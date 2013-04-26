@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>net.automatalib</groupId>
+  <artifactId>automata-brics</artifactId>
+  <packaging>jar</packaging>
+
+  <name>automata-brics</name>
+
+	<parent>
+		<groupId>net.automatalib</groupId>
+		<artifactId>automata-adapters</artifactId>
+		<version>0.3.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<brics.version>1.11-8</brics.version>
+	<brics.javadoc>http://www.brics.dk/automaton/doc/</brics.javadoc>
+  </properties>
+
+  <dependencies>
+    <dependency>
+		<groupId>${project.groupId}</groupId>
+		<artifactId>automata-commons-util</artifactId>
+    </dependency>
+
+    <dependency>
+		<groupId>${project.groupId}</groupId>
+		<artifactId>automata-commons-smartcollections</artifactId>
+    </dependency>
+
+	<dependency>
+		<groupId>${project.groupId}</groupId>
+		<artifactId>automata-api</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>${project.groupId}</groupId>
+		<artifactId>automata-core</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>dk.brics.automaton</groupId>
+		<artifactId>automaton</artifactId>
+		<version>${brics.version}</version>
+	</dependency>
+  </dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<links>
+						<link>${brics.javadoc}</link>
+					</links>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+

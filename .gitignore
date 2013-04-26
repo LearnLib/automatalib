@@ -1,2 +1,15 @@
+.classpath
+.idea/
+.project
+.settings/
 *~
-
+*.iml
+hs_err_*
+test-output/
+/example-automata/target/
+/automata-parent/api/target/
+/automata-parent/commons/dotutil/target/
+/automata-parent/commons/smartcollections/target/
+/automata-parent/commons/util/target/
+/automata-parent/core/target/
+/automata-parent/util/target/

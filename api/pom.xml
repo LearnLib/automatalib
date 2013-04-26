@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>net.automatalib</groupId>
+  <artifactId>automata-api</artifactId>
+  <packaging>jar</packaging>
+
+  <name>automata-api</name>
+
+	<parent>
+		<groupId>net.automatalib</groupId>
+		<artifactId>automata-parent</artifactId>
+		<version>0.3.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+	<dependencies>
+	<dependency>
+      <groupId>${project.groupId}</groupId>
+		<artifactId>automata-commons-util</artifactId>
+    </dependency>
+	<dependency>
+		<groupId>org.testng</groupId>
+		<artifactId>testng</artifactId>
+	</dependency>
+	</dependencies>
+
+</project>
