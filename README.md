@@ -1,6 +1,6 @@
 AutomataLib
 ===========
-AutomataLib is a free, open source ([LGPLv3](https://github.com/misberner/automatalib/blob/master/COPYING.txt)) Java library for modeling automata, graphs, and transition systems.
+AutomataLib is a free, open source ([LGPLv3](http://www.gnu.de/documents/lgpl.en.html)) Java library for modeling automata, graphs, and transition systems.
 
 About
 -----
@@ -15,6 +15,7 @@ Maintainers
 
 Resources
 ---------
+* **[API Documentation](http://misberner.github.io/automatalib/apidocs/)**
 * [Q&A @ Google Groups](https://groups.google.com/forum/?fromgroups#!forum/automatalib-qa) -- [automatalib-qa@googlegroups.com](mailto:automatalib-qa@googlegroups.com)
 * [Discussion @ Google Groups](https://groups.google.com/forum/?fromgroups#!forum/automatalib-discussion) -- [automatalib-discussion@googlegroups.com](mailto:automatalib-discussion@googlegroups.com) 
 * [Developers @ Google Groups (closed group)](https://groups.google.com/forum/?fromgroups#!forum/automatalib-devel) -- [automatalib-devel@googlegroups.com](mailto:automatalib-devel@googlegroups.com)
