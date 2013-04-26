@@ -17,11 +17,14 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<brics.version>1.11-8</brics.version>
-	<brics.javadoc>http://www.brics.dk/automaton/doc/</brics.javadoc>
   </properties>
 
   <dependencies>
+ 	<dependency>
+		<groupId>org.testng</groupId>
+		<artifactId>testng</artifactId>
+	</dependency>
+
     <dependency>
 		<groupId>${project.groupId}</groupId>
 		<artifactId>automata-commons-util</artifactId>
@@ -45,22 +48,8 @@
 	<dependency>
 		<groupId>dk.brics.automaton</groupId>
 		<artifactId>automaton</artifactId>
-		<version>${brics.version}</version>
 	</dependency>
   </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<links>
-						<link>${brics.javadoc}</link>
-					</links>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
 
