@@ -75,8 +75,8 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	@Override
 	public boolean getNodeProperties(N node, Map<String,String> properties) {
 		String label = String.valueOf(node);
-		properties.put("label", label);
-		properties.put("shape", "circle");
+		properties.put(LABEL, label);
+		properties.put(SHAPE, "circle");
 		return true;
 	}
 

@@ -53,7 +53,6 @@ public final class ResizingObjectArray {
 	/**
 	 * Constructor. Creates an array with the specified initial capacity.
 	 * 
-	 * @param arrayClazz the class of the storage array.
 	 * @param initialCapacity the initial capacity.
 	 */
 	public ResizingObjectArray(int initialCapacity) {

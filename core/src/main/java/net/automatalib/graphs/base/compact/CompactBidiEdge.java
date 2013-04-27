@@ -16,14 +16,18 @@
  */
 package net.automatalib.graphs.base.compact;
 
-
-
-public class CompactGraph<NP, EP> extends
-		AbstractCompactGraph<CompactEdge<EP>,NP, EP> {
-
-	@Override
-	protected CompactEdge<EP> createEdge(int source, int target, EP property) {
-		return new CompactEdge<>(target, property);
+public class CompactBidiEdge<EP> extends CompactEdge<EP> {
+	
+	private final int source;
+	protected int inIndex;
+	
+	public CompactBidiEdge(int source, int target, EP property) {
+		super(target, property);
+		this.source = source;
+	}
+	
+	public int getSource() {
+		return source;
 	}
 
 }

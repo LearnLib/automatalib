@@ -30,6 +30,11 @@ import net.automatalib.commons.util.mappings.Mapping;
  * @param <E> edge class
  */
 public interface GraphDOTHelper<N, E> {
+	
+	public static final String LABEL = "label";
+	public static final String SHAPE = "shape";
+	
+	
 	/**
 	 * Called before the node and edge data are written, but <i>after</i>
 	 * the opening "digraph {" statement.

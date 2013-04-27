@@ -16,14 +16,19 @@
  */
 package net.automatalib.graphs.base.compact;
 
-public final class CompactEdge<EP> {
+/**
+ * An edge in a {@link CompactGraph}.
+ * 
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ * @param <EP> edge property class.
+ */
+public class CompactEdge<EP> {
 	
 	private final int target;
 	private EP property;
+	protected int outIndex;
 
-	public CompactEdge(int target) {
-		this(target, null);
-	}
 	
 	public CompactEdge(int target, EP property) {
 		this.target = target;
