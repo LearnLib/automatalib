@@ -17,7 +17,7 @@
 package net.automatalib.util.graphs.traversal;
 
 public interface DFSVisitor<N, E, D> {
-	public D exploreInitial(N node);
+	public D initialize(N node);
 	public void explore(N node, D data);
 	public void finish(N node, D data);
 	

@@ -32,8 +32,7 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
 	 * @see net.automatalib.util.graphs.traversal.DFSVisitor#exploreInitial(java.lang.Object)
 	 */
 	@Override
-	public D exploreInitial(N node) {
-		explore(node, null);
+	public D initialize(N node) {
 		return null;
 	}
 	

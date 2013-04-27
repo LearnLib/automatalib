@@ -144,7 +144,7 @@ bfs_loop:
 		}
 	}
 	
-	public static <N,E,D> void depthFirst(IndefiniteGraph<N,E> graph, int limit, Collection<N> initialNodes,
+	public static <N,E,D> void depthFirst(IndefiniteGraph<N,E> graph, int limit, Collection<? extends N> initialNodes,
 			GraphTraversalVisitor<N, E, D> vis) {
 		
 		if(limit < 0)
@@ -221,10 +221,18 @@ bfs_loop:
 	}
 	
 	
-	public static <N,E,D> void dfs(IndefiniteGraph<N, E> graph, int limit, Collection<N> initialNodes, DFSVisitor<N, E, D> visitor) {
+	public static <N,E,D> void dfs(IndefiniteGraph<N, E> graph, int limit, Collection<? extends N> initialNodes, DFSVisitor<? super N, ? super E, D> visitor) {
 		GraphTraversalVisitor<N, E, DFSData<D>> traversalVisitor
 			= new DFSTraversalVisitor<N, E, D>(graph, visitor);
 		depthFirst(graph, limit, initialNodes, traversalVisitor);
+	}
+	
+	public static <N,E,D> void dfs(IndefiniteGraph<N, E> graph, N initialNode, DFSVisitor<? super N, ? super E, D> visitor) {
+		dfs(graph, -1, Collections.singleton(initialNode), visitor);
+	}
+	
+	public static <N,E,D> void dfs(IndefiniteGraph<N, E> graph, Collection<? extends N> initialNodes, DFSVisitor<? super N, ? super E, D> visitor) {
+		dfs(graph, -1, initialNodes, visitor);
 	}
 	
 	

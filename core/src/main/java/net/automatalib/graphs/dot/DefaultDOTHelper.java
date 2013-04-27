@@ -86,8 +86,6 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	 */
 	@Override
 	public boolean getEdgeProperties(E edge, Map<String,String> properties) {
-		String label = String.valueOf(edge);
-		properties.put("label", label);
 		return true;
 	}
 

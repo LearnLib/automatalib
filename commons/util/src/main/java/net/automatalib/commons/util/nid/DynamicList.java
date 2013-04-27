@@ -19,14 +19,14 @@ package net.automatalib.commons.util.nid;
 import java.util.AbstractList;
 import java.util.Iterator;
 
-import net.automatalib.commons.util.array.SimpleResizingArray;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 
 
 public class DynamicList<T extends MutableNumericID> extends
 		AbstractList<T> {
 	
-	private final SimpleResizingArray storage
-		= new SimpleResizingArray();
+	private final ResizingObjectArray storage
+		= new ResizingObjectArray();
 	
 	private int size = 0;
 	

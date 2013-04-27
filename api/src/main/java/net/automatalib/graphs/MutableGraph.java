@@ -45,6 +45,8 @@ public interface MutableGraph<N, E, NP, EP> extends Graph<N,E> {
 	 */
 	public N addNode(NP properties);
 	
+	public E connect(N source, N target);
+	
 	/**
 	 * Inserts an edge in the graph.
 	 * @param source the source node of the edge

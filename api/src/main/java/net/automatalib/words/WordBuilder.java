@@ -19,7 +19,7 @@ package net.automatalib.words;
 import java.util.AbstractList;
 import java.util.List;
 
-import net.automatalib.commons.util.array.SimpleResizingArray;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 
 /**
  * A class for dynamically building {@link Word}s.
@@ -45,7 +45,7 @@ import net.automatalib.commons.util.array.SimpleResizingArray;
  */
 public final class WordBuilder<I> extends AbstractList<I> {
 	
-	private final SimpleResizingArray storage;
+	private final ResizingObjectArray storage;
 	private int length;
 	private boolean lock = true;
 	
@@ -53,7 +53,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 * Constructor. Initializes the builder with a default capacity.
 	 */
 	public WordBuilder() {
-		this.storage = new SimpleResizingArray();
+		this.storage = new ResizingObjectArray();
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 * @param initialCapacity the initial capacity of the internal storage.
 	 */
 	public WordBuilder(int initialCapacity) {
-		this.storage = new SimpleResizingArray(initialCapacity);
+		this.storage = new ResizingObjectArray(initialCapacity);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 * @param count the initial symbol count
 	 */
 	public WordBuilder(I initSym, int count) {
-		this.storage = new SimpleResizingArray(count);
+		this.storage = new ResizingObjectArray(count);
 		if(initSym != null) {
 			for(int i = 0; i < count; i++)
 				storage.array[i] = initSym;
@@ -91,7 +91,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	public WordBuilder(int capacity, I initSym, int count) {
 		if(capacity < count)
 			capacity = count;
-		this.storage = new SimpleResizingArray(capacity);
+		this.storage = new ResizingObjectArray(capacity);
 		if(initSym != null) {
 			for(int i = 0; i < count; i++)
 				storage.array[i] = initSym;
@@ -105,7 +105,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 */
 	public WordBuilder(Word<I> init) {
 		int wLen = init.length();
-		this.storage = new SimpleResizingArray(wLen);
+		this.storage = new ResizingObjectArray(wLen);
 		init.writeToArray(0, storage.array, 0, wLen);
 		length = wLen;
 	}
@@ -120,7 +120,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 		int wLen = init.length();
 		if(capacity < wLen)
 			capacity = wLen;
-		this.storage = new SimpleResizingArray(capacity);
+		this.storage = new ResizingObjectArray(capacity);
 		init.writeToArray(0, storage.array, 0, wLen);
 		length = wLen;
 	}

@@ -17,7 +17,7 @@
 package net.automatalib.automata.base;
 
 import net.automatalib.automata.Automaton;
-import net.automatalib.commons.util.array.SimpleResizingArray;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.IDChangeListener;
 import net.automatalib.commons.util.nid.NumericID;
@@ -26,11 +26,11 @@ public class StateIDDynamicMapping<S extends NumericID, V> implements MutableMap
 		IDChangeListener<S> {
 	
 	private final Automaton<S, ?, ?> automaton;
-	private final SimpleResizingArray storage;
+	private final ResizingObjectArray storage;
 
 	public StateIDDynamicMapping(Automaton<S,?,?> automaton) {
 		this.automaton = automaton;
-		this.storage = new SimpleResizingArray(automaton.size());
+		this.storage = new ResizingObjectArray(automaton.size());
 	}
 	
 	@Override

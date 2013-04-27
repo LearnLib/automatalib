@@ -16,7 +16,6 @@
  */
 package net.automatalib.commons.util.array;
 
-import java.util.Arrays;
 
 /**
  * Class that provides a resizable {@link Object} array storage.
@@ -28,7 +27,7 @@ import java.util.Arrays;
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
  */
-public final class SimpleResizingArray {
+public final class ResizingIntArray {
 	
 	/**
 	 * The arrays default initial capacity.
@@ -38,7 +37,7 @@ public final class SimpleResizingArray {
 	/**
 	 * The storage array.
 	 */
-	public Object[] array;
+	public int[] array;
 	
 	private int nextCapacityHint;
 	
@@ -47,7 +46,7 @@ public final class SimpleResizingArray {
 	 * Constructor. Initializes an array of the default initial capacity.
 	 * @see #DEFAULT_INITIAL_CAPACITY
 	 */
-	public SimpleResizingArray() {
+	public ResizingIntArray() {
 		this(DEFAULT_INITIAL_CAPACITY);
 	}
 	
@@ -57,10 +56,10 @@ public final class SimpleResizingArray {
 	 * @param arrayClazz the class of the storage array.
 	 * @param initialCapacity the initial capacity.
 	 */
-	public SimpleResizingArray(int initialCapacity) {
+	public ResizingIntArray(int initialCapacity) {
 		if(initialCapacity <= 0)
 			initialCapacity = DEFAULT_INITIAL_CAPACITY;
-		this.array = new Object[initialCapacity];
+		this.array = new int[initialCapacity];
 	}
 	
 	/**
@@ -84,7 +83,7 @@ public final class SimpleResizingArray {
 		if (newCapacity < minCapacity)
 			newCapacity = minCapacity;
 
-		Object[] newArray = new Object[newCapacity];
+		int[] newArray = new int[newCapacity];
 		System.arraycopy(array, 0, newArray, 0, array.length);
 		array = newArray;
 		nextCapacityHint = 0;
@@ -95,7 +94,9 @@ public final class SimpleResizingArray {
 		if(maxCapacity >= array.length)
 			return false;
 		
-		array = Arrays.copyOf(array, maxCapacity);
+		int[] newArray = new int[maxCapacity];
+		System.arraycopy(array, 0, newArray, 0, maxCapacity);
+		array = newArray;
 		return true;
 	}
 
@@ -103,13 +104,13 @@ public final class SimpleResizingArray {
 	 * Sets all the elements in the array to the specified value.
 	 * @param value the value.
 	 */
-	public void setAll(Object value) {
+	public void setAll(int value) {
 		for(int i = 0; i < array.length; i++)
 			array[i] = value;
 	}
 	
-	public void swap(SimpleResizingArray other) {
-		Object[] arrayTmp = array;
+	public void swap(ResizingIntArray other) {
+		int[] arrayTmp = array;
 		int hintTmp = nextCapacityHint;
 		array = other.array;
 		nextCapacityHint = other.nextCapacityHint;

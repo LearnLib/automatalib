@@ -21,11 +21,11 @@ import net.automatalib.graphs.IndefiniteGraph;
 
 final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, DFSData<D>> {
 	private final IndefiniteGraph<N, E> graph;
-	private final DFSVisitor<N, E, D> visitor;
+	private final DFSVisitor<? super N, ? super E, D> visitor;
 	private int dfsNum;
 	private final MutableMapping<N, DFSData<D>> records;
 	
-	public DFSTraversalVisitor(IndefiniteGraph<N,E> graph, DFSVisitor<N, E, D> visitor) {
+	public DFSTraversalVisitor(IndefiniteGraph<N,E> graph, DFSVisitor<? super N, ? super E, D> visitor) {
 		this.graph = graph;
 		this.visitor = visitor;
 		this.records = graph.createStaticNodeMapping();
@@ -33,8 +33,9 @@ final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, 
 
 	@Override
 	public GraphTraversalAction<DFSData<D>> processInitial(N initialNode) {
-		D data = visitor.exploreInitial(initialNode);
+		D data = visitor.initialize(initialNode);
 		DFSData<D> rec = new DFSData<D>(data, dfsNum++);
+		records.put(initialNode, rec);
 		return GraphTraversal.explore(rec);
 	}
 
