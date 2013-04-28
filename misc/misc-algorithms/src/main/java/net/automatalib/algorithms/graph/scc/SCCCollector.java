@@ -14,32 +14,24 @@
  * License along with AutomataLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package net.automatalib.util.graphs.traversal;
+package net.automatalib.algorithms.graph.scc;
 
-import net.automatalib.commons.util.Triple;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
+public class SCCCollector<N> implements SCCListener<N> {
 	
-	public final D data;
-	private Triple<E,N,D> lastEdge;
+	private final List<List<N>> sccList = new ArrayList<>();
+
 	
-	public DFRecord(N node, D data) {
-		super(node);
-		this.data = data;
+	@Override
+	public void foundSCC(Collection<? extends N> scc) {
+		sccList.add(new ArrayList<>(scc));
 	}
 	
-	public D getData() {
-		return data;
+	public List<List<N>> getSCCList() {
+		return sccList;
 	}
 
-	public Triple<E, N, D> getLastEdge() {
-		Triple<E,N,D> result = lastEdge;
-		lastEdge = null;
-		return result;
-	}
-	
-	public void setLastEdge(E edge, N tgtNode, D tgtData) {
-		assert lastEdge == null;
-		lastEdge = Triple.make(edge, tgtNode, tgtData);
-	}
 }

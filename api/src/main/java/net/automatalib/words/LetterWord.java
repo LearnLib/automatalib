@@ -240,4 +240,15 @@ final class LetterWord<I> extends Word<I> {
 	public Word<I> flatten() {
 		return this;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see net.automatalib.words.Word#trimmed()
+	 */
+	@Override
+	public Word<I> trimmed() {
+		return this;
+	}
+	
+	
 }

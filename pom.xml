@@ -16,9 +16,14 @@
   <licenses>
     <license>
       <name>GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
-      <url>http://www.gnu.org/copyleft/lesser.html</url>
+      <url>http://www.gnu.org/licenses/lgpl-3.0-standalone.html</url>
     </license>
   </licenses>
+
+  <issueManagement>
+    <url>https://github.com/misberner/automatalib/issues</url>
+    <system>GitHub Issues</system>
+  </issueManagement>
 
   <developers>
     <developer>
@@ -34,17 +39,20 @@
   <scm>
     <connection>scm:git:git@github.com:misberner/automatalib.git</connection>
     <developerConnection>scm:git:git@github.com:misberner/automatalib.git</developerConnection>
-    <url>git@github.com:misberner/automatalib.git</url>
+    <url>https://github.com/misberner/automatalib</url>
   </scm>
   
   <!--
   =================================  SONATYPE PARENT ==============================
   -->
+<!-- FIXME: Disabled as it's causing mvn site to fail!
+
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>7</version>
   </parent>
+-->
   
 <!--
   =================================  MODULES ===================================
@@ -72,7 +80,20 @@
 	<brics-automaton.version>1.11-8</brics-automaton.version>
 
     <!-- Javadoc links -->
-	<brics-automaton.javadoc>http://www.brics.dk/automaton/doc/</brics-automaton.javadoc>
+	<brics-automaton.javadoc>http://www.brics.dk/automaton/doc</brics-automaton.javadoc>
+
+    <!-- Sonatype OSS snapshots repository -->
+    <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
+
+    <!-- scm-publish settings -->
+    <scm-publish.siteOutputDirectory>${project.build.directory}/site/maven-site</scm-publish.siteOutputDirectory>  
+    <scm-publish.siteDocOuputDirectory>${project.build.directory}/site</scm-publish.siteDocOuputDirectory>  
+
+    <scm-publish.scmBranch>gh-pages</scm-publish.scmBranch>  
+    <scm-publish.pubScmUrl>scm:git:git@github.com:misberner/automatalib.git</scm-publish.pubScmUrl>  
+  
+    <scm-publish.siteDocOuputDirectory>${project.build.directory}/site</scm-publish.siteDocOuputDirectory>  
+  
   </properties>
 
   <!--
@@ -91,10 +112,58 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${javadoc-plugin.version}</version>
         </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.1</version>
+					<configuration>
+						<mavenExecutorId>forked-path</mavenExecutorId>
+						<useReleaseProfile>false</useReleaseProfile>
+						<arguments>-Psonatype-oss-release</arguments>
+					</configuration>
+				</plugin>
+<plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-publish-plugin</artifactId>
+                    <version>${plugin.scm-publish.version}</version>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <checkoutDirectory>${scmPublish.checkoutDirectory}</checkoutDirectory>
+                        <checkinComment>Publishing Site Docs for ${project.artifactId}:${project.version}</checkinComment>
+                        <!-- Plugins defaults to "target/staging" and since the distributionManagement section is a pain in the ass for site docs, this is easier -->
+                        <content>${scm-publish.siteDocOuputDirectory}</content>
+                        <skipDeletedFiles>true</skipDeletedFiles>
+                        <pubScmUrl>${scm-publish.pubScmUrl}</pubScmUrl>
+                        <scmBranch>${scm-publish.scmBranch}</scmBranch>
+                    </configuration>
+                </plugin>
       </plugins>
+
     </pluginManagement>
 
-    <plugins>
+<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>(,2.1.0),(2.1.0,2.2.0),(2.2.0,)</version>
+									<message>Maven 2.1.0 and 2.2.0 produce incorrect GPG signatures and checksums respectively.</message>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
       <!-- default assembly config -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -122,6 +191,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <inherited>false</inherited>
         <executions>
           <execution>
             <id>aggregate</id>
@@ -134,11 +204,39 @@
           </execution>
         </executions>
       </plugin>
+
+<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.2</version>
+        <inherited>false</inherited>
+      </plugin>
+
     </plugins>
   </build>
 
   <reporting>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.6</version>
+        <inherited>false</inherited>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>dependencies</report>
+              <report>project-team</report>
+              <report>mailing-list</report>
+              <report>issue-tracking</report>
+              <report>license</report>
+              <report>scm</report>
+              <report>dependency-info</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -151,8 +249,7 @@
         <reportSets>
           <reportSet>
             <id>aggregate</id>
-            <configuration>
-            </configuration>
+            <inherited>false</inherited>
             <reports>
               <report>aggregate</report>
             </reports>
@@ -188,38 +285,53 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <!-- attach source and javadoc jars -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+		<profile>
+			<id>sonatype-oss-release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.1.2</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.7</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.1</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
   </profiles>
 
   <!--
@@ -280,4 +392,26 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <version>${testng.version}</version>
+        <scope>test</scope>
+      </dependency>
+  </dependencies>
+
+  <distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>${sonatypeOssDistMgmtSnapshotsUrl}</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Release Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 </project>

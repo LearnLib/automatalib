@@ -637,6 +637,13 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 		writeToArray(0, array, 0, len);
 		return new SharedWord<>(array);
 	}
+	
+	public Word<I> trimmed() {
+		int len = length();
+		Object[] array = new Object[len];
+		writeToArray(0, array, 0, len);
+		return new SharedWord<>(array);
+	}
 
 	/**
 	 * Checks if this word is empty, i.e., contains no symbols.

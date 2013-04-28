@@ -66,16 +66,15 @@ public abstract class Graphs {
 
 			@Override
 			public GraphTraversalAction<N2> processEdge(N1 srcNode, N2 srcData,
-					E1 edge) {
+					E1 edge, N1 tgtNode) {
 				EP2 prop2 = epCopy.get(edge);
-				N1 tgt1 = in.getTarget(edge);
 				boolean newNode = false;
-				N2 tgt2 = nodeMapping.get(tgt1);
+				N2 tgt2 = nodeMapping.get(tgtNode);
 				if(tgt2 == null) {
 					newNode = true;
-					NP2 tgtProp2 = npCopy.get(tgt1);
+					NP2 tgtProp2 = npCopy.get(tgtNode);
 					tgt2 = out.addNode(tgtProp2);
-					nodeMapping.put(tgt1, tgt2);
+					nodeMapping.put(tgtNode, tgt2);
 				}
 				
 				out.connect(srcData, tgt2, prop2);
@@ -84,7 +83,13 @@ public abstract class Graphs {
 					return GraphTraversal.explore(tgt2);
 				return GraphTraversal.ignore();
 			}
-			
+
+			@Override
+			public void backtrackEdge(N1 srcNode, N2 srcData, E1 edge,
+					N1 tgtNode, N2 tgtData) {
+			}
+
+
 		});
 	}
 	
@@ -117,18 +122,17 @@ public abstract class Graphs {
 
 			@Override
 			public GraphTraversalAction<N2> processEdge(N1 srcNode, N2 srcData,
-					E1 edge) {
+					E1 edge, N1 tgtNode) {
 				EP1 prop1 = in.getEdgeProperties(edge);
 				EP2 prop2 = epCopy.get(prop1);
-				N1 tgt1 = in.getTarget(edge);
 				boolean newNode = false;
-				N2 tgt2 = nodeMapping.get(tgt1);
+				N2 tgt2 = nodeMapping.get(tgtNode);
 				if(tgt2 == null) {
 					newNode = true;
-					NP1 tgtProp1 = in.getNodeProperties(tgt1);
+					NP1 tgtProp1 = in.getNodeProperties(tgtNode);
 					NP2 tgtProp2 = npCopy.get(tgtProp1);
 					tgt2 = out.addNode(tgtProp2);
-					nodeMapping.put(tgt1, tgt2);
+					nodeMapping.put(tgtNode, tgt2);
 				}
 				
 				out.connect(srcData, tgt2, prop2);
@@ -136,6 +140,11 @@ public abstract class Graphs {
 				if(newNode)
 					return GraphTraversal.explore(tgt2);
 				return GraphTraversal.ignore();
+			}
+
+			@Override
+			public void backtrackEdge(N1 srcNode, N2 srcData, E1 edge,
+					N1 tgtNode, N2 tgtData) {
 			}
 			
 		});

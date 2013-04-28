@@ -14,32 +14,22 @@
  * License along with AutomataLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package net.automatalib.util.graphs.traversal;
+package net.automatalib.graphs.concepts;
 
-import net.automatalib.commons.util.Triple;
-
-class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
+/**
+ * Edge weights concepts. Allows to associate a fractional (floating-point) <i>weight</i>
+ * with the edges in a graph.
+ * 
+ * @author Malte Isberner <malte.isberner@gmail.com>
+ *
+ * @param <E> edge class
+ */
+public interface EdgeWeights<E> {
 	
-	public final D data;
-	private Triple<E,N,D> lastEdge;
-	
-	public DFRecord(N node, D data) {
-		super(node);
-		this.data = data;
-	}
-	
-	public D getData() {
-		return data;
-	}
-
-	public Triple<E, N, D> getLastEdge() {
-		Triple<E,N,D> result = lastEdge;
-		lastEdge = null;
-		return result;
-	}
-	
-	public void setLastEdge(E edge, N tgtNode, D tgtData) {
-		assert lastEdge == null;
-		lastEdge = Triple.make(edge, tgtNode, tgtData);
-	}
+	/**
+	 * Retrieves the weight of an edge.
+	 * @param edge the edge
+	 * @return the weight of the given edge
+	 */
+	float getEdgeWeight(E edge);
 }

@@ -103,4 +103,8 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
 	@Override
 	public void finish(N node, D data) {
 	}
+
+	@Override
+	public void backtrackEdge(N srcNode, D srcDate, E edge, N tgtNode, D tgtData) {
+	}
 }

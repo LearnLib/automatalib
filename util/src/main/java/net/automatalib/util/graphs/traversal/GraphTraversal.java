@@ -23,6 +23,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.Queue;
 
+import net.automatalib.commons.util.Triple;
 import net.automatalib.graphs.IndefiniteGraph;
 import net.automatalib.util.graphs.traversal.GraphTraversalAction.Type;
 
@@ -119,8 +120,10 @@ bfs_loop:
 				continue;
 			
 			for(E edge : edges) {
+				
+				N tgtNode = graph.getTarget(edge);
 				GraphTraversalAction<D> act 
-					= vis.processEdge(currNode, currData, edge);
+					= vis.processEdge(currNode, currData, edge, tgtNode);
 				
 				switch(act.type) {
 				case IGNORE:
@@ -133,7 +136,6 @@ bfs_loop:
 				}
 				
 				D data = act.data;
-				N tgtNode = graph.getTarget(edge);
 				if(nodeCount != limit) { // not equals will always be true for negative limit values
 					bfsQueue.offer(new BFRecord<N,D>(tgtNode, data));
 					nodeCount++;
@@ -142,6 +144,21 @@ bfs_loop:
 			
 			vis.finishExploration(currNode, currData);
 		}
+	}
+	
+	public static <N,E,D> void depthFirst(IndefiniteGraph<N,E> graph, N initNode,
+			GraphTraversalVisitor<N, E, D> vis) {
+		depthFirst(graph, -1, initNode, vis);
+	}
+	
+	public static <N,E,D> void depthFirst(IndefiniteGraph<N,E> graph, int limit, N initNode,
+			GraphTraversalVisitor<N, E, D> vis) {
+		depthFirst(graph, Collections.singleton(initNode), vis);
+	}
+	
+	public static <N,E,D> void depthFirst(IndefiniteGraph<N,E> graph, Collection<? extends N> initialNodes,
+			GraphTraversalVisitor<N, E, D> vis) {
+		depthFirst(graph, -1, initialNodes, vis);
 	}
 	
 	public static <N,E,D> void depthFirst(IndefiniteGraph<N,E> graph, int limit, Collection<? extends N> initialNodes,
@@ -189,6 +206,12 @@ bfs_loop:
 				}
 			}
 			
+			Triple<E,N,D> lastEdge = current.getLastEdge();
+			if(lastEdge != null) {
+				vis.backtrackEdge(currNode, currData, lastEdge.getFirst(),
+						lastEdge.getSecond(), lastEdge.getThird());
+			}
+			
 			if(!current.hasNextEdge()) {
 				dfsStack.pop();
 				vis.finishExploration(currNode, currData);
@@ -197,7 +220,8 @@ bfs_loop:
 			
 			E edge = current.nextEdge();
 			
-			GraphTraversalAction<D> act = vis.processEdge(currNode, currData, edge);
+			N tgt = graph.getTarget(edge);
+			GraphTraversalAction<D> act = vis.processEdge(currNode, currData, edge, tgt);
 			
 			switch(act.type) {
 			case IGNORE:
@@ -211,9 +235,9 @@ bfs_loop:
 			}
 			
 			D data = act.data;
-			N tgt = graph.getTarget(edge);
 			
 			if(nodeCount < limit) {
+				current.setLastEdge(edge, tgt, data);
 				dfsStack.push(new DFRecord<N,E,D>(tgt, data));
 				nodeCount++;
 			}

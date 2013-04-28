@@ -113,6 +113,24 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>,NP, EP> ext
 		return Integer.valueOf(id);
 	}
 	
+	
+	public NP getNodeProperties(int node) {
+		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties(java.lang.Object)
+	 */
+	@Override
+	public NP getNodeProperties(Integer node) {
+		return getNodeProperties(node.intValue());
+	}
+	
+	@Override
+	public EP getEdgeProperties(E edge) {
+		return edge.getProperty();
+	}
+
 	protected abstract E createEdge(int source, int target, EP property);
 
 }

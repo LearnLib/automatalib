@@ -177,6 +177,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
 		numStates = 0;
 		for(int i = 0; i < endIdx; i++)
 			transitions[i] = null;
+		this.initial = -1;
 	}
 	
 	protected final int createState() {

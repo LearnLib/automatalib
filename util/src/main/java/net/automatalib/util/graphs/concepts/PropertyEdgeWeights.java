@@ -14,32 +14,25 @@
  * License along with AutomataLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package net.automatalib.util.graphs.traversal;
+package net.automatalib.util.graphs.concepts;
 
-import net.automatalib.commons.util.Triple;
+import net.automatalib.graphs.UniversalGraph;
+import net.automatalib.graphs.concepts.EdgeWeights;
 
-class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
+public class PropertyEdgeWeights<E> implements EdgeWeights<E> {
 	
-	public final D data;
-	private Triple<E,N,D> lastEdge;
-	
-	public DFRecord(N node, D data) {
-		super(node);
-		this.data = data;
+	private final UniversalGraph<?,E,?,? extends Number> graph;
+
+	public PropertyEdgeWeights(UniversalGraph<?, E, ?, ? extends Number> graph) {
+		this.graph = graph;
 	}
 	
-	public D getData() {
-		return data;
+	@Override
+	public float getEdgeWeight(E edge) {
+		Number prop = graph.getEdgeProperties(edge);
+		return prop.floatValue();
 	}
 
-	public Triple<E, N, D> getLastEdge() {
-		Triple<E,N,D> result = lastEdge;
-		lastEdge = null;
-		return result;
-	}
 	
-	public void setLastEdge(E edge, N tgtNode, D tgtData) {
-		assert lastEdge == null;
-		lastEdge = Triple.make(edge, tgtNode, tgtData);
-	}
+
 }

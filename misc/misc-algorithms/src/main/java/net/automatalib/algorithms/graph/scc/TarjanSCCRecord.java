@@ -14,32 +14,16 @@
  * License along with AutomataLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package net.automatalib.util.graphs.traversal;
+package net.automatalib.algorithms.graph.scc;
 
-import net.automatalib.commons.util.Triple;
+final class TarjanSCCRecord {
 
-class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
+	public final int number;
+	public int lowLink;
 	
-	public final D data;
-	private Triple<E,N,D> lastEdge;
-	
-	public DFRecord(N node, D data) {
-		super(node);
-		this.data = data;
-	}
-	
-	public D getData() {
-		return data;
+	public TarjanSCCRecord(int number) {
+		this.number = number;
+		this.lowLink = number;
 	}
 
-	public Triple<E, N, D> getLastEdge() {
-		Triple<E,N,D> result = lastEdge;
-		lastEdge = null;
-		return result;
-	}
-	
-	public void setLastEdge(E edge, N tgtNode, D tgtData) {
-		assert lastEdge == null;
-		lastEdge = Triple.make(edge, tgtNode, tgtData);
-	}
 }

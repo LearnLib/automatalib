@@ -16,6 +16,7 @@
  */
 package net.automatalib.automata.transout.abstractimpl;
 
+import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.automata.transout.TransitionOutputAutomaton;
@@ -27,14 +28,22 @@ public abstract class AbstractTransOutAutomaton {
 	
 	public static <S,I,T,O> Word<O> computeOutput(TransitionOutputAutomaton<S,I,T,O> $this,
 			Iterable<I> input) {
-		WordBuilder<O> result = new WordBuilder<O>();
+		WordBuilder<O> result;
+		if(input instanceof Collection)
+			result = new WordBuilder<O>(((Collection<I>)input).size());
+		else
+			result = new WordBuilder<>();
 		$this.trace(input, result);
 		return result.toWord();
 	}
 	
 	public static <S,I,T,O> Word<O> computeSuffixOutput(TransitionOutputAutomaton<S,I,T,O> $this,
 			Iterable<I> prefix, Iterable<I> suffix) {
-		WordBuilder<O> result = new WordBuilder<O>();
+		WordBuilder<O> result;
+		if(suffix instanceof Collection)
+			result = new WordBuilder<O>(((Collection<I>)suffix).size());
+		else
+			result = new WordBuilder<>();
 		S state = $this.getState(prefix);
 		$this.trace(state, suffix, result);
 		return result.toWord();

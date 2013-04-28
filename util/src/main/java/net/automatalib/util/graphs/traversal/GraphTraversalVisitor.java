@@ -57,5 +57,7 @@ public interface GraphTraversalVisitor<N, E, D> {
 	 * @param edge the edge that is being processed
 	 * @return the action to perform
 	 */
-	public GraphTraversalAction<D> processEdge(N srcNode, D srcData, E edge);
+	public GraphTraversalAction<D> processEdge(N srcNode, D srcData, E edge, N tgtNode);
+	
+	public void backtrackEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData);
 }

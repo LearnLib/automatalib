@@ -14,32 +14,25 @@
  * License along with AutomataLib; if not, see
  * <http://www.gnu.de/documents/lgpl.en.html>.
  */
-package net.automatalib.util.graphs.traversal;
+package net.automatalib.util.words;
 
-import net.automatalib.commons.util.Triple;
+import java.util.HashMap;
+import java.util.Map;
 
-class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
+import net.automatalib.words.Word;
+
+public final class WordInterner {
+
+	private final Map<Word<?>,Word<?>> storage = new HashMap<>();
 	
-	public final D data;
-	private Triple<E,N,D> lastEdge;
-	
-	public DFRecord(N node, D data) {
-		super(node);
-		this.data = data;
-	}
-	
-	public D getData() {
-		return data;
+	@SuppressWarnings("unchecked")
+	public <I> Word<I> intern(Word<I> w) {
+		Word<I> cached = (Word<I>)storage.get(w);
+		if(cached == null) {
+			cached = w.trimmed();
+			storage.put(cached, cached);
+		}
+		return cached;
 	}
 
-	public Triple<E, N, D> getLastEdge() {
-		Triple<E,N,D> result = lastEdge;
-		lastEdge = null;
-		return result;
-	}
-	
-	public void setLastEdge(E edge, N tgtNode, D tgtData) {
-		assert lastEdge == null;
-		lastEdge = Triple.make(edge, tgtNode, tgtData);
-	}
 }

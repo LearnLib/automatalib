@@ -202,4 +202,14 @@ final class SharedWord<I> extends Word<I> {
 	public Word<I> flatten() {
 		return this;
 	}
+	
+	
+	@Override
+	public Word<I> trimmed() {
+		if(offset == 0 && length == storage.length)
+			return this;
+		Object[] trimmed = new Object[length];
+		System.arraycopy(storage, offset, trimmed, 0, length);
+		return new SharedWord<>(trimmed);
+	}
 }

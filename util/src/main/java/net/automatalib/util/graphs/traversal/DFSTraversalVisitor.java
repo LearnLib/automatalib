@@ -20,13 +20,11 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
 
 final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, DFSData<D>> {
-	private final IndefiniteGraph<N, E> graph;
 	private final DFSVisitor<? super N, ? super E, D> visitor;
 	private int dfsNum;
 	private final MutableMapping<N, DFSData<D>> records;
 	
 	public DFSTraversalVisitor(IndefiniteGraph<N,E> graph, DFSVisitor<? super N, ? super E, D> visitor) {
-		this.graph = graph;
 		this.visitor = visitor;
 		this.records = graph.createStaticNodeMapping();
 	}
@@ -53,22 +51,27 @@ final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, 
 
 	@Override
 	public GraphTraversalAction<DFSData<D>> processEdge(N srcNode,
-			DFSData<D> srcData, E edge) {
-		N tgt = graph.getTarget(edge);
-		DFSData<D> tgtRec = records.get(tgt);
+			DFSData<D> srcData, E edge, N tgtNode) {
+		DFSData<D> tgtRec = records.get(tgtNode);
 		if(tgtRec == null) {
-			D data = visitor.treeEdge(srcNode, srcData.data, edge, tgt);
+			D data = visitor.treeEdge(srcNode, srcData.data, edge, tgtNode);
 			tgtRec = new DFSData<D>(data, dfsNum++);
-			records.put(tgt, tgtRec);
+			records.put(tgtNode, tgtRec);
 			return GraphTraversal.explore(tgtRec);
 		}
 		if(!tgtRec.finished)
-			visitor.backEdge(srcNode, srcData.data, edge, tgt, tgtRec.data);
+			visitor.backEdge(srcNode, srcData.data, edge, tgtNode, tgtRec.data);
 		else if(tgtRec.dfsNumber > srcData.dfsNumber)
-			visitor.forwardEdge(srcNode, srcData.data, edge, tgt, tgtRec.data);
+			visitor.forwardEdge(srcNode, srcData.data, edge, tgtNode, tgtRec.data);
 		else
-			visitor.crossEdge(srcNode, srcData.data, edge, tgt, tgtRec.data);
+			visitor.crossEdge(srcNode, srcData.data, edge, tgtNode, tgtRec.data);
 		return GraphTraversal.ignore();
+	}
+
+	@Override
+	public void backtrackEdge(N srcNode, DFSData<D> srcData, E edge, N tgtNode,
+			DFSData<D> tgtData) {
+		visitor.backtrackEdge(srcNode, srcData.data, edge, tgtNode, tgtData.data);
 	}
 	
 	

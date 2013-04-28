@@ -163,5 +163,14 @@ final class EmptyWord extends Word<Object> {
 	public Word<Object> flatten() {
 		return this;
 	}
+
+	/* (non-Javadoc)
+	 * @see net.automatalib.words.Word#trimmed()
+	 */
+	@Override
+	public Word<Object> trimmed() {
+		return this;
+	}
+	
 	
 }

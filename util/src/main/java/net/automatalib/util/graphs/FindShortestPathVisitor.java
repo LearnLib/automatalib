@@ -32,13 +32,11 @@ import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
 final class FindShortestPathVisitor<N, E> implements
 		GraphTraversalVisitor<N, E, Void> {
 	
-	private final IndefiniteGraph<N,E> graph;
 	private final MutableMapping<N, Pair<N,E>> predMapping;
 	private final Collection<? extends N> targetNodes;
 	private N foundTarget;
 	
 	public FindShortestPathVisitor(IndefiniteGraph<N,E> graph, Collection<? extends N> targetNodes) {
-		this.graph = graph;
 		this.targetNodes = targetNodes;
 		this.predMapping = graph.createStaticNodeMapping();
 	}
@@ -60,8 +58,7 @@ final class FindShortestPathVisitor<N, E> implements
 
 	@Override
 	public GraphTraversalAction<Void> processEdge(N srcNode, Void srcData,
-			E edge) {
-		N tgtNode = graph.getTarget(edge);
+			E edge, N tgtNode) {
 		
 		if(targetNodes.contains(tgtNode)) {
 			Pair<N,E> pred = Pair.make(srcNode, edge);
@@ -102,5 +99,10 @@ final class FindShortestPathVisitor<N, E> implements
 		Collections.reverse(path);
 		
 		return Pair.make(currNode, path);
+	}
+
+	@Override
+	public void backtrackEdge(N srcNode, Void srcData, E edge, N tgtNode,
+			Void tgtData) {
 	}
 }

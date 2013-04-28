@@ -25,4 +25,6 @@ public interface DFSVisitor<N, E, D> {
 	public void backEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData);
 	public void crossEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData);
 	public void forwardEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData);
+	
+	public void backtrackEdge(N srcNode, D srcDate, E edge, N tgtNode, D tgtData);
 }

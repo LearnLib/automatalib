@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>./incremental</module>
+		<module>./misc-algorithms</module>
 	</modules>
 </project>
 

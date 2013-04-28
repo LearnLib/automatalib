@@ -28,7 +28,7 @@ package net.automatalib.graphs;
  * @param <NP> node property class
  * @param <EP> edge property class
  */
-public interface MutableGraph<N, E, NP, EP> extends Graph<N,E> {
+public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N,E,NP,EP> {
 	
 	/**
 	 * Adds a new node with default properties to the graph.
