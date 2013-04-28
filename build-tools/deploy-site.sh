@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with AutomataLib; if not, see
 # http://www.gnu.de/documents/lgpl.en.html.
-#!/bin/bash
 
 PROJECT_ROOT=".."
 ABSPATH=`readlink -f $0`
