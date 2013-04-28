@@ -1,0 +1,7 @@
+file_pattern="\.xml$"
+file_header=1
+preamble="<!--
+"
+postamble="-->
+"
+

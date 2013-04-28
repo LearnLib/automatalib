@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.commons.util.strings;
 
