@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>net.automatalib</groupId>
-  <artifactId>automata-adapters</artifactId>
+  <artifactId>automata-adapters-parent</artifactId>
   <packaging>pom</packaging>
 
-  <name>automata-adapters</name>
+  <name>automata-adapters-parent</name>
 
 	<parent>
 		<groupId>net.automatalib</groupId>

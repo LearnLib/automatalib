@@ -10,14 +10,15 @@
 
 	<parent>
 		<groupId>net.automatalib</groupId>
-		<artifactId>automata-misc</artifactId>
+		<artifactId>automata-misc-parent</artifactId>
 		<version>0.3.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+
+    <properties>
+      <maven.site.prefix>automata-misc-parent</maven.site.prefix>
+    </properties>
 
   <dependencies>
     <dependency>

@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
 
   <name>automata-parent</name>
-  <url>http://www.automatalib.net</url>
+  <url>http://misberner.github.io/automatalib/maven-site</url>
   <description>A fully generic library for automata, graphs, and models, written in Java.</description>
 
   <licenses>
@@ -25,11 +25,40 @@
     <system>GitHub Issues</system>
   </issueManagement>
 
+  <mailingLists>
+    <mailingList>
+      <name>Developers List</name>
+      <subscribe>automatalib-devel+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>automatalib-devel+unsubscribe@googlegroups.com</unsubscribe>
+      <post>automatalib-devel@googlegroups.com</post>
+    </mailingList>
+    <mailingList>
+      <name>Discussion List</name>
+      <subscribe>automatalib-discussion+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>automatalib-discussion+unsubscribe@googlegroups.com</unsubscribe>
+      <post>automatalib-discussion@googlegroups.com</post>
+    </mailingList>
+    <mailingList>
+      <name>Q&amp;A List</name>
+      <subscribe>automatalib-qa+subscribe@googlegroups.com</subscribe>
+      <unsubscribe>automatalib-qa+unsubscribe@googlegroups.com</unsubscribe>
+      <post>automatalib-qa@googlegroups.com</post>
+    </mailingList>
+  </mailingLists>
+
   <developers>
     <developer>
       <id>misberner</id>
       <name>Malte Isberner</name>
       <email>malte.isberner@gmail.com</email>
+      <organization>TU Dortmund, Chair for Programming Systems</organization>
+      <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <properties>
+        <picUrl>http://www.gravatar.com/avatar/c44dc4164f1a9a597ec0c24425d1b89d.png</picUrl>
+      </properties>
     </developer>
   </developers>
 
@@ -72,12 +101,14 @@
   -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.sites.url>http://misberner.github.io/maven-sites</maven.sites.url>
     <!-- dependency versions -->
     <automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
     <testng.version>6.8</testng.version>
     <source-plugin.version>2.0.4</source-plugin.version>
     <javadoc-plugin.version>2.9</javadoc-plugin.version>
 	<brics-automaton.version>1.11-8</brics-automaton.version>
+    <scm-publish.version>1.0-beta-2</scm-publish.version>
 
     <!-- Javadoc links -->
 	<brics-automaton.javadoc>http://www.brics.dk/automaton/doc</brics-automaton.javadoc>
@@ -86,13 +117,14 @@
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
 
     <!-- scm-publish settings -->
-    <scm-publish.siteOutputDirectory>${project.build.directory}/site/maven-site</scm-publish.siteOutputDirectory>  
-    <scm-publish.siteDocOuputDirectory>${project.build.directory}/site</scm-publish.siteDocOuputDirectory>  
+    <scm-publish.checkoutDirectory>${project.build.directory}/scmpublish</scm-publish.checkoutDirectory>
+    <site.tmpDeployRoot>/tmp/automatalib-site</site.tmpDeployRoot>
+    <site.tmpDeployDirectory>${site.tmpDeployRoot}/maven-site</site.tmpDeployDirectory>
+    
+    <scm-publish.siteDocOutputDirectory>${site.tmpDeployRoot}</scm-publish.siteDocOutputDirectory>  
 
     <scm-publish.scmBranch>gh-pages</scm-publish.scmBranch>  
     <scm-publish.pubScmUrl>scm:git:git@github.com:misberner/automatalib.git</scm-publish.pubScmUrl>  
-  
-    <scm-publish.siteDocOuputDirectory>${project.build.directory}/site</scm-publish.siteDocOuputDirectory>  
   
   </properties>
 
@@ -122,26 +154,44 @@
 						<arguments>-Psonatype-oss-release</arguments>
 					</configuration>
 				</plugin>
+
+
+<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-descriptor</id>
+            <goals>
+              <goal>attach-descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      </plugins>
+
+
+    </pluginManagement>
+
+<plugins>
 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-publish-plugin</artifactId>
-                    <version>${plugin.scm-publish.version}</version>
+                    <version>${scm-publish.version}</version>
                     <inherited>true</inherited>
                     <configuration>
-                        <checkoutDirectory>${scmPublish.checkoutDirectory}</checkoutDirectory>
+                        <checkoutDirectory>${scm-publish.checkoutDirectory}</checkoutDirectory>
                         <checkinComment>Publishing Site Docs for ${project.artifactId}:${project.version}</checkinComment>
                         <!-- Plugins defaults to "target/staging" and since the distributionManagement section is a pain in the ass for site docs, this is easier -->
-                        <content>${scm-publish.siteDocOuputDirectory}</content>
+                        <content>${scm-publish.siteDocOutputDirectory}</content>
                         <skipDeletedFiles>true</skipDeletedFiles>
                         <pubScmUrl>${scm-publish.pubScmUrl}</pubScmUrl>
                         <scmBranch>${scm-publish.scmBranch}</scmBranch>
                     </configuration>
                 </plugin>
-      </plugins>
-
-    </pluginManagement>
-
-<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
@@ -191,10 +241,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <inherited>false</inherited>
         <executions>
           <execution>
             <id>aggregate</id>
+        <inherited>false</inherited>
             <goals>
               <goal>aggregate</goal>
             </goals>
@@ -205,12 +255,6 @@
         </executions>
       </plugin>
 
-<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>3.2</version>
-        <inherited>false</inherited>
-      </plugin>
 
     </plugins>
   </build>
@@ -221,17 +265,18 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
         <version>2.6</version>
-        <inherited>false</inherited>
         <reportSets>
           <reportSet>
             <reports>
-              <report>dependencies</report>
+              <report>index</report>
+              <report>license</report>
               <report>project-team</report>
               <report>mailing-list</report>
               <report>issue-tracking</report>
-              <report>license</report>
               <report>scm</report>
+              <report>dependencies</report>
               <report>dependency-info</report>
+              <report>modules</report>
             </reports>
           </reportSet>
         </reportSets>
@@ -247,6 +292,14 @@
           </links>
         </configuration>
         <reportSets>
+        <reportSet>
+            <id>non-aggregate</id>
+            <configuration>
+            </configuration>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+          </reportSet>
           <reportSet>
             <id>aggregate</id>
             <inherited>false</inherited>
@@ -413,5 +466,10 @@
 			<name>Nexus Release Repository</name>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
+
+    <site>
+      <id>local</id>
+      <url>file://${site.tmpDeployDirectory}</url>
+   </site>
 	</distributionManagement>
 </project>

@@ -15,6 +15,9 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+  <properties>
+    <maven.site.prefix>automata-commons-parent</maven.site.prefix>
+  </properties>
 
 	<dependencies>
 		<dependency>

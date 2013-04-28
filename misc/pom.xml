@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>net.automatalib</groupId>
-  <artifactId>automata-misc</artifactId>
+  <artifactId>automata-misc-parent</artifactId>
   <packaging>pom</packaging>
 
-  <name>automata-misc</name>
+  <name>automata-misc-parent</name>
 
 	<parent>
 		<groupId>net.automatalib</groupId>

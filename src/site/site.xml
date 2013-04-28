@@ -3,6 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd" name="AutomataLib">
   <body>
-    <menu ref="reports" />
+    <menu ref="parent" inherit="top" inheritAsRef="true" />
+    <menu ref="modules" inherit="top" inheritAsRef="true" />
+    <menu ref="reports" inherit="top" inheritAsRef="true" />
   </body>
 </project>

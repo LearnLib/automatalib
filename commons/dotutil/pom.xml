@@ -8,12 +8,17 @@
 
   <name>automata-commons-dotutil</name>
 
+
 	<parent>
 		<groupId>net.automatalib</groupId>
 		<artifactId>automata-commons-parent</artifactId>
 		<version>0.3.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+
+  <properties>
+    <maven.site.prefix>automata-commons-parent</maven.site.prefix>
+  </properties>
 
 	<dependencies>
 		<dependency>
