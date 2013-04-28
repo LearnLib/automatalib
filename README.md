@@ -15,6 +15,7 @@ Maintainers
 
 Resources
 ---------
+* **[Maven Project Site](http://misberner.github.io/automatalib/maven-site/)**
 * **[API Documentation](http://misberner.github.io/automatalib/apidocs/)**
 * [Q&A @ Google Groups](https://groups.google.com/forum/?fromgroups#!forum/automatalib-qa) -- [automatalib-qa@googlegroups.com](mailto:automatalib-qa@googlegroups.com)
 * [Discussion @ Google Groups](https://groups.google.com/forum/?fromgroups#!forum/automatalib-discussion) -- [automatalib-discussion@googlegroups.com](mailto:automatalib-discussion@googlegroups.com) 
