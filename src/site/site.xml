@@ -6,5 +6,8 @@
     <menu ref="parent" inherit="top" inheritAsRef="true" />
     <menu ref="modules" inherit="top" inheritAsRef="true" />
     <menu ref="reports" inherit="top" inheritAsRef="true" />
+    <menu name="Links">
+      <item name="GitHub Page" href="http://www.github.com/misberner/automatalib" />
+    </menu>
   </body>
 </project>
