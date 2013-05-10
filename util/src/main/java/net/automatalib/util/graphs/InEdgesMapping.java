@@ -22,7 +22,7 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.BidirectionalGraph;
 
 
-public class InEdgesMapping<N, E> implements Mapping<N, Collection<E>> {
+final class InEdgesMapping<N, E> implements Mapping<N, Collection<E>> {
 	
 	private final BidirectionalGraph<N, E> graph;
 	

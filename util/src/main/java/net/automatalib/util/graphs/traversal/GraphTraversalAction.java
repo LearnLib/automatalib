@@ -17,59 +17,24 @@
 package net.automatalib.util.graphs.traversal;
 
 /**
- * An action to perform during a graph traversal.
+ * The type of a {@link GraphTraversalAction} to be performed.
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
- * @param <D> user data class
  */
-public final class GraphTraversalAction<D> {
-	
+public enum GraphTraversalAction {
+
+	IGNORE,
 	/**
-	 * The type of a {@link GraphTraversalAction} to be performed.
-	 * 
-	 * @author Malte Isberner <malte.isberner@gmail.com>
-	 *
+	 * Explore the respective node (in this case, the user data is regarded).
 	 */
-	public static enum Type {
-		/**
-		 * Ignore the respective node or edge.
-		 */
-		IGNORE,
-		/**
-		 * Explore the respective node (in this case, the user data is regarded).
-		 */
-		EXPLORE,
-		/**
-		 * Abort the exploration of the current node.
-		 */
-		ABORT_NODE,
-		/**
-		 * Abort the traversal of the whole graph.
-		 */
-		ABORT_TRAVERSAL
-	}
-	
-	
-	public final Type type;
-	public final D data;
-	
+	EXPLORE,
 	/**
-	 * Constructor. Initializes the action with the specified type and
-	 * <tt>null</tt> user data.
-	 * @param type the action type
+	 * Abort the exploration of the current node.
 	 */
-	public GraphTraversalAction(Type type) {
-		this(type, null);
-	}
-	
+	ABORT_NODE,
 	/**
-	 * Constructor. Initializes the action with the specified type and user data.
-	 * @param type the action type
-	 * @param data the user data
+	 * Abort the traversal of the whole graph.
 	 */
-	public GraphTraversalAction(Type type, D data) {
-		this.type = type;
-		this.data = data;
-	}
+	ABORT_TRAVERSAL
 }

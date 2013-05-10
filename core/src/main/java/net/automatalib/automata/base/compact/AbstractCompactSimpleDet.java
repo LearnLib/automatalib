@@ -268,12 +268,12 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	}
 
 	@Override
-	public SP getNodeProperties(Integer node) {
+	public SP getNodeProperty(Integer node) {
 		return getStateProperty(node);
 	}
 
 	@Override
-	public Pair<I, Void> getEdgeProperties(Pair<I, Integer> edge) {
+	public Pair<I, Void> getEdgeProperty(Pair<I, Integer> edge) {
 		return Pair.make(edge.getFirst(), null);
 	}
 

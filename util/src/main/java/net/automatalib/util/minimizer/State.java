@@ -31,7 +31,7 @@ import net.automatalib.commons.smartcollections.ElementReference;
  * operates on, and also keeps various other information that is relevant
  * for the process.
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> original state class.
  * @param <L> original transition label class.

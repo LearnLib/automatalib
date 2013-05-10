@@ -25,7 +25,7 @@ import java.util.Collection;
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
- * @param <N> node class.
+ * @param <N> node class
  * @param <E> edge class
  */
 public interface BidirectionalGraph<N, E> extends Graph<N, E> {

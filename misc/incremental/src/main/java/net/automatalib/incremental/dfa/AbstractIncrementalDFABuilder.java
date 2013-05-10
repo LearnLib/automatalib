@@ -114,14 +114,14 @@ public abstract class AbstractIncrementalDFABuilder<I> extends
 	}
 	
 	@Override
-	public Acceptance getNodeProperties(State node) {
+	public Acceptance getNodeProperty(State node) {
 		if(sink != null && node == sink)
 			return Acceptance.FALSE;
 		return node.getAcceptance();
 	}
 	
 	@Override
-	public I getEdgeProperties(EdgeRecord edge) {
+	public I getEdgeProperty(EdgeRecord edge) {
 		return inputAlphabet.getSymbol(edge.transIdx);
 	}
 	

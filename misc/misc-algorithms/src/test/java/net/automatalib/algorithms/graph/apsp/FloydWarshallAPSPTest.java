@@ -21,7 +21,7 @@ import java.util.List;
 
 import net.automatalib.algorithms.graph.GraphAlgorithms;
 import net.automatalib.graphs.base.compact.CompactEdge;
-import net.automatalib.graphs.base.compact.CompactGraph;
+import net.automatalib.graphs.base.compact.CompactSimpleGraph;
 import net.automatalib.graphs.concepts.EdgeWeights;
 import net.automatalib.util.graphs.concepts.PropertyEdgeWeights;
 
@@ -32,13 +32,13 @@ import org.testng.annotations.Test;
 @Test
 public class FloydWarshallAPSPTest {
 	
-	private CompactGraph<Void,Float> graph;
+	private CompactSimpleGraph<Float> graph;
 	private EdgeWeights<CompactEdge<Float>> weights;
 	Integer n0, n1, n2, n3, n4;
 
 	@BeforeClass
 	public void setUp() {
-		graph = new CompactGraph<>();
+		graph = new CompactSimpleGraph<>();
 		
 		n0 = graph.addNode();
 		n1 = graph.addNode();

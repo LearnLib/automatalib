@@ -31,12 +31,12 @@ public class UniversalAutomatonAsGraph<S, I, T, SP, TP,A extends UniversalAutoma
 	}
 	
 	@Override
-	public SP getNodeProperties(S node) {
+	public SP getNodeProperty(S node) {
 		return automaton.getStateProperty(node);
 	}
 
 	@Override
-	public Pair<I, TP> getEdgeProperties(Pair<I, T> edge) {
+	public Pair<I, TP> getEdgeProperty(Pair<I, T> edge) {
 		return Pair.make(edge.getFirst(),
 				automaton.getTransitionProperty(edge.getSecond()));
 	}

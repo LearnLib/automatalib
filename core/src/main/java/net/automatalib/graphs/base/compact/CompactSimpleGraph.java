@@ -14,26 +14,25 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.util.ts.traversal;
+package net.automatalib.graphs.base.compact;
 
-public final class TraversalAction<D> {
-	public static enum Type {
-		EXPLORE,
-		IGNORE,
-		ABORT_INPUT,
-		ABORT_STATE,
-		ABORT_TRAVERSAL
-	}
+
+
+public class CompactSimpleGraph<EP> extends
+		AbstractCompactSimpleGraph<CompactEdge<EP>,EP> {
+
 	
-	public final Type type;
-	public final D data;
-	
-	public TraversalAction(Type type) {
-		this(type, null);
+	public CompactSimpleGraph() {
+		super();
 	}
-	
-	public TraversalAction(Type type, D data) {
-		this.type = type;
-		this.data = data;
+
+	public CompactSimpleGraph(int initialCapacity) {
+		super(initialCapacity);
 	}
+
+	@Override
+	protected CompactEdge<EP> createEdge(int source, int target, EP property) {
+		return new CompactEdge<>(target, property);
+	}
+
 }

@@ -18,11 +18,7 @@ package net.automatalib.commons.util.array;
 
 
 /**
- * Class that provides a resizable {@link Object} array storage.
- * 
- * Unlike {@link ResizingArrayStorage}, the array provided by this class
- * is always of type <code>Object[]</code>. This results in a higher efficiency,
- * since there is no need for reflection when creating new arrays.
+ * Class that provides a resizable <tt>int</tt> array storage.
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
  *

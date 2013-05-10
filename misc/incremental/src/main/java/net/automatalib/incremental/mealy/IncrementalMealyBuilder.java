@@ -68,6 +68,10 @@ public class IncrementalMealyBuilder<I, O> extends
 	private final int alphabetSize;
 	private final State init;
 
+	/**
+	 * Constructor.
+	 * @param inputAlphabet the input alphabet to use
+	 */
 	public IncrementalMealyBuilder(Alphabet<I> inputAlphabet) {
 		this.inputAlphabet = inputAlphabet;
 		this.alphabetSize = inputAlphabet.size();
@@ -76,11 +80,21 @@ public class IncrementalMealyBuilder<I, O> extends
 		register.put(null, init);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton#size()
+	 */
 	@Override
 	public int size() {
 		return register.size();
 	}
 
+	/**
+	 * Retrieves the (internal) state reached by the given input word,
+	 * or <tt>null</tt> if no information about the input word is present.
+	 * @param word the input word
+	 * @return the corresponding state
+	 */
 	private State getState(Word<I> word) {
 		State s = init;
 
@@ -93,11 +107,26 @@ public class IncrementalMealyBuilder<I, O> extends
 		return s;
 	}
 
+	/**
+	 * Checks whether there exists secured information about the output
+	 * for the given word.
+	 * @param word the input word
+	 * @return a boolean indicating whether information about the output for the
+	 * given input word exists.
+	 */
 	public boolean isComplete(Word<I> word) {
 		State s = getState(word);
 		return (s != null);
 	}
 	
+	/**
+	 * Retrieves the output word for the given input word. If no definitive information
+	 * for the input word exists, the output for the longest known prefix will be returned.
+	 * @param word the input word
+	 * @param output a {@link WordBuilder} for constructing the output word
+	 * @return <tt>true</tt> if the information contained was complete (in this case,
+	 * <code>word.length() == output.size()</code> will hold), <tt>false</tt> otherwise. 
+	 */
 	@SuppressWarnings("unchecked")
 	public boolean lookup(Word<I> word, WordBuilder<O> output) {
 		State curr = init;
@@ -114,6 +143,12 @@ public class IncrementalMealyBuilder<I, O> extends
 	}
 	
 
+	/**
+	 * Incorporates a pair of input/output words into the stored information.
+	 * @param word the input word
+	 * @param outputWord the corresponding output word
+	 * @throws ConflictException if this information conflicts with information already stored
+	 */
 	public void insert(Word<I> word, Word<O> outputWord) {
 		int len = word.length();
 
@@ -123,7 +158,11 @@ public class IncrementalMealyBuilder<I, O> extends
 		int confIndex = -1;
 
 		int prefixLen = 0;
+		// Find the internal state in the automaton that can be reached by a
+		// maximal prefix of the word (i.e., a path of secured information)
 		for (I sym : word) {
+			// During this, store the *first* confluence state (i.e., state with
+			// multiple incoming edges).
 			if (conf == null && curr.isConfluence()) {
 				conf = curr;
 				confIndex = prefixLen;
@@ -133,6 +172,8 @@ public class IncrementalMealyBuilder<I, O> extends
 			State succ = curr.getSuccessor(idx);
 			if (succ == null)
 				break;
+			// If a transition exists for the input symbol, it also has an output symbol.
+			// Check if this matches the provided one, otherwise there is a conflict
 			O outSym = outputWord.getSymbol(prefixLen);
 			if(!Objects.equals(outSym, curr.getOutput(idx)))
 				throw new ConflictException("Incompatible output symbols: " + outSym + " vs " + curr.getOutput(idx));
@@ -140,25 +181,40 @@ public class IncrementalMealyBuilder<I, O> extends
 			prefixLen++;
 		}
 
+		// The information was already present - we do not need to continue
 		if (prefixLen == len)
 			return;
 
+
+		// We then create a suffix path, i.e., a linear sequence of states corresponding to
+		// the suffix (more precisely: the suffix minus the first symbol, since this is the
+		// transition which is used for gluing the suffix path to the existing automaton).
 		Word<I> suffix = word.subWord(prefixLen);
 		Word<O> suffixOut = outputWord.subWord(prefixLen);
-		
-	
 
 		State last;
 
 		State suffixState;
 		State endpoint = null;
-		if(conf != null)
+		if(conf != null) {
+			// If we encountered a confluence state on a way, the whole path including
+			// the confluence state will have to be duplicated to separate it from
+			// other prefixes
 			suffixState = createSuffix(suffix.subWord(1), suffixOut.subWord(1));
+		}
 		else {
+			// This is a dangerous corner case: If NO confluence state was found, it can happen
+			// that the last state of the suffix path is merged with the end of the prefix path
+			// (i.e., when both have no outgoing transitions - note that this is ALWAYS the case
+			// upon the first insert() call). Because there is no confluence we resolve by cloning
+			// part of the prefix path, we might accidentally introduce a cycle here.
+			// Storing the endpoint of the suffix path allows avoiding this later on.
 			Pair<State,State> suffixRes = createSuffix2(suffix.subWord(1), suffixOut.subWord(1));
 			suffixState = suffixRes.getFirst();
 			endpoint = suffixRes.getSecond();
 		}
+		
+		// Here we create the "gluing" transition
 		I sym = suffix.getSymbol(0);
 		int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
 		O suffTransOut = suffixOut.getSymbol(0);
@@ -166,6 +222,10 @@ public class IncrementalMealyBuilder<I, O> extends
 
 		int currentIndex;
 		if (conf != null) {
+			// If there was a confluence state, we have to clone all nodes on
+			// the prefix path up to this state, in order to separate it from other
+			// prefixes reaching the confluence state (we do not now anything about them
+			// plus the suffix).
 			last = clone(curr, suffTransIdx, suffixState, suffTransOut);
 
 			for (int i = prefixLen - 1; i >= confIndex; i--) {
@@ -177,17 +237,23 @@ public class IncrementalMealyBuilder<I, O> extends
 
 			currentIndex = confIndex;
 		} else {
+			// Otherwise, we have to check for the above-mentioned corner case, and possibly
+			// also duplicate the last state on the prefix path
 			if(endpoint == curr)
 				last = clone(curr, suffTransIdx, suffixState, suffTransOut);
 			else if(curr != init)
 				last = updateSignature(curr, suffTransIdx, suffixState, suffTransOut);
 			else {
+				// The last state on the prefix path is the initial state. After updating
+				// its signature, we are done since we cannot backtrack any further.
 				updateInitSignature(suffTransIdx, suffixState, suffTransOut);
 				return;
 			}
 			currentIndex = prefixLen;
 		}
 		
+		// Finally, we have to refresh all the signatures, iterating backwards
+		// until the updating becomes stable.
 		while (--currentIndex > 0) {
 			State state = getState(word.prefix(currentIndex));
 			sym = word.getSymbol(currentIndex);
@@ -201,10 +267,15 @@ public class IncrementalMealyBuilder<I, O> extends
 		sym = word.getSymbol(0);
 		int idx = inputAlphabet.getSymbolIndex(sym);
 		updateInitSignature(idx, last);
-		
 	}
 
 	
+	/**
+	 * Update the signature of the initial state. This requires special handling, as the
+	 * initial state is not stored in the register (since it can never legally act as a predecessor).
+	 * @param idx the transition index being changed
+	 * @param succ the new successor state
+	 */
 	private void updateInitSignature(int idx, State succ) {
 		StateSignature sig = init.getSignature();
 		State oldSucc = sig.successors[idx];
@@ -216,6 +287,15 @@ public class IncrementalMealyBuilder<I, O> extends
 		succ.increaseIncoming();
 	}
 	
+	/**
+	 * Update the signature of a state, changing only the successor state of a single transition
+	 * index.
+	 * @param state the state which's signature to update
+	 * @param idx the transition index to modify
+	 * @param succ the new successor state
+	 * @return the resulting state, which can either be the same as the input state (if the new
+	 * signature is unique), or the result of merging with another state.
+	 */
 	private State updateSignature(State state, int idx, State succ) {
 		StateSignature sig = state.getSignature();
 		if (sig.successors[idx] == succ)
@@ -230,6 +310,13 @@ public class IncrementalMealyBuilder<I, O> extends
 		return replaceOrRegister(state);
 	}
 	
+	/**
+	 * Updates the signature of the initial state, changing both the successor state
+	 * and the output symbol.
+	 * @param idx the transition index to change
+	 * @param succ the new successor state
+	 * @param out the output symbol
+	 */
 	private void updateInitSignature(int idx, State succ, O out) {
 		StateSignature sig = init.getSignature();
 		State oldSucc = sig.successors[idx];
@@ -242,6 +329,16 @@ public class IncrementalMealyBuilder<I, O> extends
 		succ.increaseIncoming();
 	}
 	
+	/**
+	 * Updates the signature of a state, changing both the successor state and the output
+	 * symbol for a single transition index.
+	 * @param state the state which's signature to change
+	 * @param idx the transition index to change
+	 * @param succ the new successor state
+	 * @param out the output symbol
+	 * @return the resulting state, which can either be the same as the input state (if the new
+	 * signature is unique), or the result of merging with another state.
+	 */
 	private State updateSignature(State state, int idx, State succ, O out) {
 		StateSignature sig = state.getSignature();
 		if (sig.successors[idx] == succ && Objects.equals(out, sig.outputs[idx]))
@@ -377,7 +474,7 @@ public class IncrementalMealyBuilder<I, O> extends
 	 * @see net.automatalib.graphs.UniversalGraph#getNodeProperties(java.lang.Object)
 	 */
 	@Override
-	public Void getNodeProperties(State node) {
+	public Void getNodeProperty(State node) {
 		return null;
 	}
 
@@ -387,7 +484,7 @@ public class IncrementalMealyBuilder<I, O> extends
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public Pair<I, O> getEdgeProperties(TransitionRecord edge) {
+	public Pair<I, O> getEdgeProperty(TransitionRecord edge) {
 		I input = inputAlphabet.getSymbol(edge.transIdx);
 		O out = (O)edge.source.getOutput(edge.transIdx);
 		return Pair.make(input, out);

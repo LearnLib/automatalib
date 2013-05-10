@@ -22,7 +22,7 @@ import java.util.Map;
 
 import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.graphs.base.compact.CompactEdge;
-import net.automatalib.graphs.base.compact.CompactGraph;
+import net.automatalib.graphs.base.compact.CompactSimpleGraph;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.util.graphs.traversal.BaseDFSVisitor;
@@ -83,11 +83,6 @@ public class DFSExample {
 			edgeTypes.put(edge, EdgeType.FORWARD);
 		}
 		
-		public void clear() {
-			dfsNumbers.clear();
-			edgeTypes.clear();
-		}
-		
 		public Map<N,Integer> getDfsNumbers() {
 			return dfsNumbers;
 		}
@@ -139,7 +134,7 @@ public class DFSExample {
 
 	
 	public static void main(String[] args) throws Exception {
-		CompactGraph<Void,Void> graph = new CompactGraph<>();
+		CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
 		
 		int n0 = graph.addIntNode(), n1 = graph.addIntNode(), n2 = graph.addIntNode(), n3 = graph.addIntNode(), n4 = graph.addIntNode();
 		

@@ -16,6 +16,8 @@
  */
 package net.automatalib.util.graphs.traversal;
 
+import net.automatalib.commons.util.Holder;
+
 /**
  * Visitor interface for graph traversals.
  * <p>
@@ -33,7 +35,7 @@ public interface GraphTraversalVisitor<N, E, D> {
 	 * @param initialNode the node that is processed
 	 * @return the action to perform
 	 */
-	public GraphTraversalAction<D> processInitial(N initialNode);
+	public GraphTraversalAction processInitial(N initialNode, Holder<D> outData);
 	
 	/**
 	 * Called when the exploration of a node is started.
@@ -48,7 +50,7 @@ public interface GraphTraversalVisitor<N, E, D> {
 	 * @param node the node which's exploration is being finished
 	 * @param data the user data associated with this node
 	 */
-	public void finishExploration(N node, D data);
+	public void finishExploration(N node, D inData);
 	
 	/**
 	 * Called when an edge is processed.
@@ -57,7 +59,7 @@ public interface GraphTraversalVisitor<N, E, D> {
 	 * @param edge the edge that is being processed
 	 * @return the action to perform
 	 */
-	public GraphTraversalAction<D> processEdge(N srcNode, D srcData, E edge, N tgtNode);
+	public GraphTraversalAction processEdge(N srcNode, D srcData, E edge, N tgtNode, Holder<D> outData);
 	
 	public void backtrackEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData);
 }

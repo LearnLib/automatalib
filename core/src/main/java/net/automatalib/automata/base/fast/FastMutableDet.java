@@ -217,7 +217,7 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties(java.lang.Object)
 	 */
 	@Override
-	public SP getNodeProperties(S node) {
+	public SP getNodeProperty(S node) {
 		return AbstractAutomatonGraph.getNodeProperties(this, node);
 	}
 	
@@ -226,7 +226,7 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getEdgeProperties(java.lang.Object)
 	 */
 	@Override
-	public Pair<I,TP> getEdgeProperties(Pair<I,T> edge) {
+	public Pair<I,TP> getEdgeProperty(Pair<I,T> edge) {
 		return AbstractAutomatonGraph.getEdgeProperties(this, edge);
 	}
 	

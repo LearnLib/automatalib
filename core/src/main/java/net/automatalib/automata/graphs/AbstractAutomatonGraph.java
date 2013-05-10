@@ -116,13 +116,13 @@ public abstract class AbstractAutomatonGraph<S,I,T,SP,TP>
 
 
 	@Override
-	public SP getNodeProperties(S node) {
+	public SP getNodeProperty(S node) {
 		return getNodeProperties(this, node);
 	}
 
 
 	@Override
-	public Pair<I, TP> getEdgeProperties(Pair<I, T> edge) {
+	public Pair<I, TP> getEdgeProperty(Pair<I, T> edge) {
 		return getEdgeProperties(this, edge);
 	}
 

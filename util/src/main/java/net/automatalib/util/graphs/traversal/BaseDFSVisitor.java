@@ -44,6 +44,25 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
 	public void explore(N node, D data) {
 	}
 	
+	/**
+	 * Most general edge handler. In their default implementations, the following methods
+	 * resort to calling this method:
+	 * <ul>
+	 * <li>{@link #treeEdge(Object, Object, Object, Object)}
+	 * <li>{@link #nontreeEdge(Object, Object, Object, Object, Object)}
+	 * </ul>
+	 * Provided that the latter is not overwritten, the following methods
+	 * resort to this method indirectly in their default implementation:
+	 * <ul>
+	 * <li>{@link #grayTarget(Object, Object, Object, Object, Object)}
+	 * <li>{@link #blackTarget(Object, Object, Object, Object, Object)}
+	 * </ul>
+	 * 
+	 * @param srcNode the source node
+	 * @param srcData the data associated with the source node
+	 * @param edge the edge that is being processed
+	 * @param tgtNode the target node of this edge
+	 */
 	public void edge(N srcNode, D srcData, E edge, N tgtNode) {
 	}
 	

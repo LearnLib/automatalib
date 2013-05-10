@@ -44,14 +44,21 @@ final class DOTHelper extends DefaultDOTHelper<State, TransitionRecord> {
 		this.initial = initial;
 	}
 
-	
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#initialNodes()
+	 */
 	@Override
 	protected Collection<? extends State> initialNodes() {
 		return Collections.singleton(initial);
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
+	 */
 	@Override
 	public boolean getNodeProperties(State node, Map<String, String> properties) {
 		if(!super.getNodeProperties(node, properties))
@@ -62,6 +69,10 @@ final class DOTHelper extends DefaultDOTHelper<State, TransitionRecord> {
 		return true;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
+	 */
 	@Override
 	public boolean getEdgeProperties(TransitionRecord edge,
 			Map<String, String> properties) {

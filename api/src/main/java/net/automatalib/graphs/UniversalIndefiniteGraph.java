@@ -31,16 +31,16 @@ import net.automatalib.ts.UniversalTransitionSystem;
  */
 public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<N,E> {
 	/**
-	 * Retrieves the properties of a given node.
+	 * Retrieves the property of a given node.
 	 * @param node the node
-	 * @return the properties of the specified node
+	 * @return the property of the specified node
 	 */
-	public NP getNodeProperties(N node);
+	public NP getNodeProperty(N node);
 	
 	/**
-	 * Retrieves the properties of a given edge.
+	 * Retrieves the property of a given edge.
 	 * @param edge the edge
-	 * @return the properties of the specified edge
+	 * @return the property of the specified edge
 	 */
-	public EP getEdgeProperties(E edge);
+	public EP getEdgeProperty(E edge);
 }

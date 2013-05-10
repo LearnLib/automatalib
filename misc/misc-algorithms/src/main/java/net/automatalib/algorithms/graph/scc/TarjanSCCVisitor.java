@@ -19,9 +19,9 @@ package net.automatalib.algorithms.graph.scc;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
-import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.util.graphs.traversal.GraphTraversalAction;
 import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
 
@@ -38,6 +38,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
 public class TarjanSCCVisitor<N, E> implements
 		GraphTraversalVisitor<N, E, TarjanSCCRecord> {
 	
+	private static final int NODE_FINISHED = -1;
 	
 	private int counter = 0;
 	private final MutableMapping<N,TarjanSCCRecord> records;
@@ -56,11 +57,12 @@ public class TarjanSCCVisitor<N, E> implements
 	
 	/*
 	 * (non-Javadoc)
-	 * @see net.automatalib.util.graphs.traversal.GraphTraversalVisitor#processInitial(java.lang.Object)
+	 * @see net.automatalib.util.graphs.traversal.GraphTraversalVisitor#processInitial(java.lang.Object, net.automatalib.commons.util.Holder)
 	 */
 	@Override
-	public GraphTraversalAction<TarjanSCCRecord> processInitial(N initialNode) {
-		return explore();
+	public GraphTraversalAction processInitial(N initialNode, Holder<TarjanSCCRecord> outData) {
+		outData.value = createRecord();
+		return GraphTraversalAction.EXPLORE;
 	}
 	
 	/*
@@ -84,21 +86,29 @@ public class TarjanSCCVisitor<N, E> implements
 			listener.foundSCC(currentScc);
 			currentScc.clear();
 		}
+		data.lowLink = NODE_FINISHED;
 	}
 	
 	/*
 	 * (non-Javadoc)
-	 * @see net.automatalib.util.graphs.traversal.GraphTraversalVisitor#processEdge(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
+	 * @see net.automatalib.util.graphs.traversal.GraphTraversalVisitor#processEdge(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, net.automatalib.commons.util.Holder)
 	 */
 	@Override
-	public GraphTraversalAction<TarjanSCCRecord> processEdge(N srcNode,
-			TarjanSCCRecord srcData, E edge, N tgtNode) {
+	public GraphTraversalAction processEdge(N srcNode,
+			TarjanSCCRecord srcData, E edge, N tgtNode, Holder<TarjanSCCRecord> dataHolder) {
 		TarjanSCCRecord rec = records.get(tgtNode);
-		if(rec == null)
-			return explore();
-		if(rec.lowLink != -1)
-			srcData.lowLink = Math.min(srcData.lowLink, rec.number);
-		return GraphTraversal.ignore();
+		if(rec == null) {
+			rec = createRecord();
+			dataHolder.value = rec;
+			return GraphTraversalAction.EXPLORE;
+		}
+		
+		if(rec.lowLink != NODE_FINISHED) {
+			int tgtNum = rec.number;
+			if(tgtNum < srcData.lowLink)
+				srcData.lowLink = tgtNum;
+		}
+		return GraphTraversalAction.IGNORE;
 	}
 	
 	/*
@@ -117,8 +127,8 @@ public class TarjanSCCVisitor<N, E> implements
 		return (records.get(node) != null);
 	}
 
-	private GraphTraversalAction<TarjanSCCRecord> explore() {
-		return GraphTraversal.explore(new TarjanSCCRecord(counter++));
+	private TarjanSCCRecord createRecord() {
+		return new TarjanSCCRecord(counter++);
 	}
 	
 }

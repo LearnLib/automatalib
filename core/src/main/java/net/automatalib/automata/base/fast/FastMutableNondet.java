@@ -119,7 +119,7 @@ public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, S
 
 
 	@Override
-	public void setTransitions(S state, I input, Collection<T> transitions) {
+	public void setTransitions(S state, I input, Collection<? extends T> transitions) {
 		int inputIdx = inputAlphabet.getSymbolIndex(input);
 		state.setTransitions(inputIdx, transitions);
 	}
@@ -223,12 +223,12 @@ public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, S
 	}
 
 	@Override
-	public SP getNodeProperties(S node) {
+	public SP getNodeProperty(S node) {
 		return AbstractAutomatonGraph.getNodeProperties(this, node);
 	}
 
 	@Override
-	public Pair<I, TP> getEdgeProperties(Pair<I, T> edge) {
+	public Pair<I, TP> getEdgeProperty(Pair<I, T> edge) {
 		return AbstractAutomatonGraph.getEdgeProperties(this, edge);
 	}
 

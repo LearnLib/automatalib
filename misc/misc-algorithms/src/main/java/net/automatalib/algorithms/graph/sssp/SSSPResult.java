@@ -56,4 +56,13 @@ public interface SSSPResult<N, E> {
 	 * there exists no such path.
 	 */
 	public List<E> getShortestPath(N target);
+	
+	/**
+	 * Retrieves the incoming edge via which the given node is reached on the shortest path.
+	 * If the node is not reachable or it is the initial node, <tt>null</tt> is returned.
+	 * 
+	 * @param target the target node
+	 * @return the reaching edge on the shortest path, or <tt>null</tt>.
+	 */
+	public E getShortestPathEdge(N target);
 }

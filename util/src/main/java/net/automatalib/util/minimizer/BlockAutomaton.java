@@ -23,7 +23,7 @@ import java.util.List;
  * A "block automaton", i.e. an automaton-style representation of the
  * minimization result in which each block forms a state.
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> state class.
  * @param <L> transition label class.

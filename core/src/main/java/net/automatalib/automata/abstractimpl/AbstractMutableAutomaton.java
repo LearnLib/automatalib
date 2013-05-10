@@ -16,6 +16,7 @@
  */
 package net.automatalib.automata.abstractimpl;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -80,16 +81,24 @@ public abstract class AbstractMutableAutomaton<S, I, T,SP,TP> extends AbstractAu
 		$this.setTransitions(state, input, transitions);
 	}
 	
+	public static <S,I,T,SP,TP> void addTransitions(MutableAutomaton<S,I,T,SP,TP> $this, S state, I input, Collection<? extends T> transitions) {
+		Set<T> oldTransitions = new HashSet<T>($this.getTransitions(state, input));
+		if(!oldTransitions.addAll(transitions))
+			return;
+		$this.setTransitions(state, input, transitions);
+	}
+	
 	/**
 	 * Provides a realization of {@link MutableAutomaton#addTransition(Object, Object, Object, Object)}
 	 * using {@link MutableAutomaton#createTransition(Object, Object)} and
 	 * {@link MutableAutomaton#addTransition(Object, Object, Object)}.
 	 * @see MutableAutomaton#addTransition(Object, Object, Object, Object)
 	 */
-	public static <S,I,T,SP,TP> void addTransition(MutableAutomaton<S, I, T, SP, TP> $this,
+	public static <S,I,T,SP,TP> T addTransition(MutableAutomaton<S, I, T, SP, TP> $this,
 			S state, I input, S succ, TP property) {
 		T trans = $this.createTransition(succ, property);
 		$this.addTransition(state, input, trans);
+		return trans;
 	}
 	
 	/**
@@ -141,14 +150,23 @@ public abstract class AbstractMutableAutomaton<S, I, T,SP,TP> extends AbstractAu
 	public void addTransition(S state, I input, T transition) {
 		addTransition(this, state, input, transition);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.automata.MutableAutomaton#addTransitions(java.lang.Object, java.lang.Object, java.util.Collection)
+	 */
+	@Override
+	public void addTransitions(S state, I input, Collection<? extends T> transitions) {
+		addTransitions(this, state, input, transitions);
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see net.automatalib.automata.MutableAutomaton#addTransition(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void addTransition(S state, I input, S successor, TP properties) {
-		addTransition(this, state, input, successor, properties);
+	public T addTransition(S state, I input, S successor, TP properties) {
+		return addTransition(this, state, input, successor, properties);
 	}
 	
 	/*

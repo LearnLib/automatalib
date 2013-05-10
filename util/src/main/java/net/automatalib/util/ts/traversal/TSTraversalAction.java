@@ -14,16 +14,12 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.graphs.base.compact;
+package net.automatalib.util.ts.traversal;
 
-
-
-public class CompactGraph<NP, EP> extends
-		AbstractCompactGraph<CompactEdge<EP>,NP, EP> {
-
-	@Override
-	protected CompactEdge<EP> createEdge(int source, int target, EP property) {
-		return new CompactEdge<>(target, property);
-	}
-
+public enum TSTraversalAction {
+	EXPLORE,
+	IGNORE,
+	ABORT_INPUT,
+	ABORT_STATE,
+	ABORT_TRAVERSAL
 }

@@ -24,16 +24,16 @@ import java.util.List;
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.graphs.BidirectionalGraph;
 
-public class CompactBidiGraph<NP, EP> extends
-		AbstractCompactGraph<CompactBidiEdge<EP>, NP, EP> implements BidirectionalGraph<Integer, CompactBidiEdge<EP>> {
+public class CompactSimpleBidiGraph<EP> extends
+		AbstractCompactSimpleGraph<CompactBidiEdge<EP>, EP> implements BidirectionalGraph<Integer, CompactBidiEdge<EP>> {
 	
 	private final ResizingObjectArray inEdges;
 
-	public CompactBidiGraph() {
+	public CompactSimpleBidiGraph() {
 		this.inEdges = new ResizingObjectArray();
 	}
 
-	public CompactBidiGraph(int initialCapacity) {
+	public CompactSimpleBidiGraph(int initialCapacity) {
 		super(initialCapacity);
 		this.inEdges = new ResizingObjectArray(initialCapacity);
 	}
@@ -71,7 +71,7 @@ public class CompactBidiGraph<NP, EP> extends
 	 * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#addIntNode(java.lang.Object)
 	 */
 	@Override
-	public int addIntNode(NP properties) {
+	public int addIntNode(Void properties) {
 		inEdges.ensureCapacity(size + 1);
 		int node = super.addIntNode(properties);
 		inEdges.array[node] = new ArrayList<CompactBidiEdge<EP>>();
@@ -89,8 +89,7 @@ public class CompactBidiGraph<NP, EP> extends
 		inEdges.add(edge);
 		return edge;
 	}
-	
-	
+
 
 
 }

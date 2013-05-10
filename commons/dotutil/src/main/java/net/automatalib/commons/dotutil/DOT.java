@@ -59,6 +59,8 @@ public class DOT {
 	private static final int MAX_WIDTH = 800;
 	private static final int MAX_HEIGHT = 600;
 	
+	
+	
 	/**
 	 * Invokes the GraphVIZ DOT utility for rendering graphs.
 	 * @param r the reader from which the GraphVIZ description is obtained.
@@ -301,6 +303,7 @@ public class DOT {
 	 * @return the writer
 	 */
 	public static Writer createDotWriter(final boolean modal) {
+		// TODO: Change this to an OutputStreamWriter and write directly to the pipe
 		return new StringWriter() {
 			@Override
 			public void close() throws IOException {

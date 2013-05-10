@@ -17,7 +17,7 @@
 package net.automatalib.graphs.base.compact;
 
 /**
- * An edge in a {@link CompactGraph}.
+ * An edge in a {@link CompactSimpleGraph}.
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
  *

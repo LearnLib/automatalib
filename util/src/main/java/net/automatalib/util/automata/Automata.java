@@ -23,17 +23,12 @@ import java.util.List;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.DeterministicAutomaton;
-import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.commons.util.mappings.Mappings;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.ts.TransitionSystem;
-import net.automatalib.ts.UniversalTransitionSystem;
 import net.automatalib.util.automata.asgraph.AutomatonAsGraph;
 import net.automatalib.util.automata.asgraph.UniversalAutomatonAsGraph;
 import net.automatalib.util.automata.equivalence.CharacterizingSets;
@@ -42,68 +37,9 @@ import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
-import net.automatalib.util.ts.TS;
-import net.automatalib.util.ts.traversal.TSTraversal;
-import net.automatalib.util.ts.traversal.TSTraversalVisitor;
 import net.automatalib.words.Word;
 
 public class Automata {
-
-	public static <S1,I1,T1,S2,I2,T2,SP2,TP2, A extends MutableAutomaton<S2, I2, T2, SP2, TP2>>
-	A copy(
-			TransitionSystem<S1,I1,T1> in,
-			Collection<? extends I1> inputs, A out,
-			Mapping<? super I1, ? extends I2> inputsMapping,
-			Mapping<? super S1, ? extends SP2> statePropMapping,
-			Mapping<? super T1, ? extends TP2> transPropMapping) {
-		return doCopy(in, inputs, out, inputsMapping, statePropMapping,
-				transPropMapping);
-	}
-	
-	public static <S1,I1,T1,SP1,TP1,S2,I2,T2,SP2,TP2,A extends MutableAutomaton<S2,I2,T2,SP2,TP2>>
-	A copyUniversal(UniversalTransitionSystem<S1,I1,T1,SP1,TP1> in,
-			Collection<? extends I1> inputs, A out,
-			Mapping<? super I1,? extends I2> inputsMapping,
-			Mapping<? super SP1, ? extends SP2> spMapping,
-			Mapping<? super TP1, ? extends TP2> tpMapping) {
-		Mapping<S1,? extends SP2> effSpMapping = Mappings.compose(TS.stateProperties(in), spMapping);
-		Mapping<T1,? extends TP2> effTpMapping = Mappings.compose(TS.transitionProperties(in), tpMapping);
-		return doCopy(in, inputs, out, inputsMapping, effSpMapping, effTpMapping);
-	}
-	
-	public static <S1,I1,T1,SP,TP,S2,I2,T2,A extends MutableAutomaton<S2,I2,T2,? super SP,? super TP>>
-	A copyUniversal(UniversalTransitionSystem<S1,I1,T1,? extends SP,? extends TP> in,
-			Collection<? extends I1> inputs,
-			A out,
-			Mapping<? super I1, ? extends I2> inputsMapping) {
-		Mapping<S1,? extends SP> spMapping = TS.stateProperties(in);
-		Mapping<T1,? extends TP> tpMapping = TS.transitionProperties(in);
-		return doCopy(in, inputs, out, inputsMapping, spMapping, tpMapping);
-	}
-	
-	
-	public static <S1,S2,I,T1,T2,SP,TP,A extends MutableAutomaton<S2, I, T2, SP, TP>>
-	A copy(
-			UniversalTransitionSystem<S1, I, T1, ? extends SP, ? extends TP> in,
-			Collection<? extends I> inputs,
-			A out) {
-		return doCopy(in, inputs, out, Mappings.<I>identity(), TS.stateProperties(in), TS.transitionProperties(in));
-	}
-
-
-
-	private static <S1, I1, T1, S2, I2, T2, SP2, TP2, A extends MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2>>
-	A doCopy(
-			TransitionSystem<S1, I1, T1> in,
-			Collection<? extends I1> inputs, A out,
-			Mapping<? super I1, ? extends I2> inputsMapping,
-			Mapping<? super S1, ? extends SP2> statePropMapping,
-			Mapping<? super T1, ? extends TP2> transPropMapping) {
-		TSTraversalVisitor<S1, I1, T1, S2> vis = new CopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2>(
-				in, out, inputsMapping, statePropMapping, transPropMapping);
-		TSTraversal.breadthFirst(in, inputs, vis);
-		return out;
-	}
 
 	public static <S, I, T>
 	Graph<S, Pair<I, T>> asGraph(

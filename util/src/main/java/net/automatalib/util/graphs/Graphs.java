@@ -22,140 +22,16 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.commons.util.mappings.Mappings;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.BidirectionalGraph;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.IndefiniteGraph;
-import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.UniversalIndefiniteGraph;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
-import net.automatalib.util.graphs.traversal.GraphTraversalAction;
-import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
 
 
 public abstract class Graphs {
 	
-	
-	
-	public static <N1,E1,N2,E2,NP2,EP2> void copy(final IndefiniteGraph<N1, E1> in,
-			int limit,
-			Collection<N1> initialNodes,
-			final MutableGraph<N2,E2,NP2,EP2> out,
-			final Mapping<? super N1,? extends NP2> npCopy,
-			final Mapping<? super E1,? extends EP2> epCopy) {
-		final MutableMapping<N1,N2> nodeMapping = in.createStaticNodeMapping();
-		
-		GraphTraversal.depthFirst(in, limit, initialNodes, new GraphTraversalVisitor<N1, E1, N2>() {
-			@Override
-			public GraphTraversalAction<N2> processInitial(N1 initialNode) {
-				NP2 prop2 = npCopy.get(initialNode);
-				N2 init2 = out.addNode(prop2);
-				nodeMapping.put(initialNode, init2);
-				return GraphTraversal.explore(init2);
-			}
-
-			@Override
-			public boolean startExploration(N1 node, N2 data) {
-				return true;
-			}
-
-			@Override
-			public void finishExploration(N1 node, N2 data) {
-			}
-
-			@Override
-			public GraphTraversalAction<N2> processEdge(N1 srcNode, N2 srcData,
-					E1 edge, N1 tgtNode) {
-				EP2 prop2 = epCopy.get(edge);
-				boolean newNode = false;
-				N2 tgt2 = nodeMapping.get(tgtNode);
-				if(tgt2 == null) {
-					newNode = true;
-					NP2 tgtProp2 = npCopy.get(tgtNode);
-					tgt2 = out.addNode(tgtProp2);
-					nodeMapping.put(tgtNode, tgt2);
-				}
-				
-				out.connect(srcData, tgt2, prop2);
-				
-				if(newNode)
-					return GraphTraversal.explore(tgt2);
-				return GraphTraversal.ignore();
-			}
-
-			@Override
-			public void backtrackEdge(N1 srcNode, N2 srcData, E1 edge,
-					N1 tgtNode, N2 tgtData) {
-			}
-
-
-		});
-	}
-	
-	public static <N1,E1,NP1,EP1,N2,E2,NP2,EP2> void copy(final UniversalIndefiniteGraph<N1, E1, ? extends NP1, ? extends EP1> in,
-			int limit,
-			Collection<N1> initialNodes,
-			final MutableGraph<N2,E2,? super NP2,? super EP2> out,
-			final Mapping<NP1,NP2> npCopy,
-			final Mapping<EP1,EP2> epCopy) {
-		final MutableMapping<N1,N2> nodeMapping = in.createStaticNodeMapping();
-		
-		GraphTraversal.depthFirst(in, limit, initialNodes, new GraphTraversalVisitor<N1, E1, N2>() {
-			@Override
-			public GraphTraversalAction<N2> processInitial(N1 initialNode) {
-				NP1 prop1 = in.getNodeProperties(initialNode);
-				NP2 prop2 = npCopy.get(prop1);
-				N2 init2 = out.addNode(prop2);
-				nodeMapping.put(initialNode, init2);
-				return GraphTraversal.explore(init2);
-			}
-
-			@Override
-			public boolean startExploration(N1 node, N2 data) {
-				return true;
-			}
-
-			@Override
-			public void finishExploration(N1 node, N2 data) {
-			}
-
-			@Override
-			public GraphTraversalAction<N2> processEdge(N1 srcNode, N2 srcData,
-					E1 edge, N1 tgtNode) {
-				EP1 prop1 = in.getEdgeProperties(edge);
-				EP2 prop2 = epCopy.get(prop1);
-				boolean newNode = false;
-				N2 tgt2 = nodeMapping.get(tgtNode);
-				if(tgt2 == null) {
-					newNode = true;
-					NP1 tgtProp1 = in.getNodeProperties(tgtNode);
-					NP2 tgtProp2 = npCopy.get(tgtProp1);
-					tgt2 = out.addNode(tgtProp2);
-					nodeMapping.put(tgtNode, tgt2);
-				}
-				
-				out.connect(srcData, tgt2, prop2);
-				
-				if(newNode)
-					return GraphTraversal.explore(tgt2);
-				return GraphTraversal.ignore();
-			}
-
-			@Override
-			public void backtrackEdge(N1 srcNode, N2 srcData, E1 edge,
-					N1 tgtNode, N2 tgtData) {
-			}
-			
-		});
-	}
-	
-	public static <N1,E1,NP,EP,N2,E2> void copy(final UniversalIndefiniteGraph<N1, E1, ? extends NP, ? extends EP> input,
-			int limit,
-			Collection<N1> initialNodes,
-			final MutableGraph<N2, E2, NP, EP> out) {
-		copy(input, limit, initialNodes, out, Mappings.<NP>identity(), Mappings.<EP>identity());
-	}
 			
 	public static <N,E> Mapping<N,Collection<E>> incomingEdges(final Graph<N,E> graph) {
 		if(graph instanceof BidirectionalGraph)
@@ -191,6 +67,25 @@ public abstract class Graphs {
 			return null;
 		
 		return vis.getTargetPath().getSecond();
+	}
+	
+	
+	public static <N,NP> Mapping<N,NP> nodeProperties(final UniversalIndefiniteGraph<N, ?, NP, ?> graph) {
+		return new Mapping<N,NP>() {
+			@Override
+			public NP get(N elem) {
+				return graph.getNodeProperty(elem);
+			}
+		};
+	}
+	
+	public static <E,EP> Mapping<E,EP> edgeProperties(final UniversalIndefiniteGraph<?, E, ?, EP> graph) {
+		return new Mapping<E,EP>() {
+			@Override
+			public EP get(E elem) {
+				return graph.getEdgeProperty(elem);
+			}
+		};
 	}
 	
 	private Graphs() {}

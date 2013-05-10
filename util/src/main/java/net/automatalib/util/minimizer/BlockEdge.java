@@ -19,7 +19,7 @@ package net.automatalib.util.minimizer;
 /**
  * An edge in a {@link BlockAutomaton}.
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> state class.
  * @param <L> transition label class.

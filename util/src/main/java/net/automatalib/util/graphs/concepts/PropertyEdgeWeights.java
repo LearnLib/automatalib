@@ -29,7 +29,7 @@ public class PropertyEdgeWeights<E> implements EdgeWeights<E> {
 	
 	@Override
 	public float getEdgeWeight(E edge) {
-		Number prop = graph.getEdgeProperties(edge);
+		Number prop = graph.getEdgeProperty(edge);
 		return prop.floatValue();
 	}
 

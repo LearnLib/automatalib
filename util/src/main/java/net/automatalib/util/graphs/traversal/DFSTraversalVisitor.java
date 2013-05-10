@@ -16,6 +16,7 @@
  */
 package net.automatalib.util.graphs.traversal;
 
+import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
 
@@ -30,11 +31,13 @@ final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, 
 	}
 
 	@Override
-	public GraphTraversalAction<DFSData<D>> processInitial(N initialNode) {
+	public GraphTraversalAction processInitial(N initialNode, Holder<DFSData<D>> outData) {
 		D data = visitor.initialize(initialNode);
 		DFSData<D> rec = new DFSData<D>(data, dfsNum++);
 		records.put(initialNode, rec);
-		return GraphTraversal.explore(rec);
+		
+		outData.value = rec;
+		return GraphTraversalAction.EXPLORE;
 	}
 
 	@Override
@@ -50,14 +53,16 @@ final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, 
 	}
 
 	@Override
-	public GraphTraversalAction<DFSData<D>> processEdge(N srcNode,
-			DFSData<D> srcData, E edge, N tgtNode) {
+	public GraphTraversalAction processEdge(N srcNode,
+			DFSData<D> srcData, E edge, N tgtNode, Holder<DFSData<D>> outData) {
 		DFSData<D> tgtRec = records.get(tgtNode);
 		if(tgtRec == null) {
 			D data = visitor.treeEdge(srcNode, srcData.data, edge, tgtNode);
 			tgtRec = new DFSData<D>(data, dfsNum++);
 			records.put(tgtNode, tgtRec);
-			return GraphTraversal.explore(tgtRec);
+			
+			outData.value = tgtRec;
+			return GraphTraversalAction.EXPLORE;
 		}
 		if(!tgtRec.finished)
 			visitor.backEdge(srcNode, srcData.data, edge, tgtNode, tgtRec.data);
@@ -65,7 +70,8 @@ final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, 
 			visitor.forwardEdge(srcNode, srcData.data, edge, tgtNode, tgtRec.data);
 		else
 			visitor.crossEdge(srcNode, srcData.data, edge, tgtNode, tgtRec.data);
-		return GraphTraversal.ignore();
+		
+		return GraphTraversalAction.IGNORE;
 	}
 
 	@Override

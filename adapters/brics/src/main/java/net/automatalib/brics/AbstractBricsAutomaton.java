@@ -176,7 +176,7 @@ public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Characte
 	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties(java.lang.Object)
 	 */
 	@Override
-	public Boolean getNodeProperties(State node) {
+	public Boolean getNodeProperty(State node) {
 		return node.isAccept();
 	}
 
@@ -185,7 +185,7 @@ public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Characte
 	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getEdgeProperties(java.lang.Object)
 	 */
 	@Override
-	public BricsTransitionProperty getEdgeProperties(Transition edge) {
+	public BricsTransitionProperty getEdgeProperty(Transition edge) {
 		return new BricsTransitionProperty(edge);
 	}
 }

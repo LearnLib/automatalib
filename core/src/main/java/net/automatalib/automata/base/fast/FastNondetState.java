@@ -37,7 +37,7 @@ public abstract class FastNondetState<S extends FastNondetState<S, T>, T>
 		return transitions[inputIdx];
 	}
 	
-	public final void setTransitions(int inputIdx, Collection<T> transitions) {
+	public final void setTransitions(int inputIdx, Collection<? extends T> transitions) {
 		this.transitions[inputIdx] = new HashSet<T>(transitions);
 	}
 	

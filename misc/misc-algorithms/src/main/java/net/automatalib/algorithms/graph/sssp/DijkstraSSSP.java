@@ -40,8 +40,9 @@ import net.automatalib.graphs.concepts.EdgeWeights;
  */
 public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 	
-	public static final float INVALID_DISTANCE = -1.0f;
-
+	/*
+	 * Internal data record
+	 */
 	private static final class Record<N,E> implements Comparable<Record<N,E>> {
 		public final N node;
 		public float dist;
@@ -71,6 +72,14 @@ public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 		}
 	}
 	
+	/**
+	 * Search for the shortest paths from a single source node in a graph.
+	 * 
+	 * @param graph the graph in which to perform the search
+	 * @param init the initial (source) node
+	 * @param edgeWeights the edge weights
+	 * @return the single-source shortest path results
+	 */
 	public static <N,E> SSSPResult<N,E> findSSSP(Graph<N,E> graph, N init, EdgeWeights<E> edgeWeights) {
 		DijkstraSSSP<N, E> dijkstra = new DijkstraSSSP<N, E>(graph, init, edgeWeights);
 		dijkstra.findSSSP();
@@ -82,6 +91,12 @@ public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 	private final EdgeWeights<E> edgeWeights;
 	private final MutableMapping<N,Record<N,E>> records;
 	
+	/**
+	 * Constructor.
+	 * @param graph the graph in which to search for shortest paths
+	 * @param init the initial node
+	 * @param edgeWeights the edge weights
+	 */
 	public DijkstraSSSP(Graph<N,E> graph, N init, EdgeWeights<E> edgeWeights) {
 		this.graph = graph;
 		this.init = init;
@@ -90,17 +105,25 @@ public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 	}
 	
 	
+	/**
+	 * Start the search. This method may only be invoked once.
+	 */
 	public void findSSSP() {
-		SmartDynamicPriorityQueue<Record<N,E>> pq = BinaryHeap.create(graph.size());
-		
 		Record<N,E> initRec = new Record<>(init, 0.0f);
+		if(records.put(init, initRec) != null)
+			throw new IllegalStateException("Search has already been performed!");
+		
+		SmartDynamicPriorityQueue<Record<N,E>> pq = BinaryHeap.create(graph.size());
 		initRec.ref = pq.referencedAdd(initRec);
 		
 		while(!pq.isEmpty()) {
+			// Remove node with minimum distance
 			Record<N,E> rec = pq.extractMin();
 			float dist = rec.dist;
 			
 			N node = rec.node;
+			
+			// edge scanning
 			for(E edge : graph.getOutgoingEdges(node)) {
 				float w = edgeWeights.getEdgeWeight(edge);
 				float newDist = dist + w;
@@ -108,15 +131,19 @@ public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 				N tgt = graph.getTarget(edge);
 				Record<N,E> tgtRec = records.get(tgt);
 				if(tgtRec == null) {
+					// node has not been visited before, add a record
+					// and add it to the queue
 					tgtRec = new Record<>(tgt, newDist, edge, rec);
 					tgtRec.ref = pq.referencedAdd(tgtRec);
 					records.put(tgt, tgtRec);
 				}
 				else if(newDist < tgtRec.dist) {
+					// using currently considered edge decreases current distance
 					tgtRec.dist = newDist;
 					tgtRec.reach = edge;
 					tgtRec.depth = rec.depth + 1;
 					tgtRec.parent = rec;
+					// update it's position in the queue
 					pq.keyChanged(tgtRec.ref);
 				}
 			}
@@ -167,5 +194,17 @@ public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 	@Override
 	public N getInitialNode() {
 		return init;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.algorithms.graph.sssp.SSSPResult#getShortestPathEdge(java.lang.Object)
+	 */
+	@Override
+	public E getShortestPathEdge(N target) {
+		Record<N,E> rec = records.get(target);
+		if(rec == null)
+			return null;
+		return rec.reach;
 	}
 }
