@@ -97,14 +97,14 @@ public abstract class GraphTraversal {
 			case ABORT_TRAVERSAL:
 				return complete;
 			case EXPLORE:
+				if(nodeCount != limit) { // not equals will always be true for negative limit values
+					bfsQueue.offer(new BFRecord<N,D>(init, dataHolder.value));
+					nodeCount++;
+				}
+				else
+					complete = false;
+				break;
 			}
-			
-			if(nodeCount != limit) { // not equals will always be true for negative limit values
-				bfsQueue.offer(new BFRecord<N,D>(init, dataHolder.value));
-				nodeCount++;
-			}
-			else
-				complete = false;
 		}
 		
 		
@@ -139,14 +139,13 @@ bfs_loop:
 				case ABORT_TRAVERSAL:
 					return complete;
 				case EXPLORE:
+					if(nodeCount != limit) { // not equals will always be true for negative limit values
+						bfsQueue.offer(new BFRecord<N,D>(tgtNode, dataHolder.value));
+						nodeCount++;
+					}
+					else
+						complete = false;
 				}
-				
-				if(nodeCount != limit) { // not equals will always be true for negative limit values
-					bfsQueue.offer(new BFRecord<N,D>(tgtNode, dataHolder.value));
-					nodeCount++;
-				}
-				else
-					complete = false;
 			}
 			
 			vis.finishExploration(currNode, currData);
@@ -201,14 +200,14 @@ bfs_loop:
 			case ABORT_TRAVERSAL:
 				return complete;
 			case EXPLORE:
+				if(nodeCount != limit) {
+					dfsStack.push(new DFRecord<N,E,D>(init, dataHolder.value));
+					nodeCount++;
+				}
+				else
+					complete = false;
+				break;
 			}
-			
-			if(nodeCount != limit) {
-				dfsStack.push(new DFRecord<N,E,D>(init, dataHolder.value));
-				nodeCount++;
-			}
-			else
-				complete = false;
 		}
 		
 		
@@ -252,16 +251,16 @@ bfs_loop:
 			case ABORT_TRAVERSAL:
 				return complete;
 			case EXPLORE:
+				if(nodeCount != limit) {
+					D data = dataHolder.value;
+					current.setLastEdge(edge, tgt, data);
+					dfsStack.push(new DFRecord<N,E,D>(tgt, data));
+					nodeCount++;
+				}
+				else
+					complete = false;
+				break;
 			}
-			
-			if(nodeCount != limit) {
-				D data = dataHolder.value;
-				current.setLastEdge(edge, tgt, data);
-				dfsStack.push(new DFRecord<N,E,D>(tgt, data));
-				nodeCount++;
-			}
-			else
-				complete = false;
 		}
 		
 		return complete;

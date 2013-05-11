@@ -17,14 +17,21 @@ License along with AutomataLib; if not, see
 http://www.gnu.de/documents/lgpl.en.html.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+	http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.automatalib</groupId>
-  <artifactId>automata-api</artifactId>
-  <packaging>jar</packaging>
+	<groupId>net.automatalib</groupId>
+	<artifactId>automata-api</artifactId>
+	<packaging>jar</packaging>
 
-  <name>automata-api</name>
+	<name>AutomataLib :: API</name>
+	<description>
+		This artifact contains the API of AutomataLib, which mainly consists of interfaces
+		for the various concepts and automaton models supported by the AutomataLib core.
+		In addition to that, it also defines some fundamental classes for dealing with
+		words of symbols.
+	</description>
 
 	<parent>
 		<groupId>net.automatalib</groupId>
@@ -33,19 +40,15 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
 	<dependencies>
-	<dependency>
-      <groupId>${project.groupId}</groupId>
-		<artifactId>automata-commons-util</artifactId>
-    </dependency>
-	<dependency>
-		<groupId>org.testng</groupId>
-		<artifactId>testng</artifactId>
-	</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-commons-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

@@ -17,14 +17,20 @@ License along with AutomataLib; if not, see
 http://www.gnu.de/documents/lgpl.en.html.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.automatalib</groupId>
-  <artifactId>automata-examples</artifactId>
-  <packaging>jar</packaging>
+	<groupId>net.automatalib</groupId>
+	<artifactId>automata-examples</artifactId>
+	<packaging>jar</packaging>
 
-  <name>automata-examples</name>
+	<name>AutomataLib :: Examples</name>
+	<description><![CDATA[
+		A collection of various small example applications that illustrate several use cases
+		of AutomataLib.<br />
+		<em>Note:</em> This artifact is not intended as a library, but only exists for educational
+		purposes.
+	]]></description>
 
 	<parent>
 		<groupId>net.automatalib</groupId>
@@ -33,35 +39,31 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
-  <dependencies>
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-api</artifactId>
-    </dependency>
-    <dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-core</artifactId>
-    </dependency>
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-commons-dotutil</artifactId>
-    </dependency>
-    <dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-util</artifactId>
-    </dependency>
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-incremental</artifactId>
-	</dependency>
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-brics</artifactId>
-	</dependency>
-  </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-commons-dotutil</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-incremental</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-brics</artifactId>
+		</dependency>
+	</dependencies>
 </project>
 

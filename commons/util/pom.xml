@@ -17,14 +17,18 @@ License along with AutomataLib; if not, see
 http://www.gnu.de/documents/lgpl.en.html.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.automatalib</groupId>
-  <artifactId>automata-commons-util</artifactId>
-  <packaging>jar</packaging>
+	<groupId>net.automatalib</groupId>
+	<artifactId>automata-commons-util</artifactId>
+	<packaging>jar</packaging>
 
-  <name>automata-commons-util</name>
+	<name>AutomataLib :: Commons :: Utilities</name>
+	<description><![CDATA[
+		Basic utility library containing several useful classes (e.g., a Pair class) to ease
+		everyday programming.
+	]]></description>
 
 	<parent>
 		<groupId>net.automatalib</groupId>
@@ -32,10 +36,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<version>0.3.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-  <properties>
-    <maven.site.prefix>automata-commons-parent</maven.site.prefix>
-  </properties>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.testng</groupId>

@@ -44,6 +44,10 @@ final class FindShortestPathVisitor<N, E> extends
 	@Override
 	public GraphTraversalAction processInitial(N initialNode, Holder<Void> outData) {
 		predMapping.put(initialNode, Pair.<N,E>make(null, null));
+		if(targetNodes.contains(initialNode)) {
+			this.foundTarget = initialNode;
+			return GraphTraversalAction.ABORT_TRAVERSAL;
+		}
 		return GraphTraversalAction.EXPLORE;
 	}
 
@@ -80,12 +84,12 @@ final class FindShortestPathVisitor<N, E> extends
 		N currNode = foundTarget;
 		Pair<N,E> pred = predMapping.get(currNode);
 		
-		do {
+		while(pred != null && pred.getSecond() != null) {
 			path.add(pred.getSecond());
 			
 			currNode = pred.getFirst();
 			pred = predMapping.get(currNode);
-		} while(pred != null && currNode != foundTarget);
+		}
 		
 		Collections.reverse(path);
 		

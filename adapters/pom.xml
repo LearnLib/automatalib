@@ -17,14 +17,19 @@ License along with AutomataLib; if not, see
 http://www.gnu.de/documents/lgpl.en.html.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.automatalib</groupId>
-  <artifactId>automata-adapters-parent</artifactId>
-  <packaging>pom</packaging>
+	<groupId>net.automatalib</groupId>
+	<artifactId>automata-adapters-parent</artifactId>
+	<packaging>pom</packaging>
 
-  <name>automata-adapters-parent</name>
+	<name>AutomataLib :: Adapters</name>
+	<description><![CDATA[
+		Common parent metaproject for various adapters, i.e., wrapper class that allow to
+		treat automaton or graph models from other software libraries as AutomataLib automata
+		or graphs.
+	]]></description>
 
 	<parent>
 		<groupId>net.automatalib</groupId>

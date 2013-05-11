@@ -83,7 +83,9 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>,NP, EP> ext
 	public int addIntNode(NP properties) {
 		edges.ensureCapacity(size + 1);
 		edges.array[size] = new ArrayList<CompactEdge<EP>>();
-		return size++;
+		int n = size++;
+		setNodeProperty(n, properties);
+		return n;
 	}
 
 	@Override
