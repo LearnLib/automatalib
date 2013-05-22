@@ -78,8 +78,10 @@ else
 fi
 
 targetDir=`readlink -f "$CHECKOUT_DIR/$GIT_PATH"`
+mkdir -p "$targetDir"
+rm -rf "$targetDir/*"
+cp -r "$stagingDir"/* $targetDir
 
-cp -r "$stagingDir" $targetDir
 if [ $? != 0 ]; then
 	echo "Copying $stagingDir to $targetDir failed"
 	exit 1
