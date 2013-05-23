@@ -9,29 +9,39 @@
 	<packaging>jar</packaging>
 
 	<properties>
+		<!-- Version of AutomataLib to use -->
 		<automatalib.version>${automatalibVersion}</automatalib.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Import AutomataLib dependencies -->
+			<dependency>
+				<groupId>net.automatalib</groupId>
+				<artifactId>automata-parent</artifactId>
+				<version>${automatalib.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-api</artifactId>
-			<version>${automatalib.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-core</artifactId>
-			<version>${automatalib.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-util</artifactId>
-			<version>${automatalib.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.automatalib</groupId>
 			<artifactId>automata-commons-dotutil</artifactId>
-			<version>${automatalib.version}</version>
 		</dependency>
 	</dependencies>
 </project>
