@@ -91,7 +91,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<scm>
 		<connection>scm:git:git@github.com:misberner/automatalib.git</connection>
 		<developerConnection>scm:git:git@github.com:misberner/automatalib.git</developerConnection>
-		<url>https://github.com/misberner/automatalib</url>
+		<url>https://github.com/misberner/automatalib/tree/develop</url>
 	</scm>
 
 	<!-- ================================= SONATYPE PARENT ==============================
@@ -103,14 +103,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<!-- ================================= MODULES ===================================
 		-->
 	<modules>
-		<module>./api</module>
-		<module>./core</module>
-		<module>./util</module>
-		<module>./commons</module>
-		<module>./misc</module>
-		<module>./adapters</module>
-		<module>./examples</module>
-		<module>./archetypes</module>
+		<module>api</module>
+		<module>core</module>
+		<module>util</module>
+		<module>commons</module>
+		<module>misc</module>
+		<module>adapters</module>
+		<module>examples</module>
+		<module>archetypes</module>
 	</modules>
 
 	<!-- ================================= PROPERTIES ================================
