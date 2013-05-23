@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>${groupId}</groupId>
+	<artifactId>${artifactId}</artifactId>
+	<version>${version}</version>
+	<packaging>jar</packaging>
+
+	<properties>
+		<automatalib.version>${automatalibVersion}</automatalib.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-api</artifactId>
+			<version>${automatalib.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-core</artifactId>
+			<version>${automatalib.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-util</artifactId>
+			<version>${automatalib.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-incremental</artifactId>
+			<version>${automatalib.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-commons-util</artifactId>
+			<version>${automatalib.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-commons-smartcollections</artifactId>
+			<version>${automatalib.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-commons-dotutil</artifactId>
+			<version>${automatalib.version}</version>
+		</dependency>
+	</dependencies>
+</project>
+
