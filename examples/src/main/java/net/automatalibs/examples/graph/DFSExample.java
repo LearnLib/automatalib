@@ -113,7 +113,7 @@ public class DFSExample {
 		 * @see net.automatalib.graphs.dot.EmptyDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
 		 */
 		@Override
-		public boolean getEdgeProperties(E edge,
+		public boolean getEdgeProperties(N src, E edge, N tgt,
 				Map<String, String> properties) {
 			EdgeType et = edgeTypes.get(edge);
 			assert et != null;

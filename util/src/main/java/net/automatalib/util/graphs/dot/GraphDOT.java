@@ -203,7 +203,7 @@ public abstract class GraphDOT {
 					continue;
 				
 				props.clear();
-				if(!dotHelper.getEdgeProperties(e, props))
+				if(!dotHelper.getEdgeProperties(node, e, tgt, props))
 					continue;
 				
 				a.append('\t').append(srcId).append(' ');

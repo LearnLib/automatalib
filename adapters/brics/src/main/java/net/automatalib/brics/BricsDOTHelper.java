@@ -74,9 +74,9 @@ final class BricsDOTHelper extends DefaultDOTHelper<State, Transition> {
 	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
 	 */
 	@Override
-	public boolean getEdgeProperties(Transition edge,
+	public boolean getEdgeProperties(State src, Transition edge, State tgt,
 			Map<String, String> properties) {
-		if(!super.getEdgeProperties(edge, properties))
+		if(!super.getEdgeProperties(src, edge, tgt, properties))
 			return false;
 		
 		String label = BricsTransitionProperty.toString(edge.getMin(), edge.getMax());

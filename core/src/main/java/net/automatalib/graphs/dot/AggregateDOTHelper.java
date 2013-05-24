@@ -62,9 +62,9 @@ public class AggregateDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	}
 
 	@Override
-	public boolean getEdgeProperties(E edge, Map<String, String> properties) {
+	public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
 		for(GraphDOTHelper<N,? super E> helper : helpers) {
-			if(!helper.getEdgeProperties(edge, properties))
+			if(!helper.getEdgeProperties(src, edge, tgt, properties))
 				return false;
 		}
 		return true;

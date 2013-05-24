@@ -74,9 +74,9 @@ final class DOTHelper extends DefaultDOTHelper<State, TransitionRecord> {
 	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
 	 */
 	@Override
-	public boolean getEdgeProperties(TransitionRecord edge,
+	public boolean getEdgeProperties(State src, TransitionRecord edge, State tgt,
 			Map<String, String> properties) {
-		if(!super.getEdgeProperties(edge, properties))
+		if(!super.getEdgeProperties(src, edge, tgt, properties))
 			return false;
 		
 		Object in = inputAlphabet.getSymbol(edge.transIdx);

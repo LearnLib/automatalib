@@ -83,5 +83,5 @@ public interface GraphDOTHelper<N, E> {
 	 * @param properties the property map
 	 * @return whether or not this edge should be rendered
 	 */
-	public boolean getEdgeProperties(E edge, Map<String,String> properties);
+	public boolean getEdgeProperties(N src, E edge, N tgt, Map<String,String> properties);
 }

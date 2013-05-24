@@ -49,8 +49,8 @@ public class DefaultDOTHelperAutomaton<S, I, T, A extends Automaton<S, I, T>>
 	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
 	 */
 	@Override
-	public boolean getEdgeProperties(Pair<I, T> edge, Map<String,String> properties) {
-		if(!super.getEdgeProperties(edge, properties))
+	public boolean getEdgeProperties(S src, Pair<I, T> edge, S tgt, Map<String,String> properties) {
+		if(!super.getEdgeProperties(src, edge, tgt, properties))
 			return false;
 		String label = String.valueOf(edge.getFirst());
 		properties.put("label", label);

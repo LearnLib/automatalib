@@ -39,7 +39,7 @@ public class EmptyDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	}
 
 	@Override
-	public boolean getEdgeProperties(E edge, Map<String, String> properties) {
+	public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
 		return true;
 	}
 

@@ -85,7 +85,7 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	 * @see net.automatalib.graphs.dot.GraphDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
 	 */
 	@Override
-	public boolean getEdgeProperties(E edge, Map<String,String> properties) {
+	public boolean getEdgeProperties(N src, E edge, N tgt, Map<String,String> properties) {
 		return true;
 	}
 
