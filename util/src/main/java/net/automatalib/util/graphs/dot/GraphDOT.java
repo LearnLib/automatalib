@@ -243,7 +243,12 @@ public abstract class GraphDOT {
 				first = false;
 			else
 				a.append(' ');
+			String key = e.getKey();
+			String value = e.getValue();
 			a.append(e.getKey()).append("=");
+			if(key.equals(GraphDOTHelper.LABEL)) {
+				
+			}
 			StringUtil.enquote(e.getValue(), a);
 		}
 		a.append(']');
