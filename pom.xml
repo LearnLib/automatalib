@@ -86,22 +86,26 @@ http://www.gnu.de/documents/lgpl.en.html.
 	</developers>
 
 	<!--
-  ===============================  SCM =======================
-  -->
+	===============================  SCM =======================
+	-->
 	<scm>
 		<connection>scm:git:git@github.com:misberner/automatalib.git</connection>
 		<developerConnection>scm:git:git@github.com:misberner/automatalib.git</developerConnection>
 		<url>https://github.com/misberner/automatalib/tree/develop</url>
 	</scm>
 
-	<!-- ================================= SONATYPE PARENT ==============================
-		-->
-	<!-- FIXME: Disabled as it's causing mvn site to fail! <parent> <groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId> <version>7</version> </parent>
--->
+	<!--
+	================================= SONATYPE PARENT ==============================
+	-->
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
-	<!-- ================================= MODULES ===================================
-		-->
+	<!--
+	================================= MODULES ===================================
+	-->
 	<modules>
 		<module>api</module>
 		<module>core</module>
@@ -113,97 +117,25 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>archetypes</module>
 	</modules>
 
-	<!-- ================================= PROPERTIES ================================
-		-->
+	<!--
+	================================= PROPERTIES ================================
+	-->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- dependency versions -->
 		<automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
 		<testng.version>6.8</testng.version>
-		<source-plugin.version>2.0.4</source-plugin.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<brics-automaton.version>1.11-8</brics-automaton.version>
 
 		<!-- Javadoc links -->
 		<brics-automaton.javadoc>http://www.brics.dk/automaton/doc</brics-automaton.javadoc>
-
-		<!-- Sonatype OSS snapshots repository -->
-		<sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
-
 	</properties>
 
 	<!-- ================================= BUILD PLUGINS =============================
 		-->
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>${source-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>${javadoc-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.1</version>
-					<configuration>
-						<mavenExecutorId>forked-path</mavenExecutorId>
-						<useReleaseProfile>false</useReleaseProfile>
-						<arguments>-Psonatype-oss-release</arguments>
-					</configuration>
-				</plugin>
-
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-site-plugin</artifactId>
-					<version>3.2</version>
-					<configuration>
-					</configuration>
-					<executions>
-						<execution>
-							<id>attach-descriptor</id>
-							<goals>
-								<goal>attach-descriptor</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-
-
-		</pluginManagement>
-
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>1.0</version>
-				<executions>
-					<execution>
-						<id>enforce-maven</id>
-						<goals>
-							<goal>enforce</goal>
-						</goals>
-						<configuration>
-							<rules>
-								<requireMavenVersion>
-									<version>(,2.1.0),(2.1.0,2.2.0),(2.2.0,)</version>
-									<message>
-										Maven 2.1.0 and 2.2.0 produce incorrect GPG signatures and checksums respectively.
-									</message>
-								</requireMavenVersion>
-							</rules>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 			<!-- default assembly config -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -231,6 +163,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${javadoc-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>aggregate</id>
@@ -244,8 +177,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 					</execution>
 				</executions>
 			</plugin>
-
-
 		</plugins>
 	</build>
 
@@ -328,53 +259,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>sonatype-oss-release</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>2.1.2</version>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar-no-fork</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.7</version>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.1</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 	</profiles>
 
 	<!-- =============================== DEFAULT DEP. VERSIONS =======================
@@ -445,22 +329,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 	</dependencies>
 
 	<distributionManagement>
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>Sonatype Nexus Snapshots</name>
-			<url>${sonatypeOssDistMgmtSnapshotsUrl}</url>
-		</snapshotRepository>
-		<repository>
-			<id>sonatype-nexus-staging</id>
-			<name>Nexus Release Repository</name>
-			<url>
-				https://oss.sonatype.org/service/local/staging/deploy/maven2/
-			</url>
-		</repository>
-
 		<site>
 			<id>local</id>
-			<url>file://${site.tmpDeployDirectory}</url>
+			<url>file://${user.home}/automatalib-site</url>
 		</site>
 	</distributionManagement>
 </project>
