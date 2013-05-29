@@ -39,7 +39,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	</parent>
 
 	<modules>
-		<module>./brics</module>
+		<module>brics</module>
 	</modules>
 </project>
 

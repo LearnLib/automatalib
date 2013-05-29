@@ -38,8 +38,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 	</parent>
 
 	<modules>
-		<module>./incremental</module>
-		<module>./misc-algorithms</module>
+		<module>incremental</module>
+		<module>misc-algorithms</module>
 	</modules>
 </project>
 

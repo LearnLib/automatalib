@@ -41,9 +41,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 	</properties>
 
 	<modules>
-		<module>./core</module>
-		<module>./typical</module>
-		<module>./complete</module>
+		<module>core</module>
+		<module>typical</module>
+		<module>complete</module>
 	</modules>
 
 	<build>
