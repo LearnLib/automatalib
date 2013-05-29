@@ -127,6 +127,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<testng.version>6.8</testng.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
 		<brics-automaton.version>1.11-8</brics-automaton.version>
+		<assembly-plugin.version>2.2.2</assembly-plugin.version>
 
 		<!-- Javadoc links -->
 		<brics-automaton.javadoc>http://www.brics.dk/automaton/doc</brics-automaton.javadoc>
@@ -136,16 +137,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 		-->
 	<build>
 		<plugins>
-			<!-- default assembly config -->
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-
 			<!-- compiler plugin config -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -256,6 +247,99 @@ http://www.gnu.de/documents/lgpl.en.html.
 							</suiteXmlFiles>
 						</configuration>
 					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>binary-release</id>
+			<build>
+				<plugins>
+					<!--  aggregate javadoc of modules in one jar -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${javadoc-plugin.version}</version>
+						<inherited>false</inherited>
+						<configuration>
+							<maxmemory>512</maxmemory>
+							<quiet>false</quiet>
+							<source>1.7</source>
+							<verbose>true</verbose>
+							<linksource>true</linksource>
+							<links>
+								<link>http://docs.oracle.com/javase/7/docs/api/</link>
+							</links>
+							<finalName>automatalib-${project.version}</finalName>
+						</configuration>
+						<executions>
+							<execution>
+								<id>aggregate</id>
+								<goals>
+									<goal>aggregate-jar</goal>
+								</goals>
+								<phase>site</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- 
+                        build assemblies
+                    -->
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>${assembly-plugin.version}</version>
+						<inherited>false</inherited>
+						<configuration>
+							<finalName>automatalib-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+						</configuration>
+						<executions>
+							<!--  sources jar -->
+							<execution>
+								<id>src</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/automatalib-srcjar.xml</descriptor>
+									</descriptors>
+									<finalName>automatalib-${project.version}-sources</finalName>
+								</configuration>
+							</execution>
+							<!-- 
+                                binary jar
+                            -->
+							<execution>
+								<id>jar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/automatalib-jar.xml</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+							<!-- 
+                                bin
+                            -->
+							<execution>
+								<id>bin</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/automatalib-bin.xml</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
 				</plugins>
 			</build>
 		</profile>

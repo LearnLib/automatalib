@@ -14,7 +14,7 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalibs.examples.graph;
+package net.automatalib.examples.graph;
 
 import java.io.Writer;
 import java.util.HashMap;
