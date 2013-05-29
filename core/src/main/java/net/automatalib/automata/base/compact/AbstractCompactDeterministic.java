@@ -19,12 +19,13 @@ package net.automatalib.automata.base.compact;
 import java.util.Collection;
 
 import net.automatalib.automata.abstractimpl.AbstractMutableDeterministic;
+import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 
 public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
-		AbstractMutableDeterministic<Integer, I, T, SP, TP> implements StateIDs<Integer> {
+		AbstractMutableDeterministic<Integer, I, T, SP, TP> implements StateIDs<Integer>, InputAlphabetHolder<I> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -217,4 +218,15 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
 		return this;
 	}
 
+
+
+	/* (non-Javadoc)
+	 * @see net.automatalib.automata.concepts.InputAlphabetHolder#getInputAlphabet()
+	 */
+	@Override
+	public Alphabet<I> getInputAlphabet() {
+		return alphabet;
+	}
+
+	
 }
