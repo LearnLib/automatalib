@@ -27,12 +27,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<packaging>pom</packaging>
 
 	<name>AutomataLib :: Parent</name>
-	<description><![CDATA[
-		A fully generic library for automata, graphs, and models, written in Java.<br />
+	<description>
+		A fully generic library for automata, graphs, and models, written in Java.
 		This is the parent artifact which does not have any source code. Please refer to the
 		"modules" page for more detailed documentation on the single library artifacts.
-	]]></description>
-	<url>http://misberner.github.io/automatalib/maven-site</url>
+	</description>
+	<url>http://misberner.github.io/automatalib/maven-site/</url>
 
 	<licenses>
 		<license>
@@ -86,7 +86,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	</developers>
 
 	<!--
-	===============================  SCM =======================
+	=============================== SCM =======================
 	-->
 	<scm>
 		<connection>scm:git:git@github.com:misberner/automatalib.git</connection>
@@ -122,61 +122,95 @@ http://www.gnu.de/documents/lgpl.en.html.
 	-->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- dependency versions -->
-		<automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
+		<!--
+			dependency versions
+		-->
 		<testng.version>6.8</testng.version>
 		<javadoc-plugin.version>2.9</javadoc-plugin.version>
+		<compiler-plugin.version>3.1</compiler-plugin.version>
+		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
+		<site-plugin.version>3.3</site-plugin.version>
+		<reports-plugin.version>2.7</reports-plugin.version>
+		<surefire-plugin.version>2.14.1</surefire-plugin.version>
+		<assembly-plugin.version>2.4</assembly-plugin.version>
+
 		<brics-automaton.version>1.11-8</brics-automaton.version>
-		<assembly-plugin.version>2.2.2</assembly-plugin.version>
 
 		<!-- Javadoc links -->
-		<brics-automaton.javadoc>http://www.brics.dk/automaton/doc</brics-automaton.javadoc>
+		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
+		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
 	</properties>
 
-	<!-- ================================= BUILD PLUGINS =============================
-		-->
+	<!--
+	================================= BUILD PLUGINS =============================
+	-->
 	<build>
-		<plugins>
-			<!-- compiler plugin config -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
-				<configuration>
-					<fork>true</fork>
-					<meminitial>128m</meminitial>
-					<maxmem>512m</maxmem>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${javadoc-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>aggregate</id>
-						<inherited>false</inherited>
-						<goals>
-							<goal>aggregate</goal>
-						</goals>
-						<phase>site</phase>
-						<configuration>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${compiler-plugin.version}</version>
+					<configuration>
+						<fork>true</fork>
+						<meminitial>128m</meminitial>
+						<maxmem>512m</maxmem>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${javadoc-plugin.version}</version>
+					<configuration>
+						<maxmemory>512</maxmemory>
+						<quiet>false</quiet>
+						<source>1.7</source>
+						<verbose>true</verbose>
+						<linksource>true</linksource>
+						<links>
+							<link>${java7.apidocs}</link>
+							<link>${brics-automaton.apidocs}</link>
+						</links>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${site-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>attach-descriptor</id>
+							<goals>
+								<goal>attach-descriptor</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${assembly-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
+	<!--
+	================================= REPORTING PLUGINS ==============================	
+	-->
 	<reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.6</version>
+				<version>${reports-plugin.version}</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -192,22 +226,25 @@ http://www.gnu.de/documents/lgpl.en.html.
 						</reports>
 					</reportSet>
 				</reportSets>
-
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${javadoc-plugin.version}</version>
 				<configuration>
+					<maxmemory>512</maxmemory>
+					<quiet>false</quiet>
+					<source>1.7</source>
+					<verbose>true</verbose>
+					<linksource>true</linksource>
 					<links>
-						<link>${brics-automaton.javadoc}</link>
+						<link>${java7.apidocs}</link>
+						<link>${brics-automaton.apidocs}</link>
 					</links>
 				</configuration>
 				<reportSets>
 					<reportSet>
 						<id>non-aggregate</id>
-						<configuration>
-						</configuration>
 						<reports>
 							<report>javadoc</report>
 						</reports>
@@ -224,9 +261,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</plugins>
 	</reporting>
 
+
 	<!--
-  ===============================  PROFILES =======================
-  -->
+	=============================== PROFILES =======================
+ 	-->
 	<profiles>
 		<profile>
 			<id>netbeans-private-testng</id>
@@ -345,8 +383,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</profile>
 	</profiles>
 
-	<!-- =============================== DEFAULT DEP. VERSIONS =======================
-		-->
+	<!--
+	=============================== DEFAULT DEP. VERSIONS =======================
+	-->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -389,11 +428,13 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>automata-commons-dotutil</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+
 			<dependency>
 				<groupId>dk.brics.automaton</groupId>
 				<artifactId>automaton</artifactId>
 				<version>${brics-automaton.version}</version>
 			</dependency>
+
 			<dependency>
 				<groupId>org.testng</groupId>
 				<artifactId>testng</artifactId>
@@ -403,16 +444,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</dependencies>
 	</dependencyManagement>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>${testng.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
+	<!--
+	================================= DISTRIBUTION ==============================	
+	-->
 	<distributionManagement>
+		<!-- Dummy - this will NOT actually be used, but is required for mvn site:stage -->
+		<!-- Use build-tools/deploy-site.sh for site deployment on GitHub pages -->
 		<site>
 			<id>local</id>
 			<url>file://${user.home}/automatalib-site</url>

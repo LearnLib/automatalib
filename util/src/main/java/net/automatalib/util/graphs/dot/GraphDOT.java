@@ -107,6 +107,11 @@ public abstract class GraphDOT {
 		write(automaton, helper, inputAlphabet, a, additionalHelpers);
 	}
 	
+	@SafeVarargs
+	public static <S,I,T> void write(DOTPlottableAutomaton<S, I, T> automaton, Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
+		write(automaton, automaton.getDOTHelper(), automaton.getInputAlphabet(), a, additionalHelpers);
+	}
+	
 	
 	/**
 	 * Renders a {@link Graph} in the GraphVIZ DOT format.
@@ -246,10 +251,11 @@ public abstract class GraphDOT {
 			String key = e.getKey();
 			String value = e.getValue();
 			a.append(e.getKey()).append("=");
-			if(key.equals(GraphDOTHelper.LABEL)) {
-				
-			}
-			StringUtil.enquote(e.getValue(), a);
+			// HTML labels have to be enclosed in <> instead of ""
+			if(key.equals(GraphDOTHelper.LABEL) && value.startsWith("<HTML>"))
+				a.append('<').append(value.substring(6)).append('>');
+			else
+				StringUtil.enquote(e.getValue(), a);
 		}
 		a.append(']');
 	}

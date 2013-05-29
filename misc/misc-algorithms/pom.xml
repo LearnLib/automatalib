@@ -42,6 +42,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 	<dependencies>
 		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>automata-commons-util</artifactId>
 		</dependency>
