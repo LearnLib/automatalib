@@ -28,3 +28,4 @@ import net.automatalib.graphs.concepts.NodeAcceptance;
  */
 public interface AcceptanceGraph<N, E> extends Graph<N, E>, NodeAcceptance<N> {
 }
+
