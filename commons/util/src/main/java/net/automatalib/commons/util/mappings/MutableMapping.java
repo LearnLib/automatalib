@@ -16,6 +16,7 @@
  */
 package net.automatalib.commons.util.mappings;
 
+
 /**
  * Mutable version of a {@link Mapping}, which supports setting
  * keys for given values.

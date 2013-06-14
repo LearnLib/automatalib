@@ -67,6 +67,7 @@ public class BitSetIterator implements Iterator<Integer> {
 			findNextSetBit();
 			return oldIdx;
 		}
+		Math.max(0, 1);
 		
 		return null;
 	}

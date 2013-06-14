@@ -21,7 +21,7 @@ import net.automatalib.graphs.concepts.KripkeInterpretation;
 /**
  * A Kripke structure is a graph which has sets of atomic properties assigned to its nodes.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class

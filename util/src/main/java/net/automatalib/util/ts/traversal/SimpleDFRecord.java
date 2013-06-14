@@ -27,28 +27,27 @@ class SimpleDFRecord<S, I, T> {
 
 	private final Iterator<? extends I> inputsIterator;
 	private I input;
-	private Iterator<T> transitionIterator;
-	private T retractedTransition;
+	private Iterator<? extends T> transitionIterator;
 
 	public SimpleDFRecord(S state, Collection<? extends I> inputs) {
 		this.state = state;
 		this.inputsIterator = inputs.iterator();
 	}
 
-	private void findNext(TransitionSystem<S,I,T> ts) {
+	private void findNext(TransitionSystem<S,? super I,T> ts) {
 		if(transitionIterator != null && transitionIterator.hasNext())
 			return;
 		while(inputsIterator.hasNext()) {
 			input = inputsIterator.next();
-			Collection<T> transitions = ts.getTransitions(state, input);
-			if(transitions != null && !transitions.isEmpty()) {
+			Collection<? extends T> transitions = ts.getTransitions(state, input);
+			if(!transitions.isEmpty()) {
 				transitionIterator = transitions.iterator();
 				break;
 			}
 		}
 	}
 
-	public boolean start(TransitionSystem<S, I, T> ts) {
+	public boolean start(TransitionSystem<S, ? super I, T> ts) {
 		if(transitionIterator != null)
 			return false;
 		
@@ -56,22 +55,22 @@ class SimpleDFRecord<S, I, T> {
 		return true;
 	}
 
-	public boolean hasNextTransition() {
-		if(retractedTransition != null)
-			return true;
-		
+	public boolean hasNextTransition(TransitionSystem<S,? super I,T> ts) {
 		if(transitionIterator == null)
 			return false;
+		if(!transitionIterator.hasNext()) {
+			findNext(ts);
+		}
 		return transitionIterator.hasNext();
 	}
 
-	public void advance(TransitionSystem<S,I,T> ts) {
+	public void advance(TransitionSystem<S,? super I,T> ts) {
 		if(transitionIterator.hasNext())
 			return;
 		findNext(ts);
 	}
 
-	public void advanceInput(TransitionSystem<S,I,T> ts) {
+	public void advanceInput(TransitionSystem<S,? super I,T> ts) {
 		transitionIterator = null;
 		findNext(ts);
 	}

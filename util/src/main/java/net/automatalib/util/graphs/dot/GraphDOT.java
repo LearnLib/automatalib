@@ -30,7 +30,7 @@ import java.util.Map;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
 import net.automatalib.automata.dot.DefaultDOTHelperAutomaton;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.strings.StringUtil;
 import net.automatalib.graphs.Graph;
@@ -77,10 +77,10 @@ public abstract class GraphDOT {
 	 */
 	@SafeVarargs
 	public static <S,I,T> void write(Automaton<S,I,T> automaton,
-			GraphDOTHelper<S, ? super Pair<I,T>> helper,
+			GraphDOTHelper<S, ? super TransitionEdge<I,T>> helper,
 			Collection<? extends I> inputAlphabet,
-			Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
-		Graph<S,Pair<I,T>> ag = Automata.asGraph(automaton, inputAlphabet);
+			Appendable a, GraphDOTHelper<S,? super TransitionEdge<I,T>> ...additionalHelpers) throws IOException {
+		Graph<S,TransitionEdge<I,T>> ag = Automata.asGraph(automaton, inputAlphabet);
 		write(ag, helper, a, additionalHelpers);
 	}
 	
@@ -95,8 +95,8 @@ public abstract class GraphDOT {
 	@SafeVarargs
 	public static <S,I,T> void write(Automaton<S,I,T> automaton,
 			Collection<? extends I> inputAlphabet,
-			Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
-		GraphDOTHelper<S,? super Pair<I,T>> helper;
+			Appendable a, GraphDOTHelper<S,? super TransitionEdge<I,T>> ...additionalHelpers) throws IOException {
+		GraphDOTHelper<S,? super TransitionEdge<I,T>> helper;
 		if(automaton instanceof DOTPlottableAutomaton) {
 			DOTPlottableAutomaton<S,I,T> dp = (DOTPlottableAutomaton<S,I,T>)automaton;
 			helper = dp.getDOTHelper();
@@ -108,7 +108,7 @@ public abstract class GraphDOT {
 	}
 	
 	@SafeVarargs
-	public static <S,I,T> void write(DOTPlottableAutomaton<S, I, T> automaton, Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
+	public static <S,I,T> void write(DOTPlottableAutomaton<S, I, T> automaton, Appendable a, GraphDOTHelper<S,? super TransitionEdge<I,T>> ...additionalHelpers) throws IOException {
 		write(automaton, automaton.getDOTHelper(), automaton.getInputAlphabet(), a, additionalHelpers);
 	}
 	
@@ -120,7 +120,6 @@ public abstract class GraphDOT {
 	 * @param a the appendable to write to
 	 * @throws IOException if writing to <tt>a</tt> fails
 	 */
-	@SuppressWarnings("unchecked")
 	@SafeVarargs
 	public static <N,E> void write(Graph<N,E> graph,
 			Appendable a, GraphDOTHelper<N,? super E> ...additionalHelpers) throws IOException {
@@ -130,7 +129,7 @@ public abstract class GraphDOT {
 			helper = plottable.getGraphDOTHelper();
 		}
 		else
-			helper = (GraphDOTHelper<N,? super E>)DefaultDOTHelper.getInstance();
+			helper = new DefaultDOTHelper<N,E>();
 		write(graph, helper, a, additionalHelpers);
 	}
 	
@@ -171,10 +170,28 @@ public abstract class GraphDOT {
 			a.append("di");
 		a.append("graph g {\n");
 		
+
+		Map<String,String> props = new HashMap<>();
+		
+		dotHelper.getGlobalNodeProperties(props);
+		if(!props.isEmpty()) {
+			a.append('\t').append("node");
+			appendParams(props, a);
+			a.append(";\n");
+		}
+		
+		props.clear();
+		dotHelper.getGlobalEdgeProperties(props);
+		if(!props.isEmpty()) {
+			a.append('\t').append("edge");
+			appendParams(props, a);
+			a.append(";\n");
+		}
+		
+		
 		dotHelper.writePreamble(a);
 		a.append('\n');
 		
-		Map<String,String> props = new HashMap<>();
 		
 		MutableMapping<N,String> nodeNames = graph.createStaticNodeMapping();
 		
@@ -195,8 +212,8 @@ public abstract class GraphDOT {
 			String srcId = nodeNames.get(node);
 			if(srcId == null)
 				continue;
-			Collection<E> outEdges = graph.getOutgoingEdges(node);
-			if(outEdges == null || outEdges.isEmpty())
+			Collection<? extends E> outEdges = graph.getOutgoingEdges(node);
+			if(outEdges.isEmpty())
 				continue;
 			for(E e : outEdges) {
 				N tgt = graph.getTarget(e);
@@ -252,7 +269,7 @@ public abstract class GraphDOT {
 			String value = e.getValue();
 			a.append(e.getKey()).append("=");
 			// HTML labels have to be enclosed in <> instead of ""
-			if(key.equals(GraphDOTHelper.LABEL) && value.startsWith("<HTML>"))
+			if(key.equals(GraphDOTHelper.CommonAttrs.LABEL) && value.toUpperCase().startsWith("<HTML>"))
 				a.append('<').append(value.substring(6)).append('>');
 			else
 				StringUtil.enquote(e.getValue(), a);

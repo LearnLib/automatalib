@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,17 +16,18 @@
  */
 package net.automatalib.ts.powerset;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.automatalib.commons.util.nid.NumericID;
+import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.ts.abstractimpl.AbstractDTS;
 
 
 public class FastPowersetDTS<S extends NumericID, I, T> extends
-		AbstractDTS<FastPowersetState<S>, I, Collection<T>> {
+		AbstractDTS<FastPowersetState<S>, I, Set<? extends T>> implements PowersetViewTS<FastPowersetState<S>,I,Set<? extends T>,S,T> {
 	
 	private final TransitionSystem<S, I, T> ts;
 	
@@ -43,18 +44,17 @@ public class FastPowersetDTS<S extends NumericID, I, T> extends
 	}
 
 	@Override
-	public Collection<T> getTransition(FastPowersetState<S> state, I input) {
-		List<T> result = new ArrayList<T>();
+	public Set<? extends T> getTransition(FastPowersetState<S> state, I input) {
+		Set<T> result = new HashSet<>();
 		for(S s : state) {
-			Collection<T> transitions = ts.getTransitions(s, input);
-			if(transitions != null)
-				result.addAll(transitions);
+			Collection<? extends T> transitions = ts.getTransitions(s, input);
+			result.addAll(transitions);
 		}
 		return result;
 	}
 
 	@Override
-	public FastPowersetState<S> getSuccessor(Collection<T> transition) {
+	public FastPowersetState<S> getSuccessor(Set<? extends T> transition) {
 		FastPowersetState<S> succ = new FastPowersetState<S>();
 		for(T t : transition) {
 			S succS = ts.getSuccessor(t);
@@ -69,15 +69,24 @@ public class FastPowersetDTS<S extends NumericID, I, T> extends
 		FastPowersetState<S> succ = new FastPowersetState<S>();
 		
 		for(S s : state) {
-			Collection<S> succs = ts.getSuccessors(s, input);
-			if(succs == null)
-				continue;
-			
-			for(S succS : succs)
+			Collection<? extends S> succs = ts.getSuccessors(s, input);
+			for(S succS : succs) {
 				succ.add(succS, succS.getId());
+			}
 		}
 		
 		return succ;
+	}
+
+	@Override
+	public Collection<? extends S> getOriginalStates(FastPowersetState<S> state) {
+		return state;
+	}
+
+	@Override
+	public Collection<? extends T> getOriginalTransitions(
+			Set<? extends T> transition) {
+		return transition;
 	}
 	
 	

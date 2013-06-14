@@ -34,7 +34,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>net.automatalib</groupId>
 		<artifactId>automata-parent</artifactId>
-		<version>0.3.1-SNAPSHOT</version>
+		<version>0.4.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -43,6 +43,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<groupId>${project.groupId}</groupId>
 			<artifactId>automata-commons-util</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>

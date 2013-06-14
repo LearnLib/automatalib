@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,14 +18,20 @@ package net.automatalib.algorithms.graph.apsp;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.algorithms.graph.GraphAlgorithms;
+
 /**
  * Result interface for the all pairs shortest paths problem.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class
  */
+@ParametersAreNonnullByDefault
 public interface APSPResult<N,E> {
 
 	
@@ -33,18 +39,19 @@ public interface APSPResult<N,E> {
 	 * Retrieves the length of the shortest path between the given nodes.
 	 * @param src the source node
 	 * @param tgt the target node
-	 * @return the length of the shortest path from <tt>src</tt> to <tt>tgt</tt>,
+	 * @return the length of the shortest path from {@code src} to {@code tgt},
 	 * or {@link GraphAlgorithms#INVALID_DISTANCE} if there exists no such path.
 	 */
 	public float getShortestPathDistance(N src, N tgt);
 	
 	/**
-	 * Retrieves the shortest path between the given nodes, or <tt>null</tt> if there
+	 * Retrieves the shortest path between the given nodes, or {@code null} if there
 	 * exists no such path.
 	 * @param src the source node
 	 * @param tgt the target node
-	 * @return the shortest path from <tt>src</tt> to <tt>tgt</tt>, or <tt>null</tt>
+	 * @return the shortest path from {@code src} to {@code tgt}, or {@code null}
 	 * if there exists no such path.
 	 */
+	@Nullable
 	public List<E> getShortestPath(N src, N tgt);
 }

@@ -16,12 +16,23 @@
  */
 package net.automatalib.util.graphs.traversal;
 
-import net.automatalib.commons.util.Triple;
 
 class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
 	
+	public static class LastEdge<E,N,D> {
+		public final E edge;
+		public final N node;
+		public final D data;
+		
+		public LastEdge(E edge, N node, D data) {
+			this.edge = edge;
+			this.node = node;
+			this.data = data;
+		}
+	}
+	
 	public final D data;
-	private Triple<E,N,D> lastEdge;
+	private LastEdge<E,N,D> lastEdge;
 	
 	public DFRecord(N node, D data) {
 		super(node);
@@ -32,14 +43,14 @@ class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
 		return data;
 	}
 
-	public Triple<E, N, D> getLastEdge() {
-		Triple<E,N,D> result = lastEdge;
+	public LastEdge<E, N, D> getLastEdge() {
+		LastEdge<E,N,D> result = lastEdge;
 		lastEdge = null;
 		return result;
 	}
 	
 	public void setLastEdge(E edge, N tgtNode, D tgtData) {
 		assert lastEdge == null;
-		lastEdge = Triple.make(edge, tgtNode, tgtData);
+		lastEdge = new LastEdge<>(edge, tgtNode, tgtData);
 	}
 }

@@ -28,13 +28,13 @@ final class IntRange extends AbstractList<Integer> implements ArrayWritable<Inte
 	private final int size;
 	
 	public IntRange(int start, int end) {
-		this(start, 1, end);
+		this(start, end, 1);
 	}
 	
-	public IntRange(int start, int step, int end) {
+	public IntRange(int start, int end, int step) {
 		this.start = start;
 		this.step = step;
-		this.size = (end - start) / step;
+		this.size = (end - start - 1) / step + 1;
 	}
 
 	public int intGet(int index) {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@ package net.automatalib.util.automata.equivalence;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +45,7 @@ import net.automatalib.words.Word;
  * for every state <i>t</i>, there exists a word <i>w &in; W</i> such that <i>w</i> exposes
  * a difference between <i>s</i> and <i>t</i>, or there exists no such word at all.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public class CharacterizingSets {
@@ -52,6 +53,10 @@ public class CharacterizingSets {
 	private static <S,I,T> List<Object> buildTrace(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
 			S state,
 			Word<I> suffix) {
+		if(suffix.isEmpty()) {
+			Object prop = automaton.getStateProperty(state);
+			return Collections.singletonList(prop);
+		}
 		List<Object> trace = new ArrayList<Object>(2*suffix.length());
 		
 		S curr = state;
@@ -102,6 +107,19 @@ public class CharacterizingSets {
 		return true;
 	}
 	
+	private static <S,I,T> List<List<Object>> buildSignature(UniversalDeterministicAutomaton<S,I,T,?,?> automaton,
+			List<? extends Word<I>> suffixes,
+			S state) {
+		List<List<Object>> signature = new ArrayList<>(suffixes.size());
+		
+		for(Word<I> suffix : suffixes) {
+			List<Object> trace = buildTrace(automaton, state, suffix);
+			signature.add(trace);
+		}
+		
+		return signature;
+	}
+	
 	private static <S,I,T> void cluster(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
 			Word<I> suffix,
 			Iterator<S> stateIt,
@@ -118,6 +136,7 @@ public class CharacterizingSets {
 			bucket.add(state);
 		}
 	}
+	
 	
 	/**
 	 * Computes a characterizing set for a specified state in the given automaton. 
@@ -188,31 +207,61 @@ public class CharacterizingSets {
 	public static <S,I,T> void findCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
 			Collection<? extends I> inputs,
 			Collection<? super Word<I>> result) {
+		findIncrementalCharacterizingSet(automaton, inputs, Collections.<Word<I>>emptyList(), result);
+	}
+	
+	private static <S,I,T> Map<Object,List<S>> clusterByProperty(
+			UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+			List<S> states) {
+		Map<Object,List<S>> result = new HashMap<>();
 		
-		Map<Object,List<S>> initBlockMap = new HashMap<Object,List<S>>();
-		
-		Queue<List<S>> blocks = new ArrayDeque<List<S>>();
-		
-		for(S state : automaton) {
+		for(S state : states) {
 			Object prop = automaton.getStateProperty(state);
-			
-			List<S> initBlock = initBlockMap.get(prop);
-			if(initBlock == null) {
-				initBlock = new ArrayList<S>();
-				blocks.offer(initBlock);
-				initBlockMap.put(prop, initBlock);
+			List<S> block = result.get(prop);
+			if(block == null) {
+				block = new ArrayList<>();
+				result.put(prop, block);
 			}
-
-			initBlock.add(state);
+			block.add(state);
 		}
 		
-		if(blocks.size() > 1)
-			result.add(Word.<I>epsilon());
+		return result;
+	}
+	
+	private static <S,I,T> boolean epsilonRefine(UniversalDeterministicAutomaton<S,I,T,?,?> automaton,
+			Queue<List<S>> blockQueue) {
 		
-
+		
+		int initialSize = blockQueue.size();
+		
+		boolean refined = false;
+		
+		for(int i = 0; i < initialSize; i++) {
+			List<S> block = blockQueue.poll();
+			if(block.size() <= 1) {
+				continue;
+			}
+			Map<Object,List<S>> propCluster = clusterByProperty(automaton, block);
+			if(propCluster.size() > 1) {
+				refined = true;
+			}
+			blockQueue.addAll(propCluster.values());
+		}
+		
+		return refined;
+	}
+	
+	private static <S,I,T> Word<I> refine(
+			UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+			Collection<? extends I> inputs,
+			Queue<List<S>> blockQueue) {
+		
 		List<S> currBlock;
-		
-		while((currBlock = blocks.poll()) != null) {
+		while((currBlock = blockQueue.poll()) != null) {
+			if(currBlock.size() <= 1) {
+				continue; // we cannot split further
+			}
+			
 			Iterator<S> it = currBlock.iterator();
 			
 			S ref = it.next();
@@ -224,33 +273,85 @@ public class CharacterizingSets {
 				suffix = Automata.findSeparatingWord(automaton, ref, state, inputs);
 			}
 			
-			if(suffix == null)
-				continue;
-			
-			result.add(suffix);
-			
-			int otherBlocks = blocks.size();
-			
-			Map<List<Object>,List<S>> buckets = new HashMap<List<Object>,List<S>>();
-			
-			List<S> firstBucket = new ArrayList<S>();
-			List<S> secondBucket = new ArrayList<S>();
-			firstBucket.add(ref);
-			buckets.put(buildTrace(automaton, ref, suffix), firstBucket);
-			secondBucket.add(state);
-			buckets.put(buildTrace(automaton, state, suffix), secondBucket);
-			
-			cluster(automaton, suffix, it, buckets);
-			
-			blocks.addAll(buckets.values());
-			
-			while(otherBlocks-- > 0) {
-				List<S> block = blocks.poll();
-				buckets.clear();
-				cluster(automaton, suffix, block.iterator(), buckets);
-				blocks.addAll(buckets.values());
+			if(suffix != null) {
+				int otherBlocks = blockQueue.size();
+				
+				Map<List<Object>,List<S>> buckets = new HashMap<List<Object>,List<S>>();
+				
+				List<S> firstBucket = new ArrayList<S>();
+				List<S> secondBucket = new ArrayList<S>();
+				firstBucket.add(ref);
+				buckets.put(buildTrace(automaton, ref, suffix), firstBucket);
+				secondBucket.add(state);
+				buckets.put(buildTrace(automaton, state, suffix), secondBucket);
+				
+				cluster(automaton, suffix, it, buckets);
+				
+				blockQueue.addAll(buckets.values());
+				
+				
+				// Split all other blocks that were in the queue
+				for(int i = 0; i < otherBlocks; i++) {
+					List<S> otherBlock = blockQueue.poll();
+					if(otherBlock.size() > 2) {
+						buckets.clear();
+						cluster(automaton, suffix, otherBlock.iterator(), buckets);
+						blockQueue.addAll(buckets.values());
+					}
+				}
+				
+				return suffix;
 			}
 		}
+		return null;
 	}
+	
+	public static <S,I,T> boolean findIncrementalCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+			Collection<? extends I> inputs,
+			Collection<? extends Word<I>> oldSuffixes,
+			Collection<? super Word<I>> newSuffixes) {
+		
+		boolean refined = false;
+		Map<List<List<Object>>,List<S>> initialPartitioning = new HashMap<>();
+		
+		// We need a list to ensure a stable iteration order
+		List<? extends Word<I>> oldSuffixList;
+		if(oldSuffixes instanceof List) {
+			oldSuffixList = (List<? extends Word<I>>)oldSuffixes;
+		}
+		else {
+			oldSuffixList = new ArrayList<>(oldSuffixes);
+		}
+		
+		Queue<List<S>> blocks = new ArrayDeque<>();
+		for(S state : automaton) {
+			List<List<Object>> sig = buildSignature(automaton, oldSuffixList, state);
+			List<S> block = initialPartitioning.get(sig);
+			if(block == null) {
+				block = new ArrayList<>();
+				blocks.add(block);
+				initialPartitioning.put(sig, block);
+			}
+			block.add(state);
+		}
+		
+		if(!oldSuffixes.contains(Word.epsilon())) {
+			if(epsilonRefine(automaton, blocks)) {
+				newSuffixes.add(Word.<I>epsilon());
+				refined = true;
+			}
+		}
+		
+		Word<I> suffix;
+		
+		while((suffix = refine(automaton, inputs, blocks)) != null) {
+			newSuffixes.add(suffix);
+			refined = true;
+		}
+		
+		return refined;
+	}
+	
+	
 	
 }

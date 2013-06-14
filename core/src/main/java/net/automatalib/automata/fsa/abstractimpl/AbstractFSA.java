@@ -36,11 +36,11 @@ public abstract class AbstractFSA<S, I> extends AbstractAutomaton<S,I,S> impleme
 	}
 
 	
-	public static <S,I> Boolean computeOutput(FiniteStateAcceptor<S,I> $this, Iterable<I> input) {
+	public static <S,I> Boolean computeOutput(FiniteStateAcceptor<S,I> $this, Iterable<? extends I> input) {
 		return $this.accepts(input);
 	}
 	
-	public static <S,I> Boolean computeSuffixOutput(FiniteStateAcceptor<S,I> $this, Iterable<I> prefix, Iterable<I> suffix) {
+	public static <S,I> Boolean computeSuffixOutput(FiniteStateAcceptor<S,I> $this, Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		Iterable<I> input = IterableUtil.concat(prefix, suffix);
 		return $this.computeOutput(input);
 	}
@@ -61,12 +61,12 @@ public abstract class AbstractFSA<S, I> extends AbstractAutomaton<S,I,S> impleme
 	}
 	
 	@Override
-	public Boolean computeOutput(Iterable<I> input) {
+	public Boolean computeOutput(Iterable<? extends I> input) {
 		return computeOutput(this, input);
 	}
 	
 	@Override
-	public Boolean computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return computeSuffixOutput(this, prefix, suffix);
 	}
 	

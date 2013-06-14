@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,25 +16,30 @@
  */
 package net.automatalib.graphs;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.ts.UniversalTransitionSystem;
 
 /**
  * A universal graph, i.e., with (possibly empty) node and edge properties. For a documentation
  * on the concept of "universal", see {@link UniversalTransitionSystem}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class
  * @param <NP> node property class
  * @param <EP> edge property class
  */
+@ParametersAreNonnullByDefault
 public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<N,E> {
 	/**
 	 * Retrieves the property of a given node.
 	 * @param node the node
 	 * @return the property of the specified node
 	 */
+	@Nullable
 	public NP getNodeProperty(N node);
 	
 	/**
@@ -42,5 +47,6 @@ public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<
 	 * @param edge the edge
 	 * @return the property of the specified edge
 	 */
+	@Nullable
 	public EP getEdgeProperty(E edge);
 }

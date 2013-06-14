@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,7 +16,10 @@
  */
 package net.automatalib.automata.concepts;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 
+
+@ParametersAreNonnullByDefault
 public interface MutableProbabilistic<T> extends Probabilistic<T> {
 	public void setTransitionProbability(T transition, float probability);
 }

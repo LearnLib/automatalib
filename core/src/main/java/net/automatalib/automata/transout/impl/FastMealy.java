@@ -21,10 +21,11 @@ import java.util.List;
 import net.automatalib.automata.base.fast.FastMutableDet;
 import net.automatalib.automata.dot.DOTHelperMealy;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.ts.abstractimpl.AbstractDeterministicTransOutTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -66,8 +67,8 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 	 * @see de.ls5.automata.transout.TransitionOutputAutomaton#trace(java.lang.Iterable, java.util.List)
 	 */
 	@Override
-	public void trace(Iterable<I> input, List<O> output) {
-		AbstractTransOutAutomaton.trace(this, input, output);
+	public boolean trace(Iterable<? extends I> input, List<? super O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, input, output);
 	}
 
 	/*
@@ -75,8 +76,8 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 	 * @see de.ls5.automata.transout.TransitionOutputAutomaton#trace(java.lang.Object, java.lang.Iterable, java.util.List)
 	 */
 	@Override
-	public void trace(FastMealyState<O> state, Iterable<I> input, List<O> output) {
-		AbstractTransOutAutomaton.trace(this, state, input, output);
+	public boolean trace(FastMealyState<O> state, Iterable<? extends I> input, List<? super O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, state, input, output);
 	}
 
 	/*
@@ -170,7 +171,7 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 	 * @see de.ls5.automata.features.SODetOutputAutomaton#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
 	 */
 	@Override
-	public Word<O> computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return AbstractTransOutAutomaton.computeSuffixOutput(this, prefix, suffix);
 	}
 
@@ -179,7 +180,7 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 	 * @see de.ls5.automata.features.OutputAutomaton#computeOutput(java.lang.Iterable)
 	 */
 	@Override
-	public Word<O> computeOutput(Iterable<I> input) {
+	public Word<O> computeOutput(Iterable<? extends I> input) {
 		return AbstractTransOutAutomaton.computeOutput(this, input);
 	}
 	
@@ -195,11 +196,11 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 
 	@Override
 	public O getOutput(FastMealyState<O> state, I input) {
-		return AbstractTransOutAutomaton.getOutput(this, state, input);
+		return AbstractDeterministicTransOutTS.getOutput(this, state, input);
 	}
 
 	@Override
-	public GraphDOTHelper<FastMealyState<O>, Pair<I, MealyTransition<FastMealyState<O>, O>>> getDOTHelper() {
+	public GraphDOTHelper<FastMealyState<O>, TransitionEdge<I, MealyTransition<FastMealyState<O>, O>>> getDOTHelper() {
 		return new DOTHelperMealy<FastMealyState<O>, I, MealyTransition<FastMealyState<O>,O>, O>(this);
 	}
 }

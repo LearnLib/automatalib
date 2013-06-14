@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ import net.automatalib.ts.UniversalDTS;
 /**
  * A deterministic acceptor transition system.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @see AcceptorTS
  * @see DeterministicTransitionSystem

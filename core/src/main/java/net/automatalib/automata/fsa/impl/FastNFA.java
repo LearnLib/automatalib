@@ -25,7 +25,7 @@ import net.automatalib.automata.fsa.MutableNFA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractFSA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractMutableFSA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractNFA;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.WrapperUtil;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
@@ -66,7 +66,7 @@ public class FastNFA<I> extends
 	 * @see de.ls5.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
 	 */
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return AbstractNFA.accepts(this, input);
 	}
 
@@ -177,7 +177,7 @@ public class FastNFA<I> extends
 	 * @see net.automatalib.automata.concepts.SuffixOutput#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
 	 */
 	@Override
-	public Boolean computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return AbstractFSA.computeSuffixOutput(this, prefix, suffix);
 	}
 
@@ -187,7 +187,7 @@ public class FastNFA<I> extends
 	 * @see net.automatalib.automata.concepts.Output#computeOutput(java.lang.Iterable)
 	 */
 	@Override
-	public Boolean computeOutput(Iterable<I> input) {
+	public Boolean computeOutput(Iterable<? extends I> input) {
 		return AbstractFSA.computeOutput(this, input);
 	}
 
@@ -213,7 +213,7 @@ public class FastNFA<I> extends
 
 
 	@Override
-	public GraphDOTHelper<FastNFAState, Pair<I, FastNFAState>> getDOTHelper() {
+	public GraphDOTHelper<FastNFAState, TransitionEdge<I, FastNFAState>> getDOTHelper() {
 		return new DOTHelperFSA<>(this);
 	}
 

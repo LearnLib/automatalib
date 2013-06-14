@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,10 @@
  */
 package net.automatalib.graphs.concepts;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.graphs.Graph;
+
 /**
  * Node acceptance concept, for {@link Graph}s that represent a structure for
  * deciding acceptance or rejection.
@@ -24,6 +28,7 @@ package net.automatalib.graphs.concepts;
  *
  * @param <N> node class
  */
+@ParametersAreNonnullByDefault
 public interface NodeAcceptance<N> {
 	
 	/**

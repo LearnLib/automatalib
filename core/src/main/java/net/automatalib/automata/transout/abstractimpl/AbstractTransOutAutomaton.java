@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.automata.transout.TransitionOutputAutomaton;
+import net.automatalib.ts.abstractimpl.AbstractDeterministicTransOutTS;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
@@ -27,10 +28,10 @@ import net.automatalib.words.WordBuilder;
 public abstract class AbstractTransOutAutomaton {
 	
 	public static <S,I,T,O> Word<O> computeOutput(TransitionOutputAutomaton<S,I,T,O> $this,
-			Iterable<I> input) {
+			Iterable<? extends I> input) {
 		WordBuilder<O> result;
 		if(input instanceof Collection)
-			result = new WordBuilder<O>(((Collection<I>)input).size());
+			result = new WordBuilder<O>(((Collection<? extends I>)input).size());
 		else
 			result = new WordBuilder<>();
 		$this.trace(input, result);
@@ -38,10 +39,10 @@ public abstract class AbstractTransOutAutomaton {
 	}
 	
 	public static <S,I,T,O> Word<O> computeSuffixOutput(TransitionOutputAutomaton<S,I,T,O> $this,
-			Iterable<I> prefix, Iterable<I> suffix) {
+			Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		WordBuilder<O> result;
 		if(suffix instanceof Collection)
-			result = new WordBuilder<O>(((Collection<I>)suffix).size());
+			result = new WordBuilder<O>(((Collection<? extends I>)suffix).size());
 		else
 			result = new WordBuilder<>();
 		S state = $this.getState(prefix);
@@ -50,28 +51,22 @@ public abstract class AbstractTransOutAutomaton {
 	}
 	
 	
-	public static <S,I,T,O> void trace(TransitionOutputAutomaton<S,I,T,O> $this,
+	@Deprecated
+	public static <S,I,T,O> boolean trace(TransitionOutputAutomaton<S,I,T,O> $this,
 			Iterable<I> input, List<O> output) {
-		$this.trace($this.getInitialState(), input, output);
+		return AbstractDeterministicTransOutTS.trace($this, input, output);
 	}
 	
-	public static <S,I,T,O> void trace(TransitionOutputAutomaton<S, I, T, O> $this,
+	@Deprecated
+	public static <S,I,T,O> boolean trace(TransitionOutputAutomaton<S, I, T, O> $this,
 			S state, Iterable<I> input, List<O> output) {
-		
-		for(I sym : input) {
-			T trans = $this.getTransition(state, sym);
-			O out = $this.getTransitionOutput(trans);
-			output.add(out);
-			state = $this.getSuccessor(trans);
-		}
+		return AbstractDeterministicTransOutTS.trace($this, state, input, output);
 	}
 	
+	@Deprecated
 	public static <S,I,T,O> O getOutput(TransitionOutputAutomaton<S, I, T, O> $this,
 			S state, I input) {
-		T trans = $this.getTransition(state, input);
-		if(trans == null)
-			return null;
-		return $this.getTransitionOutput(trans);
+		return AbstractDeterministicTransOutTS.getOutput($this, state, input);
 	}
 }
 

@@ -18,8 +18,8 @@ package net.automatalib.automata.dot;
 
 import java.util.Map;
 
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.transout.TransitionOutputAutomaton;
-import net.automatalib.commons.util.Pair;
 
 
 public class DOTHelperMealy<S, I, T, O> extends
@@ -34,14 +34,14 @@ public class DOTHelperMealy<S, I, T, O> extends
 	 * @see net.automatalib.automata.dot.DefaultDOTHelperAutomaton#getEdgeProperties(net.automatalib.commons.util.Pair, java.util.Map)
 	 */
 	@Override
-	public boolean getEdgeProperties(S src, Pair<I, T> edge, S tgt, Map<String,String> properties) {
+	public boolean getEdgeProperties(S src, TransitionEdge<I, T> edge, S tgt, Map<String,String> properties) {
 		if(!super.getEdgeProperties(src, edge, tgt, properties))
 			return false;
-		String label = String.valueOf(edge.getFirst()) + " / ";
-		O output = automaton.getTransitionOutput(edge.getSecond());
+		String label = String.valueOf(edge.getInput()) + " / ";
+		O output = automaton.getTransitionOutput(edge.getTransition());
 		if(output != null)
 			label += String.valueOf(output);
-		properties.put("label", label);
+		properties.put(EdgeAttrs.LABEL, label);
 		return true;
 	}
 	

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -23,16 +23,18 @@ import java.util.Map;
 
 import net.automatalib.commons.util.mappings.Mapping;
 
-public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
-	
+public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
+		
 	protected static final String START_PREFIX = "__start";
 	
+	private final GraphDOTHelper<N, ? super E> delegate;
 	
-	private static final DefaultDOTHelper<Object,Object> DEFAULT_INSTANCE
-		= new DefaultDOTHelper<Object,Object>();
+	public DefaultDOTHelper() {
+		this(null);
+	}
 	
-	public static DefaultDOTHelper<Object,Object> getInstance() {
-		return DEFAULT_INSTANCE;
+	public DefaultDOTHelper(GraphDOTHelper<N,? super E> delegate) {
+		this.delegate = delegate;
 	}
 	
 	protected Collection<? extends N> initialNodes() {
@@ -45,6 +47,10 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	 */
 	@Override
 	public void writePreamble(Appendable a) throws IOException {
+		if(delegate != null) {
+			delegate.writePreamble(a);
+		}
+		
 		int size = initialNodes().size();
 		
 		for(int i = 0; i < size; i++) {
@@ -59,6 +65,10 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	 */
 	@Override
 	public void writePostamble(Mapping<N,String> identifiers, Appendable a) throws IOException {
+		if(delegate != null) {
+			delegate.writePostamble(identifiers, a);
+		}
+		
 		Collection<? extends N> initials = initialNodes();
 		
 		int i = 0;
@@ -74,9 +84,19 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	 */
 	@Override
 	public boolean getNodeProperties(N node, Map<String,String> properties) {
-		String label = String.valueOf(node);
-		properties.put(LABEL, label);
-		properties.put(SHAPE, "circle");
+		if(delegate != null) {
+			if(!delegate.getNodeProperties(node, properties)) {
+				return false;
+			}
+		}
+		
+		if(!properties.containsKey(NodeAttrs.LABEL)) {
+			String label = String.valueOf(node);
+			properties.put(NodeAttrs.LABEL, label);
+		}
+		if(!properties.containsKey(NodeAttrs.SHAPE)) {
+			properties.put(NodeAttrs.SHAPE, NodeShapes.CIRCLE);
+		}
 		return true;
 	}
 
@@ -86,7 +106,11 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	 */
 	@Override
 	public boolean getEdgeProperties(N src, E edge, N tgt, Map<String,String> properties) {
+		if(delegate != null) {
+			return delegate.getEdgeProperties(src, edge, tgt, properties);
+		}
 		return true;
 	}
+	
 
 }

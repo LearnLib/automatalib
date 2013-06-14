@@ -16,6 +16,8 @@
  */
 package net.automatalib.automata.base.compact;
 
+import java.util.Arrays;
+
 import net.automatalib.words.Alphabet;
 
 public class UniversalCompactSimpleDet<I, SP> extends
@@ -68,9 +70,8 @@ public class UniversalCompactSimpleDet<I, SP> extends
 
 	@Override
 	public void clear() {
+		Arrays.fill(stateProperties, 0, size(), null);
 		super.clear();
-		for(int i = 0; i < stateProperties.length; i++)
-			stateProperties[i] = null;
 	}
 	
 	

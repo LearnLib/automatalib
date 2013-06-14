@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.algorithms.graph.GraphAlgorithms;
 import net.automatalib.commons.smartcollections.BinaryHeap;
 import net.automatalib.commons.smartcollections.ElementReference;
@@ -33,21 +37,27 @@ import net.automatalib.graphs.concepts.EdgeWeights;
  * Implementation of Dijkstras algorithm for the single-source shortest path
  * problem.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class
  */
+@ParametersAreNonnullByDefault
 public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 	
 	/*
 	 * Internal data record
 	 */
+	@ParametersAreNonnullByDefault
 	private static final class Record<N,E> implements Comparable<Record<N,E>> {
+		@Nonnull
 		public final N node;
 		public float dist;
+		@Nullable
 		public ElementReference ref;
+		@Nullable
 		public E reach;
+		@Nullable
 		public Record<N,E> parent;
 		int depth;
 		
@@ -56,7 +66,7 @@ public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 			this(node, dist, null, null);
 		}
 		
-		public Record(N node, float dist, E reach, Record<N,E> parent) {
+		public Record(N node, float dist, @Nullable E reach, @Nullable Record<N,E> parent) {
 			this.node = node;
 			this.dist = dist;
 			this.reach = reach;
@@ -80,6 +90,7 @@ public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 	 * @param edgeWeights the edge weights
 	 * @return the single-source shortest path results
 	 */
+	@Nonnull
 	public static <N,E> SSSPResult<N,E> findSSSP(Graph<N,E> graph, N init, EdgeWeights<E> edgeWeights) {
 		DijkstraSSSP<N, E> dijkstra = new DijkstraSSSP<N, E>(graph, init, edgeWeights);
 		dijkstra.findSSSP();

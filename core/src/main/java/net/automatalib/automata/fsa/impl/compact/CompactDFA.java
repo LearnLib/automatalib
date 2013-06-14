@@ -24,7 +24,7 @@ import net.automatalib.automata.dot.DOTPlottableAutomaton;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractDFA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractFSA;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 
@@ -98,18 +98,18 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 	}
 
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return AbstractDFA.accepts(this, input);
 	}
 
 	@Override
-	public Boolean computeSuffixOutput(Iterable<I> prefix,
-			Iterable<I> suffix) {
+	public Boolean computeSuffixOutput(Iterable<? extends I> prefix,
+			Iterable<? extends I> suffix) {
 		return AbstractFSA.computeSuffixOutput(this, prefix, suffix);
 	}
 
 	@Override
-	public Boolean computeOutput(Iterable<I> input) {
+	public Boolean computeOutput(Iterable<? extends I> input) {
 		return AbstractFSA.computeOutput(this, input);
 	}
 
@@ -120,13 +120,15 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 
 	@Override
 	public void initState(int stateId, Boolean property) {
-		setAccepting(stateId, property.booleanValue());
+		boolean bval = (property == null) ? false : property.booleanValue();
+		setAccepting(stateId, bval);
 	}
 
 	
 	@Override
 	public void setStateProperty(int stateId, Boolean property) {
-		setAccepting(stateId, property.booleanValue());
+		boolean bval = (property == null) ? false : property.booleanValue();
+		setAccepting(stateId, bval);
 	}
 
 	@Override
@@ -135,7 +137,7 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 	}
 
 	@Override
-	public GraphDOTHelper<Integer, Pair<I, Integer>> getDOTHelper() {
+	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getDOTHelper() {
 		return new DOTHelperFSA<>(this);
 	}
 

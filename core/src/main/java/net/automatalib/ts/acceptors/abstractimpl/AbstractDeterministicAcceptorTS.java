@@ -22,7 +22,7 @@ import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 public abstract class AbstractDeterministicAcceptorTS<S, I> extends
 		AbstractDTS<S, I, S> implements DeterministicAcceptorTS<S, I> {
 	
-	public static <S,I> boolean accepts(DeterministicAcceptorTS<S, I> $this, Iterable<I> input) {
+	public static <S,I> boolean accepts(DeterministicAcceptorTS<S, I> $this, Iterable<? extends I> input) {
 		S state = $this.getState(input);
 		if(state == null)
 			return false;
@@ -31,7 +31,7 @@ public abstract class AbstractDeterministicAcceptorTS<S, I> extends
 
 
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return accepts(this, input);
 	}
 

@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
+import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.abstractimpl.AbstractDTS;
 
 
@@ -60,5 +61,14 @@ public abstract class AbstractDeterministicAutomaton<S, I, T> extends AbstractDT
 	@Override
 	public StateIDs<S> stateIDs() {
 		return AbstractAutomaton.stateIDs(this);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.ts.abstractimpl.AbstractTS#createStaticStateMapping()
+	 */
+	@Override
+	public <V> MutableMapping<S,V> createStaticStateMapping() {
+		return AbstractAutomaton.createStaticStateMapping(this);
 	}
 }

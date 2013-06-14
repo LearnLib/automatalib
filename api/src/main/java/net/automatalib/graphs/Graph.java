@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@ package net.automatalib.graphs;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+
 import net.automatalib.graphs.concepts.NodeIDs;
 
 
@@ -25,7 +27,7 @@ import net.automatalib.graphs.concepts.NodeIDs;
  * Graph interface. Like an {@link IndefiniteGraph}, but with the additional requirement
  * that the set of nodes be finite.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class
@@ -42,9 +44,11 @@ public interface Graph<N, E> extends IndefiniteGraph<N,E>, Iterable<N> {
 	 * Retrieves an (unmodifiable) collection of the nodes in this graph. 
 	 * @return the nodes in this graph
 	 */
-	public Collection<N> getNodes();
+	@Nonnull
+	public Collection<? extends N> getNodes();
 	
 	
+	@Nonnull
 	public NodeIDs<N> nodeIDs();
 	
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -15,6 +15,9 @@
  * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.ts;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * A "universal" transition system, which captures the possibility to assign
@@ -46,6 +49,7 @@ package net.automatalib.ts;
  * @param <SP> state property class
  * @param <TP> transition property class
  */
+@ParametersAreNonnullByDefault
 public interface UniversalTransitionSystem<S, I, T, SP, TP> extends
 		TransitionSystem<S, I, T> {
 	
@@ -54,6 +58,7 @@ public interface UniversalTransitionSystem<S, I, T, SP, TP> extends
 	 * @param state the state.
 	 * @return the corresponding property.
 	 */
+	@Nullable
 	public SP getStateProperty(S state);
 	
 	/**
@@ -61,5 +66,6 @@ public interface UniversalTransitionSystem<S, I, T, SP, TP> extends
 	 * @param transition the transition.
 	 * @return the corresponding property.
 	 */
+	@Nullable
 	public TP getTransitionProperty(T transition);
 }

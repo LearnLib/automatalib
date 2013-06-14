@@ -17,6 +17,7 @@
 package net.automatalib.commons.smartcollections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -365,6 +366,9 @@ SmartSequence<E> {
 	 */
 	@Override
 	public E choose() {
+		if(head == null) {
+			throw new NoSuchElementException();
+		}
 		return head.getElement();
 	}
 
@@ -449,10 +453,13 @@ SmartSequence<E> {
 
 	/**
 	 * Retrieves the last element in the list. If the list is empty,
-	 * a {@link NullPointerException} may be thrown.
+	 * a {@link NoSuchElementException} will be thrown.
 	 * @return the last element in the list.
 	 */
 	public E getBack() {
+		if(last == null) {
+			throw new NoSuchElementException();
+		}
 		return last.getElement();
 	}
 
@@ -467,10 +474,13 @@ SmartSequence<E> {
 
 	/**
 	 * Retrieves the first element in the list. If the list is empty,
-	 * a {@link NullPointerException} may be thrown.
+	 * a {@link NoSuchElementException} will be thrown
 	 * @return the first element in the list.
 	 */
 	public E getFront() {
+		if(head == null) {
+			throw new NoSuchElementException();
+		}
 		return head.getElement();
 	}
 

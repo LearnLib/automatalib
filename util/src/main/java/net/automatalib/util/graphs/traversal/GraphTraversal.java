@@ -24,8 +24,8 @@ import java.util.Iterator;
 import java.util.Queue;
 
 import net.automatalib.commons.util.Holder;
-import net.automatalib.commons.util.Triple;
 import net.automatalib.graphs.IndefiniteGraph;
+import net.automatalib.util.graphs.traversal.DFRecord.LastEdge;
 import net.automatalib.util.traversal.TraversalOrder;
 
 
@@ -98,7 +98,7 @@ public abstract class GraphTraversal {
 				return complete;
 			case EXPLORE:
 				if(nodeCount != limit) { // not equals will always be true for negative limit values
-					bfsQueue.offer(new BFRecord<N,D>(init, dataHolder.value));
+					bfsQueue.add(new BFRecord<N,D>(init, dataHolder.value));
 					nodeCount++;
 				}
 				else
@@ -118,10 +118,8 @@ bfs_loop:
 			if(!vis.startExploration(currNode, currData))
 				continue;
 			
-			Collection<E> edges = graph.getOutgoingEdges(currNode);
-			
-			if(edges == null)
-				continue;
+			Collection<? extends E> edges = graph.getOutgoingEdges(currNode);
+
 			
 			for(E edge : edges) {
 				
@@ -224,10 +222,10 @@ bfs_loop:
 				}
 			}
 			
-			Triple<E,N,D> lastEdge = current.getLastEdge();
+			LastEdge<E,N,D> lastEdge = current.getLastEdge();
 			if(lastEdge != null) {
-				vis.backtrackEdge(currNode, currData, lastEdge.getFirst(),
-						lastEdge.getSecond(), lastEdge.getThird());
+				vis.backtrackEdge(currNode, currData, lastEdge.edge,
+						lastEdge.node, lastEdge.data);
 			}
 			
 			if(!current.hasNextEdge()) {

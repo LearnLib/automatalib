@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,14 +16,18 @@
  */
 package net.automatalib.graphs;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * A graph that supports (desirably efficient) removal of nodes and edges.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class
  */
+@ParametersAreNonnullByDefault
 public interface ShrinkableGraph<N, E> extends Graph<N, E> {
 	
 	/**
@@ -40,7 +44,7 @@ public interface ShrinkableGraph<N, E> extends Graph<N, E> {
 	 * @param node the node to remove
 	 * @param replacement the replacement node for incoming edges
 	 */
-	public void removeNode(N node, N replacement);
+	public void removeNode(N node, @Nullable N replacement);
 	
 	/**
 	 * Removes an outgoing edge from the given node.

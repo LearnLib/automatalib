@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (C) 2013 TU Dortmund
+Copyright (C) 2013-2014 TU Dortmund
 This file is part of AutomataLib, http://www.automatalib.net/.
 
 AutomataLib is free software; you can redistribute it and/or
@@ -22,16 +22,16 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<!-- ================================= PROJECT INFO ============================== -->
 	<groupId>net.automatalib</groupId>
 	<artifactId>automata-parent</artifactId>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.4.0</version>
 	<packaging>pom</packaging>
 
-	<name>AutomataLib :: Parent</name>
+	<name>AutomataLib</name>
 	<description>
 		A fully generic library for automata, graphs, and models, written in Java.
 		This is the parent artifact which does not have any source code. Please refer to the
 		"modules" page for more detailed documentation on the single library artifacts.
 	</description>
-	<url>http://misberner.github.io/automatalib/maven-site/</url>
+	<url>http://misberner.github.io/automatalib/maven-site/${project.version}</url>
 
 	<licenses>
 		<license>
@@ -99,7 +99,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<version>9</version>
 	</parent>
 
 	<!--
@@ -124,20 +124,30 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!--
 			dependency versions
 		-->
-		<testng.version>6.8</testng.version>
-		<javadoc-plugin.version>2.9</javadoc-plugin.version>
+		<testng.version>6.8.8</testng.version>
+		<javadoc-plugin.version>2.9.1</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
 		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
 		<site-plugin.version>3.3</site-plugin.version>
 		<reports-plugin.version>2.7</reports-plugin.version>
-		<surefire-plugin.version>2.14.1</surefire-plugin.version>
+		<surefire-plugin.version>2.17</surefire-plugin.version>
 		<assembly-plugin.version>2.4</assembly-plugin.version>
+		<exec-plugin.version>1.2.1</exec-plugin.version>
+		<deploy-plugin.version>2.8.1</deploy-plugin.version>
+		<deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
 
 		<brics-automaton.version>1.11-8</brics-automaton.version>
 
+		<guava.version>16.0.1</guava.version>
+		<findbugs.version>2.0.3</findbugs.version>
+
+		<duzzt.version>0.0.2</duzzt.version>
+
 		<!-- Javadoc links -->
-		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
 		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
+		<trove4j.apidocs>http://trove4j.sourceforge.net/javadocs/</trove4j.apidocs>
+		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
+		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
 	</properties>
 
 	<!--
@@ -152,27 +162,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${compiler-plugin.version}</version>
 					<configuration>
 						<fork>true</fork>
-						<meminitial>128m</meminitial>
-						<maxmem>512m</maxmem>
 						<source>1.7</source>
 						<target>1.7</target>
 					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>${javadoc-plugin.version}</version>
-					<configuration>
-						<maxmemory>512</maxmemory>
-						<quiet>false</quiet>
-						<source>1.7</source>
-						<verbose>true</verbose>
-						<linksource>true</linksource>
-						<links>
-							<link>${java7.apidocs}</link>
-							<link>${brics-automaton.apidocs}</link>
-						</links>
-					</configuration>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${deploy-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -185,7 +182,23 @@ http://www.gnu.de/documents/lgpl.en.html.
 								<goal>attach-descriptor</goal>
 							</goals>
 						</execution>
+						<!-- Skip site creation; this will be done by deploy-site-github -->
+						<execution>
+							<id>default-site</id>
+							<phase>site</phase>
+							<configuration>
+								<skip>true</skip>
+							</configuration>
+						</execution>
 					</executions>
+					<configuration>
+						<skipDeploy>true</skipDeploy>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>${exec-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -197,8 +210,82 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>${assembly-plugin.version}</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<configuration>
+						<arguments>-Psonatype-oss-release -Dautomatalib.release=true</arguments>
+						<!-- False to allow adjustment to branching model -->
+						<pushChanges>false</pushChanges>
+						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
+						<preparationGoals>clean install</preparationGoals>
+					</configuration>
+				</plugin>
+				<!-- This gets rid of the nasty "maven-enforcer-plugin will be ignored" warning by m2e -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<executions>
+					<!-- Deploy site @ GitHub pages -->
+					<!--
+						Note: In order to be able to deploy the Maven site,
+						you need the script deploy-site-github to reside
+						in your PATH, or manually specify the path to the
+						executable script using the "deploy-site-github.exec"
+						property.
+						You can download the shell script from this URL:
+						https://raw.github.com/misberner/shell-scripts/master/maven/deploy-site-github.sh
+					-->
+					<execution>
+						<id>deploy-site-github</id>
+						<inherited>false</inherited>
+						<phase>site-deploy</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${deploy-site-github.exec}</executable>
+							<workingDirectory>${project.basedir}</workingDirectory>
+							<arguments>
+								<argument>-p</argument> <!-- Purge contents before copying -->
+								<argument>-P/maven-site</argument>
+								<argument>-V</argument>
+								<argument>-l</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 
 	<!--
@@ -231,13 +318,15 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${javadoc-plugin.version}</version>
 				<configuration>
-					<maxmemory>512</maxmemory>
 					<quiet>false</quiet>
 					<source>1.7</source>
 					<verbose>true</verbose>
-					<linksource>true</linksource>
+					<detectLinks>true</detectLinks>
+					<linksource>false</linksource>
 					<links>
 						<link>${java7.apidocs}</link>
+						<link>${trove4j.apidocs}</link>
+						<link>${guava.apidocs}</link>
 						<link>${brics-automaton.apidocs}</link>
 					</links>
 				</configuration>
@@ -289,94 +378,32 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</profile>
 		<profile>
 			<id>binary-release</id>
+			<activation>
+				<property>
+					<name>automatalib.release</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<modules>
+				<module>distribution</module>
+			</modules>
 			<build>
 				<plugins>
 					<!--  aggregate javadoc of modules in one jar -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${javadoc-plugin.version}</version>
-						<inherited>false</inherited>
-						<configuration>
-							<maxmemory>512</maxmemory>
-							<quiet>false</quiet>
-							<source>1.7</source>
-							<verbose>true</verbose>
-							<linksource>true</linksource>
-							<links>
-								<link>http://docs.oracle.com/javase/7/docs/api/</link>
-							</links>
-							<finalName>automatalib-${project.version}</finalName>
-						</configuration>
 						<executions>
 							<execution>
 								<id>aggregate</id>
+								<inherited>false</inherited>
 								<goals>
 									<goal>aggregate-jar</goal>
 								</goals>
-								<phase>site</phase>
+								<phase>prepare-package</phase>
 							</execution>
 						</executions>
 					</plugin>
-					<!-- 
-                        build assemblies
-                    -->
-					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<version>${assembly-plugin.version}</version>
-						<inherited>false</inherited>
-						<configuration>
-							<finalName>automatalib-${project.version}</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
-						</configuration>
-						<executions>
-							<!--  sources jar -->
-							<execution>
-								<id>src</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<descriptors>
-										<descriptor>src/main/assembly/automatalib-srcjar.xml</descriptor>
-									</descriptors>
-									<finalName>automatalib-${project.version}-sources</finalName>
-								</configuration>
-							</execution>
-							<!-- 
-                                binary jar
-                            -->
-							<execution>
-								<id>jar</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<descriptors>
-										<descriptor>src/main/assembly/automatalib-jar.xml</descriptor>
-									</descriptors>
-								</configuration>
-							</execution>
-							<!-- 
-                                bin
-                            -->
-							<execution>
-								<id>bin</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<descriptors>
-										<descriptor>src/main/assembly/automatalib-bin.xml</descriptor>
-									</descriptors>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-
 				</plugins>
 			</build>
 		</profile>
@@ -388,42 +415,47 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-util</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-incremental</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
+				<artifactId>automata-misc-algorithms</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-brics</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-commons-util</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-commons-smartcollections</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-commons-dotutil</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -433,6 +465,26 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>automaton</artifactId>
 				<version>${brics-automaton.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+ 				<groupId>com.google.code.findbugs</groupId>
+ 				<artifactId>jsr305</artifactId>
+				<version>${findbugs.version}</version>
+				<!-- <scope>provided</scope> -->
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.misberner.duzzt</groupId>
+				<artifactId>duzzt-processor</artifactId>
+				<version>${duzzt.version}</version>
+				<!-- Compile-time only -->
+				<scope>provided</scope>
+			</dependency>
+
 
 			<dependency>
 				<groupId>org.testng</groupId>
@@ -444,7 +496,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	</dependencyManagement>
 
 	<!--
-	================================= DISTRIBUTION ==============================	
+	================================= DISTRIBUTION ==============================
 	-->
 	<distributionManagement>
 		<!-- Dummy - this will NOT actually be used, but is required for mvn site:stage -->

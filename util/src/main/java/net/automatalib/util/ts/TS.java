@@ -19,24 +19,30 @@ package net.automatalib.util.ts;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.ts.UniversalTransitionSystem;
+import net.automatalib.util.ts.TSIterators.DefinedInputsIterator;
+import net.automatalib.util.ts.TSIterators.UndefinedInputsIterator;
 import net.automatalib.util.ts.traversal.BFSOrderIterator;
+
+import com.google.common.base.Function;
 
 
 public abstract class TS {
 	
-	
-	public static <S,I,T> Iterable<T> allTransitions(final TransitionSystem<S,I,T> ts,
-			final S state,
-			final Collection<I> inputs) {
-		return new Iterable<T>() {
-			@Override
-			public Iterator<T> iterator() {
-				return new AllTransitionsIterator<S,I,T>(ts, state, inputs);
-			}
-		};
+	public static final class TransRef<S,I,T> {
+		public final S state;
+		public final I input;
+		public final T transition;
+		public TransRef(S state, I input, T transition) {
+			this.state = state;
+			this.input = input;
+			this.transition = transition;
+		}
+		public TransRef(S state, I input) {
+			this(state, input, null);
+		}
 	}
 	
 	public static <S,I> Iterable<S> bfsOrder(final TransitionSystem<S,I,?> ts, final Collection<? extends I> inputs) {
@@ -49,20 +55,96 @@ public abstract class TS {
 		};
 	}
 	
-	public static <S,SP> Mapping<S,SP> stateProperties(final UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
-		return new Mapping<S,SP>() {
+	public static <S,SP> Function<S,SP> stateProperties(final UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
+		return new Function<S,SP>() {
 			@Override
-			public SP get(S elem) {
+			public SP apply(S elem) {
 				return uts.getStateProperty(elem);
 			}
 		};
 	}
 	
-	public static <T,TP> Mapping<T,TP> transitionProperties(final UniversalTransitionSystem<?, ?, T, ?, TP> uts) {
-		return new Mapping<T,TP>() {
+	public static <T,TP> Function<T,TP> transitionProperties(final UniversalTransitionSystem<?, ?, T, ?, TP> uts) {
+		return new Function<T,TP>() {
 			@Override
-			public TP get(T elem) {
+			public TP apply(T elem) {
 				return uts.getTransitionProperty(elem);
+			}
+		};
+	}
+	
+	public static <S,I> Iterator<I> definedInputsIterator(TransitionSystem<S, I, ?> ts,
+			S state,
+			Iterator<? extends I> inputsIt) {
+		return new DefinedInputsIterator<S, I>(ts, state, inputsIt);
+	}
+	
+	public static <S,I> Iterable<I> definedInputs(
+			final DeterministicTransitionSystem<S, I, ?> dts,
+			final S state,
+			final Iterable<? extends I> inputs) {
+		return new Iterable<I>() {
+			@Override
+			public Iterator<I> iterator() {
+				return definedInputsIterator(dts, state, inputs.iterator());
+			}
+		};
+	}
+	
+	public static <S,I> Iterator<TransRef<S,I,?>> allDefinedInputsIterator(
+			TransitionSystem<S, I, ?> ts,
+			Iterator<? extends S> stateIt,
+			Iterable<? extends I> inputs) {
+		return new TSIterators.AllDefinedInputsIterator<>(stateIt, ts, inputs);
+	}
+	
+	public static <S,I> Iterable<TransRef<S,I,?>> allDefinedInputs(
+			final TransitionSystem<S, I, ?> ts,
+			final Iterable<? extends S> states,
+			final Iterable<? extends I> inputs) {
+		return new Iterable<TransRef<S,I,?>>() {
+			@Override
+			public Iterator<TransRef<S,I,?>> iterator() {
+				return allDefinedInputsIterator(ts, states.iterator(), inputs);
+			}
+		};
+	}
+	
+	
+	
+	public static <S,I> Iterator<I> undefinedInputsIterator(TransitionSystem<S, I, ?> ts,
+			S state,
+			Iterator<? extends I> inputsIt) {
+		return new UndefinedInputsIterator<S, I>(ts, state, inputsIt);
+	}
+	
+	public static <S,I> Iterable<I> undefinedInputs(
+			final TransitionSystem<S, I, ?> ts,
+			final S state,
+			final Iterable<? extends I> inputs) {
+		return new Iterable<I>() {
+			@Override
+			public Iterator<I> iterator() {
+				return undefinedInputsIterator(ts, state, inputs.iterator());
+			}
+		};
+	}
+	
+	public static <S,I> Iterator<TransRef<S,I,?>> allUndefinedTransitionsIterator(
+			TransitionSystem<S, I, ?> ts,
+			Iterator<? extends S> stateIt,
+			Iterable<? extends I> inputs) {
+		return new TSIterators.AllUndefinedInputsIterator<>(stateIt, ts, inputs);
+	}
+	
+	public static <S,I> Iterable<TransRef<S,I,?>> allUndefinedTransitions(
+			final TransitionSystem<S, I, ?> ts,
+			final Iterable<? extends S> states,
+			final Iterable<? extends I> inputs) {
+		return new Iterable<TransRef<S,I,?>>() {
+			@Override
+			public Iterator<TransRef<S, I, ?>> iterator() {
+				return allUndefinedTransitionsIterator(ts, states.iterator(), inputs);
 			}
 		};
 	}

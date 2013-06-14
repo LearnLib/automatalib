@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
  * At the end of the minimization process, all states in the same block may
  * be identified.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <S> state class.
  * @param <L> transition label class.
@@ -138,6 +138,9 @@ public final class Block<S,L> extends BasicLinkedListEntry<Block<S,L>,Block<S,L>
 	 * @param state the state to be added.
 	 */
 	void addToSubBlock(State<S,L> state) {
+		if(currSubBlock == null) {
+			throw new IllegalStateException("No current sub block");
+		}
 		currSubBlock.referencedAdd(state);
 		elementsInSubBlocks++;
 	}

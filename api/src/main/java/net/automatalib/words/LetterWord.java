@@ -16,6 +16,9 @@
  */
 package net.automatalib.words;
 
+import com.google.common.base.Function;
+
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -189,8 +192,8 @@ final class LetterWord<I> extends Word<I> {
 	 * @see net.automatalib.words.Word#isPrefixOf(net.automatalib.words.Word)
 	 */
 	@Override
-	public boolean isPrefixOf(Word<I> other) {
-		if(other.length() == 0)
+	public boolean isPrefixOf(Word<?> other) {
+		if(other.isEmpty())
 			return false;
 		return Objects.equals(letter, other.getSymbol(0));
 	}
@@ -201,9 +204,10 @@ final class LetterWord<I> extends Word<I> {
 	 * @see net.automatalib.words.Word#longestCommonPrefix(net.automatalib.words.Word)
 	 */
 	@Override
-	public Word<I> longestCommonPrefix(Word<I> other) {
-		if(isPrefixOf(other))
+	public Word<I> longestCommonPrefix(Word<?> other) {
+		if(isPrefixOf(other)) {
 			return this;
+		}
 		return Word.epsilon();
 	}
 
@@ -213,7 +217,7 @@ final class LetterWord<I> extends Word<I> {
 	 * @see net.automatalib.words.Word#isSuffixOf(net.automatalib.words.Word)
 	 */
 	@Override
-	public boolean isSuffixOf(Word<I> other) {
+	public boolean isSuffixOf(Word<?> other) {
 		if(other.isEmpty())
 			return false;
 		return Objects.equals(letter, other.lastSymbol());
@@ -225,7 +229,7 @@ final class LetterWord<I> extends Word<I> {
 	 * @see net.automatalib.words.Word#longestCommonSuffix(net.automatalib.words.Word)
 	 */
 	@Override
-	public Word<I> longestCommonSuffix(Word<I> other) {
+	public Word<I> longestCommonSuffix(Word<?> other) {
 		if(isSuffixOf(other))
 			return this;
 		return Word.epsilon();
@@ -249,6 +253,11 @@ final class LetterWord<I> extends Word<I> {
 	public Word<I> trimmed() {
 		return this;
 	}
-	
-	
+
+	@Nonnull
+	@Override
+	public <T> Word<T> transform(Function<? super I,? extends T> transformer) {
+		T transformed = transformer.apply(letter);
+		return new LetterWord<>(transformed);
+	}
 }

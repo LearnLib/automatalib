@@ -31,8 +31,54 @@ import net.automatalib.commons.util.mappings.Mapping;
  */
 public interface GraphDOTHelper<N, E> {
 	
-	public static final String LABEL = "label";
-	public static final String SHAPE = "shape";
+	public abstract class CommonAttrs {
+		public static final String LABEL = "label";
+		public static final String COLOR = "color";
+		public static final String TEXLBL = "texlbl";
+		public static final String STYLE = "style";
+	}
+	
+	public abstract class NodeAttrs extends CommonAttrs {
+		public static final String SHAPE = "shape";
+		public static final String WIDTH = "width";
+		public static final String HEIGHT = "height";
+		public static final String FIXEDSIZE = "fixedsize";
+	}
+	
+	public abstract class EdgeAttrs extends CommonAttrs {
+		public static final String PENWIDTH = "penwidth";
+		public static final String ARROWHEAD = "arrowhead";
+	}
+	
+	public abstract class NodeShapes {
+		public static final String NONE = "none";
+		
+		public static final String OVAL = "oval";
+		public static final String DOUBLEOVAL = "doubleoval";
+		
+		public static final String CIRCLE = "circle";
+		public static final String DOUBLECIRCLE = "doublecircle";
+		
+		public static final String OCTAGON = "octagon";
+		public static final String DOUBLEOCTAGON = "doubleoctagon";
+		
+		public static final String BOX = "box";
+	}
+	
+	public abstract class CommonStyles {
+		public static final String DASHED = "dashed";
+		public static final String DOTTED = "dotted";
+		public static final String SOLID = "solid";
+		public static final String BOLD = "bold";
+	}
+	
+	public abstract class NodeStyles extends CommonStyles {
+		public static final String FILLED = "filled";
+		public static final String INVISIBLE = "invisible";
+		public static final String DIAGONALS = "diagonals";
+		public static final String ROUNDED = "rounded";
+	}
+	
 	
 	
 	/**
@@ -50,6 +96,9 @@ public interface GraphDOTHelper<N, E> {
 	 * @throws IOException if writing to <tt>a</tt> throws.
 	 */
 	public void writePostamble(Mapping<N,String> identifiers, Appendable a) throws IOException;
+	
+	public void getGlobalNodeProperties(Map<String,String> properties);
+	public void getGlobalEdgeProperties(Map<String,String> properties);
 	
 	/**
 	 * Retrieves the GraphVIZ properties for rendering a single node. Additionally,

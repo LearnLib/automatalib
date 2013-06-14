@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,7 +16,9 @@
  */
 package net.automatalib.automata.base.compact;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 
 import net.automatalib.automata.FiniteAlphabetAutomaton;
 import net.automatalib.automata.abstractimpl.AbstractMutableDeterministic;
@@ -25,7 +27,7 @@ import net.automatalib.automata.base.StateIDStaticMapping;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.dot.DefaultDOTHelperAutomaton;
 import net.automatalib.automata.graphs.AbstractAutomatonGraph;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.UniversalGraph;
@@ -36,9 +38,9 @@ import net.automatalib.words.Alphabet;
 
 public abstract class AbstractCompactSimpleDet<I, SP> extends
 		AbstractMutableDeterministic<Integer, I, Integer, SP, Void>
-		implements UniversalGraph<Integer,Pair<I,Integer>,SP,Pair<I,Void>>,
+		implements UniversalGraph<Integer,TransitionEdge<I,Integer>,SP,TransitionEdge.Property<I,Void>>,
 		FiniteAlphabetAutomaton<Integer,I,Integer>, StateIDs<Integer>,
-		NodeIDs<Integer>, DOTPlottableGraph<Integer, Pair<I,Integer>> {
+		NodeIDs<Integer>, DOTPlottableGraph<Integer, TransitionEdge<I,Integer>> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -67,6 +69,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 		this.alphabet = alphabet;
 		this.alphabetSize = alphabet.size();
 		this.transitions = new int[stateCapacity * alphabetSize];
+		Arrays.fill(this.transitions, 0, this.transitions.length, -1);
 		this.resizeFactor = resizeFactor;
 		this.stateCapacity = stateCapacity;
 	}
@@ -81,6 +84,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 		
 		int[] newTrans = new int[newCap * alphabetSize];
 		System.arraycopy(transitions, 0, newTrans, 0, stateCapacity * alphabetSize);
+		Arrays.fill(newTrans, this.transitions.length, newTrans.length, -1);
 		this.transitions = newTrans;
 		ensureCapacity(stateCapacity, newCap);
 		this.stateCapacity = newCap;
@@ -136,7 +140,11 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	 */
 	@Override
 	public Integer getInitialState() {
-		return (initial != -1) ? Integer.valueOf(initial) : null;
+		return wrapState(initial);
+	}
+	
+	public int getIntInitialState() {
+		return initial;
 	}
 
 	/*
@@ -145,11 +153,14 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	 */
 	@Override
 	public Integer getTransition(Integer state, I input) {
-		int transId = state.intValue() * alphabetSize + alphabet.getSymbolIndex(input);
-		int succId = transitions[transId];
-		if(succId == 0)
-			return null;
-		return succId - 1;
+		int trans = getIntTransition(state.intValue(), input);
+		return wrapState(trans);
+	}
+	
+	
+	public int getIntTransition(int state, I input) {
+		int transId = state * alphabetSize + alphabet.getSymbolIndex(input);
+		return transitions[transId];
 	}
 
 	public void setInitialState(int state) {
@@ -162,7 +173,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	}
 	
 	public void setTransition(int state, int inputIdx, int succ) {
-		transitions[state * alphabetSize + inputIdx] = succ + 1;
+		transitions[state * alphabetSize + inputIdx] = succ;
 	}
 	
 	public void setTransition(int state, I input, int succ) {
@@ -179,8 +190,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	public void clear() {
 		int endIdx = numStates * alphabetSize;
 		numStates = 0;
-		for(int i = 0; i < endIdx; i++)
-			transitions[i] = 0;
+		Arrays.fill(transitions, 0, endIdx, -1);
 		initial = -1;
 	}
 
@@ -188,8 +198,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	public void removeAllTransitions(int state) {
 		int base = state * alphabetSize;
 		
-		for(int i = 0; i < alphabetSize; i++)
-			transitions[base++] = 0;
+		Arrays.fill(transitions, base, base + alphabetSize, -1);
 	}
 	
 	@Override
@@ -205,6 +214,10 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	@Override
 	public Integer getSuccessor(Integer transition) {
 		return transition;
+	}
+	
+	public int getIntSuccessor(int state, I input) {
+		return getIntTransition(state, input);
 	}
 	
 	public abstract SP getStateProperty(int stateId);
@@ -223,13 +236,27 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 		return null;
 	}
 	
-	public abstract void initState(int stateId, SP property);
+	protected abstract void initState(int stateId, SP property);
 
 	public int addIntState(SP property) {
 		int stateId = numStates++;
 		ensureCapacity(numStates);
 		initState(stateId, property);
 		return stateId;
+	}
+	
+	public int addIntState() {
+		return addIntState(null);
+	}
+	
+	public int addIntInitialState(SP property) {
+		int state = addIntState(property);
+		setInitialState(state);
+		return state;
+	}
+	
+	public int addIntInitialState() {
+		return addIntInitialState(null);
 	}
 	
 	@Override
@@ -273,18 +300,18 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	}
 
 	@Override
-	public Pair<I, Void> getEdgeProperty(Pair<I, Integer> edge) {
-		return Pair.make(edge.getFirst(), null);
+	public TransitionEdge.Property<I, Void> getEdgeProperty(TransitionEdge<I, Integer> edge) {
+		return new TransitionEdge.Property<I,Void>(edge.getInput(), null);
 	}
 
 	@Override
-	public Collection<Pair<I, Integer>> getOutgoingEdges(Integer node) {
+	public Collection<TransitionEdge<I, Integer>> getOutgoingEdges(Integer node) {
 		return AbstractAutomatonGraph.getOutgoingEdges(this, node);
 	}
 
 	@Override
-	public Integer getTarget(Pair<I, Integer> edge) {
-		return edge.getSecond();
+	public Integer getTarget(TransitionEdge<I, Integer> edge) {
+		return edge.getTransition();
 	}
 
 	@Override
@@ -308,7 +335,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	}
 
 	@Override
-	public GraphDOTHelper<Integer, Pair<I, Integer>> getGraphDOTHelper() {
+	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getGraphDOTHelper() {
 		return new DefaultDOTHelperAutomaton<>(this);
 	}
 
@@ -323,5 +350,37 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	}
 
 
+	public int getIntSuccessor(int state, Iterable<? extends I> input) {
+		int current = state;
+		
+		Iterator<? extends I> inputIt = input.iterator();
+		
+		while(current >= 0 && inputIt.hasNext()) {
+			current = getIntSuccessor(current, inputIt.next());
+		}
+		
+		return current;
+	}
+	
+	@Override
+	public Integer getSuccessor(Integer state, Iterable<? extends I> input) {
+		return wrapState(getIntSuccessor(state.intValue(), input));
+	}
+
+	
+	public int getIntState(Iterable<? extends I> input) {
+		return getIntSuccessor(initial, input);
+	}
+	@Override
+	public Integer getState(Iterable<? extends I> input) {
+		return wrapState(getIntState(input));
+	}
+
+	protected static Integer wrapState(int id) {
+		if(id < 0) {
+			return null;
+		}
+		return Integer.valueOf(id);
+	}
 	
 }

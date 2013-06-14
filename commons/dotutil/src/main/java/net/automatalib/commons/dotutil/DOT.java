@@ -35,6 +35,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
@@ -58,9 +59,21 @@ import net.automatalib.commons.util.IOUtil;
  */
 public class DOT {
 	
+	private static final Logger LOGGER = Logger.getLogger("automatalib.dotutil");
+	
 	private static final int MAX_WIDTH = 800;
 	private static final int MAX_HEIGHT = 600;
 	
+	
+	public static Process executeDOT(String format, String ...additionalOpts) throws IOException {
+		String[] dotArgs = new String[2 + additionalOpts.length];
+		dotArgs[0] = "dot";
+		dotArgs[1] = "-T" + format;
+		System.arraycopy(additionalOpts, 0, dotArgs, 2, additionalOpts.length);
+		Process dot = Runtime.getRuntime().exec(dotArgs);
+		
+		return dot;
+	}
 	
 	
 	/**
@@ -72,11 +85,7 @@ public class DOT {
 	 * @throws IOException if reading from the specified reader fails.
 	 */
 	public static InputStream runDOT(Reader r, String format, String ...additionalOpts) throws IOException {
-		String[] dotArgs = new String[2 + additionalOpts.length];
-		dotArgs[0] = "dot";
-		dotArgs[1] = "-T" + format;
-		System.arraycopy(additionalOpts, 0, dotArgs, 2, additionalOpts.length);
-		final Process dot = Runtime.getRuntime().exec(dotArgs);
+		Process dot = executeDOT(format, additionalOpts);
 		
 		OutputStream dotIn = dot.getOutputStream();
 		Writer dotWriter = new OutputStreamWriter(dotIn);
@@ -119,18 +128,20 @@ public class DOT {
 	 * or writing to the output file.
 	 */
 	public static void runDOT(Reader r, String format, File out) throws IOException {
-		String[] dotArgs = new String[3];
-		dotArgs[0] = "dot";
-		dotArgs[1] = "-T" + format;
-		
-		dotArgs[2] = "-o" + out.getAbsolutePath();
-		
-		Process dot = Runtime.getRuntime().exec(dotArgs);
+		Process dot = executeDOT(format, "-o" + out.getAbsolutePath());
 		
 		OutputStream dotIn = dot.getOutputStream();
 		Writer dotWriter = new OutputStreamWriter(dotIn);
 		
 		IOUtil.copy(r, dotWriter);
+		dot.getErrorStream().close();
+		dot.getInputStream().close();
+		try {
+			dot.waitFor();
+		}
+		catch(InterruptedException ex) {
+			LOGGER.warning("Interrupted while waiting for 'dot' process to exit." + ex);
+		}
 	}
 	
 	
@@ -312,7 +323,6 @@ public class DOT {
 	 * @return the writer
 	 */
 	public static Writer createDotWriter(final boolean modal) {
-		// TODO: Change this to an OutputStreamWriter and write directly to the pipe
 		return new StringWriter() {
 			@Override
 			public void close() throws IOException {
@@ -321,4 +331,5 @@ public class DOT {
 			}
 		};
 	}
+
 }

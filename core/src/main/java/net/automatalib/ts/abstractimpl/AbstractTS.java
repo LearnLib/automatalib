@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -24,9 +24,9 @@ import java.util.Set;
 
 import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.ts.DeterministicTransitionSystem;
+import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
-import net.automatalib.ts.powerset.PowersetDTS;
+import net.automatalib.ts.powerset.DirectPowersetDTS;
 
 
 public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
@@ -39,9 +39,10 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * @see TransitionSystem#getSuccessors(Object, Object)
 	 */
 	public static <S,I,T> Set<S> getSuccessors(TransitionSystem<S, I, T> $this, S state, I input) {
-		Collection<T> transitions = $this.getTransitions(state, input);
-		if(transitions == null)
+		Collection<? extends T> transitions = $this.getTransitions(state, input);
+		if(transitions.isEmpty()) {
 			return Collections.emptySet();
+		}
 		Set<S> result = new HashSet<S>(transitions.size());
 		for(T trans : transitions)
 			result.add($this.getSuccessor(trans));
@@ -54,7 +55,7 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * {@link TransitionSystem#getSuccessors(Collection, Iterable)}.
 	 * @see TransitionSystem#getSuccessors(Object, Iterable)
 	 */
-	public static <S,I,T> Set<S> getSuccessors(TransitionSystem<S, I, T> $this, S state, Iterable<I> input) {
+	public static <S,I,T> Set<? extends S> getSuccessors(TransitionSystem<S, I, T> $this, S state, Iterable<? extends I> input) {
 		return $this.getSuccessors(Collections.singleton(state), input);
 	}
 	
@@ -64,15 +65,14 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * {@link TransitionSystem#getSuccessors(Object, Object)}.
 	 * @see TransitionSystem#getSuccessors(Collection, Iterable)
 	 */
-	public static <S,I,T> Set<S> getSuccessors(TransitionSystem<S, I, T> $this, Collection<S> states, Iterable<I> input) {
+	public static <S,I,T> Set<? extends S> getSuccessors(TransitionSystem<S, I, T> $this, Collection<? extends S> states, Iterable<? extends I> input) {
 		Set<S> current = new HashSet<S>(states);
 		Set<S> succs = new HashSet<S>();
 		
 		for(I sym : input) {
 			for(S state : current) {
-				Set<S> currSuccs = $this.getSuccessors(state, sym);
-				if(currSuccs != null)
-					succs.addAll(currSuccs);
+				Set<? extends S> currSuccs = $this.getSuccessors(state, sym);
+				succs.addAll(currSuccs);
 			}
 					
 			Set<S> tmp = current;
@@ -91,7 +91,7 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * {@link TransitionSystem#getInitialStates()}.
 	 * @see TransitionSystem#getStates(Iterable)
 	 */
-	public static <S,I,T> Set<S> getStates(TransitionSystem<S, I, T> $this, Iterable<I> input) {
+	public static <S,I,T> Set<? extends S> getStates(TransitionSystem<S, I, T> $this, Iterable<? extends I> input) {
 		return $this.getSuccessors($this.getInitialStates(), input);
 	}
 	
@@ -99,10 +99,10 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * Provides a realization of
 	 * {@link TransitionSystem#powersetView()}.
 	 * @see TransitionSystem#powersetView()
-	 * @see PowersetDTS
+	 * @see DirectPowersetDTS
 	 */
-	public static <S,I,T> PowersetDTS<S,I,T> powersetView(TransitionSystem<S,I,T> $this) {
-		return new PowersetDTS<S,I,T>($this);
+	public static <S,I,T> DirectPowersetDTS<S,I,T> powersetView(TransitionSystem<S,I,T> $this) {
+		return new DirectPowersetDTS<S,I,T>($this);
 	}
 	
 	
@@ -132,7 +132,7 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * @see net.automatalib.ts.SimpleTS#getSuccessors(java.lang.Object, java.lang.Iterable)
 	 */
 	@Override
-	public Set<S> getSuccessors(S state, Iterable<I> input) {
+	public Set<? extends S> getSuccessors(S state, Iterable<? extends I> input) {
 		return getSuccessors(this, state, input);
 	}
 
@@ -141,7 +141,7 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * @see net.automatalib.ts.SimpleTS#getSuccessors(java.util.Collection, java.lang.Iterable)
 	 */
 	@Override
-	public Set<S> getSuccessors(Collection<S> states, Iterable<I> input) {
+	public Set<? extends S> getSuccessors(Collection<? extends S> states, Iterable<? extends I> input) {
 		return getSuccessors(this, states, input);
 	}
 
@@ -150,7 +150,7 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * @see net.automatalib.ts.SimpleTS#getStates(java.lang.Iterable)
 	 */
 	@Override
-	public Set<S> getStates(Iterable<I> input) {
+	public Set<? extends S> getStates(Iterable<? extends I> input) {
 		return getStates(this, input);
 	}
 
@@ -159,7 +159,7 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * @see net.automatalib.ts.TransitionSystem#powersetView()
 	 */
 	@Override
-	public DeterministicTransitionSystem<? extends Set<S>, I, ? extends Collection<T>> powersetView() {
+	public PowersetViewTS<?, I, ?, S, T> powersetView() {
 		return powersetView(this);
 	}
 	

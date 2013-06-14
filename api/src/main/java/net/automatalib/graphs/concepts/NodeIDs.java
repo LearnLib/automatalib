@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,9 +16,14 @@
  */
 package net.automatalib.graphs.concepts;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface NodeIDs<N> {
 	
 	public int getNodeId(N node);
 	
+	@Nonnull
 	public N getNode(int id);
 }

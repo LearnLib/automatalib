@@ -116,8 +116,7 @@
 		<xs:element name="transitions" type="transitions" />
 	</xs:sequence>
 </xs:complexType>
-
-
+ 
 <xs:element name="register-automaton" type="registerAutomaton" />
 
 </xs:schema>

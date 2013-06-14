@@ -1,3 +1,19 @@
+/* Copyright (C) 2013 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ * 
+ * AutomataLib is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3.0 as published by the Free Software Foundation.
+ * 
+ * AutomataLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with AutomataLib; if not, see
+ * http://www.gnu.de/documents/lgpl.en.html.
+ */
 package net.automatalib.commons.util.collections;
 
 import java.util.AbstractList;
@@ -11,11 +27,11 @@ public class CharRange extends AbstractList<Character> implements
 	private final IntRange delegate;
 
 	public CharRange(char low, char high) {
-		this(low, 1, high);
+		this(low, high, 1);
 	}
 	
-	public CharRange(char low, int step, char high) {
-		this(new IntRange(low, step, high));
+	public CharRange(char low, char high, int step) {
+		this(new IntRange(low, high, step));
 	}
 	
 	public CharRange(IntRange delegate) {

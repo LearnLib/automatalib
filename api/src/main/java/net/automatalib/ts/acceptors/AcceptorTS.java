@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,17 +16,20 @@
  */
 package net.automatalib.ts.acceptors;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.ts.UniversalTransitionSystem;
 
 /**
  * A transition system whose semantics are defined by whether a state is "accepting"
  * or not.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <S> state class
  * @param <I> input symbol class
  */
+@ParametersAreNonnullByDefault
 public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boolean, Void> {
 	
 	/**
@@ -43,5 +46,5 @@ public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boo
 	 * @return <code>true</code> if the input word is accepted,
 	 * <code>false</code> otherwise. 
 	 */
-	public boolean accepts(Iterable<I> input);
+	public boolean accepts(Iterable<? extends I> input);
 }

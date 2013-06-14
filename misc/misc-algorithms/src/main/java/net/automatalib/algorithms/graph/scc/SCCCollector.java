@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public class SCCCollector<N> implements SCCListener<N> {
 	
 	private final List<List<N>> sccList = new ArrayList<>();
@@ -30,6 +34,7 @@ public class SCCCollector<N> implements SCCListener<N> {
 		sccList.add(new ArrayList<>(scc));
 	}
 	
+	@Nonnull
 	public List<List<N>> getSCCList() {
 		return sccList;
 	}

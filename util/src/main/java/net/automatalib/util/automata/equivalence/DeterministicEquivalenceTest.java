@@ -23,13 +23,31 @@ import java.util.Queue;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 
 
 public class DeterministicEquivalenceTest<I> {
+	
+	private static final class StatePair<S,S2> {
+		public final S ref;
+		public final S2 other;
+		public StatePair(S ref, S2 other) {
+			this.ref = ref;
+			this.other = other;
+		}
+	}
+	
+	private static final class Pred<I> {
+		public final int id;
+		public final I symbol;
+		public Pred(int id, I input) {
+			this.id = id;
+			this.symbol = input;
+		}
+	}
+	
 	private final UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference;
 	
 	public DeterministicEquivalenceTest(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference) {
@@ -46,7 +64,7 @@ public class DeterministicEquivalenceTest<I> {
 	Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S,I,T,?,?> reference,
 			UniversalDeterministicAutomaton<S2,I,T2,?,?> other,
 			Collection<? extends I> inputs) {
-		Queue<Pair<S,S2>> bfsQueue = new ArrayDeque<Pair<S,S2>>();
+		Queue<StatePair<S,S2>> bfsQueue = new ArrayDeque<>();
 		
 		S refInit = reference.getInitialState();
 		S2 otherInit = other.getInitialState();
@@ -57,7 +75,7 @@ public class DeterministicEquivalenceTest<I> {
 		if(!Objects.equals(refStateProp, otherStateProp))
 			return Word.epsilon();
 		
-		bfsQueue.offer(Pair.make(refInit, otherInit));
+		bfsQueue.add(new StatePair<>(refInit, otherInit));
 		
 		int refSize = reference.size();
 		int totalStates = refSize * other.size();
@@ -65,11 +83,11 @@ public class DeterministicEquivalenceTest<I> {
 		StateIDs<S> refStateIds = reference.stateIDs();
 		StateIDs<S2> otherStateIds = other.stateIDs();
 		
-		Pair<S,S2> currPair = null;
+		StatePair<S,S2> currPair = null;
 		int lastId = otherStateIds.getStateId(otherInit) * refSize + refStateIds.getStateId(refInit);
 		
-		Pair<Integer,I>[] preds = (Pair<Integer,I>[])new Pair<?,?>[totalStates];
-		preds[lastId] = Pair.make(-1, null);
+		Pred<I>[] preds = new Pred[totalStates];
+		preds[lastId] = new Pred<I>(-1, null);
 		
 		int currDepth = 0;
 		int inCurrDepth = 1;
@@ -78,8 +96,8 @@ public class DeterministicEquivalenceTest<I> {
 		I lastSym = null;
 		
 bfs:	while((currPair = bfsQueue.poll()) != null) {
-			S refState = currPair.getFirst();
-			S2 otherState = currPair.getSecond();
+			S refState = currPair.ref;
+			S2 otherState = currPair.other;
 			
 			
 			int currId = otherStateIds.getStateId(otherState) * refSize + refStateIds.getStateId(refState);
@@ -112,8 +130,8 @@ bfs:	while((currPair = bfsQueue.poll()) != null) {
 					if(!Objects.equals(refStateProp, otherStateProp))
 						break bfs;
 					
-					preds[succId] = Pair.make(currId, in);
-					bfsQueue.offer(Pair.make(refSucc, otherSucc));
+					preds[succId] = new Pred<>(currId, in);
+					bfsQueue.add(new StatePair<>(refSucc, otherSucc));
 					inNextDepth++;
 				}
 			}
@@ -136,12 +154,12 @@ bfs:	while((currPair = bfsQueue.poll()) != null) {
 		int index = currDepth;
 		sep.setSymbol(index--, lastSym);
 		
-		Pair<Integer,I> pred = preds[lastId];
-		I sym = pred.getSecond();
+		Pred<I> pred = preds[lastId];
+		I sym = pred.symbol;
 		while(sym != null) {
 			sep.setSymbol(index--, sym);
-			pred = preds[pred.getFirst()];
-			sym = pred.getSecond();
+			pred = preds[pred.id];
+			sym = pred.symbol;
 		}
 		
 		

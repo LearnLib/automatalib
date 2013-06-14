@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,15 +18,19 @@ package net.automatalib.algorithms.graph.scc;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.graphs.Graph;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 
 /**
  * Algorithms for finding strongly-connected components (SCCs) in a graph.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
+@ParametersAreNonnullByDefault
 public abstract class SCCs {
 
 	private SCCs() {
@@ -64,6 +68,7 @@ public abstract class SCCs {
 	 * 
 	 * @see TarjanSCCVisitor
 	 */
+	@Nonnull
 	public static <N,E> List<List<N>> collectSCCs(Graph<N,E> graph) {
 		SCCCollector<N> coll = new SCCCollector<>();
 		findSCCs(graph, coll);

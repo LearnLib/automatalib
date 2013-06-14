@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,9 @@
  */
 package net.automatalib.ts.simple;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.ts.TransitionSystem;
 
 /**
@@ -27,6 +30,7 @@ import net.automatalib.ts.TransitionSystem;
  * @param <S> state class
  * @param <I> input symbol class
  */
+@ParametersAreNonnullByDefault
 public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 	
 	/**
@@ -34,6 +38,7 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 	 * @return the initial state.
 	 * @see TransitionSystem#getInitialStates()
 	 */
+	@Nullable
 	public S getInitialState();
 	
 	/**
@@ -44,7 +49,8 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 	 * or <code>null</code> if no state is reachable by this symbol.
 	 * @see TransitionSystem#getSuccessors(Object, Object)
 	 */
-	public S getSuccessor(S state, I input);
+	@Nullable
+	public S getSuccessor(S state, @Nullable I input);
 	
 	/**
 	 * Retrieves the successor state reachable by the given sequence of
@@ -55,7 +61,8 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 	 * symbols, or <code>null</code> if no state is reachable by this symbol.
 	 * @see TransitionSystem#getSuccessors(Object, Iterable)
 	 */
-	public S getSuccessor(S state, Iterable<I> input);
+	@Nullable
+	public S getSuccessor(S state, Iterable<? extends I> input);
 	
 	/**
 	 * Retrieves the state reachable by the given sequence of input symbols
@@ -65,5 +72,6 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 	 * if no state is reachable by this word.
 	 * @see TransitionSystem#getStates(Iterable)
 	 */
-	public S getState(Iterable<I> input);
+	@Nullable
+	public S getState(Iterable<? extends I> input);
 }

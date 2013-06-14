@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,9 @@
  */
 package net.automatalib.ts;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.ts.simple.SimpleDTS;
 
 
@@ -23,12 +26,13 @@ import net.automatalib.ts.simple.SimpleDTS;
  * Deterministic transition system. Like a {@link TransitionSystem}, but in each state
  * there may exist at most one transition for each input symbol.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <S> state class
  * @param <I> input symbol class
  * @param <T> transition class
  */
+@ParametersAreNonnullByDefault
 public interface DeterministicTransitionSystem<S, I, T> extends
 		TransitionSystem<S, I, T>, SimpleDTS<S,I> {
 
@@ -40,7 +44,8 @@ public interface DeterministicTransitionSystem<S, I, T> extends
 	 * <code>null</code> if no transition is triggered.
 	 * @see TransitionSystem#getTransitions(Object, Object)
 	 */
-	public T getTransition(S state, I input);
+	@Nullable
+	public T getTransition(S state, @Nullable I input);
 	
 	
 }

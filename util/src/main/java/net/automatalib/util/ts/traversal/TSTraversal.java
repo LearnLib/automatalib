@@ -27,7 +27,7 @@ import net.automatalib.util.traversal.TraversalOrder;
 
 /**
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public abstract class TSTraversal {
@@ -37,7 +37,7 @@ public abstract class TSTraversal {
 	
 	
 	public static <S,I,T,D>
-	boolean depthFirst(TransitionSystem<S, I, T> ts,
+	boolean depthFirst(TransitionSystem<S, ? super I, T> ts,
 			int limit,
 			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
@@ -83,8 +83,9 @@ public abstract class TSTraversal {
 					continue;
 				}
 			}
-			
-			if(!current.hasNextTransition()) {
+
+
+			if(!current.hasNextTransition(ts)) {
 				dfsStack.pop();
 				continue;
 			}
@@ -139,7 +140,7 @@ public abstract class TSTraversal {
 	 * @param vis the visitor.
 	 */
 	public static <S,I,T,D>
-	boolean breadthFirst(TransitionSystem<S, I, T> ts,
+	boolean breadthFirst(TransitionSystem<S, ? super I, T> ts,
 			int limit,
 			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
@@ -166,9 +167,7 @@ public abstract class TSTraversal {
 				else
 					complete = false;
 				break;
-			case ABORT_INPUT:
-			case ABORT_STATE:
-			case IGNORE:
+			default: // case ABORT_INPUT: case ABORT_STATE: case IGNORE:
 			}
 		}
 		
@@ -183,10 +182,7 @@ public abstract class TSTraversal {
 			
 inputs_loop:
 			for(I input : inputs) {
-				Collection<T> transitions = ts.getTransitions(state, input);
-				
-				if(transitions == null)
-					continue;
+				Collection<? extends T> transitions = ts.getTransitions(state, input);
 				
 				for(T trans : transitions) {
 					S succ = ts.getSuccessor(trans);
@@ -219,7 +215,7 @@ inputs_loop:
 	}
 	
 	public static <S,I,T,D>
-	boolean breadthFirst(TransitionSystem<S, I, T> ts,
+	boolean breadthFirst(TransitionSystem<S, ? super I, T> ts,
 			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
 		return breadthFirst(ts, NO_LIMIT, inputs, vis);
@@ -227,7 +223,7 @@ inputs_loop:
 
 	
 	public static <S,I,T,D>
-	boolean traverse(TraversalOrder order, TransitionSystem<S,I,T> ts, int limit, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
+	boolean traverse(TraversalOrder order, TransitionSystem<S,? super I,T> ts, int limit, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
 		switch(order) {
 		case BREADTH_FIRST:
 			return breadthFirst(ts, limit, inputs, vis);
@@ -239,7 +235,7 @@ inputs_loop:
 	}
 	
 	public static <S,I,T,D>
-	boolean traverse(TraversalOrder order, TransitionSystem<S,I,T> ts, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
+	boolean traverse(TraversalOrder order, TransitionSystem<S,? super I,T> ts, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
 		return traverse(order, ts, NO_LIMIT, inputs, vis);
 	}
 	

@@ -17,6 +17,7 @@
 package net.automatalib.words;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -61,6 +62,9 @@ final class SharedWord<I> extends Word<I> {
 		@Override
 		@SuppressWarnings("unchecked")
 		public I next() {
+			if(currIdx >= endIdx) {
+				throw new NoSuchElementException();
+			}
 			return (I)storage[currIdx++];
 		}
 
@@ -175,6 +179,12 @@ final class SharedWord<I> extends Word<I> {
 		System.arraycopy(storage, this.offset + offset, array, tgtOfs, num);
 	}
 	
+	@Override
+	@SuppressWarnings("unchecked")
+	public I firstSymbol() {
+		return (I)storage[offset];
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see net.automatalib.words.Word#lastSymbol()
@@ -182,7 +192,7 @@ final class SharedWord<I> extends Word<I> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public I lastSymbol() {
-		return (I)storage[length-1];
+		return (I)storage[offset + length-1];
 	}
 
 	/*

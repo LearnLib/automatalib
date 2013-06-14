@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,9 @@
  */
 package net.automatalib.automata;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * A mutable automaton that also supports destructive modifications, i.e., removal
  * of states and transitions.
@@ -28,6 +31,7 @@ package net.automatalib.automata;
  * @param <SP> state property class
  * @param <TP> transition property class
  */
+@ParametersAreNonnullByDefault
 public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S,I,T,SP,TP> {
 	/**
      * removes a state from the automaton.
@@ -45,5 +49,5 @@ public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S
      * @param state the state to remove
      * @param replacement the replacement state, or <code>null</code>
      */
-    public void removeState(S state, S replacement);    
+    public void removeState(S state, @Nullable S replacement);    
 }

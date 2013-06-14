@@ -64,8 +64,9 @@ public abstract class AbstractMutableDeterministic<S,I,T,SP,TP> extends
 		if(transition == null)
 			return;
 		T currTrans = $this.getTransition(state, input);
-		if(transition.equals(currTrans))
+		if(transition.equals(currTrans)) {
 			$this.setTransition(state, input, null);
+		}
 	}
 	
 	/**

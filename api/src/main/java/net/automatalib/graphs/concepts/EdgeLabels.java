@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,11 @@
  */
 package net.automatalib.graphs.concepts;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.graphs.Graph;
+
 /**
  * Edge label context, for {@link Graph}s with labeled edges.
  * 
@@ -24,6 +29,7 @@ package net.automatalib.graphs.concepts;
  * @param <E> edge class
  * @param <L> label class
  */
+@ParametersAreNonnullByDefault
 public interface EdgeLabels<E, L> {
 	
 	/**
@@ -31,5 +37,6 @@ public interface EdgeLabels<E, L> {
 	 * @param edge the edge
 	 * @return the label for the given edge
 	 */
+	@Nullable
 	public L getEdgeLabel(E edge);
 }

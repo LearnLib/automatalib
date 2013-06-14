@@ -21,11 +21,12 @@ import java.util.List;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.dot.DOTHelperMealy;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.ts.abstractimpl.AbstractDeterministicTransOutTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -77,7 +78,7 @@ public class CompactMealy<I, O> extends
 	 */
 	@Override
 	public O getOutput(Integer state, I input) {
-		return AbstractTransOutAutomaton.getOutput(this, state, input);
+		return AbstractDeterministicTransOutTS.getOutput(this, state, input);
 	}
 
 	/*
@@ -85,8 +86,8 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.transout.TransitionOutputAutomaton#trace(java.lang.Iterable, java.util.List)
 	 */
 	@Override
-	public void trace(Iterable<I> input, List<O> output) {
-		AbstractTransOutAutomaton.trace(this, input, output);
+	public boolean  trace(Iterable<? extends I> input, List<? super O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, input, output);
 	}
 
 	/*
@@ -94,8 +95,8 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.transout.TransitionOutputAutomaton#trace(java.lang.Object, java.lang.Iterable, java.util.List)
 	 */
 	@Override
-	public void trace(Integer state, Iterable<I> input, List<O> output) {
-		AbstractTransOutAutomaton.trace(this, state, input, output);
+	public boolean trace(Integer state, Iterable<? extends I> input, List<? super O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, state, input, output);
 	}
 
 	/*
@@ -103,7 +104,7 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.concepts.SuffixOutput#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
 	 */
 	@Override
-	public Word<O> computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return AbstractTransOutAutomaton.computeSuffixOutput(this, prefix, suffix);
 	}
 
@@ -112,7 +113,7 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.concepts.Output#computeOutput(java.lang.Iterable)
 	 */
 	@Override
-	public Word<O> computeOutput(Iterable<I> input) {
+	public Word<O> computeOutput(Iterable<? extends I> input) {
 		return AbstractTransOutAutomaton.computeOutput(this, input);
 	}
 
@@ -194,7 +195,7 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.dot.DOTPlottableAutomaton#getDOTHelper()
 	 */
 	@Override
-	public GraphDOTHelper<Integer, Pair<I, CompactMealyTransition<O>>> getDOTHelper() {
+	public GraphDOTHelper<Integer, TransitionEdge<I, CompactMealyTransition<O>>> getDOTHelper() {
 		return new DOTHelperMealy<>(this);
 	}
 	

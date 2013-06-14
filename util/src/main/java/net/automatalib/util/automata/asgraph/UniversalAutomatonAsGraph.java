@@ -19,11 +19,11 @@ package net.automatalib.util.automata.asgraph;
 import java.util.Collection;
 
 import net.automatalib.automata.UniversalAutomaton;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.graphs.UniversalGraph;
 
 public class UniversalAutomatonAsGraph<S, I, T, SP, TP,A extends UniversalAutomaton<S, I, T, SP, TP>>
-		extends AutomatonAsGraph<S, I, T, A> implements UniversalGraph<S, Pair<I,T>, SP, Pair<I,TP>> {
+		extends AutomatonAsGraph<S, I, T, A> implements UniversalGraph<S, TransitionEdge<I,T>, SP, TransitionEdge.Property<I,TP>> {
 	
 	public UniversalAutomatonAsGraph(A automaton,
 			Collection<? extends I> inputs) {
@@ -36,9 +36,9 @@ public class UniversalAutomatonAsGraph<S, I, T, SP, TP,A extends UniversalAutoma
 	}
 
 	@Override
-	public Pair<I, TP> getEdgeProperty(Pair<I, T> edge) {
-		return Pair.make(edge.getFirst(),
-				automaton.getTransitionProperty(edge.getSecond()));
+	public TransitionEdge.Property<I, TP> getEdgeProperty(TransitionEdge<I, T> edge) {
+		return new TransitionEdge.Property<>(edge.getInput(),
+				automaton.getTransitionProperty(edge.getTransition()));
 	}
 
 }

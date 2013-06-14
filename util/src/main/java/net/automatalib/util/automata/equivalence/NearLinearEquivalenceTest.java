@@ -83,7 +83,7 @@ public class NearLinearEquivalenceTest<I> {
 		
 		Queue<Record<S,S2,I>> queue = new ArrayDeque<Record<S,S2,I>>();
 		
-		queue.offer(new Record<S,S2,I>(init1, init2));
+		queue.add(new Record<S,S2,I>(init1, init2));
 		
 		I lastSym = null;
 		
@@ -138,7 +138,7 @@ explore:while((current = queue.poll()) != null) {
 				
 				uf.link(r1, r2);
 				
-				queue.offer(new Record<>(succ1, succ2, sym, current));
+				queue.add(new Record<>(succ1, succ2, sym, current));
 			}
         }
 		
@@ -183,7 +183,7 @@ explore:while((current = queue.poll()) != null) {
 		
 		Queue<Record<S,S,I>> queue = new ArrayDeque<Record<S,S,I>>();
 		
-		queue.offer(new Record<S,S,I>(init1, init2));
+		queue.add(new Record<S,S,I>(init1, init2));
 		
 		I lastSym = null;
 		Record<S,S,I> current;
@@ -237,7 +237,7 @@ explore:while((current = queue.poll()) != null) {
 				
 				uf.link(r1, r2);
 				
-				queue.offer(new Record<>(succ1, succ2, sym, current));
+				queue.add(new Record<>(succ1, succ2, sym, current));
 			}
         }
 		

@@ -26,7 +26,7 @@ import net.automatalib.automata.base.StateIDDynamicMapping;
 import net.automatalib.automata.base.StateIDStaticMapping;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.graphs.AbstractAutomatonGraph;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
@@ -37,7 +37,7 @@ import net.automatalib.words.Alphabet;
 
 public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, SP, TP>
 		extends AbstractShrinkableAutomaton<S, I, T, SP, TP> implements
-		FiniteAlphabetAutomaton<S, I, T>, UniversalGraph<S,Pair<I,T>,SP,Pair<I,TP>>, StateIDs<S>,
+		FiniteAlphabetAutomaton<S, I, T>, UniversalGraph<S,TransitionEdge<I,T>,SP,TransitionEdge.Property<I,TP>>, StateIDs<S>,
 			NodeIDs<S> {
 	
 	
@@ -204,7 +204,7 @@ public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, S
 	 * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
 	 */
 	@Override
-	public Collection<Pair<I, T>> getOutgoingEdges(S node) {
+	public Collection<TransitionEdge<I, T>> getOutgoingEdges(S node) {
 		return AbstractAutomatonGraph.getOutgoingEdges(this, node);
 	}
 
@@ -213,7 +213,7 @@ public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, S
 	 * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
 	 */
 	@Override
-	public S getTarget(Pair<I, T> edge) {
+	public S getTarget(TransitionEdge<I, T> edge) {
 		return AbstractAutomatonGraph.getTarget(this, edge);
 	}
 	
@@ -228,7 +228,7 @@ public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, S
 	}
 
 	@Override
-	public Pair<I, TP> getEdgeProperty(Pair<I, T> edge) {
+	public TransitionEdge.Property<I, TP> getEdgeProperty(TransitionEdge<I, T> edge) {
 		return AbstractAutomatonGraph.getEdgeProperties(this, edge);
 	}
 

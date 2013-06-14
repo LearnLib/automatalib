@@ -59,11 +59,19 @@ public final class FastDFA<I> extends FastMutableDet<FastDFAState, I, FastDFASta
 		return AbstractFSA.getTransitionProperty(this, transition);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.automata.MutableAutomaton#setStateProperty(java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public void setStateProperty(FastDFAState state, Boolean property) {
 		AbstractMutableFSA.setStateProperty(this, state, property);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.automata.MutableAutomaton#setTransitionProperty(java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public void setTransitionProperty(FastDFAState transition, Void property) {
 		AbstractMutableFSA.setTransitionProperty(this, transition, property);
@@ -101,21 +109,21 @@ public final class FastDFA<I> extends FastMutableDet<FastDFAState, I, FastDFASta
 
 
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return AbstractDFA.accepts(this, input);
 	}
 
 
 
 	@Override
-	public Boolean computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return AbstractFSA.computeSuffixOutput(this, prefix, suffix);
 	}
 
 
 
 	@Override
-	public Boolean computeOutput(Iterable<I> input) {
+	public Boolean computeOutput(Iterable<? extends I> input) {
 		return AbstractFSA.computeOutput(this, input);
 	}
 

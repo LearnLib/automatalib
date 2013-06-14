@@ -22,7 +22,7 @@ import net.automatalib.automata.fsa.DFA;
 public abstract class AbstractDFA<S, I> extends AbstractDeterministicAutomaton<S, I, S>
 		implements DFA<S, I> {
 
-	public static <S,I> boolean accepts(DFA<S, I> $this, Iterable<I> input) {
+	public static <S,I> boolean accepts(DFA<S, I> $this, Iterable<? extends I> input) {
 		S tgt = $this.getState(input);
 		if(tgt == null)
 			return false;
@@ -37,7 +37,7 @@ public abstract class AbstractDFA<S, I> extends AbstractDeterministicAutomaton<S
 	 * @see de.ls5.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
 	 */
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return accepts(this, input);
 	}
 
@@ -73,7 +73,7 @@ public abstract class AbstractDFA<S, I> extends AbstractDeterministicAutomaton<S
 	 * @see de.ls5.automata.features.SODetOutputAutomaton#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
 	 */
 	@Override
-	public Boolean computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return AbstractFSA.computeSuffixOutput(this, prefix, suffix);
 	}
 
@@ -82,7 +82,7 @@ public abstract class AbstractDFA<S, I> extends AbstractDeterministicAutomaton<S
 	 * @see de.ls5.automata.features.OutputAutomaton#computeOutput(java.lang.Iterable)
 	 */
 	@Override
-	public Boolean computeOutput(Iterable<I> input) {
+	public Boolean computeOutput(Iterable<? extends I> input) {
 		return AbstractFSA.computeOutput(this, input);
 	}
 	

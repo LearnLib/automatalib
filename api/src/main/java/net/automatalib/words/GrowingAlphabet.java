@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,14 +16,18 @@
  */
 package net.automatalib.words;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 
 /**
  * {@link Alphabet} class that supports adding new symbols.
  * 
  * @param <I> symbol class.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  */
+@ParametersAreNonnullByDefault
 public interface GrowingAlphabet<I> extends Alphabet<I> {
 
     /**
@@ -33,6 +37,6 @@ public interface GrowingAlphabet<I> extends Alphabet<I> {
      *
      * @return the index of the symbol in the alphabet, after adding it.
      */
-    public abstract int addSymbol(I a);
+    public abstract int addSymbol(@Nullable I a);
     
 }

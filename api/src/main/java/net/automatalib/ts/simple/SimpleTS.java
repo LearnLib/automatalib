@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -19,24 +19,30 @@ package net.automatalib.ts.simple;
 import java.util.Collection;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.commons.util.mappings.MutableMapping;
 
 /**
  * A simple transition system. A transition system is a (not necessarily finite) collection
  * of states. For an arbitrary input symbol, each state has a set of successors.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner
  *
  * @param <S> state class.
  * @param <I> symbol class.
  */
+@ParametersAreNonnullByDefault
 public interface SimpleTS<S, I> {
 	
 	/**
 	 * Retrieves the set of initial states of the transition system.
 	 * @return the initial states.
 	 */
-	public Set<S> getInitialStates();
+	@Nonnull
+	public Set<? extends S> getInitialStates();
 	
 	/**
 	 * Retrieves the set of successors for the given input symbol. 
@@ -46,7 +52,8 @@ public interface SimpleTS<S, I> {
 	 * @return the set of successors reachable by this input, or
 	 * <code>null</code> if no successor states are reachable by this input.
 	 */
-	public Set<S> getSuccessors(S state, I input);
+	@Nonnull
+	public Set<? extends S> getSuccessors(S state, @Nullable I input);
 	
 	/**
 	 * Retrieves the set of successors for the given sequence of input symbols.
@@ -56,7 +63,8 @@ public interface SimpleTS<S, I> {
 	 * @return the set of successors reachable by this input, or
 	 * <code>null</code> if no successor states are reachable by this input.
 	 */
-	public Set<S> getSuccessors(S state, Iterable<I> input);
+	@Nonnull
+	public Set<? extends S> getSuccessors(S state, Iterable<? extends I> input);
 	
 	/**
 	 * Retrieves the set of all successors that can be reached from any
@@ -67,7 +75,8 @@ public interface SimpleTS<S, I> {
 	 * @return the set of successors reachable by this input, or <code>null</code>
 	 * if no successor states are reachable.
 	 */
-	public Set<S> getSuccessors(Collection<S> states, Iterable<I> input);
+	@Nonnull
+	public Set<? extends S> getSuccessors(Collection<? extends S> states, Iterable<? extends I> input);
 
 	/**
 	 * Retrieves the set of all states reachable by the given sequence of input
@@ -78,7 +87,8 @@ public interface SimpleTS<S, I> {
 	 * @return the set of states reachable by this input from an initial state,
 	 * or <code>null</code> if no successor state is reachable.
 	 */
-	public Set<S> getStates(Iterable<I> input);
+	@Nonnull
+	public Set<? extends S> getStates(Iterable<? extends I> input);
 	
 	/**
 	 * Creates a {@link MutableMapping} allowing to associate arbitrary data
@@ -87,6 +97,7 @@ public interface SimpleTS<S, I> {
 	 * modified.
 	 * @return the mutable mapping
 	 */
+	@Nonnull
 	public <V> MutableMapping<S,V> createStaticStateMapping();
 	
 	/**
@@ -95,6 +106,7 @@ public interface SimpleTS<S, I> {
 	 * the association even when the transition system is modified.
 	 * @return the mutable mapping
 	 */
+	@Nonnull
 	public <V> MutableMapping<S,V> createDynamicStateMapping();
 	
 }

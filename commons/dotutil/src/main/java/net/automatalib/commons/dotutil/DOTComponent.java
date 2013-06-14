@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -49,8 +50,7 @@ public class DOTComponent extends ImageComponent {
 			int result = saveDlg.showSaveDialog(DOTComponent.this);
 			if(result != JFileChooser.APPROVE_OPTION)
 				return;
-			try {
-				Writer w = new BufferedWriter(new FileWriter(saveDlg.getSelectedFile()));
+			try(Writer w = new BufferedWriter(new FileWriter(saveDlg.getSelectedFile()))) {
 				w.write(dot);
 				w.close();
 			}
@@ -68,6 +68,17 @@ public class DOTComponent extends ImageComponent {
 	}
 	
 	
+	
+	
+	/* (non-Javadoc)
+	 * @see net.automatalib.commons.dotutil.ImageComponent#listActions(java.util.List)
+	 */
+	@Override
+	public void listActions(List<Action> actions) {
+		super.listActions(actions);
+		actions.add(saveDotAction);
+	}
+
 	private void renderDot(Reader dotReader) throws IOException {
 		StringWriter w = new StringWriter();
 		
@@ -88,8 +99,4 @@ public class DOTComponent extends ImageComponent {
 		return saveDotAction;
 	}
 
-	public void toggleScale() {
-		// TODO Auto-generated method stub
-		
-	}
 }

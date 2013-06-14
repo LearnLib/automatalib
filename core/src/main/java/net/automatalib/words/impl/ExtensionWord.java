@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -79,12 +79,14 @@ public class ExtensionWord<I> extends Word<I> {
 	protected Word<I> _subWord(int fromIndex, int toIndex) {
 		int wLen = word.length();
 		if(fromIndex < wLen) {
-			if(toIndex <= wLen)
-				word.subWord(fromIndex, toIndex);
+			if(toIndex <= wLen) {
+				return word.subWord(fromIndex, toIndex);
+			}
 			return new ExtensionWord<>(word.subWord(fromIndex, wLen), letter);
 		}
-		else if(fromIndex == wLen)
+		else if(fromIndex == wLen) {
 			return Word.fromLetter(letter);
+		}
 		return Word.epsilon();
 	}
 
@@ -113,7 +115,7 @@ public class ExtensionWord<I> extends Word<I> {
 	}
 
 	@Override
-	public boolean isPrefixOf(Word<I> other) {
+	public boolean isPrefixOf(Word<?> other) {
 		int wordLen = word.length();
 		if(wordLen >= other.length())
 			return false;

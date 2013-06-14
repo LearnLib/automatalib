@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -19,6 +19,9 @@ package net.automatalib.brics;
 import java.util.Collection;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractDFA;
@@ -32,9 +35,10 @@ import dk.brics.automaton.State;
  * are reflected. Please note that any changes which result in a loss of determinism
  * will result in incorrect behavior exposed by this class until determinism is restored.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
+@ParametersAreNonnullByDefault
 public class BricsDFA extends AbstractBricsAutomaton implements
 		DFA<State, Character> {
 	
@@ -73,7 +77,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
 	 */
 	@Override
-	public boolean accepts(Iterable<Character> input) {
+	public boolean accepts(Iterable<? extends Character> input) {
 		return AbstractDFA.accepts(this, input);
 	}
 
@@ -91,7 +95,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.simple.SimpleDTS#getSuccessor(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public State getSuccessor(State state, Character input) {
+	public State getSuccessor(State state, @Nonnull Character input) {
 		return state.step(input.charValue());
 	}
 
@@ -100,7 +104,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.simple.SimpleDTS#getSuccessor(java.lang.Object, java.lang.Iterable)
 	 */
 	@Override
-	public State getSuccessor(State state, Iterable<Character> input) {
+	public State getSuccessor(State state, Iterable<? extends Character> input) {
 		return AbstractDeterministicAutomaton.getSuccessor(this, state, input);
 	}
 
@@ -109,7 +113,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.simple.SimpleDTS#getState(java.lang.Iterable)
 	 */
 	@Override
-	public State getState(Iterable<Character> input) {
+	public State getState(Iterable<? extends Character> input) {
 		return AbstractDeterministicAutomaton.getState(this, input);
 	}
 
@@ -118,7 +122,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.DeterministicTransitionSystem#getTransition(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public State getTransition(State state, Character input) {
+	public State getTransition(State state, @Nonnull Character input) {
 		return state.step(input.charValue());
 	}
 
@@ -127,7 +131,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.brics.AbstractBricsAutomaton#getTransitions(dk.brics.automaton.State, java.lang.Character)
 	 */
 	@Override
-	public Collection<State> getTransitions(State state, Character input) {
+	public Collection<State> getTransitions(State state, @Nonnull Character input) {
 		return AbstractDeterministicAutomaton.getTransitions(this, state, input);
 	}
 
@@ -136,7 +140,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.abstractimpl.AbstractTS#getSuccessors(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Set<State> getSuccessors(State state, Character input) {
+	public Set<State> getSuccessors(State state, @Nonnull Character input) {
 		return AbstractDeterministicAutomaton.getSuccessors(this, state, input);
 	}
 	

@@ -78,8 +78,8 @@ public abstract class CollectionsUtil {
 		return new IntRange(start, end);
 	}
 	
-	public static List<Integer> intRange(int start, int step, int end) {
-		return new IntRange(start, step, end);
+	public static List<Integer> intRange(int start, int end, int step) {
+		return new IntRange(start, end, step);
 	}
 	
 	public static List<Character> charRange(char start, char end) {

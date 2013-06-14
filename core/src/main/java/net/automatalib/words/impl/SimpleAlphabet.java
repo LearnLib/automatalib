@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
@@ -37,8 +39,10 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
  */
 public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlphabet<I> {
 	
+	@Nonnull
 	private final List<I> symbols = new ArrayList<I>();
 	
+	@Nonnull
 	private final Map<I,Integer> indexMap = new HashMap<I,Integer>();
 	
 	/*

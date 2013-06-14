@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,16 +16,37 @@
  */
 package net.automatalib.incremental.dfa;
 
+import javax.annotation.Nonnull;
+
 /**
  * Tri-state acceptance value.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public enum Acceptance {
-	FALSE,
-	TRUE,
-	DONT_KNOW;
+	FALSE { 
+		@Override
+		public boolean toBoolean() {
+			return false;
+		}
+	},
+	TRUE {
+		@Override
+		public boolean toBoolean() {
+			return true;
+		}
+	},
+	DONT_KNOW {
+		@Override
+		public boolean toBoolean() {
+			throw new UnsupportedOperationException();
+		}
+		@Override
+		public boolean conflicts(boolean val) {
+			return false;
+		}
+	};
 	
 	/**
 	 * Retrieves the corresponding acceptance value (either {@link #TRUE} or {@link #FALSE})
@@ -33,14 +54,15 @@ public enum Acceptance {
 	 * @param val the boolean value
 	 * @return the corresponding acceptance value
 	 */
+	@Nonnull
 	public static Acceptance fromBoolean(boolean val) {
 		return val ? TRUE : FALSE;
 	}
 	
+	public abstract boolean toBoolean();
+	
 	
 	public boolean conflicts(boolean val) {
-		if(this == DONT_KNOW)
-			return false;
-		return ((this == TRUE) != val);
+		return (val != toBoolean());
 	}
 }

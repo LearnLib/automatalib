@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,8 @@
  */
 package net.automatalib.graphs.concepts;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Edge weights concepts. Allows to associate a fractional (floating-point) <i>weight</i>
  * with the edges in a graph.
@@ -24,6 +26,7 @@ package net.automatalib.graphs.concepts;
  *
  * @param <E> edge class
  */
+@ParametersAreNonnullByDefault
 public interface EdgeWeights<E> {
 	
 	/**
