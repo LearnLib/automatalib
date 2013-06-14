@@ -87,4 +87,9 @@ public class DOTComponent extends ImageComponent {
 	public Action getSaveDotAction() {
 		return saveDotAction;
 	}
+
+	public void toggleScale() {
+		// TODO Auto-generated method stub
+		
+	}
 }

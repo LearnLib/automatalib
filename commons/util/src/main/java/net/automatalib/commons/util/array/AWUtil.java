@@ -16,6 +16,8 @@
  */
 package net.automatalib.commons.util.array;
 
+import java.util.Arrays;
+
 /**
  * Utility class for writing containers to arrays.
  * 
@@ -94,5 +96,21 @@ public abstract class AWUtil {
 			return 0;
 		aw.writeToArray(0, array, tgtOfs, num);
 		return num;
+	}
+	
+	
+	public static Object[] toArray(ArrayWritable<?> aw) {
+		int num = aw.size();
+		Object[] arr = new Object[num];
+		aw.writeToArray(0, arr, 0, num);
+		return arr;
+	}
+	
+	public static <T> T[] toArray(ArrayWritable<?> aw, T[] arr) {
+		int num = aw.size();
+		if(arr.length < num)
+			arr = Arrays.copyOf(arr, num);
+		aw.writeToArray(0, arr, 0, num);
+		return arr;
 	}
 }

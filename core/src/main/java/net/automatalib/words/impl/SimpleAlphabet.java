@@ -16,7 +16,6 @@
  */
 package net.automatalib.words.impl;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
 
 /**
@@ -35,7 +35,7 @@ import net.automatalib.words.GrowingAlphabet;
  *
  * @param <I> input symbol class.
  */
-public class SimpleAlphabet<I> extends AbstractList<I> implements GrowingAlphabet<I> {
+public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlphabet<I> {
 	
 	private final List<I> symbols = new ArrayList<I>();
 	

@@ -134,7 +134,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
 
 	@Override
 	public Collection<Integer> getStates() {
-		return CollectionsUtil.rangeList(0, numStates);
+		return CollectionsUtil.intRange(0, numStates);
 	}
 
 	@Override

@@ -109,7 +109,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	 */
 	@Override
 	public Collection<Integer> getStates() {
-		return CollectionsUtil.rangeList(0, numStates);
+		return CollectionsUtil.intRange(0, numStates);
 	}
 
 	/*

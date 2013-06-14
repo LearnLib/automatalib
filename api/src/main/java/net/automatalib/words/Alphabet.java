@@ -19,6 +19,8 @@ package net.automatalib.words;
 import java.util.Collection;
 import java.util.Comparator;
 
+import net.automatalib.commons.util.array.ArrayWritable;
+
 /**
  * Class implementing an (indexed) alphabet. An alphabet is a collection of symbols, where
  * each symbol has a (unique) index. Apart from serving as a collection, this class also provides
@@ -28,7 +30,7 @@ import java.util.Comparator;
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
  */
-public interface Alphabet<I> extends Collection<I>, Comparator<I> {
+public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator<I> {
 
     /**
      * Returns the symbol with the given index in this alphabet.

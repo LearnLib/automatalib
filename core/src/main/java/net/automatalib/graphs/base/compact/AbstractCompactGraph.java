@@ -48,7 +48,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>,NP, EP> ext
 
 	@Override
 	public Collection<Integer> getNodes() {
-		return CollectionsUtil.rangeList(0, size);
+		return CollectionsUtil.intRange(0, size);
 	}
 
 	@Override

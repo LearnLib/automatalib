@@ -42,6 +42,8 @@ public class ImageComponent extends JComponent  {
 	
 	private BufferedImage img;
 	
+	private boolean scale = false;
+	
 	
 	private final Action savePngAction = new AbstractAction("Save PNG") {
 		private static final long serialVersionUID = 1L;
@@ -122,7 +124,13 @@ public class ImageComponent extends JComponent  {
 	protected void paintComponent(Graphics g) {
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		if(img != null)
-			g.drawImage(img, 0, 0, null);
+		if(img != null) {
+			if(!scale)
+				g.drawImage(img, 0, 0, null);
+			else
+				g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+		}
 	}
+	
+
 }
