@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 /**
  * 
@@ -31,7 +31,7 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
  * Represents a transition label in the automaton model the minimizer
  * operates on. 
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> state class.
  * @param <EP> edge property class.

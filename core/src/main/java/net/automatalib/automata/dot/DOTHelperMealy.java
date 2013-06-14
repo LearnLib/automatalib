@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.automata.dot;
 
@@ -34,8 +34,8 @@ public class DOTHelperMealy<S, I, T, O> extends
 	 * @see net.automatalib.automata.dot.DefaultDOTHelperAutomaton#getEdgeProperties(net.automatalib.commons.util.Pair, java.util.Map)
 	 */
 	@Override
-	public boolean getEdgeProperties(Pair<I, T> edge, Map<String,String> properties) {
-		if(!super.getEdgeProperties(edge, properties))
+	public boolean getEdgeProperties(S src, Pair<I, T> edge, S tgt, Map<String,String> properties) {
+		if(!super.getEdgeProperties(src, edge, tgt, properties))
 			return false;
 		String label = String.valueOf(edge.getFirst()) + " / ";
 		O output = automaton.getTransitionOutput(edge.getSecond());

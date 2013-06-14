@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.brics;
 
@@ -24,6 +24,15 @@ import dk.brics.automaton.Transition;
  * @author Malte Isberner <malte.isberner@gmail.com>
  */
 public class BricsTransitionProperty {
+	
+	public static String toString(char min, char max) {
+		StringBuilder sb = new StringBuilder();
+		sb.append('\'').append(min).append('\'');
+		if(max > min)
+			sb.append("..'").append(max).append('\'');
+		return sb.toString();
+	}
+	
 	private final char min;
 	private final char max;
 
@@ -102,11 +111,7 @@ public class BricsTransitionProperty {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append('\'').append(min).append('\'');
-		if(max > min)
-			sb.append("..'").append(max).append('\'');
-		return sb.toString();
+		return toString(min, max);
 	}
 	
 	

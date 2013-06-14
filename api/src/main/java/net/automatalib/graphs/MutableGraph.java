@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.graphs;
 
@@ -28,7 +28,7 @@ package net.automatalib.graphs;
  * @param <NP> node property class
  * @param <EP> edge property class
  */
-public interface MutableGraph<N, E, NP, EP> extends Graph<N,E> {
+public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N,E,NP,EP> {
 	
 	/**
 	 * Adds a new node with default properties to the graph.
@@ -40,18 +40,32 @@ public interface MutableGraph<N, E, NP, EP> extends Graph<N,E> {
 	
 	/**
 	 * Adds a new node to the graph.
-	 * @param properties the properties for the new node
+	 * @param property the property for the new node
 	 * @return the newly inserted node
 	 */
-	public N addNode(NP properties);
+	public N addNode(NP property);
+	
+	/**
+	 * Inserts an edge in the graph, with the default property.
+	 * Calling this method should be equivalent to invoking
+	 * {@link #connect(Object, Object, Object)} with a <tt>null</tt>
+	 * property value.
+	 * @param source the source node
+	 * @param target the target node
+	 * @return the edge connecting the given nodes
+	 */
+	public E connect(N source, N target);
 	
 	/**
 	 * Inserts an edge in the graph.
 	 * @param source the source node of the edge
 	 * @param target the target node of the edge
-	 * @param properties the properties of the edge
+	 * @param property the property of the edge
 	 * @return the newly inserted edge
 	 */
-	public E connect(N source, N target, EP properties);
+	public E connect(N source, N target, EP property);
+	
+	public void setNodeProperty(N node, NP property);
+	public void setEdgeProperty(E edge, EP property);
 	
 }

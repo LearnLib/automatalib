@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.commons.smartcollections;
 
@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 
-import net.automatalib.commons.util.array.SimpleResizingArray;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 
 
 /**
@@ -130,7 +130,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E>
 	
 	
 	// The collection's storage
-	private final SimpleResizingArray storage;
+	private final ResizingObjectArray storage;
 	private int size;
 	
 	/**
@@ -149,7 +149,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E>
 		if(initialCapacity <= 0)
 			initialCapacity = DEFAULT_INITIAL_CAPACITY;
 		this.storage
-			= new SimpleResizingArray(initialCapacity);
+			= new ResizingObjectArray(initialCapacity);
 				
 	}
 	

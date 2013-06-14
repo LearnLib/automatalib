@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.automata.abstractimpl;
 
@@ -83,7 +83,7 @@ public abstract class AbstractMutableDeterministic<S,I,T,SP,TP> extends
 	 * @see MutableDeterministic#setTransitions(Object, Object, Collection)
 	 */
 	public static <S,I,T,SP,TP> void setTransitions(MutableDeterministic<S,I,T,SP,TP> $this,
-			S state, I input, Collection<T> transitions) {
+			S state, I input, Collection<? extends T> transitions) {
 		
 		int num = transitions.size();
 		if(num > 1) {
@@ -141,13 +141,17 @@ public abstract class AbstractMutableDeterministic<S,I,T,SP,TP> extends
 		addTransition(this, state, input, transition);
 	}
 	
+	@Override
+	public void addTransitions(S state, I input, Collection<? extends T> transitions) {
+		AbstractMutableAutomaton.addTransitions(this, state, input, transitions);
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see net.automatalib.automata.MutableAutomaton#addTransition(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void addTransition(S state, I input, S successor, TP property) {
-		AbstractMutableAutomaton.addTransition(this, state, input, successor, property);
+	public T addTransition(S state, I input, S successor, TP property) {
+		return AbstractMutableAutomaton.addTransition(this, state, input, successor, property);
 	}
 	
 	/*
@@ -182,7 +186,7 @@ public abstract class AbstractMutableDeterministic<S,I,T,SP,TP> extends
 	 * @see net.automatalib.automata.MutableAutomaton#setTransitions(java.lang.Object, java.lang.Object, java.util.Collection)
 	 */
 	@Override
-	public void setTransitions(S state, I input, Collection<T> transitions) {
+	public void setTransitions(S state, I input, Collection<? extends T> transitions) {
 		setTransitions(this, state, input, transitions);
 	}
 	

@@ -12,13 +12,16 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.graphs.traversal;
+
+import net.automatalib.commons.util.Triple;
 
 class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
 	
 	public final D data;
+	private Triple<E,N,D> lastEdge;
 	
 	public DFRecord(N node, D data) {
 		super(node);
@@ -27,5 +30,16 @@ class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
 	
 	public D getData() {
 		return data;
+	}
+
+	public Triple<E, N, D> getLastEdge() {
+		Triple<E,N,D> result = lastEdge;
+		lastEdge = null;
+		return result;
+	}
+	
+	public void setLastEdge(E edge, N tgtNode, D tgtData) {
+		assert lastEdge == null;
+		lastEdge = Triple.make(edge, tgtNode, tgtData);
 	}
 }

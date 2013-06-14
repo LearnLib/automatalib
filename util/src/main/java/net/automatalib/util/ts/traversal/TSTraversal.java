@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.ts.traversal;
 
@@ -20,8 +20,9 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 
+import net.automatalib.commons.util.Holder;
 import net.automatalib.ts.TransitionSystem;
-import net.automatalib.util.ts.traversal.TraversalAction.Type;
+import net.automatalib.util.traversal.TraversalOrder;
 
 
 /**
@@ -31,63 +32,41 @@ import net.automatalib.util.ts.traversal.TraversalAction.Type;
  */
 public abstract class TSTraversal {
 
-	private static final TraversalAction<?> IGNORE = new TraversalAction<Object>(Type.IGNORE);
-
-	private static final TraversalAction<?> ABORT_INPUT
-		= new TraversalAction<Object>(Type.ABORT_INPUT);
-
-	private static final TraversalAction<?> ABORT_STATE
-		= new TraversalAction<Object>(Type.ABORT_STATE);
-
-	private static final TraversalAction<?> ABORT_TRAVERSAL
-		= new TraversalAction<Object>(Type.ABORT_TRAVERSAL);
-
-	public static <D> TraversalAction<D> explore(D data) {
-		return new TraversalAction<D>(Type.EXPLORE, data);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <D> TraversalAction<D> ignore() {
-		return (TraversalAction<D>) IGNORE;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <D> TraversalAction<D> abortInput() {
-		return (TraversalAction<D>) ABORT_INPUT;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <D> TraversalAction<D> abortState() {
-		return (TraversalAction<D>) ABORT_STATE;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <D> TraversalAction<D> abortTraversal() {
-		return (TraversalAction<D>) ABORT_TRAVERSAL;
-	}
-	
-	public static <D> TraversalAction<D> explore() {
-		return explore(null);
-	}
+	public static final int NO_LIMIT = -1;
 	
 	
-	public static <S,I,T,D> void depthFirst(TransitionSystem<S, I, T> ts,
-			Collection<I> inputs,
+	
+	public static <S,I,T,D>
+	boolean depthFirst(TransitionSystem<S, I, T> ts,
+			int limit,
+			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
 		Deque<DFRecord<S,I,T,D>> dfsStack = new ArrayDeque<DFRecord<S,I,T,D>>();
 		
+		Holder<D> dataHolder = new Holder<>();
+		
+		// setting the following to false means that the traversal had to be aborted
+		// due to reaching the limit
+		boolean complete = true;
+		int stateCount = 0;
+		
 		for(S initS : ts.getInitialStates()) {
-			TraversalAction<D> act = vis.processInitial(initS);
-			switch(act.type) {
+			dataHolder.value = null;
+			TSTraversalAction act = vis.processInitial(initS, dataHolder);
+			switch(act) {
 			case ABORT_INPUT:
 			case ABORT_STATE:
 			case IGNORE:
 				continue;
 			case ABORT_TRAVERSAL:
-				return;
+				return complete;
 			case EXPLORE:
-				D data = act.data;
-				dfsStack.push(new DFRecord<S, I, T, D>(initS, inputs, data));
+				if(stateCount != limit) {
+					dfsStack.push(new DFRecord<S, I, T, D>(initS, inputs, dataHolder.value));
+					stateCount++;
+				}
+				else
+					complete = false;
 				break;
 			}
 		}
@@ -113,28 +92,41 @@ public abstract class TSTraversal {
 			I input = current.input();
 			T trans = current.transition();
 			
-			TraversalAction<D> act = vis.processTransition(source, data, input, trans);
+			S succ = ts.getSuccessor(trans);
+			dataHolder.value = null;
+			TSTraversalAction act = vis.processTransition(source, data, input, trans, succ, dataHolder);
 			
-			switch(act.type) {
+			switch(act) {
 			case ABORT_INPUT:
 				current.advanceInput(ts);
-				continue;
+				break;
 			case ABORT_STATE:
 				dfsStack.pop();
-				continue;
+				break;
 			case ABORT_TRAVERSAL:
-				return;
+				return complete;
 			case IGNORE:
 				current.advance(ts);
-				continue;
+				break;
 			case EXPLORE:
+				if(stateCount != limit) {
+					dfsStack.push(new DFRecord<S,I,T,D>(succ, inputs, dataHolder.value));
+					stateCount++;
+				}
+				else
+					complete = false;
+				break;
 			}
-			
-			S succ = ts.getSuccessor(trans);
-			D succData = act.data;
-			
-			dfsStack.push(new DFRecord<S,I,T,D>(succ, inputs, succData));
 		}
+		
+		return complete;
+	}
+	
+	public static <S,I,T,D>
+	boolean depthFirst(TransitionSystem<S, I, T> ts,
+			Collection<? extends I> inputs,
+			TSTraversalVisitor<S, I, T, D> vis) {
+		return depthFirst(ts, NO_LIMIT, inputs, vis);
 	}
 	
 	
@@ -146,25 +138,37 @@ public abstract class TSTraversal {
 	 * @param inputs the input alphabet.
 	 * @param vis the visitor.
 	 */
-	public static <S,I,T,D> void breadthFirst(TransitionSystem<S, I, T> ts,
+	public static <S,I,T,D>
+	boolean breadthFirst(TransitionSystem<S, I, T> ts,
+			int limit,
 			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
 		Deque<BFSRecord<S,D>> bfsQueue = new ArrayDeque<BFSRecord<S,D>>();
+
+		// setting the following to false means that the traversal had to be aborted
+		// due to reaching the limit
+		boolean complete = true;
+		int stateCount = 0;
 		
+		Holder<D> dataHolder = new Holder<>();
 		
 		for(S initS : ts.getInitialStates()) {
-			TraversalAction<D> act = vis.processInitial(initS);
-			switch(act.type) {
+			dataHolder.value = null;
+			TSTraversalAction act = vis.processInitial(initS, dataHolder);
+			switch(act) {
+			case ABORT_TRAVERSAL:
+				return complete;
+			case EXPLORE:
+				if(stateCount != limit) {
+					bfsQueue.offer(new BFSRecord<S,D>(initS, dataHolder.value));
+					stateCount++;
+				}
+				else
+					complete = false;
+				break;
 			case ABORT_INPUT:
 			case ABORT_STATE:
 			case IGNORE:
-				continue;
-			case ABORT_TRAVERSAL:
-				return;
-			case EXPLORE:
-				D data = act.data;
-				bfsQueue.offer(new BFSRecord<S,D>(initS, data));
-				break;
 			}
 		}
 		
@@ -185,30 +189,58 @@ inputs_loop:
 					continue;
 				
 				for(T trans : transitions) {
-					TraversalAction<D> act = vis.processTransition(state, data, input, trans);
+					S succ = ts.getSuccessor(trans);
 					
-					switch(act.type) {
+					dataHolder.value = null;
+					TSTraversalAction act = vis.processTransition(state, data, input, trans, succ, dataHolder);
+					
+					switch(act) {
 					case ABORT_INPUT:
 						continue inputs_loop;
 					case ABORT_STATE:
 						break inputs_loop;
 					case ABORT_TRAVERSAL:
-						return;
-					case IGNORE:
-						continue;
+						return complete;
 					case EXPLORE:
+						if(stateCount != limit) {
+							bfsQueue.offer(new BFSRecord<S,D>(succ, dataHolder.value));
+							stateCount++;
+						}
+						else
+							complete = false;
+						break;
+					case IGNORE:
 					}
-					
-
-					S succ = ts.getSuccessor(trans);
-					D succData = act.data;
-					
-					bfsQueue.offer(new BFSRecord<S,D>(succ, succData));
 				}
 			}
 		}
 		
+		return complete;
+	}
+	
+	public static <S,I,T,D>
+	boolean breadthFirst(TransitionSystem<S, I, T> ts,
+			Collection<? extends I> inputs,
+			TSTraversalVisitor<S, I, T, D> vis) {
+		return breadthFirst(ts, NO_LIMIT, inputs, vis);
 	}
 
+	
+	public static <S,I,T,D>
+	boolean traverse(TraversalOrder order, TransitionSystem<S,I,T> ts, int limit, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
+		switch(order) {
+		case BREADTH_FIRST:
+			return breadthFirst(ts, limit, inputs, vis);
+		case DEPTH_FIRST:
+			return depthFirst(ts, limit, inputs, vis);
+		default:
+			throw new IllegalArgumentException("Unknown traversal order: " + order);
+		}
+	}
+	
+	public static <S,I,T,D>
+	boolean traverse(TraversalOrder order, TransitionSystem<S,I,T> ts, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
+		return traverse(order, ts, NO_LIMIT, inputs, vis);
+	}
 	
 }

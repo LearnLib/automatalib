@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.minimizer;
 
@@ -36,11 +36,11 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
  * {@link AutomatonInterface}, and may be partially defined. Note that
  * undefined transitions are preserved, thus, they have no semantics that
  * could be modeled otherwise wrt. this algorithm.
- * 
+ * <p>
  * The implemented algorithm is described in the paper "Minimizing incomplete
  * automata" by Marie-Pierre Beal and Maxime Crochemore.
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> state class.
  * @param <L> transition label class.
@@ -233,7 +233,7 @@ public class Minimizer<S,L> {
 			for(E edge : graph.getOutgoingEdges(origState)) {
 				S origTarget = graph.getTarget(edge);
 				State<S,L> target = stateStorage.get(origTarget);
-				L label = graph.getEdgeProperties(edge);
+				L label = graph.getEdgeProperty(edge);
 				TransitionLabel<S,L> transition = transitionMap.get(label);
 				if(transition == null) {
 					transition = new TransitionLabel<S,L>(label);

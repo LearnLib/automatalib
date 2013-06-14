@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.minimizer;
 
@@ -25,7 +25,7 @@ import net.automatalib.graphs.UniversalIndefiniteGraph;
 
 /**
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> state class.
  * @param <L> transition 
@@ -44,7 +44,7 @@ class HashMapInitialPartitioning<S, L> implements
 
 	@Override
 	public Block<S, L> getBlock(S origState) {
-		Object clazz = graph.getNodeProperties(origState);
+		Object clazz = graph.getNodeProperty(origState);
 		Block<S,L> block = initialBlockMap.get(clazz);
 		if(block == null) {
 			block = new Block<S, L>(numExistingBlocks++);

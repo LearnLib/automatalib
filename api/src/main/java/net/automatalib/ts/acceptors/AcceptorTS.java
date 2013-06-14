@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.ts.acceptors;
 
@@ -26,7 +26,6 @@ import net.automatalib.ts.UniversalTransitionSystem;
  *
  * @param <S> state class
  * @param <I> input symbol class
- * @param <T> transition class
  */
 public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boolean, Void> {
 	

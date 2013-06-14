@@ -12,21 +12,22 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.commons.util.nid;
 
 import java.util.AbstractList;
 import java.util.Iterator;
 
-import net.automatalib.commons.util.array.SimpleResizingArray;
+import net.automatalib.commons.util.array.ArrayWritable;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 
 
 public class DynamicList<T extends MutableNumericID> extends
-		AbstractList<T> {
+		AbstractList<T> implements ArrayWritable<T> {
 	
-	private final SimpleResizingArray storage
-		= new SimpleResizingArray();
+	private final ResizingObjectArray storage
+		= new ResizingObjectArray();
 	
 	private int size = 0;
 	
@@ -156,6 +157,11 @@ public class DynamicList<T extends MutableNumericID> extends
 		for(int i = 0; i < size; i++)
 			storage.array[i] = null;
 		size = 0;
+	}
+
+	@Override
+	public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
+		System.arraycopy(storage.array, offset, array, tgtOfs, num);
 	}
 
 }

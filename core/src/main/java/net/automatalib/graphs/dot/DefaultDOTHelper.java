@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.graphs.dot;
 
@@ -75,8 +75,8 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	@Override
 	public boolean getNodeProperties(N node, Map<String,String> properties) {
 		String label = String.valueOf(node);
-		properties.put("label", label);
-		properties.put("shape", "circle");
+		properties.put(LABEL, label);
+		properties.put(SHAPE, "circle");
 		return true;
 	}
 
@@ -85,9 +85,7 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	 * @see net.automatalib.graphs.dot.GraphDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
 	 */
 	@Override
-	public boolean getEdgeProperties(E edge, Map<String,String> properties) {
-		String label = String.valueOf(edge);
-		properties.put("label", label);
+	public boolean getEdgeProperties(N src, E edge, N tgt, Map<String,String> properties) {
 		return true;
 	}
 

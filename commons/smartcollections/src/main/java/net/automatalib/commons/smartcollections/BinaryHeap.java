@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.commons.smartcollections;
 
@@ -21,7 +21,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
-import net.automatalib.commons.util.array.SimpleResizingArray;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.commons.util.comparison.CmpUtil;
 
 /**
@@ -171,7 +171,7 @@ public class BinaryHeap<E>
 	
 	
 	// Entry storage.
-	private SimpleResizingArray entries;
+	private ResizingObjectArray entries;
 	// Number of entries in the queue.
 	private int size = 0;
 	
@@ -289,7 +289,7 @@ public class BinaryHeap<E>
 
 	
 	protected BinaryHeap(int initialCapacity, Comparator<? super E> comparator) {
-		this.entries = new SimpleResizingArray(initialCapacity);
+		this.entries = new ResizingObjectArray(initialCapacity);
 		this.comparator = comparator;
 	}
 	

@@ -12,13 +12,15 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.ts.traversal;
 
+import net.automatalib.commons.util.Holder;
+
 
 public interface TSTraversalVisitor<S, I, T, D> {
-	public TraversalAction<D> processInitial(S state);
+	public TSTraversalAction processInitial(S state, Holder<D> outData);
 	public boolean startExploration(S state, D data);
-	public TraversalAction<D> processTransition(S source, D srcData, I input, T transition);
+	public TSTraversalAction processTransition(S source, D srcData, I input, T transition, S succ, Holder<D> outData);
 }

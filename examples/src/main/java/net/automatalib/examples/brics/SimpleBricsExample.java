@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.examples.brics;
 
@@ -31,10 +31,6 @@ import dk.brics.automaton.RegExp;
 
 public class SimpleBricsExample {
 
-
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) throws IOException {
 		// Create a BRICS automaton from a regular expression ...
 		RegExp r = new RegExp("ab+(c|d)*e?");
@@ -47,6 +43,7 @@ public class SimpleBricsExample {
 		GraphDOT.write(ba, w);
 		w.close();
 		
+		// Test whether the following words are accepted
 		List<Word<Character>> testWords = Arrays.asList(
 				Word.fromString("abd"),
 				Word.fromString("abbc"),

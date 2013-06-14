@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.words;
 
@@ -240,4 +240,15 @@ final class LetterWord<I> extends Word<I> {
 	public Word<I> flatten() {
 		return this;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see net.automatalib.words.Word#trimmed()
+	 */
+	@Override
+	public Word<I> trimmed() {
+		return this;
+	}
+	
+	
 }

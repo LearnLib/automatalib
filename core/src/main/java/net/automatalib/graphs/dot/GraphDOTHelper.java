@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.graphs.dot;
 
@@ -30,6 +30,11 @@ import net.automatalib.commons.util.mappings.Mapping;
  * @param <E> edge class
  */
 public interface GraphDOTHelper<N, E> {
+	
+	public static final String LABEL = "label";
+	public static final String SHAPE = "shape";
+	
+	
 	/**
 	 * Called before the node and edge data are written, but <i>after</i>
 	 * the opening "digraph {" statement.
@@ -78,5 +83,5 @@ public interface GraphDOTHelper<N, E> {
 	 * @param properties the property map
 	 * @return whether or not this edge should be rendered
 	 */
-	public boolean getEdgeProperties(E edge, Map<String,String> properties);
+	public boolean getEdgeProperties(N src, E edge, N tgt, Map<String,String> properties);
 }

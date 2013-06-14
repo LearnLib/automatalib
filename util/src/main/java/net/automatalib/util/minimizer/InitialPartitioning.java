@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.minimizer;
 
@@ -20,12 +20,12 @@ import java.util.Collection;
 
 /**
  * Interface for the initial partitioning data structure.
- * 
+ * <p>
  * This interface is needed to generalize the optimized (if the number
  * of partitions is known and the classification can be done using integers)
  * and non-optimized variants of initial partitionings.
  *  
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> state class.
  * @param <L> transition label class.

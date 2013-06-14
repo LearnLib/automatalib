@@ -12,11 +12,10 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.commons.util.array;
 
-import java.util.Arrays;
 
 /**
  * Class that provides a resizable {@link Object} array storage.
@@ -28,7 +27,7 @@ import java.util.Arrays;
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
  */
-public final class SimpleResizingArray {
+public final class ResizingObjectArray {
 	
 	/**
 	 * The arrays default initial capacity.
@@ -47,17 +46,16 @@ public final class SimpleResizingArray {
 	 * Constructor. Initializes an array of the default initial capacity.
 	 * @see #DEFAULT_INITIAL_CAPACITY
 	 */
-	public SimpleResizingArray() {
+	public ResizingObjectArray() {
 		this(DEFAULT_INITIAL_CAPACITY);
 	}
 	
 	/**
 	 * Constructor. Creates an array with the specified initial capacity.
 	 * 
-	 * @param arrayClazz the class of the storage array.
 	 * @param initialCapacity the initial capacity.
 	 */
-	public SimpleResizingArray(int initialCapacity) {
+	public ResizingObjectArray(int initialCapacity) {
 		if(initialCapacity <= 0)
 			initialCapacity = DEFAULT_INITIAL_CAPACITY;
 		this.array = new Object[initialCapacity];
@@ -95,7 +93,9 @@ public final class SimpleResizingArray {
 		if(maxCapacity >= array.length)
 			return false;
 		
-		array = Arrays.copyOf(array, maxCapacity);
+		Object[] newArray = new Object[maxCapacity];
+		System.arraycopy(array, 0, newArray, 0, maxCapacity);
+		array = newArray;
 		return true;
 	}
 
@@ -108,7 +108,7 @@ public final class SimpleResizingArray {
 			array[i] = value;
 	}
 	
-	public void swap(SimpleResizingArray other) {
+	public void swap(ResizingObjectArray other) {
 		Object[] arrayTmp = array;
 		int hintTmp = nextCapacityHint;
 		array = other.array;

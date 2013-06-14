@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.automata.base.fast;
 
@@ -37,7 +37,7 @@ public abstract class FastNondetState<S extends FastNondetState<S, T>, T>
 		return transitions[inputIdx];
 	}
 	
-	public final void setTransitions(int inputIdx, Collection<T> transitions) {
+	public final void setTransitions(int inputIdx, Collection<? extends T> transitions) {
 		this.transitions[inputIdx] = new HashSet<T>(transitions);
 	}
 	

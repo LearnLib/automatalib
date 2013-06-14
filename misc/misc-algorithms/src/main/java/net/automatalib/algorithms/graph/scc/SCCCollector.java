@@ -12,28 +12,26 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.util.ts.traversal;
+package net.automatalib.algorithms.graph.scc;
 
-public final class TraversalAction<D> {
-	public static enum Type {
-		EXPLORE,
-		IGNORE,
-		ABORT_INPUT,
-		ABORT_STATE,
-		ABORT_TRAVERSAL
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class SCCCollector<N> implements SCCListener<N> {
+	
+	private final List<List<N>> sccList = new ArrayList<>();
+
+	
+	@Override
+	public void foundSCC(Collection<? extends N> scc) {
+		sccList.add(new ArrayList<>(scc));
 	}
 	
-	public final Type type;
-	public final D data;
-	
-	public TraversalAction(Type type) {
-		this(type, null);
+	public List<List<N>> getSCCList() {
+		return sccList;
 	}
-	
-	public TraversalAction(Type type, D data) {
-		this.type = type;
-		this.data = data;
-	}
+
 }

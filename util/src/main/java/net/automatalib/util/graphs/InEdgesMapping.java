@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.graphs;
 
@@ -22,7 +22,7 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.BidirectionalGraph;
 
 
-public class InEdgesMapping<N, E> implements Mapping<N, Collection<E>> {
+final class InEdgesMapping<N, E> implements Mapping<N, Collection<E>> {
 	
 	private final BidirectionalGraph<N, E> graph;
 	

@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.minimizer;
 
@@ -27,7 +27,7 @@ import net.automatalib.commons.util.mappings.Mapping;
  * process is a partition on the original set of states. This is represented
  * by a collection of {@link Block}s containing states that are equivalent
  * and thus can be merged.
- * 
+ * <p>
  * Since all states in a block are equivalent (and thus especially have the
  * same set of outgoing edge labels), a minimized automaton can be created
  * from this partition by instantiating a state for each block. The edges
@@ -36,15 +36,15 @@ import net.automatalib.commons.util.mappings.Mapping;
  * created according to the edges of this state, only that they point to
  * the states representing the blocks the respective target states belong to
  * (using {@link #getBlockForState(Object)}).
- * 
+ * <p>
  * The blocks in the result partition are guaranteed to have contiguous IDs
  * (see {@link Block#getId()}), starting at 0. This allows an efficient
  * construction of the resulting automaton.
- * 
+ * <p>
  * A more convenient way to obtain a representation of the resulting, minimized
  * automaton is using a {@link BlockAutomaton}.
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> state class.
  * @param <L> transition label class.

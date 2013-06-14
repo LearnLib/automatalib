@@ -12,25 +12,25 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.commons.util.mappings;
 
-import net.automatalib.commons.util.array.SimpleResizingArray;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.commons.util.nid.IDChangeListener;
 import net.automatalib.commons.util.nid.NumericID;
 
 public final class ArrayMapping<K extends NumericID, V> implements MutableMapping<K, V>,
 		IDChangeListener<K> {
 
-	private final SimpleResizingArray storage;
+	private final ResizingObjectArray storage;
 	
 	public ArrayMapping() {
-		storage = new SimpleResizingArray();
+		storage = new ResizingObjectArray();
 	}
 	
 	public ArrayMapping(int initialSize) {
-		storage = new SimpleResizingArray(initialSize);
+		storage = new ResizingObjectArray(initialSize);
 	}
 	
 	@Override

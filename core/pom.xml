@@ -1,35 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2013 TU Dortmund
+This file is part of AutomataLib, http://www.automatalib.net/.
+
+AutomataLib is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License version 3.0 as published by the Free Software Foundation.
+
+AutomataLib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with AutomataLib; if not, see
+http://www.gnu.de/documents/lgpl.en.html.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.automatalib</groupId>
-  <artifactId>automata-core</artifactId>
-  <packaging>jar</packaging>
+	<groupId>net.automatalib</groupId>
+	<artifactId>automata-core</artifactId>
+	<packaging>jar</packaging>
 
-  <name>automata-core</name>
+	<name>AutomataLib :: Core</name>
+	<description><![CDATA[
+		The core artifact of AutomataLib. This library contains concrete implementations for many
+		of the automaton model interfaces defined in the API artifact, as well as abstract
+		base classes that facilitate implementing new automaton model classes. Note that
+		concrete algorithms (traversal, reachability analysis etc.) are not in the scope of this
+		artifact.
+	]]></description>
 
 	<parent>
 		<groupId>net.automatalib</groupId>
 		<artifactId>automata-parent</artifactId>
-		<version>0.3.0-SNAPSHOT</version>
+		<version>0.3.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-  <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-		<artifactId>automata-commons-util</artifactId>
-    </dependency>
-
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-api</artifactId>
-	</dependency>
-        
-        <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-        </dependency>
-        
-  </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-commons-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+		</dependency>
+	</dependencies>
 </project>

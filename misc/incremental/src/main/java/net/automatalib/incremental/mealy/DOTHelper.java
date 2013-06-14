@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.incremental.mealy;
 
@@ -44,14 +44,21 @@ final class DOTHelper extends DefaultDOTHelper<State, TransitionRecord> {
 		this.initial = initial;
 	}
 
-	
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#initialNodes()
+	 */
 	@Override
 	protected Collection<? extends State> initialNodes() {
 		return Collections.singleton(initial);
 	}
 
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
+	 */
 	@Override
 	public boolean getNodeProperties(State node, Map<String, String> properties) {
 		if(!super.getNodeProperties(node, properties))
@@ -62,10 +69,14 @@ final class DOTHelper extends DefaultDOTHelper<State, TransitionRecord> {
 		return true;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
+	 */
 	@Override
-	public boolean getEdgeProperties(TransitionRecord edge,
+	public boolean getEdgeProperties(State src, TransitionRecord edge, State tgt,
 			Map<String, String> properties) {
-		if(!super.getEdgeProperties(edge, properties))
+		if(!super.getEdgeProperties(src, edge, tgt, properties))
 			return false;
 		
 		Object in = inputAlphabet.getSymbol(edge.transIdx);

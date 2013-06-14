@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 /**
  * 
@@ -31,11 +31,11 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
 
 /**
  * A block in the partition calculated during minimization.
- * 
+ * <p>
  * At the end of the minimization process, all states in the same block may
  * be identified.
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> state class.
  * @param <L> transition label class.

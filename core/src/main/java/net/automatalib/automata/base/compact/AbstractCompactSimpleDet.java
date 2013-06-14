@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.automata.base.compact;
 
@@ -109,7 +109,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	 */
 	@Override
 	public Collection<Integer> getStates() {
-		return CollectionsUtil.rangeList(0, numStates);
+		return CollectionsUtil.intRange(0, numStates);
 	}
 
 	/*
@@ -268,12 +268,12 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	}
 
 	@Override
-	public SP getNodeProperties(Integer node) {
+	public SP getNodeProperty(Integer node) {
 		return getStateProperty(node);
 	}
 
 	@Override
-	public Pair<I, Void> getEdgeProperties(Pair<I, Integer> edge) {
+	public Pair<I, Void> getEdgeProperty(Pair<I, Integer> edge) {
 		return Pair.make(edge.getFirst(), null);
 	}
 

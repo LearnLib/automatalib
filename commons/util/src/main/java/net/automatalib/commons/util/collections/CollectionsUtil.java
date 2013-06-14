@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.commons.util.collections;
 
@@ -64,12 +64,26 @@ public abstract class CollectionsUtil {
 		return (List<E>)(List<?>)new NullList(size);
 	}
 	
-	public static List<Integer> rangeList(int start, int end) {
-		return new RangeList(start, end);
+	public static <E> E removeReplace(List<E> list, int index) {
+		int lastIdx = list.size() - 1;
+		E last = list.remove(lastIdx);
+		if(lastIdx != index) {
+			list.set(index, last);
+			return last;
+		}
+		return null;
 	}
 	
-	public static List<Integer> rangeList(int start, int step, int end) {
-		return new RangeList(start, step, end);
+	public static List<Integer> intRange(int start, int end) {
+		return new IntRange(start, end);
+	}
+	
+	public static List<Integer> intRange(int start, int step, int end) {
+		return new IntRange(start, step, end);
+	}
+	
+	public static List<Character> charRange(char start, char end) {
+		return new CharRange(start, end);
 	}
 	
 	public static <T> List<? extends T> randomAccessList(Collection<? extends T> coll) {

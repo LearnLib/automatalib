@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.words;
 
@@ -632,6 +632,13 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 	 * @return a flattened version of this word.
 	 */
 	public Word<I> flatten() {
+		int len = length();
+		Object[] array = new Object[len];
+		writeToArray(0, array, 0, len);
+		return new SharedWord<>(array);
+	}
+	
+	public Word<I> trimmed() {
 		int len = length();
 		Object[] array = new Object[len];
 		writeToArray(0, array, 0, len);

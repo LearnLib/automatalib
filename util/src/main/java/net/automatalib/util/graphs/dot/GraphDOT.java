@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.graphs.dot;
 
@@ -20,8 +20,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.automatalib.automata.Automaton;
@@ -32,6 +35,7 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.strings.StringUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UndirectedGraph;
+import net.automatalib.graphs.dot.AggregateDOTHelper;
 import net.automatalib.graphs.dot.DOTPlottableGraph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -55,10 +59,11 @@ public abstract class GraphDOT {
 	 * @param a the appendable to write to.
 	 * @throws IOException if writing to <tt>a</tt> fails. 
 	 */
+	@SafeVarargs
 	public static <N,E> void write(DOTPlottableGraph<N, E> graph,
-			Appendable a) throws IOException {
-		GraphDOTHelper<N,E> helper = graph.getGraphDOTHelper();
-		write(graph, helper, a);
+			Appendable a, GraphDOTHelper<N,? super E> ...additionalHelpers) throws IOException {
+		GraphDOTHelper<N,? super E> helper = graph.getGraphDOTHelper();
+		write(graph, helper, a, additionalHelpers);
 	}
 	
 	/**
@@ -70,12 +75,13 @@ public abstract class GraphDOT {
 	 * @param a the appendable to write to.
 	 * @throws IOException if writing to <tt>a</tt> fails.
 	 */
+	@SafeVarargs
 	public static <S,I,T> void write(Automaton<S,I,T> automaton,
-			GraphDOTHelper<S, Pair<I,T>> helper,
+			GraphDOTHelper<S, ? super Pair<I,T>> helper,
 			Collection<? extends I> inputAlphabet,
-			Appendable a) throws IOException {
+			Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
 		Graph<S,Pair<I,T>> ag = Automata.asGraph(automaton, inputAlphabet);
-		write(ag, helper, a);
+		write(ag, helper, a, additionalHelpers);
 	}
 	
 	/**
@@ -86,10 +92,11 @@ public abstract class GraphDOT {
 	 * @param a the appendable to write to
 	 * @throws IOException if writing to <tt>a</tt> fails
 	 */
+	@SafeVarargs
 	public static <S,I,T> void write(Automaton<S,I,T> automaton,
 			Collection<? extends I> inputAlphabet,
-			Appendable a) throws IOException {
-		GraphDOTHelper<S,Pair<I,T>> helper;
+			Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
+		GraphDOTHelper<S,? super Pair<I,T>> helper;
 		if(automaton instanceof DOTPlottableAutomaton) {
 			DOTPlottableAutomaton<S,I,T> dp = (DOTPlottableAutomaton<S,I,T>)automaton;
 			helper = dp.getDOTHelper();
@@ -97,7 +104,12 @@ public abstract class GraphDOT {
 		else
 			helper = new DefaultDOTHelperAutomaton<S, I, T, Automaton<S,I,T>>(automaton);
 		
-		write(automaton, helper, inputAlphabet, a);
+		write(automaton, helper, inputAlphabet, a, additionalHelpers);
+	}
+	
+	@SafeVarargs
+	public static <S,I,T> void write(DOTPlottableAutomaton<S, I, T> automaton, Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
+		write(automaton, automaton.getDOTHelper(), automaton.getInputAlphabet(), a, additionalHelpers);
 	}
 	
 	
@@ -109,8 +121,9 @@ public abstract class GraphDOT {
 	 * @throws IOException if writing to <tt>a</tt> fails
 	 */
 	@SuppressWarnings("unchecked")
+	@SafeVarargs
 	public static <N,E> void write(Graph<N,E> graph,
-			Appendable a) throws IOException {
+			Appendable a, GraphDOTHelper<N,? super E> ...additionalHelpers) throws IOException {
 		GraphDOTHelper<N, ? super E> helper = null;
 		if(graph instanceof DOTPlottableGraph) {
 			DOTPlottableGraph<N,E> plottable = (DOTPlottableGraph<N,E>)graph;
@@ -118,7 +131,21 @@ public abstract class GraphDOT {
 		}
 		else
 			helper = (GraphDOTHelper<N,? super E>)DefaultDOTHelper.getInstance();
-		write(graph, helper, a);
+		write(graph, helper, a, additionalHelpers);
+	}
+	
+	@SafeVarargs
+	public static <N,E> void write(Graph<N,E> graph, GraphDOTHelper<N, ? super E> helper, Appendable a, GraphDOTHelper<N, ? super E> ...additionalHelpers) throws IOException {
+		List<GraphDOTHelper<N,? super E>> helpers = new ArrayList<>(additionalHelpers.length + 1);
+		helpers.add(helper);
+		helpers.addAll(Arrays.asList(additionalHelpers));
+		
+		write(graph, a, helpers);
+	}
+	
+	public static <N,E> void write(Graph<N,E> graph, Appendable a, List<GraphDOTHelper<N,? super E>> helpers) throws IOException {
+		AggregateDOTHelper<N, E> aggHelper = new AggregateDOTHelper<>(helpers);
+		write(graph, aggHelper, a);
 	}
 	
 	/**
@@ -181,7 +208,7 @@ public abstract class GraphDOT {
 					continue;
 				
 				props.clear();
-				if(!dotHelper.getEdgeProperties(e, props))
+				if(!dotHelper.getEdgeProperties(node, e, tgt, props))
 					continue;
 				
 				a.append('\t').append(srcId).append(' ');
@@ -221,8 +248,14 @@ public abstract class GraphDOT {
 				first = false;
 			else
 				a.append(' ');
+			String key = e.getKey();
+			String value = e.getValue();
 			a.append(e.getKey()).append("=");
-			StringUtil.enquote(e.getValue(), a);
+			// HTML labels have to be enclosed in <> instead of ""
+			if(key.equals(GraphDOTHelper.LABEL) && value.startsWith("<HTML>"))
+				a.append('<').append(value.substring(6)).append('>');
+			else
+				StringUtil.enquote(e.getValue(), a);
 		}
 		a.append(']');
 	}

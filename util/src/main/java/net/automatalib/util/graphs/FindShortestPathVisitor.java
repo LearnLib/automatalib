@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.graphs;
 
@@ -21,65 +21,57 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
-import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.util.graphs.traversal.DefaultGraphTraversalVisitor;
 import net.automatalib.util.graphs.traversal.GraphTraversalAction;
-import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
 
 
-final class FindShortestPathVisitor<N, E> implements
-		GraphTraversalVisitor<N, E, Void> {
+final class FindShortestPathVisitor<N, E> extends
+		DefaultGraphTraversalVisitor<N, E, Void> {
 	
-	private final IndefiniteGraph<N,E> graph;
 	private final MutableMapping<N, Pair<N,E>> predMapping;
 	private final Collection<? extends N> targetNodes;
 	private N foundTarget;
 	
 	public FindShortestPathVisitor(IndefiniteGraph<N,E> graph, Collection<? extends N> targetNodes) {
-		this.graph = graph;
 		this.targetNodes = targetNodes;
 		this.predMapping = graph.createStaticNodeMapping();
 	}
 
 	@Override
-	public GraphTraversalAction<Void> processInitial(N initialNode) {
+	public GraphTraversalAction processInitial(N initialNode, Holder<Void> outData) {
 		predMapping.put(initialNode, Pair.<N,E>make(null, null));
-		return GraphTraversal.explore();
+		if(targetNodes.contains(initialNode)) {
+			this.foundTarget = initialNode;
+			return GraphTraversalAction.ABORT_TRAVERSAL;
+		}
+		return GraphTraversalAction.EXPLORE;
 	}
 
 	@Override
-	public boolean startExploration(N node, Void data) {
-		return true;
-	}
-
-	@Override
-	public void finishExploration(N node, Void data) {
-	}
-
-	@Override
-	public GraphTraversalAction<Void> processEdge(N srcNode, Void srcData,
-			E edge) {
-		N tgtNode = graph.getTarget(edge);
+	public GraphTraversalAction processEdge(N srcNode, Void srcData,
+			E edge, N tgtNode, Holder<Void> outData) {
 		
 		if(targetNodes.contains(tgtNode)) {
 			Pair<N,E> pred = Pair.make(srcNode, edge);
 			predMapping.put(tgtNode, pred);
 			this.foundTarget = tgtNode;
-			return GraphTraversal.abortTraversal();
+			return GraphTraversalAction.ABORT_TRAVERSAL;
 		}
 		
 		Pair<N,E> pred = predMapping.get(tgtNode);
 		
 		if(pred != null)
-			return GraphTraversal.ignore();
+			return GraphTraversalAction.IGNORE;
 		
 		pred = Pair.make(srcNode, edge);
 		
 		predMapping.put(tgtNode, pred);
 		
-		return GraphTraversal.explore();
+		return GraphTraversalAction.EXPLORE;
 	}
 	
 	public boolean wasSuccessful() {
@@ -92,12 +84,12 @@ final class FindShortestPathVisitor<N, E> implements
 		N currNode = foundTarget;
 		Pair<N,E> pred = predMapping.get(currNode);
 		
-		do {
+		while(pred != null && pred.getSecond() != null) {
 			path.add(pred.getSecond());
 			
 			currNode = pred.getFirst();
 			pred = predMapping.get(currNode);
-		} while(pred != null && currNode != foundTarget);
+		}
 		
 		Collections.reverse(path);
 		

@@ -1,66 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2013 TU Dortmund
+This file is part of AutomataLib, http://www.automatalib.net/.
+
+AutomataLib is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License version 3.0 as published by the Free Software Foundation.
+
+AutomataLib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with AutomataLib; if not, see
+http://www.gnu.de/documents/lgpl.en.html.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>net.automatalib</groupId>
-  <artifactId>automata-brics</artifactId>
-  <packaging>jar</packaging>
+	<groupId>net.automatalib</groupId>
+	<artifactId>automata-brics</artifactId>
+	<packaging>jar</packaging>
 
-  <name>automata-brics</name>
+	<name>AutomataLib :: Adapters :: BRICS</name>
+	<description><![CDATA[
+		This artifact contains adapter classes for treating the <tt>Automaton</tt> objects from the
+		<a href="http://www.brics.dk/automaton">BRICS library</a> as AutomataLib models.
+	]]></description>
 
 	<parent>
 		<groupId>net.automatalib</groupId>
-		<artifactId>automata-adapters</artifactId>
-		<version>0.3.0-SNAPSHOT</version>
+		<artifactId>automata-adapters-parent</artifactId>
+		<version>0.3.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	<brics.version>1.11-8</brics.version>
-	<brics.javadoc>http://www.brics.dk/automaton/doc/</brics.javadoc>
-  </properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-commons-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-commons-smartcollections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>automata-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>dk.brics.automaton</groupId>
+			<artifactId>automaton</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
 
-  <dependencies>
-    <dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-commons-util</artifactId>
-    </dependency>
-
-    <dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-commons-smartcollections</artifactId>
-    </dependency>
-
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-api</artifactId>
-	</dependency>
-
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>automata-core</artifactId>
-	</dependency>
-
-	<dependency>
-		<groupId>dk.brics.automaton</groupId>
-		<artifactId>automaton</artifactId>
-		<version>${brics.version}</version>
-	</dependency>
-  </dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<links>
-						<link>${brics.javadoc}</link>
-					</links>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
 

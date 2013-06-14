@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.words;
 
@@ -201,5 +201,15 @@ final class SharedWord<I> extends Word<I> {
 	@Override
 	public Word<I> flatten() {
 		return this;
+	}
+	
+	
+	@Override
+	public Word<I> trimmed() {
+		if(offset == 0 && length == storage.length)
+			return this;
+		Object[] trimmed = new Object[length];
+		System.arraycopy(storage, offset, trimmed, 0, length);
+		return new SharedWord<>(trimmed);
 	}
 }

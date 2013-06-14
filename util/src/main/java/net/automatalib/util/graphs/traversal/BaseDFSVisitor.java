@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.graphs.traversal;
 
@@ -32,8 +32,7 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
 	 * @see net.automatalib.util.graphs.traversal.DFSVisitor#exploreInitial(java.lang.Object)
 	 */
 	@Override
-	public D exploreInitial(N node) {
-		explore(node, null);
+	public D initialize(N node) {
 		return null;
 	}
 	
@@ -45,6 +44,25 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
 	public void explore(N node, D data) {
 	}
 	
+	/**
+	 * Most general edge handler. In their default implementations, the following methods
+	 * resort to calling this method:
+	 * <ul>
+	 * <li>{@link #treeEdge(Object, Object, Object, Object)}
+	 * <li>{@link #nontreeEdge(Object, Object, Object, Object, Object)}
+	 * </ul>
+	 * Provided that the latter is not overwritten, the following methods
+	 * resort to this method indirectly in their default implementation:
+	 * <ul>
+	 * <li>{@link #grayTarget(Object, Object, Object, Object, Object)}
+	 * <li>{@link #blackTarget(Object, Object, Object, Object, Object)}
+	 * </ul>
+	 * 
+	 * @param srcNode the source node
+	 * @param srcData the data associated with the source node
+	 * @param edge the edge that is being processed
+	 * @param tgtNode the target node of this edge
+	 */
 	public void edge(N srcNode, D srcData, E edge, N tgtNode) {
 	}
 	
@@ -103,5 +121,9 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
 	 */
 	@Override
 	public void finish(N node, D data) {
+	}
+
+	@Override
+	public void backtrackEdge(N srcNode, D srcDate, E edge, N tgtNode, D tgtData) {
 	}
 }

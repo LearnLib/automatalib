@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.brics;
 
@@ -176,7 +176,7 @@ public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Characte
 	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties(java.lang.Object)
 	 */
 	@Override
-	public Boolean getNodeProperties(State node) {
+	public Boolean getNodeProperty(State node) {
 		return node.isAccept();
 	}
 
@@ -185,7 +185,7 @@ public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Characte
 	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getEdgeProperties(java.lang.Object)
 	 */
 	@Override
-	public BricsTransitionProperty getEdgeProperties(Transition edge) {
+	public BricsTransitionProperty getEdgeProperty(Transition edge) {
 		return new BricsTransitionProperty(edge);
 	}
 }

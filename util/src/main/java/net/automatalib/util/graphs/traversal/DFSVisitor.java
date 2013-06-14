@@ -12,12 +12,12 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.graphs.traversal;
 
 public interface DFSVisitor<N, E, D> {
-	public D exploreInitial(N node);
+	public D initialize(N node);
 	public void explore(N node, D data);
 	public void finish(N node, D data);
 	
@@ -25,4 +25,6 @@ public interface DFSVisitor<N, E, D> {
 	public void backEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData);
 	public void crossEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData);
 	public void forwardEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData);
+	
+	public void backtrackEdge(N srcNode, D srcDate, E edge, N tgtNode, D tgtData);
 }

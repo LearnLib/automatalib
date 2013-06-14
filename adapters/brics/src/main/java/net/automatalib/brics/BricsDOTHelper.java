@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.brics;
 
@@ -63,9 +63,9 @@ final class BricsDOTHelper extends DefaultDOTHelper<State, Transition> {
 		String str = node.toString();
 		int wsIdx1 = str.indexOf(' ');
 		int wsIdx2 = str.indexOf(' ', wsIdx1 + 1);
-		properties.put("label", "s" + str.substring(wsIdx1 + 1, wsIdx2));
+		properties.put(LABEL, "s" + str.substring(wsIdx1 + 1, wsIdx2));
 		if(node.isAccept())
-			properties.put("shape", "doublecircle");
+			properties.put(SHAPE, "doublecircle");
 		return true;
 	}
 
@@ -74,19 +74,13 @@ final class BricsDOTHelper extends DefaultDOTHelper<State, Transition> {
 	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
 	 */
 	@Override
-	public boolean getEdgeProperties(Transition edge,
+	public boolean getEdgeProperties(State src, Transition edge, State tgt,
 			Map<String, String> properties) {
-		if(!super.getEdgeProperties(edge, properties))
+		if(!super.getEdgeProperties(src, edge, tgt, properties))
 			return false;
 		
-		char min = edge.getMin();
-		char max = edge.getMax();
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append('\'').append(min).append('\'');
-		if(max > min)
-			sb.append("..").append('\'').append(max).append('\'');
-		properties.put("label", sb.toString());
+		String label = BricsTransitionProperty.toString(edge.getMin(), edge.getMax());
+		properties.put(LABEL, label);
 		return true;
 	}
 

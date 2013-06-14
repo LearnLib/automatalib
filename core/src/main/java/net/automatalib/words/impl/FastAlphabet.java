@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.words.impl;
 
@@ -80,5 +80,6 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I>
 	public int compare(I o1, I o2) {
 		return o1.getId() - o2.getId();
 	}
+
 
 }

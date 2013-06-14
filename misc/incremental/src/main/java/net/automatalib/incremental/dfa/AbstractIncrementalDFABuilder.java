@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.incremental.dfa;
 
@@ -114,14 +114,14 @@ public abstract class AbstractIncrementalDFABuilder<I> extends
 	}
 	
 	@Override
-	public Acceptance getNodeProperties(State node) {
+	public Acceptance getNodeProperty(State node) {
 		if(sink != null && node == sink)
 			return Acceptance.FALSE;
 		return node.getAcceptance();
 	}
 	
 	@Override
-	public I getEdgeProperties(EdgeRecord edge) {
+	public I getEdgeProperty(EdgeRecord edge) {
 		return inputAlphabet.getSymbol(edge.transIdx);
 	}
 	

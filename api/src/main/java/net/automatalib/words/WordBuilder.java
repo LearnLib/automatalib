@@ -12,14 +12,14 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.words;
 
 import java.util.AbstractList;
 import java.util.List;
 
-import net.automatalib.commons.util.array.SimpleResizingArray;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 
 /**
  * A class for dynamically building {@link Word}s.
@@ -45,15 +45,17 @@ import net.automatalib.commons.util.array.SimpleResizingArray;
  */
 public final class WordBuilder<I> extends AbstractList<I> {
 	
-	private final SimpleResizingArray storage;
+	private final ResizingObjectArray storage;
+	private Object[] array;
 	private int length;
-	private boolean lock = true;
+	private boolean lock = false;
 	
 	/**
 	 * Constructor. Initializes the builder with a default capacity.
 	 */
 	public WordBuilder() {
-		this.storage = new SimpleResizingArray();
+		this.storage = new ResizingObjectArray();
+		this.array = this.storage.array;
 	}
 	
 	/**
@@ -61,7 +63,8 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 * @param initialCapacity the initial capacity of the internal storage.
 	 */
 	public WordBuilder(int initialCapacity) {
-		this.storage = new SimpleResizingArray(initialCapacity);
+		this.storage = new ResizingObjectArray(initialCapacity);
+		this.array = this.storage.array;
 	}
 	
 	/**
@@ -73,10 +76,11 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 * @param count the initial symbol count
 	 */
 	public WordBuilder(I initSym, int count) {
-		this.storage = new SimpleResizingArray(count);
+		this.storage = new ResizingObjectArray(count);
+		this.array = this.storage.array;
 		if(initSym != null) {
 			for(int i = 0; i < count; i++)
-				storage.array[i] = initSym;
+				array[i] = initSym;
 		}
 		length = count;
 	}
@@ -91,10 +95,11 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	public WordBuilder(int capacity, I initSym, int count) {
 		if(capacity < count)
 			capacity = count;
-		this.storage = new SimpleResizingArray(capacity);
+		this.storage = new ResizingObjectArray(capacity);
+		this.array = this.storage.array;
 		if(initSym != null) {
 			for(int i = 0; i < count; i++)
-				storage.array[i] = initSym;
+				array[i] = initSym;
 		}
 		length = count;
 	}
@@ -105,8 +110,9 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 */
 	public WordBuilder(Word<I> init) {
 		int wLen = init.length();
-		this.storage = new SimpleResizingArray(wLen);
-		init.writeToArray(0, storage.array, 0, wLen);
+		this.storage = new ResizingObjectArray(wLen);
+		this.array = this.storage.array;
+		init.writeToArray(0, array, 0, wLen);
 		length = wLen;
 	}
 	
@@ -120,8 +126,9 @@ public final class WordBuilder<I> extends AbstractList<I> {
 		int wLen = init.length();
 		if(capacity < wLen)
 			capacity = wLen;
-		this.storage = new SimpleResizingArray(capacity);
-		init.writeToArray(0, storage.array, 0, wLen);
+		this.storage = new ResizingObjectArray(capacity);
+		this.array = this.storage.array;
+		init.writeToArray(0, array, 0, wLen);
 		length = wLen;
 	}
 	
@@ -129,7 +136,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 		int lLen = symList.size();
 		ensureAdditionalCapacity(lLen);
 		for(I sym : symList)
-			storage.array[length++] = sym;
+			array[length++] = sym;
 		return this;
 	}
 	
@@ -142,7 +149,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	public WordBuilder<I> append(Word<? extends I> word) {
 		int wLen = word.length();
 		ensureAdditionalCapacity(wLen);
-		word.writeToArray(0, storage.array, length, wLen);
+		word.writeToArray(0, array, length, wLen);
 		length += wLen;
 		return this;
 	}
@@ -166,7 +173,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 		for(int i = 0; i < words.length; i++) {
 			Word<? extends I> word = words[i];
 			int wLen = word.length();
-			word.writeToArray(0, storage.array, length, wLen);
+			word.writeToArray(0, array, length, wLen);
 			length += wLen;
 		}
 		
@@ -190,7 +197,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 		ensureAdditionalCapacity(allLen);
 		
 		while(num-- > 0) {
-			word.writeToArray(0, storage.array, length, wLen);
+			word.writeToArray(0, array, length, wLen);
 			length += wLen;
 		}
 		
@@ -204,7 +211,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 */
 	public WordBuilder<I> append(I symbol) {
 		ensureAdditionalCapacity(1);
-		storage.array[length++] = symbol;
+		array[length++] = symbol;
 		return this;
 	}
 	
@@ -224,7 +231,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 			length += num;
 		else {
 			while(num-- > 0)
-				storage.array[length++] = symbol;
+				array[length++] = symbol;
 		}
 		return this;
 	}
@@ -239,7 +246,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 		if(symbols.length == 0)
 			return this;
 		ensureAdditionalCapacity(symbols.length);
-		System.arraycopy(symbols, 0, storage.array, length, symbols.length);
+		System.arraycopy(symbols, 0, array, length, symbols.length);
 		length += symbols.length;
 		return this;
 	}
@@ -249,8 +256,10 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 * @param cap the minimum capacity to ensure
 	 */
 	public void ensureCapacity(int cap) {
-		if(storage.ensureCapacity(cap))
+		if(storage.ensureCapacity(cap)) {
 			lock = false;
+			array = storage.array;
+		}
 	}
 	
 	/**
@@ -259,16 +268,16 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 * @param add the additional capacity to ensure
 	 */
 	public void ensureAdditionalCapacity(int add) {
-		if(storage.ensureCapacity(length + add))
-			lock = false;
+		ensureCapacity(length + add);
 	}
 	
 	/*
 	 * Ensure that non-appending modifications may be made
 	 */
-	private void ensureUnlocked() {
+	private final void ensureUnlocked() {
 		if(lock) {
-			storage.array = storage.array.clone();
+			array = array.clone();
+			storage.array = array;
 			lock = false;
 		}
 	}
@@ -280,7 +289,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 */
 	@SuppressWarnings("unchecked")
 	public I getSymbol(int index) {
-		return (I)storage.array[index];
+		return (I)array[index];
 	}
 	
 	/**
@@ -291,7 +300,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 */
 	public WordBuilder<I> setSymbol(int index, I symbol) {
 		ensureUnlocked();
-		storage.array[index] = symbol;
+		array[index] = symbol;
 		return this;
 	}
 	
@@ -306,7 +315,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 		
 		ensureUnlocked();
 		for(int i = truncLen; i < length; i++)
-			storage.array[i] = null;
+			array[i] = null;
 		
 		length = truncLen;
 		
@@ -328,7 +337,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 		int len = toIndex - fromIndex;
 		
 		lock = true;
-		return new SharedWord<>(storage.array, fromIndex, len);
+		return new SharedWord<>(array, fromIndex, len);
 	}
 	
 	/**
@@ -340,7 +349,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	 */
 	public Word<I> toWord() {
 		lock = true;
-		return new SharedWord<>(storage.array, 0, length);
+		return new SharedWord<>(array, 0, length);
 	}
 
 	/*
@@ -381,7 +390,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	public void clear() {
 		ensureUnlocked();
 		for(int i = 0; i < length; i++)
-			storage.array[i] = null;
+			array[i] = null;
 		length = 0;
 	}
 
@@ -392,6 +401,19 @@ public final class WordBuilder<I> extends AbstractList<I> {
 	@Override
 	public int size() {
 		return length;
+	}
+	
+	public WordBuilder<I> reverse() {
+		ensureUnlocked();
+		int lowIdx = 0, highIdx = length - 1;
+		
+		while(lowIdx < highIdx) {
+			Object tmp = array[lowIdx];
+			array[lowIdx++] = array[highIdx];
+			array[highIdx--] = tmp;
+		}
+		
+		return this;
 	}
 	
 	

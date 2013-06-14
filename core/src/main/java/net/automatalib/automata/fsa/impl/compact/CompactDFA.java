@@ -12,19 +12,23 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.automata.fsa.impl.compact;
 
 import java.util.BitSet;
 
 import net.automatalib.automata.base.compact.AbstractCompactSimpleDet;
+import net.automatalib.automata.dot.DOTHelperFSA;
+import net.automatalib.automata.dot.DOTPlottableAutomaton;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractDFA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractFSA;
+import net.automatalib.commons.util.Pair;
+import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 
-public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implements MutableDFA<Integer,I> {
+public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implements MutableDFA<Integer,I>, DOTPlottableAutomaton<Integer, I, Integer> {
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
 	
@@ -128,6 +132,11 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 	@Override
 	public Integer addInitialState(boolean accepting) {
 		return addInitialState(Boolean.valueOf(accepting));
+	}
+
+	@Override
+	public GraphDOTHelper<Integer, Pair<I, Integer>> getDOTHelper() {
+		return new DOTHelperFSA<>(this);
 	}
 
 }

@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.automata.fsa;
 
@@ -24,7 +24,7 @@ import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.Mappings;
 import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
-import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.copy.AutomatonCopy;
 import net.automatalib.util.ts.acceptors.AcceptanceCombiner;
 import net.automatalib.util.ts.acceptors.Acceptors;
 import net.automatalib.words.Alphabet;
@@ -48,7 +48,8 @@ public abstract class DFAs {
 		DeterministicAcceptorTS<?, I> acc
 			= Acceptors.combine(dfa1, dfa2, combiner);
 		
-		return Automata.copyUniversal(acc, inputs, out, Mappings.<I>identity());
+		AutomatonCopy.copyUniversalDfs(acc, inputs, out, Mappings.<I>identity());
+		return out;
 	}
 	
 	
@@ -116,7 +117,8 @@ public abstract class DFAs {
 	
 	public static <I,S,A extends MutableDFA<S,I>> A complement(DFA<?,I> dfa,
 			Collection<? extends I> inputs, A out) {
-		return Automata.copyUniversal(dfa, inputs, out, Mappings.<I>identity(), NEGATE, Mappings.<Void,Void>nullMapping());
+		AutomatonCopy.copyUniversalDfs(dfa, inputs, out, NEGATE, Mappings.<Void,Void>nullMapping());
+		return out;
 	}
 	
 	public static <I> FastDFA<I> complement(DFA<?,I> dfa,

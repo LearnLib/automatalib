@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.automata.base.fast;
 
@@ -217,7 +217,7 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties(java.lang.Object)
 	 */
 	@Override
-	public SP getNodeProperties(S node) {
+	public SP getNodeProperty(S node) {
 		return AbstractAutomatonGraph.getNodeProperties(this, node);
 	}
 	
@@ -226,7 +226,7 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getEdgeProperties(java.lang.Object)
 	 */
 	@Override
-	public Pair<I,TP> getEdgeProperties(Pair<I,T> edge) {
+	public Pair<I,TP> getEdgeProperty(Pair<I,T> edge) {
 		return AbstractAutomatonGraph.getEdgeProperties(this, edge);
 	}
 	

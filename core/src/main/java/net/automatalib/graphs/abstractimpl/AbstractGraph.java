@@ -12,19 +12,16 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.graphs.abstractimpl;
 
-import java.util.HashMap;
 import java.util.Iterator;
 
-import net.automatalib.commons.util.mappings.MapMapping;
-import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
 
 
-public abstract class AbstractGraph<N, E> implements Graph<N, E> {
+public abstract class AbstractGraph<N, E> extends AbstractIndefiniteGraph<N,E> implements Graph<N, E> {
 	
 	/**
 	 * Provides a realization for {@link Graph#iterator()} relying on
@@ -43,24 +40,6 @@ public abstract class AbstractGraph<N, E> implements Graph<N, E> {
 	public static <N,E> int size(Graph<N,E> $this) {
 		return $this.getNodes().size();
 	}
-	
-	/**
-	 * Provides a realization for {@link Graph#createStaticNodeMapping()}
-	 * by defaulting to a {@link HashMap} backed mapping.
-	 * @see Graph#createStaticNodeMapping()
-	 */
-	public static <N,E,V> MutableMapping<N,V> createStaticNodeMapping(Graph<N,E> $this) {
-		return new MapMapping<>(new HashMap<N,V>());
-	}
-	
-	/**
-	 * Provides a realization for {@link Graph#createDynamicNodeMapping()}
-	 * by defaulting to a {@link HashMap} backed mapping.
-	 * @see Graph#createDynamicNodeMapping()
-	 */
-	public static <N,E,V> MutableMapping<N,V> createDynamicNodeMapping(Graph<N,E> $this) {
-		return new MapMapping<>(new HashMap<N,V>());
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -78,24 +57,6 @@ public abstract class AbstractGraph<N, E> implements Graph<N, E> {
 	@Override
 	public int size() {
 		return size(this);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createStaticNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<N,V> createStaticNodeMapping() {
-		return createStaticNodeMapping(this);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createDynamicNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<N,V> createDynamicNodeMapping() {
-		return createDynamicNodeMapping(this);
 	}
 
 

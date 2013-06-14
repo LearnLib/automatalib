@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.minimizer;
 
@@ -23,7 +23,7 @@ import java.util.List;
  * A "block automaton", i.e. an automaton-style representation of the
  * minimization result in which each block forms a state.
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> state class.
  * @param <L> transition label class.
@@ -47,10 +47,11 @@ public class BlockAutomaton<S, L> {
 			List<Edge<S,L>> outgoing = rep.getOutgoing();
 			BlockEdge<S,L>[] array = new BlockEdge[outgoing.size()];
 			int i = 0;
-			for(Edge<S,L> e : outgoing)
+			for(Edge<S,L> e : outgoing) {
 				array[i++] = new BlockEdge<S,L>(block,
 						e.getTarget().getBlock(),
 						e.getTransitionLabel().getOriginalLabel());
+			}
 			edges[id] = array;
 		}
 	}

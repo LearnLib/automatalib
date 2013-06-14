@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 /**
  * 
@@ -31,7 +31,7 @@ import net.automatalib.commons.smartcollections.ElementReference;
  * operates on, and also keeps various other information that is relevant
  * for the process.
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <S> original state class.
  * @param <L> original transition label class.

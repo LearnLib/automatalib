@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.commons.dotutil;
 
@@ -20,6 +20,8 @@ import java.awt.Desktop;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -58,6 +60,8 @@ public class DOT {
 	
 	private static final int MAX_WIDTH = 800;
 	private static final int MAX_HEIGHT = 600;
+	
+	
 	
 	/**
 	 * Invokes the GraphVIZ DOT utility for rendering graphs.
@@ -190,7 +194,7 @@ public class DOT {
 	 * @param modal whether or not the dialog should be modal.
 	 */
 	public static void renderDOT(Reader r, boolean modal) {
-		DOTComponent cmp = createDOTComponent(r);
+		final DOTComponent cmp = createDOTComponent(r);
 		if (cmp == null)
 			return;
 
@@ -216,6 +220,13 @@ public class DOT {
 		frame.setJMenuBar(menuBar);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
+		frame.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+					frame.setVisible(false);
+			}
+		});
 	}
 	
 	
@@ -301,6 +312,7 @@ public class DOT {
 	 * @return the writer
 	 */
 	public static Writer createDotWriter(final boolean modal) {
+		// TODO: Change this to an OutputStreamWriter and write directly to the pipe
 		return new StringWriter() {
 			@Override
 			public void close() throws IOException {

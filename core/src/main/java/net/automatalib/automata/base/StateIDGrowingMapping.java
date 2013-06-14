@@ -12,25 +12,25 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.automata.base;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.commons.util.array.SimpleResizingArray;
+import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.commons.util.mappings.MutableMapping;
 
 public class StateIDGrowingMapping<S,V> implements MutableMapping<S,V> {
 
 	private final Automaton<S,?,?> automaton;
 	private final StateIDs<S> stateIds;
-	private final SimpleResizingArray storage;
+	private final ResizingObjectArray storage;
 	
 	public StateIDGrowingMapping(Automaton<S,?,?> automaton, StateIDs<S> stateIds) {
 		this.automaton = automaton;
 		this.stateIds = stateIds;
-		this.storage = new SimpleResizingArray(automaton.size());
+		this.storage = new ResizingObjectArray(automaton.size());
 	}
 
 	/*

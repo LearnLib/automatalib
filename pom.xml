@@ -1,245 +1,459 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-		<modelVersion>4.0.0</modelVersion>
-		
-		<!--  
-		=================================  PROJECT INFO ==============================  
-				-->
-						<groupId>net.automatalib</groupId>
-						<artifactId>automata-parent</artifactId>
-						<version>0.3.0-SNAPSHOT</version>
-						<packaging>pom</packaging>
-						<name>automata-parent</name>
-						<url>http://www.automatalib.net</url>
-						
-						<description>A fully generic library for automata, graphs, and models, written in Java.</description>
-						
-						<licenses>
-								<license>
-										<name>GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
-										<url>http://www.gnu.org/copyleft/lesser.html</url>
-								</license>
-						</licenses>
-						
-						<developers>
-								<developer>
-										<id>misberner</id>
-										<name>Malte Isberner</name>
-										<email>malte.isberner@gmail.com</email>
-								</developer>
-						</developers>   
-						
-						<!--  
-						===============================  SCM =======================  
-								-->
-										<scm>
-												<connection>scm:git:git@github.com:misberner/automatalib.git</connection>
-												<developerConnection>scm:git:git@github.com:misberner/automatalib.git</developerConnection>
-												<url>git@github.com:misberner/automatalib.git</url>
-										</scm>
-										
-										
-										<!--  
-										=================================  SONATYPE PARENT ==============================  
-												-->
-														<parent>
-																<groupId>org.sonatype.oss</groupId>
-																<artifactId>oss-parent</artifactId>
-																<version>7</version>
-														</parent>
-														
-														<!--  
-														=================================  MODULES ===================================  
-																-->
-																		<modules>
-																				<module>./api</module>
-																				<module>./core</module>
-																				<module>./util</module>
-																				<module>./commons</module>
-																				<module>./misc</module>
-																				<module>./adapters</module>
-																				<module>./examples</module>
-																		</modules>	
-																		
-																		<!--  
-																		=================================  PROPERTIES ================================
-																				-->
-																						<properties>
-																								<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-																								<!--
-																								dependency versions
-																										-->
-																												<automatalib.version>0.3.0-SNAPSHOT</automatalib.version>
-																												<testng.version>6.8</testng.version>
-																												<attach-source.version>2.0.4</attach-source.version>
-																												<attach-javadoc.version>2.3</attach-javadoc.version>
-																										</properties>
-																										
-																										
-																										<!--  
-																										=================================  BUILD PLUGINS =============================  
-																												-->
-																														<build>
-																																
-																																<plugins>
-																																		<!-- 
-																																		default assembly config
-																																				-->
-																																						<plugin>
-																																								<artifactId>maven-assembly-plugin</artifactId>
-																																								<configuration>
-																																										<descriptorRefs>
-																																												<descriptorRef>jar-with-dependencies</descriptorRef>
-																																										</descriptorRefs>
-																																								</configuration>
-																																						</plugin>
-																																						
-																																						<!-- 
-																																						compiler plugin config
-																																								-->            
-																																										<plugin>
-																																												<groupId>org.apache.maven.plugins</groupId>
-																																												<artifactId>maven-compiler-plugin</artifactId>
-																																												<version>2.0.2</version>
-																																												<configuration>
-																																														<fork>true</fork>
-																																														<meminitial>128m</meminitial>
-																																														<maxmem>512m</maxmem>
-																																														<source>1.7</source>
-																																														<target>1.7</target>
-																																												</configuration>
-																																										</plugin>
-																																								</plugins>
-																																								<pluginManagement>
-																																										<plugins>
-																																												<plugin>
-																																														<groupId>org.apache.maven.plugins</groupId>
-																																														<artifactId>maven-source-plugin</artifactId>
-																																														<version>${attach-source.version}</version>
-																																												</plugin>
-																																												<plugin>
-																																														<groupId>org.apache.maven.plugins</groupId>
-																																														<artifactId>maven-javadoc-plugin</artifactId>
-																																														<version>${attach-javadoc.version}</version>
-																																												</plugin>
-																																										</plugins>
-																																								</pluginManagement>
-																																						</build>
-																																						
-																																						<!--  
-																																						===============================  PROFILES =======================  
-																																								-->
-																																										<profiles>
-																																												<profile>
-																																														<id>netbeans-private-testng</id>
-																																														<activation>
-																																																<property>
-																																																		<name>netbeans.testng.action</name>
-																																																</property>
-																																														</activation>
-																																														<build>
-																																																<plugins>
-																																																		<plugin>
-																																																				<groupId>org.apache.maven.plugins</groupId>
-																																																				<artifactId>maven-surefire-plugin</artifactId>
-																																																				<version>2.11</version>
-																																																				<configuration>
-																																																						<suiteXmlFiles>
-																																																								<suiteXmlFile>target/nb-private/testng-suite.xml</suiteXmlFile>
-																																																						</suiteXmlFiles>
-																																																				</configuration>
-																																																		</plugin>
-																																																</plugins>
-																																														</build>
-																																												</profile>
-																																												<profile>
-																																														<id>release</id>
-																																														<build>
-																																																<plugins>
-																																																		<!-- 
-																																																		attach source and javadoc jars
-																																																				-->
-																																																						<plugin>
-																																																								<groupId>org.apache.maven.plugins</groupId>
-																																																								<artifactId>maven-source-plugin</artifactId>
-																																																								<executions>
-																																																										<execution>
-																																																												<id>attach-sources</id>
-																																																												<goals>
-																																																														<goal>jar</goal>
-																																																												</goals>
-																																																										</execution>
-																																																								</executions>
-																																																						</plugin>
-																																																						<plugin>
-																																																								<groupId>org.apache.maven.plugins</groupId>
-																																																								<artifactId>maven-javadoc-plugin</artifactId>
-																																																								<executions>
-																																																										<execution>
-																																																												<id>attach-javadocs</id>
-																																																												<goals>
-																																																														<goal>jar</goal>
-																																																												</goals>
-																																																										</execution>
-																																																								</executions>
-																																																						</plugin>
-																																																				</plugins>
-																																																		</build>
-																																																</profile>
-																																														</profiles>
-																																														
-																																														<!--  
-																																														===============================  DEFAULT DEP. VERSIONS =======================  
-																																																-->
-																																																		<dependencyManagement>
-																																																				<dependencies>
-																																																						<dependency>
-																																																								<groupId>${project.groupId}</groupId>
-																																																								<artifactId>automata-api</artifactId>
-																																																								<version>${project.version}</version>
-																																																						</dependency>
-																																																						<dependency>
-																																																								<groupId>${project.groupId}</groupId>
-																																																								<artifactId>automata-core</artifactId>
-																																																								<version>${project.version}</version>
-																																																						</dependency>
-																																																						<dependency>
-																																																								<groupId>${project.groupId}</groupId>
-																																																								<artifactId>automata-util</artifactId>
-																																																								<version>${project.version}</version>
-																																																						</dependency>
-																																																						<dependency>
-																																																								<groupId>${project.groupId}</groupId>
-																																																								<artifactId>automata-incremental</artifactId>
-																																																								<version>${project.version}</version>
-																																																						</dependency>
-																																																						<dependency>
-																																																								<groupId>${project.groupId}</groupId>
-																																																								<artifactId>automata-brics</artifactId>
-																																																								<version>${project.version}</version>
-																																																						</dependency>
-																																																						<dependency>
-																																																								<groupId>${project.groupId}</groupId>
-																																																								<artifactId>automata-commons-util</artifactId>
-																																																								<version>${project.version}</version>
-																																																						</dependency>
-																																																						<dependency>
-																																																								<groupId>${project.groupId}</groupId>
-																																																								<artifactId>automata-commons-smartcollections</artifactId>
-																																																								<version>${project.version}</version>
-																																																						</dependency>
-																																																						<dependency>
-																																																								<groupId>${project.groupId}</groupId>
-																																																								<artifactId>automata-commons-dotutil</artifactId>
-																																																								<version>${project.version}</version>
-																																																						</dependency>  
-																																																						<dependency>
-																																																								<groupId>org.testng</groupId>
-																																																								<artifactId>testng</artifactId>
-																																																								<version>${testng.version}</version>
-																																																								<scope>test</scope>
-																																																						</dependency>            
-																																																				</dependencies>
-																																																		</dependencyManagement>            
-																																																</project>
-																																																
+<!--
+Copyright (C) 2013 TU Dortmund
+This file is part of AutomataLib, http://www.automatalib.net/.
+
+AutomataLib is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License version 3.0 as published by the Free Software Foundation.
+
+AutomataLib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with AutomataLib; if not, see
+http://www.gnu.de/documents/lgpl.en.html.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<!-- ================================= PROJECT INFO ============================== -->
+	<groupId>net.automatalib</groupId>
+	<artifactId>automata-parent</artifactId>
+	<version>0.3.0</version>
+	<packaging>pom</packaging>
+
+	<name>AutomataLib :: Parent</name>
+	<description>
+		A fully generic library for automata, graphs, and models, written in Java.
+		This is the parent artifact which does not have any source code. Please refer to the
+		"modules" page for more detailed documentation on the single library artifacts.
+	</description>
+	<url>http://misberner.github.io/automatalib/maven-site/</url>
+
+	<licenses>
+		<license>
+			<name>GNU LESSER GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0-standalone.html</url>
+		</license>
+	</licenses>
+
+	<issueManagement>
+		<url>https://github.com/misberner/automatalib/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+	<mailingLists>
+		<mailingList>
+			<name>Developers List</name>
+			<subscribe>automatalib-devel+subscribe@googlegroups.com</subscribe>
+			<unsubscribe>automatalib-devel+unsubscribe@googlegroups.com</unsubscribe>
+			<post>automatalib-devel@googlegroups.com</post>
+		</mailingList>
+		<mailingList>
+			<name>Discussion List</name>
+			<subscribe>automatalib-discussion+subscribe@googlegroups.com</subscribe>
+			<unsubscribe>automatalib-discussion+unsubscribe@googlegroups.com</unsubscribe>
+			<post>automatalib-discussion@googlegroups.com</post>
+		</mailingList>
+		<mailingList>
+			<name>Q&amp;A List</name>
+			<subscribe>automatalib-qa+subscribe@googlegroups.com</subscribe>
+			<unsubscribe>automatalib-qa+unsubscribe@googlegroups.com</unsubscribe>
+			<post>automatalib-qa@googlegroups.com</post>
+		</mailingList>
+	</mailingLists>
+
+	<developers>
+		<developer>
+			<id>misberner</id>
+			<name>Malte Isberner</name>
+			<email>malte.isberner@gmail.com</email>
+			<organization>TU Dortmund, Chair for Programming Systems</organization>
+			<organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<properties>
+				<picUrl>
+					http://www.gravatar.com/avatar/c44dc4164f1a9a597ec0c24425d1b89d.png
+				</picUrl>
+			</properties>
+		</developer>
+	</developers>
+
+	<!--
+	=============================== SCM =======================
+	-->
+	<scm>
+		<connection>scm:git:git@github.com:misberner/automatalib.git</connection>
+		<developerConnection>scm:git:git@github.com:misberner/automatalib.git</developerConnection>
+		<url>https://github.com/misberner/automatalib/tree/develop</url>
+	</scm>
+
+	<!--
+	================================= SONATYPE PARENT ==============================
+	-->
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<!--
+	================================= MODULES ===================================
+	-->
+	<modules>
+		<module>api</module>
+		<module>core</module>
+		<module>util</module>
+		<module>commons</module>
+		<module>misc</module>
+		<module>adapters</module>
+		<module>examples</module>
+		<module>archetypes</module>
+	</modules>
+
+	<!--
+	================================= PROPERTIES ================================
+	-->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!--
+			dependency versions
+		-->
+		<testng.version>6.8</testng.version>
+		<javadoc-plugin.version>2.9</javadoc-plugin.version>
+		<compiler-plugin.version>3.1</compiler-plugin.version>
+		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
+		<site-plugin.version>3.3</site-plugin.version>
+		<reports-plugin.version>2.7</reports-plugin.version>
+		<surefire-plugin.version>2.14.1</surefire-plugin.version>
+		<assembly-plugin.version>2.4</assembly-plugin.version>
+
+		<brics-automaton.version>1.11-8</brics-automaton.version>
+
+		<!-- Javadoc links -->
+		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
+		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
+	</properties>
+
+	<!--
+	================================= BUILD PLUGINS =============================
+	-->
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${compiler-plugin.version}</version>
+					<configuration>
+						<fork>true</fork>
+						<meminitial>128m</meminitial>
+						<maxmem>512m</maxmem>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${javadoc-plugin.version}</version>
+					<configuration>
+						<maxmemory>512</maxmemory>
+						<quiet>false</quiet>
+						<source>1.7</source>
+						<verbose>true</verbose>
+						<linksource>true</linksource>
+						<links>
+							<link>${java7.apidocs}</link>
+							<link>${brics-automaton.apidocs}</link>
+						</links>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${site-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>attach-descriptor</id>
+							<goals>
+								<goal>attach-descriptor</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${assembly-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<!--
+	================================= REPORTING PLUGINS ==============================	
+	-->
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>${reports-plugin.version}</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+							<report>license</report>
+							<report>project-team</report>
+							<report>mailing-list</report>
+							<report>issue-tracking</report>
+							<report>scm</report>
+							<report>dependencies</report>
+							<report>dependency-info</report>
+							<report>modules</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${javadoc-plugin.version}</version>
+				<configuration>
+					<maxmemory>512</maxmemory>
+					<quiet>false</quiet>
+					<source>1.7</source>
+					<verbose>true</verbose>
+					<linksource>true</linksource>
+					<links>
+						<link>${java7.apidocs}</link>
+						<link>${brics-automaton.apidocs}</link>
+					</links>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<id>non-aggregate</id>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+					<reportSet>
+						<id>aggregate</id>
+						<inherited>false</inherited>
+						<reports>
+							<report>aggregate</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+
+
+	<!--
+	=============================== PROFILES =======================
+ 	-->
+	<profiles>
+		<profile>
+			<id>netbeans-private-testng</id>
+			<activation>
+				<property>
+					<name>netbeans.testng.action</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.11</version>
+						<configuration>
+							<suiteXmlFiles>
+								<suiteXmlFile>target/nb-private/testng-suite.xml</suiteXmlFile>
+							</suiteXmlFiles>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>binary-release</id>
+			<build>
+				<plugins>
+					<!--  aggregate javadoc of modules in one jar -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${javadoc-plugin.version}</version>
+						<inherited>false</inherited>
+						<configuration>
+							<maxmemory>512</maxmemory>
+							<quiet>false</quiet>
+							<source>1.7</source>
+							<verbose>true</verbose>
+							<linksource>true</linksource>
+							<links>
+								<link>http://docs.oracle.com/javase/7/docs/api/</link>
+							</links>
+							<finalName>automatalib-${project.version}</finalName>
+						</configuration>
+						<executions>
+							<execution>
+								<id>aggregate</id>
+								<goals>
+									<goal>aggregate-jar</goal>
+								</goals>
+								<phase>site</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- 
+                        build assemblies
+                    -->
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>${assembly-plugin.version}</version>
+						<inherited>false</inherited>
+						<configuration>
+							<finalName>automatalib-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+						</configuration>
+						<executions>
+							<!--  sources jar -->
+							<execution>
+								<id>src</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/automatalib-srcjar.xml</descriptor>
+									</descriptors>
+									<finalName>automatalib-${project.version}-sources</finalName>
+								</configuration>
+							</execution>
+							<!-- 
+                                binary jar
+                            -->
+							<execution>
+								<id>jar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/automatalib-jar.xml</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+							<!-- 
+                                bin
+                            -->
+							<execution>
+								<id>bin</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/main/assembly/automatalib-bin.xml</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<!--
+	=============================== DEFAULT DEP. VERSIONS =======================
+	-->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>automata-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>automata-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>automata-util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>automata-incremental</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>automata-brics</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>automata-commons-util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>automata-commons-smartcollections</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>automata-commons-dotutil</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>dk.brics.automaton</groupId>
+				<artifactId>automaton</artifactId>
+				<version>${brics-automaton.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>${testng.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!--
+	================================= DISTRIBUTION ==============================	
+	-->
+	<distributionManagement>
+		<!-- Dummy - this will NOT actually be used, but is required for mvn site:stage -->
+		<!-- Use build-tools/deploy-site.sh for site deployment on GitHub pages -->
+		<site>
+			<id>local</id>
+			<url>file://${user.home}/automatalib-site</url>
+		</site>
+	</distributionManagement>
+</project>
+

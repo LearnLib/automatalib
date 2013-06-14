@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.automata.asgraph;
 
@@ -31,12 +31,12 @@ public class UniversalAutomatonAsGraph<S, I, T, SP, TP,A extends UniversalAutoma
 	}
 	
 	@Override
-	public SP getNodeProperties(S node) {
+	public SP getNodeProperty(S node) {
 		return automaton.getStateProperty(node);
 	}
 
 	@Override
-	public Pair<I, TP> getEdgeProperties(Pair<I, T> edge) {
+	public Pair<I, TP> getEdgeProperty(Pair<I, T> edge) {
 		return Pair.make(edge.getFirst(),
 				automaton.getTransitionProperty(edge.getSecond()));
 	}

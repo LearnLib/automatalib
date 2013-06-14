@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.automata;
 
@@ -59,12 +59,13 @@ public abstract interface MutableAutomaton<S,I,T,SP,TP>
     public T createTransition(S successor, TP properties);
     
     public void addTransition(S state, I input, T transition);
-    public void setTransitions(S state, I input, Collection<T> transitions);
+    public void addTransitions(S state, I input, Collection<? extends T> transitions);
+    public void setTransitions(S state, I input, Collection<? extends T> transitions);
     public void removeTransition(S state, I input, T transition);
     public void removeAllTransitions(S state, I input);
     public void removeAllTransitions(S state);
     
-    public void addTransition(S state, I input, S successor, TP properties);
+    public T addTransition(S state, I input, S successor, TP properties);
     
     public T copyTransition(T trans, S succ);
 }

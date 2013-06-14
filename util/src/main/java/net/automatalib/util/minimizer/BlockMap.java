@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.minimizer;
 
@@ -20,17 +20,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import net.automatalib.commons.util.mappings.MutableMapping;
+
 /**
  * Class for associating arbitrary values with the blocks of a minimization
  * result.
- * 
+ * <p>
  * The storage and lookup are performed in constant time.
  * 
- * @author Malte Isberner
+ * @author Malte Isberner <malte.isberner@gmail.com>
  *
  * @param <V> value class.
  */
-public class BlockMap<V> {
+public class BlockMap<V> implements MutableMapping<Block<?,?>,V> {
 	private final Object[] storage;
 	
 	
@@ -48,6 +50,7 @@ public class BlockMap<V> {
 	 * @return the associated value.
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public V get(Block<?,?> block) {
 		return (V)storage[block.getId()];
 	}
@@ -57,8 +60,12 @@ public class BlockMap<V> {
 	 * @param block the associated block.
 	 * @param value the value.
 	 */
-	public void put(Block<?,?> block, V value) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public V put(Block<?,?> block, V value) {
+		V old = (V)storage[block.getId()];
 		storage[block.getId()] = value;
+		return old;
 	}
 	
 	/**

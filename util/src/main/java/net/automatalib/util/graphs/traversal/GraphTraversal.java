@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.graphs.traversal;
 
@@ -23,83 +23,87 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.Queue;
 
+import net.automatalib.commons.util.Holder;
+import net.automatalib.commons.util.Triple;
 import net.automatalib.graphs.IndefiniteGraph;
-import net.automatalib.util.graphs.traversal.GraphTraversalAction.Type;
+import net.automatalib.util.traversal.TraversalOrder;
 
 
 public abstract class GraphTraversal {
 	
-	private static final GraphTraversalAction<Object> IGNORE
-		= new GraphTraversalAction<>(Type.IGNORE);
 	
-	private static final GraphTraversalAction<Object> ABORT_NODE
-		= new GraphTraversalAction<>(Type.ABORT_NODE);
-	
-	private static final GraphTraversalAction<Object> ABORT_TRAVERSAL
-		= new GraphTraversalAction<>(Type.ABORT_TRAVERSAL);
-	
-	private static final GraphTraversalAction<Object> DEFAULT_EXPLORE_ACTION
-		= new GraphTraversalAction<>(Type.EXPLORE);
-	
-	@SuppressWarnings("unchecked")
-	public static final <D> GraphTraversalAction<D> ignore() {
-		return (GraphTraversalAction<D>)IGNORE;
+	public static <N,E,D>
+	boolean traverse(TraversalOrder order,
+			IndefiniteGraph<N,E> graph, 
+			int limit, 
+			Collection<? extends N> initialNodes, 
+			GraphTraversalVisitor<N, E, D> vis) {
+		switch(order) {
+		case BREADTH_FIRST:
+			return breadthFirst(graph, limit, initialNodes, vis);
+		case DEPTH_FIRST:
+			return depthFirst(graph, limit, initialNodes, vis);
+		default:
+			throw new IllegalArgumentException("Unknown traversal order " + order);
+		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static final <D> GraphTraversalAction<D> abortNode() {
-		return (GraphTraversalAction<D>)ABORT_NODE;
+	public static <N,E,D>
+	boolean traverse(TraversalOrder order,
+			IndefiniteGraph<N,E> graph,
+			int limit,
+			N initialNode,
+			GraphTraversalVisitor<N,E,D> vis) {
+		return traverse(order, graph, limit, Collections.singleton(initialNode), vis);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static final <D> GraphTraversalAction<D> abortTraversal() {
-		return (GraphTraversalAction<D>)ABORT_TRAVERSAL;
+	public static <N,E,D>
+	boolean traverse(TraversalOrder order,
+			IndefiniteGraph<N,E> graph,
+			N initialNode,
+			GraphTraversalVisitor<N,E,D> vis) {
+		return traverse(order, graph, -1, Collections.singleton(initialNode), vis);
 	}
 	
-	public static final <D> GraphTraversalAction<D> explore(D data) {
-		if(data == null)
-			return explore();
-		return new GraphTraversalAction<D>(Type.EXPLORE, data);
+	public static <N,E,D>
+	boolean traverse(TraversalOrder order,
+			IndefiniteGraph<N,E> graph,
+			Collection<? extends N> initialNodes,
+			GraphTraversalVisitor<N,E,D> vis) {
+		return traverse(order, graph, -1, initialNodes, vis);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static final <D> GraphTraversalAction<D> explore() {
-		return (GraphTraversalAction<D>)DEFAULT_EXPLORE_ACTION;
-	}
 	
-	public static <N,E,D> void breadthFirst(IndefiniteGraph<N,E> graph, int limit, N initialNode, GraphTraversalVisitor<N, E, D> visitor) {
-		breadthFirst(graph, limit, Collections.singleton(initialNode), visitor);
-	}
-	
-	public static <N,E,D> void breadthFirst(IndefiniteGraph<N,E> graph, Collection<N> initialNodes, GraphTraversalVisitor<N, E, D> visitor) {
-		breadthFirst(graph, -1, initialNodes, visitor);
-	}
-	
-	public static <N,E,D> void breadthFirst(IndefiniteGraph<N,E> graph, N initialNode, GraphTraversalVisitor<N, E, D> visitor) {
-		breadthFirst(graph, -1, Collections.singleton(initialNode), visitor);
-	}
-	
-	public static <N,E,D> void breadthFirst(IndefiniteGraph<N, E> graph, int limit, Collection<N> initialNodes, GraphTraversalVisitor<N, E, D> vis) {
+	public static <N,E,D>
+	boolean breadthFirst(IndefiniteGraph<N, E> graph, int limit, Collection<? extends N> initialNodes, GraphTraversalVisitor<N, E, D> vis) {
 		
 		Queue<BFRecord<N,D>> bfsQueue = new ArrayDeque<BFRecord<N,D>>();
 		
+		// setting the following to false means that the traversal had to be aborted
+		// due to reaching the limit
+		boolean complete = true;
 		int nodeCount = 0;
 		
+		Holder<D> dataHolder = new Holder<>();
+		
 		for(N init : initialNodes) {
-			GraphTraversalAction<D> act = vis.processInitial(init);
-			switch(act.type) {
+			dataHolder.value = null;
+			GraphTraversalAction act = vis.processInitial(init, dataHolder);
+				
+			switch(act) {
 			case IGNORE:
 			case ABORT_NODE:
 				continue;
 			case ABORT_TRAVERSAL:
-				return;
+				return complete;
 			case EXPLORE:
-			}
-			D data = act.data;
-			
-			if(nodeCount != limit) { // not equals will always be true for negative limit values
-				bfsQueue.offer(new BFRecord<N,D>(init, data));
-				nodeCount++;
+				if(nodeCount != limit) { // not equals will always be true for negative limit values
+					bfsQueue.offer(new BFRecord<N,D>(init, dataHolder.value));
+					nodeCount++;
+				}
+				else
+					complete = false;
+				break;
 			}
 		}
 		
@@ -110,6 +114,7 @@ bfs_loop:
 			
 			N currNode = current.node;
 			D currData = current.data;
+			
 			if(!vis.startExploration(currNode, currData))
 				continue;
 			
@@ -119,36 +124,61 @@ bfs_loop:
 				continue;
 			
 			for(E edge : edges) {
-				GraphTraversalAction<D> act 
-					= vis.processEdge(currNode, currData, edge);
 				
-				switch(act.type) {
+				N tgtNode = graph.getTarget(edge);
+				
+				dataHolder.value = null;
+				GraphTraversalAction act = vis.processEdge(currNode, currData, edge, tgtNode, dataHolder);
+
+				
+				switch(act) {
 				case IGNORE:
 					continue;
 				case ABORT_NODE:
 					continue bfs_loop;
 				case ABORT_TRAVERSAL:
-					return;
+					return complete;
 				case EXPLORE:
-				}
-				
-				D data = act.data;
-				N tgtNode = graph.getTarget(edge);
-				if(nodeCount != limit) { // not equals will always be true for negative limit values
-					bfsQueue.offer(new BFRecord<N,D>(tgtNode, data));
-					nodeCount++;
+					if(nodeCount != limit) { // not equals will always be true for negative limit values
+						bfsQueue.offer(new BFRecord<N,D>(tgtNode, dataHolder.value));
+						nodeCount++;
+					}
+					else
+						complete = false;
 				}
 			}
 			
 			vis.finishExploration(currNode, currData);
 		}
+		
+		return complete;
 	}
 	
-	public static <N,E,D> void depthFirst(IndefiniteGraph<N,E> graph, int limit, Collection<N> initialNodes,
+	public static <N,E,D>
+	boolean breadthFirst(IndefiniteGraph<N,E> graph, int limit, N initialNode, GraphTraversalVisitor<N, E, D> visitor) {
+		return breadthFirst(graph, limit, Collections.singleton(initialNode), visitor);
+	}
+	
+	public static <N,E,D>
+	boolean breadthFirst(IndefiniteGraph<N,E> graph, Collection<? extends N> initialNodes, GraphTraversalVisitor<N, E, D> visitor) {
+		return breadthFirst(graph, -1, initialNodes, visitor);
+	}
+	
+	public static <N,E,D>
+	boolean breadthFirst(IndefiniteGraph<N,E> graph, N initialNode, GraphTraversalVisitor<N, E, D> visitor) {
+		return breadthFirst(graph, -1, Collections.singleton(initialNode), visitor);
+	}
+	
+	
+	
+	
+	public static <N,E,D>
+	boolean depthFirst(IndefiniteGraph<N,E> graph, int limit, Collection<? extends N> initialNodes,
 			GraphTraversalVisitor<N, E, D> vis) {
 		
-		if(limit < 0)
-			limit = Integer.MAX_VALUE;
+		// setting the following to false means that the traversal had to be aborted
+		// due to reaching the limit
+		boolean complete = true;
 		
 		int nodeCount = 0;
 			
@@ -156,22 +186,27 @@ bfs_loop:
 		Deque<DFRecord<N,E,D>> dfsStack
 			= new ArrayDeque<DFRecord<N,E,D>>();
 		
+		Holder<D> dataHolder = new Holder<>();
+		
 		for(N init : initialNodes) {
-			GraphTraversalAction<D> act = vis.processInitial(init);
 			
-			switch(act.type) {
+			dataHolder.value = null;
+			GraphTraversalAction act = vis.processInitial(init, dataHolder);
+			
+			switch(act) {
 			case IGNORE:
 			case ABORT_NODE:
 				continue;
 			case ABORT_TRAVERSAL:
-				return;
+				return complete;
 			case EXPLORE:
-			}
-			
-			D data = act.data;
-			if(nodeCount < limit) {
-				dfsStack.push(new DFRecord<N,E,D>(init, data));
-				nodeCount++;
+				if(nodeCount != limit) {
+					dfsStack.push(new DFRecord<N,E,D>(init, dataHolder.value));
+					nodeCount++;
+				}
+				else
+					complete = false;
+				break;
 			}
 		}
 		
@@ -189,6 +224,12 @@ bfs_loop:
 				}
 			}
 			
+			Triple<E,N,D> lastEdge = current.getLastEdge();
+			if(lastEdge != null) {
+				vis.backtrackEdge(currNode, currData, lastEdge.getFirst(),
+						lastEdge.getSecond(), lastEdge.getThird());
+			}
+			
 			if(!current.hasNextEdge()) {
 				dfsStack.pop();
 				vis.finishExploration(currNode, currData);
@@ -197,34 +238,71 @@ bfs_loop:
 			
 			E edge = current.nextEdge();
 			
-			GraphTraversalAction<D> act = vis.processEdge(currNode, currData, edge);
+			N tgt = graph.getTarget(edge);
 			
-			switch(act.type) {
+			GraphTraversalAction act = vis.processEdge(currNode, currData, edge, tgt, dataHolder);
+			
+			switch(act) {
 			case IGNORE:
 				continue;
 			case ABORT_NODE:
 				dfsStack.pop();
 				continue;
 			case ABORT_TRAVERSAL:
-				return;
+				return complete;
 			case EXPLORE:
-			}
-			
-			D data = act.data;
-			N tgt = graph.getTarget(edge);
-			
-			if(nodeCount < limit) {
-				dfsStack.push(new DFRecord<N,E,D>(tgt, data));
-				nodeCount++;
+				if(nodeCount != limit) {
+					D data = dataHolder.value;
+					current.setLastEdge(edge, tgt, data);
+					dfsStack.push(new DFRecord<N,E,D>(tgt, data));
+					nodeCount++;
+				}
+				else
+					complete = false;
+				break;
 			}
 		}
+		
+		return complete;
+	}
+	
+	public static <N,E,D>
+	boolean depthFirst(IndefiniteGraph<N,E> graph, N initNode,
+			GraphTraversalVisitor<N, E, D> vis) {
+		return depthFirst(graph, -1, initNode, vis);
+	}
+	
+	public static <N,E,D>
+	boolean depthFirst(IndefiniteGraph<N,E> graph, int limit, N initNode,
+			GraphTraversalVisitor<N, E, D> vis) {
+		return depthFirst(graph, Collections.singleton(initNode), vis);
+	}
+	
+	public static <N,E,D>
+	boolean depthFirst(IndefiniteGraph<N,E> graph, Collection<? extends N> initialNodes,
+			GraphTraversalVisitor<N, E, D> vis) {
+		return depthFirst(graph, -1, initialNodes, vis);
 	}
 	
 	
-	public static <N,E,D> void dfs(IndefiniteGraph<N, E> graph, int limit, Collection<N> initialNodes, DFSVisitor<N, E, D> visitor) {
+	
+	
+	
+	public static <N,E,D>
+	boolean dfs(IndefiniteGraph<N, E> graph, int limit, Collection<? extends N> initialNodes, DFSVisitor<? super N, ? super E, D> visitor) {
 		GraphTraversalVisitor<N, E, DFSData<D>> traversalVisitor
 			= new DFSTraversalVisitor<N, E, D>(graph, visitor);
-		depthFirst(graph, limit, initialNodes, traversalVisitor);
+		return depthFirst(graph, limit, initialNodes, traversalVisitor);
+	}
+	
+	public static <N,E,D>
+	boolean dfs(IndefiniteGraph<N, E> graph, N initialNode, DFSVisitor<? super N, ? super E, D> visitor) {
+		return dfs(graph, -1, Collections.singleton(initialNode), visitor);
+	}
+	
+	public static <N,E,D>
+	boolean dfs(IndefiniteGraph<N, E> graph, Collection<? extends N> initialNodes, DFSVisitor<? super N, ? super E, D> visitor) {
+		return dfs(graph, -1, initialNodes, visitor);
 	}
 	
 	

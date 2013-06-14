@@ -12,30 +12,32 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.util.graphs.traversal;
 
+import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
 
 final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, DFSData<D>> {
-	private final IndefiniteGraph<N, E> graph;
-	private final DFSVisitor<N, E, D> visitor;
+	private final DFSVisitor<? super N, ? super E, D> visitor;
 	private int dfsNum;
 	private final MutableMapping<N, DFSData<D>> records;
 	
-	public DFSTraversalVisitor(IndefiniteGraph<N,E> graph, DFSVisitor<N, E, D> visitor) {
-		this.graph = graph;
+	public DFSTraversalVisitor(IndefiniteGraph<N,E> graph, DFSVisitor<? super N, ? super E, D> visitor) {
 		this.visitor = visitor;
 		this.records = graph.createStaticNodeMapping();
 	}
 
 	@Override
-	public GraphTraversalAction<DFSData<D>> processInitial(N initialNode) {
-		D data = visitor.exploreInitial(initialNode);
+	public GraphTraversalAction processInitial(N initialNode, Holder<DFSData<D>> outData) {
+		D data = visitor.initialize(initialNode);
 		DFSData<D> rec = new DFSData<D>(data, dfsNum++);
-		return GraphTraversal.explore(rec);
+		records.put(initialNode, rec);
+		
+		outData.value = rec;
+		return GraphTraversalAction.EXPLORE;
 	}
 
 	@Override
@@ -51,23 +53,31 @@ final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, 
 	}
 
 	@Override
-	public GraphTraversalAction<DFSData<D>> processEdge(N srcNode,
-			DFSData<D> srcData, E edge) {
-		N tgt = graph.getTarget(edge);
-		DFSData<D> tgtRec = records.get(tgt);
+	public GraphTraversalAction processEdge(N srcNode,
+			DFSData<D> srcData, E edge, N tgtNode, Holder<DFSData<D>> outData) {
+		DFSData<D> tgtRec = records.get(tgtNode);
 		if(tgtRec == null) {
-			D data = visitor.treeEdge(srcNode, srcData.data, edge, tgt);
+			D data = visitor.treeEdge(srcNode, srcData.data, edge, tgtNode);
 			tgtRec = new DFSData<D>(data, dfsNum++);
-			records.put(tgt, tgtRec);
-			return GraphTraversal.explore(tgtRec);
+			records.put(tgtNode, tgtRec);
+			
+			outData.value = tgtRec;
+			return GraphTraversalAction.EXPLORE;
 		}
 		if(!tgtRec.finished)
-			visitor.backEdge(srcNode, srcData.data, edge, tgt, tgtRec.data);
+			visitor.backEdge(srcNode, srcData.data, edge, tgtNode, tgtRec.data);
 		else if(tgtRec.dfsNumber > srcData.dfsNumber)
-			visitor.forwardEdge(srcNode, srcData.data, edge, tgt, tgtRec.data);
+			visitor.forwardEdge(srcNode, srcData.data, edge, tgtNode, tgtRec.data);
 		else
-			visitor.crossEdge(srcNode, srcData.data, edge, tgt, tgtRec.data);
-		return GraphTraversal.ignore();
+			visitor.crossEdge(srcNode, srcData.data, edge, tgtNode, tgtRec.data);
+		
+		return GraphTraversalAction.IGNORE;
+	}
+
+	@Override
+	public void backtrackEdge(N srcNode, DFSData<D> srcData, E edge, N tgtNode,
+			DFSData<D> tgtData) {
+		visitor.backtrackEdge(srcNode, srcData.data, edge, tgtNode, tgtData.data);
 	}
 	
 	

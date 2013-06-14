@@ -12,7 +12,7 @@
  * 
  * You should have received a copy of the GNU Lesser General Public
  * License along with AutomataLib; if not, see
- * <http://www.gnu.de/documents/lgpl.en.html>.
+ * http://www.gnu.de/documents/lgpl.en.html.
  */
 package net.automatalib.graphs;
 
@@ -25,7 +25,7 @@ import java.util.Collection;
  * 
  * @author Malte Isberner <malte.isberner@gmail.com>
  *
- * @param <N> node class.
+ * @param <N> node class
  * @param <E> edge class
  */
 public interface BidirectionalGraph<N, E> extends Graph<N, E> {
