@@ -11,11 +11,11 @@ public class CharRange extends AbstractList<Character> implements
 	private final IntRange delegate;
 
 	public CharRange(char low, char high) {
-		this(low, 1, high);
+		this(low, high, 1);
 	}
 	
-	public CharRange(char low, int step, char high) {
-		this(new IntRange(low, step, high));
+	public CharRange(char low, char high, int step) {
+		this(new IntRange(low, high, step));
 	}
 	
 	public CharRange(IntRange delegate) {

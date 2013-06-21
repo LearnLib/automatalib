@@ -34,7 +34,7 @@ final class IntRange extends AbstractList<Integer> implements ArrayWritable<Inte
 	public IntRange(int start, int step, int end) {
 		this.start = start;
 		this.step = step;
-		this.size = (end - start) / step;
+		this.size = (end - start - 1) / step + 1;
 	}
 
 	public int intGet(int index) {

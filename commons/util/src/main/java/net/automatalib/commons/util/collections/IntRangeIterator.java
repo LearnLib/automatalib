@@ -10,15 +10,15 @@ public class IntRangeIterator implements ListIterator<Integer> {
 	private final int size;
 	private int curr;
 
-	public IntRangeIterator(int low, int size, int step) {
-		this(low, size, step, 0);
+	public IntRangeIterator(int low, int step, int size) {
+		this(low, step, size, 0);
 	}
 	
-	public IntRangeIterator(int low, int size, int step, int startIdx) {
+	public IntRangeIterator(int low, int step, int size, int startIdx) {
 		this.low = low;
-		this.size = size ;
+		this.size = size;
 		this.step = step;
-		this.curr = low + step * startIdx;
+		this.curr = startIdx;
 	}
 
 	@Override
