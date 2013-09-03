@@ -18,9 +18,9 @@ package net.automatalib.automata.dot;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 
 public interface DOTPlottableAutomaton<S, I, T> extends Automaton<S, I, T>, InputAlphabetHolder<I> {
-	public GraphDOTHelper<S,Pair<I,T>> getDOTHelper();
+	public GraphDOTHelper<S,TransitionEdge<I,T>> getDOTHelper();
 }

@@ -25,7 +25,7 @@ import net.automatalib.automata.base.StateIDStaticMapping;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.dot.DefaultDOTHelperAutomaton;
 import net.automatalib.automata.graphs.AbstractAutomatonGraph;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.UniversalGraph;
@@ -36,9 +36,9 @@ import net.automatalib.words.Alphabet;
 
 public abstract class AbstractCompactSimpleDet<I, SP> extends
 		AbstractMutableDeterministic<Integer, I, Integer, SP, Void>
-		implements UniversalGraph<Integer,Pair<I,Integer>,SP,Pair<I,Void>>,
+		implements UniversalGraph<Integer,TransitionEdge<I,Integer>,SP,TransitionEdge.Property<I,Void>>,
 		FiniteAlphabetAutomaton<Integer,I,Integer>, StateIDs<Integer>,
-		NodeIDs<Integer>, DOTPlottableGraph<Integer, Pair<I,Integer>> {
+		NodeIDs<Integer>, DOTPlottableGraph<Integer, TransitionEdge<I,Integer>> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -273,18 +273,18 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	}
 
 	@Override
-	public Pair<I, Void> getEdgeProperty(Pair<I, Integer> edge) {
-		return Pair.make(edge.getFirst(), null);
+	public TransitionEdge.Property<I, Void> getEdgeProperty(TransitionEdge<I, Integer> edge) {
+		return new TransitionEdge.Property<I,Void>(edge.getInput(), null);
 	}
 
 	@Override
-	public Collection<Pair<I, Integer>> getOutgoingEdges(Integer node) {
+	public Collection<TransitionEdge<I, Integer>> getOutgoingEdges(Integer node) {
 		return AbstractAutomatonGraph.getOutgoingEdges(this, node);
 	}
 
 	@Override
-	public Integer getTarget(Pair<I, Integer> edge) {
-		return edge.getSecond();
+	public Integer getTarget(TransitionEdge<I, Integer> edge) {
+		return edge.getTransition();
 	}
 
 	@Override
@@ -308,7 +308,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> extends
 	}
 
 	@Override
-	public GraphDOTHelper<Integer, Pair<I, Integer>> getGraphDOTHelper() {
+	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getGraphDOTHelper() {
 		return new DefaultDOTHelperAutomaton<>(this);
 	}
 

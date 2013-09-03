@@ -16,7 +16,6 @@
  */
 package net.automatalib.incremental.dfa;
 
-import net.automatalib.commons.util.Pair;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -119,9 +118,9 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 			if(conf != null)
 				suffixState = createSuffix(suffix.subWord(1), acc);
 			else {
-				Pair<State,State> suffixRes = createSuffix2(suffix.subWord(1), acc);
-				suffixState = suffixRes.getFirst();
-				endpoint = suffixRes.getSecond();
+				SuffixInfo suffixRes = createSuffix2(suffix.subWord(1), acc);
+				suffixState = suffixRes.last;
+				endpoint = suffixRes.end;
 			}
 			I sym = suffix.getSymbol(0);
 			suffTransIdx = inputAlphabet.getSymbolIndex(sym);
@@ -220,7 +219,17 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 		return last;
 	}
 	
-	private Pair<State,State> createSuffix2(Word<I> suffix, Acceptance acc) {
+	private static final class SuffixInfo {
+		private final State last;
+		private final State end;
+		
+		public SuffixInfo(State last, State end) {
+			this.last = last;
+			this.end = end;
+		}
+	}
+	
+	private SuffixInfo createSuffix2(Word<I> suffix, Acceptance acc) {
 		StateSignature sig = new StateSignature(alphabetSize, acc);
 		sig.updateHashCode();
 		State last = replaceOrRegister(sig);
@@ -236,7 +245,7 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 			last = replaceOrRegister(sig);
 		}
 		
-		return Pair.make(last, end);
+		return new SuffixInfo(last, end);
 	}
 	
 

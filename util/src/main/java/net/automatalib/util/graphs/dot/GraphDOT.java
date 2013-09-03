@@ -30,7 +30,7 @@ import java.util.Map;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
 import net.automatalib.automata.dot.DefaultDOTHelperAutomaton;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.strings.StringUtil;
 import net.automatalib.graphs.Graph;
@@ -77,10 +77,10 @@ public abstract class GraphDOT {
 	 */
 	@SafeVarargs
 	public static <S,I,T> void write(Automaton<S,I,T> automaton,
-			GraphDOTHelper<S, ? super Pair<I,T>> helper,
+			GraphDOTHelper<S, ? super TransitionEdge<I,T>> helper,
 			Collection<? extends I> inputAlphabet,
-			Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
-		Graph<S,Pair<I,T>> ag = Automata.asGraph(automaton, inputAlphabet);
+			Appendable a, GraphDOTHelper<S,? super TransitionEdge<I,T>> ...additionalHelpers) throws IOException {
+		Graph<S,TransitionEdge<I,T>> ag = Automata.asGraph(automaton, inputAlphabet);
 		write(ag, helper, a, additionalHelpers);
 	}
 	
@@ -95,8 +95,8 @@ public abstract class GraphDOT {
 	@SafeVarargs
 	public static <S,I,T> void write(Automaton<S,I,T> automaton,
 			Collection<? extends I> inputAlphabet,
-			Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
-		GraphDOTHelper<S,? super Pair<I,T>> helper;
+			Appendable a, GraphDOTHelper<S,? super TransitionEdge<I,T>> ...additionalHelpers) throws IOException {
+		GraphDOTHelper<S,? super TransitionEdge<I,T>> helper;
 		if(automaton instanceof DOTPlottableAutomaton) {
 			DOTPlottableAutomaton<S,I,T> dp = (DOTPlottableAutomaton<S,I,T>)automaton;
 			helper = dp.getDOTHelper();
@@ -108,7 +108,7 @@ public abstract class GraphDOT {
 	}
 	
 	@SafeVarargs
-	public static <S,I,T> void write(DOTPlottableAutomaton<S, I, T> automaton, Appendable a, GraphDOTHelper<S,? super Pair<I,T>> ...additionalHelpers) throws IOException {
+	public static <S,I,T> void write(DOTPlottableAutomaton<S, I, T> automaton, Appendable a, GraphDOTHelper<S,? super TransitionEdge<I,T>> ...additionalHelpers) throws IOException {
 		write(automaton, automaton.getDOTHelper(), automaton.getInputAlphabet(), a, additionalHelpers);
 	}
 	

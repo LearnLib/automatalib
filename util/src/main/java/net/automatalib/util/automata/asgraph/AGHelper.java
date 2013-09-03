@@ -21,16 +21,16 @@ import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.automata.Automaton;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 
 
 
 public class AGHelper {
 
 	
-	public static <S,I,T> Collection<Pair<I,T>> outgoingEdges(Automaton<S,I,T> aut, S state, Collection<? extends I> inputAlphabet) {
-		List<Pair<I,T>> result
-			= new ArrayList<Pair<I,T>>();
+	public static <S,I,T> Collection<TransitionEdge<I,T>> outgoingEdges(Automaton<S,I,T> aut, S state, Collection<? extends I> inputAlphabet) {
+		List<TransitionEdge<I,T>> result
+			= new ArrayList<TransitionEdge<I,T>>();
 		
 		
 		for(I input : inputAlphabet) {
@@ -38,7 +38,7 @@ public class AGHelper {
 			if(transitions == null)
 				continue;
 			for(T t : transitions)
-				result.add(Pair.make(input, t));
+				result.add(new TransitionEdge<>(input, t));
 		}
 		
 		return result;

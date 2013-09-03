@@ -21,6 +21,7 @@ import java.io.IOException;
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.commons.util.strings.StringUtil;
 
+@Deprecated
 public class Triple<T1, T2, T3> extends AbstractPrintable {
 	
 	protected T1 first;

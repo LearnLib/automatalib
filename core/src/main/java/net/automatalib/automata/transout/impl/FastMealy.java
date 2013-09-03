@@ -21,9 +21,9 @@ import java.util.List;
 import net.automatalib.automata.base.fast.FastMutableDet;
 import net.automatalib.automata.dot.DOTHelperMealy;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -199,7 +199,7 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 	}
 
 	@Override
-	public GraphDOTHelper<FastMealyState<O>, Pair<I, MealyTransition<FastMealyState<O>, O>>> getDOTHelper() {
+	public GraphDOTHelper<FastMealyState<O>, TransitionEdge<I, MealyTransition<FastMealyState<O>, O>>> getDOTHelper() {
 		return new DOTHelperMealy<FastMealyState<O>, I, MealyTransition<FastMealyState<O>,O>, O>(this);
 	}
 }

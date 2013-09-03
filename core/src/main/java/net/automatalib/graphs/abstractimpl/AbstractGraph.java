@@ -19,6 +19,7 @@ package net.automatalib.graphs.abstractimpl;
 import java.util.Iterator;
 
 import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.concepts.NodeIDs;
 
 
 public abstract class AbstractGraph<N, E> extends AbstractIndefiniteGraph<N,E> implements Graph<N, E> {
@@ -40,6 +41,10 @@ public abstract class AbstractGraph<N, E> extends AbstractIndefiniteGraph<N,E> i
 	public static <N,E> int size(Graph<N,E> $this) {
 		return $this.getNodes().size();
 	}
+	
+	public static <N,E> NodeIDs<N> nodeIDs(Graph<N,E> $this) {
+		return new SimpleNodeIDs<>($this);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -58,6 +63,16 @@ public abstract class AbstractGraph<N, E> extends AbstractIndefiniteGraph<N,E> i
 	public int size() {
 		return size(this);
 	}
+
+	/* (non-Javadoc)
+	 * @see net.automatalib.graphs.Graph#nodeIDs()
+	 */
+	@Override
+	public NodeIDs<N> nodeIDs() {
+		return nodeIDs(this);
+	}
+	
+	
 
 
 }

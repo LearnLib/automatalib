@@ -15,7 +15,7 @@ public class IntRangeListTest {
 	@BeforeClass
 	public void setup() {
 		ir0 = new IntRange(10, 20);
-		ir1 = new IntRange(20, 3, 30);
+		ir1 = new IntRange(20, 30, 3);
 	}
 	
 	@Test

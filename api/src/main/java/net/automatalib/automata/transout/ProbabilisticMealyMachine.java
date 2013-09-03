@@ -19,10 +19,10 @@ package net.automatalib.automata.transout;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.concepts.Probabilistic;
 import net.automatalib.automata.concepts.TransitionOutput;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.transout.probabilistic.ProbabilisticOutput;
 import net.automatalib.ts.UniversalTransitionSystem;
 
 public interface ProbabilisticMealyMachine<S, I, T, O> extends Automaton<S, I, T>,
-	TransitionOutput<T, O>, UniversalTransitionSystem<S,I,T,Void,Pair<Float,O>>, Probabilistic<T> {
+	TransitionOutput<T, O>, UniversalTransitionSystem<S,I,T,Void,ProbabilisticOutput<O>>, Probabilistic<T> {
 
 }

@@ -22,7 +22,7 @@ import net.automatalib.automata.FiniteAlphabetAutomaton;
 import net.automatalib.automata.abstractimpl.AbstractMutableDeterministic;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.graphs.AbstractAutomatonGraph;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
@@ -30,7 +30,7 @@ import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.words.Alphabet;
 
 public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
-		AbstractMutableDeterministic<Integer, I, T, SP, TP> implements StateIDs<Integer>, FiniteAlphabetAutomaton<Integer,I,T>, Graph<Integer,Pair<I,T>> {
+		AbstractMutableDeterministic<Integer, I, T, SP, TP> implements StateIDs<Integer>, FiniteAlphabetAutomaton<Integer,I,T>, Graph<Integer,TransitionEdge<I,T>> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -239,7 +239,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
 	 * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
 	 */
 	@Override
-	public Collection<Pair<I, T>> getOutgoingEdges(Integer node) {
+	public Collection<TransitionEdge<I, T>> getOutgoingEdges(Integer node) {
 		return AbstractAutomatonGraph.getOutgoingEdges(this, node);
 	}
 
@@ -249,7 +249,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
 	 * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
 	 */
 	@Override
-	public Integer getTarget(Pair<I, T> edge) {
+	public Integer getTarget(TransitionEdge<I, T> edge) {
 		return AbstractAutomatonGraph.getTarget(this, edge);
 	}
 

@@ -21,13 +21,13 @@ import java.util.Iterator;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.NodeIDs;
 
 
-public class AutomatonAsGraph<S, I, T,A extends Automaton<S,I,T>> implements Graph<S, Pair<I, T>> {
+public class AutomatonAsGraph<S, I, T,A extends Automaton<S,I,T>> implements Graph<S, TransitionEdge<I, T>> {
 	
 	
 	protected final A automaton;
@@ -50,13 +50,13 @@ public class AutomatonAsGraph<S, I, T,A extends Automaton<S,I,T>> implements Gra
 	}
 
 	@Override
-	public Collection<Pair<I, T>> getOutgoingEdges(S node) {
+	public Collection<TransitionEdge<I, T>> getOutgoingEdges(S node) {
 		return AGHelper.outgoingEdges(automaton, node, inputAlphabet);
 	}
 
 	@Override
-	public S getTarget(Pair<I, T> edge) {
-		return automaton.getSuccessor(edge.getSecond());
+	public S getTarget(TransitionEdge<I, T> edge) {
+		return automaton.getSuccessor(edge.getTransition());
 	}
 
 	@Override

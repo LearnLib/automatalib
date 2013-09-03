@@ -30,6 +30,7 @@ import net.automatalib.commons.util.strings.StringUtil;
  * @param <T1> type of the pair's first component.
  * @param <T2> type of the pair's second component.
  */
+@Deprecated
 public class Pair<T1, T2> extends AbstractPrintable implements Serializable {
 	private static final long serialVersionUID = -1L;
 	

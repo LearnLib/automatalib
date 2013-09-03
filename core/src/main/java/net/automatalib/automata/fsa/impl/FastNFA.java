@@ -25,7 +25,7 @@ import net.automatalib.automata.fsa.MutableNFA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractFSA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractMutableFSA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractNFA;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.WrapperUtil;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
@@ -213,7 +213,7 @@ public class FastNFA<I> extends
 
 
 	@Override
-	public GraphDOTHelper<FastNFAState, Pair<I, FastNFAState>> getDOTHelper() {
+	public GraphDOTHelper<FastNFAState, TransitionEdge<I, FastNFAState>> getDOTHelper() {
 		return new DOTHelperFSA<>(this);
 	}
 

@@ -19,9 +19,9 @@ package net.automatalib.automata.transout;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.concepts.MutableProbabilistic;
 import net.automatalib.automata.concepts.MutableTransitionOutput;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automata.transout.probabilistic.ProbabilisticOutput;
 
 public interface MutableProbabilisticMealy<S, I, T, O> extends
 		ProbabilisticMealyMachine<S, I, T, O>, MutableTransitionOutput<T, O>,
-		MutableProbabilistic<T>, MutableAutomaton<S, I, T, Void, Pair<Float,O>> {
+		MutableProbabilistic<T>, MutableAutomaton<S, I, T, Void, ProbabilisticOutput<O>> {
 }

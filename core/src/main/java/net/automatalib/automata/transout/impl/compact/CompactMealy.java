@@ -21,10 +21,10 @@ import java.util.List;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.dot.DOTHelperMealy;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -194,7 +194,7 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.dot.DOTPlottableAutomaton#getDOTHelper()
 	 */
 	@Override
-	public GraphDOTHelper<Integer, Pair<I, CompactMealyTransition<O>>> getDOTHelper() {
+	public GraphDOTHelper<Integer, TransitionEdge<I, CompactMealyTransition<O>>> getDOTHelper() {
 		return new DOTHelperMealy<>(this);
 	}
 	

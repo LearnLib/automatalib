@@ -26,6 +26,7 @@ import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
@@ -42,13 +43,13 @@ import net.automatalib.words.Word;
 public class Automata {
 
 	public static <S, I, T>
-	Graph<S, Pair<I, T>> asGraph(
+	Graph<S, TransitionEdge<I, T>> asGraph(
 			Automaton<S, I, T> automaton, Collection<? extends I> inputs) {
 		return new AutomatonAsGraph<S, I, T,Automaton<S,I,T>>(automaton, inputs);
 	}
 	
 	public static <S,I,T,SP,TP>
-	UniversalGraph<S,Pair<I,T>,SP,Pair<I,TP>> asUniversalGraph(
+	UniversalGraph<S,TransitionEdge<I,T>,SP,TransitionEdge.Property<I,TP>> asUniversalGraph(
 			UniversalAutomaton<S, I, T, SP, TP> automaton, Collection<? extends I> inputs) {
 		return new UniversalAutomatonAsGraph<S, I, T, SP, TP, UniversalAutomaton<S,I,T,SP,TP>>(automaton, inputs);
 	}
@@ -60,16 +61,16 @@ public class Automata {
 			Collection<? extends I> inputs,
 			A output) {
 
-		UniversalGraph<S, Pair<I,T>, SP, Pair<I,TP>> aag = asUniversalGraph(automaton, inputs);
+		UniversalGraph<S, TransitionEdge<I,T>, SP, TransitionEdge.Property<I,TP>> aag = asUniversalGraph(automaton, inputs);
 		
-		MinimizationResult<S, Pair<I,TP>> mr = Minimizer.minimize(aag, Collections.singleton(automaton.getInitialState()));
+		MinimizationResult<S, TransitionEdge.Property<I,TP>> mr = Minimizer.minimize(aag, Collections.singleton(automaton.getInitialState()));
 		output.clear();
 		
 		S init = automaton.getInitialState();
-		Block<S,Pair<I,TP>> initBlock = mr.getBlockForState(init);
+		Block<S,TransitionEdge.Property<I,TP>> initBlock = mr.getBlockForState(init);
 		BlockMap<SO> bm = new BlockMap<SO>(mr);
 		
-		for(Block<S, Pair<I,TP>> block : mr.getBlocks()) {
+		for(Block<S, TransitionEdge.Property<I,TP>> block : mr.getBlocks()) {
 			S rep = mr.getRepresentative(block);
 			SO state;
 			SP repProp = automaton.getStateProperty(rep);
@@ -80,14 +81,14 @@ public class Automata {
 			bm.put(block, state);
 		}
 		
-		for(Block<S,Pair<I,TP>> block : mr.getBlocks()) {
+		for(Block<S,TransitionEdge.Property<I,TP>> block : mr.getBlocks()) {
 			S rep = mr.getRepresentative(block);
 			SO state = bm.get(block);
 			for(I input : inputs) {
 				T trans = automaton.getTransition(rep, input);
 				TP prop = automaton.getTransitionProperty(trans);
 				S oldSucc = automaton.getSuccessor(trans);
-				Block<S,Pair<I,TP>> succBlock = mr.getBlockForState(oldSucc);
+				Block<S,TransitionEdge.Property<I,TP>> succBlock = mr.getBlockForState(oldSucc);
 				SO newSucc = bm.get(succBlock);
 				output.addTransition(state, input, newSucc, prop);
 			}
@@ -128,16 +129,16 @@ public class Automata {
 		
 		int numInputs = inputs.size();
 
-		UniversalGraph<S, Pair<I,T>, SP, Pair<I,TP>> aag = asUniversalGraph(automaton, inputs);
+		UniversalGraph<S, TransitionEdge<I,T>, SP, TransitionEdge.Property<I,TP>> aag = asUniversalGraph(automaton, inputs);
 		
-		MinimizationResult<S, Pair<I,TP>> mr = Minimizer.minimize(aag, automaton.getInitialStates());
+		MinimizationResult<S, TransitionEdge.Property<I,TP>> mr = Minimizer.minimize(aag, automaton.getInitialStates());
 		
 		S init = automaton.getInitialState();
 		int initId = mr.getBlockForState(init).getId();
 		
 		ResultStateRecord<SP,TP>[] records = new ResultStateRecord[mr.getNumBlocks()];
 		
-		for(Block<S,Pair<I,TP>> blk : mr.getBlocks()) {
+		for(Block<S,TransitionEdge.Property<I,TP>> blk : mr.getBlocks()) {
 			int id = blk.getId();
 			S state = mr.getRepresentative(blk);
 			SP prop = automaton.getStateProperty(state);

@@ -224,10 +224,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     @Override
     public int hashCode() {
     	int hash = 5;
-    	int len = length();
-    	for(int i = 0; i < len; i++) {
+    	for(I sym : this) {
     		hash *= 89;
-    		I sym = getSymbol(i);
     		hash += (sym != null) ? sym.hashCode() : 0;
     	}
         return hash;
@@ -249,8 +247,12 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     	int len = otherWord.length();
     	if(len != length())
     		return false;
-    	for(int i = 0; i < len; i++) {
-    		if(!Objects.equals(getSymbol(i), otherWord.getSymbol(i)))
+    	java.util.Iterator<I> thisIt = iterator();
+    	java.util.Iterator<?> otherIt = otherWord.iterator();
+    	while(thisIt.hasNext()) {
+    		I thisSym = thisIt.next();
+    		Object otherSym = otherIt.next();
+    		if(!Objects.equals(thisSym, otherSym))
     			return false;
     	}
     	return true;

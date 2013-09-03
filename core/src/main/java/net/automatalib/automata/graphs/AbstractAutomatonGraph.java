@@ -24,18 +24,17 @@ import net.automatalib.automata.Automaton;
 import net.automatalib.automata.FiniteAlphabetAutomaton;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.abstractimpl.AbstractAutomaton;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
 
 public abstract class AbstractAutomatonGraph<S,I,T,SP,TP>
-		extends AbstractAutomaton<S, I, T> implements FiniteAlphabetAutomaton<S,I,T>, UniversalAutomaton<S,I,T,SP,TP>, UniversalGraph<S,Pair<I,T>,SP,Pair<I,TP>> {
+		extends AbstractAutomaton<S, I, T> implements FiniteAlphabetAutomaton<S,I,T>, UniversalAutomaton<S,I,T,SP,TP>, UniversalGraph<S,TransitionEdge<I,T>,SP,TransitionEdge.Property<I,TP>> {
 	
 	
-	public static <S,I,T> Collection<Pair<I,T>> createOutgoingEdges(Automaton<S,I,T> automaton, Collection<? extends I> inputs, S state) {
-		List<Pair<I,T>> result
-			= new ArrayList<Pair<I,T>>();
+	public static <S,I,T> Collection<TransitionEdge<I,T>> createOutgoingEdges(Automaton<S,I,T> automaton, Collection<? extends I> inputs, S state) {
+		List<TransitionEdge<I,T>> result
+			= new ArrayList<TransitionEdge<I,T>>();
 	
 		
 		for(I input : inputs) {
@@ -43,7 +42,7 @@ public abstract class AbstractAutomatonGraph<S,I,T,SP,TP>
 			if(transitions == null)
 				continue;
 			for(T t : transitions)
-				result.add(Pair.make(input, t));
+				result.add(new TransitionEdge<>(input, t));
 		}
 		
 		return result;
@@ -58,12 +57,12 @@ public abstract class AbstractAutomatonGraph<S,I,T,SP,TP>
 		return new StateAsNodeIDs<>($this.stateIDs());
 	}
 	
-	public static <S,I,T> Collection<Pair<I,T>> getOutgoingEdges(FiniteAlphabetAutomaton<S,I,T> $this, S node) {
+	public static <S,I,T> Collection<TransitionEdge<I,T>> getOutgoingEdges(FiniteAlphabetAutomaton<S,I,T> $this, S node) {
 		return createOutgoingEdges($this, $this.getInputAlphabet(), node);
 	}
 	
-	public static <S,I,T> S getTarget(Automaton<S,I,T> $this, Pair<I,T> edge) {
-		return $this.getSuccessor(edge.getSecond());
+	public static <S,I,T> S getTarget(Automaton<S,I,T> $this, TransitionEdge<I,T> edge) {
+		return $this.getSuccessor(edge.getTransition());
 	}
 	
 	public static <S,I,T,V> MutableMapping<S, V> createStaticNodeMapping(Automaton<S,I,T> $this) {
@@ -79,9 +78,8 @@ public abstract class AbstractAutomatonGraph<S,I,T,SP,TP>
 	}
 
 
-	public static <S,I,T,SP,TP> Pair<I, TP> getEdgeProperties(UniversalAutomaton<S,I,T,SP,TP> $this, Pair<I, T> edge) {
-		TP transProp = $this.getTransitionProperty(edge.getSecond());
-		return Pair.make(edge.getFirst(), transProp);
+	public static <S,I,T,SP,TP> TransitionEdge.Property<I, TP> getEdgeProperties(UniversalAutomaton<S,I,T,SP,TP> $this, TransitionEdge<I, T> edge) {
+		return edge.property($this);
 	}
 	
 	@Override
@@ -95,12 +93,12 @@ public abstract class AbstractAutomatonGraph<S,I,T,SP,TP>
 	}
 
 	@Override
-	public Collection<Pair<I, T>> getOutgoingEdges(S node) {
+	public Collection<TransitionEdge<I, T>> getOutgoingEdges(S node) {
 		return getOutgoingEdges(this, node);
 	}
 
 	@Override
-	public S getTarget(Pair<I, T> edge) {
+	public S getTarget(TransitionEdge<I, T> edge) {
 		return getTarget(this, edge);
 	}
 
@@ -122,7 +120,7 @@ public abstract class AbstractAutomatonGraph<S,I,T,SP,TP>
 
 
 	@Override
-	public Pair<I, TP> getEdgeProperty(Pair<I, T> edge) {
+	public TransitionEdge.Property<I, TP> getEdgeProperty(TransitionEdge<I, T> edge) {
 		return getEdgeProperties(this, edge);
 	}
 
