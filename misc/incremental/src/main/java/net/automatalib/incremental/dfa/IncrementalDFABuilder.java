@@ -227,6 +227,41 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 			this.last = last;
 			this.end = end;
 		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((end == null) ? 0 : end.hashCode());
+			result = prime * result + ((last == null) ? 0 : last.hashCode());
+			return result;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (obj.getClass() != SuffixInfo.class)
+				return false;
+			SuffixInfo other = (SuffixInfo)obj;
+			
+			
+			// State has identity equals-semantics!
+			if(last != other.last)
+				return false;
+			
+			return (end == other.end);
+		}
+		
+		
 	}
 	
 	private SuffixInfo createSuffix2(Word<I> suffix, Acceptance acc) {

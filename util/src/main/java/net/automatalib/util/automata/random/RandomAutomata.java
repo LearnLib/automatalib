@@ -51,6 +51,7 @@ public abstract class RandomAutomata {
 		gen.addTransitions();
 		gen.chooseInitial();
 		
+		
 		if(minimize)
 			Automata.invasiveMinimize(out, inputs);
 		
