@@ -30,9 +30,9 @@ import net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.concepts.TransitionOutput;
 import net.automatalib.automata.graphs.AbstractAutomatonGraph;
+import net.automatalib.automata.graphs.TransitionEdge.Property;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.UnionFind;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.UniversalGraph;
@@ -57,10 +57,28 @@ import net.automatalib.words.WordBuilder;
 public class IncrementalMealyBuilder<I, O> extends
 	AbstractDeterministicAutomaton<State, I, TransitionRecord> implements
 	TransitionOutput<TransitionRecord, O>,
-	UniversalGraph<State, TransitionRecord, Void, Pair<I,O>>,
+	UniversalGraph<State, TransitionRecord, Void, Property<I,O>>,
 	DOTPlottableGraph<State, TransitionRecord>,
 	IncrementalConstruction<MealyMachine<?,I,?,O>, I> {
 	
+	
+	private static final class SuffixInfo {
+		private final State last;
+		private final State end;
+		
+		public SuffixInfo(State last, State end) {
+			this.last = last;
+			this.end = end;
+		}
+		
+		public State getLast() {
+			return last;
+		}
+		
+		public State getEnd() {
+			return end;
+		}
+	}
 	
 	private final Map<StateSignature, State> register = new HashMap<>();
 
@@ -209,9 +227,9 @@ public class IncrementalMealyBuilder<I, O> extends
 			// upon the first insert() call). Because there is no confluence we resolve by cloning
 			// part of the prefix path, we might accidentally introduce a cycle here.
 			// Storing the endpoint of the suffix path allows avoiding this later on.
-			Pair<State,State> suffixRes = createSuffix2(suffix.subWord(1), suffixOut.subWord(1));
-			suffixState = suffixRes.getFirst();
-			endpoint = suffixRes.getSecond();
+			SuffixInfo suffixRes = createSuffix2(suffix.subWord(1), suffixOut.subWord(1));
+			suffixState = suffixRes.getLast();
+			endpoint = suffixRes.getEnd();
 		}
 		
 		// Here we create the "gluing" transition
@@ -428,7 +446,7 @@ public class IncrementalMealyBuilder<I, O> extends
 		return last;
 	}
 	
-	private Pair<State,State> createSuffix2(Word<I> suffix, Word<O> suffixOut) {
+	private SuffixInfo createSuffix2(Word<I> suffix, Word<O> suffixOut) {
 		StateSignature sig = new StateSignature(alphabetSize);
 		sig.updateHashCode();
 		State last = replaceOrRegister(sig);
@@ -446,7 +464,7 @@ public class IncrementalMealyBuilder<I, O> extends
 			last = replaceOrRegister(sig);
 		}
 
-		return Pair.make(last, end);
+		return new SuffixInfo(last, end);
 	}
 	
 
@@ -484,10 +502,10 @@ public class IncrementalMealyBuilder<I, O> extends
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public Pair<I, O> getEdgeProperty(TransitionRecord edge) {
+	public Property<I, O> getEdgeProperty(TransitionRecord edge) {
 		I input = inputAlphabet.getSymbol(edge.transIdx);
 		O out = (O)edge.source.getOutput(edge.transIdx);
-		return Pair.make(input, out);
+		return new Property<>(input, out);
 	}
 
 	/*

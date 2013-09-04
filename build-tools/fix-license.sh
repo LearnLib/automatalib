@@ -44,6 +44,9 @@ fi
 if [ -z "$lastline_suffix" ]; then
 	lastline_suffix=$line_suffix
 fi
+if [ -z "$ignore_pattern" ]; then
+	ignore_pattern="$^"
+fi
 
 preamble_lines=`echo -n "$preamble" | wc -l`
 
@@ -55,7 +58,7 @@ firstline_rep="$firstline_prefix"'\0'"$firstline_suffix"
 line_rep="$line_prefix"'\0'"$line_suffix"
 lastline_rep="$lastline_prefix"'\0'"$lastline_suffix"
 
-FILES=`git ls-files "$PROJECT_ROOT" | egrep $file_pattern`
+FILES=`git ls-files "$PROJECT_ROOT" | egrep "$file_pattern" | egrep -v "$ignore_pattern"`
 
 LICENSE_FILE="license-header.txt"
 

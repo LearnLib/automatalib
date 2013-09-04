@@ -56,7 +56,7 @@ public interface CapacityManagement {
 	 * specified capacity at the time the next resizing of the internal
 	 * storage is performed.
 	 * 
-	 * This method is useful when a not too unprecise upper bound on the
+	 * This method is useful when a not too imprecise upper bound on the
 	 * elements that will in consequence be added is known. Since the actual
 	 * number of elements added may be lower than the specified upper bound,
 	 * a resizing that would have been performed by

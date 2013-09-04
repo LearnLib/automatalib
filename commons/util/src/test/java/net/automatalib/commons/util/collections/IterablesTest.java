@@ -30,7 +30,6 @@ public class IterablesTest {
 		List<String> l1 = Arrays.asList("foo", "bar");
 		List<String> l2 = Arrays.asList("baz", "qux");
 		
-		
 		System.err.println("=================");
 		for(String s : IterableUtil.concat(l1, l2))
 			System.err.println(s);
