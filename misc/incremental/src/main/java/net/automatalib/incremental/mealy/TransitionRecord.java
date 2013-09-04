@@ -16,7 +16,7 @@
  */
 package net.automatalib.incremental.mealy;
 
-final class TransitionRecord {
+public final class TransitionRecord {
 	public final State source;
 	public final int transIdx;
 	

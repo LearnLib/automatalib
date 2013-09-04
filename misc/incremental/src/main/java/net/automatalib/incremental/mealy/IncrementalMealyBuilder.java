@@ -194,7 +194,7 @@ public class IncrementalMealyBuilder<I, O> extends
 			// Check if this matches the provided one, otherwise there is a conflict
 			O outSym = outputWord.getSymbol(prefixLen);
 			if(!Objects.equals(outSym, curr.getOutput(idx)))
-				throw new ConflictException("Incompatible output symbols: " + outSym + " vs " + curr.getOutput(idx));
+				throw new ConflictException("Error inserting " + word + " / " + outputWord + ": Incompatible output symbols: " + outSym + " vs " + curr.getOutput(idx));
 			curr = succ;
 			prefixLen++;
 		}

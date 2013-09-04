@@ -17,7 +17,7 @@
 package net.automatalib.incremental.mealy;
 
 
-final class State {
+public final class State {
 	
 	private int numIncoming;
 	private final StateSignature signature;
