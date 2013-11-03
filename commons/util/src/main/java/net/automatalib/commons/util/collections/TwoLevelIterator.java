@@ -21,11 +21,11 @@ import java.util.NoSuchElementException;
 
 public abstract class TwoLevelIterator<L1, L2, O> implements Iterator<O> {
 	
-	private final Iterator<L1> l1Iterator;
+	private final Iterator<? extends L1> l1Iterator;
 	private L1 l1Object;
 	private Iterator<L2> l2Iterator;
 	
-	public TwoLevelIterator(Iterator<L1> l1Iterator) {
+	public TwoLevelIterator(Iterator<? extends L1> l1Iterator) {
 		this.l1Iterator = l1Iterator;
 		this.l2Iterator = null;
 	}

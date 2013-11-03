@@ -24,8 +24,8 @@ import java.util.Iterator;
 import java.util.Queue;
 
 import net.automatalib.commons.util.Holder;
-import net.automatalib.commons.util.Triple;
 import net.automatalib.graphs.IndefiniteGraph;
+import net.automatalib.util.graphs.traversal.DFRecord.LastEdge;
 import net.automatalib.util.traversal.TraversalOrder;
 
 
@@ -224,10 +224,10 @@ bfs_loop:
 				}
 			}
 			
-			Triple<E,N,D> lastEdge = current.getLastEdge();
+			LastEdge<E,N,D> lastEdge = current.getLastEdge();
 			if(lastEdge != null) {
-				vis.backtrackEdge(currNode, currData, lastEdge.getFirst(),
-						lastEdge.getSecond(), lastEdge.getThird());
+				vis.backtrackEdge(currNode, currData, lastEdge.edge,
+						lastEdge.node, lastEdge.data);
 			}
 			
 			if(!current.hasNextEdge()) {

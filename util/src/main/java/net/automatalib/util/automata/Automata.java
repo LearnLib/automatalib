@@ -19,6 +19,7 @@ package net.automatalib.util.automata;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import net.automatalib.automata.Automaton;
@@ -27,7 +28,6 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.automata.asgraph.AutomatonAsGraph;
@@ -38,9 +38,10 @@ import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
+import net.automatalib.util.ts.TS;
 import net.automatalib.words.Word;
 
-public class Automata {
+public class Automata extends TS {
 
 	public static <S, I, T>
 	Graph<S, TransitionEdge<I, T>> asGraph(
@@ -316,5 +317,35 @@ public class Automata {
 		List<Word<I>> all = new ArrayList<Word<I>>(automaton.size() * inputs.size());
 		cover(automaton, inputs, all, all);
 		return all;
+	}
+	
+	
+	
+	public static <S,I>
+	Iterator<TransRef<S,I>> allDefinedTransitionsIterator(
+			DeterministicAutomaton<S, I, ?> automaton,
+			Iterable<? extends I> inputs) {
+		return allDefinedTransitionsIterator(automaton, automaton.iterator(), inputs);
+	}
+	
+	public static <S,I>
+	Iterable<TransRef<S,I>> allDefinedTransitions(
+			DeterministicAutomaton<S, I, ?> automaton,
+			Iterable<? extends I> inputs) {
+		return allDefinedTransitions(automaton, automaton, inputs);
+	}
+	
+	public static <S,I>
+	Iterator<TransRef<S,I>> allUndefinedTransitionsIterator(
+			DeterministicAutomaton<S, I, ?> automaton,
+			Iterable<? extends I> inputs) {
+		return allUndefinedTransitionsIterator(automaton, automaton.iterator(), inputs);
+	}
+	
+	public static <S,I>
+	Iterable<TransRef<S,I>> allUndefinedTransitions(
+			DeterministicAutomaton<S, I, ?> automaton,
+			Iterable<? extends I> inputs) {
+		return allUndefinedTransitions(automaton, automaton, inputs);
 	}
 }

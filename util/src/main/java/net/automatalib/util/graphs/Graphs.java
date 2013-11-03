@@ -19,7 +19,6 @@ package net.automatalib.util.graphs;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -31,7 +30,6 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
 
 
 public abstract class Graphs {
-	
 			
 	public static <N,E> Mapping<N,Collection<E>> incomingEdges(final Graph<N,E> graph) {
 		if(graph instanceof BidirectionalGraph)
@@ -58,7 +56,7 @@ public abstract class Graphs {
 		return inEdgesMapping;
 	}
 	
-	public static <N,E> List<E> findShortestPath(final IndefiniteGraph<N, E> graph, int limit, N start, Collection<? extends N> targets) {
+	public static <N,E> Path<N,E> findShortestPath(final IndefiniteGraph<N, E> graph, int limit, N start, Collection<? extends N> targets) {
 		FindShortestPathVisitor<N, E> vis = new FindShortestPathVisitor<N, E>(graph, targets);
 		
 		GraphTraversal.breadthFirst(graph, limit, Collections.singleton(start), vis);
@@ -66,7 +64,7 @@ public abstract class Graphs {
 		if(!vis.wasSuccessful())
 			return null;
 		
-		return vis.getTargetPath().getSecond();
+		return vis.getTargetPath().toPath(graph);
 	}
 	
 	

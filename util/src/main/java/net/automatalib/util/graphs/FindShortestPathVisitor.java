@@ -22,9 +22,9 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.commons.util.Holder;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
+import net.automatalib.util.graphs.Path.PathData;
 import net.automatalib.util.graphs.traversal.DefaultGraphTraversalVisitor;
 import net.automatalib.util.graphs.traversal.GraphTraversalAction;
 
@@ -32,7 +32,17 @@ import net.automatalib.util.graphs.traversal.GraphTraversalAction;
 final class FindShortestPathVisitor<N, E> extends
 		DefaultGraphTraversalVisitor<N, E, Void> {
 	
-	private final MutableMapping<N, Pair<N,E>> predMapping;
+	private static final class Pred<N,E> {
+		public final N node;
+		public final E edge;
+		
+		public Pred(N node, E edge) {
+			this.node = node;
+			this.edge = edge;
+		}
+	}
+	
+	private final MutableMapping<N, Pred<N,E>> predMapping;
 	private final Collection<? extends N> targetNodes;
 	private N foundTarget;
 	
@@ -43,7 +53,7 @@ final class FindShortestPathVisitor<N, E> extends
 
 	@Override
 	public GraphTraversalAction processInitial(N initialNode, Holder<Void> outData) {
-		predMapping.put(initialNode, Pair.<N,E>make(null, null));
+		predMapping.put(initialNode, new Pred<N,E>(null, null));
 		if(targetNodes.contains(initialNode)) {
 			this.foundTarget = initialNode;
 			return GraphTraversalAction.ABORT_TRAVERSAL;
@@ -56,18 +66,18 @@ final class FindShortestPathVisitor<N, E> extends
 			E edge, N tgtNode, Holder<Void> outData) {
 		
 		if(targetNodes.contains(tgtNode)) {
-			Pair<N,E> pred = Pair.make(srcNode, edge);
+			Pred<N,E> pred = new Pred<>(srcNode, edge);
 			predMapping.put(tgtNode, pred);
 			this.foundTarget = tgtNode;
 			return GraphTraversalAction.ABORT_TRAVERSAL;
 		}
 		
-		Pair<N,E> pred = predMapping.get(tgtNode);
+		Pred<N,E> pred = predMapping.get(tgtNode);
 		
 		if(pred != null)
 			return GraphTraversalAction.IGNORE;
 		
-		pred = Pair.make(srcNode, edge);
+		pred = new Pred<>(srcNode, edge);
 		
 		predMapping.put(tgtNode, pred);
 		
@@ -78,21 +88,21 @@ final class FindShortestPathVisitor<N, E> extends
 		return (foundTarget != null);
 	}
 	
-	public Pair<N,List<E>> getTargetPath() {
-		List<E> path = new ArrayList<E>();
+	public PathData<N,E> getTargetPath() {
+		List<E> edges = new ArrayList<E>();
 		
 		N currNode = foundTarget;
-		Pair<N,E> pred = predMapping.get(currNode);
+		Pred<N,E> pred = predMapping.get(currNode);
 		
-		while(pred != null && pred.getSecond() != null) {
-			path.add(pred.getSecond());
+		while(pred != null && pred.edge != null) {
+			edges.add(pred.edge);
 			
-			currNode = pred.getFirst();
+			currNode = pred.node;
 			pred = predMapping.get(currNode);
 		}
 		
-		Collections.reverse(path);
+		Collections.reverse(edges);
 		
-		return Pair.make(currNode, path);
+		return new PathData<>(currNode, edges);
 	}
 }

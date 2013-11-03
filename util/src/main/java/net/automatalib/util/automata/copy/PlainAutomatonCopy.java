@@ -22,11 +22,20 @@ import java.util.List;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
-import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 
 final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 		AbstractAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2, Automaton<S1,I1,T1>> {
+	
+	private static class StateRec<S1,S2> {
+		private final S1 inState;
+		private final S2 outState;
+		
+		public StateRec(S1 inState, S2 outState) {
+			this.inState = inState;
+			this.outState = outState;
+		}
+	}
 
 	public PlainAutomatonCopy(Automaton<S1, I1, T1> in,
 			Collection<? extends I1> inputs,
@@ -43,16 +52,16 @@ final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 	 */
 	@Override
 	public void doCopy() {
-		List<Pair<S1,S2>> outStates = new ArrayList<>(in.size());
+		List<StateRec<S1,S2>> outStates = new ArrayList<>(in.size());
 		
 		for(S1 s1 : in) {
 			S2 s2 = copyState(s1);
-			outStates.add(Pair.make(s1, s2));
+			outStates.add(new StateRec<>(s1, s2));
 		}
 		
-		for(Pair<S1,S2> p : outStates) {
-			S1 s1 = p.getFirst();
-			S2 s2 = p.getSecond();
+		for(StateRec<S1,S2> p : outStates) {
+			S1 s1 = p.inState;
+			S2 s2 = p.outState;
 			
 			for(I1 i1 : inputs) {
 				I2 i2 = inputsMapping.get(i1);
