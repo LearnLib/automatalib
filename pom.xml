@@ -135,6 +135,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 		<brics-automaton.version>1.11-8</brics-automaton.version>
 
+		<guava.version>15.0</guava.version>
+
 		<!-- Javadoc links -->
 		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
 		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
@@ -432,6 +434,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<groupId>dk.brics.automaton</groupId>
 				<artifactId>automaton</artifactId>
 				<version>${brics-automaton.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
 			</dependency>
 
 			<dependency>

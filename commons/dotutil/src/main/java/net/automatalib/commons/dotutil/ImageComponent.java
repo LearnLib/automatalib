@@ -31,7 +31,7 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-vax.swing.JOptionPane;
+
 
 /**
  * Component that displays a {@link BufferedImage}.
