@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
@@ -30,6 +31,7 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+vax.swing.JOptionPane;
 
 /**
  * Component that displays a {@link BufferedImage}.
@@ -70,6 +72,10 @@ public class ImageComponent extends JComponent  {
 	 */
 	public ImageComponent() {
 		setPreferredSize(new Dimension(320, 240));
+	}
+	
+	public void listActions(List<Action> actions) {
+		actions.add(savePngAction);
 	}
 	
 	/**
@@ -132,5 +138,13 @@ public class ImageComponent extends JComponent  {
 		}
 	}
 	
-
+	
+	public void setScale(boolean scale) {
+		this.scale = scale;
+		repaint();
+	}
+	
+	public void toggleScale() {
+		setScale(!scale);
+	}
 }
