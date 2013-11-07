@@ -199,6 +199,18 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>${assembly-plugin.version}</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<configuration>
+						<!-- False to allow adjustment to branching model -->
+						<pushChanges>false</pushChanges>
+						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+						<!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
+						<preparationGoals>clean install</preparationGoals>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -390,42 +402,42 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-api</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-util</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-incremental</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-brics</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-commons-util</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-commons-smartcollections</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>${project.groupId}</groupId>
+				<groupId>net.automatalib</groupId>
 				<artifactId>automata-commons-dotutil</artifactId>
 				<version>${project.version}</version>
 			</dependency>
