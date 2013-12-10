@@ -133,10 +133,8 @@ public class SuffixTrie<I> extends AbstractGraph<SuffixTrieNode<I>,SuffixTrieNod
 					Map<String, String> properties) {
 				if(!super.getNodeProperties(node, properties))
 					return false;
-				if(node.isRoot())
-					properties.put(LABEL, "ε");
-				else
-					properties.put(LABEL, String.valueOf(node.getSymbol()));
+				String lbl = node.isRoot() ? "ε" : String.valueOf(node.getSymbol());
+				properties.put(NodeAttrs.LABEL, lbl);
 				return true;
 			}
 			

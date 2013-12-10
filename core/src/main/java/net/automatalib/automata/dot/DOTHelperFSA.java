@@ -36,7 +36,7 @@ public class DOTHelperFSA<S, I> extends DefaultDOTHelperAutomaton<S, I, S, Finit
 		if(!super.getNodeProperties(node, properties))
 			return false;
 		if(automaton.isAccepting(node))
-			properties.put("shape", "doublecircle");
+			properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
 		return true;
 	}
 	

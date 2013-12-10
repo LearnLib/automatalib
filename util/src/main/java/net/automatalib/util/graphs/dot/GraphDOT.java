@@ -120,7 +120,6 @@ public abstract class GraphDOT {
 	 * @param a the appendable to write to
 	 * @throws IOException if writing to <tt>a</tt> fails
 	 */
-	@SuppressWarnings("unchecked")
 	@SafeVarargs
 	public static <N,E> void write(Graph<N,E> graph,
 			Appendable a, GraphDOTHelper<N,? super E> ...additionalHelpers) throws IOException {
@@ -130,7 +129,7 @@ public abstract class GraphDOT {
 			helper = plottable.getGraphDOTHelper();
 		}
 		else
-			helper = (GraphDOTHelper<N,? super E>)DefaultDOTHelper.getInstance();
+			helper = new DefaultDOTHelper<N,E>();
 		write(graph, helper, a, additionalHelpers);
 	}
 	
@@ -171,10 +170,28 @@ public abstract class GraphDOT {
 			a.append("di");
 		a.append("graph g {\n");
 		
+
+		Map<String,String> props = new HashMap<>();
+		
+		dotHelper.getGlobalNodeProperties(props);
+		if(!props.isEmpty()) {
+			a.append('\t').append("node");
+			appendParams(props, a);
+			a.append(";\n");
+		}
+		
+		props.clear();
+		dotHelper.getGlobalEdgeProperties(props);
+		if(!props.isEmpty()) {
+			a.append('\t').append("edge");
+			appendParams(props, a);
+			a.append(";\n");
+		}
+		
+		
 		dotHelper.writePreamble(a);
 		a.append('\n');
 		
-		Map<String,String> props = new HashMap<>();
 		
 		MutableMapping<N,String> nodeNames = graph.createStaticNodeMapping();
 		
@@ -252,7 +269,7 @@ public abstract class GraphDOT {
 			String value = e.getValue();
 			a.append(e.getKey()).append("=");
 			// HTML labels have to be enclosed in <> instead of ""
-			if(key.equals(GraphDOTHelper.LABEL) && value.startsWith("<HTML>"))
+			if(key.equals(GraphDOTHelper.CommonAttrs.LABEL) && value.startsWith("<HTML>"))
 				a.append('<').append(value.substring(6)).append('>');
 			else
 				StringUtil.enquote(e.getValue(), a);

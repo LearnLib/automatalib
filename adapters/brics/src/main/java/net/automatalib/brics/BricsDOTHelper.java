@@ -57,15 +57,17 @@ final class BricsDOTHelper extends DefaultDOTHelper<State, Transition> {
 	 */
 	@Override
 	public boolean getNodeProperties(State node, Map<String, String> properties) {
-		if(!super.getNodeProperties(node, properties))
+		if(!super.getNodeProperties(node, properties)) {
 			return false;
+		}
 		
 		String str = node.toString();
 		int wsIdx1 = str.indexOf(' ');
 		int wsIdx2 = str.indexOf(' ', wsIdx1 + 1);
-		properties.put(LABEL, "s" + str.substring(wsIdx1 + 1, wsIdx2));
-		if(node.isAccept())
-			properties.put(SHAPE, "doublecircle");
+		properties.put(NodeAttrs.LABEL, "s" + str.substring(wsIdx1 + 1, wsIdx2));
+		if(node.isAccept()) {
+			properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
+		}
 		return true;
 	}
 
@@ -76,11 +78,12 @@ final class BricsDOTHelper extends DefaultDOTHelper<State, Transition> {
 	@Override
 	public boolean getEdgeProperties(State src, Transition edge, State tgt,
 			Map<String, String> properties) {
-		if(!super.getEdgeProperties(src, edge, tgt, properties))
+		if(!super.getEdgeProperties(src, edge, tgt, properties)) {
 			return false;
+		}
 		
 		String label = BricsTransitionProperty.toString(edge.getMin(), edge.getMax());
-		properties.put(LABEL, label);
+		properties.put(NodeAttrs.LABEL, label);
 		return true;
 	}
 

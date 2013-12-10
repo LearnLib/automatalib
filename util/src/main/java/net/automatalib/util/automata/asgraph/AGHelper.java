@@ -34,7 +34,7 @@ public class AGHelper {
 		
 		
 		for(I input : inputAlphabet) {
-			Collection<T> transitions = aut.getTransitions(state, input);
+			Collection<? extends T> transitions = aut.getTransitions(state, input);
 			if(transitions == null)
 				continue;
 			for(T t : transitions)

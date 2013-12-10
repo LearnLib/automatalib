@@ -39,7 +39,7 @@ public abstract class AbstractTS<S, I, T> implements TransitionSystem<S, I, T> {
 	 * @see TransitionSystem#getSuccessors(Object, Object)
 	 */
 	public static <S,I,T> Set<S> getSuccessors(TransitionSystem<S, I, T> $this, S state, I input) {
-		Collection<T> transitions = $this.getTransitions(state, input);
+		Collection<? extends T> transitions = $this.getTransitions(state, input);
 		if(transitions == null)
 			return Collections.emptySet();
 		Set<S> result = new HashSet<S>(transitions.size());

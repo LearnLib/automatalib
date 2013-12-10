@@ -19,7 +19,9 @@ package net.automatalib.automata.abstractimpl;
 import java.util.Iterator;
 
 import net.automatalib.automata.Automaton;
+import net.automatalib.automata.base.StateIDStaticMapping;
 import net.automatalib.automata.concepts.StateIDs;
+import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.abstractimpl.AbstractTS;
 
 
@@ -61,6 +63,11 @@ public abstract class AbstractAutomaton<S, I, T> extends AbstractTS<S, I, T> imp
 		return new SimpleStateIDs<>($this);
 	}
 	
+	public static <S,I,T,V>
+	MutableMapping<S,V> createStaticStateMapping(Automaton<S,I,T> $this) {
+		return new StateIDStaticMapping<>($this.stateIDs(), $this.size());
+	}
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	/*
@@ -88,5 +95,14 @@ public abstract class AbstractAutomaton<S, I, T> extends AbstractTS<S, I, T> imp
 	@Override
 	public StateIDs<S> stateIDs() {
 		return stateIDs(this);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.ts.abstractimpl.AbstractTS#createStaticStateMapping()
+	 */
+	@Override
+	public <V> MutableMapping<S,V> createStaticStateMapping() {
+		return createStaticStateMapping(this);
 	}
 }

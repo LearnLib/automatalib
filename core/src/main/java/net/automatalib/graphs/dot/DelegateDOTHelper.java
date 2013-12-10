@@ -50,4 +50,14 @@ public class DelegateDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 			Map<String, String> properties) {
 		return parent.getEdgeProperties(src, edge, tgt, properties);
 	}
+
+	@Override
+	public void getGlobalNodeProperties(Map<String, String> properties) {
+		parent.getGlobalNodeProperties(properties);
+	}
+
+	@Override
+	public void getGlobalEdgeProperties(Map<String, String> properties) {
+		parent.getGlobalEdgeProperties(properties);
+	}
 }

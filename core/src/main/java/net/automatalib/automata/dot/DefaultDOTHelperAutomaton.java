@@ -53,7 +53,7 @@ public class DefaultDOTHelperAutomaton<S, I, T, A extends Automaton<S, I, T>>
 		if(!super.getEdgeProperties(src, edge, tgt, properties))
 			return false;
 		String label = String.valueOf(edge.getInput());
-		properties.put("label", label);
+		properties.put(EdgeAttrs.LABEL, label);
 		return true;
 	}
 

@@ -42,7 +42,7 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S,I> {
 	 * @return the transitions, or <code>null</code> if no transitions
 	 * are triggered by this input symbol.
 	 */
-	public Collection<T> getTransitions(S state, I input);
+	public Collection<? extends T> getTransitions(S state, I input);
 	
 	/**
 	 * Retrieves the successor state of a given transition.

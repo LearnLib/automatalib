@@ -41,7 +41,7 @@ public class DOTHelperMealy<S, I, T, O> extends
 		O output = automaton.getTransitionOutput(edge.getTransition());
 		if(output != null)
 			label += String.valueOf(output);
-		properties.put("label", label);
+		properties.put(EdgeAttrs.LABEL, label);
 		return true;
 	}
 	

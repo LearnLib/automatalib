@@ -23,17 +23,10 @@ import java.util.Map;
 
 import net.automatalib.commons.util.mappings.Mapping;
 
-public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
-	
+public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
+		
 	protected static final String START_PREFIX = "__start";
 	
-	
-	private static final DefaultDOTHelper<Object,Object> DEFAULT_INSTANCE
-		= new DefaultDOTHelper<Object,Object>();
-	
-	public static DefaultDOTHelper<Object,Object> getInstance() {
-		return DEFAULT_INSTANCE;
-	}
 	
 	protected Collection<? extends N> initialNodes() {
 		return Collections.emptySet();
@@ -75,8 +68,8 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	@Override
 	public boolean getNodeProperties(N node, Map<String,String> properties) {
 		String label = String.valueOf(node);
-		properties.put(LABEL, label);
-		properties.put(SHAPE, "circle");
+		properties.put(NodeAttrs.LABEL, label);
+		properties.put(NodeAttrs.SHAPE, NodeShapes.CIRCLE);
 		return true;
 	}
 
@@ -88,5 +81,6 @@ public class DefaultDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 	public boolean getEdgeProperties(N src, E edge, N tgt, Map<String,String> properties) {
 		return true;
 	}
+	
 
 }

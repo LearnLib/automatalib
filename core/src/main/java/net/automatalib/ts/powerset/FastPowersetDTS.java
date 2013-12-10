@@ -46,7 +46,7 @@ public class FastPowersetDTS<S extends NumericID, I, T> extends
 	public Collection<T> getTransition(FastPowersetState<S> state, I input) {
 		List<T> result = new ArrayList<T>();
 		for(S s : state) {
-			Collection<T> transitions = ts.getTransitions(s, input);
+			Collection<? extends T> transitions = ts.getTransitions(s, input);
 			if(transitions != null)
 				result.addAll(transitions);
 		}

@@ -43,4 +43,12 @@ public class EmptyDOTHelper<N, E> implements GraphDOTHelper<N, E> {
 		return true;
 	}
 
+	@Override
+	public void getGlobalNodeProperties(Map<String, String> properties) {
+	}
+
+	@Override
+	public void getGlobalEdgeProperties(Map<String, String> properties) {
+	}
+
 }

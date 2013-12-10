@@ -43,7 +43,7 @@ public class PowersetDTS<S, I, T> extends AbstractDTS<Set<S>, I, Collection<T>> 
 	public Collection<T> getTransition(Set<S> state, I input) {
 		List<T> result = new ArrayList<T>();
 		for(S s : state) {
-			Collection<T> transitions = ts.getTransitions(s, input);
+			Collection<? extends T> transitions = ts.getTransitions(s, input);
 			if(transitions != null)
 				result.addAll(transitions);
 		}
@@ -62,7 +62,7 @@ public class PowersetDTS<S, I, T> extends AbstractDTS<Set<S>, I, Collection<T>> 
 	public Set<S> getSuccessor(Set<S> state, I input) {
 		Set<S> result = new HashSet<S>();
 		for(S s : state) {
-			Collection<T> transitions = ts.getTransitions(s, input);
+			Collection<? extends T> transitions = ts.getTransitions(s, input);
 			if(transitions == null)
 				continue;
 			for(T t : transitions)

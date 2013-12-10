@@ -42,7 +42,7 @@ public abstract class AbstractShrinkableAutomaton<S, I, T, SP, TP> extends
 				continue;
 			
 			for(I input : inputs) {
-				Collection<T> transitions = automaton.getTransitions(curr, input);
+				Collection<? extends T> transitions = automaton.getTransitions(curr, input);
 				if(transitions == null || transitions.isEmpty())
 					continue;
 				

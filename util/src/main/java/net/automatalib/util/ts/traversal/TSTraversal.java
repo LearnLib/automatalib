@@ -183,7 +183,7 @@ public abstract class TSTraversal {
 			
 inputs_loop:
 			for(I input : inputs) {
-				Collection<T> transitions = ts.getTransitions(state, input);
+				Collection<? extends T> transitions = ts.getTransitions(state, input);
 				
 				if(transitions == null)
 					continue;

@@ -38,7 +38,7 @@ public abstract class AbstractAutomatonGraph<S,I,T,SP,TP>
 	
 		
 		for(I input : inputs) {
-			Collection<T> transitions = automaton.getTransitions(state, input);
+			Collection<? extends T> transitions = automaton.getTransitions(state, input);
 			if(transitions == null)
 				continue;
 			for(T t : transitions)
