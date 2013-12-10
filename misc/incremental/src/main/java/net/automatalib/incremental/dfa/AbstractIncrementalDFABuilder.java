@@ -433,6 +433,7 @@ explore:while((current = queue.poll()) != null) {
 	 * @return the canonical state for the updated signature
 	 */
 	protected State updateSignature(State state, Acceptance acc) {
+		assert (state != init);
 		StateSignature sig = state.getSignature();
 		if(sig.acceptance == acc)
 			return state;
@@ -474,6 +475,8 @@ explore:while((current = queue.poll()) != null) {
 	 * @return the canonical state for the updated signature
 	 */
 	protected State updateSignature(State state, int idx, State succ) {
+		assert (state != init);
+		
 		StateSignature sig = state.getSignature();
 		if(sig.successors[idx] == succ)
 			return state;
@@ -488,6 +491,8 @@ explore:while((current = queue.poll()) != null) {
 	}
 	
 	protected State updateSignature(State state, Acceptance acc, int idx, State succ) {
+		assert (state != init);
+		
 		StateSignature sig = state.getSignature();
 		if(sig.successors[idx] == succ && sig.acceptance == acc)
 			return state;
@@ -504,6 +509,8 @@ explore:while((current = queue.poll()) != null) {
 	 * @return the canonical state for the derived signature
 	 */
 	protected State clone(State other, Acceptance acc) {
+		assert (other != init);
+		
 		StateSignature sig = other.getSignature();
 		if(sig.acceptance == acc)
 			return other;
@@ -513,28 +520,59 @@ explore:while((current = queue.poll()) != null) {
 		return replaceOrRegister(sig);
 	}
 	
-	protected static State hiddenClone(State other) {
+	protected State hiddenClone(State other) {
+		assert (other != init);
+		
 		StateSignature sig = other.getSignature().clone();
+		for(int i = 0; i < alphabetSize; i++) {
+			State succ = sig.successors[i];
+			if(succ != null) {
+				succ.increaseIncoming();
+			}
+		}
 		return new State(sig);
 	}
 	
 	protected void hide(State state) {
-		register.remove(state);
+		assert (state != init);
+		
+		StateSignature sig = state.getSignature();
+		register.remove(sig);
 	}
 	
 	protected State unhide(State state, Acceptance acc, int idx, State succ) {
+		assert (state != init);
+		
 		StateSignature sig = state.getSignature();
 		sig.acceptance = acc;
+		State prevSucc = sig.successors[idx];
+		if(prevSucc != null) {
+			prevSucc.decreaseIncoming();
+		}
 		sig.successors[idx] = succ;
+		if(succ != null) {
+			succ.increaseIncoming();
+		}
 		sig.updateHashCode();
-		return replaceOrRegister(sig);
+		
+		return replaceOrRegister(state);
 	}
 	
 	protected State unhide(State state, int idx, State succ) {
+		assert (state != init);
+		
 		StateSignature sig = state.getSignature();
+		State prevSucc = sig.successors[idx];
+		if(prevSucc != null) {
+			prevSucc.decreaseIncoming();
+		}
 		sig.successors[idx] = succ;
+		if(succ != null) {
+			succ.increaseIncoming();
+		}
 		sig.updateHashCode();
-		return replaceOrRegister(sig);
+		
+		return replaceOrRegister(state);
 	}
 	
 	/**
@@ -545,6 +583,8 @@ explore:while((current = queue.poll()) != null) {
 	 * @return the canonical state for the derived signature
 	 */
 	protected State clone(State other, int idx, State succ) {
+		assert (other != init);
+		
 		StateSignature sig = other.getSignature();
 		if(sig.successors[idx] == succ)
 			return other;
@@ -555,6 +595,8 @@ explore:while((current = queue.poll()) != null) {
 	}
 	
 	protected State clone(State other, Acceptance acc, int idx, State succ) {
+		assert (other != init);
+		
 		StateSignature sig = other.getSignature();
 		if(sig.successors[idx] == succ && sig.acceptance == acc)
 			return other;

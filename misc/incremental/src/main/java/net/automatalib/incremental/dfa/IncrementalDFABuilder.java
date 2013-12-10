@@ -16,6 +16,9 @@
  */
 package net.automatalib.incremental.dfa;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -69,106 +72,96 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 		State curr = init;
 		State conf = null;
 		
-		int confIndex = -1;
 		
-		int prefixLen = 0;
+		Deque<PathElem> path = new ArrayDeque<>();
 		
 		for(I sym : word) {
 			if(conf == null && curr.isConfluence()) {
 				conf = curr;
-				confIndex = prefixLen;
 			}
 			
 			int idx = inputAlphabet.getSymbolIndex(sym);
 			State succ = curr.getSuccessor(idx);
 			if(succ == null)
 				break;
+			path.push(new PathElem(curr, idx));
 			curr = succ;
-			prefixLen++;
 		}
 		
-		int currentIndex;
+		int prefixLen = path.size();
 		
-		State endpoint;
+		State last = curr;
+		
 		if(prefixLen == len) {
 			Acceptance currAcc = curr.getAcceptance();
 			if(currAcc == acc)
 				return;
 			
-			if(currAcc == Acceptance.DONT_KNOW) {
-				if(curr == init) {
-					updateInitSignature(acc);
-					return;
-				}
-				if(conf == null) {
-					State upd = updateSignature(curr, acc);
-					if(upd == curr)
-						return;
-					curr = upd;
-				}
-				else {
-					curr = clone(curr, acc);
-				}
+			if(currAcc != Acceptance.DONT_KNOW) {
+				throw new ConflictException("Incompatible acceptances: " + currAcc + " vs " + acc);
+			}
+			if(conf != null || last.isConfluence()) {
+				last = clone(last, acc);
+			}
+			else if(last == init) {
+				updateInitSignature(acc);
 			}
 			else {
-				throw new ConflictException("Incompatible acceptances: " + currAcc + " vs. " + acc);
+				last = updateSignature(last, acc);
 			}
-			
-			currentIndex = prefixLen;
-			endpoint = curr;
 		}
 		else {
+			if(conf != null) {
+				if(conf == last) {
+					conf = null;
+				}
+				last = hiddenClone(last);
+			}
+			else if(last != init) {
+				hide(last);
+			}
+			
 			Word<I> suffix = word.subWord(prefixLen);
 			I sym = suffix.firstSymbol();
 			int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
-
-			
-			if(conf != null) {
-				endpoint = hiddenClone(curr);
-				
-				State last = endpoint;
-				
-				for (int i = prefixLen - 1; i >= confIndex; i--) {
-					State s = getState(word.prefix(i));
-					sym = word.getSymbol(i);
-					int idx = inputAlphabet.getSymbolIndex(sym);
-					last = clone(s, idx, last);
-				}
-
-				currentIndex = confIndex;
-			}
-			else {
-				hide(curr);
-				endpoint = curr;
-				
-				currentIndex = prefixLen;
-			}
-			
 			State suffixState = createSuffix(suffix.subWord(1), acc);
 			
-			if(endpoint == init) {
-				updateInitSignature(suffTransIdx, suffixState);
-				return;
+			if(last != init) {
+				last = unhide(last, suffTransIdx, suffixState);
 			}
-			
-			endpoint = unhide(endpoint, suffTransIdx, suffixState);
+			else {
+				updateInitSignature(suffTransIdx, suffixState);
+			}
 		}
 		
+		if(path.isEmpty())
+			return;
 		
-		State last = endpoint;
+		if(conf != null) {
+			PathElem next;
+			do {
+				next = path.pop();
+				State state = next.state;
+				int idx = next.transIdx;
+				state = clone(state, idx, last);
+				last = state;
+			} while(next.state != conf);
+		}
 		
-		while(--currentIndex > 0) {
-			State state = getState(word.prefix(currentIndex));
-			I sym = word.getSymbol(currentIndex);
-			int idx = inputAlphabet.getSymbolIndex(sym);
-			last = updateSignature(state, idx, last);
-			if(state == last)
+
+		while(path.size() > 1) {
+			PathElem next = path.pop();
+			State state = next.state;
+			int idx = next.transIdx;
+			State updated = updateSignature(state, idx, last);
+			if(state == updated)
 				return;
+			last = updated;
 		}
 		
-		I sym = word.getSymbol(0);
-		int idx = inputAlphabet.getSymbolIndex(sym);
-		updateInitSignature(idx, last);
+		int finalIdx = path.pop().transIdx;
+		
+		updateInitSignature(finalIdx, last);
 	}
 	
 	

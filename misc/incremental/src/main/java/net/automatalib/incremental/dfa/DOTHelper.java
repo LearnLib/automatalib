@@ -27,6 +27,7 @@ final class DOTHelper extends DefaultDOTHelper<State, EdgeRecord> {
 	
 	private final Alphabet<?> alphabet;
 	private final State initial;
+	private int id = 0;
 	
 	public DOTHelper(Alphabet<?> alphabet, State initial) {
 		this.alphabet = alphabet;
@@ -52,6 +53,7 @@ final class DOTHelper extends DefaultDOTHelper<State, EdgeRecord> {
 		String baseShape = node.isConfluence() ? "octagon" : "circle";
 		
 		if(!node.isSink()) {
+			properties.put(NodeAttrs.LABEL, "s" + (id++));
 			if(node.getAcceptance() == Acceptance.TRUE)
 				properties.put("shape", "double" + baseShape);
 			else {
@@ -59,6 +61,9 @@ final class DOTHelper extends DefaultDOTHelper<State, EdgeRecord> {
 				if(node.getAcceptance() == Acceptance.DONT_KNOW)
 					properties.put("style", "dashed");
 			}
+		}
+		else {
+			properties.put(NodeAttrs.LABEL, "sink");
 		}
 		
 		return true;

@@ -53,5 +53,4 @@ public final class State {
 	public StateSignature getSignature() {
 		return signature;
 	}
-	
 }

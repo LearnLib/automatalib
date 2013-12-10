@@ -87,4 +87,11 @@ final class State {
 	public boolean isSink() {
 		return (signature == null);
 	}
+	
+	@Override
+	public String toString() {
+		if(isSink())
+			return "sink";
+		return "s";
+	}
 }

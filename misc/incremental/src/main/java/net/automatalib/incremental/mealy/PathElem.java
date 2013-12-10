@@ -14,34 +14,16 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.commons.util.collections;
+package net.automatalib.incremental.mealy;
 
-import java.util.Iterator;
+final class PathElem {
 
-public abstract class TransformingIterator<I, E> implements Iterator<E> {
+	public final State state;
+	public final int transIdx;
 	
-	private final Iterator<? extends I> iterator;
-	
-	protected abstract E transform(I internal);
-
-	public TransformingIterator(Iterator<? extends I> iterator) {
-		this.iterator = iterator;
-	}
-
-	@Override
-	public boolean hasNext() {
-		return iterator.hasNext();
-	}
-
-	@Override
-	public E next() {
-		I internal = iterator.next();
-		return transform(internal);
-	}
-
-	@Override
-	public void remove() {
-		iterator.remove();
+	public PathElem(State state, int transIdx) {
+		this.state = state;
+		this.transIdx = transIdx;
 	}
 
 }

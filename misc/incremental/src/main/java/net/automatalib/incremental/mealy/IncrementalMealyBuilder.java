@@ -20,7 +20,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -155,17 +157,16 @@ public class IncrementalMealyBuilder<I, O> extends
 		State curr = init;
 		State conf = null;
 
-		int confIndex = -1;
-
-		int prefixLen = 0;
+		Deque<PathElem> path = new ArrayDeque<>();
+		
 		// Find the internal state in the automaton that can be reached by a
 		// maximal prefix of the word (i.e., a path of secured information)
+		Iterator<O> outWordIterator = outputWord.iterator();
 		for (I sym : word) {
 			// During this, store the *first* confluence state (i.e., state with
 			// multiple incoming edges).
 			if (conf == null && curr.isConfluence()) {
 				conf = curr;
-				confIndex = prefixLen;
 			}
 
 			int idx = inputAlphabet.getSymbolIndex(sym);
@@ -175,18 +176,32 @@ public class IncrementalMealyBuilder<I, O> extends
 			
 			// If a transition exists for the input symbol, it also has an output symbol.
 			// Check if this matches the provided one, otherwise there is a conflict
-			O outSym = outputWord.getSymbol(prefixLen);
+			O outSym = outWordIterator.next();
 			if(!Objects.equals(outSym, curr.getOutput(idx))) {
-				throw new ConflictException("Error inserting " + word.prefix(prefixLen+1) + " / " + outputWord.prefix(prefixLen+1) + ": Incompatible output symbols: " + outSym + " vs " + curr.getOutput(idx));
+				throw new ConflictException("Error inserting " + word.prefix(path.size()+1) + " / " + outputWord.prefix(path.size()+1) + ": Incompatible output symbols: " + outSym + " vs " + curr.getOutput(idx));
 			}
+			path.push(new PathElem(curr, idx));
 			curr = succ;
-			prefixLen++;
 		}
 
+		State last = curr;
+		
+		int prefixLen = path.size();
+		
 		// The information was already present - we do not need to continue
-		if (prefixLen == len)
+		if (prefixLen == len) {
 			return;
-
+		}
+		
+		if(conf != null) {
+			if(conf == last) {
+				conf = null;
+			}
+			last = hiddenClone(last);
+		}
+		else if(last != init) {
+			hide(last);
+		}
 
 		// We then create a suffix path, i.e., a linear sequence of states corresponding to
 		// the suffix (more precisely: the suffix minus the first symbol, since this is the
@@ -195,14 +210,22 @@ public class IncrementalMealyBuilder<I, O> extends
 		Word<O> suffixOut = outputWord.subWord(prefixLen);
 
 		// Here we prepare the "gluing" transition
-		I sym = suffix.getSymbol(0);
+		I sym = suffix.firstSymbol();
 		int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
-		O suffTransOut = suffixOut.getSymbol(0);
+		O suffTransOut = suffixOut.firstSymbol();
 		
-		int currentIndex;
-
-
-		State endpoint;
+		State suffixState = createSuffix(suffix.subWord(1), suffixOut.subWord(1));
+		
+		if(last != init) {
+			last = unhide(last, suffTransIdx, suffixState, suffTransOut);
+		}
+		else {
+			updateInitSignature(suffTransIdx, suffixState, suffTransOut);
+		}
+		
+		if(path.isEmpty()) {
+			return;
+		}
 		
 		if (conf != null) {
 			// If there was a confluence state, we have to clone all nodes on
@@ -211,58 +234,31 @@ public class IncrementalMealyBuilder<I, O> extends
 			// prefixes reaching the confluence state (we do not know anything
 			// about them
 			// plus the suffix).
-			endpoint = hiddenClone(curr);
-
-			State last = endpoint;
-			
-			for (int i = prefixLen - 1; i >= confIndex; i--) {
-				State s = getState(word.prefix(i));
-				sym = word.getSymbol(i);
-				int idx = inputAlphabet.getSymbolIndex(sym);
-				last = clone(s, idx, last);
-			}
-
-			currentIndex = confIndex;
+			PathElem next;
+			do {
+				next = path.pop();
+				State state = next.state;
+				int idx = next.transIdx;
+				state = clone(state, idx, last);
+				last = state;
+			} while(next.state != conf);
 		}
-		else {
-			// If there was no confluence, we can simply extend the path.
-			// Here we have to be careful about a corner case:
-			// Our last state on the path might be identified with one of
-			// the states in the suffix path we are going to create below.
-			// We hence have to make sure it is unique by temporarily 
-			// removing it from the register.
-			hide(curr);
-			endpoint = curr;
-			
-			currentIndex = prefixLen;
-		}
-		
-		State suffixState = createSuffix(suffix.subWord(1), suffixOut.subWord(1));
-		
-		if(endpoint == init) {
-			updateInitSignature(suffTransIdx, suffixState, suffTransOut);
-			return;
-		}
-		endpoint = unhide(endpoint, suffTransIdx, suffixState, suffTransOut);
-		
 		
 		// Finally, we have to refresh all the signatures, iterating backwards
 		// until the updating becomes stable.
-		State last = endpoint;
-		while (--currentIndex > 0) {
-			State state = getState(word.prefix(currentIndex));
-			sym = word.getSymbol(currentIndex);
-			int idx = inputAlphabet.getSymbolIndex(sym);
-			last = updateSignature(state, idx, last);
-
-			if (state == last) {
+		while(path.size() > 1) {
+			PathElem next = path.pop();
+			State state = next.state;
+			int idx = next.transIdx;
+			State updated = updateSignature(state, idx, last);
+			if(state == updated)
 				return;
-			}
+			last = updated;
 		}
 		
-		sym = word.getSymbol(0);
-		int idx = inputAlphabet.getSymbolIndex(sym);
-		updateInitSignature(idx, last);
+		int finalIdx = path.pop().transIdx;
+		
+		updateInitSignature(finalIdx, last);
 	}
 
 	
@@ -308,10 +304,15 @@ public class IncrementalMealyBuilder<I, O> extends
 	
 	private State unhide(State state, int idx, State succ, O out) {
 		StateSignature sig = state.getSignature();
+		State prevSucc = sig.successors[idx];
+		if(prevSucc != null) {
+			prevSucc.decreaseIncoming();
+		}
 		sig.successors[idx] = succ;
+		if(succ != null) {
+			succ.increaseIncoming();
+		}
 		sig.outputs[idx] = out;
-		
-		succ.increaseIncoming();
 		sig.updateHashCode();
 		return replaceOrRegister(state);
 	}
@@ -349,8 +350,15 @@ public class IncrementalMealyBuilder<I, O> extends
 		return replaceOrRegister(sig);
 	}
 	
-	private static State hiddenClone(State other) {
+	private State hiddenClone(State other) {
 		StateSignature sig = other.getSignature().clone();
+		
+		for(int i = 0; i < alphabetSize; i++) {
+			State succ = sig.successors[i];
+			if(succ != null) {
+				succ.increaseIncoming();
+			}
+		}
 		return new State(sig);
 	}
 	
@@ -369,10 +377,10 @@ public class IncrementalMealyBuilder<I, O> extends
 	}
 	
 	private void hide(State state) {
-		if(state == init) {
-			return;
-		}
-		register.remove(state.getSignature());
+		assert state != init;
+		StateSignature sig = state.getSignature();
+		
+		register.remove(sig);
 	}
 
 	private State replaceOrRegister(State state) {

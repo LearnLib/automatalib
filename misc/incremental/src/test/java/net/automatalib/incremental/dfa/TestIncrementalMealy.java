@@ -16,13 +16,8 @@
  */
 package net.automatalib.incremental.dfa;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
-import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -91,6 +86,8 @@ public class TestIncrementalMealy {
 		Assert.assertTrue(incMealy.lookup(w1, wb));
 		Assert.assertEquals(wb.toWord(), w1o);
 		wb.clear();
+		
+		
 			
 		incMealy.insert(w3, w3o);
 		Assert.assertTrue(incMealy.hasDefinitiveInformation(w1));

@@ -33,6 +33,7 @@ import net.automatalib.words.Alphabet;
 final class DOTHelper extends DefaultDOTHelper<State, TransitionRecord> {
 	private final State initial;
 	private final Alphabet<?> inputAlphabet;
+	private int id = 0;
 	
 	/**
 	 * Constructor.
@@ -65,7 +66,8 @@ final class DOTHelper extends DefaultDOTHelper<State, TransitionRecord> {
 			return false;
 		
 		String shape = node.isConfluence() ? "octagon" : "circle";
-		properties.put("shape", shape);
+		properties.put(NodeAttrs.SHAPE, shape);
+		properties.put(NodeAttrs.LABEL, "s" + (id++));
 		return true;
 	}
 	

@@ -40,8 +40,9 @@ public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I>
 		for(I sym : word) {
 			int idx = inputAlphabet.getSymbolIndex(sym);
 			s = s.getSuccessor(idx);
-			if(s == null || s == sink)
+			if(s == null || s == sink) {
 				return s;
+			}
 		}
 		return s;
 	}
@@ -73,9 +74,12 @@ public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I>
 		Deque<PathElem> path = new ArrayDeque<>();
 		
 		for(I sym : word) {
-			if(curr == sink) {
+			if(curr == sink || curr.getAcceptance() == Acceptance.FALSE) {
 				if(accepting) {
 					throw new IllegalArgumentException("Conflict");
+				}
+				if(curr != sink) {
+					purge(curr);
 				}
 				return;
 			}
@@ -113,7 +117,11 @@ public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I>
 			}
 			else {
 				if(conf != null || last.isConfluence()) {
-					last = clone(last, acc);
+					last = clone(last, Acceptance.TRUE);
+				}
+				else if(last == init) {
+					updateInitSignature(Acceptance.TRUE);
+					return;
 				}
 				else {
 					last = updateSignature(last, acc);
@@ -122,9 +130,12 @@ public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I>
 		}
 		else {
 			if(conf != null) {
+				if(conf == last) {
+					conf = null;
+				}
 				last = hiddenClone(last);
 			}
-			else {
+			else if(last != init) {
 				hide(last);
 			}
 			
@@ -133,12 +144,26 @@ public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I>
 			int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
 			State suffixState = createSuffix(suffix.subWord(1), accepting);
 			
-			if(accepting) {
-				unhide(last, Acceptance.TRUE, suffTransIdx, suffixState);
+			if(last != init) {
+				if(accepting) {
+					last = unhide(last, Acceptance.TRUE, suffTransIdx, suffixState);
+				}
+				else {
+					last = unhide(last, suffTransIdx, suffixState);
+				}
 			}
 			else {
-				unhide(last, suffTransIdx, suffixState);
+				if(accepting) {
+					updateInitSignature(Acceptance.TRUE, suffTransIdx, suffixState);
+				}
+				else {
+					updateInitSignature(suffTransIdx, suffixState);
+				}
 			}
+		}
+		
+		if(path.isEmpty()) {
+			return;
 		}
 			
 		if(conf != null) {
@@ -157,9 +182,7 @@ public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I>
 			} while(next.state != conf);
 		}
 		
-		if(path.isEmpty()) {
-			return;
-		}
+		
 		
 		while(path.size() > 1) {
 			PathElem next = path.pop();
@@ -194,18 +217,17 @@ public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I>
 	 */
 	private void purge(State state) {
 		StateSignature sig = state.getSignature();
-		if(register.remove(sig) == null)
+		if(state.getAcceptance() == Acceptance.TRUE) {
+			throw new IllegalStateException("Attempting to purge accepting state");
+		}
+		if(register.remove(sig) == null) {
 			return;
+		}
+		sig.acceptance = Acceptance.FALSE;
 		for(int i = 0; i < alphabetSize; i++) {
 			State succ = sig.successors[i];
 			if(succ != null) {
-				if(succ.isConfluence()) {
-					succ.decreaseIncoming();
-				}
-				else {
-					purge(succ);
-				}
-				sig.successors[i] = null;
+				purge(succ);
 			}
 		}
 	}
