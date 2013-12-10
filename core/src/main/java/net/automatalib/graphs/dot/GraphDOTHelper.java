@@ -35,6 +35,7 @@ public interface GraphDOTHelper<N, E> {
 		public static final String LABEL = "label";
 		public static final String COLOR = "color";
 		public static final String TEXLBL = "texlbl";
+		public static final String STYLE = "style";
 	}
 	
 	public abstract class NodeAttrs extends CommonAttrs {

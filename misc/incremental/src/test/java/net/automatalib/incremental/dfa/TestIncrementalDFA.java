@@ -17,6 +17,7 @@
 package net.automatalib.incremental.dfa;
 
 import net.automatalib.incremental.ConflictException;
+import net.automatalib.visualization.jung.JungGraphVisualizer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.SimpleAlphabet;
@@ -53,6 +54,7 @@ public class TestIncrementalDFA {
 		Assert.assertEquals(incDfa.lookup(w3), Acceptance.DONT_KNOW);
 		
 		incDfa.insert(w1, true);
+		JungGraphVisualizer.visualize(incDfa);
 		Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
 		Assert.assertEquals(incDfa.lookup(w2), Acceptance.DONT_KNOW);
 		Assert.assertEquals(incDfa.lookup(w3), Acceptance.DONT_KNOW);
@@ -63,6 +65,7 @@ public class TestIncrementalDFA {
 		
 		
 		incDfa.insert(w2, false);
+		JungGraphVisualizer.visualize(incDfa);
 		Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
 		Assert.assertEquals(incDfa.lookup(w2), Acceptance.FALSE);
 		Assert.assertEquals(incDfa.lookup(w3), Acceptance.DONT_KNOW);
@@ -73,6 +76,7 @@ public class TestIncrementalDFA {
 		
 		
 		incDfa.insert(w3, true);
+		JungGraphVisualizer.visualize(incDfa);
 		Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
 		Assert.assertEquals(incDfa.lookup(w2), Acceptance.FALSE);
 		Assert.assertEquals(incDfa.lookup(w3), Acceptance.TRUE);
@@ -83,6 +87,7 @@ public class TestIncrementalDFA {
 		
 		
 		incDfa.insert(w4, true);
+		JungGraphVisualizer.visualize(incDfa);
 		Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
 		Assert.assertEquals(incDfa.lookup(w2), Acceptance.FALSE);
 		Assert.assertEquals(incDfa.lookup(w3), Acceptance.TRUE);

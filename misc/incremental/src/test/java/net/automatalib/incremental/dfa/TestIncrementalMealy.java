@@ -18,6 +18,7 @@ package net.automatalib.incremental.dfa;
 
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
+import net.automatalib.visualization.jung.JungGraphVisualizer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -56,6 +57,7 @@ public class TestIncrementalMealy {
 		
 		
 		incMealy.insert(w1, w1o);
+		JungGraphVisualizer.visualize(incMealy);
 		Assert.assertTrue(incMealy.hasDefinitiveInformation(w1));
 		Assert.assertTrue(incMealy.hasDefinitiveInformation(w1.prefix(2)));
 		Assert.assertFalse(incMealy.hasDefinitiveInformation(w1.append('a')));
@@ -73,6 +75,7 @@ public class TestIncrementalMealy {
 		
 		
 		incMealy.insert(w2, w2o);
+		JungGraphVisualizer.visualize(incMealy);
 		Assert.assertTrue(incMealy.hasDefinitiveInformation(w1));
 		Assert.assertTrue(incMealy.hasDefinitiveInformation(w2));
 		Assert.assertFalse(incMealy.hasDefinitiveInformation(w3));
@@ -90,6 +93,7 @@ public class TestIncrementalMealy {
 		
 			
 		incMealy.insert(w3, w3o);
+		JungGraphVisualizer.visualize(incMealy);
 		Assert.assertTrue(incMealy.hasDefinitiveInformation(w1));
 		Assert.assertTrue(incMealy.hasDefinitiveInformation(w2));
 		Assert.assertTrue(incMealy.hasDefinitiveInformation(w3));

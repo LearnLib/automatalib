@@ -29,6 +29,7 @@ import java.util.Collection;
  * @param <E> edge class
  */
 public interface BidirectionalGraph<N, E> extends Graph<N, E> {
+	
 	/**
 	 * Retrieves the incoming edges of a given node.
 	 * @param node the node

@@ -138,5 +138,10 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getDOTHelper() {
 		return new DOTHelperFSA<>(this);
 	}
+	
+	@Override
+	public GraphDOTHelper<Integer,TransitionEdge<I,Integer>> getGraphDOTHelper() {
+		return new DOTHelperFSA<>(this);
+	}
 
 }

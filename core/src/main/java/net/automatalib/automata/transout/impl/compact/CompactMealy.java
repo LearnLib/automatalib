@@ -25,13 +25,15 @@ import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
+import net.automatalib.graphs.dot.DOTPlottableGraph;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 public class CompactMealy<I, O> extends
 		AbstractCompactDeterministic<I, CompactMealyTransition<O>, Void, O> implements
-		MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O>, DOTPlottableAutomaton<Integer,I,CompactMealyTransition<O>> {
+		MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O>, DOTPlottableAutomaton<Integer,I,CompactMealyTransition<O>>,
+		DOTPlottableGraph<Integer, TransitionEdge<I, CompactMealyTransition<O>>>{
 	
 	
 
@@ -195,6 +197,11 @@ public class CompactMealy<I, O> extends
 	 */
 	@Override
 	public GraphDOTHelper<Integer, TransitionEdge<I, CompactMealyTransition<O>>> getDOTHelper() {
+		return new DOTHelperMealy<>(this);
+	}
+	
+	@Override
+	public GraphDOTHelper<Integer, TransitionEdge<I, CompactMealyTransition<O>>> getGraphDOTHelper() {
 		return new DOTHelperMealy<>(this);
 	}
 	
