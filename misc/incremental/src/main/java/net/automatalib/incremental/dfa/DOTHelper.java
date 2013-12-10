@@ -51,12 +51,14 @@ final class DOTHelper extends DefaultDOTHelper<State, EdgeRecord> {
 		
 		String baseShape = node.isConfluence() ? "octagon" : "circle";
 		
-		if(node.getAcceptance() == Acceptance.TRUE)
-			properties.put("shape", "double" + baseShape);
-		else {
-			properties.put("shape", baseShape);
-			if(node.getAcceptance() == Acceptance.DONT_KNOW)
-				properties.put("style", "dashed");
+		if(!node.isSink()) {
+			if(node.getAcceptance() == Acceptance.TRUE)
+				properties.put("shape", "double" + baseShape);
+			else {
+				properties.put("shape", baseShape);
+				if(node.getAcceptance() == Acceptance.DONT_KNOW)
+					properties.put("style", "dashed");
+			}
 		}
 		
 		return true;

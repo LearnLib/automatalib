@@ -16,6 +16,9 @@
  */
 package net.automatalib.incremental.dfa;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -67,108 +70,121 @@ public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I>
 		State curr = init;
 		State conf = null;
 		
-		int confIndex = -1;
+		Deque<PathElem> path = new ArrayDeque<>();
 		
-		int prefixLen = 0;
 		for(I sym : word) {
-			if(curr == sink)
-				break;
+			if(curr == sink) {
+				if(accepting) {
+					throw new IllegalArgumentException("Conflict");
+				}
+				return;
+			}
+			
 			if(conf == null && curr.isConfluence()) {
 				conf = curr;
-				confIndex = prefixLen;
 			}
 			
 			int idx = inputAlphabet.getSymbolIndex(sym);
+			
 			State succ = curr.getSuccessor(idx);
-			if(succ == null)
+			if(succ == null) {
 				break;
+			}
+			path.push(new PathElem(curr, idx));
 			curr = succ;
-			prefixLen++;
 		}
 		
-		if(curr == sink) {
-			if(accepting)
-				throw new RuntimeException("Conflict");
-			return;
-		}
+		int prefixLen = path.size();
+		
+
+		State last = curr;
 		
 		if(prefixLen == len) {
 			Acceptance currAcc = curr.getAcceptance();
-			if(currAcc == acc)
+			if(currAcc == acc) {
 				return;
-			else if(conf == null) {
-				if(currAcc == Acceptance.DONT_KNOW) {
-					if(accepting) {
-						State upd = updateSignature(curr, Acceptance.TRUE);
-						if(upd == curr)
-							return;
-						curr = upd;
-					}
-					else {
-						purge(curr);
-						curr = sink;
-					}
-				}
-				else
-					throw new ConflictException("Incompatible acceptances: " + currAcc + " vs " + acc);
 			}
-		}
-		
-		
-		Word<I> suffix = word.subWord(prefixLen); 
-		
-		State last;
-		
-		State suffixState = null;
-		int suffTransIdx = -1;
-		if(!suffix.isEmpty()) {
-			suffixState = createSuffix(suffix.subWord(1), accepting);
-			I sym = suffix.getSymbol(0);
-			suffTransIdx = inputAlphabet.getSymbolIndex(sym);
-		}
-		
-		int currentIndex;
-		if(conf != null) {
-			if(suffTransIdx == -1)
-				last = clone(curr, acc);
-			else /* if(accepting) */
-				last = clone(curr, Acceptance.TRUE, suffTransIdx, suffixState);
-			
-			for(int i = prefixLen - 1; i >= confIndex; i--) {
-				State s = getState(word.prefix(i));
-				I sym = word.getSymbol(i);
-				int idx = inputAlphabet.getSymbolIndex(sym);
-				if(accepting)
-					last = clone(s, Acceptance.TRUE, idx, last);
-				else
-					last = clone(s, idx, last);
+			if(currAcc != Acceptance.DONT_KNOW) {
+				throw new ConflictException("Incompatible acceptances: " + currAcc + " vs " + acc);
 			}
-			
-			currentIndex = confIndex;
-		}
-		else {
-			if(suffTransIdx == -1)
-				last = updateSignature(curr, acc);
-			else /* if(accepting) */
-				last = updateSignature(curr, Acceptance.TRUE, suffTransIdx, suffixState);
-			currentIndex = prefixLen;
-		}
-		
-		while(--currentIndex >= 0) {
-			State state = getState(word.prefix(currentIndex));
-			I sym = word.getSymbol(currentIndex);
-			int idx = inputAlphabet.getSymbolIndex(sym);
-			if(accepting) {
-				Acceptance lastAcc = last.getAcceptance();
-				last = updateSignature(state, Acceptance.TRUE, idx, last);
-				if(state == last && lastAcc == Acceptance.TRUE)
-					break;
+			if(!accepting) {
+				purge(last);
+				last = sink;
 			}
 			else {
-				last = updateSignature(state, idx, last);
-				if(state == last)
-					break;
+				if(conf != null || last.isConfluence()) {
+					last = clone(last, acc);
+				}
+				else {
+					last = updateSignature(last, acc);
+				}
 			}
+		}
+		else {
+			if(conf != null) {
+				last = hiddenClone(last);
+			}
+			else {
+				hide(last);
+			}
+			
+			Word<I> suffix = word.subWord(prefixLen);
+			I sym = suffix.firstSymbol();
+			int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
+			State suffixState = createSuffix(suffix.subWord(1), accepting);
+			
+			if(accepting) {
+				unhide(last, Acceptance.TRUE, suffTransIdx, suffixState);
+			}
+			else {
+				unhide(last, suffTransIdx, suffixState);
+			}
+		}
+			
+		if(conf != null) {
+			PathElem next;
+			do {
+				next = path.pop();
+				State state = next.state;
+				int idx = next.transIdx;
+				if(accepting) {
+					state = clone(state, Acceptance.TRUE, idx, last);
+				}
+				else {
+					state = clone(state, idx, last);
+				}
+				last = state;
+			} while(next.state != conf);
+		}
+		
+		if(path.isEmpty()) {
+			return;
+		}
+		
+		while(path.size() > 1) {
+			PathElem next = path.pop();
+			State state = next.state;
+			int idx = next.transIdx;
+			State updated;
+			Acceptance oldAcc = state.getAcceptance();
+			if(accepting) {
+				updated = updateSignature(state, Acceptance.TRUE, idx, last);
+			}
+			else {
+				updated = updateSignature(state, idx, last);
+			}
+			if(state == updated && oldAcc == updated.getAcceptance())
+				return;
+			last = updated;
+		}
+		
+		int finalIdx = path.pop().transIdx;
+		
+		if(accepting) {
+			updateInitSignature(Acceptance.TRUE, finalIdx, last);
+		}
+		else {
+			updateInitSignature(finalIdx, last);
 		}
 	}
 		
@@ -182,9 +198,15 @@ public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I>
 			return;
 		for(int i = 0; i < alphabetSize; i++) {
 			State succ = sig.successors[i];
-			if(succ != null)
-				purge(succ);
-			sig.successors[i] = null;
+			if(succ != null) {
+				if(succ.isConfluence()) {
+					succ.decreaseIncoming();
+				}
+				else {
+					purge(succ);
+				}
+				sig.successors[i] = null;
+			}
 		}
 	}
 	

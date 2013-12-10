@@ -453,6 +453,19 @@ explore:while((current = queue.poll()) != null) {
 		succ.increaseIncoming();
 	}
 	
+	protected void updateInitSignature(Acceptance acc, int idx, State succ) {
+		StateSignature sig = init.getSignature();
+		State oldSucc = sig.successors[idx];
+		Acceptance oldAcc = sig.acceptance;
+		if(oldSucc == succ && oldAcc == acc)
+			return;
+		if(oldSucc != null)
+			oldSucc.decreaseIncoming();
+		sig.successors[idx] = succ;
+		succ.increaseIncoming();
+		sig.acceptance = acc;
+	}
+	
 	/**
 	 * Updates the signature for a given state.
 	 * @param state the state
@@ -496,6 +509,30 @@ explore:while((current = queue.poll()) != null) {
 			return other;
 		sig = sig.clone();
 		sig.acceptance = acc;
+		sig.updateHashCode();
+		return replaceOrRegister(sig);
+	}
+	
+	protected static State hiddenClone(State other) {
+		StateSignature sig = other.getSignature().clone();
+		return new State(sig);
+	}
+	
+	protected void hide(State state) {
+		register.remove(state);
+	}
+	
+	protected State unhide(State state, Acceptance acc, int idx, State succ) {
+		StateSignature sig = state.getSignature();
+		sig.acceptance = acc;
+		sig.successors[idx] = succ;
+		sig.updateHashCode();
+		return replaceOrRegister(sig);
+	}
+	
+	protected State unhide(State state, int idx, State succ) {
+		StateSignature sig = state.getSignature();
+		sig.successors[idx] = succ;
 		sig.updateHashCode();
 		return replaceOrRegister(sig);
 	}

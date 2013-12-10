@@ -62,24 +62,6 @@ public class IncrementalMealyBuilder<I, O> extends
 	IncrementalConstruction<MealyMachine<?,I,?,O>, I> {
 	
 	
-	private static final class SuffixInfo {
-		private final State last;
-		private final State end;
-		
-		public SuffixInfo(State last, State end) {
-			this.last = last;
-			this.end = end;
-		}
-		
-		public State getLast() {
-			return last;
-		}
-		
-		public State getEnd() {
-			return end;
-		}
-	}
-	
 	private final Map<StateSignature, State> register = new HashMap<>();
 
 	private final Alphabet<I> inputAlphabet;
@@ -190,11 +172,13 @@ public class IncrementalMealyBuilder<I, O> extends
 			State succ = curr.getSuccessor(idx);
 			if (succ == null)
 				break;
+			
 			// If a transition exists for the input symbol, it also has an output symbol.
 			// Check if this matches the provided one, otherwise there is a conflict
 			O outSym = outputWord.getSymbol(prefixLen);
-			if(!Objects.equals(outSym, curr.getOutput(idx)))
-				throw new ConflictException("Error inserting " + word + " / " + outputWord + ": Incompatible output symbols: " + outSym + " vs " + curr.getOutput(idx));
+			if(!Objects.equals(outSym, curr.getOutput(idx))) {
+				throw new ConflictException("Error inserting " + word.prefix(prefixLen+1) + " / " + outputWord.prefix(prefixLen+1) + ": Incompatible output symbols: " + outSym + " vs " + curr.getOutput(idx));
+			}
 			curr = succ;
 			prefixLen++;
 		}
@@ -210,42 +194,27 @@ public class IncrementalMealyBuilder<I, O> extends
 		Word<I> suffix = word.subWord(prefixLen);
 		Word<O> suffixOut = outputWord.subWord(prefixLen);
 
-		State last;
-
-		State suffixState;
-		State endpoint = null;
-		if(conf != null) {
-			// If we encountered a confluence state on a way, the whole path including
-			// the confluence state will have to be duplicated to separate it from
-			// other prefixes
-			suffixState = createSuffix(suffix.subWord(1), suffixOut.subWord(1));
-		}
-		else {
-			// This is a dangerous corner case: If NO confluence state was found, it can happen
-			// that the last state of the suffix path is merged with the end of the prefix path
-			// (i.e., when both have no outgoing transitions - note that this is ALWAYS the case
-			// upon the first insert() call). Because there is no confluence we resolve by cloning
-			// part of the prefix path, we might accidentally introduce a cycle here.
-			// Storing the endpoint of the suffix path allows avoiding this later on.
-			SuffixInfo suffixRes = createSuffix2(suffix.subWord(1), suffixOut.subWord(1));
-			suffixState = suffixRes.getLast();
-			endpoint = suffixRes.getEnd();
-		}
-		
-		// Here we create the "gluing" transition
+		// Here we prepare the "gluing" transition
 		I sym = suffix.getSymbol(0);
 		int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
 		O suffTransOut = suffixOut.getSymbol(0);
 		
-
 		int currentIndex;
+
+
+		State endpoint;
+		
 		if (conf != null) {
 			// If there was a confluence state, we have to clone all nodes on
-			// the prefix path up to this state, in order to separate it from other
-			// prefixes reaching the confluence state (we do not now anything about them
+			// the prefix path up to this state, in order to separate it from
+			// other
+			// prefixes reaching the confluence state (we do not know anything
+			// about them
 			// plus the suffix).
-			last = clone(curr, suffTransIdx, suffixState, suffTransOut);
+			endpoint = hiddenClone(curr);
 
+			State last = endpoint;
+			
 			for (int i = prefixLen - 1; i >= confIndex; i--) {
 				State s = getState(word.prefix(i));
 				sym = word.getSymbol(i);
@@ -254,32 +223,41 @@ public class IncrementalMealyBuilder<I, O> extends
 			}
 
 			currentIndex = confIndex;
-		} else {
-			// Otherwise, we have to check for the above-mentioned corner case, and possibly
-			// also duplicate the last state on the prefix path
-			if(endpoint == curr)
-				last = clone(curr, suffTransIdx, suffixState, suffTransOut);
-			else if(curr != init)
-				last = updateSignature(curr, suffTransIdx, suffixState, suffTransOut);
-			else {
-				// The last state on the prefix path is the initial state. After updating
-				// its signature, we are done since we cannot backtrack any further.
-				updateInitSignature(suffTransIdx, suffixState, suffTransOut);
-				return;
-			}
+		}
+		else {
+			// If there was no confluence, we can simply extend the path.
+			// Here we have to be careful about a corner case:
+			// Our last state on the path might be identified with one of
+			// the states in the suffix path we are going to create below.
+			// We hence have to make sure it is unique by temporarily 
+			// removing it from the register.
+			hide(curr);
+			endpoint = curr;
+			
 			currentIndex = prefixLen;
 		}
 		
+		State suffixState = createSuffix(suffix.subWord(1), suffixOut.subWord(1));
+		
+		if(endpoint == init) {
+			updateInitSignature(suffTransIdx, suffixState, suffTransOut);
+			return;
+		}
+		endpoint = unhide(endpoint, suffTransIdx, suffixState, suffTransOut);
+		
+		
 		// Finally, we have to refresh all the signatures, iterating backwards
 		// until the updating becomes stable.
+		State last = endpoint;
 		while (--currentIndex > 0) {
 			State state = getState(word.prefix(currentIndex));
 			sym = word.getSymbol(currentIndex);
 			int idx = inputAlphabet.getSymbolIndex(sym);
 			last = updateSignature(state, idx, last);
 
-			if (state == last)
+			if (state == last) {
 				return;
+			}
 		}
 		
 		sym = word.getSymbol(0);
@@ -328,6 +306,16 @@ public class IncrementalMealyBuilder<I, O> extends
 		return replaceOrRegister(state);
 	}
 	
+	private State unhide(State state, int idx, State succ, O out) {
+		StateSignature sig = state.getSignature();
+		sig.successors[idx] = succ;
+		sig.outputs[idx] = out;
+		
+		succ.increaseIncoming();
+		sig.updateHashCode();
+		return replaceOrRegister(state);
+	}
+	
 	/**
 	 * Updates the signature of the initial state, changing both the successor state
 	 * and the output symbol.
@@ -338,39 +326,17 @@ public class IncrementalMealyBuilder<I, O> extends
 	private void updateInitSignature(int idx, State succ, O out) {
 		StateSignature sig = init.getSignature();
 		State oldSucc = sig.successors[idx];
-		if(oldSucc == succ && Objects.equals(out, sig.outputs[idx]))
+		if(oldSucc == succ && Objects.equals(out, sig.outputs[idx])) {
 			return;
-		if(oldSucc != null)
+		}
+		if(oldSucc != null) {
 			oldSucc.decreaseIncoming();
+		}
 		sig.successors[idx] = succ;
 		sig.outputs[idx] = out;
 		succ.increaseIncoming();
 	}
 	
-	/**
-	 * Updates the signature of a state, changing both the successor state and the output
-	 * symbol for a single transition index.
-	 * @param state the state which's signature to change
-	 * @param idx the transition index to change
-	 * @param succ the new successor state
-	 * @param out the output symbol
-	 * @return the resulting state, which can either be the same as the input state (if the new
-	 * signature is unique), or the result of merging with another state.
-	 */
-	private State updateSignature(State state, int idx, State succ, O out) {
-		StateSignature sig = state.getSignature();
-		if (sig.successors[idx] == succ && Objects.equals(out, sig.outputs[idx]))
-			return state;
-		
-		register.remove(sig);
-		if(sig.successors[idx] != null)
-			sig.successors[idx].decreaseIncoming();
-		sig.successors[idx] = succ;
-		succ.increaseIncoming();
-		sig.outputs[idx] = out;
-		sig.updateHashCode();
-		return replaceOrRegister(state);
-	}
 
 
 	private State clone(State other, int idx, State succ) {
@@ -383,17 +349,11 @@ public class IncrementalMealyBuilder<I, O> extends
 		return replaceOrRegister(sig);
 	}
 	
-	private State clone(State other, int idx, State succ, O out) {
-		StateSignature sig = other.getSignature();
-		if (sig.successors[idx] == succ && Objects.equals(out, sig.outputs[idx]))
-			return other;
-		sig = sig.clone();
-		sig.successors[idx] = succ;
-		sig.outputs[idx] = out;
-		sig.updateHashCode();
-		return replaceOrRegister(sig);
+	private static State hiddenClone(State other) {
+		StateSignature sig = other.getSignature().clone();
+		return new State(sig);
 	}
-
+	
 	private State replaceOrRegister(StateSignature sig) {
 		State state = register.get(sig);
 		if (state != null)
@@ -406,6 +366,13 @@ public class IncrementalMealyBuilder<I, O> extends
 				succ.increaseIncoming();
 		}
 		return state;
+	}
+	
+	private void hide(State state) {
+		if(state == init) {
+			return;
+		}
+		register.remove(state.getSignature());
 	}
 
 	private State replaceOrRegister(State state) {
@@ -445,28 +412,6 @@ public class IncrementalMealyBuilder<I, O> extends
 
 		return last;
 	}
-	
-	private SuffixInfo createSuffix2(Word<I> suffix, Word<O> suffixOut) {
-		StateSignature sig = new StateSignature(alphabetSize);
-		sig.updateHashCode();
-		State last = replaceOrRegister(sig);
-		State end = last;
-		
-		int len = suffix.length();
-		for (int i = len - 1; i >= 0; i--) {
-			sig = new StateSignature(alphabetSize);
-			I sym = suffix.getSymbol(i);
-			O outsym = suffixOut.getSymbol(i);
-			int idx = inputAlphabet.getSymbolIndex(sym);
-			sig.successors[idx] = last;
-			sig.outputs[idx] = outsym;
-			sig.updateHashCode();
-			last = replaceOrRegister(sig);
-		}
-
-		return new SuffixInfo(last, end);
-	}
-	
 
 	
 	/*

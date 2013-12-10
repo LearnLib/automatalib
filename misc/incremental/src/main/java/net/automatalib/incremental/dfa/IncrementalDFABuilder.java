@@ -72,6 +72,7 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 		int confIndex = -1;
 		
 		int prefixLen = 0;
+		
 		for(I sym : word) {
 			if(conf == null && curr.isConfluence()) {
 				conf = curr;
@@ -86,75 +87,75 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 			prefixLen++;
 		}
 		
+		int currentIndex;
+		
+		State endpoint;
 		if(prefixLen == len) {
 			Acceptance currAcc = curr.getAcceptance();
 			if(currAcc == acc)
 				return;
-			else if(conf == null) {
-				if(currAcc == Acceptance.DONT_KNOW) {
-					if(curr == init) {
-						updateInitSignature(acc);
-						return;
-					}
+			
+			if(currAcc == Acceptance.DONT_KNOW) {
+				if(curr == init) {
+					updateInitSignature(acc);
+					return;
+				}
+				if(conf == null) {
 					State upd = updateSignature(curr, acc);
 					if(upd == curr)
 						return;
 					curr = upd;
 				}
-				else
-					throw new ConflictException("Incompatible acceptances: " + currAcc + " vs. " + acc);
+				else {
+					curr = clone(curr, acc);
+				}
 			}
-		}
-		
-		
-		Word<I> suffix = word.subWord(prefixLen); 
-		
-		State last;
-		
-		State suffixState = null;
-		State endpoint = null;
-		int suffTransIdx = -1;
-		if(!suffix.isEmpty()) {
-			if(conf != null)
-				suffixState = createSuffix(suffix.subWord(1), acc);
 			else {
-				SuffixInfo suffixRes = createSuffix2(suffix.subWord(1), acc);
-				suffixState = suffixRes.last;
-				endpoint = suffixRes.end;
-			}
-			I sym = suffix.getSymbol(0);
-			suffTransIdx = inputAlphabet.getSymbolIndex(sym);
-		}
-		
-		int currentIndex;
-		if(conf != null) {
-			if(suffTransIdx == -1)
-				last = clone(curr, acc);
-			else
-				last = clone(curr, suffTransIdx, suffixState);
-			
-			for(int i = prefixLen - 1; i >= confIndex; i--) {
-				State s = getState(word.prefix(i));
-				I sym = word.getSymbol(i);
-				int idx = inputAlphabet.getSymbolIndex(sym);
-				last = clone(s, idx, last);
+				throw new ConflictException("Incompatible acceptances: " + currAcc + " vs. " + acc);
 			}
 			
-			currentIndex = confIndex;
+			currentIndex = prefixLen;
+			endpoint = curr;
 		}
 		else {
-			if(suffTransIdx == -1)
-				last = curr;
-			else if(endpoint == curr)
-				last = clone(curr, suffTransIdx, suffixState);
-			else if(curr == init) {
+			Word<I> suffix = word.subWord(prefixLen);
+			I sym = suffix.firstSymbol();
+			int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
+
+			
+			if(conf != null) {
+				endpoint = hiddenClone(curr);
+				
+				State last = endpoint;
+				
+				for (int i = prefixLen - 1; i >= confIndex; i--) {
+					State s = getState(word.prefix(i));
+					sym = word.getSymbol(i);
+					int idx = inputAlphabet.getSymbolIndex(sym);
+					last = clone(s, idx, last);
+				}
+
+				currentIndex = confIndex;
+			}
+			else {
+				hide(curr);
+				endpoint = curr;
+				
+				currentIndex = prefixLen;
+			}
+			
+			State suffixState = createSuffix(suffix.subWord(1), acc);
+			
+			if(endpoint == init) {
 				updateInitSignature(suffTransIdx, suffixState);
 				return;
 			}
-			else
-				last = updateSignature(curr, suffTransIdx, suffixState);
-			currentIndex = prefixLen;
+			
+			endpoint = unhide(endpoint, suffTransIdx, suffixState);
 		}
+		
+		
+		State last = endpoint;
 		
 		while(--currentIndex > 0) {
 			State state = getState(word.prefix(currentIndex));
@@ -217,70 +218,6 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 		}
 		
 		return last;
-	}
-	
-	private static final class SuffixInfo {
-		private final State last;
-		private final State end;
-		
-		public SuffixInfo(State last, State end) {
-			this.last = last;
-			this.end = end;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((end == null) ? 0 : end.hashCode());
-			result = prime * result + ((last == null) ? 0 : last.hashCode());
-			return result;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (obj.getClass() != SuffixInfo.class)
-				return false;
-			SuffixInfo other = (SuffixInfo)obj;
-			
-			
-			// State has identity equals-semantics!
-			if(last != other.last)
-				return false;
-			
-			return (end == other.end);
-		}
-		
-		
-	}
-	
-	private SuffixInfo createSuffix2(Word<I> suffix, Acceptance acc) {
-		StateSignature sig = new StateSignature(alphabetSize, acc);
-		sig.updateHashCode();
-		State last = replaceOrRegister(sig);
-		State end = last;
-		
-		int len = suffix.length();
-		for(int i = len - 1; i >= 0; i--) {
-			sig = new StateSignature(alphabetSize, Acceptance.DONT_KNOW);
-			I sym = suffix.getSymbol(i);
-			int idx = inputAlphabet.getSymbolIndex(sym);
-			sig.successors[idx] = last;
-			sig.updateHashCode();
-			last = replaceOrRegister(sig);
-		}
-		
-		return new SuffixInfo(last, end);
 	}
 	
 

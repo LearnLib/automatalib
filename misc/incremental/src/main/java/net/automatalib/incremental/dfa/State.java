@@ -83,4 +83,8 @@ final class State {
 	public StateSignature getSignature() {
 		return signature;
 	}
+
+	public boolean isSink() {
+		return (signature == null);
+	}
 }
