@@ -31,7 +31,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>net.automatalib</groupId>
 		<artifactId>automata-parent</artifactId>
-		<version>0.3.1-ase2013-tutorial-r2-SNAPSHOT</version>
+		<version>0.3.1-ase2013-tutorial-r1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -46,6 +46,34 @@ http://www.gnu.de/documents/lgpl.en.html.
 	</modules>
 
 	<build>
+		<!-- Custom resource rules:
+		We use the ${project.version} property in
+		- src/main/resources/META-INF/maven/archetype-metadata.xml
+		- src/test/resources/projects/*/archetype.properties
+		These must hence be filtered!
+		-->
+		<resources>
+			<resource>
+				<directory>src/main/resources-template</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources-template</directory>
+				<filtering>true</filtering>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>false</filtering>
+			</testResource>
+		</testResources>
+
+		
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.archetype</groupId>
