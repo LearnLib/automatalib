@@ -19,74 +19,61 @@ package net.automatalib.incremental.dfa;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
-public class TestIncrementalDFA {
+public class TestIncrementalPCDFA {
 
 	private Alphabet<Character> alphabet;
-	private IncrementalDFABuilder<Character> incDfa;
+	private IncrementalPCDFABuilder<Character> incDfa;
 
 	@BeforeClass
 	public void setUp() {
-		this.alphabet = new SimpleAlphabet<>();
-		this.alphabet.add('a');
-		this.alphabet.add('b');
-		this.alphabet.add('c');
+		this.alphabet = Alphabets.characters('a', 'c');
 		
-		this.incDfa = new IncrementalDFABuilder<>(alphabet);
+		this.incDfa = new IncrementalPCDFABuilder<>(alphabet);
 	}
 
 	@Test
 	public void testLookup() {
 		Word<Character> w1 = Word.fromString("abc");
-		Word<Character> w2 = Word.fromString("ac");
-		Word<Character> w3 = Word.fromString("acb");
-		Word<Character> w4 = Word.epsilon();
+		Word<Character> w2 = Word.fromString("acb");
+		Word<Character> w3 = Word.fromString("ac");
 		
-		Assert.assertEquals(Acceptance.DONT_KNOW, incDfa.lookup(w1));
+		Assert.assertEquals(incDfa.lookup(w1), Acceptance.DONT_KNOW);
 		Assert.assertEquals(incDfa.lookup(w2), Acceptance.DONT_KNOW);
 		Assert.assertEquals(incDfa.lookup(w3), Acceptance.DONT_KNOW);
 		
 		incDfa.insert(w1, true);
 		Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
+		Assert.assertEquals(incDfa.lookup(w1.prefix(2)), Acceptance.TRUE);
+		Assert.assertEquals(incDfa.lookup(w1.prefix(1)), Acceptance.TRUE);
+		Assert.assertEquals(incDfa.lookup(w1.prefix(0)), Acceptance.TRUE);
+		
 		Assert.assertEquals(incDfa.lookup(w2), Acceptance.DONT_KNOW);
 		Assert.assertEquals(incDfa.lookup(w3), Acceptance.DONT_KNOW);
-		
-		Assert.assertEquals(incDfa.lookup(w1.prefix(2)), Acceptance.DONT_KNOW);
-		Assert.assertEquals(incDfa.lookup(w2.prefix(1)), Acceptance.DONT_KNOW);
-		Assert.assertEquals(incDfa.lookup(w3.prefix(2)), Acceptance.DONT_KNOW);
-		
 		
 		incDfa.insert(w2, false);
 		Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
 		Assert.assertEquals(incDfa.lookup(w2), Acceptance.FALSE);
+		Assert.assertEquals(incDfa.lookup(w2.append('a')), Acceptance.FALSE);
 		Assert.assertEquals(incDfa.lookup(w3), Acceptance.DONT_KNOW);
 		
-		Assert.assertEquals(incDfa.lookup(w1.prefix(2)), Acceptance.DONT_KNOW);
-		Assert.assertEquals(incDfa.lookup(w2.prefix(1)), Acceptance.DONT_KNOW);
-		Assert.assertEquals(incDfa.lookup(w3.prefix(2)), Acceptance.FALSE);
-		
+		Assert.assertEquals(incDfa.lookup(w1.prefix(1)), Acceptance.TRUE);
+		Assert.assertEquals(incDfa.lookup(w2.prefix(1)), Acceptance.TRUE);
 		
 		incDfa.insert(w3, true);
 		Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
 		Assert.assertEquals(incDfa.lookup(w2), Acceptance.FALSE);
 		Assert.assertEquals(incDfa.lookup(w3), Acceptance.TRUE);
 		
-		Assert.assertEquals(incDfa.lookup(w1.prefix(2)), Acceptance.DONT_KNOW);
-		Assert.assertEquals(incDfa.lookup(w2.prefix(1)), Acceptance.DONT_KNOW);
-		Assert.assertEquals(incDfa.lookup(w3.prefix(2)), Acceptance.FALSE);
-		
-		
-		incDfa.insert(w4, true);
-		Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
-		Assert.assertEquals(incDfa.lookup(w2), Acceptance.FALSE);
-		Assert.assertEquals(incDfa.lookup(w3), Acceptance.TRUE);
-		Assert.assertEquals(incDfa.lookup(w4), Acceptance.TRUE);
+		Assert.assertEquals(incDfa.lookup(w1.prefix(2)), Acceptance.TRUE);
+		Assert.assertEquals(incDfa.lookup(w2.prefix(1)), Acceptance.TRUE);
+		Assert.assertEquals(incDfa.lookup(w3.append('a')), Acceptance.DONT_KNOW);
 	}
 	
 	@Test(dependsOnMethods = "testLookup")

@@ -83,4 +83,15 @@ final class State {
 	public StateSignature getSignature() {
 		return signature;
 	}
+
+	public boolean isSink() {
+		return (signature == null);
+	}
+	
+	@Override
+	public String toString() {
+		if(isSink())
+			return "sink";
+		return "s";
+	}
 }

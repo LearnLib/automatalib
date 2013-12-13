@@ -14,43 +14,14 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.mealy;
+package net.automatalib.incremental.dfa;
 
-
-public final class State {
+final class PathElem {
+	public final State state;
+	public final int transIdx;
 	
-	private int numIncoming;
-	private final StateSignature signature;
-	
-	public State(StateSignature signature) {
-		this.signature = signature;
-	}
-	
-	public void increaseIncoming() {
-		numIncoming++;
-	}
-	
-	public void decreaseIncoming() {
-		numIncoming--;
-	}
-	
-	public int getNumIncoming() {
-		return numIncoming;
-	}
-	
-	public boolean isConfluence() {
-		return (numIncoming > 1);
-	}
-	
-	public State getSuccessor(int idx) {
-		return signature.successors[idx];
-	}
-	
-	public Object getOutput(int idx) {
-		return signature.outputs[idx];
-	}
-	
-	public StateSignature getSignature() {
-		return signature;
+	public PathElem(State state, int transIdx) {
+		this.state = state;
+		this.transIdx = transIdx;
 	}
 }

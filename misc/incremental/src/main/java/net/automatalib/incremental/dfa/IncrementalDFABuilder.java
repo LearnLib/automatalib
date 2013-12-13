@@ -16,6 +16,9 @@
  */
 package net.automatalib.incremental.dfa;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -69,105 +72,96 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 		State curr = init;
 		State conf = null;
 		
-		int confIndex = -1;
 		
-		int prefixLen = 0;
+		Deque<PathElem> path = new ArrayDeque<>();
+		
 		for(I sym : word) {
 			if(conf == null && curr.isConfluence()) {
 				conf = curr;
-				confIndex = prefixLen;
 			}
 			
 			int idx = inputAlphabet.getSymbolIndex(sym);
 			State succ = curr.getSuccessor(idx);
 			if(succ == null)
 				break;
+			path.push(new PathElem(curr, idx));
 			curr = succ;
-			prefixLen++;
 		}
+		
+		int prefixLen = path.size();
+		
+		State last = curr;
 		
 		if(prefixLen == len) {
 			Acceptance currAcc = curr.getAcceptance();
 			if(currAcc == acc)
 				return;
-			else if(conf == null) {
-				if(currAcc == Acceptance.DONT_KNOW) {
-					if(curr == init) {
-						updateInitSignature(acc);
-						return;
-					}
-					State upd = updateSignature(curr, acc);
-					if(upd == curr)
-						return;
-					curr = upd;
-				}
-				else
-					throw new ConflictException("Incompatible acceptances: " + currAcc + " vs. " + acc);
+			
+			if(currAcc != Acceptance.DONT_KNOW) {
+				throw new ConflictException("Incompatible acceptances: " + currAcc + " vs " + acc);
 			}
-		}
-		
-		
-		Word<I> suffix = word.subWord(prefixLen); 
-		
-		State last;
-		
-		State suffixState = null;
-		State endpoint = null;
-		int suffTransIdx = -1;
-		if(!suffix.isEmpty()) {
-			if(conf != null)
-				suffixState = createSuffix(suffix.subWord(1), acc);
+			if(conf != null || last.isConfluence()) {
+				last = clone(last, acc);
+			}
+			else if(last == init) {
+				updateInitSignature(acc);
+			}
 			else {
-				SuffixInfo suffixRes = createSuffix2(suffix.subWord(1), acc);
-				suffixState = suffixRes.last;
-				endpoint = suffixRes.end;
+				last = updateSignature(last, acc);
 			}
-			I sym = suffix.getSymbol(0);
-			suffTransIdx = inputAlphabet.getSymbolIndex(sym);
-		}
-		
-		int currentIndex;
-		if(conf != null) {
-			if(suffTransIdx == -1)
-				last = clone(curr, acc);
-			else
-				last = clone(curr, suffTransIdx, suffixState);
-			
-			for(int i = prefixLen - 1; i >= confIndex; i--) {
-				State s = getState(word.prefix(i));
-				I sym = word.getSymbol(i);
-				int idx = inputAlphabet.getSymbolIndex(sym);
-				last = clone(s, idx, last);
-			}
-			
-			currentIndex = confIndex;
 		}
 		else {
-			if(suffTransIdx == -1)
-				last = curr;
-			else if(endpoint == curr)
-				last = clone(curr, suffTransIdx, suffixState);
-			else if(curr == init) {
-				updateInitSignature(suffTransIdx, suffixState);
-				return;
+			if(conf != null) {
+				if(conf == last) {
+					conf = null;
+				}
+				last = hiddenClone(last);
 			}
-			else
-				last = updateSignature(curr, suffTransIdx, suffixState);
-			currentIndex = prefixLen;
+			else if(last != init) {
+				hide(last);
+			}
+			
+			Word<I> suffix = word.subWord(prefixLen);
+			I sym = suffix.firstSymbol();
+			int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
+			State suffixState = createSuffix(suffix.subWord(1), acc);
+			
+			if(last != init) {
+				last = unhide(last, suffTransIdx, suffixState);
+			}
+			else {
+				updateInitSignature(suffTransIdx, suffixState);
+			}
 		}
 		
-		while(--currentIndex > 0) {
-			State state = getState(word.prefix(currentIndex));
-			I sym = word.getSymbol(currentIndex);
-			int idx = inputAlphabet.getSymbolIndex(sym);
-			last = updateSignature(state, idx, last);
-			if(state == last)
+		if(path.isEmpty())
+			return;
+		
+		if(conf != null) {
+			PathElem next;
+			do {
+				next = path.pop();
+				State state = next.state;
+				int idx = next.transIdx;
+				state = clone(state, idx, last);
+				last = state;
+			} while(next.state != conf);
+		}
+		
+
+		while(path.size() > 1) {
+			PathElem next = path.pop();
+			State state = next.state;
+			int idx = next.transIdx;
+			State updated = updateSignature(state, idx, last);
+			if(state == updated)
 				return;
+			last = updated;
 		}
 		
-		I sym = word.getSymbol(0);
-		int idx = inputAlphabet.getSymbolIndex(sym);
-		updateInitSignature(idx, last);
+		int finalIdx = path.pop().transIdx;
+		
+		updateInitSignature(finalIdx, last);
 	}
 	
 	
@@ -217,70 +211,6 @@ public class IncrementalDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
 		}
 		
 		return last;
-	}
-	
-	private static final class SuffixInfo {
-		private final State last;
-		private final State end;
-		
-		public SuffixInfo(State last, State end) {
-			this.last = last;
-			this.end = end;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((end == null) ? 0 : end.hashCode());
-			result = prime * result + ((last == null) ? 0 : last.hashCode());
-			return result;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (obj.getClass() != SuffixInfo.class)
-				return false;
-			SuffixInfo other = (SuffixInfo)obj;
-			
-			
-			// State has identity equals-semantics!
-			if(last != other.last)
-				return false;
-			
-			return (end == other.end);
-		}
-		
-		
-	}
-	
-	private SuffixInfo createSuffix2(Word<I> suffix, Acceptance acc) {
-		StateSignature sig = new StateSignature(alphabetSize, acc);
-		sig.updateHashCode();
-		State last = replaceOrRegister(sig);
-		State end = last;
-		
-		int len = suffix.length();
-		for(int i = len - 1; i >= 0; i--) {
-			sig = new StateSignature(alphabetSize, Acceptance.DONT_KNOW);
-			I sym = suffix.getSymbol(i);
-			int idx = inputAlphabet.getSymbolIndex(sym);
-			sig.successors[idx] = last;
-			sig.updateHashCode();
-			last = replaceOrRegister(sig);
-		}
-		
-		return new SuffixInfo(last, end);
 	}
 	
 
