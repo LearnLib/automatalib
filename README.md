@@ -26,7 +26,7 @@ Resources
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
 [5]: http://misberner.github.io/automatalib/maven-site/
-[6]: http://misberner.github.io/automatalib/apidocs/
+[6]: http://misberner.github.io/automatalib/maven-site/apidocs/
 [7]: https://groups.google.com/forum/?fromgroups#!forum/automatalib-qa
 [8]: mailto:automatalib-qa@googlegroups.com
 [9]: https://groups.google.com/forum/?fromgroups#!forum/automatalib-discussion
