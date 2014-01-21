@@ -59,11 +59,19 @@ public final class FastDFA<I> extends FastMutableDet<FastDFAState, I, FastDFASta
 		return AbstractFSA.getTransitionProperty(this, transition);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.automata.MutableAutomaton#setStateProperty(java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public void setStateProperty(FastDFAState state, Boolean property) {
 		AbstractMutableFSA.setStateProperty(this, state, property);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.automata.MutableAutomaton#setTransitionProperty(java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public void setTransitionProperty(FastDFAState transition, Void property) {
 		AbstractMutableFSA.setTransitionProperty(this, transition, property);

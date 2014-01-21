@@ -18,6 +18,7 @@ package net.automatalib.commons.util.comparison;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Various methods for dealing with the comparison of objects.
@@ -114,9 +115,48 @@ public abstract class CmpUtil {
 	}
 	
 	/**
+	 * Compares two {@link List}s with respect to canonical ordering.
+	 * <p>
+	 * In canonical ordering, a sequence <tt>o1</tt> is less than a sequence <tt>o2</tt> if <tt>o1</tt> is shorter
+	 * than <tt>o2</tt>, or if they have the same length and <tt>o1</tt> is lexicographically smaller than <tt>o2</tt>. 
+	 * @param o1 the first list
+	 * @param o2 the second list
+	 * @param elemComparator the comparator for comparing the single elements
+	 * @return the result of the comparison
+	 */
+	public static <U> int canonicalCompare(List<? extends U> o1, List<? extends U> o2, Comparator<? super U> elemComparator) {
+		int siz1 = o1.size(), siz2 = o2.size();
+		
+		if(siz1 != siz2) {
+			return siz1 - siz2;
+		}
+		
+		return lexCompare(o1, o2, elemComparator);
+	}
+	
+	/**
+	 * Compares two {@link List}s of {@link Comparable} elements with respect to canonical ordering.
+	 * <p>
+	 * In canonical ordering, a sequence <tt>o1</tt> is less than a sequence <tt>o2</tt> if <tt>o1</tt> is shorter
+	 * than <tt>o2</tt>, or if they have the same length and <tt>o1</tt> is lexicographically smaller than <tt>o2</tt>.
+	 * @param o1 the first list
+	 * @param o2 the second list
+	 * @return the result of the comparison
+	 */
+	public static <U extends Comparable<? super U>> int canonicalCompare(List<? extends U> o1, List<? extends U> o2) {
+		int siz1 = o1.size(), siz2 = o2.size();
+		if(siz1 != siz2) {
+			return siz1 - siz2;
+		}
+		
+		return lexCompare(o1, o2);
+	}
+	
+	/**
 	 * Retrieves a lexicographical comparator for the given type.
 	 * @param elemComp the comparator to use for comparing the elements.
-	 * @return a comparator for comparing objects of type <code>T</code>.
+	 * @return a comparator for comparing objects of type <code>T</code>
+	 * based on lexicographical ordering.
 	 */
 	public static <T extends Iterable<U>,U> Comparator<T> lexComparator(Comparator<U> elemComp) {
 		return new LexComparator<T,U>(elemComp);
@@ -129,6 +169,27 @@ public abstract class CmpUtil {
 	 */
 	public static <U extends Comparable<U>,T extends Iterable<U>> Comparator<T> lexComparator() {
 		return NaturalLexComparator.<T,U>getInstance();
+	}
+	
+	
+	/**
+	 * Retrieves a canonical comparator for the given list type.
+	 * @param elemComp the comparator to use for comparing the elements.
+	 * @return a comparator for comparing objects of type <code>T</code> based on
+	 * canonical ordering.
+	 */
+	public static <T extends List<U>,U> Comparator<T> canonicalComparator(Comparator<U> elemComp) {
+		return new CanonicalComparator<>(elemComp);
+	}
+	
+	/**
+	 * Retrieves a canonical comparator for the given type, which has to be
+	 * a {@link List} of {@link Comparable} types.
+	 * @return the canonical comparator
+	 * @see #canonicalCompare(List, List)
+	 */
+	public static <T extends List<U>,U extends Comparable<U>> Comparator<T> canonicalComparator() {
+		return NaturalCanonicalComparator.<T,U>getInstance();
 	}
 	
 	/**

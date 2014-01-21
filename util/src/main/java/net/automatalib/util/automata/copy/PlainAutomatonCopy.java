@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -22,10 +22,15 @@ import java.util.List;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
-import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.ts.TransitionPredicate;
+import net.automatalib.util.automata.predicates.TransitionPredicates;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
-		AbstractAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2, Automaton<S1,I1,T1>> {
+		AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2, Automaton<S1,? super I1,T1>> {
 	
 	private static class StateRec<S1,S2> {
 		private final S1 inState;
@@ -37,13 +42,15 @@ final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 		}
 	}
 
-	public PlainAutomatonCopy(Automaton<S1, I1, T1> in,
+	public PlainAutomatonCopy(Automaton<S1, ? super I1, T1> in,
 			Collection<? extends I1> inputs,
-			MutableAutomaton<S2, I2, T2, SP2, TP2> out,
-			Mapping<? super I1, ? extends I2> inputsMapping,
-			Mapping<? super S1, ? extends SP2> spMapping,
-			Mapping<? super T1, ? extends TP2> tpMapping) {
-		super(in, inputs, out, inputsMapping, spMapping, tpMapping);
+			MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
+			Function<? super I1, ? extends I2> inputsMapping,
+			Function<? super S1, ? extends SP2> spMapping,
+			Function<? super T1, ? extends TP2> tpMapping,
+			Predicate<? super S1> stateFilter,
+			TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
+		super(in, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transFilter);
 	}
 
 	/*
@@ -55,8 +62,10 @@ final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 		List<StateRec<S1,S2>> outStates = new ArrayList<>(in.size());
 		
 		for(S1 s1 : in) {
-			S2 s2 = copyState(s1);
-			outStates.add(new StateRec<>(s1, s2));
+			if(stateFilter.apply(s1)) {
+				S2 s2 = copyState(s1);
+				outStates.add(new StateRec<>(s1, s2));
+			}
 		}
 		
 		for(StateRec<S1,S2> p : outStates) {
@@ -64,9 +73,10 @@ final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 			S2 s2 = p.outState;
 			
 			for(I1 i1 : inputs) {
-				I2 i2 = inputsMapping.get(i1);
+				I2 i2 = inputsMapping.apply(i1);
 				Collection<? extends T1> transitions1 = in.getTransitions(s1, i1);
-				copyTransitions(s2, i2, transitions1);
+				Predicate<T1> transPred = TransitionPredicates.toUnaryPredicate(transFilter, s1, i1);
+				copyTransitions(s2, i2, Iterables.filter(transitions1, transPred));
 			}
 		}
 		

@@ -35,7 +35,7 @@ class SimpleDFRecord<S, I, T> {
 		this.inputsIterator = inputs.iterator();
 	}
 
-	private void findNext(TransitionSystem<S,I,T> ts) {
+	private void findNext(TransitionSystem<S,? super I,T> ts) {
 		if(transitionIterator != null && transitionIterator.hasNext())
 			return;
 		while(inputsIterator.hasNext()) {
@@ -48,7 +48,7 @@ class SimpleDFRecord<S, I, T> {
 		}
 	}
 
-	public boolean start(TransitionSystem<S, I, T> ts) {
+	public boolean start(TransitionSystem<S, ? super I, T> ts) {
 		if(transitionIterator != null)
 			return false;
 		
@@ -65,13 +65,13 @@ class SimpleDFRecord<S, I, T> {
 		return transitionIterator.hasNext();
 	}
 
-	public void advance(TransitionSystem<S,I,T> ts) {
+	public void advance(TransitionSystem<S,? super I,T> ts) {
 		if(transitionIterator.hasNext())
 			return;
 		findNext(ts);
 	}
 
-	public void advanceInput(TransitionSystem<S,I,T> ts) {
+	public void advanceInput(TransitionSystem<S,? super I,T> ts) {
 		transitionIterator = null;
 		findNext(ts);
 	}

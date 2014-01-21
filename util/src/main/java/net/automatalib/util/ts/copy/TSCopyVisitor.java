@@ -1,0 +1,122 @@
+/* Copyright (C) 2014 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ * 
+ * AutomataLib is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3.0 as published by the Free Software Foundation.
+ * 
+ * AutomataLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with AutomataLib; if not, see
+ * http://www.gnu.de/documents/lgpl.en.html.
+ */
+package net.automatalib.util.ts.copy;
+
+import net.automatalib.automata.MutableAutomaton;
+import net.automatalib.commons.util.Holder;
+import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.ts.TransitionPredicate;
+import net.automatalib.ts.TransitionSystem;
+import net.automatalib.util.ts.traversal.TSTraversalAction;
+import net.automatalib.util.ts.traversal.TSTraversalVisitor;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+
+public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements
+		TSTraversalVisitor<S1, I1, T1, S2> {
+	
+	private final MutableMapping<S1, S2> stateMapping;
+	private final MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out;
+	
+	private final Function<? super I1,? extends I2> inputMapping;
+	private final Function<? super S1,? extends SP2> spMapping;
+	private final Function<? super T1,? extends TP2> tpMapping;
+	
+	private final Predicate<? super S1> stateFilter;
+	private final TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter;
+	
+	public TSCopyVisitor(TransitionSystem<S1, ? super I1, T1> in,
+			MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
+			Function<? super I1,? extends I2> inputMapping,
+			Function<? super S1,? extends SP2> spMapping,
+			Function<? super T1,? extends TP2> tpMapping,
+			Predicate<? super S1> stateFilter,
+			TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
+		this.stateMapping = in.createStaticStateMapping();
+		this.out = out;
+		this.inputMapping = inputMapping;
+		this.spMapping = spMapping;
+		this.tpMapping = tpMapping;
+		this.stateFilter = stateFilter;
+		this.transFilter = transFilter;
+	}
+			
+			
+
+	@Override
+	public TSTraversalAction processInitial(S1 state, Holder<S2> outData) {
+		S2 s2 = stateMapping.get(state);
+		if(s2 != null) {
+			out.setInitial(s2, true);
+			return TSTraversalAction.IGNORE;
+		}
+		else if(!stateFilter.apply(state)) {
+			return TSTraversalAction.IGNORE;
+		}
+		
+		SP2 sp = spMapping.apply(state);
+		s2 = out.addInitialState(sp);
+		
+		stateMapping.put(state, s2);
+		
+		outData.value = s2;
+		return TSTraversalAction.EXPLORE;
+	}
+
+	@Override
+	public boolean startExploration(S1 state, S2 data) {
+		return true;
+	}
+
+	@Override
+	public TSTraversalAction processTransition(S1 source, S2 source2, I1 input,
+			T1 transition, S1 succ, Holder<S2> outData) {
+		if(!transFilter.apply(source, input, transition)) {
+			return TSTraversalAction.IGNORE;
+		}
+		
+		boolean ignore = false;
+		
+		S2 succ2 = stateMapping.get(succ);
+		if(succ2 == null) {
+			if(!stateFilter.apply(succ)) {
+				return TSTraversalAction.IGNORE;
+			}
+			SP2 sp = spMapping.apply(succ);
+			succ2 = out.addState(sp);
+			stateMapping.put(succ, succ2);
+		}
+		else {
+			ignore = true;
+		}
+
+		I2 input2 = inputMapping.apply(input);
+		TP2 tp = tpMapping.apply(transition);
+		
+		out.addTransition(source2, input2, succ2, tp);
+		outData.value = succ2;
+		
+		return (ignore) ? TSTraversalAction.IGNORE : TSTraversalAction.EXPLORE;
+	}
+
+	
+	public Mapping<S1,S2> getStateMapping() {
+		return stateMapping;
+	}
+}

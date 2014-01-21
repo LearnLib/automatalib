@@ -211,6 +211,13 @@ public class Automata extends TS {
 		return NearLinearEquivalenceTest.findSeparatingWord(reference, other, inputs);
 	}
 	
+	public static <I> boolean testEquivalence(
+			UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
+			UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+			Collection<? extends I> inputs) {
+		return (findSeparatingWord(reference, other, inputs) == null);
+	}
+	
 	/**
 	 * Finds a separating word for two states in an automaton. A separating word is a word
 	 * that exposes a difference (differing state or transition properties, or a transition

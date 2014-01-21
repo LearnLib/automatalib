@@ -27,10 +27,16 @@ TS2 extends DeterministicTransitionSystem<S2, I, T2>> extends
 	
 	protected final TS1 ts1;
 	protected final TS2 ts2;
+	protected final boolean allowPartial;
 	
-	public DTSComposition(TS1 ts1, TS2 ts2) {
+	public DTSComposition(TS1 ts1, TS2 ts2, boolean allowPartial) {
 		this.ts1 = ts1;
 		this.ts2 = ts2;
+		this.allowPartial = allowPartial;
+	}
+	
+	public DTSComposition(TS1 ts1, TS2 ts2) {
+		this(ts1, ts2, false);
 	}
 	
 	public TS1 getFirstTS() {
@@ -50,11 +56,12 @@ TS2 extends DeterministicTransitionSystem<S2, I, T2>> extends
 	public Pair<T1, T2> getTransition(Pair<S1, S2> state, I input) {
 		S1 s1 = state.getFirst();
 		S2 s2 = state.getSecond();
-		T1 t1 = ts1.getTransition(s1, input);
-		if(t1 == null)
+		
+		T1 t1 = (s1 == null) ? null : ts1.getTransition(s1, input);
+		if(t1 == null && !allowPartial)
 			return null;
-		T2 t2 = ts2.getTransition(s2, input);
-		if(t2 == null)
+		T2 t2 = (s2 == null) ? null : ts2.getTransition(s2, input);
+		if(t2 == null && !allowPartial)
 			return null;
 		return Pair.make(t1, t2);
 	}
@@ -63,8 +70,8 @@ TS2 extends DeterministicTransitionSystem<S2, I, T2>> extends
 	public Pair<S1, S2> getSuccessor(Pair<T1, T2> transition) {
 		T1 t1 = transition.getFirst();
 		T2 t2 = transition.getSecond();
-		return Pair.make(ts1.getSuccessor(t1),
-				ts2.getSuccessor(t2));
+		return Pair.make((t1 == null) ? null : ts1.getSuccessor(t1),
+				(t2 == null) ? null : ts2.getSuccessor(t2));
 	}
 
 }

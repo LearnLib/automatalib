@@ -28,7 +28,7 @@ public class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorT
 	private final AcceptanceCombiner combiner;
 	
 	public DetAcceptorComposition(A1 ts1, A2 ts2, AcceptanceCombiner combiner) {
-		super(ts1, ts2);
+		super(ts1, ts2, true);
 		this.combiner = combiner;
 	}
 	
@@ -36,8 +36,8 @@ public class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorT
 	public boolean isAccepting(Pair<S1, S2> state) {
 		S1 s1 = state.getFirst();
 		S2 s2 = state.getSecond();
-		boolean acc1 = ts1.isAccepting(s1);
-		boolean acc2 = ts2.isAccepting(s2);
+		boolean acc1 = (s1 == null) ? false : ts1.isAccepting(s1);
+		boolean acc2 = (s2 == null) ? false : ts2.isAccepting(s2);
 		return combiner.combine(acc1, acc2);
 	}
 

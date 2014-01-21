@@ -37,7 +37,7 @@ public abstract class TSTraversal {
 	
 	
 	public static <S,I,T,D>
-	boolean depthFirst(TransitionSystem<S, I, T> ts,
+	boolean depthFirst(TransitionSystem<S, ? super I, T> ts,
 			int limit,
 			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
@@ -139,7 +139,7 @@ public abstract class TSTraversal {
 	 * @param vis the visitor.
 	 */
 	public static <S,I,T,D>
-	boolean breadthFirst(TransitionSystem<S, I, T> ts,
+	boolean breadthFirst(TransitionSystem<S, ? super I, T> ts,
 			int limit,
 			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
@@ -219,7 +219,7 @@ inputs_loop:
 	}
 	
 	public static <S,I,T,D>
-	boolean breadthFirst(TransitionSystem<S, I, T> ts,
+	boolean breadthFirst(TransitionSystem<S, ? super I, T> ts,
 			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
 		return breadthFirst(ts, NO_LIMIT, inputs, vis);
@@ -227,7 +227,7 @@ inputs_loop:
 
 	
 	public static <S,I,T,D>
-	boolean traverse(TraversalOrder order, TransitionSystem<S,I,T> ts, int limit, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
+	boolean traverse(TraversalOrder order, TransitionSystem<S,? super I,T> ts, int limit, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
 		switch(order) {
 		case BREADTH_FIRST:
 			return breadthFirst(ts, limit, inputs, vis);
@@ -239,7 +239,7 @@ inputs_loop:
 	}
 	
 	public static <S,I,T,D>
-	boolean traverse(TraversalOrder order, TransitionSystem<S,I,T> ts, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
+	boolean traverse(TraversalOrder order, TransitionSystem<S,? super I,T> ts, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> vis) {
 		return traverse(order, ts, NO_LIMIT, inputs, vis);
 	}
 	

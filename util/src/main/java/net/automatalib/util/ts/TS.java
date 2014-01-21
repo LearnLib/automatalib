@@ -19,13 +19,14 @@ package net.automatalib.util.ts;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.ts.UniversalTransitionSystem;
 import net.automatalib.util.ts.TSIterators.DefinedInputsIterator;
 import net.automatalib.util.ts.TSIterators.UndefinedInputsIterator;
 import net.automatalib.util.ts.traversal.BFSOrderIterator;
+
+import com.google.common.base.Function;
 
 
 public abstract class TS {
@@ -54,19 +55,19 @@ public abstract class TS {
 		};
 	}
 	
-	public static <S,SP> Mapping<S,SP> stateProperties(final UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
-		return new Mapping<S,SP>() {
+	public static <S,SP> Function<S,SP> stateProperties(final UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
+		return new Function<S,SP>() {
 			@Override
-			public SP get(S elem) {
+			public SP apply(S elem) {
 				return uts.getStateProperty(elem);
 			}
 		};
 	}
 	
-	public static <T,TP> Mapping<T,TP> transitionProperties(final UniversalTransitionSystem<?, ?, T, ?, TP> uts) {
-		return new Mapping<T,TP>() {
+	public static <T,TP> Function<T,TP> transitionProperties(final UniversalTransitionSystem<?, ?, T, ?, TP> uts) {
+		return new Function<T,TP>() {
 			@Override
-			public TP get(T elem) {
+			public TP apply(T elem) {
 				return uts.getTransitionProperty(elem);
 			}
 		};
