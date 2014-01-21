@@ -264,7 +264,12 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      */
     @Override
 	public void print(Appendable a) throws IOException {
-		StringUtil.appendIterable(a, this, " ");
+    	if(isEmpty()) {
+    		a.append('ε');
+    	}
+    	else {
+    		StringUtil.appendIterable(a, this, " ");
+    	}
 	}
 
 	/*
