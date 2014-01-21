@@ -44,7 +44,7 @@ public abstract class MealyFilter {
 	 * Returns a Mealy machine with all transitions removed that have one of the specified output values. The resulting
 	 * Mealy machine will not contain any unreachable states.
 	 * <p>
-	 * This is a convenience varargs overload of {@link #removeTransitionsWithOutput(MealyMachine, Alphabet, Collection)}.
+	 * This is a convenience varargs overload of {@link #pruneTransitionsWithOutput(MealyMachine, Alphabet, Collection)}.
 	 * 
 	 * @param in the input Mealy machine
 	 * @param inputs the input alphabet
@@ -53,11 +53,11 @@ public abstract class MealyFilter {
 	 */
 	@SafeVarargs
 	public static <I,O>
-	CompactMealy<I,O> removeTransitionsWithOutput(
+	CompactMealy<I,O> pruneTransitionsWithOutput(
 			MealyMachine<?,I,?,O> in,
 			Alphabet<I> inputs,
 			O... outputs) {
-		return removeTransitionsWithOutput(in, inputs, Arrays.asList(outputs));
+		return pruneTransitionsWithOutput(in, inputs, Arrays.asList(outputs));
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public abstract class MealyFilter {
 	 * @return a Mealy machine with all transitions removed that have one of the specified outputs.
 	 */
 	public static <I,O>
-	CompactMealy<I,O> removeTransitionsWithOutput(
+	CompactMealy<I,O> pruneTransitionsWithOutput(
 			MealyMachine<?,I,?,O> in,
 			Alphabet<I> inputs,
 			Collection<? super O> outputs) {
