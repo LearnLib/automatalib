@@ -14,7 +14,7 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.dfa;
+package net.automatalib.incremental.mealy;
 
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
@@ -28,22 +28,24 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
-public class TestIncrementalMealy {
+public abstract class AbstractIncrementalMealyBuilderTest {
+	
+	private static final Alphabet<Character> testAlphabet = Alphabets.characters('a', 'c');
+	private static final Word<Character> w1 = Word.fromString("abc");
+	private static final Word<Character> w1o = Word.fromString("xyz");
+	private static final Word<Character> w2 = Word.fromString("ac");
+	private static final Word<Character> w2o = Word.fromString("xw");
+	private static final Word<Character> w3 = Word.fromString("acb");
+	private static final Word<Character> w3o = Word.fromString("xwu");
 
-	private Alphabet<Character> alphabet;
 	private IncrementalMealyBuilder<Character,Character> incMealy;
-	private Word<Character> w1 = Word.fromString("abc");
-	private Word<Character> w1o = Word.fromString("xyz");
-	private Word<Character> w2 = Word.fromString("ac");
-	private Word<Character> w2o = Word.fromString("xw");
-	private Word<Character> w3 = Word.fromString("acb");
-	private Word<Character> w3o = Word.fromString("xwu");
-
+	
+	
+	protected abstract <I,O> IncrementalMealyBuilder<I,O> createIncrementalMealyBuilder(Alphabet<I> alphabet);
+	
 	@BeforeClass
 	public void setUp() {
-		this.alphabet = Alphabets.characters('a', 'c');
-		
-		this.incMealy = new IncrementalMealyBuilder<>(alphabet);
+		this.incMealy = createIncrementalMealyBuilder(testAlphabet);
 	}
 
 	@Test

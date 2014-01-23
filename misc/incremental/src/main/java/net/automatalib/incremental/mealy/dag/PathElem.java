@@ -1,4 +1,4 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -14,19 +14,16 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.mealy;
+package net.automatalib.incremental.mealy.dag;
 
-import java.util.List;
+final class PathElem {
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.IncrementalConstruction;
-import net.automatalib.words.Word;
-
-public interface IncrementalMealyBuilder<I, O> extends IncrementalConstruction<MealyMachine<?,I,?,O>, I>{
-	public Word<O> lookup(Word<I> inputWord);
-	public boolean lookup(Word<I> inputWord, List<? super O> output);
-	public void insert(Word<I> inputWord, Word<O> outputWord) throws ConflictException;
+	public final State state;
+	public final int transIdx;
 	
-	public int size();
+	public PathElem(State state, int transIdx) {
+		this.state = state;
+		this.transIdx = transIdx;
+	}
+
 }

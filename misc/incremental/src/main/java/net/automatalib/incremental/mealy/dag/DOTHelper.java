@@ -14,7 +14,7 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.mealy;
+package net.automatalib.incremental.mealy.dag;
 
 import java.util.Collection;
 import java.util.Collections;

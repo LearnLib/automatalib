@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -14,43 +14,22 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.mealy;
+package net.automatalib.incremental.mealy.tree;
 
-
-public final class State {
+final class Edge<I, O> {
+	private final O output;
+	private final Node<I,O> target;
 	
-	private int numIncoming;
-	private final StateSignature signature;
-	
-	public State(StateSignature signature) {
-		this.signature = signature;
+	public Edge(O output, Node<I,O> target) {
+		this.output = output;
+		this.target = target;
 	}
 	
-	public void increaseIncoming() {
-		numIncoming++;
+	public O getOutput() {
+		return output;
 	}
 	
-	public void decreaseIncoming() {
-		numIncoming--;
-	}
-	
-	public int getNumIncoming() {
-		return numIncoming;
-	}
-	
-	public boolean isConfluence() {
-		return (numIncoming > 1);
-	}
-	
-	public State getSuccessor(int idx) {
-		return signature.successors[idx];
-	}
-	
-	public Object getOutput(int idx) {
-		return signature.outputs[idx];
-	}
-	
-	public StateSignature getSignature() {
-		return signature;
+	public Node<I,O> getTarget() {
+		return target;
 	}
 }

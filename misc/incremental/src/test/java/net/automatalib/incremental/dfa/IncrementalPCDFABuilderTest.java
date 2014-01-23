@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
-public class TestIncrementalPCDFA {
+public class IncrementalPCDFABuilderTest {
 
 	private Alphabet<Character> alphabet;
 	private IncrementalPCDFABuilder<Character> incDfa;

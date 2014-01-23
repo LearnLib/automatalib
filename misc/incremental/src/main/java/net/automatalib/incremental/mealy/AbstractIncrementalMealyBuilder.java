@@ -16,17 +16,38 @@
  */
 package net.automatalib.incremental.mealy;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.IncrementalConstruction;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 
-public interface IncrementalMealyBuilder<I, O> extends IncrementalConstruction<MealyMachine<?,I,?,O>, I>{
-	public Word<O> lookup(Word<I> inputWord);
-	public boolean lookup(Word<I> inputWord, List<? super O> output);
-	public void insert(Word<I> inputWord, Word<O> outputWord) throws ConflictException;
+public abstract class AbstractIncrementalMealyBuilder<I, O> implements
+		IncrementalMealyBuilder<I, O> {
 	
-	public int size();
+	protected Alphabet<I> inputAlphabet;
+	
+	public AbstractIncrementalMealyBuilder(Alphabet<I> alphabet) {
+		this.inputAlphabet = alphabet;
+	}
+	
+	@Override
+	public Alphabet<I> getInputAlphabet() {
+		return inputAlphabet;
+	}
+
+	@Override
+	public boolean hasDefinitiveInformation(Word<I> word) {
+		List<O> unused = new ArrayList<>(word.length());
+		return lookup(word, unused);
+	}
+
+	@Override
+	public Word<O> lookup(Word<I> inputWord) {
+		WordBuilder<O> wb = new WordBuilder<>(inputWord.size());
+		lookup(inputWord, wb);
+		return wb.toWord();
+	}
+
 }
