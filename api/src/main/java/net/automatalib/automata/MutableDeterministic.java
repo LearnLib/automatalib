@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,9 @@
  */
 package net.automatalib.automata;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Interface for a <i>mutable</i> deterministic automaton.
  * 
@@ -27,14 +30,16 @@ package net.automatalib.automata;
  * @param <SP> state property.
  * @param <TP> transition property.
  */
+@ParametersAreNonnullByDefault
 public abstract interface MutableDeterministic<S,I,T,SP,TP> extends UniversalDeterministicAutomaton<S,I,T,SP,TP>,
 	MutableAutomaton<S,I,T,SP,TP> {
 	
 	/**
-	 * Sets the initial state to the given state
-	 * @param state the new initial state
+	 * Sets the initial state to the given state. If the current initial state
+	 * should be unset, {@code null} can be passed.
+	 * @param state the new initial state, or {@code null}.
 	 */
-	public void setInitialState(S state);
+	public void setInitialState(@Nullable S state);
 	
 	/**
 	 * Sets the transition for the given state and input symbol.
@@ -42,7 +47,7 @@ public abstract interface MutableDeterministic<S,I,T,SP,TP> extends UniversalDet
 	 * @param input the triggering input symbol
 	 * @param transition the transition
 	 */
-	public void setTransition(S state, I input, T transition);
+	public void setTransition(S state, @Nullable I input, @Nullable T transition);
 	
 	/**
 	 * Sets the transition for the given state and input symbol to a newly
@@ -52,5 +57,5 @@ public abstract interface MutableDeterministic<S,I,T,SP,TP> extends UniversalDet
 	 * @param successor the target state
 	 * @param property the transition's property
 	 */
-	public void setTransition(S state, I input, S successor, TP property);
+	public void setTransition(S state, @Nullable I input, S successor, @Nullable TP property);
 }

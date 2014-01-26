@@ -14,12 +14,21 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.automata.concepts;
+package net.automatalib.automata.transout.probabilistic;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.automata.Automaton;
+import net.automatalib.automata.concepts.Probabilistic;
+import net.automatalib.automata.concepts.TransitionOutput;
+import net.automatalib.ts.UniversalTransitionSystem;
+
 @ParametersAreNonnullByDefault
-public interface MutableTransitionOutput<T, O> extends TransitionOutput<T, O> {
-	public void setTransitionOutput(T transition, @Nullable O output);
+public interface ProbabilisticMealyMachine<S, I, T, O> extends Automaton<S, I, T>,
+	TransitionOutput<T, O>, UniversalTransitionSystem<S,I,T,Void,ProbabilisticOutput<O>>, Probabilistic<T> {
+
+	@Override
+	@Nonnull
+	public ProbabilisticOutput<O> getTransitionProperty(T transition);
 }

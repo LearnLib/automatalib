@@ -42,7 +42,7 @@ public class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorT
 	}
 
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return AbstractDeterministicAcceptorTS.accepts(this, input);
 	}
 

@@ -98,7 +98,7 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 	}
 
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return AbstractDFA.accepts(this, input);
 	}
 

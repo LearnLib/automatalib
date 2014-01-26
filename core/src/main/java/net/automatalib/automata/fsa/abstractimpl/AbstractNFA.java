@@ -36,8 +36,8 @@ public abstract class AbstractNFA<S, I> extends AbstractFSA<S,I> implements
 		return false;
 	}
 	
-	public static <S,I> boolean accepts(NFA<S,I> $this, Iterable<I> input) {
-		Collection<S> states = $this.getStates(input);
+	public static <S,I> boolean accepts(NFA<S,I> $this, Iterable<? extends I> input) {
+		Collection<? extends S> states = $this.getStates(input);
 		return $this.isAccepting(states);
 	}
 	
@@ -49,7 +49,7 @@ public abstract class AbstractNFA<S, I> extends AbstractFSA<S,I> implements
 
 	
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return accepts(this, input);
 	}
 

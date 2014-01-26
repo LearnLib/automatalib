@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ import dk.brics.automaton.State;
  * {@link Automaton} will always work. However, determining successor states for input
  * characters might be much less efficient than when using a {@link BricsDFA}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public class BricsNFA extends AbstractBricsAutomaton implements
@@ -52,7 +52,7 @@ public class BricsNFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
 	 */
 	@Override
-	public boolean accepts(Iterable<Character> input) {
+	public boolean accepts(Iterable<? extends Character> input) {
 		return AbstractNFA.accepts(this, input);
 	}
 

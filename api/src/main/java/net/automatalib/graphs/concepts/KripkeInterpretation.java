@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@ package net.automatalib.graphs.concepts;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * A Kripke interpretation for a graph. A Kripke interpretation assigns
  * to each node a set of so-called <i>atomic propositions</i>.
@@ -27,6 +30,7 @@ import java.util.Set;
  * @param <N> node class
  * @param <AP> atomic proposition class
  */
+@ParametersAreNonnullByDefault
 public interface KripkeInterpretation<N, AP> {
 	/**
 	 * Retrieves the atomic propositions holding at the given node.
@@ -34,5 +38,6 @@ public interface KripkeInterpretation<N, AP> {
 	 * @param node the node
 	 * @return the set of atomic propositions that hold at the given node
 	 */
-	public Set<AP> getAtomicPropositions(N node);
+	@Nonnull
+	public Set<? extends AP> getAtomicPropositions(N node);
 }

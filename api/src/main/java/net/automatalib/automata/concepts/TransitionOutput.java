@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,9 @@
  */
 package net.automatalib.automata.concepts;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Transition output concept. Associates a transition with an output, like in
  * a Mealy machine.
@@ -25,6 +28,8 @@ package net.automatalib.automata.concepts;
  * @param <T> transition class.
  * @param <O> output class.
  */
+@ParametersAreNonnullByDefault
 public interface TransitionOutput<T, O> {
+	@Nullable
 	public O getTransitionOutput(T transition);
 }

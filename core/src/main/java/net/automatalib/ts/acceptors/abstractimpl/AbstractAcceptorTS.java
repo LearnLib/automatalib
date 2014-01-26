@@ -25,9 +25,9 @@ import net.automatalib.ts.acceptors.AcceptorTS;
 public abstract class AbstractAcceptorTS<S, I> extends AbstractTS<S, I, S> implements
 		AcceptorTS<S, I> {
 	
-	public static <S,I> boolean accepts(AcceptorTS<S, I> $this, Iterable<I> input) {
-		Collection<S> states = $this.getStates(input);
-		if(states == null)
+	public static <S,I> boolean accepts(AcceptorTS<S, I> $this, Iterable<? extends I> input) {
+		Collection<? extends S> states = $this.getStates(input);
+		if(states.isEmpty())
 			return false;
 		
 		for(S state : states) {
@@ -52,7 +52,7 @@ public abstract class AbstractAcceptorTS<S, I> extends AbstractTS<S, I, S> imple
 	 * @see de.ls5.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
 	 */
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return accepts(this, input);
 	}
 	

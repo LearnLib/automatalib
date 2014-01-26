@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,6 +18,10 @@ package net.automatalib.words;
 
 import java.util.AbstractList;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 class SubwordList<I> extends AbstractList<Word<I>> {
 	
 	private final Word<I> word;
@@ -35,6 +39,7 @@ class SubwordList<I> extends AbstractList<Word<I>> {
 	 * @see java.util.AbstractList#get(int)
 	 */
 	@Override
+	@Nonnull
 	public Word<I> get(int index) {
 		if(index < 0 || index > word.length())
 			throw new IndexOutOfBoundsException();

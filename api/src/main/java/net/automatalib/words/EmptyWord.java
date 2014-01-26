@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * The empty word.
  * 
@@ -27,10 +29,11 @@ import java.util.NoSuchElementException;
  * of the symbol class involved. Hence, Java's generic mechanism allows to maintain
  * only a single instance of this class. 
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @see Collections#emptyList()
  */
+@ParametersAreNonnullByDefault
 final class EmptyWord extends Word<Object> {
 	
 	public static final EmptyWord INSTANCE
@@ -42,7 +45,7 @@ final class EmptyWord extends Word<Object> {
 	 */
 	@Override
 	public Object getSymbol(int index) {
-		return null;
+		throw new IndexOutOfBoundsException(Integer.toString(index));
 	}
 
 	/*
@@ -115,7 +118,7 @@ final class EmptyWord extends Word<Object> {
 	 * @see net.automatalib.words.Word#isPrefixOf(net.automatalib.words.Word)
 	 */
 	@Override
-	public boolean isPrefixOf(Word<Object> other) {
+	public boolean isPrefixOf(Word<?> other) {
 		return true;
 	}
 
@@ -124,7 +127,7 @@ final class EmptyWord extends Word<Object> {
 	 * @see net.automatalib.words.Word#longestCommonPrefix(net.automatalib.words.Word)
 	 */
 	@Override
-	public Word<Object> longestCommonPrefix(Word<Object> other) {
+	public Word<Object> longestCommonPrefix(Word<?> other) {
 		return this;
 	}
 
@@ -133,7 +136,7 @@ final class EmptyWord extends Word<Object> {
 	 * @see net.automatalib.words.Word#isSuffixOf(net.automatalib.words.Word)
 	 */
 	@Override
-	public boolean isSuffixOf(Word<Object> other) {
+	public boolean isSuffixOf(Word<?> other) {
 		return true;
 	}
 
@@ -142,7 +145,7 @@ final class EmptyWord extends Word<Object> {
 	 * @see net.automatalib.words.Word#longestCommonSuffix(net.automatalib.words.Word)
 	 */
 	@Override
-	public Word<Object> longestCommonSuffix(Word<Object> other) {
+	public Word<Object> longestCommonSuffix(Word<?> other) {
 		return this;
 	}
 	

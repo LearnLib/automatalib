@@ -22,7 +22,7 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.Graph;
 
 
-public class OutEdgesMapping<N, E> implements Mapping<N, Collection<E>> {
+public class OutEdgesMapping<N, E> implements Mapping<N, Collection<? extends E>> {
 	
 	private final Graph<N,E> graph;
 	
@@ -31,7 +31,7 @@ public class OutEdgesMapping<N, E> implements Mapping<N, Collection<E>> {
 	}
 	
 	@Override
-	public Collection<E> get(N elem) {
+	public Collection<? extends E> get(N elem) {
 		return graph.getOutgoingEdges(elem);
 	}
 

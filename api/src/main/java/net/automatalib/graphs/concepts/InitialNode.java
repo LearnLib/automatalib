@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,18 +16,22 @@
  */
 package net.automatalib.graphs.concepts;
 
+import javax.annotation.Nullable;
+
 /**
  * Initial node concept. Graphs implementing this interface expose a designated
  * initial node.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class.
  */
 public interface InitialNode<N> {
 	/**
-	 * Retrieves the initial node.
+	 * Retrieves the initial node, or {@code null} if this graph does not have an initial
+	 * node.
 	 * @return the initial node.
 	 */
+	@Nullable
 	public N getInitialNode();
 }

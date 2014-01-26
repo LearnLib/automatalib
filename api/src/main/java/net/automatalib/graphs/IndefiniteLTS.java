@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ import net.automatalib.graphs.concepts.EdgeLabels;
 /**
  * A labeled transition system is a graph with labels attached to its edges.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class

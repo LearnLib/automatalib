@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,18 +16,23 @@
  */
 package net.automatalib.graphs;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * A graph that allows modification. Note that this interface only exposes
  * methods for extending a graph. If also destructive modifications should be performed,
  * {@link ShrinkableGraph} is the adequate interface.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class
  * @param <NP> node property class
  * @param <EP> edge property class
  */
+@ParametersAreNonnullByDefault
 public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N,E,NP,EP> {
 	
 	/**
@@ -36,6 +41,7 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N,E,NP,EP> {
 	 * a <code>null</code> parameter.
 	 * @return the newly inserted node
 	 */
+	@Nonnull
 	public N addNode();
 	
 	/**
@@ -43,7 +49,8 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N,E,NP,EP> {
 	 * @param property the property for the new node
 	 * @return the newly inserted node
 	 */
-	public N addNode(NP property);
+	@Nonnull
+	public N addNode(@Nullable NP property);
 	
 	/**
 	 * Inserts an edge in the graph, with the default property.
@@ -54,6 +61,7 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N,E,NP,EP> {
 	 * @param target the target node
 	 * @return the edge connecting the given nodes
 	 */
+	@Nonnull
 	public E connect(N source, N target);
 	
 	/**
@@ -63,9 +71,10 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N,E,NP,EP> {
 	 * @param property the property of the edge
 	 * @return the newly inserted edge
 	 */
-	public E connect(N source, N target, EP property);
+	@Nonnull
+	public E connect(N source, N target, @Nullable EP property);
 	
-	public void setNodeProperty(N node, NP property);
-	public void setEdgeProperty(E edge, EP property);
+	public void setNodeProperty(N node, @Nullable NP property);
+	public void setEdgeProperty(E edge, @Nullable EP property);
 	
 }

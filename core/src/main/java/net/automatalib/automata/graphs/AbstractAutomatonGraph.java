@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -39,10 +39,9 @@ public abstract class AbstractAutomatonGraph<S,I,T,SP,TP>
 		
 		for(I input : inputs) {
 			Collection<? extends T> transitions = automaton.getTransitions(state, input);
-			if(transitions == null)
-				continue;
-			for(T t : transitions)
+			for(T t : transitions) {
 				result.add(new TransitionEdge<>(input, t));
+			}
 		}
 		
 		return result;

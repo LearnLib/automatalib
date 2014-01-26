@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -14,15 +14,13 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.automata.transout;
+package net.automatalib.automata.transout.probabilistic;
 
-import net.automatalib.automata.Automaton;
-import net.automatalib.automata.concepts.Probabilistic;
-import net.automatalib.automata.concepts.TransitionOutput;
-import net.automatalib.automata.transout.probabilistic.ProbabilisticOutput;
-import net.automatalib.ts.UniversalTransitionSystem;
+import net.automatalib.automata.MutableAutomaton;
+import net.automatalib.automata.concepts.MutableProbabilistic;
+import net.automatalib.automata.concepts.MutableTransitionOutput;
 
-public interface ProbabilisticMealyMachine<S, I, T, O> extends Automaton<S, I, T>,
-	TransitionOutput<T, O>, UniversalTransitionSystem<S,I,T,Void,ProbabilisticOutput<O>>, Probabilistic<T> {
-
+public interface MutableProbabilisticMealy<S, I, T, O> extends
+		ProbabilisticMealyMachine<S, I, T, O>, MutableTransitionOutput<T, O>,
+		MutableProbabilistic<T>, MutableAutomaton<S, I, T, Void, ProbabilisticOutput<O>> {
 }

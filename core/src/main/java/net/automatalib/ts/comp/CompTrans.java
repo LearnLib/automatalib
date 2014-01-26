@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@ package net.automatalib.ts.comp;
 
 import java.util.Objects;
 
-public class CompTrans<T1, T2> {
+public final class CompTrans<T1, T2> {
 
 	public final T1 t1;
 	public final T2 t2;

@@ -66,7 +66,7 @@ public class FastNFA<I> extends
 	 * @see de.ls5.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
 	 */
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return AbstractNFA.accepts(this, input);
 	}
 

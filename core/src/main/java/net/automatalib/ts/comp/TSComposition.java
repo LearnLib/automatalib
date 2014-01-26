@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -51,9 +51,9 @@ public class TSComposition<S1, S2, I, T1, T2,
 	 * @see de.ls5.ts.TransitionSystem#getInitialStates()
 	 */
 	@Override
-	public Set<CompState<S1,S2>> getInitialStates() {
-		Collection<S1> init1 = ts1.getInitialStates();
-		Collection<S2> init2 = ts2.getInitialStates();
+	public Set<? extends CompState<S1,S2>> getInitialStates() {
+		Collection<? extends S1> init1 = ts1.getInitialStates();
+		Collection<? extends S2> init2 = ts2.getInitialStates();
 		
 		Set<CompState<S1,S2>> result = new HashSet<CompState<S1,S2>>(init1.size() * init2.size());
 		
@@ -76,7 +76,7 @@ public class TSComposition<S1, S2, I, T1, T2,
 		Collection<? extends T1> trans1 = ts1.getTransitions(s1, input);
 		Collection<? extends T2> trans2 = ts2.getTransitions(s2, input);
 		
-		if(trans1 == null || trans1.isEmpty() || trans2 == null || trans2.isEmpty())
+		if(trans1.isEmpty() || trans2.isEmpty())
 			return Collections.emptySet();
 		
 		List<CompTrans<T1,T2>> result = new ArrayList<>(trans1.size() * trans2.size());

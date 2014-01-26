@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@ package net.automatalib.ts.comp;
 
 import java.util.Objects;
 
-public class CompState<S1, S2> {
+public final class CompState<S1, S2> {
 	
 	public final S1 s1;
 	public final S2 s2;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@ package net.automatalib.graphs;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.commons.util.mappings.MutableMapping;
 
 /**
@@ -30,6 +33,7 @@ import net.automatalib.commons.util.mappings.MutableMapping;
  * @param <N> node class.
  * @param <E> edge class.
  */
+@ParametersAreNonnullByDefault
 public interface IndefiniteGraph<N, E> {
 	
 	/**
@@ -38,16 +42,20 @@ public interface IndefiniteGraph<N, E> {
 	 * @return a {@link Collection} of all outgoing edges, or <code>null</code> if
 	 * the node has no outgoing edges.
 	 */
-	public Collection<E> getOutgoingEdges(N node);
+	@Nonnull
+	public Collection<? extends E> getOutgoingEdges(N node);
 	
 	/**
 	 * Retrieves, for a given edge, its target node.
 	 * @param edge the edge.
 	 * @return the target node of the given edge.
 	 */
+	@Nonnull
 	public N getTarget(E edge);
 	
 	
+	@Nonnull
 	public <V> MutableMapping<N,V> createStaticNodeMapping();
+	@Nonnull
 	public <V> MutableMapping<N,V> createDynamicNodeMapping();
 }

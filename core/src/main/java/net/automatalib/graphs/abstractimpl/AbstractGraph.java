@@ -16,6 +16,7 @@
  */
 package net.automatalib.graphs.abstractimpl;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 import net.automatalib.graphs.Graph;
@@ -30,7 +31,7 @@ public abstract class AbstractGraph<N, E> extends AbstractIndefiniteGraph<N,E> i
 	 * @see Graph#iterator()
 	 */
 	public static <N,E> Iterator<N> iterator(Graph<N,E> $this) {
-		return $this.getNodes().iterator();
+		return Collections.unmodifiableCollection($this.getNodes()).iterator();
 	}
 	
 	/**

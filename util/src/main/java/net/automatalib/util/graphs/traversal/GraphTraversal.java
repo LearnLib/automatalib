@@ -118,10 +118,8 @@ bfs_loop:
 			if(!vis.startExploration(currNode, currData))
 				continue;
 			
-			Collection<E> edges = graph.getOutgoingEdges(currNode);
-			
-			if(edges == null)
-				continue;
+			Collection<? extends E> edges = graph.getOutgoingEdges(currNode);
+
 			
 			for(E edge : edges) {
 				

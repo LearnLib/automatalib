@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@ package net.automatalib.words;
 import java.util.Collection;
 import java.util.Comparator;
 
+import javax.annotation.Nullable;
+
 import net.automatalib.commons.util.array.ArrayWritable;
 
 /**
@@ -28,7 +30,7 @@ import net.automatalib.commons.util.array.ArrayWritable;
  * 
  * @param <I> symbol class.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  */
 public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator<I> {
 
@@ -38,6 +40,7 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
      * @return symbol with the given index. 
      * @throws IllegalArgumentException if there is no symbol with this index.
      */
+	@Nullable
     public abstract I getSymbol(int index) throws IllegalArgumentException;
     
     /**
@@ -46,5 +49,5 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
      * @return
      * @throws IllegalArgumentException if the provided symbol does not belong to the alphabet.
      */
-    public abstract int getSymbolIndex(I symbol) throws IllegalArgumentException;
+    public abstract int getSymbolIndex(@Nullable I symbol) throws IllegalArgumentException;
 }

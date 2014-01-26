@@ -61,12 +61,10 @@ public class BFSOrderIterator<S, I> implements Iterator<S> {
 		S state = bfsQueue.poll();
 		
 		for(I input : inputs) {
-			Collection<S> succs = ts.getSuccessors(state, input);
-			if(succs != null) {
-				for(S succ : succs) {
-					if(seen.put(succ, VisitedState.VISITED) != VisitedState.VISITED)
-						bfsQueue.add(succ);
-				}
+			Collection<? extends S> succs = ts.getSuccessors(state, input);
+			for(S succ : succs) {
+				if(seen.put(succ, VisitedState.VISITED) != VisitedState.VISITED)
+					bfsQueue.add(succ);
 			}
 		}
 		

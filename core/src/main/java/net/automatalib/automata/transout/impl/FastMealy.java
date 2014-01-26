@@ -67,7 +67,7 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 	 * @see de.ls5.automata.transout.TransitionOutputAutomaton#trace(java.lang.Iterable, java.util.List)
 	 */
 	@Override
-	public boolean trace(Iterable<I> input, List<O> output) {
+	public boolean trace(Iterable<? extends I> input, List<? super O> output) {
 		return AbstractDeterministicTransOutTS.trace(this, input, output);
 	}
 
@@ -76,7 +76,7 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 	 * @see de.ls5.automata.transout.TransitionOutputAutomaton#trace(java.lang.Object, java.lang.Iterable, java.util.List)
 	 */
 	@Override
-	public boolean trace(FastMealyState<O> state, Iterable<I> input, List<O> output) {
+	public boolean trace(FastMealyState<O> state, Iterable<? extends I> input, List<? super O> output) {
 		return AbstractDeterministicTransOutTS.trace(this, state, input, output);
 	}
 

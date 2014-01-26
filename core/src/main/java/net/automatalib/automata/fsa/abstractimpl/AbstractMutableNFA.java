@@ -39,7 +39,7 @@ public abstract class AbstractMutableNFA<S, I> extends
 
 
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return AbstractNFA.accepts(this, input);
 	}
 

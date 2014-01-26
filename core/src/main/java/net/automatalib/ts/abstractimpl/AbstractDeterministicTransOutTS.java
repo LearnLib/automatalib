@@ -18,13 +18,13 @@ public abstract class AbstractDeterministicTransOutTS<S, I, T, O> extends Abstra
 	
 	public static <S,I,T,O>
 	boolean trace(DeterministicTransitionOutputTS<S,I,T,O> _this,
-			Iterable<I> input, List<O> output) {
+			Iterable<? extends I> input, List<? super O> output) {
 		return _this.trace(_this.getInitialState(), input, output);
 	}
 	
 	public static <S,I,T,O>
 	boolean trace(DeterministicTransitionOutputTS<S, I, T, O> _this,
-			S state, Iterable<I> input, List<O> output) {
+			S state, Iterable<? extends I> input, List<? super O> output) {
 		
 		for(I sym : input) {
 			T trans = _this.getTransition(state, sym);
@@ -45,12 +45,12 @@ public abstract class AbstractDeterministicTransOutTS<S, I, T, O> extends Abstra
 	}
 
 	@Override
-	public boolean trace(Iterable<I> input, List<O> output) {
+	public boolean trace(Iterable<? extends I> input, List<? super O> output) {
 		return trace(this, input, output);
 	}
 
 	@Override
-	public boolean trace(S state, Iterable<I> input, List<O> output) {
+	public boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {
 		return trace(this, state, input, output);
 	}
 

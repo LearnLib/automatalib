@@ -18,9 +18,13 @@ package net.automatalib.ts.transout;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.concepts.TransitionOutput;
 import net.automatalib.ts.DeterministicTransitionSystem;
 
+@ParametersAreNonnullByDefault
 public interface DeterministicTransitionOutputTS<S, I, T, O> extends DeterministicTransitionSystem<S,I,T>, TransitionOutput<T, O> {
 	
 	/**
@@ -34,8 +38,9 @@ public interface DeterministicTransitionOutputTS<S, I, T, O> extends Determinist
 	 * @param input the input symbol
 	 * @return the output symbol (or <code>null</code> if the transition is undefined)
 	 */
-	public O getOutput(S state, I input);
+	@Nullable
+	public O getOutput(S state, @Nullable I input);
 	
-	public boolean trace(Iterable<I> input, List<O> output);
-	public boolean trace(S state, Iterable<I> input, List<O> output);
+	public boolean trace(Iterable<? extends I> input, List<? super O> output);
+	public boolean trace(S state, Iterable<? extends I> input, List<? super O> output);
 }

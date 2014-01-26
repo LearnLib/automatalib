@@ -17,7 +17,7 @@
 package net.automatalib.automata.transout.impl;
 
 import net.automatalib.automata.base.fast.FastMutableNondet;
-import net.automatalib.automata.transout.MutableProbabilisticMealy;
+import net.automatalib.automata.transout.probabilistic.MutableProbabilisticMealy;
 import net.automatalib.automata.transout.probabilistic.ProbabilisticOutput;
 import net.automatalib.words.Alphabet;
 
@@ -84,14 +84,34 @@ public class FastProbMealy<I, O>
 	public void setTransitionProperty(
 			ProbMealyTransition<FastProbMealyState<O>, O> transition,
 			ProbabilisticOutput<O> property) {
-		transition.setProbability(property.getProbability());
-		transition.setOutput(property.getOutput());
+		float prob;
+		O output;
+		if(property == null) {
+			prob = 0.0f;
+			output = null;
+		}
+		else {
+			prob = property.getProbability();
+			output = property.getOutput();
+		}
+		transition.setProbability(prob);
+		transition.setOutput(output);
 	}
 
 	@Override
 	public ProbMealyTransition<FastProbMealyState<O>, O> createTransition(
 			FastProbMealyState<O> successor, ProbabilisticOutput<O> properties) {
-		return new ProbMealyTransition<FastProbMealyState<O>, O>(successor, properties.getOutput(), properties.getProbability());
+		float prob;
+		O output;
+		if(properties == null) {
+			prob = 0.0f;
+			output = null;
+		}
+		else {
+			prob = properties.getProbability();
+			output = properties.getOutput();
+		}
+		return new ProbMealyTransition<FastProbMealyState<O>, O>(successor, output, prob);
 	}
 
 

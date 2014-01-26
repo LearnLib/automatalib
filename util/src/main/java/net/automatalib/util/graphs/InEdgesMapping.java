@@ -22,7 +22,7 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.BidirectionalGraph;
 
 
-final class InEdgesMapping<N, E> implements Mapping<N, Collection<E>> {
+final class InEdgesMapping<N, E> implements Mapping<N, Collection<? extends E>> {
 	
 	private final BidirectionalGraph<N, E> graph;
 	
@@ -31,7 +31,7 @@ final class InEdgesMapping<N, E> implements Mapping<N, Collection<E>> {
 	}
 
 	@Override
-	public Collection<E> get(N elem) {
+	public Collection<? extends E> get(N elem) {
 		return graph.getIncomingEdges(elem);
 	}
 

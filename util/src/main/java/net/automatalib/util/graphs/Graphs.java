@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
 
 public abstract class Graphs {
 			
-	public static <N,E> Mapping<N,Collection<E>> incomingEdges(final Graph<N,E> graph) {
+	public static <N,E> Mapping<N,? extends Collection<? extends E>> incomingEdges(final Graph<N,E> graph) {
 		if(graph instanceof BidirectionalGraph)
 			return new InEdgesMapping<N,E>((BidirectionalGraph<N,E>)graph);
 		
@@ -39,7 +39,7 @@ public abstract class Graphs {
 			= graph.createStaticNodeMapping();
 		
 		for(N node : graph) {
-			Collection<E> outEdges = graph.getOutgoingEdges(node);
+			Collection<? extends E> outEdges = graph.getOutgoingEdges(node);
 			if(outEdges == null)
 				continue;
 			for(E e : outEdges) {

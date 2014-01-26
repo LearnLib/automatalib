@@ -74,9 +74,9 @@ public abstract class AbstractDTS<S, I, T> extends AbstractTS<S, I, T> implement
 	 * {@link DeterministicTransitionSystem#getSuccessor(Object, Object)}.
 	 * @see DeterministicTransitionSystem#getSuccessor(Object, Iterable)
 	 */
-	public static <S,I,T> S getSuccessor(DeterministicTransitionSystem<S, I, T> $this, S state, Iterable<I> input) {
+	public static <S,I,T> S getSuccessor(DeterministicTransitionSystem<S, I, T> $this, S state, Iterable<? extends I> input) {
 		S curr = state;
-		Iterator<I> it = input.iterator();
+		Iterator<? extends I> it = input.iterator();
 		
 		while(curr != null && it.hasNext()) {
 			I sym = it.next();
@@ -93,7 +93,7 @@ public abstract class AbstractDTS<S, I, T> extends AbstractTS<S, I, T> implement
 	 * and {@link DeterministicTransitionSystem#getInitialState()}.
 	 * @see {@link DeterministicTransitionSystem#getState(Iterable)}
 	 */
-	public static <S,I,T> S getState(DeterministicTransitionSystem<S, I, T> $this, Iterable<I> input) {
+	public static <S,I,T> S getState(DeterministicTransitionSystem<S, I, T> $this, Iterable<? extends I> input) {
 		return $this.getSuccessor(
 				$this.getInitialState(),
 				input);
@@ -133,7 +133,7 @@ public abstract class AbstractDTS<S, I, T> extends AbstractTS<S, I, T> implement
 	 * @see net.automatalib.ts.SimpleDTS#getSuccessor(java.lang.Object, java.lang.Iterable)
 	 */
 	@Override
-	public S getSuccessor(S state, Iterable<I> input) {
+	public S getSuccessor(S state, Iterable<? extends I> input) {
 		return getSuccessor(this, state, input);
 	}
 
@@ -142,7 +142,7 @@ public abstract class AbstractDTS<S, I, T> extends AbstractTS<S, I, T> implement
 	 * @see net.automatalib.ts.SimpleDTS#getState(java.lang.Iterable)
 	 */
 	@Override
-	public S getState(Iterable<I> input) {
+	public S getState(Iterable<? extends I> input) {
 		return getState(this, input);
 	}
 

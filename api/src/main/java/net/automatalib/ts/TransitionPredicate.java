@@ -16,7 +16,11 @@
  */
 package net.automatalib.ts;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
+
+@ParametersAreNonnullByDefault
 public interface TransitionPredicate<S,I,T> {
-	boolean apply(S source, I input, T transition);
+	boolean apply(S source, @Nullable I input, T transition);
 }

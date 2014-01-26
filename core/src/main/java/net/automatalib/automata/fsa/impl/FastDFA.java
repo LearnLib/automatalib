@@ -109,7 +109,7 @@ public final class FastDFA<I> extends FastMutableDet<FastDFAState, I, FastDFASta
 
 
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return AbstractDFA.accepts(this, input);
 	}
 

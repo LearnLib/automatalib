@@ -25,7 +25,7 @@ public abstract class AbstractMutableDFA<S, I> extends
 	
 	
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return AbstractDFA.accepts(this, input);
 	}
 

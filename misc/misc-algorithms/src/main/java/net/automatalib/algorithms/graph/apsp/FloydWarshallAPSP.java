@@ -80,7 +80,7 @@ public class FloydWarshallAPSP<N,E> implements APSPResult<N,E> {
 		for(int i = 0; i < size; i++) {
 			N src = ids.getNode(i);
 			
-			Collection<E> edges = graph.getOutgoingEdges(src);
+			Collection<? extends E> edges = graph.getOutgoingEdges(src);
 			
 			for(E edge : edges) {
 				N tgt = graph.getTarget(edge);

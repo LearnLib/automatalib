@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ import dk.brics.automaton.State;
  * are reflected. Please note that any changes which result in a loss of determinism
  * will result in incorrect behavior exposed by this class until determinism is restored.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public class BricsDFA extends AbstractBricsAutomaton implements
@@ -73,7 +73,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
 	 */
 	@Override
-	public boolean accepts(Iterable<Character> input) {
+	public boolean accepts(Iterable<? extends Character> input) {
 		return AbstractDFA.accepts(this, input);
 	}
 
@@ -100,7 +100,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.simple.SimpleDTS#getSuccessor(java.lang.Object, java.lang.Iterable)
 	 */
 	@Override
-	public State getSuccessor(State state, Iterable<Character> input) {
+	public State getSuccessor(State state, Iterable<? extends Character> input) {
 		return AbstractDeterministicAutomaton.getSuccessor(this, state, input);
 	}
 
@@ -109,7 +109,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.simple.SimpleDTS#getState(java.lang.Iterable)
 	 */
 	@Override
-	public State getState(Iterable<Character> input) {
+	public State getState(Iterable<? extends Character> input) {
 		return AbstractDeterministicAutomaton.getState(this, input);
 	}
 

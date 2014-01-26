@@ -17,6 +17,7 @@
 package net.automatalib.words;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -61,6 +62,9 @@ final class SharedWord<I> extends Word<I> {
 		@Override
 		@SuppressWarnings("unchecked")
 		public I next() {
+			if(currIdx >= endIdx) {
+				throw new NoSuchElementException();
+			}
 			return (I)storage[currIdx++];
 		}
 

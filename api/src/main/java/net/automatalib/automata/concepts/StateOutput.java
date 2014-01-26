@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,9 @@
  */
 package net.automatalib.automata.concepts;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 
 /**
  * State output concept. Allows to associate with each state an output, like in a Moore
@@ -26,6 +29,8 @@ package net.automatalib.automata.concepts;
  * @param <S> state class.
  * @param <O> output class.
  */
+@ParametersAreNonnullByDefault
 public interface StateOutput<S, O> {
+	@Nullable
 	public O getStateOutput(S state);
 }

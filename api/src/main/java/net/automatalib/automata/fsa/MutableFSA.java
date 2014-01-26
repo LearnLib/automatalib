@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,6 +16,9 @@
  */
 package net.automatalib.automata.fsa;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.MutableAutomaton;
 
 
@@ -23,11 +26,14 @@ import net.automatalib.automata.MutableAutomaton;
  *
  * @author fh
  */
+@ParametersAreNonnullByDefault
 public interface MutableFSA<S,I> extends FiniteStateAcceptor<S,I>,
 		MutableAutomaton<S, I, S, Boolean, Void> {
 	
+	@Nonnull
 	public S addState(boolean accepting);
 	
+	@Nonnull
 	public S addInitialState(boolean accepting);
 
 	public void setAccepting(S state, boolean accepting);

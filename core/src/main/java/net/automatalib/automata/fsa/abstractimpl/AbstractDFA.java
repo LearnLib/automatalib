@@ -22,7 +22,7 @@ import net.automatalib.automata.fsa.DFA;
 public abstract class AbstractDFA<S, I> extends AbstractDeterministicAutomaton<S, I, S>
 		implements DFA<S, I> {
 
-	public static <S,I> boolean accepts(DFA<S, I> $this, Iterable<I> input) {
+	public static <S,I> boolean accepts(DFA<S, I> $this, Iterable<? extends I> input) {
 		S tgt = $this.getState(input);
 		if(tgt == null)
 			return false;
@@ -37,7 +37,7 @@ public abstract class AbstractDFA<S, I> extends AbstractDeterministicAutomaton<S
 	 * @see de.ls5.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
 	 */
 	@Override
-	public boolean accepts(Iterable<I> input) {
+	public boolean accepts(Iterable<? extends I> input) {
 		return accepts(this, input);
 	}
 

@@ -19,6 +19,8 @@ package net.automatalib.words.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.MutableNumericID;
 import net.automatalib.words.GrowingAlphabet;
@@ -53,6 +55,7 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I>
 	 * @see de.ls5.words.Alphabet#getSymbol(int)
 	 */
 	@Override
+	@Nonnull
 	public I getSymbol(int index) {
 		return get(index);
 	}
@@ -62,7 +65,7 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I>
 	 * @see de.ls5.words.Alphabet#getSymbolIndex(java.lang.Object)
 	 */
 	@Override
-	public int getSymbolIndex(I symbol) {
+	public int getSymbolIndex(@Nonnull I symbol) {
 		return symbol.getId();
 	}
 
@@ -71,13 +74,13 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I>
 	 * @see de.ls5.words.GrowingAlphabet#addSymbol(java.lang.Object)
 	 */
 	@Override
-	public int addSymbol(I a) {
+	public int addSymbol(@Nonnull I a) {
 		add(a);
 		return a.getId();
 	}
 
 	@Override
-	public int compare(I o1, I o2) {
+	public int compare(@Nonnull I o1, @Nonnull I o2) {
 		return o1.getId() - o2.getId();
 	}
 

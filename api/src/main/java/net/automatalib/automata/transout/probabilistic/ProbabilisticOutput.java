@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,12 +18,17 @@ package net.automatalib.automata.transout.probabilistic;
 
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public final class ProbabilisticOutput<O> {
 	
 	private final float probability;
+	@Nullable
 	private final O output;
 
-	public ProbabilisticOutput(float probability, O output) {
+	public ProbabilisticOutput(float probability, @Nullable O output) {
 		this.probability = probability;
 		this.output = output;
 	}
@@ -32,6 +37,7 @@ public final class ProbabilisticOutput<O> {
 		return probability;
 	}
 	
+	@Nullable
 	public O getOutput() {
 		return output;
 	}

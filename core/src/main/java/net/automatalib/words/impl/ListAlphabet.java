@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,10 +18,15 @@ package net.automatalib.words.impl;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
+@ParametersAreNonnullByDefault
 public class ListAlphabet<I> extends AbstractAlphabet<I> {
 	
+	@Nonnull
 	private final List<? extends I> list;
 
 	public ListAlphabet(List<? extends I> list) {

@@ -212,7 +212,7 @@ public abstract class GraphDOT {
 			String srcId = nodeNames.get(node);
 			if(srcId == null)
 				continue;
-			Collection<E> outEdges = graph.getOutgoingEdges(node);
+			Collection<? extends E> outEdges = graph.getOutgoingEdges(node);
 			if(outEdges == null || outEdges.isEmpty())
 				continue;
 			for(E e : outEdges) {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -17,6 +17,8 @@
 package net.automatalib.automata.simple;
 
 import java.util.Collection;
+
+import javax.annotation.Nonnull;
 
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.ts.simple.SimpleTS;
@@ -37,6 +39,7 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S,I>, Iterable<S> {
      * collection
      * @return all states in the transition system
      */
+	@Nonnull
 	public Collection<S> getStates();
 	
 	/**
@@ -46,5 +49,6 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S,I>, Iterable<S> {
 	public int size();
 	
 
+	@Nonnull
 	public StateIDs<S> stateIDs();
 }

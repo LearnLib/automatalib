@@ -66,11 +66,11 @@ public abstract class AbstractIncrementalMealyBuilder<I, O> implements
 			return AbstractDeterministicTransOutTS.getOutput(this, state, input);
 		}
 		@Override
-		public boolean trace(Iterable<I> input, List<O> output) {
+		public boolean trace(Iterable<? extends I> input, List<? super O> output) {
 			return AbstractDeterministicTransOutTS.trace(this, input, output);
 		}
 		@Override
-		public boolean trace(S state, Iterable<I> input, List<O> output) {
+		public boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {
 			return AbstractDeterministicTransOutTS.trace(this, state, input,
 					output);
 		}

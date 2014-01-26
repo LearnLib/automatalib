@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@ package net.automatalib.graphs;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Interface for bidirectional graph. A bidirectional graph is conceptually the same as
  * a normal (directed) graph, but provides direct access to not only the outgoing, but also
@@ -28,18 +31,21 @@ import java.util.Collection;
  * @param <N> node class
  * @param <E> edge class
  */
+@ParametersAreNonnullByDefault
 public interface BidirectionalGraph<N, E> extends Graph<N, E> {
 	/**
 	 * Retrieves the incoming edges of a given node.
 	 * @param node the node
 	 * @return all incoming edges of the specified node.
 	 */
-	public Collection<E> getIncomingEdges(N node);
+	@Nonnull
+	public Collection<? extends E> getIncomingEdges(N node);
 	
 	/**
 	 * Retrieves the source node of a given edge.
 	 * @param edge the edge
 	 * @return the source node of the given edge
 	 */
+	@Nonnull
 	public N getSource(E edge);
 }

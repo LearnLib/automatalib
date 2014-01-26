@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,10 +16,15 @@
  */
 package net.automatalib.automata.concepts;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
 public interface SuffixOutput<I, O> extends Output<I,O> {
     // FIXME: here I see a potential clash between I/O of the automaton and O of the suffix. 
     // Why do we need this interface and method anyway? I think its the responsibility of 
     // whoever is using this Automaton to truncate output as needed
 
+	@Nullable
 	public O computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix);
 }
