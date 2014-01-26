@@ -136,6 +136,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<brics-automaton.version>1.11-8</brics-automaton.version>
 
 		<guava.version>15.0</guava.version>
+		<findbugs.version>2.0.2</findbugs.version>
 
 		<!-- Javadoc links -->
 		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
@@ -451,6 +452,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+ 				<groupId>com.google.code.findbugs</groupId>
+ 				<artifactId>jsr305</artifactId>
+				<version>${findbugs.version}</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<dependency>

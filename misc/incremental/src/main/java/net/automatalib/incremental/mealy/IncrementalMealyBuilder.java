@@ -18,15 +18,37 @@ package net.automatalib.incremental.mealy;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.graphs.dot.DOTPlottableGraph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
+import net.automatalib.ts.transout.MealyTransitionSystem;
 import net.automatalib.words.Word;
 
-public interface IncrementalMealyBuilder<I, O> extends IncrementalConstruction<MealyMachine<?,I,?,O>, I>{
+public interface IncrementalMealyBuilder<I, O> extends IncrementalConstruction<MealyMachine<?,I,?,O>, I> {
+
+	public static interface GraphView<I, O, N, E> extends DOTPlottableGraph<N, E> {
+		@Nullable
+		public I getInputSymbol(@Nonnull E edge);
+		@Nullable
+		public O getOutputSymbol(@Nonnull E edge);
+		@Nonnull
+		public N getInitialNode();
+	}
+	
+	public static interface TransitionSystemView<I, O, S, T> extends MealyTransitionSystem<S, I, T, O> {
+	}
+	
 	public Word<O> lookup(Word<I> inputWord);
 	public boolean lookup(Word<I> inputWord, List<? super O> output);
 	public void insert(Word<I> inputWord, Word<O> outputWord) throws ConflictException;
 	
-	public int size();
+	@Override
+	public TransitionSystemView<I,O,?,?> asTransitionSystem();
+	
+	@Override
+	public GraphView<I,O,?,?> asGraph();
 }

@@ -150,7 +150,7 @@ public abstract class AutomatonLowLevelCopy {
 			MutableAutomaton<S2,I,T2,SP2,TP2> out,
 			Function<? super S1,? extends SP2> spMapping,
 			Function<? super T1,? extends TP2> tpMapping) {
-		return rawCopy(method, in, inputs, out, spMapping, tpMapping);
+		return rawCopy(method, in, inputs, out, spMapping, tpMapping, Predicates.alwaysTrue(), TransitionPredicates.alwaysTrue());
 	}
 	
 	/**

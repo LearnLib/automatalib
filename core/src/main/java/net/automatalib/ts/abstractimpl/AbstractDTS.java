@@ -115,7 +115,7 @@ public abstract class AbstractDTS<S, I, T> extends AbstractTS<S, I, T> implement
 	 * @see net.automatalib.ts.TransitionSystem#getTransitions(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Collection<T> getTransitions(S state, I input) {
+	public Collection<? extends T> getTransitions(S state, I input) {
 		return getTransitions(this, state, input);
 	}
 

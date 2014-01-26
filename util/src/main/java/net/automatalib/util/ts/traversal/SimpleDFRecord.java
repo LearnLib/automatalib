@@ -28,7 +28,6 @@ class SimpleDFRecord<S, I, T> {
 	private final Iterator<? extends I> inputsIterator;
 	private I input;
 	private Iterator<? extends T> transitionIterator;
-	private T retractedTransition;
 
 	public SimpleDFRecord(S state, Collection<? extends I> inputs) {
 		this.state = state;
@@ -57,9 +56,6 @@ class SimpleDFRecord<S, I, T> {
 	}
 
 	public boolean hasNextTransition() {
-		if(retractedTransition != null)
-			return true;
-		
 		if(transitionIterator == null)
 			return false;
 		return transitionIterator.hasNext();

@@ -22,6 +22,7 @@ import net.automatalib.automata.base.fast.FastMutableDet;
 import net.automatalib.automata.transout.MutableMooreMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractMooreMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
+import net.automatalib.ts.abstractimpl.AbstractDeterministicTransOutTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -56,8 +57,8 @@ public final class FastMoore<I, O> extends FastMutableDet<FastMooreState<O>, I, 
 	 * @see de.ls5.automata.transout.TransitionOutputAutomaton#trace(java.lang.Iterable)
 	 */
 	@Override
-	public void trace(Iterable<I> input, List<O> output) {
-		AbstractTransOutAutomaton.trace(this, input, output);
+	public boolean trace(Iterable<I> input, List<O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, input, output);
 	}
 
 	/*
@@ -65,8 +66,8 @@ public final class FastMoore<I, O> extends FastMutableDet<FastMooreState<O>, I, 
 	 * @see de.ls5.automata.transout.TransitionOutputAutomaton#trace(java.lang.Object, java.lang.Iterable)
 	 */
 	@Override
-	public void trace(FastMooreState<O> state, Iterable<I> input, List<O> output) {
-		AbstractTransOutAutomaton.trace(this, state, input, output);
+	public boolean trace(FastMooreState<O> state, Iterable<I> input, List<O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, state, input, output);
 	}
 
 	/*
@@ -183,7 +184,7 @@ public final class FastMoore<I, O> extends FastMutableDet<FastMooreState<O>, I, 
 
 	@Override
 	public O getOutput(FastMooreState<O> state, I input) {
-		return AbstractTransOutAutomaton.getOutput(this, state, input);
+		return AbstractDeterministicTransOutTS.getOutput(this, state, input);
 	}
 
 }

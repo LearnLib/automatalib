@@ -14,14 +14,15 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.dfa;
+package net.automatalib.incremental.dfa.dag;
 
-final class PathElem {
-	public final State state;
+final class EdgeRecord {
+	public final State source;
 	public final int transIdx;
 	
-	public PathElem(State state, int transIdx) {
-		this.state = state;
+	public EdgeRecord(State source, int transIdx) {
+		this.source = source;
 		this.transIdx = transIdx;
 	}
+
 }

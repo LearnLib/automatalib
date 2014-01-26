@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -14,15 +14,35 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.dfa;
+package net.automatalib.incremental.dfa.tree;
 
-final class EdgeRecord {
-	public final State source;
-	public final int transIdx;
-	
-	public EdgeRecord(State source, int transIdx) {
-		this.source = source;
-		this.transIdx = transIdx;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.incremental.dfa.Acceptance;
+
+@ParametersAreNonnullByDefault
+public final class Edge<I> {
+	private final Node<I> node;
+	private final I input;
+	public Edge(Node<I> node, @Nullable I input) {
+		this.node = node;
+		this.input = input;
 	}
-
+	
+	@Nonnull
+	public Node<I> getNode() {
+		return node;
+	}
+	
+	@Nullable
+	public I getInput() {
+		return input;
+	}
+	
+	@Nonnull
+	public Acceptance getAcceptance() {
+		return node.getAcceptance();
+	}
 }

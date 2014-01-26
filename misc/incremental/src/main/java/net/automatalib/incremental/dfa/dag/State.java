@@ -14,7 +14,9 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.dfa;
+package net.automatalib.incremental.dfa.dag;
+
+import net.automatalib.incremental.dfa.Acceptance;
 
 /**
  * State data structure. Note that states are generally unique throughout the algorithm,
@@ -64,6 +66,9 @@ final class State {
 	 * @return the acceptance status of this node.
 	 */
 	public Acceptance getAcceptance() {
+		if(signature == null) {
+			return Acceptance.FALSE;
+		}
 		return signature.acceptance;
 	}
 	

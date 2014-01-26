@@ -17,20 +17,29 @@
 package net.automatalib.incremental.mealy.tree;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.graphs.dot.DelegateDOTHelper;
+import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
+import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Iterators;
 
 public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyBuilder<I,O> {
 	
@@ -48,25 +57,88 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 		}
 	}
 	
-	private static final class BuildAutomatonRecord<I,O> {
-		private final int automatonState;
-		private final Node<I,O> treeNode;
-		private int inputIdx;
+	
+	public class GraphView extends AbstractGraphView<I,O,Node<I,O>,AnnotatedEdge<I,O>> {
+		@Override
+		public Collection<Node<I, O>> getNodes() {
+			List<Node<I,O>> result = new ArrayList<>();
+			Iterators.addAll(result, GraphTraversal.dfIterator(this, Collections.singleton(root)));
+			return result;
+		}
+		@Override
+		public Collection<AnnotatedEdge<I, O>> getOutgoingEdges(Node<I, O> node) {
+			List<AnnotatedEdge<I,O>> result = new ArrayList<>();
+			for(int i = 0; i < inputAlphabet.size(); i++) {
+				Edge<I,O> edge = node.getEdge(i);
+				if(edge != null) {
+					result.add(new AnnotatedEdge<>(edge, inputAlphabet.getSymbol(i)));
+				}
+			}
+			return result;
+		}
+		@Override
+		public Node<I, O> getTarget(AnnotatedEdge<I, O> edge) {
+			return edge.getTarget();
+		}
+		@Override
+		@Nonnull
+		public Node<I, O> getInitialNode() {
+			return root;
+		}
+		@Override
+		@Nullable
+		public I getInputSymbol(AnnotatedEdge<I, O> edge) {
+			return edge.getInput();
+		}
+		@Override
+		@Nullable
+		public O getOutputSymbol(AnnotatedEdge<I, O> edge) {
+			return edge.getOutput();
+		}
+		@Override
+		public GraphDOTHelper<Node<I, O>, AnnotatedEdge<I, O>> getGraphDOTHelper() {
+			return new DelegateDOTHelper<Node<I,O>,AnnotatedEdge<I,O>>(super.getGraphDOTHelper()) {
+				private int id = 0;
+				@Override
+				public boolean getNodeProperties(Node<I, O> node,
+						Map<String, String> properties) {
+					if(!super.getNodeProperties(node, properties)) {
+						return false;
+					}
+					properties.put(NodeAttrs.LABEL, "n" + (id++));
+					return true;
+				}
+			};
+		}
 		
-		public BuildAutomatonRecord(int automatonState, Node<I,O> treeNode) {
-			this.automatonState = automatonState;
-			this.treeNode = treeNode;
-			this.inputIdx = 0;
+	}
+	
+	public class TransitionSystemView extends AbstractTransitionSystemView<I, O, Node<I,O>, Edge<I,O>> {
+		@Override
+		public Edge<I, O> getTransition(Node<I, O> state, I input) {
+			int inputIdx = inputAlphabet.getSymbolIndex(input);
+			return state.getEdge(inputIdx);
+		}
+		@Override
+		public Node<I, O> getSuccessor(Edge<I, O> transition) {
+			return transition.getTarget();
+		}
+		@Override
+		public Node<I, O> getInitialState() {
+			return root;
+		}
+		@Override
+		public O getTransitionOutput(Edge<I, O> transition) {
+			return transition.getOutput();
 		}
 	}
 	
+	
 	private final Node<I,O> root;
-	private int size;
 	
 	public IncrementalMealyTreeBuilder(Alphabet<I> inputAlphabet) {
 		super(inputAlphabet);
 		this.root = new Node<>(inputAlphabet.size());
-		this.size = 1;
 	}
 
 	/*
@@ -114,15 +186,6 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 		
 		return true;
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.incremental.mealy.IncrementalMealyBuilder#size()
-	 */
-	@Override
-	public int size() {
-		return size;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -134,46 +197,6 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 		return doFindSeparatingWord(target, inputs, omitUndefined);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.incremental.IncrementalConstruction#toAutomaton()
-	 */
-	@Override
-	public MealyMachine<?, I, ?, O> toAutomaton() {
-		CompactMealy<I, O> result = new CompactMealy<>(inputAlphabet);
-		
-		int init = result.addInitialState();
-		
-		Deque<BuildAutomatonRecord<I,O>> dfsStack = new ArrayDeque<>();
-		
-		dfsStack.push(new BuildAutomatonRecord<>(init, root));
-		
-		int alphabetSize = inputAlphabet.size();
-		
-		while(!dfsStack.isEmpty()) {
-			BuildAutomatonRecord<I,O> rec = dfsStack.peek();
-			if(rec.inputIdx >= alphabetSize) {
-				dfsStack.pop();
-				continue;
-			}
-			
-			int inputIdx = rec.inputIdx++;
-			
-			Edge<I,O> edge = rec.treeNode.getEdge(inputIdx);
-			if(edge == null) {
-				continue;
-			}
-			
-			I inputSym = inputAlphabet.getSymbol(inputIdx);
-			
-			int succ = result.addState();
-			result.addTransition(rec.automatonState, inputSym, succ, edge.getOutput());
-			
-			dfsStack.push(new BuildAutomatonRecord<>(succ, edge.getTarget()));
-		}
-		
-		return result;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -241,4 +264,12 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 		return succ;
 	}
 
+	@Override
+	public TransitionSystemView asTransitionSystem() {
+		return new TransitionSystemView();
+	}
+	@Override
+	public GraphView asGraph() {
+		return new GraphView();
+	}
 }

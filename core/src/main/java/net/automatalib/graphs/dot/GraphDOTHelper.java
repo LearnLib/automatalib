@@ -35,6 +35,7 @@ public interface GraphDOTHelper<N, E> {
 		public static final String LABEL = "label";
 		public static final String COLOR = "color";
 		public static final String TEXLBL = "texlbl";
+		public static final String STYLE = "style";
 	}
 	
 	public abstract class NodeAttrs extends CommonAttrs {
@@ -58,7 +59,24 @@ public interface GraphDOTHelper<N, E> {
 		public static final String CIRCLE = "circle";
 		public static final String DOUBLECIRCLE = "doublecircle";
 		
+		public static final String OCTAGON = "octagon";
+		public static final String DOUBLEOCTAGON = "doubleoctagon";
+		
 		public static final String BOX = "box";
+	}
+	
+	public abstract class CommonStyles {
+		public static final String DASHED = "dashed";
+		public static final String DOTTED = "dotted";
+		public static final String SOLID = "solid";
+		public static final String BOLD = "bold";
+	}
+	
+	public abstract class NodeStyles extends CommonStyles {
+		public static final String FILLED = "filled";
+		public static final String INVISIBLE = "invisible";
+		public static final String DIAGONALS = "diagonals";
+		public static final String ROUNDED = "rounded";
 	}
 	
 	

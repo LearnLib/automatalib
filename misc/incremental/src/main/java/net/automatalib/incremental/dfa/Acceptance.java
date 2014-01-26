@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,10 +16,12 @@
  */
 package net.automatalib.incremental.dfa;
 
+import javax.annotation.Nonnull;
+
 /**
  * Tri-state acceptance value.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public enum Acceptance {
@@ -33,6 +35,7 @@ public enum Acceptance {
 	 * @param val the boolean value
 	 * @return the corresponding acceptance value
 	 */
+	@Nonnull
 	public static Acceptance fromBoolean(boolean val) {
 		return val ? TRUE : FALSE;
 	}

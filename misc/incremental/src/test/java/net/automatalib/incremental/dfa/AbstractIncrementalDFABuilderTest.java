@@ -16,29 +16,28 @@
  */
 package net.automatalib.incremental.dfa;
 
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
-public class IncrementalDFABuilderTest {
+public abstract class AbstractIncrementalDFABuilderTest {
 
-	private Alphabet<Character> alphabet;
+	private static final Alphabet<Character> testAlphabet = Alphabets.characters('a', 'c');
+	
 	private IncrementalDFABuilder<Character> incDfa;
 
+	protected abstract <I> IncrementalDFABuilder<I> createIncrementalDFABuilder(Alphabet<I> alphabet);
+	
 	@BeforeClass
 	public void setUp() {
-		this.alphabet = new SimpleAlphabet<>();
-		this.alphabet.add('a');
-		this.alphabet.add('b');
-		this.alphabet.add('c');
-		
-		this.incDfa = new IncrementalDFABuilder<>(alphabet);
+		this.incDfa = createIncrementalDFABuilder(testAlphabet);
 	}
 
 	@Test
@@ -92,7 +91,9 @@ public class IncrementalDFABuilderTest {
 	@Test(dependsOnMethods = "testLookup")
 	public void testInsertSame() {
 		Word<Character> w1 = Word.fromString("abc");
+		int oldSize = incDfa.asGraph().size();
 		incDfa.insert(w1, true);
+		Assert.assertEquals(incDfa.asGraph().size(), oldSize);
 	}
 	
 	@Test(expectedExceptions = ConflictException.class, dependsOnMethods = "testLookup")
@@ -100,5 +101,49 @@ public class IncrementalDFABuilderTest {
 		Word<Character> w1 = Word.fromString("abc");
 		incDfa.insert(w1, false);
 	}
+	
+	@Test(dependsOnMethods = "testLookup")
+	public void testFindSeparatingWord() {
+		CompactDFA<Character> testDfa = new CompactDFA<>(testAlphabet);
+		
+		int s0 = testDfa.addInitialState(true);
+		int s1 = testDfa.addState(false);
+		int s2 = testDfa.addState(false);
+		int s3 = testDfa.addState(true);
+		
+		testDfa.addTransition(s0, 'a', s1);
+		testDfa.addTransition(s1, 'b', s2);
+		testDfa.addTransition(s2, 'c', s3);
+		
+		Word<Character> sepWord;
+		sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, true);
+		Assert.assertNull(sepWord);
+		sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, false);
+		Assert.assertEquals(sepWord, Word.fromString("acb"));
+		
+		testDfa.setAccepting(s3, false);
+		sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, true);
+		Assert.assertEquals(sepWord, Word.fromString("abc"));
+		testDfa.setAccepting(s3, true);
+		
+		int s4 = testDfa.addState(false);
+		int s5 = testDfa.addState(true);
+		testDfa.addTransition(s1, 'c', s4);
+		testDfa.addTransition(s4, 'b', s5);
+
+		
+		sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, true);
+		Assert.assertNull(sepWord);
+		sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, false);
+		Assert.assertNull(sepWord);
+		
+		testDfa.setAccepting(s1, true);
+		testDfa.setAccepting(s2, true);
+		sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, true);
+		Assert.assertNull(sepWord);
+		sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, false);
+		Assert.assertNull(sepWord);
+	}
+	
 
 }

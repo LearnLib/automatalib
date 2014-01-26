@@ -14,18 +14,19 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.dfa;
+package net.automatalib.incremental.dfa.dag;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 import net.automatalib.incremental.ConflictException;
+import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
-public class IncrementalPCDFABuilder<I> extends AbstractIncrementalDFABuilder<I> {
+public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilder<I> {
 	
-	public IncrementalPCDFABuilder(Alphabet<I> inputAlphabet) {
+	public IncrementalPCDFADAGBuilder(Alphabet<I> inputAlphabet) {
 		super(inputAlphabet);
 	}
 	

@@ -14,9 +14,11 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.incremental.dfa;
+package net.automatalib.incremental.dfa.dag;
 
 import java.util.Arrays;
+
+import net.automatalib.incremental.dfa.Acceptance;
 
 /**
  * Signature of a state. A signature consists of the list of all successor states
@@ -42,8 +44,7 @@ final class StateSignature {
 		this.acceptance = other.acceptance;
 	}
 	
-	@Override
-	public StateSignature clone() {
+	public StateSignature duplicate() {
 		return new StateSignature(this);
 	}
 

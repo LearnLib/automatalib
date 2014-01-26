@@ -269,7 +269,7 @@ public abstract class GraphDOT {
 			String value = e.getValue();
 			a.append(e.getKey()).append("=");
 			// HTML labels have to be enclosed in <> instead of ""
-			if(key.equals(GraphDOTHelper.CommonAttrs.LABEL) && value.startsWith("<HTML>"))
+			if(key.equals(GraphDOTHelper.CommonAttrs.LABEL) && value.toUpperCase().startsWith("<HTML>"))
 				a.append('<').append(value.substring(6)).append('>');
 			else
 				StringUtil.enquote(e.getValue(), a);

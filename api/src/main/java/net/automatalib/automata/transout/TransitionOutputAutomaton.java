@@ -16,30 +16,12 @@
  */
 package net.automatalib.automata.transout;
 
-import java.util.List;
-
 import net.automatalib.automata.concepts.SODetOutputAutomaton;
-import net.automatalib.automata.concepts.TransitionOutput;
+import net.automatalib.ts.transout.DeterministicTransitionOutputTS;
 import net.automatalib.words.Word;
 
 
 public interface TransitionOutputAutomaton<S, I, T, O>
-		extends SODetOutputAutomaton<S, I, T, Word<O>>, TransitionOutput<T, O> {
-	
-	/**
-	 * Retrieves the output for the given input symbol in the given state.
-	 * This is roughly equivalent to calling {@link #getTransitionOutput(Object)}
-	 * on the transition returned by {@link #getTransition(Object, Object)}, however
-	 * it should be noted that this function does not allow distinguishing between
-	 * a <code>null</code> output and an undefined transition.
-	 * 
-	 * @param state the source state
-	 * @param input the input symbol
-	 * @return the output symbol (or <code>null</code> if the transition is undefined)
-	 */
-	public O getOutput(S state, I input);
-	
-	public void trace(Iterable<I> input, List<O> output);
-	public void trace(S state, Iterable<I> input, List<O> output);
+		extends SODetOutputAutomaton<S, I, T, Word<O>>, DeterministicTransitionOutputTS<S,I,T,O> {
 }
 

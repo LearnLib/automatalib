@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2014 TU Dortmund
+/* Copyright (C) 2013 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -14,15 +14,14 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.automata.transout;
+package net.automatalib.incremental.dfa.dag;
 
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.ts.transout.MealyTransitionSystem;
-
-/**
- *
- * @author fh
- */
-public interface MealyMachine<S,I,T,O> extends UniversalDeterministicAutomaton<S, I, T, Void, O>,
-		TransitionOutputAutomaton<S,I,T,O>, MealyTransitionSystem<S, I, T, O> {
+final class PathElem {
+	public final State state;
+	public final int transIdx;
+	
+	public PathElem(State state, int transIdx) {
+		this.state = state;
+		this.transIdx = transIdx;
+	}
 }

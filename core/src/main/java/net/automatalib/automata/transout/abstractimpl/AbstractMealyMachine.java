@@ -16,10 +16,17 @@
  */
 package net.automatalib.automata.transout.abstractimpl;
 
+import java.util.List;
+
+import net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.ts.abstractimpl.AbstractDeterministicTransOutTS;
+import net.automatalib.words.Word;
 
-public abstract class AbstractMealyMachine {
+public abstract class AbstractMealyMachine<S,I,T,O> extends AbstractDeterministicAutomaton<S, I, T>
+		implements MealyMachine<S, I, T, O> {
+	
 	public static <S,I,T,O> Void getStateProperty(MealyMachine<S, I, T, O> $this, S state) {
 		return null;
 	}
@@ -41,5 +48,39 @@ public abstract class AbstractMealyMachine {
 		T newTrans = $this.createTransition(succ, output);
 		return newTrans;
 	}
-	
+
+	@Override
+	public O getOutput(S state, I input) {
+		return AbstractDeterministicTransOutTS.getOutput(this, state, input);
+	}
+
+	@Override
+	public boolean trace(Iterable<I> input, List<O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, input, output);
+	}
+
+	@Override
+	public boolean trace(S state, Iterable<I> input, List<O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, state, input, output);
+	}
+
+	@Override
+	public Word<O> computeOutput(Iterable<I> input) {
+		return AbstractTransOutAutomaton.computeOutput(this, input);
+	}
+
+	@Override
+	public Void getStateProperty(S state) {
+		return getStateProperty(this, state);
+	}
+
+	@Override
+	public O getTransitionProperty(T transition) {
+		return getTransitionProperty(this, transition);
+	}
+
+	@Override
+	public Word<O> computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+		return AbstractTransOutAutomaton.computeSuffixOutput(this, prefix, suffix);
+	}
 }

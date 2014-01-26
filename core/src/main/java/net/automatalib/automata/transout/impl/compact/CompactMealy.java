@@ -26,6 +26,7 @@ import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractMealyMachine;
 import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
 import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.ts.abstractimpl.AbstractDeterministicTransOutTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -77,7 +78,7 @@ public class CompactMealy<I, O> extends
 	 */
 	@Override
 	public O getOutput(Integer state, I input) {
-		return AbstractTransOutAutomaton.getOutput(this, state, input);
+		return AbstractDeterministicTransOutTS.getOutput(this, state, input);
 	}
 
 	/*
@@ -85,8 +86,8 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.transout.TransitionOutputAutomaton#trace(java.lang.Iterable, java.util.List)
 	 */
 	@Override
-	public void trace(Iterable<I> input, List<O> output) {
-		AbstractTransOutAutomaton.trace(this, input, output);
+	public boolean  trace(Iterable<I> input, List<O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, input, output);
 	}
 
 	/*
@@ -94,8 +95,8 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.transout.TransitionOutputAutomaton#trace(java.lang.Object, java.lang.Iterable, java.util.List)
 	 */
 	@Override
-	public void trace(Integer state, Iterable<I> input, List<O> output) {
-		AbstractTransOutAutomaton.trace(this, state, input, output);
+	public boolean trace(Integer state, Iterable<I> input, List<O> output) {
+		return AbstractDeterministicTransOutTS.trace(this, state, input, output);
 	}
 
 	/*

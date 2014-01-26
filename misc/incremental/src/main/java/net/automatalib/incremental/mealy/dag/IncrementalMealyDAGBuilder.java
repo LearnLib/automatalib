@@ -28,17 +28,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
-import net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.graphs.TransitionEdge.Property;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.abstractimpl.AbstractMealyMachine;
-import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.UnionFind;
-import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.graphs.abstractimpl.AbstractGraph;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
+import net.automatalib.graphs.dot.DelegateDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
@@ -50,7 +46,7 @@ import net.automatalib.words.WordBuilder;
  * Incrementally builds an (acyclic) Mealy machine, from a set of input and corresponding
  * output words.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <I> input symbol class
  * @param <O> output symbol class
@@ -58,36 +54,7 @@ import net.automatalib.words.WordBuilder;
 public class IncrementalMealyDAGBuilder<I, O> extends
 	AbstractIncrementalMealyBuilder<I, O> {
 	
-	public class GraphView extends AbstractGraph<State, TransitionRecord>
-			implements
-			UniversalGraph<State, TransitionRecord, Void, Property<I, O>>,
-			DOTPlottableGraph<State, TransitionRecord> {
-
-		/*
-		 * (non-Javadoc)
-		 * @see net.automatalib.graphs.UniversalGraph#getNodeProperties(java.lang.Object)
-		 */
-		@Override
-		public Void getNodeProperty(State node) {
-			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see net.automatalib.graphs.UniversalGraph#getEdgeProperties(java.lang.Object)
-		 */
-		@Override
-		@SuppressWarnings("unchecked")
-		public Property<I, O> getEdgeProperty(TransitionRecord edge) {
-			I input = inputAlphabet.getSymbol(edge.transIdx);
-			O out = (O) edge.source.getOutput(edge.transIdx);
-			return new Property<>(input, out);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
-		 */
+	public class GraphView extends AbstractGraphView<I, O, State, TransitionRecord> {
 		@Override
 		public Collection<TransitionRecord> getOutgoingEdges(State node) {
 			List<TransitionRecord> edges = new ArrayList<TransitionRecord>();
@@ -97,53 +64,62 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 			}
 			return edges;
 		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
-		 */
 		@Override
 		public State getTarget(TransitionRecord edge) {
 			return edge.source.getSuccessor(edge.transIdx);
 		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see net.automatalib.graphs.dot.DOTPlottableGraph#getHelper()
-		 */
-		@Override
-		public GraphDOTHelper<State, TransitionRecord> getGraphDOTHelper() {
-			return new DOTHelper(inputAlphabet, init);
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see net.automatalib.graphs.FiniteGraph#getNodes()
-		 */
 		@Override
 		public Collection<State> getNodes() {
 			return Collections.unmodifiableCollection(register.values());
 		}
+		@Override
+		@Nullable
+		public I getInputSymbol(TransitionRecord edge) {
+			return inputAlphabet.getSymbol(edge.transIdx);
+		}
+		@Override
+		@Nullable
+		@SuppressWarnings("unchecked")
+		public O getOutputSymbol(TransitionRecord edge) {
+			return (O)edge.source.getOutput(edge.transIdx);
+		}
+		@Override
+		@Nonnull
+		public State getInitialNode() {
+			return init;
+		}
+		@Override
+		public GraphDOTHelper<State, TransitionRecord> getGraphDOTHelper() {
+			return new DelegateDOTHelper<State, TransitionRecord>(super.getGraphDOTHelper()) {
+				private int id = 0;
+				@Override
+				public boolean getNodeProperties(State node,
+						Map<String, String> properties) {
+					if(!super.getNodeProperties(node, properties)) {
+						return false;
+					}
+					properties.put(NodeAttrs.LABEL, "n" + (id++));
+					if(node.isConfluence()) {
+						properties.put(NodeAttrs.SHAPE, NodeShapes.OCTAGON);
+					}
+					return true;
+				}
+				
+			};
+		}
+		
 	}
 	
-	public class AutomatonView extends AbstractDeterministicAutomaton<State, I, TransitionRecord> implements MealyMachine<State,I,TransitionRecord,O> {
-
+	public class AutomatonView extends AbstractTransitionSystemView<I, O, State, TransitionRecord> {
 		@Override
 		public State getSuccessor(TransitionRecord transition) {
 			State src = transition.source;
 			return src.getSuccessor(transition.transIdx);
 		}
-
-		@Override
-		public Collection<State> getStates() {
-			return register.values();
-		}
-
 		@Override
 		public State getInitialState() {
 			return init;
 		}
-
 		@Override
 		public TransitionRecord getTransition(State state, I input) {
 			int inputIdx = inputAlphabet.getSymbolIndex(input);
@@ -152,43 +128,6 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 			}
 			return new TransitionRecord(state, inputIdx); 
 		}
-
-		@Override
-		public Void getStateProperty(State state) {
-			return AbstractMealyMachine.getStateProperty(this, state);
-		}
-
-		@Override
-		public O getTransitionProperty(TransitionRecord transition) {
-			return AbstractMealyMachine.getTransitionProperty(this, transition);
-		}
-
-		@Override
-		public O getOutput(State state, I input) {
-			return AbstractTransOutAutomaton.getOutput(this, state, input);
-		}
-
-		@Override
-		public void trace(Iterable<I> input, List<O> output) {
-			AbstractTransOutAutomaton.trace(this, input, output);
-		}
-
-		@Override
-		public void trace(State state, Iterable<I> input, List<O> output) {
-			AbstractTransOutAutomaton.trace(this, state, input, output);
-		}
-
-		@Override
-		public Word<O> computeOutput(Iterable<I> input) {
-			return AbstractTransOutAutomaton.computeOutput(this, input);
-		}
-
-		@Override
-		public Word<O> computeSuffixOutput(Iterable<I> prefix,
-				Iterable<I> suffix) {
-			return AbstractTransOutAutomaton.computeSuffixOutput(this, prefix, suffix);
-		}
-
 		@Override
 		@SuppressWarnings("unchecked")
 		public O getTransitionOutput(TransitionRecord transition) {
@@ -266,15 +205,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		return (s != null);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.incremental.mealy.IncrementalMealyBuilder#size()
-	 */
-	@Override
-	public int size() {
-		return register.size();
-	}
-
+	
 	/**
 	 * Retrieves the output word for the given input word. If no definitive
 	 * information for the input word exists, the output for the longest known
@@ -526,14 +457,14 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		StateSignature sig = other.getSignature();
 		if (sig.successors[idx] == succ)
 			return other;
-		sig = sig.clone();
+		sig = sig.duplicate();
 		sig.successors[idx] = succ;
 		sig.updateHashCode();
 		return replaceOrRegister(sig);
 	}
 
 	private State hiddenClone(State other) {
-		StateSignature sig = other.getSignature().clone();
+		StateSignature sig = other.getSignature().duplicate();
 
 		for (int i = 0; i < alphabetSize; i++) {
 			State succ = sig.successors[i];
@@ -604,11 +535,13 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		return last;
 	}
 	
+	@Override
 	public GraphView asGraph() {
 		return new GraphView();
 	}
 	
-	public AutomatonView asAutomaton() {
+	@Override
+	public AutomatonView asTransitionSystem() {
 		return new AutomatonView();
 	}
 
@@ -620,45 +553,6 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 	public Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
 			Collection<? extends I> inputs, boolean omitUndefined) {
 		return doFindSeparatingWord(target, inputs, omitUndefined);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.incremental.IncrementalConstruction#toAutomaton()
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public CompactMealy<I, O> toAutomaton() {
-		CompactMealy<I, O> result = new CompactMealy<I, O>(inputAlphabet,
-				register.size());
-
-		Map<State, Integer> stateMap = new HashMap<>();
-
-		for (State s : register.values()) {
-			Integer id;
-			if (s == init)
-				id = result.addInitialState();
-			else
-				id = result.addState();
-			stateMap.put(s, id);
-		}
-
-		for (Map.Entry<State, Integer> e : stateMap.entrySet()) {
-			State s = e.getKey();
-			Integer id = e.getValue();
-
-			for (int i = 0; i < alphabetSize; i++) {
-				State succ = s.getSuccessor(i);
-				if (succ == null)
-					continue;
-				I sym = inputAlphabet.getSymbol(i);
-				O out = (O) s.getOutput(i);
-				Integer succId = stateMap.get(succ);
-				result.addTransition(id, sym, succId, out);
-			}
-		}
-
-		return result;
 	}
 
 	// /////////////////////////////////////////////////////////////////////
@@ -786,5 +680,4 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 
 		return wb.toWord();
 	}
-
 }

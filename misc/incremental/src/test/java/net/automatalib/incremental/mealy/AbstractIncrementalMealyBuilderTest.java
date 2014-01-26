@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,8 +16,8 @@
  */
 package net.automatalib.incremental.mealy;
 
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -118,6 +118,44 @@ public abstract class AbstractIncrementalMealyBuilderTest {
 	@Test(expectedExceptions = ConflictException.class, dependsOnMethods = "testLookup")
 	public void testConflict() {
 		incMealy.insert(w1, w3o);
+	}
+	
+	@Test(dependsOnMethods = "testLookup")
+	public void testFindSeparatingWord() {
+		CompactMealy<Character, Character> testMealy
+			= new CompactMealy<>(testAlphabet);
+			
+		int s0 = testMealy.addInitialState();
+		int s1 = testMealy.addState();
+		int s2 = testMealy.addState();
+		int s3 = testMealy.addState();
+		int s4 = testMealy.addState();
+		int s5 = testMealy.addState();
+		
+		testMealy.addTransition(s0, 'a', s1, 'x');
+		testMealy.addTransition(s0, 'b', s2, 'u');
+		testMealy.addTransition(s1, 'b', s3, 'y');
+		testMealy.addTransition(s3, 'c', s4, 'z');
+		testMealy.addTransition(s1, 'c', s5, 'w');
+		
+		Word<Character> sepWord;
+		sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, true);
+		Assert.assertNull(sepWord);
+		sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, false);
+		Assert.assertEquals(sepWord, Word.fromString("acb"));
+		
+		testMealy.addTransition(s5, 'b', s4, 'u');
+		sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, true);
+		Assert.assertNull(sepWord);
+		sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, false);
+		Assert.assertNull(sepWord);
+		
+		testMealy.getTransition(s5, (Character)'b').setOutput('w');
+		
+		sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, true);
+		Assert.assertEquals(sepWord, Word.fromString("acb"));
+		sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, false);
+		Assert.assertEquals(sepWord, Word.fromString("acb"));
 	}
 
 }

@@ -35,8 +35,7 @@ final class StateSignature {
 	}
 	
 	
-	@Override
-	public StateSignature clone() {
+	public StateSignature duplicate() {
 		return new StateSignature(this);
 	}
 

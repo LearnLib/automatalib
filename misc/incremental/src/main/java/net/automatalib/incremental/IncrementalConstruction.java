@@ -18,6 +18,12 @@ package net.automatalib.incremental;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.graphs.Graph;
+import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -25,17 +31,19 @@ import net.automatalib.words.Word;
  * Basic interface for incremental automata constructions. An incremental automaton construction
  * creates an (acyclic) automaton by iterated insertion of example words.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <A> the automaton model which is constructed
  * @param <I> input symbol class
  */
+@ParametersAreNonnullByDefault
 public interface IncrementalConstruction<A, I> {
 	
 	/**
 	 * Retrieves the input alphabet of this construction.
 	 * @return the input alphabet
 	 */
+	@Nonnull
 	public Alphabet<I> getInputAlphabet();
 	
 	/**
@@ -49,13 +57,8 @@ public interface IncrementalConstruction<A, I> {
 	 * (e.g., non-accepting sink in case of DFAs).
 	 * @return a separating word, or <tt>null</tt> if no difference could be found.
 	 */
+	@Nullable
 	public Word<I> findSeparatingWord(A target, Collection<? extends I> inputs, boolean omitUndefined);
-	
-	/**
-	 * Creates an automaton model from the current state of the construction.
-	 * @return an automaton model
-	 */
-	public A toAutomaton();
 	
 	/**
 	 * Checks whether this class has definitive information about a given word.
@@ -64,4 +67,21 @@ public interface IncrementalConstruction<A, I> {
 	 * <tt>false</tt> otherwise. 
 	 */
 	public boolean hasDefinitiveInformation(Word<I> word);
+
+	/**
+	 * Retrieves a <i>graph view</i> of the current state of the construction. The graph model should be
+	 * backed by the construction, i.e., subsequent changes will be reflected in the graph model.
+	 * @return a graph view on the current state of the construction
+	 */
+	@Nonnull
+	public Graph<?,?> asGraph();
+	
+	/**
+	 * Retrieves a <i>transition system view</i> of the current state of the construction. The transition
+	 * system model should be backed by the construction, i.e., subsequent changes will be reflected in
+	 * the transition system.
+	 * @return a transition system view on the current state of the construction
+	 */
+	@Nonnull
+	public DeterministicTransitionSystem<?, I, ?> asTransitionSystem();
 }
