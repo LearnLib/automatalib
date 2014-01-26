@@ -19,6 +19,7 @@ package net.automatalib.commons.smartcollections;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 
 import net.automatalib.commons.util.array.ResizingObjectArray;
@@ -49,8 +50,8 @@ public class BinaryHeap<E>
 	 */
 	private static final class Reference<E>
 			implements ElementReference {
-		protected int index;
-		protected E element;
+		private int index;
+		private E element;
 	
 		/**
 		 * Constructor.
@@ -83,6 +84,9 @@ public class BinaryHeap<E>
 		 */
 		@Override
 		public ElementReference next() {
+			if(current >= size) {
+				throw new NoSuchElementException();
+			}
 			return (ElementReference)entries.array[current++];
 		}
 

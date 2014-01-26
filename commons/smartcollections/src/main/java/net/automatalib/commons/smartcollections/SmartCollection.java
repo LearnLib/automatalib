@@ -19,6 +19,11 @@ package net.automatalib.commons.smartcollections;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * An extended collection interface.
@@ -58,6 +63,7 @@ import java.util.List;
  *
  * @param <E> element class
  */
+@ParametersAreNonnullByDefault
 public interface SmartCollection<E> extends Collection<E> {
 	
 	/**
@@ -69,6 +75,7 @@ public interface SmartCollection<E> extends Collection<E> {
 	 * @param ref the element's reference.
 	 * @return the element.
 	 */
+	@Nullable
 	public E get(ElementReference ref);
 	
 	/**
@@ -80,7 +87,8 @@ public interface SmartCollection<E> extends Collection<E> {
 	 * @param elem the element to be added.
 	 * @return a reference to this element in the collection.
 	 */
-	public ElementReference referencedAdd(E elem);
+	@Nonnull
+	public ElementReference referencedAdd(@Nullable E elem);
 	
 	/**
 	 * Removes an element (by its reference) from the collection.
@@ -94,23 +102,21 @@ public interface SmartCollection<E> extends Collection<E> {
 	
 	/**
 	 * Retrieves an arbitrary element from the collection. If the collection
-	 * is empty, <code>null</code> is returned. Note, however, that a
-	 * <code>null</code> return value doesn't necessary mean that the
-	 * collection is empty, since it may contain <code>null</code> elements.
+	 * is empty, a {@link NoSuchElementException} is thrown
 	 * 
-	 * @return an arbitrary element from the collection, or <code>null</code>.
+	 * @return an arbitrary element from the collection
 	 */
-	public E choose();
+	@Nullable
+	public E choose() throws NoSuchElementException;
 	
 	/**
 	 * Retrieves the reference to an arbitrary element from the collection.
-	 * If the collection is empty, <code>null</code> is returned. In contrast
-	 * to the above {@link #choose()}, this method returns <code>null</code>
-	 * if <i>and only if</i> the collection is empty.
+	 * If the collection is empty, a {@link NoSuchElementException}
+	 * is thrown.
 	 * 
-	 * @return the reference to an arbitrary element in the collection, or
-	 * <code>null</code>.
+	 * @return the reference to an arbitrary element in the collection
 	 */
+	@Nonnull
 	public ElementReference chooseRef();
 	
 	/**
@@ -120,13 +126,14 @@ public interface SmartCollection<E> extends Collection<E> {
 	 */
 	@Deprecated
 	@Override
-	public boolean remove(Object element);
+	public boolean remove(@Nullable Object element);
 	
 	/**
 	 * Retrieves an iterator for iterating over the references of elements
 	 * in this collection.
 	 * @return the reference iterator.
 	 */
+	@Nonnull
 	public Iterator<ElementReference> referenceIterator();
 	
 	/**
@@ -137,6 +144,7 @@ public interface SmartCollection<E> extends Collection<E> {
 	 * @return an {@link Iterable} with the above {@link #referenceIterator()}
 	 * as its iterator.
 	 */
+	@Nonnull
 	public Iterable<ElementReference> references();
 	
 	/**
@@ -162,7 +170,7 @@ public interface SmartCollection<E> extends Collection<E> {
 	 * @param ref the reference of the element to be replaced.
 	 * @param newElement the replacement.
 	 */
-	public void replace(ElementReference ref, E newElement);
+	public void replace(ElementReference ref, @Nullable E newElement);
 	
 	/**
 	 * Retrieves the reference for a given element. If the element is not
@@ -171,7 +179,7 @@ public interface SmartCollection<E> extends Collection<E> {
 	 * @param element the element to search for.
 	 * @return the reference to this element, or <code>null</code>.
 	 */
-	public ElementReference find(Object element);
+	public ElementReference find(@Nullable Object element);
 	
 	/**
 	 * Quickly clears this collection. This method is supposed to perform

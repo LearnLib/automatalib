@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@ package net.automatalib.algorithms.graph.scc;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
@@ -30,11 +32,12 @@ import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
  * Depth-first traversal visitor realizing Tarjan's algorithm for finding all
  * strongly-connected components (SCCs) in a graph.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class
  */
+@ParametersAreNonnullByDefault
 public class TarjanSCCVisitor<N, E> implements
 		GraphTraversalVisitor<N, E, TarjanSCCRecord> {
 	

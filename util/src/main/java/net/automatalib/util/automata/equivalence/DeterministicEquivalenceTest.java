@@ -75,7 +75,7 @@ public class DeterministicEquivalenceTest<I> {
 		if(!Objects.equals(refStateProp, otherStateProp))
 			return Word.epsilon();
 		
-		bfsQueue.offer(new StatePair<>(refInit, otherInit));
+		bfsQueue.add(new StatePair<>(refInit, otherInit));
 		
 		int refSize = reference.size();
 		int totalStates = refSize * other.size();
@@ -131,7 +131,7 @@ bfs:	while((currPair = bfsQueue.poll()) != null) {
 						break bfs;
 					
 					preds[succId] = new Pred<>(currId, in);
-					bfsQueue.offer(new StatePair<>(refSucc, otherSucc));
+					bfsQueue.add(new StatePair<>(refSucc, otherSucc));
 					inNextDepth++;
 				}
 			}

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@ package net.automatalib.algorithms.graph;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.algorithms.graph.apsp.APSPResult;
 import net.automatalib.algorithms.graph.apsp.FloydWarshallAPSP;
 import net.automatalib.algorithms.graph.scc.SCCListener;
@@ -32,9 +34,10 @@ import net.automatalib.graphs.concepts.EdgeWeights;
 /**
  * Convenience entry points and helper methods for various graph algorithms.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
+@ParametersAreNonnullByDefault
 public class GraphAlgorithms {
 
 	/**

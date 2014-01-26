@@ -166,9 +166,7 @@ public abstract class TSTraversal {
 				else
 					complete = false;
 				break;
-			case ABORT_INPUT:
-			case ABORT_STATE:
-			case IGNORE:
+			default: // case ABORT_INPUT: case ABORT_STATE: case IGNORE:
 			}
 		}
 		
@@ -184,9 +182,6 @@ public abstract class TSTraversal {
 inputs_loop:
 			for(I input : inputs) {
 				Collection<? extends T> transitions = ts.getTransitions(state, input);
-				
-				if(transitions == null)
-					continue;
 				
 				for(T trans : transitions) {
 					S succ = ts.getSuccessor(trans);

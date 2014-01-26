@@ -17,6 +17,7 @@
 package net.automatalib.util.tries;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -60,6 +61,9 @@ public class SuffixTrieNode<I> extends Word<I> {
 		 */
 		@Override
 		public I next() {
+			if(current.isRoot()) {
+				throw new NoSuchElementException();
+			}
 			I sym = current.symbol;
 			current = current.parent;
 			return sym;

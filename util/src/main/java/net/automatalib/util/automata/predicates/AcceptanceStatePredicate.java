@@ -16,6 +16,8 @@
  */
 package net.automatalib.util.automata.predicates;
 
+import javax.annotation.Nonnull;
+
 import net.automatalib.automata.fsa.FiniteStateAcceptor;
 
 import com.google.common.base.Predicate;
@@ -34,7 +36,7 @@ final class AcceptanceStatePredicate<S> implements Predicate<S> {
 	 * @see com.google.common.base.Predicate#apply(java.lang.Object)
 	 */
 	@Override
-	public boolean apply(S state) {
+	public boolean apply(@Nonnull S state) {
 		return fsa.isAccepting(state) == acceptance;
 	}
 	

@@ -40,8 +40,6 @@ public abstract class Graphs {
 		
 		for(N node : graph) {
 			Collection<? extends E> outEdges = graph.getOutgoingEdges(node);
-			if(outEdges == null)
-				continue;
 			for(E e : outEdges) {
 				N tgt = graph.getTarget(e);
 				Collection<E> inEdges = inEdgesMapping.get(tgt);

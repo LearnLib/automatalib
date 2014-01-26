@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.algorithms.graph.GraphAlgorithms;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.EdgeWeights;
@@ -29,14 +33,17 @@ import net.automatalib.graphs.concepts.NodeIDs;
  * Implementation of the Floyd-Warshall dynamic programming algorithm for the
  * all pairs shortest paths problem.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <N> node class
  * @param <E> edge class
  */
+@ParametersAreNonnullByDefault
 public class FloydWarshallAPSP<N,E> implements APSPResult<N,E> {
 	
+	@ParametersAreNonnullByDefault
 	private static final class APSPRecord<N,E> {
+		@Nullable
 		public final E edge;
 		public float distance;
 		public int middle;
@@ -57,6 +64,7 @@ public class FloydWarshallAPSP<N,E> implements APSPResult<N,E> {
 	}
 	
 	
+	@Nonnull
 	public static <N,E> APSPResult<N,E> findAPSP(Graph<N,E> graph, EdgeWeights<E> edgeWeights) {
 		FloydWarshallAPSP<N, E> fw = new FloydWarshallAPSP<>(graph, edgeWeights);
 		fw.findAPSP();
@@ -64,7 +72,9 @@ public class FloydWarshallAPSP<N,E> implements APSPResult<N,E> {
 	}
 	
 	private final int size;
+	@Nonnull
 	private final NodeIDs<N> ids;
+	@Nonnull
 	private final APSPRecord<N,E>[][] table;
 	
 	@SuppressWarnings("unchecked")

@@ -36,7 +36,7 @@ class Covers {
 		S init = automaton.getInitialState();
 		
 		reach.put(init, Word.<I>epsilon());
-		bfsQueue.offer(init);
+		bfsQueue.add(init);
 		if(states != null)
 			states.add(Word.<I>epsilon());
 		
@@ -53,9 +53,10 @@ class Covers {
 				if(reach.get(succ) == null) {
 					Word<I> succAs = as.append(in);
 					reach.put(succ, succAs);
-					if(states != null)
+					if(states != null) {
 						states.add(succAs);
-					bfsQueue.offer(succ);
+					}
+					bfsQueue.add(succ);
 				}
 				else if(transitions != null)
 					transitions.add(as.append(in));

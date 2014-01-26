@@ -98,7 +98,7 @@ public abstract class GraphTraversal {
 				return complete;
 			case EXPLORE:
 				if(nodeCount != limit) { // not equals will always be true for negative limit values
-					bfsQueue.offer(new BFRecord<N,D>(init, dataHolder.value));
+					bfsQueue.add(new BFRecord<N,D>(init, dataHolder.value));
 					nodeCount++;
 				}
 				else

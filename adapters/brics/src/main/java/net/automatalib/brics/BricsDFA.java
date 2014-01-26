@@ -19,6 +19,9 @@ package net.automatalib.brics;
 import java.util.Collection;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.abstractimpl.AbstractDFA;
@@ -35,6 +38,7 @@ import dk.brics.automaton.State;
  * @author Malte Isberner
  *
  */
+@ParametersAreNonnullByDefault
 public class BricsDFA extends AbstractBricsAutomaton implements
 		DFA<State, Character> {
 	
@@ -91,7 +95,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.simple.SimpleDTS#getSuccessor(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public State getSuccessor(State state, Character input) {
+	public State getSuccessor(State state, @Nonnull Character input) {
 		return state.step(input.charValue());
 	}
 
@@ -118,7 +122,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.DeterministicTransitionSystem#getTransition(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public State getTransition(State state, Character input) {
+	public State getTransition(State state, @Nonnull Character input) {
 		return state.step(input.charValue());
 	}
 
@@ -127,7 +131,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.brics.AbstractBricsAutomaton#getTransitions(dk.brics.automaton.State, java.lang.Character)
 	 */
 	@Override
-	public Collection<State> getTransitions(State state, Character input) {
+	public Collection<State> getTransitions(State state, @Nonnull Character input) {
 		return AbstractDeterministicAutomaton.getTransitions(this, state, input);
 	}
 
@@ -136,7 +140,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 	 * @see net.automatalib.ts.abstractimpl.AbstractTS#getSuccessors(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Set<State> getSuccessors(State state, Character input) {
+	public Set<State> getSuccessors(State state, @Nonnull Character input) {
 		return AbstractDeterministicAutomaton.getSuccessors(this, state, input);
 	}
 	

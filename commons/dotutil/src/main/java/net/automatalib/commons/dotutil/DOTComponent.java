@@ -50,8 +50,7 @@ public class DOTComponent extends ImageComponent {
 			int result = saveDlg.showSaveDialog(DOTComponent.this);
 			if(result != JFileChooser.APPROVE_OPTION)
 				return;
-			try {
-				Writer w = new BufferedWriter(new FileWriter(saveDlg.getSelectedFile()));
+			try(Writer w = new BufferedWriter(new FileWriter(saveDlg.getSelectedFile()))) {
 				w.write(dot);
 				w.close();
 			}

@@ -17,6 +17,7 @@
 package net.automatalib.ts;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,10 +42,14 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S,I> {
 	/**
 	 * Retrieves the transitions that can be triggered by the given
 	 * input symbol.
+	 * <p>
+	 * The return value must not be {@code null}; if there
+	 * are no transitions triggered by the specified input,
+	 * {@link Collections#emptySet()} should be returned.
+	 * 
 	 * @param state the source state.
 	 * @param input the input symbol.
-	 * @return the transitions, or <code>null</code> if no transitions
-	 * are triggered by this input symbol.
+	 * @return the transitions triggered by the given input
 	 */
 	@Nonnull
 	public Collection<? extends T> getTransitions(S state, @Nullable I input);

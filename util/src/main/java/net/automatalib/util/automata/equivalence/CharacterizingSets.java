@@ -199,7 +199,7 @@ public class CharacterizingSets {
 			List<S> initBlock = initBlockMap.get(prop);
 			if(initBlock == null) {
 				initBlock = new ArrayList<S>();
-				blocks.offer(initBlock);
+				blocks.add(initBlock);
 				initBlockMap.put(prop, initBlock);
 			}
 

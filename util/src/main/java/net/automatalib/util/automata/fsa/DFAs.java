@@ -53,6 +53,9 @@ public abstract class DFAs {
 		= new Function<Boolean,Boolean>() {
 			@Override
 			public Boolean apply(Boolean elem) {
+				if(elem == null) { // treat null as false
+					return Boolean.TRUE;
+				}
 				return !elem;
 			}
 	};

@@ -19,6 +19,8 @@ package net.automatalib.util.automata.predicates;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+
 import net.automatalib.automata.concepts.TransitionOutput;
 import net.automatalib.ts.TransitionPredicate;
 
@@ -34,7 +36,7 @@ public abstract class TransitionPredicates {
 			final S source, final I input) {
 		return new Predicate<T>() {
 			@Override
-			public boolean apply(T trans) {
+			public boolean apply(@Nonnull T trans) {
 				return transPred.apply(source, input, trans);
 			}
 		};

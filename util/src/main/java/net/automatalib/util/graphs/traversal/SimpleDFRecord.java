@@ -45,10 +45,16 @@ class SimpleDFRecord<N, E> {
 	}
 	
 	public final boolean hasNextEdge() {
+		if(edgeIterator == null) {
+			throw new IllegalStateException("Edge iteration not yet started");
+		}
 		return edgeIterator.hasNext();
 	}
 	
 	public final E nextEdge() {
+		if(edgeIterator == null) {
+			throw new IllegalStateException("Edge iteration not yet started");
+		}
 		return edgeIterator.next();
 	}
 

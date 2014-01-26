@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -21,6 +21,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.fsa.abstractimpl.AbstractFSA;
 import net.automatalib.automata.graphs.AbstractAutomatonGraph;
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -35,9 +38,10 @@ import dk.brics.automaton.Transition;
 /**
  * Base class for Brics automata adapters.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
+@ParametersAreNonnullByDefault
 public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Character> implements
 		DOTPlottableGraph<State, Transition>, UniversalGraph<State,Transition,Boolean,BricsTransitionProperty> {
 	
@@ -48,6 +52,9 @@ public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Characte
 	 * @param automaton the Brics automaton object. 
 	 */
 	public AbstractBricsAutomaton(Automaton automaton) {
+		if(automaton == null) {
+			throw new IllegalArgumentException("Provided Brics automaton must not be null");
+		}
 		this.automaton = automaton;
 	}
 	
@@ -127,7 +134,7 @@ public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Characte
 	 * @see net.automatalib.ts.TransitionSystem#getTransitions(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Collection<State> getTransitions(State state, Character input) {
+	public Collection<State> getTransitions(State state, @Nonnull Character input) {
 		Collection<Transition> transitions = state.getSortedTransitions(false);
 		
 		Set<State> result = new HashSet<>();

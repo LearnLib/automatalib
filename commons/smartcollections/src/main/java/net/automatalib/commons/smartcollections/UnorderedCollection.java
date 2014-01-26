@@ -18,6 +18,7 @@ package net.automatalib.commons.smartcollections;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import net.automatalib.commons.util.array.ResizingObjectArray;
@@ -78,6 +79,9 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E>
 		 */
 		@Override
 		public ElementReference next() {
+			if(index >= size) {
+				throw new NoSuchElementException();
+			}
 			return (ElementReference)storage.array[index++];
 		}
 
@@ -113,6 +117,9 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E>
 		@Override
 		@SuppressWarnings("unchecked")
 		public E next() {
+			if(index >= size) {
+				throw new NoSuchElementException();
+			}
 			return ((Reference<E>)storage.array[index++]).element;
 		}
 
@@ -369,8 +376,9 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E>
 	 */
 	@Override
 	public ElementReference chooseRef() {
-		if(size == 0)
-			return null;
+		if(size == 0) {
+			throw new NoSuchElementException();
+		}
 		return (ElementReference)storage.array[0];
 	}
 
