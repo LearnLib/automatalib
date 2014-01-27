@@ -138,6 +138,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<guava.version>15.0</guava.version>
 		<findbugs.version>2.0.2</findbugs.version>
 
+		<duzzt.version>0.0.2-SNAPSHOT</duzzt.version>
+
 		<!-- Javadoc links -->
 		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
 		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
@@ -457,8 +459,17 @@ http://www.gnu.de/documents/lgpl.en.html.
  				<groupId>com.google.code.findbugs</groupId>
  				<artifactId>jsr305</artifactId>
 				<version>${findbugs.version}</version>
+				<!-- <scope>provided</scope> -->
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.misberner.duzzt</groupId>
+				<artifactId>duzzt-processor</artifactId>
+				<version>${duzzt.version}</version>
+				<!-- Compile-time only -->
 				<scope>provided</scope>
 			</dependency>
+
 
 			<dependency>
 				<groupId>org.testng</groupId>

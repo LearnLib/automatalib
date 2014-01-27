@@ -58,6 +58,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<artifactId>automata-core</artifactId>
 		</dependency>
 		
+
+		<dependency> 
+			<groupId>com.github.misberner.duzzt</groupId>
+			<artifactId>duzzt-processor</artifactId>
+		</dependency>
+		
 		<dependency> 
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
