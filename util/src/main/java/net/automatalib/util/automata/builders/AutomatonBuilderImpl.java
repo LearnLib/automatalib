@@ -29,7 +29,8 @@ import com.github.misberner.duzzt.annotations.GenerateEmbeddedDSL;
 
 @GenerateEmbeddedDSL(name = "AutomatonBuilder",
 		enableAllMethods = false,
-		syntax = "((from (on (withProperty? <<to* loop? to*>>)+)+)|withStateProperty|withInitial)* create")
+		syntax = "((from (on (withProperty? <<to* loop? to*>>)+)+)|withStateProperty|withInitial)* create"
+)
 class AutomatonBuilderImpl<S,I,T,SP,TP,A extends MutableAutomaton<S,? super I,T,? super SP,? super TP>> {
 	
 	protected final A automaton;
