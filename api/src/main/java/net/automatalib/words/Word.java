@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.array.ArrayWritable;
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.commons.util.strings.StringUtil;
@@ -65,7 +66,26 @@ import net.automatalib.commons.util.strings.StringUtil;
  */
 @ParametersAreNonnullByDefault
 public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I> {
-	
+
+
+	private static String emptyWordRep = "ε";
+	private static String wordDelimLeft = "";
+	private static String wordDelimRight = "";
+	private static String wordSymbolSeparator = " ";
+	private static String wordSymbolDelimLeft = "";
+	private static String wordSymbolDelimRight = "";
+
+	static {
+		AutomataLibSettings settings = AutomataLibSettings.getInstance();
+		System.err.println("Reading AutomataLib settings");
+		emptyWordRep = settings.getProperty("word.empty", "ε");
+		wordDelimLeft = settings.getProperty("word.delim.left", "");
+		wordDelimRight = settings.getProperty("word.delim.right", "");
+		wordSymbolSeparator = settings.getProperty("word.symbol.separator", " ");
+		wordSymbolDelimLeft = settings.getProperty("word.symbol.delim.left", "");
+		wordSymbolDelimRight = settings.getProperty("word.symbol.delim.right", "");
+	}
+
 	
 	/**
 	 * Retrieves the empty word.
@@ -144,7 +164,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 		int len = str.length();
 		Character[] chars = new Character[str.length()];
 		for(int i = 0; i < len; i++)
-			chars[i] = Character.valueOf(str.charAt(i));
+			chars[i] = str.charAt(i);
 		return new SharedWord<>(chars);
 	}
 	
@@ -224,7 +244,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 
     /**
      * Return symbol that is at the specified position
-     * @param i the position
+     * @param index the position
      * @return symbol at position i, <tt>null</tt> if no such symbol exists
      */
 	@Nullable
@@ -284,11 +304,25 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     @Override
 	public void print(Appendable a) throws IOException {
     	if(isEmpty()) {
-    		a.append('ε');
+		    a.append(emptyWordRep);
     	}
     	else {
-    		StringUtil.appendIterable(a, this, " ");
+		    a.append(wordDelimLeft);
+		    java.util.Iterator<? extends I> symIt = iterator();
+		    assert symIt.hasNext();
+		    appendSymbol(a, symIt.next());
+		    while(symIt.hasNext()) {
+			    a.append(wordSymbolSeparator);
+			    appendSymbol(a, symIt.next());
+		    }
+		    a.append(wordDelimRight);
     	}
+	}
+
+	private static void appendSymbol(Appendable a, Object symbol) throws IOException {
+		a.append(wordSymbolDelimLeft);
+		a.append(String.valueOf(symbol));
+		a.append(wordSymbolDelimRight);
 	}
 
 	/*
