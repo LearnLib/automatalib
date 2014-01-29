@@ -69,8 +69,5 @@ public class AutomataLibSettings {
 
 		// System properties (specified via command line) override all other properties
 		properties.putAll(System.getProperties());
-
-		System.err.println("Effective properties:");
-		properties.list(System.err);
 	}
 }

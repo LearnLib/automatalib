@@ -77,7 +77,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 
 	static {
 		AutomataLibSettings settings = AutomataLibSettings.getInstance();
-		System.err.println("Reading AutomataLib settings");
 		emptyWordRep = settings.getProperty("word.empty", "ε");
 		wordDelimLeft = settings.getProperty("word.delim.left", "");
 		wordDelimRight = settings.getProperty("word.delim.right", "");
