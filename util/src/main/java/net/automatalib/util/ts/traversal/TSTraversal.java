@@ -27,7 +27,7 @@ import net.automatalib.util.traversal.TraversalOrder;
 
 /**
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public abstract class TSTraversal {
@@ -83,8 +83,9 @@ public abstract class TSTraversal {
 					continue;
 				}
 			}
-			
-			if(!current.hasNextTransition()) {
+
+
+			if(!current.hasNextTransition(ts)) {
 				dfsStack.pop();
 				continue;
 			}

@@ -55,9 +55,12 @@ class SimpleDFRecord<S, I, T> {
 		return true;
 	}
 
-	public boolean hasNextTransition() {
+	public boolean hasNextTransition(TransitionSystem<S,? super I,T> ts) {
 		if(transitionIterator == null)
 			return false;
+		if(!transitionIterator.hasNext()) {
+			findNext(ts);
+		}
 		return transitionIterator.hasNext();
 	}
 
