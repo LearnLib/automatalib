@@ -16,10 +16,13 @@
  */
 package net.automatalib.words;
 
+import com.google.common.base.Function;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -174,6 +177,11 @@ final class EmptyWord extends Word<Object> {
 	public Word<Object> trimmed() {
 		return this;
 	}
-	
-	
+
+	@Nonnull
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> Word<T> transform(Function<? super Object,T> transformer) {
+		return (Word<T>)this;
+	}
 }

@@ -27,6 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.base.Function;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.array.ArrayWritable;
 import net.automatalib.commons.util.strings.AbstractPrintable;
@@ -734,5 +735,17 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 	 */
 	public boolean isEmpty() {
 		return (length() == 0);
+	}
+
+	@Nonnull
+	public <T>
+	Word<T> transform(Function<? super I,T> transformer) {
+		int len = length();
+		Object[] array = new Object[len];
+		int i = 0;
+		for(I symbol : this) {
+			array[i++] = transformer.apply(symbol);
+		}
+		return new SharedWord<>(array);
 	}
 }

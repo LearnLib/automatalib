@@ -16,6 +16,9 @@
  */
 package net.automatalib.words;
 
+import com.google.common.base.Function;
+
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -250,6 +253,11 @@ final class LetterWord<I> extends Word<I> {
 	public Word<I> trimmed() {
 		return this;
 	}
-	
-	
+
+	@Nonnull
+	@Override
+	public <T> Word<T> transform(Function<? super I,T> transformer) {
+		T transformed = transformer.apply(letter);
+		return new LetterWord<>(transformed);
+	}
 }

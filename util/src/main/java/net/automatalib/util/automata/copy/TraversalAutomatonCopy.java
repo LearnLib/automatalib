@@ -114,10 +114,11 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 	@Override
 	public TSTraversalAction processTransition(S1 source, S2 srcData, I1 input,
 			T1 transition, S1 succ, Holder<S2> outData) {
-		if(transFilter.apply(source, input, transition)) {
+		if(transFilter.apply(source, input, transition) && stateFilter.apply(succ)) {
 			S2 succ2 = copyTransitionChecked(srcData, inputsMapping.apply(input), transition, succ);
-			if(succ2 == null)
+			if(succ2 == null) {
 				return TSTraversalAction.IGNORE;
+			}
 			outData.value = succ2;
 			return TSTraversalAction.EXPLORE;
 		}
