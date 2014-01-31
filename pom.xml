@@ -141,11 +141,13 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<guava.version>16.0</guava.version>
 		<findbugs.version>2.0.2</findbugs.version>
 
-		<duzzt.version>0.0.2-SNAPSHOT</duzzt.version>
+		<duzzt.version>0.0.2</duzzt.version>
 
 		<!-- Javadoc links -->
 		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
 		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
+		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/release/javadoc/</guava.apidocs>
+
 	</properties>
 
 	<!--
@@ -184,6 +186,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<links>
 							<link>${java7.apidocs}</link>
 							<link>${brics-automaton.apidocs}</link>
+							<link>${guava.apidocs}</link>
 						</links>
 					</configuration>
 				</plugin>
