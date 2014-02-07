@@ -73,7 +73,7 @@ public abstract class AbstractDFA<S, I> extends AbstractDeterministicAutomaton<S
 	 * @see de.ls5.automata.features.SODetOutputAutomaton#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
 	 */
 	@Override
-	public Boolean computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return AbstractFSA.computeSuffixOutput(this, prefix, suffix);
 	}
 
@@ -82,7 +82,7 @@ public abstract class AbstractDFA<S, I> extends AbstractDeterministicAutomaton<S
 	 * @see de.ls5.automata.features.OutputAutomaton#computeOutput(java.lang.Iterable)
 	 */
 	@Override
-	public Boolean computeOutput(Iterable<I> input) {
+	public Boolean computeOutput(Iterable<? extends I> input) {
 		return AbstractFSA.computeOutput(this, input);
 	}
 	

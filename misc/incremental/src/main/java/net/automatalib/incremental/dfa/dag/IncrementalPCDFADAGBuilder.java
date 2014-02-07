@@ -35,7 +35,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 	 * @see net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder#getState(net.automatalib.words.Word)
 	 */
 	@Override
-	protected State getState(Word<I> word) {
+	protected State getState(Word<? extends I> word) {
 		State s = init;
 		
 		for(I sym : word) {
@@ -53,7 +53,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 	 * @see net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder#lookup(net.automatalib.words.Word)
 	 */
 	@Override
-	public Acceptance lookup(Word<I> word) {
+	public Acceptance lookup(Word<? extends I> word) {
 		State s = getState(word);
 		if(s == null)
 			return Acceptance.DONT_KNOW;
@@ -65,7 +65,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 	 * @see net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder#insert(net.automatalib.words.Word, boolean)
 	 */
 	@Override
-	public void insert(Word<I> word, boolean accepting) {
+	public void insert(Word<? extends I> word, boolean accepting) {
 		int len = word.length();
 		Acceptance acc = Acceptance.fromBoolean(accepting);
 		
@@ -140,7 +140,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 				hide(last);
 			}
 			
-			Word<I> suffix = word.subWord(prefixLen);
+			Word<? extends I> suffix = word.subWord(prefixLen);
 			I sym = suffix.firstSymbol();
 			int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
 			State suffixState = createSuffix(suffix.subWord(1), accepting);
@@ -240,7 +240,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 	 * @param acc whether or not the final state should be accepting
 	 * @return the first state in the sequence
 	 */
-	private State createSuffix(Word<I> suffix, boolean accepting) {
+	private State createSuffix(Word<? extends I> suffix, boolean accepting) {
 		State last;
 		Acceptance intermediate;
 		if(!accepting) {

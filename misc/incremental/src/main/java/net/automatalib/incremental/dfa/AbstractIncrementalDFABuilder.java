@@ -121,12 +121,12 @@ public abstract class AbstractIncrementalDFABuilder<I> implements
 	 * @see net.automatalib.incremental.IncrementalConstruction#hasDefinitiveInformation(net.automatalib.words.Word)
 	 */
 	@Override
-	public boolean hasDefinitiveInformation(Word<I> word) {
+	public boolean hasDefinitiveInformation(Word<? extends I> word) {
 		return lookup(word) != Acceptance.DONT_KNOW;
 	}
 	
 	@Override
-	public void insert(Word<I> word) throws ConflictException {
+	public void insert(Word<? extends I> word) throws ConflictException {
 		insert(word, true);
 	}
 

@@ -171,7 +171,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 	 * @see net.automatalib.incremental.dfa.IncrementalDFABuilder#lookup(net.automatalib.words.Word)
 	 */
 	@Override
-	public Acceptance lookup(Word<I> inputWord) {
+	public Acceptance lookup(Word<? extends I> inputWord) {
 		Node<I> curr = root;
 		
 		for(I sym : inputWord) {
@@ -190,7 +190,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 	 * @see net.automatalib.incremental.dfa.IncrementalDFABuilder#insert(net.automatalib.words.Word, boolean)
 	 */
 	@Override
-	public void insert(Word<I> word, boolean acceptance) {
+	public void insert(Word<? extends I> word, boolean acceptance) {
 		Node<I> curr = root;
 		
 		for(I sym : word) {

@@ -96,13 +96,13 @@ public abstract class AbstractIncrementalMealyBuilder<I, O> implements
 	}
 
 	@Override
-	public boolean hasDefinitiveInformation(Word<I> word) {
+	public boolean hasDefinitiveInformation(Word<? extends I> word) {
 		List<O> unused = new ArrayList<>(word.length());
 		return lookup(word, unused);
 	}
 
 	@Override
-	public Word<O> lookup(Word<I> inputWord) {
+	public Word<O> lookup(Word<? extends I> inputWord) {
 		WordBuilder<O> wb = new WordBuilder<>(inputWord.size());
 		lookup(inputWord, wb);
 		return wb.toWord();

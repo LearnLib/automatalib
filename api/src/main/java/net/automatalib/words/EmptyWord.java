@@ -181,7 +181,7 @@ final class EmptyWord extends Word<Object> {
 	@Nonnull
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> Word<T> transform(Function<? super Object,T> transformer) {
+	public <T> Word<T> transform(Function<? super Object,? extends T> transformer) {
 		return (Word<T>)this;
 	}
 }

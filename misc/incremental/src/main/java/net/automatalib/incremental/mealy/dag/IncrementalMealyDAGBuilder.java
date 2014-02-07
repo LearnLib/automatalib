@@ -165,7 +165,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 	 *            the input word
 	 * @return the corresponding state
 	 */
-	private State getState(Word<I> word) {
+	private State getState(Word<? extends I> word) {
 		State s = init;
 
 		for (I sym : word) {
@@ -188,7 +188,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 	 * @deprecated since 2014-01-22. Use {@link #hasDefinitiveInformation(Word)}
 	 */
 	@Deprecated
-	public boolean isComplete(Word<I> word) {
+	public boolean isComplete(Word<? extends I> word) {
 		return hasDefinitiveInformation(word);
 	}
 
@@ -200,7 +200,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 	 * (net.automatalib.words.Word)
 	 */
 	@Override
-	public boolean hasDefinitiveInformation(Word<I> word) {
+	public boolean hasDefinitiveInformation(Word<? extends I> word) {
 		State s = getState(word);
 		return (s != null);
 	}
@@ -221,7 +221,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean lookup(Word<I> word, List<? super O> output) {
+	public boolean lookup(Word<? extends I> word, List<? super O> output) {
 		State curr = init;
 		for (I sym : word) {
 			int idx = inputAlphabet.getSymbolIndex(sym);
@@ -246,7 +246,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 	 *             if this information conflicts with information already stored
 	 */
 	@Override
-	public void insert(Word<I> word, Word<O> outputWord) {
+	public void insert(Word<? extends I> word, Word<? extends O> outputWord) {
 		int len = word.length();
 
 		State curr = init;
@@ -256,7 +256,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 
 		// Find the internal state in the automaton that can be reached by a
 		// maximal prefix of the word (i.e., a path of secured information)
-		Iterator<O> outWordIterator = outputWord.iterator();
+		Iterator<? extends O> outWordIterator = outputWord.iterator();
 		for (I sym : word) {
 			// During this, store the *first* confluence state (i.e., state with
 			// multiple incoming edges).
@@ -309,8 +309,8 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		// this is the
 		// transition which is used for gluing the suffix path to the existing
 		// automaton).
-		Word<I> suffix = word.subWord(prefixLen);
-		Word<O> suffixOut = outputWord.subWord(prefixLen);
+		Word<? extends I> suffix = word.subWord(prefixLen);
+		Word<? extends O> suffixOut = outputWord.subWord(prefixLen);
 
 		// Here we prepare the "gluing" transition
 		I sym = suffix.firstSymbol();
@@ -515,7 +515,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		return state;
 	}
 
-	private State createSuffix(Word<I> suffix, Word<O> suffixOut) {
+	private State createSuffix(Word<? extends I> suffix, Word<? extends O> suffixOut) {
 		StateSignature sig = new StateSignature(alphabetSize);
 		sig.updateHashCode();
 		State last = replaceOrRegister(sig);

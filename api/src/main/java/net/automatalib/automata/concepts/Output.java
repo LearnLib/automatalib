@@ -22,5 +22,5 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public interface Output<I, O> {
 	@Nullable
-	public O computeOutput(Iterable<I> input);
+	public O computeOutput(Iterable<? extends I> input);
 }

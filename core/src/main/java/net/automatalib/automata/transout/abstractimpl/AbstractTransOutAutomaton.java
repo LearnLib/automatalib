@@ -28,10 +28,10 @@ import net.automatalib.words.WordBuilder;
 public abstract class AbstractTransOutAutomaton {
 	
 	public static <S,I,T,O> Word<O> computeOutput(TransitionOutputAutomaton<S,I,T,O> $this,
-			Iterable<I> input) {
+			Iterable<? extends I> input) {
 		WordBuilder<O> result;
 		if(input instanceof Collection)
-			result = new WordBuilder<O>(((Collection<I>)input).size());
+			result = new WordBuilder<O>(((Collection<? extends I>)input).size());
 		else
 			result = new WordBuilder<>();
 		$this.trace(input, result);
@@ -39,10 +39,10 @@ public abstract class AbstractTransOutAutomaton {
 	}
 	
 	public static <S,I,T,O> Word<O> computeSuffixOutput(TransitionOutputAutomaton<S,I,T,O> $this,
-			Iterable<I> prefix, Iterable<I> suffix) {
+			Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		WordBuilder<O> result;
 		if(suffix instanceof Collection)
-			result = new WordBuilder<O>(((Collection<I>)suffix).size());
+			result = new WordBuilder<O>(((Collection<? extends I>)suffix).size());
 		else
 			result = new WordBuilder<>();
 		S state = $this.getState(prefix);

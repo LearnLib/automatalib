@@ -56,7 +56,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 	}
 	
 	@Override
-	public Acceptance lookup(Word<I> inputWord) {
+	public Acceptance lookup(Word<? extends I> inputWord) {
 		Node<I> curr = root;
 		
 		for(I sym : inputWord) {
@@ -75,7 +75,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 	}
 	
 	@Override
-	public void insert(Word<I> word, boolean acceptance) throws ConflictException {
+	public void insert(Word<? extends I> word, boolean acceptance) throws ConflictException {
 		if(acceptance) {
 			insertTrue(word);
 		}
@@ -84,7 +84,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 		}
 	}
 	
-	private void insertTrue(Word<I> word) throws ConflictException {
+	private void insertTrue(Word<? extends I> word) throws ConflictException {
 		Node<I> curr = root;
 		
 		int idx = 0;
@@ -108,7 +108,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 		curr.setAcceptance(Acceptance.TRUE);
 	}
 	
-	private void insertFalse(Word<I> word) throws ConflictException {
+	private void insertFalse(Word<? extends I> word) throws ConflictException {
 		Node<I> curr = root;
 		Node<I> prev = null;
 		int lastSymIdx = -1;

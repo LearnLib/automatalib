@@ -146,7 +146,7 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 	 * @see net.automatalib.incremental.mealy.IncrementalMealyBuilder#insert(net.automatalib.words.Word, net.automatalib.words.Word)
 	 */
 	@Override
-	public void insert(Word<I> input, Word<O> outputWord) throws ConflictException {
+	public void insert(Word<? extends I> input, Word<? extends O> outputWord) throws ConflictException {
 		Node<I,O> curr = root;
 		
 		Iterator<? extends O> outputIt = outputWord.iterator();
@@ -171,7 +171,7 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 	 * @see net.automatalib.incremental.mealy.IncrementalMealyBuilder#lookup(net.automatalib.words.Word, java.util.List)
 	 */
 	@Override
-	public boolean lookup(Word<I> word, List<? super O> output) {
+	public boolean lookup(Word<? extends I> word, List<? super O> output) {
 		Node<I,O> curr = root;
 		
 		for(I sym : word) {
@@ -203,10 +203,10 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 	 * @see net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder#hasDefinitiveInformation(net.automatalib.words.Word)
 	 */
 	@Override
-	public boolean hasDefinitiveInformation(Word<I> word) {
+	public boolean hasDefinitiveInformation(Word<? extends I> word) {
 		Node<I,O> curr = root;
 		
-		Iterator<I> symIt = word.iterator();
+		Iterator<? extends I> symIt = word.iterator();
 		while(symIt.hasNext() && curr != null) {
 			int symIdx = inputAlphabet.getSymbolIndex(symIt.next());
 			curr = curr.getSuccessor(symIdx);

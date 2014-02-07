@@ -104,7 +104,7 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.concepts.SuffixOutput#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
 	 */
 	@Override
-	public Word<O> computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return AbstractTransOutAutomaton.computeSuffixOutput(this, prefix, suffix);
 	}
 
@@ -113,7 +113,7 @@ public class CompactMealy<I, O> extends
 	 * @see net.automatalib.automata.concepts.Output#computeOutput(java.lang.Iterable)
 	 */
 	@Override
-	public Word<O> computeOutput(Iterable<I> input) {
+	public Word<O> computeOutput(Iterable<? extends I> input) {
 		return AbstractTransOutAutomaton.computeOutput(this, input);
 	}
 

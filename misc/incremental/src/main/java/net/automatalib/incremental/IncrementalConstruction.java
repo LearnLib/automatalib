@@ -66,7 +66,7 @@ public interface IncrementalConstruction<A, I> {
 	 * @return <tt>true</tt> if this class has definitive information about the word,
 	 * <tt>false</tt> otherwise. 
 	 */
-	public boolean hasDefinitiveInformation(Word<I> word);
+	public boolean hasDefinitiveInformation(Word<? extends I> word);
 
 	/**
 	 * Retrieves a <i>graph view</i> of the current state of the construction. The graph model should be

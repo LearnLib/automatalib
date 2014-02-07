@@ -167,7 +167,7 @@ public final class FastMoore<I, O> extends FastMutableDet<FastMooreState<O>, I, 
 	 * @see de.ls5.automata.features.SODetOutputAutomaton#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
 	 */
 	@Override
-	public Word<O> computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return AbstractTransOutAutomaton.computeSuffixOutput(this, prefix, suffix);
 	}
 
@@ -177,7 +177,7 @@ public final class FastMoore<I, O> extends FastMutableDet<FastMooreState<O>, I, 
 	 * @see de.ls5.automata.features.OutputAutomaton#computeOutput(java.lang.Iterable)
 	 */
 	@Override
-	public Word<O> computeOutput(Iterable<I> input) {
+	public Word<O> computeOutput(Iterable<? extends I> input) {
 		return AbstractTransOutAutomaton.computeOutput(this, input);
 	}
 

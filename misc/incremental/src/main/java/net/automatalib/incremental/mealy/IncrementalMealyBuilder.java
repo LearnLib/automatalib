@@ -42,9 +42,9 @@ public interface IncrementalMealyBuilder<I, O> extends IncrementalConstruction<M
 	public static interface TransitionSystemView<I, O, S, T> extends MealyTransitionSystem<S, I, T, O> {
 	}
 	
-	public Word<O> lookup(Word<I> inputWord);
-	public boolean lookup(Word<I> inputWord, List<? super O> output);
-	public void insert(Word<I> inputWord, Word<O> outputWord) throws ConflictException;
+	public Word<O> lookup(Word<? extends I> inputWord);
+	public boolean lookup(Word<? extends I> inputWord, List<? super O> output);
+	public void insert(Word<? extends I> inputWord, Word<? extends O> outputWord) throws ConflictException;
 	
 	@Override
 	public TransitionSystemView<I,O,?,?> asTransitionSystem();

@@ -256,7 +256,7 @@ final class LetterWord<I> extends Word<I> {
 
 	@Nonnull
 	@Override
-	public <T> Word<T> transform(Function<? super I,T> transformer) {
+	public <T> Word<T> transform(Function<? super I,? extends T> transformer) {
 		T transformed = transformer.apply(letter);
 		return new LetterWord<>(transformed);
 	}

@@ -116,14 +116,14 @@ public final class FastDFA<I> extends FastMutableDet<FastDFAState, I, FastDFASta
 
 
 	@Override
-	public Boolean computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix) {
+	public Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
 		return AbstractFSA.computeSuffixOutput(this, prefix, suffix);
 	}
 
 
 
 	@Override
-	public Boolean computeOutput(Iterable<I> input) {
+	public Boolean computeOutput(Iterable<? extends I> input) {
 		return AbstractFSA.computeOutput(this, input);
 	}
 

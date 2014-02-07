@@ -53,7 +53,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
 	 * @return the acceptance status for the given word
 	 */
 	@Override
-	public Acceptance lookup(Word<I> word) {
+	public Acceptance lookup(Word<? extends I> word) {
 		State s = getState(word);
 		if(s == null)
 			return Acceptance.DONT_KNOW;
@@ -66,7 +66,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
 	 * @param accepting whether to insert this word into the set of accepted or rejected words.
 	 */
 	@Override
-	public void insert(Word<I> word, boolean accepting) {
+	public void insert(Word<? extends I> word, boolean accepting) {
 		int len = word.length();
 		Acceptance acc = Acceptance.fromBoolean(accepting);
 		
@@ -122,7 +122,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
 				hide(last);
 			}
 			
-			Word<I> suffix = word.subWord(prefixLen);
+			Word<? extends I> suffix = word.subWord(prefixLen);
 			I sym = suffix.firstSymbol();
 			int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
 			State suffixState = createSuffix(suffix.subWord(1), acc);
@@ -174,7 +174,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
 	 * by that word
 	 */
 	@Override
-	protected State getState(Word<I> word) {
+	protected State getState(Word<? extends I> word) {
 		State s = init;
 		
 		for(I sym : word) {
@@ -196,7 +196,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
 	 * @param acc the acceptance status of the final state
 	 * @return the first state in the sequence
 	 */
-	private State createSuffix(Word<I> suffix, Acceptance acc) {
+	private State createSuffix(Word<? extends I> suffix, Acceptance acc) {
 		StateSignature sig = new StateSignature(alphabetSize, acc);
 		sig.updateHashCode();
 		State last = replaceOrRegister(sig);

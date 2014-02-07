@@ -62,7 +62,7 @@ public interface IncrementalDFABuilder<I> extends
 	 * @return the tri-state acceptance value for this word.
 	 */
 	@Nonnull
-	public Acceptance lookup(Word<I> inputWord);
+	public Acceptance lookup(Word<? extends I> inputWord);
 	
 	/**
 	 * Inserts a new word into the automaton, with a given acceptance value.
@@ -72,7 +72,7 @@ public interface IncrementalDFABuilder<I> extends
 	 * @throws ConflictException if the newly provided information conflicts with existing
 	 * information
 	 */
-	public void insert(Word<I> word, boolean accepting) throws ConflictException;
+	public void insert(Word<? extends I> word, boolean accepting) throws ConflictException;
 	
 	/**
 	 * Inserts a new word into the automaton.
@@ -84,7 +84,7 @@ public interface IncrementalDFABuilder<I> extends
 	 * 
 	 * @see #insert(Word, boolean)
 	 */
-	public void insert(Word<I> word) throws ConflictException;
+	public void insert(Word<? extends I> word) throws ConflictException;
 	
 	@Override
 	@Nonnull

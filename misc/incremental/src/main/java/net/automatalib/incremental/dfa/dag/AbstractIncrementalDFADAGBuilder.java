@@ -303,7 +303,7 @@ explore:while((current = queue.poll()) != null) {
 	
 	
 	
-	protected abstract State getState(Word<I> word);
+	protected abstract State getState(Word<? extends I> word);
 	
 	/**
 	 * Returns (and possibly creates) the canonical state for the given signature.

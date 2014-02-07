@@ -28,10 +28,11 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.base.Function;
+
 import net.automatalib.AutomataLibSettings;
+import net.automatalib.commons.util.array.AWUtil;
 import net.automatalib.commons.util.array.ArrayWritable;
 import net.automatalib.commons.util.strings.AbstractPrintable;
-import net.automatalib.commons.util.strings.StringUtil;
 
 /**
  * A word is an ordered sequence of symbols. {@link Word}s are generally immutable,
@@ -166,6 +167,28 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 		for(int i = 0; i < len; i++)
 			chars[i] = str.charAt(i);
 		return new SharedWord<>(chars);
+	}
+	
+	@SafeVarargs
+	public static <I> Word<I> fromWords(Word<? extends I>... words) {
+		int totalLength = 0;
+		for(Word<?> w : words) {
+			totalLength += w.length();
+		}
+		
+		if(totalLength == 0) {
+			return epsilon();
+		}
+		
+		Object[] array = new Object[totalLength];
+		
+		int currOfs = 0;
+		for(Word<? extends I> w : words) {
+			AWUtil.safeWrite(w, array, currOfs);
+			currOfs += w.length();
+		}
+		
+		return new SharedWord<>(array);
 	}
 	
 	/*
@@ -739,7 +762,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 
 	@Nonnull
 	public <T>
-	Word<T> transform(Function<? super I,T> transformer) {
+	Word<T> transform(Function<? super I,? extends T> transformer) {
 		int len = length();
 		Object[] array = new Object[len];
 		int i = 0;
@@ -747,5 +770,10 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 			array[i++] = transformer.apply(symbol);
 		}
 		return new SharedWord<>(array);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <I> Word<I> upcast(Word<? extends I> word) {
+		return (Word<I>)word;
 	}
 }

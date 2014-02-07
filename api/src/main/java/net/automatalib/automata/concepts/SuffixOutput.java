@@ -26,5 +26,5 @@ public interface SuffixOutput<I, O> extends Output<I,O> {
     // whoever is using this Automaton to truncate output as needed
 
 	@Nullable
-	public O computeSuffixOutput(Iterable<I> prefix, Iterable<I> suffix);
+	public O computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix);
 }
