@@ -138,16 +138,16 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 		<brics-automaton.version>1.11-8</brics-automaton.version>
 
-		<guava.version>16.0</guava.version>
+		<guava.version>16.0.1</guava.version>
 		<findbugs.version>2.0.2</findbugs.version>
 
 		<duzzt.version>0.0.2</duzzt.version>
 
 		<!-- Javadoc links -->
-		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
 		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
-		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/release/javadoc/</guava.apidocs>
-
+		<trove4j.apidocs>http://trove4j.sourceforge.net/javadocs/</trove4j.apidocs>
+		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
+		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
 	</properties>
 
 	<!--
@@ -172,23 +172,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>${deploy-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>${javadoc-plugin.version}</version>
-					<configuration>
-						<maxmemory>512</maxmemory>
-						<quiet>false</quiet>
-						<source>1.7</source>
-						<verbose>true</verbose>
-						<linksource>true</linksource>
-						<links>
-							<link>${java7.apidocs}</link>
-							<link>${brics-automaton.apidocs}</link>
-							<link>${guava.apidocs}</link>
-						</links>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -233,6 +216,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<configuration>
+						<arguments>-Psonatype-oss-release -Dautomatalib.release=true</arguments>
 						<!-- False to allow adjustment to branching model -->
 						<pushChanges>false</pushChanges>
 						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
@@ -336,13 +320,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${javadoc-plugin.version}</version>
 				<configuration>
-					<maxmemory>512</maxmemory>
 					<quiet>false</quiet>
 					<source>1.7</source>
 					<verbose>true</verbose>
-					<linksource>true</linksource>
+					<linksource>false</linksource>
 					<links>
 						<link>${java7.apidocs}</link>
+						<link>${trove4j.apidocs}</link>
+						<link>${guava.apidocs}</link>
 						<link>${brics-automaton.apidocs}</link>
 					</links>
 				</configuration>
@@ -394,94 +379,32 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</profile>
 		<profile>
 			<id>binary-release</id>
+			<activation>
+				<property>
+					<name>automatalib.release</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<modules>
+				<module>distribution</module>
+			</modules>
 			<build>
 				<plugins>
 					<!--  aggregate javadoc of modules in one jar -->
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${javadoc-plugin.version}</version>
-						<inherited>false</inherited>
-						<configuration>
-							<maxmemory>512</maxmemory>
-							<quiet>false</quiet>
-							<source>1.7</source>
-							<verbose>true</verbose>
-							<linksource>true</linksource>
-							<links>
-								<link>http://docs.oracle.com/javase/7/docs/api/</link>
-							</links>
-							<finalName>automatalib-${project.version}</finalName>
-						</configuration>
 						<executions>
 							<execution>
 								<id>aggregate</id>
+								<inherited>false</inherited>
 								<goals>
 									<goal>aggregate-jar</goal>
 								</goals>
-								<phase>site</phase>
+								<phase>prepare-package</phase>
 							</execution>
 						</executions>
 					</plugin>
-					<!-- 
-                        build assemblies
-                    -->
-					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<version>${assembly-plugin.version}</version>
-						<inherited>false</inherited>
-						<configuration>
-							<finalName>automatalib-${project.version}</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
-						</configuration>
-						<executions>
-							<!--  sources jar -->
-							<execution>
-								<id>src</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<descriptors>
-										<descriptor>src/main/assembly/automatalib-srcjar.xml</descriptor>
-									</descriptors>
-									<finalName>automatalib-${project.version}-sources</finalName>
-								</configuration>
-							</execution>
-							<!-- 
-                                binary jar
-                            -->
-							<execution>
-								<id>jar</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<descriptors>
-										<descriptor>src/main/assembly/automatalib-jar.xml</descriptor>
-									</descriptors>
-								</configuration>
-							</execution>
-							<!-- 
-                                bin
-                            -->
-							<execution>
-								<id>bin</id>
-								<phase>package</phase>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<configuration>
-									<descriptors>
-										<descriptor>src/main/assembly/automatalib-bin.xml</descriptor>
-									</descriptors>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-
 				</plugins>
 			</build>
 		</profile>
@@ -510,6 +433,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<dependency>
 				<groupId>net.automatalib</groupId>
 				<artifactId>automata-incremental</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.automatalib</groupId>
+				<artifactId>automata-misc-algorithms</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
