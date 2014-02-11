@@ -87,11 +87,13 @@ public class Automata extends TS {
 			SO state = bm.get(block);
 			for(I input : inputs) {
 				T trans = automaton.getTransition(rep, input);
-				TP prop = automaton.getTransitionProperty(trans);
-				S oldSucc = automaton.getSuccessor(trans);
-				Block<S,TransitionEdge.Property<I,TP>> succBlock = mr.getBlockForState(oldSucc);
-				SO newSucc = bm.get(succBlock);
-				output.addTransition(state, input, newSucc, prop);
+				if(trans != null) {
+					TP prop = automaton.getTransitionProperty(trans);
+					S oldSucc = automaton.getSuccessor(trans);
+					Block<S,TransitionEdge.Property<I,TP>> succBlock = mr.getBlockForState(oldSucc);
+					SO newSucc = bm.get(succBlock);
+					output.addTransition(state, input, newSucc, prop);
+				}
 			}
 		}
 		return output;
