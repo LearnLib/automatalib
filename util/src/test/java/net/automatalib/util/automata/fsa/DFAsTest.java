@@ -14,7 +14,7 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automalib.util.automata.fsa;
+package net.automatalib.util.automata.fsa;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;

@@ -328,7 +328,31 @@ public class Automata extends TS {
 		return all;
 	}
 	
+	public static <I> boolean incrementalCover(
+			DeterministicAutomaton<?, I, ?> automaton,
+			Collection<? extends I> inputs,
+			Collection<? extends Word<I>> oldStates,
+			Collection<? extends Word<I>> oldTransitions,
+			Collection<? super Word<I>> newStates,
+			Collection<? super Word<I>> newTransitions) {
+		return Covers.incrementalCover(automaton, inputs, oldStates, oldTransitions, newStates, newTransitions);
+	}
 	
+	public static <I> boolean incrementalStateCover(
+			DeterministicAutomaton<?, I, ?> automaton,
+			Collection<? extends I> inputs,
+			Collection<? extends Word<I>> oldStates,
+			Collection<? super Word<I>> newStates) {
+		return incrementalCover(automaton, inputs, oldStates, Collections.<Word<I>>emptyList(), newStates, null);
+	}
+	
+	public static <I> boolean incrementalStructuralCover(
+			DeterministicAutomaton<?, I, ?> automaton,
+			Collection<? extends I> inputs,
+			Collection<? extends Word<I>> oldStructural,
+			Collection<? super Word<I>> newStructural) {
+		return incrementalCover(automaton, inputs, oldStructural, Collections.<Word<I>>emptyList(), newStructural, newStructural);
+	}
 	
 	public static <S,I>
 	Iterator<TransRef<S,I,?>> allDefinedInputsIterator(
