@@ -45,7 +45,7 @@ import net.automatalib.words.Word;
  * for every state <i>t</i>, there exists a word <i>w &in; W</i> such that <i>w</i> exposes
  * a difference between <i>s</i> and <i>t</i>, or there exists no such word at all.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public class CharacterizingSets {
@@ -53,6 +53,10 @@ public class CharacterizingSets {
 	private static <S,I,T> List<Object> buildTrace(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
 			S state,
 			Word<I> suffix) {
+		if(suffix.isEmpty()) {
+			Object prop = automaton.getStateProperty(state);
+			return Collections.singletonList(prop);
+		}
 		List<Object> trace = new ArrayList<Object>(2*suffix.length());
 		
 		S curr = state;
@@ -304,15 +308,24 @@ public class CharacterizingSets {
 	
 	public static <S,I,T> boolean findIncrementalCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
 			Collection<? extends I> inputs,
-			List<? extends Word<I>> oldSuffixes,
+			Collection<? extends Word<I>> oldSuffixes,
 			Collection<? super Word<I>> newSuffixes) {
 		
 		boolean refined = false;
 		Map<List<List<Object>>,List<S>> initialPartitioning = new HashMap<>();
 		
+		// We need a list to ensure a stable iteration order
+		List<? extends Word<I>> oldSuffixList;
+		if(oldSuffixes instanceof List) {
+			oldSuffixList = (List<? extends Word<I>>)oldSuffixes;
+		}
+		else {
+			oldSuffixList = new ArrayList<>(oldSuffixes);
+		}
+		
 		Queue<List<S>> blocks = new ArrayDeque<>();
 		for(S state : automaton) {
-			List<List<Object>> sig = buildSignature(automaton, oldSuffixes, state);
+			List<List<Object>> sig = buildSignature(automaton, oldSuffixList, state);
 			List<S> block = initialPartitioning.get(sig);
 			if(block == null) {
 				block = new ArrayList<>();

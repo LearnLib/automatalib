@@ -61,12 +61,13 @@ public class CoversTest {
 		newStates.clear();
 		newTransitions.clear();
 		
+		
 		Covers.incrementalCover(dfa, alphabet, structuralCover, empty, newStructural, newStructural);
 		System.err.println("New structural: " + newStructural);
 		structuralCover.addAll(newStructural);
 		newStructural.clear();
 		
-		int q1 = dfa.addState();
+		int q1 = dfa.addState(true);
 		dfa.addTransition(q1, 0, q1);
 		dfa.addTransition(q1, 1, q0);
 		dfa.addTransition(q1, 2, q1);

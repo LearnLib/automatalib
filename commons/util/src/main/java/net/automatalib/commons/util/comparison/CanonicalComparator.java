@@ -19,7 +19,7 @@ package net.automatalib.commons.util.comparison;
 import java.util.Comparator;
 import java.util.List;
 
-final class CanonicalComparator<T extends List<U>,U> implements Comparator<T> {
+final class CanonicalComparator<T extends List<? extends U>,U> implements Comparator<T> {
 	
 	private final Comparator<? super U> elemComparator;
 	

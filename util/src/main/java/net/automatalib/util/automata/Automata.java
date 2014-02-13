@@ -271,6 +271,13 @@ public class Automata extends TS {
 		return result;
 	}
 	
+	public static <I> boolean incrementalCharacterizingSet(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+			Collection<? extends I> inputs,
+			Collection<? extends Word<I>> oldSuffixes,
+			Collection<? super Word<I>> newSuffixes) {
+		return CharacterizingSets.findIncrementalCharacterizingSet(automaton, inputs, oldSuffixes, newSuffixes);
+	}
+	
 	/**
 	 * Computes a characterizing set for a single state.
 	 * <p>

@@ -10,8 +10,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-
 @Test
 public class MealyFilterTest {
 

@@ -178,7 +178,7 @@ public abstract class CmpUtil {
 	 * @return a comparator for comparing objects of type <code>T</code> based on
 	 * canonical ordering.
 	 */
-	public static <T extends List<U>,U> Comparator<T> canonicalComparator(Comparator<U> elemComp) {
+	public static <T extends List<? extends U>,U> Comparator<T> canonicalComparator(Comparator<? super U> elemComp) {
 		return new CanonicalComparator<>(elemComp);
 	}
 	

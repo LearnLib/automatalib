@@ -19,6 +19,7 @@ package net.automatalib.words;
 import java.io.IOException;
 import java.util.AbstractList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -85,6 +86,11 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 		wordSymbolSeparator = settings.getProperty("word.symbol.separator", " ");
 		wordSymbolDelimLeft = settings.getProperty("word.symbol.delim.left", "");
 		wordSymbolDelimRight = settings.getProperty("word.symbol.delim.right", "");
+	}
+
+	
+	public static <I> Comparator<Word<? extends I>> canonicalComparator(Comparator<? super I> symComparator) {
+		return new CanonicalWordComparator<>(symComparator);
 	}
 
 	
