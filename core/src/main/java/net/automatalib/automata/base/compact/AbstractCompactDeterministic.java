@@ -105,6 +105,14 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
 		transitions[state * alphabetSize + inputIdx] = trans;
 	}
 	
+	public void setTransition(int stateId, int inputIdx, int succId) {
+		setTransition(stateId, inputIdx, succId, null);
+	}
+	
+	public void setTransition(int stateId, int inputIdx, int succId, TP property) {
+		setTransition(stateId, inputIdx, createTransition(succId, property));
+	}
+	
 	@Override
 	public void setTransition(Integer state, I input, T transition) {
 		setTransition(getId(state), alphabet.getSymbolIndex(input), transition);
@@ -190,6 +198,20 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
 		int newState = numStates++;
 		ensureCapacity(numStates);
 		return newState;
+	}
+	
+	public int addIntInitialState(SP property) {
+		int newState = addIntState(property);
+		setInitialState(newState);
+		return newState;
+	}
+	
+	public int addIntInitialState() {
+		return addIntInitialState(null);
+	}
+	
+	public int addIntState() {
+		return addIntState(null);
 	}
 	
 	public int addIntState(SP property) {
