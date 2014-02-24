@@ -121,7 +121,6 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 		
 		// old prefixes with all *new* suffixes
 		if(newSuffixes && oldNumPrefixes > 0) {
-			System.err.println("New suffixes: " + suffixes.subList(oldNumSuffixes, suffixes.size()));
 			Item<I> item = new Item<>();
 			item.prefixIdx = 0;
 			item.minPrefix = 0;
@@ -133,7 +132,6 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 		}
 		// new prefixes with *all* suffixes
 		if(newPrefixes) {
-			System.err.println("New prefixes: " + prefixes.subList(oldNumPrefixes, prefixes.size()));
 			Item<I> item = new Item<>();
 			item.prefixIdx = oldNumPrefixes;
 			item.minPrefix = oldNumPrefixes;
