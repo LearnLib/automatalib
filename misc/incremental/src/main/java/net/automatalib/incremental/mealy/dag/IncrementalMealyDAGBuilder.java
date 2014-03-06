@@ -137,7 +137,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 	}
 	
 	
-
+	
 	private final Map<StateSignature, State> register = new HashMap<>();
 
 	private final int alphabetSize;
@@ -171,8 +171,9 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		for (I sym : word) {
 			int idx = inputAlphabet.getSymbolIndex(sym);
 			s = s.getSuccessor(idx);
-			if (s == null)
-				return null;
+			if (s == null) {
+				break;
+			}
 		}
 		return s;
 	}
@@ -226,8 +227,9 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		for (I sym : word) {
 			int idx = inputAlphabet.getSymbolIndex(sym);
 			State succ = curr.getSuccessor(idx);
-			if (succ == null)
+			if (succ == null) {
 				return false;
+			}
 			output.add((O) curr.getOutput(idx));
 			curr = succ;
 		}

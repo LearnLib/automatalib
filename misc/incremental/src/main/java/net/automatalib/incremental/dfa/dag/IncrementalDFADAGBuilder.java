@@ -94,28 +94,42 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
 		State last = curr;
 		
 		if(prefixLen == len) {
+			// structural skeleton for this word already present
 			Acceptance currAcc = curr.getAcceptance();
-			if(currAcc == acc)
+			if(currAcc == acc) {
+				// consistent with our existing knowledge, nothing changes
 				return;
+			}
 			
 			if(currAcc != Acceptance.DONT_KNOW) {
+				// conflict
 				throw new ConflictException("Incompatible acceptances: " + currAcc + " vs " + acc);
 			}
 			if(conf != null || last.isConfluence()) {
+				// there is a confluence (maybe in the last node), so duplicate
+				// the last node (this will have to be propagated)
 				last = clone(last, acc);
 			}
 			else if(last == init) {
+				// we inserted the empty word, so update the acceptance of the initial
+				// state (nothing else changes)
 				updateInitSignature(acc);
+				return;
 			}
 			else {
+				// no confluence, so just update the signature
 				last = updateSignature(last, acc);
 			}
 		}
 		else {
+			// we had to abort after processing a prefix
 			if(conf != null) {
 				if(conf == last) {
+					// if the first confluence is the last node, this confluence gets resolved
+					// directly by cloning (so act as if there was no confluence)
 					conf = null;
 				}
+				// confluence always requires cloning, to separate this path from other paths
 				last = hiddenClone(last);
 			}
 			else if(last != init) {
