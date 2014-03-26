@@ -24,6 +24,9 @@ import net.automatalib.automata.fsa.NFA;
 public abstract class AbstractNFA<S, I> extends AbstractFSA<S,I> implements
 		NFA<S, I> {
 	
+	
+	
+	
 	public static <S,I> boolean isAccepting(NFA<S,I> $this,
 			Collection<? extends S> states) {
 		if(states == null)

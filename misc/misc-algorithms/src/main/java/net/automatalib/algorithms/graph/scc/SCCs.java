@@ -27,7 +27,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
 /**
  * Algorithms for finding strongly-connected components (SCCs) in a graph.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 @ParametersAreNonnullByDefault

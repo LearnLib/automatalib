@@ -17,9 +17,10 @@
 package net.automatalib.util.graphs;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
+import com.google.common.base.Predicate;
 
 import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -28,7 +29,7 @@ import net.automatalib.util.graphs.Path.PathData;
 import net.automatalib.util.graphs.traversal.DefaultGraphTraversalVisitor;
 import net.automatalib.util.graphs.traversal.GraphTraversalAction;
 
-
+@Deprecated
 final class FindShortestPathVisitor<N, E> extends
 		DefaultGraphTraversalVisitor<N, E, Void> {
 	
@@ -43,18 +44,18 @@ final class FindShortestPathVisitor<N, E> extends
 	}
 	
 	private final MutableMapping<N, Pred<N,E>> predMapping;
-	private final Collection<? extends N> targetNodes;
+	private final Predicate<? super N> targetPred;
 	private N foundTarget;
 	
-	public FindShortestPathVisitor(IndefiniteGraph<N,E> graph, Collection<? extends N> targetNodes) {
-		this.targetNodes = targetNodes;
+	public FindShortestPathVisitor(IndefiniteGraph<N,E> graph, Predicate<? super N> targetPred) {
+		this.targetPred = targetPred;
 		this.predMapping = graph.createStaticNodeMapping();
 	}
 
 	@Override
 	public GraphTraversalAction processInitial(N initialNode, Holder<Void> outData) {
 		predMapping.put(initialNode, new Pred<N,E>(null, null));
-		if(targetNodes.contains(initialNode)) {
+		if(targetPred.apply(initialNode)) {
 			this.foundTarget = initialNode;
 			return GraphTraversalAction.ABORT_TRAVERSAL;
 		}
@@ -65,7 +66,7 @@ final class FindShortestPathVisitor<N, E> extends
 	public GraphTraversalAction processEdge(N srcNode, Void srcData,
 			E edge, N tgtNode, Holder<Void> outData) {
 		
-		if(targetNodes.contains(tgtNode)) {
+		if(targetPred.apply(tgtNode)) {
 			Pred<N,E> pred = new Pred<>(srcNode, edge);
 			predMapping.put(tgtNode, pred);
 			this.foundTarget = tgtNode;

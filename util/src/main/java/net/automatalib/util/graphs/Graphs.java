@@ -18,7 +18,6 @@ package net.automatalib.util.graphs;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -26,7 +25,6 @@ import net.automatalib.graphs.BidirectionalGraph;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.IndefiniteGraph;
 import net.automatalib.graphs.UniversalIndefiniteGraph;
-import net.automatalib.util.graphs.traversal.GraphTraversal;
 
 
 public abstract class Graphs {
@@ -53,17 +51,11 @@ public abstract class Graphs {
 		
 		return inEdgesMapping;
 	}
-	
+
 	public static <N,E> Path<N,E> findShortestPath(final IndefiniteGraph<N, E> graph, int limit, N start, Collection<? extends N> targets) {
-		FindShortestPathVisitor<N, E> vis = new FindShortestPathVisitor<N, E>(graph, targets);
-		
-		GraphTraversal.breadthFirst(graph, limit, Collections.singleton(start), vis);
-		
-		if(!vis.wasSuccessful())
-			return null;
-		
-		return vis.getTargetPath().toPath(graph);
+		return ShortestPaths.shortestPath(graph, start, limit, targets);
 	}
+	
 	
 	
 	public static <N,NP> Mapping<N,NP> nodeProperties(final UniversalIndefiniteGraph<N, ?, NP, ?> graph) {

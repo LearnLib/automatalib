@@ -158,4 +158,6 @@ public class Path<N, E> extends AbstractList<E> {
 	public boolean isEmpty() {
 		return edgeList.isEmpty();
 	}
+	
+	
 }

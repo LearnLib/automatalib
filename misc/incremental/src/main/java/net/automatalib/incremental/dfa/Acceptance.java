@@ -25,9 +25,28 @@ import javax.annotation.Nonnull;
  *
  */
 public enum Acceptance {
-	FALSE,
-	TRUE,
-	DONT_KNOW;
+	FALSE { 
+		@Override
+		public boolean toBoolean() {
+			return false;
+		}
+	},
+	TRUE {
+		@Override
+		public boolean toBoolean() {
+			return true;
+		}
+	},
+	DONT_KNOW {
+		@Override
+		public boolean toBoolean() {
+			throw new UnsupportedOperationException();
+		}
+		@Override
+		public boolean conflicts(boolean val) {
+			return false;
+		}
+	};
 	
 	/**
 	 * Retrieves the corresponding acceptance value (either {@link #TRUE} or {@link #FALSE})
@@ -40,10 +59,10 @@ public enum Acceptance {
 		return val ? TRUE : FALSE;
 	}
 	
+	public abstract boolean toBoolean();
+	
 	
 	public boolean conflicts(boolean val) {
-		if(this == DONT_KNOW)
-			return false;
-		return ((this == TRUE) != val);
+		return (val != toBoolean());
 	}
 }
