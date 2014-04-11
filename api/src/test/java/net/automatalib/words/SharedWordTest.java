@@ -19,8 +19,7 @@ package net.automatalib.words;
 import java.util.Arrays;
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
