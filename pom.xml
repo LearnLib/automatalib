@@ -99,7 +99,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>7</version>
+		<version>9</version>
 	</parent>
 
 	<!--
@@ -124,13 +124,13 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<!--
 			dependency versions
 		-->
-		<testng.version>6.8</testng.version>
-		<javadoc-plugin.version>2.9</javadoc-plugin.version>
+		<testng.version>6.8.8</testng.version>
+		<javadoc-plugin.version>2.9.1</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
 		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
 		<site-plugin.version>3.3</site-plugin.version>
 		<reports-plugin.version>2.7</reports-plugin.version>
-		<surefire-plugin.version>2.14.1</surefire-plugin.version>
+		<surefire-plugin.version>2.17</surefire-plugin.version>
 		<assembly-plugin.version>2.4</assembly-plugin.version>
 		<exec-plugin.version>1.2.1</exec-plugin.version>
 		<deploy-plugin.version>2.8.1</deploy-plugin.version>
@@ -162,8 +162,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<version>${compiler-plugin.version}</version>
 					<configuration>
 						<fork>true</fork>
-						<meminitial>128m</meminitial>
-						<maxmem>512m</maxmem>
 						<source>1.7</source>
 						<target>1.7</target>
 					</configuration>
@@ -323,6 +321,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<quiet>false</quiet>
 					<source>1.7</source>
 					<verbose>true</verbose>
+					<detectLinks>true</detectLinks>
 					<linksource>false</linksource>
 					<links>
 						<link>${java7.apidocs}</link>
