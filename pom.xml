@@ -114,6 +114,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<module>adapters</module>
 		<module>examples</module>
 		<module>archetypes</module>
+		<module>distribution</module>
 	</modules>
 
 	<!--
@@ -384,9 +385,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<value>true</value>
 				</property>
 			</activation>
-			<modules>
-				<module>distribution</module>
-			</modules>
 			<build>
 				<plugins>
 					<!--  aggregate javadoc of modules in one jar -->

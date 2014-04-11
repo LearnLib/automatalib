@@ -4,6 +4,7 @@
     <groupId>net.automatalib</groupId>
     <artifactId>automata-parent</artifactId>
     <version>0.4.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   
   <groupId>net.automatalib.distribution</groupId>
@@ -129,57 +130,69 @@
     </dependency>
   </dependencies>
   
-  <build>
-    <plugins>
-  		<plugin>
-  			<groupId>org.apache.maven.plugins</groupId>
-  			<artifactId>maven-assembly-plugin</artifactId>
-  			<configuration>
-  				<outputDirectory>${project.build.directory}/bundles</outputDirectory>
-  				<appendAssemblyId>true</appendAssemblyId>
-  				<finalName>automatalib-${project.version}</finalName>
-  			</configuration>
-  			<executions>
-  				<execution>
-  					<id>bundle</id>
-  					<goals>
-  						<goal>single</goal>
-  					</goals>
-  					<phase>package</phase>
-  					<configuration>
-  						<descriptors>
-  							<descriptor>src/main/assembly/automatalib-bundle.xml</descriptor>
-  						</descriptors>
-  					</configuration>
-  				</execution>
-  				<execution>
-  					<id>dependencies-bundle</id>
-  					<goals>
-  						<goal>single</goal>
-  					</goals>
-  					<phase>package</phase>
-  					<configuration>
-  						<descriptors>
-  							<descriptor>src/main/assembly/automatalib-dependencies-bundle.xml</descriptor>
-  						</descriptors>
-  					</configuration>
-  				</execution>
-  				<execution>
-  					<id>sources</id>
-  					<goals>
-  						<goal>single</goal>
-  					</goals>
-  					<phase>package</phase>
-  					<configuration>
-  						<descriptors>
-  							<descriptor>src/main/assembly/automatalib-sources.xml</descriptor>
-  						</descriptors>
-  					</configuration>
-  				</execution>
-  			</executions>
-  		</plugin>
-  	</plugins>
-  </build>
+  <profiles>
+    <profile>
+      <id>bundles</id>
+      <activation>
+        <property>
+          <name>automatalib.release</name>
+          <value>true</value>
+        </property>
+      </activation>
+
+      <build>
+        <plugins>
+      		<plugin>
+      			<groupId>org.apache.maven.plugins</groupId>
+      			<artifactId>maven-assembly-plugin</artifactId>
+      			<configuration>
+      				<outputDirectory>${project.build.directory}/bundles</outputDirectory>
+      				<appendAssemblyId>true</appendAssemblyId>
+      				<finalName>automatalib-${project.version}</finalName>
+      			</configuration>
+      			<executions>
+      				<execution>
+      					<id>bundle</id>
+      					<goals>
+      						<goal>single</goal>
+      					</goals>
+      					<phase>package</phase>
+      					<configuration>
+      						<descriptors>
+      							<descriptor>src/main/assembly/automatalib-bundle.xml</descriptor>
+      						</descriptors>
+      					</configuration>
+      				</execution>
+      				<execution>
+      					<id>dependencies-bundle</id>
+      					<goals>
+      						<goal>single</goal>
+      					</goals>
+      					<phase>package</phase>
+      					<configuration>
+      						<descriptors>
+      							<descriptor>src/main/assembly/automatalib-dependencies-bundle.xml</descriptor>
+      						</descriptors>
+      					</configuration>
+      				</execution>
+      				<execution>
+      					<id>sources</id>
+      					<goals>
+      						<goal>single</goal>
+      					</goals>
+      					<phase>package</phase>
+      					<configuration>
+      						<descriptors>
+      							<descriptor>src/main/assembly/automatalib-sources.xml</descriptor>
+      						</descriptors>
+      					</configuration>
+      				</execution>
+      			</executions>
+      		</plugin>
+      	</plugins>
+      </build>
+    </profile>
+  </profiles>
   
   
 </project>
