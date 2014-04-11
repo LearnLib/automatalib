@@ -12,124 +12,7 @@
   <name>AutomataLib :: Distribution</name>
 
   <packaging>pom</packaging>
-  
 
-  <!--
-  All packaged AutomataLib dependencies.
-  Note: These exist for two purposes:
-  - allowing an easy dependencySets specification in the assembly descriptor
-  - enforcing the correct reactor build order
-  -->
-  <dependencies>
-  	<dependency>
-  		<groupId>net.automatalib</groupId>
-  		<artifactId>automata-api</artifactId>
-      <version>${project.version}</version>
-  	</dependency>
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-api</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-core</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-util</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-util</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-commons-util</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-commons-util</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-commons-dotutil</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-commons-dotutil</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-commons-smartcollections</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-commons-smartcollections</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-incremental</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-incremental</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-brics</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-brics</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-misc-algorithms</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>net.automatalib</groupId>
-      <artifactId>automata-misc-algorithms</artifactId>
-      <version>${project.version}</version>
-      <classifier>sources</classifier>
-    </dependency>
-  </dependencies>
-  
   <profiles>
     <profile>
       <id>bundles</id>
@@ -139,6 +22,122 @@
           <value>true</value>
         </property>
       </activation>
+
+      <!--
+      All packaged AutomataLib dependencies.
+      Note: These exist for two purposes:
+      - allowing an easy dependencySets specification in the assembly descriptor
+      - enforcing the correct reactor build order
+      -->
+      <dependencies>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-api</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-api</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-core</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-core</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-util</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-util</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-commons-util</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-commons-util</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-commons-dotutil</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-commons-dotutil</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-commons-smartcollections</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-commons-smartcollections</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-incremental</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-incremental</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-brics</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-brics</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-misc-algorithms</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>net.automatalib</groupId>
+          <artifactId>automata-misc-algorithms</artifactId>
+          <version>${project.version}</version>
+          <classifier>sources</classifier>
+        </dependency>
+      </dependencies>
 
       <build>
         <plugins>
