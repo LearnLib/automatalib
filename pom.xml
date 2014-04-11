@@ -22,7 +22,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<!-- ================================= PROJECT INFO ============================== -->
 	<groupId>net.automatalib</groupId>
 	<artifactId>automata-parent</artifactId>
-	<version>0.4.0</version>
+	<version>0.4.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>AutomataLib</name>
