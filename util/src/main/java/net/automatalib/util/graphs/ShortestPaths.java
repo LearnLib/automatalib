@@ -25,8 +25,19 @@ import com.google.common.base.Predicates;
 
 import net.automatalib.graphs.IndefiniteGraph;
 
+/**
+ * Unweighted shortest path search in graphs.
+ * <p>
+ * This class offers an iterator-style approach to shortest path search: the methods in this class generally
+ * return either an {@link Iterator} or an {@link Iterable} wrapped around an iterator which allows for enumerating
+ * all shortest paths to the given set of target nodes. The iterators implement this lazily, i.e., a call to
+ * the {@link Iterator#next() next()} method of an iterator will continue the shortest path search
+ * on an as-needed basis.
+ * 
+ * @author Malte Isberner
+ *
+ */
 public abstract class ShortestPaths {
-	
 	
 	
 	public static <N,E>
