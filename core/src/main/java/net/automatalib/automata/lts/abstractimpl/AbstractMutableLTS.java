@@ -31,11 +31,5 @@ import net.automatalib.automata.lts.MutableLTS;
 public abstract class AbstractMutableLTS<S,I> extends AbstractMutableAutomaton<S, I, S, Void, Void> 
 	implements MutableLTS<S, I>, DOTPlottableAutomaton<S, I, S> {
 
-	/**
-	 * 
-	 */
-	public AbstractMutableLTS() {
-		// TODO Auto-generated constructor stub
-	}
 
 }
