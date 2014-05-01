@@ -23,10 +23,9 @@ import net.automatalib.automata.MutableAutomaton;
  * 
  * @author Michele Volpato
  *
- * @param <S> state class
  * @param <I> input symbol class
  */
-public interface MutableLTS<S,I> extends LTS<S, I>,
-		MutableAutomaton<S, I, S, Void, Void> {
+public interface MutableLTS<I> extends LTS<I>,
+		MutableAutomaton<Integer, I, Integer, Void, Void> {
 
 }
