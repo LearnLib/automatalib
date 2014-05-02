@@ -24,9 +24,9 @@ import net.automatalib.automata.simple.SimpleAutomaton;
  * 
  * @author Michele Volpato
  *
- * @param <I> input symbol class
+ * @param <L> label class
  */
-public interface LTS<I> extends UniversalAutomaton<Integer, I, Integer, Void, Void>, // TODO why the second Integer (the transition class)? Why not Void?
-		SimpleAutomaton<Integer, I> {
+public interface LTS<L> extends UniversalAutomaton<Integer, L, Integer, Void, Void>, // TODO why the second Integer (the transition class)? Why not Void?
+		SimpleAutomaton<Integer, L> {
 
 }

@@ -34,12 +34,12 @@ import net.automatalib.words.Alphabet;
  * 
  * @author Michele Volpato
  *
- * @param <I> label class
+ * @param <L> label class
  */
-public abstract class AbstractMutableLTS<I> extends AbstractMutableAutomaton<Integer, I, Integer, Void, Void> 
-	implements MutableLTS<I>, DOTPlottableAutomaton<Integer, I, Integer> {
+public abstract class AbstractMutableLTS<L> extends AbstractMutableAutomaton<Integer, L, Integer, Void, Void> 
+	implements MutableLTS<L>, DOTPlottableAutomaton<Integer, L, Integer> {
 
-	protected final Alphabet<I> alphabet;
+	protected final Alphabet<L> alphabet;
 	protected final int alphabetSize;
 	protected Map<Integer, List<TransitionLTS>> states = new HashMap<Integer, List<TransitionLTS>>();
 
@@ -50,7 +50,7 @@ public abstract class AbstractMutableLTS<I> extends AbstractMutableAutomaton<Int
 	
 	protected class TransitionLTS{
 		private Integer transitionId;
-		private I label;
+		private L label;
 		private Integer nextState;
 		
 		public TransitionLTS(Integer transitionId) {
@@ -63,10 +63,10 @@ public abstract class AbstractMutableLTS<I> extends AbstractMutableAutomaton<Int
 		public void setTransitionId(Integer transitionId) {
 			this.transitionId = transitionId;
 		}
-		public I getLabel() {
+		public L getLabel() {
 			return label;
 		}
-		public void setLabel(I label) {
+		public void setLabel(L label) {
 			this.label = label;
 		}
 		public Integer getNextState() {
@@ -78,17 +78,19 @@ public abstract class AbstractMutableLTS<I> extends AbstractMutableAutomaton<Int
 	
 	}
 	
-	public AbstractMutableLTS(Alphabet<I> alphabet) {
+	public AbstractMutableLTS(Alphabet<L> alphabet) {
 		this.alphabet = alphabet;
 		this.alphabetSize = alphabet.size();	
 	}
 
 	@Override
-	public Collection<? extends Integer> getTransitions(Integer state, I input) {
+	public Collection<? extends Integer> getTransitions(Integer state, L label) {
 		List<Integer> edgeIds = new ArrayList<Integer>();
 		List<TransitionLTS> edges = states.get(state);
 		for(TransitionLTS edge : edges){
-			edgeIds.add(edge.getTransitionId());
+			if(edge.getLabel().equals(label)){
+				edgeIds.add(edge.getTransitionId());
+			}
 		}
 		return edgeIds;
 	}
@@ -158,13 +160,13 @@ public abstract class AbstractMutableLTS<I> extends AbstractMutableAutomaton<Int
 	}
 
 	@Override
-	public void setTransitions(Integer state, I input,
+	public void setTransitions(Integer state, L label,
 			Collection<? extends Integer> transitions) {
-		if(states.containsKey(state) && alphabet.contains(input)){
+		if(states.containsKey(state) && alphabet.contains(label)){
 			for(Integer transitionId : transitions){
 				TransitionLTS transition = this.transitions.get(transitionId);
 				if(transition != null){
-					transition.setLabel(input);
+					transition.setLabel(label);
 					states.get(state).add(transition);
 				}
 			}
@@ -190,7 +192,7 @@ public abstract class AbstractMutableLTS<I> extends AbstractMutableAutomaton<Int
 	}
 
 	@Override
-	public Alphabet<I> getInputAlphabet() {
+	public Alphabet<L> getInputAlphabet() {
 		return alphabet;
 	}
 

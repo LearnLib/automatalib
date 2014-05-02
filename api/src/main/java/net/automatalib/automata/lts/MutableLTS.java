@@ -23,9 +23,9 @@ import net.automatalib.automata.MutableAutomaton;
  * 
  * @author Michele Volpato
  *
- * @param <I> input symbol class
+ * @param <L> label class
  */
-public interface MutableLTS<I> extends LTS<I>,
-		MutableAutomaton<Integer, I, Integer, Void, Void> {
+public interface MutableLTS<L> extends LTS<L>,
+		MutableAutomaton<Integer, L, Integer, Void, Void> {
 
 }
