@@ -19,6 +19,7 @@ package net.automatalib.automata.lts.abstractimpl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,166 +36,164 @@ import net.automatalib.words.Alphabet;
  * 
  * @author Michele Volpato
  *
- * @param <I> input symbol class
+ * @param <I> label class
  */
 public abstract class AbstractMutableLTS<I> extends AbstractMutableAutomaton<Integer, I, Integer, Void, Void> 
 	implements MutableLTS<I>, DOTPlottableAutomaton<Integer, I, Integer> {
 
 	protected final Alphabet<I> alphabet;
 	protected final int alphabetSize;
-	protected List<StateLTS> states;
-	protected List<Integer> statesIds;
-	protected int nextState = 0;
-	
-	protected List<Integer> initialStatesIds;
-	protected List<Integer> transitionsIds;
-	protected Map<Integer, I> transitionLabels;
-	protected Map<Integer, Integer> transitions;
-	
-	protected class StateLTS {
-		private boolean initial;
-		private Integer stateId;
-		private List<TransitionLTS> transitions;
-		
-		public StateLTS(Integer id){
-			this(id, false, new ArrayList<TransitionLTS>());	
-		}
-		
-		public StateLTS(Integer id, boolean initial){
-			this(id, initial, new ArrayList<TransitionLTS>());	
-		}
+	protected Map<Integer, List<TransitionLTS>> states = new HashMap<Integer, List<TransitionLTS>>();
 
-		public StateLTS(Integer id, boolean initial, List<TransitionLTS> edges){
-			stateId = id;
-			transitions = edges;
-			this.initial = initial;
-		}
-		
-		public Integer getStateId(){
-			return stateId;
-		}
-		
-		public Integer getSuccessor(I label){
-			return transitions.get(label);
-		}
-	}
+	protected int nextState = 0;
+	protected int nextTransition = 0;
+	protected Map<Integer, TransitionLTS> transitions = new HashMap<Integer, TransitionLTS>();
+	protected Set<Integer> initialStatesIds = new HashSet<Integer>();;
 	
-	protected class TransitionLTS {
+	protected class TransitionLTS{
 		private Integer transitionId;
 		private I label;
-		private Integer successorState;
+		private Integer nextState;
+		
+		public TransitionLTS(Integer transitionId) {
+			this.transitionId = transitionId;
+		}
+		
+		public Integer getTransitionId() {
+			return transitionId;
+		}
+		public void setTransitionId(Integer transitionId) {
+			this.transitionId = transitionId;
+		}
+		public I getLabel() {
+			return label;
+		}
+		public void setLabel(I label) {
+			this.label = label;
+		}
+		public Integer getNextState() {
+			return nextState;
+		}
+		public void setNextState(Integer nextState) {
+			this.nextState = nextState;
+		}
 	
 	}
 	
 	public AbstractMutableLTS(Alphabet<I> alphabet) {
 		this.alphabet = alphabet;
-		this.alphabetSize = alphabet.size();
-		this.states = new ArrayList<StateLTS>();
+		this.alphabetSize = alphabet.size();	
 	}
 
 	@Override
 	public Collection<? extends Integer> getTransitions(Integer state, I input) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Integer> edgeIds = new ArrayList<Integer>();
+		List<TransitionLTS> edges = states.get(state);
+		for(TransitionLTS edge : edges){
+			edgeIds.add(edge.getTransitionId());
+		}
+		return edgeIds;
 	}
 
 	@Override
 	public Integer getSuccessor(Integer transition) {
-		// TODO Auto-generated method stub
-		return null;
+		return (transitions.get(transition)).getNextState();
 	}
 
 	@Override
 	public Set<? extends Integer> getInitialStates() {
-		// TODO Auto-generated method stub
-		return null;
+		return initialStatesIds;
 	}
 
 	@Override
 	public Collection<Integer> getStates() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Void getStateProperty(Integer state) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Void getTransitionProperty(Integer transition) {
-		// TODO Auto-generated method stub
-		return null;
+		return states.keySet();
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		states = new HashMap<Integer, List<TransitionLTS>>();
+		nextState = 0;
+		nextTransition = 0;
+		transitions = new HashMap<Integer, TransitionLTS>();
+		initialStatesIds = new HashSet<Integer>();
 	}
 
 	@Override
 	public Integer addState(Void property) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Integer stateId = nextState;
+		states.put(stateId, new ArrayList<TransitionLTS>());
+		nextState++;
+		
+		return stateId;
+	}
+	
+	public Integer addState() {
+		return this.addState(null);
 	}
 
 	@Override
 	public void setInitial(Integer state, boolean initial) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setStateProperty(Integer state, Void property) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setTransitionProperty(Integer transition, Void property) {
-		// TODO Auto-generated method stub
-		
+		if(states.containsKey(state)){
+			if(initial){
+				initialStatesIds.add(state);
+			}
+			else {
+				initialStatesIds.remove(state);
+			}
+		}
 	}
 
 	@Override
 	public Integer createTransition(Integer successor, Void properties) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Integer transitionId = nextTransition;
+		transitions.put(transitionId, new TransitionLTS(transitionId));
+		transitionId++;
+	
+		return transitionId;
+	}
+	
+	public Integer createTransition(Integer successor) {
+		return this.createTransition(successor, null);
 	}
 
 	@Override
 	public void setTransitions(Integer state, I input,
 			Collection<? extends Integer> transitions) {
-		// TODO Auto-generated method stub
-		
+		if(states.containsKey(state) && alphabet.contains(input)){
+			for(Integer transitionId : transitions){
+				TransitionLTS transition = this.transitions.get(transitionId);
+				if(transition != null){
+					transition.setLabel(input);
+					states.get(state).add(transition);
+				}
+			}
+		}
 	}
 
 	@Override
 	public void removeAllTransitions(Integer state) {
-		// TODO Auto-generated method stub
-		
+		for(TransitionLTS transition : states.get(state)){
+			transitions.remove(transition.getTransitionId());
+		}
+		states.remove(state);
+		states.put(state, new ArrayList<TransitionLTS>());
 	}
 
 	@Override
 	public Integer copyTransition(Integer trans, Integer succ) {
-		// TODO Auto-generated method stub
-		return null;
+		Integer newTransitionId = createTransition(succ);
+		TransitionLTS newTrans = transitions.get(newTransitionId);
+		TransitionLTS oldTrans = transitions.get(trans);
+		newTrans.setLabel(oldTrans.getLabel());
+		return newTransitionId;
 	}
 
 	@Override
 	public Alphabet<I> getInputAlphabet() {
-		// TODO Auto-generated method stub
-		return null;
+		return alphabet;
 	}
-
-	@Override
-	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getDOTHelper() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
 
 }
