@@ -22,51 +22,54 @@ import net.automatalib.automata.lts.MutableLTS;
 import net.automatalib.automata.lts.abstractimpl.AbstractMutableLTS;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.InputOutputLabel;
 
 /**
  * A nondeterministic input output labelled transition system.
  * 
  * @author Michele Volpato
  *
- * @param <I> input symbol class
+ * @param <L> input symbol class
  */
-public class InputOutputLTS<I> extends AbstractMutableLTS<I> implements MutableLTS<I>,
-		DOTPlottableAutomaton<Integer, I, Integer> {
+public class InputOutputLTS<I,O> extends AbstractMutableLTS<InputOutputLabel> implements MutableLTS<InputOutputLabel>,
+		DOTPlottableAutomaton<Integer, InputOutputLabel, Integer> {
 
-	public InputOutputLTS(Alphabet<I> alphabet) {
+	public InputOutputLTS(Alphabet<InputOutputLabel> alphabet) {
 		super(alphabet);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Void getStateProperty(Integer state) {
-		// TODO Auto-generated method stub
+		// no property
 		return null;
 	}
 
 	@Override
 	public Void getTransitionProperty(Integer transition) {
-		// TODO Auto-generated method stub
+		// no property
 		return null;
 	}
 
 	@Override
 	public void setStateProperty(Integer state, Void property) {
-		// TODO Auto-generated method stub
+		// no property
 		
 	}
 
 	@Override
 	public void setTransitionProperty(Integer transition, Void property) {
-		// TODO Auto-generated method stub
+		// no property
 		
 	}
 
 	@Override
-	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getDOTHelper() {
+	public GraphDOTHelper<Integer, TransitionEdge<InputOutputLabel, Integer>> getDOTHelper() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 
 	
 

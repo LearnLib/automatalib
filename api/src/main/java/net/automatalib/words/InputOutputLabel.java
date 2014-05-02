@@ -21,10 +21,9 @@ package net.automatalib.words;
  * 
  * @author Michele Volpato
  *
- * @param <I> input class
- * @param <O> output class
+ * @param <L> label class
  */
-public interface InputOutputLabel<I,O> {
+public interface InputOutputLabel {
 	
     /**
      * Returns true if the label is an input.
@@ -37,8 +36,9 @@ public interface InputOutputLabel<I,O> {
     public abstract boolean isOutput();
     
     /**
-     * Return the label.
+     * Return the label as input.
      */
     public abstract Object getLabel();
+
 
 }
