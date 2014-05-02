@@ -16,18 +16,11 @@
  */
 package net.automatalib.automata.lts.impl;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-
-import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.lts.MutableLTS;
 import net.automatalib.automata.lts.abstractimpl.AbstractMutableLTS;
-import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.dot.GraphDOTHelper;
-import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.words.Alphabet;
 
 /**

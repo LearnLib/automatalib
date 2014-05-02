@@ -26,9 +26,7 @@ import java.util.Set;
 
 import net.automatalib.automata.abstractimpl.AbstractMutableAutomaton;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
-import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.lts.MutableLTS;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 
 /**
