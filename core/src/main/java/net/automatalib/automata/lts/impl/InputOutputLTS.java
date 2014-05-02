@@ -69,8 +69,4 @@ public class InputOutputLTS<I,O> extends AbstractMutableLTS<InputOutputLabel> im
 		return new DOTHelperLTS<>(this);
 	}
 
-
-
-	
-
 }

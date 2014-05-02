@@ -39,6 +39,11 @@ public interface InputOutputLabel {
      * Return the label as input.
      */
     public abstract Object getLabel();
+    
+    /**
+     * Return a string representation of the label label as input.
+     */
+    public abstract String toString();
 
 
 }
