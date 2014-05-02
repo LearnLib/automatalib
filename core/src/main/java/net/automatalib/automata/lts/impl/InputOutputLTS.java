@@ -16,7 +16,9 @@
  */
 package net.automatalib.automata.lts.impl;
 
+import net.automatalib.automata.dot.DOTHelperLTS;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
+import net.automatalib.automata.dot.DefaultDOTHelperAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.lts.MutableLTS;
 import net.automatalib.automata.lts.abstractimpl.AbstractMutableLTS;
@@ -36,7 +38,6 @@ public class InputOutputLTS<I,O> extends AbstractMutableLTS<InputOutputLabel> im
 
 	public InputOutputLTS(Alphabet<InputOutputLabel> alphabet) {
 		super(alphabet);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -65,8 +66,7 @@ public class InputOutputLTS<I,O> extends AbstractMutableLTS<InputOutputLabel> im
 
 	@Override
 	public GraphDOTHelper<Integer, TransitionEdge<InputOutputLabel, Integer>> getDOTHelper() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DOTHelperLTS<>(this);
 	}
 
 
