@@ -149,8 +149,10 @@ public abstract class AbstractMutableLTS<L> extends AbstractMutableAutomaton<Int
 	public Integer createTransition(Integer successor, Void properties) {
 		
 		Integer transitionId = nextTransition;
-		transitions.put(transitionId, new TransitionLTS(transitionId));
-		transitionId++;
+		TransitionLTS trans = new TransitionLTS(transitionId);
+		trans.setNextState(successor);
+		transitions.put(transitionId, trans);
+		nextTransition++;
 	
 		return transitionId;
 	}
@@ -194,6 +196,23 @@ public abstract class AbstractMutableLTS<L> extends AbstractMutableAutomaton<Int
 	@Override
 	public Alphabet<L> getInputAlphabet() {
 		return alphabet;
+	}
+	 
+	/**
+	 * Print a string representation of the LTS in the form:
+	 * start label target
+	 * 
+	 * for each transition.
+	 * 
+	 */
+	public String toString(){
+		String lts = "LTS: \n";
+		for(Integer state : states.keySet()){
+			for(TransitionLTS trans: states.get(state)){
+				lts = lts + state + " " + trans.getLabel().toString() + " " + trans.getNextState() + "\n";
+			}		
+		}
+		return lts;
 	}
 
 }
