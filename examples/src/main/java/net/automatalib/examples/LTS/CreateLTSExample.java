@@ -20,15 +20,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 import net.automatalib.automata.lts.impl.InputOutputLTS;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.graphs.FiniteLTS;
-import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.InputOutputLabel;
@@ -110,7 +106,6 @@ public class CreateLTSExample {
 		    			lts.addTransition(source, label, transition);
 	    			}
     			}
-    			
     		}
     	}
     	System.out.println(lts.toString());
@@ -122,12 +117,12 @@ public class CreateLTSExample {
 	public static void main(String[] args) throws IOException {
 		// load LTS and alphabet
         
-        InputOutputLTS<Character,Integer> lts = constructLTS(10,3,3,0L);
+        InputOutputLTS<Character,Integer> lts = constructLTS(6,3,3,334L);
         Alphabet<InputOutputLabel> inputsLTS = lts.getInputAlphabet();
         
         // print model to file
-        String filename = Settings.DIRECTORY + 10+"_"+3+"_"+3+"_"+String.valueOf(0)+"_LTS.dot";
-        //String filename = "" + 10+"_"+3+"_"+3+"_"+String.valueOf(0)+"_LTS.dot";
+        //String filename = Settings.DIRECTORY + 6+"_"+3+"_"+3+"_"+String.valueOf(334L)+"_LTS.dot";
+        String filename = "" + 10+"_"+3+"_"+3+"_"+String.valueOf(0)+"_LTS.dot";
         PrintStream writer = new PrintStream(
         	     new FileOutputStream(filename)); 
         GraphDOT.write(lts, inputsLTS, writer); // may throw IOException!
