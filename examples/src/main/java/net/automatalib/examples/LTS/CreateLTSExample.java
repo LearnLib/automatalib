@@ -82,7 +82,7 @@ public class CreateLTSExample {
     	//create transitions
     	for (int source : states) {
     		for (InputOutputLabel label : alphabet) {
-    			//output are not enabled in every state
+    			//outputs are not enabled in every state, inputs are!
     			if(label.isInput() || generator.nextBoolean()){
 	    			//create transition
 	    			int targetIndex = generator.nextInt(numberOfStates-1);
@@ -90,6 +90,25 @@ public class CreateLTSExample {
 	    			
 	    			Integer transition = lts.createTransition(target);
 	    			lts.addTransition(source, label, transition);
+	    			
+	    			//nondeterminism 1
+	    			if(generator.nextBoolean()){
+		    			//create transition
+		    			targetIndex = generator.nextInt(numberOfStates-1);
+		    			target = states.get(targetIndex);
+		    			
+		    			transition = lts.createTransition(target);
+		    			lts.addTransition(source, label, transition);
+	    			}
+	    			//nondeterminism 2
+	    			if(generator.nextBoolean()){
+		    			//create transition
+		    			targetIndex = generator.nextInt(numberOfStates-1);
+		    			target = states.get(targetIndex);
+		    			
+		    			transition = lts.createTransition(target);
+		    			lts.addTransition(source, label, transition);
+	    			}
     			}
     			
     		}
@@ -107,8 +126,8 @@ public class CreateLTSExample {
         Alphabet<InputOutputLabel> inputsLTS = lts.getInputAlphabet();
         
         // print model to file
-        //String filename = Settings.DIRECTORY + 10+"_"+3+"_"+3+"_"+String.valueOf(0)+"_LTS.dot";
-        String filename = "" + 10+"_"+3+"_"+3+"_"+String.valueOf(0)+"_LTS.dot";
+        String filename = Settings.DIRECTORY + 10+"_"+3+"_"+3+"_"+String.valueOf(0)+"_LTS.dot";
+        //String filename = "" + 10+"_"+3+"_"+3+"_"+String.valueOf(0)+"_LTS.dot";
         PrintStream writer = new PrintStream(
         	     new FileOutputStream(filename)); 
         GraphDOT.write(lts, inputsLTS, writer); // may throw IOException!
