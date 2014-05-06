@@ -169,7 +169,9 @@ public abstract class AbstractMutableLTS<L> extends AbstractMutableAutomaton<Int
 				TransitionLTS transition = this.transitions.get(transitionId);
 				if(transition != null){
 					transition.setLabel(label);
-					states.get(state).add(transition);
+					if(!states.get(state).contains(transition)){
+						states.get(state).add(transition);
+					}
 				}
 			}
 		}
@@ -186,9 +188,11 @@ public abstract class AbstractMutableLTS<L> extends AbstractMutableAutomaton<Int
 
 	@Override
 	public Integer copyTransition(Integer trans, Integer succ) {
+		TransitionLTS oldTrans = transitions.get(trans);
+		if(oldTrans == null) return -1;
+		
 		Integer newTransitionId = createTransition(succ);
 		TransitionLTS newTrans = transitions.get(newTransitionId);
-		TransitionLTS oldTrans = transitions.get(trans);
 		newTrans.setLabel(oldTrans.getLabel());
 		return newTransitionId;
 	}
@@ -206,10 +210,18 @@ public abstract class AbstractMutableLTS<L> extends AbstractMutableAutomaton<Int
 	 * 
 	 */
 	public String toString(){
-		String lts = "LTS: \n";
+		String lts = "States: ";
+		for(Integer state : states.keySet()){
+			lts = lts + state + " ";
+		}
+		lts = lts + "\n Transitions: ";
+		for(Integer transition : transitions.keySet()){
+			lts = lts + transition + " ";
+		}
+		lts = lts + "\n (State, Label, Target) - Transition Id: \n";
 		for(Integer state : states.keySet()){
 			for(TransitionLTS trans: states.get(state)){
-				lts = lts + state + " " + trans.getLabel().toString() + " " + trans.getNextState() + "\n";
+				lts = lts + "(" + state + ", " + trans.getLabel().toString() + ", " + trans.getNextState() + ") - " + trans.getTransitionId() + "\n";
 			}		
 		}
 		return lts;

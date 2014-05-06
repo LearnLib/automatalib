@@ -16,9 +16,12 @@
  */
 package net.automatalib.automata.lts.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import net.automatalib.automata.dot.DOTHelperLTS;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
-import net.automatalib.automata.dot.DefaultDOTHelperAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.lts.MutableLTS;
 import net.automatalib.automata.lts.abstractimpl.AbstractMutableLTS;
@@ -28,6 +31,8 @@ import net.automatalib.words.InputOutputLabel;
 
 /**
  * A nondeterministic input output labelled transition system.
+ * Transitions leaving the same state, with the same label and reaching the same
+ * state, are merged together (no probabilistic apporach).
  * 
  * @author Michele Volpato
  *
@@ -68,5 +73,32 @@ public class InputOutputLTS<I,O> extends AbstractMutableLTS<InputOutputLabel> im
 	public GraphDOTHelper<Integer, TransitionEdge<InputOutputLabel, Integer>> getDOTHelper() {
 		return new DOTHelperLTS<>(this);
 	}
-
+	
+	//Methods avoiding multiple transitions with the same label and target state.
+	
+//	@Override
+//	public void setTransitions(Integer state, InputOutputLabel label,
+	
+	// TODO: usare getTransitions() ?
+	
+	
+//			Collection<? extends Integer> transitions) {
+//		List<Integer> tempTrans = new ArrayList<Integer>();
+//		
+//		for(Integer transitionId : transitions){
+//			TransitionLTS transition = this.transitions.get(transitionId);
+//			if(transition == null) continue;
+//			boolean transitionAlreadyPresent = false;
+//			for(TransitionLTS transInState : states.get(state)){
+//				if(transInState.getLabel().equals(label) && transInState.getNextState().equals(transition.getNextState())){
+//					transitionAlreadyPresent = true;
+//					break;
+//				}
+//			}
+//			if(!transitionAlreadyPresent){
+//				tempTrans.add(transitionId);
+//			}
+//		}
+//		super.setTransitions(state, label, tempTrans);
+//	}
 }
