@@ -121,8 +121,8 @@ public class CreateLTSExample {
         Alphabet<InputOutputLabel> inputsLTS = lts.getInputAlphabet();
         
         // print model to file
-        //String filename = Settings.DIRECTORY + 6+"_"+3+"_"+3+"_"+String.valueOf(334L)+"_LTS.dot";
-        String filename = "" + 10+"_"+3+"_"+3+"_"+String.valueOf(0)+"_LTS.dot";
+        String filename = 6+"_"+3+"_"+3+"_"+String.valueOf(334L)+"_LTS.dot";
+        //filename = Settings.DIRECTORY + filename;
         PrintStream writer = new PrintStream(
         	     new FileOutputStream(filename)); 
         GraphDOT.write(lts, inputsLTS, writer); // may throw IOException!
