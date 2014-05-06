@@ -76,29 +76,43 @@ public class InputOutputLTS<I,O> extends AbstractMutableLTS<InputOutputLabel> im
 	
 	//Methods avoiding multiple transitions with the same label and target state.
 	
-//	@Override
-//	public void setTransitions(Integer state, InputOutputLabel label,
-	
-	// TODO: usare getTransitions() ?
-	
-	
-//			Collection<? extends Integer> transitions) {
-//		List<Integer> tempTrans = new ArrayList<Integer>();
-//		
-//		for(Integer transitionId : transitions){
-//			TransitionLTS transition = this.transitions.get(transitionId);
-//			if(transition == null) continue;
-//			boolean transitionAlreadyPresent = false;
-//			for(TransitionLTS transInState : states.get(state)){
-//				if(transInState.getLabel().equals(label) && transInState.getNextState().equals(transition.getNextState())){
-//					transitionAlreadyPresent = true;
-//					break;
-//				}
-//			}
-//			if(!transitionAlreadyPresent){
-//				tempTrans.add(transitionId);
-//			}
-//		}
-//		super.setTransitions(state, label, tempTrans);
-//	}
+	@Override
+	public void setTransitions(Integer state, InputOutputLabel label,
+			Collection<? extends Integer> transitions) {
+		List<Integer> tempTrans = new ArrayList<Integer>();	
+		Collection<? extends Integer> existingTransitions = this.getTransitions(state, label);
+		
+		for(Integer transitionId : transitions){
+			TransitionLTS transition = this.transitions.get(transitionId);
+			if(transition == null) continue;
+			boolean transitionAlreadyPresent = false;
+			for(Integer existingTransition : existingTransitions){
+				if(this.transitions.get(existingTransition).getNextState().equals(transition.getNextState())){
+					transitionAlreadyPresent = true;
+					break;
+				}
+			}
+			if(!transitionAlreadyPresent){
+				tempTrans.add(transitionId);
+			}
+			else{
+				// a transition has been created, but it is not used
+				this.removeTransitionId(transitionId);
+			}
+		}
+		super.setTransitions(state, label, tempTrans);
+	}
+
+	private boolean removeTransitionId(Integer transitionId) {
+		// If there is no state listing the transition transitionId, then remove
+		// transitionId from the list of transitions.
+		// Return true if the transition has been removed
+		TransitionLTS transition = transitions.get(transitionId);
+		for(List<TransitionLTS> transitionsInStates : states.values()){
+			if(transitionsInStates.contains(transition)){
+				return false;
+			}
+		}
+		return transitions.remove(transitionId) != null;
+	}
 }
