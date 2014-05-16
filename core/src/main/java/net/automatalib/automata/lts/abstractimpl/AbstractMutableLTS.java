@@ -30,7 +30,7 @@ import net.automatalib.automata.lts.MutableLTS;
 import net.automatalib.words.Alphabet;
 
 /**
- * Abstract base class for automata nondeterministic mutable labeled transition system.
+ * Abstract base class for nondeterministic mutable labeled transition system.
  * 
  * @author Michele Volpato
  *
@@ -40,7 +40,6 @@ public abstract class AbstractMutableLTS<L> extends AbstractMutableAutomaton<Int
 	implements MutableLTS<L>, DOTPlottableAutomaton<Integer, L, Integer> {
 
 	protected final Alphabet<L> alphabet;
-	protected final int alphabetSize;
 	protected Map<Integer, List<TransitionLTS>> states = new HashMap<Integer, List<TransitionLTS>>();
 
 	protected int nextState = 0;
@@ -80,7 +79,6 @@ public abstract class AbstractMutableLTS<L> extends AbstractMutableAutomaton<Int
 	
 	public AbstractMutableLTS(Alphabet<L> alphabet) {
 		this.alphabet = alphabet;
-		this.alphabetSize = alphabet.size();	
 	}
 
 	@Override
