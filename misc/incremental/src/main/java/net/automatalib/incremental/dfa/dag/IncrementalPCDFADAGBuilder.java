@@ -16,15 +16,11 @@
  */
 package net.automatalib.incremental.dfa.dag;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
