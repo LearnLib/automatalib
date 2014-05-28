@@ -16,7 +16,7 @@
  */
 package net.automatalib.automata.concepts;
 
-public interface SODetOutputAutomaton<S, I, T, O>
-		extends DetOutputAutomaton<S,I,T,O>, SuffixOutput<I,O> {
+public interface SODetOutputAutomaton<S, I, T, D>
+		extends DetOutputAutomaton<S,I,T,D>, SuffixOutput<I,D> {
     
 }

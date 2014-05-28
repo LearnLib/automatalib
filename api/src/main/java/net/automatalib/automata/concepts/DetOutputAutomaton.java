@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@ import net.automatalib.automata.DeterministicAutomaton;
  * @param <S> state class
  * @param <I> input symbol class
  * @param <T> transition class
- * @param <O> output class
+ * @param <D> output domain class
  */
-public interface DetOutputAutomaton<S, I, T, O> extends
-		OutputAutomaton<S, I, T, O>, DeterministicAutomaton<S, I, T> {
+public interface DetOutputAutomaton<S, I, T, D> extends
+		OutputAutomaton<S, I, T, D>, DeterministicAutomaton<S, I, T> {
 }

@@ -19,12 +19,21 @@ package net.automatalib.automata.concepts;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+/**
+ * Feature for automata that compute a <i>suffix-observable</i> output function, i.e.,
+ * they compute an output containing a part that can be attributed to a suffix of
+ * the input.
+ * <p>
+ * Note that this is a special case of the {@link Output} feature, as
+ * <code>computeOutput(input) = computeSuffixOutput(epsilon, input)</code>.
+ *  
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ * @param <D> output domain type
+ */
 @ParametersAreNonnullByDefault
-public interface SuffixOutput<I, O> extends Output<I,O> {
-    // FIXME: here I see a potential clash between I/O of the automaton and O of the suffix. 
-    // Why do we need this interface and method anyway? I think its the responsibility of 
-    // whoever is using this Automaton to truncate output as needed
-
+public interface SuffixOutput<I, D> extends Output<I,D> {
 	@Nullable
-	public O computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix);
+	public D computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix);
 }

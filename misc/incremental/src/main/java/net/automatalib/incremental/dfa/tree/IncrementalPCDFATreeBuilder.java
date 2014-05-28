@@ -74,8 +74,10 @@ public class IncrementalPCDFATreeBuilder<I> extends
 		return curr.getAcceptance();
 	}
 	
+	private int insertCount = 0;
 	@Override
 	public void insert(Word<? extends I> word, boolean acceptance) throws ConflictException {
+		insertCount++;
 		if(acceptance) {
 			insertTrue(word);
 		}
