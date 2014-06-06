@@ -36,13 +36,13 @@ import net.automatalib.words.Word;
  * Operations for calculating <i>characterizing sets</i>.
  * <p>
  * A characterizing set for a whole automaton is a set <i>W</i> of words such that for every two states
- * <i>s<sub>1</sub></i> and <i>s<sub>2</sub></i>, there exists a word <i>w &in; W</i> such that
+ * <i>s<sub>1</sub></i> and <i>s<sub>2</sub></i>, there exists a word <i>w &isin; W</i> such that
  * <i>w</i> exposes a difference between <i>s<sub>1</sub></i> and <i>s<sub>2</sub></i> (i.e.,
  * either covers a transition with differing property (or not defined in only one case),
  * or reaching a successor state with differing properties), or there exists no such word at all.
  * <p>
  * A characterizing set for a single state <i>s</i> is a set <i>W</i> of words such that
- * for every state <i>t</i>, there exists a word <i>w &in; W</i> such that <i>w</i> exposes
+ * for every state <i>t</i>, there exists a word <i>w &isin; W</i> such that <i>w</i> exposes
  * a difference between <i>s</i> and <i>t</i>, or there exists no such word at all.
  * 
  * @author Malte Isberner

@@ -41,7 +41,7 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param inputsMapping the transformation for input symbols
@@ -87,7 +87,7 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param inputsMapping the transformation for input symbols
@@ -113,7 +113,7 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param spMapping the function for obtaining state properties
@@ -141,13 +141,11 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param spMapping the function for obtaining state properties
 	 * @param tpMapping the function for obtaining transition properties
-	 * @param stateFilter the filter predicate for states
-	 * @param transFilter the filter predicate for transitions
 	 * @return a mapping from old to new states
 	 */
 	public static <S1,I,T1,S2,T2,SP2,TP2>
@@ -167,7 +165,7 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param inputsMapping the transformation for input symbols
@@ -199,7 +197,7 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param inputsMapping the transformation for input symbols
@@ -225,7 +223,7 @@ public class TSCopy {
 	 *  
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param spTransform the transformation for state properties
@@ -253,7 +251,7 @@ public class TSCopy {
 	 *  
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param spTransform the transformation for state properties
@@ -276,7 +274,7 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param inputsMapping the transformation for input symbols
@@ -302,7 +300,7 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param inputsMapping a mapping from inputs in the input automaton to inputs in the output automaton
@@ -323,7 +321,7 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @param stateFilter the filter predicate for states
@@ -347,7 +345,7 @@ public class TSCopy {
 	 * 
 	 * @param method the traversal method to use
 	 * @param in the input transition system
-	 * @param limits the traversal limit, a value less than 0 means no limit
+	 * @param limit the traversal limit, a value less than 0 means no limit
 	 * @param inputs the inputs to consider
 	 * @param out the output automaton
 	 * @return a mapping from old to new states.

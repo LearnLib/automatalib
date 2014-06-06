@@ -48,7 +48,7 @@ public interface GraphTraversalVisitor<N, E, D> {
 	/**
 	 * Called when the exploration of a node is finished.
 	 * @param node the node which's exploration is being finished
-	 * @param data the user data associated with this node
+	 * @param inData the user data associated with this node
 	 */
 	public void finishExploration(N node, D inData);
 	

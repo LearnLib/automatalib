@@ -188,7 +188,7 @@ public abstract class DFAs {
 	}
 	
 	/**
-	 * Calculates the equivalence ("<=>") of two DFA, and stores the result in a given mutable DFA.
+	 * Calculates the equivalence ("&lt;=&gt;") of two DFA, and stores the result in a given mutable DFA.
 	 * 
 	 * @param dfa1 the first DFA
 	 * @param dfa2 the second DFA
@@ -203,7 +203,7 @@ public abstract class DFAs {
 	}
 	
 	/**
-	 * Calculates the equivalence ("<=>") of two DFA, and returns the result as a new DFA.
+	 * Calculates the equivalence ("&lt;=&gt;") of two DFA, and returns the result as a new DFA.
 	 * 
 	 * @param dfa1 the first DFA
 	 * @param dfa2 the second DFA
@@ -217,7 +217,7 @@ public abstract class DFAs {
 	}
 	
 	/**
-	 * Calculates the implication ("=>") of two DFA, and stores the result in a given mutable DFA.
+	 * Calculates the implication ("=&gt;") of two DFA, and stores the result in a given mutable DFA.
 	 * 
 	 * @param dfa1 the first DFA
 	 * @param dfa2 the second DFA
@@ -232,7 +232,7 @@ public abstract class DFAs {
 	}
 	
 	/**
-	 * Calculates the implication ("=>") of two DFA, and returns the result as a new DFA.
+	 * Calculates the implication ("=&gt;") of two DFA, and returns the result as a new DFA.
 	 * 
 	 * @param dfa1 the first DFA
 	 * @param dfa2 the second DFA

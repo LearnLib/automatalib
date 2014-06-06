@@ -33,7 +33,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
 
 /**
  * Automaton minimizer. The automata are accessed via the 
- * {@link AutomatonInterface}, and may be partially defined. Note that
+ * {@link UniversalGraph} interface, and may be partially defined. Note that
  * undefined transitions are preserved, thus, they have no semantics that
  * could be modeled otherwise wrt. this algorithm.
  * <p>
@@ -76,7 +76,7 @@ public class Minimizer<S,L> {
 	/**
 	 * Minimizes an automaton. The automaton is not minimized directly, instead,
 	 * a {@link MinimizationResult} structure is returned. The automaton is
-	 * interfaced using an adapter implementing the {@link AutomatonInterface}
+	 * interfaced using an adapter implementing the {@link UniversalGraph}
 	 * interface.
 	 * 
 	 * @param <S> state class.
@@ -119,7 +119,7 @@ public class Minimizer<S,L> {
 	/**
 	 * Default constructor.
 	 * @deprecated Public instantiation is deprecated. Use {@link #getLocalInstance()}
-	 * or {@link #apply(AutomatonInterface)}
+	 * or {@link #minimize(UniversalGraph)}
 	 */
 	@Deprecated
 	public Minimizer() {
@@ -134,7 +134,7 @@ public class Minimizer<S,L> {
 	/**
 	 * Performs the minimization of an automaton.
 	 * 
-	 * The automaton is accessed via an {@link AutomatonInterface}. The result
+	 * The automaton is accessed via a {@link UniversalGraph}. The result
 	 * of the minimization process is effectively a partition on the set of
 	 * states, each element (block) in this partition contains equivalent
 	 * states that can be merged in a minimized automaton.

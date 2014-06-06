@@ -139,8 +139,6 @@ public abstract class AutomatonLowLevelCopy {
 	 * @param out the output automaton
 	 * @param spMapping the function for obtaining state properties
 	 * @param tpMapping the function for obtaining transition properties
-	 * @param stateFilter the filter predicate for states
-	 * @param transFilter the filter predicate for transitions
 	 * @return a mapping from old to new states
 	 */
 	public static <S1,I,T1,S2,T2,SP2,TP2>
