@@ -23,7 +23,7 @@ import java.util.Arrays;
 /**
  * Class that provides a resizable array storage of a certain type.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <T> element class.
  */

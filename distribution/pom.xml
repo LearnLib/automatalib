@@ -3,7 +3,7 @@
   <parent>
     <groupId>net.automatalib</groupId>
     <artifactId>automata-parent</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   
@@ -188,8 +188,32 @@
       				</execution>
       			</executions>
       		</plugin>
-      	</plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <inherited>false</inherited>
+            <configuration>
+              <finalName>automatalib-${project.version}</finalName>
+              <jarOutputDirectory>${project.build.directory}/bundles</jarOutputDirectory>
+              <includeDependencySources>true</includeDependencySources>
+              <dependencySourceIncludes>
+                <dependencySourceInclude>net.automatalib:*</dependencySourceInclude>
+              </dependencySourceIncludes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>aggregate</id>
+                <goals>
+                  <goal>aggregate-jar</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
+
+
     </profile>
   </profiles>
   

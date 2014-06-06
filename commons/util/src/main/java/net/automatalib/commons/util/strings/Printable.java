@@ -22,7 +22,7 @@ import java.io.IOException;
  * Interface that allows outputting to an {@link Appendable} (e.g., a
  * {@link StringBuilder}) instead of simply using {@link Object#toString()}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public interface Printable {

@@ -22,7 +22,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<!-- ================================= PROJECT INFO ============================== -->
 	<groupId>net.automatalib</groupId>
 	<artifactId>automata-parent</artifactId>
-	<version>0.4.0</version>
+	<version>0.4.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>AutomataLib</name>
@@ -139,8 +139,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 		<brics-automaton.version>1.11-8</brics-automaton.version>
 
-		<guava.version>16.0.1</guava.version>
+		<guava.version>17.0</guava.version>
 		<findbugs.version>2.0.3</findbugs.version>
+		<trove4j.version>3.0.3</trove4j.version>
 
 		<duzzt.version>0.0.2</duzzt.version>
 
@@ -388,6 +389,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<build>
 				<plugins>
 					<!--  aggregate javadoc of modules in one jar -->
+					<!-- Moved to distribution -->
+					<!--
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
@@ -402,6 +405,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 							</execution>
 						</executions>
 					</plugin>
+				-->
 				</plugins>
 			</build>
 		</profile>
@@ -474,6 +478,12 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<version>${findbugs.version}</version>
 				<!-- <scope>provided</scope> -->
 			</dependency>
+			
+			<dependency>
+				<groupId>net.sf.trove4j</groupId>
+				<artifactId>trove4j</artifactId>
+				<version>${trove4j.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>com.github.misberner.duzzt</groupId>
@@ -505,4 +515,5 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</site>
 	</distributionManagement>
 </project>
+
 

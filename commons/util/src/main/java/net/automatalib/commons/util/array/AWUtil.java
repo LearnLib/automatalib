@@ -24,7 +24,7 @@ import java.util.Arrays;
  * It is generally preferable to use the static methods this class offers than
  * using {@link ArrayWritable#writeToArray(int, Object[], int, int)} directly.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public abstract class AWUtil {

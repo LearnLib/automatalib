@@ -28,7 +28,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>net.automatalib.archetypes</groupId>
 		<artifactId>automata-archetypes-parent</artifactId>
-		<version>0.4.0</version>
+		<version>0.4.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 

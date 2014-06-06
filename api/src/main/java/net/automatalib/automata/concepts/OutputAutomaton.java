@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,5 +18,5 @@ package net.automatalib.automata.concepts;
 
 import net.automatalib.automata.Automaton;
 
-public interface OutputAutomaton<S, I, T, O> extends Automaton<S,I,T>, Output<I,O> {
+public interface OutputAutomaton<S, I, T, D> extends Automaton<S,I,T>, Output<I,D> {
 }

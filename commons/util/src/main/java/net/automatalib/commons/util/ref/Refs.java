@@ -19,7 +19,7 @@ package net.automatalib.commons.util.ref;
 /**
  * Utility functions for dealing with references.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner
  *
  */
 public abstract class Refs {

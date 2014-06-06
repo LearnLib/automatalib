@@ -23,7 +23,7 @@ import java.util.Iterator;
  * Iterator for iterating over a BitSet like over a normal collection.
  * The type returned by next() is {@link Integer}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  */
 public class BitSetIterator implements Iterator<Integer> {
 	private final BitSet bitSet;

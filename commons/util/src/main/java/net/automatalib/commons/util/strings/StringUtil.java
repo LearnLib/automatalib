@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * Misceallanous utility functions for {@link String}s.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  */
 public abstract class StringUtil {
 	

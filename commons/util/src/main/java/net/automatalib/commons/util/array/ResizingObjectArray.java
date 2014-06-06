@@ -24,7 +24,7 @@ package net.automatalib.commons.util.array;
  * is always of type <code>Object[]</code>. This results in a higher efficiency,
  * since there is no need for reflection when creating new arrays.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public final class ResizingObjectArray {

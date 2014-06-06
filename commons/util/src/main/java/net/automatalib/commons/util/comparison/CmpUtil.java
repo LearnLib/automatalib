@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Various methods for dealing with the comparison of objects.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public abstract class CmpUtil {
@@ -33,7 +33,7 @@ public abstract class CmpUtil {
 	 * element when using a safe comparator
 	 * ({@link CmpUtil#safeComparator(Comparator, NullOrdering)}).
 	 * 
-	 * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+	 * @author Malte Isberner
 	 *
 	 */
 	public static enum NullOrdering {

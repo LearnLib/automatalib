@@ -28,7 +28,7 @@ import java.util.Map;
  * because it does not requires them to be stored at all. Instead, they can be calculated
  * on the fly upon an invocation of {@link #get(Object)}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <D> domain type.
  * @param <R> range type.

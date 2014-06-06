@@ -21,7 +21,7 @@ package net.automatalib.commons.util.mappings;
  * Mutable version of a {@link Mapping}, which supports setting
  * keys for given values.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <D> domain class
  * @param <R> range class

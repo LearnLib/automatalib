@@ -66,6 +66,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 	 */
 	@Override
 	public void insert(Word<? extends I> word, boolean accepting) {
+		
 		int len = word.length();
 		Acceptance acc = Acceptance.fromBoolean(accepting);
 		
@@ -75,12 +76,10 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 		Deque<PathElem> path = new ArrayDeque<>();
 		
 		for(I sym : word) {
-			if(curr == sink || curr.getAcceptance() == Acceptance.FALSE) {
+			if(curr.getAcceptance() == Acceptance.FALSE) {
 				if(accepting) {
+					
 					throw new IllegalArgumentException("Conflict");
-				}
-				if(curr != sink) {
-					purge(curr);
 				}
 				return;
 			}
@@ -113,7 +112,9 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 				throw new ConflictException("Incompatible acceptances: " + currAcc + " vs " + acc);
 			}
 			if(!accepting) {
-				purge(last);
+				if(conf == null) {
+					purge(last);
+				}
 				last = sink;
 			}
 			else {
@@ -218,6 +219,9 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 	 */
 	private void purge(State state) {
 		StateSignature sig = state.getSignature();
+		if(sig == null) {
+			return;
+		}
 		if(state.getAcceptance() == Acceptance.TRUE) {
 			throw new IllegalStateException("Attempting to purge accepting state");
 		}

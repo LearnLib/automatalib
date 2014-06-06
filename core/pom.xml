@@ -35,7 +35,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>net.automatalib</groupId>
 		<artifactId>automata-parent</artifactId>
-		<version>0.4.0</version>
+		<version>0.4.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -56,6 +56,10 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.trove4j</groupId>
+			<artifactId>trove4j</artifactId>
 		</dependency>
 	</dependencies>
 </project>

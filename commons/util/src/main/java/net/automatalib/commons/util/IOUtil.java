@@ -25,7 +25,7 @@ import java.io.Writer;
 /**
  * Utility methods for operating with <tt>java.io.*</tt> classes.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public abstract class IOUtil {

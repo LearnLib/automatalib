@@ -19,8 +19,16 @@ package net.automatalib.automata.concepts;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+/**
+ * Feature for automata that compute an output.
+ * 
+ * @author Malte Isberner
+ *
+ * @param <I> input symbol type
+ * @param <D> output domain type
+ */
 @ParametersAreNonnullByDefault
-public interface Output<I, O> {
+public interface Output<I, D> {
 	@Nullable
-	public O computeOutput(Iterable<? extends I> input);
+	public D computeOutput(Iterable<? extends I> input);
 }

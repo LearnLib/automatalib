@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
 /**
  * A weak reference wrapper, complying to the {@link Ref} interface.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner
  *
  * @param <T> referent class.
  */

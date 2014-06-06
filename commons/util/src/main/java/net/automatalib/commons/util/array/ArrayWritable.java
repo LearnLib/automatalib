@@ -24,7 +24,7 @@ import java.util.Collection;
  * in the following way:
  *  - 
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <T> type class. This is a marker parameter that is not reflected in the signatures,
  * but respected by the methods in {@link AWUtil}.
