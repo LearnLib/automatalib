@@ -102,7 +102,7 @@ public class DOT {
 	
 	/**
 	 * Invokes the DOT utility on a string.
-	 * Convenience method, see {@link #runDOT(Reader, String)}.
+	 * Convenience method, see {@link #runDOT(Reader, String, String...)}
 	 */
 	public static InputStream runDOT(String dotText, String format, String ...additionalOpts) throws IOException {
 		StringReader sr = new StringReader(dotText);
@@ -111,7 +111,7 @@ public class DOT {
 	
 	/**
 	 * Invokes the DOT utility on a file.
-	 * Convenience method, see {@link #runDOT(Reader, String)}.
+	 * Convenience method, see {@link #runDOT(Reader, String, String...)}.
 	 */
 	public static InputStream runDOT(File dotFile, String format, String ...additionalOpts) throws IOException {
 		FileReader fr = new FileReader(dotFile);
