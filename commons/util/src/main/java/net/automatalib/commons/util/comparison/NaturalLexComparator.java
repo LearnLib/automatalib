@@ -21,7 +21,7 @@ import java.util.Comparator;
 /**
  * Lexicographical comparator using the natural ordering.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <T> iterable class
  * @param <U> element class

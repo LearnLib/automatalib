@@ -25,7 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * A Kripke interpretation for a graph. A Kripke interpretation assigns
  * to each node a set of so-called <i>atomic propositions</i>.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  * @param <AP> atomic proposition class

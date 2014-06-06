@@ -24,7 +24,7 @@ import java.util.NoSuchElementException;
  * An immutable word implementation that is based on the idea of a common array storage.
  * This allows a very efficient creation of subwords (e.g., prefixes and suffixes).
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class
  */
@@ -33,7 +33,7 @@ final class SharedWord<I> extends Word<I> {
 	/**
 	 * Iterator for iterating over {@link SharedWord}s.
 	 * 
-	 * @author Malte Isberner <malte.isberner@gmail.com>
+	 * @author Malte Isberner 
 	 *
 	 * @param <I> symbol class.
 	 */

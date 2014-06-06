@@ -24,7 +24,7 @@ import net.automatalib.ts.DeterministicTransitionSystem;
  * Basic interface for a deterministic automaton. A deterministic automaton is a
  * {@link DeterministicTransitionSystem} with a finite number of states.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <I> input symbol class.

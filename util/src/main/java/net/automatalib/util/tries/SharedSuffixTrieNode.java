@@ -21,7 +21,7 @@ package net.automatalib.util.tries;
  * array containing all children, in order to avoid inserting
  * duplicates.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> symbol class.
  */

@@ -91,7 +91,8 @@ public abstract class AbstractDTS<S, I, T> extends AbstractTS<S, I, T> implement
 	 * {@link DeterministicTransitionSystem#getState(Iterable)} using
 	 * {@link DeterministicTransitionSystem#getSuccessor(Object, Iterable)}
 	 * and {@link DeterministicTransitionSystem#getInitialState()}.
-	 * @see {@link DeterministicTransitionSystem#getState(Iterable)}
+	 * 
+	 * @see DeterministicTransitionSystem#getState(Iterable)
 	 */
 	public static <S,I,T> S getState(DeterministicTransitionSystem<S, I, T> $this, Iterable<? extends I> input) {
 		return $this.getSuccessor(

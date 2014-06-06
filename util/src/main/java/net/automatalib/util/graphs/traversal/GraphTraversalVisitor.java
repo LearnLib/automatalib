@@ -23,7 +23,7 @@ import net.automatalib.commons.util.Holder;
  * <p>
  * This interface declares methods that are called upon basic graph traversal actions.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  * @param <E> edge class
@@ -48,7 +48,7 @@ public interface GraphTraversalVisitor<N, E, D> {
 	/**
 	 * Called when the exploration of a node is finished.
 	 * @param node the node which's exploration is being finished
-	 * @param data the user data associated with this node
+	 * @param inData the user data associated with this node
 	 */
 	public void finishExploration(N node, D inData);
 	

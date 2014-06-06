@@ -29,7 +29,7 @@ import net.automatalib.words.GrowingAlphabet;
  * A fast alphabet implementation, that assumes identifiers are stored directly in the
  * input symbols.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class.
  */

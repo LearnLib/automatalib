@@ -22,7 +22,7 @@ package net.automatalib.util.minimizer;
 /**
  * An edge in the internal automaton representation.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <T> transition label class.

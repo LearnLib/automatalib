@@ -20,7 +20,7 @@ package net.automatalib.automata.transout.impl;
  * A transition of a mealy machine, comprising a successor state
  * and an output symbol.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <O> output symbol class.

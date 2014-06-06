@@ -23,7 +23,7 @@ package net.automatalib.commons.smartcollections;
  * more explicitly between operations on concrete elements and on their
  * references.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  */
 public interface ElementReference {
 }

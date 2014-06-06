@@ -23,7 +23,7 @@ package net.automatalib.commons.smartcollections;
  * implement {@link Comparable} or can be compared using a comparator),
  * or have external keys attached.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class
  */

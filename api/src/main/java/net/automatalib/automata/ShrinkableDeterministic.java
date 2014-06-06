@@ -20,7 +20,7 @@ package net.automatalib.automata;
  * A mutable deterministic automaton that also supports destructive operations, i.e.,
  * removal of states and transitions.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class
  * @param <I> input symbol class

@@ -20,7 +20,7 @@ package net.automatalib.incremental;
  * Conflict exception. Thrown when a data point to be inserted conflicts with
  * definitive information already existing. 
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 public class ConflictException extends IllegalArgumentException {

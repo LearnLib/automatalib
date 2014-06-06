@@ -27,7 +27,7 @@ import net.automatalib.ts.abstractimpl.AbstractDTS;
 /**
  * Abstract base class for deterministic automata.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class
  * @param <I> input symbol class

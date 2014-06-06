@@ -25,7 +25,7 @@ import net.automatalib.graphs.UniversalIndefiniteGraph;
 
 /**
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <L> transition 

@@ -24,7 +24,7 @@ import net.automatalib.incremental.dfa.Acceptance;
  * Signature of a state. A signature consists of the list of all successor states
  * for all alphabet symbols, and the acceptance status.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 final class StateSignature {

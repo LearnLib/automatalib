@@ -21,7 +21,7 @@ import net.automatalib.ts.simple.SimpleDTS;
 /**
  * A simple deterministic automaton.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <I> input symbol class.

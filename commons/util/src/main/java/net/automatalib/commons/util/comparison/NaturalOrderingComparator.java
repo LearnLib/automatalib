@@ -27,7 +27,7 @@ import java.util.Comparator;
  * This class is a singleton, since due to type erasure, different
  * instantiations won't really differ from each other.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <T> element class.
  */

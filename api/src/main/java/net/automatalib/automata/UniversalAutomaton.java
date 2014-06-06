@@ -23,7 +23,7 @@ import net.automatalib.ts.UniversalTransitionSystem;
  * access to the properties of states and transitions. See {@link UniversalTransitionSystem}
  * for a further explanation of this concept.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class
  * @param <I> input symbol class

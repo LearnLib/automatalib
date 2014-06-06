@@ -32,7 +32,7 @@ import net.automatalib.commons.util.array.ResizingObjectArray;
  * not invalidate the references of other objects, and can be performed during
  * iteration (using the respective {@link Iterator#remove()} method).
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  */

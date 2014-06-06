@@ -30,7 +30,7 @@ import java.util.NoSuchElementException;
  * lists are created. Therefore, it can be used by both 
  * intrusive and non-intrusive linked lists.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element type
  * @param <T> linked list entry type
@@ -54,7 +54,7 @@ SmartSequence<E> {
 	 * Iterator that follows the linked structure of the
 	 * elements.
 	 * 
-	 * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+	 * @author Malte Isberner 
 	 */
 	private class LinkedListEntryIterator
 	implements Iterator<T> {

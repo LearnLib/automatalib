@@ -22,7 +22,7 @@ import java.util.Iterator;
  * A transparent iterator wrapper that applies a {@link Mapping} to each
  * element returned by an underlying iterator.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner 
  *
  * @param <D> domain (original iterator type) class.
  * @param <R> range (resulting iterator type) class.

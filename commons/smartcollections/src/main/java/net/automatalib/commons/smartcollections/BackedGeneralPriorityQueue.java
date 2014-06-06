@@ -29,7 +29,7 @@ import java.util.Objects;
  * {@link BinaryHeap}, but every other implementation of this interface
  * may be used. The backing queue is specified in the constructor.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  * @param <K> key class.

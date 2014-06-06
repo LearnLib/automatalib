@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Transition output concept. Associates a transition with an output, like in
  * a Mealy machine.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <T> transition class.
  * @param <O> output class.

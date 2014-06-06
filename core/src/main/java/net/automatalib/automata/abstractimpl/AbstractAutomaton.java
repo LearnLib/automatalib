@@ -29,7 +29,7 @@ import net.automatalib.ts.abstractimpl.AbstractTS;
 /**
  * Abstract base class for automata.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <I> input symbol class.

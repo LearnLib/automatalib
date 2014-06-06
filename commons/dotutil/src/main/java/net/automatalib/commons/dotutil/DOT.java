@@ -54,7 +54,7 @@ import net.automatalib.commons.util.IOUtil;
  * of the provided methods require GraphVIZ to be installed on the system, and that the
  * "dot" binary resides in the execution path.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 public class DOT {
@@ -102,7 +102,7 @@ public class DOT {
 	
 	/**
 	 * Invokes the DOT utility on a string.
-	 * Convenience method, see {@link #runDOT(Reader, String)}.
+	 * Convenience method, see {@link #runDOT(Reader, String, String...)}
 	 */
 	public static InputStream runDOT(String dotText, String format, String ...additionalOpts) throws IOException {
 		StringReader sr = new StringReader(dotText);
@@ -111,7 +111,7 @@ public class DOT {
 	
 	/**
 	 * Invokes the DOT utility on a file.
-	 * Convenience method, see {@link #runDOT(Reader, String)}.
+	 * Convenience method, see {@link #runDOT(Reader, String, String...)}.
 	 */
 	public static InputStream runDOT(File dotFile, String format, String ...additionalOpts) throws IOException {
 		FileReader fr = new FileReader(dotFile);

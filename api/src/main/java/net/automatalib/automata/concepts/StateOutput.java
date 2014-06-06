@@ -24,7 +24,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * State output concept. Allows to associate with each state an output, like in a Moore
  * machine.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <O> output class.

@@ -27,7 +27,7 @@ import java.util.Objects;
 /**
  * A word consisting of a single letter only.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> symbol class
  * @see Collections#singletonList(Object)

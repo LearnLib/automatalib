@@ -36,7 +36,7 @@ import java.util.Objects;
  * - {@link SmartCollection#remove(ElementReference)}
  * - {@link SmartCollection#replace(ElementReference, Object)}
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  */

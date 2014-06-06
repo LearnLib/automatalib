@@ -35,7 +35,7 @@ import java.util.Comparator;
  * larger than any non-<code>null</code> key. The default key for consequent
  * insertions can be changed by calling {@link #setDefaultKey(Comparable)}. 
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  * @param <K> key class.

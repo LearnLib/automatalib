@@ -41,7 +41,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * would therefore be {@link Void}, but the transition property would be the
  * output produced by this transition.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class
  * @param <I> input symbol class

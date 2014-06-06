@@ -26,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * a normal (directed) graph, but provides direct access to not only the outgoing, but also
  * the incoming edges of each state.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  * @param <E> edge class

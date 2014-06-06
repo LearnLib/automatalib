@@ -20,7 +20,7 @@ package net.automatalib.commons.smartcollections;
  * The default linked list entry. It provides handling of successor and
  * predecessor entries as well as storage of the actual element.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  */

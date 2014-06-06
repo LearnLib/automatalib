@@ -18,7 +18,7 @@ package net.automatalib.util.ts.traversal;
 
 /**
  * BFS state record.
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <D> user data class.

@@ -24,7 +24,7 @@ import java.util.Iterator;
  * Class that maps a {@link Collection} of states to a collection of
  * the respective original states.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <L> transition label class.

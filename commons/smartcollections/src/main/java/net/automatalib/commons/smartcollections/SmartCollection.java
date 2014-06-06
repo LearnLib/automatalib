@@ -59,7 +59,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * The validity of references is retained through all operations on the
  * collection, except for those that cause removal of the respective elements. 
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class
  */

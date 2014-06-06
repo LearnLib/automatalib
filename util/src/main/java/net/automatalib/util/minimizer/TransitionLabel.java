@@ -31,7 +31,7 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
  * Represents a transition label in the automaton model the minimizer
  * operates on. 
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <EP> edge property class.

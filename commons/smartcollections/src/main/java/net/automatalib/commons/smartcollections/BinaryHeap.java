@@ -28,7 +28,7 @@ import net.automatalib.commons.util.comparison.CmpUtil;
 /**
  * A {@link PriorityQueue} implementation using a binary heap.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  */
