@@ -41,7 +41,7 @@ import com.google.common.base.Functions;
  * Note that the methods provided by this class do not modify their input arguments. Such methods
  * are instead provided by the {@link MutableDFAs} class.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 public abstract class DFAs {

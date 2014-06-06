@@ -26,7 +26,7 @@ import dk.brics.automaton.Transition;
 /**
  * DOT rendering helper for Brics automaton adapters.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 final class BricsDOTHelper extends DefaultDOTHelper<State, Transition> {

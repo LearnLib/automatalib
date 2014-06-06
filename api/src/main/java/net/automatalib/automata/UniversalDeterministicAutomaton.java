@@ -23,7 +23,7 @@ import net.automatalib.ts.UniversalDTS;
 /**
  * A {@link DeterministicAutomaton} with state and transition properties.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class
  * @param <I> input symbol class

@@ -23,7 +23,7 @@ import net.automatalib.commons.util.Holder;
  * <p>
  * This interface declares methods that are called upon basic graph traversal actions.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  * @param <E> edge class

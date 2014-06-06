@@ -27,7 +27,7 @@ import net.automatalib.ts.simple.SimpleTS;
 /**
  * A simple automaton, i.e., a {@link SimpleTS} with a finite number of states.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <I> input symbol class.

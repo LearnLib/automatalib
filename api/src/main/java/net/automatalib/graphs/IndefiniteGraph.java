@@ -28,7 +28,7 @@ import net.automatalib.commons.util.mappings.MutableMapping;
  * has outgoing edges connecting to other nodes. In an indefinite graph, the node set is not
  * required to be finite.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class.
  * @param <E> edge class.

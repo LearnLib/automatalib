@@ -25,7 +25,7 @@ import net.automatalib.words.WordBuilder;
 /**
  * A node in a {@link SuffixTrie}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> symbol class.
  */
@@ -34,7 +34,7 @@ public class SuffixTrieNode<I> extends Word<I> {
 	/**
 	 * Optimized iterator for the implicit word representation.
 	 * 
-	 * @author Malte Isberner <malte.isberner@gmail.com>
+	 * @author Malte Isberner 
 	 *
 	 * @param <I> symbol class
 	 */

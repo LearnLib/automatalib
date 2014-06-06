@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Interface for a <i>mutable</i> deterministic automaton.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <I> input symbol class.

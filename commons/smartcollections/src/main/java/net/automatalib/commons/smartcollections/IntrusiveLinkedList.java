@@ -26,7 +26,7 @@ package net.automatalib.commons.smartcollections;
  * Note that this furthermore implies that each such element can only be
  * stored in at most <i>one</i> {@link IntrusiveLinkedList}. 
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <T> element class, must implement {@link LinkedListEntry}.
  */

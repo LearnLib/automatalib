@@ -40,7 +40,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
  * The implemented algorithm is described in the paper "Minimizing incomplete
  * automata" by Marie-Pierre Beal and Maxime Crochemore.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <L> transition label class.

@@ -28,7 +28,7 @@ import net.automatalib.commons.util.mappings.MutableMapping;
  * <p>
  * The storage and lookup are performed in constant time.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <V> value class.
  */

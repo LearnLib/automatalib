@@ -39,7 +39,7 @@ import net.automatalib.commons.util.array.ResizingObjectArray;
  * such as
  * <pre>builder.append(foo).append(bar).append(baz);</pre>
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> symbol class.
  */

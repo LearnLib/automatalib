@@ -23,7 +23,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * A mutable automaton that also supports destructive modifications, i.e., removal
  * of states and transitions.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class
  * @param <I> input symbol class

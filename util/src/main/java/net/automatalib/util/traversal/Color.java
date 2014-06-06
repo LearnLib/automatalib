@@ -22,7 +22,7 @@ package net.automatalib.util.traversal;
  * Note that this enum only declares two values. The value {@link #WHITE} for unvisited nodes/states
  * is identified with <tt>null</tt>.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 public enum Color {

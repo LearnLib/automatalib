@@ -20,7 +20,7 @@ package net.automatalib.commons.smartcollections;
  * A simple linked list implementation that allows storing
  * arbitrary elements.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  */

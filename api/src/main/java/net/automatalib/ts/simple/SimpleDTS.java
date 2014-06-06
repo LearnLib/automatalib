@@ -25,7 +25,7 @@ import net.automatalib.ts.TransitionSystem;
  * A simple deterministic transition system. In a deterministic transition system,
  * there exists in each state at most one successor state for each input symbol.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class
  * @param <I> input symbol class

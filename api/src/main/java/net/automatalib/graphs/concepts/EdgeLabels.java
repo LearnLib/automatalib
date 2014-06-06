@@ -24,7 +24,7 @@ import net.automatalib.graphs.Graph;
 /**
  * Edge label context, for {@link Graph}s with labeled edges.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> edge class
  * @param <L> label class

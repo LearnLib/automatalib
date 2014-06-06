@@ -24,7 +24,7 @@ import net.automatalib.commons.util.mappings.Mapping;
 /**
  * Helper interface for plotting graphs using the GraphVIZ DOT format.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  * @param <E> edge class

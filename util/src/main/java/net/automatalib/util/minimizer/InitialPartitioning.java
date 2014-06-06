@@ -25,7 +25,7 @@ import java.util.Collection;
  * of partitions is known and the classification can be done using integers)
  * and non-optimized variants of initial partitionings.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <L> transition label class.

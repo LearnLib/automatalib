@@ -20,7 +20,7 @@ package net.automatalib.graphs;
  * A finite Kripke Transition System combines the properties of both a labeled transition system
  * and a Kripke structure.
  *  
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  * @param <E> edge class

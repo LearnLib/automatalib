@@ -20,7 +20,7 @@ package net.automatalib.ts;
 /**
  * Universal deterministic transition system.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @see UniversalTransitionSystem
  * @see DeterministicTransitionSystem

@@ -19,7 +19,7 @@ package net.automatalib.commons.smartcollections;
 /**
  * Basic interface for entries in a linked list.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  * @param <T> linked list entry class.

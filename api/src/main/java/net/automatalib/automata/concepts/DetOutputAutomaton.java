@@ -23,7 +23,7 @@ import net.automatalib.automata.DeterministicAutomaton;
  * output refers to the <i>complete</i> output that is made when an input word is read,
  * not a single symbol.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class
  * @param <I> input symbol class

@@ -21,7 +21,7 @@ import net.automatalib.graphs.concepts.NodeAcceptance;
 /**
  * Interface for finite graphs that embody the concept of node acceptance.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  * @param <E> edge class

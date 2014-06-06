@@ -21,7 +21,7 @@ import dk.brics.automaton.Transition;
 /**
  * The properties of an edge in a Brics automaton.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  */
 public class BricsTransitionProperty {
 	

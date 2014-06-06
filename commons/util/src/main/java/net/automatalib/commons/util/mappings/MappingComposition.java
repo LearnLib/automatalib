@@ -19,7 +19,7 @@ package net.automatalib.commons.util.mappings;
 /**
  * Mapping realized by the composition of two mappings.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <D> domain class of the first (and final) mapping.
  * @param <I> intermediate object class, i.e. range of the first

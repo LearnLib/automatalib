@@ -32,7 +32,7 @@ import net.automatalib.words.Word;
  * words ({@link Acceptance#TRUE}), definitely rejected words ({@link Acceptance#FALSE}), or
  * neither ({@link Acceptance#DONT_KNOW}).
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class
  */

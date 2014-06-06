@@ -30,7 +30,7 @@ import net.automatalib.words.Word;
 /**
  * A fast implementation of a Moore automaton.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class.
  * @param <O> output symbol class.

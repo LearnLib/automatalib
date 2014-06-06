@@ -22,7 +22,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * Edge weights concepts. Allows to associate a fractional (floating-point) <i>weight</i>
  * with the edges in a graph.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> edge class
  */

@@ -33,7 +33,7 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
  * A simple alphabet implementation, that does not impose any restriction on the input
  * symbol class. However, the id lookup for a symbol might be slightly slower.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class.
  */

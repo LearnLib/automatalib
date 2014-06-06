@@ -54,7 +54,7 @@ import net.automatalib.commons.util.IOUtil;
  * of the provided methods require GraphVIZ to be installed on the system, and that the
  * "dot" binary resides in the execution path.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 public class DOT {

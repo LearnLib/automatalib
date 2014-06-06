@@ -36,7 +36,7 @@ import javax.swing.JOptionPane;
 /**
  * Component that displays a {@link BufferedImage}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 public class ImageComponent extends JComponent  {

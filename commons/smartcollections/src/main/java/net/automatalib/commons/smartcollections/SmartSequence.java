@@ -20,7 +20,7 @@ package net.automatalib.commons.smartcollections;
  * Sequence interface. A sequence is a collection where elements are
  * stored in a specific order, and elements can be inserted in between.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  */

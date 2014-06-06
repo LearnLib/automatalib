@@ -19,7 +19,7 @@ package net.automatalib.graphs.base.compact;
 /**
  * An edge in a {@link CompactSimpleGraph}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <EP> edge property class.
  */

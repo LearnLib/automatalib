@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 
 /**
  *
- * @author Maik Merten <maikmerten@googlemail.com>
+ * @author Maik Merten 
  */
 public class FastMealyTest {
     

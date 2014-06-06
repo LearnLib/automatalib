@@ -34,7 +34,7 @@ import net.automatalib.words.Word;
 /**
  * A fast implementation of a Mealy machine.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner 
  *
  * @param <I> input symbol class.
  * @param <O> output symbol class.

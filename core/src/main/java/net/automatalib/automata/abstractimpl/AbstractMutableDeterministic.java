@@ -24,7 +24,7 @@ import net.automatalib.automata.MutableDeterministic;
 /**
  * Abstract base class for mutable deterministic automata.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class
  * @param <I> input symbol class

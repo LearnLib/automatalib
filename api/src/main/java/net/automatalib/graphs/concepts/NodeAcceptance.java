@@ -24,7 +24,7 @@ import net.automatalib.graphs.Graph;
  * Node acceptance concept, for {@link Graph}s that represent a structure for
  * deciding acceptance or rejection.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  */

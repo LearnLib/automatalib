@@ -24,7 +24,7 @@ import net.automatalib.ts.TransitionSystem;
  * Basic interface for an automaton. An automaton is a {@link TransitionSystem}
  * with a finite number of states.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <I> input symbol class.

@@ -19,7 +19,7 @@ package net.automatalib.graphs;
 /**
  * A finite LTS is an {@link IndefiniteLTS} with a finite number of nodes.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  * @param <E> edge class

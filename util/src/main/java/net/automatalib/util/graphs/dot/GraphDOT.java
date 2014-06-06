@@ -48,7 +48,7 @@ import net.automatalib.util.automata.Automata;
  * This class does not take care of actually processing the generated DOT data. For this,
  * please take a look at the <tt>automata-commons-dotutil</tt> artifact.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 public abstract class GraphDOT {

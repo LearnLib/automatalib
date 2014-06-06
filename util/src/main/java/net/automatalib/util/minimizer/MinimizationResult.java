@@ -44,7 +44,7 @@ import net.automatalib.commons.util.mappings.Mapping;
  * A more convenient way to obtain a representation of the resulting, minimized
  * automaton is using a {@link BlockAutomaton}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <L> transition label class.

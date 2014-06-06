@@ -19,7 +19,7 @@ package net.automatalib.util.graphs.traversal;
 /**
  * A base implementation of a {@link DFSVisitor}.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <N> node class
  * @param <E> edge class

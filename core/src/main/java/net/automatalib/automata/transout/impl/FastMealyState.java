@@ -21,7 +21,7 @@ import net.automatalib.automata.base.fast.FastDetState;
 /**
  * A state in a {@link FastMealy} automaton.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner 
  *
  * @param <O> output symbol class.
  */

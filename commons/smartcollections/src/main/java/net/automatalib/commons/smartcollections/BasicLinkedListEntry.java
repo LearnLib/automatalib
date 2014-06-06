@@ -20,7 +20,7 @@ package net.automatalib.commons.smartcollections;
  * Abstract base class for entries in a linked list. Takes care for handling
  * predecessor and successor, but not storage of the element itself.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <E> element class.
  * @param <T> linked list entry class.

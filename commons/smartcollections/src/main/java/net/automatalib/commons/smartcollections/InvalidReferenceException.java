@@ -23,7 +23,7 @@ package net.automatalib.commons.smartcollections;
  * 
  * This exception does not need to be caught explicitly.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  */
 public class InvalidReferenceException extends IllegalArgumentException {
 	

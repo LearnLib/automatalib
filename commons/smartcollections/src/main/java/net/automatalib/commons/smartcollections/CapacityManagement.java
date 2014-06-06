@@ -20,7 +20,7 @@ package net.automatalib.commons.smartcollections;
  * Control interface for collections supporting a capacity management, i.e., reserving
  * space in advance in order to avoid repeated reallocations.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  */
 public interface CapacityManagement {

@@ -28,7 +28,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * (from the set of outgoing transitions) should be removed, then {@link ShrinkableAutomaton}
  * is the adequate interface.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner 
  *
  * @param <S> state class.
  * @param <I> input symbol class.
