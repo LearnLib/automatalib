@@ -122,7 +122,7 @@ public class GraphAlgorithms {
 	 * Tarjan's algorithm is used for realizing the SCC search.
 	 * 
 	 * @param graph the graph
-	 * @param listener the SCC listener
+	 * @param sccListener the SCC listener
 	 * 
 	 * @see TarjanSCCVisitor
 	 * @see SCCs
