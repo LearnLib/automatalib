@@ -36,7 +36,7 @@ public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S
 	/**
      * removes a state from the automaton.
      *
-     * @param s: state to be removed
+     * @param state state to be removed
      */
     public void removeState(S state);
     
