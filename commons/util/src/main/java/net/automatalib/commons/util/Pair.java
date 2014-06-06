@@ -25,7 +25,7 @@ import net.automatalib.commons.util.strings.StringUtil;
 /**
  * Mutable pair class.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  * @param <T1> type of the pair's first component.
  * @param <T2> type of the pair's second component.

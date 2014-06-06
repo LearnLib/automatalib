@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Collection of various methods dealing with {@link Mapping}s.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public abstract class Mappings {

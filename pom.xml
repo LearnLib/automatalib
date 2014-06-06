@@ -389,6 +389,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<build>
 				<plugins>
 					<!--  aggregate javadoc of modules in one jar -->
+					<!-- Moved to distribution -->
+					<!--
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
@@ -403,6 +405,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 							</execution>
 						</executions>
 					</plugin>
+				-->
 				</plugins>
 			</build>
 		</profile>
@@ -512,4 +515,5 @@ http://www.gnu.de/documents/lgpl.en.html.
 		</site>
 	</distributionManagement>
 </project>
+
 

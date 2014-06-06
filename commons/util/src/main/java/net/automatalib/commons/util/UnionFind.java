@@ -21,7 +21,7 @@ package net.automatalib.commons.util;
  * on a fixed-range integer domain.
  * 
  * @author fhowar
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  */
 public final class UnionFind {
 

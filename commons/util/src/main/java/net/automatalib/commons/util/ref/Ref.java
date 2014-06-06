@@ -25,7 +25,7 @@ import java.lang.ref.WeakReference;
  * This class allows for treating normal ("strong") references the same way
  * as {@link WeakReference}s.
  * 
- * @author Malte Isberner <malte.isberner@cs.uni-dortmund.de>
+ * @author Malte Isberner
  *
  * @param <T> referent class.
  */

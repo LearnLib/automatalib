@@ -25,7 +25,7 @@ import java.io.IOException;
  * standard {@link #toString()} implementation using a {@link StringBuilder}
  * and the {@link #print(Appendable)} method.
  * 
- * @author Malte Isberner <malte.isberner@gmail.com>
+ * @author Malte Isberner
  *
  */
 public abstract class AbstractPrintable implements Printable {
