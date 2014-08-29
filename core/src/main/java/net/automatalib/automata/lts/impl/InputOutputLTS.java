@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import net.automatalib.automata.concepts.OutputAutomaton;
+import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.dot.DOTHelperLTS;
 import net.automatalib.automata.dot.DOTPlottableAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
@@ -32,14 +34,15 @@ import net.automatalib.words.InputOutputLabel;
 /**
  * A nondeterministic input output labelled transition system.
  * Transitions leaving the same state, with the same label and reaching the same
- * state, are merged together (no probabilistic apporach).
+ * state, are merged together (no probabilistic approach).
  * 
  * @author Michele Volpato
  *
- * @param <L> input symbol class
+ * @param <I> input symbol class
+ * @param <O> output symbol class
  */
-public class InputOutputLTS<I,O> extends AbstractMutableLTS<InputOutputLabel> implements MutableLTS<InputOutputLabel>,
-		DOTPlottableAutomaton<Integer, InputOutputLabel, Integer> {
+public class InputOutputLTS<I,O> extends AbstractMutableLTS<InputOutputLabel>  implements MutableLTS<InputOutputLabel>,
+		DOTPlottableAutomaton<Integer, InputOutputLabel, Integer>, SuffixOutput<InputOutputLabel,InputOutputLabel> {
 
 	public InputOutputLTS(Alphabet<InputOutputLabel> alphabet) {
 		super(alphabet);
@@ -114,5 +117,18 @@ public class InputOutputLTS<I,O> extends AbstractMutableLTS<InputOutputLabel> im
 			}
 		}
 		return transitions.remove(transitionId) != null;
+	}
+
+	@Override
+	public InputOutputLabel computeOutput(Iterable<? extends InputOutputLabel> input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public InputOutputLabel computeSuffixOutput(Iterable<? extends InputOutputLabel> prefix,
+			Iterable<? extends InputOutputLabel> suffix) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

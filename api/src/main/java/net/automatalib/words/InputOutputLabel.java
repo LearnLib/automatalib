@@ -21,7 +21,6 @@ package net.automatalib.words;
  * 
  * @author Michele Volpato
  *
- * @param <L> label class
  */
 public interface InputOutputLabel {
 	
@@ -36,12 +35,12 @@ public interface InputOutputLabel {
     public abstract boolean isOutput();
     
     /**
-     * Return the label as input.
+     * Return the label.
      */
     public abstract Object getLabel();
     
     /**
-     * Return a string representation of the label label as input.
+     * Return a string representation of the label.
      */
     public abstract String toString();
 
