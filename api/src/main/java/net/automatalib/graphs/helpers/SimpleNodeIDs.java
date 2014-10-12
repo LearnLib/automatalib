@@ -14,7 +14,7 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.graphs.abstractimpl;
+package net.automatalib.graphs.helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;

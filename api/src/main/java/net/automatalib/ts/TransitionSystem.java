@@ -18,11 +18,14 @@ package net.automatalib.ts;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.ts.powerset.DirectPowersetDTS;
 import net.automatalib.ts.simple.SimpleTS;
 
 /**
@@ -38,6 +41,19 @@ import net.automatalib.ts.simple.SimpleTS;
  */
 @ParametersAreNonnullByDefault
 public interface TransitionSystem<S, I, T> extends SimpleTS<S,I> {
+	
+	@Override
+	@Nonnull
+	default public Set<? extends S> getSuccessors(S state, @Nullable I input) {
+		Collection<? extends T> transitions = getTransitions(state, input);
+		if(transitions.isEmpty()) {
+			return Collections.emptySet();
+		}
+		Set<S> result = new HashSet<S>(transitions.size());
+		for(T trans : transitions)
+			result.add(getSuccessor(trans));
+		return result;
+	}
 	
 	/**
 	 * Retrieves the transitions that can be triggered by the given
@@ -67,5 +83,7 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S,I> {
 	 * @return a powerset view of this transition system.
 	 */
 	@Nonnull
-	public PowersetViewTS<?,I,?,S,T> powersetView();
+	public default PowersetViewTS<?,I,?,S,T> powersetView() {
+		return new DirectPowersetDTS<S,I,T>(this);
+	}
 }

@@ -16,6 +16,11 @@
  */
 package net.automatalib.ts.simple;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -32,6 +37,38 @@ import net.automatalib.ts.TransitionSystem;
  */
 @ParametersAreNonnullByDefault
 public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
+	
+	public static <S> Set<S> stateToSet(S state) {
+		if (state == null) {
+			return Collections.emptySet();
+		}
+		return Collections.singleton(state);
+	}
+	
+	
+	
+	@Override
+	default public Set<? extends S> getInitialStates() {
+		return stateToSet(getInitialState());
+	}
+	
+	@Override
+	@Nonnull
+	default public Set<? extends S> getSuccessors(S state, @Nullable I input) {
+		return stateToSet(getSuccessor(state, input));
+	}
+	
+	@Override
+	@Nonnull
+	default public Set<? extends S> getSuccessors(S state, Iterable<? extends I> input) {
+		return stateToSet(getSuccessor(state, input));
+	}
+	
+	@Override
+	@Nonnull
+	default public Set<? extends S> getStates(Iterable<? extends I> input) {
+		return stateToSet(getState(input));
+	}
 	
 	/**
 	 * Retrieves the initial state of this transition system.
@@ -62,7 +99,17 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 	 * @see TransitionSystem#getSuccessors(Object, Iterable)
 	 */
 	@Nullable
-	public S getSuccessor(S state, Iterable<? extends I> input);
+	default public S getSuccessor(S state, Iterable<? extends I> input) {
+		S curr = state;
+		Iterator<? extends I> it = input.iterator();
+		
+		while(curr != null && it.hasNext()) {
+			I sym = it.next();
+			curr = getSuccessor(curr, sym);
+		}
+		
+		return curr;
+	}
 	
 	/**
 	 * Retrieves the state reachable by the given sequence of input symbols
@@ -73,5 +120,7 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 	 * @see TransitionSystem#getStates(Iterable)
 	 */
 	@Nullable
-	public S getState(Iterable<? extends I> input);
+	default public S getState(Iterable<? extends I> input) {
+		return getSuccessor(getInitialState(), input);
+	}
 }

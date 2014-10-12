@@ -17,7 +17,20 @@
 package net.automatalib.automata;
 
 import net.automatalib.automata.concepts.InputAlphabetHolder;
+import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.concepts.GraphViewable;
 
 public interface FiniteAlphabetAutomaton<S, I, T> extends Automaton<S, I, T>,
-		InputAlphabetHolder<I> {
+		InputAlphabetHolder<I>, GraphViewable {
+	
+	@Override
+	default public Graph<?,?> graphView() {
+		return transitionGraphView();
+	}
+	
+	default public Graph<S,TransitionEdge<I,T>> transitionGraphView() {
+		return transitionGraphView(getInputAlphabet());
+	}
+	
 }

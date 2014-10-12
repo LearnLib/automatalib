@@ -33,6 +33,7 @@ import net.automatalib.graphs.dot.DelegateDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
+import net.automatalib.ts.transout.MealyTransitionSystem;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -113,7 +114,7 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 		
 	}
 	
-	public class TransitionSystemView extends AbstractTransitionSystemView<I, O, Node<I,O>, Edge<I,O>> {
+	public class TransitionSystemView implements MealyTransitionSystem<Node<I,O>, I, Edge<I,O>, O> {
 		@Override
 		public Edge<I, O> getTransition(Node<I, O> state, I input) {
 			int inputIdx = inputAlphabet.getSymbolIndex(input);

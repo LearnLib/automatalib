@@ -19,16 +19,11 @@ package net.automatalib.automata.fsa.impl.compact;
 import java.util.BitSet;
 
 import net.automatalib.automata.base.compact.AbstractCompactSimpleDet;
-import net.automatalib.automata.dot.DOTHelperFSA;
-import net.automatalib.automata.dot.DOTPlottableAutomaton;
 import net.automatalib.automata.fsa.MutableDFA;
-import net.automatalib.automata.fsa.abstractimpl.AbstractDFA;
-import net.automatalib.automata.fsa.abstractimpl.AbstractFSA;
-import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 
-public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implements MutableDFA<Integer,I>, DOTPlottableAutomaton<Integer, I, Integer> {
+public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implements
+		MutableDFA<Integer,I> {
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
 	
@@ -54,8 +49,6 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 	public void ensureCapacity(int oldCap, int newCap) {
 		acceptance.set(newCap);
 	}
-	
-	
 
 
 	@Override
@@ -98,22 +91,6 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 	}
 
 	@Override
-	public boolean accepts(Iterable<? extends I> input) {
-		return AbstractDFA.accepts(this, input);
-	}
-
-	@Override
-	public Boolean computeSuffixOutput(Iterable<? extends I> prefix,
-			Iterable<? extends I> suffix) {
-		return AbstractFSA.computeSuffixOutput(this, prefix, suffix);
-	}
-
-	@Override
-	public Boolean computeOutput(Iterable<? extends I> input) {
-		return AbstractFSA.computeOutput(this, input);
-	}
-
-	@Override
 	public Boolean getStateProperty(int stateId) {
 		return isAccepting(stateId);
 	}
@@ -133,17 +110,8 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 
 	@Override
 	public Integer addInitialState(boolean accepting) {
-		return addInitialState(Boolean.valueOf(accepting));
+		return super.addInitialState(Boolean.valueOf(accepting));
 	}
 
-	@Override
-	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getDOTHelper() {
-		return new DOTHelperFSA<>(this);
-	}
 	
-	@Override
-	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getGraphDOTHelper() {
-		return new DOTHelperFSA<>(this);
-	}
-
 }

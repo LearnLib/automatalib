@@ -14,22 +14,22 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.automata.abstractimpl;
+package net.automatalib.automata.helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.automata.Automaton;
 import net.automatalib.automata.concepts.StateIDs;
+import net.automatalib.automata.simple.SimpleAutomaton;
 
 public class SimpleStateIDs<S> implements StateIDs<S> {
 	
 	private final Map<S,Integer> stateIds;
 	private final List<S> states;
 	
-	public SimpleStateIDs(Automaton<S,?,?> automaton) {
+	public SimpleStateIDs(SimpleAutomaton<S,?> automaton) {
 		this.states = new ArrayList<S>(automaton.getStates());
 		int numStates = this.states.size();
 		this.stateIds = new HashMap<S,Integer>(numStates);

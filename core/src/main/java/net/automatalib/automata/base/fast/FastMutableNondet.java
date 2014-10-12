@@ -20,25 +20,20 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.automatalib.automata.FiniteAlphabetAutomaton;
-import net.automatalib.automata.abstractimpl.AbstractShrinkableAutomaton;
+import net.automatalib.automata.ShrinkableAutomaton;
+import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.base.StateIDDynamicMapping;
-import net.automatalib.automata.base.StateIDStaticMapping;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.graphs.AbstractAutomatonGraph;
-import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
-import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.words.Alphabet;
 
 
 public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, SP, TP>
-		extends AbstractShrinkableAutomaton<S, I, T, SP, TP> implements
-		FiniteAlphabetAutomaton<S, I, T>, UniversalGraph<S,TransitionEdge<I,T>,SP,TransitionEdge.Property<I,TP>>, StateIDs<S>,
-			NodeIDs<S> {
+		implements ShrinkableAutomaton<S, I, T, SP, TP>,
+		UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>, StateIDs<S> {
 	
 	
 	private final DynamicList<S> states
@@ -106,7 +101,7 @@ public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, S
 
 	@Override
 	public void removeState(S state, S replacement) {
-		AbstractShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
+		ShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
 		states.remove(state);
 		if(initialStates.remove(state))
 			initialStates.add(state);
@@ -154,84 +149,6 @@ public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, S
 		return mapping;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createStaticNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<S, V> createStaticNodeMapping() {
-		return AbstractAutomatonGraph.createStaticNodeMapping(this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createDynamicNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<S, V> createDynamicNodeMapping() {
-		return AbstractAutomatonGraph.createDynamicNodeMapping(this);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.concepts.NodeIDs#getNodeId(java.lang.Object)
-	 */
-	@Override
-	public int getNodeId(S node) {
-		return node.getId();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.concepts.NodeIDs#getNode(int)
-	 */
-	@Override
-	public S getNode(int id) {
-		return states.get(id);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.Graph#getNodes()
-	 */
-	@Override
-	public Collection<S> getNodes() {
-		return AbstractAutomatonGraph.getNodes(this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
-	 */
-	@Override
-	public Collection<TransitionEdge<I, T>> getOutgoingEdges(S node) {
-		return AbstractAutomatonGraph.getOutgoingEdges(this, node);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
-	 */
-	@Override
-	public S getTarget(TransitionEdge<I, T> edge) {
-		return AbstractAutomatonGraph.getTarget(this, edge);
-	}
-	
-	@Override
-	public NodeIDs<S> nodeIDs() {
-		return this;
-	}
-
-	@Override
-	public SP getNodeProperty(S node) {
-		return AbstractAutomatonGraph.getNodeProperties(this, node);
-	}
-
-	@Override
-	public TransitionEdge.Property<I, TP> getEdgeProperty(TransitionEdge<I, T> edge) {
-		return AbstractAutomatonGraph.getEdgeProperties(this, edge);
-	}
-
 	protected abstract S createState(SP property);
 
 }

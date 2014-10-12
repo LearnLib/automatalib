@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -14,25 +14,11 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.ts.acceptors.abstractimpl;
+package net.automatalib.graphs.concepts;
 
-import net.automatalib.ts.abstractimpl.AbstractDTS;
-import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
+import net.automatalib.graphs.Graph;
 
-public abstract class AbstractDeterministicAcceptorTS<S, I> extends
-		AbstractDTS<S, I, S> implements DeterministicAcceptorTS<S, I> {
-	
-	public static <S,I> boolean accepts(DeterministicAcceptorTS<S, I> $this, Iterable<? extends I> input) {
-		S state = $this.getState(input);
-		if(state == null)
-			return false;
-		return $this.isAccepting(state);
-	}
-
-
-	@Override
-	public boolean accepts(Iterable<? extends I> input) {
-		return accepts(this, input);
-	}
+public interface GraphViewable {
+	public Graph<?,?> graphView();
 
 }

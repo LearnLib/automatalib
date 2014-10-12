@@ -16,15 +16,10 @@
  */
 package net.automatalib.brics;
 
-import java.util.Collection;
-import java.util.Set;
-
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.abstractimpl.AbstractDFA;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
 
@@ -74,15 +69,6 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.automatalib.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
-	 */
-	@Override
-	public boolean accepts(Iterable<? extends Character> input) {
-		return AbstractDFA.accepts(this, input);
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see net.automatalib.ts.simple.SimpleDTS#getInitialState()
 	 */
 	@Override
@@ -101,48 +87,11 @@ public class BricsDFA extends AbstractBricsAutomaton implements
 
 	/*
 	 * (non-Javadoc)
-	 * @see net.automatalib.ts.simple.SimpleDTS#getSuccessor(java.lang.Object, java.lang.Iterable)
-	 */
-	@Override
-	public State getSuccessor(State state, Iterable<? extends Character> input) {
-		return AbstractDeterministicAutomaton.getSuccessor(this, state, input);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.ts.simple.SimpleDTS#getState(java.lang.Iterable)
-	 */
-	@Override
-	public State getState(Iterable<? extends Character> input) {
-		return AbstractDeterministicAutomaton.getState(this, input);
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see net.automatalib.ts.DeterministicTransitionSystem#getTransition(java.lang.Object, java.lang.Object)
 	 */
 	@Override
 	public State getTransition(State state, @Nonnull Character input) {
 		return state.step(input.charValue());
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.brics.AbstractBricsAutomaton#getTransitions(dk.brics.automaton.State, java.lang.Character)
-	 */
-	@Override
-	public Collection<State> getTransitions(State state, @Nonnull Character input) {
-		return AbstractDeterministicAutomaton.getTransitions(this, state, input);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.ts.abstractimpl.AbstractTS#getSuccessors(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public Set<State> getSuccessors(State state, @Nonnull Character input) {
-		return AbstractDeterministicAutomaton.getSuccessors(this, state, input);
-	}
-	
 	
 }

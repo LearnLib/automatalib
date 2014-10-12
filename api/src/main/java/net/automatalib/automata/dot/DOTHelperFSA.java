@@ -16,11 +16,30 @@
  */
 package net.automatalib.automata.dot;
 
-import net.automatalib.automata.Automaton;
-import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import java.util.Map;
 
-public interface DOTPlottableAutomaton<S, I, T> extends Automaton<S, I, T>, InputAlphabetHolder<I> {
-	public GraphDOTHelper<S,TransitionEdge<I,T>> getDOTHelper();
+import net.automatalib.automata.fsa.FiniteStateAcceptor;
+
+
+public class DOTHelperFSA<S, I> extends DefaultDOTHelperAutomaton<S, I, S, FiniteStateAcceptor<S,I>> {
+
+	public DOTHelperFSA(FiniteStateAcceptor<S, I> automaton) {
+		super(automaton);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
+	 */
+	@Override
+	public boolean getNodeProperties(S node, Map<String,String> properties) {
+		if(!super.getNodeProperties(node, properties))
+			return false;
+		if(automaton.isAccepting(node)) {
+			String oldShape = properties.getOrDefault(NodeAttrs.SHAPE, "oval");
+			properties.put(NodeAttrs.SHAPE, "double" + oldShape);
+		}
+		return true;
+	}
+	
 }

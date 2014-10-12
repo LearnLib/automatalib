@@ -30,13 +30,60 @@ import net.automatalib.automata.MutableAutomaton;
 public interface MutableFSA<S,I> extends FiniteStateAcceptor<S,I>,
 		MutableAutomaton<S, I, S, Boolean, Void> {
 	
+	@Override
+	default public void setStateProperty(S state, Boolean property) {
+		boolean acc = (property != null) ? property.booleanValue() : false;
+		setAccepting(state, acc);
+	}
+
+	@Override
+	default public void setTransitionProperty(S transition, Void property) {}
+
+	default public void flipAcceptance() {
+		for (S state : this)
+			setAccepting(state, !isAccepting(state));
+	}
+	
+	@Override
+	default public S addState() {
+		return addState(false);
+	}
+
+	@Override
+	default public S addState(Boolean property) {
+		boolean acc = (property != null) ? property.booleanValue() : false;
+		return addState(acc);
+	}
+
+	@Override
+	default public S addInitialState() {
+		return addInitialState(false);
+	}
+	
+	@Override
+	default public S addInitialState(Boolean property) {
+		boolean acc = (property != null) ? property.booleanValue() : false;
+		return addInitialState(acc);
+	}
+	
+	@Override
+	default public S createTransition(S successor, Void properties) {
+		return successor;
+	}
+
+	@Override
+	default public S copyTransition(S trans, S succ) {
+		return succ;
+	}
+	
+	default public S addInitialState(boolean accepting) {
+		S init = addState(accepting);
+		setInitial(init, true);
+		return init;
+	}
+	
 	@Nonnull
 	public S addState(boolean accepting);
 	
-	@Nonnull
-	public S addInitialState(boolean accepting);
-
 	public void setAccepting(S state, boolean accepting);
-	
-	public void flipAcceptance();
 }

@@ -16,14 +16,12 @@
  */
 package net.automatalib.util.ts.acceptors;
 
-import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.IPair;
 import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
-import net.automatalib.ts.acceptors.abstractimpl.AbstractAcceptorTS;
-import net.automatalib.ts.acceptors.abstractimpl.AbstractDeterministicAcceptorTS;
 import net.automatalib.ts.comp.DTSComposition;
 
 public class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorTS<S1, I>, A2 extends DeterministicAcceptorTS<S2, I>>
-		extends DTSComposition<S1, S2, I, S1, S2, A1, A2> implements DeterministicAcceptorTS<Pair<S1,S2>, I> {
+		extends DTSComposition<S1, S2, I, S1, S2, A1, A2> implements DeterministicAcceptorTS<IPair<S1,S2>, I> {
 
 	private final AcceptanceCombiner combiner;
 	
@@ -33,27 +31,11 @@ public class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorT
 	}
 	
 	@Override
-	public boolean isAccepting(Pair<S1, S2> state) {
+	public boolean isAccepting(IPair<S1, S2> state) {
 		S1 s1 = state.getFirst();
 		S2 s2 = state.getSecond();
 		boolean acc1 = (s1 == null) ? false : ts1.isAccepting(s1);
 		boolean acc2 = (s2 == null) ? false : ts2.isAccepting(s2);
 		return combiner.combine(acc1, acc2);
 	}
-
-	@Override
-	public boolean accepts(Iterable<? extends I> input) {
-		return AbstractDeterministicAcceptorTS.accepts(this, input);
-	}
-
-	@Override
-	public Boolean getStateProperty(Pair<S1, S2> state) {
-		return AbstractAcceptorTS.getStateProperty(this, state);
-	}
-
-	@Override
-	public Void getTransitionProperty(Pair<S1, S2> transition) {
-		return AbstractAcceptorTS.getTransitionProperty(this, transition);
-	}
-
 }

@@ -39,8 +39,28 @@ public interface DeterministicTransitionOutputTS<S, I, T, O> extends Determinist
 	 * @return the output symbol (or <code>null</code> if the transition is undefined)
 	 */
 	@Nullable
-	public O getOutput(S state, @Nullable I input);
+	default public O getOutput(S state, @Nullable I input) {
+		T trans = getTransition(state, input);
+		if(trans == null) {
+			return null;
+		}
+		return getTransitionOutput(trans);
+	}
 	
-	public boolean trace(Iterable<? extends I> input, List<? super O> output);
-	public boolean trace(S state, Iterable<? extends I> input, List<? super O> output);
+	default public boolean trace(Iterable<? extends I> input, List<? super O> output) {
+		return trace(getInitialState(), input, output);
+	}
+	
+	default public boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {
+		for(I sym : input) {
+			T trans = getTransition(state, sym);
+			if(trans == null) {
+				return false;
+			}
+			O out = getTransitionOutput(trans);
+			output.add(out);
+			state = getSuccessor(trans);
+		}
+		return true;
+	}
 }

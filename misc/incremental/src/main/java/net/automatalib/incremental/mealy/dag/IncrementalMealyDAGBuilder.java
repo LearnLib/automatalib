@@ -38,6 +38,7 @@ import net.automatalib.graphs.dot.DelegateDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
+import net.automatalib.ts.transout.MealyTransitionSystem;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -110,7 +111,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		
 	}
 	
-	public class AutomatonView extends AbstractTransitionSystemView<I, O, State, TransitionRecord> {
+	public class AutomatonView implements MealyTransitionSystem<State, I, TransitionRecord, O> {
 		@Override
 		public State getSuccessor(TransitionRecord transition) {
 			State src = transition.source;

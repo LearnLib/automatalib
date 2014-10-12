@@ -17,10 +17,14 @@
 package net.automatalib.automata.simple;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 
 import net.automatalib.automata.concepts.StateIDs;
+import net.automatalib.automata.helpers.SimpleStateIDs;
+import net.automatalib.automata.helpers.StateIDStaticMapping;
+import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.simple.SimpleTS;
 
 
@@ -46,9 +50,25 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S,I>, Iterable<S> {
 	 * Retrieves the size (number of states) of this transition system.
 	 * @return the number of states of this transition system
 	 */
-	public int size();
+	default public int size() {
+		return getStates().size();
+	}
 	
 
 	@Nonnull
-	public StateIDs<S> stateIDs();
+	default public StateIDs<S> stateIDs() {
+		return new SimpleStateIDs<S>(this);
+	}
+	
+	@Override
+	@Nonnull
+	default public Iterator<S> iterator() {
+		return getStates().iterator();
+	}
+	
+	@Override
+	@Nonnull
+	default public <V> MutableMapping<S,V> createStaticStateMapping() {
+		return new StateIDStaticMapping<>(stateIDs(), size());
+	}
 }

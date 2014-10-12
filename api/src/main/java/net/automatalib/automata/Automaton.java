@@ -16,7 +16,12 @@
  */
 package net.automatalib.automata;
 
+import java.util.Collection;
+
+import net.automatalib.automata.graphs.AutomatonGraphView;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.simple.SimpleAutomaton;
+import net.automatalib.graphs.Graph;
 import net.automatalib.ts.TransitionSystem;
 
 
@@ -32,4 +37,8 @@ import net.automatalib.ts.TransitionSystem;
  */
 public interface Automaton<S,I,T> 
         extends TransitionSystem<S,I,T>, SimpleAutomaton<S,I> {
+	
+	default public Graph<S,TransitionEdge<I,T>> transitionGraphView(Collection<? extends I> inputs) {
+		return AutomatonGraphView.create(this, inputs);
+	}
 }

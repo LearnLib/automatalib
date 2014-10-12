@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -17,27 +17,25 @@
 package net.automatalib.commons.util;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.commons.util.strings.StringUtil;
 
 /**
- * Mutable pair class.
+ * Immutable pair class.
  * 
  * @author Malte Isberner
  *
- * @param <T1> type of the pair's first component.
- * @param <T2> type of the pair's second component.
+ * @param <T1> first component type
+ * @param <T2> second component type
  */
-public class Pair<T1, T2> extends AbstractPrintable implements Serializable {
-	private static final long serialVersionUID = -1L;
-	
+public class IPair<T1, T2> extends AbstractPrintable {
+
 	/*
 	 * Components
 	 */
-	protected T1 first;
-	protected T2 second;
+	public final T1 first;
+	public final T2 second;
 	
 	/**
 	 * Constructs a pair with the given members.
@@ -45,7 +43,7 @@ public class Pair<T1, T2> extends AbstractPrintable implements Serializable {
 	 * @param first first member.
 	 * @param second second member.
 	 */
-	public Pair(T1 first, T2 second) {
+	public IPair(T1 first, T2 second) {
 		this.first = first;
 		this.second = second;
 	}
@@ -61,29 +59,6 @@ public class Pair<T1, T2> extends AbstractPrintable implements Serializable {
 	 * @return the second member.
 	 */
 	public T2 getSecond() { return second; }
-	
-	/**
-	 * Setter for the first member.
-	 * @param first the new value for the first member.
-	 */
-	public void setFirst(T1 first) { this.first = first; }
-	
-	/**
-	 * Setter for the second member.
-	 * @param second the new value for the second member.
-	 */
-	public void setSecond(T2 second) { this.second = second; }
-	
-	/**
-	 * Convenience function for creating a pair, allowing the user to omit
-	 * the type parameters.
-	 * 
-	 * @see #Pair(Object, Object)
-	 */
-	public static <T1,T2> Pair<T1,T2> make(T1 first, T2 second) {
-		return new Pair<T1,T2>(first, second);
-	}
-	
 	
 	
 	@Override
@@ -103,7 +78,7 @@ public class Pair<T1, T2> extends AbstractPrintable implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Pair<?,?> other = (Pair<?,?>) obj;
+		IPair<?,?> other = (IPair<?,?>) obj;
 		if (first == null) {
 			if (other.first != null)
 				return false;
@@ -116,7 +91,6 @@ public class Pair<T1, T2> extends AbstractPrintable implements Serializable {
 			return false;
 		return true;
 	}
-
 
 	/*
 	 * (non-Javadoc)

@@ -21,13 +21,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.automatalib.commons.util.nid.NumericID;
+import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
-import net.automatalib.ts.abstractimpl.AbstractDTS;
 
 
-public class FastPowersetDTS<S extends NumericID, I, T> extends
-		AbstractDTS<FastPowersetState<S>, I, Set<? extends T>> implements PowersetViewTS<FastPowersetState<S>,I,Set<? extends T>,S,T> {
+public class FastPowersetDTS<S extends NumericID, I, T> implements
+		DeterministicTransitionSystem<FastPowersetState<S>, I, Set<? extends T>>,
+		PowersetViewTS<FastPowersetState<S>,I,Set<? extends T>,S,T> {
 	
 	private final TransitionSystem<S, I, T> ts;
 	

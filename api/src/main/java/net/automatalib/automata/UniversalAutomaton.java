@@ -16,6 +16,11 @@
  */
 package net.automatalib.automata;
 
+import java.util.Collection;
+
+import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
+import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.ts.UniversalTransitionSystem;
 
 /**
@@ -33,5 +38,11 @@ import net.automatalib.ts.UniversalTransitionSystem;
  */
 public interface UniversalAutomaton<S, I, T, SP, TP> extends
 		Automaton<S, I, T>, UniversalTransitionSystem<S, I, T, SP, TP> {
+	
+	@Override
+	public default UniversalGraph<S,TransitionEdge<I,T>,SP,TransitionEdge.Property<I,TP>>
+	transitionGraphView(Collection<? extends I> inputs) {
+		return UniversalAutomatonGraphView.create(this, inputs);
+	}
 
 }

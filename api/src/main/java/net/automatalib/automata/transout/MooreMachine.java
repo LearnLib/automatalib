@@ -23,4 +23,18 @@ import net.automatalib.automata.concepts.StateOutput;
 public interface MooreMachine<S, I, T, O> extends UniversalDeterministicAutomaton<S,I,T,O,Void>,
 		StateOutput<S,O>, TransitionOutputAutomaton<S, I, T, O> {
 	
+	@Override
+	default public O getStateProperty(S state) {
+		return getStateOutput(state);
+	}
+	
+	@Override
+	default public Void getTransitionProperty(T transition) {
+		return null;
+	}
+	
+	@Override
+	default public O getTransitionOutput(T transition) {
+		return getStateOutput(getSuccessor(transition));
+	}
 }

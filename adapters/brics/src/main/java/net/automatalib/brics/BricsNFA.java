@@ -16,10 +16,7 @@
  */
 package net.automatalib.brics;
 
-import java.util.Collection;
-
 import net.automatalib.automata.fsa.NFA;
-import net.automatalib.automata.fsa.abstractimpl.AbstractNFA;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
 
@@ -46,23 +43,4 @@ public class BricsNFA extends AbstractBricsAutomaton implements
 	public BricsNFA(Automaton automaton) {
 		super(automaton);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)
-	 */
-	@Override
-	public boolean accepts(Iterable<? extends Character> input) {
-		return AbstractNFA.accepts(this, input);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.fsa.NFA#isAccepting(java.util.Collection)
-	 */
-	@Override
-	public boolean isAccepting(Collection<? extends State> states) {
-		return AbstractNFA.isAccepting(this, states);
-	}
-
 }

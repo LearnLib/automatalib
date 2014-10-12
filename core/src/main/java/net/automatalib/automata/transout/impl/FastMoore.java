@@ -16,15 +16,9 @@
  */
 package net.automatalib.automata.transout.impl;
 
-import java.util.List;
-
 import net.automatalib.automata.base.fast.FastMutableDet;
 import net.automatalib.automata.transout.MutableMooreMachine;
-import net.automatalib.automata.transout.abstractimpl.AbstractMooreMachine;
-import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
-import net.automatalib.ts.abstractimpl.AbstractDeterministicTransOutTS;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 
 /**
@@ -54,33 +48,6 @@ public final class FastMoore<I, O> extends FastMutableDet<FastMooreState<O>, I, 
 
 	/*
 	 * (non-Javadoc)
-	 * @see de.ls5.automata.transout.TransitionOutputAutomaton#trace(java.lang.Iterable)
-	 */
-	@Override
-	public boolean trace(Iterable<? extends I> input, List<? super O> output) {
-		return AbstractDeterministicTransOutTS.trace(this, input, output);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.automata.transout.TransitionOutputAutomaton#trace(java.lang.Object, java.lang.Iterable)
-	 */
-	@Override
-	public boolean trace(FastMooreState<O> state, Iterable<? extends I> input, List<? super O> output) {
-		return AbstractDeterministicTransOutTS.trace(this, state, input, output);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.automata.features.TransitionOutput#getTransitionOutput(java.lang.Object)
-	 */
-	@Override
-	public O getTransitionOutput(FastMooreState<O> transition) {
-		return AbstractMooreMachine.getTransitionOutput(this, transition);
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see de.ls5.automata.features.StateOutput#getStateOutput(java.lang.Object)
 	 */
 	@Override
@@ -90,39 +57,12 @@ public final class FastMoore<I, O> extends FastMutableDet<FastMooreState<O>, I, 
 
 	/*
 	 * (non-Javadoc)
-	 * @see de.ls5.automata.MutableAutomaton#setStateProperty(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public void setStateProperty(FastMooreState<O> state, O property) {
-		AbstractMooreMachine.setStateProperty(this, state, property);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.automata.MutableAutomaton#setTransitionProperty(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public void setTransitionProperty(FastMooreState<O> transition, Void property) {
-		AbstractMooreMachine.setTransitionProperty(this, transition, property);
-	}
-	
-	/*
-	 * (non-Javadoc)
 	 * @see de.ls5.automata.MutableAutomaton#createTransition(java.lang.Object, java.lang.Object)
 	 */
 	@Override
 	public FastMooreState<O> createTransition(FastMooreState<O> successor,
 			Void properties) {
 		return successor;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.automata.MutableAutomaton#copyTransition(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public FastMooreState<O> copyTransition(FastMooreState<O> trans, FastMooreState<O> succ) {
-		return AbstractMooreMachine.copyTransition(this, trans, succ);
 	}
 
 	/*
@@ -141,50 +81,6 @@ public final class FastMoore<I, O> extends FastMutableDet<FastMooreState<O>, I, 
 	@Override
 	protected FastMooreState<O> createState(O property) {
 		return new FastMooreState<O>(inputAlphabet.size(), property);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.ts.UniversalTransitionSystem#getStateProperty(java.lang.Object)
-	 */
-	@Override
-	public O getStateProperty(FastMooreState<O> state) {
-		return AbstractMooreMachine.getStateProperty(this, state);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.ts.UniversalTransitionSystem#getTransitionProperty(java.lang.Object)
-	 */
-	@Override
-	public Void getTransitionProperty(FastMooreState<O> transition) {
-		return AbstractMooreMachine.getTransitionProperty(this, transition);
-	}
-
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.automata.features.SODetOutputAutomaton#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
-	 */
-	@Override
-	public Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-		return AbstractTransOutAutomaton.computeSuffixOutput(this, prefix, suffix);
-	}
-
-
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.automata.features.OutputAutomaton#computeOutput(java.lang.Iterable)
-	 */
-	@Override
-	public Word<O> computeOutput(Iterable<? extends I> input) {
-		return AbstractTransOutAutomaton.computeOutput(this, input);
-	}
-
-
-	@Override
-	public O getOutput(FastMooreState<O> state, I input) {
-		return AbstractDeterministicTransOutTS.getOutput(this, state, input);
 	}
 
 }

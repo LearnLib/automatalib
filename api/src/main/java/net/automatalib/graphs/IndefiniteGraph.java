@@ -17,10 +17,12 @@
 package net.automatalib.graphs;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 
 /**
@@ -55,7 +57,12 @@ public interface IndefiniteGraph<N, E> {
 	
 	
 	@Nonnull
-	public <V> MutableMapping<N,V> createStaticNodeMapping();
+	default public <V> MutableMapping<N,V> createStaticNodeMapping() {
+		return new MapMapping<>(new HashMap<N,V>());
+	}
+	
 	@Nonnull
-	public <V> MutableMapping<N,V> createDynamicNodeMapping();
+	default public <V> MutableMapping<N,V> createDynamicNodeMapping() {
+		return new MapMapping<>(new HashMap<N,V>());
+	}
 }

@@ -22,10 +22,9 @@ import java.util.Set;
 
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
-import net.automatalib.ts.abstractimpl.AbstractDTS;
 
 
-public class DirectPowersetDTS<S, I, T> extends AbstractDTS<Set<? extends S>, I, Set<? extends T>>
+public class DirectPowersetDTS<S, I, T>
 		implements PowersetViewTS<Set<? extends S>, I, Set<? extends T>, S, T> {
 	
 	private final TransitionSystem<S, I, T> ts;

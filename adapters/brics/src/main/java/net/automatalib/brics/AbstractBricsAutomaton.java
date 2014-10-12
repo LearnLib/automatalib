@@ -24,12 +24,10 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.automata.fsa.abstractimpl.AbstractFSA;
-import net.automatalib.automata.graphs.AbstractAutomatonGraph;
-import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.automata.fsa.FiniteStateAcceptor;
+import net.automatalib.automata.graphs.AbstractAutomatonGraphView;
 import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.graphs.concepts.NodeIDs;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
+import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
@@ -42,8 +40,8 @@ import dk.brics.automaton.Transition;
  *
  */
 @ParametersAreNonnullByDefault
-public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Character> implements
-		DOTPlottableGraph<State, Transition>, UniversalGraph<State,Transition,Boolean,BricsTransitionProperty> {
+public abstract class AbstractBricsAutomaton implements
+		FiniteStateAcceptor<State,Character>, GraphViewable {
 	
 	protected final Automaton automaton;
 
@@ -64,60 +62,6 @@ public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Characte
 	 */
 	public Automaton getBricsAutomaton() {
 		return automaton;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.Graph#getNodes()
-	 */
-	@Override
-	public Collection<State> getNodes() {
-		return AbstractAutomatonGraph.getNodes(this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.Graph#nodeIDs()
-	 */
-	@Override
-	public NodeIDs<State> nodeIDs() {
-		return AbstractAutomatonGraph.nodeIDs(this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
-	 */
-	@Override
-	public Collection<Transition> getOutgoingEdges(State node) {
-		return node.getTransitions();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
-	 */
-	@Override
-	public State getTarget(Transition edge) {
-		return edge.getDest();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createStaticNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<State, V> createStaticNodeMapping() {
-		return AbstractAutomatonGraph.createStaticNodeMapping(this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createDynamicNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<State, V> createDynamicNodeMapping() {
-		return AbstractAutomatonGraph.createDynamicNodeMapping(this);
 	}
 
 	/*
@@ -168,31 +112,59 @@ public abstract class AbstractBricsAutomaton extends AbstractFSA<State, Characte
 	public Collection<State> getStates() {
 		return automaton.getStates();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.dot.DOTPlottableGraph#getGraphDOTHelper()
-	 */
+	
 	@Override
-	public GraphDOTHelper<State, Transition> getGraphDOTHelper() {
-		return new BricsDOTHelper(this);
+	public GraphView graphView() {
+		return new GraphView();
+	}
+	
+	public class GraphView
+			extends
+			AbstractAutomatonGraphView<State, AbstractBricsAutomaton, Transition>
+			implements
+			UniversalGraph<State, Transition, Boolean, BricsTransitionProperty> {
+		public GraphView() {
+			super(AbstractBricsAutomaton.this);
+		}
+
+		@Override
+		public Collection<? extends Transition> getOutgoingEdges(State node) {
+			return node.getTransitions();
+		}
+
+		@Override
+		public State getTarget(Transition edge) {
+			return edge.getDest();
+		}
+
+		@Override
+		public GraphDOTHelper<State, Transition> getGraphDOTHelper() {
+			return new BricsDOTHelper(AbstractBricsAutomaton.this);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties
+		 * (java.lang.Object)
+		 */
+		@Override
+		public Boolean getNodeProperty(State node) {
+			return node.isAccept();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * net.automatalib.graphs.UniversalIndefiniteGraph#getEdgeProperties
+		 * (java.lang.Object)
+		 */
+		@Override
+		public BricsTransitionProperty getEdgeProperty(Transition edge) {
+			return new BricsTransitionProperty(edge);
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties(java.lang.Object)
-	 */
-	@Override
-	public Boolean getNodeProperty(State node) {
-		return node.isAccept();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getEdgeProperties(java.lang.Object)
-	 */
-	@Override
-	public BricsTransitionProperty getEdgeProperty(Transition edge) {
-		return new BricsTransitionProperty(edge);
-	}
 }

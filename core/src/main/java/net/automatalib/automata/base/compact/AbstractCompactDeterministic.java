@@ -18,19 +18,14 @@ package net.automatalib.automata.base.compact;
 
 import java.util.Collection;
 
-import net.automatalib.automata.FiniteAlphabetAutomaton;
-import net.automatalib.automata.abstractimpl.AbstractMutableDeterministic;
+import net.automatalib.automata.MutableDeterministic;
+import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.graphs.AbstractAutomatonGraph;
-import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.words.Alphabet;
 
-public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
-		AbstractMutableDeterministic<Integer, I, T, SP, TP> implements StateIDs<Integer>, FiniteAlphabetAutomaton<Integer,I,T>, Graph<Integer,TransitionEdge<I,T>> {
+public abstract class AbstractCompactDeterministic<I, T, SP, TP>
+		implements MutableDeterministic<Integer,I,T,SP,TP>, StateIDs<Integer>, UniversalFiniteAlphabetAutomaton<Integer,I,T,SP,TP> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -90,6 +85,11 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
 		this.transitions = newTrans;
 		this.stateCapacity = newCap;
 		ensureCapacity();
+	}
+	
+	@Override
+	public int size() {
+		return numStates;
 	}
 	
 	public void setInitialState(int stateId) {
@@ -254,63 +254,5 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends
 	public Alphabet<I> getInputAlphabet() {
 		return alphabet;
 	}
-
-
-
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
-	 */
-	@Override
-	public Collection<TransitionEdge<I, T>> getOutgoingEdges(Integer node) {
-		return AbstractAutomatonGraph.getOutgoingEdges(this, node);
-	}
-
-
-
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
-	 */
-	@Override
-	public Integer getTarget(TransitionEdge<I, T> edge) {
-		return AbstractAutomatonGraph.getTarget(this, edge);
-	}
-
-
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createStaticNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<Integer, V> createStaticNodeMapping() {
-		return AbstractAutomatonGraph.createStaticNodeMapping(this);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createDynamicNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<Integer, V> createDynamicNodeMapping() {
-		return AbstractAutomatonGraph.createDynamicNodeMapping(this);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.Graph#getNodes()
-	 */
-	@Override
-	public Collection<Integer> getNodes() {
-		return AbstractAutomatonGraph.getNodes(this);
-	}
-
-
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.Graph#nodeIDs()
-	 */
-	@Override
-	public NodeIDs<Integer> nodeIDs() {
-		return AbstractAutomatonGraph.nodeIDs(this);
-	}
-	
-	
-	
-
 	
 }

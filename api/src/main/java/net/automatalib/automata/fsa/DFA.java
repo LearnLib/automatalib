@@ -26,4 +26,13 @@ import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 public interface DFA<S,I> extends UniversalDeterministicAutomaton<S,I,S,Boolean,Void>, DeterministicAcceptorTS<S, I>,
         FiniteStateAcceptor<S,I>,
         SODetOutputAutomaton<S, I, S, Boolean> {
+	
+	@Override
+	default public boolean accepts(Iterable<? extends I> input) {
+		S tgt = getState(input);
+		if(tgt == null)
+			return false;
+		return isAccepting(tgt);
+	}
+	
 }

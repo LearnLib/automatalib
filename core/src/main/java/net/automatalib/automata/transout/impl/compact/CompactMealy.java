@@ -16,26 +16,14 @@
  */
 package net.automatalib.automata.transout.impl.compact;
 
-import java.util.List;
-
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
-import net.automatalib.automata.dot.DOTHelperMealy;
-import net.automatalib.automata.dot.DOTPlottableAutomaton;
-import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.transout.MutableMealyMachine;
-import net.automatalib.automata.transout.abstractimpl.AbstractMealyMachine;
-import net.automatalib.automata.transout.abstractimpl.AbstractTransOutAutomaton;
-import net.automatalib.graphs.dot.GraphDOTHelper;
-import net.automatalib.ts.abstractimpl.AbstractDeterministicTransOutTS;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 
 public class CompactMealy<I, O> extends
 		AbstractCompactDeterministic<I, CompactMealyTransition<O>, Void, O> implements
-		MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O>, DOTPlottableAutomaton<Integer,I,CompactMealyTransition<O>> {
+		MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O> {
 	
-	
-
 	public CompactMealy(Alphabet<I> alphabet, float resizeFactor) {
 		super(alphabet, resizeFactor);
 	}
@@ -60,70 +48,6 @@ public class CompactMealy<I, O> extends
 	@Override
 	public O getTransitionOutput(CompactMealyTransition<O> transition) {
 		return transition.getOutput();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.MutableAutomaton#setTransitionProperty(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public void setTransitionProperty(CompactMealyTransition<O> transition,
-			O property) {
-		transition.setOutput(property);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.transout.TransitionOutputAutomaton#getOutput(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public O getOutput(Integer state, I input) {
-		return AbstractDeterministicTransOutTS.getOutput(this, state, input);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.transout.TransitionOutputAutomaton#trace(java.lang.Iterable, java.util.List)
-	 */
-	@Override
-	public boolean  trace(Iterable<? extends I> input, List<? super O> output) {
-		return AbstractDeterministicTransOutTS.trace(this, input, output);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.transout.TransitionOutputAutomaton#trace(java.lang.Object, java.lang.Iterable, java.util.List)
-	 */
-	@Override
-	public boolean trace(Integer state, Iterable<? extends I> input, List<? super O> output) {
-		return AbstractDeterministicTransOutTS.trace(this, state, input, output);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.concepts.SuffixOutput#computeSuffixOutput(java.lang.Iterable, java.lang.Iterable)
-	 */
-	@Override
-	public Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-		return AbstractTransOutAutomaton.computeSuffixOutput(this, prefix, suffix);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.concepts.Output#computeOutput(java.lang.Iterable)
-	 */
-	@Override
-	public Word<O> computeOutput(Iterable<? extends I> input) {
-		return AbstractTransOutAutomaton.computeOutput(this, input);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.ts.UniversalTransitionSystem#getTransitionProperty(java.lang.Object)
-	 */
-	@Override
-	public O getTransitionProperty(CompactMealyTransition<O> transition) {
-		return AbstractMealyMachine.getTransitionProperty(this, transition);
 	}
 
 	/*
@@ -156,15 +80,6 @@ public class CompactMealy<I, O> extends
 	
 	/*
 	 * (non-Javadoc)
-	 * @see net.automatalib.automata.base.compact.AbstractCompactDeterministic#getStateProperty(java.lang.Integer)
-	 */
-	@Override
-	public Void getStateProperty(Integer state) {
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see net.automatalib.automata.base.compact.AbstractCompactDeterministic#createTransition(int, java.lang.Object)
 	 */
 	@Override
@@ -188,15 +103,6 @@ public class CompactMealy<I, O> extends
 	 */
 	@Override
 	public void setStateProperty(int state, Void property) {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.dot.DOTPlottableAutomaton#getDOTHelper()
-	 */
-	@Override
-	public GraphDOTHelper<Integer, TransitionEdge<I, CompactMealyTransition<O>>> getDOTHelper() {
-		return new DOTHelperMealy<>(this);
 	}
 	
 }

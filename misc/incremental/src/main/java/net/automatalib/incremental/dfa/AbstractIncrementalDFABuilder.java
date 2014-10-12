@@ -22,11 +22,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import net.automatalib.graphs.abstractimpl.AbstractGraph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.ConflictException;
-import net.automatalib.ts.abstractimpl.AbstractDTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -43,7 +41,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements
 	
 	
 	protected static abstract class AbstractGraphView<I,N,E>
-			extends AbstractGraph<N,E> implements GraphView<I, N, E> {
+			implements GraphView<I, N, E> {
 		@Override
 		public GraphDOTHelper<N, E> getGraphDOTHelper() {
 			return new DefaultDOTHelper<N,E>() {
@@ -83,7 +81,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements
 		}
 	}
 	
-	protected static abstract class AbstractTransitionSystemView<S,I,T> extends AbstractDTS<S, I, T>
+	protected static abstract class AbstractTransitionSystemView<S,I,T>
 		implements IncrementalDFABuilder.TransitionSystemView<S, I, T> {
 		@Override
 		public Acceptance getStateProperty(S state) {

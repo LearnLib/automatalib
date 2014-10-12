@@ -24,7 +24,14 @@ import net.automatalib.automata.concepts.MutableTransitionOutput;
  * @author fh
  */
 public interface MutableMealyMachine<S,I,T,O> extends MealyMachine<S,I,T,O>, MutableDeterministic<S,I,T,Void,O>,
-		MutableTransitionOutput<T,O>
-{
-
+		MutableTransitionOutput<T,O> {
+	
+	@Override
+	default public void setStateProperty(S state, Void property) {}
+	
+	@Override
+	default public void setTransitionProperty(T transition, O property) {
+		setTransitionOutput(transition, property);
+	}
+	
 }

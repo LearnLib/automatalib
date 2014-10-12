@@ -17,20 +17,13 @@
 package net.automatalib.automata.fsa.impl.compact;
 
 import java.util.BitSet;
-import java.util.Collection;
 
 import net.automatalib.automata.base.compact.AbstractCompactSimpleNondet;
-import net.automatalib.automata.dot.DOTHelperFSA;
-import net.automatalib.automata.dot.DOTPlottableAutomaton;
 import net.automatalib.automata.fsa.MutableNFA;
-import net.automatalib.automata.fsa.abstractimpl.AbstractFSA;
-import net.automatalib.automata.fsa.abstractimpl.AbstractNFA;
-import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 
 public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> implements
-		MutableNFA<Integer, I>, DOTPlottableAutomaton<Integer, I, Integer> {
+		MutableNFA<Integer, I> {
 	
 	private final BitSet accepting = new BitSet();
 
@@ -53,11 +46,6 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
 	}
 
 	@Override
-	public boolean isAccepting(Collection<? extends Integer> states) {
-		return AbstractNFA.isAccepting(this, states);
-	}
-
-	@Override
 	public boolean isAccepting(Integer state) {
 		return isAccepting(state.intValue());
 	}
@@ -67,30 +55,13 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
 	}
 
 	@Override
-	public boolean accepts(Iterable<? extends I> input) {
-		return AbstractNFA.accepts(this, input);
-	}
-
-
-	@Override
-	public Boolean computeSuffixOutput(Iterable<? extends I> prefix,
-			Iterable<? extends I> suffix) {
-		return AbstractFSA.computeSuffixOutput(this, prefix, suffix);
-	}
-
-	@Override
-	public Boolean computeOutput(Iterable<? extends I> input) {
-		return AbstractFSA.computeOutput(this, input);
-	}
-
-	@Override
 	public Integer addState(boolean accepting) {
 		return addState(Boolean.valueOf(accepting));
 	}
 
 	@Override
 	public Integer addInitialState(boolean accepting) {
-		return addInitialState(Boolean.valueOf(accepting));
+		return super.addInitialState(Boolean.valueOf(accepting));
 	}
 
 	@Override
@@ -130,14 +101,8 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
 	}
 	
 	
-	
-	
 	public CompactDFA<I> determinize() {
 		return null;
 	}
 
-	@Override
-	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getDOTHelper() {
-		return new DOTHelperFSA<>(this);
-	}
 }

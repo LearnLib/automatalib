@@ -20,4 +20,13 @@ import net.automatalib.ts.UniversalDTS;
 
 public interface MealyTransitionSystem<S, I, T, O> extends DeterministicTransitionOutputTS<S, I, T, O>, UniversalDTS<S, I, T, Void, O> {
 
+	@Override
+	default public Void getStateProperty(S state) {
+		return null;
+	}
+	
+	@Override
+	default public O getTransitionProperty(T transition) {
+		return getTransitionOutput(transition);
+	}
 }

@@ -116,27 +116,10 @@ public class FastProbMealy<I, O>
 
 
 	@Override
-	public ProbMealyTransition<FastProbMealyState<O>, O> copyTransition(
-			ProbMealyTransition<FastProbMealyState<O>, O> trans,
-			FastProbMealyState<O> succ) {
-		return new ProbMealyTransition<FastProbMealyState<O>,O>(succ, trans.getOutput(), trans.getProbability());
-	}
-
-	@Override
 	protected FastProbMealyState<O> createState(Void property) {
 		return new FastProbMealyState<O>(inputAlphabet.size());
 	}
 
-	
-	@Override
-	public FastProbMealyState<O> addState() {
-		return addState((Void)null);
-	}
-	
-	@Override
-	public FastProbMealyState<O> addInitialState() {
-		return addInitialState((Void)null);
-	}
 	
 	public void addTransition(FastProbMealyState<O> src, I input, FastProbMealyState<O> successor, O output, float prob) {
 		addTransition(src, input, successor, new ProbabilisticOutput<O>(prob, output));

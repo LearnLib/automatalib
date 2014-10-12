@@ -26,6 +26,20 @@ import java.io.IOException;
  *
  */
 public interface Printable {
+	
+	public static String toString(Printable p) {
+		StringBuilder sb = new StringBuilder();
+		try {
+			p.print(sb);
+		}
+		catch(IOException e) {
+			throw new AssertionError("Unexpected IOException thrown during operation on StringBuilder.", e);
+			// THIS SHOULD NOT HAPPEN
+			// since the StringBuilder methods do not throw.
+		}
+		return sb.toString();
+	}
+	
 	/**
 	 * Outputs the current object.
 	 * @param a the appendable.

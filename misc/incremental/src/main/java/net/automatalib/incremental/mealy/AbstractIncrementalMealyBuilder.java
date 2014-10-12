@@ -22,11 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.graphs.abstractimpl.AbstractGraph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
-import net.automatalib.ts.abstractimpl.AbstractDTS;
-import net.automatalib.ts.abstractimpl.AbstractDeterministicTransOutTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -35,7 +32,7 @@ public abstract class AbstractIncrementalMealyBuilder<I, O> implements
 		IncrementalMealyBuilder<I, O> {
 	
 	public abstract static class AbstractGraphView<I, O, N, E>
-			extends AbstractGraph<N, E> implements GraphView<I, O, N, E> {
+			implements GraphView<I, O, N, E> {
 		@Override
 		public GraphDOTHelper<N, E> getGraphDOTHelper() {
 			return new DefaultDOTHelper<N,E>() {
@@ -56,31 +53,6 @@ public abstract class AbstractIncrementalMealyBuilder<I, O> implements
 				}
 				
 			};
-		}
-	}
-
-	public static abstract class AbstractTransitionSystemView<I,O,S,T> extends
-			AbstractDTS<S, I, T> implements TransitionSystemView<I, O, S, T> {
-		@Override
-		public O getOutput(S state, I input) {
-			return AbstractDeterministicTransOutTS.getOutput(this, state, input);
-		}
-		@Override
-		public boolean trace(Iterable<? extends I> input, List<? super O> output) {
-			return AbstractDeterministicTransOutTS.trace(this, input, output);
-		}
-		@Override
-		public boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {
-			return AbstractDeterministicTransOutTS.trace(this, state, input,
-					output);
-		}
-		@Override
-		public Void getStateProperty(S state) {
-			return null;
-		}
-		@Override
-		public O getTransitionProperty(T transition) {
-			return getTransitionOutput(transition);
 		}
 	}
 	

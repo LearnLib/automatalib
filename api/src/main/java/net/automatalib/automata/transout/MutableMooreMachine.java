@@ -22,4 +22,13 @@ import net.automatalib.automata.concepts.MutableStateOutput;
 public interface MutableMooreMachine<S, I, T, O> extends
 		MooreMachine<S, I, T, O>, MutableDeterministic<S, I, T, O, Void>,
 		MutableStateOutput<S,O> {
+	
+	@Override
+	default public void setStateProperty(S state, O property) {
+		setStateOutput(state, property);
+	}
+	
+	@Override
+	default public void setTransitionProperty(T transition, Void property) {}
+	
 }

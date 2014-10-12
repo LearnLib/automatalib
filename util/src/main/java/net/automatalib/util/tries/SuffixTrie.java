@@ -22,12 +22,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.graphs.abstractimpl.AbstractGraph;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
+import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.EmptyDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 
-public class SuffixTrie<I> extends AbstractGraph<SuffixTrieNode<I>,SuffixTrieNode<I>> implements DOTPlottableGraph<SuffixTrieNode<I>,SuffixTrieNode<I>> {
+public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>,SuffixTrieNode<I>> {
 	
 	public static final boolean DEFAULT_GRAPH_REPRESENTABLE = true;
 	

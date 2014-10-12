@@ -350,8 +350,9 @@ SmartSequence<E> {
 			head = other.head;
 			last = other.last;
 		} else {
-			last.setNext(other.head);
-			other.head.setPrev(last);
+			T otherHead = other.head;
+			last.setNext(otherHead);
+			otherHead.setPrev(last);
 			last = other.last;
 		}
 		size += other.size;

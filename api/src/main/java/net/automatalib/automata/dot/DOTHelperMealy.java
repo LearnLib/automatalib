@@ -45,6 +45,4 @@ public class DOTHelperMealy<S, I, T, O> extends
 		return true;
 	}
 	
-	
-
 }

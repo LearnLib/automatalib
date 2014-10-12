@@ -18,25 +18,21 @@ package net.automatalib.automata.base.fast;
 
 import java.util.Collection;
 
-import net.automatalib.automata.FiniteAlphabetAutomaton;
-import net.automatalib.automata.abstractimpl.AbstractShrinkableAutomaton;
-import net.automatalib.automata.abstractimpl.AbstractShrinkableDeterministic;
+import net.automatalib.automata.ShrinkableAutomaton;
+import net.automatalib.automata.ShrinkableDeterministic;
+import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.base.StateIDDynamicMapping;
-import net.automatalib.automata.base.StateIDStaticMapping;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.graphs.AbstractAutomatonGraph;
-import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
-import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.words.Alphabet;
 
 
-public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP> extends
-		AbstractShrinkableDeterministic<S, I, T, SP, TP> implements
-		FiniteAlphabetAutomaton<S, I, T>, UniversalGraph<S,TransitionEdge<I,T>,SP,TransitionEdge.Property<I,TP>>, StateIDs<S>, NodeIDs<S> {
+public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP> implements
+		ShrinkableDeterministic<S, I, T, SP, TP>,
+		UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>, StateIDs<S> {
 	
 	private final DynamicList<S> states
 		= new DynamicList<S>();
@@ -144,7 +140,7 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 	 */
 	@Override
 	public void removeState(S state, S replacement) {
-		AbstractShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
+		ShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
 		states.remove(state);
 	}
 
@@ -155,52 +151,6 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 	@Override
 	public Alphabet<I> getInputAlphabet() {
 		return inputAlphabet;
-	}
-
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.concepts.NodeIDs#getNodeId(java.lang.Object)
-	 */
-	@Override
-	public int getNodeId(S node) {
-		return node.getId();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.concepts.NodeIDs#getNode(int)
-	 */
-	@Override
-	public S getNode(int id) {
-		return states.get(id);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.Graph#getNodes()
-	 */
-	@Override
-	public Collection<S> getNodes() {
-		return AbstractAutomatonGraph.getNodes(this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
-	 */
-	@Override
-	public Collection<TransitionEdge<I, T>> getOutgoingEdges(S node) {
-		return AbstractAutomatonGraph.getOutgoingEdges(this, node);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
-	 */
-	@Override
-	public S getTarget(TransitionEdge<I, T> edge) {
-		return AbstractAutomatonGraph.getTarget(this, edge);
 	}
 	
 	/*
@@ -214,40 +164,12 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 	
 	/*
 	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties(java.lang.Object)
-	 */
-	@Override
-	public SP getNodeProperty(S node) {
-		return AbstractAutomatonGraph.getNodeProperties(this, node);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getEdgeProperties(java.lang.Object)
-	 */
-	@Override
-	public TransitionEdge.Property<I,TP> getEdgeProperty(TransitionEdge<I,T> edge) {
-		return AbstractAutomatonGraph.getEdgeProperties(this, edge);
-	}
-	
-	/*
-	 * (non-Javadoc)
 	 * @see net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton#stateIDs()
 	 */
 	@Override
 	public StateIDs<S> stateIDs() {
 		return this;
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.Graph#nodeIDs()
-	 */
-	@Override
-	public NodeIDs<S> nodeIDs() {
-		return this;
-	}
-	
 	
 	/*
 	 * (non-Javadoc)
@@ -267,24 +189,6 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 		StateIDDynamicMapping<S, V> mapping = new StateIDDynamicMapping<>(this);
 		tracker.addListener(mapping, true);
 		return mapping;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createStaticNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<S, V> createStaticNodeMapping() {
-		return AbstractAutomatonGraph.createStaticNodeMapping(this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.graphs.IndefiniteGraph#createDynamicNodeMapping()
-	 */
-	@Override
-	public <V> MutableMapping<S, V> createDynamicNodeMapping() {
-		return AbstractAutomatonGraph.createDynamicNodeMapping(this);
 	}
 
 	protected abstract S createState(SP property);

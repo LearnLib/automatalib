@@ -28,15 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.automata.Automaton;
-import net.automatalib.automata.dot.DOTPlottableAutomaton;
-import net.automatalib.automata.dot.DefaultDOTHelperAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.strings.StringUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UndirectedGraph;
+import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.graphs.dot.AggregateDOTHelper;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.util.automata.Automata;
@@ -53,6 +51,11 @@ import net.automatalib.util.automata.Automata;
  */
 public abstract class GraphDOT {
 	
+	public static <N,E> void write(GraphViewable gv, Appendable a) throws IOException {
+		Graph<?,?> graph = gv.graphView();
+		write(graph, a);
+	}
+	
 	/**
 	 * Renders a {@link DOTPlottableGraph} in the GraphVIZ DOT format. 
 	 * @param graph the graph to render
@@ -60,10 +63,10 @@ public abstract class GraphDOT {
 	 * @throws IOException if writing to <tt>a</tt> fails. 
 	 */
 	@SafeVarargs
-	public static <N,E> void write(DOTPlottableGraph<N, E> graph,
+	public static <N,E> void write(Graph<N, E> graph,
 			Appendable a, GraphDOTHelper<N,? super E> ...additionalHelpers) throws IOException {
 		GraphDOTHelper<N,? super E> helper = graph.getGraphDOTHelper();
-		write(graph, helper, a, additionalHelpers);
+		writeRaw(graph, helper, a, additionalHelpers);
 	}
 	
 	/**
@@ -81,7 +84,7 @@ public abstract class GraphDOT {
 			Collection<? extends I> inputAlphabet,
 			Appendable a, GraphDOTHelper<S,? super TransitionEdge<I,T>> ...additionalHelpers) throws IOException {
 		Graph<S,TransitionEdge<I,T>> ag = Automata.asGraph(automaton, inputAlphabet);
-		write(ag, helper, a, additionalHelpers);
+		writeRaw(ag, helper, a, additionalHelpers);
 	}
 	
 	/**
@@ -96,55 +99,22 @@ public abstract class GraphDOT {
 	public static <S,I,T> void write(Automaton<S,I,T> automaton,
 			Collection<? extends I> inputAlphabet,
 			Appendable a, GraphDOTHelper<S,? super TransitionEdge<I,T>> ...additionalHelpers) throws IOException {
-		GraphDOTHelper<S,? super TransitionEdge<I,T>> helper;
-		if(automaton instanceof DOTPlottableAutomaton) {
-			DOTPlottableAutomaton<S,I,T> dp = (DOTPlottableAutomaton<S,I,T>)automaton;
-			helper = dp.getDOTHelper();
-		}
-		else
-			helper = new DefaultDOTHelperAutomaton<S, I, T, Automaton<S,I,T>>(automaton);
 		
-		write(automaton, helper, inputAlphabet, a, additionalHelpers);
+		write(automaton.transitionGraphView(inputAlphabet), a, additionalHelpers);
 	}
 	
 	@SafeVarargs
-	public static <S,I,T> void write(DOTPlottableAutomaton<S, I, T> automaton, Appendable a, GraphDOTHelper<S,? super TransitionEdge<I,T>> ...additionalHelpers) throws IOException {
-		write(automaton, automaton.getDOTHelper(), automaton.getInputAlphabet(), a, additionalHelpers);
-	}
-	
-	
-	/**
-	 * Renders a {@link Graph} in the GraphVIZ DOT format.
-	 * 
-	 * @param graph the graph to render
-	 * @param a the appendable to write to
-	 * @throws IOException if writing to <tt>a</tt> fails
-	 */
-	@SafeVarargs
-	public static <N,E> void write(Graph<N,E> graph,
-			Appendable a, GraphDOTHelper<N,? super E> ...additionalHelpers) throws IOException {
-		GraphDOTHelper<N, ? super E> helper = null;
-		if(graph instanceof DOTPlottableGraph) {
-			DOTPlottableGraph<N,E> plottable = (DOTPlottableGraph<N,E>)graph;
-			helper = plottable.getGraphDOTHelper();
-		}
-		else
-			helper = new DefaultDOTHelper<N,E>();
-		write(graph, helper, a, additionalHelpers);
-	}
-	
-	@SafeVarargs
-	public static <N,E> void write(Graph<N,E> graph, GraphDOTHelper<N, ? super E> helper, Appendable a, GraphDOTHelper<N, ? super E> ...additionalHelpers) throws IOException {
+	public static <N,E> void writeRaw(Graph<N,E> graph, GraphDOTHelper<N, ? super E> helper, Appendable a, GraphDOTHelper<N, ? super E> ...additionalHelpers) throws IOException {
 		List<GraphDOTHelper<N,? super E>> helpers = new ArrayList<>(additionalHelpers.length + 1);
 		helpers.add(helper);
 		helpers.addAll(Arrays.asList(additionalHelpers));
 		
-		write(graph, a, helpers);
+		writeRaw(graph, a, helpers);
 	}
 	
-	public static <N,E> void write(Graph<N,E> graph, Appendable a, List<GraphDOTHelper<N,? super E>> helpers) throws IOException {
+	public static <N,E> void writeRaw(Graph<N,E> graph, Appendable a, List<GraphDOTHelper<N,? super E>> helpers) throws IOException {
 		AggregateDOTHelper<N, E> aggHelper = new AggregateDOTHelper<>(helpers);
-		write(graph, aggHelper, a);
+		writeRaw(graph, aggHelper, a);
 	}
 	
 	/**
@@ -155,7 +125,7 @@ public abstract class GraphDOT {
 	 * @param a the appendable to write to
 	 * @throws IOException if writing to <tt>a</tt> fails
 	 */
-	public static <N,E> void write(Graph<N, E> graph,
+	public static <N,E> void writeRaw(Graph<N, E> graph,
 			GraphDOTHelper<N,? super E> dotHelper,
 			Appendable a) throws IOException {
 		
@@ -244,12 +214,12 @@ public abstract class GraphDOT {
 		a.append("}\n");
 	}
 	
-	public static <N,E> void writeToFile(Graph<N,E> graph,
+	public static <N,E> void writeToFileRaw(Graph<N,E> graph,
 			GraphDOTHelper<N,E> dotHelper,
 			File file) throws IOException {
 		
 		try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-			write(graph, dotHelper, writer);
+			writeRaw(graph, dotHelper, writer);
 		}
 	}
 	

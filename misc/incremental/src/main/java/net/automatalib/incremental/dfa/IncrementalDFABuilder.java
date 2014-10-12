@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
+import net.automatalib.graphs.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.UniversalDTS;
@@ -39,7 +39,7 @@ public interface IncrementalDFABuilder<I> extends
 		IncrementalConstruction<DFA<?, I>, I> {
 	
 	public static interface GraphView<I,N,E>
-		extends DOTPlottableGraph<N,E> {
+		extends Graph<N,E> {
 		@Nullable
 		public I getInputSymbol(@Nonnull E edge);
 		@Nonnull

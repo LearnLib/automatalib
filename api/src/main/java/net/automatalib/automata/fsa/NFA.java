@@ -26,5 +26,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
  */
 @ParametersAreNonnullByDefault
 public interface NFA<S,I> extends FiniteStateAcceptor<S,I> {
-	public boolean isAccepting(Collection<? extends S> states);
+	@Override
+	default public boolean isAccepting(Collection<? extends S> states) {
+		for (S state : states) {
+			if (isAccepting(state)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -42,7 +42,9 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N,E,NP,EP> {
 	 * @return the newly inserted node
 	 */
 	@Nonnull
-	public N addNode();
+	default public N addNode() {
+		return addNode(null);
+	}
 	
 	/**
 	 * Adds a new node to the graph.
@@ -62,7 +64,9 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N,E,NP,EP> {
 	 * @return the edge connecting the given nodes
 	 */
 	@Nonnull
-	public E connect(N source, N target);
+	default public E connect(N source, N target) {
+		return connect(source, target, null);
+	}
 	
 	/**
 	 * Inserts an edge in the graph.

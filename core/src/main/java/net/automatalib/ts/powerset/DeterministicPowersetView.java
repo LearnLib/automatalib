@@ -21,11 +21,9 @@ import java.util.Collections;
 
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.PowersetViewTS;
-import net.automatalib.ts.abstractimpl.AbstractDTS;
 
-public class DeterministicPowersetView<S, I, T> extends AbstractDTS<S, I, T>
-		implements PowersetViewTS<S, I, T, S, T> {
-
+public class DeterministicPowersetView<S, I, T> implements DeterministicTransitionSystem<S, I, T>,
+		PowersetViewTS<S, I, T, S, T> {
 	
 	private final DeterministicTransitionSystem<S, I, T> delegate;
 	

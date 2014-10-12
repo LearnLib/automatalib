@@ -16,6 +16,8 @@
  */
 package net.automatalib.ts.acceptors;
 
+import java.util.Collection;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.ts.UniversalTransitionSystem;
@@ -40,11 +42,32 @@ public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boo
 	 */
 	public boolean isAccepting(S state);
 	
+	public boolean isAccepting(Collection<? extends S> states);
+	
 	/**
 	 * Determines whether the given input word is accepted by this acceptor.
 	 * @param input the input word.
 	 * @return <code>true</code> if the input word is accepted,
 	 * <code>false</code> otherwise. 
 	 */
-	public boolean accepts(Iterable<? extends I> input);
+	default public boolean accepts(Iterable<? extends I> input) {
+		Collection<? extends S> states = getStates(input);
+		
+		return isAccepting(states);
+	}
+	
+	@Override
+	default public Boolean getStateProperty(S state) {
+		return Boolean.valueOf(isAccepting(state));
+	}
+	
+	@Override
+	default public Void getTransitionProperty(S transition) {
+		return null;
+	}
+	
+	@Override
+	default public S getSuccessor(S transition) {
+		return transition;
+	}
 }

@@ -28,27 +28,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
-import net.automatalib.automata.FiniteAlphabetAutomaton;
-import net.automatalib.automata.abstractimpl.AbstractMutableAutomaton;
-import net.automatalib.automata.base.StateIDGrowingMapping;
-import net.automatalib.automata.base.StateIDStaticMapping;
+import net.automatalib.automata.MutableAutomaton;
+import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.dot.DefaultDOTHelperAutomaton;
-import net.automatalib.automata.graphs.AbstractAutomatonGraph;
-import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.graphs.concepts.NodeIDs;
-import net.automatalib.graphs.dot.DOTPlottableGraph;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.Alphabet;
 
-public abstract class AbstractCompactSimpleNondet<I, SP> extends
-		AbstractMutableAutomaton<Integer, I, Integer, SP, Void>
-		implements UniversalGraph<Integer,TransitionEdge<I,Integer>,SP,TransitionEdge.Property<I,Void>>,
-		FiniteAlphabetAutomaton<Integer,I,Integer>, StateIDs<Integer>,
-		NodeIDs<Integer>, DOTPlottableGraph<Integer, TransitionEdge<I,Integer>> {
+public abstract class AbstractCompactSimpleNondet<I, SP>
+		implements MutableAutomaton<Integer,I,Integer,SP,Void>,
+		UniversalFiniteAlphabetAutomaton<Integer,I,Integer,SP,Void>, StateIDs<Integer> {
 	
 	// FIXME: This should come with trove!
 	public static final TIntSet EMPTY_SET
@@ -302,62 +290,6 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends
 	public StateIDs<Integer> stateIDs() {
 		return this;
 	}
-
-	@Override
-	public SP getNodeProperty(Integer node) {
-		return getStateProperty(node);
-	}
-
-	@Override
-	public TransitionEdge.Property<I, Void> getEdgeProperty(TransitionEdge<I, Integer> edge) {
-		return new TransitionEdge.Property<I,Void>(edge.getInput(), null);
-	}
-
-	@Override
-	public Collection<TransitionEdge<I, Integer>> getOutgoingEdges(Integer node) {
-		return AbstractAutomatonGraph.getOutgoingEdges(this, node);
-	}
-
-	@Override
-	public Integer getTarget(TransitionEdge<I, Integer> edge) {
-		return edge.getTransition();
-	}
-
-	@Override
-	public <V> MutableMapping<Integer, V> createStaticNodeMapping() {
-		return new StateIDStaticMapping<>(this, numStates);
-	}
-
-	@Override
-	public <V> MutableMapping<Integer, V> createDynamicNodeMapping() {
-		return new StateIDGrowingMapping<>(this, this);
-	}
-
-	@Override
-	public Collection<Integer> getNodes() {
-		return getStates();
-	}
-
-	@Override
-	public NodeIDs<Integer> nodeIDs() {
-		return this;
-	}
-
-	@Override
-	public GraphDOTHelper<Integer, TransitionEdge<I, Integer>> getGraphDOTHelper() {
-		return new DefaultDOTHelperAutomaton<>(this);
-	}
-
-	@Override
-	public int getNodeId(Integer node) {
-		return node.intValue();
-	}
-
-	@Override
-	public Integer getNode(int id) {
-		return Integer.valueOf(id);
-	}
-
 	
 	protected TIntSet successors(int transId) {
 		TIntSet successors = transitions[transId];

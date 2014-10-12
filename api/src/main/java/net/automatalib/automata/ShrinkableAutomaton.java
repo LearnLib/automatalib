@@ -16,6 +16,11 @@
  */
 package net.automatalib.automata;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -33,12 +38,52 @@ import javax.annotation.ParametersAreNonnullByDefault;
  */
 @ParametersAreNonnullByDefault
 public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S,I,T,SP,TP> {
+	
+	public static <S,I,T,SP,TP> void unlinkState(MutableAutomaton<S,I,T,SP,TP> automaton,
+			S state, S replacement, Collection<I> inputs) {
+		
+		for(S curr : automaton) {
+			if(state.equals(curr))
+				continue;
+			
+			for(I input : inputs) {
+				Collection<? extends T> transitions = automaton.getTransitions(curr, input);
+				if(transitions.isEmpty())
+					continue;
+				
+				boolean modified = false;
+				List<T> modTransitions = new LinkedList<T>(transitions); // TODO
+					
+				ListIterator<T> it = modTransitions.listIterator();
+				while(it.hasNext()) {
+					T trans = it.next();
+					if(automaton.getSuccessor(trans) == state) {
+						if(replacement == null)
+							it.remove();
+						else {
+							T transRep = automaton.copyTransition(trans, replacement);
+							it.set(transRep);
+						}
+						modified = true;
+					}
+				}
+					
+				if(modified)
+					automaton.setTransitions(curr, input, modTransitions);
+			}
+		}
+	}
+	
+	
+		
 	/**
      * removes a state from the automaton.
      *
      * @param state state to be removed
      */
-    public void removeState(S state);
+    default public void removeState(S state) {
+    	removeState(state, null);
+    }
     
     //FIXME: should this be replaceState?
     /**

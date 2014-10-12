@@ -23,11 +23,11 @@ import java.util.List;
 
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.graphs.abstractimpl.AbstractMutableGraph;
+import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
 
-public abstract class AbstractCompactGraph<E extends CompactEdge<EP>,NP, EP> extends
-		AbstractMutableGraph<Integer, E, NP, EP> implements NodeIDs<Integer> {
+public abstract class AbstractCompactGraph<E extends CompactEdge<EP>,NP, EP>
+		implements MutableGraph<Integer, E, NP, EP>, NodeIDs<Integer> {
 
 	protected int size;
 	protected final ResizingObjectArray edges;

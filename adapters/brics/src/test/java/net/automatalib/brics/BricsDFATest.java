@@ -46,7 +46,6 @@ public class BricsDFATest {
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
-	@SuppressWarnings("unused")
 	public void testNondetAutomaton() {
 		RegExp nondetRe = new RegExp("ab|ac");
 		new BricsDFA(nondetRe.toAutomaton());
@@ -68,6 +67,8 @@ public class BricsDFATest {
 	
 	@Test
 	public void testStructuralEquality() {
+		AbstractBricsAutomaton.GraphView graphView = dfa.graphView();
+		
 		Assert.assertEquals(dfa.getInitialState(), bricsAutomaton.getInitialState());
 		
 		Set<State> states1 = new HashSet<State>(bricsAutomaton.getStates());
@@ -78,7 +79,7 @@ public class BricsDFATest {
 		for(State s : dfa) {
 			Assert.assertEquals(dfa.isAccepting(s), s.isAccept());
 			
-			Set<Transition> trans1 = new HashSet<Transition>(dfa.getOutgoingEdges(s));
+			Set<Transition> trans1 = new HashSet<Transition>(graphView.getOutgoingEdges(s));
 			Set<Transition> trans2 = new HashSet<Transition>(s.getTransitions());
 			
 			Assert.assertEquals(trans1, trans2);

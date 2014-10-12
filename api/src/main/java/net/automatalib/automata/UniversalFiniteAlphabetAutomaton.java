@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2014 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -14,10 +14,16 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.graphs.dot;
+package net.automatalib.automata;
 
-import net.automatalib.graphs.Graph;
+import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.graphs.UniversalGraph;
 
-public interface DOTPlottableGraph<N,E> extends Graph<N,E> {
-	public GraphDOTHelper<N, E> getGraphDOTHelper();
+public interface UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>
+	extends UniversalAutomaton<S, I, T, SP, TP>, FiniteAlphabetAutomaton<S, I, T> {
+
+	@Override
+	default public UniversalGraph<S, TransitionEdge<I,T>, SP, TransitionEdge.Property<I,TP>> transitionGraphView() {
+		return transitionGraphView(getInputAlphabet());
+	}
 }

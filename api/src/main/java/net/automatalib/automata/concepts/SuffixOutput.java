@@ -19,6 +19,8 @@ package net.automatalib.automata.concepts;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.words.Word;
+
 /**
  * Feature for automata that compute a <i>suffix-observable</i> output function, i.e.,
  * they compute an output containing a part that can be attributed to a suffix of
@@ -36,4 +38,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public interface SuffixOutput<I, D> extends Output<I,D> {
 	@Nullable
 	public D computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix);
+	
+	@Override
+	@Nullable
+	default public D computeOutput(Iterable<? extends I> input) {
+		return computeSuffixOutput(Word.epsilon(), input);
+	}
 }

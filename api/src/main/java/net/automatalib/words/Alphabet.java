@@ -50,4 +50,17 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
      * @throws IllegalArgumentException if the provided symbol does not belong to the alphabet.
      */
     public abstract int getSymbolIndex(@Nullable I symbol) throws IllegalArgumentException;
+    
+    
+    @Override
+	default public int compare(I o1, I o2) {
+		return getSymbolIndex(o1) - getSymbolIndex(o2);
+	}
+
+	@Override
+	default public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
+		for(int i = offset, j = tgtOfs, k = 0; k < num; i++, j++, k++) {
+			array[j] = getSymbol(i);
+		}
+	}
 }
