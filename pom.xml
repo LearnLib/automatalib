@@ -226,6 +226,14 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<preparationGoals>clean install</preparationGoals>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${javadoc-plugin.version}</version>
+					<configuration>
+						<failOnError>false</failOnError>
+					</configuration>
+				</plugin>
 				<!-- This gets rid of the nasty "maven-enforcer-plugin will be ignored" warning by m2e -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -322,10 +330,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<version>${javadoc-plugin.version}</version>
 				<configuration>
 					<quiet>false</quiet>
-					<source>1.7</source>
+					<source>1.8</source>
 					<verbose>true</verbose>
 					<detectLinks>true</detectLinks>
 					<linksource>false</linksource>
+					<failOnError>false</failOnError>
 					<links>
 						<link>${java7.apidocs}</link>
 						<link>${trove4j.apidocs}</link>
