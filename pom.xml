@@ -22,7 +22,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<!-- ================================= PROJECT INFO ============================== -->
 	<groupId>net.automatalib</groupId>
 	<artifactId>automata-parent</artifactId>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 	<packaging>pom</packaging>
 
 	<name>AutomataLib</name>
@@ -91,7 +91,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<connection>scm:git:git@github.com:misberner/automatalib.git</connection>
 		<developerConnection>scm:git:git@github.com:misberner/automatalib.git</developerConnection>
 		<url>https://github.com/misberner/automatalib/tree/develop</url>
-	</scm>
+	  <tag>automatalib-0.5.1</tag>
+  </scm>
 
 	<!--
 	================================= SONATYPE PARENT ==============================
@@ -127,15 +128,16 @@ http://www.gnu.de/documents/lgpl.en.html.
 			dependency versions
 		-->
 		<testng.version>6.8.8</testng.version>
-		<javadoc-plugin.version>2.9.1</javadoc-plugin.version>
-		<compiler-plugin.version>3.1</compiler-plugin.version>
+		<javadoc-plugin.version>2.10.1</javadoc-plugin.version>
+		<compiler-plugin.version>3.2</compiler-plugin.version>
+		<release-plugin.version>2.5.1</release-plugin.version>
 		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
-		<site-plugin.version>3.3</site-plugin.version>
-		<reports-plugin.version>2.7</reports-plugin.version>
-		<surefire-plugin.version>2.17</surefire-plugin.version>
-		<assembly-plugin.version>2.4</assembly-plugin.version>
-		<exec-plugin.version>1.2.1</exec-plugin.version>
-		<deploy-plugin.version>2.8.1</deploy-plugin.version>
+		<site-plugin.version>3.4</site-plugin.version>
+		<reports-plugin.version>2.8</reports-plugin.version>
+		<surefire-plugin.version>2.18.1</surefire-plugin.version>
+		<assembly-plugin.version>2.5.3</assembly-plugin.version>
+		<exec-plugin.version>1.3.2</exec-plugin.version>
+		<deploy-plugin.version>2.8.2</deploy-plugin.version>
 		<deploy-site-github.exec>deploy-site-github</deploy-site-github.exec>
 
 		<brics-automaton.version>1.11-8</brics-automaton.version>
@@ -143,14 +145,17 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<guava.version>18.0</guava.version>
 		<findbugs.version>2.0.3</findbugs.version>
 		<trove4j.version>3.0.3</trove4j.version>
+		
+		<jung.version>2.0.1</jung.version>
 
 		<duzzt.version>0.0.2</duzzt.version>
 
 		<!-- Javadoc links -->
 		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
 		<trove4j.apidocs>http://trove4j.sourceforge.net/javadocs/</trove4j.apidocs>
-		<java7.apidocs>http://docs.oracle.com/javase/7/docs/api/</java7.apidocs>
+		<java8.apidocs>http://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
 		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
+		<jung.apidocs>http://jung.sourceforge.net/doc/api/</jung.apidocs>
 	</properties>
 
 	<!--
@@ -216,6 +221,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
+					<version>${release-plugin.version}</version>
 					<configuration>
 						<arguments>-Psonatype-oss-release -Dautomatalib.release=true</arguments>
 						<!-- False to allow adjustment to branching model -->
@@ -224,6 +230,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
 						<preparationGoals>clean install</preparationGoals>
+						<tagNameFormat>automatalib-@{version}</tagNameFormat>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -231,7 +238,19 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${javadoc-plugin.version}</version>
 					<configuration>
+						<quiet>false</quiet>
+						<source>1.8</source>
+						<verbose>true</verbose>
+						<detectLinks>true</detectLinks>
+						<linksource>false</linksource>
 						<failOnError>false</failOnError>
+						<links>
+							<link>${java8.apidocs}</link>
+							<link>${trove4j.apidocs}</link>
+							<link>${guava.apidocs}</link>
+							<link>${brics-automaton.apidocs}</link>
+							<link>${jung.apidocs}</link>
+						</links>
 					</configuration>
 				</plugin>
 				<!-- This gets rid of the nasty "maven-enforcer-plugin will be ignored" warning by m2e -->
@@ -336,10 +355,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<linksource>false</linksource>
 					<failOnError>false</failOnError>
 					<links>
-						<link>${java7.apidocs}</link>
+						<link>${java8.apidocs}</link>
 						<link>${trove4j.apidocs}</link>
 						<link>${guava.apidocs}</link>
 						<link>${brics-automaton.apidocs}</link>
+						<link>${jung.apidocs}</link>
 					</links>
 				</configuration>
 				<reportSets>
@@ -471,6 +491,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>automata-commons-dotutil</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>net.automatalib</groupId>
+				<artifactId>automata-jung-visualizer</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>dk.brics.automaton</groupId>
@@ -494,6 +519,33 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>trove4j</artifactId>
 				<version>${trove4j.version}</version>
 			</dependency>
+			
+			<!-- JUNG dependencies -->
+			<dependency>
+            	<groupId>net.sf.jung</groupId>
+            	<artifactId>jung-api</artifactId>
+            	<version>${jung.version}</version>
+        	</dependency>
+        	<dependency>
+	            <groupId>net.sf.jung</groupId>
+	            <artifactId>jung-algorithms</artifactId>
+            	<version>${jung.version}</version>
+        	</dependency>
+        	<dependency>
+	            <groupId>net.sf.jung</groupId>
+	            <artifactId>jung-io</artifactId>
+	            <version>${jung.version}</version>
+        	</dependency>
+        	<dependency>
+	            <groupId>net.sf.jung</groupId>
+	            <artifactId>jung-graph-impl</artifactId>
+	            <version>${jung.version}</version>
+        	</dependency>
+        	<dependency>
+	            <groupId>net.sf.jung</groupId>
+	            <artifactId>jung-visualization</artifactId>
+	            <version>${jung.version}</version>
+        	</dependency>
 
 			<dependency>
 				<groupId>com.github.misberner.duzzt</groupId>

@@ -83,7 +83,7 @@ public abstract class GraphDOT {
 	}
 	
 	/**
-	 * Renders a {@link DOTPlottableGraph} in the GraphVIZ DOT format. 
+	 * Renders a {@link Graph} in the GraphVIZ DOT format. 
 	 * @param graph the graph to render
 	 * @param a the appendable to write to.
 	 * @throws IOException if writing to <tt>a</tt> fails. 

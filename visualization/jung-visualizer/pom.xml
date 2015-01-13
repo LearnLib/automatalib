@@ -28,9 +28,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 	</description>
 
 	<parent>
-		<groupId>net.automatalib.visualization</groupId>
+		<groupId>net.automatalib</groupId>
 		<artifactId>automata-visualization-parent</artifactId>
-		<version>0.5.0</version>
+		<version>0.5.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
