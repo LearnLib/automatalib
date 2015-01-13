@@ -20,6 +20,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,8 +29,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.AutomataLibSettings;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.strings.StringUtil;
 import net.automatalib.graphs.Graph;
@@ -50,6 +54,28 @@ import net.automatalib.util.automata.Automata;
  *
  */
 public abstract class GraphDOT {
+	
+	
+	static {
+		AutomataLibSettings settings = AutomataLibSettings.getInstance();
+		
+		String dotExePath = settings.getProperty("dot.exe.dir");
+		String dotExeName = settings.getProperty("dot.exe.name", "dot");
+		
+		String dotExe = dotExeName;
+		if (dotExePath != null) {
+			Path dotBasePath = FileSystems.getDefault().getPath(dotExePath);
+			Path resolvedDotPath = dotBasePath.resolve(dotExeName);
+			dotExe = resolvedDotPath.toString();
+		}
+		
+		DOT.setDotExe(dotExe);
+	}
+	
+	public static boolean isDotUsable() {
+		return DOT.checkUsable();
+	}
+	
 	
 	public static <N,E> void write(GraphViewable gv, Appendable a) throws IOException {
 		Graph<?,?> graph = gv.graphView();

@@ -66,7 +66,11 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I>
 	 */
 	@Override
 	public int getSymbolIndex(@Nonnull I symbol) {
-		return symbol.getId();
+		int id = symbol.getId();
+		if (id < 0 || id >= size() || get(id) != symbol) {
+			throw new IllegalArgumentException("Invalid symbol: " + symbol + " does not belong to this alphabet");
+		}
+		return id;
 	}
 
 	/*

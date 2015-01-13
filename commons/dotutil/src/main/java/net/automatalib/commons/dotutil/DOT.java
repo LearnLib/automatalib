@@ -64,15 +64,42 @@ public class DOT {
 	private static final int MAX_WIDTH = 800;
 	private static final int MAX_HEIGHT = 600;
 	
+	private static String dotExe = "dot";
 	
-	public static Process executeDOT(String format, String ...additionalOpts) throws IOException {
-		String[] dotArgs = new String[2 + additionalOpts.length];
-		dotArgs[0] = "dot";
-		dotArgs[1] = "-T" + format;
-		System.arraycopy(additionalOpts, 0, dotArgs, 2, additionalOpts.length);
+	public static void setDotExe(String dotExe) {
+		DOT.dotExe = dotExe;
+	}
+	
+	public static boolean checkUsable() {
+		try {
+			Process p = executeDOTRaw("-V");
+			
+			int result = p.waitFor();
+			if (result == 0) {
+				return true;
+			}
+		}
+		catch (IOException | InterruptedException ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static Process executeDOTRaw(String... opts) throws IOException {
+		String[] dotArgs = new String[1 + opts.length];
+		dotArgs[0] = dotExe;
+		System.arraycopy(opts, 0, dotArgs, 1, opts.length);
 		Process dot = Runtime.getRuntime().exec(dotArgs);
 		
 		return dot;
+	}
+	
+	public static Process executeDOT(String format, String ...additionalOpts) throws IOException {
+		String[] dotArgs = new String[1 + additionalOpts.length];
+		dotArgs[0] = "-T" + format;
+		System.arraycopy(additionalOpts, 0, dotArgs, 1, additionalOpts.length);
+		
+		return executeDOTRaw(dotArgs);
 	}
 	
 	

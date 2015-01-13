@@ -16,19 +16,14 @@
  */
 package net.automatalib;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.Properties;
-import java.util.logging.Logger;
+
+import net.automatalib.commons.util.settings.SettingsSource;
 
 /**
  * @author Malte Isberner
  */
 public class AutomataLibSettings {
-
-	private static final Logger LOG = Logger.getLogger(AutomataLibSettings.class.getName());
 
 	private static final AutomataLibSettings INSTANCE = new AutomataLibSettings();
 
@@ -37,7 +32,7 @@ public class AutomataLibSettings {
 	}
 
 
-	private final Properties properties = new Properties();
+	private final Properties properties;
 
 
 	public String getProperty(String propName) {
@@ -51,23 +46,6 @@ public class AutomataLibSettings {
 
 
 	private AutomataLibSettings() {
-		try {
-			Enumeration<URL> resourceUrls = getClass().getClassLoader().getResources("automatalib.properties");
-			while(resourceUrls.hasMoreElements()) {
-				URL url = resourceUrls.nextElement();
-				try(BufferedInputStream is = new BufferedInputStream(url.openStream())) {
-					properties.load(is);
-				}
-				catch(IOException ex) {
-					LOG.severe("Could not read property file " + url + ": " + ex.getMessage());
-				}
-			}
-		}
-		catch(IOException ex) {
-			LOG.severe("Could not enumerate automatalib.properties files: " + ex.getMessage());
-		}
-
-		// System properties (specified via command line) override all other properties
-		properties.putAll(System.getProperties());
+		properties = SettingsSource.readSettings(AutomataLibSettingsSource.class);
 	}
 }

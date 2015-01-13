@@ -115,6 +115,50 @@ public abstract class ReflectUtil {
 		}
 	}
 	
+	public static Method findMatchingMethod(Class<?> clazz, String name, Object... args) {
+		for (Method m : clazz.getMethods()) {
+			if (!m.getName().equals(name)) {
+				continue;
+			}
+			
+			if (isMatch(m.getParameterTypes(), args)) {
+				return m;
+			}
+		}
+		
+		return null;
+	}
+	
+	public static boolean isMatch(Class<?>[] paramTypes, Object... args) {
+		if (paramTypes.length != args.length) {
+			return false;
+		}
+		
+		for (int i = 0; i < paramTypes.length; i++) {
+			Class<?> paramType = paramTypes[i];
+			Object arg = args[i];
+			if (paramType.isPrimitive()) {
+				if (arg == null) {
+					return false;
+				}
+				Class<?> argType = arg.getClass();
+				if (paramType != wrapperToPrimitive(argType)) {
+					return false;
+				}
+			}
+			else {
+				if (arg != null) {
+					Class<?> argType = arg.getClass();
+					if (!paramType.isAssignableFrom(argType)) {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return true;
+	}
+	
 	public static Method findMethod(Class<?> clazz, String name, Class<?> ...params)
 			throws SecurityException, NoSuchMethodException {
 		try {
