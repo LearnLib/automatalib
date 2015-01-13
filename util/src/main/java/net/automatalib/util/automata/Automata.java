@@ -201,6 +201,7 @@ public class Automata extends TS {
 	 * a difference (differing state or transition properties, or a transition undefined in
 	 * only one of the automata) between the two automata.
 	 * 
+	 * @param <I> input symbol type
 	 * @param reference the one automaton to consider
 	 * @param other the other automaton to consider
 	 * @param inputs the input symbols to consider
@@ -224,6 +225,9 @@ public class Automata extends TS {
 	 * Finds a separating word for two states in an automaton. A separating word is a word
 	 * that exposes a difference (differing state or transition properties, or a transition
 	 * undefined in only one of the paths) between the two states.
+	 * 
+	 * @param <S> state type
+	 * @param <I> input symbol type
 	 * @param automaton the automaton containing the states
 	 * @param state1 the one state
 	 * @param state2 the other state
@@ -245,6 +249,7 @@ public class Automata extends TS {
 	 * 
 	 * @see CharacterizingSets
 	 * 
+	 * @param <I> input symbol type
 	 * @param automaton the automaton for which to determine the characterizing set
 	 * @param inputs the input symbols to consider
 	 * @param result the collection in which to store the characterizing words
@@ -260,6 +265,7 @@ public class Automata extends TS {
 	 * 
 	 * @see CharacterizingSets
 	 * 
+	 * @param <I> input symbol type
 	 * @param automaton the automaton for which to determine the characterizing set
 	 * @param inputs the input symbols to consider
 	 * @return a list containing the characterizing words
@@ -286,6 +292,8 @@ public class Automata extends TS {
 	 * 
 	 * @see CharacterizingSets
 	 * 
+	 * @param <S> state type
+	 * @param <I> input symbol type
 	 * @param automaton the automaton containing the state
 	 * @param inputs the input symbols to consider
 	 * @param state the state for which to determine a characterizing set
@@ -303,6 +311,8 @@ public class Automata extends TS {
 	 * 
 	 * @see CharacterizingSets
 	 * 
+	 * @param <S> state type
+	 * @param <I> input symbol type
 	 * @param automaton the automaton containing the state
 	 * @param inputs the input symbols to consider
 	 * @param state the state for which to determine a characterizing set

@@ -39,6 +39,14 @@ public abstract class AutomatonLowLevelCopy {
 	 * Copies an {@link Automaton} to a {@link MutableAutomaton} with possibly heterogeneous input alphabets and
 	 * state and transition properties.
 	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I1> input automaton input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <S2> output automaton state type
+	 * @param <I2> output automaton input symbol type
+	 * @param <T2> output automaton transition type
+	 * @param <SP2> output automaton state property type
+	 * @param <TP2> output automaton transition property type
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider
@@ -83,6 +91,14 @@ public abstract class AutomatonLowLevelCopy {
 	 * Copies an {@link Automaton} to a {@link MutableAutomaton} with possibly heterogeneous input alphabets and
 	 * state and transition properties. State and transitions will not be filtered.
 	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I1> input automaton input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <S2> output automaton state type
+	 * @param <I2> output automaton input symbol type
+	 * @param <T2> output automaton transition type
+	 * @param <SP2> output automaton state property type
+	 * @param <TP2> output automaton transition property type
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider
@@ -107,6 +123,13 @@ public abstract class AutomatonLowLevelCopy {
 	 * Copies an {@link Automaton} to a {@link MutableAutomaton} with a compatible input alphabet, but possibly heterogeneous state and
 	 * transition properties.
 	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I> input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <S2> output automaton state type
+	 * @param <T2> output automaton transition type
+	 * @param <SP2> output automaton state property type
+	 * @param <TP2> output automaton transition property type
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider
@@ -133,6 +156,14 @@ public abstract class AutomatonLowLevelCopy {
 	 * Copies an {@link Automaton} to a {@link MutableAutomaton} with a compatible input alphabet, but possibly heterogeneous state and
 	 * transition properties. States and transitions will not be filtered.
 	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I> input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <S2> output automaton state type
+	 * @param <T2> output automaton transition type
+	 * @param <SP2> output automaton state property type
+	 * @param <TP2> output automaton transition property type
+	 * 
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider
@@ -154,6 +185,17 @@ public abstract class AutomatonLowLevelCopy {
 	/**
 	 * Copies a {@link UniversalAutomaton} to a {@link MutableAutomaton} with possibly heterogeneous input alphabets and state and transition
 	 * properties.
+	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I1> input automaton input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <SP1> input automaton state property type
+	 * @param <TP1> input automaton transition property type
+	 * @param <S2> output automaton state type
+	 * @param <I2> output automaton input symbol type
+	 * @param <T2> output automaton transition type
+	 * @param <SP2> output automaton state property type
+	 * @param <TP2> output automaton transition property type
 	 * 
 	 * @param method the copy method to use
 	 * @param in the input automaton
@@ -185,6 +227,17 @@ public abstract class AutomatonLowLevelCopy {
 	 * Copies a {@link UniversalAutomaton} to a {@link MutableAutomaton} with possibly heterogeneous input alphabets and state and transition
 	 * properties. States and transitions will not be filtered
 	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I1> input automaton input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <SP1> input automaton state property type
+	 * @param <TP1> input automaton transition property type
+	 * @param <S2> output automaton state type
+	 * @param <I2> output automaton input symbol type
+	 * @param <T2> output automaton transition type
+	 * @param <SP2> output automaton state property type
+	 * @param <TP2> output automaton transition property type
+	 * 
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider
@@ -209,6 +262,16 @@ public abstract class AutomatonLowLevelCopy {
 	 * Copies a {@link UniversalAutomaton} to a {@link MutableAutomaton} with compatible input alphabets, but possibly heterogeneous
 	 * properties.
 	 *  
+	 * @param <S1> input automaton state type
+	 * @param <I> input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <SP1> input automaton state property type
+	 * @param <TP1> input automaton transition property type
+	 * @param <S2> output automaton state type
+	 * @param <T2> output automaton transition type
+	 * @param <SP2> output automaton state property type
+	 * @param <TP2> output automaton transition property type
+	 * 
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider
@@ -234,7 +297,17 @@ public abstract class AutomatonLowLevelCopy {
 	/**
 	 * Copies a {@link UniversalAutomaton} to a {@link MutableAutomaton} with compatible input alphabets, but possibly heterogeneous
 	 * properties. States and transitions will not be filtered. 
-	 *  
+	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I> input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <SP1> input automaton state property type
+	 * @param <TP1> input automaton transition property type
+	 * @param <S2> output automaton state type
+	 * @param <T2> output automaton transition type
+	 * @param <SP2> output automaton state property type
+	 * @param <TP2> output automaton transition property type
+	 * 
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider
@@ -256,6 +329,17 @@ public abstract class AutomatonLowLevelCopy {
 	/**
 	 * Copies a {@link UniversalAutomaton} with possibly heterogeneous input alphabets, but compatible properties.
 	 * 
+	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I1> input automaton input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <SP1> input automaton state property type
+	 * @param <TP1> input automaton transition property type
+	 * @param <S2> output automaton state type
+	 * @param <I2> output automaton input symbol type
+	 * @param <T2> output automaton transition type
+	 * @param <SP2> output automaton state property type
+	 * @param <TP2> output automaton transition property type
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider
@@ -280,6 +364,15 @@ public abstract class AutomatonLowLevelCopy {
 	 * Copies a {@link UniversalAutomaton} with possibly heterogeneous input alphabets, but compatible properties. States and
 	 * transitions will not be filtered
 	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I1> input automaton input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <SP> state property type
+	 * @param <TP> transition property type
+	 * @param <S2> output automaton state type
+	 * @param <I2> output automaton input symbol type
+	 * @param <T2> output automaton transition type
+	 * 
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider
@@ -298,6 +391,14 @@ public abstract class AutomatonLowLevelCopy {
 	
 	/**
 	 * Copies a {@link UniversalAutomaton} with compatible input alphabets and properties.
+	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I> input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <SP> state property type
+	 * @param <TP> transition property type
+	 * @param <S2> output automaton state type
+	 * @param <T2> output automaton transition type
 	 * 
 	 * @param method the copy method to use
 	 * @param in the input automaton
@@ -320,6 +421,14 @@ public abstract class AutomatonLowLevelCopy {
 	/**
 	 * Copies a {@link UniversalAutomaton} with compatible input alphabets and properties. States and transitions
 	 * will not be filtered.
+	 * 
+	 * @param <S1> input automaton state type
+	 * @param <I> input symbol type
+	 * @param <T1> input automaton transition type
+	 * @param <SP> state property type
+	 * @param <TP> transition property type
+	 * @param <S2> output automaton state type
+	 * @param <T2> output automaton transition type
 	 * 
 	 * @param method the copy method to use
 	 * @param in the input automaton
