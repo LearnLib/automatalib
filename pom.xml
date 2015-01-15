@@ -144,6 +144,8 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<guava.version>18.0</guava.version>
 		<findbugs.version>2.0.3</findbugs.version>
 		<trove4j.version>3.0.3</trove4j.version>
+		
+		<jung.version>2.0.1</jung.version>
 
 		<duzzt.version>0.0.2</duzzt.version>
 
@@ -152,6 +154,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<trove4j.apidocs>http://trove4j.sourceforge.net/javadocs/</trove4j.apidocs>
 		<java8.apidocs>http://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
 		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
+		<jung.apidocs>http://jung.sourceforge.net/doc/api/</jung.apidocs>
 	</properties>
 
 	<!--
@@ -245,6 +248,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 							<link>${trove4j.apidocs}</link>
 							<link>${guava.apidocs}</link>
 							<link>${brics-automaton.apidocs}</link>
+							<link>${jung.apidocs}</link>
 						</links>
 					</configuration>
 				</plugin>
@@ -354,6 +358,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<link>${trove4j.apidocs}</link>
 						<link>${guava.apidocs}</link>
 						<link>${brics-automaton.apidocs}</link>
+						<link>${jung.apidocs}</link>
 					</links>
 				</configuration>
 				<reportSets>
@@ -513,6 +518,33 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>trove4j</artifactId>
 				<version>${trove4j.version}</version>
 			</dependency>
+			
+			<!-- JUNG dependencies -->
+			<dependency>
+            	<groupId>net.sf.jung</groupId>
+            	<artifactId>jung-api</artifactId>
+            	<version>${jung.version}</version>
+        	</dependency>
+        	<dependency>
+	            <groupId>net.sf.jung</groupId>
+	            <artifactId>jung-algorithms</artifactId>
+            	<version>${jung.version}</version>
+        	</dependency>
+        	<dependency>
+	            <groupId>net.sf.jung</groupId>
+	            <artifactId>jung-io</artifactId>
+	            <version>${jung.version}</version>
+        	</dependency>
+        	<dependency>
+	            <groupId>net.sf.jung</groupId>
+	            <artifactId>jung-graph-impl</artifactId>
+	            <version>${jung.version}</version>
+        	</dependency>
+        	<dependency>
+	            <groupId>net.sf.jung</groupId>
+	            <artifactId>jung-visualization</artifactId>
+	            <version>${jung.version}</version>
+        	</dependency>
 
 			<dependency>
 				<groupId>com.github.misberner.duzzt</groupId>

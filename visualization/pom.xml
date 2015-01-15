@@ -34,40 +34,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<properties>
-		<jung.version>2.0.1</jung.version>
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-            	<groupId>net.sf.jung</groupId>
-            	<artifactId>jung-api</artifactId>
-            	<version>${jung.version}</version>
-        	</dependency>
-        	<dependency>
-	            <groupId>net.sf.jung</groupId>
-	            <artifactId>jung-algorithms</artifactId>
-            	<version>${jung.version}</version>
-        	</dependency>
-        	<dependency>
-	            <groupId>net.sf.jung</groupId>
-	            <artifactId>jung-io</artifactId>
-	            <version>${jung.version}</version>
-        	</dependency>
-        	<dependency>
-	            <groupId>net.sf.jung</groupId>
-	            <artifactId>jung-graph-impl</artifactId>
-	            <version>${jung.version}</version>
-        	</dependency>
-        	<dependency>
-	            <groupId>net.sf.jung</groupId>
-	            <artifactId>jung-visualization</artifactId>
-	            <version>${jung.version}</version>
-        	</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<modules>
 		<module>jung-visualizer</module>
 	</modules>
