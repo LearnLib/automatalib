@@ -139,12 +139,12 @@
         </dependency>
         
         <dependency>
-          <groupId>net.automatalib.visualization</groupId>
+          <groupId>net.automatalib</groupId>
           <artifactId>automata-jung-visualizer</artifactId>
           <version>${project.version}</version>
         </dependency>
         <dependency>
-          <groupId>net.automatalib.visualization</groupId>
+          <groupId>net.automatalib</groupId>
           <artifactId>automata-jung-visualizer</artifactId>
           <version>${project.version}</version>
           <classifier>sources</classifier>

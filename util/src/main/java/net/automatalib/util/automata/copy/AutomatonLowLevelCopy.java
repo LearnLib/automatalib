@@ -333,13 +333,11 @@ public abstract class AutomatonLowLevelCopy {
 	 * @param <S1> input automaton state type
 	 * @param <I1> input automaton input symbol type
 	 * @param <T1> input automaton transition type
-	 * @param <SP1> input automaton state property type
-	 * @param <TP1> input automaton transition property type
+	 * @param <SP> state property type
+	 * @param <TP> transition property type
 	 * @param <S2> output automaton state type
 	 * @param <I2> output automaton input symbol type
 	 * @param <T2> output automaton transition type
-	 * @param <SP2> output automaton state property type
-	 * @param <TP2> output automaton transition property type
 	 * @param method the copy method to use
 	 * @param in the input automaton
 	 * @param inputs the inputs to consider

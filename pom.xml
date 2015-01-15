@@ -127,7 +127,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 			dependency versions
 		-->
 		<testng.version>6.8.8</testng.version>
-		<javadoc-plugin.version>2.9.1</javadoc-plugin.version>
+		<javadoc-plugin.version>2.7</javadoc-plugin.version>
 		<compiler-plugin.version>3.1</compiler-plugin.version>
 		<checkstyle-plugin.version>2.10</checkstyle-plugin.version>
 		<site-plugin.version>3.3</site-plugin.version>
@@ -469,6 +469,11 @@ http://www.gnu.de/documents/lgpl.en.html.
 			<dependency>
 				<groupId>net.automatalib</groupId>
 				<artifactId>automata-commons-dotutil</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.automatalib</groupId>
+				<artifactId>automata-jung-visualizer</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
