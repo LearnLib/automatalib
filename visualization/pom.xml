@@ -19,7 +19,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.automatalib.visualization</groupId>
 	<artifactId>automata-visualization-parent</artifactId>
 	<packaging>pom</packaging>
 
@@ -31,43 +30,9 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<parent>
 		<groupId>net.automatalib</groupId>
 		<artifactId>automata-parent</artifactId>
-		<version>0.5.0</version>
+		<version>0.5.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-
-	<properties>
-		<jung.version>2.0.1</jung.version>
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-            	<groupId>net.sf.jung</groupId>
-            	<artifactId>jung-api</artifactId>
-            	<version>${jung.version}</version>
-        	</dependency>
-        	<dependency>
-	            <groupId>net.sf.jung</groupId>
-	            <artifactId>jung-algorithms</artifactId>
-            	<version>${jung.version}</version>
-        	</dependency>
-        	<dependency>
-	            <groupId>net.sf.jung</groupId>
-	            <artifactId>jung-io</artifactId>
-	            <version>${jung.version}</version>
-        	</dependency>
-        	<dependency>
-	            <groupId>net.sf.jung</groupId>
-	            <artifactId>jung-graph-impl</artifactId>
-	            <version>${jung.version}</version>
-        	</dependency>
-        	<dependency>
-	            <groupId>net.sf.jung</groupId>
-	            <artifactId>jung-visualization</artifactId>
-	            <version>${jung.version}</version>
-        	</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<modules>
 		<module>jung-visualizer</module>
