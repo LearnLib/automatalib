@@ -16,12 +16,15 @@
  */
 package net.automatalib.visualization;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
 import net.automatalib.AutomataLibSettings;
+import net.automatalib.automata.Automaton;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.AggregateDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -34,6 +37,12 @@ public class Visualization {
 	@SafeVarargs
 	public static <N,E> void visualizeGraph(Graph<N,E> graph, boolean modal, GraphDOTHelper<N,? super E>... addlHelpers) {
 		INSTANCE.visualize(graph, modal, addlHelpers);
+	}
+	
+	@SafeVarargs
+	public static <S,I,T> void visualizeAutomaton(Automaton<S, I, T> automaton, Collection<? extends I> inputs,
+			                                      boolean modal, GraphDOTHelper<S, TransitionEdge<I, T>>... addlHelpers) {
+		visualizeGraph(automaton.transitionGraphView(inputs), modal, addlHelpers);
 	}
 	
 	private final VPManager manager = new VPManager();
