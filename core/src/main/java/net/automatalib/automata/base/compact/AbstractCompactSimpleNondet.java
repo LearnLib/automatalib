@@ -87,6 +87,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 				transitions[i] = new TIntHashSet(tgts);
 			}
 		}
+		this.numStates = other.numStates;
 		this.resizeFactor = other.resizeFactor;
 		this.stateCapacity = other.stateCapacity;
 		
