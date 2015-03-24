@@ -33,13 +33,13 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
 	
-	private final Alphabet<I> alphabet;
-	private final int alphabetSize;
-	private int[] transitions;
-	private int stateCapacity;
-	private int numStates;
-	private int initial = -1;
-	private final float resizeFactor;
+	protected final Alphabet<I> alphabet;
+	protected final int alphabetSize;
+	protected int[] transitions;
+	protected int stateCapacity;
+	protected int numStates;
+	protected int initial = -1;
+	protected final float resizeFactor;
 	
 	public AbstractCompactSimpleDet(Alphabet<I> alphabet) {
 		this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
@@ -60,6 +60,30 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		Arrays.fill(this.transitions, 0, this.transitions.length, -1);
 		this.resizeFactor = resizeFactor;
 		this.stateCapacity = stateCapacity;
+	}
+	
+	protected AbstractCompactSimpleDet(Alphabet<I> alphabet, int numStates, int initial, int[] transitions,
+			float resizeFactor) {
+		this.alphabet = alphabet;
+		this.alphabetSize = alphabet.size();
+		this.numStates = numStates;
+		if (initial < 0 || initial >= numStates) {
+			throw new IllegalArgumentException("Invalid initial state " + initial + " for automaton with "
+					+ numStates + " states");
+		}
+		this.initial = initial;
+		if (transitions.length < numStates * alphabetSize) {
+			throw new IllegalArgumentException("Transition array is not large enough for automaton with "
+					+ numStates + " states");
+		}
+		this.transitions = transitions;
+		this.stateCapacity = transitions.length / alphabetSize;
+		this.resizeFactor = resizeFactor;
+	}
+	
+	
+	protected AbstractCompactSimpleDet(Alphabet<I> alphabet, AbstractCompactSimpleDet<?,?> other) {
+		this(alphabet, other.numStates, other.initial, other.transitions.clone(), other.resizeFactor);
 	}
 	
 	public void ensureCapacity(int newCapacity) {

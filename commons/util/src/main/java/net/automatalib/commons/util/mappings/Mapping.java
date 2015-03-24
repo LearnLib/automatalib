@@ -17,6 +17,7 @@
 package net.automatalib.commons.util.mappings;
 
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * An interface for mapping objects of a certain domain type
@@ -33,7 +34,8 @@ import java.util.Map;
  * @param <D> domain type.
  * @param <R> range type.
  */
-public interface Mapping<D,R> {
+@FunctionalInterface
+public interface Mapping<D,R> extends Function<D,R> {
 	/**
 	 * Get the range object <code>elem</code> maps to.
 	 * 
@@ -41,5 +43,6 @@ public interface Mapping<D,R> {
 	 * @return the object from the range corresponding to
 	 * <code>elem</code>.
 	 */
+	default public R apply(D elem) { return get(elem); }
 	public R get(D elem);
 }

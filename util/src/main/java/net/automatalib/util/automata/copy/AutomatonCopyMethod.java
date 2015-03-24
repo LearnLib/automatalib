@@ -17,14 +17,14 @@
 package net.automatalib.util.automata.copy;
 
 import java.util.Collection;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.traversal.TraversalOrder;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 
 public interface AutomatonCopyMethod {
 	

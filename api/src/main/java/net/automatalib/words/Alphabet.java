@@ -22,6 +22,7 @@ import java.util.Comparator;
 import javax.annotation.Nullable;
 
 import net.automatalib.commons.util.array.ArrayWritable;
+import net.automatalib.commons.util.mappings.Mapping;
 
 /**
  * Class implementing an (indexed) alphabet. An alphabet is a collection of symbols, where
@@ -62,5 +63,14 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
 		for(int i = offset, j = tgtOfs, k = 0; k < num; i++, j++, k++) {
 			array[j] = getSymbol(i);
 		}
+	}
+	
+	default public <I2>
+	Mapping<I2,I> translateFrom(Alphabet<I2> other) {
+		if (other.size() > size()) {
+			throw new IllegalArgumentException("Cannot translate from an alphabet with " + other.size() +
+					" elements into an alphabet with only " + size() + " elements");
+		}
+		return i -> getSymbol(other.getSymbolIndex(i));
 	}
 }

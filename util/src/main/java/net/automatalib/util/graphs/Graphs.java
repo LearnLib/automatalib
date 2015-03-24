@@ -30,8 +30,10 @@ import net.automatalib.graphs.UniversalIndefiniteGraph;
 public abstract class Graphs {
 			
 	public static <N,E> Mapping<N,? extends Collection<? extends E>> incomingEdges(final Graph<N,E> graph) {
-		if(graph instanceof BidirectionalGraph)
-			return new InEdgesMapping<N,E>((BidirectionalGraph<N,E>)graph);
+		if(graph instanceof BidirectionalGraph) {
+			final BidirectionalGraph<N,E> bdGraph = (BidirectionalGraph<N, E>)graph;
+			return n -> bdGraph.getIncomingEdges(n);
+		}
 		
 		MutableMapping<N,Collection<E>> inEdgesMapping
 			= graph.createStaticNodeMapping();
@@ -58,22 +60,14 @@ public abstract class Graphs {
 	
 	
 	
+	@Deprecated
 	public static <N,NP> Mapping<N,NP> nodeProperties(final UniversalIndefiniteGraph<N, ?, NP, ?> graph) {
-		return new Mapping<N,NP>() {
-			@Override
-			public NP get(N elem) {
-				return graph.getNodeProperty(elem);
-			}
-		};
+		return n -> graph.getNodeProperty(n);
 	}
 	
+	@Deprecated
 	public static <E,EP> Mapping<E,EP> edgeProperties(final UniversalIndefiniteGraph<?, E, ?, EP> graph) {
-		return new Mapping<E,EP>() {
-			@Override
-			public EP get(E elem) {
-				return graph.getEdgeProperty(elem);
-			}
-		};
+		return e -> graph.getEdgeProperty(e);
 	}
 	
 	private Graphs() {}

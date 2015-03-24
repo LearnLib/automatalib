@@ -45,12 +45,12 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
 	
-	private final Alphabet<I> alphabet;
-	private final int alphabetSize;
-	private TIntSet[] transitions;
-	private int stateCapacity;
-	private int numStates;
-	private final TIntSet initial = new TIntHashSet();
+	protected final Alphabet<I> alphabet;
+	protected final int alphabetSize;
+	protected TIntSet[] transitions;
+	protected int stateCapacity;
+	protected int numStates;
+	protected final TIntSet initial;
 	
 	private final float resizeFactor;
 	
@@ -73,6 +73,24 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 		
 		this.resizeFactor = resizeFactor;
 		this.stateCapacity = stateCapacity;
+		
+		this.initial = new TIntHashSet();
+	}
+	
+	protected AbstractCompactSimpleNondet(Alphabet<I> alphabet, AbstractCompactSimpleNondet<?, ?> other) {
+		this.alphabet = alphabet;
+		this.alphabetSize = alphabet.size();
+		this.transitions = other.transitions.clone();
+		for (int i = 0; i < transitions.length; i++) {
+			TIntSet tgts = transitions[i];
+			if (tgts != null) {
+				transitions[i] = new TIntHashSet(tgts);
+			}
+		}
+		this.resizeFactor = other.resizeFactor;
+		this.stateCapacity = other.stateCapacity;
+		
+		this.initial = new TIntHashSet(other.initial);
 	}
 	
 	public void ensureCapacity(int newCapacity) {

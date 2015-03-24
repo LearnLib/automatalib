@@ -19,15 +19,12 @@ package net.automatalib.util.automata.copy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.ts.TransitionPredicate;
-import net.automatalib.util.automata.predicates.TransitionPredicates;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 
 final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 		AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2, Automaton<S1,? super I1,T1>> {
@@ -62,7 +59,7 @@ final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 		List<StateRec<S1,S2>> outStates = new ArrayList<>(in.size());
 		
 		for(S1 s1 : in) {
-			if(stateFilter.apply(s1)) {
+			if(stateFilter.test(s1)) {
 				S2 s2 = copyState(s1);
 				outStates.add(new StateRec<>(s1, s2));
 			}
@@ -75,8 +72,7 @@ final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 			for(I1 i1 : inputs) {
 				I2 i2 = inputsMapping.apply(i1);
 				Collection<? extends T1> transitions1 = in.getTransitions(s1, i1);
-				Predicate<T1> transPred = TransitionPredicates.toUnaryPredicate(transFilter, s1, i1);
-				copyTransitions(s2, i2, Iterables.filter(transitions1, transPred));
+				copyTransitions(s2, i2, transitions1.stream().filter(t -> transFilter.apply(s1, i1, t)).iterator());
 			}
 		}
 		

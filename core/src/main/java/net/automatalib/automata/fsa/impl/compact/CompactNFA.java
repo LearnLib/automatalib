@@ -18,6 +18,7 @@ package net.automatalib.automata.fsa.impl.compact;
 
 import java.util.BitSet;
 
+import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.AbstractCompactSimpleNondet;
 import net.automatalib.automata.fsa.MutableNFA;
 import net.automatalib.words.Alphabet;
@@ -25,24 +26,52 @@ import net.automatalib.words.Alphabet;
 public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> implements
 		MutableNFA<Integer, I> {
 	
-	private final BitSet accepting = new BitSet();
+	public static final class Creator<I> implements AutomatonCreator<CompactNFA<I>, I> {
+		@Override
+		public CompactNFA<I> createAutomaton(Alphabet<I> alphabet) {
+			return new CompactNFA<I>(alphabet);
+		}
+		@Override
+		public CompactNFA<I> createAutomaton(Alphabet<I> alphabet, int numStates) {
+			return new CompactNFA<I>(alphabet, numStates);
+		}
+	}
+	
+	private final BitSet accepting;
 
 	
 	public CompactNFA(Alphabet<I> alphabet, float resizeFactor) {
 		super(alphabet, resizeFactor);
+		this.accepting = new BitSet();
 	}
 
 	public CompactNFA(Alphabet<I> alphabet, int stateCapacity,
 			float resizeFactor) {
 		super(alphabet, stateCapacity, resizeFactor);
+		this.accepting = new BitSet();
 	}
 
 	public CompactNFA(Alphabet<I> alphabet, int stateCapacity) {
 		super(alphabet, stateCapacity);
+		this.accepting = new BitSet();
 	}
 
 	public CompactNFA(Alphabet<I> alphabet) {
 		super(alphabet);
+		this.accepting = new BitSet();
+	}
+	
+	protected CompactNFA(Alphabet<I> alphabet, CompactNFA<?> other) {
+		super(alphabet, other);
+		this.accepting = (BitSet) other.accepting.clone();
+	}
+	
+	public <I2> CompactNFA<I2> translate(Alphabet<I2> newAlphabet) {
+		if (alphabet.size() != newAlphabet.size()) {
+			throw new IllegalArgumentException("Can only translate automata with matching alphabet sizes, found: "
+					+ newAlphabet.size() + " (new) vs. " + alphabetSize + " (old)");
+		}
+		return new CompactNFA<>(newAlphabet, this);
 	}
 
 	@Override

@@ -16,11 +16,16 @@
  */
 package net.automatalib.commons.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Utility methods for operating with <tt>java.io.*</tt> classes.
@@ -113,5 +118,64 @@ public abstract class IOUtil {
 	 */
 	public static void copy(Reader r, Writer w) throws IOException {
 		copy(r, w, true);
+	}
+	
+	/**
+	 * Ensures that the returned stream is a buffered version of the supplied
+	 * input stream. The result must not necessarily be an instance of
+	 * {@link BufferedInputStream}, it can also be, e.g., a {@link ByteArrayInputStream},
+	 * depending on the type of the supplied input stream.
+	 * 
+	 * @param is the input stream
+	 * @return a buffered version of {@code is}
+	 */
+	public static InputStream asBufferedInputStream(InputStream is) {
+		if (is instanceof BufferedInputStream || is instanceof ByteArrayInputStream) {
+			return is;
+		}
+		return new BufferedInputStream(is);
+	}
+	
+	/**
+	 * Ensures that the returned stream is an uncompressed version of the supplied
+	 * input stream.
+	 * <p>
+	 * This method first tries to read the first two bytes from the stream, then resets
+	 * the stream. If the first two bytes equal the GZip magic number (see
+	 * {@link GZIPInputStream#GZIP_MAGIC}), the supplied stream is wrapped in a
+	 * {@link GZIPInputStream}. Otherwise, the stream is returned as-is, but possibly
+	 * in a buffered version (see {@link #asBufferedInputStream(InputStream)}).
+	 * 
+	 * @param is the input stream
+	 * @return an uncompressed version of {@code is}
+	 * @throws IOException if reading the magic number fails
+	 */
+	public static InputStream asUncompressedInputStream(InputStream is) throws IOException {
+		is = asBufferedInputStream(is);
+		assert is.markSupported();
+		
+		is.mark(2);
+		byte[] buf = new byte[2];
+		int bytesRead = 0;
+		try {
+			bytesRead = is.read(buf);
+		}
+		finally {
+			is.reset();
+		}
+		if (bytesRead == 2) {
+			int magic = (buf[0] & 0xff) << 8 | (buf[1] & 0xff);
+			if (magic == GZIPInputStream.GZIP_MAGIC) {
+				return new GZIPInputStream(is);
+			}
+		}
+		return is;
+	}
+	
+	public static OutputStream asBufferedOutputStream(OutputStream os) {
+		if (os instanceof BufferedOutputStream || os instanceof ByteArrayOutputStream) {
+			return os;
+		}
+		return new BufferedOutputStream(os);
 	}
 }

@@ -18,7 +18,10 @@ package net.automatalib.util.automata.copy;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.commons.util.mappings.Mapping;
@@ -26,8 +29,6 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.TransitionSystem;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 
 public abstract class AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2, TS1 extends TransitionSystem<S1, ? super I1, T1>> implements LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> {
 
@@ -90,10 +91,11 @@ public abstract class AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP
 		return trans2;
 	}
 	
-	protected void copyTransitions(S2 src2, I2 input2, Iterable<? extends T1> transitions1) {
+	protected void copyTransitions(S2 src2, I2 input2, Iterator<? extends T1> transitions1It) {
 		List<T2> transitions2 = new ArrayList<>();
 		
-		for(T1 trans1 : transitions1) {
+		while (transitions1It.hasNext()) {
+			T1 trans1 = transitions1It.next();
 			S1 succ1 = in.getSuccessor(trans1);
 			S2 succ2 = stateMapping.get(succ1);
 			TP2 prop = tpMapping.apply(trans1);

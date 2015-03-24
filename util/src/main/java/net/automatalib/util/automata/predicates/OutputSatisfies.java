@@ -16,10 +16,11 @@
  */
 package net.automatalib.util.automata.predicates;
 
+import java.util.function.Predicate;
+
 import net.automatalib.automata.concepts.TransitionOutput;
 import net.automatalib.ts.TransitionPredicate;
 
-import com.google.common.base.Predicate;
 
 final class OutputSatisfies<S,I,T,O> implements TransitionPredicate<S, I, T> {
 
@@ -40,6 +41,6 @@ final class OutputSatisfies<S,I,T,O> implements TransitionPredicate<S, I, T> {
 	@Override
 	public boolean apply(S source, I input, T transition) {
 		O out = transOut.getTransitionOutput(transition);
-		return negate ^ outputPred.apply(out);
+		return negate ^ outputPred.test(out);
 	}
 }

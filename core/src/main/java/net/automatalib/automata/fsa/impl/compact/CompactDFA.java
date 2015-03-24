@@ -18,31 +18,60 @@ package net.automatalib.automata.fsa.impl.compact;
 
 import java.util.BitSet;
 
+import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.AbstractCompactSimpleDet;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.words.Alphabet;
 
 public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implements
 		MutableDFA<Integer,I> {
+	public static final class Creator<I> implements AutomatonCreator<CompactDFA<I>, I> {
+		@Override
+		public CompactDFA<I> createAutomaton(Alphabet<I> alphabet) {
+			return new CompactDFA<>(alphabet);
+		}
+		@Override
+		public CompactDFA<I> createAutomaton(Alphabet<I> alphabet, int numStates) {
+			return new CompactDFA<>(alphabet, numStates);
+		}
+	}
+	
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
 	
-	private final BitSet acceptance = new BitSet();
+	private final BitSet acceptance;
 	
 	public CompactDFA(Alphabet<I> alphabet) {
 		super(alphabet);
+		this.acceptance = new BitSet();
 	}
 	
 	public CompactDFA(Alphabet<I> alphabet, int stateCapacity) {
 		super(alphabet, stateCapacity);
+		this.acceptance = new BitSet();
 	}
 	
 	public CompactDFA(Alphabet<I> alphabet, float resizeFactor) {
 		super(alphabet, resizeFactor);
+		this.acceptance = new BitSet();
 	}
 	
 	public CompactDFA(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
 		super(alphabet, stateCapacity, resizeFactor);
+		this.acceptance = new BitSet();
+	}
+	
+	protected CompactDFA(Alphabet<I> alphabet, CompactDFA<?> other) {
+		super(alphabet, other);
+		this.acceptance = (BitSet)other.acceptance.clone();
+	}
+	
+	public <I2> CompactDFA<I2> translate(Alphabet<I2> newAlphabet) {
+		if (newAlphabet.size() != alphabetSize) {
+			throw new IllegalArgumentException("Alphabet sizes must match, but they do not (old/new): " +
+					alphabetSize + " vs. " + newAlphabet.size());
+		}
+		return new CompactDFA<I2>(newAlphabet, this);
 	}
 	
 	@Override

@@ -18,95 +18,70 @@ package net.automatalib.util.automata.predicates;
 
 import java.util.Arrays;
 import java.util.Collection;
-
-import javax.annotation.Nonnull;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import net.automatalib.automata.concepts.TransitionOutput;
 import net.automatalib.ts.TransitionPredicate;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 public abstract class TransitionPredicates {
 
 	private TransitionPredicates() {}
 	
 	public static <S,I,T>
-	Predicate<T> toUnaryPredicate(final TransitionPredicate<? super S,? super I,? super T> transPred,
-			final S source, final I input) {
-		return new Predicate<T>() {
-			@Override
-			public boolean apply(@Nonnull T trans) {
-				return transPred.apply(source, input, trans);
-			}
-		};
-	}
-	
-	public static <S,I,T>
 	TransitionPredicate<S,I,T> safePred(TransitionPredicate<S, I, T> pred, boolean nullValue) {
 		if(pred != null) {
 			return pred;
 		}
-		return constantValue(nullValue);
+		return (s,i,t) -> nullValue;
 	}
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> compose(Predicate<? super S> sourcePred, Predicate<? super I> inputPred, Predicate<? super T> transPred) {
-		if(sourcePred == null) {
-			sourcePred = Predicates.alwaysTrue();
-		}
-		if(inputPred == null) {
-			inputPred = Predicates.alwaysTrue();
-		}
-		if(transPred == null) {
-			transPred = Predicates.alwaysTrue();
-		}
-		return new CompositeTransitionPredicate<>(sourcePred, inputPred, transPred); 
+		final Predicate<? super S> sourcePred_ = (sourcePred == null) ? (s -> true) : sourcePred;
+		final Predicate<? super I> inputPred_ = (inputPred == null) ? (i -> true) : inputPred;
+		final Predicate<? super T> transPred_ = (transPred == null) ? (t -> true) : transPred;
+		return (s,i,t) -> sourcePred_.test(s) && inputPred_.test(i) && transPred_.test(t);
+	}
+	
+	public static <S,I,T>
+	TransitionPredicate<S,I,T> alwaysTrue() {
+		return (s,i,t) -> true;
+	}
+	
+	public static <S,I,T>
+	TransitionPredicate<S,I,T> alwaysFalse() {
+		return (s,i,t) -> false;
 	}
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> constantValue(boolean value) {
-		if(value) {
-			return alwaysTrue();
-		}
-		return alwaysFalse();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <S,I,T>
-	TransitionPredicate<S,I,T> alwaysTrue() {
-		return (TransitionPredicate<S,I,T>)ConstantTransitionPredicate.TRUE;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static <S,I,T>
-	TransitionPredicate<S,I,T> alwaysFalse() {
-		return (TransitionPredicate<S,I,T>)ConstantTransitionPredicate.FALSE;
+		return (s,i,t) -> value;
 	}
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> sourceSatisfying(Predicate<? super S> sourcePred) {
-		return compose(sourcePred, null, null);
+		return (s,i,t) -> sourcePred.test(s);
 	}
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> inputSatisfying(Predicate<? super I> inputPred) {
-		return compose(null, inputPred, null);
+		return (s,i,t) -> inputPred.test(i);
 	}
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> transitionSatisfying(Predicate<? super T> transPred) {
-		return compose(null, null, transPred);
+		return (s,i,t) -> transPred.test(t);
 	}
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> inputIs(Object input) {
-		return inputSatisfying(Predicates.equalTo(input));
+		return (s,i,t) -> Objects.equals(i, input);
 	}
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> inputIsNot(Object input) {
-		return inputSatisfying(Predicates.not(Predicates.equalTo(input)));
+		return (s,i,t) -> !Objects.equals(i, input);
 	}
 	
 	@SafeVarargs
@@ -117,7 +92,7 @@ public abstract class TransitionPredicates {
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> inputIn(Collection<?> inputs) {
-		return inputSatisfying(Predicates.in(inputs));
+		return (s,i,t) -> inputs.contains(i);
 	}
 	
 	@SafeVarargs
@@ -128,7 +103,7 @@ public abstract class TransitionPredicates {
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> inputNotIn(Collection<?> inputs) {
-		return inputSatisfying(Predicates.not(Predicates.in(inputs)));
+		return (s,i,t) -> !inputs.contains(i);
 	}
 	
 	
@@ -148,13 +123,13 @@ public abstract class TransitionPredicates {
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> outputIs(TransitionOutput<? super T, ?> transOut,
 			Object output) {
-		return outputSatisfies(transOut, Predicates.equalTo(output));
+		return outputSatisfies(transOut, o -> Objects.equals(o, output));
 	}
 	
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> outputIsNot(TransitionOutput<? super T,?> transOut,
 			Object output) {
-		return outputViolates(transOut, Predicates.equalTo(output));
+		return outputViolates(transOut, o -> Objects.equals(o, output));
 	}
 	
 	public static <S,I,T>
@@ -166,7 +141,7 @@ public abstract class TransitionPredicates {
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> outputIn(TransitionOutput<? super T,?> transOut,
 			Collection<?> outputs) {
-		return outputSatisfies(transOut, Predicates.in(outputs));
+		return outputSatisfies(transOut, o -> outputs.contains(o));
 	}
 	
 	
@@ -179,8 +154,9 @@ public abstract class TransitionPredicates {
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> outputNotIn(TransitionOutput<? super T,?> transOut,
 			Collection<?> outputs) {
-		return outputViolates(transOut, Predicates.in(outputs));
+		return outputViolates(transOut, o -> outputs.contains(o));
 	}
 	
 	
 }
+

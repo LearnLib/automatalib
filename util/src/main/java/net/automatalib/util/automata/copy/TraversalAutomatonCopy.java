@@ -17,6 +17,8 @@
 package net.automatalib.util.automata.copy;
 
 import java.util.Collection;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
@@ -27,9 +29,6 @@ import net.automatalib.util.traversal.TraversalOrder;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.util.ts.traversal.TSTraversalAction;
 import net.automatalib.util.ts.traversal.TSTraversalVisitor;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 
 
 final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
@@ -91,7 +90,7 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 	 */
 	@Override
 	public TSTraversalAction processInitial(S1 state, Holder<S2> outData) {
-		if(stateFilter.apply(state)) {
+		if(stateFilter.test(state)) {
 			outData.value = copyInitialState(state);
 			return TSTraversalAction.EXPLORE;
 		}
@@ -114,7 +113,7 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2> extends
 	@Override
 	public TSTraversalAction processTransition(S1 source, S2 srcData, I1 input,
 			T1 transition, S1 succ, Holder<S2> outData) {
-		if(transFilter.apply(source, input, transition) && stateFilter.apply(succ)) {
+		if(transFilter.apply(source, input, transition) && stateFilter.test(succ)) {
 			S2 succ2 = copyTransitionChecked(srcData, inputsMapping.apply(input), transition, succ);
 			if(succ2 == null) {
 				return TSTraversalAction.IGNORE;

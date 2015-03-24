@@ -18,6 +18,7 @@ package net.automatalib.util.automata.transout;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.MutableMealyMachine;
@@ -28,9 +29,6 @@ import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automata.predicates.TransitionPredicates;
 import net.automatalib.words.Alphabet;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 /**
  * Various utility methods to filter Mealy machines.
@@ -74,7 +72,7 @@ public abstract class MealyFilter {
 			MealyMachine<?,I,?,O> in,
 			Alphabet<I> inputs,
 			Collection<? super O> outputs) {
-		return filterByOutput(in, inputs, Predicates.not(Predicates.in(outputs)));
+		return filterByOutput(in, inputs, o -> !outputs.contains(o));
 	}
 	
 	/**
@@ -111,7 +109,7 @@ public abstract class MealyFilter {
 			MealyMachine<?,I,?,O> in,
 			Alphabet<I> inputs,
 			Collection<? super O> outputs) {
-		return filterByOutput(in, inputs, Predicates.in(outputs));
+		return filterByOutput(in, inputs, o -> outputs.contains(o));
 	}
 	
 	public static <I,O>
@@ -131,7 +129,7 @@ public abstract class MealyFilter {
 			Predicate<? super O> outputPred) {
 		TransitionPredicate<S1,I,T1> transPred = TransitionPredicates.outputSatisfies(in, outputPred);
 		
-		return AutomatonLowLevelCopy.copy(AutomatonCopyMethod.DFS, in, inputs, out, Predicates.alwaysTrue(), transPred);
+		return AutomatonLowLevelCopy.copy(AutomatonCopyMethod.DFS, in, inputs, out, (Predicate<S1>)(s -> true), transPred);
 	}
 
 	private MealyFilter() {
