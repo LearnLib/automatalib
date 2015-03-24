@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2015 TU Dortmund
+This file is part of AutomataLib, http://www.automatalib.net/.
+
+AutomataLib is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License version 3.0 as published by the Free Software Foundation.
+
+AutomataLib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with AutomataLib; if not, see
+http://www.gnu.de/documents/lgpl.en.html.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>net.automatalib</groupId>
+	<artifactId>automata-serialization-parent</artifactId>
+	<packaging>pom</packaging>
+
+	<name>AutomataLib :: Serialization</name>
+	<description>Serialization parent metaproject for various (de-)serialization methods.</description>
+
+	<parent>
+		<groupId>net.automatalib</groupId>
+		<artifactId>automata-parent</artifactId>
+		<version>0.5.2-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<modules>
+		<module>core</module>
+		<module>saf</module>
+	</modules>
+</project>
+
