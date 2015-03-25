@@ -398,4 +398,22 @@ public class Automata extends TS {
 			Iterable<? extends I> inputs) {
 		return allUndefinedTransitions(automaton, automaton, inputs);
 	}
+	
+	public static <S,I>
+	TransRef<S,I,?> findUndefinedInput(
+			Automaton<S,I,?> automaton,
+			Iterable<? extends I> inputs) {
+		Iterator<TransRef<S,I,?>> it = allUndefinedInputsIterator(automaton, inputs);
+		if (!it.hasNext()) {
+			return null;
+		}
+		return it.next();
+	}
+	
+	public static <I>
+	boolean hasUndefinedInput(
+			Automaton<?,I,?> automaton,
+			Iterable<? extends I> inputs) {
+		return findUndefinedInput(automaton, inputs) != null;
+	}
 }
