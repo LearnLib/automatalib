@@ -164,7 +164,7 @@ public abstract class IOUtil {
 			is.reset();
 		}
 		if (bytesRead == 2) {
-			int magic = (buf[0] & 0xff) << 8 | (buf[1] & 0xff);
+			int magic = (buf[1] & 0xff) << 8 | (buf[0] & 0xff);
 			if (magic == GZIPInputStream.GZIP_MAGIC) {
 				return new GZIPInputStream(is);
 			}
