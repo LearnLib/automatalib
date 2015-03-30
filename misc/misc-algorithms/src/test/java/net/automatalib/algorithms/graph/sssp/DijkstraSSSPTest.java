@@ -14,7 +14,7 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.algorithms.graph.apsp;
+package net.automatalib.algorithms.graph.sssp;
 
 import java.util.Arrays;
 import java.util.List;

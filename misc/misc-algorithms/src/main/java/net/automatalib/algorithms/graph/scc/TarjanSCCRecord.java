@@ -20,7 +20,7 @@ final class TarjanSCCRecord {
 
 	public final int number;
 	public int lowLink;
-	
+
 	public TarjanSCCRecord(int number) {
 		this.number = number;
 		this.lowLink = number;
