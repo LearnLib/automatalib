@@ -25,15 +25,14 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class SCCCollector<N> implements SCCListener<N> {
-	
+
 	private final List<List<N>> sccList = new ArrayList<>();
 
-	
 	@Override
 	public void foundSCC(Collection<? extends N> scc) {
 		sccList.add(new ArrayList<>(scc));
 	}
-	
+
 	@Nonnull
 	public List<List<N>> getSCCList() {
 		return sccList;
