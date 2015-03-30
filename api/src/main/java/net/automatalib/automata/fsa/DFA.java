@@ -16,16 +16,16 @@
  */
 package net.automatalib.automata.fsa;
 
+import java.util.Collection;
+
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.SODetOutputAutomaton;
 import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 
 /**
  * Deterministic finite state acceptor
  */
 public interface DFA<S,I> extends UniversalDeterministicAutomaton<S,I,S,Boolean,Void>, DeterministicAcceptorTS<S, I>,
-        FiniteStateAcceptor<S,I>,
-        SODetOutputAutomaton<S, I, S, Boolean> {
+        NFA<S,I> {
 	
 	@Override
 	default public boolean accepts(Iterable<? extends I> input) {
@@ -33,6 +33,10 @@ public interface DFA<S,I> extends UniversalDeterministicAutomaton<S,I,S,Boolean,
 		if(tgt == null)
 			return false;
 		return isAccepting(tgt);
+	}
+	
+	default public boolean isAccepting(Collection<? extends S> states) {
+		return DeterministicAcceptorTS.super.isAccepting(states);
 	}
 	
 }

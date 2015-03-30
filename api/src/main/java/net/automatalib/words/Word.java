@@ -23,17 +23,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.ToIntFunction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import com.google.common.base.Function;
-
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.array.AWUtil;
 import net.automatalib.commons.util.array.ArrayWritable;
 import net.automatalib.commons.util.strings.AbstractPrintable;
+
+import com.google.common.base.Function;
 
 /**
  * A word is an ordered sequence of symbols. {@link Word}s are generally immutable,
@@ -764,6 +765,23 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 	 */
 	public boolean isEmpty() {
 		return (length() == 0);
+	}
+	
+	public int[] toIntArray(ToIntFunction<? super I> toInt) {
+		int len = length();
+		int[] result = new int[len];
+		int i = 0;
+		java.util.Iterator<I> it = iterator();
+		while (it.hasNext()) {
+			I sym = it.next();
+			int symIdx = toInt.applyAsInt(sym);
+			result[i++] = symIdx;
+		}
+		return result;
+	}
+	
+	public int[] toIntArray(Alphabet<I> alphabet) {
+		return toIntArray(i -> alphabet.getSymbolIndex(i));
 	}
 
 	@Nonnull
