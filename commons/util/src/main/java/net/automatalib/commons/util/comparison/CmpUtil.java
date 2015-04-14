@@ -91,6 +91,35 @@ public abstract class CmpUtil {
 		return 0;
 	}
 	
+	public static int lexCompare(int[] a1, int[] a2) {
+		int i = 0;
+		int len1 = a1.length, len2 = a2.length;
+		
+		while (i < len1 && i < len2) {
+			int cmp = a1[i] - a2[i];
+			if (cmp != 0) {
+				return cmp;
+			}
+			i++;
+		}
+		
+		if (i < len1) {
+			return 1;
+		}
+		if (i < len2) {
+			return -1;
+		}
+		return 0;
+	}
+	
+	public static int canonicalCompare(int[] a1, int [] a2) {
+		int ldiff = a1.length - a2.length;
+		if (ldiff != 0) {
+			return ldiff;
+		}
+		return lexCompare(a1, a2);
+	}
+	
 	/**
 	 * Lexicographically compares two {@link Iterable}s, whose element types
 	 * are comparable.

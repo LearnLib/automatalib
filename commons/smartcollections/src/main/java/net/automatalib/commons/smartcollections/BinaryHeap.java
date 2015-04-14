@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.commons.util.comparison.CmpUtil;
@@ -34,7 +35,7 @@ import net.automatalib.commons.util.comparison.CmpUtil;
  */
 public class BinaryHeap<E>
 		extends AbstractSmartCollection<E> implements SmartDynamicPriorityQueue<E>,
-			CapacityManagement {
+			CapacityManagement, Queue<E> {
 	
 	private static final int DEFAULT_INITIAL_CAPACITY = 10;
 	
@@ -312,6 +313,9 @@ public class BinaryHeap<E>
 	@Override
 	@SuppressWarnings("unchecked")
 	public E extractMin() {
+		if (size <= 0) {
+			throw new NoSuchElementException();
+		}
 		E min = ((Reference<E>)entries.array[0]).element;
 		entries.array[0] = entries.array[--size];
 		entries.array[size] = null;
@@ -338,6 +342,9 @@ public class BinaryHeap<E>
 	@Override
 	@SuppressWarnings("unchecked")
 	public E peekMin() {
+		if (size <= 0) {
+			throw new NoSuchElementException();
+		}
 		return ((Reference<E>)entries.array[0]).element;
 	}
 	
@@ -455,6 +462,43 @@ public class BinaryHeap<E>
 	@Override
 	public void quickClear() {
 		size = 0;
+	}
+
+
+	@Override
+	public boolean offer(E e) {
+		add(e);
+		return true;
+	}
+
+
+	@Override
+	public E remove() {
+		return extractMin();
+	}
+
+
+	@Override
+	public E poll() {
+		if (size > 0) {
+			return extractMin();
+		}
+		return null;
+	}
+
+
+	@Override
+	public E element() {
+		return peekMin();
+	}
+
+
+	@Override
+	public E peek() {
+		if (size > 0) {
+			return peekMin();
+		}
+		return null;
 	}
 	
 	

@@ -18,6 +18,8 @@ package net.automatalib.graphs;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -55,6 +57,12 @@ public interface IndefiniteGraph<N, E> {
 	@Nonnull
 	public N getTarget(E edge);
 	
+	@Nonnull
+	default public Collection<? extends E> getEdgesBetween(N from, N to) {
+		return getOutgoingEdges(from).stream()
+				.filter(e -> Objects.equals(getTarget(e), to))
+				.collect(Collectors.<E>toList());
+	}
 	
 	@Nonnull
 	default public <V> MutableMapping<N,V> createStaticNodeMapping() {

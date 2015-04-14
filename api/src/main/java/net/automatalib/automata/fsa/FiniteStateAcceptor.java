@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.automata.UniversalAutomaton;
+import net.automatalib.automata.concepts.OutputAutomaton;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.dot.DOTHelperFSA;
 import net.automatalib.automata.graphs.TransitionEdge;
@@ -37,7 +38,9 @@ import net.automatalib.ts.acceptors.AcceptorTS;
  *
  */
 public interface FiniteStateAcceptor<S,I> extends AcceptorTS<S, I>,
-		UniversalAutomaton<S,I,S,Boolean,Void>, SuffixOutput<I, Boolean> {
+		UniversalAutomaton<S,I,S,Boolean,Void>,
+		OutputAutomaton<S,I,S,Boolean>,
+		SuffixOutput<I, Boolean> {
 	public static final List<Boolean> STATE_PROPERTIES = Arrays.asList(Boolean.FALSE, Boolean.TRUE);
 	public static final List<Void> TRANSITION_PROPERTIES = Collections.singletonList(null);
 	

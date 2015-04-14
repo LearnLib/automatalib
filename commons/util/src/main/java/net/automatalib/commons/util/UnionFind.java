@@ -43,6 +43,9 @@ public final class UnionFind {
 		}
 	}
 
+	public int size() {
+		return p.length;
+	}
 	/**
 	 * Unites the sets containing the two given elements.
 	 * @param p the first element
@@ -61,13 +64,15 @@ public final class UnionFind {
 	 * @return the identifier of the resulting set (either <tt>x</tt> or <tt>y</tt>)
 	 */
 	public int link(int x, int y) {
-		if(rank[x] > rank[y]) {
+		int rx = rank[x], ry = rank[y];
+		if(rx > ry) {
 			p[y] = x;
 			return x;
 		}
 		p[x] = y;
-		if(rank[x] == rank[y])
-			rank[y]++;
+		if(rx == ry) {
+			rank[y] = ry + 1;
+		}
 		return y;
 	}
 
@@ -77,22 +82,20 @@ public final class UnionFind {
 	 * @return the identifier of the set which contains the given element
 	 */
 	public int find(int x) {
-		int r = p[x];
-		if(x != r)
-			p[x] = r = find(r);
-
-		return r;
+		int curr = x;
+		int currp = p[curr];
+		while (curr != currp) {
+			curr = currp;
+			currp = p[curr];
+		}
+		int ancestor = curr;
+		curr = x;
+		while (curr != ancestor) {
+			int next = p[curr];
+			p[curr] = ancestor;
+			curr = next;
+		}
+		
+		return ancestor;
 	}
-
-	// public synchronized boolean findAndUnite(int x, int y)
-	// {
-	// int r1 = find(x);
-	// int r2 = find(y);
-	//
-	// if (r1 == r2)
-	// return false;
-	//
-	// union(r1, r2);
-	// return true;
-	// }
 }
