@@ -22,7 +22,16 @@ import java.util.Collection;
  * Unified interface for (collection) classes that allow writing their contents to an array.
  * The intended behavior differs from the standard Java {@link Collection#toArray(Object[])} method
  * in the following way:
- *  - 
+ * <ul>
+ * <li>It is possible to specify a source offset for this collection, i.e., how many elements are skipped
+ * before the target array is written to. Note that if the collection does not define an iteration order,
+ * the set of elements which are omitted is unspecified if {@code offset > 0}.</li>
+ * <li>It is possible to specify an offset for the destination array, i.e., at which position to begin writing
+ * into the destination array.
+ * <li>It is possible to specify the number of elements to be written. Again, if this collection
+ * does not define an iteration order, the set of elements which are omitted if {@code num < size()}
+ * is unspecified.</li>
+ * </ul>
  * 
  * @author Malte Isberner
  *

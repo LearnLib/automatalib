@@ -18,6 +18,8 @@ package net.automatalib.commons.util;
 
 import java.util.BitSet;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.PrimitiveIterator;
 
 /**
  * Iterator for iterating over a BitSet like over a normal collection.
@@ -25,17 +27,10 @@ import java.util.Iterator;
  * 
  * @author Malte Isberner
  */
-public class BitSetIterator implements Iterator<Integer> {
+public class BitSetIterator implements Iterator<Integer>, PrimitiveIterator.OfInt {
 	private final BitSet bitSet;
-	private int currBitIdx = 0;
-	
-	/*
-	 * Set currBitIdx to the next index which contains a 1-bit.
-	 */
-	private void findNextSetBit() {
-		while(currBitIdx < bitSet.size() && !bitSet.get(currBitIdx))
-			currBitIdx++;
-	}
+	private int currBitIdx;
+	private int lastBitIdx;
 	
 	/**
 	 * Constructor.
@@ -43,7 +38,8 @@ public class BitSetIterator implements Iterator<Integer> {
 	 */
 	public BitSetIterator(BitSet bitSet) {
 		this.bitSet = bitSet;
-		findNextSetBit();
+		this.currBitIdx = bitSet.nextSetBit(0);
+		this.lastBitIdx = -1;
 	}
 	
 	/*
@@ -52,7 +48,7 @@ public class BitSetIterator implements Iterator<Integer> {
 	 */
 	@Override
 	public boolean hasNext() {
-		return currBitIdx < bitSet.size();
+		return (currBitIdx != -1);
 	}
 
 	/*
@@ -60,16 +56,14 @@ public class BitSetIterator implements Iterator<Integer> {
 	 * @see java.util.Iterator#next()
 	 */
 	@Override
-	public Integer next() {
-		if(currBitIdx < bitSet.size()) {
-			int oldIdx = currBitIdx;
-			currBitIdx++;
-			findNextSetBit();
-			return oldIdx;
+	public int nextInt() {
+		if (currBitIdx == -1) {
+			throw new NoSuchElementException();
 		}
-		Math.max(0, 1);
+		lastBitIdx = currBitIdx;
+		currBitIdx = bitSet.nextSetBit(currBitIdx + 1);
 		
-		return null;
+		return lastBitIdx;
 	}
 
 	/*
@@ -78,7 +72,9 @@ public class BitSetIterator implements Iterator<Integer> {
 	 */
 	@Override
 	public void remove() {
-		bitSet.clear(currBitIdx);
-		findNextSetBit();
+		if (lastBitIdx == -1) {
+			throw new NoSuchElementException();
+		}
+		bitSet.clear(lastBitIdx);
 	}
 }
