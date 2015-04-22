@@ -27,6 +27,16 @@
 'http://docs.guava-libraries.googlecode.com/git-history/v16.0.1/javadoc'
 -link
 'http://www.brics.dk/automaton/doc'
+-link
+'http://misberner.github.io/automatalib/maven-site/0.4.0/automata-commons-parent/automata-commons-util/apidocs'
+-link
+'http://misberner.github.io/automatalib/maven-site/0.4.0/automata-commons-parent/automata-commons-smartcollections/apidocs'
+-link
+'http://misberner.github.io/automatalib/maven-site/0.4.0/automata-api/apidocs'
+-link
+'http://misberner.github.io/automatalib/maven-site/0.4.0/automata-core/apidocs'
+-link
+'http://misberner.github.io/automatalib/maven-site/0.4.0/automata-util/apidocs'
 -linkoffline
 'http://docs.oracle.com/javase/7/docs/api' '/Users/malte/Workspaces/learnlib/automatalib/misc/incremental/target/javadoc-bundle-options'
 -linkoffline
