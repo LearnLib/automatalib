@@ -1,0 +1,11 @@
+net.automatalib.commons.util
+net.automatalib.commons.util.array
+net.automatalib.commons.util.collections
+net.automatalib.commons.util.combinatorics
+net.automatalib.commons.util.comparison
+net.automatalib.commons.util.mappings
+net.automatalib.commons.util.nid
+net.automatalib.commons.util.random
+net.automatalib.commons.util.ref
+net.automatalib.commons.util.settings
+net.automatalib.commons.util.strings
