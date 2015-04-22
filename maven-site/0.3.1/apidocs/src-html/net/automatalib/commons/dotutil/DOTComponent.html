@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="de">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/* Copyright (C) 2013 TU Dortmund<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * This file is part of AutomataLib, http://www.automatalib.net/.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * <a name="line.3"></a>
+<span class="sourceLineNo">004</span> * AutomataLib is free software; you can redistribute it and/or<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * modify it under the terms of the GNU Lesser General Public<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * License version 3.0 as published by the Free Software Foundation.<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * <a name="line.7"></a>
+<span class="sourceLineNo">008</span> * AutomataLib is distributed in the hope that it will be useful,<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Lesser General Public License for more details.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * <a name="line.12"></a>
+<span class="sourceLineNo">013</span> * You should have received a copy of the GNU Lesser General Public<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * License along with AutomataLib; if not, see<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * http://www.gnu.de/documents/lgpl.en.html.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package net.automatalib.commons.dotutil;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.awt.event.ActionEvent;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.awt.image.BufferedImage;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.io.BufferedWriter;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.io.FileWriter;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import java.io.IOException;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.io.Reader;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.io.StringWriter;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import java.io.Writer;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>import java.util.List;<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>import javax.swing.AbstractAction;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>import javax.swing.Action;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>import javax.swing.JFileChooser;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>import javax.swing.JOptionPane;<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>import net.automatalib.commons.util.IOUtil;<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>public class DOTComponent extends ImageComponent {<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        /**<a name="line.37"></a>
+<span class="sourceLineNo">038</span>         * <a name="line.38"></a>
+<span class="sourceLineNo">039</span>         */<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        private static final long serialVersionUID = 1L;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        <a name="line.41"></a>
+<span class="sourceLineNo">042</span>        private String dot;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        <a name="line.43"></a>
+<span class="sourceLineNo">044</span>        private final Action saveDotAction = new AbstractAction("Save DOT") {<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                private static final long serialVersionUID = 1L;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                @Override<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                public void actionPerformed(ActionEvent e) {<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                        JFileChooser saveDlg = new JFileChooser();<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                        saveDlg.setFileFilter(DOTMisc.DOT_FILTER);<a name="line.49"></a>
+<span class="sourceLineNo">050</span>                        int result = saveDlg.showSaveDialog(DOTComponent.this);<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                        if(result != JFileChooser.APPROVE_OPTION)<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                                return;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                        try {<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                                Writer w = new BufferedWriter(new FileWriter(saveDlg.getSelectedFile()));<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                                w.write(dot);<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                                w.close();<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                        }<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                        catch(IOException ex) {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                                JOptionPane.showMessageDialog(DOTComponent.this, "Could not save DOT file: " + ex.getMessage(), "Cannot save DOT", JOptionPane.ERROR_MESSAGE);<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                        }<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                }<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                <a name="line.62"></a>
+<span class="sourceLineNo">063</span>        };<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        <a name="line.64"></a>
+<span class="sourceLineNo">065</span>        public DOTComponent() {}<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        <a name="line.66"></a>
+<span class="sourceLineNo">067</span>        public DOTComponent(Reader dotReader) throws IOException {<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                renderDot(dotReader);<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        }<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        <a name="line.70"></a>
+<span class="sourceLineNo">071</span>        <a name="line.71"></a>
+<span class="sourceLineNo">072</span>        <a name="line.72"></a>
+<span class="sourceLineNo">073</span>        <a name="line.73"></a>
+<span class="sourceLineNo">074</span>        /* (non-Javadoc)<a name="line.74"></a>
+<span class="sourceLineNo">075</span>         * @see net.automatalib.commons.dotutil.ImageComponent#listActions(java.util.List)<a name="line.75"></a>
+<span class="sourceLineNo">076</span>         */<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        @Override<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        public void listActions(List&lt;Action&gt; actions) {<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                super.listActions(actions);<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                actions.add(saveDotAction);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        }<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>        private void renderDot(Reader dotReader) throws IOException {<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                StringWriter w = new StringWriter();<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                <a name="line.85"></a>
+<span class="sourceLineNo">086</span>                IOUtil.copy(dotReader, w);<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                String dot = w.getBuffer().toString();<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                 <a name="line.88"></a>
+<span class="sourceLineNo">089</span>                BufferedImage img = DOT.renderDOTImage(dot);<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                <a name="line.90"></a>
+<span class="sourceLineNo">091</span>                super.setImage(img);<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                this.dot = dot;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        }<a name="line.93"></a>
+<span class="sourceLineNo">094</span><a name="line.94"></a>
+<span class="sourceLineNo">095</span>        public String getDot() {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                return dot;<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        }<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        <a name="line.98"></a>
+<span class="sourceLineNo">099</span>        public Action getSaveDotAction() {<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                return saveDotAction;<a name="line.100"></a>
+<span class="sourceLineNo">101</span>        }<a name="line.101"></a>
+<span class="sourceLineNo">102</span><a name="line.102"></a>
+<span class="sourceLineNo">103</span>}<a name="line.103"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

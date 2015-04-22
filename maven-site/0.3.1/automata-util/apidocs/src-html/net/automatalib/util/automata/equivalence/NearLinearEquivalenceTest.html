@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="de">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/* Copyright (C) 2013 TU Dortmund<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * This file is part of AutomataLib, http://www.automatalib.net/.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * <a name="line.3"></a>
+<span class="sourceLineNo">004</span> * AutomataLib is free software; you can redistribute it and/or<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * modify it under the terms of the GNU Lesser General Public<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * License version 3.0 as published by the Free Software Foundation.<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * <a name="line.7"></a>
+<span class="sourceLineNo">008</span> * AutomataLib is distributed in the hope that it will be useful,<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Lesser General Public License for more details.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * <a name="line.12"></a>
+<span class="sourceLineNo">013</span> * You should have received a copy of the GNU Lesser General Public<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * License along with AutomataLib; if not, see<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * http://www.gnu.de/documents/lgpl.en.html.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package net.automatalib.util.automata.equivalence;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.util.ArrayDeque;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.Collection;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.util.Objects;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.util.Queue;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>import net.automatalib.automata.UniversalDeterministicAutomaton;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import net.automatalib.automata.concepts.StateIDs;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import net.automatalib.commons.util.UnionFind;<a name="line.26"></a>
+<span class="sourceLineNo">027</span>import net.automatalib.words.Word;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>import net.automatalib.words.WordBuilder;<a name="line.28"></a>
+<span class="sourceLineNo">029</span><a name="line.29"></a>
+<span class="sourceLineNo">030</span>public class NearLinearEquivalenceTest&lt;I&gt; {<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        <a name="line.31"></a>
+<span class="sourceLineNo">032</span>        private static final class Record&lt;S,S2,I&gt; {<a name="line.32"></a>
+<span class="sourceLineNo">033</span>                private final S state1;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>                private final S2 state2;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>                private final I reachedBy;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>                private final Record&lt;S,S2,I&gt; reachedFrom;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>                private final int depth;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>                <a name="line.38"></a>
+<span class="sourceLineNo">039</span>                public Record(S state1, S2 state2) {<a name="line.39"></a>
+<span class="sourceLineNo">040</span>                        this(state1, state2, null, null);<a name="line.40"></a>
+<span class="sourceLineNo">041</span>                }<a name="line.41"></a>
+<span class="sourceLineNo">042</span>                <a name="line.42"></a>
+<span class="sourceLineNo">043</span>                public Record(S state1, S2 state2, I reachedBy, Record&lt;S,S2,I&gt; reachedFrom) {<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                        this.state1 = state1;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                        this.state2 = state2;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                        this.reachedBy = reachedBy;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                        this.reachedFrom = reachedFrom;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                        this.depth = (reachedFrom != null) ? reachedFrom.depth + 1 : 0;<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                }<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        }<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        <a name="line.51"></a>
+<span class="sourceLineNo">052</span>        private final UniversalDeterministicAutomaton&lt;?, I, ?, ?, ?&gt; target;<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        <a name="line.53"></a>
+<span class="sourceLineNo">054</span>        public NearLinearEquivalenceTest(UniversalDeterministicAutomaton&lt;?, I, ?, ?, ?&gt; target) {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                this.target = target;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        }<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        <a name="line.57"></a>
+<span class="sourceLineNo">058</span>        public Word&lt;I&gt; findSeparatingWord(UniversalDeterministicAutomaton&lt;?, I, ?, ?, ?&gt; other, Collection&lt;? extends I&gt; inputs) {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                return findSeparatingWord(target, other, inputs);<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        }<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        <a name="line.61"></a>
+<span class="sourceLineNo">062</span>        public static &lt;S,S2,I,T,T2&gt; Word&lt;I&gt; findSeparatingWord(UniversalDeterministicAutomaton&lt;S,I,T,?,?&gt; target,<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                        UniversalDeterministicAutomaton&lt;S2,I,T2,?,?&gt; other, Collection&lt;? extends I&gt; inputs) {<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                int targetStates = target.size();<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                UnionFind uf = new UnionFind(targetStates + other.size());<a name="line.65"></a>
+<span class="sourceLineNo">066</span><a name="line.66"></a>
+<span class="sourceLineNo">067</span>                S init1 = target.getInitialState();<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                S2 init2 = other.getInitialState();<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                <a name="line.69"></a>
+<span class="sourceLineNo">070</span>                Object sprop1 = target.getStateProperty(init1);<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                Object sprop2 = other.getStateProperty(init2);<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                <a name="line.72"></a>
+<span class="sourceLineNo">073</span>                if(!Objects.equals(sprop1, sprop2))<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                        return Word.epsilon();<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                <a name="line.75"></a>
+<span class="sourceLineNo">076</span>                StateIDs&lt;S&gt; targetStateIds = target.stateIDs();<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                StateIDs&lt;S2&gt; otherStateIds = other.stateIDs();<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                <a name="line.78"></a>
+<span class="sourceLineNo">079</span>                int id1 = targetStateIds.getStateId(init1);<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                int id2 = otherStateIds.getStateId(init2) + targetStates;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                <a name="line.81"></a>
+<span class="sourceLineNo">082</span>                uf.link(id1, id2);<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                <a name="line.83"></a>
+<span class="sourceLineNo">084</span>                Queue&lt;Record&lt;S,S2,I&gt;&gt; queue = new ArrayDeque&lt;Record&lt;S,S2,I&gt;&gt;();<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                <a name="line.85"></a>
+<span class="sourceLineNo">086</span>                queue.offer(new Record&lt;S,S2,I&gt;(init1, init2));<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                <a name="line.87"></a>
+<span class="sourceLineNo">088</span>                I lastSym = null;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                <a name="line.89"></a>
+<span class="sourceLineNo">090</span>                Record&lt;S,S2,I&gt; current;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                <a name="line.91"></a>
+<span class="sourceLineNo">092</span>explore:while((current = queue.poll()) != null) {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                        S state1 = current.state1;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                        S2 state2 = current.state2;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                        <a name="line.95"></a>
+<span class="sourceLineNo">096</span>                        for(I sym : inputs) {<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                                T trans1 = target.getTransition(state1, sym);<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                                T2 trans2 = other.getTransition(state2, sym);<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                                <a name="line.99"></a>
+<span class="sourceLineNo">100</span>                                if(trans1 == null) {<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                                        if(trans2 == null)<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                                                continue;<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                                        lastSym = sym;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                                        break explore;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                                }<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                                else if(trans2 == null) {<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                                        lastSym = sym;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                                        break explore;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                                }<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                                <a name="line.110"></a>
+<span class="sourceLineNo">111</span>                                Object tprop1 = target.getTransitionProperty(trans1);<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                                Object tprop2 = other.getTransitionProperty(trans2);<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                                <a name="line.113"></a>
+<span class="sourceLineNo">114</span>                                if(!Objects.equals(tprop1, tprop2)) {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                                        lastSym = sym;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                                        break explore;<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                                }<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                                <a name="line.118"></a>
+<span class="sourceLineNo">119</span>                                S succ1 = target.getSuccessor(trans1);<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                                S2 succ2 = other.getSuccessor(trans2);<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                                <a name="line.121"></a>
+<span class="sourceLineNo">122</span>                                id1 = targetStateIds.getStateId(succ1);<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                                id2 = otherStateIds.getStateId(succ2) + targetStates;<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                                <a name="line.124"></a>
+<span class="sourceLineNo">125</span>                                int r1 = uf.find(id1), r2 = uf.find(id2);<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                                <a name="line.126"></a>
+<span class="sourceLineNo">127</span>                                if(r1 == r2)<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                                        continue;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                                <a name="line.129"></a>
+<span class="sourceLineNo">130</span>                                <a name="line.130"></a>
+<span class="sourceLineNo">131</span>                                sprop1 = target.getStateProperty(succ1);<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                                sprop2 = other.getStateProperty(succ2);<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                                <a name="line.133"></a>
+<span class="sourceLineNo">134</span>                                if(!Objects.equals(sprop1, sprop2)) {<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                                        lastSym = sym;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                                        break explore;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                                }<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                                <a name="line.138"></a>
+<span class="sourceLineNo">139</span>                                uf.link(r1, r2);<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                                <a name="line.140"></a>
+<span class="sourceLineNo">141</span>                                queue.offer(new Record&lt;&gt;(succ1, succ2, sym, current));<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                        }<a name="line.142"></a>
+<span class="sourceLineNo">143</span>        }<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                <a name="line.144"></a>
+<span class="sourceLineNo">145</span>                if(current == null)<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                        return null;<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                <a name="line.147"></a>
+<span class="sourceLineNo">148</span>                int ceLength = current.depth;<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                if(lastSym != null)<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                        ceLength++;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                <a name="line.151"></a>
+<span class="sourceLineNo">152</span>                WordBuilder&lt;I&gt; wb = new WordBuilder&lt;I&gt;(null, ceLength);<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                <a name="line.153"></a>
+<span class="sourceLineNo">154</span>                int index = ceLength;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                <a name="line.155"></a>
+<span class="sourceLineNo">156</span>                if(lastSym != null)<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        wb.setSymbol(--index, lastSym);<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                <a name="line.158"></a>
+<span class="sourceLineNo">159</span>                while(current.reachedFrom != null) {<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                        wb.setSymbol(--index, current.reachedBy);<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                        current = current.reachedFrom;<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                }<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                <a name="line.163"></a>
+<span class="sourceLineNo">164</span>                return wb.toWord();<a name="line.164"></a>
+<span class="sourceLineNo">165</span>        }<a name="line.165"></a>
+<span class="sourceLineNo">166</span>        <a name="line.166"></a>
+<span class="sourceLineNo">167</span>        <a name="line.167"></a>
+<span class="sourceLineNo">168</span>        public static &lt;S,I,T&gt; Word&lt;I&gt; findSeparatingWord(UniversalDeterministicAutomaton&lt;S,I,T,?,?&gt; target,<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                        S init1, S init2, Collection&lt;? extends I&gt; inputs) {<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                UnionFind uf = new UnionFind(target.size());<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                <a name="line.171"></a>
+<span class="sourceLineNo">172</span>                Object sprop1 = target.getStateProperty(init1);<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                Object sprop2 = target.getStateProperty(init2);<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                <a name="line.174"></a>
+<span class="sourceLineNo">175</span>                if(!Objects.equals(sprop1, sprop2))<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                        return Word.epsilon();<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                <a name="line.177"></a>
+<span class="sourceLineNo">178</span>                StateIDs&lt;S&gt; stateIds = target.stateIDs();<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                <a name="line.179"></a>
+<span class="sourceLineNo">180</span>                int id1 = stateIds.getStateId(init1), id2 = stateIds.getStateId(init2);<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                <a name="line.181"></a>
+<span class="sourceLineNo">182</span>                uf.link(id1, id2);<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                <a name="line.183"></a>
+<span class="sourceLineNo">184</span>                Queue&lt;Record&lt;S,S,I&gt;&gt; queue = new ArrayDeque&lt;Record&lt;S,S,I&gt;&gt;();<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                <a name="line.185"></a>
+<span class="sourceLineNo">186</span>                queue.offer(new Record&lt;S,S,I&gt;(init1, init2));<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                <a name="line.187"></a>
+<span class="sourceLineNo">188</span>                I lastSym = null;<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                Record&lt;S,S,I&gt; current;<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                <a name="line.190"></a>
+<span class="sourceLineNo">191</span>explore:while((current = queue.poll()) != null) {<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                        S state1 = current.state1;<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                        S state2 = current.state2;<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                        <a name="line.194"></a>
+<span class="sourceLineNo">195</span>                        for(I sym : inputs) {<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                                T trans1 = target.getTransition(state1, sym);<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                                T trans2 = target.getTransition(state2, sym);<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                                <a name="line.198"></a>
+<span class="sourceLineNo">199</span>                                if(trans1 == null) {<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                                        if(trans2 == null)<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                                                continue;<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                                        lastSym = sym;<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                                        break explore;<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                                }<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                                else if(trans2 == null) {<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                                        lastSym = sym;<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                                        break explore;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                                }<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                                <a name="line.209"></a>
+<span class="sourceLineNo">210</span>                                Object tprop1 = target.getTransitionProperty(trans1);<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                                Object tprop2 = target.getTransitionProperty(trans2);<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                                <a name="line.212"></a>
+<span class="sourceLineNo">213</span>                                if(!Objects.equals(tprop1, tprop2)) {<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                                        lastSym = sym;<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                                        break explore;<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                                }<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                                <a name="line.217"></a>
+<span class="sourceLineNo">218</span>                                S succ1 = target.getSuccessor(trans1);<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                                S succ2 = target.getSuccessor(trans2);<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                                <a name="line.220"></a>
+<span class="sourceLineNo">221</span>                                id1 = stateIds.getStateId(succ1);<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                                id2 = stateIds.getStateId(succ2);<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                                <a name="line.223"></a>
+<span class="sourceLineNo">224</span>                                int r1 = uf.find(id1), r2 = uf.find(id2);<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                                <a name="line.225"></a>
+<span class="sourceLineNo">226</span>                                if(r1 == r2)<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                                        continue;<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                                <a name="line.228"></a>
+<span class="sourceLineNo">229</span>                                <a name="line.229"></a>
+<span class="sourceLineNo">230</span>                                sprop1 = target.getStateProperty(succ1);<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                                sprop2 = target.getStateProperty(succ2);<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                                <a name="line.232"></a>
+<span class="sourceLineNo">233</span>                                if(!Objects.equals(sprop1, sprop2)) {<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                                        lastSym = sym;<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                                        break explore;<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                                }<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                                <a name="line.237"></a>
+<span class="sourceLineNo">238</span>                                uf.link(r1, r2);<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                                <a name="line.239"></a>
+<span class="sourceLineNo">240</span>                                queue.offer(new Record&lt;&gt;(succ1, succ2, sym, current));<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                        }<a name="line.241"></a>
+<span class="sourceLineNo">242</span>        }<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                <a name="line.243"></a>
+<span class="sourceLineNo">244</span>                if(current == null)<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                        return null;<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                <a name="line.246"></a>
+<span class="sourceLineNo">247</span>                int ceLength = current.depth;<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                if(lastSym != null)<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                        ceLength++;<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                <a name="line.250"></a>
+<span class="sourceLineNo">251</span>                WordBuilder&lt;I&gt; wb = new WordBuilder&lt;I&gt;(null, ceLength);<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                <a name="line.252"></a>
+<span class="sourceLineNo">253</span>                int index = ceLength;<a name="line.253"></a>
+<span class="sourceLineNo">254</span>                <a name="line.254"></a>
+<span class="sourceLineNo">255</span>                if(lastSym != null)<a name="line.255"></a>
+<span class="sourceLineNo">256</span>                        wb.setSymbol(--index, lastSym);<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                <a name="line.257"></a>
+<span class="sourceLineNo">258</span>                while(current.reachedFrom != null) {<a name="line.258"></a>
+<span class="sourceLineNo">259</span>                        wb.setSymbol(--index, current.reachedBy);<a name="line.259"></a>
+<span class="sourceLineNo">260</span>                        current = current.reachedFrom;<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                }<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                <a name="line.262"></a>
+<span class="sourceLineNo">263</span>                return wb.toWord();<a name="line.263"></a>
+<span class="sourceLineNo">264</span>        }<a name="line.264"></a>
+<span class="sourceLineNo">265</span>}<a name="line.265"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

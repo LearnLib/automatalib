@@ -1,0 +1,42 @@
+-classpath
+'/Users/malte/Workspaces/learnlib/automatalib/misc/incremental/target/classes:/Users/malte/.m2/repository/net/automatalib/automata-api/0.3.1/automata-api-0.3.1.jar:/Users/malte/.m2/repository/net/automatalib/automata-core/0.3.1/automata-core-0.3.1.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-util/0.3.1/automata-commons-util-0.3.1.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-smartcollections/0.3.1/automata-commons-smartcollections-0.3.1.jar:/Users/malte/.m2/repository/com/google/guava/guava/15.0/guava-15.0.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.7'
+-sourcepath
+'/Users/malte/Workspaces/learnlib/automatalib/misc/incremental/src/main/java'
+-verbose
+-author
+-bottom
+'Copyright &#169; 2015. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/malte/Workspaces/learnlib/automatalib/misc/incremental/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'AutomataLib :: Misc :: Incremental 0.3.1 API'
+-link
+'http://docs.oracle.com/javase/7/docs/api'
+-link
+'http://www.brics.dk/automaton/doc'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' '/Users/malte/Workspaces/learnlib/automatalib/misc/incremental/target/javadoc-bundle-options'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/automata-commons-parent/automata-commons-util/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/commons/util/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/automata-api/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/api/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/automata-core/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/core/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/automata-commons-parent/automata-commons-smartcollections/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/commons/smartcollections/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/automata-util/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/util/target/site/apidocs'
+-linksource
+-use
+-version
+-windowtitle
+'AutomataLib :: Misc :: Incremental 0.3.1 API'
