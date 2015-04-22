@@ -1,0 +1,35 @@
+-classpath
+'/Users/malte/Workspaces/learnlib/automatalib/commons/util/target/classes:/Users/malte/.m2/repository/com/google/guava/guava/16.0.1/guava-16.0.1.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.7'
+-sourcepath
+'/Users/malte/Workspaces/learnlib/automatalib/commons/util/src/main/java'
+-verbose
+-author
+-bottom
+'Copyright &#169; 2015. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/malte/Workspaces/learnlib/automatalib/commons/util/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'AutomataLib :: Commons :: Utilities 0.4.0 API'
+-link
+'http://docs.oracle.com/javase/7/docs/api'
+-link
+'http://trove4j.sourceforge.net/javadocs'
+-link
+'http://docs.guava-libraries.googlecode.com/git-history/v16.0.1/javadoc'
+-link
+'http://www.brics.dk/automaton/doc'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' '/Users/malte/Workspaces/learnlib/automatalib/commons/util/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'AutomataLib :: Commons :: Utilities 0.4.0 API'

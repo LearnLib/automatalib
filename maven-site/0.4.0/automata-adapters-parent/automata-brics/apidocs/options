@@ -1,0 +1,43 @@
+-classpath
+'/Users/malte/Workspaces/learnlib/automatalib/adapters/brics/target/classes:/Users/malte/.m2/repository/net/automatalib/automata-api/0.4.0/automata-api-0.4.0.jar:/Users/malte/.m2/repository/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8.jar:/Users/malte/.m2/repository/net/automatalib/automata-core/0.4.0/automata-core-0.4.0.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-util/0.4.0/automata-commons-util-0.4.0.jar:/Users/malte/.m2/repository/com/google/code/findbugs/jsr305/2.0.3/jsr305-2.0.3.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-smartcollections/0.4.0/automata-commons-smartcollections-0.4.0.jar:/Users/malte/.m2/repository/com/google/guava/guava/16.0.1/guava-16.0.1.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.7'
+-sourcepath
+'/Users/malte/Workspaces/learnlib/automatalib/adapters/brics/src/main/java'
+-verbose
+-author
+-bottom
+'Copyright &#169; 2015. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/malte/Workspaces/learnlib/automatalib/adapters/brics/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'AutomataLib :: Adapters :: BRICS 0.4.0 API'
+-link
+'http://docs.oracle.com/javase/7/docs/api'
+-link
+'http://trove4j.sourceforge.net/javadocs'
+-link
+'http://docs.guava-libraries.googlecode.com/git-history/v16.0.1/javadoc'
+-link
+'http://www.brics.dk/automaton/doc'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' '/Users/malte/Workspaces/learnlib/automatalib/adapters/brics/target/javadoc-bundle-options'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/0.4.0/automata-commons-parent/automata-commons-util/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/commons/util/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/0.4.0/automata-api/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/api/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/0.4.0/automata-core/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/core/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/0.4.0/automata-commons-parent/automata-commons-smartcollections/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/commons/smartcollections/target/site/apidocs'
+-use
+-version
+-windowtitle
+'AutomataLib :: Adapters :: BRICS 0.4.0 API'
