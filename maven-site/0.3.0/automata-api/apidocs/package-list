@@ -1,0 +1,11 @@
+net.automatalib.automata
+net.automatalib.automata.concepts
+net.automatalib.automata.fsa
+net.automatalib.automata.simple
+net.automatalib.automata.transout
+net.automatalib.graphs
+net.automatalib.graphs.concepts
+net.automatalib.ts
+net.automatalib.ts.acceptors
+net.automatalib.ts.simple
+net.automatalib.words

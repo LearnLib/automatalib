@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="de">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/* Copyright (C) 2013 TU Dortmund<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * This file is part of AutomataLib, http://www.automatalib.net/.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * <a name="line.3"></a>
+<span class="sourceLineNo">004</span> * AutomataLib is free software; you can redistribute it and/or<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * modify it under the terms of the GNU Lesser General Public<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * License version 3.0 as published by the Free Software Foundation.<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * <a name="line.7"></a>
+<span class="sourceLineNo">008</span> * AutomataLib is distributed in the hope that it will be useful,<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Lesser General Public License for more details.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * <a name="line.12"></a>
+<span class="sourceLineNo">013</span> * You should have received a copy of the GNU Lesser General Public<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * License along with AutomataLib; if not, see<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * http://www.gnu.de/documents/lgpl.en.html.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package net.automatalib.commons.smartcollections;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.util.Collection;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.Comparator;<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>/**<a name="line.22"></a>
+<span class="sourceLineNo">023</span> * A generalized priority queue which allows storing arbitrary elements that<a name="line.23"></a>
+<span class="sourceLineNo">024</span> * don't have to be comparable, neither by their natural ordering nor by a<a name="line.24"></a>
+<span class="sourceLineNo">025</span> * provided {@link Comparator}. Instead, keys can be assigned to the elements<a name="line.25"></a>
+<span class="sourceLineNo">026</span> * explicitly.<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * <a name="line.27"></a>
+<span class="sourceLineNo">028</span> * Since this interface extends the {@link SmartCollection} (and thus also<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * the {@link Collection}) interface, it has to provide the<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * {@link SmartCollection#referencedAdd(Object)} and<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * {@link Collection#add(Object)} methods with no additional key parameters.<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * This is handled by using a &lt;i&gt;default key&lt;/i&gt;, which is implicitly used <a name="line.32"></a>
+<span class="sourceLineNo">033</span> * for all elements inserted using the above methods. Initially, the default<a name="line.33"></a>
+<span class="sourceLineNo">034</span> * key is &lt;code&gt;null&lt;/code&gt;, whereas the &lt;code&gt;null&lt;/code&gt; key is by convention<a name="line.34"></a>
+<span class="sourceLineNo">035</span> * larger than any non-&lt;code&gt;null&lt;/code&gt; key. The default key for consequent<a name="line.35"></a>
+<span class="sourceLineNo">036</span> * insertions can be changed by calling {@link #setDefaultKey(Comparable)}. <a name="line.36"></a>
+<span class="sourceLineNo">037</span> * <a name="line.37"></a>
+<span class="sourceLineNo">038</span> * @author Malte Isberner &lt;malte.isberner@gmail.com&gt;<a name="line.38"></a>
+<span class="sourceLineNo">039</span> *<a name="line.39"></a>
+<span class="sourceLineNo">040</span> * @param &lt;E&gt; element class.<a name="line.40"></a>
+<span class="sourceLineNo">041</span> * @param &lt;K&gt; key class.<a name="line.41"></a>
+<span class="sourceLineNo">042</span> */<a name="line.42"></a>
+<span class="sourceLineNo">043</span>public interface SmartGeneralPriorityQueue&lt;E, K extends Comparable&lt;K&gt;&gt;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        extends SmartPriorityQueue&lt;E&gt; {<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>        /**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>         * Inserts an element with the specified key.<a name="line.47"></a>
+<span class="sourceLineNo">048</span>         * <a name="line.48"></a>
+<span class="sourceLineNo">049</span>         * @param elem the element to insert.<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         * @param key the key for this element.<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         * @return the reference to the inserted element.<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         */<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        public abstract ElementReference add(E elem, K key);<a name="line.53"></a>
+<span class="sourceLineNo">054</span><a name="line.54"></a>
+<span class="sourceLineNo">055</span>        /**<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * Sets the default key, which is used for elements that are inserted<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         * with no explicit key specified. <a name="line.57"></a>
+<span class="sourceLineNo">058</span>         * @param defaultKey the new defualt key.<a name="line.58"></a>
+<span class="sourceLineNo">059</span>         */<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        public abstract void setDefaultKey(K defaultKey);<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span>        /**<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         * Changes the key of an element in the priority key.<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         * @param ref reference to the element whose key is to be changed.<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         * @param newKey the new key of this element.<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         */<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        public abstract void changeKey(ElementReference ref, K newKey);<a name="line.67"></a>
+<span class="sourceLineNo">068</span>}<a name="line.68"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
