@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="de">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/* Copyright (C) 2013 TU Dortmund<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * This file is part of AutomataLib, http://www.automatalib.net/.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * <a name="line.3"></a>
+<span class="sourceLineNo">004</span> * AutomataLib is free software; you can redistribute it and/or<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * modify it under the terms of the GNU Lesser General Public<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * License version 3.0 as published by the Free Software Foundation.<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * <a name="line.7"></a>
+<span class="sourceLineNo">008</span> * AutomataLib is distributed in the hope that it will be useful,<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Lesser General Public License for more details.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * <a name="line.12"></a>
+<span class="sourceLineNo">013</span> * You should have received a copy of the GNU Lesser General Public<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * License along with AutomataLib; if not, see<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * http://www.gnu.de/documents/lgpl.en.html.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package net.automatalib.words.impl;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.util.NoSuchElementException;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.Objects;<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>import net.automatalib.words.Word;<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>public class ExtensionWord&lt;I&gt; extends Word&lt;I&gt; {<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        <a name="line.25"></a>
+<span class="sourceLineNo">026</span>        private static final class Iterator&lt;I&gt; implements java.util.Iterator&lt;I&gt; {<a name="line.26"></a>
+<span class="sourceLineNo">027</span>                private final java.util.Iterator&lt;I&gt; wordIt;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>                private final I letter;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>                private boolean next = true;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>                <a name="line.30"></a>
+<span class="sourceLineNo">031</span>                public Iterator(java.util.Iterator&lt;I&gt; wordIt, I letter) {<a name="line.31"></a>
+<span class="sourceLineNo">032</span>                        this.wordIt = wordIt;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>                        this.letter = letter;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>                }<a name="line.34"></a>
+<span class="sourceLineNo">035</span>                <a name="line.35"></a>
+<span class="sourceLineNo">036</span>                @Override<a name="line.36"></a>
+<span class="sourceLineNo">037</span>                public boolean hasNext() {<a name="line.37"></a>
+<span class="sourceLineNo">038</span>                        return next;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>                }<a name="line.39"></a>
+<span class="sourceLineNo">040</span>                @Override<a name="line.40"></a>
+<span class="sourceLineNo">041</span>                public I next() {<a name="line.41"></a>
+<span class="sourceLineNo">042</span>                        if(wordIt.hasNext())<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                                return wordIt.next();<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                        if(!next)<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                                throw new NoSuchElementException();<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                        next = false;<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                        return letter;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                }<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                <a name="line.49"></a>
+<span class="sourceLineNo">050</span>                @Override<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                public void remove() {<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                        throw new UnsupportedOperationException();<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                }<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                <a name="line.54"></a>
+<span class="sourceLineNo">055</span>                <a name="line.55"></a>
+<span class="sourceLineNo">056</span>        }<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        <a name="line.57"></a>
+<span class="sourceLineNo">058</span>        private final Word&lt;I&gt; word;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        private final I letter;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        <a name="line.60"></a>
+<span class="sourceLineNo">061</span>        public ExtensionWord(Word&lt;I&gt; word, I letter) {<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                this.word = word;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                this.letter = letter;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        }<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>        @Override<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        public I getSymbol(int index) {<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                if(index == word.length())<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                        return letter;<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                return word.getSymbol(index);<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        }<a name="line.71"></a>
+<span class="sourceLineNo">072</span><a name="line.72"></a>
+<span class="sourceLineNo">073</span>        @Override<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        public int length() {<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                return word.length() + 1;<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        }<a name="line.76"></a>
+<span class="sourceLineNo">077</span><a name="line.77"></a>
+<span class="sourceLineNo">078</span>        @Override<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        protected Word&lt;I&gt; _subWord(int fromIndex, int toIndex) {<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                int wLen = word.length();<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                if(fromIndex &lt; wLen) {<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                        if(toIndex &lt;= wLen)<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                                word.subWord(fromIndex, toIndex);<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                        return new ExtensionWord&lt;&gt;(word.subWord(fromIndex, wLen), letter);<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                }<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                else if(fromIndex == wLen)<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                        return Word.fromLetter(letter);<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                return Word.epsilon();<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        }<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>        @Override<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        public java.util.Iterator&lt;I&gt; iterator() {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                return new Iterator&lt;I&gt;(word.iterator(), letter);<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        }<a name="line.94"></a>
+<span class="sourceLineNo">095</span><a name="line.95"></a>
+<span class="sourceLineNo">096</span>        @Override<a name="line.96"></a>
+<span class="sourceLineNo">097</span>        public void writeToArray(int offset, Object[] array, int tgtOffset,<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                        int length) {<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                int wordLen = word.length();<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                boolean writeLetter = (offset + length &gt; wordLen);<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                if(offset &lt; wordLen) {<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                        if(writeLetter)<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                                length--;<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                        word.writeToArray(offset, array, tgtOffset, length);<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                }<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                if(writeLetter)<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                        array[tgtOffset+length] = letter;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        }<a name="line.108"></a>
+<span class="sourceLineNo">109</span><a name="line.109"></a>
+<span class="sourceLineNo">110</span>        @Override<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        public Word&lt;I&gt; prepend(I symbol) {<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                return new ExtensionWord&lt;&gt;(word.prepend(symbol), letter);<a name="line.112"></a>
+<span class="sourceLineNo">113</span>        }<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>        @Override<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        public boolean isPrefixOf(Word&lt;I&gt; other) {<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                int wordLen = word.length();<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                if(wordLen &gt;= other.length())<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                        return false;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                <a name="line.120"></a>
+<span class="sourceLineNo">121</span>                if(!word.isPrefixOf(other))<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                        return false;<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                return Objects.equals(other.getSymbol(wordLen), letter);<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        }<a name="line.124"></a>
+<span class="sourceLineNo">125</span><a name="line.125"></a>
+<span class="sourceLineNo">126</span>}<a name="line.126"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

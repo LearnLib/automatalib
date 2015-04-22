@@ -1,0 +1,34 @@
+-classpath
+'/Users/malte/Workspaces/learnlib/automatalib/api/target/classes:/Users/malte/.m2/repository/net/automatalib/automata-commons-util/0.3.1-ase2013-tutorial/automata-commons-util-0.3.1-ase2013-tutorial.jar:/Users/malte/.m2/repository/com/google/guava/guava/15.0/guava-15.0.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.7'
+-sourcepath
+'/Users/malte/Workspaces/learnlib/automatalib/api/src/main/java'
+-verbose
+-author
+-bottom
+'Copyright &#169; 2015. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/malte/Workspaces/learnlib/automatalib/api/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'AutomataLib :: API 0.3.1-ase2013-tutorial API'
+-link
+'http://docs.oracle.com/javase/7/docs/api'
+-link
+'http://www.brics.dk/automaton/doc'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' '/Users/malte/Workspaces/learnlib/automatalib/api/target/javadoc-bundle-options'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/automata-commons-parent/automata-commons-util/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/commons/util/target/site/apidocs'
+-linksource
+-use
+-version
+-windowtitle
+'AutomataLib :: API 0.3.1-ase2013-tutorial API'

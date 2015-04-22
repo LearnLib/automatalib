@@ -1,0 +1,32 @@
+-classpath
+'/Users/malte/Workspaces/learnlib/automatalib/target/classes:/Users/malte/Workspaces/learnlib/automatalib/commons/target/classes:/Users/malte/Workspaces/learnlib/automatalib/commons/util/target/classes:/Users/malte/Workspaces/learnlib/automatalib/api/target/classes:/Users/malte/Workspaces/learnlib/automatalib/core/target/classes:/Users/malte/Workspaces/learnlib/automatalib/commons/smartcollections/target/classes:/Users/malte/Workspaces/learnlib/automatalib/util/target/classes:/Users/malte/Workspaces/learnlib/automatalib/commons/dotutil/target/classes:/Users/malte/Workspaces/learnlib/automatalib/misc/target/classes:/Users/malte/Workspaces/learnlib/automatalib/misc/incremental/target/classes:/Users/malte/Workspaces/learnlib/automatalib/misc/misc-algorithms/target/classes:/Users/malte/Workspaces/learnlib/automatalib/adapters/target/classes:/Users/malte/Workspaces/learnlib/automatalib/adapters/brics/target/classes:/Users/malte/Workspaces/learnlib/automatalib/examples/target/classes:/Users/malte/Workspaces/learnlib/automatalib/archetypes/target/classes:/Users/malte/Workspaces/learnlib/automatalib/archetypes/core/target/classes:/Users/malte/Workspaces/learnlib/automatalib/archetypes/typical/target/classes:/Users/malte/Workspaces/learnlib/automatalib/archetypes/complete/target/classes:/Users/malte/.m2/repository/net/automatalib/automata-api/0.3.1-ase2013-tutorial/automata-api-0.3.1-ase2013-tutorial.jar:/Users/malte/.m2/repository/net/automatalib/automata-util/0.3.1-ase2013-tutorial/automata-util-0.3.1-ase2013-tutorial.jar:/Users/malte/.m2/repository/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8.jar:/Users/malte/.m2/repository/net/automatalib/automata-core/0.3.1-ase2013-tutorial/automata-core-0.3.1-ase2013-tutorial.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-util/0.3.1-ase2013-tutorial/automata-commons-util-0.3.1-ase2013-tutorial.jar:/Users/malte/.m2/repository/net/automatalib/automata-incremental/0.3.1-ase2013-tutorial/automata-incremental-0.3.1-ase2013-tutorial.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-smartcollections/0.3.1-ase2013-tutorial/automata-commons-smartcollections-0.3.1-ase2013-tutorial.jar:/Users/malte/.m2/repository/net/automatalib/automata-brics/0.3.1-ase2013-tutorial/automata-brics-0.3.1-ase2013-tutorial.jar:/Users/malte/.m2/repository/com/google/guava/guava/15.0/guava-15.0.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-dotutil/0.3.1-ase2013-tutorial/automata-commons-dotutil-0.3.1-ase2013-tutorial.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.7'
+-sourcepath
+'/Users/malte/Workspaces/learnlib/automatalib/commons/util/src/main/java:/Users/malte/Workspaces/learnlib/automatalib/api/src/main/java:/Users/malte/Workspaces/learnlib/automatalib/core/src/main/java:/Users/malte/Workspaces/learnlib/automatalib/commons/smartcollections/src/main/java:/Users/malte/Workspaces/learnlib/automatalib/util/src/main/java:/Users/malte/Workspaces/learnlib/automatalib/commons/dotutil/src/main/java:/Users/malte/Workspaces/learnlib/automatalib/misc/incremental/src/main/java:/Users/malte/Workspaces/learnlib/automatalib/misc/misc-algorithms/src/main/java:/Users/malte/Workspaces/learnlib/automatalib/adapters/brics/src/main/java:/Users/malte/Workspaces/learnlib/automatalib/examples/src/main/java'
+-verbose
+-author
+-bottom
+'Copyright &#169; 2015. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/malte/Workspaces/learnlib/automatalib/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'AutomataLib :: Parent 0.3.1-ase2013-tutorial API'
+-link
+'http://docs.oracle.com/javase/7/docs/api'
+-link
+'http://www.brics.dk/automaton/doc'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' '/Users/malte/Workspaces/learnlib/automatalib/target/javadoc-bundle-options'
+-linksource
+-use
+-version
+-windowtitle
+'AutomataLib :: Parent 0.3.1-ase2013-tutorial API'

@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="de">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/* Copyright (C) 2013 TU Dortmund<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * This file is part of AutomataLib, http://www.automatalib.net/.<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * <a name="line.3"></a>
+<span class="sourceLineNo">004</span> * AutomataLib is free software; you can redistribute it and/or<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * modify it under the terms of the GNU Lesser General Public<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * License version 3.0 as published by the Free Software Foundation.<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * <a name="line.7"></a>
+<span class="sourceLineNo">008</span> * AutomataLib is distributed in the hope that it will be useful,<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * but WITHOUT ANY WARRANTY; without even the implied warranty of<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * Lesser General Public License for more details.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * <a name="line.12"></a>
+<span class="sourceLineNo">013</span> * You should have received a copy of the GNU Lesser General Public<a name="line.13"></a>
+<span class="sourceLineNo">014</span> * License along with AutomataLib; if not, see<a name="line.14"></a>
+<span class="sourceLineNo">015</span> * http://www.gnu.de/documents/lgpl.en.html.<a name="line.15"></a>
+<span class="sourceLineNo">016</span> */<a name="line.16"></a>
+<span class="sourceLineNo">017</span>package net.automatalib.brics;<a name="line.17"></a>
+<span class="sourceLineNo">018</span><a name="line.18"></a>
+<span class="sourceLineNo">019</span>import java.util.Collection;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import java.util.Set;<a name="line.20"></a>
+<span class="sourceLineNo">021</span><a name="line.21"></a>
+<span class="sourceLineNo">022</span>import net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import net.automatalib.automata.fsa.DFA;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import net.automatalib.automata.fsa.abstractimpl.AbstractDFA;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import dk.brics.automaton.Automaton;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import dk.brics.automaton.State;<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>/**<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * Adapter class for wrapping a Brics automaton as a {@link DFA}.<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * &lt;p&gt;<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * This adapter is backed by the Brics automaton, so changes to the {@link Automaton}<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * are reflected. Please note that any changes which result in a loss of determinism<a name="line.32"></a>
+<span class="sourceLineNo">033</span> * will result in incorrect behavior exposed by this class until determinism is restored.<a name="line.33"></a>
+<span class="sourceLineNo">034</span> *  <a name="line.34"></a>
+<span class="sourceLineNo">035</span> * @author Malte Isberner &lt;malte.isberner@gmail.com&gt;<a name="line.35"></a>
+<span class="sourceLineNo">036</span> *<a name="line.36"></a>
+<span class="sourceLineNo">037</span> */<a name="line.37"></a>
+<span class="sourceLineNo">038</span>public class BricsDFA extends AbstractBricsAutomaton implements<a name="line.38"></a>
+<span class="sourceLineNo">039</span>                DFA&lt;State, Character&gt; {<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        <a name="line.40"></a>
+<span class="sourceLineNo">041</span>        private static Automaton requireDeterministic(Automaton aut, boolean mayDeterminize) {<a name="line.41"></a>
+<span class="sourceLineNo">042</span>                if(aut.isDeterministic()) {<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                        if(!mayDeterminize)<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                                throw new IllegalArgumentException("A BricsDFA expects a deterministic automaton");<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                        aut.determinize();<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                }<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                return aut;<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        }<a name="line.48"></a>
+<span class="sourceLineNo">049</span><a name="line.49"></a>
+<span class="sourceLineNo">050</span>        /**<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         * Constructor. If the specified automaton is not deterministic, this will result<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         * in an {@link IllegalArgumentException}.<a name="line.52"></a>
+<span class="sourceLineNo">053</span>         * @param automaton the Brics automaton to wrap.<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         */<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        public BricsDFA(Automaton automaton) {<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                this(automaton, false);<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        }<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        <a name="line.58"></a>
+<span class="sourceLineNo">059</span>        /**<a name="line.59"></a>
+<span class="sourceLineNo">060</span>         * Constructor. If &lt;tt&gt;mayDeterminize&lt;/tt&gt; is false, this constructor behaves as the above<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         * {@link #BricsDFA(Automaton)}. Otherwise, if the specified automaton is not deterministic,<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         * it is determinized beforehand by invoking {@link Automaton#determinize()}.<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         * @param automaton the Brics automaton to wrap.<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         * @param mayDeterminize whether or not a possible nondeterministic automaton may be<a name="line.64"></a>
+<span class="sourceLineNo">065</span>         * determinized.<a name="line.65"></a>
+<span class="sourceLineNo">066</span>         */<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        public BricsDFA(Automaton automaton, boolean mayDeterminize) {<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                super(requireDeterministic(automaton, mayDeterminize));<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        }<a name="line.69"></a>
+<span class="sourceLineNo">070</span><a name="line.70"></a>
+<span class="sourceLineNo">071</span>        /*<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * (non-Javadoc)<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * @see net.automatalib.ts.acceptors.AcceptorTS#accepts(java.lang.Iterable)<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         */<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        @Override<a name="line.75"></a>
+<span class="sourceLineNo">076</span>        public boolean accepts(Iterable&lt;Character&gt; input) {<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                return AbstractDFA.accepts(this, input);<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        }<a name="line.78"></a>
+<span class="sourceLineNo">079</span><a name="line.79"></a>
+<span class="sourceLineNo">080</span>        /*<a name="line.80"></a>
+<span class="sourceLineNo">081</span>         * (non-Javadoc)<a name="line.81"></a>
+<span class="sourceLineNo">082</span>         * @see net.automatalib.ts.simple.SimpleDTS#getInitialState()<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         */<a name="line.83"></a>
+<span class="sourceLineNo">084</span>        @Override<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        public State getInitialState() {<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                return automaton.getInitialState();<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        }<a name="line.87"></a>
+<span class="sourceLineNo">088</span><a name="line.88"></a>
+<span class="sourceLineNo">089</span>        /*<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * (non-Javadoc)<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         * @see net.automatalib.ts.simple.SimpleDTS#getSuccessor(java.lang.Object, java.lang.Object)<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         */<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        @Override<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        public State getSuccessor(State state, Character input) {<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                return state.step(input.charValue());<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        }<a name="line.96"></a>
+<span class="sourceLineNo">097</span><a name="line.97"></a>
+<span class="sourceLineNo">098</span>        /*<a name="line.98"></a>
+<span class="sourceLineNo">099</span>         * (non-Javadoc)<a name="line.99"></a>
+<span class="sourceLineNo">100</span>         * @see net.automatalib.ts.simple.SimpleDTS#getSuccessor(java.lang.Object, java.lang.Iterable)<a name="line.100"></a>
+<span class="sourceLineNo">101</span>         */<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        @Override<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        public State getSuccessor(State state, Iterable&lt;Character&gt; input) {<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                return AbstractDeterministicAutomaton.getSuccessor(this, state, input);<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        }<a name="line.105"></a>
+<span class="sourceLineNo">106</span><a name="line.106"></a>
+<span class="sourceLineNo">107</span>        /*<a name="line.107"></a>
+<span class="sourceLineNo">108</span>         * (non-Javadoc)<a name="line.108"></a>
+<span class="sourceLineNo">109</span>         * @see net.automatalib.ts.simple.SimpleDTS#getState(java.lang.Iterable)<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         */<a name="line.110"></a>
+<span class="sourceLineNo">111</span>        @Override<a name="line.111"></a>
+<span class="sourceLineNo">112</span>        public State getState(Iterable&lt;Character&gt; input) {<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                return AbstractDeterministicAutomaton.getState(this, input);<a name="line.113"></a>
+<span class="sourceLineNo">114</span>        }<a name="line.114"></a>
+<span class="sourceLineNo">115</span><a name="line.115"></a>
+<span class="sourceLineNo">116</span>        /*<a name="line.116"></a>
+<span class="sourceLineNo">117</span>         * (non-Javadoc)<a name="line.117"></a>
+<span class="sourceLineNo">118</span>         * @see net.automatalib.ts.DeterministicTransitionSystem#getTransition(java.lang.Object, java.lang.Object)<a name="line.118"></a>
+<span class="sourceLineNo">119</span>         */<a name="line.119"></a>
+<span class="sourceLineNo">120</span>        @Override<a name="line.120"></a>
+<span class="sourceLineNo">121</span>        public State getTransition(State state, Character input) {<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                return state.step(input.charValue());<a name="line.122"></a>
+<span class="sourceLineNo">123</span>        }<a name="line.123"></a>
+<span class="sourceLineNo">124</span><a name="line.124"></a>
+<span class="sourceLineNo">125</span>        /*<a name="line.125"></a>
+<span class="sourceLineNo">126</span>         * (non-Javadoc)<a name="line.126"></a>
+<span class="sourceLineNo">127</span>         * @see net.automatalib.brics.AbstractBricsAutomaton#getTransitions(dk.brics.automaton.State, java.lang.Character)<a name="line.127"></a>
+<span class="sourceLineNo">128</span>         */<a name="line.128"></a>
+<span class="sourceLineNo">129</span>        @Override<a name="line.129"></a>
+<span class="sourceLineNo">130</span>        public Collection&lt;State&gt; getTransitions(State state, Character input) {<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                return AbstractDeterministicAutomaton.getTransitions(this, state, input);<a name="line.131"></a>
+<span class="sourceLineNo">132</span>        }<a name="line.132"></a>
+<span class="sourceLineNo">133</span><a name="line.133"></a>
+<span class="sourceLineNo">134</span>        /*<a name="line.134"></a>
+<span class="sourceLineNo">135</span>         * (non-Javadoc)<a name="line.135"></a>
+<span class="sourceLineNo">136</span>         * @see net.automatalib.ts.abstractimpl.AbstractTS#getSuccessors(java.lang.Object, java.lang.Object)<a name="line.136"></a>
+<span class="sourceLineNo">137</span>         */<a name="line.137"></a>
+<span class="sourceLineNo">138</span>        @Override<a name="line.138"></a>
+<span class="sourceLineNo">139</span>        public Set&lt;State&gt; getSuccessors(State state, Character input) {<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                return AbstractDeterministicAutomaton.getSuccessors(this, state, input);<a name="line.140"></a>
+<span class="sourceLineNo">141</span>        }<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        <a name="line.142"></a>
+<span class="sourceLineNo">143</span>        <a name="line.143"></a>
+<span class="sourceLineNo">144</span>}<a name="line.144"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
