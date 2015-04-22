@@ -1,0 +1,45 @@
+-classpath
+'/Users/malte/Workspaces/learnlib/automatalib/util/target/classes:/Users/malte/.m2/repository/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8.jar:/Users/malte/.m2/repository/com/github/misberner/duzzt/duzzt-annotations/0.0.2/duzzt-annotations-0.0.2.jar:/Users/malte/.m2/repository/net/automatalib/automata-core/0.5.0/automata-core-0.5.0.jar:/Users/malte/.m2/repository/net/sf/trove4j/trove4j/3.0.3/trove4j-3.0.3.jar:/Users/malte/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/Users/malte/.m2/repository/org/antlr/stringtemplate/3.2.1/stringtemplate-3.2.1.jar:/Users/malte/.m2/repository/net/automatalib/automata-api/0.5.0/automata-api-0.5.0.jar:/Users/malte/.m2/repository/com/github/misberner/ap-commons/ap-commons/0.0.2/ap-commons-0.0.2.jar:/Users/malte/.m2/repository/com/github/misberner/duzzt/duzzt-processor/0.0.2/duzzt-processor-0.0.2.jar:/Users/malte/.m2/repository/org/antlr/antlr-runtime/3.5/antlr-runtime-3.5.jar:/Users/malte/.m2/repository/org/antlr/ST4/4.0.7/ST4-4.0.7.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-util/0.5.0/automata-commons-util-0.5.0.jar:/Users/malte/.m2/repository/com/google/code/findbugs/jsr305/2.0.3/jsr305-2.0.3.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-smartcollections/0.5.0/automata-commons-smartcollections-0.5.0.jar:/Users/malte/.m2/repository/com/google/guava/guava/18.0/guava-18.0.jar:/Users/malte/.m2/repository/net/automatalib/automata-commons-dotutil/0.5.0/automata-commons-dotutil-0.5.0.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'1.8'
+-sourcepath
+'/Users/malte/Workspaces/learnlib/automatalib/util/src/main/java'
+-verbose
+-author
+-bottom
+'Copyright &#169; 2015. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/malte/Workspaces/learnlib/automatalib/util/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'AutomataLib :: Utilities 0.5.0 API'
+-link
+'http://docs.oracle.com/javase/7/docs/api'
+-link
+'http://trove4j.sourceforge.net/javadocs'
+-link
+'http://docs.guava-libraries.googlecode.com/git-history/v18.0/javadoc'
+-link
+'http://www.brics.dk/automaton/doc'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' '/Users/malte/Workspaces/learnlib/automatalib/util/target/javadoc-bundle-options'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/0.5.0/automata-commons-parent/automata-commons-util/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/commons/util/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/0.5.0/automata-api/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/api/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/0.5.0/automata-core/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/core/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/0.5.0/automata-commons-parent/automata-commons-smartcollections/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/commons/smartcollections/target/site/apidocs'
+-linkoffline
+'http://misberner.github.io/automatalib/maven-site/0.5.0/automata-commons-parent/automata-commons-dotutil/apidocs' '/Users/malte/Workspaces/learnlib/automatalib/commons/dotutil/target/site/apidocs'
+-use
+-version
+-windowtitle
+'AutomataLib :: Utilities 0.5.0 API'
