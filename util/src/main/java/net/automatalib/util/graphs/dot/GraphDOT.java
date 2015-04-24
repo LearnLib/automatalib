@@ -19,6 +19,7 @@ package net.automatalib.util.graphs.dot;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.Flushable;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -238,6 +239,9 @@ public abstract class GraphDOT {
 		a.append('\n');
 		dotHelper.writePostamble(nodeNames, a);
 		a.append("}\n");
+		if (a instanceof Flushable) {
+			((Flushable) a).flush();
+		}
 	}
 	
 	public static <N,E> void writeToFileRaw(Graph<N,E> graph,

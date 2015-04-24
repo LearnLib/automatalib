@@ -35,7 +35,7 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
  * 
  * @author Malte Isberner 
  *
- * @param <I> input symbol class.
+ * @param <I> input symbol type
  */
 public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlphabet<I> {
 	
@@ -125,6 +125,11 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
 	@Override
 	public int compare(I o1, I o2) {
 		return indexMap.get(o1) - indexMap.get(o2);
+	}
+	
+	@Override
+	public boolean containsSymbol(I symbol) {
+		return indexMap.containsKey(symbol);
 	}
 
 }

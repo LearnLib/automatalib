@@ -16,6 +16,7 @@
  */
 package net.automatalib.words.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.commons.util.collections.CollectionsUtil;
@@ -50,6 +51,14 @@ public abstract class Alphabets {
 		return fromList(lst);
 	}
 	
+	public static Alphabet<String> closedCharStringRange(char startInclusive, char endInclusive) {
+		List<String> lst = CollectionsUtil.charStringRange(startInclusive, (char)(endInclusive + 1));
+		return fromList(lst);
+	}
+	
+	public static <T> Alphabet<T> singleton(T symbol) {
+		return fromList(Collections.singletonList(symbol));
+	}
 	
 	
 	private Alphabets() {

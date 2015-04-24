@@ -23,21 +23,21 @@ import net.automatalib.commons.util.array.ResizingObjectArray;
 
 /**
  * A class for dynamically building {@link Word}s.
- * 
+ * <p>
  * As {@link Word}s are - like strings - immutable objects, constructing them by subsequent
  * invocations of {@link Word#concat(Word...)} etc. is highly inefficient. This class provides an
  * efficient means of construction by operating on an internal storage during construction,
  * only creating a {@link Word} (and thus requiring to ensure immutability) when the method {@link #toWord()}
- * (or {@link #toWord(int, int)} is invoked.
- * 
+ * (or {@link #toWord(int, int)}) is invoked.
+ * <p>
  * Note that due to the specifics of the underlying word implementation, even after an invocation
  * of {@link #toWord()} the storage does not have to be duplicated unless it either is required
  * due to capacity adjustment <i>or</i> a non-appending change (such as {@link #setSymbol(int, Object)}
  * or {@link #truncate(int)}) is made.
- * 
+ * <p>
  * Nearly all modification methods of this class return a <tt>this</tt>-reference, allowing constructs
  * such as
- * <pre>builder.append(foo).append(bar).append(baz);</pre>
+ * {@code builder.append(foo).append(bar).append(baz)}.
  * 
  * @author Malte Isberner 
  *
@@ -403,6 +403,11 @@ public final class WordBuilder<I> extends AbstractList<I> {
 		return length;
 	}
 	
+	/**
+	 * Reverses the contents of the internal buffer.
+	 * 
+	 * @return {@code this}
+	 */
 	public WordBuilder<I> reverse() {
 		ensureUnlocked();
 		int lowIdx = 0, highIdx = length - 1;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2015 TU Dortmund
+/* Copyright (C) 2015 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -14,22 +14,19 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.automata;
+package net.automatalib.serialization.taf.parser;
 
-import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
-import net.automatalib.ts.DeterministicTransitionSystem;
+import java.util.Collection;
 
+import net.automatalib.automata.fsa.DFA;
 
 /**
- * Basic interface for a deterministic automaton. A deterministic automaton is a
- * {@link DeterministicTransitionSystem} with a finite number of states.
+ * Interface for a {@link TAFBuilder} that builds DFAs.
  * 
- * @author Malte Isberner 
- *
- * @param <S> state type
- * @param <I> input symbol type
- * @param <T> transition type
+ * @author Malte Isberner
  */
-public interface DeterministicAutomaton<S,I,T> extends Automaton<S,I,T>,
-		SimpleDeterministicAutomaton<S,I>, DeterministicTransitionSystem<S, I, T> {
+interface TAFBuilderDFA extends TAFBuilder {
+	public void addTransitions(String source, Collection<String> symbols, String targetId);
+	@Override
+	public DFA<?,?> finish();
 }

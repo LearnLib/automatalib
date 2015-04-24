@@ -88,5 +88,10 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I>
 		return o1.getId() - o2.getId();
 	}
 
+	@Override
+	public boolean containsSymbol(I symbol) {
+		int index = symbol.getId();
+		return index >= 0 && index < size() && get(index) == symbol;
+	}
 
 }

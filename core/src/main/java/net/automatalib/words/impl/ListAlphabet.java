@@ -56,4 +56,8 @@ public class ListAlphabet<I> extends AbstractAlphabet<I> {
 		return list.size();
 	}
 
+	@Override
+	public boolean containsSymbol(I symbol) {
+		return list.indexOf(symbol) != -1;
+	}
 }

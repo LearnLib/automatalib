@@ -64,7 +64,7 @@ import com.google.common.base.Function;
  * However, for the sake of efficiency it is highly encouraged to overwrite the other methods
  * as well, providing specialized realizations.
  *
- * @param <I> symbol class
+ * @param <I> symbol type
  * 
  * @author Malte Isberner
  */
@@ -767,6 +767,14 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 		return (length() == 0);
 	}
 	
+	/**
+	 * Transforms this word into an array of integers, using the specified function
+	 * for translating an individual symbol to an integer.
+	 * 
+	 * @param toInt the function for translating symbols to integers
+	 * @return an integer-array representation of the word, according to the specified
+	 * translation function
+	 */
 	public int[] toIntArray(ToIntFunction<? super I> toInt) {
 		int len = length();
 		int[] result = new int[len];
@@ -779,11 +787,13 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 		}
 		return result;
 	}
-	
-	public int[] toIntArray(Alphabet<I> alphabet) {
-		return toIntArray(i -> alphabet.getSymbolIndex(i));
-	}
 
+	/**
+	 * Transforms a word symbol-by-symbol, using the specified transformation
+	 * function.
+	 * @param transformer the transformation function
+	 * @return the transformed word
+	 */
 	@Nonnull
 	public <T>
 	Word<T> transform(Function<? super I,? extends T> transformer) {
@@ -796,6 +806,14 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 		return new SharedWord<>(array);
 	}
 	
+	/**
+	 * Performs an upcast of the generic type parameter of the word. Since words
+	 * are immutable, the type parameter {@code <I>} is covariant (even though
+	 * it is not possible to express this in Java), making this a safe operation.
+	 * 
+	 * @param word the word to upcast
+	 * @return the upcasted word (reference identical to {@code word})
+	 */
 	@SuppressWarnings("unchecked")
 	public static <I> Word<I> upcast(Word<? extends I> word) {
 		return (Word<I>)word;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2014 TU Dortmund
+/* Copyright (C) 2013-2015 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@ package net.automatalib.words;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.function.IntFunction;
+import java.util.function.ToIntFunction;
 
 import javax.annotation.Nullable;
 
@@ -29,11 +32,11 @@ import net.automatalib.commons.util.mappings.Mapping;
  * each symbol has a (unique) index. Apart from serving as a collection, this class also provides
  * a one-to-one mapping between symbols and indices.
  * 
- * @param <I> symbol class.
+ * @param <I> symbol type
  * 
  * @author Malte Isberner
  */
-public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator<I> {
+public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator<I>, IntFunction<I>, ToIntFunction<I> {
 
     /**
      * Returns the symbol with the given index in this alphabet.
@@ -52,6 +55,15 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
      */
     public abstract int getSymbolIndex(@Nullable I symbol) throws IllegalArgumentException;
     
+    @Override
+    default public I apply(int index) {
+    	return getSymbol(index);
+    }
+    
+    @Override
+    default public int applyAsInt(I symbol) {
+    	return getSymbolIndex(symbol);
+    }
     
     @Override
 	default public int compare(I o1, I o2) {
@@ -72,5 +84,27 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
 					" elements into an alphabet with only " + size() + " elements");
 		}
 		return i -> getSymbol(other.getSymbolIndex(i));
+	}
+	
+	/**
+	 * Checks whether the given symbol is part of the alphabet.
+	 * <p>
+	 * <b>Caution:</b> the default implementation is rather inefficient and should
+	 * be overridden, if possible.
+	 * 
+	 * @param symbol the symbol to check 
+	 * @return {@code true} iff the symbol is part of the alphabet
+	 */
+	default public boolean containsSymbol(I symbol) {
+		try {
+			int index = getSymbolIndex(symbol);
+			if (index < 0 || index >= size()) {
+				return false;
+			}
+			return Objects.equals(symbol, getSymbol(index));
+		}
+		catch (IllegalArgumentException ex) {
+			return false;
+		}
 	}
 }

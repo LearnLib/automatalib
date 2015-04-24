@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2015 TU Dortmund
+/* Copyright (C) 2015 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -14,22 +14,23 @@
  * License along with AutomataLib; if not, see
  * http://www.gnu.de/documents/lgpl.en.html.
  */
-package net.automatalib.automata;
-
-import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
-import net.automatalib.ts.DeterministicTransitionSystem;
-
+package net.automatalib.serialization.taf.parser;
 
 /**
- * Basic interface for a deterministic automaton. A deterministic automaton is a
- * {@link DeterministicTransitionSystem} with a finite number of states.
+ * Exception to signal fatal errors during parsing TAF inputs.
  * 
- * @author Malte Isberner 
- *
- * @param <S> state type
- * @param <I> input symbol type
- * @param <T> transition type
+ * @author Malte Isberner
  */
-public interface DeterministicAutomaton<S,I,T> extends Automaton<S,I,T>,
-		SimpleDeterministicAutomaton<S,I>, DeterministicTransitionSystem<S, I, T> {
+public class TAFParseException extends RuntimeException {
+	private static final long serialVersionUID = 1L;
+
+	public TAFParseException(String message) {
+		super(message);
+	}
+	public TAFParseException(String message, Throwable cause) {
+		super(message, cause);
+	}
+	public TAFParseException(Throwable cause) {
+		super(cause);
+	}
 }

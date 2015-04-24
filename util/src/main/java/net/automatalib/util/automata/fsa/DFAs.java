@@ -30,9 +30,6 @@ import net.automatalib.util.ts.copy.TSCopy;
 import net.automatalib.util.ts.traversal.TSTraversalMethod;
 import net.automatalib.words.Alphabet;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-
 
 
 /**
@@ -45,20 +42,6 @@ import com.google.common.base.Functions;
  *
  */
 public abstract class DFAs {
-	
-	/*
-	 * Function for negating a Boolean value.
-	 */
-	private static final Function<Boolean,Boolean> NEGATE
-		= new Function<Boolean,Boolean>() {
-			@Override
-			public Boolean apply(Boolean elem) {
-				if(elem == null) { // treat null as false
-					return Boolean.TRUE;
-				}
-				return !elem;
-			}
-	};
 	
 	
 	/**
@@ -260,7 +243,8 @@ public abstract class DFAs {
 	public static <I,S,A extends MutableDFA<S,I>>
 	A complement(DFA<?,I> dfa,
 			Collection<? extends I> inputs, A out) {
-		AutomatonLowLevelCopy.copy(AutomatonCopyMethod.DFS, dfa, inputs, out, NEGATE, Functions.constant((Void)null));
+		AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, dfa, inputs, out,
+				b -> (b == null) ? true : !b, t -> null);
 		MutableDFAs.complete(out, inputs, false, true);
 		return out;
 	}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Copyright (C) 2015 TU Dortmund
+Copyright (C) 2013 TU Dortmund
 This file is part of AutomataLib, http://www.automatalib.net/.
 
 AutomataLib is free software; you can redistribute it and/or
@@ -20,24 +20,32 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>net.automatalib</groupId>
-	<artifactId>automata-serialization-parent</artifactId>
-	<packaging>pom</packaging>
+	<artifactId>automata-serialization-taf</artifactId>
+	<packaging>jar</packaging>
 
-	<name>AutomataLib :: Serialization</name>
-	<description>Serialization parent metaproject for various (de-)serialization methods.</description>
+	<name>AutomataLib :: Serialization :: TAF</name>
+	<description>(De-)Serializers for the Textual Automaton Format</description>
 
 	<parent>
 		<groupId>net.automatalib</groupId>
-		<artifactId>automata-parent</artifactId>
+		<artifactId>automata-serialization-parent</artifactId>
 		<version>0.5.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javacc-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 
-	<modules>
-		<module>core</module>
-		<module>saf</module>
-		<module>taf</module>
-		<module>learnlibv2</module>
-	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>net.automatalib</groupId>
+			<artifactId>automata-serialization-core</artifactId>
+		</dependency>
+	</dependencies>
 </project>
-

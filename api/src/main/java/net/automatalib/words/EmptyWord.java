@@ -27,7 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * The empty word.
- * 
+ * <p>
  * This class has no type parameter, as there are no non-<tt>null</tt> instances
  * of the symbol class involved. Hence, Java's generic mechanism allows to maintain
  * only a single instance of this class. 

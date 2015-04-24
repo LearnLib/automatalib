@@ -86,6 +86,10 @@ public abstract class CollectionsUtil {
 		return new CharRange(start, end);
 	}
 	
+	public static List<String> charStringRange(char start, char end) {
+		return new CharStringRange(start, end);
+	}
+	
 	public static <T> List<? extends T> randomAccessList(Collection<? extends T> coll) {
 		if(coll instanceof List && coll instanceof RandomAccess)
 			return (List<? extends T>)coll;

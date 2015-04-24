@@ -56,6 +56,10 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
 		System.arraycopy(symbols, offset, array, tgtOfs, num);
 	}
 	
+	@Override
+	public boolean containsSymbol(I symbol) {
+		return getSymbolIndex(symbol) != -1;
+	}
 	
 
 }

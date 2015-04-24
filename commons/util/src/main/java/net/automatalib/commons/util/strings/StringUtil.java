@@ -54,6 +54,28 @@ public abstract class StringUtil {
 		a.append('"');
 	}
 	
+	public static String enquoteIfNecessary(String s) {
+		StringBuilder sb = new StringBuilder();
+		try {
+			enquoteIfNecessary(s, sb);
+			return sb.toString();
+		}
+		catch (IOException ex) {
+			throw new AssertionError();
+		}
+	}
+	
+	public static String enquoteIfNecessary(String s, Pattern p) {
+		StringBuilder sb = new StringBuilder();
+		try {
+			enquoteIfNecessary(s, sb, p);
+			return sb.toString();
+		}
+		catch (IOException ex) {
+			throw new AssertionError();
+		}
+	}
+	
 	public static void enquoteIfNecessary(String s, Appendable a) throws IOException {
 		if(!getIdentifierPattern().matcher(s).matches())
 			enquote(s, a);

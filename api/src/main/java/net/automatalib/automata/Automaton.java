@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2015 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -31,13 +31,21 @@ import net.automatalib.ts.TransitionSystem;
  * 
  * @author Malte Isberner 
  *
- * @param <S> state class.
- * @param <I> input symbol class.
- * @param <T> transition class.
+ * @param <S> state type
+ * @param <I> input symbol type
+ * @param <T> transition type
  */
 public interface Automaton<S,I,T> 
         extends TransitionSystem<S,I,T>, SimpleAutomaton<S,I> {
 	
+	/**
+	 * Obtains a {@link Graph graph} view of the transition graph of this automaton, taking into
+	 * account the specified input symbols. The transitions are represented as {@link TransitionEdge}s
+	 * in the grpah.
+	 * 
+	 * @param inputs the input symbols to consider
+	 * @return a graph view of the transition graph of this automaton for the given input symbols
+	 */
 	default public Graph<S,TransitionEdge<I,T>> transitionGraphView(Collection<? extends I> inputs) {
 		return AutomatonGraphView.create(this, inputs);
 	}

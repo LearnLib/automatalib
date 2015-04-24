@@ -58,5 +58,14 @@ public class EnumAlphabet<E extends Enum<E>> extends ArrayAlphabet<E> {
 			return -1;
 		return o1.compareTo(o2);
 	}
+	
+	@Override
+	public boolean containsSymbol(E symbol) {
+		if (symbol == null && symbols[symbols.length-1] == null) {
+			return true;
+		}
+		int index = symbol.ordinal();
+		return index >= 0 && index < symbols.length && symbols[index] == symbol;
+	}
 
 }
