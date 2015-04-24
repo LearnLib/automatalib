@@ -99,6 +99,7 @@ TOKEN:
 |	< RBRACE: "}" >
 |	< COMMA: "," >
 |	< SLASH: "/" >
+|	< ASTERISK: "*" >
 |	< ARROW: "->" >
 |	< LC_ALPHA: ["a"-"z"] >
 |	< ID: ["a"-"z","A"-"Z","_"](["a"-"z","A"-"Z","0"-"9","_"])* >
@@ -285,6 +286,15 @@ void transDeclDfa(TAFBuilderDFA builder, String source):
 	{ if (symbols != null) { builder.addTransitions(source, symbols, tgt); } }
 }
 
+void wildcardTransDeclDfa(TAFBuilderDFA builder, String source):
+{
+	String tgt;
+}
+{
+	<ASTERISK> <ARROW> tgt=identifier()
+	{ builder.addWildcardTransitions(source, tgt); }
+}
+
 void mealy(TAFBuilderMealy builder):
 {}
 {
@@ -324,6 +334,7 @@ void transBlockMealy(TAFBuilderMealy builder, String source):
 {
 	<LBRACE>
 	( transDeclMealy(builder, source) )*
+	[ wildcardTransDeclMealy(builder, source) ]
 	<RBRACE>
 }
 
@@ -337,4 +348,15 @@ void transDeclMealy(TAFBuilderMealy builder, String source):
 	symbols=stringCollection() [<SLASH> output=string()] <ARROW> tgt=identifier()
 	{ if (symbols != null) { builder.addTransitions(source, symbols, output, tgt); } }
 }
+
+void wildcardTransDeclMealy(TAFBuilderMealy builder, String source):
+{
+	String output = null;
+	String tgt;
+}
+{
+	<ASTERISK> [<SLASH> output=string()] <ARROW> tgt=identifier()
+	{ builder.addWildcardTransitions(source, output, tgt); }
+}
+
 

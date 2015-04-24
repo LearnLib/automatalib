@@ -34,6 +34,11 @@ final class DefaultTAFBuilderMealy extends AbstractTAFBuilder<Integer,String,Com
 	public void addTransitions(String source, Collection<String> symbols, String output, String targetId) {
 		doAddTransitions(source, symbols, targetId, output);
 	}
+	
+	@Override
+	public void addWildcardTransitions(String source, String output, String targetId) {
+		doAddWildcardTransitions(source, targetId, output);
+	}
 
 	@Override
 	protected CompactMealy<String,String> createAutomaton(

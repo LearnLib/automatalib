@@ -134,6 +134,18 @@ abstract class AbstractTAFBuilder<S,I,T,SP,TP,M extends MutableDeterministic<S, 
 		}
 	}
 	
+	protected void doAddWildcardTransitions(String source, String target, TP transProperty) {
+		S src = lookupState(source);
+		S tgt = lookupState(target);
+		for (String s : alphabet) {
+			I input = translateInput(s);
+			T exTrans = automaton.getTransition(src, input);
+			if (exTrans == null) {
+				automaton.addTransition(src, input, tgt, transProperty);
+			}
+		}
+	}
+	
 	protected S lookupState(String identifier) {
 		S state = stateMap.get(identifier);
 		if (state == null) {

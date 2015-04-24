@@ -27,6 +27,7 @@ import net.automatalib.automata.fsa.DFA;
  */
 interface TAFBuilderDFA extends TAFBuilder {
 	public void addTransitions(String source, Collection<String> symbols, String targetId);
+	public void addWildcardTransitions(String source, String targetId);
 	@Override
 	public DFA<?,?> finish();
 }

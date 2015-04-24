@@ -27,6 +27,7 @@ import net.automatalib.automata.transout.MealyMachine;
  */
 interface TAFBuilderMealy extends TAFBuilder {
 	public void addTransitions(String source, Collection<String> symbols, String output, String targetId);
+	public void addWildcardTransitions(String source, String output, String targetId);
 	@Override
 	public MealyMachine<?,?,?,?> finish();
 }

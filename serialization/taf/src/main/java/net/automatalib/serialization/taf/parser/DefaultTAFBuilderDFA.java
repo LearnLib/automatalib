@@ -35,6 +35,11 @@ final class DefaultTAFBuilderDFA extends AbstractTAFBuilder<Integer,String,Integ
 	}
 
 	@Override
+	public void addWildcardTransitions(String source, String targetId) {
+		doAddWildcardTransitions(source, targetId, null);
+	}
+	
+	@Override
 	protected CompactDFA<String> createAutomaton(
 			Alphabet<String> stringAlphabet) {
 		return new CompactDFA<>(stringAlphabet);
