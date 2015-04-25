@@ -24,8 +24,10 @@ import java.util.Map;
 
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.automata.Automaton;
+import net.automatalib.automata.FiniteAlphabetAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.graphs.dot.AggregateDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 
@@ -33,6 +35,10 @@ public class Visualization {
 	
 	private static final Visualization INSTANCE = new Visualization();
 	
+	
+	public static void visualize(GraphViewable gv, boolean modal) {
+		visualizeGraph(gv.graphView(), modal);
+	}
 	
 	@SafeVarargs
 	public static <N,E> void visualizeGraph(Graph<N,E> graph, boolean modal, GraphDOTHelper<N,? super E>... addlHelpers) {
