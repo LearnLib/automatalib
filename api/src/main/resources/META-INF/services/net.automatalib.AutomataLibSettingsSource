@@ -1,2 +1,3 @@
 net.automatalib.settingssources.AutomataLibPropertiesSource
 net.automatalib.settingssources.AutomataLibSystemPropertiesSource
+net.automatalib.settingssources.AutomataLibLocalPropertiesSource

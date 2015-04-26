@@ -103,6 +103,7 @@ TOKEN:
 |	< ARROW: "->" >
 |	< LC_ALPHA: ["a"-"z"] >
 |	< ID: ["a"-"z","A"-"Z","_"](["a"-"z","A"-"Z","0"-"9","_"])* >
+|	< NUMBER: ["0"-"9"](["0"-"9"])* >
 }
 
 SKIP:
@@ -199,6 +200,7 @@ String identifier():
 |	t=<LC_ALPHA> { return t.toString(); }
 }
 
+
 String string():
 {
 	String s;
@@ -208,6 +210,7 @@ String string():
 	(
 	s=identifier()
 |	t=<QID> { s = StringUtil.unescapeQuotes(t.toString()); }
+|	t=<NUMBER> { s = t.toString(); }
 	)
 	{ return s; }
 }
