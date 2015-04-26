@@ -27,6 +27,7 @@ net.automatalib.commons.util.array
 net.automatalib.commons.util.collections
 net.automatalib.commons.util.combinatorics
 net.automatalib.commons.util.comparison
+net.automatalib.commons.util.lib
 net.automatalib.commons.util.mappings
 net.automatalib.commons.util.nid
 net.automatalib.commons.util.random
@@ -48,7 +49,14 @@ net.automatalib.incremental.dfa.tree
 net.automatalib.incremental.mealy
 net.automatalib.incremental.mealy.dag
 net.automatalib.incremental.mealy.tree
+net.automatalib.serialization
+net.automatalib.serialization.learnlibv2
+net.automatalib.serialization.saf
+net.automatalib.serialization.taf
+net.automatalib.serialization.taf.parser
+net.automatalib.serialization.taf.writer
 net.automatalib.settingssources
+net.automatalib.tools.taf
 net.automatalib.ts
 net.automatalib.ts.acceptors
 net.automatalib.ts.comp
