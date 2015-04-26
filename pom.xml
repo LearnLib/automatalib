@@ -238,7 +238,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<artifactId>maven-release-plugin</artifactId>
 					<version>${release-plugin.version}</version>
 					<configuration>
-						<arguments>-Psonatype-oss-release -Dautomatalib.release=true</arguments>
+						<arguments>-Psonatype-oss-release -Dautomatalib.release=true -Dmaven.javadoc.failOnError=false</arguments>
 						<!-- False to allow adjustment to branching model -->
 						<pushChanges>false</pushChanges>
 						<!-- Automatically use the parent version for all submodules, do not prompt for each one -->
