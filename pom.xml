@@ -22,7 +22,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 	<!-- ================================= PROJECT INFO ============================== -->
 	<groupId>net.automatalib</groupId>
 	<artifactId>automata-parent</artifactId>
-	<version>0.5.2-SNAPSHOT</version>
+	<version>0.5.2</version>
 	<packaging>pom</packaging>
 
 	<name>AutomataLib</name>
@@ -91,7 +91,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<connection>scm:git:git@github.com:misberner/automatalib.git</connection>
 		<developerConnection>scm:git:git@github.com:misberner/automatalib.git</developerConnection>
 		<url>https://github.com/misberner/automatalib/tree/develop</url>
-	  <tag>HEAD</tag>
+	  <tag>automatalib-0.5.2</tag>
   </scm>
 
 	<!--
