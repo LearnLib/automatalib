@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2015 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -16,7 +16,17 @@
  */
 package net.automatalib.automata.concepts;
 
-public interface SODetOutputAutomaton<S, I, T, D>
+public interface DetSuffixOutputAutomaton<S, I, T, D>
 		extends DetOutputAutomaton<S,I,T,D>, SuffixOutput<I,D> {
-    
+	public D computeStateOutput(S state, Iterable<? extends I> input);
+	
+	@Override
+	default public D computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
+		return computeStateOutput(getState(prefix), suffix);
+	}
+	
+	@Override
+	default public D computeOutput(Iterable<? extends I> input) {
+		return computeStateOutput(getInitialState(), input);
+	}
 }

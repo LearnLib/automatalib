@@ -19,12 +19,16 @@ package net.automatalib.automata.fsa;
 import java.util.Collection;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
 import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 
 /**
  * Deterministic finite state acceptor
  */
-public interface DFA<S,I> extends UniversalDeterministicAutomaton<S,I,S,Boolean,Void>, DeterministicAcceptorTS<S, I>,
+public interface DFA<S,I> extends
+		UniversalDeterministicAutomaton<S,I,S,Boolean,Void>,
+		DeterministicAcceptorTS<S, I>,
+		DetSuffixOutputAutomaton<S, I, S, Boolean>,
         NFA<S,I> {
 	
 	@Override
@@ -39,4 +43,22 @@ public interface DFA<S,I> extends UniversalDeterministicAutomaton<S,I,S,Boolean,
 		return DeterministicAcceptorTS.super.isAccepting(states);
 	}
 	
+	@Override
+	default public Boolean computeStateOutput(S state, Iterable<? extends I> input) {
+		S tgt = getSuccessor(state, input);
+		if (tgt == null) {
+			return false;
+		}
+		return isAccepting(tgt);
+	}
+	
+	@Override
+	default public Boolean computeOutput(Iterable<? extends I> input) {
+		return accepts(input);
+	}
+	
+	@Override
+	default public Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
+		return DetSuffixOutputAutomaton.super.computeSuffixOutput(prefix, suffix);
+	}
 }

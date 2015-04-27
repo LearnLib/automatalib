@@ -18,35 +18,24 @@ package net.automatalib.automata.transout;
 
 import java.util.Collection;
 
-import net.automatalib.automata.concepts.SODetOutputAutomaton;
+import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
 import net.automatalib.ts.transout.DeterministicTransitionOutputTS;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 
 public interface TransitionOutputAutomaton<S, I, T, O>
-		extends SODetOutputAutomaton<S, I, T, Word<O>>, DeterministicTransitionOutputTS<S,I,T,O> {
-	
+		extends DetSuffixOutputAutomaton<S, I, T, Word<O>>, DeterministicTransitionOutputTS<S,I,T,O> {
 	@Override
-	default public Word<O> computeOutput(Iterable<? extends I> input) {
+	default public Word<O> computeStateOutput(S state, Iterable<? extends I> input) {
 		WordBuilder<O> result;
-		if(input instanceof Collection)
-			result = new WordBuilder<O>(((Collection<? extends I>)input).size());
-		else
+		if (input instanceof Collection) {
+			result = new WordBuilder<>(((Collection<?>) input).size());
+		}
+		else {
 			result = new WordBuilder<>();
-		trace(input, result);
-		return result.toWord();
-	}
-	
-	@Override
-	default public Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-		WordBuilder<O> result;
-		if(suffix instanceof Collection)
-			result = new WordBuilder<O>(((Collection<? extends I>)suffix).size());
-		else
-			result = new WordBuilder<>();
-		S state = getState(prefix);
-		trace(state, suffix, result);
+		}
+		trace(state, input, result);
 		return result.toWord();
 	}
 }
