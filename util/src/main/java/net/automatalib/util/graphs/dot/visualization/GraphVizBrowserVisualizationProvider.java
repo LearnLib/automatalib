@@ -25,12 +25,15 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import org.kohsuke.MetaInfServices;
+
 import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.visualization.VisualizationProvider;
 
+@MetaInfServices(VisualizationProvider.class)
 public class GraphVizBrowserVisualizationProvider implements VisualizationProvider {
 
 	@Override

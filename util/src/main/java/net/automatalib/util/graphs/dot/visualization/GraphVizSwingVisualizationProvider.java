@@ -28,6 +28,9 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.visualization.VisualizationProvider;
 
+import org.kohsuke.MetaInfServices;
+
+@MetaInfServices(VisualizationProvider.class)
 public class GraphVizSwingVisualizationProvider implements VisualizationProvider {
 
 	@Override

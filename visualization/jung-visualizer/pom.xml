@@ -68,6 +68,11 @@ http://www.gnu.de/documents/lgpl.en.html.
             <artifactId>jung-visualization</artifactId>
        	</dependency>
        	
+       	<dependency>
+       		<groupId>org.kohsuke.metainf-services</groupId>
+       		<artifactId>metainf-services</artifactId>
+       	</dependency>
+       	
 		<dependency>
             <groupId>com.github.misberner.graphviz-awt-shapes</groupId>
             <artifactId>graphviz-awt-shapes</artifactId>

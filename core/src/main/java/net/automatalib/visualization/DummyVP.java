@@ -20,9 +20,12 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import org.kohsuke.MetaInfServices;
+
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 
+@MetaInfServices(VisualizationProvider.class)
 public class DummyVP implements VisualizationProvider {
 
 	@Override

@@ -16,9 +16,12 @@
  */
 package net.automatalib.settingssources;
 
+import org.kohsuke.MetaInfServices;
+
 import net.automatalib.AutomataLibSettingsSource;
 import net.automatalib.commons.util.settings.LocalFileSource;
 
+@MetaInfServices(AutomataLibSettingsSource.class)
 public class AutomataLibLocalPropertiesSource extends LocalFileSource implements AutomataLibSettingsSource {
 	public AutomataLibLocalPropertiesSource() {
 		super("automatalib.properties");

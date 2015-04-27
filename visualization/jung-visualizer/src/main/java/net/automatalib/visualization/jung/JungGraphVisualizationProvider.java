@@ -40,6 +40,7 @@ import net.automatalib.graphs.dot.GraphDOTHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationProvider;
 
 import org.apache.commons.collections15.Transformer;
+import org.kohsuke.MetaInfServices;
 
 import com.github.misberner.graphvizawtshapes.ShapeLibrary;
 
@@ -56,6 +57,7 @@ import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
 
 
+@MetaInfServices(VisualizationProvider.class)
 public class JungGraphVisualizationProvider implements VisualizationProvider {
 	
 	public static final class NodeVisualization {

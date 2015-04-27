@@ -151,6 +151,7 @@ http://www.gnu.de/documents/lgpl.en.html.
 		<jung.version>2.0.1</jung.version>
 
 		<duzzt.version>0.0.2</duzzt.version>
+		<metainf-services.version>1.5</metainf-services.version>
 
 		<!-- Javadoc links -->
 		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
@@ -586,6 +587,13 @@ http://www.gnu.de/documents/lgpl.en.html.
 				<artifactId>duzzt-processor</artifactId>
 				<version>${duzzt.version}</version>
 				<!-- Compile-time only -->
+				<scope>provided</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.kohsuke.metainf-services</groupId>
+				<artifactId>metainf-services</artifactId>
+				<version>${metainf-services.version}</version>
 				<scope>provided</scope>
 			</dependency>
 
