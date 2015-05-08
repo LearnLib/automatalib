@@ -16,13 +16,15 @@
  */
 package net.automatalib.words;
 
-import com.google.common.base.Function;
-
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Spliterator;
+
+import javax.annotation.Nonnull;
+
+import com.google.common.base.Function;
 
 /**
  * A word consisting of a single letter only.
@@ -260,4 +262,12 @@ final class LetterWord<I> extends Word<I> {
 		T transformed = transformer.apply(letter);
 		return new LetterWord<>(transformed);
 	}
+	
+	
+	@Override
+	@Nonnull
+	public Spliterator<I> spliterator() {
+		return Collections.singleton(letter).spliterator();
+	}
+	
 }

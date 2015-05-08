@@ -16,8 +16,10 @@
  */
 package net.automatalib.words;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
 
 
 /**
@@ -222,4 +224,10 @@ final class SharedWord<I> extends Word<I> {
 		System.arraycopy(storage, offset, trimmed, 0, length);
 		return new SharedWord<>(trimmed);
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+    public Spliterator<I> spliterator() {
+		return Arrays.spliterator((I[]) storage, offset, offset + length);
+    }
 }
