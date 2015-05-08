@@ -16,6 +16,7 @@
  */
 package net.automatalib.automata.transout.impl.compact;
 
+import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.words.Alphabet;
@@ -24,6 +25,17 @@ public class CompactMealy<I, O> extends
 		AbstractCompactDeterministic<I, CompactMealyTransition<O>, Void, O> implements
 		MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O> {
 	
+	public static final class Creator<I,O> implements AutomatonCreator<CompactMealy<I,O>, I> {
+		@Override
+		public CompactMealy<I, O> createAutomaton(Alphabet<I> alphabet) {
+			return new CompactMealy<>(alphabet);
+		}
+		@Override
+		public CompactMealy<I,O> createAutomaton(Alphabet<I> alphabet, int sizeHint) {
+			return new CompactMealy<>(alphabet, sizeHint);
+		}
+	}
+		
 	public CompactMealy(Alphabet<I> alphabet, float resizeFactor) {
 		super(alphabet, resizeFactor);
 	}
