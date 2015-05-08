@@ -16,6 +16,7 @@
  */
 package net.automatalib.words.impl;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,6 +61,13 @@ public abstract class Alphabets {
 		return fromList(Collections.singletonList(symbol));
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static <I> Alphabet<I> fromCollection(Collection<? extends I> coll) {
+		if (coll instanceof Alphabet) {
+			return (Alphabet<I>) coll;
+		}
+		return new SimpleAlphabet<>(coll);
+	}
 	
 	private Alphabets() {
 		// prevent inheritance

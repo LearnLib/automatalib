@@ -21,6 +21,8 @@ import com.google.common.base.Function;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
+import java.util.Spliterators;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -184,4 +186,9 @@ final class EmptyWord extends Word<Object> {
 	public <T> Word<T> transform(Function<? super Object,? extends T> transformer) {
 		return (Word<T>)this;
 	}
+	
+	@Override
+    public Spliterator<Object> spliterator() {
+		return Spliterators.emptySpliterator();
+    }
 }

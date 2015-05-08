@@ -73,7 +73,5 @@ public class UniversalCompactSimpleDet<I, SP> extends
 		Arrays.fill(stateProperties, 0, size(), null);
 		super.clear();
 	}
-	
-	
 
 }

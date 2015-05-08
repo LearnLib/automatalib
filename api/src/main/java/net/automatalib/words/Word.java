@@ -23,7 +23,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.ToIntFunction;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -168,12 +172,17 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 	}
 	
 	@Nonnull
-	public static Word<Character> fromString(String str) {
-		int len = str.length();
-		Character[] chars = new Character[str.length()];
+	public static Word<Character> fromCharSequence(CharSequence cs) {
+		int len = cs.length();
+		Character[] chars = new Character[len];
 		for(int i = 0; i < len; i++)
-			chars[i] = str.charAt(i);
+			chars[i] = cs.charAt(i);
 		return new SharedWord<>(chars);
+	}
+	
+	@Nonnull
+	public static Word<Character> fromString(String str) {
+		return fromCharSequence(str);
 	}
 	
 	@SafeVarargs
@@ -364,6 +373,20 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     	return length();
     }
     
+    
+    @Override
+    public Spliterator<I> spliterator() {
+    	return Spliterators.spliterator(iterator(), length(),
+    			Spliterator.IMMUTABLE | Spliterator.ORDERED | Spliterator.SUBSIZED);
+    }
+    
+    public Stream<I> stream() {
+    	return StreamSupport.stream(spliterator(), false);
+    }
+    
+    public Stream<I> parallelStream() {
+    	return StreamSupport.stream(spliterator(), true);
+    }
     
     
     /**

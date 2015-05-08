@@ -33,6 +33,7 @@ import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.automata.asgraph.AutomatonAsGraph;
 import net.automatalib.util.automata.asgraph.UniversalAutomatonAsGraph;
 import net.automatalib.util.automata.equivalence.CharacterizingSets;
+import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
@@ -214,6 +215,13 @@ public class Automata extends TS {
 		return NearLinearEquivalenceTest.findSeparatingWord(reference, other, inputs);
 	}
 	
+	public static <I> Word<I> findShortestSeparatingWord(
+			UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
+			UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+			Collection<? extends I> inputs) {
+		return DeterministicEquivalenceTest.findSeparatingWordLarge(reference, other, inputs);
+	}
+	
 	public static <I> boolean testEquivalence(
 			UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
 			UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
@@ -240,6 +248,7 @@ public class Automata extends TS {
 			Collection<? extends I> inputs) {
 		return NearLinearEquivalenceTest.findSeparatingWord(automaton, state1, state2, inputs);
 	}
+	
 	
 	/**
 	 * Computes a characterizing set for the given automaton.

@@ -19,13 +19,16 @@ package net.automatalib.automata.base.compact;
 import java.util.Collection;
 
 import net.automatalib.automata.MutableDeterministic;
+import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 
 public abstract class AbstractCompactDeterministic<I, T, SP, TP>
-		implements MutableDeterministic<Integer,I,T,SP,TP>, StateIDs<Integer>, UniversalFiniteAlphabetAutomaton<Integer,I,T,SP,TP> {
+		implements MutableDeterministic<Integer,I,T,SP,TP>, StateIDs<Integer>, UniversalFiniteAlphabetAutomaton<Integer,I,T,SP,TP>,
+		UniversalDeterministicAutomaton.StateIntAbstraction<I, T, SP, TP>,
+		UniversalDeterministicAutomaton.FullIntAbstraction<T, SP, TP> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -133,8 +136,6 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 	
 	public abstract T copyTransition(T trans, int succId);
 	
-	public abstract int getIntSuccessor(T transition);
-
 	@Override
 	public final Integer getSuccessor(T transition) {
 		return makeId(getIntSuccessor(transition));
@@ -155,6 +156,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		return state.intValue();
 	}
 
+	@Override
 	public int getIntInitialState() {
 		return initial;
 	}
@@ -253,6 +255,28 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 	@Override
 	public Alphabet<I> getInputAlphabet() {
 		return alphabet;
+	}
+	
+	@Override
+	public StateIntAbstraction<I,T,SP,TP> stateIntAbstraction() {
+		return this;
+	}
+	
+	@Override
+	public FullIntAbstraction<T,SP,TP> fullIntAbstraction(Alphabet<I> alphabet) {
+		if (alphabet == this.alphabet) {
+			return this;
+		}
+		return MutableDeterministic.super.fullIntAbstraction(alphabet);
+	}
+	
+	public FullIntAbstraction<T,SP,TP> fullIntAbstraction() {
+		return this;
+	}
+
+	@Override
+	public int numInputs() {
+		return alphabet.size();
 	}
 	
 }

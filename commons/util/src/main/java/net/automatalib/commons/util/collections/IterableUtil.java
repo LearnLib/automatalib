@@ -16,7 +16,9 @@
  */
 package net.automatalib.commons.util.collections;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public abstract class IterableUtil {
@@ -87,6 +89,29 @@ public abstract class IterableUtil {
 				return unmodifiableIterator(iterable.iterator());
 			}
 		};
+	}
+	
+	public static <T> Iterator<List<T>> allCombinationsIterator(List<? extends Iterable<? extends T>> iterables) {
+		return allCombinationsIterator(iterables);
+	}
+	
+	@SafeVarargs
+	public static <T> Iterator<List<T>> allCombinationsIterator(Iterable<? extends T> ...iterables) {
+		return allCombinationsIterator(Arrays.asList(iterables));
+	}
+	
+	public static <T> Iterable<List<T>> allCombinations(List<? extends Iterable<? extends T>> iterables) {
+		return new Iterable<List<T>>() {
+			@Override
+			public Iterator<List<T>> iterator() {
+				return allCombinationsIterator(iterables);
+			}
+		};
+	}
+	
+	@SafeVarargs
+	public static <T> Iterable<List<T>> allCombinations(Iterable<? extends T> ...iterables) {
+		return allCombinations(Arrays.asList(iterables));
 	}
 	
 	// Prevent inheritance
