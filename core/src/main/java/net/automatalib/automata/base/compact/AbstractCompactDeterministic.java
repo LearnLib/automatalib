@@ -19,7 +19,6 @@ package net.automatalib.automata.base.compact;
 import java.util.Collection;
 
 import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
@@ -27,8 +26,8 @@ import net.automatalib.words.Alphabet;
 
 public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		implements MutableDeterministic<Integer,I,T,SP,TP>, StateIDs<Integer>, UniversalFiniteAlphabetAutomaton<Integer,I,T,SP,TP>,
-		UniversalDeterministicAutomaton.StateIntAbstraction<I, T, SP, TP>,
-		UniversalDeterministicAutomaton.FullIntAbstraction<T, SP, TP> {
+		MutableDeterministic.StateIntAbstraction<I, T, SP, TP>,
+		MutableDeterministic.FullIntAbstraction<T, SP, TP> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -108,12 +107,20 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		transitions[state * alphabetSize + inputIdx] = trans;
 	}
 	
+	public void setTransition(int state, I input, T trans) {
+		setTransition(state, alphabet.getSymbolIndex(input), trans);
+	}
+	
 	public void setTransition(int stateId, int inputIdx, int succId) {
 		setTransition(stateId, inputIdx, succId, null);
 	}
 	
 	public void setTransition(int stateId, int inputIdx, int succId, TP property) {
 		setTransition(stateId, inputIdx, createTransition(succId, property));
+	}
+	
+	public void setTransition(int stateId, I input, int succId, TP property) {
+		setTransition(stateId, input, createTransition(succId, property));
 	}
 	
 	@Override

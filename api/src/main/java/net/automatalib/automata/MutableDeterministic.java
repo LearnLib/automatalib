@@ -17,9 +17,12 @@
 package net.automatalib.automata;
 
 import java.util.Collection;
+import java.util.function.IntFunction;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.words.Alphabet;
 
 /**
  * Interface for a <i>mutable</i> deterministic automaton.
@@ -35,6 +38,136 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public abstract interface MutableDeterministic<S,I,T,SP,TP> extends UniversalDeterministicAutomaton<S,I,T,SP,TP>,
 	MutableAutomaton<S,I,T,SP,TP> {
+	
+	public static interface IntAbstraction<T,SP,TP> extends UniversalDeterministicAutomaton.IntAbstraction<T, SP, TP> {
+		public void setStateProperty(int state, SP property);
+		public void setTransitionProperty(T transition, TP property);
+		public void setInitialState(int state);
+		public T createTransition(int successor, TP property);
+		
+		default public int addIntState() {
+			return addIntState(null);
+		}
+		
+		public int addIntState(SP property);
+		
+		default public int addIntInitialState() {
+			return addIntInitialState(null);
+		}
+		
+		public int addIntInitialState(SP property);
+	}
+	
+	public static interface StateIntAbstraction<I,T,SP,TP>
+			extends IntAbstraction<T, SP, TP>, UniversalDeterministicAutomaton.StateIntAbstraction<I, T, SP, TP> {
+		public void setTransition(int state, I input, T transition);
+		public void setTransition(int state, I input, int successor, TP property);
+		
+		public static class DefaultAbstraction<S,I,T,SP,TP,A extends MutableDeterministic<S, I, T, SP, TP>>
+				extends UniversalDeterministicAutomaton.StateIntAbstraction.DefaultAbstraction<S, I, T, SP, TP, A>
+				implements StateIntAbstraction<I,T,SP,TP> {
+			public DefaultAbstraction(A automaton) {
+				super(automaton);
+			}
+			@Override
+			public void setStateProperty(int state, SP property) {
+				automaton.setStateProperty(intToState(state), property);
+			}
+			@Override
+			public void setTransitionProperty(T transition, TP property) {
+				automaton.setTransitionProperty(transition, property);
+			}
+			@Override
+			public void setInitialState(int state) {
+				automaton.setInitialState(intToState(state));
+			}
+			@Override
+			public T createTransition(int successor, TP property) {
+				return automaton.createTransition(intToState(successor), property);
+			}
+			@Override
+			public int addIntState() {
+				return stateToInt(automaton.addState());
+			}
+			@Override
+			public int addIntState(SP property) {
+				return stateToInt(automaton.addState(property));
+			}
+			@Override
+			public int addIntInitialState() {
+				return stateToInt(automaton.addInitialState());
+			}
+			@Override
+			public int addIntInitialState(SP property) {
+				return stateToInt(automaton.addInitialState(property));
+			}
+			@Override
+			public void setTransition(int state, I input, T transition) {
+				automaton.setTransition(intToState(state), input, transition);
+			}
+			@Override
+			public void setTransition(int state, I input, int successor,
+					TP property) {
+				automaton.setTransition(intToState(state), input, intToState(successor), property);
+			}
+		}
+	}
+	
+	public static interface FullIntAbstraction<T,SP,TP>
+			extends IntAbstraction<T,SP,TP>, UniversalDeterministicAutomaton.FullIntAbstraction<T, SP, TP> {
+		public void setTransition(int state, int input, T transition);
+		public void setTransition(int state, int input, int successor, TP property);
+		
+		public static class DefaultAbstraction<I,T,SP,TP,A extends StateIntAbstraction<I, T, SP, TP>>
+				extends UniversalDeterministicAutomaton.FullIntAbstraction.DefaultAbstraction<I, T, SP, TP, A>
+				implements FullIntAbstraction<T, SP, TP> {
+			public DefaultAbstraction(A stateAbstraction, int numInputs,
+					IntFunction<? extends I> symMapping) {
+				super(stateAbstraction, numInputs, symMapping);
+			}
+			@Override
+			public void setStateProperty(int state, SP property) {
+				stateAbstraction.setStateProperty(state, property);
+			}
+			@Override
+			public void setTransitionProperty(T transition, TP property) {
+				stateAbstraction.setTransitionProperty(transition, property);
+			}
+			@Override
+			public void setInitialState(int state) {
+				stateAbstraction.setInitialState(state);
+			}
+			@Override
+			public T createTransition(int successor, TP property) {
+				return stateAbstraction.createTransition(successor, property);
+			}
+			@Override
+			public int addIntState() {
+				return stateAbstraction.addIntState();
+			}
+			@Override
+			public int addIntState(SP property) {
+				return stateAbstraction.addIntState(property);
+			}
+			@Override
+			public int addIntInitialState() {
+				return stateAbstraction.addIntInitialState();
+			}
+			@Override
+			public int addIntInitialState(SP property) {
+				return stateAbstraction.addIntInitialState(property);
+			}
+			@Override
+			public void setTransition(int state, int input, T transition) {
+				stateAbstraction.setTransition(state, intToSym(input), transition);
+			}
+			@Override
+			public void setTransition(int state, int input, int successor,
+					TP property) {
+				stateAbstraction.setTransition(state, intToSym(input), successor, property);
+			}
+		}
+	}
 	
 	@Override
 	default public void addTransition(S state, I input, T transition) {
@@ -117,5 +250,20 @@ public abstract interface MutableDeterministic<S,I,T,SP,TP> extends UniversalDet
 	default public void setTransition(S state, @Nullable I input, S successor, @Nullable TP property) {
 		T trans = createTransition(successor, property);
 		setTransition(state, input, trans);
+	}
+	
+	@Override
+	default public StateIntAbstraction<I,T,SP,TP> stateIntAbstraction() {
+		return new StateIntAbstraction.DefaultAbstraction<>(this);
+	}
+	
+	@Override
+	default public FullIntAbstraction<T,SP,TP> fullIntAbstraction(int numInputs, IntFunction<? extends I> symMapping) {
+		return new FullIntAbstraction.DefaultAbstraction<>(stateIntAbstraction(), numInputs, symMapping);
+	}
+	
+	@Override
+	default public FullIntAbstraction<T,SP,TP> fullIntAbstraction(Alphabet<I> alphabet) {
+		return fullIntAbstraction(alphabet.size(), alphabet);
 	}
 }

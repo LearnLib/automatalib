@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
@@ -31,8 +30,8 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		implements MutableDeterministic<Integer,I,Integer,SP,Void>,
 		UniversalFiniteAlphabetAutomaton<Integer,I,Integer,SP,Void>,
 		StateIDs<Integer>,
-		UniversalDeterministicAutomaton.StateIntAbstraction<I, Integer, SP, Void>,
-		UniversalDeterministicAutomaton.FullIntAbstraction<Integer, SP, Void> {
+		MutableDeterministic.StateIntAbstraction<I, Integer, SP, Void>,
+		MutableDeterministic.FullIntAbstraction<Integer, SP, Void> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -314,6 +313,11 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		return successor;
 	}
 	
+	@Override
+	public Integer createTransition(int successor, Void property) {
+		return wrapState(successor);
+	}
+	
 	
 	@Override
 	public StateIDs<Integer> stateIDs() {
@@ -377,6 +381,26 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	@Override
 	public Integer getTransition(int state, int input) {
 		return wrapState(getSuccessor(state, input));
+	}
+	
+	@Override
+	public void setTransition(int state, int input, Integer transition) {
+		setTransition(state, input, unwrapState(transition));
+	}
+	
+	@Override
+	public void setTransition(int state, int input, int successor, Void property) {
+		setTransition(state, input, successor);
+	}
+	
+	@Override
+	public void setTransition(int state, I input, Integer transition) {
+		setTransition(state, input, unwrapState(transition));
+	}
+	
+	@Override
+	public void setTransition(int state, I input, int successor, Void property) {
+		setTransition(state, input, successor);
 	}
 
 	@Override
