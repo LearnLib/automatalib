@@ -16,12 +16,14 @@
  */
 package net.automatalib.words.impl;
 
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -40,10 +42,22 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
 public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlphabet<I> {
 	
 	@Nonnull
-	private final List<I> symbols = new ArrayList<I>();
+	private final List<I> symbols;;
 	
 	@Nonnull
-	private final Map<I,Integer> indexMap = new HashMap<I,Integer>();
+	private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>();
+	
+	public SimpleAlphabet() {
+		this.symbols = new ArrayList<>();
+	}
+	
+	public SimpleAlphabet(Collection<? extends I> symbols) {
+		this.symbols = new ArrayList<>(symbols);
+		int i = 0;
+		for (I sym : this.symbols) {
+			indexMap.put(sym, i++);
+		}
+	}
 	
 	/*
 	 * (non-Javadoc)
