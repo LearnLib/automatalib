@@ -241,6 +241,11 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		return getIntTransition(state, input);
 	}
 	
+	@Override
+	public int getSuccessor(int state, I input) {
+		return getIntTransition(state, input);
+	}
+	
 	public abstract SP getStateProperty(int stateId);
 
 	@Override

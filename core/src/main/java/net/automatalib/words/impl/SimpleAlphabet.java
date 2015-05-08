@@ -45,7 +45,7 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
 	private final List<I> symbols;;
 	
 	@Nonnull
-	private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>();
+	private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>(10, 0.75f, -1);
 	
 	public SimpleAlphabet() {
 		this.symbols = new ArrayList<>();
@@ -78,8 +78,8 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
 	 */
 	@Override
 	public int addSymbol(I a) {
-		Integer idx = indexMap.get(a);
-		if(idx != null)
+		int idx = indexMap.get(a);
+		if(idx != -1)
 			return idx;
 		idx = size();
 		symbols.add(a);
