@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.automatalib.automata.MutableDeterministic;
+import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
@@ -28,7 +29,10 @@ import net.automatalib.words.Alphabet;
 
 public abstract class AbstractCompactSimpleDet<I, SP>
 		implements MutableDeterministic<Integer,I,Integer,SP,Void>,
-		UniversalFiniteAlphabetAutomaton<Integer,I,Integer,SP,Void>, StateIDs<Integer> {
+		UniversalFiniteAlphabetAutomaton<Integer,I,Integer,SP,Void>,
+		StateIDs<Integer>,
+		UniversalDeterministicAutomaton.StateIntAbstraction<I, Integer, SP, Void>,
+		UniversalDeterministicAutomaton.FullIntAbstraction<Integer, SP, Void> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -197,6 +201,11 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		int succId = (transition != null) ? transition.intValue() : -1;
 		setTransition(state.intValue(), input, succId);
 	}
+	
+	@Override
+	public void setTransition(Integer state, I input, Integer transition, Void property) {
+		setTransition(state, input, transition);
+	}
 
 	@Override
 	public void clear() {
@@ -331,12 +340,57 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	public Integer getState(Iterable<? extends I> input) {
 		return wrapState(getIntState(input));
 	}
+	
+	@Override
+	public StateIntAbstraction<I,Integer,SP,Void> stateIntAbstraction() {
+		return this;
+	}
+	
+	@Override
+	public FullIntAbstraction<Integer,SP,Void> fullIntAbstraction(Alphabet<I> alphabet) {
+		if (alphabet == this.alphabet) {
+			return this;
+		}
+		return MutableDeterministic.super.fullIntAbstraction(alphabet);
+	}
+	
+	public FullIntAbstraction<Integer,SP,Void> fullIntAbstraction() {
+		return this;
+	}
+	
+	
+	@Override
+	public int getIntSuccessor(Integer transition) {
+		return unwrapState(transition);
+	}
+
+	@Override
+	public Integer getTransition(int state, I input) {
+		return wrapState(getSuccessor(state, input));
+	}
+
+	@Override
+	public Integer getTransition(int state, int input) {
+		return wrapState(getSuccessor(state, input));
+	}
+
+	@Override
+	public int numInputs() {
+		return alphabet.size();
+	}
 
 	protected static Integer wrapState(int id) {
 		if(id < 0) {
 			return null;
 		}
 		return Integer.valueOf(id);
+	}
+	
+	protected static int unwrapState(Integer state) {
+		if (state == null) {
+			return INVALID_STATE;
+		}
+		return state.intValue();
 	}
 	
 }
