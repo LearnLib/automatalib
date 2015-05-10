@@ -1,52 +1,205 @@
-package net.automatalib.util.automata.minimizer.hopcroft;
+package net.automatalib.util.partitionrefinement;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.PrimitiveIterator;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
-import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.DeterministicAutomaton;
-import net.automatalib.automata.MutableDeterministic;
+import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
-import net.automatalib.commons.util.array.RichArray;
 import net.automatalib.words.Alphabet;
 
-public class PaigeTarjan {
+public class PaigeTarjanInitializers {
 	
-	private Block worklistHead;
-	private Block worklistTail;
+	public static void initCompleteDeterministic(
+			PaigeTarjan pt,
+			UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> absAutomaton) {
+		initCompleteDeterministic(pt, absAutomaton, absAutomaton::getStateProperty);
+	}
 	
-	private Block touchedHead;
+	public static void initCompleteDeterministic(
+			PaigeTarjan pt,
+			SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,
+			IntFunction<?> initialClassification) {
+		int numStates = absAutomaton.size();
+		int numInputs = absAutomaton.numInputs();
+		
+		int posDataLow = numStates;
+		int predOfsDataLow = posDataLow + numStates;
+		int numTransitions = numStates * numInputs;
+		int predDataLow = predOfsDataLow + numTransitions + 1;
+		int dataSize = predDataLow + numTransitions;
+		
+		int[] data = new int[dataSize];
+		Block[] blockForState = new Block[numStates];
+		
+		Map<Object,Block> blockMap = new HashMap<>();
+		
+		int init = absAutomaton.getIntInitialState();
+		Object initClass = initialClassification.apply(init);
+		
+		Block initBlock = pt.createBlock();
+		initBlock.high = 1;
+		blockForState[init] = initBlock;
+		blockMap.put(initClass, initBlock);
+		
+		int[] statesBuff = new int[numStates];
+		statesBuff[0] = init;
+		
+		int statesPtr = 0;
+		int reachableStates = 1;
+		
+		while (statesPtr < reachableStates) {
+			int curr = statesBuff[statesPtr++];
+			int predCountBase = predOfsDataLow;
+			
+			for (int i = 0; i < numInputs; i++) {
+				int succ = absAutomaton.getSuccessor(curr, i);
+				if (succ < 0) {
+					throw new IllegalArgumentException("Automaton must not be partial");
+				}
+				
+				Block succBlock = blockForState[succ];
+				if (succBlock == null) {
+					Object succClass = initialClassification.apply(succ);
+					succBlock = blockMap.get(succClass);
+					if (succBlock == null) {
+						succBlock = pt.createBlock();
+						succBlock.high = 0;
+						blockMap.put(succClass, succBlock);
+					}
+					succBlock.high++;
+					blockForState[succ] = succBlock;
+					statesBuff[reachableStates++] = succ;
+				}
+				data[predCountBase + succ]++;
+				predCountBase += numStates;
+			}
+		}
+		
+		int curr = 0;
+		for (Block b : pt.blockList()) {
+			curr += b.high;
+			b.high = curr;
+			b.low = curr;
+		}
+		
+		data[predOfsDataLow] += predDataLow;
+		prefixSum(data, predOfsDataLow, predDataLow);
+		
+		for (int i = 0; i < reachableStates; i++) {
+			int stateId = statesBuff[i];
+			Block b = blockForState[stateId];
+			int pos = --b.low;
+			data[pos] = stateId;
+			data[posDataLow + stateId] = pos;
+			
+			int predOfsBase = predOfsDataLow;
+			
+			for (int j = 0; j < numInputs; j++) {
+				int succ = absAutomaton.getSuccessor(stateId, j);
+				assert succ >= 0;
+			
+				data[--data[predOfsBase + succ]] = stateId;
+				predOfsBase += numStates;
+			}
+		}
+		
+		pt.blockData = data;
+		pt.posData = data;
+		pt.posDataLow = posDataLow;
+		pt.predOfsData = data;
+		pt.predOfsDataLow = predOfsDataLow;
+		pt.predData = data;
+		pt.blockForState = blockForState;
+		pt.numStates = numStates;
+		pt.numInputs = numInputs;
+	}
 	
-	protected int numInputs;
-	protected int numStates;
-	
-	protected int[] blockData;
-	protected int blockDataLow;
-	
-	protected int[] posData;
-	protected int posDataLow;
-	
-	protected int[] predOfsData;
-	protected int predOfsDataLow;
-	
-	protected int[] predData;
-	protected int predDataLow;
-	
-	protected Block[] blockForState;
-	
-	
-	private Block blocklistHead = null;
-	private int numBlocks = 0;
-	
-	public <S,I> StateIDs<S> initDeterministic(
+	public static void initCompleteConnectedDeterministic(
+			PaigeTarjan pt,
+			SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,
+			IntFunction<?> initialClassification) {
+		int numStates = absAutomaton.size();
+		int numInputs = absAutomaton.numInputs();
+		
+		int posDataLow = numStates;
+		int predOfsDataLow = posDataLow + numStates;
+		int numTransitions = numStates * numInputs;
+		int predDataLow = predOfsDataLow + numTransitions + 1;
+		int dataSize = predDataLow + numTransitions;
+		
+		int[] data = new int[dataSize];
+		Block[] blockForState = new Block[numStates];
+		
+		Map<Object,Block> blockMap = new HashMap<>();
+		
+		for (int i = 0; i < numStates; i++) {
+			Object classification = initialClassification.apply(i);
+			Block block = blockMap.get(classification);
+			if (block == null) {
+				block = pt.createBlock();
+				block.high = 0;
+				blockMap.put(classification, block);
+			}
+			block.high++;
+			blockForState[i] = block;
+			
+			int predCountBase = predOfsDataLow;
+			
+			for (int j = 0; j < numInputs; j++) {
+				int succ = absAutomaton.getSuccessor(i, j);
+				if (succ < 0) {
+					throw new IllegalArgumentException("Automaton must not be partial");
+				}
+				
+				data[predCountBase + succ]++;
+				predCountBase += numStates;
+			}
+		}
+		
+		int curr = 0;
+		for (Block b : pt.blockList()) {
+			curr += b.high;
+			b.high = curr;
+			b.low = curr;
+		}
+		
+		data[predOfsDataLow] += predDataLow;
+		prefixSum(data, predOfsDataLow, predDataLow);
+		
+		for (int i = 0; i < numStates; i++) {
+			Block b = blockForState[i];
+			int pos = --b.low;
+			data[pos] = i;
+			data[posDataLow + i] = pos;			
+			int predOfsBase = predOfsDataLow;
+			
+			for (int j = 0; j < numInputs; j++) {
+				int succ = absAutomaton.getSuccessor(i, j);
+				assert succ >= 0;
+			
+				data[--data[predOfsBase + succ]] = i;
+				predOfsBase += numStates;
+			}
+		}
+		
+		pt.blockData = data;
+		pt.posData = data;
+		pt.posDataLow = posDataLow;
+		pt.predOfsData = data;
+		pt.predOfsDataLow = predOfsDataLow;
+		pt.predData = data;
+		pt.blockForState = blockForState;
+		pt.numStates = numStates;
+		pt.numInputs = numInputs;
+	}
+
+	public static <S,I> StateIDs<S> initDeterministic(
+			PaigeTarjan pt,
 			SimpleDeterministicAutomaton<S, I> automaton,
 			Alphabet<I> inputs,
 			Function<? super S,?> initialClassification,
@@ -56,7 +209,6 @@ public class PaigeTarjan {
 		
 		int sinkId = numStates;
 		int numStatesWithSink = numStates + 1;
-		int blockDataLow = 0;
 		int posDataLow = numStatesWithSink;
 		int predOfsDataLow = posDataLow + numStatesWithSink;
 		int numTransitionsFull = numStatesWithSink * numInputs;
@@ -75,9 +227,10 @@ public class PaigeTarjan {
 		
 		Object initClass = initialClassification.apply(init);
 		
-		Block initBlock = createBlock();
+		Block initBlock = pt.createBlock();
 		initBlock.high = 1;
 		blockForState[initId] = initBlock;
+		blockMap.put(initClass, initBlock);
 		
 		int[] statesBuff = new int[numStatesWithSink];
 		statesBuff[0] = initId;
@@ -118,7 +271,7 @@ public class PaigeTarjan {
 					}
 					succBlock = blockMap.get(succClass);
 					if (succBlock == null) {
-						succBlock = createBlock();
+						succBlock = pt.createBlock();
 						succBlock.high = 0;
 						blockMap.put(succClass, succBlock);
 					}
@@ -140,7 +293,7 @@ public class PaigeTarjan {
 		}
 		
 		int curr = 0;
-		for (Block b = blocklistHead; b != null; b = b.nextBlock) {
+		for (Block b : pt.blockList()) {
 			curr += b.high;
 			b.high = curr;
 			b.low = curr;
@@ -184,22 +337,22 @@ public class PaigeTarjan {
 			}
 		}
 		
-		this.blockData = data;
-		this.blockDataLow = 0;
-		this.posData = data;
-		this.posDataLow = posDataLow;
-		this.predOfsData = data;
-		this.predOfsDataLow = predOfsDataLow;
-		this.predData = data;
-		this.predDataLow = predDataLow;
-		this.blockForState = blockForState;
-		this.numStates = numStatesWithSink;
-		this.numInputs = numInputs;
+		pt.blockData = data;
+		pt.posData = data;
+		pt.posDataLow = posDataLow;
+		pt.predOfsData = data;
+		pt.predOfsDataLow = predOfsDataLow;
+		pt.predData = data;
+		pt.blockForState = blockForState;
+		pt.numStates = numStatesWithSink;
+		pt.numInputs = numInputs;
 		
 		return ids;
 	}
 	
-	public <S,I,T> StateIDs<S> initDeterministic(DeterministicAutomaton<S, I, T> automaton,
+	public static <S,I,T> StateIDs<S> initDeterministic(
+			PaigeTarjan pt,
+			DeterministicAutomaton<S, I, T> automaton,
 			Alphabet<I> inputs,
 			Predicate<? super S> initialClassification,
 			boolean sinkClassification) {
@@ -208,7 +361,6 @@ public class PaigeTarjan {
 		
 		int sinkId = numStates;
 		int numStatesWithSink = numStates + 1;
-		int blockDataLow = 0;
 		int posDataLow = numStatesWithSink;
 		int predOfsDataLow = posDataLow + numStatesWithSink;
 		int numTransitionsFull = numStatesWithSink * numInputs;
@@ -226,10 +378,8 @@ public class PaigeTarjan {
 		int falsePtr = 0;
 		int truePtr = numStatesWithSink;
 		
-		Block falseBlock = createBlock();
-//		falseBlock.data = data;
-		Block trueBlock = createBlock();
-//		trueBlock.data = data;
+		Block falseBlock = pt.createBlock();
+		Block trueBlock = pt.createBlock();
 		
 		boolean initClass = initialClassification.test(init);
 		
@@ -382,279 +532,29 @@ public class PaigeTarjan {
 			}
 		}
 		
-		this.blockData = data;
-		this.blockDataLow = 0;
-		this.posData = data;
-		this.posDataLow = posDataLow;
-		this.predOfsData = data;
-		this.predOfsDataLow = predOfsDataLow;
-		this.predData = data;
-		this.predDataLow = predDataLow;
-		this.blockForState = blockForState;
-		this.numStates = numStatesWithSink;
-		this.numInputs = numInputs;
+		pt.blockData = data;
+		pt.posData = data;
+		pt.posDataLow = posDataLow;
+		pt.predOfsData = data;
+		pt.predOfsDataLow = predOfsDataLow;
+		pt.predData = data;
+		pt.blockForState = blockForState;
+		pt.numStates = numStatesWithSink;
+		pt.numInputs = numInputs;
 		
-		removeEmptyBlocks();
+		pt.removeEmptyBlocks();
 		
 		return ids;
 	}
-		
+	
+
+	
 	private static void prefixSum(int[] array, int startInclusive, int endExclusive) {
 		int curr = array[startInclusive];
 		for (int i = startInclusive + 1; i < endExclusive; i++) {
 			curr += array[i];
 			array[i] = curr;
 		}
-	}
-	
-	private Block poll() {
-		if (worklistHead == null) {
-			return null;
-		}
-		Block b = worklistHead;
-		worklistHead = b.nextInWorklist;
-		b.nextInWorklist = null;
-		if (worklistHead == null) {
-			worklistTail = null;
-		}
-		
-		return b;
-	}
-	
-	public void removeEmptyBlocks() {
-		Block curr = blocklistHead;
-		Block prev = null;
-		int effId = 0;
-		while (curr != null) {
-			if (!curr.isEmpty()) {
-				curr.id = effId++;
-				if (prev != null) {
-					prev.nextBlock = curr;
-				}
-				else {
-					blocklistHead = curr;
-				}
-				prev = curr;
-			}
-			curr = curr.nextBlock;
-		}
-		if (prev != null) {
-			prev.nextBlock = null;
-		}
-		else {
-			blocklistHead = null;
-		}
-		numBlocks = effId;
-	}
-	
-	public void initWorklist(boolean addAll) {
-		if (addAll) {
-			Block last = null;
-			for (Block b = blocklistHead; b != null; b = b.nextBlock) {
-				b.nextInWorklist = b.nextBlock;
-				last = b;
-			}
-			worklistHead = blocklistHead;
-			worklistTail = last;
-		}
-		else {
-			Block largest = blocklistHead;
-			if (largest == null) {
-				return;
-			}
-			int largestSize = largest.size();
-			for (Block b = largest.nextBlock; b != null; b = b.nextBlock) {
-				int size = b.size();
-				if (size > largestSize) {
-					addToWorklist(largest);
-					largest = b;
-					largestSize = size;
-				}
-				else {
-					addToWorklist(b);
-				}
-			}
-		}
-	}
-	
-	public void computeCoarsestStablePartition() {
-		Block curr;
-		while ((curr = poll()) != null) {
-			int currLow = curr.low, currHigh = curr.high;
-			int predOfsBase = predOfsDataLow;
-//			int[] blockData = curr.data;
-			for (int i = 0; i < numInputs; i++) {
-				for (int j = currLow; j < currHigh; j++) {
-					int state = blockData[j];
-					int predOfsIdx = predOfsBase + state;
-					int predLow = predOfsData[predOfsIdx], predHigh = predOfsData[predOfsIdx + 1];
-					for (int k = predLow; k < predHigh; k++) {
-						int pred = predData[k];
-						moveLeft(pred);
-					}
-				}
-				predOfsBase += numStates;
-				processTouched();
-			}
-		}
-	}
-	
-	private Block split(Block b) {
-		Block splt = b.split(numBlocks, blocklistHead);
-		if (splt == null) {
-			return null;
-		}
-		numBlocks++;
-		blocklistHead = splt;
-		int spltLow = splt.low, spltHigh = splt.high;
-//		int[] blockData = splt.data;
-		for (int i = spltLow; i < spltHigh; i++) {
-			int state = blockData[i];
-			blockForState[state] = splt;
-		}
-		return splt;
-	}
-	
-	private void processTouched() {
-		Block b = touchedHead;
-		while (b != null) {
-			Block next = b.nextTouched;
-			b.nextTouched = null;
-			Block splt = split(b);
-			if (splt != null) {
-				addToWorklist(splt);
-			}
-			b.ptr = -1;
-			b = next;
-		}
-			
-		touchedHead = null;
-	}
-	
-	private void addToWorklist(Block b) {
-		if (worklistHead == null) {
-			worklistHead = b;
-			worklistTail = b;
-		}
-		else {
-			worklistTail.nextInWorklist = b;
-			worklistTail = b;
-		}
-	}
-	
-	private void moveLeft(int state) {
-		Block b = blockForState[state];
-//		int[] blockData = b.data;
-		int posIdx = posDataLow + state;
-		int inBlockIdx = posData[posIdx];
-		int ptr = b.ptr;
-		
-		if (ptr == -1) {
-			b.nextTouched = touchedHead;
-			touchedHead = b;
-			b.ptr = ptr = b.low;
-		}
-		
-		if (ptr <= inBlockIdx) {
-			if (ptr < inBlockIdx) {
-				int other = blockData[ptr];
-				blockData[ptr] = blockData[inBlockIdx];
-				blockData[inBlockIdx] = other;
-				
-				posData[posIdx] = ptr;
-				posData[posDataLow + other] = inBlockIdx;
-			}
-			b.ptr = ++ptr;
-		}
-	}
-	
-	public Block createBlock() {
-		Block b = new Block(-1, -1, numBlocks++, blocklistHead);
-		blocklistHead = b;
-		return b;
-	}
-	
-	public Block getBlockForState(int id) {
-		return blockForState[id];
-	}
-	
-	public int getRepresentative(Block b) {
-//		return b.data[b.low];
-		return blockData[b.low];
-	}
-	
-	public Spliterator.OfInt statesInBlockSpliterator(Block b) {
-		return Arrays.spliterator(blockData, b.low, b.high);
-	}
-	
-	public PrimitiveIterator.OfInt statesInBlockIterator(Block b) {
-		return Spliterators.iterator(statesInBlockSpliterator(b));
-	}
-	
-	
-	public Iterator<Block> blockListIterator() {
-		return blockListIterator();
-	}
-	
-	public Iterable<Block> blockList() {
-		return () -> blockListIterator();
-	}
-	
-	
-	public <S1,S2,I,T1,T2,SP,TP,A extends MutableDeterministic<S2, I, T2, SP, TP>>
-	A toDeterministic(AutomatonCreator<A, I> creator, Alphabet<I> inputs,
-			DeterministicAutomaton<S1, I, T1> original,
-			StateIDs<S1> origIds,
-			Function<? super S1,? extends SP> spExtractor,
-			Function<? super T1,? extends TP> tpExtractor) {
-		
-		if (spExtractor == null) {
-			spExtractor = (s) -> null;
-		}
-		if (tpExtractor == null) {
-			tpExtractor = (t) -> null;
-		}
-		
-		A result = creator.createAutomaton(inputs, numBlocks);
-		RichArray<S2> states = new RichArray<>(numBlocks);
-		
-		for (Block curr = blocklistHead; curr != null; curr = curr.nextBlock) {
-			int blockId = curr.id;
-			S1 rep = origIds.getState(getRepresentative(curr));
-			SP sp = spExtractor.apply(rep);
-			S2 resState = result.addState(sp);
-			states.update(blockId, resState);
-		}
-		for (Block curr = blocklistHead; curr != null; curr = curr.nextBlock) {
-			int blockId = curr.id;
-			S1 rep = origIds.getState(getRepresentative(curr));
-			S2 resultState = states.get(blockId);
-			
-			for (I sym : inputs) {
-				T1 origTrans = original.getTransition(rep, sym);
-				Block succBlock;
-				TP tp;
-				if (origTrans != null) {
-					tp = tpExtractor.apply(origTrans);
-					S1 origSucc = original.getSuccessor(origTrans);
-					int origSuccId = origIds.getStateId(origSucc);
-					succBlock = blockForState[origSuccId];
-				}
-				else {
-					succBlock = null;
-					tp = null;
-				}
-				S2 resultSucc = states.get(succBlock.id);
-				result.setTransition(resultState, sym, resultSucc, tp);
-			}
-		}
-		
-		S1 origInit = original.getInitialState();
-		int origInitId = origIds.getStateId(origInit);
-		S2 resInit = states.get(blockForState[origInitId].id);
-		result.setInitialState(resInit);
-		
-		return result;
 	}
 
 }

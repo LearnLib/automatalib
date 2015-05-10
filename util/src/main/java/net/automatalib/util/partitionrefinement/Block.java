@@ -1,4 +1,4 @@
-package net.automatalib.util.automata.minimizer.hopcroft;
+package net.automatalib.util.partitionrefinement;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -34,10 +34,9 @@ public class Block {
 	
 	
 	
-	protected int low;
+	public int low;
 	protected int ptr = -1;
-	protected int high;
-	//protected int[] data;
+	public int high;
 	
 	protected Block nextInWorklist = null;
 	protected Block nextTouched = null;

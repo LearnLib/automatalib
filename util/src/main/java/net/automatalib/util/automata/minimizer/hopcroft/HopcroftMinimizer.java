@@ -11,12 +11,14 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
+import net.automatalib.util.partitionrefinement.PaigeTarjan;
+import net.automatalib.util.partitionrefinement.PaigeTarjanExtractors;
+import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
-public class HopcroftMinimizer<S,I> extends PaigeTarjan {
+public class HopcroftMinimizer<S,I> {
 	
 	
 	public static final class MealySignature {
@@ -79,11 +81,14 @@ public class HopcroftMinimizer<S,I> extends PaigeTarjan {
 	public static <S,I> CompactDFA<I> minimizeDFA(DFA<S,I> dfa, Alphabet<I> alphabet) {
 		PaigeTarjan pr = new PaigeTarjan();
 		
-		StateIDs<S> ids = pr.initDeterministic(dfa, alphabet, dfa::getStateProperty, Boolean.FALSE);	
+		StateIDs<S> ids 
+			= PaigeTarjanInitializers.initDeterministic(pr, dfa, alphabet, dfa::getStateProperty, Boolean.FALSE);	
+		
 		pr.initWorklist(false);
 		pr.computeCoarsestStablePartition();
 		
-		return pr.toDeterministic(
+		return PaigeTarjanExtractors.toDeterministic(
+				pr,
 				new CompactDFA.Creator<I>(),
 				alphabet,
 				dfa,
@@ -95,11 +100,13 @@ public class HopcroftMinimizer<S,I> extends PaigeTarjan {
 	private static <S,I,T,O> CompactMealy<I,O> doMinimizeMealy(MealyMachine<S,I,T,O> mealy, Alphabet<I> alphabet) {
 		PaigeTarjan pr = new PaigeTarjan();
 		
-		StateIDs<S> ids = pr.initDeterministic(mealy, alphabet, s -> MealySignature.build(mealy, alphabet, s), MealySignature.build(alphabet.size(), null));
+		StateIDs<S> ids
+			= PaigeTarjanInitializers.initDeterministic(pr, mealy, alphabet, s -> MealySignature.build(mealy, alphabet, s), MealySignature.build(alphabet.size(), null));
 		pr.initWorklist(false);
 		pr.computeCoarsestStablePartition();
 		
-		return pr.toDeterministic(
+		return PaigeTarjanExtractors.toDeterministic(
+				pr,
 				new CompactMealy.Creator<I,O>(),
 				alphabet,
 				mealy,
