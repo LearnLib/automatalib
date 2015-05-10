@@ -28,4 +28,24 @@ package net.automatalib.ts;
 public interface UniversalDTS<S, I, T, SP, TP> extends
 		UniversalTransitionSystem<S, I, T, SP, TP>,
 		DeterministicTransitionSystem<S, I, T> {
+	
+	/**
+	 * Retrieves the transition property of the outgoing transition corresponding
+	 * to the given state and input, if it exists. Otherwise, {@code null} is returned.
+	 * <p>
+	 * Note that this method alone is insufficient for determining whether or not a
+	 * transition actually exists, as {@code null} might either be property of an existing
+	 * transition, or indicate that the transition does not exist.
+	 * 
+	 * @param state the source state
+	 * @param input the input symbol
+	 * @return the property of the outgoing transition, or {@code null}
+	 */
+	default public TP getTransitionProperty(S state, I input) {
+		T trans = getTransition(state, input);
+		if (trans != null) {
+			return getTransitionProperty(trans);
+		}
+		return null;
+	}
 }

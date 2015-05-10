@@ -9,6 +9,10 @@
 	<packaging>jar</packaging>
 
 	<properties>
+		<!-- AutomataLib requires Java 8 -->
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		
 		<!-- Version of AutomataLib to use -->
 		<automatalib.version>${automatalibVersion}</automatalib.version>
 	</properties>

@@ -61,6 +61,16 @@ public class CompactMealy<I, O> extends
 	public O getTransitionOutput(CompactMealyTransition<O> transition) {
 		return transition.getOutput();
 	}
+	
+	@Override
+	public O getTransitionProperty(CompactMealyTransition<O> transition) {
+		return transition.getOutput();
+	}
+	
+	@Override
+	public void setTransitionProperty(CompactMealyTransition<O> transition, O property) {
+		transition.setOutput(property);
+	}
 
 	/*
 	 * (non-Javadoc)
