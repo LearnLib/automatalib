@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2014 TU Dortmund
+/* Copyright (C) 2013-2015 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -17,15 +17,15 @@
 package net.automatalib.graphs;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.commons.util.mappings.MapMapping;
-import net.automatalib.commons.util.mappings.MutableMapping;
+import com.google.common.collect.Iterators;
 
 /**
  * Interface for an (indefinite) graph structure. A graph consists of nodes, each of which
@@ -34,11 +34,26 @@ import net.automatalib.commons.util.mappings.MutableMapping;
  * 
  * @author Malte Isberner 
  *
- * @param <N> node class.
- * @param <E> edge class.
+ * @param <N> node type
+ * @param <E> edge type
  */
 @ParametersAreNonnullByDefault
-public interface IndefiniteGraph<N, E> {
+public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
+	
+	@Override
+	default public Collection<? extends N> getAdjacentTargets(N node) {
+		return adjacentTargetsStream(node).collect(Collectors.toList());
+	}
+	
+	@Override
+	default public Iterator<N> adjacentTargetsIterator(N node) {
+		return Iterators.transform(outgoingEdgesIterator(node), this::getTarget);
+	}
+	
+	@Override
+	default public Stream<N> adjacentTargetsStream(N node) {
+		return outgoingEdgesStream(node).map(this::getTarget);
+	}
 	
 	/**
 	 * Retrieves the outgoing edges of a given node.
@@ -48,6 +63,23 @@ public interface IndefiniteGraph<N, E> {
 	 */
 	@Nonnull
 	public Collection<? extends E> getOutgoingEdges(N node);
+	
+	@Nonnull
+	@SuppressWarnings("unchecked")
+	default public Iterator<E> outgoingEdgesIterator(N node) {
+		return (Iterator<E>) getOutgoingEdges(node).iterator();
+	}
+	
+	@Nonnull
+	default public Iterable<E> outgoingEdges(N node) {
+		return () -> outgoingEdgesIterator(node);
+	}
+	
+	@Nonnull
+	@SuppressWarnings("unchecked")
+	default public Stream<E> outgoingEdgesStream(N node) {
+		return (Stream<E>) getOutgoingEdges(node).stream();
+	}
 	
 	/**
 	 * Retrieves, for a given edge, its target node.
@@ -64,13 +96,9 @@ public interface IndefiniteGraph<N, E> {
 				.collect(Collectors.<E>toList());
 	}
 	
-	@Nonnull
-	default public <V> MutableMapping<N,V> createStaticNodeMapping() {
-		return new MapMapping<>(new HashMap<N,V>());
+	@Override
+	default public IndefiniteGraph<N,E> asNormalGraph() {
+		return this;
 	}
 	
-	@Nonnull
-	default public <V> MutableMapping<N,V> createDynamicNodeMapping() {
-		return new MapMapping<>(new HashMap<N,V>());
-	}
 }

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.SimpleGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
 
 public class SimpleNodeIDs<N> implements NodeIDs<N> {
@@ -29,7 +29,7 @@ public class SimpleNodeIDs<N> implements NodeIDs<N> {
 	private final Map<N,Integer> nodeIds;
 	private final List<N> nodes;
 	
-	public SimpleNodeIDs(Graph<N,?> graph) {
+	public SimpleNodeIDs(SimpleGraph<N> graph) {
 		this.nodes = new ArrayList<N>(graph.getNodes());
 		int numNodes = this.nodes.size();
 		this.nodeIds = new HashMap<N,Integer>((int)(numNodes / 0.75) + 1);
