@@ -329,7 +329,6 @@ public class PaigeTarjan {
 			return null;
 		}
 		numBlocks++;
-		blocklistHead = splt;
 		int spltLow = splt.low, spltHigh = splt.high;
 		for (int i = spltLow; i < spltHigh; i++) {
 			int state = blockData[i];
