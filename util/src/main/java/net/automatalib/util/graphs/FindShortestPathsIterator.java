@@ -21,13 +21,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.AbstractIterator;
+import java.util.function.Predicate;
 
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
+
+import com.google.common.collect.AbstractIterator;
 
 final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N,E>>{
 	
@@ -52,7 +53,7 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N,E>>{
 		this.graph = graph;
 		this.preds = graph.createStaticNodeMapping();
 		this.limit = limit;
-		this.targetPred = targetPred;
+		this.targetPred = Objects.requireNonNull(targetPred);
 		
 		for(N startNode : start) {
 			preds.put(startNode, new Pred<N,E>(null, null));
@@ -67,7 +68,7 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N,E>>{
 				return endOfData();
 			}
 			N curr = bfsQueue.poll();
-			if(targetPred.apply(curr)) {
+			if(targetPred.test(curr)) {
 				return makePath(curr);
 			}
 			

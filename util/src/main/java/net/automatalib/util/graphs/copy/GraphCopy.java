@@ -25,7 +25,6 @@ import net.automatalib.graphs.IndefiniteGraph;
 import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.graphs.UniversalIndefiniteGraph;
-import net.automatalib.util.graphs.Graphs;
 import net.automatalib.util.traversal.TraversalOrder;
 
 public class GraphCopy {
@@ -45,8 +44,8 @@ public class GraphCopy {
 	public static <N1,E1,N2,E2,NP2,EP2>
 	Mapping<N1,N2> copyPlain(UniversalGraph<N1, E1,? extends NP2, ? extends EP2> in,
 			MutableGraph<N2, E2, NP2, EP2> out) {
-		Mapping<N1,? extends NP2> npMapping = Graphs.nodeProperties(in);
-		Mapping<E1,? extends EP2> epMapping = Graphs.edgeProperties(in);
+		Mapping<N1,? extends NP2> npMapping = in::getNodeProperty;
+		Mapping<E1,? extends EP2> epMapping = in::getEdgeProperty;
 		return copyPlain(in, out, npMapping, epMapping);
 	}
 	
@@ -55,8 +54,8 @@ public class GraphCopy {
 			MutableGraph<N2, E2, NP2, EP2> out,
 			Mapping<? super NP1,? extends NP2> npConversion,
 			Mapping<? super EP1,? extends EP2> epConversion) {
-		Mapping<? super N1,? extends NP2> npMapping = Mappings.compose(Graphs.nodeProperties(in), npConversion);
-		Mapping<? super E1,? extends EP2> epMapping = Mappings.compose(Graphs.edgeProperties(in), epConversion);
+		Mapping<? super N1,? extends NP2> npMapping = Mappings.compose(in::getNodeProperty, npConversion);
+		Mapping<? super E1,? extends EP2> epMapping = Mappings.compose(in::getEdgeProperty, epConversion);
 		return copyPlain(in, out, npMapping, epMapping);
 	}
 	
@@ -80,8 +79,8 @@ public class GraphCopy {
 			TraversalOrder order,
 			int limit,
 			Collection<? extends N1> initialNodes) {
-		Mapping<N1,? extends NP2> npMapping = Graphs.nodeProperties(in);
-		Mapping<E1,? extends EP2> epMapping = Graphs.edgeProperties(in);
+		Mapping<N1,? extends NP2> npMapping = in::getNodeProperty;
+		Mapping<E1,? extends EP2> epMapping = in::getEdgeProperty;
 		return copyTraversal(in, out, order, limit, initialNodes, npMapping, epMapping);
 	}
 	
@@ -93,8 +92,8 @@ public class GraphCopy {
 			Collection<? extends N1> initialNodes,
 			Mapping<? super NP1,? extends NP2> npConversion,
 			Mapping<? super EP1,? extends EP2> epConversion) {
-		Mapping<? super N1,? extends NP2> npMapping = Mappings.compose(Graphs.nodeProperties(in), npConversion);
-		Mapping<? super E1,? extends EP2> epMapping = Mappings.compose(Graphs.edgeProperties(in), epConversion);
+		Mapping<? super N1,? extends NP2> npMapping = Mappings.compose(in::getNodeProperty, npConversion);
+		Mapping<? super E1,? extends EP2> epMapping = Mappings.compose(in::getEdgeProperty, epConversion);
 		return copyTraversal(in, out, order, limit, initialNodes, npMapping, epMapping);
 	}
 

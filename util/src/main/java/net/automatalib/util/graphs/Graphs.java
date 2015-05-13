@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2014 TU Dortmund
+/* Copyright (C) 2013-2015 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * AutomataLib is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@ package net.automatalib.util.graphs;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -56,6 +57,10 @@ public abstract class Graphs {
 
 	public static <N,E> Path<N,E> findShortestPath(final IndefiniteGraph<N, E> graph, int limit, N start, Collection<? extends N> targets) {
 		return ShortestPaths.shortestPath(graph, start, limit, targets);
+	}
+	
+	public static <N,E> Path<N,E> findShortestPath(IndefiniteGraph<N, E> graph, int limit, N start, Predicate<? super N> targetPred) {
+		return ShortestPaths.shortestPath(graph, start, limit, targetPred);
 	}
 	
 	
