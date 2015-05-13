@@ -19,6 +19,7 @@ package net.automatalib.commons.util.random;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -47,7 +48,7 @@ import java.util.function.Supplier;
  *
  * @param <T> the supplied type
  */
-public class WeightedSupplier<T> implements Supplier<T> {
+public class WeightedSupplier<T> implements Supplier<T>, Function<Random, T> {
 	
 	private static final class SubSupplier<T> implements Supplier<T> {
 		private final int lowIdx;
@@ -66,18 +67,10 @@ public class WeightedSupplier<T> implements Supplier<T> {
 		}
 	}
 	
+	private static final Random RANDOM = new Random();
 	
-	private final Random random;
 	private int totalWeight = 0;
 	private final List<SubSupplier<T>> subSuppliers = new ArrayList<>();
-
-	public WeightedSupplier() {
-		this(new Random());
-	}
-	
-	public WeightedSupplier(Random random) {
-		this.random = random;
-	}
 	
 	/**
 	 * Adds an object to be supplied with a given weight.
@@ -107,10 +100,10 @@ public class WeightedSupplier<T> implements Supplier<T> {
 		subSuppliers.add(ss);
 		return this;
 	}
-
+	
 	@Override
-	public T get() {
-		int val = random.nextInt(totalWeight);
+	public T apply(Random r) {
+		int val = r.nextInt(totalWeight);
 		int l = 0, h = subSuppliers.size();
 		while (l < h) {
 			int mid = l + (h - l)/2;
@@ -126,6 +119,15 @@ public class WeightedSupplier<T> implements Supplier<T> {
 			}
 		}
 		throw new AssertionError();
+	}
+
+	@Override
+	public T get() {
+		return apply(RANDOM);
+	}
+	
+	public Supplier<T> forRandom(Random r) {
+		return () -> apply(r);
 	}
 
 }

@@ -18,12 +18,14 @@ package net.automatalib.util.automata.fsa;
 
 import java.util.Collection;
 
+import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
+import net.automatalib.util.automata.minimizer.hopcroft.HopcroftMinimization;
 import net.automatalib.util.ts.acceptors.AcceptanceCombiner;
 import net.automatalib.util.ts.acceptors.Acceptors;
 import net.automatalib.util.ts.copy.TSCopy;
@@ -277,6 +279,36 @@ public abstract class DFAs {
 	public static <I>
 	CompactDFA<I> complete(DFA<?,I> dfa, Alphabet<I> inputs) {
 		return complete(dfa, inputs, new CompactDFA<>(inputs));
+	}
+	
+	/**
+	 * Minimizes the given DFA over the given alphabet. This method does not modify the
+	 * given DFA, but returns the minimized version as a new instance.
+	 * <p>
+	 * <b>Note:</b> the DFA must be completely specified. 
+	 * 
+	 * @param dfa the DFA to be minimized
+	 * @param alphabet the input alphabet to consider for minimization (this will also be
+	 * the input alphabet of the resulting automaton)
+	 * @return a minimized version of the specified DFA
+	 */
+	public static <I>
+	CompactDFA<I> minimize(DFA<?,I> dfa, Alphabet<I> alphabet) {
+		return HopcroftMinimization.minimizeDFA(dfa, alphabet);
+	}
+	
+	/**
+	 * Minimizes the given DFA. This method does not modify the given DFA, but returns the minimized
+	 * version as a new instance.
+	 * <p>
+	 * <b>Note:</b> the DFA must be completely specified
+	 * 
+	 * @param dfa the DFA to be minimized
+	 * @return a minimized version of the specified DFA
+	 */
+	public static <I,A extends DFA<?,I> & InputAlphabetHolder<I>>
+	CompactDFA<I> minimize(A dfa) {
+		return HopcroftMinimization.minimizeDFA(dfa);
 	}
 			
 

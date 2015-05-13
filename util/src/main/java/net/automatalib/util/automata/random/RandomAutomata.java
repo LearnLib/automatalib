@@ -25,11 +25,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.fsa.DFAs;
 import net.automatalib.words.Alphabet;
 
 @ParametersAreNonnullByDefault
@@ -87,6 +89,33 @@ public class RandomAutomata {
 			Automata.invasiveMinimize(out, inputs);
 		
 		return out;
+	}
+	
+	/**
+	 * Randomly generates an initially connected DFA (ICDFA), i.e., a DFA where all states are reachable from the initial state.
+	 * 
+	 * @param rand the randomness source
+	 * @param numStates the number of states of the generated automaton
+	 * @param inputs the input alphabet
+	 * @param minimize determines whether or not the DFA will be minimized before being returned. Note that if {@code true} is passed
+	 * for this parameter, the resulting automaton might have a {@link Automaton#size() size} less than {@code numStates}
+	 * @return a randomly generated ICDFA
+	 */
+	@Nonnull
+	public static <I>
+	CompactDFA<I> randomICDFA(
+			Random rand,
+			@Nonnegative
+			int numStates,
+			Alphabet<I> inputs,
+			boolean minimize) {
+		CompactDFA<I> dfa = new RandomICAutomatonGenerator<Boolean,Void>()
+			.withStateProperties(r -> r.nextBoolean())
+			.generateICDeterministicAutomaton(numStates, inputs, new CompactDFA.Creator<I>(), rand);
+		if (minimize) {
+			dfa = DFAs.minimize(dfa);
+		}
+		return dfa;
 	}
 	
 	@Nonnull

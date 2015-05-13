@@ -1,3 +1,19 @@
+/* Copyright (C) 2015 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ * 
+ * AutomataLib is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3.0 as published by the Free Software Foundation.
+ * 
+ * AutomataLib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with AutomataLib; if not, see
+ * http://www.gnu.de/documents/lgpl.en.html.
+ */
 package net.automatalib.util.partitionrefinement;
 
 import java.util.Arrays;
@@ -11,15 +27,44 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * A low-level realization of the Paige/Tarjan partition refinement algorithm.
+ * An implementation of the Paige/Tarjan partition refinement algorithm.
+ * <p>
+ * To ensure maximal performance, this class is designed in a very low-level fashion, exposing
+ * most of its internal fields directly. It should only ever be used directly, and its use
+ * should be hidden behind a facade such that neither this class nor any of its methods/referenced
+ * objects are exposed at an API level.
+ * <p>
+ * This class stores most of its internal data in several, or possibly even a single, (mostly {@code int}) array(s),
+ * to achieve maximal cache efficiency. The layout of of these arrays is described in the documentation
+ * of the respective public fields:
+ * <ul>
+ * <li>{@link #blockData}</li>
+ * <li>{@link #predOfsData}</li>
+ * <li>{@link #predData}</li>
+ * <li>{@link #blockForState}</li>
+ * </ul>
+ * The {@link PaigeTarjanInitializers} provides methods for initializing this data structure for common
+ * cases (e.g., DFA minimization). Similarly, the {@link PaigeTarjanExtractors} class provides methods for
+ * transforming the resulting data structure.
  * 
  * @author Malte Isberner
  *
  */
 public class PaigeTarjan {
 	
+	/**
+	 * Determines how the worklist is managed, i.e., where newly created blocks are inserted.
+	 * 
+	 * @author Malte Isberner
+	 */
 	public static enum WorklistPolicy {
+		/**
+		 * Newly created blocks are inserted at the beginning of the worklist.
+		 */
 		FIFO,
+		/**
+		 * Newly created blocks are inserted at the end of the worklist.
+		 */
 		LIFO
 	}
 	
@@ -109,6 +154,11 @@ public class PaigeTarjan {
 	@Nonnull
 	private WorklistPolicy worklistPolicy = WorklistPolicy.FIFO;
 	
+
+	public void setSize(int numStates, int numInputs) {
+		this.numStates = numStates;
+		this.numInputs = numInputs;
+	}
 	
 	public void setWorklistPolicy(WorklistPolicy policy) {
 		this.worklistPolicy = Objects.requireNonNull(policy);
@@ -151,6 +201,13 @@ public class PaigeTarjan {
 		return b;
 	}
 	
+	/**
+	 * Removes all blocks which are empty from the block list. The {@link Block#id IDs} of the blocks
+	 * are adjusted to remain contiguous.
+	 * <p>
+	 * Note that this method does not modify the worklist, i.e., it should only be called when the worklist
+	 * is empty.
+	 */
 	public void removeEmptyBlocks() {
 		Block curr = blocklistHead;
 		Block prev = null;
@@ -177,6 +234,11 @@ public class PaigeTarjan {
 		numBlocks = effId;
 	}
 	
+	/**
+	 * Creates the {@link #blockForState} mapping from the blocks in the block list,
+	 * and the contents of the {@link #blockData} array.
+	 * @return a {@link #blockForState} mapping consistent with the {@link #blockData}
+	 */
 	public Block[] createBlockForStateMap() {
 		Block[] map = new Block[numStates];
 		for (Block b = blocklistHead; b != null; b = b.nextBlock) {
@@ -189,10 +251,24 @@ public class PaigeTarjan {
 		return map;
 	}
 	
+	/**
+	 * Automatically creates a {@link #blockForState} mapping, and sets it as the current
+	 * one.
+	 * @see #createBlockForStateMap()
+	 * @see #setBlockForState(Block[])
+	 */
 	public void initBlockForStateMap() {
 		this.blockForState = createBlockForStateMap();
 	}
 	
+	/**
+	 * Initializes the worklist from the block list. This assumes that the worklist is empty.
+	 * <p>
+	 * If {@code addAll} is {@code true}, all blocks from the block list will be added to the
+	 * worklist. Otherwise, all but the largest block will be added.
+	 * 
+	 * @param addAll controls if all blocks are added to the worklist, or all but the largest.
+	 */
 	public void initWorklist(boolean addAll) {
 		if (addAll) {
 			Block last = null;
@@ -223,12 +299,14 @@ public class PaigeTarjan {
 		}
 	}
 	
+	/**
+	 * Refines the partition until it stabilizes.
+	 */
 	public void computeCoarsestStablePartition() {
 		Block curr;
 		while ((curr = poll()) != null) {
 			int currLow = curr.low, currHigh = curr.high;
 			int predOfsBase = predOfsDataLow;
-//			int[] blockData = curr.data;
 			for (int i = 0; i < numInputs; i++) {
 				for (int j = currLow; j < currHigh; j++) {
 					int state = blockData[j];
@@ -246,14 +324,13 @@ public class PaigeTarjan {
 	}
 	
 	private Block split(Block b) {
-		Block splt = b.split(numBlocks, blocklistHead);
+		Block splt = b.split(numBlocks);
 		if (splt == null) {
 			return null;
 		}
 		numBlocks++;
 		blocklistHead = splt;
 		int spltLow = splt.low, spltHigh = splt.high;
-//		int[] blockData = splt.data;
 		for (int i = spltLow; i < spltHigh; i++) {
 			int state = blockData[i];
 			blockForState[state] = splt;
@@ -314,38 +391,79 @@ public class PaigeTarjan {
 		}
 	}
 	
+	/**
+	 * Creates a new block. The {@link Block#low} and {@link Block#high} fields
+	 * will be initialized to {@code -1}.
+	 * 
+	 * @return a newly created block.
+	 */
 	public Block createBlock() {
 		Block b = new Block(-1, -1, numBlocks++, blocklistHead);
 		blocklistHead = b;
 		return b;
 	}
 	
+	/**
+	 * Retrieves the corresponding block for a given state (ID).
+	 * @param id the state ID
+	 * @return the block containing the specified state
+	 */
 	public Block getBlockForState(int id) {
 		return blockForState[id];
 	}
 	
+	/**
+	 * Retrieves a representative state from the given block. This method behaves
+	 * deterministically.
+	 * 
+	 * @param b the block
+	 * @return a representative state in the specified block
+	 */
 	public int getRepresentative(Block b) {
 		return blockData[b.low];
 	}
 	
+	/**
+	 * Retrieves a spliterator for the contents of the given block.
+	 * 
+	 * @param b the block
+	 * @return a spliterator for the contents of the specified block
+	 */
 	public Spliterator.OfInt statesInBlockSpliterator(Block b) {
 		return Arrays.spliterator(blockData, b.low, b.high);
 	}
 	
+	/**
+	 * Retrieves an iterator for the contents of the given block.
+	 * 
+	 * @param b the block
+	 * @return an iterator for the contents of the specified block
+	 */
 	public PrimitiveIterator.OfInt statesInBlockIterator(Block b) {
 		return Spliterators.iterator(statesInBlockSpliterator(b));
 	}
 	
-	
+	/**
+	 * Retrieves an iterator for iterating over all blocks in the block list.
+	 * @return an iterator for iterating over all blocks
+	 */
 	public Iterator<Block> blockListIterator() {
 		return Block.blockListIterator(blocklistHead);
 	}
 	
+	/**
+	 * Retrieves an {@link Iterable} that provides the iterator returned by
+	 * {@link #blockListIterator()}.
+	 * @return an {@link Iterable} for iterating over all blocks
+	 */
 	public Iterable<Block> blockList() {
 		return () -> blockListIterator();
 	}
 	
-	
+	/**
+	 * Retrieves the total number of blocks in the block list.
+	 * @return the total number of blocks
+	 */
 	public int getNumBlocks() {
 		return numBlocks;
 	}

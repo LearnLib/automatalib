@@ -45,32 +45,20 @@ public abstract class TS {
 		}
 	}
 	
-	public static <S,I> Iterable<S> bfsOrder(final TransitionSystem<S,I,?> ts, final Collection<? extends I> inputs) {
-		return new Iterable<S>() {
-			@Override
-			public Iterator<S> iterator() {
-				return new BFSOrderIterator<S, I>(ts, inputs);
-			}
-			
-		};
+	public static <S,I> Iterable<S> bfsOrder(TransitionSystem<S,I,?> ts, Collection<? extends I> inputs) {
+		return () -> bfsOrderIterator(ts, inputs);
+	}
+	
+	public static <S,I> Iterator<S> bfsOrderIterator(TransitionSystem<S, I, ?> ts, Collection<? extends I> inputs) {
+		return new BFSOrderIterator<>(ts, inputs);
 	}
 	
 	public static <S,SP> Function<S,SP> stateProperties(final UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
-		return new Function<S,SP>() {
-			@Override
-			public SP apply(S elem) {
-				return uts.getStateProperty(elem);
-			}
-		};
+		return (s) -> uts.getStateProperty(s);
 	}
 	
 	public static <T,TP> Function<T,TP> transitionProperties(final UniversalTransitionSystem<?, ?, T, ?, TP> uts) {
-		return new Function<T,TP>() {
-			@Override
-			public TP apply(T elem) {
-				return uts.getTransitionProperty(elem);
-			}
-		};
+		return (t) -> uts.getTransitionProperty(t);
 	}
 	
 	public static <S,I> Iterator<I> definedInputsIterator(TransitionSystem<S, I, ?> ts,

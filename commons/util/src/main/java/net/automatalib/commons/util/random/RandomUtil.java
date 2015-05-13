@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 public class RandomUtil {
 	
 	public static int[] distinctIntegers(int num, int min, int max, Random rand) {
@@ -46,9 +48,23 @@ public class RandomUtil {
 		return distinctIntegers(num, 0, max, rand);
 	}
 	
+	@Nullable
+	public static <T> T choose(T[] array, Random rand) {
+		int len = array.length;
+		if (len == 0) {
+			return null;
+		}
+		int idx = rand.nextInt(array.length);
+		return array[idx];
+	}
 	
+	@Nullable
 	public static <T> T choose(List<? extends T> list, Random rand) {
-		int idx = rand.nextInt(list.size());
+		int size = list.size();
+		if (size == 0) {
+			return null;
+		}
+		int idx = rand.nextInt(size);
 		return list.get(idx);
 	}
 	

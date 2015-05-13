@@ -172,10 +172,13 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		return wrapState(trans);
 	}
 	
+	public int getIntTransition(int state, int input) {
+		int transId = state * alphabetSize + input;
+		return transitions[transId];
+	}
 	
 	public int getIntTransition(int state, I input) {
-		int transId = state * alphabetSize + alphabet.getSymbolIndex(input);
-		return transitions[transId];
+		return getIntTransition(state, alphabet.getSymbolIndex(input));
 	}
 
 	public void setInitialState(int state) {
@@ -381,6 +384,11 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	@Override
 	public Integer getTransition(int state, int input) {
 		return wrapState(getSuccessor(state, input));
+	}
+	
+	@Override
+	public int getSuccessor(int state, int input) {
+		return getIntTransition(state, input);
 	}
 	
 	@Override
