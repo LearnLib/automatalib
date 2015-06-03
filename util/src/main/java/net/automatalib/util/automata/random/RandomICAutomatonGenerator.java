@@ -195,8 +195,8 @@ public class RandomICAutomatonGenerator<SP,TP> {
 	 * parameters. Note that the automaton will <b>not</b> be minized.
 	 * 
 	 * @param numStates the number of states of the resulting automaton
-	 * @param alphabet the input symbols to consider during generation
-	 * @param the result automaton (should be empty)
+	 * @param inputs the input symbols to consider during generation
+	 * @param result the result automaton (should be empty)
 	 * @param r the randomness source
 	 * @return the result automaton 
 	 */

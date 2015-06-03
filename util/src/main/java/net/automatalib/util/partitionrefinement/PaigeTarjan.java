@@ -128,8 +128,8 @@ public class PaigeTarjan {
 	 * {@code j}, where <code>0 &lt;= i &lt; {@link #numStates}</code> and
 	 * <code>0 &lt;= j &lt; {@link #numInputs}</code>, the {@code j}-predecessors of {@code i} are
 	 * the elements of {@link #predData} from index
-	 * <code>{@link #predOfsData}[{@link #predOfsDataLow + j*{@link #numStates} + i]</code>, inclusive, to index
-	 * <code>{@link #predOfsData}[{@link #predOfsDataLow + j*{@link #numStates} + i + 1]</code>, exclusive.
+	 * <code>{@link #predOfsData}[{@link #predOfsDataLow} + j*{@link #numStates} + i]</code>, inclusive, to index
+	 * <code>{@link #predOfsData}[{@link #predOfsDataLow} + j*{@link #numStates} + i + 1]</code>, exclusive.
 	 */
 	public int[] predData;
 	

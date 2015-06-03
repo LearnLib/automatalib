@@ -139,7 +139,6 @@ public class HopcroftMinimization {
 	 * Pruning (see above) is performed after computing state equivalences.
 	 * 
 	 * @param mealy the Mealy machine to minimize
-	 * @param pruningMode the pruning mode (see above)
 	 * @return a minimized version of the specified Mealy machine
 	 */
 	public static <I,O,A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>>

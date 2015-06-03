@@ -69,7 +69,7 @@ public class Block {
 	 * belong to a potential sub-class of this block, and those that do not or have not been checked.
 	 * <p>
 	 * This variable will be maintained such that either <code>ptr == -1</code>, or
-	 * <code>{@link #low} <= ptr <= {@link #high}</code>.
+	 * <code>{@link #low} &lt;= ptr &lt;= {@link #high}</code>.
 	 */
 	public int ptr = -1;
 	/**
@@ -119,8 +119,8 @@ public class Block {
 	 * Splits this block, if applicable. If this block cannot be split, {@code null}
 	 * is returned.
 	 * <p>
-	 * A new block (the split result) is created if both <code>{@link #ptr} > {@link #low}</code>
-	 * and <code>{@link #ptr} < {@link #high}</code>. This new block will contain either the elements
+	 * A new block (the split result) is created if both <code>{@link #ptr} &gt; {@link #low}</code>
+	 * and <code>{@link #ptr} &lt; {@link #high}</code>. This new block will contain either the elements
 	 * between {@link #low} (inclusive) and {@link #ptr} (exclusive), or between {@link #ptr} (inclusive)
 	 * and {@link #high} (exclusive), depending on whichever range is smaller. This block will be updated
 	 * to contain the remaining elements.
