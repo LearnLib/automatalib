@@ -61,6 +61,10 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 		this.acceptance = new BitSet();
 	}
 	
+	public CompactDFA(CompactDFA<I> other) {
+		this(other.getInputAlphabet(), other);
+	}
+	
 	protected CompactDFA(Alphabet<I> alphabet, CompactDFA<?> other) {
 		super(alphabet, other);
 		this.acceptance = (BitSet)other.acceptance.clone();
