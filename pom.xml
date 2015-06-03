@@ -146,7 +146,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 		<guava.version>18.0</guava.version>
 		<findbugs.version>2.0.3</findbugs.version>
-		<trove4j.version>3.0.3</trove4j.version>
 		
 		<jung.version>2.0.1</jung.version>
 
@@ -155,7 +154,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 
 		<!-- Javadoc links -->
 		<brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
-		<trove4j.apidocs>http://trove4j.sourceforge.net/javadocs/</trove4j.apidocs>
 		<java8.apidocs>http://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
 		<guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
 		<jung.apidocs>http://jung.sourceforge.net/doc/api/</jung.apidocs>
@@ -262,7 +260,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 						<failOnError>false</failOnError>
 						<links>
 							<link>${java8.apidocs}</link>
-							<link>${trove4j.apidocs}</link>
 							<link>${guava.apidocs}</link>
 							<link>${brics-automaton.apidocs}</link>
 							<link>${jung.apidocs}</link>
@@ -372,7 +369,6 @@ http://www.gnu.de/documents/lgpl.en.html.
 					<failOnError>false</failOnError>
 					<links>
 						<link>${java8.apidocs}</link>
-						<link>${trove4j.apidocs}</link>
 						<link>${guava.apidocs}</link>
 						<link>${brics-automaton.apidocs}</link>
 						<link>${jung.apidocs}</link>
@@ -547,12 +543,6 @@ http://www.gnu.de/documents/lgpl.en.html.
  				<artifactId>jsr305</artifactId>
 				<version>${findbugs.version}</version>
 				<!-- <scope>provided</scope> -->
-			</dependency>
-			
-			<dependency>
-				<groupId>net.sf.trove4j</groupId>
-				<artifactId>trove4j</artifactId>
-				<version>${trove4j.version}</version>
 			</dependency>
 			
 			<!-- JUNG dependencies -->

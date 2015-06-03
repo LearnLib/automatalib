@@ -16,16 +16,12 @@
  */
 package net.automatalib.automata.base.compact;
 
-import gnu.trove.TCollections;
-import gnu.trove.TIntCollection;
-import gnu.trove.decorator.TIntSetDecorator;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.automatalib.automata.MutableAutomaton;
@@ -37,20 +33,18 @@ import net.automatalib.words.Alphabet;
 public abstract class AbstractCompactSimpleNondet<I, SP>
 		implements MutableAutomaton<Integer,I,Integer,SP,Void>,
 		UniversalFiniteAlphabetAutomaton<Integer,I,Integer,SP,Void>, StateIDs<Integer> {
-	
-	// FIXME: This should come with trove!
-	public static final TIntSet EMPTY_SET
-		= TCollections.unmodifiableSet(new TIntHashSet());
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
 	
 	protected final Alphabet<I> alphabet;
 	protected final int alphabetSize;
-	protected TIntSet[] transitions;
+//	protected TIntSet[] transitions;
+	protected Set<Integer>[] transitions; // TODO: replace by primitive specialization
 	protected int stateCapacity;
 	protected int numStates;
-	protected final TIntSet initial;
+//	protected final TIntSet initial;
+	protected final Set<Integer> initial; // TODO: replace by primitive specialization
 	
 	private final float resizeFactor;
 	
@@ -66,15 +60,18 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 		this(alphabet, DEFAULT_INIT_CAPACITY, resizeFactor);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public AbstractCompactSimpleNondet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
 		this.alphabet = alphabet;
 		this.alphabetSize = alphabet.size();
-		this.transitions = new TIntSet[stateCapacity * alphabetSize];
+//		this.transitions = new TIntSet[stateCapacity * alphabetSize];
+		this.transitions = new Set[stateCapacity * alphabetSize];  // TODO: replace by primitive specialization
 		
 		this.resizeFactor = resizeFactor;
 		this.stateCapacity = stateCapacity;
 		
-		this.initial = new TIntHashSet();
+//		this.initial = new TIntHashSet();
+		this.initial = new HashSet<>(); // TODO: replace by primitive specialization
 	}
 	
 	protected AbstractCompactSimpleNondet(Alphabet<I> alphabet, AbstractCompactSimpleNondet<?, ?> other) {
@@ -82,18 +79,22 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 		this.alphabetSize = alphabet.size();
 		this.transitions = other.transitions.clone();
 		for (int i = 0; i < transitions.length; i++) {
-			TIntSet tgts = transitions[i];
+//			TIntSet tgts = transitions[i];
+			Set<Integer> tgts = transitions[i]; // TODO: replace by primitive specialization
 			if (tgts != null) {
-				transitions[i] = new TIntHashSet(tgts);
+//				transitions[i] = new TIntHashSet(tgts);
+				transitions[i] = new HashSet<>(tgts); // TODO: replace by primitive specialization
 			}
 		}
 		this.numStates = other.numStates;
 		this.resizeFactor = other.resizeFactor;
 		this.stateCapacity = other.stateCapacity;
 		
-		this.initial = new TIntHashSet(other.initial);
+//		this.initial = new TIntHashSet(other.initial);
+		this.initial = new HashSet<>(); // TODO: replace by primitive specialization
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void ensureCapacity(int newCapacity) {
 		if(newCapacity <= stateCapacity)
 			return;
@@ -102,7 +103,8 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 		if(newCap < newCapacity)
 			newCap = newCapacity;
 		
-		TIntSet[] newTrans = new TIntSet[newCap * alphabetSize];
+//		TIntSet[] newTrans = new TIntSet[newCap * alphabetSize];
+		Set<Integer>[] newTrans = new Set[newCap * alphabetSize]; // TODO: replace by primitive specialization
 		System.arraycopy(transitions, 0, newTrans, 0, stateCapacity * alphabetSize);
 		this.transitions = newTrans;
 		ensureCapacity(stateCapacity, newCap);
@@ -154,12 +156,14 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 	}
 
 	
-	public TIntCollection getIntInitialStates() {
+//	public TIntCollection getIntInitialStates() {
+	public Set<Integer> getIntInitialStates() { // TODO: replace by primitive specialization
 		return initial;
 	}
 	
 	
-	public TIntCollection getIntTransitions(int state, I input) {
+//	public TIntCollection getIntTransitions(int state, I input) {
+	public Set<Integer> getIntTransitions(int state, I input) { // TODO: replace by primitive specialization
 		int transId = state * alphabetSize + alphabet.getSymbolIndex(input);
 		return successors(transId);
 	}
@@ -182,7 +186,8 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 	
 	public void removeTransition(int stateId, int inputIdx, int successorId) {
 		int transIdx = stateId * alphabetSize + inputIdx;
-		TIntCollection successors = transitions[transIdx];
+//		TIntCollection successors = transitions[transIdx];
+		Collection<Integer> successors = transitions[transIdx]; // TODO: replace by primitive specialization
 		if(successors != null) {
 			successors.remove(successorId);
 		}
@@ -213,9 +218,11 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 	
 	public void addTransition(int stateId, int inputIdx, int succId) {
 		int transIdx = stateId * alphabetSize + inputIdx;
-		TIntSet successors = transitions[transIdx];
+//		TIntSet successors = transitions[transIdx];
+		Set<Integer> successors = transitions[transIdx]; // TODO: replace by primitive specialization
 		if(successors == null) {
-			successors = new TIntHashSet();
+//			successors = new TIntHashSet();
+			successors = new HashSet<>(); // TODO: replace by primitive specialization
 			transitions[transIdx] = successors;
 		}
 		successors.add(succId);
@@ -310,10 +317,13 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 		return this;
 	}
 	
-	protected TIntSet successors(int transId) {
-		TIntSet successors = transitions[transId];
+//	protected TIntSet successors(int transId) {
+	protected Set<Integer> successors(int transId) { // TODO: replace by primitive specialization
+//		TIntSet successors = transitions[transId];
+		Set<Integer> successors = transitions[transId]; // TODO: replace by primitive specialization
 		if(successors == null) {
-			return EMPTY_SET;
+//			return EMPTY_SET;
+			return Collections.emptySet(); // TODO: replace by primitive specialization
 		}
 		return successors;
 	}
@@ -350,22 +360,27 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 	@Override
 	public void setTransitions(Integer state, I input,
 			Collection<? extends Integer> transitions) {
-		TIntList successors = new TIntArrayList(transitions.size());
+//		TIntList successors = new TIntArrayList(transitions.size());
+		List<Integer> successors = new ArrayList<>(transitions.size()); // TODO: replace by primitive specialization
 		for(Integer succ : transitions) {
-			successors.add(succ.intValue());
+			successors.add(succ);
 		}
 		setTransitions(state, input, successors);
 	}
 	
-	public void setTransitions(int state, I input, TIntCollection successors) {
+//	public void setTransitions(int state, I input, TIntCollection successors) {
+	public void setTransitions(int state, I input, Collection<? extends Integer> successors) { // TODO: replace by primitive specialization
 		setTransitions(state, alphabet.getSymbolIndex(input), successors);
 	}
 	
-	public void setTransitions(int state, int inputIdx, TIntCollection successors) {
+//	public void setTransitions(int state, int inputIdx, TIntCollection successors) {
+	public void setTransitions(int state, int inputIdx, Collection<? extends Integer> successors) { // TODO: replace by primitive specialization
 		int transIdx = state * alphabetSize + inputIdx;
-		TIntSet succs = transitions[transIdx];
+//		TIntSet succs = transitions[transIdx];
+		Set<Integer> succs = transitions[transIdx]; // TODO: replace by primitive specialization
 		if(succs == null) {
-			succs = new TIntHashSet(successors);
+//			succs = new TIntHashSet(successors);
+			succs = new HashSet<>(); // TODO: replace by primitive specialization
 			transitions[transIdx] = succs;
 		}
 		else {
@@ -376,21 +391,24 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 
 	@Override
 	public Collection<? extends Integer> getTransitions(Integer state, I input) {
-		return new TIntSetDecorator(getTransitions(state.intValue(), input));
+//		return new TIntSetDecorator(getTransitions(state.intValue(), input));
+		return getTransitions(state.intValue(), input); // TODO: replace by primitive specialization
 	}
 	
-	public TIntSet getTransitions(int state, I input) {
+//	public TIntSet getTransitions(int state, I input) {
+	public Set<Integer> getTransitions(int state, I input) { // TODO: replace by primitive specialization
 		return getTransitions(state, alphabet.getSymbolIndex(input));
 	}
 	
-	public TIntSet getTransitions(int state, int inputIdx) {
+//	public TIntSet getTransitions(int state, int inputIdx) {
+	public Set<Integer> getTransitions(int state, int inputIdx) { // TODO: replace by primitive specialization
 		return successors(state * alphabetSize + inputIdx);
 	}
 
 	@Override
 	public Set<? extends Integer> getInitialStates() {
-		return new TIntSetDecorator(initial);
+//		return new TIntSetDecorator(initial);
+		return initial; // TODO: replace by primitive specialization
 	}
-
 	
 }

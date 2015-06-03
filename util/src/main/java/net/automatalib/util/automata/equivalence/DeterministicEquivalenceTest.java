@@ -16,11 +16,10 @@
  */
 package net.automatalib.util.automata.equivalence;
 
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
@@ -201,7 +200,8 @@ bfs:	while((currPair = bfsQueue.poll()) != null) {
 		StatePair<S,S2> currPair = null;
 		int lastId = otherStateIds.getStateId(otherInit) * refSize + refStateIds.getStateId(refInit);
 		
-		TIntObjectMap<Pred<I>> preds = new TIntObjectHashMap<>();
+//		TIntObjectMap<Pred<I>> preds = new TIntObjectHashMap<>();
+		Map<Integer,Pred<I>> preds = new HashMap<>(); // TODO: replace by primitive specialization
 		preds.put(lastId, new Pred<I>(-1, null));
 		
 		int currDepth = 0;
