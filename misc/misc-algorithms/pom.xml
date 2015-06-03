@@ -34,7 +34,7 @@ limitations under the License.
 	<parent>
 		<groupId>net.automatalib</groupId>
 		<artifactId>automata-misc-parent</artifactId>
-		<version>0.6.0</version>
+		<version>0.6.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
