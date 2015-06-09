@@ -130,6 +130,14 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
 				}
 				// confluence always requires cloning, to separate this path from other paths
 				last = hiddenClone(last);
+				if(conf == null) {
+					State prev = path.peek().state;
+					if (prev != init) {
+						updateSignature(prev, path.peek().transIdx , last);
+					} else {
+						updateInitSignature(path.peek().transIdx, last);
+					}
+				}
 			}
 			else if(last != init) {
 				hide(last);

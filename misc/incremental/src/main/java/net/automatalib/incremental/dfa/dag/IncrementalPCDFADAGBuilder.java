@@ -135,6 +135,14 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
 					conf = null;
 				}
 				last = hiddenClone(last);
+				if(conf == null) {
+					State prev = path.peek().state;
+					if (prev != init) {
+						updateSignature(prev, path.peek().transIdx , last);
+					} else {
+						updateInitSignature(path.peek().transIdx, last);
+					}
+				}
 			}
 			else if(last != init) {
 				hide(last);

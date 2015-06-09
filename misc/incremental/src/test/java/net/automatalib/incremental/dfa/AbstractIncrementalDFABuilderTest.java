@@ -40,6 +40,20 @@ public abstract class AbstractIncrementalDFABuilderTest {
 	}
 
 	@Test
+	public void testConfluenceBug() {
+		Word<Character> wB1 = Word.fromString("aaa");
+		Word<Character> wB2 = Word.fromString("bba");
+		Word<Character> wB3 = Word.fromString("aabaa");
+		
+		incDfa.insert(wB1, true);
+		incDfa.insert(wB2, true);
+		incDfa.insert(wB3, true);
+		
+		Assert.assertEquals(incDfa.lookup(Word.fromString("aababaa")), Acceptance.DONT_KNOW);
+		this.incDfa = createIncrementalDFABuilder(testAlphabet);
+	}
+
+	@Test (dependsOnMethods = "testConfluenceBug")
 	public void testLookup() {
 		Word<Character> w1 = Word.fromString("abc");
 		Word<Character> w2 = Word.fromString("ac");

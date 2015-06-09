@@ -41,6 +41,20 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
 	}
 
 	@Test
+	public void testConfluenceBug() {
+		Word<Character> wB1 = Word.fromString("aaa");
+		Word<Character> wB2 = Word.fromString("bba");
+		Word<Character> wB3 = Word.fromString("aabaa");
+		
+		incPcDfa.insert(wB1, true);
+		incPcDfa.insert(wB2, true);
+		incPcDfa.insert(wB3, true);
+		
+		Assert.assertEquals(incPcDfa.lookup(Word.fromString("aababaa")), Acceptance.DONT_KNOW);
+		this.incPcDfa = createIncrementalPCDFABuilder(testAlphabet);
+	}
+
+	@Test (dependsOnMethods = "testConfluenceBug")
 	public void testLookup() {
 		Word<Character> w1 = Word.fromString("abc");
 		Word<Character> w2 = Word.fromString("acb");
