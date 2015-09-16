@@ -817,7 +817,7 @@ public class PaigeTarjanInitializers {
 	
 
 	
-	private static void prefixSum(int[] array, int startInclusive, int endExclusive) {
+	public static void prefixSum(int[] array, int startInclusive, int endExclusive) {
 		int curr = array[startInclusive];
 		for (int i = startInclusive + 1; i < endExclusive; i++) {
 			curr += array[i];
