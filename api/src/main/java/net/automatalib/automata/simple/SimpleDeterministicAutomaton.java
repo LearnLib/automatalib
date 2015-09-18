@@ -96,7 +96,7 @@ public interface SimpleDeterministicAutomaton<S, I> extends
 			}
 			
 			protected final S intToState(int stateId) {
-				return (stateId < 0) ? stateIds.getState(stateId) : null;
+				return (stateId >= 0) ? stateIds.getState(stateId) : null;
 			}
 		}
 	}
