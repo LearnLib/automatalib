@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.UnionFind;
 import net.automatalib.graphs.dot.DelegateDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -603,7 +604,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 			Collection<? extends I> inputs, boolean omitUndefined) {
 		int thisStates = register.size();
 
-		UnionFind uf = new UnionFind(thisStates + mealy.size());
+		IntDisjointSets uf = new UnionFind(thisStates + mealy.size());
 
 		Map<State, Integer> ids = new HashMap<State, Integer>();
 

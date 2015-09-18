@@ -30,6 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.UnionFind;
 import net.automatalib.graphs.dot.DelegateDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
@@ -207,7 +208,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I>
 		if(!omitUndefined)
 			targetStates++;
 		
-		UnionFind uf = new UnionFind(thisStates + targetStates);
+		IntDisjointSets uf = new UnionFind(thisStates + targetStates);
 
 		State init1 = init;
 		S init2 = target.getInitialState();

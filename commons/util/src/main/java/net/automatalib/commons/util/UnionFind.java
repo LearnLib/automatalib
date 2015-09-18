@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2015 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ package net.automatalib.commons.util;
  * @author fhowar
  * @author Malte Isberner
  */
-public final class UnionFind {
+public final class UnionFind implements IntDisjointSets {
 
 	private final int[] p;
 	private final int[] rank;
@@ -44,15 +44,6 @@ public final class UnionFind {
 
 	public int size() {
 		return p.length;
-	}
-	/**
-	 * Unites the sets containing the two given elements.
-	 * @param p the first element
-	 * @param q the second element
-	 * @return the identifier of the resulting set
-	 */
-	public int union(int p, int q) {
-		return link(find(p), find(q));
 	}
 
 	/**
@@ -97,4 +88,5 @@ public final class UnionFind {
 		
 		return ancestor;
 	}
+
 }
