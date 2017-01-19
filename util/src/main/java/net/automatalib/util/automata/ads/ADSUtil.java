@@ -24,12 +24,7 @@ public class ADSUtil {
 			return 0;
 		}
 
-		return (node.isLeaf() ? 0 : 1) + node.getChildren()
-				.values()
-				.stream()
-				.mapToInt(ADSUtil::computeLength)
-				.max()
-				.getAsInt();
+		return 1 + node.getChildren().values().stream().mapToInt(ADSUtil::computeLength).max().getAsInt();
 	}
 
 	public static <S, I, O> int countSymbolNodes(final ADSNode<S, I, O> node) {
@@ -37,11 +32,7 @@ public class ADSUtil {
 			return 0;
 		}
 
-		return (node.isLeaf() ? 0 : 1) + node.getChildren()
-				.values()
-				.stream()
-				.mapToInt(ADSUtil::countSymbolNodes)
-				.sum();
+		return 1 + node.getChildren().values().stream().mapToInt(ADSUtil::countSymbolNodes).sum();
 	}
 
 	public static <S, I, O> Pair<ADSNode<S, I, O>, ADSNode<S, I, O>> buildFromTrace(final MealyMachine<S, I, ?, O> automaton,
