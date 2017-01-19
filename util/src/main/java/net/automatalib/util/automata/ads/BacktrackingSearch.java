@@ -1,7 +1,6 @@
 package net.automatalib.util.automata.ads;
 
 import com.google.common.collect.Maps;
-import com.google.common.math.LongMath;
 import net.automatalib.automata.ads.ADSNode;
 import net.automatalib.automata.ads.impl.ADSLeafNode;
 import net.automatalib.automata.ads.impl.ADSSymbolNode;
@@ -110,8 +109,9 @@ public class BacktrackingSearch {
 																final SplitTree<S, I, O> node,
 																final int originalPartitionSize) {
 
-		final long maximumSplittingWordLength =
-				computeMaximumSplittingWordLength(automaton, node, originalPartitionSize);
+		final long maximumSplittingWordLength = ADSUtil.computeMaximumSplittingWordLength(automaton.size(),
+																						  node.getPartition().size(),
+																						  originalPartitionSize);
 		final Queue<Word<I>> splittingWordCandidates = new LinkedList<>();
 		final StateIDs<S> stateIds = automaton.stateIDs();
 		final Set<BitSet> cache = new HashSet<>();
@@ -466,19 +466,5 @@ public class BacktrackingSearch {
 		}
 
 		return result;
-	}
-
-	/**
-	 * See: S.M. Gobershtein -- "Check Words for the States of a Finite Automaton", Cybernetics 10.1 (1974)
-	 */
-	private static long computeMaximumSplittingWordLength(final MealyMachine<?, ?, ?, ?> automaton,
-														  final SplitTree<?, ?, ?> node,
-														  final int originalPartitionSize) {
-
-		final int n = automaton.size();
-		final int m = originalPartitionSize;
-		final int i = node.getPartition().size();
-
-		return LongMath.binomial(n, i) - LongMath.binomial(m - 1, i - 1) - 1;
 	}
 }

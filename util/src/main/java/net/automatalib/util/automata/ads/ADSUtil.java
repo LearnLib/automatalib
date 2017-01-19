@@ -1,5 +1,6 @@
 package net.automatalib.util.automata.ads;
 
+import com.google.common.math.LongMath;
 import net.automatalib.automata.ads.ADSNode;
 import net.automatalib.automata.ads.impl.ADSSymbolNode;
 import net.automatalib.automata.transout.MealyMachine;
@@ -112,6 +113,25 @@ public class ADSUtil {
 		}
 
 		throw new IllegalArgumentException("No child relationship");
+	}
+
+	/**
+	 * Computes an upper bound for the length of a splitting word. Based on
+	 *
+	 * I.V. Kogan. "Estimated Length of a Minimal Simple Conditional Diagnostic Experiment". In: Automation and Remote
+	 * Control 34 (1973)
+	 *
+	 * @param n the size of the automaton (number of states)
+	 * @param i the number of states that should be distinguished by the current splitting word
+	 * @param m the number of states that should originally be distinguished
+	 * @return
+	 */
+	public static long computeMaximumSplittingWordLength(final int n, final int i, final int m) {
+		if (m == 2) {
+			return n;
+		}
+
+		return LongMath.binomial(n, i) - LongMath.binomial(m - 1, i - 1) - 1;
 	}
 
 }
