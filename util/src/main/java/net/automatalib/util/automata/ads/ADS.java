@@ -1,7 +1,7 @@
 package net.automatalib.util.automata.ads;
 
 import net.automatalib.automata.ads.ADSNode;
-import net.automatalib.automata.ads.impl.ADSFinalNode;
+import net.automatalib.automata.ads.impl.ADSLeafNode;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.words.Alphabet;
 
@@ -37,7 +37,7 @@ public class ADS {
 		}
 		else if (states.size() == 1) {
 			final S singleState = states.iterator().next();
-			return Optional.of(new ADSFinalNode<>(null, singleState));
+			return Optional.of(new ADSLeafNode<>(null, singleState));
 		}
 		else if (states.size() == 2) {
 			return StateEquivalence.compute(automaton, input, states);
@@ -73,7 +73,7 @@ public class ADS {
 				throw new IllegalStateException();
 			}
 
-			final ADSNode<S, I, O> result = new ADSFinalNode<>(null, node.getMapping().get(state));
+			final ADSNode<S, I, O> result = new ADSLeafNode<>(null, node.getMapping().get(state));
 			return Optional.of(result);
 		}
 		else if (node.getPartition().size() == 2) {

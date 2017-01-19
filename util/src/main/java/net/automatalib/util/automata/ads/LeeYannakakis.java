@@ -4,7 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.ads.ADSNode;
-import net.automatalib.automata.ads.impl.ADSFinalNode;
+import net.automatalib.automata.ads.impl.ADSLeafNode;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.base.compact.CompactEdge;
@@ -210,7 +210,7 @@ public class LeeYannakakis {
 
 			assert currentToInitialMapping.containsKey(currentNode) : new IllegalStateException();
 
-			return new ADSFinalNode<>(predecessor, currentToInitialMapping.get(currentNode));
+			return new ADSLeafNode<>(predecessor, currentToInitialMapping.get(currentNode));
 		}
 
 		final SplitTree<S, I, O> u = st.findLowestSubsetNode(currentSet).orElseThrow(IllegalStateException::new);

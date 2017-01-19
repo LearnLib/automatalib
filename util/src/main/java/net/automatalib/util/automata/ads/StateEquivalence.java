@@ -2,7 +2,7 @@ package net.automatalib.util.automata.ads;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.ads.ADSNode;
-import net.automatalib.automata.ads.impl.ADSFinalNode;
+import net.automatalib.automata.ads.impl.ADSLeafNode;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.util.automata.Automata;
@@ -81,8 +81,8 @@ public class StateEquivalence {
 		final ADSNode<S, I, O> head = ads.getFirst();
 		final ADSNode<S, I, O> tail = ads.getSecond();
 
-		final ADSNode<S, I, O> s1FinalNode = new ADSFinalNode<>(tail, node.getMapping().get(s1));
-		final ADSNode<S, I, O> s2FinalNode = new ADSFinalNode<>(tail, node.getMapping().get(s2));
+		final ADSNode<S, I, O> s1FinalNode = new ADSLeafNode<>(tail, node.getMapping().get(s1));
+		final ADSNode<S, I, O> s2FinalNode = new ADSLeafNode<>(tail, node.getMapping().get(s2));
 
 		tail.getChildren().put(s1Output.getSymbol(sharedOutput.length()), s1FinalNode);
 		tail.getChildren().put(s2Output.getSymbol(sharedOutput.length()), s2FinalNode);

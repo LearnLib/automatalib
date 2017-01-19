@@ -5,14 +5,14 @@ import net.automatalib.automata.ads.ADSNode;
 import java.util.Collections;
 import java.util.Map;
 
-public class ADSFinalNode<S, I, O> implements ADSNode<S, I, O> {
+public class ADSLeafNode<S, I, O> implements ADSNode<S, I, O> {
 
 	private ADSNode<S, I, O> parent;
 	private S hypothesisState;
 
-	public ADSFinalNode() {}
+	public ADSLeafNode() {}
 
-	public ADSFinalNode(ADSNode<S, I, O> parent, S hypothesisState) {
+	public ADSLeafNode(ADSNode<S, I, O> parent, S hypothesisState) {
 		this.parent = parent;
 		this.hypothesisState = hypothesisState;
 	}

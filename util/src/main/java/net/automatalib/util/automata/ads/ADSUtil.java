@@ -71,25 +71,25 @@ public class ADSUtil {
 		return new Pair<>(head, tempADS);
 	}
 
-	public static <S, I, O> Set<ADSNode<S, I, O>> collectFinalNodes(final ADSNode<S, I, O> root) {
+	public static <S, I, O> Set<ADSNode<S, I, O>> collectLeaves(final ADSNode<S, I, O> root) {
 		final Set<ADSNode<S, I, O>> result = new LinkedHashSet<>();
-		collectFinalNodesRecursively(result, root);
+		collectLeavesRecursively(result, root);
 		return result;
 	}
 
-	private static <S, I, O> void collectFinalNodesRecursively(final Set<ADSNode<S, I, O>> nodes,
-															   final ADSNode<S, I, O> current) {
+	private static <S, I, O> void collectLeavesRecursively(final Set<ADSNode<S, I, O>> nodes,
+														   final ADSNode<S, I, O> current) {
 		if (current.isLeaf()) {
 			nodes.add(current);
 		}
 		else {
 			for (ADSNode<S, I, O> n : current.getChildren().values()) {
-				collectFinalNodesRecursively(nodes, n);
+				collectLeavesRecursively(nodes, n);
 			}
 		}
 	}
 
-	public static <S, I, O> Pair<Word<I>, Word<O>> buildTraceForFinalNode(final ADSNode<S, I, O> node) {
+	public static <S, I, O> Pair<Word<I>, Word<O>> buildTraceForNode(final ADSNode<S, I, O> node) {
 
 		ADSNode<S, I, O> parentIter = node.getParent();
 		ADSNode<S, I, O> nodeIter = node;

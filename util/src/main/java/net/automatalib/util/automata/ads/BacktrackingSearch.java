@@ -3,7 +3,7 @@ package net.automatalib.util.automata.ads;
 import com.google.common.collect.Maps;
 import com.google.common.math.LongMath;
 import net.automatalib.automata.ads.ADSNode;
-import net.automatalib.automata.ads.impl.ADSFinalNode;
+import net.automatalib.automata.ads.impl.ADSLeafNode;
 import net.automatalib.automata.ads.impl.ADSSymbolNode;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transout.MealyMachine;
@@ -427,7 +427,7 @@ public class BacktrackingSearch {
 		if (targets.size() == 1) {
 			final S target = targets.iterator().next();
 
-			return new ADSFinalNode<>(null, currentToInitialMapping.get(target));
+			return new ADSLeafNode<>(null, currentToInitialMapping.get(target));
 		}
 
 		final I i = searchState.symbol;

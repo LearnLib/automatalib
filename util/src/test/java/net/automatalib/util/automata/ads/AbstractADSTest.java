@@ -72,12 +72,12 @@ public class AbstractADSTest {
 		Assert.assertTrue(potentialADS.isPresent());
 
 		final ADSNode<Integer, I, O> ads = potentialADS.get();
-		final Set<ADSNode<Integer, I, O>> finalNodes = ADSUtil.collectFinalNodes(ads);
+		final Set<ADSNode<Integer, I, O>> leaves = ADSUtil.collectLeaves(ads);
 
-		Assert.assertEquals(targets, finalNodes.stream().map(ADSNode::getHypothesisState).collect(Collectors.toSet()));
+		Assert.assertEquals(targets, leaves.stream().map(ADSNode::getHypothesisState).collect(Collectors.toSet()));
 
 		final Map<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> traces =
-				finalNodes.stream().collect(Collectors.toMap(Function.identity(), ADSUtil::buildTraceForFinalNode));
+				leaves.stream().collect(Collectors.toMap(Function.identity(), ADSUtil::buildTraceForNode));
 
 		// check matching outputs
 		for (Map.Entry<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> entry : traces.entrySet()) {
