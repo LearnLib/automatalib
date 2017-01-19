@@ -30,7 +30,7 @@ public class StateEquivalence {
 	 *
 	 * @param automaton the automaton for which an ADS should be computed
 	 * @param input     the input alphabet of the automaton
-	 * @param states    the set of states for should be distinguished by the computed ADS
+	 * @param states    the set of states which should be distinguished by the computed ADS
 	 * @param <S>       (hypothesis) state type
 	 * @param <I>       input alphabet type
 	 * @param <O>       output alphabet type
