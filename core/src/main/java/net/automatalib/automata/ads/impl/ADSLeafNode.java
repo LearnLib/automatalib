@@ -18,8 +18,6 @@ public class ADSLeafNode<S, I, O> implements ADSNode<S, I, O> {
 	private ADSNode<S, I, O> parent;
 	private S hypothesisState;
 
-	public ADSLeafNode() {}
-
 	public ADSLeafNode(ADSNode<S, I, O> parent, S hypothesisState) {
 		this.parent = parent;
 		this.hypothesisState = hypothesisState;

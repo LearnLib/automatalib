@@ -21,12 +21,8 @@ public class ADSSymbolNode<S, I, O> implements ADSNode<S, I, O> {
 
 	private Map<O, ADSNode<S, I, O>> successors;
 
-	public ADSSymbolNode() {
-		this.successors = new HashMap<>();
-	}
-
 	public ADSSymbolNode(ADSNode<S, I, O> parent, I symbol) {
-		this();
+		this.successors = new HashMap<>();
 		this.parent = parent;
 		this.symbol = symbol;
 	}
