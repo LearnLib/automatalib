@@ -5,6 +5,14 @@ import net.automatalib.automata.ads.ADSNode;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Implementation of a symbol node
+ *
+ * @param <S> (hypothesis) state type
+ * @param <I> input alphabet type
+ * @param <O> output alphabet type
+ * @author frohme
+ */
 public class ADSSymbolNode<S, I, O> implements ADSNode<S, I, O> {
 
 	private ADSNode<S, I, O> parent;
