@@ -23,21 +23,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class AbstractCompactSimpleNondet<I, SP>
 		implements MutableAutomaton<Integer,I,Integer,SP,Void>,
-		UniversalFiniteAlphabetAutomaton<Integer,I,Integer,SP,Void>, StateIDs<Integer> {
+		UniversalFiniteAlphabetAutomaton<Integer,I,Integer,SP,Void>,
+		StateIDs<Integer>,
+		GrowableAlphabetAutomaton<I> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
 	
-	protected final Alphabet<I> alphabet;
-	protected final int alphabetSize;
+	protected final GrowingAlphabet<I> alphabet;
+	protected int alphabetSize;
 //	protected TIntSet[] transitions;
 	protected Set<Integer>[] transitions; // TODO: replace by primitive specialization
 	protected int stateCapacity;
@@ -61,7 +66,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 	
 	@SuppressWarnings("unchecked")
 	public AbstractCompactSimpleNondet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.alphabetSize = alphabet.size();
 //		this.transitions = new TIntSet[stateCapacity * alphabetSize];
 		this.transitions = new Set[stateCapacity * alphabetSize];  // TODO: replace by primitive specialization
@@ -74,7 +79,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 	}
 	
 	protected AbstractCompactSimpleNondet(Alphabet<I> alphabet, AbstractCompactSimpleNondet<?, ?> other) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.alphabetSize = alphabet.size();
 		this.transitions = other.transitions.clone();
 		for (int i = 0; i < transitions.length; i++) {
@@ -409,5 +414,26 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 //		return new TIntSetDecorator(initial);
 		return initial; // TODO: replace by primitive specialization
 	}
-	
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		final int oldAlphabetSize = this.alphabetSize;
+		final int newAlphabetSize = oldAlphabetSize + 1;
+		final int newArraySize = this.transitions.length + this.numStates;
+		final Set<Integer>[] newTransitions = new Set[newArraySize];
+
+		for (int i = 0; i < this.numStates; i++) {
+			System.arraycopy(transitions, i*oldAlphabetSize, newTransitions, i*newAlphabetSize, oldAlphabetSize);
+		}
+
+		this.transitions = newTransitions;
+		this.alphabet.addSymbol(symbol);
+		this.alphabetSize = newAlphabetSize;
+	}
 }

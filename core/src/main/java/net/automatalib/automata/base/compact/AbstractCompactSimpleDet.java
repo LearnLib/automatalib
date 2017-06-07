@@ -19,24 +19,28 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class AbstractCompactSimpleDet<I, SP>
 		implements MutableDeterministic<Integer,I,Integer,SP,Void>,
 		UniversalFiniteAlphabetAutomaton<Integer,I,Integer,SP,Void>,
 		StateIDs<Integer>,
 		MutableDeterministic.StateIntAbstraction<I, Integer, SP, Void>,
-		MutableDeterministic.FullIntAbstraction<Integer, SP, Void> {
+		MutableDeterministic.FullIntAbstraction<Integer, SP, Void>,
+		GrowableAlphabetAutomaton<I> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
 	
-	protected final Alphabet<I> alphabet;
-	protected final int alphabetSize;
+	protected final GrowingAlphabet<I> alphabet;
+	protected int alphabetSize;
 	protected int[] transitions;
 	protected int stateCapacity;
 	protected int numStates;
@@ -56,7 +60,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	}
 	
 	public AbstractCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.alphabetSize = alphabet.size();
 		this.transitions = new int[stateCapacity * alphabetSize];
 		Arrays.fill(this.transitions, 0, this.transitions.length, INVALID_STATE);
@@ -66,7 +70,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	
 	protected AbstractCompactSimpleDet(Alphabet<I> alphabet, int numStates, int initial, int[] transitions,
 			float resizeFactor) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.alphabetSize = alphabet.size();
 		this.numStates = numStates;
 		if (initial < 0 || initial >= numStates) {
@@ -428,5 +432,27 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		}
 		return state.intValue();
 	}
-	
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		final int oldAlphabetSize = this.alphabetSize;
+		final int newAlphabetSize = oldAlphabetSize + 1;
+		final int newArraySize = this.transitions.length + this.numStates;
+		final int[] newTransitions = new int[newArraySize];
+
+		Arrays.fill(newTransitions, 0, newArraySize, INVALID_STATE);
+
+		for (int i = 0; i < this.numStates; i++) {
+			System.arraycopy(transitions, i*oldAlphabetSize, newTransitions, i*newAlphabetSize, oldAlphabetSize);
+		}
+
+		this.transitions = newTransitions;
+		this.alphabet.addSymbol(symbol);
+		this.alphabetSize = newAlphabetSize;
+	}
 }

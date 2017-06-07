@@ -17,22 +17,26 @@ package net.automatalib.automata.base.compact;
 
 import java.util.Collection;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		implements MutableDeterministic<Integer,I,T,SP,TP>, StateIDs<Integer>, UniversalFiniteAlphabetAutomaton<Integer,I,T,SP,TP>,
 		MutableDeterministic.StateIntAbstraction<I, T, SP, TP>,
-		MutableDeterministic.FullIntAbstraction<T, SP, TP> {
+		MutableDeterministic.FullIntAbstraction<T, SP, TP>,
+		GrowableAlphabetAutomaton<I> {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
-	
-	protected final Alphabet<I> alphabet;
-	protected final int alphabetSize;
+
+	protected final GrowingAlphabet<I> alphabet;
+	protected int alphabetSize;
 	protected Object[] transitions;
 	protected int stateCapacity; 
 	protected int numStates;
@@ -63,7 +67,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 	}
 	
 	public AbstractCompactDeterministic(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.alphabetSize = alphabet.size();
 		this.transitions = new Object[stateCapacity * alphabetSize];
 		this.resizeFactor = resizeFactor;
@@ -284,4 +288,26 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 	public int numInputs() {
 		return alphabetSize;
 	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		final int oldAlphabetSize = this.alphabetSize;
+		final int newAlphabetSize = oldAlphabetSize + 1;
+		final int newArraySize = this.transitions.length + this.numStates;
+		final Object[] newTransitions = new Object[newArraySize];
+
+		for (int i = 0; i < this.numStates; i++) {
+			System.arraycopy(transitions, i*oldAlphabetSize, newTransitions, i*newAlphabetSize, oldAlphabetSize);
+		}
+
+		this.transitions = newTransitions;
+		this.alphabet.addSymbol(symbol);
+		this.alphabetSize = newAlphabetSize;
+	}
+
 }
