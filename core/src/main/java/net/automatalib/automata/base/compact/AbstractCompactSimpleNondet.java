@@ -384,8 +384,8 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 		}
 		else {
 			succs.clear();
-			succs.addAll(successors);
 		}
+		succs.addAll(successors);
 	}
 
 	@Override
