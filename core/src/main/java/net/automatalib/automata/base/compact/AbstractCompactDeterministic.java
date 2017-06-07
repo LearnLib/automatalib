@@ -36,18 +36,18 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 	protected Object[] transitions;
 	protected int stateCapacity; 
 	protected int numStates;
-	protected int initial = -1;
+	protected int initial = INVALID_STATE;
 	protected final float resizeFactor;
 	
 	
 	protected static final int getId(Integer id) {
-		return (id != null) ? id.intValue() : -1;
+		return (id != null) ? id.intValue() : INVALID_STATE;
 	}
 	
 	
 	
 	protected static final Integer makeId(int id) {
-		return (id != -1) ? Integer.valueOf(id) : null;
+		return (id != INVALID_STATE) ? Integer.valueOf(id) : null;
 	}
 	
 	public AbstractCompactDeterministic(Alphabet<I> alphabet) {
@@ -199,7 +199,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		numStates = 0;
 		for(int i = 0; i < endIdx; i++)
 			transitions[i] = null;
-		this.initial = -1;
+		this.initial = INVALID_STATE;
 	}
 	
 	protected final int createState() {
@@ -282,7 +282,6 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 
 	@Override
 	public int numInputs() {
-		return alphabet.size();
+		return alphabetSize;
 	}
-	
 }

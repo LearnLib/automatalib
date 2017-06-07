@@ -40,7 +40,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	protected int[] transitions;
 	protected int stateCapacity;
 	protected int numStates;
-	protected int initial = -1;
+	protected int initial = INVALID_STATE;
 	protected final float resizeFactor;
 	
 	public AbstractCompactSimpleDet(Alphabet<I> alphabet) {
@@ -59,7 +59,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		this.alphabet = alphabet;
 		this.alphabetSize = alphabet.size();
 		this.transitions = new int[stateCapacity * alphabetSize];
-		Arrays.fill(this.transitions, 0, this.transitions.length, -1);
+		Arrays.fill(this.transitions, 0, this.transitions.length, INVALID_STATE);
 		this.resizeFactor = resizeFactor;
 		this.stateCapacity = stateCapacity;
 	}
@@ -98,7 +98,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		
 		int[] newTrans = new int[newCap * alphabetSize];
 		System.arraycopy(transitions, 0, newTrans, 0, stateCapacity * alphabetSize);
-		Arrays.fill(newTrans, this.transitions.length, newTrans.length, -1);
+		Arrays.fill(newTrans, this.transitions.length, newTrans.length, INVALID_STATE);
 		this.transitions = newTrans;
 		ensureCapacity(stateCapacity, newCap);
 		this.stateCapacity = newCap;
@@ -186,7 +186,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 
 	@Override
 	public void setInitialState(Integer state) {
-		setInitialState((state != null) ? state.intValue() : -1);
+		setInitialState((state != null) ? state.intValue() : INVALID_STATE);
 	}
 	
 	public void setTransition(int state, int inputIdx, int succ) {
@@ -199,7 +199,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 
 	@Override
 	public void setTransition(Integer state, I input, Integer transition) {
-		int succId = (transition != null) ? transition.intValue() : -1;
+		int succId = (transition != null) ? transition.intValue() : INVALID_STATE;
 		setTransition(state.intValue(), input, succId);
 	}
 	
@@ -212,15 +212,15 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	public void clear() {
 		int endIdx = numStates * alphabetSize;
 		numStates = 0;
-		Arrays.fill(transitions, 0, endIdx, -1);
-		initial = -1;
+		Arrays.fill(transitions, 0, endIdx, INVALID_STATE);
+		initial = INVALID_STATE;
 	}
 
 
 	public void removeAllTransitions(int state) {
 		int base = state * alphabetSize;
 		
-		Arrays.fill(transitions, base, base + alphabetSize, -1);
+		Arrays.fill(transitions, base, base + alphabetSize, INVALID_STATE);
 	}
 	
 	@Override
@@ -412,7 +412,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 
 	@Override
 	public int numInputs() {
-		return alphabet.size();
+		return alphabetSize;
 	}
 
 	protected static Integer wrapState(int id) {

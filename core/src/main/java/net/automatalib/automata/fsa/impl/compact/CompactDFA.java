@@ -35,9 +35,6 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 		}
 	}
 	
-	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
-	public static final int DEFAULT_INIT_CAPACITY = 11;
-	
 	private final BitSet acceptance;
 	
 	public CompactDFA(Alphabet<I> alphabet) {
