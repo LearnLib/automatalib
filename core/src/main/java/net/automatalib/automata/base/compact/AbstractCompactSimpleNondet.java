@@ -364,7 +364,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 		for(Integer succ : transitions) {
 			successors.add(succ);
 		}
-		setTransitions(state, input, successors);
+		setTransitions(state.intValue(), input, successors);
 	}
 	
 //	public void setTransitions(int state, I input, TIntCollection successors) {
