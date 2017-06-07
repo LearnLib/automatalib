@@ -68,14 +68,4 @@ public class FastNFA<I> extends
 		return addState(Boolean.valueOf(accepting));
 	}
 
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.automata.fsa.MutableFSA#addInitialState(boolean)
-	 */
-	@Override
-	public FastNFAState addInitialState(boolean accepting) {
-		return addInitialState(Boolean.valueOf(accepting));
-	}
-
 }
