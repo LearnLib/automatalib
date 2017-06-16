@@ -442,7 +442,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 
 		final int oldAlphabetSize = this.alphabetSize;
 		final int newAlphabetSize = oldAlphabetSize + 1;
-		final int newArraySize = this.transitions.length + this.numStates;
+		final int newArraySize = this.transitions.length + this.stateCapacity;
 		final int[] newTransitions = new int[newArraySize];
 
 		Arrays.fill(newTransitions, 0, newArraySize, INVALID_STATE);
