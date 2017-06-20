@@ -298,7 +298,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 
 		final int oldAlphabetSize = this.alphabetSize;
 		final int newAlphabetSize = oldAlphabetSize + 1;
-		final int newArraySize = this.transitions.length + this.numStates;
+		final int newArraySize = this.transitions.length + this.stateCapacity;
 		final Object[] newTransitions = new Object[newArraySize];
 
 		for (int i = 0; i < this.numStates; i++) {

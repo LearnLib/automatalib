@@ -425,7 +425,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP>
 
 		final int oldAlphabetSize = this.alphabetSize;
 		final int newAlphabetSize = oldAlphabetSize + 1;
-		final int newArraySize = this.transitions.length + this.numStates;
+		final int newArraySize = this.transitions.length + this.stateCapacity;
 		final Set<Integer>[] newTransitions = new Set[newArraySize];
 
 		for (int i = 0; i < this.numStates; i++) {
