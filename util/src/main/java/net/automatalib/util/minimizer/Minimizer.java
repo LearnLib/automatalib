@@ -50,7 +50,7 @@ public class Minimizer<S,L> {
 		= new ThreadLocal<Minimizer<Object,Object>>() {
 			@Override
 			protected Minimizer<Object, Object> initialValue() {
-				return new Minimizer<Object, Object>();
+				return new Minimizer<>();
 			}
 	};
 	
@@ -101,17 +101,17 @@ public class Minimizer<S,L> {
 	// as local variables in the split() method, but storing them
 	// as attributes helps to avoid costly re-allocations. 
 	private final DefaultLinkedList<Block<S,L>> splitters
-		= new DefaultLinkedList<Block<S,L>>();
+		= new DefaultLinkedList<>();
 	private final IntrusiveLinkedList<TransitionLabel<S, L>> letterList
-		= new IntrusiveLinkedList<TransitionLabel<S,L>>();
+		= new IntrusiveLinkedList<>();
 	private final IntrusiveLinkedList<State<S,L>> stateList
-		= new IntrusiveLinkedList<State<S,L>>();
+		= new IntrusiveLinkedList<>();
 	private final IntrusiveLinkedList<Block<S,L>> splitBlocks
-		= new IntrusiveLinkedList<Block<S,L>>();
+		= new IntrusiveLinkedList<>();
 	private final IntrusiveLinkedList<Block<S,L>>  newBlocks
-		= new IntrusiveLinkedList<Block<S,L>>();
+		= new IntrusiveLinkedList<>();
 	private final IntrusiveLinkedList<State<S,L>> finalList
-		= new IntrusiveLinkedList<State<S,L>>();
+		= new IntrusiveLinkedList<>();
 	
 	
 	
@@ -152,7 +152,7 @@ public class Minimizer<S,L> {
 		
 		// Add all blocks from the initial partition as an element
 		// of the partition, and as a potential splitter.
-		partition = new UnorderedCollection<Block<S,L>>(initialBlocks.size());
+		partition = new UnorderedCollection<>(initialBlocks.size());
 		///splitters.hintNextCapacity(initialBlocks.size());
 		
 		for(Block<S,L> block : initialBlocks) {
@@ -174,7 +174,7 @@ public class Minimizer<S,L> {
 		}
 		
 		// Return the result.
-		MinimizationResult<S,L> result = new MinimizationResult<S, L>(stateStorage, partition);
+		MinimizationResult<S,L> result = new MinimizationResult<>(stateStorage, partition);
 		
 		// Ensure the garbage collection isn't hampered
 		stateStorage = null;
@@ -208,19 +208,19 @@ public class Minimizer<S,L> {
 		else
 			origStates = GraphTraversal.depthFirstOrder(graph, initialNodes);
 		
-		Map<L,TransitionLabel<S,L>> transitionMap = new HashMap<L,TransitionLabel<S,L>>();
+		Map<L,TransitionLabel<S,L>> transitionMap = new HashMap<>();
 		
 		stateStorage = graph.createStaticNodeMapping();
 		
 		int numStates = 0;
 		for(S origState : origStates) {
-			State<S,L> state = new State<S,L>(numStates++, origState);
+			State<S,L> state = new State<>(numStates++, origState);
 			stateStorage.put(origState, state);
 			stateList.add(state);
 		}
 		
 		
-		InitialPartitioning<S, L> initPartitioning = new HashMapInitialPartitioning<S, L>(graph);
+		InitialPartitioning<S, L> initPartitioning = new HashMapInitialPartitioning<>(graph);
 		
 		
 		for(State<S,L> state : stateList) {
@@ -235,10 +235,10 @@ public class Minimizer<S,L> {
 				L label = graph.getEdgeProperty(edge);
 				TransitionLabel<S,L> transition = transitionMap.get(label);
 				if(transition == null) {
-					transition = new TransitionLabel<S,L>(label);
+					transition = new TransitionLabel<>(label);
 					transitionMap.put(label, transition);
 				}
-				Edge<S,L> edgeObj = new Edge<S,L>(state, target, transition);
+				Edge<S,L> edgeObj = new Edge<>(state, target, transition);
 				state.addOutgoingEdge(edgeObj);
 				target.addIncomingEdge(edgeObj);
 			}
@@ -347,7 +347,7 @@ public class Minimizer<S,L> {
 				}
 				
 				
-				Block<S,L> subBlock = new Block<S,L>(numBlocks++, subBlockStates);
+				Block<S,L> subBlock = new Block<>(numBlocks++, subBlockStates);
 				updateBlockReferences(subBlock);
 				newBlocks.add(subBlock);
 				addToPartition(subBlock);

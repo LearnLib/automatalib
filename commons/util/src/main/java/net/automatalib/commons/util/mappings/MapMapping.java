@@ -30,7 +30,7 @@ import java.util.Set;
 public class MapMapping<D, R> implements MutableMapping<D, R> {
 	
 	public static <D,R> MapMapping<D,R> create(Map<D,R> map) {
-		return new MapMapping<D,R>(map);
+		return new MapMapping<>(map);
 	}
 	
 	
@@ -40,7 +40,7 @@ public class MapMapping<D, R> implements MutableMapping<D, R> {
 		if(!copy)
 			this.map = map;
 		else
-			this.map = new HashMap<D,R>();
+			this.map = new HashMap<>();
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class MapMapping<D, R> implements MutableMapping<D, R> {
 	}
 	
 	public MapMapping() {
-		this(new HashMap<D,R>());
+		this(new HashMap<>());
 	}
 	
 	/*

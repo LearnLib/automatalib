@@ -56,7 +56,7 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S,I>, Iterable<S> {
 
 	@Nonnull
 	default public StateIDs<S> stateIDs() {
-		return new SimpleStateIDs<S>(this);
+		return new SimpleStateIDs<>(this);
 	}
 	
 	@Override

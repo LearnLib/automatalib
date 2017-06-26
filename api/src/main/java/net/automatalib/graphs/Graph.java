@@ -32,7 +32,7 @@ public interface Graph<N, E> extends IndefiniteGraph<N,E>, SimpleGraph<N> {
 	
 	@Override
 	default public GraphDOTHelper<N, ? super E> getGraphDOTHelper() {
-		return new EmptyDOTHelper<N,E>();
+		return new EmptyDOTHelper<>();
 	}
 	
 	@Override

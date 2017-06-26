@@ -62,7 +62,7 @@ public abstract class TS {
 	public static <S,I> Iterator<I> definedInputsIterator(TransitionSystem<S, I, ?> ts,
 			S state,
 			Iterator<? extends I> inputsIt) {
-		return new DefinedInputsIterator<S, I>(ts, state, inputsIt);
+		return new DefinedInputsIterator<>(ts, state, inputsIt);
 	}
 	
 	public static <S,I> Iterable<I> definedInputs(
@@ -91,7 +91,7 @@ public abstract class TS {
 	public static <S,I> Iterator<I> undefinedInputsIterator(TransitionSystem<S, I, ?> ts,
 			S state,
 			Iterator<? extends I> inputsIt) {
-		return new UndefinedInputsIterator<S, I>(ts, state, inputsIt);
+		return new UndefinedInputsIterator<>(ts, state, inputsIt);
 	}
 	
 	public static <S,I> Iterable<I> undefinedInputs(

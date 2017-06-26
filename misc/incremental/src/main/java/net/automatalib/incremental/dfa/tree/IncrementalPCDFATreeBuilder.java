@@ -97,7 +97,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 			int symIdx = inputAlphabet.getSymbolIndex(sym);
 			Node<I> succ = curr.getChild(symIdx);
 			if(succ == null) {
-				succ = new Node<I>(Acceptance.TRUE);
+				succ = new Node<>(Acceptance.TRUE);
 				curr.setChild(symIdx, alphabetSize, succ);
 			}
 			curr = succ;
@@ -121,7 +121,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 			int symIdx = inputAlphabet.getSymbolIndex(sym);
 			Node<I> succ = curr.getChild(symIdx);
 			if(succ == null) {
-				succ = new Node<I>(Acceptance.DONT_KNOW);
+				succ = new Node<>(Acceptance.DONT_KNOW);
 				curr.setChild(symIdx, alphabetSize, succ);
 			}
 			prev = curr;

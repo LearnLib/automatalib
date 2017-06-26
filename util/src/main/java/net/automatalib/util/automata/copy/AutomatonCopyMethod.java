@@ -38,7 +38,7 @@ public interface AutomatonCopyMethod {
 				Function<? super T1, ? extends TP2> tpMapping,
 				Predicate<? super S1> stateFilter,
 				TransitionPredicate<? super S1, ? super I1, ? super T1> transitionFilter) {
-			return new PlainAutomatonCopy<S1,I1,T1,S2,I2,T2,SP2,TP2>(in, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transitionFilter);
+			return new PlainAutomatonCopy<>(in, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transitionFilter);
 		}
 	};
 	

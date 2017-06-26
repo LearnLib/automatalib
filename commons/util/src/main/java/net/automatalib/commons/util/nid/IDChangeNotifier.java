@@ -26,14 +26,14 @@ import net.automatalib.commons.util.ref.WeakRef;
 
 public class IDChangeNotifier<T extends NumericID> {
 	private final List<Ref<IDChangeListener<T>>> listeners
-		= new LinkedList<Ref<IDChangeListener<T>>>();
+		= new LinkedList<>();
 	
 	public void addListener(IDChangeListener<T> listener, boolean weak) {
 		Ref<IDChangeListener<T>> ref;
 		if(weak)
-			ref = new WeakRef<IDChangeListener<T>>(listener);
+			ref = new WeakRef<>(listener);
 		else
-			ref = new StrongRef<IDChangeListener<T>>(listener);
+			ref = new StrongRef<>(listener);
 		
 		listeners.add(ref);
 	}

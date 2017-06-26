@@ -48,7 +48,7 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S,I> {
 		if(transitions.isEmpty()) {
 			return Collections.emptySet();
 		}
-		Set<S> result = new HashSet<S>(transitions.size());
+		Set<S> result = new HashSet<>(transitions.size());
 		for(T trans : transitions)
 			result.add(getSuccessor(trans));
 		return result;
@@ -83,6 +83,6 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S,I> {
 	 */
 	@Nonnull
 	public default PowersetViewTS<?,I,?,S,T> powersetView() {
-		return new DirectPowersetDTS<S,I,T>(this);
+		return new DirectPowersetDTS<>(this);
 	}
 }

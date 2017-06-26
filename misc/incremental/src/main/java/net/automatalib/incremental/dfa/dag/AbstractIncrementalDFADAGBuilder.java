@@ -228,7 +228,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I>
 		
 		Queue<Record<S,I>> queue = new ArrayDeque<>();
 		
-		queue.add(new Record<S,I>(init1, init2));
+		queue.add(new Record<>(init1, init2));
 		
 		I lastSym = null;
 		
@@ -286,7 +286,7 @@ explore:while((current = queue.poll()) != null) {
 		if(lastSym != null)
 			ceLength++;
 		
-		WordBuilder<I> wb = new WordBuilder<I>(null, ceLength);
+		WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 		
 		int index = ceLength;
 		

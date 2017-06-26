@@ -42,10 +42,10 @@ final class State<S,L> extends BasicLinkedListEntry<State<S,L>,State<S,L>> {
 	private final S originalState;
 	// The list of incoming edges.
 	private final List<Edge<S,L>> incoming
-		= new ArrayList<Edge<S,L>>();
+		= new ArrayList<>();
 	// The list of outgoing edges.
 	private final List<Edge<S,L>> outgoing
-		= new ArrayList<Edge<S,L>>();
+		= new ArrayList<>();
 	
 	// The block that contains this state.
 	private Block<S,L> block;
@@ -60,7 +60,7 @@ final class State<S,L> extends BasicLinkedListEntry<State<S,L>,State<S,L>> {
 	// The signature of the state, i.e., a sorted list of the (relevant)
 	// outgoing edge labels.
 	private List<TransitionLabel<S,L>> signature
-		= new ArrayList<TransitionLabel<S,L>>();
+		= new ArrayList<>();
 	
 	/**
 	 * Constructor.
@@ -164,7 +164,7 @@ final class State<S,L> extends BasicLinkedListEntry<State<S,L>,State<S,L>> {
 	public void reset() {
 		splitPoint = false;
 		if(signature == null)
-			signature = new ArrayList<TransitionLabel<S,L>>();
+			signature = new ArrayList<>();
 		else
 			signature.clear();
 	}

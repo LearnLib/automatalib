@@ -38,7 +38,7 @@ public abstract class ReflectUtil {
 
 	
 	static {
-		w2pMap = new HashMap<Class<?>,Class<?>>();
+		w2pMap = new HashMap<>();
 		
 		for(Class<?>[] w2p : W2P_MAPPING)
 			w2pMap.put(w2p[0], w2p[1]);

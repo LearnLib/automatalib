@@ -29,9 +29,9 @@ public class SimpleNodeIDs<N> implements NodeIDs<N> {
 	private final List<N> nodes;
 	
 	public SimpleNodeIDs(SimpleGraph<N> graph) {
-		this.nodes = new ArrayList<N>(graph.getNodes());
+		this.nodes = new ArrayList<>(graph.getNodes());
 		int numNodes = this.nodes.size();
-		this.nodeIds = new HashMap<N,Integer>((int)(numNodes / 0.75) + 1);
+		this.nodeIds = new HashMap<>((int) (numNodes / 0.75) + 1);
 		
 		for(int i = 0; i < numNodes; i++) {
 			N node = this.nodes.get(i);

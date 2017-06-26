@@ -42,13 +42,13 @@ final class TransitionLabel<S,EP>
 	// The list of states that have an outgoing transition
 	// with this label, considered in the respective step.
 	private final UnorderedCollection<State<S,EP>> list
-		= new UnorderedCollection<State<S,EP>>();
+		= new UnorderedCollection<>();
 	// Keeps track of the states that are contained in the above list.
 	private final BitSet setContents = new BitSet();
 	
 	// The bucket, used for the weak sort of the algorithm.
 	private final IntrusiveLinkedList<State<S,EP>> bucket
-		= new IntrusiveLinkedList<State<S,EP>>();
+		= new IntrusiveLinkedList<>();
 	
 	/**
 	 * Constructor.

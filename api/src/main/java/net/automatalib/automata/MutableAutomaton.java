@@ -81,14 +81,14 @@ public interface MutableAutomaton<S,I,T,SP,TP>
     public T createTransition(S successor, @Nullable TP properties);
     
     default public void addTransition(S state, @Nullable I input, T transition) {
-    	Set<T> transitions = new HashSet<T>(getTransitions(state, input));
+    	Set<T> transitions = new HashSet<>(getTransitions(state, input));
 		if(!transitions.add(transition))
 			return;
 		setTransitions(state, input, transitions);
     }
     
     default public void addTransitions(S state, @Nullable I input, Collection<? extends T> transitions) {
-    	Set<T> newTransitions = new HashSet<T>(getTransitions(state, input));
+    	Set<T> newTransitions = new HashSet<>(getTransitions(state, input));
 		if(!newTransitions.addAll(transitions))
 			return;
 		setTransitions(state, input, newTransitions);
@@ -97,7 +97,7 @@ public interface MutableAutomaton<S,I,T,SP,TP>
     public void setTransitions(S state, @Nullable I input, Collection<? extends T> transitions);
     
     default public void removeTransition(S state, @Nullable I input, T transition) {
-    	Set<T> transitions = new HashSet<T>(getTransitions(state, input));
+    	Set<T> transitions = new HashSet<>(getTransitions(state, input));
 		if(!transitions.remove(transition))
 			return;
 		setTransitions(state, input, transitions);

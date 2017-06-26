@@ -68,7 +68,7 @@ public class RandomUtil {
 	}
 	
 	public static <T> List<T> sample(List<? extends T> list, int num, Random rand) {
-		List<T> result = new ArrayList<T>(num);
+		List<T> result = new ArrayList<>(num);
 		int size = list.size();
 		for(int i = 0; i < num; i++) {
 			int idx = rand.nextInt(size);

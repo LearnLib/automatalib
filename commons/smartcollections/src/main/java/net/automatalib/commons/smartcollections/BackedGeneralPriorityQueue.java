@@ -97,7 +97,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
 		
 		while(elemIt.hasNext()) {
 			K key = (keyIt.hasNext()) ? keyIt.next() : null;
-			entries.add(new Entry<E,K>(elemIt.next(), key));
+			entries.add(new Entry<>(elemIt.next(), key));
 		}
 		
 		this.backingQueue = BinaryHeap.create(entries);

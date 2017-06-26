@@ -107,7 +107,7 @@ public class DFAsTest {
 			throw new IllegalArgumentException("Length of vector must be non-zero");
 		}
 		
-		CompactDFA<Integer> result = new CompactDFA<Integer>(testAlphabet, boolVec.length);
+		CompactDFA<Integer> result = new CompactDFA<>(testAlphabet, boolVec.length);
 		
 		int first = result.addInitialState(boolVec[0]);
 		int prev = first;

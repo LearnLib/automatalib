@@ -102,7 +102,7 @@ public class HopcroftMinimization {
 			MealyMachine<?, I, ?, O> mealy,
 			Alphabet<I> alphabet,
 			PruningMode pruningMode) {
-		return doMinimizeMealy(mealy, alphabet, new CompactMealy.Creator<I,O>(), pruningMode);
+		return doMinimizeMealy(mealy, alphabet, new CompactMealy.Creator<>(), pruningMode);
 	}
 	
 	/**
@@ -129,7 +129,8 @@ public class HopcroftMinimization {
 	 */
 	public static <I,O,A extends MealyMachine<?,I,?,O> & InputAlphabetHolder<I>>
 	CompactMealy<I,O> minimizeMealy(A mealy, PruningMode pruningMode) {
-		return doMinimizeMealy((MealyMachine<?,I,?,O>) mealy, mealy.getInputAlphabet(), new CompactMealy.Creator<I,O>(), pruningMode);
+		return doMinimizeMealy((MealyMachine<?,I,?,O>) mealy, mealy.getInputAlphabet(),
+							   new CompactMealy.Creator<>(), pruningMode);
 	}
 	
 	
@@ -155,7 +156,7 @@ public class HopcroftMinimization {
 	 * @return a minimized version of the specified DFA
 	 */
 	public static <I> CompactDFA<I> minimizeDFA(DFA<?,I> dfa, Alphabet<I> alphabet, PruningMode pruningMode) {
-		return doMinimizeDFA(dfa, alphabet, new CompactDFA.Creator<I>(), pruningMode);
+		return doMinimizeDFA(dfa, alphabet, new CompactDFA.Creator<>(), pruningMode);
 	}
 	
 	/**
@@ -181,7 +182,7 @@ public class HopcroftMinimization {
 	 */
 	public static <I,A extends DFA<?,I> & InputAlphabetHolder<I>>
 	CompactDFA<I> minimizeDFA(A dfa, PruningMode pruningMode) {
-		return doMinimizeDFA((DFA<?,I>) dfa, dfa.getInputAlphabet(), new CompactDFA.Creator<I>(), pruningMode);
+		return doMinimizeDFA((DFA<?,I>) dfa, dfa.getInputAlphabet(), new CompactDFA.Creator<>(), pruningMode);
 	}
 	
 	/**

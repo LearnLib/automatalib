@@ -44,7 +44,7 @@ public abstract class Graphs {
 				N tgt = graph.getTarget(e);
 				Collection<E> inEdges = inEdgesMapping.get(tgt);
 				if(inEdges == null) {
-					inEdges = new ArrayList<E>();
+					inEdges = new ArrayList<>();
 					inEdgesMapping.put(tgt, inEdges);
 				}
 				inEdges.add(e);

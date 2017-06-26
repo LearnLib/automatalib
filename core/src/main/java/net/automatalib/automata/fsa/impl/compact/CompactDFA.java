@@ -71,7 +71,7 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 			throw new IllegalArgumentException("Alphabet sizes must match, but they do not (old/new): " +
 					alphabetSize + " vs. " + newAlphabet.size());
 		}
-		return new CompactDFA<I2>(newAlphabet, this);
+		return new CompactDFA<>(newAlphabet, this);
 	}
 	
 	@Override

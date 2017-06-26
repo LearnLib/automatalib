@@ -95,7 +95,7 @@ public class WeightedSupplier<T> implements Supplier<T>, Function<Random, T> {
 		}
 		int low = totalWeight;
 		totalWeight += weight;
-		SubSupplier<T> ss = new SubSupplier<T>(low, totalWeight, supplier);
+		SubSupplier<T> ss = new SubSupplier<>(low, totalWeight, supplier);
 		subSuppliers.add(ss);
 		return this;
 	}

@@ -187,7 +187,7 @@ public abstract class CmpUtil {
 	 * based on lexicographical ordering.
 	 */
 	public static <T extends Iterable<U>,U> Comparator<T> lexComparator(Comparator<U> elemComp) {
-		return new LexComparator<T,U>(elemComp);
+		return new LexComparator<>(elemComp);
 	}
 	
 	/**
@@ -231,7 +231,7 @@ public abstract class CmpUtil {
 	 * @return a safe comparator using the specified underlying comparator.
 	 */
 	public static <T> Comparator<T> safeComparator(Comparator<T> baseComp, NullOrdering nullOrd) {
-		return new SafeComparator<T>(baseComp, nullOrd);
+		return new SafeComparator<>(baseComp, nullOrd);
 	}
 	
 	

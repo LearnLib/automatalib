@@ -90,7 +90,7 @@ public final class MinimizationResult<S, L> {
 	 * block.
 	 */
 	public static <S,L> Collection<S> getStatesInBlock(Block<S,L> block) {
-		return new OriginalStateCollection<S>(block.getStates());
+		return new OriginalStateCollection<>(block.getStates());
 	}
 	
 	/**
@@ -118,6 +118,6 @@ public final class MinimizationResult<S, L> {
 	 * @return the block automaton.
 	 */
 	public BlockAutomaton<S,L> asBlockAutomaton() {
-		return new BlockAutomaton<S, L>(this);
+		return new BlockAutomaton<>(this);
 	}
 }

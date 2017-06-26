@@ -56,7 +56,7 @@ public class CharacterizingSets {
 			Object prop = automaton.getStateProperty(state);
 			return Collections.singletonList(prop);
 		}
-		List<Object> trace = new ArrayList<Object>(2*suffix.length());
+		List<Object> trace = new ArrayList<>(2 * suffix.length());
 		
 		S curr = state;
 		
@@ -129,7 +129,7 @@ public class CharacterizingSets {
 			List<Object> trace = buildTrace(automaton, state, suffix);
 			List<S> bucket = bucketMap.get(trace);
 			if(bucket == null) {
-				bucket = new ArrayList<S>();
+				bucket = new ArrayList<>();
 				bucketMap.put(trace, bucket);
 			}
 			bucket.add(state);
@@ -150,7 +150,7 @@ public class CharacterizingSets {
 		
 		Object prop = automaton.getStateProperty(state);
 		
-		List<S> currentBlock = new ArrayList<S>();
+		List<S> currentBlock = new ArrayList<>();
 		
 		boolean multipleStateProps = false;
 		
@@ -169,7 +169,7 @@ public class CharacterizingSets {
 			result.add(Word.<I>epsilon());
 		
 		while(!currentBlock.isEmpty()) {
-			List<S> nextBlock = new ArrayList<S>();
+			List<S> nextBlock = new ArrayList<>();
 			
 			Iterator<S> it = currentBlock.iterator();
 			
@@ -275,10 +275,10 @@ public class CharacterizingSets {
 			if(suffix != null) {
 				int otherBlocks = blockQueue.size();
 				
-				Map<List<Object>,List<S>> buckets = new HashMap<List<Object>,List<S>>();
+				Map<List<Object>,List<S>> buckets = new HashMap<>();
 				
-				List<S> firstBucket = new ArrayList<S>();
-				List<S> secondBucket = new ArrayList<S>();
+				List<S> firstBucket = new ArrayList<>();
+				List<S> secondBucket = new ArrayList<>();
 				firstBucket.add(ref);
 				buckets.put(buildTrace(automaton, ref, suffix), firstBucket);
 				secondBucket.add(state);

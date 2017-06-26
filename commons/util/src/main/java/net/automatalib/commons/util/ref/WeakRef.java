@@ -34,7 +34,7 @@ public final class WeakRef<T> implements Ref<T> {
 	 * @param referent the referent.
 	 */
 	public WeakRef(T referent) {
-		this.reference = new WeakReference<T>(referent);
+		this.reference = new WeakReference<>(referent);
 	}
 
 	/*

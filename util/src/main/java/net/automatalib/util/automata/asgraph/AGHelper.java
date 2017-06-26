@@ -29,7 +29,7 @@ public class AGHelper {
 	
 	public static <S,I,T> Collection<TransitionEdge<I,T>> outgoingEdges(Automaton<S,I,T> aut, S state, Collection<? extends I> inputAlphabet) {
 		List<TransitionEdge<I,T>> result
-			= new ArrayList<TransitionEdge<I,T>>();
+			= new ArrayList<>();
 		
 		
 		for(I input : inputAlphabet) {

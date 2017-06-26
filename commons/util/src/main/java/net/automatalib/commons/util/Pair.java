@@ -80,7 +80,7 @@ public class Pair<T1, T2> extends AbstractPrintable implements Serializable {
 	 * @see #Pair(Object, Object)
 	 */
 	public static <T1,T2> Pair<T1,T2> make(T1 first, T2 second) {
-		return new Pair<T1,T2>(first, second);
+		return new Pair<>(first, second);
 	}
 	
 	

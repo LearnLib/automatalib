@@ -95,7 +95,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 
 	public IncrementalWMethodTestsIterator(Alphabet<I> alphabet) {
 		this.alphabet = alphabet;
-		this.itemQueue = new StrictPriorityQueue<>(new ItemComparator<>(alphabet), new ItemMerge<I>());
+		this.itemQueue = new StrictPriorityQueue<>(new ItemComparator<>(alphabet), new ItemMerge<>());
 		this.suffixes.add(Word.<I>epsilon()); // *always* assume the empty word as a suffix
 	}
 	

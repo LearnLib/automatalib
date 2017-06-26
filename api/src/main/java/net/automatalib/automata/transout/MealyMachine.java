@@ -48,6 +48,6 @@ public interface MealyMachine<S,I,T,O> extends UniversalDeterministicAutomaton<S
 	@Override
 	default public UniversalGraph<S,TransitionEdge<I,T>,Void,TransitionEdge.Property<I,O>>
 	transitionGraphView(Collection<? extends I> inputs) {
-		return new MealyGraphView<S,I,T,O,MealyMachine<S,I,T,O>>(this, inputs);
+		return new MealyGraphView<>(this, inputs);
 	}
 }

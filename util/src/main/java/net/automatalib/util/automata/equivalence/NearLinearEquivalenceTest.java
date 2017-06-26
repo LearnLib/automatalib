@@ -116,9 +116,9 @@ public class NearLinearEquivalenceTest<I> {
 		
 		uf.link(id1, id2);
 		
-		Queue<Record<S,S2,I>> queue = new ArrayDeque<Record<S,S2,I>>();
+		Queue<Record<S,S2,I>> queue = new ArrayDeque<>();
 		
-		queue.add(new Record<S,S2,I>(init1, init2));
+		queue.add(new Record<>(init1, init2));
 		
 		I lastSym = null;
 		
@@ -181,7 +181,7 @@ explore:while((current = queue.poll()) != null) {
 		if(lastSym != null)
 			ceLength++;
 		
-		WordBuilder<I> wb = new WordBuilder<I>(null, ceLength);
+		WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 		
 		int index = ceLength;
 		
@@ -283,7 +283,7 @@ explore:while((current = queue.poll()) != null) {
 		if(lastSym != -1)
 			ceLength++;
 		
-		WordBuilder<I> wb = new WordBuilder<I>(null, ceLength);
+		WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 		
 		int index = ceLength;
 		
@@ -340,9 +340,9 @@ explore:while((current = queue.poll()) != null) {
 		
 		uf.link(id1, id2);
 		
-		Queue<Record<S,S,I>> queue = new ArrayDeque<Record<S,S,I>>();
+		Queue<Record<S,S,I>> queue = new ArrayDeque<>();
 		
-		queue.add(new Record<S,S,I>(init1, init2));
+		queue.add(new Record<>(init1, init2));
 		
 		I lastSym = null;
 		Record<S,S,I> current;
@@ -410,7 +410,7 @@ explore:while((current = queue.poll()) != null) {
 		if(lastSym != null)
 			ceLength++;
 		
-		WordBuilder<I> wb = new WordBuilder<I>(null, ceLength);
+		WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 		
 		int index = ceLength;
 		

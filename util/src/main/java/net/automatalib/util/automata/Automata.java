@@ -46,13 +46,13 @@ public class Automata extends TS {
 	public static <S, I, T>
 	Graph<S, TransitionEdge<I, T>> asGraph(
 			Automaton<S, I, T> automaton, Collection<? extends I> inputs) {
-		return new AutomatonAsGraph<S, I, T,Automaton<S,I,T>>(automaton, inputs);
+		return new AutomatonAsGraph<>(automaton, inputs);
 	}
 	
 	public static <S,I,T,SP,TP>
 	UniversalGraph<S,TransitionEdge<I,T>,SP,TransitionEdge.Property<I,TP>> asUniversalGraph(
 			UniversalAutomaton<S, I, T, SP, TP> automaton, Collection<? extends I> inputs) {
-		return new UniversalAutomatonAsGraph<S, I, T, SP, TP, UniversalAutomaton<S,I,T,SP,TP>>(automaton, inputs);
+		return new UniversalAutomatonAsGraph<>(automaton, inputs);
 	}
 	
 
@@ -69,7 +69,7 @@ public class Automata extends TS {
 		
 		S init = automaton.getInitialState();
 		Block<S,TransitionEdge.Property<I,TP>> initBlock = mr.getBlockForState(init);
-		BlockMap<SO> bm = new BlockMap<SO>(mr);
+		BlockMap<SO> bm = new BlockMap<>(mr);
 		
 		for(Block<S, TransitionEdge.Property<I,TP>> block : mr.getBlocks()) {
 			S rep = mr.getRepresentative(block);
@@ -156,7 +156,7 @@ public class Automata extends TS {
 				TP transProp = automaton.getTransitionProperty(trans);
 				S succ = automaton.getSuccessor(trans);
 				int tgtId = mr.getBlockForState(succ).getId();
-				rec.transitions[i] = new ResultTransRecord<TP>(tgtId, transProp);
+				rec.transitions[i] = new ResultTransRecord<>(tgtId, transProp);
 			}
 		}
 		
@@ -280,7 +280,7 @@ public class Automata extends TS {
 	 */
 	public static <I> List<Word<I>> characterizingSet(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
 			Collection<? extends I> inputs) {
-		List<Word<I>> result = new ArrayList<Word<I>>();
+		List<Word<I>> result = new ArrayList<>();
 		characterizingSet(automaton, inputs, result);
 		return result;
 	}
@@ -329,7 +329,7 @@ public class Automata extends TS {
 	public static <S,I> List<Word<I>> stateCharacterizingSet(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
 			Collection<? extends I> inputs,
 			S state) {
-		List<Word<I>> result = new ArrayList<Word<I>>();
+		List<Word<I>> result = new ArrayList<>();
 		stateCharacterizingSet(automaton, inputs, state, result);
 		return result;
 	}
@@ -341,14 +341,14 @@ public class Automata extends TS {
 	
 	public static <I> List<Word<I>> stateCover(DeterministicAutomaton<?, I, ?> automaton,
 			Collection<? extends I> inputs) {
-		List<Word<I>> states = new ArrayList<Word<I>>(automaton.size());
+		List<Word<I>> states = new ArrayList<>(automaton.size());
 		cover(automaton, inputs, states, null);
 		return states;
 	}
 	
 	public static <I> List<Word<I>> transitionCover(DeterministicAutomaton<?, I, ?> automaton,
 			Collection<? extends I> inputs) {
-		List<Word<I>> all = new ArrayList<Word<I>>(automaton.size() * inputs.size());
+		List<Word<I>> all = new ArrayList<>(automaton.size() * inputs.size());
 		cover(automaton, inputs, all, all);
 		return all;
 	}

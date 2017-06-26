@@ -50,12 +50,12 @@ public final class Block<S,L> extends BasicLinkedListEntry<Block<S,L>,Block<S,L>
 	// The bucket of this block, used for initially arranging the
 	// states ordered by their respective blocks during the weak sort.
 	private IntrusiveLinkedList<State<S,L>> bucket
-		= new IntrusiveLinkedList<State<S,L>>();
+		= new IntrusiveLinkedList<>();
 	
 	// The sub blocks, i.e., the new blocks that result from
 	// splitting this block.
 	private List<UnorderedCollection<State<S,L>>>
-		subBlocks = new ArrayList<UnorderedCollection<State<S,L>>>();
+		subBlocks = new ArrayList<>();
 	
 	// The total number of elements in all sub blocks, this is used
 	// to detect whether an actual split has to be performed.
@@ -71,7 +71,7 @@ public final class Block<S,L> extends BasicLinkedListEntry<Block<S,L>,Block<S,L>
 	 */
 	Block(int id) {
 		this.id = id;
-		this.states = new UnorderedCollection<State<S,L>>();
+		this.states = new UnorderedCollection<>();
 	}
 	
 	/**
@@ -128,7 +128,7 @@ public final class Block<S,L> extends BasicLinkedListEntry<Block<S,L>,Block<S,L>
 	 * Initializes a new sub block.
 	 */
 	void createSubBlock() {
-		currSubBlock = new UnorderedCollection<State<S,L>>();
+		currSubBlock = new UnorderedCollection<>();
 		subBlocks.add(currSubBlock);
 	}
 	

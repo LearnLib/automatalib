@@ -48,7 +48,7 @@ class Covers {
 		
 		MutableMapping<S,Word<I>> reach = automaton.createStaticStateMapping();
 		
-		Queue<S> bfsQueue = new ArrayDeque<S>();
+		Queue<S> bfsQueue = new ArrayDeque<>();
 		
 		S init = automaton.getInitialState();
 		
@@ -157,7 +157,7 @@ class Covers {
 		// regardless of whether other sequence in oldCover cover it
 		S init = automaton.getInitialState();
 		
-		Record<S,I> initRec = new Record<S,I>(init, Word.<I>epsilon(), new HashSet<I>());
+		Record<S,I> initRec = new Record<>(init, Word.<I>epsilon(), new HashSet<>());
 		bfsQueue.add(initRec);
 		reach.put(init, initRec);
 		
@@ -174,7 +174,7 @@ class Covers {
 				continue; // strange, but we'll ignore it
 			}
 			
-			Record<S,I> rec = new Record<>(state, oldStateAs, new HashSet<I>());
+			Record<S,I> rec = new Record<>(state, oldStateAs, new HashSet<>());
 			bfsQueue.add(rec);
 			reach.put(state, rec);
 		}
@@ -220,7 +220,7 @@ class Covers {
 					Record<S,I> rec = reach.get(state);
 					if(rec == null) {
 						// if so, add it to the state cover and to the queue
-						rec = new Record<>(state, oldTransAs, new HashSet<I>());
+						rec = new Record<>(state, oldTransAs, new HashSet<>());
 						bfsQueue.add(rec);
 						reach.put(state, rec);
 						if(newStateCover != null) {
@@ -262,7 +262,7 @@ class Covers {
 						
 						if(succRec == null) {
 							// new state!
-							succRec = new Record<>(succ, newAs, new HashSet<I>());
+							succRec = new Record<>(succ, newAs, new HashSet<>());
 							bfsQueue.add(succRec);
 							reach.put(succ, succRec);
 							

@@ -156,7 +156,7 @@ public abstract class GraphDOT {
 			Appendable a) throws IOException {
 		
 		if(dotHelper == null)
-			dotHelper = new DefaultDOTHelper<N, E>();
+			dotHelper = new DefaultDOTHelper<>();
 		
 		boolean directed = true;
 		if(graph instanceof UndirectedGraph)

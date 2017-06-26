@@ -91,7 +91,7 @@ public class ExtensionWord<I> extends Word<I> {
 
 	@Override
 	public java.util.Iterator<I> iterator() {
-		return new Iterator<I>(word.iterator(), letter);
+		return new Iterator<>(word.iterator(), letter);
 	}
 
 	@Override

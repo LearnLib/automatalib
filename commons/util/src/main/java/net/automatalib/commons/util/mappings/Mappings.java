@@ -214,7 +214,7 @@ public abstract class Mappings {
 	}
 	
 	public static <D,R> Mapping<D,R> fromMap(Map<D,R> map) {
-		return new MapMapping<D,R>(map);
+		return new MapMapping<>(map);
 	}
 
 	

@@ -37,7 +37,7 @@ final class DepthFirstIterator<N, E> extends AbstractIterator<N> {
 		this.graph = graph;
 		this.visited = graph.createStaticNodeMapping();
 		for(N startNode : start) {
-			dfsStack.push(new SimpleDFRecord<N,E>(startNode));
+			dfsStack.push(new SimpleDFRecord<>(startNode));
 		}
 	}
 	
@@ -54,7 +54,7 @@ final class DepthFirstIterator<N, E> extends AbstractIterator<N> {
 				E edge = rec.nextEdge();
 				N tgt = graph.getTarget(edge);
 				if(visited.get(tgt) != VisitedState.VISITED) {
-					dfsStack.push(new SimpleDFRecord<N,E>(tgt));
+					dfsStack.push(new SimpleDFRecord<>(tgt));
 				}
 			}
 			else {

@@ -51,7 +51,7 @@ public class SharedWordTest extends NonemptyWordTest {
 
 	@Override
 	protected List<Word<Object>> equalWords() {
-		return Arrays.<Word<Object>>asList(new SharedWord<Object>(Arrays.asList(1, 3, 3, 7)),
+		return Arrays.<Word<Object>>asList(new SharedWord<>(Arrays.asList(1, 3, 3, 7)),
 				new SharedWord<>(new Object[]{1, 3, 3, 7}));
 	}
 
@@ -59,25 +59,22 @@ public class SharedWordTest extends NonemptyWordTest {
 	@Override
 	protected List<Word<Object>> unequalWords() {
 		return Arrays.<Word<Object>>asList(new SharedWord<>(DATA),
-				new SharedWord<>(Arrays.asList(DATA)),
-				new EmptyWord(),
-				new SharedWord<Object>(Arrays.asList(2, 4)));
+										   new SharedWord<>(Arrays.asList(DATA)),
+										   new EmptyWord(), new SharedWord<>(Arrays.asList(2, 4)));
 	}
 
 
 	@Override
 	protected List<Word<Object>> realPrefixes() {
-		return Arrays.<Word<Object>>asList(new EmptyWord(), new SharedWord<Object>(Arrays.asList(1, 3)),
-				new SharedWord<>(new Object[]{1, 3, 3}),
-				new LetterWord<Object>(1));
+		return Arrays.<Word<Object>>asList(new EmptyWord(), new SharedWord<>(Arrays.asList(1, 3)),
+										   new SharedWord<>(new Object[]{1, 3, 3}), new LetterWord<>(1));
 	}
 
 
 	@Override
 	protected List<Word<Object>> realSuffixes() {
-		return Arrays.<Word<Object>>asList(new EmptyWord(), new SharedWord<Object>(Arrays.asList(3, 7)),
-				new SharedWord<>(new Object[]{3, 3, 7}),
-				new LetterWord<Object>(7));
+		return Arrays.<Word<Object>>asList(new EmptyWord(), new SharedWord<>(Arrays.asList(3, 7)),
+										   new SharedWord<>(new Object[]{3, 3, 7}), new LetterWord<>(7));
 	}
 	
 

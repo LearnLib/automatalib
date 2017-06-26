@@ -95,7 +95,7 @@ public class DeterministicEquivalenceTest<I> {
 		int lastId = otherStateIds.getStateId(otherInit) * refSize + refStateIds.getStateId(refInit);
 		
 		Pred<I>[] preds = new Pred[totalStates];
-		preds[lastId] = new Pred<I>(-1, null);
+		preds[lastId] = new Pred<>(-1, null);
 		
 		int currDepth = 0;
 		int inCurrDepth = 1;
@@ -158,7 +158,7 @@ bfs:	while((currPair = bfsQueue.poll()) != null) {
 		if(lastSym == null)
 			return null;
 		
-		WordBuilder<I> sep = new WordBuilder<I>(null, currDepth+1);
+		WordBuilder<I> sep = new WordBuilder<>(null, currDepth + 1);
 		int index = currDepth;
 		sep.setSymbol(index--, lastSym);
 		
@@ -201,7 +201,7 @@ bfs:	while((currPair = bfsQueue.poll()) != null) {
 		
 //		TIntObjectMap<Pred<I>> preds = new TIntObjectHashMap<>();
 		Map<Integer,Pred<I>> preds = new HashMap<>(); // TODO: replace by primitive specialization
-		preds.put(lastId, new Pred<I>(-1, null));
+		preds.put(lastId, new Pred<>(-1, null));
 		
 		int currDepth = 0;
 		int inCurrDepth = 1;
@@ -264,7 +264,7 @@ bfs:	while((currPair = bfsQueue.poll()) != null) {
 		if(lastSym == null)
 			return null;
 		
-		WordBuilder<I> sep = new WordBuilder<I>(null, currDepth+1);
+		WordBuilder<I> sep = new WordBuilder<>(null, currDepth + 1);
 		int index = currDepth;
 		sep.setSymbol(index--, lastSym);
 		

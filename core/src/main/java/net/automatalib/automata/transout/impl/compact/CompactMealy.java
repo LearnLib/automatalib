@@ -105,7 +105,7 @@ public class CompactMealy<I, O> extends
 	 */
 	@Override
 	public CompactMealyTransition<O> createTransition(int succId, O property) {
-		return new CompactMealyTransition<O>(succId, property);
+		return new CompactMealyTransition<>(succId, property);
 	}
 
 	/*
@@ -115,7 +115,7 @@ public class CompactMealy<I, O> extends
 	@Override
 	public CompactMealyTransition<O> copyTransition(
 			CompactMealyTransition<O> trans, int succId) {
-		return new CompactMealyTransition<O>(succId, trans.getOutput());
+		return new CompactMealyTransition<>(succId, trans.getOutput());
 	}
 
 	/*

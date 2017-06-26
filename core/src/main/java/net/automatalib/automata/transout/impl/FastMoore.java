@@ -79,7 +79,7 @@ public final class FastMoore<I, O> extends FastMutableDet<FastMooreState<O>, I, 
 	 */
 	@Override
 	protected FastMooreState<O> createState(O property) {
-		return new FastMooreState<O>(inputAlphabet.size(), property);
+		return new FastMooreState<>(inputAlphabet.size(), property);
 	}
 
 }

@@ -58,7 +58,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 	public class GraphView extends AbstractGraphView<I, O, State, TransitionRecord> {
 		@Override
 		public Collection<TransitionRecord> getOutgoingEdges(State node) {
-			List<TransitionRecord> edges = new ArrayList<TransitionRecord>();
+			List<TransitionRecord> edges = new ArrayList<>();
 			for (int i = 0; i < alphabetSize; i++) {
 				if (node.getSuccessor(i) != null)
 					edges.add(new TransitionRecord(node, i));
@@ -606,7 +606,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 
 		IntDisjointSets uf = new UnionFind(thisStates + mealy.size());
 
-		Map<State, Integer> ids = new HashMap<State, Integer>();
+		Map<State, Integer> ids = new HashMap<>();
 
 		State init1 = init;
 		S init2 = mealy.getInitialState();
@@ -621,9 +621,9 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 
 		uf.link(id1, id2);
 
-		Queue<Record<S, I>> queue = new ArrayDeque<Record<S, I>>();
+		Queue<Record<S, I>> queue = new ArrayDeque<>();
 
-		queue.offer(new Record<S, I>(init1, init2));
+		queue.offer(new Record<>(init1, init2));
 
 		I lastSym = null;
 
@@ -677,7 +677,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		if (lastSym != null)
 			ceLength++;
 
-		WordBuilder<I> wb = new WordBuilder<I>(null, ceLength);
+		WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 
 		int index = ceLength;
 

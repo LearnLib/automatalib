@@ -28,7 +28,7 @@ public class AutomatonGraphView<S, I, T, A extends Automaton<S,I,T>> extends Abs
 	
 	public static <S,I,T> Collection<TransitionEdge<I,T>> createTransitionEdges(Automaton<S,I,T> automaton, Collection<? extends I> inputs, S state) {
 		List<TransitionEdge<I,T>> result
-			= new ArrayList<TransitionEdge<I,T>>();
+			= new ArrayList<>();
 	
 		
 		for(I input : inputs) {

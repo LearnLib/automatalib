@@ -83,7 +83,7 @@ public class Visualization {
 		for (GraphDOTHelper<N,? super E> h : addlHelpers) {
 			helpers.add(h);
 		}
-		GraphDOTHelper<N, E> aggHelper = new AggregateDOTHelper<N, E>(helpers);
+		GraphDOTHelper<N, E> aggHelper = new AggregateDOTHelper<>(helpers);
 		
 		visualize(graph, aggHelper, modal, Collections.emptyMap());
 	}

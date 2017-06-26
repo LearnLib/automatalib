@@ -91,7 +91,7 @@ public class DijkstraSSSP<N,E> implements SSSPResult<N,E> {
 	 */
 	@Nonnull
 	public static <N,E> SSSPResult<N,E> findSSSP(Graph<N,E> graph, N init, EdgeWeights<E> edgeWeights) {
-		DijkstraSSSP<N, E> dijkstra = new DijkstraSSSP<N, E>(graph, init, edgeWeights);
+		DijkstraSSSP<N, E> dijkstra = new DijkstraSSSP<>(graph, init, edgeWeights);
 		dijkstra.findSSSP();
 		return dijkstra;
 	}

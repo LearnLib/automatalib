@@ -29,7 +29,7 @@ public class BFSOrderIterator<S, I> implements Iterator<S> {
 	
 	private final Collection<? extends I> inputs;
 	private final SimpleTS<S, I> ts;
-	private final Queue<S> bfsQueue = new ArrayDeque<S>();
+	private final Queue<S> bfsQueue = new ArrayDeque<>();
 	private final MutableMapping<S,VisitedState> seen;
 	
 	public BFSOrderIterator(SimpleTS<S,I> ts, Collection<? extends I> inputs) {

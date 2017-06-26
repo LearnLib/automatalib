@@ -28,11 +28,11 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
 	public static final class Creator<I> implements AutomatonCreator<CompactNFA<I>, I> {
 		@Override
 		public CompactNFA<I> createAutomaton(Alphabet<I> alphabet) {
-			return new CompactNFA<I>(alphabet);
+			return new CompactNFA<>(alphabet);
 		}
 		@Override
 		public CompactNFA<I> createAutomaton(Alphabet<I> alphabet, int numStates) {
-			return new CompactNFA<I>(alphabet, numStates);
+			return new CompactNFA<>(alphabet, numStates);
 		}
 	}
 	

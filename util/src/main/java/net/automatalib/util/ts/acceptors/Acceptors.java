@@ -29,7 +29,7 @@ public abstract class Acceptors {
 		TS2 extends DeterministicAcceptorTS<S2,I>>
 	DetAcceptorComposition<S1, S2, I, TS1, TS2>
 	combine(TS1 ts1, TS2 ts2, AcceptanceCombiner combiner) {
-		return new DetAcceptorComposition<S1, S2, I, TS1, TS2>(ts1, ts2, combiner);
+		return new DetAcceptorComposition<>(ts1, ts2, combiner);
 	}
 	
 	

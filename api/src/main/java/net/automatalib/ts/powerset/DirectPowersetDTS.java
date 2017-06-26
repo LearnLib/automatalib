@@ -49,7 +49,7 @@ public class DirectPowersetDTS<S, I, T>
 
 	@Override
 	public Set<? extends S> getSuccessor(Set<? extends T> transition) {
-		Set<S> result = new HashSet<S>();
+		Set<S> result = new HashSet<>();
 		for(T trans : transition)
 			result.add(ts.getSuccessor(trans));
 		return result;
@@ -57,7 +57,7 @@ public class DirectPowersetDTS<S, I, T>
 	
 	@Override
 	public Set<? extends S> getSuccessor(Set<? extends S> state, I input) {
-		Set<S> result = new HashSet<S>();
+		Set<S> result = new HashSet<>();
 		for(S s : state) {
 			Collection<? extends T> transitions = ts.getTransitions(s, input);
 			for(T t : transitions) {

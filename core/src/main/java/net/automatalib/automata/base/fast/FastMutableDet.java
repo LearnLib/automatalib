@@ -38,7 +38,7 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 		GrowableAlphabetAutomaton<I> {
 
 	private final DynamicList<S> states
-		= new DynamicList<S>();
+		= new DynamicList<>();
 	private final IDChangeNotifier<S> tracker
 		= new IDChangeNotifier<>();
 	

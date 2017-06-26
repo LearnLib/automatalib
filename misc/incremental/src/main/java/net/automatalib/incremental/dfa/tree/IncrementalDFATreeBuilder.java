@@ -132,7 +132,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 	
 	public IncrementalDFATreeBuilder(Alphabet<I> inputAlphabet) {
 		super(inputAlphabet);
-		this.root = new Node<I>();
+		this.root = new Node<>();
 	}
 	
 	/*
@@ -196,7 +196,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 			int inputIdx = inputAlphabet.getSymbolIndex(sym);
 			Node<I> succ = curr.getChild(inputIdx);
 			if(succ == null) {
-				succ = new Node<I>();
+				succ = new Node<>();
 				curr.setChild(inputIdx, alphabetSize, succ);
 			}
 			curr = succ;

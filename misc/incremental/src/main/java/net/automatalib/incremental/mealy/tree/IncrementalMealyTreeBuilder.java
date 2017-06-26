@@ -259,7 +259,7 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 	
 	private Node<I,O> insertNode(Node<I,O> parent, int symIdx, O output) {
 		Node<I,O> succ = new Node<>(inputAlphabet.size());
-		Edge<I,O> edge = new Edge<I,O>(output, succ);
+		Edge<I,O> edge = new Edge<>(output, succ);
 		parent.setEdge(symIdx, edge);
 		return succ;
 	}

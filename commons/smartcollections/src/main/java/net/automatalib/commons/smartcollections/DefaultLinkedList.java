@@ -31,7 +31,7 @@ public class DefaultLinkedList<E> extends
 	 */
 	@Override
 	protected DefaultLinkedListEntry<E> makeEntry(E element) {
-		return new DefaultLinkedListEntry<E>(element);
+		return new DefaultLinkedListEntry<>(element);
 	}
 	
 	/*
