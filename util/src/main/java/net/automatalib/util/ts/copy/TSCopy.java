@@ -16,6 +16,8 @@
 package net.automatalib.util.ts.copy;
 
 import java.util.Collection;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
@@ -28,10 +30,6 @@ import net.automatalib.util.automata.predicates.TransitionPredicates;
 import net.automatalib.util.ts.TS;
 import net.automatalib.util.ts.traversal.TSTraversalMethod;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 public class TSCopy {
 	/**
@@ -62,13 +60,13 @@ public class TSCopy {
 			Predicate<? super S1> stateFilter,
 			TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
 		if(spMapping == null) {
-			spMapping = Functions.constant(null);
+			spMapping = x -> null;
 		}
 		if(tpMapping == null) {
-			tpMapping = Functions.constant(null);
+			tpMapping = x -> null;
 		}
 		if(stateFilter == null) {
-			stateFilter = Predicates.alwaysTrue();
+			stateFilter = x -> true;
 		}
 		if(transFilter == null) {
 			transFilter = TransitionPredicates.alwaysTrue();
@@ -103,7 +101,7 @@ public class TSCopy {
 			Function<? super I1,? extends I2> inputsMapping,
 			Function<? super S1,? extends SP2> spMapping,
 			Function<? super T1,? extends TP2> tpMapping) {
-		return rawCopy(method, in, limit, inputs, out, inputsMapping, spMapping, tpMapping, Predicates.alwaysTrue(), TransitionPredicates.alwaysTrue());
+		return rawCopy(method, in, limit, inputs, out, inputsMapping, spMapping, tpMapping, x -> true, TransitionPredicates.alwaysTrue());
 	}
 	
 	/**
@@ -131,7 +129,7 @@ public class TSCopy {
 			Function<? super T1,? extends TP2> tpMapping,
 			Predicate<? super S1> stateFilter,
 			TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
-		return rawCopy(method, in, limit, inputs, out, Functions.<I>identity(), spMapping, tpMapping, stateFilter, transFilter);
+		return rawCopy(method, in, limit, inputs, out, Function.identity(), spMapping, tpMapping, stateFilter, transFilter);
 	}
 	
 	/**
@@ -155,7 +153,7 @@ public class TSCopy {
 			MutableAutomaton<S2,I,T2,SP2,TP2> out,
 			Function<? super S1,? extends SP2> spMapping,
 			Function<? super T1,? extends TP2> tpMapping) {
-		return rawCopy(method, in, limit, inputs, out, spMapping, tpMapping, Predicates.alwaysTrue(), TransitionPredicates.alwaysTrue());
+		return rawCopy(method, in, limit, inputs, out, spMapping, tpMapping, x -> true, TransitionPredicates.alwaysTrue());
 	}
 	
 	/**
@@ -185,8 +183,8 @@ public class TSCopy {
 			Function<? super TP1,? extends TP2> tpTransform,
 			Predicate<? super S1> stateFilter,
 			TransitionPredicate<? super S1,? super I1, ? super T1> transFilter) {
-		Function<? super S1,? extends SP2> spMapping = (spTransform == null) ? null : Functions.compose(spTransform, TS.stateProperties(in));
-		Function<? super T1,? extends TP2> tpMapping = (tpTransform == null) ? null : Functions.compose(tpTransform, TS.transitionProperties(in));
+		Function<? super S1,? extends SP2> spMapping = (spTransform == null) ? null : TS.stateProperties(in).andThen(spTransform);
+		Function<? super T1,? extends TP2> tpMapping = (tpTransform == null) ? null : TS.transitionProperties(in).andThen(tpTransform);
 		return rawCopy(method, in, limit, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transFilter);
 	}
 	
@@ -213,7 +211,7 @@ public class TSCopy {
 			Function<? super I1,? extends I2> inputsMapping,
 			Function<? super SP1,? extends SP2> spTransform,
 			Function<? super TP1,? extends TP2> tpTransform) {
-		return copy(method, in, limit, inputs, out, inputsMapping, spTransform, tpTransform, Predicates.alwaysTrue(), TransitionPredicates.alwaysTrue());
+		return copy(method, in, limit, inputs, out, inputsMapping, spTransform, tpTransform, x -> true, TransitionPredicates.alwaysTrue());
 	}
 	
 	/**
@@ -241,7 +239,7 @@ public class TSCopy {
 			Function<? super TP1,? extends TP2> tpTransform,
 			Predicate<? super S1> stateFilter,
 			TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
-		return copy(method, in, limit, inputs, out, Functions.<I>identity(), spTransform, tpTransform, stateFilter, transFilter);
+		return copy(method, in, limit, inputs, out, Function.<I>identity(), spTransform, tpTransform, stateFilter, transFilter);
 	}
 	
 	/**
@@ -265,7 +263,7 @@ public class TSCopy {
 			MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
 			Function<? super SP1,? extends SP2> spTransform,
 			Function<? super TP1,? extends TP2> tpTransform) {
-		return copy(method, in, limit, inputs, out, spTransform, tpTransform, Predicates.alwaysTrue(), TransitionPredicates.alwaysTrue());
+		return copy(method, in, limit, inputs, out, spTransform, tpTransform, x -> true, TransitionPredicates.alwaysTrue());
 	}
 	
 	/**
@@ -290,7 +288,7 @@ public class TSCopy {
 			Function<? super I1,? extends I2> inputsMapping,
 			Predicate<? super S1> stateFilter,
 			TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
-		return copy(method, in, limit, inputs, out, inputsMapping, Functions.<SP>identity(), Functions.<TP>identity(), stateFilter, transFilter);
+		return copy(method, in, limit, inputs, out, inputsMapping, Function.identity(), Function.identity(), stateFilter, transFilter);
 	}
 	
 	/**
@@ -312,7 +310,7 @@ public class TSCopy {
 			Collection<? extends I1> inputs,
 			MutableAutomaton<S2, I2, T2, ? super SP, ? super TP> out,
 			Function<? super I1,? extends I2> inputsMapping) {
-		return copy(method, in, limit, inputs, out, inputsMapping, Predicates.alwaysTrue(), TransitionPredicates.alwaysTrue());
+		return copy(method, in, limit, inputs, out, inputsMapping, x -> true, TransitionPredicates.alwaysTrue());
 	}
 	
 	/**
@@ -335,7 +333,7 @@ public class TSCopy {
 			MutableAutomaton<S2, I,	T2, ? super SP, ? super TP> out,
 			Predicate<? super S1> stateFilter,
 			TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
-		return copy(method, in, limit, inputs, out, Functions.<I>identity(), stateFilter, transFilter);
+		return copy(method, in, limit, inputs, out, Function.identity(), stateFilter, transFilter);
 	}
 	
 	/**
@@ -355,7 +353,7 @@ public class TSCopy {
 			int limit,
 			Collection<? extends I> inputs,
 			MutableAutomaton<S2, I,	T2, ? super SP, ? super TP> out) {
-		return copy(method, in, limit, inputs, out, Predicates.alwaysTrue(), TransitionPredicates.alwaysTrue());
+		return copy(method, in, limit, inputs, out, x -> true, TransitionPredicates.alwaysTrue());
 	}
 	
 	

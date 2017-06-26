@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -37,8 +38,6 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.strings.StringUtil;
-
-import com.google.common.base.Function;
 
 /**
  * This class provides methods to write automata in the TAF format.

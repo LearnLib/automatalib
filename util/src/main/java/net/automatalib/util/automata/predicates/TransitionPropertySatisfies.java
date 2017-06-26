@@ -18,7 +18,7 @@ package net.automatalib.util.automata.predicates;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.UniversalTransitionSystem;
 
-import com.google.common.base.Predicate;
+import java.util.function.Predicate;
 
 final class TransitionPropertySatisfies<S, I, T, TP> implements
 		TransitionPredicate<S, I, T> {
@@ -35,7 +35,7 @@ final class TransitionPropertySatisfies<S, I, T, TP> implements
 	@Override
 	public boolean apply(S source, I input, T transition) {
 		TP prop = uts.getTransitionProperty(transition);
-		return tpPred.apply(prop);
+		return tpPred.test(prop);
 	}
 
 }

@@ -106,12 +106,7 @@ public abstract class CollectionsUtil {
 			return Collections.<List<T>>emptyList();
 		}
 		
-		return new Iterable<List<T>>() {
-			@Override
-			public Iterator<List<T>> iterator() {
-				return new AllTuplesIterator<>(domain, minLength, maxLength);
-			}
-		};
+		return () -> new AllTuplesIterator<>(domain, minLength, maxLength);
 	}
 	
 	public static <T> Iterable<List<T>> allTuples(final Iterable<T> domain, final int length) {
@@ -123,17 +118,14 @@ public abstract class CollectionsUtil {
 		if(iterables.length == 0)
 			return Collections.singletonList(Collections.<T>emptyList());
 		
-		return new Iterable<List<T>>() {
-			@Override
-			public Iterator<List<T>> iterator() {
-				try {
-					return new AllCombinationsIterator<>(iterables);
-				}
-				catch(NoSuchElementException ex) {
-					// FIXME: Special case if one of the iterables is empty, then the whole set
-					// of combinations is empty. Maybe handle this w/o exception?
-					return Collections.<List<T>>emptySet().iterator();
-				}
+		return () -> {
+			try {
+				return new AllCombinationsIterator<>(iterables);
+			}
+			catch(NoSuchElementException ex) {
+				// FIXME: Special case if one of the iterables is empty, then the whole set
+				// of combinations is empty. Maybe handle this w/o exception?
+				return Collections.<List<T>>emptySet().iterator();
 			}
 		};
 	}

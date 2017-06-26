@@ -24,8 +24,8 @@ import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.ts.traversal.TSTraversalAction;
 import net.automatalib.util.ts.traversal.TSTraversalVisitor;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements
 		TSTraversalVisitor<S1, I1, T1, S2> {
@@ -65,7 +65,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements
 			out.setInitial(s2, true);
 			return TSTraversalAction.IGNORE;
 		}
-		else if(!stateFilter.apply(state)) {
+		else if(!stateFilter.test(state)) {
 			return TSTraversalAction.IGNORE;
 		}
 		
@@ -94,7 +94,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements
 		
 		S2 succ2 = stateMapping.get(succ);
 		if(succ2 == null) {
-			if(!stateFilter.apply(succ)) {
+			if(!stateFilter.test(succ)) {
 				return TSTraversalAction.IGNORE;
 			}
 			SP2 sp = spMapping.apply(succ);

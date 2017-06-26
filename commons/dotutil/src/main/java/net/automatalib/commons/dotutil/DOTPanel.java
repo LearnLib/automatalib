@@ -149,22 +149,19 @@ public class DOTPanel extends JPanel {
 		c.gridheight = 1;
 		this.graphs = new DefaultListModel<>();
 		listBox = new JList<>(graphs);
-		listBox.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				int idx = listBox.getSelectedIndex();
-				boolean activeSelection = (idx != -1);
-				if(!activeSelection)
-					imgComponent.setImage(null);
-				else {
-					PlottedGraph pg = graphs.get(idx);
-					imgComponent.setImage(pg.getImage());
-				}
-				saveDotAction.setEnabled(activeSelection);
-				savePngAction.setEnabled(activeSelection);
-				renameAction.setEnabled(activeSelection);
-				scrollPane.validate();
+		listBox.addListSelectionListener(e -> {
+			int idx = listBox.getSelectedIndex();
+			boolean activeSelection = (idx != -1);
+			if(!activeSelection)
+				imgComponent.setImage(null);
+			else {
+				PlottedGraph pg = graphs.get(idx);
+				imgComponent.setImage(pg.getImage());
 			}
+			saveDotAction.setEnabled(activeSelection);
+			savePngAction.setEnabled(activeSelection);
+			renameAction.setEnabled(activeSelection);
+			scrollPane.validate();
 		});
 		add(new JScrollPane(listBox), c);
 		

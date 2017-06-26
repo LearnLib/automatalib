@@ -15,13 +15,12 @@
  */
 package net.automatalib.words;
 
-import com.google.common.base.Function;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;

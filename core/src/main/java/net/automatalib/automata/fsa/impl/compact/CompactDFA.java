@@ -126,14 +126,14 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 
 	@Override
 	public void initState(int stateId, Boolean property) {
-		boolean bval = (property == null) ? false : property.booleanValue();
+		boolean bval = property != null && property.booleanValue();
 		setAccepting(stateId, bval);
 	}
 
 	
 	@Override
 	public void setStateProperty(int stateId, Boolean property) {
-		boolean bval = (property == null) ? false : property.booleanValue();
+		boolean bval = property != null && property.booleanValue();
 		setAccepting(stateId, bval);
 	}
 

@@ -24,6 +24,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -36,8 +37,6 @@ import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.array.AWUtil;
 import net.automatalib.commons.util.array.ArrayWritable;
 import net.automatalib.commons.util.strings.AbstractPrintable;
-
-import com.google.common.base.Function;
 
 /**
  * A word is an ordered sequence of symbols. {@link Word}s are generally immutable,

@@ -311,12 +311,7 @@ bfs_loop:
 			final IndefiniteGraph<N,E> graph,
 			final Collection<? extends N> start) {
 		
-		return new Iterable<N>() {
-			@Override
-			public Iterator<N> iterator() {
-				return bfIterator(graph, start);
-			}
-		};
+		return () -> bfIterator(graph, start);
 	}
 	
 	public static <N,E> Iterator<N> dfIterator(IndefiniteGraph<N,E> graph, Collection<? extends N> start) {
@@ -327,12 +322,7 @@ bfs_loop:
 			final IndefiniteGraph<N,E> graph,
 			final Collection<? extends N> start) {
 		
-		return new Iterable<N>() {
-			@Override
-			public Iterator<N> iterator() {
-				return dfIterator(graph, start);
-			}
-		};
+		return () -> dfIterator(graph, start);
 	}
 	
 	private GraphTraversal() {} // prevent inheritance

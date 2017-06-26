@@ -275,12 +275,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E>
 	 */
 	@Override
 	public Iterable<ElementReference> references() {
-		return new Iterable<ElementReference>() {
-			@Override
-			public Iterator<ElementReference> iterator() {
-				return referenceIterator();
-			}
-		};
+		return () -> referenceIterator();
 	}
 	
 	/*

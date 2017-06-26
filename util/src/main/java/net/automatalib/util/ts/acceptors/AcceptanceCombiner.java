@@ -16,40 +16,15 @@
 package net.automatalib.util.ts.acceptors;
 
 public interface AcceptanceCombiner {
-	public static AcceptanceCombiner AND = new AcceptanceCombiner() {
-		@Override
-		public boolean combine(boolean a1, boolean a2) {
-			return a1 && a2;
-		}
-	};
+	public static AcceptanceCombiner AND = (a1, a2) -> a1 && a2;
 	
-	public static AcceptanceCombiner OR = new AcceptanceCombiner() {
-		@Override
-		public boolean combine(boolean a1, boolean a2) {
-			return a1 || a2;
-		}
-	};
+	public static AcceptanceCombiner OR = (a1, a2) -> a1 || a2;
 	
-	public static AcceptanceCombiner XOR = new AcceptanceCombiner() {
-		@Override
-		public boolean combine(boolean a1, boolean a2) {
-			return a1 ^ a2;
-		}
-	};
+	public static AcceptanceCombiner XOR = (a1, a2) -> a1 ^ a2;
 	
-	public static AcceptanceCombiner EQUIV = new AcceptanceCombiner() {
-		@Override
-		public boolean combine(boolean a1, boolean a2) {
-			return (a1 == a2);
-		}
-	};
+	public static AcceptanceCombiner EQUIV = (a1, a2) -> (a1 == a2);
 	
-	public static AcceptanceCombiner IMPL = new AcceptanceCombiner() {
-		@Override
-		public boolean combine(boolean a1, boolean a2) {
-			return !a1 || a2;
-		}
-	};
+	public static AcceptanceCombiner IMPL = (a1, a2) -> !a1 || a2;
 	
 	/**
 	 * Combine two acceptance values.

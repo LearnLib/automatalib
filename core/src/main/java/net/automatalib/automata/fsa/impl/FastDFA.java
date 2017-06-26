@@ -34,7 +34,7 @@ public final class FastDFA<I> extends FastMutableDet<FastDFAState, I, FastDFASta
 
 	@Override
 	protected FastDFAState createState(Boolean accepting) {
-		boolean acc = (accepting != null) ? accepting.booleanValue() : false;
+		boolean acc = (accepting != null) && accepting.booleanValue();
 		return createState(acc);
 	}
 

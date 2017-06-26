@@ -20,10 +20,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Spliterator;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
-
-import com.google.common.base.Function;
 
 /**
  * A word consisting of a single letter only.

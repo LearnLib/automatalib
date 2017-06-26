@@ -41,12 +41,7 @@ public interface SettingsSource {
 		ServiceLoader<S> loader = ServiceLoader.load(clazz);
 		List<S> sources = new ArrayList<>();
 		Iterators.addAll(sources, loader.iterator());
-		sources.sort(new Comparator<SettingsSource>() {
-			@Override
-			public int compare(SettingsSource a, SettingsSource b) {
-				return a.getPriority() - b.getPriority();
-			}
-		});
+		sources.sort(Comparator.comparingInt(SettingsSource::getPriority));
 		
 		for (S source : sources) {
 			source.loadSettings(p);

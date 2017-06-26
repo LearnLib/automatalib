@@ -59,15 +59,12 @@ public abstract class IterableUtil {
 	
 	@SafeVarargs
 	public static <T> Iterable<T> concat(final Iterable<? extends T> ...iterables) {
-		return new Iterable<T>() {
-			@Override
-			public Iterator<T> iterator() {
-				@SuppressWarnings("unchecked")
-				Iterator<? extends T>[] iterators = new Iterator[iterables.length];
-				for(int i = 0; i < iterables.length; i++)
-					iterators[i] = iterables[i].iterator();
-				return concat(iterators);
-			}
+		return () -> {
+			@SuppressWarnings("unchecked")
+			Iterator<? extends T>[] iterators = new Iterator[iterables.length];
+			for(int i = 0; i < iterables.length; i++)
+				iterators[i] = iterables[i].iterator();
+			return concat(iterators);
 		};
 	}
 	
@@ -82,12 +79,7 @@ public abstract class IterableUtil {
 	
 	
 	public static <T> Iterable<T> unmodifiableIterable(final Iterable<T> iterable) {
-		return new Iterable<T>() {
-			@Override
-			public Iterator<T> iterator() {
-				return unmodifiableIterator(iterable.iterator());
-			}
-		};
+		return () -> unmodifiableIterator(iterable.iterator());
 	}
 	
 	public static <T> Iterator<List<T>> allCombinationsIterator(List<? extends Iterable<? extends T>> iterables) {
@@ -100,12 +92,7 @@ public abstract class IterableUtil {
 	}
 	
 	public static <T> Iterable<List<T>> allCombinations(List<? extends Iterable<? extends T>> iterables) {
-		return new Iterable<List<T>>() {
-			@Override
-			public Iterator<List<T>> iterator() {
-				return allCombinationsIterator(iterables);
-			}
-		};
+		return () -> allCombinationsIterator(iterables);
 	}
 	
 	@SafeVarargs

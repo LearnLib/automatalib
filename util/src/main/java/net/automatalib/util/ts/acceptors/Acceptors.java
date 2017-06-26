@@ -66,12 +66,7 @@ public abstract class Acceptors {
 	
 	
 	public static <S> Mapping<S,Boolean> acceptance(final AcceptorTS<S, ?> acceptor) {
-		return new Mapping<S,Boolean>() {
-			@Override
-			public Boolean get(S elem) {
-				return acceptor.isAccepting(elem);
-			}
-		};
+		return elem -> acceptor.isAccepting(elem);
 	}
 	
 	
