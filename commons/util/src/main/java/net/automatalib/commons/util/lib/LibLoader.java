@@ -106,11 +106,8 @@ public class LibLoader {
 		try {
 			System.load(libPath.toString());
 		}
-		catch (SecurityException ex) {
+		catch (SecurityException | UnsatisfiedLinkError ex) {
 			throw new LoadLibraryException(ex);
-		}
-		catch (UnsatisfiedLinkError err) {
-			throw new LoadLibraryException(err);
 		}
 	}
 	
@@ -118,11 +115,8 @@ public class LibLoader {
 		try {
 			System.loadLibrary(name);
 		}
-		catch (SecurityException ex) {
+		catch (SecurityException | UnsatisfiedLinkError ex) {
 			throw new LoadLibraryException(ex);
-		}
-		catch (UnsatisfiedLinkError err) {
-			throw new LoadLibraryException(err);
 		}
 	}
 	
