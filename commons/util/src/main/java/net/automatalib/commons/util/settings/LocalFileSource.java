@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LocalFileSource implements SettingsSource {
 
@@ -47,13 +49,13 @@ public class LocalFileSource implements SettingsSource {
 			return;
 		}
 		
-		Logger log = Logger.getLogger(getClass().getName());
+		Logger log = LoggerFactory.getLogger(getClass());
 		
 		try (BufferedReader r = new BufferedReader(new FileReader(file))) {
 			properties.load(r);
 		}
 		catch(IOException ex) {
-			log.warning("Could not read properties file " + file.getAbsolutePath() + ": " + ex.getMessage());
+			log.warn("Could not read properties file " + file.getAbsolutePath() + ".", ex);
 		}
 	}
 	
