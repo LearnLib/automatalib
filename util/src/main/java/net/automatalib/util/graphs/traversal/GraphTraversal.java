@@ -180,9 +180,8 @@ bfs_loop:
 		int nodeCount = 0;
 			
 		
-		Deque<DFRecord<N,E,D>> dfsStack
-			= new ArrayDeque<>();
-		
+		Deque<DFRecord<N,E,D>> dfsStack = new ArrayDeque<>();
+
 		Holder<D> dataHolder = new Holder<>();
 		
 		for(N init : initialNodes) {

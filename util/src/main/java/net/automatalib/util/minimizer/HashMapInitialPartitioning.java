@@ -31,8 +31,7 @@ import net.automatalib.graphs.UniversalIndefiniteGraph;
  */
 class HashMapInitialPartitioning<S, L> implements
 		InitialPartitioning<S, L> {
-	private final Map<Object,Block<S,L>> initialBlockMap
-		= new HashMap<>();
+	private final Map<Object,Block<S,L>> initialBlockMap = new HashMap<>();
 	private final UniversalIndefiniteGraph<S, ?, ?, L> graph;
 
 	private int numExistingBlocks;

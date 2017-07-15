@@ -100,19 +100,13 @@ public class Minimizer<S,L> {
 	// The following attributes may be reused. Most of them are used
 	// as local variables in the split() method, but storing them
 	// as attributes helps to avoid costly re-allocations. 
-	private final DefaultLinkedList<Block<S,L>> splitters
-		= new DefaultLinkedList<>();
-	private final IntrusiveLinkedList<TransitionLabel<S, L>> letterList
-		= new IntrusiveLinkedList<>();
-	private final IntrusiveLinkedList<State<S,L>> stateList
-		= new IntrusiveLinkedList<>();
-	private final IntrusiveLinkedList<Block<S,L>> splitBlocks
-		= new IntrusiveLinkedList<>();
-	private final IntrusiveLinkedList<Block<S,L>>  newBlocks
-		= new IntrusiveLinkedList<>();
-	private final IntrusiveLinkedList<State<S,L>> finalList
-		= new IntrusiveLinkedList<>();
-	
+	private final DefaultLinkedList<Block<S,L>> splitters = new DefaultLinkedList<>();
+	private final IntrusiveLinkedList<TransitionLabel<S, L>> letterList = new IntrusiveLinkedList<>();
+	private final IntrusiveLinkedList<State<S,L>> stateList = new IntrusiveLinkedList<>();
+	private final IntrusiveLinkedList<Block<S,L>> splitBlocks = new IntrusiveLinkedList<>();
+	private final IntrusiveLinkedList<Block<S,L>>  newBlocks = new IntrusiveLinkedList<>();
+	private final IntrusiveLinkedList<State<S,L>> finalList = new IntrusiveLinkedList<>();
+
 	
 	
 	/**

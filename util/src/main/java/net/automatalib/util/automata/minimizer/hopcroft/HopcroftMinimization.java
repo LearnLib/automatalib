@@ -129,8 +129,7 @@ public class HopcroftMinimization {
 	 */
 	public static <I,O,A extends MealyMachine<?,I,?,O> & InputAlphabetHolder<I>>
 	CompactMealy<I,O> minimizeMealy(A mealy, PruningMode pruningMode) {
-		return doMinimizeMealy((MealyMachine<?,I,?,O>) mealy, mealy.getInputAlphabet(),
-							   new CompactMealy.Creator<>(), pruningMode);
+		return doMinimizeMealy((MealyMachine<?,I,?,O>) mealy, mealy.getInputAlphabet(), new CompactMealy.Creator<>(), pruningMode);
 	}
 	
 	
