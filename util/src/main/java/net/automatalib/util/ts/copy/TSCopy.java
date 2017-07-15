@@ -19,8 +19,6 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.google.common.base.Functions;
-import com.google.common.base.Predicates;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.UniversalAutomaton;

@@ -20,7 +20,7 @@ import net.automatalib.words.VPDAlphabet;
 /**
  * Utility class used to wrap input symbols of a {@link VPDAlphabet}. Stores additional index information to allow fast
  * index-based access.
- * 
+ *
  * @param <T> type of the payload
  *
  * @author Malte Isberner
