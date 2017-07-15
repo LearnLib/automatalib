@@ -455,7 +455,7 @@ public class PaigeTarjan {
 	 * @return an {@link Iterable} for iterating over all blocks
 	 */
 	public Iterable<Block> blockList() {
-		return () -> blockListIterator();
+		return this::blockListIterator;
 	}
 	
 	/**

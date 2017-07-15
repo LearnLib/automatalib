@@ -32,7 +32,7 @@ public abstract class Graphs {
 	public static <N,E> Mapping<N,? extends Collection<? extends E>> incomingEdges(final Graph<N,E> graph) {
 		if(graph instanceof BidirectionalGraph) {
 			final BidirectionalGraph<N,E> bdGraph = (BidirectionalGraph<N, E>)graph;
-			return n -> bdGraph.getIncomingEdges(n);
+			return bdGraph::getIncomingEdges;
 		}
 		
 		MutableMapping<N,Collection<E>> inEdgesMapping
@@ -66,12 +66,12 @@ public abstract class Graphs {
 	
 	@Deprecated
 	public static <N,NP> Mapping<N,NP> nodeProperties(final UniversalIndefiniteGraph<N, ?, NP, ?> graph) {
-		return n -> graph.getNodeProperty(n);
+		return graph::getNodeProperty;
 	}
 	
 	@Deprecated
 	public static <E,EP> Mapping<E,EP> edgeProperties(final UniversalIndefiniteGraph<?, E, ?, EP> graph) {
-		return e -> graph.getEdgeProperty(e);
+		return graph::getEdgeProperty;
 	}
 	
 	private Graphs() {}

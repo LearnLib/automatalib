@@ -60,7 +60,7 @@ public class RandomICAutomatonGenerator<SP,TP> {
 	 * @return a random IC automaton generator instance for generating DFAs
 	 */
 	public static RandomICAutomatonGenerator<Boolean,Void> forDFA() {
-		return new RandomICAutomatonGenerator<Boolean,Void>().withStateProperties(r -> r.nextBoolean());
+		return new RandomICAutomatonGenerator<Boolean,Void>().withStateProperties(Random::nextBoolean);
 	}
 	
 	/**

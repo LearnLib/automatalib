@@ -109,7 +109,7 @@ public class RandomAutomata {
 			Alphabet<I> inputs,
 			boolean minimize) {
 		CompactDFA<I> dfa = new RandomICAutomatonGenerator<Boolean,Void>()
-			.withStateProperties(r -> r.nextBoolean())
+			.withStateProperties(Random::nextBoolean)
 			.generateICDeterministicAutomaton(numStates, inputs, new CompactDFA.Creator<>(), rand);
 		if (minimize) {
 			dfa = DFAs.minimize(dfa);

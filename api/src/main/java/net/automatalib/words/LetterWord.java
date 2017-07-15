@@ -15,14 +15,13 @@
  */
 package net.automatalib.words;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Function;
-
-import javax.annotation.Nonnull;
 
 /**
  * A word consisting of a single letter only.
@@ -256,7 +255,7 @@ final class LetterWord<I> extends Word<I> {
 
 	@Nonnull
 	@Override
-	public <T> Word<T> transform(Function<? super I,? extends T> transformer) {
+	public <T> Word<T> transform(Function<? super I, ? extends T> transformer) {
 		T transformed = transformer.apply(letter);
 		return new LetterWord<>(transformed);
 	}

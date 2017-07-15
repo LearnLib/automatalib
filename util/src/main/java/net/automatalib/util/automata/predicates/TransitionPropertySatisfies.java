@@ -15,10 +15,10 @@
  */
 package net.automatalib.util.automata.predicates;
 
+import java.util.function.Predicate;
+
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.UniversalTransitionSystem;
-
-import java.util.function.Predicate;
 
 final class TransitionPropertySatisfies<S, I, T, TP> implements
 		TransitionPredicate<S, I, T> {

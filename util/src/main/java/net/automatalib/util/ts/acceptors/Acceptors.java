@@ -66,7 +66,7 @@ public abstract class Acceptors {
 	
 	
 	public static <S> Mapping<S,Boolean> acceptance(final AcceptorTS<S, ?> acceptor) {
-		return elem -> acceptor.isAccepting(elem);
+		return acceptor::isAccepting;
 	}
 	
 	

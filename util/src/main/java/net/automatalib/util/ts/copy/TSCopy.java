@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.google.common.base.Functions;
+import com.google.common.base.Predicates;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.UniversalAutomaton;
@@ -239,7 +241,7 @@ public class TSCopy {
 			Function<? super TP1,? extends TP2> tpTransform,
 			Predicate<? super S1> stateFilter,
 			TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
-		return copy(method, in, limit, inputs, out, Function.<I>identity(), spTransform, tpTransform, stateFilter, transFilter);
+		return copy(method, in, limit, inputs, out, Function.identity(), spTransform, tpTransform, stateFilter, transFilter);
 	}
 	
 	/**

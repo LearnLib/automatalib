@@ -15,6 +15,9 @@
  */
 package net.automatalib.util.ts.copy;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.mappings.Mapping;
@@ -23,9 +26,6 @@ import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.ts.traversal.TSTraversalAction;
 import net.automatalib.util.ts.traversal.TSTraversalVisitor;
-
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements
 		TSTraversalVisitor<S1, I1, T1, S2> {

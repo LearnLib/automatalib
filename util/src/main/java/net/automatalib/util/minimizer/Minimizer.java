@@ -47,12 +47,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
 public class Minimizer<S,L> {
 	
 	private static final ThreadLocal<Minimizer<Object,Object>> LOCAL_INSTANCE
-		= new ThreadLocal<Minimizer<Object,Object>>() {
-			@Override
-			protected Minimizer<Object, Object> initialValue() {
-				return new Minimizer<>();
-			}
-	};
+		= ThreadLocal.withInitial(Minimizer::new);
 	
 	
 	/**

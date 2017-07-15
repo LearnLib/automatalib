@@ -52,11 +52,11 @@ public abstract class TS {
 	}
 	
 	public static <S,SP> Function<S,SP> stateProperties(final UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
-		return (s) -> uts.getStateProperty(s);
+		return uts::getStateProperty;
 	}
 	
 	public static <T,TP> Function<T,TP> transitionProperties(final UniversalTransitionSystem<?, ?, T, ?, TP> uts) {
-		return (t) -> uts.getTransitionProperty(t);
+		return uts::getTransitionProperty;
 	}
 	
 	public static <S,I> Iterator<I> definedInputsIterator(TransitionSystem<S, I, ?> ts,
