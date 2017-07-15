@@ -18,6 +18,7 @@ package net.automatalib.ts.acceptors;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.UniversalDTS;
 
@@ -30,7 +31,7 @@ import net.automatalib.ts.UniversalDTS;
  * @see DeterministicTransitionSystem
  */
 public interface DeterministicAcceptorTS<S, I> extends AcceptorTS<S, I>,
-		UniversalDTS<S, I, S, Boolean, Void> {
+		UniversalDTS<S, I, S, Boolean, Void>, Output<I, Boolean> {
 	
 	@Override
 	default public boolean isAccepting(Collection<? extends S> states) {
@@ -53,5 +54,10 @@ public interface DeterministicAcceptorTS<S, I> extends AcceptorTS<S, I>,
 		if(state == null)
 			return false;
 		return isAccepting(state);
+	}
+
+	@Override
+	default Boolean computeOutput(Iterable<? extends I> input) {
+		return accepts(input);
 	}
 }
