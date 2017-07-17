@@ -153,4 +153,10 @@ public class OneSEVPAUtil {
 		return findAcceptedWord(prod, alphabet);
 	}
 
+	public static <I> boolean testEquivalence(final OneSEVPA<?, I> sevpa1,
+											  final OneSEVPA<?, I> sevpa2,
+											  final VPDAlphabet<I> alphabet) {
+		return findSeparatingWord(sevpa1, sevpa2, alphabet) == null;
+	}
+
 }

@@ -27,6 +27,7 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.automata.asgraph.AutomatonAsGraph;
@@ -34,11 +35,13 @@ import net.automatalib.util.automata.asgraph.UniversalAutomatonAsGraph;
 import net.automatalib.util.automata.equivalence.CharacterizingSets;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.util.automata.vpda.OneSEVPAUtil;
 import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.util.ts.TS;
+import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
 public class Automata extends TS {
@@ -213,6 +216,12 @@ public class Automata extends TS {
 			Collection<? extends I> inputs) {
 		return NearLinearEquivalenceTest.findSeparatingWord(reference, other, inputs);
 	}
+
+	public static <I> Word<I> findSeparatingWord(final OneSEVPA<?, I> sevpa1,
+												 final OneSEVPA<?, I> sevpa2,
+												 final VPDAlphabet<I> inputs) {
+		return OneSEVPAUtil.findSeparatingWord(sevpa1, sevpa2, inputs);
+	}
 	
 	public static <I> Word<I> findShortestSeparatingWord(
 			UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
@@ -226,6 +235,12 @@ public class Automata extends TS {
 			UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
 			Collection<? extends I> inputs) {
 		return (findSeparatingWord(reference, other, inputs) == null);
+	}
+
+	public static <I> boolean testEquivalence(final OneSEVPA<?, I> sevpa1,
+											  final OneSEVPA<?, I> sevpa2,
+											  final VPDAlphabet<I> inputs) {
+		return OneSEVPAUtil.testEquivalence(sevpa1, sevpa2, inputs);
 	}
 	
 	/**
