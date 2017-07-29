@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.ads.impl;
+package net.automatalib.graphs.ads.impl;
 
-import net.automatalib.automata.ads.ADSNode;
+import net.automatalib.graphs.ads.ADSNode;
 
 import java.util.HashMap;
 import java.util.Map;

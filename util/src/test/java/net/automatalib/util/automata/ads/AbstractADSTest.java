@@ -15,7 +15,7 @@
  */
 package net.automatalib.util.automata.ads;
 
-import net.automatalib.automata.ads.ADSNode;
+import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;

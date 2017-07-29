@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.ads;
+package net.automatalib.graphs.ads;
 
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.DefaultDOTHelper;

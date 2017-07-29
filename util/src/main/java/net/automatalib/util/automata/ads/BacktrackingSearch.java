@@ -16,9 +16,9 @@
 package net.automatalib.util.automata.ads;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automata.ads.ADSNode;
-import net.automatalib.automata.ads.impl.ADSLeafNode;
-import net.automatalib.automata.ads.impl.ADSSymbolNode;
+import net.automatalib.graphs.ads.ADSNode;
+import net.automatalib.graphs.ads.impl.ADSLeafNode;
+import net.automatalib.graphs.ads.impl.ADSSymbolNode;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;

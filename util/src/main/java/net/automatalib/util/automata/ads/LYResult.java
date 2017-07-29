@@ -15,7 +15,7 @@
  */
 package net.automatalib.util.automata.ads;
 
-import net.automatalib.automata.ads.ADSNode;
+import net.automatalib.graphs.ads.ADSNode;
 
 import java.util.Collections;
 import java.util.Optional;
