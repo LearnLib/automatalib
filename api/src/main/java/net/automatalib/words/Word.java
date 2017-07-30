@@ -165,7 +165,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 		if(siz == 0)
 			return epsilon();
 		if(siz == 1)
-			return Word.<I>fromLetter(symbolList.get(0));
+			return Word.fromLetter(symbolList.get(0));
 		return new SharedWord<>(symbolList);
 	}
 	

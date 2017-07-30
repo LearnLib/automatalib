@@ -156,7 +156,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 			return Word.epsilon();
 		}
 		if(rootAcc == Acceptance.FALSE) {
-			return findLive(target, automatonInit, inputs, target.<Boolean>createStaticStateMapping());
+			return findLive(target, automatonInit, inputs, target.createStaticStateMapping());
 		}
 		
 		Deque<Record<S,I>> dfsStack = new ArrayDeque<>();

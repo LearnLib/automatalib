@@ -166,7 +166,7 @@ public class CharacterizingSets {
 		}
 		
 		if(multipleStateProps)
-			result.add(Word.<I>epsilon());
+			result.add(Word.epsilon());
 		
 		while(!currentBlock.isEmpty()) {
 			List<S> nextBlock = new ArrayList<>();
@@ -206,7 +206,7 @@ public class CharacterizingSets {
 	public static <S,I,T> void findCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
 			Collection<? extends I> inputs,
 			Collection<? super Word<I>> result) {
-		findIncrementalCharacterizingSet(automaton, inputs, Collections.<Word<I>>emptyList(), result);
+		findIncrementalCharacterizingSet(automaton, inputs, Collections.emptyList(), result);
 	}
 	
 	private static <S,I,T> Map<Object,List<S>> clusterByProperty(
@@ -336,7 +336,7 @@ public class CharacterizingSets {
 		
 		if(!oldSuffixes.contains(Word.epsilon())) {
 			if(epsilonRefine(automaton, blocks)) {
-				newSuffixes.add(Word.<I>epsilon());
+				newSuffixes.add(Word.epsilon());
 				refined = true;
 			}
 		}

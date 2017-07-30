@@ -52,10 +52,10 @@ class Covers {
 		
 		S init = automaton.getInitialState();
 		
-		reach.put(init, Word.<I>epsilon());
+		reach.put(init, Word.epsilon());
 		bfsQueue.add(init);
 		if(states != null)
-			states.add(Word.<I>epsilon());
+			states.add(Word.epsilon());
 		
 		S curr;
 		
@@ -109,7 +109,7 @@ class Covers {
 			Record<S,I> rec = new Record<>(init, Word.<I>epsilon());
 			reach.put(init, rec);
 			bfsQueue.add(rec);
-			newStates.add(Word.<I>epsilon());
+			newStates.add(Word.epsilon());
 			augmented = true;
 		}
 		
@@ -206,7 +206,7 @@ class Covers {
 		
 		if(!hasEpsilon) {
 			if(newStateCover != null) {
-				newStateCover.add(Word.<I>epsilon());
+				newStateCover.add(Word.epsilon());
 				augmented = true;
 			}
 		}

@@ -383,7 +383,7 @@ public class Automata extends TS {
 			Collection<? extends I> inputs,
 			Collection<? extends Word<I>> oldStates,
 			Collection<? super Word<I>> newStates) {
-		return incrementalCover(automaton, inputs, oldStates, Collections.<Word<I>>emptyList(), newStates, null);
+		return incrementalCover(automaton, inputs, oldStates, Collections.emptyList(), newStates, null);
 	}
 	
 	public static <I> boolean incrementalStructuralCover(
@@ -391,7 +391,7 @@ public class Automata extends TS {
 			Collection<? extends I> inputs,
 			Collection<? extends Word<I>> oldStructural,
 			Collection<? super Word<I>> newStructural) {
-		return incrementalCover(automaton, inputs, oldStructural, Collections.<Word<I>>emptyList(), newStructural, newStructural);
+		return incrementalCover(automaton, inputs, oldStructural, Collections.emptyList(), newStructural, newStructural);
 	}
 	
 	public static <S,I>

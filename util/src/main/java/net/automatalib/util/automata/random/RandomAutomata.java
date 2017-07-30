@@ -152,7 +152,7 @@ public class RandomAutomata {
 			Alphabet<I> inputs,
 			Collection<? extends O> outputs,
 			boolean minimize) {
-		return randomDeterministic(rand, numStates, inputs, Collections.<Void>singleton(null), outputs, new CompactMealy<I,O>(inputs), minimize);
+		return randomDeterministic(rand, numStates, inputs, Collections.singleton(null), outputs, new CompactMealy<I,O>(inputs), minimize);
 	}
 	
 	@Nonnull

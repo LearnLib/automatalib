@@ -104,7 +104,7 @@ public interface MutableAutomaton<S,I,T,SP,TP>
     }
     
     default public void removeAllTransitions(S state, @Nullable I input) {
-    	setTransitions(state, input, Collections.<T>emptySet());
+    	setTransitions(state, input, Collections.emptySet());
     }
     
     public void removeAllTransitions(S state);

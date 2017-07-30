@@ -18,7 +18,6 @@ package net.automatalib.commons.util.collections;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.RandomAccess;
@@ -103,7 +102,7 @@ public abstract class CollectionsUtil {
 		if(!domain.iterator().hasNext()) {
 			if(minLength == 0)
 				return Collections.singletonList(Collections.<T>emptyList());
-			return Collections.<List<T>>emptyList();
+			return Collections.emptyList();
 		}
 		
 		return () -> new AllTuplesIterator<>(domain, minLength, maxLength);

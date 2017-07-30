@@ -196,7 +196,7 @@ public abstract class CmpUtil {
 	 * @return the lexicographical comparator.
 	 */
 	public static <U extends Comparable<U>,T extends Iterable<U>> Comparator<T> lexComparator() {
-		return NaturalLexComparator.<T,U>getInstance();
+		return NaturalLexComparator.getInstance();
 	}
 	
 	
@@ -217,7 +217,7 @@ public abstract class CmpUtil {
 	 * @see #canonicalCompare(List, List)
 	 */
 	public static <T extends List<U>,U extends Comparable<U>> Comparator<T> canonicalComparator() {
-		return NaturalCanonicalComparator.<T,U>getInstance();
+		return NaturalCanonicalComparator.getInstance();
 	}
 	
 	/**

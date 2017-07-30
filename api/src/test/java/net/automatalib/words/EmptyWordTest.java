@@ -46,16 +46,16 @@ public class EmptyWordTest extends AbstractWordTest {
 
 	@Override
 	protected List<Word<Object>> equalWords() {
-		return Arrays.<Word<Object>>asList(new SharedWord<>(new Object[0]),
-				new SharedWord<>(Collections.emptyList()),
-				new SharedWord<>(new Object[3], 2, 0));
+		return Arrays.asList(new SharedWord<>(new Object[0]),
+							 new SharedWord<>(Collections.emptyList()),
+							 new SharedWord<>(new Object[3], 2, 0));
 	}
 
 	@Override
 	protected List<Word<Object>> unequalWords() {
-		return Arrays.<Word<Object>>asList(new LetterWord<>(new Object()),
-				new SharedWord<>(new Object[3]),
-				new SharedWord<>(Arrays.<Object>asList(1, 2, 3)));
+		return Arrays.asList(new LetterWord<>(new Object()),
+							 new SharedWord<>(new Object[3]),
+							 new SharedWord<>(Arrays.<Object>asList(1, 2, 3)));
 	}
 	
 	

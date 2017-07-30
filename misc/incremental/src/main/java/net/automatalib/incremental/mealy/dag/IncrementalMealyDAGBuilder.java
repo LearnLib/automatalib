@@ -612,7 +612,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends
 		S init2 = mealy.getInitialState();
 
 		if (init2 == null)
-			return omitUndefined ? null : Word.<I> epsilon();
+			return omitUndefined ? null : Word.epsilon();
 
 		StateIDs<S> mealyIds = mealy.stateIDs();
 
