@@ -16,6 +16,7 @@
 package net.automatalib.words;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,7 +32,7 @@ import java.util.function.Function;
  * @param <I> symbol class
  * @see Collections#singletonList(Object)
  */
-final class LetterWord<I> extends Word<I> {
+final class LetterWord<I> extends Word<I> implements Serializable {
 	
 	/*
 	 * Iterator

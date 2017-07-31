@@ -15,7 +15,9 @@
  */
 package net.automatalib.automata.transout.impl.compact;
 
-public class CompactMealyTransition<O> {
+import java.io.Serializable;
+
+public class CompactMealyTransition<O> implements Serializable {
 	private final int succId;
 	private O output;
 	

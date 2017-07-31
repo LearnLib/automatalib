@@ -16,6 +16,7 @@
 package net.automatalib.words;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -71,8 +72,7 @@ import net.automatalib.commons.util.strings.AbstractPrintable;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I> {
-
+public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I>, Serializable {
 
 	private static String emptyWordRep = "ε";
 	private static String wordDelimLeft = "";

@@ -15,6 +15,7 @@
  */
 package net.automatalib.automata.base.compact;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import net.automatalib.automata.GrowableAlphabetAutomaton;
@@ -30,7 +31,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		implements MutableDeterministic<Integer,I,T,SP,TP>, StateIDs<Integer>, UniversalFiniteAlphabetAutomaton<Integer,I,T,SP,TP>,
 		MutableDeterministic.StateIntAbstraction<I, T, SP, TP>,
 		MutableDeterministic.FullIntAbstraction<T, SP, TP>,
-		GrowableAlphabetAutomaton<I> {
+		GrowableAlphabetAutomaton<I>, Serializable {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
@@ -48,12 +49,14 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		return (id != null) ? id.intValue() : INVALID_STATE;
 	}
 	
-	
-	
 	protected static final Integer makeId(int id) {
 		return (id != INVALID_STATE) ? Integer.valueOf(id) : null;
 	}
-	
+
+	public AbstractCompactDeterministic() {
+		this(new SimpleAlphabet<>(), AbstractCompactDeterministic.DEFAULT_RESIZE_FACTOR);
+	}
+
 	public AbstractCompactDeterministic(Alphabet<I> alphabet) {
 		this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
 	}
