@@ -31,11 +31,11 @@ import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
  */
 public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
 
-	final int internalStart, internalEnd;
-	final int callStart, callEnd;
-	final int returnStart, returnEnd;
+	private final int internalStart, internalEnd;
+	private final int callStart, callEnd;
+	private final int returnStart, returnEnd;
 
-	final List<I> symbols;
+	private final List<I> symbols;
 
 	public DefaultVPDAlphabet(final Collection<I> internalSymbols,
 							  final Collection<I> callSymbols,
