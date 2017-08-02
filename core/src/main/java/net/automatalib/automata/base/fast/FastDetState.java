@@ -42,10 +42,16 @@ public abstract class FastDetState<S extends FastDetState<S,T>, T> extends Abstr
 	public final void setTransition(int inputIdx, T transition) {
 		transitions.array[inputIdx] = transition;
 	}
-	
-	public void clearTransitions() {
-		for(int i = 0; i < transitions.array.length; i++)
+
+	protected void clearTransition(final T transition) {
+		// do nothing in particular, but sub-classes may cleanup additional resources
+	}
+
+	public final void clearTransitions() {
+		for(int i = 0; i < transitions.array.length; i++) {
+			clearTransition(getTransition(i));
 			transitions.array[i] = null;
+		}
 	}
 	
 	
