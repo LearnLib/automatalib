@@ -26,7 +26,6 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
-import net.automatalib.commons.util.nid.IDChangeNotifier;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.SimpleAlphabet;
@@ -37,11 +36,8 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 		StateIDs<S>,
 		GrowableAlphabetAutomaton<I> {
 
-	private final DynamicList<S> states
-		= new DynamicList<>();
-	private final IDChangeNotifier<S> tracker
-		= new IDChangeNotifier<>();
-	
+	private final DynamicList<S> states = new DynamicList<>();
+
 	private S initialState;
 	
 	protected final GrowingAlphabet<I> inputAlphabet;
@@ -189,9 +185,7 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 	 */
 	@Override
 	public <V> MutableMapping<S,V> createDynamicStateMapping() {
-		StateIDDynamicMapping<S, V> mapping = new StateIDDynamicMapping<>(this);
-		tracker.addListener(mapping, true);
-		return mapping;
+		return new StateIDDynamicMapping<>(this);
 	}
 
 	@Override
