@@ -15,6 +15,7 @@
  */
 package net.automatalib.commons.util.array;
 
+import java.io.Serializable;
 
 /**
  * Class that provides a resizable {@link Object} array storage.
@@ -26,7 +27,7 @@ package net.automatalib.commons.util.array;
  * @author Malte Isberner
  *
  */
-public final class ResizingObjectArray {
+public final class ResizingObjectArray implements Serializable {
 	
 	/**
 	 * The arrays default initial capacity.
