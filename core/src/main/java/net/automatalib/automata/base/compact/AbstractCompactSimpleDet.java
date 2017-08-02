@@ -15,6 +15,7 @@
  */
 package net.automatalib.automata.base.compact;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,7 +35,8 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		StateIDs<Integer>,
 		MutableDeterministic.StateIntAbstraction<I, Integer, SP, Void>,
 		MutableDeterministic.FullIntAbstraction<Integer, SP, Void>,
-		GrowableAlphabetAutomaton<I> {
+		GrowableAlphabetAutomaton<I>,
+		Serializable {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
