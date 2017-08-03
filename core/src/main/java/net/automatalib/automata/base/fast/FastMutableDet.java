@@ -15,6 +15,7 @@
  */
 package net.automatalib.automata.base.fast;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import net.automatalib.automata.GrowableAlphabetAutomaton;
@@ -34,7 +35,8 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 		ShrinkableDeterministic<S, I, T, SP, TP>,
 		UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>,
 		StateIDs<S>,
-		GrowableAlphabetAutomaton<I> {
+		GrowableAlphabetAutomaton<I>,
+		Serializable {
 
 	private final DynamicList<S> states = new DynamicList<>();
 

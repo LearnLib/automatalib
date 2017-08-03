@@ -15,7 +15,6 @@
  */
 package net.automatalib.words.impl;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +37,7 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
  *
  * @param <I> input symbol type
  */
-public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlphabet<I>, Serializable {
+public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlphabet<I> {
 	
 	@Nonnull
 	private final List<I> symbols;

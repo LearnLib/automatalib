@@ -15,6 +15,7 @@
  */
 package net.automatalib.graphs.ads.impl;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ import net.automatalib.graphs.ads.RecursiveADSNode;
  * @author frohme
  */
 public abstract class AbstractRecursiveADSSymbolNode<S, I, O, N extends RecursiveADSNode<S, I, O, N>>
-		implements RecursiveADSNode<S, I, O, N> {
+		implements RecursiveADSNode<S, I, O, N>, Serializable {
 
 	private N parent;
 

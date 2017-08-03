@@ -19,13 +19,10 @@ import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.SimpleAlphabet;
-
-import java.io.Serializable;
 
 public class CompactMealy<I, O> extends
 		AbstractCompactDeterministic<I, CompactMealyTransition<O>, Void, O> implements
-		MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O>, Serializable {
+		MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O> {
 	
 	public static final class Creator<I,O> implements AutomatonCreator<CompactMealy<I,O>, I> {
 		@Override
@@ -38,10 +35,6 @@ public class CompactMealy<I, O> extends
 		}
 	}
 
-	public CompactMealy() {
-		super();
-	}
-		
 	public CompactMealy(Alphabet<I> alphabet, float resizeFactor) {
 		super(alphabet, resizeFactor);
 	}

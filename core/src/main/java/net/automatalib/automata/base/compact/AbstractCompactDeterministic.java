@@ -53,10 +53,6 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		return (id != INVALID_STATE) ? Integer.valueOf(id) : null;
 	}
 
-	public AbstractCompactDeterministic() {
-		this(new SimpleAlphabet<>(), AbstractCompactDeterministic.DEFAULT_RESIZE_FACTOR);
-	}
-
 	public AbstractCompactDeterministic(Alphabet<I> alphabet) {
 		this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
 	}
