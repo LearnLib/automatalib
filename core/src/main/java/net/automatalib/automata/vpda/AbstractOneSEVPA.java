@@ -15,6 +15,17 @@
  */
 package net.automatalib.automata.vpda;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.dot.DefaultDOTHelper;
+import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.words.VPDAlphabet;
 
 /**
@@ -25,7 +36,7 @@ import net.automatalib.words.VPDAlphabet;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I> {
+public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L, AbstractOneSEVPA.SEVPAViewEdge<L, I>> {
 
 	protected final VPDAlphabet<I> alphabet;
 
@@ -92,4 +103,112 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I> {
 		return size() * alphabet.getNumCalls();
 	}
 
+	// Explicitly declare method, since multiple interfaces define it
+	@Override
+	public abstract int size();
+
+	// default methods for graph interface
+	static class SEVPAViewEdge<S, I> {
+
+		private final S from;
+		private final I by;
+		private final int stack;
+
+		public SEVPAViewEdge(S from, I by, int stack) {
+			this.from = from;
+			this.by = by;
+			this.stack = stack;
+		}
+	}
+
+	@Nonnull
+	@Override
+	public Collection<? extends L> getNodes() {
+		return Collections.unmodifiableCollection(getLocations());
+	}
+
+	@Nonnull
+	@Override
+	public Collection<? extends SEVPAViewEdge<L, I>> getOutgoingEdges(final L location) {
+
+		final List<SEVPAViewEdge<L, I>> result = new ArrayList<>(alphabet.size());
+
+		// all internal transitions
+		for (final I i : alphabet.getInternalAlphabet()) {
+			result.add(new SEVPAViewEdge<>(location, i, -1));
+		}
+
+		// all return transitions for every possible stack contents
+		for (final I i : alphabet.getReturnAlphabet()) {
+			for (final L stackLocation : getLocations()) {
+				for (final I stackSymbol : alphabet.getCallAlphabet()) {
+					result.add(new SEVPAViewEdge<>(location, i, encodeStackSym(stackLocation, stackSymbol)));
+				}
+			}
+		}
+
+		return result;
+	}
+
+	@Nonnull
+	@Override
+	public L getTarget(final SEVPAViewEdge<L, I> edge) {
+
+		final L from = edge.from;
+		final I by = edge.by;
+		final int stack = edge.stack;
+
+		switch (alphabet.getSymbolType(by)) {
+			case INTERNAL:
+				return getInternalSuccessor(from, by);
+			case RETURN:
+				return getReturnSuccessor(from, by, stack);
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
+
+	@Override
+	public GraphDOTHelper<L, ? super SEVPAViewEdge<L, I>> getGraphDOTHelper() {
+		return new DefaultDOTHelper<L, SEVPAViewEdge<L, I>>() {
+
+			@Override
+			protected Collection<? extends L> initialNodes() {
+				return Collections.singleton(getInitialLocation());
+			}
+
+			@Override
+			public boolean getNodeProperties(final L node, final Map<String, String> properties) {
+
+				properties.put(NodeAttrs.SHAPE,
+							   isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);
+				properties.put(NodeAttrs.LABEL, Integer.toString(getLocationId(node)));
+
+				return true;
+			}
+
+			@Override
+			public boolean getEdgeProperties(final L src,
+											 final SEVPAViewEdge<L, I> edge,
+											 final L tgt,
+											 final Map<String, String> properties) {
+
+				final I by = edge.by;
+				final int stack = edge.stack;
+
+				if (alphabet.isInternalSymbol(by)) {
+					properties.put(EdgeAttrs.LABEL, by.toString());
+				}
+				else if (alphabet.isReturnSymbol(by)) {
+					properties.put(EdgeAttrs.LABEL,
+								   by.toString() + "/(" + getStackLoc(stack) + ',' + getCallSym(stack) + ')');
+				}
+				else {
+					throw new IllegalArgumentException();
+				}
+
+				return true;
+			}
+		};
+	}
 }
