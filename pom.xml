@@ -107,6 +107,7 @@ limitations under the License.
 	-->
 	<modules>
 		<module>api</module>
+		<module>build-tools</module>
 		<module>core</module>
 		<module>util</module>
 		<module>commons</module>
@@ -133,6 +134,7 @@ limitations under the License.
 		<compiler-plugin.version>3.6.1</compiler-plugin.version>
 		<release-plugin.version>2.5.3</release-plugin.version>
 		<checkstyle-plugin.version>2.17</checkstyle-plugin.version>
+		<checkstyle.version>8.1</checkstyle.version>
 		<site-plugin.version>3.6</site-plugin.version>
 		<reports-plugin.version>2.9</reports-plugin.version>
 		<surefire-plugin.version>2.20</surefire-plugin.version>
@@ -181,6 +183,26 @@ limitations under the License.
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>${deploy-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>${checkstyle-plugin.version}</version>
+					<configuration>
+						<!-- use explicit paths instead of build-tools dependency, to prevent race conditions when
+							 using checkstyle _during_ the build process -->
+						<configLocation>build-tools/src/main/resources/automatalib-learnlib-checkstyle.xml</configLocation>
+						<headerLocation>build-tools/src/main/resources/license-header-java.txt</headerLocation>
+						<linkXRef>false</linkXRef>
+						<includeTestResources>true</includeTestResources>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>${checkstyle.version}</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -466,6 +488,11 @@ limitations under the License.
 			<dependency>
 				<groupId>net.automatalib</groupId>
 				<artifactId>automata-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.automatalib</groupId>
+				<artifactId>automata-build-tools</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
