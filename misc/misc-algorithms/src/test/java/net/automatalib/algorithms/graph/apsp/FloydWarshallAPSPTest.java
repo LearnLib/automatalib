@@ -55,7 +55,7 @@ public class FloydWarshallAPSPTest {
 		graph.connect(n2, n4, Float.valueOf(5.1f));
 		graph.connect(n4, n1, Float.valueOf(10.0f));
 		
-		this.weights = new PropertyEdgeWeights<CompactEdge<Float>>(graph);
+		this.weights = new PropertyEdgeWeights<>(graph);
 	}
 	
 	@Test

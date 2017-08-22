@@ -20,7 +20,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ClassPathFileSource implements SettingsSource {
 	
@@ -32,7 +34,7 @@ public abstract class ClassPathFileSource implements SettingsSource {
 
 	@Override
 	public void loadSettings(Properties properties) {
-		Logger log = Logger.getLogger(getClass().getName());
+		Logger log = LoggerFactory.getLogger(getClass());
 		
 		try {
 			Enumeration<URL> resourceUrls = getClass().getClassLoader().getResources(fileName);
@@ -42,12 +44,12 @@ public abstract class ClassPathFileSource implements SettingsSource {
 					properties.load(is);
 				}
 				catch(IOException ex) {
-					log.severe("Could not read property file " + url + ": " + ex.getMessage());
+					log.error("Could not read property file " + url + ".", ex);
 				}
 			}
 		}
 		catch(IOException ex) {
-			log.severe("Could not enumerate " + fileName + " files: " + ex.getMessage());
+			log.error("Could not enumerate " + fileName + " files,", ex);
 		}
 	}
 	

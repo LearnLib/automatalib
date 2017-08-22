@@ -30,26 +30,11 @@ import java.util.Map;
  */
 public abstract class Mappings {
 	
-	private static final Mapping<?,?> NULL_MAPPING = new Mapping<Object,Object>() {
-		@Override
-		public Object get(Object elem) {
-			return null;
-		}
-	};
+	private static final Mapping<?,?> NULL_MAPPING = (Mapping<Object, Object>) elem -> null;
 	
-	private static final Mapping<?,?> IDENTITY_MAPPING = new Mapping<Object,Object>() {
-		@Override
-		public Object get(Object elem) {
-			return elem;
-		}
-	};
+	private static final Mapping<?,?> IDENTITY_MAPPING = (Mapping<Object, Object>) elem -> elem;
 	
-	private static final Mapping<?,String> TOSTRING_MAPPING = new Mapping<Object,String>() {
-		@Override
-		public String get(Object elem) {
-			return String.valueOf(elem);
-		}
-	};
+	private static final Mapping<?,String> TOSTRING_MAPPING = (Mapping<Object, String>) String::valueOf;
 	
 	
 	/**
@@ -182,12 +167,7 @@ public abstract class Mappings {
 	 * @return the mapped iterable.
 	 */
 	public static <D,R> Iterable<R> apply(final Mapping<? super D,R> mapping, final Iterable<? extends D> it) {
-		return new Iterable<R>() {
-			@Override
-			public Iterator<R> iterator() {
-				return apply(mapping, it.iterator());
-			}
-		};
+		return () -> apply(mapping, it.iterator());
 	}
 	
 	/**
@@ -234,7 +214,7 @@ public abstract class Mappings {
 	}
 	
 	public static <D,R> Mapping<D,R> fromMap(Map<D,R> map) {
-		return new MapMapping<D,R>(map);
+		return new MapMapping<>(map);
 	}
 
 	

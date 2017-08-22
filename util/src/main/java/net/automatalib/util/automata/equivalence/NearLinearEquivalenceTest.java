@@ -24,7 +24,6 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.IntDisjointSets;
-import net.automatalib.commons.util.UnionFind;
 import net.automatalib.commons.util.UnionFindRemSP;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -117,9 +116,9 @@ public class NearLinearEquivalenceTest<I> {
 		
 		uf.link(id1, id2);
 		
-		Queue<Record<S,S2,I>> queue = new ArrayDeque<Record<S,S2,I>>();
+		Queue<Record<S,S2,I>> queue = new ArrayDeque<>();
 		
-		queue.add(new Record<S,S2,I>(init1, init2));
+		queue.add(new Record<>(init1, init2));
 		
 		I lastSym = null;
 		
@@ -182,7 +181,7 @@ explore:while((current = queue.poll()) != null) {
 		if(lastSym != null)
 			ceLength++;
 		
-		WordBuilder<I> wb = new WordBuilder<I>(null, ceLength);
+		WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 		
 		int index = ceLength;
 		
@@ -284,7 +283,7 @@ explore:while((current = queue.poll()) != null) {
 		if(lastSym != -1)
 			ceLength++;
 		
-		WordBuilder<I> wb = new WordBuilder<I>(null, ceLength);
+		WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 		
 		int index = ceLength;
 		
@@ -298,10 +297,35 @@ explore:while((current = queue.poll()) != null) {
 		
 		return wb.toWord();
 	}
-	
-	
-	public static <S,I,T> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S,I,T,?,?> target,
-			S init1, S init2, Collection<? extends I> inputs) {
+
+	public static <S, I, T> Word<I> findSeparatingWord(final UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
+													   final S init1,
+													   final S init2,
+													   final Collection<? extends I> inputs) {
+		return findSeparatingWord(target, init1, init2, inputs, false);
+	}
+
+	/**
+	 * Find a separating word for two states in a given automaton.
+	 *
+	 * @param target                     the automaton
+	 * @param init1                      the first state
+	 * @param init2                      the second state
+	 * @param inputs                     the inputs to consider for a separating word
+	 * @param ignoreUndefinedTransitions if {@code true}, undefined transitions are not considered to distinguish two
+	 *                                   states, if {@code false} an undefined and defined transition are considered to
+	 *                                   distinguish two states
+	 * @param <S>                        automaton state type
+	 * @param <I>                        input alphabet type
+	 * @param <T>                        automaton transition type
+	 * @return A word separating the two states, {@code null} if no such word can be found
+	 */
+	public static <S, I, T> Word<I> findSeparatingWord(final UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
+													   final S init1,
+													   final S init2,
+													   final Collection<? extends I> inputs,
+													   final boolean ignoreUndefinedTransitions) {
+
 		IntDisjointSets uf = new UnionFindRemSP(target.size());
 		
 		Object sprop1 = target.getStateProperty(init1);
@@ -316,9 +340,9 @@ explore:while((current = queue.poll()) != null) {
 		
 		uf.link(id1, id2);
 		
-		Queue<Record<S,S,I>> queue = new ArrayDeque<Record<S,S,I>>();
+		Queue<Record<S,S,I>> queue = new ArrayDeque<>();
 		
-		queue.add(new Record<S,S,I>(init1, init2));
+		queue.add(new Record<>(init1, init2));
 		
 		I lastSym = null;
 		Record<S,S,I> current;
@@ -330,8 +354,11 @@ explore:while((current = queue.poll()) != null) {
 			for(I sym : inputs) {
 				T trans1 = target.getTransition(state1, sym);
 				T trans2 = target.getTransition(state2, sym);
-				
-				if(trans1 == null) {
+
+				if(ignoreUndefinedTransitions && (trans1 == null || trans2 == null)) {
+					continue;
+				}
+				else if(trans1 == null) {
 					if(trans2 == null)
 						continue;
 					lastSym = sym;
@@ -383,7 +410,7 @@ explore:while((current = queue.poll()) != null) {
 		if(lastSym != null)
 			ceLength++;
 		
-		WordBuilder<I> wb = new WordBuilder<I>(null, ceLength);
+		WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 		
 		int index = ceLength;
 		

@@ -15,15 +15,14 @@
  */
 package net.automatalib.words;
 
+import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Spliterator;
-
-import javax.annotation.Nonnull;
-
-import com.google.common.base.Function;
+import java.util.function.Function;
 
 /**
  * A word consisting of a single letter only.
@@ -33,7 +32,7 @@ import com.google.common.base.Function;
  * @param <I> symbol class
  * @see Collections#singletonList(Object)
  */
-final class LetterWord<I> extends Word<I> {
+final class LetterWord<I> extends Word<I> implements Serializable {
 	
 	/*
 	 * Iterator
@@ -257,7 +256,7 @@ final class LetterWord<I> extends Word<I> {
 
 	@Nonnull
 	@Override
-	public <T> Word<T> transform(Function<? super I,? extends T> transformer) {
+	public <T> Word<T> transform(Function<? super I, ? extends T> transformer) {
 		T transformed = transformer.apply(letter);
 		return new LetterWord<>(transformed);
 	}

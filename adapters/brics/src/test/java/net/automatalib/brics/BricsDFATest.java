@@ -70,16 +70,16 @@ public class BricsDFATest {
 		
 		Assert.assertEquals(dfa.getInitialState(), bricsAutomaton.getInitialState());
 		
-		Set<State> states1 = new HashSet<State>(bricsAutomaton.getStates());
-		Set<State> states2 = new HashSet<State>(dfa.getStates());
+		Set<State> states1 = new HashSet<>(bricsAutomaton.getStates());
+		Set<State> states2 = new HashSet<>(dfa.getStates());
 		
 		Assert.assertEquals(states1, states2);
 		
 		for(State s : dfa) {
 			Assert.assertEquals(dfa.isAccepting(s), s.isAccept());
 			
-			Set<Transition> trans1 = new HashSet<Transition>(graphView.getOutgoingEdges(s));
-			Set<Transition> trans2 = new HashSet<Transition>(s.getTransitions());
+			Set<Transition> trans1 = new HashSet<>(graphView.getOutgoingEdges(s));
+			Set<Transition> trans2 = new HashSet<>(s.getTransitions());
 			
 			Assert.assertEquals(trans1, trans2);
 		}

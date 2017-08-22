@@ -97,7 +97,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 			int symIdx = inputAlphabet.getSymbolIndex(sym);
 			Node<I> succ = curr.getChild(symIdx);
 			if(succ == null) {
-				succ = new Node<I>(Acceptance.TRUE);
+				succ = new Node<>(Acceptance.TRUE);
 				curr.setChild(symIdx, alphabetSize, succ);
 			}
 			curr = succ;
@@ -121,7 +121,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 			int symIdx = inputAlphabet.getSymbolIndex(sym);
 			Node<I> succ = curr.getChild(symIdx);
 			if(succ == null) {
-				succ = new Node<I>(Acceptance.DONT_KNOW);
+				succ = new Node<>(Acceptance.DONT_KNOW);
 				curr.setChild(symIdx, alphabetSize, succ);
 			}
 			prev = curr;
@@ -156,7 +156,7 @@ public class IncrementalPCDFATreeBuilder<I> extends
 			return Word.epsilon();
 		}
 		if(rootAcc == Acceptance.FALSE) {
-			return findLive(target, automatonInit, inputs, target.<Boolean>createStaticStateMapping());
+			return findLive(target, automatonInit, inputs, target.createStaticStateMapping());
 		}
 		
 		Deque<Record<S,I>> dfsStack = new ArrayDeque<>();

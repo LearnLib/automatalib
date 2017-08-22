@@ -108,7 +108,7 @@ public abstract class MealyFilter {
 			MealyMachine<?,I,?,O> in,
 			Alphabet<I> inputs,
 			Collection<? super O> outputs) {
-		return filterByOutput(in, inputs, o -> outputs.contains(o));
+		return filterByOutput(in, inputs, outputs::contains);
 	}
 	
 	public static <I,O>

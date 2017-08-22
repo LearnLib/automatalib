@@ -32,7 +32,7 @@ final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, 
 	@Override
 	public GraphTraversalAction processInitial(N initialNode, Holder<DFSData<D>> outData) {
 		D data = visitor.initialize(initialNode);
-		DFSData<D> rec = new DFSData<D>(data, dfsNum++);
+		DFSData<D> rec = new DFSData<>(data, dfsNum++);
 		records.put(initialNode, rec);
 		
 		outData.value = rec;
@@ -57,7 +57,7 @@ final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, 
 		DFSData<D> tgtRec = records.get(tgtNode);
 		if(tgtRec == null) {
 			D data = visitor.treeEdge(srcNode, srcData.data, edge, tgtNode);
-			tgtRec = new DFSData<D>(data, dfsNum++);
+			tgtRec = new DFSData<>(data, dfsNum++);
 			records.put(tgtNode, tgtRec);
 			
 			outData.value = tgtRec;

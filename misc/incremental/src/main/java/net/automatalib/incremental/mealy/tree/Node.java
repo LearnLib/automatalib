@@ -37,7 +37,7 @@ final class Node<I,O> {
 	}
 	
 	public void setSuccessor(int idx, O output, Node<I,O> succ) {
-		outEdges[idx] = new Edge<I,O>(output, succ);
+		outEdges[idx] = new Edge<>(output, succ);
 	}
 	
 	public Node<I,O> getSuccessor(int idx) {
@@ -56,8 +56,8 @@ final class Node<I,O> {
 			}
 			return edge.getTarget();
 		}
-		Node<I,O> succ = new Node<I,O>(outEdges.length);
-		edge = new Edge<I,O>(output, succ);
+		Node<I,O> succ = new Node<>(outEdges.length);
+		edge = new Edge<>(output, succ);
 		outEdges[idx] = edge;
 		
 		return succ;

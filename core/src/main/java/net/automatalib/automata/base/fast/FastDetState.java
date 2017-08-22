@@ -15,29 +15,43 @@
  */
 package net.automatalib.automata.base.fast;
 
+import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.commons.util.nid.AbstractMutableNumericID;
 
 
 public abstract class FastDetState<S extends FastDetState<S,T>, T> extends AbstractMutableNumericID {
-	private final Object[] transitions;
+
+	private final ResizingObjectArray transitions;
 	
-	public FastDetState(int numInputs) {
-		this.transitions = new Object[numInputs];
+	public FastDetState(int initialNumOfInputs) {
+		this.transitions = new ResizingObjectArray(initialNumOfInputs);
 	}
-	
+
+	/**
+	 * See {@link ResizingObjectArray#ensureCapacity(int)}
+	 */
+	public final boolean ensureInputCapacity(int capacity) {
+		return this.transitions.ensureCapacity(capacity);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public final T getTransition(int inputIdx) {
-		return (T)transitions[inputIdx];
+		return (T)transitions.array[inputIdx];
 	}
 	
 	public final void setTransition(int inputIdx, T transition) {
-		transitions[inputIdx] = transition;
+		transitions.array[inputIdx] = transition;
 	}
-	
-	public void clearTransitions() {
-		for(int i = 0; i < transitions.length; i++)
-			transitions[i] = null;
+
+	protected void clearTransition(final T transition) {
+		// do nothing in particular, but sub-classes may cleanup additional resources
+	}
+
+	public final void clearTransitions() {
+		for(int i = 0; i < transitions.array.length; i++) {
+			clearTransition(getTransition(i));
+			transitions.array[i] = null;
+		}
 	}
 	
 	

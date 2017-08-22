@@ -57,14 +57,14 @@ public class PaigeTarjanInitializers {
 			@Override
 			public IntFunction<Object> initialClassifier(
 					UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> automaton) {
-				return (s) -> automaton.getStateProperty(s);
+				return automaton::getStateProperty;
 			}
 			
 			@Override
 			public <S,I>
 			Function<S, Object> initialClassifier(
 					UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton, Alphabet<I> alphabet) {
-				return (s) -> automaton.getStateProperty(s);
+				return automaton::getStateProperty;
 			}
 		},
 		

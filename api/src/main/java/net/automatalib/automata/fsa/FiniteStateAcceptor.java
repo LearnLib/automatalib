@@ -70,6 +70,6 @@ public interface FiniteStateAcceptor<S,I> extends AcceptorTS<S, I>,
 	@Override
 	default public UniversalGraph<S, TransitionEdge<I,S>, Boolean, TransitionEdge.Property<I,Void>>
 	transitionGraphView(Collection<? extends I> inputs) {
-		return new FSAGraphView<S,I,FiniteStateAcceptor<S,I>>(this, inputs);
+		return new FSAGraphView<>(this, inputs);
 	}
 }

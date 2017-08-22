@@ -55,7 +55,7 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N,E>>{
 		this.targetPred = Objects.requireNonNull(targetPred);
 		
 		for(N startNode : start) {
-			preds.put(startNode, new Pred<N,E>(null, null));
+			preds.put(startNode, new Pred<>(null, null));
 			bfsQueue.add(startNode);
 		}
 	}

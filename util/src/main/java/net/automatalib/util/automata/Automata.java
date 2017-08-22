@@ -27,6 +27,7 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.automata.asgraph.AutomatonAsGraph;
@@ -34,11 +35,13 @@ import net.automatalib.util.automata.asgraph.UniversalAutomatonAsGraph;
 import net.automatalib.util.automata.equivalence.CharacterizingSets;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.util.automata.vpda.OneSEVPAUtil;
 import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.util.ts.TS;
+import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
 public class Automata extends TS {
@@ -46,13 +49,13 @@ public class Automata extends TS {
 	public static <S, I, T>
 	Graph<S, TransitionEdge<I, T>> asGraph(
 			Automaton<S, I, T> automaton, Collection<? extends I> inputs) {
-		return new AutomatonAsGraph<S, I, T,Automaton<S,I,T>>(automaton, inputs);
+		return new AutomatonAsGraph<>(automaton, inputs);
 	}
 	
 	public static <S,I,T,SP,TP>
 	UniversalGraph<S,TransitionEdge<I,T>,SP,TransitionEdge.Property<I,TP>> asUniversalGraph(
 			UniversalAutomaton<S, I, T, SP, TP> automaton, Collection<? extends I> inputs) {
-		return new UniversalAutomatonAsGraph<S, I, T, SP, TP, UniversalAutomaton<S,I,T,SP,TP>>(automaton, inputs);
+		return new UniversalAutomatonAsGraph<>(automaton, inputs);
 	}
 	
 
@@ -69,7 +72,7 @@ public class Automata extends TS {
 		
 		S init = automaton.getInitialState();
 		Block<S,TransitionEdge.Property<I,TP>> initBlock = mr.getBlockForState(init);
-		BlockMap<SO> bm = new BlockMap<SO>(mr);
+		BlockMap<SO> bm = new BlockMap<>(mr);
 		
 		for(Block<S, TransitionEdge.Property<I,TP>> block : mr.getBlocks()) {
 			S rep = mr.getRepresentative(block);
@@ -156,7 +159,7 @@ public class Automata extends TS {
 				TP transProp = automaton.getTransitionProperty(trans);
 				S succ = automaton.getSuccessor(trans);
 				int tgtId = mr.getBlockForState(succ).getId();
-				rec.transitions[i] = new ResultTransRecord<TP>(tgtId, transProp);
+				rec.transitions[i] = new ResultTransRecord<>(tgtId, transProp);
 			}
 		}
 		
@@ -213,6 +216,12 @@ public class Automata extends TS {
 			Collection<? extends I> inputs) {
 		return NearLinearEquivalenceTest.findSeparatingWord(reference, other, inputs);
 	}
+
+	public static <I> Word<I> findSeparatingWord(final OneSEVPA<?, I> sevpa1,
+												 final OneSEVPA<?, I> sevpa2,
+												 final VPDAlphabet<I> inputs) {
+		return OneSEVPAUtil.findSeparatingWord(sevpa1, sevpa2, inputs);
+	}
 	
 	public static <I> Word<I> findShortestSeparatingWord(
 			UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
@@ -226,6 +235,12 @@ public class Automata extends TS {
 			UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
 			Collection<? extends I> inputs) {
 		return (findSeparatingWord(reference, other, inputs) == null);
+	}
+
+	public static <I> boolean testEquivalence(final OneSEVPA<?, I> sevpa1,
+											  final OneSEVPA<?, I> sevpa2,
+											  final VPDAlphabet<I> inputs) {
+		return OneSEVPAUtil.testEquivalence(sevpa1, sevpa2, inputs);
 	}
 	
 	/**
@@ -280,7 +295,7 @@ public class Automata extends TS {
 	 */
 	public static <I> List<Word<I>> characterizingSet(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
 			Collection<? extends I> inputs) {
-		List<Word<I>> result = new ArrayList<Word<I>>();
+		List<Word<I>> result = new ArrayList<>();
 		characterizingSet(automaton, inputs, result);
 		return result;
 	}
@@ -329,7 +344,7 @@ public class Automata extends TS {
 	public static <S,I> List<Word<I>> stateCharacterizingSet(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
 			Collection<? extends I> inputs,
 			S state) {
-		List<Word<I>> result = new ArrayList<Word<I>>();
+		List<Word<I>> result = new ArrayList<>();
 		stateCharacterizingSet(automaton, inputs, state, result);
 		return result;
 	}
@@ -341,14 +356,14 @@ public class Automata extends TS {
 	
 	public static <I> List<Word<I>> stateCover(DeterministicAutomaton<?, I, ?> automaton,
 			Collection<? extends I> inputs) {
-		List<Word<I>> states = new ArrayList<Word<I>>(automaton.size());
+		List<Word<I>> states = new ArrayList<>(automaton.size());
 		cover(automaton, inputs, states, null);
 		return states;
 	}
 	
 	public static <I> List<Word<I>> transitionCover(DeterministicAutomaton<?, I, ?> automaton,
 			Collection<? extends I> inputs) {
-		List<Word<I>> all = new ArrayList<Word<I>>(automaton.size() * inputs.size());
+		List<Word<I>> all = new ArrayList<>(automaton.size() * inputs.size());
 		cover(automaton, inputs, all, all);
 		return all;
 	}
@@ -368,7 +383,7 @@ public class Automata extends TS {
 			Collection<? extends I> inputs,
 			Collection<? extends Word<I>> oldStates,
 			Collection<? super Word<I>> newStates) {
-		return incrementalCover(automaton, inputs, oldStates, Collections.<Word<I>>emptyList(), newStates, null);
+		return incrementalCover(automaton, inputs, oldStates, Collections.emptyList(), newStates, null);
 	}
 	
 	public static <I> boolean incrementalStructuralCover(
@@ -376,7 +391,7 @@ public class Automata extends TS {
 			Collection<? extends I> inputs,
 			Collection<? extends Word<I>> oldStructural,
 			Collection<? super Word<I>> newStructural) {
-		return incrementalCover(automaton, inputs, oldStructural, Collections.<Word<I>>emptyList(), newStructural, newStructural);
+		return incrementalCover(automaton, inputs, oldStructural, Collections.emptyList(), newStructural, newStructural);
 	}
 	
 	public static <S,I>

@@ -77,8 +77,7 @@ public class TAFSerialization implements SerializationProvider {
 	private static <I> CompactDFA<Integer> normalize(DFA<?,I> dfa, Alphabet<I> alphabet) {
 		Alphabet<Integer> normalizedAlphabet = Alphabets.integers(0, alphabet.size() - 1);
 		CompactDFA<Integer> result = new CompactDFA<>(normalizedAlphabet, dfa.size());
-		AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, dfa, alphabet, result,
-				i -> alphabet.getSymbolIndex(i));
+		AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, dfa, alphabet, result, alphabet::getSymbolIndex);
 		return result;
 	}
 

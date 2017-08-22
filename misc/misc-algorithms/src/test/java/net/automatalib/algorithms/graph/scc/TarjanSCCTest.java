@@ -38,7 +38,7 @@ public class TarjanSCCTest {
 	@Test
 	public void testSCC() {
 		Set<Set<Integer>> sccs = SCCs.collectSCCs(graph).stream()
-				.map(list -> new HashSet<>(list)).collect(Collectors.toSet());
+				.map(HashSet::new).collect(Collectors.toSet());
 
 		Assert.assertEquals(sccs.size(), 2);
 		Assert.assertEquals(sccs,

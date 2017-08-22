@@ -15,41 +15,44 @@
  */
 package net.automatalib.automata.base.compact;
 
+import java.io.Serializable;
 import java.util.Collection;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		implements MutableDeterministic<Integer,I,T,SP,TP>, StateIDs<Integer>, UniversalFiniteAlphabetAutomaton<Integer,I,T,SP,TP>,
 		MutableDeterministic.StateIntAbstraction<I, T, SP, TP>,
-		MutableDeterministic.FullIntAbstraction<T, SP, TP> {
+		MutableDeterministic.FullIntAbstraction<T, SP, TP>,
+		GrowableAlphabetAutomaton<I>, Serializable {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
-	
-	protected final Alphabet<I> alphabet;
-	protected final int alphabetSize;
+
+	protected final GrowingAlphabet<I> alphabet;
+	protected int alphabetSize;
 	protected Object[] transitions;
 	protected int stateCapacity; 
 	protected int numStates;
-	protected int initial = -1;
+	protected int initial = INVALID_STATE;
 	protected final float resizeFactor;
 	
 	
 	protected static final int getId(Integer id) {
-		return (id != null) ? id.intValue() : -1;
+		return (id != null) ? id.intValue() : INVALID_STATE;
 	}
-	
-	
 	
 	protected static final Integer makeId(int id) {
-		return (id != -1) ? Integer.valueOf(id) : null;
+		return (id != INVALID_STATE) ? Integer.valueOf(id) : null;
 	}
-	
+
 	public AbstractCompactDeterministic(Alphabet<I> alphabet) {
 		this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
 	}
@@ -63,7 +66,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 	}
 	
 	public AbstractCompactDeterministic(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.alphabetSize = alphabet.size();
 		this.transitions = new Object[stateCapacity * alphabetSize];
 		this.resizeFactor = resizeFactor;
@@ -199,7 +202,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 		numStates = 0;
 		for(int i = 0; i < endIdx; i++)
 			transitions[i] = null;
-		this.initial = -1;
+		this.initial = INVALID_STATE;
 	}
 	
 	protected final int createState() {
@@ -282,7 +285,28 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP>
 
 	@Override
 	public int numInputs() {
-		return alphabet.size();
+		return alphabetSize;
 	}
-	
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		final int oldAlphabetSize = this.alphabetSize;
+		final int newAlphabetSize = oldAlphabetSize + 1;
+		final int newArraySize = this.transitions.length + this.stateCapacity;
+		final Object[] newTransitions = new Object[newArraySize];
+
+		for (int i = 0; i < this.numStates; i++) {
+			System.arraycopy(transitions, i*oldAlphabetSize, newTransitions, i*newAlphabetSize, oldAlphabetSize);
+		}
+
+		this.transitions = newTransitions;
+		this.alphabet.addSymbol(symbol);
+		this.alphabetSize = newAlphabetSize;
+	}
+
 }

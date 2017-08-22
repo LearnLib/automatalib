@@ -37,7 +37,7 @@ public class FastPowersetDTS<S extends NumericID, I, T> implements
 
 	@Override
 	public FastPowersetState<S> getInitialState() {
-		FastPowersetState<S> result = new FastPowersetState<S>();
+		FastPowersetState<S> result = new FastPowersetState<>();
 		for(S init : ts.getInitialStates())
 			result.add(init, init.getId());
 		return result;
@@ -55,7 +55,7 @@ public class FastPowersetDTS<S extends NumericID, I, T> implements
 
 	@Override
 	public FastPowersetState<S> getSuccessor(Set<? extends T> transition) {
-		FastPowersetState<S> succ = new FastPowersetState<S>();
+		FastPowersetState<S> succ = new FastPowersetState<>();
 		for(T t : transition) {
 			S succS = ts.getSuccessor(t);
 			succ.add(succS, succS.getId());
@@ -66,7 +66,7 @@ public class FastPowersetDTS<S extends NumericID, I, T> implements
 
 	@Override
 	public FastPowersetState<S> getSuccessor(FastPowersetState<S> state, I input) {
-		FastPowersetState<S> succ = new FastPowersetState<S>();
+		FastPowersetState<S> succ = new FastPowersetState<>();
 		
 		for(S s : state) {
 			Collection<? extends S> succs = ts.getSuccessors(s, input);

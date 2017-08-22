@@ -22,7 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -33,7 +35,7 @@ import java.util.logging.Logger;
  */
 public class LibLoader {
 	
-	private static final Logger LOG = Logger.getLogger(LibLoader.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(LibLoader.class);
 	
 	private static final LibLoader INSTANCE = new LibLoader();
 	
@@ -78,8 +80,8 @@ public class LibLoader {
 			field.set(null, newPaths);
 		}
 		catch (Exception ex) {
-			LOG.severe("Error setting up classloader for custom library loading: " + ex.getMessage());
-			LOG.severe("Loading of shipped libraries may fail");
+			LOG.error("Error setting up classloader for custom library loading.", ex);
+			LOG.error("Loading of shipped libraries may fail");
 		}
 		this.tempLibDir = tmpDir;
 	}
@@ -104,11 +106,8 @@ public class LibLoader {
 		try {
 			System.load(libPath.toString());
 		}
-		catch (SecurityException ex) {
+		catch (SecurityException | UnsatisfiedLinkError ex) {
 			throw new LoadLibraryException(ex);
-		}
-		catch (UnsatisfiedLinkError err) {
-			throw new LoadLibraryException(err);
 		}
 	}
 	
@@ -116,11 +115,8 @@ public class LibLoader {
 		try {
 			System.loadLibrary(name);
 		}
-		catch (SecurityException ex) {
+		catch (SecurityException | UnsatisfiedLinkError ex) {
 			throw new LoadLibraryException(ex);
-		}
-		catch (UnsatisfiedLinkError err) {
-			throw new LoadLibraryException(err);
 		}
 	}
 	

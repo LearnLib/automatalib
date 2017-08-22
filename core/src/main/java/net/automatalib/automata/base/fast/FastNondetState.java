@@ -18,31 +18,41 @@ package net.automatalib.automata.base.fast;
 import java.util.Collection;
 import java.util.HashSet;
 
+import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.commons.util.nid.AbstractMutableNumericID;
 
 
 public abstract class FastNondetState<S extends FastNondetState<S, T>, T>
 		extends AbstractMutableNumericID {
-	private final Collection<T>[] transitions;
-	
-	
+
+	private final ResizingObjectArray transitions;
+
+
 	@SuppressWarnings("unchecked")
-	public FastNondetState(int numInputs) {
-		this.transitions = new Collection[numInputs];
+	public FastNondetState(int initialNumOfInputs) {
+		this.transitions = new ResizingObjectArray(initialNumOfInputs);
 	}
-	
-	
+
+	/**
+	 * See {@link ResizingObjectArray#ensureCapacity(int)}
+	 */
+	public final boolean ensureInputCapacity(int capacity) {
+		return this.transitions.ensureCapacity(capacity);
+	}
+
+	@SuppressWarnings("unchecked")
 	public final Collection<T> getTransitions(int inputIdx) {
-		return transitions[inputIdx];
+		return (Collection<T>) transitions.array[inputIdx];
 	}
 	
 	public final void setTransitions(int inputIdx, Collection<? extends T> transitions) {
-		this.transitions[inputIdx] = new HashSet<T>(transitions);
+		this.transitions.array[inputIdx] = new HashSet<T>(transitions);
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	public void clearTransitions() {
-		for(int i = 0; i < transitions.length; i++)
-			transitions[i].clear();
+		for(int i = 0; i < transitions.array.length; i++)
+			((Collection<T>)transitions.array[i]).clear();
 	}
 
 }

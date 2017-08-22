@@ -48,7 +48,7 @@ public class MealyFilterTest {
 	
 	
 	private CompactMealy<Integer,String> fromSequence(String... outputs) {
-		CompactMealy<Integer,String> mealy = new CompactMealy<Integer,String>(testAlphabet);
+		CompactMealy<Integer,String> mealy = new CompactMealy<>(testAlphabet);
 		
 		int prev = -1; //mealy.addInitialState();
 

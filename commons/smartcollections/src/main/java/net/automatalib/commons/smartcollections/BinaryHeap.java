@@ -148,11 +148,11 @@ public class BinaryHeap<E>
 	}
 	
 	public static <E extends Comparable<E>> BinaryHeap<E> create(Collection<? extends E> initValues) {
-		return new BinaryHeap<>(0, initValues, CmpUtil.<E>naturalOrderingComparator());
+		return new BinaryHeap<>(0, initValues, CmpUtil.naturalOrderingComparator());
 	}
 	
 	public static <E extends Comparable<E>> BinaryHeap<E> create(int initialCapacity, Collection<? extends E> initValues) {
-		return new BinaryHeap<>(initialCapacity, initValues, CmpUtil.<E>naturalOrderingComparator());
+		return new BinaryHeap<>(initialCapacity, initValues, CmpUtil.naturalOrderingComparator());
 	}
 	
 	public static <E> BinaryHeap<E> createCmp(Comparator<? super E> comparator) {

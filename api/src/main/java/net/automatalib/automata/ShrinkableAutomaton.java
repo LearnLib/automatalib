@@ -51,7 +51,7 @@ public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S
 					continue;
 				
 				boolean modified = false;
-				List<T> modTransitions = new LinkedList<T>(transitions); // TODO
+				List<T> modTransitions = new LinkedList<>(transitions); // TODO
 					
 				ListIterator<T> it = modTransitions.listIterator();
 				while(it.hasNext()) {

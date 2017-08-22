@@ -34,11 +34,11 @@ public class IterablesTest {
 			System.err.println(s);
 		
 		System.err.println("=================");
-		for(String s : IterableUtil.concat(Collections.<String>emptyList(), l2))
+		for(String s : IterableUtil.concat(Collections.emptyList(), l2))
 			System.err.println(s);
 		
 		System.err.println("=================");
-		for(String s : IterableUtil.concat(l1, Collections.<String>emptyList()))
+		for(String s : IterableUtil.concat(l1, Collections.emptyList()))
 			System.err.println(s);
 	}
 

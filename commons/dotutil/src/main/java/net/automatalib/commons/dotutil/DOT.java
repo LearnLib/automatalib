@@ -34,7 +34,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
@@ -46,7 +45,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import net.automatalib.commons.util.IOUtil;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class to simplify operating the GraphVIZ "dot" utility. Please note that all
@@ -58,7 +58,7 @@ import net.automatalib.commons.util.IOUtil;
  */
 public class DOT {
 	
-	private static final Logger LOGGER = Logger.getLogger("automatalib.dotutil");
+	private static final Logger LOGGER = LoggerFactory.getLogger(DOT.class);
 	
 	private static final int MAX_WIDTH = 800;
 	private static final int MAX_HEIGHT = 600;
@@ -166,7 +166,7 @@ public class DOT {
 			dot.waitFor();
 		}
 		catch(InterruptedException ex) {
-			LOGGER.warning("Interrupted while waiting for 'dot' process to exit." + ex);
+			LOGGER.warn("Interrupted while waiting for 'dot' process to exit.", ex);
 		}
 	}
 	

@@ -140,7 +140,7 @@ public abstract class TransitionPredicates {
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> outputIn(TransitionOutput<? super T,?> transOut,
 			Collection<?> outputs) {
-		return outputSatisfies(transOut, o -> outputs.contains(o));
+		return outputSatisfies(transOut, outputs::contains);
 	}
 	
 	
@@ -153,7 +153,7 @@ public abstract class TransitionPredicates {
 	public static <S,I,T>
 	TransitionPredicate<S,I,T> outputNotIn(TransitionOutput<? super T,?> transOut,
 			Collection<?> outputs) {
-		return outputViolates(transOut, o -> outputs.contains(o));
+		return outputViolates(transOut, outputs::contains);
 	}
 	
 	

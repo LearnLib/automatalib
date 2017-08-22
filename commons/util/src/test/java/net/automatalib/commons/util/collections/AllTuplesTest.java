@@ -47,7 +47,7 @@ public class AllTuplesTest {
 		int count = count(CollectionsUtil.allTuples(domain, 0), null);
 		Assert.assertEquals(count, 1);
 		
-		Set<Object> set = new HashSet<Object>();
+		Set<Object> set = new HashSet<>();
 		count = count(CollectionsUtil.allTuples(domain, 1), set);
 		Assert.assertEquals(count, domain.size());
 		Assert.assertEquals(set.size(), count);

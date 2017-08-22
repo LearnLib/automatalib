@@ -24,8 +24,7 @@ import java.util.List;
 public class FastPowersetState<S> extends AbstractSet<S> {
 	
 	private final BitSet bs = new BitSet();
-	private final List<S> contents
-		= new ArrayList<S>();
+	private final List<S> contents = new ArrayList<>();
 
 	public void add(S state, int id) {
 		if(bs.get(id))

@@ -21,23 +21,9 @@ import net.automatalib.ts.TransitionSystem;
 
 public interface TSTraversalMethod {
 	
-	public static TSTraversalMethod BREADTH_FIRST = new TSTraversalMethod() {
-		@Override
-		public <S, I, T, D> void traverse(TransitionSystem<S, ? super I, T> ts,
-				int limit, Collection<? extends I> inputs,
-				TSTraversalVisitor<S, I, T, D> visitor) {
-			TSTraversal.breadthFirst(ts, limit, inputs, visitor);
-		}
-	};
+	public static TSTraversalMethod BREADTH_FIRST = TSTraversal::breadthFirst;
 	
-	public static TSTraversalMethod DEPTH_FIRST = new TSTraversalMethod() {
-		@Override
-		public <S, I, T, D> void traverse(TransitionSystem<S, ? super I, T> ts,
-				int limit, Collection<? extends I> inputs,
-				TSTraversalVisitor<S, I, T, D> visitor) {
-			TSTraversal.depthFirst(ts, limit, inputs, visitor);
-		}
-	};
+	public static TSTraversalMethod DEPTH_FIRST = TSTraversal::depthFirst;
 	
 	public <S,I,T,D>
 	void traverse(TransitionSystem<S,? super I,T> ts, int limit, Collection<? extends I> inputs, TSTraversalVisitor<S, I, T, D> visitor);

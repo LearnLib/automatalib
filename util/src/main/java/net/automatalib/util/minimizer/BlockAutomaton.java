@@ -47,9 +47,7 @@ public class BlockAutomaton<S, L> {
 			BlockEdge<S,L>[] array = new BlockEdge[outgoing.size()];
 			int i = 0;
 			for(Edge<S,L> e : outgoing) {
-				array[i++] = new BlockEdge<S,L>(block,
-						e.getTarget().getBlock(),
-						e.getTransitionLabel().getOriginalLabel());
+				array[i++] = new BlockEdge<>(block, e.getTarget().getBlock(), e.getTransitionLabel().getOriginalLabel());
 			}
 			edges[id] = array;
 		}

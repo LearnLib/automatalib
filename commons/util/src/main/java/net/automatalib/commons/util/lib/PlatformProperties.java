@@ -17,11 +17,13 @@ package net.automatalib.commons.util.lib;
 
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class PlatformProperties {
 	
-	private static final Logger LOG = Logger.getLogger(PlatformProperties.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(PlatformProperties.class);
 	
 	public static String OS_NAME;
 	public static String OS_ARCH;
@@ -33,8 +35,8 @@ public abstract class PlatformProperties {
 			aliases.load(is);
 		}
 		catch (Exception ex) {
-			LOG.warning("Could not load platform aliases file: " + ex.getMessage());
-			LOG.warning("You may experience issues with the resolution of native libraries.");
+			LOG.warn("Could not load platform aliases file.", ex);
+			LOG.warn("You may experience issues with the resolution of native libraries.");
 		}
 		
 		String osName = System.getProperty("os.name").toLowerCase().replace(' ', '_').replace('/', '_');

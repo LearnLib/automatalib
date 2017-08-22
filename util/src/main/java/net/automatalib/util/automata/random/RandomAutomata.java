@@ -29,9 +29,13 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.vpda.DefaultOneSEVPA;
+import net.automatalib.automata.vpda.Location;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.fsa.DFAs;
+import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.VPDAlphabet;
 
 @ParametersAreNonnullByDefault
 public class RandomAutomata {
@@ -109,8 +113,8 @@ public class RandomAutomata {
 			Alphabet<I> inputs,
 			boolean minimize) {
 		CompactDFA<I> dfa = new RandomICAutomatonGenerator<Boolean,Void>()
-			.withStateProperties(r -> r.nextBoolean())
-			.generateICDeterministicAutomaton(numStates, inputs, new CompactDFA.Creator<I>(), rand);
+			.withStateProperties(Random::nextBoolean)
+			.generateICDeterministicAutomaton(numStates, inputs, new CompactDFA.Creator<>(), rand);
 		if (minimize) {
 			dfa = DFAs.minimize(dfa);
 		}
@@ -148,7 +152,7 @@ public class RandomAutomata {
 			Alphabet<I> inputs,
 			Collection<? extends O> outputs,
 			boolean minimize) {
-		return randomDeterministic(rand, numStates, inputs, Collections.<Void>singleton(null), outputs, new CompactMealy<I,O>(inputs), minimize);
+		return randomDeterministic(rand, numStates, inputs, Collections.singleton(null), outputs, new CompactMealy<I,O>(inputs), minimize);
 	}
 	
 	@Nonnull
@@ -231,7 +235,7 @@ public class RandomAutomata {
 			boolean minimize) {
 		return randomMealy(this.random, numStates, inputs, outputs, minimize);
 	}
-	
+
 	@Nonnull
 	public <I,O>
 	CompactMealy<I,O> randomMealy(
@@ -241,6 +245,75 @@ public class RandomAutomata {
 			Collection<? extends O> outputs) {
 		return randomMealy(this.random, numStates, inputs, outputs);
 	}
-	
+
+	public static <I> DefaultOneSEVPA<I> randomOneSEVPA(final Random r,
+														final int locCount,
+														final VPDAlphabet<I> alphabet,
+														final double acceptanceProb,
+														final double initialRetTransProb,
+														final boolean minimize) {
+		final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, locCount);
+
+		result.addInitialLocation(r.nextDouble() < initialRetTransProb);
+
+		for (int i = 0; i < locCount - 1; i++) {
+			if (alphabet.getNumInternals() == 0 || r.nextDouble() < initialRetTransProb) {
+				I retSym;
+				Location srcLoc;
+				int stackSym;
+
+				do {
+					retSym = alphabet.getReturnSymbol(r.nextInt(alphabet.getNumReturns()));
+					srcLoc = result.getLocation(r.nextInt(result.size()));
+
+					I callSym = alphabet.getCallSymbol(r.nextInt(alphabet.getNumCalls()));
+					final Location stackLoc = result.getLocation(r.nextInt(result.size()));
+					stackSym = result.encodeStackSym(stackLoc, callSym);
+				} while (result.getReturnSuccessor(srcLoc, retSym, stackSym) != null);
+
+				final Location newLoc = result.addLocation(r.nextDouble() < acceptanceProb);
+				result.setReturnSuccessor(srcLoc, retSym, stackSym, newLoc);
+			}
+			else {
+				I intSym;
+				Location srcLoc;
+
+				do {
+					intSym = alphabet.getInternalSymbol(r.nextInt(alphabet.getNumInternals()));
+					srcLoc = result.getLocation(r.nextInt(result.size()));
+				} while (result.getInternalSuccessor(srcLoc, intSym) != null);
+
+				final Location newLoc = result.addLocation(r.nextDouble() < acceptanceProb);
+				result.setInternalSuccessor(srcLoc, intSym, newLoc);
+			}
+		}
+
+		for (Location loc : result.getLocations()) {
+			for (I intSym : alphabet.getInternalSymbols()) {
+				if (result.getInternalSuccessor(loc, intSym) == null) {
+					final Location tgtLoc = result.getLocation(r.nextInt(result.size()));
+					result.setInternalSuccessor(loc, intSym, tgtLoc);
+				}
+			}
+
+			for (I callSym : alphabet.getCallSymbols()) {
+				for (Location stackLoc : result.getLocations()) {
+					int stackSym = result.encodeStackSym(stackLoc, callSym);
+					for (I retSym : alphabet.getReturnSymbols()) {
+						if (result.getReturnSuccessor(loc, retSym, stackSym) == null) {
+							final Location tgtLoc = result.getLocation(r.nextInt(result.size()));
+							result.setReturnSuccessor(loc, retSym, stackSym, tgtLoc);
+						}
+					}
+				}
+			}
+		}
+
+		if (minimize) {
+			return OneSEVPAMinimizer.minimize(result, alphabet);
+		}
+
+		return result;
+	}
 
 }

@@ -64,7 +64,7 @@ public abstract class AbstractIncrementalMealyBuilderTest {
 		incMealy.insert(wB2, wB2o);
 		incMealy.insert(wB3, wB3o);
 		
-		Assert.assertFalse(incMealy.lookup(Word.fromString("aababaa"), new ArrayList<Character>()));
+		Assert.assertFalse(incMealy.lookup(Word.fromString("aababaa"), new ArrayList<>()));
 		// reset for further tests
 		this.incMealy = createIncrementalMealyBuilder(testAlphabet);
 	}

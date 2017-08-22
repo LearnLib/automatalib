@@ -76,7 +76,7 @@ public abstract class GraphTraversal {
 	public static <N,E,D>
 	boolean breadthFirst(IndefiniteGraph<N, E> graph, int limit, Collection<? extends N> initialNodes, GraphTraversalVisitor<N, E, D> vis) {
 		
-		Queue<BFRecord<N,D>> bfsQueue = new ArrayDeque<BFRecord<N,D>>();
+		Queue<BFRecord<N,D>> bfsQueue = new ArrayDeque<>();
 		
 		// setting the following to false means that the traversal had to be aborted
 		// due to reaching the limit
@@ -97,7 +97,7 @@ public abstract class GraphTraversal {
 				return complete;
 			case EXPLORE:
 				if(nodeCount != limit) { // not equals will always be true for negative limit values
-					bfsQueue.add(new BFRecord<N,D>(init, dataHolder.value));
+					bfsQueue.add(new BFRecord<>(init, dataHolder.value));
 					nodeCount++;
 				}
 				else
@@ -137,7 +137,7 @@ bfs_loop:
 					return complete;
 				case EXPLORE:
 					if(nodeCount != limit) { // not equals will always be true for negative limit values
-						bfsQueue.offer(new BFRecord<N,D>(tgtNode, dataHolder.value));
+						bfsQueue.offer(new BFRecord<>(tgtNode, dataHolder.value));
 						nodeCount++;
 					}
 					else
@@ -180,9 +180,8 @@ bfs_loop:
 		int nodeCount = 0;
 			
 		
-		Deque<DFRecord<N,E,D>> dfsStack
-			= new ArrayDeque<DFRecord<N,E,D>>();
-		
+		Deque<DFRecord<N,E,D>> dfsStack = new ArrayDeque<>();
+
 		Holder<D> dataHolder = new Holder<>();
 		
 		for(N init : initialNodes) {
@@ -198,7 +197,7 @@ bfs_loop:
 				return complete;
 			case EXPLORE:
 				if(nodeCount != limit) {
-					dfsStack.push(new DFRecord<N,E,D>(init, dataHolder.value));
+					dfsStack.push(new DFRecord<>(init, dataHolder.value));
 					nodeCount++;
 				}
 				else
@@ -251,7 +250,7 @@ bfs_loop:
 				if(nodeCount != limit) {
 					D data = dataHolder.value;
 					current.setLastEdge(edge, tgt, data);
-					dfsStack.push(new DFRecord<N,E,D>(tgt, data));
+					dfsStack.push(new DFRecord<>(tgt, data));
 					nodeCount++;
 				}
 				else
@@ -288,7 +287,7 @@ bfs_loop:
 	public static <N,E,D>
 	boolean dfs(IndefiniteGraph<N, E> graph, int limit, Collection<? extends N> initialNodes, DFSVisitor<? super N, ? super E, D> visitor) {
 		GraphTraversalVisitor<N, E, DFSData<D>> traversalVisitor
-			= new DFSTraversalVisitor<N, E, D>(graph, visitor);
+			= new DFSTraversalVisitor<>(graph, visitor);
 		return depthFirst(graph, limit, initialNodes, traversalVisitor);
 	}
 	
@@ -311,12 +310,7 @@ bfs_loop:
 			final IndefiniteGraph<N,E> graph,
 			final Collection<? extends N> start) {
 		
-		return new Iterable<N>() {
-			@Override
-			public Iterator<N> iterator() {
-				return bfIterator(graph, start);
-			}
-		};
+		return () -> bfIterator(graph, start);
 	}
 	
 	public static <N,E> Iterator<N> dfIterator(IndefiniteGraph<N,E> graph, Collection<? extends N> start) {
@@ -327,12 +321,7 @@ bfs_loop:
 			final IndefiniteGraph<N,E> graph,
 			final Collection<? extends N> start) {
 		
-		return new Iterable<N>() {
-			@Override
-			public Iterator<N> iterator() {
-				return dfIterator(graph, start);
-			}
-		};
+		return () -> dfIterator(graph, start);
 	}
 	
 	private GraphTraversal() {} // prevent inheritance

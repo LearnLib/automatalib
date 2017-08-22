@@ -44,7 +44,7 @@ public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>,SuffixTrieNode<I>>
 	 * @param graphRepresentable whether the trie should be graph representable.
 	 */
 	public SuffixTrie(boolean graphRepresentable) {
-		this(graphRepresentable, new SuffixTrieNode<I>());
+		this(graphRepresentable, new SuffixTrieNode<>());
 	}
 	
 	/**

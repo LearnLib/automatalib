@@ -32,7 +32,7 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
 		if(maxLength < minLength || minLength < 0)
 			throw new IllegalArgumentException();
 		
-		this.current = new ArrayList<T>(maxLength);
+		this.current = new ArrayList<>(maxLength);
 		this.iterators = new Iterator[maxLength];
 		this.iterable = iterable;
 		

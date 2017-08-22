@@ -15,6 +15,7 @@
  */
 package net.automatalib.commons.util.nid;
 
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Iterator;
 
@@ -23,10 +24,9 @@ import net.automatalib.commons.util.array.ResizingObjectArray;
 
 
 public class DynamicList<T extends MutableNumericID> extends
-		AbstractList<T> implements ArrayWritable<T> {
+		AbstractList<T> implements ArrayWritable<T>, Serializable {
 	
-	private final ResizingObjectArray storage
-		= new ResizingObjectArray();
+	private final ResizingObjectArray storage = new ResizingObjectArray();
 	
 	private int size = 0;
 	

@@ -15,32 +15,38 @@
  */
 package net.automatalib.automata.base.compact;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class AbstractCompactSimpleDet<I, SP>
 		implements MutableDeterministic<Integer,I,Integer,SP,Void>,
 		UniversalFiniteAlphabetAutomaton<Integer,I,Integer,SP,Void>,
 		StateIDs<Integer>,
 		MutableDeterministic.StateIntAbstraction<I, Integer, SP, Void>,
-		MutableDeterministic.FullIntAbstraction<Integer, SP, Void> {
+		MutableDeterministic.FullIntAbstraction<Integer, SP, Void>,
+		GrowableAlphabetAutomaton<I>,
+		Serializable {
 
 	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
 	public static final int DEFAULT_INIT_CAPACITY = 11;
 	
-	protected final Alphabet<I> alphabet;
-	protected final int alphabetSize;
+	protected final GrowingAlphabet<I> alphabet;
+	protected int alphabetSize;
 	protected int[] transitions;
 	protected int stateCapacity;
 	protected int numStates;
-	protected int initial = -1;
+	protected int initial = INVALID_STATE;
 	protected final float resizeFactor;
 	
 	public AbstractCompactSimpleDet(Alphabet<I> alphabet) {
@@ -56,17 +62,17 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	}
 	
 	public AbstractCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.alphabetSize = alphabet.size();
 		this.transitions = new int[stateCapacity * alphabetSize];
-		Arrays.fill(this.transitions, 0, this.transitions.length, -1);
+		Arrays.fill(this.transitions, 0, this.transitions.length, INVALID_STATE);
 		this.resizeFactor = resizeFactor;
 		this.stateCapacity = stateCapacity;
 	}
 	
 	protected AbstractCompactSimpleDet(Alphabet<I> alphabet, int numStates, int initial, int[] transitions,
 			float resizeFactor) {
-		this.alphabet = alphabet;
+		this.alphabet = new SimpleAlphabet<>(alphabet);
 		this.alphabetSize = alphabet.size();
 		this.numStates = numStates;
 		if (initial < 0 || initial >= numStates) {
@@ -98,7 +104,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		
 		int[] newTrans = new int[newCap * alphabetSize];
 		System.arraycopy(transitions, 0, newTrans, 0, stateCapacity * alphabetSize);
-		Arrays.fill(newTrans, this.transitions.length, newTrans.length, -1);
+		Arrays.fill(newTrans, this.transitions.length, newTrans.length, INVALID_STATE);
 		this.transitions = newTrans;
 		ensureCapacity(stateCapacity, newCap);
 		this.stateCapacity = newCap;
@@ -186,7 +192,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 
 	@Override
 	public void setInitialState(Integer state) {
-		setInitialState((state != null) ? state.intValue() : -1);
+		setInitialState((state != null) ? state.intValue() : INVALID_STATE);
 	}
 	
 	public void setTransition(int state, int inputIdx, int succ) {
@@ -199,7 +205,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 
 	@Override
 	public void setTransition(Integer state, I input, Integer transition) {
-		int succId = (transition != null) ? transition.intValue() : -1;
+		int succId = (transition != null) ? transition.intValue() : INVALID_STATE;
 		setTransition(state.intValue(), input, succId);
 	}
 	
@@ -212,15 +218,15 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 	public void clear() {
 		int endIdx = numStates * alphabetSize;
 		numStates = 0;
-		Arrays.fill(transitions, 0, endIdx, -1);
-		initial = -1;
+		Arrays.fill(transitions, 0, endIdx, INVALID_STATE);
+		initial = INVALID_STATE;
 	}
 
 
 	public void removeAllTransitions(int state) {
 		int base = state * alphabetSize;
 		
-		Arrays.fill(transitions, base, base + alphabetSize, -1);
+		Arrays.fill(transitions, base, base + alphabetSize, INVALID_STATE);
 	}
 	
 	@Override
@@ -412,7 +418,7 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 
 	@Override
 	public int numInputs() {
-		return alphabet.size();
+		return alphabetSize;
 	}
 
 	protected static Integer wrapState(int id) {
@@ -428,5 +434,27 @@ public abstract class AbstractCompactSimpleDet<I, SP>
 		}
 		return state.intValue();
 	}
-	
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+
+		if (this.alphabet.containsSymbol(symbol)) {
+			return;
+		}
+
+		final int oldAlphabetSize = this.alphabetSize;
+		final int newAlphabetSize = oldAlphabetSize + 1;
+		final int newArraySize = this.transitions.length + this.stateCapacity;
+		final int[] newTransitions = new int[newArraySize];
+
+		Arrays.fill(newTransitions, 0, newArraySize, INVALID_STATE);
+
+		for (int i = 0; i < this.numStates; i++) {
+			System.arraycopy(transitions, i*oldAlphabetSize, newTransitions, i*newAlphabetSize, oldAlphabetSize);
+		}
+
+		this.transitions = newTransitions;
+		this.alphabet.addSymbol(symbol);
+		this.alphabetSize = newAlphabetSize;
+	}
 }

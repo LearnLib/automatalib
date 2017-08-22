@@ -29,9 +29,9 @@ public class SimpleStateIDs<S> implements StateIDs<S> {
 	private final List<S> states;
 	
 	public SimpleStateIDs(SimpleAutomaton<S,?> automaton) {
-		this.states = new ArrayList<S>(automaton.getStates());
+		this.states = new ArrayList<>(automaton.getStates());
 		int numStates = this.states.size();
-		this.stateIds = new HashMap<S,Integer>(numStates);
+		this.stateIds = new HashMap<>(numStates);
 		
 		for(int i = 0; i < numStates; i++) {
 			S state = this.states.get(i);

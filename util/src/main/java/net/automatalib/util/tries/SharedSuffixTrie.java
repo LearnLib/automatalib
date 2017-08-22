@@ -22,11 +22,11 @@ public class SharedSuffixTrie<I> extends SuffixTrie<I> {
 	private final Alphabet<I> alphabet;
 	
 	public SharedSuffixTrie(Alphabet<I> alphabet) {
-		super(new SharedSuffixTrieNode<I>());
+		super(new SharedSuffixTrieNode<>());
 		this.alphabet = alphabet;
 	}
 	public SharedSuffixTrie(Alphabet<I> alphabet, boolean graphRepresentable) {
-		super(graphRepresentable, new SharedSuffixTrieNode<I>());
+		super(graphRepresentable, new SharedSuffixTrieNode<>());
 		this.alphabet = alphabet;
 	}
 

@@ -31,8 +31,7 @@ import net.automatalib.graphs.UniversalIndefiniteGraph;
  */
 class HashMapInitialPartitioning<S, L> implements
 		InitialPartitioning<S, L> {
-	private final Map<Object,Block<S,L>> initialBlockMap
-		= new HashMap<Object,Block<S,L>>();
+	private final Map<Object,Block<S,L>> initialBlockMap = new HashMap<>();
 	private final UniversalIndefiniteGraph<S, ?, ?, L> graph;
 
 	private int numExistingBlocks;
@@ -46,7 +45,7 @@ class HashMapInitialPartitioning<S, L> implements
 		Object clazz = graph.getNodeProperty(origState);
 		Block<S,L> block = initialBlockMap.get(clazz);
 		if(block == null) {
-			block = new Block<S, L>(numExistingBlocks++);
+			block = new Block<>(numExistingBlocks++);
 			initialBlockMap.put(clazz, block);
 		}
 		return block;

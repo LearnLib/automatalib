@@ -17,9 +17,7 @@ package net.automatalib.ts;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-
-import com.google.common.base.Predicate;
-
+import java.util.function.Predicate;
 
 @ParametersAreNonnullByDefault
 @FunctionalInterface

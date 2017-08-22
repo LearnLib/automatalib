@@ -86,7 +86,7 @@ public class SuffixTrieNode<I> extends Word<I> {
 	}
 	
 	public static <I> Word<I> toExplicitWord(SuffixTrieNode<I> node) {
-		WordBuilder<I> wb = new WordBuilder<I>(node.depth());
+		WordBuilder<I> wb = new WordBuilder<>(node.depth());
 		appendSuffix(node, wb);
 		return wb.toWord();
 	}
@@ -170,6 +170,6 @@ public class SuffixTrieNode<I> extends Word<I> {
 	
 	@Override
 	public Iterator<I> iterator() {
-		return new Iterator<I>(this);
+		return new Iterator<>(this);
 	}
 }

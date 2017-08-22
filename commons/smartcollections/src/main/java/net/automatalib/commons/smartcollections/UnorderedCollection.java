@@ -218,7 +218,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E>
 	public ElementReference referencedAdd(E elem) {
 		ensureCapacity(size+1);
 		int insertPos = size++;
-		Reference<E> ref = new Reference<E>(elem, insertPos);
+		Reference<E> ref = new Reference<>(elem, insertPos);
 		storage.array[insertPos] = ref;
 		return ref;
 	}
@@ -245,7 +245,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E>
 		int sizeInc = coll.size();
 		ensureCapacity(size+sizeInc);
 		for(E elem : coll)
-			storage.array[size] = new Reference<E>(elem, size);
+			storage.array[size] = new Reference<>(elem, size);
 		size += sizeInc;
 		
 		return true;
@@ -275,12 +275,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E>
 	 */
 	@Override
 	public Iterable<ElementReference> references() {
-		return new Iterable<ElementReference>() {
-			@Override
-			public Iterator<ElementReference> iterator() {
-				return referenceIterator();
-			}
-		};
+		return this::referenceIterator;
 	}
 	
 	/*

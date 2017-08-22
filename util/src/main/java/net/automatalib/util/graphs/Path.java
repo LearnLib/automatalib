@@ -104,12 +104,7 @@ public class Path<N, E> extends AbstractList<E> {
 	}
 	
 	public Iterable<N> nodes() {
-		return new Iterable<N>() {
-			@Override
-			public Iterator<N> iterator() {
-				return nodeIterator();
-			}
-		};
+		return this::nodeIterator;
 	}
 	
 	public List<? extends E> edgeList() {

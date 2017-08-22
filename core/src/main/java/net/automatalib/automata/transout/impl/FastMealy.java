@@ -69,7 +69,7 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 	@Override
 	public MealyTransition<FastMealyState<O>, O> createTransition(
 			FastMealyState<O> successor, O properties) {
-		return new MealyTransition<FastMealyState<O>, O>(successor, properties);
+		return new MealyTransition<>(successor, properties);
 	}
 
 	/*
@@ -88,6 +88,6 @@ public class FastMealy<I,O> extends FastMutableDet<FastMealyState<O>,I,MealyTran
 	 */
 	@Override
 	protected FastMealyState<O> createState(Void property) {
-		return new FastMealyState<O>(inputAlphabet.size());
+		return new FastMealyState<>(inputAlphabet.size());
 	}
 }

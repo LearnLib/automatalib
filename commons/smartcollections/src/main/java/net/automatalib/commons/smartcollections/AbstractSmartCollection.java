@@ -141,12 +141,7 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
 	 */
 	@Override
 	public Iterable<ElementReference> references() {
-		return new Iterable<ElementReference>() {
-			@Override
-			public Iterator<ElementReference> iterator() {
-				return referenceIterator();
-			}
-		};
+		return this::referenceIterator;
 	}
 
 	/*

@@ -38,10 +38,10 @@ import net.automatalib.graphs.dot.GraphDOTHelper.EdgeAttrs;
 import net.automatalib.graphs.dot.GraphDOTHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationProvider;
 
-import org.apache.commons.collections15.Transformer;
 import org.kohsuke.MetaInfServices;
 
 import com.github.misberner.graphvizawtshapes.ShapeLibrary;
+import com.google.common.base.Function;
 
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -60,42 +60,12 @@ import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
 public class JungGraphVisualizationProvider implements VisualizationProvider {
 	
 	public static final class NodeVisualization {
-		public static final Transformer<NodeVisualization,String> LABEL
-			= new Transformer<NodeVisualization,String>() {
-				@Override
-				public String transform(NodeVisualization input) {
-					return input.label;
-				}
-		};
-		public static final Transformer<NodeVisualization,Paint> DRAW_COLOR
-			= new Transformer<NodeVisualization,Paint>() {
-			@Override
-			public Paint transform(NodeVisualization input) {
-				return input.color;
-			}
-		};
-		public static final Transformer<NodeVisualization,Paint> FILL_COLOR
-			= new Transformer<NodeVisualization,Paint>() {
-			@Override
-			public Paint transform(NodeVisualization input) {
-				return input.fillColor;
-			}
-		};
-		public static final Transformer<NodeVisualization,Shape> SHAPE
-			= new Transformer<NodeVisualization,Shape>() {
-				@Override
-				public Shape transform(NodeVisualization input) {
-					return input.shape;
-				}
-		};
-		public static final Transformer<NodeVisualization,Stroke> STROKE
-			= new Transformer<NodeVisualization, Stroke>() {
-				@Override
-				public Stroke transform(NodeVisualization input) {
-					return input.stroke;
-				}
-			
-		};
+		public static final Function<NodeVisualization,String> LABEL = input -> input.label;
+		public static final Function<NodeVisualization,Paint> DRAW_COLOR = input -> input.color;
+		public static final Function<NodeVisualization,Paint> FILL_COLOR = input -> input.fillColor;
+		public static final Function<NodeVisualization,Shape> SHAPE = input -> input.shape;
+		public static final Function<NodeVisualization,Stroke> STROKE = input -> input.stroke;
+
 		public final String label;
 		public final Color color;
 		public final Color fillColor;
@@ -112,21 +82,9 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 	}
 	
 	public static final class EdgeVisualization {
-		public static final Transformer<EdgeVisualization,String> LABEL
-			= new Transformer<EdgeVisualization,String>() {
-				@Override
-				public String transform(EdgeVisualization input) {
-					return input.label;
-				}
-		};
-		public static final Transformer<EdgeVisualization,Paint> DRAW_COLOR
-			= new Transformer<EdgeVisualization,Paint>() {
-				@Override
-				public Paint transform(EdgeVisualization input) {
-					return input.drawColor;
-				}
-		};
-		
+		public static final Function<EdgeVisualization,String> LABEL = input -> input.label;
+		public static final Function<EdgeVisualization,Paint> DRAW_COLOR = input -> input.drawColor;
+
 		public final String label;
 		public final Color drawColor;
 		

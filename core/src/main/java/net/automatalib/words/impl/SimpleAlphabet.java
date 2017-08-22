@@ -40,8 +40,8 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
 public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlphabet<I> {
 	
 	@Nonnull
-	private final List<I> symbols;;
-	
+	private final List<I> symbols;
+
 	@Nonnull
 //	private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>(10, 0.75f, -1);
 	private final Map<I,Integer> indexMap = new HashMap<>(); // TODO: replace by primitive specialization
@@ -66,9 +66,7 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
 	public boolean add(I a) {
 		int s = size();
 		int idx = addSymbol(a);
-		if(idx != s)
-			return false;
-		return true;
+		return idx == s;
 	}
 
 	/*

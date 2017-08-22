@@ -124,7 +124,7 @@ public class Triple<T1, T2, T3> extends AbstractPrintable {
 	
 	
 	public static <T1,T2,T3> Triple<T1,T2,T3> make(T1 first, T2 second, T3 third) {
-		return new Triple<T1,T2,T3>(first, second, third);
+		return new Triple<>(first, second, third);
 	}
 	
 	public static <T1,T2,T3> Triple<T1,T2,T3> fromPair1(Pair<T1,Pair<T2,T3>> pair) {

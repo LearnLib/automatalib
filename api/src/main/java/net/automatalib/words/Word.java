@@ -16,6 +16,7 @@
 package net.automatalib.words;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -36,8 +38,6 @@ import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.array.AWUtil;
 import net.automatalib.commons.util.array.ArrayWritable;
 import net.automatalib.commons.util.strings.AbstractPrintable;
-
-import com.google.common.base.Function;
 
 /**
  * A word is an ordered sequence of symbols. {@link Word}s are generally immutable,
@@ -72,8 +72,7 @@ import com.google.common.base.Function;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I> {
-
+public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I>, Serializable {
 
 	private static String emptyWordRep = "ε";
 	private static String wordDelimLeft = "";
@@ -166,7 +165,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 		if(siz == 0)
 			return epsilon();
 		if(siz == 1)
-			return Word.<I>fromLetter(symbolList.get(0));
+			return Word.fromLetter(symbolList.get(0));
 		return new SharedWord<>(symbolList);
 	}
 	

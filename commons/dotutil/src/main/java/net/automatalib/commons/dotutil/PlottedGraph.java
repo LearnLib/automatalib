@@ -76,13 +76,9 @@ final class PlottedGraph {
 	
 	public boolean updateDOTText(String dotText) {
 		try {
-			InputStream pngIs = DOT.runDOT(dotText, "png");
-			try {
+			try (InputStream pngIs = DOT.runDOT(dotText, "png")) {
 				BufferedImage img = ImageIO.read(pngIs);
 				this.image = img;
-			}
-			finally {
-				pngIs.close();
 			}
 		}
 		catch(IOException e) {
@@ -95,12 +91,8 @@ final class PlottedGraph {
 	}
 
 	public void saveDot(File file) throws IOException {
-		FileWriter fw = new FileWriter(file);
-		try {
+		try (FileWriter fw = new FileWriter(file)) {
 			fw.write(dotText);
-		}
-		finally {
-			fw.close();
 		}
 	}
 	

@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.base.StateIDDynamicMapping;
@@ -28,11 +29,14 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
 import net.automatalib.words.Alphabet;
-
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, SP, TP>
 		implements ShrinkableAutomaton<S, I, T, SP, TP>,
-		UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>, StateIDs<S> {
+		UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>,
+		StateIDs<S>,
+		GrowableAlphabetAutomaton<I> {
 	
 	
 	private final DynamicList<S> states
@@ -43,10 +47,10 @@ public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, S
 	private final Set<S> initialStates
 		= new HashSet<>();
 	
-	protected Alphabet<I> inputAlphabet;
+	protected GrowingAlphabet<I> inputAlphabet;
 	
 	public FastMutableNondet(Alphabet<I> inputAlphabet) {
-		this.inputAlphabet = inputAlphabet;
+		this.inputAlphabet = new SimpleAlphabet<>(inputAlphabet);
 	}
 
 	@Override
@@ -147,7 +151,17 @@ public abstract class FastMutableNondet<S extends FastNondetState<S, T>, I, T, S
 		tracker.addListener(mapping, true);
 		return mapping;
 	}
-	
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+		this.inputAlphabet.addSymbol(symbol);
+		final int newAlphabetSize = this.inputAlphabet.size();
+
+		for (final S s : this.getStates()) {
+			s.ensureInputCapacity(newAlphabetSize);
+		}
+	}
+
 	protected abstract S createState(SP property);
 
 }

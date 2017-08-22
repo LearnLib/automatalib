@@ -35,9 +35,6 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 		}
 	}
 	
-	public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
-	public static final int DEFAULT_INIT_CAPACITY = 11;
-	
 	private final BitSet acceptance;
 	
 	public CompactDFA(Alphabet<I> alphabet) {
@@ -74,7 +71,7 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 			throw new IllegalArgumentException("Alphabet sizes must match, but they do not (old/new): " +
 					alphabetSize + " vs. " + newAlphabet.size());
 		}
-		return new CompactDFA<I2>(newAlphabet, this);
+		return new CompactDFA<>(newAlphabet, this);
 	}
 	
 	@Override
@@ -129,14 +126,14 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 
 	@Override
 	public void initState(int stateId, Boolean property) {
-		boolean bval = (property == null) ? false : property.booleanValue();
+		boolean bval = property != null && property.booleanValue();
 		setAccepting(stateId, bval);
 	}
 
 	
 	@Override
 	public void setStateProperty(int stateId, Boolean property) {
-		boolean bval = (property == null) ? false : property.booleanValue();
+		boolean bval = property != null && property.booleanValue();
 		setAccepting(stateId, bval);
 	}
 

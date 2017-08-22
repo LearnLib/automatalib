@@ -465,13 +465,13 @@ outer:	for (Object o : c) {
 	
 	public void parallelSetAll(IntFunction<? extends T> generator) {
 		Objects.requireNonNull(generator);
-		IntStream.range(start, end()).parallel().forEach(i -> { contents[i] = generator.apply(i - start); });
+		IntStream.range(start, end()).parallel().forEach(i -> contents[i] = generator.apply(i - start));
 	}
 	
 	public void parallelSetAll(int startInclusive, int endExclusive, IntFunction<? extends T> generator) {
 		checkPositionIndexes(startInclusive, endExclusive, length);
 		Objects.requireNonNull(generator);
-		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> { contents[i] = generator.apply(i - start); });
+		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> contents[i] = generator.apply(i - start));
 	}
 	
 	public void setAll(IntFunction<? extends T> generator) {
@@ -491,12 +491,12 @@ outer:	for (Object o : c) {
 	
 	
 	public void parallelSetAll(T value) {
-		IntStream.range(start, end()).parallel().forEach(i -> { contents[i] = value; });
+		IntStream.range(start, end()).parallel().forEach(i -> contents[i] = value);
 	}
 	
 	public void parallelSetAll(int startInclusive, int endExclusive, T value) {
 		checkPositionIndexes(startInclusive, endExclusive, length);
-		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> { contents[i] = value; });
+		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> contents[i] = value);
 	}
 	
 	public void setAll(T value) {
@@ -517,13 +517,13 @@ outer:	for (Object o : c) {
 	
 	public void parallelSetAll(Supplier<? extends T> supplier) {
 		Objects.requireNonNull(supplier);
-		IntStream.range(start, end()).parallel().forEach(i -> { contents[i] = supplier.get(); });
+		IntStream.range(start, end()).parallel().forEach(i -> contents[i] = supplier.get());
 	}
 	
 	public void parallelSetAll(int startInclusive, int endExclusive, Supplier<? extends T> supplier) {
 		checkPositionIndexes(startInclusive, endExclusive, length);
 		Objects.requireNonNull(supplier);
-		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> { contents[i] = supplier.get(); });
+		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> contents[i] = supplier.get());
 	}
 	
 	public void setAll(Supplier<? extends T> supplier) {
@@ -674,20 +674,20 @@ outer:	for (Object o : c) {
 	
 	public RichArray<T> parallelTransform(Function<? super T,? extends T> transformer) {
 		Objects.requireNonNull(transformer);
-		IntStream.range(start, end()).parallel().forEach(i -> { contents[i] = transformer.apply(contents[i]); });
+		IntStream.range(start, end()).parallel().forEach(i -> contents[i] = transformer.apply(contents[i]));
 		return this;
 	}
 	
 	public RichArray<T> parallelTransform(int startInclusive, int endExclusive, Function<? super T,? extends T> transformer) {
 		checkPositionIndexes(startInclusive, endExclusive, length);
 		Objects.requireNonNull(transformer);
-		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> { contents[i] = transformer.apply(contents[i]); });
+		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> contents[i] = transformer.apply(contents[i]));
 		return this;
 	}
 	
 	public RichArray<T> transformWithIndex(WithIndexTransformer<? super T, ? extends T> transformer) {
 		Objects.requireNonNull(transformer);
-		IntStream.range(start, end()).forEach(i -> { contents[i] = transformer.apply(i - start, contents[i]); });
+		IntStream.range(start, end()).forEach(i -> contents[i] = transformer.apply(i - start, contents[i]));
 		return this;
 	}
 	
@@ -695,13 +695,13 @@ outer:	for (Object o : c) {
 			WithIndexTransformer<? super T,? extends T> transformer) {
 		checkPositionIndexes(startInclusive, endExclusive, length);
 		Objects.requireNonNull(transformer);
-		IntStream.range(start + startInclusive, start + endExclusive).forEach(i -> { contents[i] = transformer.apply(i - start, contents[i]); });
+		IntStream.range(start + startInclusive, start + endExclusive).forEach(i -> contents[i] = transformer.apply(i - start, contents[i]));
 		return this;
 	}
 	
 	public RichArray<T> parallelTransformWithIndex(WithIndexTransformer<? super T, ? extends T> transformer) {
 		Objects.requireNonNull(transformer);
-		IntStream.range(start, end()).parallel().forEach(i -> { contents[i] = transformer.apply(i - start, contents[i]); });
+		IntStream.range(start, end()).parallel().forEach(i -> contents[i] = transformer.apply(i - start, contents[i]));
 		return this;
 	}
 	
@@ -709,7 +709,7 @@ outer:	for (Object o : c) {
 			WithIndexTransformer<? super T,? extends T> transformer) {
 		checkPositionIndexes(startInclusive, endExclusive, length);
 		Objects.requireNonNull(transformer);
-		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> { contents[i] = transformer.apply(i - start, contents[i]); });
+		IntStream.range(start + startInclusive, start + endExclusive).parallel().forEach(i -> contents[i] = transformer.apply(i - start, contents[i]));
 		return this;
 	}
 

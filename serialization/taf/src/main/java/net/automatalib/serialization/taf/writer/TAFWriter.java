@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -37,8 +38,6 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.strings.StringUtil;
-
-import com.google.common.base.Function;
 
 /**
  * This class provides methods to write automata in the TAF format.
@@ -130,7 +129,7 @@ public class TAFWriter {
 			UniversalDeterministicAutomaton<S, I, T,?,?> automaton,
 			Collection<? extends I> inputs,
 			String type,
-			Function<S,? extends Collection<? extends String>> spExtractor)
+			Function<S, ? extends Collection<? extends String>> spExtractor)
 			throws IOException {
 		begin(type, inputs);
 		{
@@ -154,7 +153,7 @@ public class TAFWriter {
 								p -> new Pair<S,Object>(
 										automaton.getSuccessor(p.getSecond()),
 										automaton.getTransitionProperty(p.getSecond())),
-								Collectors.mapping(p -> p.getFirst(), Collectors.toList())
+								Collectors.mapping(Pair::getFirst, Collectors.toList())
 								));
 					
 					for (Map.Entry<Pair<S,Object>,List<I>> group : groupedTransitions.entrySet()) {

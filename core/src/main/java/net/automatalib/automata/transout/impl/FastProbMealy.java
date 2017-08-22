@@ -53,7 +53,7 @@ public class FastProbMealy<I, O>
 	@Override
 	public ProbabilisticOutput<O> getTransitionProperty(
 			ProbMealyTransition<FastProbMealyState<O>, O> transition) {
-		return new ProbabilisticOutput<O>(transition.getProbability(), transition.getOutput());
+		return new ProbabilisticOutput<>(transition.getProbability(), transition.getOutput());
 	}
 
 	@Override
@@ -110,18 +110,18 @@ public class FastProbMealy<I, O>
 			prob = properties.getProbability();
 			output = properties.getOutput();
 		}
-		return new ProbMealyTransition<FastProbMealyState<O>, O>(successor, output, prob);
+		return new ProbMealyTransition<>(successor, output, prob);
 	}
 
 
 	@Override
 	protected FastProbMealyState<O> createState(Void property) {
-		return new FastProbMealyState<O>(inputAlphabet.size());
+		return new FastProbMealyState<>(inputAlphabet.size());
 	}
 
 	
 	public void addTransition(FastProbMealyState<O> src, I input, FastProbMealyState<O> successor, O output, float prob) {
-		addTransition(src, input, successor, new ProbabilisticOutput<O>(prob, output));
+		addTransition(src, input, successor, new ProbabilisticOutput<>(prob, output));
 	}
 
 }

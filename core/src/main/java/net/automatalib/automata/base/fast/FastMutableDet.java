@@ -15,8 +15,10 @@
  */
 package net.automatalib.automata.base.fast;
 
+import java.io.Serializable;
 import java.util.Collection;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.automata.ShrinkableDeterministic;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
@@ -25,25 +27,25 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
-import net.automatalib.commons.util.nid.IDChangeNotifier;
 import net.automatalib.words.Alphabet;
-
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP> implements
 		ShrinkableDeterministic<S, I, T, SP, TP>,
-		UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>, StateIDs<S> {
-	
-	private final DynamicList<S> states
-		= new DynamicList<S>();
-	private final IDChangeNotifier<S> tracker
-		= new IDChangeNotifier<>();
-	
+		UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>,
+		StateIDs<S>,
+		GrowableAlphabetAutomaton<I>,
+		Serializable {
+
+	private final DynamicList<S> states = new DynamicList<>();
+
 	private S initialState;
 	
-	protected final Alphabet<I> inputAlphabet;
+	protected final GrowingAlphabet<I> inputAlphabet;
 	
 	public FastMutableDet(Alphabet<I> inputAlphabet) {
-		this.inputAlphabet = inputAlphabet;
+		this.inputAlphabet = new SimpleAlphabet<>(inputAlphabet);
 	}
 
 	/*
@@ -185,9 +187,17 @@ public abstract class FastMutableDet<S extends FastDetState<S, T>, I, T, SP, TP>
 	 */
 	@Override
 	public <V> MutableMapping<S,V> createDynamicStateMapping() {
-		StateIDDynamicMapping<S, V> mapping = new StateIDDynamicMapping<>(this);
-		tracker.addListener(mapping, true);
-		return mapping;
+		return new StateIDDynamicMapping<>(this);
+	}
+
+	@Override
+	public void addAlphabetSymbol(I symbol) {
+		this.inputAlphabet.addSymbol(symbol);
+		final int newAlphabetSize = this.inputAlphabet.size();
+
+		for (final S s : this.getStates()) {
+			s.ensureInputCapacity(newAlphabetSize);
+		}
 	}
 
 	protected abstract S createState(SP property);

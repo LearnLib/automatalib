@@ -59,7 +59,7 @@ public class DijkstraSSSPTest {
 		graph.connect(n4, n1, Float.valueOf(10.0f));
 		graph.connect(n5, n1, Float.valueOf(0.1f));
 		
-		this.weights = new PropertyEdgeWeights<CompactEdge<Float>>(graph);
+		this.weights = new PropertyEdgeWeights<>(graph);
 	}
 	
 	@Test

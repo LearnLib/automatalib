@@ -31,25 +31,25 @@ public class LetterWordTest extends NonemptyWordTest {
 
 	@Override
 	protected List<Word<Object>> realSuffixes() {
-		return Arrays.<Word<Object>>asList(new EmptyWord(), new SharedWord<>(new Object[0]),
+		return Arrays.asList(new EmptyWord(), new SharedWord<>(new Object[0]),
 				new SharedWord<>(Collections.emptyList()));
 	}
 
 	@Override
 	protected Word<Object> testWord() {
-		return new LetterWord<Object>(5);
+		return new LetterWord<>(5);
 	}
 
 	@Override
 	protected List<Word<Object>> equalWords() {
-		return Arrays.<Word<Object>>asList(new LetterWord<Object>(5),
+		return Arrays.asList(new LetterWord<>(5),
 				new SharedWord<>(new Object[]{5}),
 				new SharedWord<>(Collections.<Object>singletonList(5)));
 	}
 
 	@Override
 	protected List<Word<Object>> unequalWords() {
-		return Arrays.<Word<Object>>asList(new LetterWord<Object>(6),
+		return Arrays.asList(new LetterWord<>(6),
 				new LetterWord<>(null),
 				new SharedWord<>(new Object[]{4, 2}),
 				new EmptyWord());

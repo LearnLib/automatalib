@@ -29,7 +29,7 @@ public abstract class Refs {
 	 * @return a strong reference to the referent.
 	 */
 	public static <T> StrongRef<T> strong(T referent) {
-		return new StrongRef<T>(referent);
+		return new StrongRef<>(referent);
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public abstract class Refs {
 	 * @return a weak reference to the referent.
 	 */
 	public static <T> WeakRef<T> weak(T referent) {
-		return new WeakRef<T>(referent);
+		return new WeakRef<>(referent);
 	}
 	
 

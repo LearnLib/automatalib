@@ -82,8 +82,8 @@ public interface SimpleTS<S, I> {
 	 */
 	@Nonnull
 	public default Set<? extends S> getSuccessors(Collection<? extends S> states, Iterable<? extends I> input) {
-		Set<S> current = new HashSet<S>(states);
-		Set<S> succs = new HashSet<S>();
+		Set<S> current = new HashSet<>(states);
+		Set<S> succs = new HashSet<>();
 		
 		for(I sym : input) {
 			for(S state : current) {

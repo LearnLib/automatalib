@@ -51,7 +51,7 @@ public abstract class NFAs {
 			Alphabet<I> inputAlphabet,
 			boolean partial,
 			boolean minimize) {
-		CompactDFA<I> result = new CompactDFA<I>(inputAlphabet);
+		CompactDFA<I> result = new CompactDFA<>(inputAlphabet);
 		determinize(nfa, inputAlphabet, result, partial, minimize);
 		return result;
 	}

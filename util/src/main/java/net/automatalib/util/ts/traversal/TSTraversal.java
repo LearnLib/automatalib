@@ -40,7 +40,7 @@ public abstract class TSTraversal {
 			int limit,
 			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
-		Deque<DFRecord<S,I,T,D>> dfsStack = new ArrayDeque<DFRecord<S,I,T,D>>();
+		Deque<DFRecord<S,I,T,D>> dfsStack = new ArrayDeque<>();
 		
 		Holder<D> dataHolder = new Holder<>();
 		
@@ -61,7 +61,7 @@ public abstract class TSTraversal {
 				return complete;
 			case EXPLORE:
 				if(stateCount != limit) {
-					dfsStack.push(new DFRecord<S, I, T, D>(initS, inputs, dataHolder.value));
+					dfsStack.push(new DFRecord<>(initS, inputs, dataHolder.value));
 					stateCount++;
 				}
 				else
@@ -110,7 +110,7 @@ public abstract class TSTraversal {
 				break;
 			case EXPLORE:
 				if(stateCount != limit) {
-					dfsStack.push(new DFRecord<S,I,T,D>(succ, inputs, dataHolder.value));
+					dfsStack.push(new DFRecord<>(succ, inputs, dataHolder.value));
 					stateCount++;
 				}
 				else
@@ -143,7 +143,7 @@ public abstract class TSTraversal {
 			int limit,
 			Collection<? extends I> inputs,
 			TSTraversalVisitor<S, I, T, D> vis) {
-		Deque<BFSRecord<S,D>> bfsQueue = new ArrayDeque<BFSRecord<S,D>>();
+		Deque<BFSRecord<S,D>> bfsQueue = new ArrayDeque<>();
 
 		// setting the following to false means that the traversal had to be aborted
 		// due to reaching the limit
@@ -160,7 +160,7 @@ public abstract class TSTraversal {
 				return complete;
 			case EXPLORE:
 				if(stateCount != limit) {
-					bfsQueue.offer(new BFSRecord<S,D>(initS, dataHolder.value));
+					bfsQueue.offer(new BFSRecord<>(initS, dataHolder.value));
 					stateCount++;
 				}
 				else
@@ -198,7 +198,7 @@ inputs_loop:
 						return complete;
 					case EXPLORE:
 						if(stateCount != limit) {
-							bfsQueue.offer(new BFSRecord<S,D>(succ, dataHolder.value));
+							bfsQueue.offer(new BFSRecord<>(succ, dataHolder.value));
 							stateCount++;
 						}
 						else

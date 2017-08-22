@@ -31,7 +31,7 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
 	public AllCombinationsIterator(Iterable<T> ...iterables) {
 		this.iterables = iterables;
 		this.iterators = new Iterator[iterables.length];
-		this.current = new ArrayList<T>(iterables.length);
+		this.current = new ArrayList<>(iterables.length);
 		for(int i = 0; i < iterators.length; i++) {
 			Iterator<T> it = iterables[i].iterator();
 			this.iterators[i] = it;

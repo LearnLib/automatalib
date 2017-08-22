@@ -106,6 +106,9 @@ public class FloydWarshallAPSP<N,E> implements APSPResult<N,E> {
 	}
 
 	public void findAPSP() {
+		for(int k = 0; k < size; k++) {
+			
+	
 		for(int i = 0; i < size; i++) {
 			for(int j = 0; j < size; j++) {
 				if(j == i)
@@ -113,7 +116,7 @@ public class FloydWarshallAPSP<N,E> implements APSPResult<N,E> {
 				
 				APSPRecord<N,E> currRec = table[i][j];
 				
-				for(int k = 0; k < size; k++) {
+				
 					if(k == i || k == j)
 						continue;
 					
@@ -134,8 +137,9 @@ public class FloydWarshallAPSP<N,E> implements APSPResult<N,E> {
 						currRec.middle = k;
 						currRec.numEdges = part1.numEdges + part2.numEdges;
 					}
-				}
+				
 			}
+		}
 		}
 	}
 	
