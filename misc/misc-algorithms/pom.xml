@@ -15,15 +15,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.automatalib</groupId>
-	<artifactId>automata-misc-algorithms</artifactId>
-	<packaging>jar</packaging>
+    <groupId>net.automatalib</groupId>
+    <artifactId>automata-misc-algorithms</artifactId>
+    <packaging>jar</packaging>
 
-	<name>AutomataLib :: Misc :: Misc. Algorithms</name>
-	<description><![CDATA[
+    <name>AutomataLib :: Misc :: Misc. Algorithms</name>
+    <description><![CDATA[
 		This artifact contains several miscellaneous, well-known algorithms, which however are
 		rather specific in their concrete use case and therefore not fit for the AutomataLib
 		Utilities library. Examples include Dijkstra's algorithm for the SSSP problem, the
@@ -31,42 +33,42 @@ limitations under the License.
 		all strongly-connected components in a graph.
 	]]></description>
 
-	<parent>
-		<groupId>net.automatalib</groupId>
-		<artifactId>automata-misc-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-misc-parent</artifactId>
+        <version>0.6.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-commons-util</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-commons-smartcollections</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-util</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-smartcollections</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+    </dependencies>
 </project>

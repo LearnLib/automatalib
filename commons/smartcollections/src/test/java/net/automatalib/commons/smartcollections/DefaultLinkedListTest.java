@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,34 +21,34 @@ import org.testng.annotations.Test;
 
 @Test
 public class DefaultLinkedListTest {
-	private DefaultLinkedList<Object> linkedList;
-	private Object first = new Object(), second = new Object(), third = new Object();
-	private ElementReference firstRef, secondRef, thirdRef;
-	
-	@BeforeClass
-	public void setup() {
-		linkedList = new DefaultLinkedList<>();
-		firstRef = linkedList.referencedAdd(first);
-		secondRef = linkedList.referencedAdd(second);
-		thirdRef = linkedList.referencedAdd(third);
-	}
-	
-	
-	@Test
-	public void testInsertRemove() {
-		Assert.assertEquals(linkedList.size(), 3);
-		Assert.assertEquals(linkedList.get(firstRef), first);
-		Assert.assertEquals(linkedList.get(secondRef), second);
-		Assert.assertEquals(linkedList.get(thirdRef), third);
-		
-		Assert.assertEquals(linkedList.getFront(), first);
-		Assert.assertEquals(linkedList.getBack(), third);
-		
-		Object fourth = new Object();
-		ElementReference fourthRef = linkedList.pushFront(fourth);
-		Assert.assertEquals(linkedList.size(), 4);
-		Assert.assertEquals(linkedList.get(fourthRef), fourth);
-		Assert.assertEquals(linkedList.getFront(), fourth);
-		Assert.assertEquals(linkedList.get(linkedList.succ(fourthRef)), first);
-	}
+
+    private DefaultLinkedList<Object> linkedList;
+    private Object first = new Object(), second = new Object(), third = new Object();
+    private ElementReference firstRef, secondRef, thirdRef;
+
+    @BeforeClass
+    public void setup() {
+        linkedList = new DefaultLinkedList<>();
+        firstRef = linkedList.referencedAdd(first);
+        secondRef = linkedList.referencedAdd(second);
+        thirdRef = linkedList.referencedAdd(third);
+    }
+
+    @Test
+    public void testInsertRemove() {
+        Assert.assertEquals(linkedList.size(), 3);
+        Assert.assertEquals(linkedList.get(firstRef), first);
+        Assert.assertEquals(linkedList.get(secondRef), second);
+        Assert.assertEquals(linkedList.get(thirdRef), third);
+
+        Assert.assertEquals(linkedList.getFront(), first);
+        Assert.assertEquals(linkedList.getBack(), third);
+
+        Object fourth = new Object();
+        ElementReference fourthRef = linkedList.pushFront(fourth);
+        Assert.assertEquals(linkedList.size(), 4);
+        Assert.assertEquals(linkedList.get(fourthRef), fourth);
+        Assert.assertEquals(linkedList.getFront(), fourth);
+        Assert.assertEquals(linkedList.get(linkedList.succ(fourthRef)), first);
+    }
 }

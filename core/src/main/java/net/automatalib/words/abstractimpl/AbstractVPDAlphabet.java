@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,67 +25,68 @@ import net.automatalib.words.VPDAlphabet;
  */
 public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> implements VPDAlphabet<I> {
 
-	@Override
-	public Alphabet<I> getCallAlphabet() {
-		return new AbstractAlphabet<I>() {
+    @Override
+    public Alphabet<I> getCallAlphabet() {
+        return new AbstractAlphabet<I>() {
 
-			@Override
-			public I getSymbol(final int index) throws IllegalArgumentException {
-				return getCallSymbol(index);
-			}
+            @Override
+            public I getSymbol(final int index) throws IllegalArgumentException {
+                return getCallSymbol(index);
+            }
 
-			@Override
-			public int getSymbolIndex(final I symbol) throws IllegalArgumentException {
-				return getCallSymbolIndex(symbol);
-			}
+            @Override
+            public int size() {
+                return getNumCalls();
+            }
 
-			@Override
-			public int size() {
-				return getNumCalls();
-			}
-		};
-	}
+            @Override
+            public int getSymbolIndex(final I symbol) throws IllegalArgumentException {
+                return getCallSymbolIndex(symbol);
+            }
 
-	@Override
-	public Alphabet<I> getReturnAlphabet() {
-		return new AbstractAlphabet<I>() {
+        };
+    }
 
-			@Override
-			public I getSymbol(final int index) throws IllegalArgumentException {
-				return getReturnSymbol(index);
-			}
+    @Override
+    public Alphabet<I> getInternalAlphabet() {
+        return new AbstractAlphabet<I>() {
 
-			@Override
-			public int getSymbolIndex(final I symbol) throws IllegalArgumentException {
-				return getReturnSymbolIndex(symbol);
-			}
+            @Override
+            public I getSymbol(final int index) throws IllegalArgumentException {
+                return getInternalSymbol(index);
+            }
 
-			@Override
-			public int size() {
-				return getNumReturns();
-			}
-		};
-	}
+            @Override
+            public int getSymbolIndex(final I symbol) throws IllegalArgumentException {
+                return getInternalSymbolIndex(symbol);
+            }
 
-	@Override
-	public Alphabet<I> getInternalAlphabet() {
-		return new AbstractAlphabet<I>() {
+            @Override
+            public int size() {
+                return getNumInternals();
+            }
+        };
+    }
 
-			@Override
-			public I getSymbol(final int index) throws IllegalArgumentException {
-				return getInternalSymbol(index);
-			}
+    @Override
+    public Alphabet<I> getReturnAlphabet() {
+        return new AbstractAlphabet<I>() {
 
-			@Override
-			public int getSymbolIndex(final I symbol) throws IllegalArgumentException {
-				return getInternalSymbolIndex(symbol);
-			}
+            @Override
+            public I getSymbol(final int index) throws IllegalArgumentException {
+                return getReturnSymbol(index);
+            }
 
-			@Override
-			public int size() {
-				return getNumInternals();
-			}
-		};
-	}
+            @Override
+            public int getSymbolIndex(final I symbol) throws IllegalArgumentException {
+                return getReturnSymbolIndex(symbol);
+            }
+
+            @Override
+            public int size() {
+                return getNumReturns();
+            }
+        };
+    }
 
 }

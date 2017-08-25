@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,66 +22,72 @@ import java.util.Map;
 import net.automatalib.graphs.ads.RecursiveADSNode;
 
 /**
- * An abstract  implementation of a leaf node, that may be used by other ADS-extending classes
+ * An abstract implementation of a leaf node, that may be used by other ADS-extending classes.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
- * @param <O> output alphabet type
- * @param <N> the concrete node type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ * @param <N>
+ *         the concrete node type
+ *
  * @author frohme
  */
 public abstract class AbstractRecursiveADSLeafNode<S, I, O, N extends RecursiveADSNode<S, I, O, N>>
-		implements RecursiveADSNode<S, I, O, N>, Serializable {
+        implements RecursiveADSNode<S, I, O, N>, Serializable {
 
-	private N parent;
-	private S hypothesisState;
+    private N parent;
+    private S hypothesisState;
 
-	public AbstractRecursiveADSLeafNode(N parent, S hypothesisState) {
-		this.parent = parent;
-		this.hypothesisState = hypothesisState;
-	}
+    public AbstractRecursiveADSLeafNode(N parent, S hypothesisState) {
+        this.parent = parent;
+        this.hypothesisState = hypothesisState;
+    }
 
-	@Override
-	public boolean isLeaf() {
-		return true;
-	}
+    @Override
+    public I getSymbol() {
+        return null;
+    }
 
-	@Override
-	public S getHypothesisState() {
-		return this.hypothesisState;
-	}
+    @Override
+    public void setSymbol(I symbol) {
+        throw new UnsupportedOperationException("Cannot set symbol state on a leaf node");
+    }
 
-	@Override
-	public void setHypothesisState(S state) {
-		this.hypothesisState = state;
-	}
+    @Override
+    public N getParent() {
+        return this.parent;
+    }
 
-	@Override
-	public I getSymbol() {
-		return null;
-	}
+    @Override
+    public void setParent(N parent) {
+        this.parent = parent;
+    }
 
-	@Override
-	public void setSymbol(I symbol) {
-		throw new UnsupportedOperationException("Cannot set symbol state on a leaf node");}
+    @Override
+    public Map<O, N> getChildren() {
+        return Collections.emptyMap();
+    }
 
-	@Override
-	public N getParent() {
-		return this.parent;
-	}
+    @Override
+    public boolean isLeaf() {
+        return true;
+    }
 
-	@Override
-	public void setParent(N parent) {
-		this.parent = parent;
-	}
+    @Override
+    public S getHypothesisState() {
+        return this.hypothesisState;
+    }
 
-	@Override
-	public Map<O, N> getChildren() {
-		return Collections.emptyMap();
-	}
+    @Override
+    public void setHypothesisState(S state) {
+        this.hypothesisState = state;
+    }
 
-	@Override
-	public String toString() {
-		return this.getHypothesisState() == null ? "<null>" : this.getHypothesisState().toString();
-	}
+    @Override
+    public String toString() {
+        return this.getHypothesisState() == null ? "<null>" : this.getHypothesisState().toString();
+    }
 }

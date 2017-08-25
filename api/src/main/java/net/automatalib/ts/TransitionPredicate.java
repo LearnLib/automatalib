@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,24 +15,25 @@
  */
 package net.automatalib.ts;
 
+import java.util.function.Predicate;
+
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.function.Predicate;
 
 @ParametersAreNonnullByDefault
 @FunctionalInterface
-public interface TransitionPredicate<S,I,T> {
-	public boolean apply(S source, @Nullable I input, T transition);
-	
-	default public Predicate<? super T> toUnaryPredicate(final S source, final I input) {
-		return trans -> apply(source, input, trans);
-	}
-	
-	public static <S,I,T>
-	TransitionPredicate<S,I,T> safePred(TransitionPredicate<S, I, T> pred, final boolean nullValue) {
-		if(pred != null) {
-			return pred;
-		}
-		return (s,i,t) -> nullValue;
-	}
+public interface TransitionPredicate<S, I, T> {
+
+    static <S, I, T> TransitionPredicate<S, I, T> safePred(TransitionPredicate<S, I, T> pred, final boolean nullValue) {
+        if (pred != null) {
+            return pred;
+        }
+        return (s, i, t) -> nullValue;
+    }
+
+    default Predicate<? super T> toUnaryPredicate(final S source, final I input) {
+        return trans -> apply(source, input, trans);
+    }
+
+    boolean apply(S source, @Nullable I input, T transition);
 }

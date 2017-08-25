@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,119 +31,128 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-
 /**
  * Component that displays a {@link BufferedImage}.
- * 
- * @author Malte Isberner 
  *
+ * @author Malte Isberner
  */
-public class ImageComponent extends JComponent  {
-	private static final long serialVersionUID = -1L;
-	
-	private BufferedImage img;
-	
-	private boolean scale = false;
-	
-	
-	private final Action savePngAction = new AbstractAction("Save PNG") {
-		private static final long serialVersionUID = 1L;
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JFileChooser chooser = new JFileChooser();
-			chooser.setFileFilter(DOTMisc.PNG_FILTER);
-			int res = chooser.showSaveDialog(ImageComponent.this);
-			if(res != JFileChooser.APPROVE_OPTION)
-				return;
-			File f = chooser.getSelectedFile();
-			try {
-				ImageIO.write(img, "png", f);
-			}
-			catch(IOException ex) {
-				JOptionPane.showMessageDialog(ImageComponent.this, "Couldn't save image: " + ex.getMessage(), "Couldn't save image", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	};
-	
-	
-	/**
-	 * Default constructor.
-	 */
-	public ImageComponent() {
-		setPreferredSize(new Dimension(320, 240));
-	}
-	
-	public void listActions(List<Action> actions) {
-		actions.add(savePngAction);
-	}
-	
-	/**
-	 * Constructor. Initializes the component to display the given image.
-	 * @param img the image to be displayed
-	 */
-	public ImageComponent(BufferedImage img) {
-		this.img = img;
-		Dimension dim = new Dimension(img.getWidth(), img.getHeight());
-		setSize(dim);
-		setPreferredSize(dim);
-	}
-	
-	/**
-	 * Sets the image to be displayed.
-	 * @param img the image to be displayed
-	 */
-	public void setImage(BufferedImage img) {
-		this.img = img;
-		Dimension dim;
-		if(img != null)
-			dim = new Dimension(img.getWidth(), img.getHeight());
-		else
-			dim = new Dimension(320, 240);
-		
-		setSize(dim);
-		setPreferredSize(dim);
-		repaint();
-	}
-	
-	/**
-	 * Retrieves the image to be displayed
-	 * @return the image to be displayed
-	 */
-	public BufferedImage getImage() {
-		return img;
-	}
-	
-	/**
-	 * Retrieves an {@link Action} to save the image in a PNG file.
-	 * @return the action
-	 */
-	public Action getSavePngAction() {
-		return savePngAction;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-	 */
-	@Override
-	protected void paintComponent(Graphics g) {
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		if(img != null) {
-			if(!scale)
-				g.drawImage(img, 0, 0, null);
-			else
-				g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
-		}
-	}
-	
-	
-	public void setScale(boolean scale) {
-		this.scale = scale;
-		repaint();
-	}
-	
-	public void toggleScale() {
-		setScale(!scale);
-	}
+public class ImageComponent extends JComponent {
+
+    private static final long serialVersionUID = -1L;
+
+    private static final int DEFAULT_WIDTH = 320, DEFAULT_HEIGHT = 240;
+
+    private BufferedImage img;
+    private final Action savePngAction = new AbstractAction("Save PNG") {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileFilter(DOTMisc.PNG_FILTER);
+            int res = chooser.showSaveDialog(ImageComponent.this);
+            if (res != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+            File f = chooser.getSelectedFile();
+            try {
+                ImageIO.write(img, "png", f);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(ImageComponent.this,
+                                              "Couldn't save image: " + ex.getMessage(),
+                                              "Couldn't save image",
+                                              JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    };
+    private boolean scale;
+
+    /**
+     * Default constructor.
+     */
+    public ImageComponent() {
+        setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
+    }
+
+    /**
+     * Constructor. Initializes the component to display the given image.
+     *
+     * @param img
+     *         the image to be displayed
+     */
+    public ImageComponent(BufferedImage img) {
+        this.img = img;
+        Dimension dim = new Dimension(img.getWidth(), img.getHeight());
+        setSize(dim);
+        setPreferredSize(dim);
+    }
+
+    public void listActions(List<Action> actions) {
+        actions.add(savePngAction);
+    }
+
+    /**
+     * Retrieves the image to be displayed.
+     *
+     * @return the image to be displayed
+     */
+    public BufferedImage getImage() {
+        return img;
+    }
+
+    /**
+     * Sets the image to be displayed.
+     *
+     * @param img
+     *         the image to be displayed
+     */
+    public void setImage(BufferedImage img) {
+        this.img = img;
+        Dimension dim;
+        if (img != null) {
+            dim = new Dimension(img.getWidth(), img.getHeight());
+        } else {
+            dim = new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        }
+
+        setSize(dim);
+        setPreferredSize(dim);
+        repaint();
+    }
+
+    /**
+     * Retrieves an {@link Action} to save the image in a PNG file.
+     *
+     * @return the action
+     */
+    public Action getSavePngAction() {
+        return savePngAction;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        if (img != null) {
+            if (!scale) {
+                g.drawImage(img, 0, 0, null);
+            } else {
+                g.drawImage(img, 0, 0, getWidth(), getHeight(), null);
+            }
+        }
+    }
+
+    public void toggleScale() {
+        setScale(!scale);
+    }
+
+    public void setScale(boolean scale) {
+        this.scale = scale;
+        repaint();
+    }
 }

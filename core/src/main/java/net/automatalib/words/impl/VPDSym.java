@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,41 +21,42 @@ import net.automatalib.words.VPDAlphabet;
  * Utility class used to wrap input symbols of a {@link VPDAlphabet}. Stores additional index information to allow fast
  * index-based access.
  *
- * @param <T> type of the payload
+ * @param <T>
+ *         type of the payload
  *
  * @author Malte Isberner
  */
 public class VPDSym<T> {
 
-	private final VPDAlphabet.SymbolType type;
-	private final T userObject;
-	private final int localIndex, globalIndex;
+    private final VPDAlphabet.SymbolType type;
+    private final T userObject;
+    private final int localIndex, globalIndex;
 
-	public VPDSym(final T userObject, final VPDAlphabet.SymbolType type, final int localIndex, final int globalIndex) {
-		this.userObject = userObject;
-		this.type = type;
-		this.localIndex = localIndex;
-		this.globalIndex = globalIndex;
-	}
+    public VPDSym(final T userObject, final VPDAlphabet.SymbolType type, final int localIndex, final int globalIndex) {
+        this.userObject = userObject;
+        this.type = type;
+        this.localIndex = localIndex;
+        this.globalIndex = globalIndex;
+    }
 
-	public VPDAlphabet.SymbolType getType() {
-		return type;
-	}
+    public VPDAlphabet.SymbolType getType() {
+        return type;
+    }
 
-	public T getUserObject() {
-		return userObject;
-	}
+    public T getUserObject() {
+        return userObject;
+    }
 
-	public int getLocalIndex() {
-		return localIndex;
-	}
+    public int getLocalIndex() {
+        return localIndex;
+    }
 
-	public int getGlobalIndex() {
-		return globalIndex;
-	}
+    public int getGlobalIndex() {
+        return globalIndex;
+    }
 
-	@Override
-	public String toString() {
-		return String.valueOf(userObject);
-	}
+    @Override
+    public String toString() {
+        return String.valueOf(userObject);
+    }
 }

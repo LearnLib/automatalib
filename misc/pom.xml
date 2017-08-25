@@ -15,29 +15,31 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.automatalib</groupId>
-	<artifactId>automata-misc-parent</artifactId>
-	<packaging>pom</packaging>
+    <groupId>net.automatalib</groupId>
+    <artifactId>automata-misc-parent</artifactId>
+    <packaging>pom</packaging>
 
-	<name>AutomataLib :: Misc</name>
-	<description><![CDATA[
+    <name>AutomataLib :: Misc</name>
+    <description><![CDATA[
 		Common parent metaproject for various miscellaneous additions (algorithms, automaton types)
 		to AutomataLib, which are rather specific in their respective use case.
 	]]></description>
 
-	<parent>
-		<groupId>net.automatalib</groupId>
-		<artifactId>automata-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-parent</artifactId>
+        <version>0.6.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<modules>
-		<module>incremental</module>
-		<module>misc-algorithms</module>
-	</modules>
+    <modules>
+        <module>incremental</module>
+        <module>misc-algorithms</module>
+    </modules>
 </project>
 

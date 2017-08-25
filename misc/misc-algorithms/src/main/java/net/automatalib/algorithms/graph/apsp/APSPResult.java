@@ -1,12 +1,12 @@
-/* Copyright (C) 2013-2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,33 +24,40 @@ import net.automatalib.algorithms.graph.GraphAlgorithms;
 
 /**
  * Result interface for the all pairs shortest paths problem.
- * 
- * @author Malte Isberner
  *
- * @param <N> node class
- * @param <E> edge class
+ * @param <N>
+ *         node class
+ * @param <E>
+ *         edge class
+ *
+ * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public interface APSPResult<N,E> {
+public interface APSPResult<N, E> {
 
-	
-	/**
-	 * Retrieves the length of the shortest path between the given nodes.
-	 * @param src the source node
-	 * @param tgt the target node
-	 * @return the length of the shortest path from {@code src} to {@code tgt},
-	 * or {@link GraphAlgorithms#INVALID_DISTANCE} if there exists no such path.
-	 */
-	public float getShortestPathDistance(N src, N tgt);
-	
-	/**
-	 * Retrieves the shortest path between the given nodes, or {@code null} if there
-	 * exists no such path.
-	 * @param src the source node
-	 * @param tgt the target node
-	 * @return the shortest path from {@code src} to {@code tgt}, or {@code null}
-	 * if there exists no such path.
-	 */
-	@Nullable
-	public List<E> getShortestPath(N src, N tgt);
+    /**
+     * Retrieves the length of the shortest path between the given nodes.
+     *
+     * @param src
+     *         the source node
+     * @param tgt
+     *         the target node
+     *
+     * @return the length of the shortest path from {@code src} to {@code tgt}, or {@link
+     * GraphAlgorithms#INVALID_DISTANCE} if there exists no such path.
+     */
+    float getShortestPathDistance(N src, N tgt);
+
+    /**
+     * Retrieves the shortest path between the given nodes, or {@code null} if there exists no such path.
+     *
+     * @param src
+     *         the source node
+     * @param tgt
+     *         the target node
+     *
+     * @return the shortest path from {@code src} to {@code tgt}, or {@code null} if there exists no such path.
+     */
+    @Nullable
+    List<E> getShortestPath(N src, N tgt);
 }

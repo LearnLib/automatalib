@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,184 +31,184 @@ import net.automatalib.words.VPDAlphabet;
 /**
  * Abstract class for 1-SEVPAs that implements functionality shared across different subtypes.
  *
- * @param <L> location type
- * @param <I> input alphabet type
+ * @param <L>
+ *         location type
+ * @param <I>
+ *         input alphabet type
  *
  * @author Malte Isberner
  */
-public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L, AbstractOneSEVPA.SEVPAViewEdge<L, I>> {
+public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L, AbstractOneSEVPA.SevpaViewEdge<L, I>> {
 
-	protected final VPDAlphabet<I> alphabet;
+    protected final VPDAlphabet<I> alphabet;
 
-	public AbstractOneSEVPA(final VPDAlphabet<I> alphabet) {
-		this.alphabet = alphabet;
-	}
+    public AbstractOneSEVPA(final VPDAlphabet<I> alphabet) {
+        this.alphabet = alphabet;
+    }
 
-	public VPDAlphabet<I> getAlphabet() {
-		return alphabet;
-	}
+    public VPDAlphabet<I> getAlphabet() {
+        return alphabet;
+    }
 
-	@Override
-	public int encodeStackSym(final L srcLoc, final I callSym) {
-		return encodeStackSym(srcLoc, alphabet.getCallSymbolIndex(callSym));
-	}
+    @Override
+    public State<L> getTransition(final State<L> state, final I input) {
+        if (state.isSink()) {
+            return State.getSink();
+        }
 
-	public int encodeStackSym(final L srcLoc, final int callSymIdx) {
-		return alphabet.getNumCalls() * getLocationId(srcLoc) + callSymIdx;
-	}
+        final VPDAlphabet.SymbolType type = alphabet.getSymbolType(input);
+        switch (type) {
+            case CALL:
+                final int newStackElem = encodeStackSym(state.getLocation(), input);
+                return new State<>(getInitialLocation(), StackContents.push(newStackElem, state.getStackContents()));
+            case RETURN: {
+                if (state.getStackContents() == null) {
+                    return State.getSink();
+                }
+                final int stackElem = state.getStackContents().peek();
+                final L succ = getReturnSuccessor(state.getLocation(), input, stackElem);
+                if (succ == null) {
+                    return State.getSink();
+                }
+                return new State<>(succ, state.getStackContents().pop());
+            }
+            case INTERNAL: {
+                final L succ = getInternalSuccessor(state.getLocation(), input);
+                if (succ == null) {
+                    return State.getSink();
+                }
+                return new State<>(succ, state.getStackContents());
+            }
+            default:
+                throw new IllegalStateException("Unkown symbol type " + type);
+        }
+    }
 
-	@Override
-	public State<L> getTransition(final State<L> state, final I input) {
-		if (state.isSink()) {
-			return State.getSink();
-		}
+    @Override
+    public int encodeStackSym(final L srcLoc, final I callSym) {
+        return encodeStackSym(srcLoc, alphabet.getCallSymbolIndex(callSym));
+    }
 
-		switch (alphabet.getSymbolType(input)) {
-			case CALL:
-				final int newStackElem = encodeStackSym(state.getLocation(), input);
-				return new State<>(getInitialLocation(), StackContents.push(newStackElem, state.getStackContents()));
-			case RETURN: {
-				if (state.getStackContents() == null) {
-					return State.getSink();
-				}
-				final int stackElem = state.getStackContents().peek();
-				final L succ = getReturnSuccessor(state.getLocation(), input, stackElem);
-				if (succ == null) {
-					return State.getSink();
-				}
-				return new State<>(succ, state.getStackContents().pop());
-			}
-			case INTERNAL: {
-				final L succ = getInternalSuccessor(state.getLocation(), input);
-				if (succ == null) {
-					return State.getSink();
-				}
-				return new State<>(succ, state.getStackContents());
-			}
-		}
+    public int encodeStackSym(final L srcLoc, final int callSymIdx) {
+        return alphabet.getNumCalls() * getLocationId(srcLoc) + callSymIdx;
+    }
 
-		throw new AssertionError();
-	}
+    @Override
+    public int getNumStackSymbols() {
+        return size() * alphabet.getNumCalls();
+    }
 
-	public L getStackLoc(final int stackSym) {
-		return getLocation(stackSym / alphabet.getNumCalls());
-	}
+    // Explicitly declare method, since multiple interfaces define it
+    @Override
+    public abstract int size();
 
-	public I getCallSym(final int stackSym) {
-		return alphabet.getCallSymbol(stackSym % alphabet.getNumCalls());
-	}
+    @Nonnull
+    @Override
+    public Collection<? extends L> getNodes() {
+        return Collections.unmodifiableCollection(getLocations());
+    }
 
-	@Override
-	public int getNumStackSymbols() {
-		return size() * alphabet.getNumCalls();
-	}
+    @Nonnull
+    @Override
+    public Collection<? extends SevpaViewEdge<L, I>> getOutgoingEdges(final L location) {
 
-	// Explicitly declare method, since multiple interfaces define it
-	@Override
-	public abstract int size();
+        final List<SevpaViewEdge<L, I>> result = new ArrayList<>(alphabet.size());
 
-	// default methods for graph interface
-	static class SEVPAViewEdge<S, I> {
+        // all internal transitions
+        for (final I i : alphabet.getInternalAlphabet()) {
+            result.add(new SevpaViewEdge<>(location, i, -1));
+        }
 
-		private final S from;
-		private final I by;
-		private final int stack;
+        // all return transitions for every possible stack contents
+        for (final I i : alphabet.getReturnAlphabet()) {
+            for (final L stackLocation : getLocations()) {
+                for (final I stackSymbol : alphabet.getCallAlphabet()) {
+                    result.add(new SevpaViewEdge<>(location, i, encodeStackSym(stackLocation, stackSymbol)));
+                }
+            }
+        }
 
-		public SEVPAViewEdge(S from, I by, int stack) {
-			this.from = from;
-			this.by = by;
-			this.stack = stack;
-		}
-	}
+        return result;
+    }
 
-	@Nonnull
-	@Override
-	public Collection<? extends L> getNodes() {
-		return Collections.unmodifiableCollection(getLocations());
-	}
+    @Nonnull
+    @Override
+    public L getTarget(final SevpaViewEdge<L, I> edge) {
 
-	@Nonnull
-	@Override
-	public Collection<? extends SEVPAViewEdge<L, I>> getOutgoingEdges(final L location) {
+        final L from = edge.from;
+        final I by = edge.by;
+        final int stack = edge.stack;
 
-		final List<SEVPAViewEdge<L, I>> result = new ArrayList<>(alphabet.size());
+        switch (alphabet.getSymbolType(by)) {
+            case INTERNAL:
+                return getInternalSuccessor(from, by);
+            case RETURN:
+                return getReturnSuccessor(from, by, stack);
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
 
-		// all internal transitions
-		for (final I i : alphabet.getInternalAlphabet()) {
-			result.add(new SEVPAViewEdge<>(location, i, -1));
-		}
+    @Override
+    public GraphDOTHelper<L, ? super SevpaViewEdge<L, I>> getGraphDOTHelper() {
+        return new DefaultDOTHelper<L, SevpaViewEdge<L, I>>() {
 
-		// all return transitions for every possible stack contents
-		for (final I i : alphabet.getReturnAlphabet()) {
-			for (final L stackLocation : getLocations()) {
-				for (final I stackSymbol : alphabet.getCallAlphabet()) {
-					result.add(new SEVPAViewEdge<>(location, i, encodeStackSym(stackLocation, stackSymbol)));
-				}
-			}
-		}
+            @Override
+            protected Collection<? extends L> initialNodes() {
+                return Collections.singleton(getInitialLocation());
+            }
 
-		return result;
-	}
+            @Override
+            public boolean getNodeProperties(final L node, final Map<String, String> properties) {
 
-	@Nonnull
-	@Override
-	public L getTarget(final SEVPAViewEdge<L, I> edge) {
+                properties.put(NodeAttrs.SHAPE,
+                               isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);
+                properties.put(NodeAttrs.LABEL, Integer.toString(getLocationId(node)));
 
-		final L from = edge.from;
-		final I by = edge.by;
-		final int stack = edge.stack;
+                return true;
+            }
 
-		switch (alphabet.getSymbolType(by)) {
-			case INTERNAL:
-				return getInternalSuccessor(from, by);
-			case RETURN:
-				return getReturnSuccessor(from, by, stack);
-			default:
-				throw new IllegalArgumentException();
-		}
-	}
+            @Override
+            public boolean getEdgeProperties(final L src,
+                                             final SevpaViewEdge<L, I> edge,
+                                             final L tgt,
+                                             final Map<String, String> properties) {
 
-	@Override
-	public GraphDOTHelper<L, ? super SEVPAViewEdge<L, I>> getGraphDOTHelper() {
-		return new DefaultDOTHelper<L, SEVPAViewEdge<L, I>>() {
+                final I by = edge.by;
+                final int stack = edge.stack;
 
-			@Override
-			protected Collection<? extends L> initialNodes() {
-				return Collections.singleton(getInitialLocation());
-			}
+                if (alphabet.isInternalSymbol(by)) {
+                    properties.put(EdgeAttrs.LABEL, by.toString());
+                } else if (alphabet.isReturnSymbol(by)) {
+                    properties.put(EdgeAttrs.LABEL,
+                                   by.toString() + "/(" + getStackLoc(stack) + ',' + getCallSym(stack) + ')');
+                } else {
+                    throw new IllegalArgumentException();
+                }
 
-			@Override
-			public boolean getNodeProperties(final L node, final Map<String, String> properties) {
+                return true;
+            }
+        };
+    }
 
-				properties.put(NodeAttrs.SHAPE,
-							   isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);
-				properties.put(NodeAttrs.LABEL, Integer.toString(getLocationId(node)));
+    public L getStackLoc(final int stackSym) {
+        return getLocation(stackSym / alphabet.getNumCalls());
+    }
 
-				return true;
-			}
+    public I getCallSym(final int stackSym) {
+        return alphabet.getCallSymbol(stackSym % alphabet.getNumCalls());
+    }
 
-			@Override
-			public boolean getEdgeProperties(final L src,
-											 final SEVPAViewEdge<L, I> edge,
-											 final L tgt,
-											 final Map<String, String> properties) {
+    static class SevpaViewEdge<S, I> {
 
-				final I by = edge.by;
-				final int stack = edge.stack;
+        private final S from;
+        private final I by;
+        private final int stack;
 
-				if (alphabet.isInternalSymbol(by)) {
-					properties.put(EdgeAttrs.LABEL, by.toString());
-				}
-				else if (alphabet.isReturnSymbol(by)) {
-					properties.put(EdgeAttrs.LABEL,
-								   by.toString() + "/(" + getStackLoc(stack) + ',' + getCallSym(stack) + ')');
-				}
-				else {
-					throw new IllegalArgumentException();
-				}
-
-				return true;
-			}
-		};
-	}
+        SevpaViewEdge(S from, I by, int stack) {
+            this.from = from;
+            this.by = by;
+            this.stack = stack;
+        }
+    }
 }

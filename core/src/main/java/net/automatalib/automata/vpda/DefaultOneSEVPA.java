@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,83 +23,84 @@ import net.automatalib.words.VPDAlphabet;
 /**
  * Default implementation for 1-SEVPA.
  *
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
-public class DefaultOneSEVPA<I> extends AbstractOneSEVPA<Location,I> {
+public class DefaultOneSEVPA<I> extends AbstractOneSEVPA<Location, I> {
 
-	private Location initLoc;
-	private final List<Location> locations;
+    private final List<Location> locations;
+    private Location initLoc;
 
-	public DefaultOneSEVPA(final VPDAlphabet<I> alphabet) {
-		super(alphabet);
-		this.locations = new ArrayList<>();
-	}
+    public DefaultOneSEVPA(final VPDAlphabet<I> alphabet) {
+        super(alphabet);
+        this.locations = new ArrayList<>();
+    }
 
-	public DefaultOneSEVPA(final VPDAlphabet<I> alphabet, final int capacity) {
-		super(alphabet);
-		this.locations = new ArrayList<>(capacity);
-	}
+    public DefaultOneSEVPA(final VPDAlphabet<I> alphabet, final int capacity) {
+        super(alphabet);
+        this.locations = new ArrayList<>(capacity);
+    }
 
-	public List<? extends Location> getLocations() {
-		return locations;
-	}
+    public Location addInitialLocation(final boolean accepting) {
+        final Location loc = addLocation(accepting);
+        setInitialLocation(loc);
+        return loc;
+    }
 
-	public Location addLocation(final boolean accepting) {
-		final Location loc = new Location(alphabet, locations.size(), accepting);
-		locations.add(loc);
-		return loc;
-	}
+    public Location addLocation(final boolean accepting) {
+        final Location loc = new Location(alphabet, locations.size(), accepting);
+        locations.add(loc);
+        return loc;
+    }
 
-	public void setInitialLocation(final Location loc) {
-		this.initLoc = loc;
-	}
+    public int size() {
+        return locations.size();
+    }
 
-	public Location getInitialLocation() {
-		return initLoc;
-	}
+    public void setInternalSuccessor(final Location loc, final I intSym, final Location succ) {
+        loc.setInternalSuccessor(alphabet.getInternalSymbolIndex(intSym), succ);
+    }
 
-	public Location addInitialLocation(final boolean accepting) {
-		final Location loc = addLocation(accepting);
-		setInitialLocation(loc);
-		return loc;
-	}
+    public void setReturnSuccessor(final Location loc, final I retSym, final int stackSym, final Location succ) {
+        loc.setReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym, succ);
+    }
 
-	public int size() {
-		return locations.size();
-	}
+    @Override
+    public Location getInternalSuccessor(final Location loc, final I intSym) {
+        return loc.getInternalSuccessor(alphabet.getInternalSymbolIndex(intSym));
+    }
 
-	public int getLocationId(final Location loc) {
-		return loc.getIndex();
-	}
+    @Override
+    public Location getLocation(final int id) {
+        return locations.get(id);
+    }
 
-	@Override
-	public boolean isAcceptingLocation(final Location loc) {
-		return loc.isAccepting();
-	}
+    public int getLocationId(final Location loc) {
+        return loc.getIndex();
+    }
 
-	public void setInternalSuccessor(final Location loc, final I intSym, final Location succ) {
-		loc.setInternalSuccessor(alphabet.getInternalSymbolIndex(intSym), succ);
-	}
+    public List<? extends Location> getLocations() {
+        return locations;
+    }
 
-	public void setReturnSuccessor(final Location loc, final I retSym, final int stackSym, final Location succ) {
-		loc.setReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym, succ);
-	}
+    @Override
+    public Location getReturnSuccessor(final Location loc, final I retSym, final int stackSym) {
+        return loc.getReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym);
+    }
 
-	@Override
-	public Location getInternalSuccessor(final Location loc, final I intSym) {
-		return loc.getInternalSuccessor(alphabet.getInternalSymbolIndex(intSym));
-	}
+    @Override
+    public boolean isAcceptingLocation(final Location loc) {
+        return loc.isAccepting();
+    }
 
-	@Override
-	public Location getReturnSuccessor(final Location loc, final I retSym, final int stackSym) {
-		return loc.getReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym);
-	}
+    public Location getInitialLocation() {
+        return initLoc;
+    }
 
-	@Override
-	public Location getLocation(final int id) {
-		return locations.get(id);
-	}
+    public void setInitialLocation(final Location loc) {
+        this.initLoc = loc;
+    }
 
 }

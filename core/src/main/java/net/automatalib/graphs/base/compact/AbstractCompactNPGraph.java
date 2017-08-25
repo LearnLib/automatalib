@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,38 +17,35 @@ package net.automatalib.graphs.base.compact;
 
 import net.automatalib.commons.util.array.ResizingObjectArray;
 
-public abstract class AbstractCompactNPGraph<E extends CompactEdge<EP>, NP, EP> 
-		extends AbstractCompactGraph<E, NP, EP> {
+public abstract class AbstractCompactNPGraph<E extends CompactEdge<EP>, NP, EP>
+        extends AbstractCompactGraph<E, NP, EP> {
 
-	protected final ResizingObjectArray npStorage;
-	
-	public AbstractCompactNPGraph() {
-		this.npStorage = new ResizingObjectArray();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public NP getNodeProperties(int node) {
-		return (NP)npStorage.array[node];
-	}
+    protected final ResizingObjectArray npStorage;
 
-	@Override
-	public void setNodeProperty(int node, NP property) {
-		npStorage.array[node] = property;
-	}
+    public AbstractCompactNPGraph() {
+        this.npStorage = new ResizingObjectArray();
+    }
 
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#addIntNode(java.lang.Object)
-	 */
-	@Override
-	public int addIntNode(NP properties) {
-		int node = super.addIntNode(properties);
-		npStorage.ensureCapacity(size);
-		npStorage.array[node] = properties;
-		return node;
-	}
+    /* (non-Javadoc)
+     * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#addIntNode(java.lang.Object)
+     */
+    @Override
+    public int addIntNode(NP properties) {
+        int node = super.addIntNode(properties);
+        npStorage.ensureCapacity(size);
+        npStorage.array[node] = properties;
+        return node;
+    }
 
-	
+    @Override
+    public void setNodeProperty(int node, NP property) {
+        npStorage.array[node] = property;
+    }
 
-	
+    @Override
+    @SuppressWarnings("unchecked")
+    public NP getNodeProperties(int node) {
+        return (NP) npStorage.array[node];
+    }
+
 }

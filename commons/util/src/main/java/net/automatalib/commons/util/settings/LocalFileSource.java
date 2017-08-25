@@ -1,12 +1,12 @@
-/* Copyright (C) 2015 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,38 +26,36 @@ import org.slf4j.LoggerFactory;
 
 public class LocalFileSource implements SettingsSource {
 
-	private final File file;
-	
-	protected LocalFileSource(File file) {
-		this.file = file;
-	}
-	
-	protected LocalFileSource(String fileName) {
-		this(new File(fileName));
-	}
-	
-	@Override
-	public int getPriority() {
-		// This is directly under user control, so it should have the second-highest possible
-		// priority (to be overridden only by system properties)
-		return Integer.MAX_VALUE - 1;
-	}
+    private final File file;
 
-	@Override
-	public void loadSettings(Properties properties) {
-		if (!file.exists()) {
-			return;
-		}
-		
-		Logger log = LoggerFactory.getLogger(getClass());
-		
-		try (BufferedReader r = new BufferedReader(new FileReader(file))) {
-			properties.load(r);
-		}
-		catch(IOException ex) {
-			log.warn("Could not read properties file " + file.getAbsolutePath() + ".", ex);
-		}
-	}
-	
-	
+    protected LocalFileSource(String fileName) {
+        this(new File(fileName));
+    }
+
+    protected LocalFileSource(File file) {
+        this.file = file;
+    }
+
+    @Override
+    public void loadSettings(Properties properties) {
+        if (!file.exists()) {
+            return;
+        }
+
+        Logger log = LoggerFactory.getLogger(getClass());
+
+        try (BufferedReader r = new BufferedReader(new FileReader(file))) {
+            properties.load(r);
+        } catch (IOException ex) {
+            log.warn("Could not read properties file " + file.getAbsolutePath() + ".", ex);
+        }
+    }
+
+    @Override
+    public int getPriority() {
+        // This is directly under user control, so it should have the second-highest possible
+        // priority (to be overridden only by system properties)
+        return Integer.MAX_VALUE - 1;
+    }
+
 }

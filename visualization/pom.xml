@@ -15,26 +15,28 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>automata-visualization-parent</artifactId>
-	<packaging>pom</packaging>
+    <artifactId>automata-visualization-parent</artifactId>
+    <packaging>pom</packaging>
 
-	<name>AutomataLib :: Visualization</name>
-	<description>
-		Automata and Graph visualization libraries.
-	</description>
+    <name>AutomataLib :: Visualization</name>
+    <description>
+        Automata and Graph visualization libraries.
+    </description>
 
-	<parent>
-		<groupId>net.automatalib</groupId>
-		<artifactId>automata-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-parent</artifactId>
+        <version>0.6.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<modules>
-		<module>jung-visualizer</module>
-	</modules>
+    <modules>
+        <module>jung-visualizer</module>
+    </modules>
 </project>
 

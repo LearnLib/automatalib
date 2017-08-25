@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,37 +17,40 @@ package net.automatalib.commons.util.comparison;
 
 import java.util.Comparator;
 
-
 final class SafeComparator<T> implements Comparator<T> {
-	
-	private final int firstNullResult;
-	private final Comparator<T> baseComparator;
-	
-	/**
-	 * Constructor.
-	 * @param baseComparator the underlying comparator.
-	 * @param nullOrdering the <code>null</code> element ordering policy.
-	 */
-	public SafeComparator(Comparator<T> baseComparator, CmpUtil.NullOrdering nullOrdering) {
-		this.firstNullResult = nullOrdering.firstNullResult;
-		this.baseComparator = baseComparator;
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public int compare(T o1, T o2) {
-		if(o1 == null) {
-			if(o2 == null)
-				return 0;
-			return firstNullResult;
-		}
-		else if(o2 == null)
-			return -firstNullResult;
-			
-		return baseComparator.compare(o1, o2);
-	}
+    private final int firstNullResult;
+    private final Comparator<T> baseComparator;
+
+    /**
+     * Constructor.
+     *
+     * @param baseComparator
+     *         the underlying comparator.
+     * @param nullOrdering
+     *         the <code>null</code> element ordering policy.
+     */
+    SafeComparator(Comparator<T> baseComparator, CmpUtil.NullOrdering nullOrdering) {
+        this.firstNullResult = nullOrdering.firstNullResult;
+        this.baseComparator = baseComparator;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public int compare(T o1, T o2) {
+        if (o1 == null) {
+            if (o2 == null) {
+                return 0;
+            }
+            return firstNullResult;
+        } else if (o2 == null) {
+            return -firstNullResult;
+        }
+
+        return baseComparator.compare(o1, o2);
+    }
 
 }

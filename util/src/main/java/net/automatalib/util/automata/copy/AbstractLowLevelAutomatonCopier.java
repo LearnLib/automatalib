@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,110 +28,110 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.TransitionSystem;
 
+public abstract class AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2, TS1 extends TransitionSystem<S1, ? super I1, T1>>
+        implements LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> {
 
-public abstract class AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2, TS1 extends TransitionSystem<S1, ? super I1, T1>> implements LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> {
+    protected final TS1 in;
+    protected final Collection<? extends I1> inputs;
+    protected final MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out;
+    protected final MutableMapping<S1, S2> stateMapping;
+    protected final Function<? super I1, ? extends I2> inputsMapping;
+    protected final Function<? super S1, ? extends SP2> spMapping;
+    protected final Function<? super T1, ? extends TP2> tpMapping;
+    protected final Predicate<? super S1> stateFilter;
+    protected final TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter;
 
-	protected final TS1 in;
-	protected final Collection<? extends I1> inputs;
-	protected final MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out;
-	protected final MutableMapping<S1,S2> stateMapping;
-	protected final Function<? super I1,? extends I2> inputsMapping;
-	protected final Function<? super S1,? extends SP2> spMapping;
-	protected final Function<? super T1,? extends TP2> tpMapping;
-	protected final Predicate<? super S1> stateFilter;
-	protected final TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter;
-	
-	
-	public AbstractLowLevelAutomatonCopier(TS1 in,
-			Collection<? extends I1> inputs,
-			MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-			Function<? super I1, ? extends I2> inputsMapping,
-			Function<? super S1, ? extends SP2> spMapping,
-			Function<? super T1, ? extends TP2> tpMapping,
-			Predicate<? super S1> stateFilter,
-			TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
-		this.in = in;
-		this.inputs = inputs;
-		this.out = out;
-		this.stateMapping = in.createStaticStateMapping();
-		this.inputsMapping = inputsMapping;
-		this.spMapping = spMapping;
-		this.tpMapping = tpMapping;
-		this.stateFilter = stateFilter;
-		this.transFilter = transFilter;
-	}
-	
-	@Override
-	public Mapping<S1,S2> getStateMapping() {
-		return stateMapping;
-	}
+    public AbstractLowLevelAutomatonCopier(TS1 in,
+                                           Collection<? extends I1> inputs,
+                                           MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
+                                           Function<? super I1, ? extends I2> inputsMapping,
+                                           Function<? super S1, ? extends SP2> spMapping,
+                                           Function<? super T1, ? extends TP2> tpMapping,
+                                           Predicate<? super S1> stateFilter,
+                                           TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
+        this.in = in;
+        this.inputs = inputs;
+        this.out = out;
+        this.stateMapping = in.createStaticStateMapping();
+        this.inputsMapping = inputsMapping;
+        this.spMapping = spMapping;
+        this.tpMapping = tpMapping;
+        this.stateFilter = stateFilter;
+        this.transFilter = transFilter;
+    }
 
-	protected S2 copyState(S1 s1) {
-		SP2 prop = spMapping.apply(s1);
-		S2 s2 = out.addState(prop);
-		stateMapping.put(s1, s2);
-		return s2;
-	}
-	
-	protected S2 copyInitialState(S1 s1) {
-		SP2 prop = spMapping.apply(s1);
-		S2 s2 = out.addInitialState(prop);
-		stateMapping.put(s1, s2);
-		return s2;
-	}
-	
-	protected T2 copyTransition(S2 src2, I2 input2, T1 trans1, S1 succ1) {
-		TP2 prop = tpMapping.apply(trans1);
-		
-		S2 succ2 = stateMapping.get(succ1);
-		
-		T2 trans2 = out.createTransition(succ2, prop);
-		out.addTransition(src2, input2, trans2);
-		return trans2;
-	}
-	
-	protected void copyTransitions(S2 src2, I2 input2, Iterator<? extends T1> transitions1It) {
-		List<T2> transitions2 = new ArrayList<>();
-		
-		while (transitions1It.hasNext()) {
-			T1 trans1 = transitions1It.next();
-			S1 succ1 = in.getSuccessor(trans1);
-			S2 succ2 = stateMapping.get(succ1);
-			TP2 prop = tpMapping.apply(trans1);
-			T2 trans2 = out.createTransition(succ2, prop);
-			transitions2.add(trans2);
-		}
-		
-		out.addTransitions(src2, input2, transitions2);
-	}
-	
-	protected S2 copyTransitionChecked(S2 src2, I2 input2, T1 trans1, S1 succ1) {
-		TP2 prop = tpMapping.apply(trans1);
-		
-		S2 succ2 = stateMapping.get(succ1);
-		S2 freshSucc = null;
-		if(succ2 == null) {
-			freshSucc = succ2 = copyState(succ1);
-		}
-		
-		T2 trans2 = out.createTransition(succ2, prop);
-		out.addTransition(src2, input2, trans2);
-		return freshSucc;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.automatalib.util.automata.copy.AutomatonCopier#doCopy()
-	 */
-	@Override
-	public abstract void doCopy();
-	
-	protected final void updateInitials() {
-		for(S1 init1 : in.getInitialStates()) {
-			S2 init2 = stateMapping.get(init1);
-			if(init2 == null) {
-				continue;
-			}
-			out.setInitial(init2, true);
-		}
-	}
+    protected S2 copyInitialState(S1 s1) {
+        SP2 prop = spMapping.apply(s1);
+        S2 s2 = out.addInitialState(prop);
+        stateMapping.put(s1, s2);
+        return s2;
+    }
+
+    protected T2 copyTransition(S2 src2, I2 input2, T1 trans1, S1 succ1) {
+        TP2 prop = tpMapping.apply(trans1);
+
+        S2 succ2 = stateMapping.get(succ1);
+
+        T2 trans2 = out.createTransition(succ2, prop);
+        out.addTransition(src2, input2, trans2);
+        return trans2;
+    }
+
+    protected void copyTransitions(S2 src2, I2 input2, Iterator<? extends T1> transitions1It) {
+        List<T2> transitions2 = new ArrayList<>();
+
+        while (transitions1It.hasNext()) {
+            T1 trans1 = transitions1It.next();
+            S1 succ1 = in.getSuccessor(trans1);
+            S2 succ2 = stateMapping.get(succ1);
+            TP2 prop = tpMapping.apply(trans1);
+            T2 trans2 = out.createTransition(succ2, prop);
+            transitions2.add(trans2);
+        }
+
+        out.addTransitions(src2, input2, transitions2);
+    }
+
+    protected S2 copyTransitionChecked(S2 src2, I2 input2, T1 trans1, S1 succ1) {
+        TP2 prop = tpMapping.apply(trans1);
+
+        S2 succ2 = stateMapping.get(succ1);
+        S2 freshSucc = null;
+        if (succ2 == null) {
+            succ2 = copyState(succ1);
+            freshSucc = succ2;
+        }
+
+        T2 trans2 = out.createTransition(succ2, prop);
+        out.addTransition(src2, input2, trans2);
+        return freshSucc;
+    }
+
+    protected S2 copyState(S1 s1) {
+        SP2 prop = spMapping.apply(s1);
+        S2 s2 = out.addState(prop);
+        stateMapping.put(s1, s2);
+        return s2;
+    }
+
+    /* (non-Javadoc)
+     * @see net.automatalib.util.automata.copy.AutomatonCopier#doCopy()
+     */
+    @Override
+    public abstract void doCopy();
+
+    @Override
+    public Mapping<S1, S2> getStateMapping() {
+        return stateMapping;
+    }
+
+    protected final void updateInitials() {
+        for (S1 init1 : in.getInitialStates()) {
+            S2 init2 = stateMapping.get(init1);
+            if (init2 == null) {
+                continue;
+            }
+            out.setInitial(init2, true);
+        }
+    }
 }

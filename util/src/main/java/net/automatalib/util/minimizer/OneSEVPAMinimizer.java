@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,183 +29,186 @@ import net.automatalib.words.VPDAlphabet;
  *
  * @author Malte Isberner
  */
-public class OneSEVPAMinimizer {
+public final class OneSEVPAMinimizer {
 
-	public static <I> DefaultOneSEVPA<I> minimize(final OneSEVPA<?, I> sevpa, final VPDAlphabet<I> alphabet) {
-		final PaigeTarjan pt = new PaigeTarjan();
-		initPaigeTarjan(pt, sevpa, alphabet);
-		pt.initWorklist(false);
-		pt.computeCoarsestStablePartition();
+    private OneSEVPAMinimizer() {
+    }
 
-		return fromPaigeTarjan(pt, sevpa, alphabet);
-	}
+    public static <I> DefaultOneSEVPA<I> minimize(final OneSEVPA<?, I> sevpa, final VPDAlphabet<I> alphabet) {
+        final PaigeTarjan pt = new PaigeTarjan();
+        initPaigeTarjan(pt, sevpa, alphabet);
+        pt.initWorklist(false);
+        pt.computeCoarsestStablePartition();
 
-	private static <L, I> void initPaigeTarjan(PaigeTarjan pt, OneSEVPA<L, I> sevpa, VPDAlphabet<I> alphabet) {
-		final int numStates = sevpa.size();
-		final int numInputs =
-				alphabet.getNumInternals() + alphabet.getNumCalls() * alphabet.getNumReturns() * sevpa.size() * 2;
+        return fromPaigeTarjan(pt, sevpa, alphabet);
+    }
 
-		final int posDataLow = numStates;
-		final int predOfsDataLow = posDataLow + numStates;
-		final int numTransitions = numStates * numInputs;
-		final int predDataLow = predOfsDataLow + numTransitions + 1;
-		final int dataSize = predDataLow + numTransitions;
+    private static <L, I> void initPaigeTarjan(PaigeTarjan pt, OneSEVPA<L, I> sevpa, VPDAlphabet<I> alphabet) {
+        final int numStates = sevpa.size();
+        final int numInputs =
+                alphabet.getNumInternals() + alphabet.getNumCalls() * alphabet.getNumReturns() * sevpa.size() * 2;
 
-		final int[] data = new int[dataSize];
-		final Block[] blockForState = new Block[numStates];
+        final int posDataLow = numStates;
+        final int predOfsDataLow = posDataLow + numStates;
+        final int numTransitions = numStates * numInputs;
+        final int predDataLow = predOfsDataLow + numTransitions + 1;
+        final int dataSize = predDataLow + numTransitions;
 
-		final Block[] initBlocks = new Block[2];
+        final int[] data = new int[dataSize];
+        final Block[] blockForState = new Block[numStates];
 
-		for (int i = 0; i < numStates; i++) {
-			final L loc = sevpa.getLocation(i);
-			final int initBlockIdx = sevpa.isAcceptingLocation(loc) ? 1 : 0;
-			Block block = initBlocks[initBlockIdx];
-			if (block == null) {
-				block = pt.createBlock();
-				block.high = 0;
-				initBlocks[initBlockIdx] = block;
-			}
-			block.high++;
-			blockForState[i] = block;
+        final Block[] initBlocks = new Block[2];
 
-			int predCountBase = predOfsDataLow;
+        for (int i = 0; i < numStates; i++) {
+            final L loc = sevpa.getLocation(i);
+            final int initBlockIdx = sevpa.isAcceptingLocation(loc) ? 1 : 0;
+            Block block = initBlocks[initBlockIdx];
+            if (block == null) {
+                block = pt.createBlock();
+                block.high = 0;
+                initBlocks[initBlockIdx] = block;
+            }
+            block.high++;
+            blockForState[i] = block;
 
-			for (I intSym : alphabet.getInternalSymbols()) {
-				final L succ = sevpa.getInternalSuccessor(loc, intSym);
-				if (succ == null) {
-					throw new IllegalArgumentException();
-				}
+            int predCountBase = predOfsDataLow;
 
-				final int succId = sevpa.getLocationId(succ);
-				data[predCountBase + succId]++;
-				predCountBase += numStates;
-			}
-			for (I callSym : alphabet.getCallSymbols()) {
-				for (I retSym : alphabet.getReturnSymbols()) {
-					for (L src : sevpa.getLocations()) {
-						int stackSym = sevpa.encodeStackSym(src, callSym);
-						L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
-						int succId = sevpa.getLocationId(succ);
-						data[predCountBase + succId]++;
-						predCountBase += numStates;
+            for (I intSym : alphabet.getInternalSymbols()) {
+                final L succ = sevpa.getInternalSuccessor(loc, intSym);
+                if (succ == null) {
+                    throw new IllegalArgumentException();
+                }
 
-						stackSym = sevpa.encodeStackSym(loc, callSym);
-						succ = sevpa.getReturnSuccessor(src, retSym, stackSym);
-						succId = sevpa.getLocationId(succ);
-						data[predCountBase + succId]++;
-						predCountBase += numStates;
-					}
-				}
-			}
-		}
+                final int succId = sevpa.getLocationId(succ);
+                data[predCountBase + succId]++;
+                predCountBase += numStates;
+            }
+            for (I callSym : alphabet.getCallSymbols()) {
+                for (I retSym : alphabet.getReturnSymbols()) {
+                    for (L src : sevpa.getLocations()) {
+                        int stackSym = sevpa.encodeStackSym(src, callSym);
+                        L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
+                        int succId = sevpa.getLocationId(succ);
+                        data[predCountBase + succId]++;
+                        predCountBase += numStates;
 
-		int curr = 0;
-		for (Block b : pt.blockList()) {
-			curr += b.high;
-			b.high = curr;
-			b.low = curr;
-		}
+                        stackSym = sevpa.encodeStackSym(loc, callSym);
+                        succ = sevpa.getReturnSuccessor(src, retSym, stackSym);
+                        succId = sevpa.getLocationId(succ);
+                        data[predCountBase + succId]++;
+                        predCountBase += numStates;
+                    }
+                }
+            }
+        }
 
-		data[predOfsDataLow] += predDataLow;
-		PaigeTarjanInitializers.prefixSum(data, predOfsDataLow, predDataLow);
+        int curr = 0;
+        for (Block b : pt.blockList()) {
+            curr += b.high;
+            b.high = curr;
+            b.low = curr;
+        }
 
-		for (int i = 0; i < numStates; i++) {
-			final Block b = blockForState[i];
-			final int pos = --b.low;
-			data[pos] = i;
-			data[posDataLow + i] = pos;
-			int predOfsBase = predOfsDataLow;
+        data[predOfsDataLow] += predDataLow;
+        PaigeTarjanInitializers.prefixSum(data, predOfsDataLow, predDataLow);
 
-			int j = 0;
-			final L loc = sevpa.getLocation(i);
-			for (I intSym : alphabet.getInternalSymbols()) {
-				final L succ = sevpa.getInternalSuccessor(loc, intSym);
-				if (succ == null) {
-					throw new IllegalArgumentException();
-				}
+        for (int i = 0; i < numStates; i++) {
+            final Block b = blockForState[i];
+            final int pos = --b.low;
+            data[pos] = i;
+            data[posDataLow + i] = pos;
+            int predOfsBase = predOfsDataLow;
 
-				final int succId = sevpa.getLocationId(succ);
-				data[--data[predOfsBase + succId]] = i;
-				predOfsBase += numStates;
-				j++;
-			}
-			for (I callSym : alphabet.getCallSymbols()) {
-				for (I retSym : alphabet.getReturnSymbols()) {
-					for (L src : sevpa.getLocations()) {
-						int stackSym = sevpa.encodeStackSym(src, callSym);
-						L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
-						int succId = sevpa.getLocationId(succ);
-						data[--data[predOfsBase + succId]] = i;
-						predOfsBase += numStates;
-						j++;
+            int j = 0;
+            final L loc = sevpa.getLocation(i);
+            for (I intSym : alphabet.getInternalSymbols()) {
+                final L succ = sevpa.getInternalSuccessor(loc, intSym);
+                if (succ == null) {
+                    throw new IllegalArgumentException();
+                }
 
-						stackSym = sevpa.encodeStackSym(loc, callSym);
-						succ = sevpa.getReturnSuccessor(src, retSym, stackSym);
-						succId = sevpa.getLocationId(succ);
-						data[--data[predOfsBase + succId]] = i;
-						predOfsBase += numStates;
-						j++;
-					}
-				}
-			}
-		}
+                final int succId = sevpa.getLocationId(succ);
+                data[--data[predOfsBase + succId]] = i;
+                predOfsBase += numStates;
+                j++;
+            }
+            for (I callSym : alphabet.getCallSymbols()) {
+                for (I retSym : alphabet.getReturnSymbols()) {
+                    for (L src : sevpa.getLocations()) {
+                        int stackSym = sevpa.encodeStackSym(src, callSym);
+                        L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
+                        int succId = sevpa.getLocationId(succ);
+                        data[--data[predOfsBase + succId]] = i;
+                        predOfsBase += numStates;
+                        j++;
 
-		pt.setBlockData(data);
-		pt.setPosData(data, posDataLow);
-		pt.setPredOfsData(data, predOfsDataLow);
-		pt.setPredData(data);
-		pt.setBlockForState(blockForState);
-		pt.setSize(numStates, numInputs);
-	}
+                        stackSym = sevpa.encodeStackSym(loc, callSym);
+                        succ = sevpa.getReturnSuccessor(src, retSym, stackSym);
+                        succId = sevpa.getLocationId(succ);
+                        data[--data[predOfsBase + succId]] = i;
+                        predOfsBase += numStates;
+                        j++;
+                    }
+                }
+            }
+        }
 
-	private static <L, I> DefaultOneSEVPA<I> fromPaigeTarjan(final PaigeTarjan pt,
-															 final OneSEVPA<L, I> original,
-															 final VPDAlphabet<I> alphabet) {
+        pt.setBlockData(data);
+        pt.setPosData(data, posDataLow);
+        pt.setPredOfsData(data, predOfsDataLow);
+        pt.setPredData(data);
+        pt.setBlockForState(blockForState);
+        pt.setSize(numStates, numInputs);
+    }
 
-		final int numBlocks = pt.getNumBlocks();
-		final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, numBlocks);
+    private static <L, I> DefaultOneSEVPA<I> fromPaigeTarjan(final PaigeTarjan pt,
+                                                             final OneSEVPA<L, I> original,
+                                                             final VPDAlphabet<I> alphabet) {
 
-		final RichArray<Location> resultLocs = new RichArray<>(numBlocks, () -> result.addLocation(false));
+        final int numBlocks = pt.getNumBlocks();
+        final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, numBlocks);
 
-		for (Block curr : pt.blockList()) {
-			final int blockId = curr.id;
-			final int rep = pt.getRepresentative(curr);
-			final L repLoc = original.getLocation(rep);
+        final RichArray<Location> resultLocs = new RichArray<>(numBlocks, () -> result.addLocation(false));
 
-			final Location resultLoc = resultLocs.get(blockId);
-			resultLoc.setAccepting(original.isAcceptingLocation(repLoc));
+        for (Block curr : pt.blockList()) {
+            final int blockId = curr.id;
+            final int rep = pt.getRepresentative(curr);
+            final L repLoc = original.getLocation(rep);
 
-			for (I intSym : alphabet.getInternalSymbols()) {
-				final L origSucc = original.getInternalSuccessor(repLoc, intSym);
-				final int origSuccId = original.getLocationId(origSucc);
-				final int resSuccId = pt.getBlockForState(origSuccId).id;
-				final Location resSucc = resultLocs.get(resSuccId);
-				result.setInternalSuccessor(resultLoc, intSym, resSucc);
-			}
-			for (I callSym : alphabet.getCallSymbols()) {
-				for (I retSym : alphabet.getReturnSymbols()) {
-					for (Block b : pt.blockList()) {
-						final int stackRepId = pt.getRepresentative(b);
-						final L stackRep = original.getLocation(stackRepId);
-						final Location resultStackRep = resultLocs.get(b.id);
+            final Location resultLoc = resultLocs.get(blockId);
+            resultLoc.setAccepting(original.isAcceptingLocation(repLoc));
 
-						final int origStackSym = original.encodeStackSym(stackRep, callSym);
-						final L origSucc = original.getReturnSuccessor(repLoc, retSym, origStackSym);
-						final int origSuccId = original.getLocationId(origSucc);
-						final int resSuccId = pt.getBlockForState(origSuccId).id;
-						final Location resSucc = resultLocs.get(resSuccId);
+            for (I intSym : alphabet.getInternalSymbols()) {
+                final L origSucc = original.getInternalSuccessor(repLoc, intSym);
+                final int origSuccId = original.getLocationId(origSucc);
+                final int resSuccId = pt.getBlockForState(origSuccId).id;
+                final Location resSucc = resultLocs.get(resSuccId);
+                result.setInternalSuccessor(resultLoc, intSym, resSucc);
+            }
+            for (I callSym : alphabet.getCallSymbols()) {
+                for (I retSym : alphabet.getReturnSymbols()) {
+                    for (Block b : pt.blockList()) {
+                        final int stackRepId = pt.getRepresentative(b);
+                        final L stackRep = original.getLocation(stackRepId);
+                        final Location resultStackRep = resultLocs.get(b.id);
 
-						final int stackSym = result.encodeStackSym(resultStackRep, callSym);
-						result.setReturnSuccessor(resultLoc, retSym, stackSym, resSucc);
-					}
-				}
-			}
-		}
+                        final int origStackSym = original.encodeStackSym(stackRep, callSym);
+                        final L origSucc = original.getReturnSuccessor(repLoc, retSym, origStackSym);
+                        final int origSuccId = original.getLocationId(origSucc);
+                        final int resSuccId = pt.getBlockForState(origSuccId).id;
+                        final Location resSucc = resultLocs.get(resSuccId);
 
-		final int origInit = original.getLocationId(original.getInitialLocation());
-		result.setInitialLocation(resultLocs.get(pt.getBlockForState(origInit).id));
+                        final int stackSym = result.encodeStackSym(resultStackRep, callSym);
+                        result.setReturnSuccessor(resultLoc, retSym, stackSym, resSucc);
+                    }
+                }
+            }
+        }
 
-		return result;
-	}
+        final int origInit = original.getLocationId(original.getInitialLocation());
+        result.setInitialLocation(resultLocs.get(pt.getBlockForState(origInit).id));
+
+        return result;
+    }
 
 }

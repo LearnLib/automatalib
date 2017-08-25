@@ -15,29 +15,31 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.automatalib</groupId>
-	<artifactId>automata-adapters-parent</artifactId>
-	<packaging>pom</packaging>
+    <groupId>net.automatalib</groupId>
+    <artifactId>automata-adapters-parent</artifactId>
+    <packaging>pom</packaging>
 
-	<name>AutomataLib :: Adapters</name>
-	<description><![CDATA[
+    <name>AutomataLib :: Adapters</name>
+    <description><![CDATA[
 		Common parent metaproject for various adapters, i.e., wrapper class that allow to
 		treat automaton or graph models from other software libraries as AutomataLib automata
 		or graphs.
 	]]></description>
 
-	<parent>
-		<groupId>net.automatalib</groupId>
-		<artifactId>automata-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-parent</artifactId>
+        <version>0.6.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<modules>
-		<module>brics</module>
-	</modules>
+    <modules>
+        <module>brics</module>
+    </modules>
 </project>
 

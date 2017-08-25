@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,68 +28,75 @@ import net.automatalib.words.Word;
 
 /**
  * General interface for incremental DFA builders.
- * 
- * @author Malte Isberner
  *
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
+ *
+ * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public interface IncrementalDFABuilder<I> extends
-		IncrementalConstruction<DFA<?, I>, I> {
-	
-	public static interface GraphView<I,N,E>
-		extends Graph<N,E> {
-		@Nullable
-		public I getInputSymbol(@Nonnull E edge);
-		@Nonnull
-		public Acceptance getAcceptance(@Nonnull N node);
-		@Nonnull
-		public N getInitialNode();
-	}
-	
-	public static interface TransitionSystemView<S,I,T>
-		extends UniversalDTS<S, I, T, Acceptance, Void> {
+public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?, I>, I> {
 
-		@Nonnull
-		public Acceptance getAcceptance(@Nonnull S state);
-	}
-	
-	/**
-	 * Looks up the tri-state acceptance value for a given word.
-	 * 
-	 * @param inputWord the word
-	 * @return the tri-state acceptance value for this word.
-	 */
-	@Nonnull
-	public Acceptance lookup(Word<? extends I> inputWord);
-	
-	/**
-	 * Inserts a new word into the automaton, with a given acceptance value.
-	 * 
-	 * @param word the word to insert
-	 * @param accepting whether or not this word should be marked as accepting
-	 * @throws ConflictException if the newly provided information conflicts with existing
-	 * information
-	 */
-	public void insert(Word<? extends I> word, boolean accepting) throws ConflictException;
-	
-	/**
-	 * Inserts a new word into the automaton.
-	 * This is a convenience method equivalent to invoking {@code insert(word, true)}.
-	 * 
-	 * @param word the word to insert
-	 * @throws ConflictException if the newly provided information conflicts with existing
-	 * information
-	 * 
-	 * @see #insert(Word, boolean)
-	 */
-	public void insert(Word<? extends I> word) throws ConflictException;
-	
-	@Override
-	@Nonnull
-	public GraphView<I,?,?> asGraph();
-	
-	@Override
-	@Nonnull
-	public TransitionSystemView<?,I,?> asTransitionSystem();
+    /**
+     * Looks up the tri-state acceptance value for a given word.
+     *
+     * @param inputWord
+     *         the word
+     *
+     * @return the tri-state acceptance value for this word.
+     */
+    @Nonnull
+    Acceptance lookup(Word<? extends I> inputWord);
+
+    /**
+     * Inserts a new word into the automaton, with a given acceptance value.
+     *
+     * @param word
+     *         the word to insert
+     * @param accepting
+     *         whether or not this word should be marked as accepting
+     *
+     * @throws ConflictException
+     *         if the newly provided information conflicts with existing information
+     */
+    void insert(Word<? extends I> word, boolean accepting) throws ConflictException;
+
+    /**
+     * Inserts a new word into the automaton. This is a convenience method equivalent to invoking {@code insert(word,
+     * true)}.
+     *
+     * @param word
+     *         the word to insert
+     *
+     * @throws ConflictException
+     *         if the newly provided information conflicts with existing information
+     * @see #insert(Word, boolean)
+     */
+    void insert(Word<? extends I> word) throws ConflictException;
+
+    @Override
+    @Nonnull
+    GraphView<I, ?, ?> asGraph();
+
+    @Override
+    @Nonnull
+    TransitionSystemView<?, I, ?> asTransitionSystem();
+
+    interface GraphView<I, N, E> extends Graph<N, E> {
+
+        @Nullable
+        I getInputSymbol(@Nonnull E edge);
+
+        @Nonnull
+        Acceptance getAcceptance(@Nonnull N node);
+
+        @Nonnull
+        N getInitialNode();
+    }
+
+    interface TransitionSystemView<S, I, T> extends UniversalDTS<S, I, T, Acceptance, Void> {
+
+        @Nonnull
+        Acceptance getAcceptance(@Nonnull S state);
+    }
 }

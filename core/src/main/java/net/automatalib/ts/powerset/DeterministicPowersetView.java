@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,38 +21,38 @@ import java.util.Collections;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.PowersetViewTS;
 
-public class DeterministicPowersetView<S, I, T> implements DeterministicTransitionSystem<S, I, T>,
-		PowersetViewTS<S, I, T, S, T> {
-	
-	private final DeterministicTransitionSystem<S, I, T> delegate;
-	
-	public DeterministicPowersetView(DeterministicTransitionSystem<S, I, T> delegate) {
-		this.delegate = delegate;
-	}
+public class DeterministicPowersetView<S, I, T>
+        implements DeterministicTransitionSystem<S, I, T>, PowersetViewTS<S, I, T, S, T> {
 
-	@Override
-	public T getTransition(S state, I input) {
-		return delegate.getTransition(state, input);
-	}
+    private final DeterministicTransitionSystem<S, I, T> delegate;
 
-	@Override
-	public S getSuccessor(T transition) {
-		return delegate.getSuccessor(transition);
-	}
+    public DeterministicPowersetView(DeterministicTransitionSystem<S, I, T> delegate) {
+        this.delegate = delegate;
+    }
 
-	@Override
-	public S getInitialState() {
-		return delegate.getInitialState();
-	}
+    @Override
+    public T getTransition(S state, I input) {
+        return delegate.getTransition(state, input);
+    }
 
-	@Override
-	public Collection<? extends S> getOriginalStates(S state) {
-		return Collections.singleton(state);
-	}
+    @Override
+    public S getSuccessor(T transition) {
+        return delegate.getSuccessor(transition);
+    }
 
-	@Override
-	public Collection<? extends T> getOriginalTransitions(T transition) {
-		return Collections.singleton(transition);
-	}
+    @Override
+    public S getInitialState() {
+        return delegate.getInitialState();
+    }
+
+    @Override
+    public Collection<? extends S> getOriginalStates(S state) {
+        return Collections.singleton(state);
+    }
+
+    @Override
+    public Collection<? extends T> getOriginalTransitions(T transition) {
+        return Collections.singleton(transition);
+    }
 
 }

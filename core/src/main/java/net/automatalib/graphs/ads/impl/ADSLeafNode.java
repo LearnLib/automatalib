@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,17 +18,21 @@ package net.automatalib.graphs.ads.impl;
 import net.automatalib.graphs.ads.ADSNode;
 
 /**
- * An ADS-specific implementation of a leaf node
+ * An ADS-specific implementation of a leaf node.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ *
  * @author frohme
  */
 public class ADSLeafNode<S, I, O> extends AbstractRecursiveADSLeafNode<S, I, O, ADSNode<S, I, O>>
-		implements ADSNode<S, I, O> {
+        implements ADSNode<S, I, O> {
 
-	public ADSLeafNode(ADSNode<S, I, O> parent, S hypothesisState) {
-		super(parent, hypothesisState);
-	}
+    public ADSLeafNode(ADSNode<S, I, O> parent, S hypothesisState) {
+        super(parent, hypothesisState);
+    }
 }

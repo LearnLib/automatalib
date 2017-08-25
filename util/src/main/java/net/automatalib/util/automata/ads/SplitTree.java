@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,78 +15,81 @@
  */
 package net.automatalib.util.automata.ads;
 
-import net.automatalib.words.Word;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import net.automatalib.words.Word;
+
 /**
  * Utility class originally used by the algorithm of {@link LeeYannakakis} but utilized by other ADS computations as
  * well.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
  *
  * @author frohme
  */
 class SplitTree<S, I, O> {
 
-	private final Map<O, SplitTree<S, I, O>> successors;
-	private final Map<S, S> mapping;
-	private final Set<S> partition;
+    private final Map<O, SplitTree<S, I, O>> successors;
+    private final Map<S, S> mapping;
+    private final Set<S> partition;
 
-	private Word<I> sequence;
+    private Word<I> sequence;
 
-	public SplitTree(final Set<S> partition) {
-		this.partition = partition;
+    SplitTree(final Set<S> partition) {
+        this.partition = partition;
 
-		this.successors = new HashMap<>();
-		this.mapping = new HashMap<>();
-		this.sequence = Word.epsilon();
-	}
+        this.successors = new HashMap<>();
+        this.mapping = new HashMap<>();
+        this.sequence = Word.epsilon();
+    }
 
-	public Map<O, SplitTree<S, I, O>> getSuccessors() {
-		return successors;
-	}
+    public Map<O, SplitTree<S, I, O>> getSuccessors() {
+        return successors;
+    }
 
-	public Map<S, S> getMapping() {
-		return mapping;
-	}
+    public Map<S, S> getMapping() {
+        return mapping;
+    }
 
-	public Set<S> getPartition() {
-		return partition;
-	}
+    public Set<S> getPartition() {
+        return partition;
+    }
 
-	public Word<I> getSequence() {
-		return sequence;
-	}
+    public Word<I> getSequence() {
+        return sequence;
+    }
 
-	public void setSequence(Word<I> sequence) {
-		this.sequence = sequence;
-	}
+    public void setSequence(Word<I> sequence) {
+        this.sequence = sequence;
+    }
 
-	public Optional<SplitTree<S, I, O>> findLowestSubsetNode(final Set<S> nodes) {
+    public Optional<SplitTree<S, I, O>> findLowestSubsetNode(final Set<S> nodes) {
 
-		for (final SplitTree<S, I, O> st : successors.values()) {
-			final Optional<SplitTree<S, I, O>> candidate = st.findLowestSubsetNode(nodes);
+        for (final SplitTree<S, I, O> st : successors.values()) {
+            final Optional<SplitTree<S, I, O>> candidate = st.findLowestSubsetNode(nodes);
 
-			if (candidate.isPresent()) {
-				return candidate;
-			}
-		}
+            if (candidate.isPresent()) {
+                return candidate;
+            }
+        }
 
-		if (this.partition.containsAll(nodes)) {
-			return Optional.of(this);
-		}
+        if (this.partition.containsAll(nodes)) {
+            return Optional.of(this);
+        }
 
-		return Optional.empty();
-	}
+        return Optional.empty();
+    }
 
-	@Override
-	public String toString() {
-		return String.format("[states: %s, seq=%s]", this.partition.toString(), this.sequence.toString());
-	}
+    @Override
+    public String toString() {
+        return String.format("[states: %s, seq=%s]", this.partition.toString(), this.sequence.toString());
+    }
 }

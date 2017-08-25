@@ -15,80 +15,82 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.automatalib.archetypes</groupId>
-	<artifactId>automata-archetypes-parent</artifactId>
-	<packaging>pom</packaging>
+    <groupId>net.automatalib.archetypes</groupId>
+    <artifactId>automata-archetypes-parent</artifactId>
+    <packaging>pom</packaging>
 
-	<name>AutomataLib :: Archetypes</name>
-	<description>
-		Parent metaproject for archetypes that facilitate getting started with AutomataLib.
-	</description>
+    <name>AutomataLib :: Archetypes</name>
+    <description>
+        Parent metaproject for archetypes that facilitate getting started with AutomataLib.
+    </description>
 
-	<parent>
-		<groupId>net.automatalib</groupId>
-		<artifactId>automata-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-parent</artifactId>
+        <version>0.6.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<properties>
-		<maven-archetype.version>2.2</maven-archetype.version>
-	</properties>
+    <properties>
+        <maven-archetype.version>2.2</maven-archetype.version>
+    </properties>
 
-	<modules>
-		<module>core</module>
-		<module>typical</module>
-		<module>complete</module>
-	</modules>
+    <modules>
+        <module>core</module>
+        <module>typical</module>
+        <module>complete</module>
+    </modules>
 
-	<build>
-		<!-- Custom resource rules:
-		We use the ${project.version} property in
-		- src/main/resources/META-INF/maven/archetype-metadata.xml
-		- src/test/resources/projects/*/archetype.properties
-		These must hence be filtered!
-		-->
-		<resources>
-			<resource>
-				<directory>src/main/resources-template</directory>
-				<filtering>true</filtering>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources-template</directory>
-				<filtering>true</filtering>
-			</testResource>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>false</filtering>
-			</testResource>
-		</testResources>
+    <build>
+        <!-- Custom resource rules:
+        We use the ${project.version} property in
+        - src/main/resources/META-INF/maven/archetype-metadata.xml
+        - src/test/resources/projects/*/archetype.properties
+        These must hence be filtered!
+        -->
+        <resources>
+            <resource>
+                <directory>src/main/resources-template</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources-template</directory>
+                <filtering>true</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>false</filtering>
+            </testResource>
+        </testResources>
 
-		
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.archetype</groupId>
-				<artifactId>archetype-packaging</artifactId>
-				<version>${maven-archetype.version}</version>
-			</extension>
-		</extensions>
 
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-archetype-plugin</artifactId>
-					<version>${maven-archetype.version}</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.archetype</groupId>
+                <artifactId>archetype-packaging</artifactId>
+                <version>${maven-archetype.version}</version>
+            </extension>
+        </extensions>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-archetype-plugin</artifactId>
+                    <version>${maven-archetype.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
 

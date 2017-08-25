@@ -15,68 +15,70 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>automata-jung-visualizer</artifactId>
-	<packaging>jar</packaging>
+    <artifactId>automata-jung-visualizer</artifactId>
+    <packaging>jar</packaging>
 
-	<name>AutomataLib :: Visualization :: JUNG Visualizer</name>
-	<description>
-		Visualizer using the Java Utility for Networks and Graphs
-	</description>
+    <name>AutomataLib :: Visualization :: JUNG Visualizer</name>
+    <description>
+        Visualizer using the Java Utility for Networks and Graphs
+    </description>
 
-	<parent>
-		<groupId>net.automatalib</groupId>
-		<artifactId>automata-visualization-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-visualization-parent</artifactId>
+        <version>0.6.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<dependencies>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-util</artifactId>
-		</dependency>
-		<dependency>
-           	<groupId>net.sf.jung</groupId>
-           	<artifactId>jung-api</artifactId>
-       	</dependency>
-       	<dependency>
+    <dependencies>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.jung</groupId>
+            <artifactId>jung-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>net.sf.jung</groupId>
             <artifactId>jung-algorithms</artifactId>
-       	</dependency>
-       	<dependency>
+        </dependency>
+        <dependency>
             <groupId>net.sf.jung</groupId>
             <artifactId>jung-io</artifactId>
-       	</dependency>
-       	<dependency>
+        </dependency>
+        <dependency>
             <groupId>net.sf.jung</groupId>
             <artifactId>jung-graph-impl</artifactId>
-       	</dependency>
-       	<dependency>
+        </dependency>
+        <dependency>
             <groupId>net.sf.jung</groupId>
             <artifactId>jung-visualization</artifactId>
-       	</dependency>
-       	
-       	<dependency>
-       		<groupId>org.kohsuke.metainf-services</groupId>
-       		<artifactId>metainf-services</artifactId>
-       	</dependency>
-       	
-		<dependency>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kohsuke.metainf-services</groupId>
+            <artifactId>metainf-services</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.misberner.graphviz-awt-shapes</groupId>
             <artifactId>graphviz-awt-shapes</artifactId>
             <version>0.0.1</version>
-       	</dependency>
-	</dependencies>
+        </dependency>
+    </dependencies>
 </project>
 

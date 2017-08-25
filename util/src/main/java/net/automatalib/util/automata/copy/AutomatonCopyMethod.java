@@ -1,12 +1,12 @@
-/* Copyright (C) 2014 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,36 +24,42 @@ import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.traversal.TraversalOrder;
 
-
 public interface AutomatonCopyMethod {
-	
-	public static AutomatonCopyMethod STATE_BY_STATE = new AutomatonCopyMethod() {
-		@Override
-		public <S1, I1, T1, S2, I2, T2, SP2, TP2> LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> createLowLevelCopier(
-				Automaton<S1,? super I1,T1> in,
-				Collection<? extends I1> inputs,
-				MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-				Function<? super I1, ? extends I2> inputsMapping,
-				Function<? super S1, ? extends SP2> spMapping,
-				Function<? super T1, ? extends TP2> tpMapping,
-				Predicate<? super S1> stateFilter,
-				TransitionPredicate<? super S1, ? super I1, ? super T1> transitionFilter) {
-			return new PlainAutomatonCopy<>(in, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transitionFilter);
-		}
-	};
-	
-	public static AutomatonCopyMethod DFS = new TraversalAutomatonCopy.CopyMethod(TraversalOrder.DEPTH_FIRST);
-	public static AutomatonCopyMethod BFS = new TraversalAutomatonCopy.CopyMethod(TraversalOrder.BREADTH_FIRST);
-	
-	public <S1, I1, T1, S2, I2, T2, SP2, TP2>
-	LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2>
-	createLowLevelCopier(Automaton<S1,? super I1,T1> in,
-			Collection<? extends I1> inputs,
-			MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-			Function<? super I1, ? extends I2> inputsMapping,
-			Function<? super S1, ? extends SP2> spMapping,
-			Function<? super T1, ? extends TP2> tpMapping,
-			Predicate<? super S1> stateFilter,
-			TransitionPredicate<? super S1, ? super I1, ? super T1> transitionFilter);
-	
+
+    AutomatonCopyMethod STATE_BY_STATE = new AutomatonCopyMethod() {
+
+        @Override
+        public <S1, I1, T1, S2, I2, T2, SP2, TP2> LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> createLowLevelCopier(
+                Automaton<S1, ? super I1, T1> in,
+                Collection<? extends I1> inputs,
+                MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
+                Function<? super I1, ? extends I2> inputsMapping,
+                Function<? super S1, ? extends SP2> spMapping,
+                Function<? super T1, ? extends TP2> tpMapping,
+                Predicate<? super S1> stateFilter,
+                TransitionPredicate<? super S1, ? super I1, ? super T1> transitionFilter) {
+            return new PlainAutomatonCopy<>(in,
+                                            inputs,
+                                            out,
+                                            inputsMapping,
+                                            spMapping,
+                                            tpMapping,
+                                            stateFilter,
+                                            transitionFilter);
+        }
+    };
+
+    AutomatonCopyMethod DFS = new TraversalAutomatonCopy.CopyMethod(TraversalOrder.DEPTH_FIRST);
+    AutomatonCopyMethod BFS = new TraversalAutomatonCopy.CopyMethod(TraversalOrder.BREADTH_FIRST);
+
+    <S1, I1, T1, S2, I2, T2, SP2, TP2> LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> createLowLevelCopier(
+            Automaton<S1, ? super I1, T1> in,
+            Collection<? extends I1> inputs,
+            MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
+            Function<? super I1, ? extends I2> inputsMapping,
+            Function<? super S1, ? extends SP2> spMapping,
+            Function<? super T1, ? extends TP2> tpMapping,
+            Predicate<? super S1> stateFilter,
+            TransitionPredicate<? super S1, ? super I1, ? super T1> transitionFilter);
+
 }

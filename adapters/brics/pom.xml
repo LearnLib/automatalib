@@ -15,57 +15,59 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.automatalib</groupId>
-	<artifactId>automata-brics</artifactId>
-	<packaging>jar</packaging>
+    <groupId>net.automatalib</groupId>
+    <artifactId>automata-brics</artifactId>
+    <packaging>jar</packaging>
 
-	<name>AutomataLib :: Adapters :: BRICS</name>
-	<description><![CDATA[
+    <name>AutomataLib :: Adapters :: BRICS</name>
+    <description><![CDATA[
 		This artifact contains adapter classes for treating the <tt>Automaton</tt> objects from the
 		<a href="http://www.brics.dk/automaton">BRICS library</a> as AutomataLib models.
 	]]></description>
 
-	<parent>
-		<groupId>net.automatalib</groupId>
-		<artifactId>automata-adapters-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-adapters-parent</artifactId>
+        <version>0.6.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-commons-util</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-commons-smartcollections</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>dk.brics.automaton</groupId>
-			<artifactId>automaton</artifactId>
-			<optional>true</optional>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-smartcollections</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dk.brics.automaton</groupId>
+            <artifactId>automaton</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
 </project>
 

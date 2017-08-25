@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,125 +25,126 @@ import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
  * A {@link net.automatalib.words.VPDAlphabet} implementation that allows to add new symbols after its construction.
  * Wraps input symbols in a {@link VPDSym} instance to allow faster mappings from symbols to indexes.
  *
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
  *
  * @author Malte Isberner
  */
 public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
 
-	private final List<VPDSym<I>> allSyms = new ArrayList<>();
-	private final List<VPDSym<I>> callSyms = new ArrayList<>();
-	private final List<VPDSym<I>> returnSyms = new ArrayList<>();
-	private final List<VPDSym<I>> internalSyms = new ArrayList<>();
+    private final List<VPDSym<I>> allSyms = new ArrayList<>();
+    private final List<VPDSym<I>> callSyms = new ArrayList<>();
+    private final List<VPDSym<I>> returnSyms = new ArrayList<>();
+    private final List<VPDSym<I>> internalSyms = new ArrayList<>();
 
-	@Override
-	public VPDSym<I> getSymbol(final int index) throws IllegalArgumentException {
-		return allSyms.get(index);
-	}
+    @Override
+    public VPDSym<I> getSymbol(final int index) throws IllegalArgumentException {
+        return allSyms.get(index);
+    }
 
-	@Override
-	public int getSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
-		return symbol.getGlobalIndex();
-	}
+    @Override
+    public int getSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
+        return symbol.getGlobalIndex();
+    }
 
-	@Override
-	public SymbolType getSymbolType(final VPDSym<I> symbol) {
-		return symbol.getType();
-	}
+    @Override
+    public VPDSym<I> getCallSymbol(final int index) {
+        return callSyms.get(index);
+    }
 
-	@Override
-	public int getNumCalls() {
-		return callSyms.size();
-	}
+    @Override
+    public int getCallSymbolIndex(final VPDSym<I> symbol) {
+        if (symbol.getType() != SymbolType.CALL) {
+            throw new IllegalArgumentException();
+        }
+        return symbol.getLocalIndex();
+    }
 
-	@Override
-	public int getNumReturns() {
-		return returnSyms.size();
-	}
+    @Override
+    public Collection<? extends VPDSym<I>> getCallSymbols() {
+        return callSyms;
+    }
 
-	@Override
-	public int getNumInternals() {
-		return internalSyms.size();
-	}
+    @Override
+    public VPDSym<I> getInternalSymbol(final int index) {
+        return internalSyms.get(index);
+    }
 
-	@Override
-	public VPDSym<I> getCallSymbol(final int index) {
-		return callSyms.get(index);
-	}
+    @Override
+    public int getInternalSymbolIndex(final VPDSym<I> symbol) {
+        if (symbol.getType() != SymbolType.INTERNAL) {
+            throw new IllegalArgumentException();
+        }
+        return symbol.getLocalIndex();
+    }
 
-	@Override
-	public int getCallSymbolIndex(final VPDSym<I> symbol) {
-		if (symbol.getType() != SymbolType.CALL) {
-			throw new IllegalArgumentException();
-		}
-		return symbol.getLocalIndex();
-	}
+    @Override
+    public Collection<? extends VPDSym<I>> getInternalSymbols() {
+        return internalSyms;
+    }
 
-	@Override
-	public VPDSym<I> getReturnSymbol(final int index) {
-		return returnSyms.get(index);
-	}
+    @Override
+    public VPDSym<I> getReturnSymbol(final int index) {
+        return returnSyms.get(index);
+    }
 
-	@Override
-	public int getReturnSymbolIndex(final VPDSym<I> symbol) {
-		if (symbol.getType() != SymbolType.RETURN) {
-			throw new IllegalArgumentException();
-		}
-		return symbol.getLocalIndex();
-	}
+    @Override
+    public int getReturnSymbolIndex(final VPDSym<I> symbol) {
+        if (symbol.getType() != SymbolType.RETURN) {
+            throw new IllegalArgumentException();
+        }
+        return symbol.getLocalIndex();
+    }
 
-	@Override
-	public VPDSym<I> getInternalSymbol(final int index) {
-		return internalSyms.get(index);
-	}
+    @Override
+    public Collection<? extends VPDSym<I>> getReturnSymbols() {
+        return returnSyms;
+    }
 
-	@Override
-	public int getInternalSymbolIndex(final VPDSym<I> symbol) {
-		if (symbol.getType() != SymbolType.INTERNAL) {
-			throw new IllegalArgumentException();
-		}
-		return symbol.getLocalIndex();
-	}
+    @Override
+    public int getNumCalls() {
+        return callSyms.size();
+    }
 
-	@Override
-	public int size() {
-		return allSyms.size();
-	}
+    @Override
+    public int getNumInternals() {
+        return internalSyms.size();
+    }
 
-	public VPDSym<I> addNewSymbol(final I userObject, final SymbolType type) {
-		final List<VPDSym<I>> localList;
-		switch (type) {
-		case CALL:
-			localList = callSyms;
-			break;
-		case RETURN:
-			localList = returnSyms;
-			break;
-		default:
-			localList = internalSyms;
-			break;
-		}
+    @Override
+    public int getNumReturns() {
+        return returnSyms.size();
+    }
 
-		final VPDSym<I> vpdSym = new VPDSym<>(userObject, type, localList.size(), allSyms.size());
-		allSyms.add(vpdSym);
-		localList.add(vpdSym);
+    @Override
+    public SymbolType getSymbolType(final VPDSym<I> symbol) {
+        return symbol.getType();
+    }
 
-		return vpdSym;
-	}
+    @Override
+    public int size() {
+        return allSyms.size();
+    }
 
-	@Override
-	public Collection<? extends VPDSym<I>> getInternalSymbols() {
-		return internalSyms;
-	}
+    public VPDSym<I> addNewSymbol(final I userObject, final SymbolType type) {
+        final List<VPDSym<I>> localList;
+        switch (type) {
+            case CALL:
+                localList = callSyms;
+                break;
+            case RETURN:
+                localList = returnSyms;
+                break;
+            default:
+                localList = internalSyms;
+                break;
+        }
 
-	@Override
-	public Collection<? extends VPDSym<I>> getCallSymbols() {
-		return callSyms;
-	}
+        final VPDSym<I> vpdSym = new VPDSym<>(userObject, type, localList.size(), allSyms.size());
+        allSyms.add(vpdSym);
+        localList.add(vpdSym);
 
-	@Override
-	public Collection<? extends VPDSym<I>> getReturnSymbols() {
-		return returnSyms;
-	}
+        return vpdSym;
+    }
 
 }

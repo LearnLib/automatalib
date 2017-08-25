@@ -1,12 +1,12 @@
-/* Copyright (C) 2015 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,30 +19,28 @@ import java.io.PrintStream;
 import java.text.MessageFormat;
 
 public class PrintStreamDiagnosticListener implements TAFParseDiagnosticListener {
-	
-	private final PrintStream ps;
-	
-	private static final PrintStreamDiagnosticListener STDERR_INSTANCE
-		= new PrintStreamDiagnosticListener(System.err);
-	
-	public static TAFParseDiagnosticListener getStderrDiagnosticListener() {
-		return STDERR_INSTANCE;
-	}
 
-	public PrintStreamDiagnosticListener(PrintStream ps) {
-		this.ps = ps;
-	}
+    private static final PrintStreamDiagnosticListener STDERR_INSTANCE = new PrintStreamDiagnosticListener(System.err);
+    private final PrintStream ps;
 
-	@Override
-	public void error(int line, int col, String msgFmt, Object... args) {
-		ps.printf("Error: at line %d, column %d: %s\n", line, col, MessageFormat.format(msgFmt, args));
-		ps.flush();
-	}
+    public PrintStreamDiagnosticListener(PrintStream ps) {
+        this.ps = ps;
+    }
 
-	@Override
-	public void warning(int line, int col, String msgFmt, Object... args) {
-		ps.printf("Warning: at line %d, column %d: %s\n", line, col, MessageFormat.format(msgFmt, args));
-		ps.flush();
-	}
+    public static TAFParseDiagnosticListener getStderrDiagnosticListener() {
+        return STDERR_INSTANCE;
+    }
+
+    @Override
+    public void error(int line, int col, String msgFmt, Object... args) {
+        ps.printf("Error: at line %d, column %d: %s\n", line, col, MessageFormat.format(msgFmt, args));
+        ps.flush();
+    }
+
+    @Override
+    public void warning(int line, int col, String msgFmt, Object... args) {
+        ps.printf("Warning: at line %d, column %d: %s\n", line, col, MessageFormat.format(msgFmt, args));
+        ps.flush();
+    }
 
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,6 @@
  */
 package net.automatalib.graphs.ads;
 
-import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -26,146 +22,164 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.dot.DefaultDOTHelper;
+import net.automatalib.graphs.dot.GraphDOTHelper;
+
 /**
  * An interface representing a node in an adaptive distinguishing sequence (which essentially forms a decision tree).
- *
+ * <p>
  * For convenience, this interface extends the {@link Graph} interface so that an ADS may be passed easily to e.g.
  * GraphDOT methods.
- *
+ * <p>
  * This is a utility interface with a recursive generic type parameter to allow for better inheritance with this
  * recursive data structure. Algorithms may use more simplified sub-interfaces such as {@link ADSNode}.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
- * @param <O> output alphabet type
- * @param <N> the concrete node type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ * @param <N>
+ *         the concrete node type
+ *
  * @author frohme
  */
 public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N>> extends Graph<N, N> {
 
-	/**
-	 * A utility method indicating whether {@code this} node represents a leaf of an ADS (and therefore referencing a
-	 * hypothesis state) or an inner node (and therefore referencing an input symbol).
-	 *
-	 * @return {@code true} if {@code this} is a leaf of an ADS, {@code false} otherwise.
-	 */
-	boolean isLeaf();
+    /**
+     * Returns the input symbol associated with this ADS node.
+     *
+     * @return {@code null} if {@code this} is a leaf node (see {@link #isLeaf()}), the associated input symbol
+     * otherwise.
+     */
+    I getSymbol();
 
-	/**
-	 * Returns the hypothesis state associated with this ADS node.
-	 *
-	 * @return {@code null} if {@code this} is an inner node (see {@link #isLeaf()}), the associated hypothesis state
-	 * otherwise.
-	 */
-	S getHypothesisState();
+    /**
+     * See {@link #getSymbol()}.
+     *
+     * @param symbol
+     *         the input symbol to be associated with this ADS node.
+     *
+     * @throws UnsupportedOperationException
+     *         if trying to set an input symbol on a leaf node (see {@link #isLeaf()}).
+     */
+    void setSymbol(I symbol) throws UnsupportedOperationException;
 
-	/**
-	 * See {@link #getHypothesisState()}.
-	 *
-	 * @param state the hypothesis state to be associated with this ADS node.
-	 * @throws UnsupportedOperationException if trying to set a hypothesis state on an inner node (see {@link #isLeaf()}).
-	 */
-	void setHypothesisState(final S state) throws UnsupportedOperationException;
+    /**
+     * Returns the parent node of {@code this} node.
+     *
+     * @return The parent node of {@code this} ADS node. May be {@code null}, if {@code this} is the root node of an
+     * ADS.
+     */
+    N getParent();
 
-	/**
-	 * Returns the input symbol associated with this ADS node.
-	 *
-	 * @return {@code null} if {@code this} is a leaf node (see {@link #isLeaf()}), the associated input symbol
-	 * otherwise.
-	 */
-	I getSymbol();
+    void setParent(N parent);
 
-	/**
-	 * See {@link #getSymbol()}.
-	 *
-	 * @param symbol the input symbol to be associated with this ADS node.
-	 * @throws UnsupportedOperationException if trying to set an input symbol on a leaf node (see {@link #isLeaf()}).
-	 */
-	void setSymbol(final I symbol) throws UnsupportedOperationException;
+    /**
+     * A utility method to collect all nodes of a subtree specified by the given root node. May be used for the {@link
+     * Graph#getNodes()} implementation where a concrete type for {@link N} is needed.
+     *
+     * @param root
+     *         the node for which all subtree nodes should be collected
+     *
+     * @return all nodes in the specified subtree, including the root node itself
+     */
+    default Collection<? extends N> getNodesForRoot(final N root) {
+        final List<N> result = new LinkedList<>();
+        final Queue<N> queue = new LinkedList<>();
 
-	/**
-	 * Returns the parent node of {@code this} node.
-	 *
-	 * @return The parent node of {@code this} ADS node. May be {@code null}, if {@code this} is the root node of an ADS.
-	 */
-	N getParent();
+        queue.add(root);
 
-	void setParent(final N parent);
+        // level-order iteration of the tree nodes
+        while (!queue.isEmpty()) {
+            final N node = queue.poll();
+            result.add(node);
+            queue.addAll(node.getChildren().values());
+        }
 
-	/**
-	 * Returns a mapping to the child nodes of {@code this} ADS node.
-	 *
-	 * @return A mapping from hypothesis outputs to child ADS nodes. May be empty/unmodifiable (for leaf nodes), but
-	 * never {@code null}.
-	 */
-	Map<O, N> getChildren();
+        return Collections.unmodifiableList(result);
+    }
 
-	// default methods for graph interface
-	/**
-	 * A utility method to collect all nodes of a subtree specified by the given root node. May be used for the
-	 * {@link Graph#getNodes()} implementation where a concrete type for {@link N} is needed.
-	 *
-	 * @param root the node for which all subtree nodes should be collected
-	 * @return all nodes in the specified subtree, including the root node itself
-	 */
-	default Collection<? extends N> getNodesForRoot(final N root) {
-		final List<N> result = new LinkedList<>();
-		final Queue<N> queue = new LinkedList<>();
+    /**
+     * Returns a mapping to the child nodes of {@code this} ADS node.
+     *
+     * @return A mapping from hypothesis outputs to child ADS nodes. May be empty/unmodifiable (for leaf nodes), but
+     * never {@code null}.
+     */
+    Map<O, N> getChildren();
 
-		queue.add(root);
+    @Override
+    default Collection<? extends N> getOutgoingEdges(final N node) {
+        return Collections.unmodifiableCollection(node.getChildren().values());
+    }
 
-		// level-order iteration of the tree nodes
-		while (!queue.isEmpty()) {
-			final N node = queue.poll();
-			result.add(node);
-			queue.addAll(node.getChildren().values());
-		}
+    @Override
+    default N getTarget(final N edge) {
+        return edge;
+    }
 
-		return Collections.unmodifiableList(result);
-	}
+    // default methods for graph interface
 
-	@Override
-	default Collection<? extends N> getOutgoingEdges(final N node) {
-		return Collections.unmodifiableCollection(node.getChildren().values());
-	}
+    @Override
+    default GraphDOTHelper<N, N> getGraphDOTHelper() {
+        return new DefaultDOTHelper<N, N>() {
 
-	@Override
-	default N getTarget(final N edge) {
-		return edge;
-	}
+            @Override
+            public boolean getNodeProperties(final N node, final Map<String, String> properties) {
+                if (node.isLeaf()) {
+                    properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
+                    properties.put(NodeAttrs.LABEL, String.valueOf(node.getHypothesisState()));
+                } else {
+                    properties.put(NodeAttrs.LABEL, node.toString());
+                    properties.put(NodeAttrs.SHAPE, NodeShapes.OVAL);
+                }
 
-	@Override
-	default GraphDOTHelper<N, N> getGraphDOTHelper() {
-		return new DefaultDOTHelper<N, N>() {
+                return true;
+            }
 
-			@Override
-			public boolean getNodeProperties(final N node, final Map<String, String> properties) {
-				if (node.isLeaf()) {
-					properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
-					properties.put(NodeAttrs.LABEL, String.valueOf(node.getHypothesisState()));
-				}
-				else {
-					properties.put(NodeAttrs.LABEL, node.toString());
-					properties.put(NodeAttrs.SHAPE, NodeShapes.OVAL);
-				}
+            @Override
+            public boolean getEdgeProperties(final N src,
+                                             final N edge,
+                                             final N tgt,
+                                             final Map<String, String> properties) {
 
-				return true;
-			}
+                for (final Map.Entry<O, N> e : src.getChildren().entrySet()) {
+                    if (e.getValue().equals(tgt)) {
+                        properties.put(EdgeAttrs.LABEL, e.getKey().toString());
+                        return true;
+                    }
+                }
+                return true;
+            }
+        };
+    }
 
-			@Override
-			public boolean getEdgeProperties(final N src,
-											 final N edge,
-											 final N tgt,
-											 final Map<String, String> properties) {
+    /**
+     * A utility method indicating whether {@code this} node represents a leaf of an ADS (and therefore referencing a
+     * hypothesis state) or an inner node (and therefore referencing an input symbol).
+     *
+     * @return {@code true} if {@code this} is a leaf of an ADS, {@code false} otherwise.
+     */
+    boolean isLeaf();
 
-				for (final Map.Entry<O, N> e : src.getChildren().entrySet()) {
-					if (e.getValue().equals(tgt)) {
-						properties.put(EdgeAttrs.LABEL, e.getKey().toString());
-						return true;
-					}
-				}
-				return true;
-			}
-		};
-	}
+    /**
+     * Returns the hypothesis state associated with this ADS node.
+     *
+     * @return {@code null} if {@code this} is an inner node (see {@link #isLeaf()}), the associated hypothesis state
+     * otherwise.
+     */
+    S getHypothesisState();
+
+    /**
+     * See {@link #getHypothesisState()}.
+     *
+     * @param state
+     *         the hypothesis state to be associated with this ADS node.
+     *
+     * @throws UnsupportedOperationException
+     *         if trying to set a hypothesis state on an inner node (see {@link #isLeaf()}).
+     */
+    void setHypothesisState(S state) throws UnsupportedOperationException;
 }

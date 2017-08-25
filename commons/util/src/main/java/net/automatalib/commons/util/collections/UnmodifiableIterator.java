@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,37 +18,37 @@ package net.automatalib.commons.util.collections;
 import java.util.Iterator;
 
 final class UnmodifiableIterator<E> implements Iterator<E> {
-	
-	private final Iterator<E> iterator;
-	
-	public UnmodifiableIterator(Iterator<E> iterator) {
-		this.iterator = iterator;
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.Iterator#hasNext()
-	 */
-	@Override
-	public boolean hasNext() {
-		return iterator.hasNext();
-	}
+    private final Iterator<E> iterator;
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.Iterator#next()
-	 */
-	@Override
-	public E next() {
-		return iterator.next();
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.Iterator#remove()
-	 */
-	@Override
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
+    UnmodifiableIterator(Iterator<E> iterator) {
+        this.iterator = iterator;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.util.Iterator#hasNext()
+     */
+    @Override
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.util.Iterator#next()
+     */
+    @Override
+    public E next() {
+        return iterator.next();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.util.Iterator#remove()
+     */
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 }

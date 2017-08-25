@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,23 +20,23 @@ import javax.annotation.ParametersAreNonnullByDefault;
 /**
  * Interface for declaring, that an automaton supports adding new alphabet symbols after its instantiation.
  *
- * @param <I> input alphabet type
+ * @param <I>
+ *         input alphabet type
  *
  * @author frohme
  */
 @ParametersAreNonnullByDefault
 public interface GrowableAlphabetAutomaton<I> {
 
-	/**
-	 * Adds a new symbol to the alphabet of the automaton. Behavior depends on the implementation:
-	 *
-	 * <ul>
-	 *     <li>Duplicate symbols may: be handled accordingly, be ignored or result in an error.</li>
-	 *     <li>After a new symbol has been added the new transitions do not have to be defined.</li>
-	 * </ul>
-	 *
-	 * @param symbol The symbol to add to the alphabet.
-	 */
-	void addAlphabetSymbol(I symbol);
+    /**
+     * Adds a new symbol to the alphabet of the automaton. Behavior depends on the implementation:
+     * <p>
+     * <ul> <li>Duplicate symbols may: be handled accordingly, be ignored or result in an error.</li> <li>After a new
+     * symbol has been added the new transitions do not have to be defined.</li> </ul>
+     *
+     * @param symbol
+     *         The symbol to add to the alphabet.
+     */
+    void addAlphabetSymbol(I symbol);
 
 }

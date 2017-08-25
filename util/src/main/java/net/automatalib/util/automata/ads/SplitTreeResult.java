@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,42 +22,45 @@ import java.util.Set;
 /**
  * Utility class used by the algorithm of {@link LeeYannakakis}.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
  *
  * @author frohme
  */
 class SplitTreeResult<S, I, O> {
 
-	private final Optional<SplitTree<S, I, O>> delegate;
-	private final Set<S> indistinguishableStates;
+    private final Optional<SplitTree<S, I, O>> delegate;
+    private final Set<S> indistinguishableStates;
 
-	public SplitTreeResult(final SplitTree<S, I, O> result) {
-		this.delegate = Optional.of(result);
-		this.indistinguishableStates = Collections.emptySet();
-	}
+    SplitTreeResult(final SplitTree<S, I, O> result) {
+        this.delegate = Optional.of(result);
+        this.indistinguishableStates = Collections.emptySet();
+    }
 
-	public SplitTreeResult(final Set<S> indistinguishableStates) {
-		this.delegate = Optional.empty();
-		this.indistinguishableStates = indistinguishableStates;
-	}
+    SplitTreeResult(final Set<S> indistinguishableStates) {
+        this.delegate = Optional.empty();
+        this.indistinguishableStates = indistinguishableStates;
+    }
 
-	public SplitTreeResult() {
-		this.delegate = Optional.empty();
-		this.indistinguishableStates = Collections.emptySet();
-	}
+    SplitTreeResult() {
+        this.delegate = Optional.empty();
+        this.indistinguishableStates = Collections.emptySet();
+    }
 
-	public boolean isPresent() {
-		return this.delegate.isPresent();
-	}
+    public boolean isPresent() {
+        return this.delegate.isPresent();
+    }
 
-	public SplitTree<S, I, O> get() {
-		return this.delegate.get();
-	}
+    public SplitTree<S, I, O> get() {
+        return this.delegate.get();
+    }
 
-	public Set<S> getIndistinguishableStates() {
-		return this.indistinguishableStates;
-	}
+    public Set<S> getIndistinguishableStates() {
+        return this.indistinguishableStates;
+    }
 
 }

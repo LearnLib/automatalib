@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,121 +31,119 @@ import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
  */
 public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
 
-	private final int internalStart, internalEnd;
-	private final int callStart, callEnd;
-	private final int returnStart, returnEnd;
+    private final int internalStart, internalEnd;
+    private final int callStart, callEnd;
+    private final int returnStart, returnEnd;
 
-	private final List<I> symbols;
+    private final List<I> symbols;
 
-	public DefaultVPDAlphabet(final Collection<I> internalSymbols,
-							  final Collection<I> callSymbols,
-							  final Collection<I> returnSymbols) {
+    public DefaultVPDAlphabet(final Collection<I> internalSymbols,
+                              final Collection<I> callSymbols,
+                              final Collection<I> returnSymbols) {
 
-		internalStart = 0;
-		internalEnd = internalSymbols.size();
+        internalStart = 0;
+        internalEnd = internalSymbols.size();
 
-		callStart = internalEnd;
-		callEnd = callStart + callSymbols.size();
+        callStart = internalEnd;
+        callEnd = callStart + callSymbols.size();
 
-		returnStart = callEnd;
-		returnEnd = returnStart + returnSymbols.size();
+        returnStart = callEnd;
+        returnEnd = returnStart + returnSymbols.size();
 
-		final List<I> tmp = new ArrayList<>(returnEnd);
-		tmp.addAll(internalSymbols);
-		tmp.addAll(callSymbols);
-		tmp.addAll(returnSymbols);
+        final List<I> tmp = new ArrayList<>(returnEnd);
+        tmp.addAll(internalSymbols);
+        tmp.addAll(callSymbols);
+        tmp.addAll(returnSymbols);
 
-		this.symbols = Collections.unmodifiableList(tmp);
-	}
+        this.symbols = Collections.unmodifiableList(tmp);
+    }
 
-	@Override
-	public SymbolType getSymbolType(I symbol) {
-		final int idx = this.getSymbolIndex(symbol);
+    @Override
+    public I getCallSymbol(int index) {
+        return this.getSymbol(index + callStart);
+    }
 
-		if (idx < internalEnd) {
-			return SymbolType.INTERNAL;
-		}
-		else if (idx < callEnd) {
-			return SymbolType.CALL;
-		}
-		else {
-			return SymbolType.RETURN;
-		}
-	}
+    @Override
+    public int getCallSymbolIndex(final I symbol) {
+        return this.getSymbolIndex(symbol) - callStart;
+    }
 
-	@Override
-	public Collection<? extends I> getInternalSymbols() {
-		return this.symbols.subList(internalStart, internalEnd);
-	}
+    @Override
+    public Collection<? extends I> getCallSymbols() {
+        return this.symbols.subList(callStart, callEnd);
+    }
 
-	@Override
-	public Collection<? extends I> getCallSymbols() {
-		return this.symbols.subList(callStart, callEnd);
-	}
+    @Override
+    public I getInternalSymbol(final int index) {
+        return this.getSymbol(index + internalStart);
+    }
 
-	@Override
-	public Collection<? extends I> getReturnSymbols() {
-		return this.symbols.subList(returnStart, returnEnd);
-	}
+    @Override
+    public int getInternalSymbolIndex(final I symbol) {
+        return this.getSymbolIndex(symbol) - internalStart;
+    }
 
-	@Override
-	public int getNumCalls() {
-		return callEnd - callStart;
-	}
+    @Override
+    public Collection<? extends I> getInternalSymbols() {
+        return this.symbols.subList(internalStart, internalEnd);
+    }
 
-	@Override
-	public int getNumReturns() {
-		return returnEnd - returnStart;
-	}
+    @Override
+    public I getReturnSymbol(final int index) {
+        return this.getSymbol(index + returnStart);
+    }
 
-	@Override
-	public int getNumInternals() {
-		return internalEnd - internalStart;
-	}
+    @Override
+    public int getReturnSymbolIndex(final I symbol) {
+        return this.getSymbolIndex(symbol) - returnStart;
+    }
 
-	@Override
-	public I getCallSymbol(int index) {
-		return this.getSymbol(index + callStart);
-	}
+    @Override
+    public Collection<? extends I> getReturnSymbols() {
+        return this.symbols.subList(returnStart, returnEnd);
+    }
 
-	@Override
-	public int getCallSymbolIndex(final I symbol) {
-		return this.getSymbolIndex(symbol) - callStart;
-	}
+    @Override
+    public int getNumCalls() {
+        return callEnd - callStart;
+    }
 
-	@Override
-	public I getReturnSymbol(final int index) {
-		return this.getSymbol(index + returnStart);
-	}
+    @Override
+    public int getNumInternals() {
+        return internalEnd - internalStart;
+    }
 
-	@Override
-	public int getReturnSymbolIndex(final I symbol) {
-		return this.getSymbolIndex(symbol) - returnStart;
-	}
+    @Override
+    public int getNumReturns() {
+        return returnEnd - returnStart;
+    }
 
-	@Override
-	public I getInternalSymbol(final int index) {
-		return this.getSymbol(index + internalStart);
-	}
+    @Override
+    public SymbolType getSymbolType(I symbol) {
+        final int idx = this.getSymbolIndex(symbol);
 
-	@Override
-	public int getInternalSymbolIndex(final I symbol) {
-		return this.getSymbolIndex(symbol) - internalStart;
-	}
+        if (idx < internalEnd) {
+            return SymbolType.INTERNAL;
+        } else if (idx < callEnd) {
+            return SymbolType.CALL;
+        } else {
+            return SymbolType.RETURN;
+        }
+    }
 
-	@Override
-	public int size() {
-		return this.symbols.size();
-	}
+    @Nullable
+    @Override
+    public I getSymbol(final int index) throws IllegalArgumentException {
+        return this.symbols.get(index);
+    }
 
-	@Nullable
-	@Override
-	public I getSymbol(final int index) throws IllegalArgumentException {
-		return this.symbols.get(index);
-	}
+    @Override
+    public int getSymbolIndex(@Nullable final I symbol) throws IllegalArgumentException {
+        return this.symbols.indexOf(symbol);
+    }
 
-	@Override
-	public int getSymbolIndex(@Nullable final I symbol) throws IllegalArgumentException {
-		return this.symbols.indexOf(symbol);
-	}
+    @Override
+    public int size() {
+        return this.symbols.size();
+    }
 }

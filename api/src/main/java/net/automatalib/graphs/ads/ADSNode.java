@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,16 +22,20 @@ import javax.annotation.Nonnull;
 /**
  * A (simplified) node in an adaptive distinguishing sequence. See {@link RecursiveADSNode}.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
+ *
  * @author frohme
  */
 public interface ADSNode<S, I, O> extends RecursiveADSNode<S, I, O, ADSNode<S, I, O>> {
 
-	@Nonnull
-	@Override
-	default Collection<? extends ADSNode<S, I, O>> getNodes() {
-		return getNodesForRoot(this);
-	}
+    @Nonnull
+    @Override
+    default Collection<? extends ADSNode<S, I, O>> getNodes() {
+        return getNodesForRoot(this);
+    }
 }

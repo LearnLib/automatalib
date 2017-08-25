@@ -15,70 +15,72 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.automatalib</groupId>
-	<artifactId>automata-examples</artifactId>
-	<packaging>jar</packaging>
+    <groupId>net.automatalib</groupId>
+    <artifactId>automata-examples</artifactId>
+    <packaging>jar</packaging>
 
-	<name>AutomataLib :: Examples</name>
-	<description><![CDATA[
+    <name>AutomataLib :: Examples</name>
+    <description><![CDATA[
 		A collection of various small example applications that illustrate several use cases
 		of AutomataLib.<br />
 		<em>Note:</em> This artifact is not intended as a library, but only exists for educational
 		purposes.
 	]]></description>
 
-	<parent>
-		<groupId>net.automatalib</groupId>
-		<artifactId>automata-parent</artifactId>
-		<version>0.6.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-	
-	<build> 
-		<plugins> 
-			<plugin>
-				<!-- Do not deploy binaries -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<configuration> 
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	
-	<dependencies>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-commons-dotutil</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-util</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-incremental</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.automatalib</groupId>
-			<artifactId>automata-brics</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>dk.brics.automaton</groupId>
-			<artifactId>automaton</artifactId>
-		</dependency>
-	</dependencies>
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-parent</artifactId>
+        <version>0.6.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Do not deploy binaries -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-dotutil</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-incremental</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-brics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dk.brics.automaton</groupId>
+            <artifactId>automaton</artifactId>
+        </dependency>
+    </dependencies>
 </project>
 

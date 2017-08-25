@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,31 +22,31 @@ package net.automatalib.automata.vpda;
  */
 public class StackContents {
 
-	private final int topElem;
-	private final StackContents rest;
+    private final int topElem;
+    private final StackContents rest;
 
-	public StackContents(final int topElem, final StackContents rest) {
-		this.topElem = topElem;
-		this.rest = rest;
-	}
+    public StackContents(final int topElem) {
+        this(topElem, null);
+    }
 
-	public StackContents(final int topElem) {
-		this(topElem, null);
-	}
+    public StackContents(final int topElem, final StackContents rest) {
+        this.topElem = topElem;
+        this.rest = rest;
+    }
 
-	public int peek() {
-		return topElem;
-	}
+    public int peek() {
+        return topElem;
+    }
 
-	public StackContents pop() {
-		return rest;
-	}
+    public StackContents pop() {
+        return rest;
+    }
 
-	public StackContents push(final int elem) {
-		return new StackContents(elem, this);
-	}
+    public StackContents push(final int elem) {
+        return new StackContents(elem, this);
+    }
 
-	public static StackContents push(final int elem, final StackContents rest) {
-		return new StackContents(elem, rest);
-	}
+    public static StackContents push(final int elem, final StackContents rest) {
+        return new StackContents(elem, rest);
+    }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,36 +18,36 @@ package net.automatalib.automata.vpda;
 /**
  * Utility class to combine an entity (e.g. a location) with stack information.
  *
- * @param <L> type of the object to connect with stack information
+ * @param <L>
+ *         type of the object to connect with stack information
  *
  * @author Malte Isberner
  */
 public class State<L> {
 
-	private static final State<?> SINK = new State<>(null, null);
+    private static final State<?> SINK = new State<>(null, null);
+    private final L loc;
+    private final StackContents stack;
 
-	@SuppressWarnings("unchecked")
-	public static <L> State<L> getSink() {
-		return (State<L>) SINK;
-	}
+    public State(final L loc, final StackContents stack) {
+        this.loc = loc;
+        this.stack = stack;
+    }
 
-	private final L loc;
-	private final StackContents stack;
+    @SuppressWarnings("unchecked")
+    public static <L> State<L> getSink() {
+        return (State<L>) SINK;
+    }
 
-	public State(final L loc, final StackContents stack) {
-		this.loc = loc;
-		this.stack = stack;
-	}
+    public L getLocation() {
+        return loc;
+    }
 
-	public L getLocation() {
-		return loc;
-	}
+    public StackContents getStackContents() {
+        return stack;
+    }
 
-	public StackContents getStackContents() {
-		return stack;
-	}
-
-	public boolean isSink() {
-		return loc == null;
-	}
+    public boolean isSink() {
+        return loc == null;
+    }
 }

@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,64 +23,67 @@ import java.util.Map;
 import net.automatalib.commons.util.mappings.Mapping;
 
 public class AggregateDOTHelper<N, E> implements GraphDOTHelper<N, E> {
-	
-	private final List<GraphDOTHelper<N,? super E>> helpers;
-	
-	public AggregateDOTHelper() {
-		helpers = new ArrayList<>();
-	}
-	
-	public AggregateDOTHelper(List<? extends GraphDOTHelper<N, ? super E>> helpers) {
-		this.helpers = new ArrayList<>(helpers);
-	}
-	
-	public void add(GraphDOTHelper<N,? super E> helper) {
-		this.helpers.add(helper);
-	}
 
-	@Override
-	public void writePreamble(Appendable a) throws IOException {
-		for(GraphDOTHelper<N,? super E> helper : helpers)
-			helper.writePreamble(a);
-	}
+    private final List<GraphDOTHelper<N, ? super E>> helpers;
 
-	@Override
-	public void writePostamble(Mapping<N, String> identifiers, Appendable a)
-			throws IOException {
-		for(GraphDOTHelper<N,? super E> helper : helpers)
-			helper.writePostamble(identifiers, a);
-	}
+    public AggregateDOTHelper() {
+        helpers = new ArrayList<>();
+    }
 
-	@Override
-	public boolean getNodeProperties(N node, Map<String, String> properties) {
-		for(GraphDOTHelper<N,? super E> helper : helpers) {
-			if(!helper.getNodeProperties(node, properties))
-				return false;
-		}
-		return true;
-	}
+    public AggregateDOTHelper(List<? extends GraphDOTHelper<N, ? super E>> helpers) {
+        this.helpers = new ArrayList<>(helpers);
+    }
 
-	@Override
-	public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
-		for(GraphDOTHelper<N,? super E> helper : helpers) {
-			if(!helper.getEdgeProperties(src, edge, tgt, properties))
-				return false;
-		}
-		return true;
-	}
+    public void add(GraphDOTHelper<N, ? super E> helper) {
+        this.helpers.add(helper);
+    }
 
-	@Override
-	public void getGlobalNodeProperties(Map<String, String> properties) {
-		for(GraphDOTHelper<N,? super E> helper : helpers) {
-			helper.getGlobalNodeProperties(properties);
-		}
-	}
+    @Override
+    public void writePreamble(Appendable a) throws IOException {
+        for (GraphDOTHelper<N, ? super E> helper : helpers) {
+            helper.writePreamble(a);
+        }
+    }
 
-	@Override
-	public void getGlobalEdgeProperties(Map<String, String> properties) {
-		for(GraphDOTHelper<N,? super E> helper : helpers) {
-			helper.getGlobalEdgeProperties(properties);
-		}
-	}
+    @Override
+    public void writePostamble(Mapping<N, String> identifiers, Appendable a) throws IOException {
+        for (GraphDOTHelper<N, ? super E> helper : helpers) {
+            helper.writePostamble(identifiers, a);
+        }
+    }
+
+    @Override
+    public void getGlobalNodeProperties(Map<String, String> properties) {
+        for (GraphDOTHelper<N, ? super E> helper : helpers) {
+            helper.getGlobalNodeProperties(properties);
+        }
+    }
+
+    @Override
+    public void getGlobalEdgeProperties(Map<String, String> properties) {
+        for (GraphDOTHelper<N, ? super E> helper : helpers) {
+            helper.getGlobalEdgeProperties(properties);
+        }
+    }
+
+    @Override
+    public boolean getNodeProperties(N node, Map<String, String> properties) {
+        for (GraphDOTHelper<N, ? super E> helper : helpers) {
+            if (!helper.getNodeProperties(node, properties)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
+        for (GraphDOTHelper<N, ? super E> helper : helpers) {
+            if (!helper.getEdgeProperties(src, edge, tgt, properties)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

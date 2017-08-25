@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,55 +25,57 @@ import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
  * Interface for the 1-SEVPA (1-single entry visibly push-down automaton), a visibly push-down automaton of specific
  * structure and semantics. Additionally -- unless specified other by an implementation -- this interface only accepts
  * well-matched words.
- *
+ * <p>
  * For more information on the semantics of VPAs see e.g. "Congruences for Visibly Pushdown Languages" by Alur, Kumar,
  * Madhusudan and Viswanathan.
  *
- * @param <L> location type
- * @param <I> input alphabet type
+ * @param <L>
+ *         location type
+ * @param <I>
+ *         input alphabet type
  *
  * @author Malte Isberner
  */
 public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>, SuffixOutput<I, Boolean> {
 
-	int encodeStackSym(L srcLoc, I callSym);
+    int encodeStackSym(L srcLoc, I callSym);
 
-	L getInitialLocation();
+    L getInternalSuccessor(L loc, I intSym);
 
-	L getInternalSuccessor(L loc, I intSym);
+    L getLocation(int id);
 
-	L getLocation(int id);
+    int getLocationId(L loc);
 
-	int getLocationId(L loc);
+    List<? extends L> getLocations();
 
-	List<? extends L> getLocations();
+    int getNumStackSymbols();
 
-	int getNumStackSymbols();
+    L getReturnSuccessor(L loc, I retSym, int stackSym);
 
-	L getReturnSuccessor(L loc, I retSym, int stackSym);
+    int size();
 
-	boolean isAcceptingLocation(L loc);
+    @Override
+    default Boolean computeOutput(Iterable<? extends I> input) {
+        return accepts(input);
+    }
 
-	int size();
+    @Override
+    default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
+        State<L> state = this.getState(Iterables.concat(prefix, suffix));
+        return isAccepting(state);
+    }
 
-	@Override
-	default Boolean computeOutput(Iterable<? extends I> input) {
-		return accepts(input);
-	}
+    @Override
+    default boolean isAccepting(State<L> state) {
+        return isAcceptingLocation(state.getLocation()) && state.getStackContents() == null;
+    }
 
-	@Override
-	default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-		State<L> state = this.getState(Iterables.concat(prefix, suffix));
-		return isAccepting(state);
-	}
+    boolean isAcceptingLocation(L loc);
 
-	@Override
-	default boolean isAccepting(State<L> state) {
-		return isAcceptingLocation(state.getLocation()) && state.getStackContents() == null;
-	}
+    @Override
+    default State<L> getInitialState() {
+        return new State<>(getInitialLocation(), null);
+    }
 
-	@Override
-	default State<L> getInitialState() {
-		return new State<>(getInitialLocation(), null);
-	}
+    L getInitialLocation();
 }

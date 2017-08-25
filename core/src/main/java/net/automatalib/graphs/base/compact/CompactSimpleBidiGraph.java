@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,72 +23,70 @@ import java.util.List;
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.graphs.BidirectionalGraph;
 
-public class CompactSimpleBidiGraph<EP> extends
-		AbstractCompactSimpleGraph<CompactBidiEdge<EP>, EP> implements BidirectionalGraph<Integer, CompactBidiEdge<EP>> {
-	
-	private final ResizingObjectArray inEdges;
+public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<CompactBidiEdge<EP>, EP>
+        implements BidirectionalGraph<Integer, CompactBidiEdge<EP>> {
 
-	public CompactSimpleBidiGraph() {
-		this.inEdges = new ResizingObjectArray();
-	}
+    private final ResizingObjectArray inEdges;
 
-	public CompactSimpleBidiGraph(int initialCapacity) {
-		super(initialCapacity);
-		this.inEdges = new ResizingObjectArray(initialCapacity);
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected List<CompactBidiEdge<EP>> getInEdgeList(int node) {
-		return (List<CompactBidiEdge<EP>>)inEdges.array[node];
-	}
+    public CompactSimpleBidiGraph() {
+        this.inEdges = new ResizingObjectArray();
+    }
 
-	@Override
-	protected CompactBidiEdge<EP> createEdge(int source, int target, EP property) {
-		return new CompactBidiEdge<>(source, target, property);
-	}
+    public CompactSimpleBidiGraph(int initialCapacity) {
+        super(initialCapacity);
+        this.inEdges = new ResizingObjectArray(initialCapacity);
+    }
 
-	@Override
-	public Collection<CompactBidiEdge<EP>> getIncomingEdges(Integer node) {
-		return getIncomingEdges(node.intValue());
-	}
-	
-	public Collection<CompactBidiEdge<EP>> getIncomingEdges(int node) {
-		List<CompactBidiEdge<EP>> inEdges = getInEdgeList(node);
-		return Collections.unmodifiableCollection(inEdges);
-	}
+    @Override
+    public Collection<CompactBidiEdge<EP>> getIncomingEdges(Integer node) {
+        return getIncomingEdges(node.intValue());
+    }
 
-	@Override
-	public Integer getSource(CompactBidiEdge<EP> edge) {
-		return Integer.valueOf(getIntSource(edge));
-	}
-	
-	public int getIntSource(CompactBidiEdge<EP> edge) {
-		return edge.getSource();
-	}
+    public Collection<CompactBidiEdge<EP>> getIncomingEdges(int node) {
+        List<CompactBidiEdge<EP>> inEdges = getInEdgeList(node);
+        return Collections.unmodifiableCollection(inEdges);
+    }
 
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#addIntNode(java.lang.Object)
-	 */
-	@Override
-	public int addIntNode(Void properties) {
-		inEdges.ensureCapacity(size + 1);
-		int node = super.addIntNode(properties);
-		inEdges.array[node] = new ArrayList<CompactBidiEdge<EP>>();
-		return node;
-	}
+    @SuppressWarnings("unchecked")
+    protected List<CompactBidiEdge<EP>> getInEdgeList(int node) {
+        return (List<CompactBidiEdge<EP>>) inEdges.array[node];
+    }
 
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#connect(int, int, java.lang.Object)
-	 */
-	@Override
-	public CompactBidiEdge<EP> connect(int source, int target, EP property) {
-		CompactBidiEdge<EP> edge = super.connect(source, target, property);
-		List<CompactBidiEdge<EP>> inEdges = getInEdgeList(source);
-		edge.inIndex = inEdges.size();
-		inEdges.add(edge);
-		return edge;
-	}
+    @Override
+    public Integer getSource(CompactBidiEdge<EP> edge) {
+        return Integer.valueOf(getIntSource(edge));
+    }
 
+    public int getIntSource(CompactBidiEdge<EP> edge) {
+        return edge.getSource();
+    }
 
+    /* (non-Javadoc)
+     * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#addIntNode(java.lang.Object)
+     */
+    @Override
+    public int addIntNode(Void properties) {
+        inEdges.ensureCapacity(size + 1);
+        int node = super.addIntNode(properties);
+        inEdges.array[node] = new ArrayList<CompactBidiEdge<EP>>();
+        return node;
+    }
+
+    /* (non-Javadoc)
+     * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#connect(int, int, java.lang.Object)
+     */
+    @Override
+    public CompactBidiEdge<EP> connect(int source, int target, EP property) {
+        CompactBidiEdge<EP> edge = super.connect(source, target, property);
+        List<CompactBidiEdge<EP>> inEdges = getInEdgeList(source);
+        edge.inIndex = inEdges.size();
+        inEdges.add(edge);
+        return edge;
+    }
+
+    @Override
+    protected CompactBidiEdge<EP> createEdge(int source, int target, EP property) {
+        return new CompactBidiEdge<>(source, target, property);
+    }
 
 }

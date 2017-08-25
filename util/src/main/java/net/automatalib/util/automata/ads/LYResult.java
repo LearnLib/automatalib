@@ -1,4 +1,4 @@
-/* Copyright (C) 2017 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,51 +15,54 @@
  */
 package net.automatalib.util.automata.ads;
 
-import net.automatalib.graphs.ads.ADSNode;
-
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
+import net.automatalib.graphs.ads.ADSNode;
+
 /**
  * Utility class that holds some information aggregated during the ADS computation of {@link LeeYannakakis}.
  *
- * @param <S> (hypothesis) state type
- * @param <I> input alphabet type
- * @param <O> output alphabet type
+ * @param <S>
+ *         (hypothesis) state type
+ * @param <I>
+ *         input alphabet type
+ * @param <O>
+ *         output alphabet type
  *
  * @author frohme
  */
 public class LYResult<S, I, O> {
 
-	private final Optional<ADSNode<S, I, O>> delegate;
+    private final Optional<ADSNode<S, I, O>> delegate;
 
-	private final Set<S> indistinguishableStates;
+    private final Set<S> indistinguishableStates;
 
-	public LYResult(final ADSNode<S, I, O> result) {
-		this.delegate = Optional.of(result);
-		this.indistinguishableStates = Collections.emptySet();
-	}
+    public LYResult(final ADSNode<S, I, O> result) {
+        this.delegate = Optional.of(result);
+        this.indistinguishableStates = Collections.emptySet();
+    }
 
-	public LYResult(final Set<S> indistinguishableStates) {
-		this.delegate = Optional.empty();
-		this.indistinguishableStates = indistinguishableStates;
-	}
+    public LYResult(final Set<S> indistinguishableStates) {
+        this.delegate = Optional.empty();
+        this.indistinguishableStates = indistinguishableStates;
+    }
 
-	public LYResult() {
-		this.delegate = Optional.empty();
-		this.indistinguishableStates = Collections.emptySet();
-	}
+    public LYResult() {
+        this.delegate = Optional.empty();
+        this.indistinguishableStates = Collections.emptySet();
+    }
 
-	public boolean isPresent() {
-		return this.delegate.isPresent();
-	}
+    public boolean isPresent() {
+        return this.delegate.isPresent();
+    }
 
-	public ADSNode<S, I, O> get() {
-		return this.delegate.get();
-	}
+    public ADSNode<S, I, O> get() {
+        return this.delegate.get();
+    }
 
-	public Set<S> getIndistinguishableStates() {
-		return this.indistinguishableStates;
-	}
+    public Set<S> getIndistinguishableStates() {
+        return this.indistinguishableStates;
+    }
 }

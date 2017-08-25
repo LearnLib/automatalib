@@ -1,12 +1,12 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2017 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,27 +19,27 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.mappings.MutableMapping;
 
 public class StateIDStaticMapping<S, V> implements MutableMapping<S, V> {
-	
-	private final StateIDs<S> stateIds;
-	private final Object[] storage;
-	
-	public StateIDStaticMapping(StateIDs<S> stateIds, int size) {
-		this.stateIds = stateIds;
-		this.storage = new Object[size];
-	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public V get(S elem) {
-		return (V)storage[stateIds.getStateId(elem)];
-	}
+    private final StateIDs<S> stateIds;
+    private final Object[] storage;
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public V put(S key, V value) {
-		V old = (V)storage[stateIds.getStateId(key)];
-		storage[stateIds.getStateId(key)] = value;
-		return old;
-	}
+    public StateIDStaticMapping(StateIDs<S> stateIds, int size) {
+        this.stateIds = stateIds;
+        this.storage = new Object[size];
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public V get(S elem) {
+        return (V) storage[stateIds.getStateId(elem)];
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public V put(S key, V value) {
+        V old = (V) storage[stateIds.getStateId(key)];
+        storage[stateIds.getStateId(key)] = value;
+        return old;
+    }
 
 }
