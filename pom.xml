@@ -193,8 +193,8 @@ limitations under the License.
 							 using checkstyle _during_ the build process -->
 						<configLocation>build-tools/src/main/resources/automatalib-learnlib-checkstyle.xml</configLocation>
 						<headerLocation>build-tools/src/main/resources/license-header-java.txt</headerLocation>
+						<suppressionsLocation>build-tools/src/main/resources/automatalib-checkstyle-suppressions.xml</suppressionsLocation>
 						<linkXRef>false</linkXRef>
-						<includeTestResources>true</includeTestResources>
 					</configuration>
 					<dependencies>
 						<dependency>
