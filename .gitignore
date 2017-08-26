@@ -3,9 +3,7 @@
 .project
 .factorypath
 .settings/
-*~
 *.iml
-hs_err_*
 test-output/
-/target/
+target/
 *.versionsBackup
