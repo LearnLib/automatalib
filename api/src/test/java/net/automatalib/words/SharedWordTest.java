@@ -22,7 +22,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
-public class SharedWordTest extends NonemptyWordTest {
+public class SharedWordTest extends AbstractNonemptyWordTest {
 
     private static final Object[] DATA = new Object[] {2, 1, 3, 3, 7, 9};
     private static final int OFFSET = 1;

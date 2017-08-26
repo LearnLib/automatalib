@@ -196,6 +196,7 @@ limitations under the License.
                         <configLocation>build-tools/src/main/resources/automatalib-learnlib-checkstyle.xml</configLocation>
                         <headerLocation>build-tools/src/main/resources/license-header-java.txt</headerLocation>
                         <suppressionsLocation>build-tools/src/main/resources/automatalib-checkstyle-suppressions.xml</suppressionsLocation>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <linkXRef>false</linkXRef>
                     </configuration>
                     <dependencies>

@@ -150,11 +150,6 @@ public class HopcroftMinimizationTest {
         }
     }
 
-    protected static <I, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & InputAlphabetHolder<I>> void assertMinimal(
-            A automaton) {
-        assertMinimal(automaton, automaton.getInputAlphabet());
-    }
-
     protected static <S, I> void assertAllInequivalent(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
                                                        Collection<? extends I> inputs) {
         StateIDs<S> ids = automaton.stateIDs();
@@ -166,6 +161,11 @@ public class HopcroftMinimizationTest {
                 Assert.assertNotNull(Automata.findSeparatingWord(automaton, s1, s2, inputs));
             }
         }
+    }
+
+    protected static <I, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & InputAlphabetHolder<I>> void assertMinimal(
+            A automaton) {
+        assertMinimal(automaton, automaton.getInputAlphabet());
     }
 
     protected static <I> void assertMinimal(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
@@ -186,7 +186,7 @@ public class HopcroftMinimizationTest {
         public final int minimalSize;
         public final boolean initiallyConnected;
 
-        public TestDFA(Alphabet<I> alphabet, DFA<?, I> dfa, int minimalSize, boolean initiallyConnected) {
+        TestDFA(Alphabet<I> alphabet, DFA<?, I> dfa, int minimalSize, boolean initiallyConnected) {
             this.alphabet = alphabet;
             this.dfa = dfa;
             this.minimalSize = minimalSize;

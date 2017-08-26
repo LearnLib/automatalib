@@ -28,10 +28,10 @@ import org.testng.annotations.Test;
 
 public class AllTuplesTest {
 
-    private static final List<Integer> domain = Arrays.asList(1, 2, 3, 7);
+    private static final List<Integer> DOMAIN = Arrays.asList(1, 2, 3, 7);
 
     @Test
-    public static void testEmptyDomain() {
+    public void testEmptyDomain() {
         int count = count(CollectionsUtil.allTuples(Collections.emptySet(), 1), null);
         Assert.assertEquals(count, 0);
 
@@ -42,7 +42,7 @@ public class AllTuplesTest {
         Assert.assertEquals(count, 1);
     }
 
-    private static int count(Iterable<? extends List<?>> iterable, Set<Object> distinct) {
+    private int count(Iterable<? extends List<?>> iterable, Set<Object> distinct) {
         if (distinct != null) {
             distinct.clear();
         }
@@ -59,24 +59,24 @@ public class AllTuplesTest {
     }
 
     @Test
-    public static void testAllTuples() {
-        int count = count(CollectionsUtil.allTuples(domain, 0), null);
+    public void testAllTuples() {
+        int count = count(CollectionsUtil.allTuples(DOMAIN, 0), null);
         Assert.assertEquals(count, 1);
 
         Set<Object> set = new HashSet<>();
-        count = count(CollectionsUtil.allTuples(domain, 1), set);
-        Assert.assertEquals(count, domain.size());
+        count = count(CollectionsUtil.allTuples(DOMAIN, 1), set);
+        Assert.assertEquals(count, DOMAIN.size());
         Assert.assertEquals(set.size(), count);
 
-        count = count(CollectionsUtil.allTuples(domain, 0, 1), set);
-        Assert.assertEquals(count, domain.size() + 1);
+        count = count(CollectionsUtil.allTuples(DOMAIN, 0, 1), set);
+        Assert.assertEquals(count, DOMAIN.size() + 1);
         Assert.assertEquals(set.size(), count);
 
-        count = count(CollectionsUtil.allTuples(domain, 3), set);
-        Assert.assertEquals(count, (int) Math.pow(domain.size(), 3));
+        count = count(CollectionsUtil.allTuples(DOMAIN, 3), set);
+        Assert.assertEquals(count, (int) Math.pow(DOMAIN.size(), 3));
         Assert.assertEquals(set.size(), count);
 
-        for (List<?> lst : CollectionsUtil.allTuples(domain, 3)) {
+        for (List<?> lst : CollectionsUtil.allTuples(DOMAIN, 3)) {
             Assert.assertEquals(lst.size(), 3);
         }
     }

@@ -37,21 +37,21 @@ import org.testng.annotations.Test;
  */
 public class GrowingAlphabetAutomatonTest {
 
-    private final static Alphabet<Integer> alphabet = Alphabets.integers(1, 2);
+    private static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 2);
 
-    private final static Word<Integer> a1 = Word.epsilon();
-    private final static Word<Integer> a2 = Word.fromSymbols(1);
-    private final static Word<Integer> a3 = Word.fromSymbols(1, 2);
-    private final static Word<Integer> a4 = Word.fromSymbols(1, 2, 2);
+    private static final Word<Integer> A1 = Word.epsilon();
+    private static final Word<Integer> A2 = Word.fromSymbols(1);
+    private static final Word<Integer> A3 = Word.fromSymbols(1, 2);
+    private static final Word<Integer> A4 = Word.fromSymbols(1, 2, 2);
 
-    private final static Word<Integer> b1 = Word.fromSymbols(3);
-    private final static Word<Integer> b2 = Word.fromSymbols(1, 3);
-    private final static Word<Integer> b3 = Word.fromSymbols(1, 2, 3);
-    private final static Word<Integer> b4 = Word.fromSymbols(1, 2, 3, 3);
+    private static final Word<Integer> B1 = Word.fromSymbols(3);
+    private static final Word<Integer> B2 = Word.fromSymbols(1, 3);
+    private static final Word<Integer> B3 = Word.fromSymbols(1, 2, 3);
+    private static final Word<Integer> B4 = Word.fromSymbols(1, 2, 3, 3);
 
     @Test
     public void testCompactDFA() throws Exception {
-        this.testGrowableOutputAutomaton(new CompactDFA<>(alphabet));
+        this.testGrowableOutputAutomaton(new CompactDFA<>(ALPHABET));
     }
 
     private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer> & Output<Integer, D>, S, D, T, SP, TP> void testGrowableOutputAutomaton(
@@ -71,7 +71,7 @@ public class GrowingAlphabetAutomatonTest {
         // set and test initial transitions
         this.testInitialTransitions(automaton, s1, s2, s3);
 
-        // add new alphabet symbol
+        // add new ALPHABET symbol
         automaton.addAlphabetSymbol(3);
 
         // set and test new transitions
@@ -80,14 +80,14 @@ public class GrowingAlphabetAutomatonTest {
 
     private <M extends Output<Integer, D>, D> void testOutput(final M automaton) {
         // check that any output the automaton generates does not throw an error
-        automaton.computeOutput(a1);
-        automaton.computeOutput(a2);
-        automaton.computeOutput(a3);
-        automaton.computeOutput(a4);
-        automaton.computeOutput(b1);
-        automaton.computeOutput(b2);
-        automaton.computeOutput(b3);
-        automaton.computeOutput(b4);
+        automaton.computeOutput(A1);
+        automaton.computeOutput(A2);
+        automaton.computeOutput(A3);
+        automaton.computeOutput(A4);
+        automaton.computeOutput(B1);
+        automaton.computeOutput(B2);
+        automaton.computeOutput(B3);
+        automaton.computeOutput(B4);
     }
 
     private <M extends MutableAutomaton<S, Integer, T, SP, TP>, S, T, SP, TP> void testInitialTransitions(final M automaton,
@@ -101,10 +101,10 @@ public class GrowingAlphabetAutomatonTest {
         automaton.setTransitions(s3, 2, Collections.singleton(automaton.createTransition(s3, null)));
 
         // check first set of test words
-        Assert.assertEquals(automaton.getStates(a1), Collections.singleton(s1));
-        Assert.assertEquals(automaton.getStates(a2), Collections.singleton(s2));
-        Assert.assertEquals(automaton.getStates(a3), Collections.singleton(s3));
-        Assert.assertEquals(automaton.getStates(a4), Collections.singleton(s3));
+        Assert.assertEquals(automaton.getStates(A1), Collections.singleton(s1));
+        Assert.assertEquals(automaton.getStates(A2), Collections.singleton(s2));
+        Assert.assertEquals(automaton.getStates(A3), Collections.singleton(s3));
+        Assert.assertEquals(automaton.getStates(A4), Collections.singleton(s3));
     }
 
     private <M extends MutableAutomaton<S, Integer, T, SP, TP>, S, T, SP, TP> void testNewTransitions(final M automaton,
@@ -117,45 +117,45 @@ public class GrowingAlphabetAutomatonTest {
         automaton.setTransitions(s3, 3, Collections.singleton(automaton.createTransition(s3, null)));
 
         // check second set of test words
-        Assert.assertEquals(automaton.getStates(a1), Collections.singleton(s1));
-        Assert.assertEquals(automaton.getStates(b1), Collections.singleton(s3));
-        Assert.assertEquals(automaton.getStates(b2), Collections.singleton(s3));
-        Assert.assertEquals(automaton.getStates(b3), Collections.singleton(s3));
-        Assert.assertEquals(automaton.getStates(b4), Collections.singleton(s3));
+        Assert.assertEquals(automaton.getStates(A1), Collections.singleton(s1));
+        Assert.assertEquals(automaton.getStates(B1), Collections.singleton(s3));
+        Assert.assertEquals(automaton.getStates(B2), Collections.singleton(s3));
+        Assert.assertEquals(automaton.getStates(B3), Collections.singleton(s3));
+        Assert.assertEquals(automaton.getStates(B4), Collections.singleton(s3));
     }
 
     @Test
     public void testCompactNFA() throws Exception {
-        this.testGrowableOutputAutomaton(new CompactNFA<>(alphabet));
+        this.testGrowableOutputAutomaton(new CompactNFA<>(ALPHABET));
     }
 
     @Test
     public void testFastDFA() throws Exception {
-        this.testGrowableOutputAutomaton(new FastDFA<>(alphabet));
+        this.testGrowableOutputAutomaton(new FastDFA<>(ALPHABET));
     }
 
     @Test
     public void testFastNFA() throws Exception {
-        this.testGrowableOutputAutomaton(new FastNFA<>(alphabet));
+        this.testGrowableOutputAutomaton(new FastNFA<>(ALPHABET));
     }
 
     @Test
     public void testCompactMealy() throws Exception {
-        this.testGrowableOutputAutomaton(new CompactMealy<>(alphabet));
+        this.testGrowableOutputAutomaton(new CompactMealy<>(ALPHABET));
     }
 
     @Test
     public void testFastMealy() throws Exception {
-        this.testGrowableOutputAutomaton(new FastMealy<>(alphabet));
+        this.testGrowableOutputAutomaton(new FastMealy<>(ALPHABET));
     }
 
     @Test
     public void testFastProbMealy() throws Exception {
-        this.testGrowableAutomaton(new FastProbMealy<>(alphabet));
+        this.testGrowableAutomaton(new FastProbMealy<>(ALPHABET));
     }
 
     @Test
     public void testFastMoore() throws Exception {
-        this.testGrowableOutputAutomaton(new FastMoore<>(alphabet));
+        this.testGrowableOutputAutomaton(new FastMoore<>(ALPHABET));
     }
 }

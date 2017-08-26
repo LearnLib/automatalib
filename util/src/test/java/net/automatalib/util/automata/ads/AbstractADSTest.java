@@ -32,7 +32,7 @@ import org.testng.Assert;
 /**
  * @author frohme
  */
-public class AbstractADSTest {
+public abstract class AbstractADSTest {
 
     protected <I, O> void verifySuccess(final CompactMealy<I, O> mealy) {
         this.verifySuccess(mealy, mealy.getStates());

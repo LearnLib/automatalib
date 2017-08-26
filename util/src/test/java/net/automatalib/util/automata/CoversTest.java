@@ -26,7 +26,7 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.annotations.Test;
 
 /**
- * FIXME: Turn this into a real test
+ * FIXME: Turn this into a real test.
  *
  * @author Malte Isberner
  */

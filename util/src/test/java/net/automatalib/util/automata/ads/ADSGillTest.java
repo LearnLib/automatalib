@@ -73,12 +73,12 @@ public class ADSGillTest extends AbstractADSTest {
     }
 
     @Test
-    public void testGillExampleA_Complete() {
+    public void testGillExampleAComplete() {
         super.verifyFailure(A);
     }
 
     @Test
-    public void testGillExampleA_S2S3S4S5() {
+    public void testGillExampleAS2S3S4S5() {
         super.verifySuccess(A, Arrays.asList(1, 4));
     }
 }

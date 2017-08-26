@@ -27,13 +27,13 @@ import org.testng.annotations.Test;
 @Test
 public abstract class AbstractIncrementalDFABuilderTest {
 
-    private static final Alphabet<Character> testAlphabet = Alphabets.characters('a', 'c');
+    private static final Alphabet<Character> TEST_ALPHABET = Alphabets.characters('a', 'c');
 
     private IncrementalDFABuilder<Character> incDfa;
 
     @BeforeClass
     public void setUp() {
-        this.incDfa = createIncrementalDFABuilder(testAlphabet);
+        this.incDfa = createIncrementalDFABuilder(TEST_ALPHABET);
     }
 
     protected abstract <I> IncrementalDFABuilder<I> createIncrementalDFABuilder(Alphabet<I> alphabet);
@@ -49,7 +49,7 @@ public abstract class AbstractIncrementalDFABuilderTest {
         incDfa.insert(wB3, true);
 
         Assert.assertEquals(incDfa.lookup(Word.fromString("aababaa")), Acceptance.DONT_KNOW);
-        this.incDfa = createIncrementalDFABuilder(testAlphabet);
+        this.incDfa = createIncrementalDFABuilder(TEST_ALPHABET);
     }
 
     @Test(dependsOnMethods = "testConfluenceBug")
@@ -113,7 +113,7 @@ public abstract class AbstractIncrementalDFABuilderTest {
 
     @Test(dependsOnMethods = "testLookup")
     public void testFindSeparatingWord() {
-        CompactDFA<Character> testDfa = new CompactDFA<>(testAlphabet);
+        CompactDFA<Character> testDfa = new CompactDFA<>(TEST_ALPHABET);
 
         int s0 = testDfa.addInitialState(true);
         int s1 = testDfa.addState(false);
@@ -125,13 +125,13 @@ public abstract class AbstractIncrementalDFABuilderTest {
         testDfa.addTransition(s2, 'c', s3);
 
         Word<Character> sepWord;
-        sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, true);
+        sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
-        sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, false);
+        sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
         Assert.assertEquals(sepWord, Word.fromString("acb"));
 
         testDfa.setAccepting(s3, false);
-        sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, true);
+        sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertEquals(sepWord, Word.fromString("abc"));
         testDfa.setAccepting(s3, true);
 
@@ -140,16 +140,16 @@ public abstract class AbstractIncrementalDFABuilderTest {
         testDfa.addTransition(s1, 'c', s4);
         testDfa.addTransition(s4, 'b', s5);
 
-        sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, true);
+        sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
-        sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, false);
+        sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
         Assert.assertNull(sepWord);
 
         testDfa.setAccepting(s1, true);
         testDfa.setAccepting(s2, true);
-        sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, true);
+        sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
-        sepWord = incDfa.findSeparatingWord(testDfa, testAlphabet, false);
+        sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
         Assert.assertNull(sepWord);
     }
 

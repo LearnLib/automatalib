@@ -21,7 +21,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public abstract class NonemptyWordTest extends AbstractWordTest {
+public abstract class AbstractNonemptyWordTest extends AbstractWordTest {
 
     protected List<Word<Object>> realPrefixes;
     protected List<Word<Object>> realSuffixes;

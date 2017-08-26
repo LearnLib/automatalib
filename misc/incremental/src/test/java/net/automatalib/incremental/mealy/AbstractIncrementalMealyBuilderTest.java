@@ -30,111 +30,111 @@ import org.testng.annotations.Test;
 @Test
 public abstract class AbstractIncrementalMealyBuilderTest {
 
-    private static final Alphabet<Character> testAlphabet = Alphabets.characters('a', 'c');
-    private static final Word<Character> w1 = Word.fromString("abc");
-    private static final Word<Character> w1o = Word.fromString("xyz");
-    private static final Word<Character> w2 = Word.fromString("ac");
-    private static final Word<Character> w2o = Word.fromString("xw");
-    private static final Word<Character> w3 = Word.fromString("acb");
-    private static final Word<Character> w3o = Word.fromString("xwu");
+    private static final Alphabet<Character> TEST_ALPHABET = Alphabets.characters('a', 'c');
+    private static final Word<Character> W_1 = Word.fromString("abc");
+    private static final Word<Character> W_1_O = Word.fromString("xyz");
+    private static final Word<Character> W_2 = Word.fromString("ac");
+    private static final Word<Character> W_2_O = Word.fromString("xw");
+    private static final Word<Character> W_3 = Word.fromString("acb");
+    private static final Word<Character> W_3_O = Word.fromString("xwu");
 
     // Confluence Bug
-    private static final Word<Character> wB1 = Word.fromString("aaa");
-    private static final Word<Character> wB1o = Word.fromString("xxx");
-    private static final Word<Character> wB2 = Word.fromString("bba");
-    private static final Word<Character> wB2o = Word.fromString("xxx");
-    private static final Word<Character> wB3 = Word.fromString("aabaa");
-    private static final Word<Character> wB3o = Word.fromString("xxxxx");
+    private static final Word<Character> W_B_1 = Word.fromString("aaa");
+    private static final Word<Character> W_B_1_O = Word.fromString("xxx");
+    private static final Word<Character> W_B_2 = Word.fromString("bba");
+    private static final Word<Character> W_B_2_O = Word.fromString("xxx");
+    private static final Word<Character> W_B_3 = Word.fromString("aabaa");
+    private static final Word<Character> W_B_3_O = Word.fromString("xxxxx");
 
     private IncrementalMealyBuilder<Character, Character> incMealy;
 
     @BeforeClass
     public void setUp() {
-        this.incMealy = createIncrementalMealyBuilder(testAlphabet);
+        this.incMealy = createIncrementalMealyBuilder(TEST_ALPHABET);
     }
 
     protected abstract <I, O> IncrementalMealyBuilder<I, O> createIncrementalMealyBuilder(Alphabet<I> alphabet);
 
     @Test
     public void testConfluenceBug() {
-        incMealy.insert(wB1, wB1o);
-        incMealy.insert(wB2, wB2o);
-        incMealy.insert(wB3, wB3o);
+        incMealy.insert(W_B_1, W_B_1_O);
+        incMealy.insert(W_B_2, W_B_2_O);
+        incMealy.insert(W_B_3, W_B_3_O);
 
         Assert.assertFalse(incMealy.lookup(Word.fromString("aababaa"), new ArrayList<>()));
         // reset for further tests
-        this.incMealy = createIncrementalMealyBuilder(testAlphabet);
+        this.incMealy = createIncrementalMealyBuilder(TEST_ALPHABET);
     }
 
     @Test(dependsOnMethods = "testConfluenceBug")
     public void testLookup() {
-        Assert.assertFalse(incMealy.hasDefinitiveInformation(w1));
-        Assert.assertFalse(incMealy.hasDefinitiveInformation(w2));
-        Assert.assertFalse(incMealy.hasDefinitiveInformation(w3));
+        Assert.assertFalse(incMealy.hasDefinitiveInformation(W_1));
+        Assert.assertFalse(incMealy.hasDefinitiveInformation(W_2));
+        Assert.assertFalse(incMealy.hasDefinitiveInformation(W_3));
 
-        incMealy.insert(w1, w1o);
-        Assert.assertTrue(incMealy.hasDefinitiveInformation(w1));
-        Assert.assertTrue(incMealy.hasDefinitiveInformation(w1.prefix(2)));
-        Assert.assertFalse(incMealy.hasDefinitiveInformation(w1.append('a')));
+        incMealy.insert(W_1, W_1_O);
+        Assert.assertTrue(incMealy.hasDefinitiveInformation(W_1));
+        Assert.assertTrue(incMealy.hasDefinitiveInformation(W_1.prefix(2)));
+        Assert.assertFalse(incMealy.hasDefinitiveInformation(W_1.append('a')));
 
         WordBuilder<Character> wb = new WordBuilder<>();
 
-        Assert.assertTrue(incMealy.lookup(w1, wb));
-        Assert.assertEquals(wb.toWord(), w1o);
+        Assert.assertTrue(incMealy.lookup(W_1, wb));
+        Assert.assertEquals(wb.toWord(), W_1_O);
         wb.clear();
-        Assert.assertTrue(incMealy.lookup(w1.prefix(2), wb));
-        Assert.assertEquals(wb.toWord(), w1o.prefix(2));
+        Assert.assertTrue(incMealy.lookup(W_1.prefix(2), wb));
+        Assert.assertEquals(wb.toWord(), W_1_O.prefix(2));
         wb.clear();
-        Assert.assertFalse(incMealy.hasDefinitiveInformation(w2));
-        Assert.assertFalse(incMealy.hasDefinitiveInformation(w3));
+        Assert.assertFalse(incMealy.hasDefinitiveInformation(W_2));
+        Assert.assertFalse(incMealy.hasDefinitiveInformation(W_3));
 
-        incMealy.insert(w2, w2o);
-        Assert.assertTrue(incMealy.hasDefinitiveInformation(w1));
-        Assert.assertTrue(incMealy.hasDefinitiveInformation(w2));
-        Assert.assertFalse(incMealy.hasDefinitiveInformation(w3));
+        incMealy.insert(W_2, W_2_O);
+        Assert.assertTrue(incMealy.hasDefinitiveInformation(W_1));
+        Assert.assertTrue(incMealy.hasDefinitiveInformation(W_2));
+        Assert.assertFalse(incMealy.hasDefinitiveInformation(W_3));
 
-        Assert.assertTrue(incMealy.lookup(w2, wb));
-        Assert.assertEquals(wb.toWord(), w2o);
+        Assert.assertTrue(incMealy.lookup(W_2, wb));
+        Assert.assertEquals(wb.toWord(), W_2_O);
         wb.clear();
-        Assert.assertTrue(incMealy.lookup(w2.prefix(1), wb));
-        Assert.assertEquals(wb.toWord(), w2o.prefix(1));
+        Assert.assertTrue(incMealy.lookup(W_2.prefix(1), wb));
+        Assert.assertEquals(wb.toWord(), W_2_O.prefix(1));
         wb.clear();
-        Assert.assertTrue(incMealy.lookup(w1, wb));
-        Assert.assertEquals(wb.toWord(), w1o);
+        Assert.assertTrue(incMealy.lookup(W_1, wb));
+        Assert.assertEquals(wb.toWord(), W_1_O);
         wb.clear();
 
-        incMealy.insert(w3, w3o);
-        Assert.assertTrue(incMealy.hasDefinitiveInformation(w1));
-        Assert.assertTrue(incMealy.hasDefinitiveInformation(w2));
-        Assert.assertTrue(incMealy.hasDefinitiveInformation(w3));
+        incMealy.insert(W_3, W_3_O);
+        Assert.assertTrue(incMealy.hasDefinitiveInformation(W_1));
+        Assert.assertTrue(incMealy.hasDefinitiveInformation(W_2));
+        Assert.assertTrue(incMealy.hasDefinitiveInformation(W_3));
 
-        Assert.assertTrue(incMealy.lookup(w3, wb));
-        Assert.assertEquals(wb.toWord(), w3o);
+        Assert.assertTrue(incMealy.lookup(W_3, wb));
+        Assert.assertEquals(wb.toWord(), W_3_O);
         wb.clear();
-        Assert.assertTrue(incMealy.lookup(w3.prefix(2), wb));
-        Assert.assertEquals(wb.toWord(), w3o.prefix(2));
+        Assert.assertTrue(incMealy.lookup(W_3.prefix(2), wb));
+        Assert.assertEquals(wb.toWord(), W_3_O.prefix(2));
         wb.clear();
-        Assert.assertTrue(incMealy.lookup(w1, wb));
-        Assert.assertEquals(wb.toWord(), w1o);
+        Assert.assertTrue(incMealy.lookup(W_1, wb));
+        Assert.assertEquals(wb.toWord(), W_1_O);
         wb.clear();
-        Assert.assertTrue(incMealy.lookup(w2, wb));
-        Assert.assertEquals(wb.toWord(), w2o);
+        Assert.assertTrue(incMealy.lookup(W_2, wb));
+        Assert.assertEquals(wb.toWord(), W_2_O);
         wb.clear();
     }
 
     @Test(dependsOnMethods = "testLookup")
     public void testInsertSame() {
-        incMealy.insert(w1, w1o);
+        incMealy.insert(W_1, W_1_O);
     }
 
     @Test(expectedExceptions = ConflictException.class, dependsOnMethods = "testLookup")
     public void testConflict() {
-        incMealy.insert(w1, w3o);
+        incMealy.insert(W_1, W_3_O);
     }
 
     @Test(dependsOnMethods = "testLookup")
     public void testFindSeparatingWord() {
-        CompactMealy<Character, Character> testMealy = new CompactMealy<>(testAlphabet);
+        CompactMealy<Character, Character> testMealy = new CompactMealy<>(TEST_ALPHABET);
 
         int s0 = testMealy.addInitialState();
         int s1 = testMealy.addState();
@@ -150,22 +150,22 @@ public abstract class AbstractIncrementalMealyBuilderTest {
         testMealy.addTransition(s1, 'c', s5, 'w');
 
         Word<Character> sepWord;
-        sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, true);
+        sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
-        sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, false);
+        sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, false);
         Assert.assertEquals(sepWord, Word.fromString("acb"));
 
         testMealy.addTransition(s5, 'b', s4, 'u');
-        sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, true);
+        sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
-        sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, false);
+        sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, false);
         Assert.assertNull(sepWord);
 
         testMealy.getTransition(s5, (Character) 'b').setOutput('w');
 
-        sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, true);
+        sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, true);
         Assert.assertEquals(sepWord, Word.fromString("acb"));
-        sepWord = incMealy.findSeparatingWord(testMealy, testAlphabet, false);
+        sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, false);
         Assert.assertEquals(sepWord, Word.fromString("acb"));
     }
 

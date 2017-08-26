@@ -27,13 +27,13 @@ import org.testng.annotations.Test;
 @Test
 public abstract class AbstractIncrementalPCDFABuilderTest {
 
-    private static final Alphabet<Character> testAlphabet = Alphabets.characters('a', 'c');
+    private static final Alphabet<Character> TEST_ALPHABET = Alphabets.characters('a', 'c');
 
     private IncrementalDFABuilder<Character> incPcDfa;
 
     @BeforeClass
     public void setUp() {
-        this.incPcDfa = createIncrementalPCDFABuilder(testAlphabet);
+        this.incPcDfa = createIncrementalPCDFABuilder(TEST_ALPHABET);
     }
 
     protected abstract <I> IncrementalDFABuilder<I> createIncrementalPCDFABuilder(Alphabet<I> alphabet);
@@ -49,7 +49,7 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
         incPcDfa.insert(wB3, true);
 
         Assert.assertEquals(incPcDfa.lookup(Word.fromString("aababaa")), Acceptance.DONT_KNOW);
-        this.incPcDfa = createIncrementalPCDFABuilder(testAlphabet);
+        this.incPcDfa = createIncrementalPCDFABuilder(TEST_ALPHABET);
     }
 
     @Test(dependsOnMethods = "testConfluenceBug")
@@ -106,7 +106,7 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
 
     @Test(dependsOnMethods = "testLookup")
     public void testFindSeparatingWord() {
-        CompactDFA<Character> testDfa = new CompactDFA<>(testAlphabet);
+        CompactDFA<Character> testDfa = new CompactDFA<>(TEST_ALPHABET);
         int s0 = testDfa.addInitialState(true);
         int s1 = testDfa.addState(true);
         int s2 = testDfa.addState(true);
@@ -117,37 +117,37 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
         testDfa.addTransition(s2, 'c', s3);
 
         Word<Character> sepWord;
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, true);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, false);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
         Assert.assertEquals(sepWord, Word.fromString("ac"));
 
         int s4 = testDfa.addState(true);
         testDfa.addTransition(s1, 'c', s4);
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, true);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, false);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
         Assert.assertNull(sepWord);
 
         int s5 = testDfa.addState(false);
         testDfa.addTransition(s4, 'b', s5);
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, true);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, false);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
         Assert.assertNull(sepWord);
 
         int s6 = testDfa.addState(false);
         testDfa.addTransition(s3, 'a', s6);
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, true);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, false);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
         Assert.assertNull(sepWord);
 
         int s7 = testDfa.addState(true);
         testDfa.addTransition(s5, 'a', s7);
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, true);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertEquals(sepWord, Word.fromString("acba"));
-        sepWord = incPcDfa.findSeparatingWord(testDfa, testAlphabet, false);
+        sepWord = incPcDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
         Assert.assertEquals(sepWord, Word.fromString("acba"));
     }
 

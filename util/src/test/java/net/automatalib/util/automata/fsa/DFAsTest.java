@@ -27,16 +27,16 @@ import org.testng.annotations.Test;
 @Test
 public class DFAsTest {
 
-    private static final boolean[] vector1 = {true, true, false, false};
-    private static final boolean[] vector1Neg = {false, false, true, true};
-    private static final boolean[] vector2 = {true, false, true, false};
+    private static final boolean[] VECTOR_1 = {true, true, false, false};
+    private static final boolean[] VECTOR_1_NEG = {false, false, true, true};
+    private static final boolean[] VECTOR_2 = {true, false, true, false};
 
-    // The precomputed results of applying the operations on vector1 and vector2
-    private static final boolean[] andResult = {true, false, false, false};
-    private static final boolean[] orResult = {true, true, true, false};
-    private static final boolean[] xorResult = {false, true, true, false};
-    private static final boolean[] equivResult = {true, false, false, true};
-    private static final boolean[] implResult = {true, false, true, true};
+    // The precomputed results of applying the operations on VECTOR_1 and VECTOR_2
+    private static final boolean[] AND_RESULT = {true, false, false, false};
+    private static final boolean[] OR_RESULT = {true, true, true, false};
+    private static final boolean[] XOR_RESULT = {false, true, true, false};
+    private static final boolean[] EQUIV_RESULT = {true, false, false, true};
+    private static final boolean[] IMPL_RESULT = {true, false, true, true};
 
     private final Alphabet<Integer> testAlphabet;
     private CompactDFA<Integer> testDfa1, testDfa2;
@@ -47,8 +47,8 @@ public class DFAsTest {
 
     @BeforeClass
     public void setUp() {
-        this.testDfa1 = forVector(vector1);
-        this.testDfa2 = forVector(vector2);
+        this.testDfa1 = forVector(VECTOR_1);
+        this.testDfa2 = forVector(VECTOR_2);
     }
 
     private CompactDFA<Integer> forVector(boolean... boolVec) {
@@ -74,7 +74,7 @@ public class DFAsTest {
 
     @Test
     public void testAnd() {
-        DFA<?, Integer> expected = forVector(andResult);
+        DFA<?, Integer> expected = forVector(AND_RESULT);
         DFA<?, Integer> actual = DFAs.and(testDfa1, testDfa2, testAlphabet);
 
         Assert.assertTrue(Automata.testEquivalence(actual, expected, testAlphabet));
@@ -82,7 +82,7 @@ public class DFAsTest {
 
     @Test
     public void testOr() {
-        DFA<?, Integer> expected = forVector(orResult);
+        DFA<?, Integer> expected = forVector(OR_RESULT);
         DFA<?, Integer> actual = DFAs.or(testDfa1, testDfa2, testAlphabet);
 
         Assert.assertTrue(Automata.testEquivalence(actual, expected, testAlphabet));
@@ -90,7 +90,7 @@ public class DFAsTest {
 
     @Test
     public void testXor() {
-        DFA<?, Integer> expected = forVector(xorResult);
+        DFA<?, Integer> expected = forVector(XOR_RESULT);
         DFA<?, Integer> actual = DFAs.xor(testDfa1, testDfa2, testAlphabet);
 
         Assert.assertTrue(Automata.testEquivalence(actual, expected, testAlphabet));
@@ -98,7 +98,7 @@ public class DFAsTest {
 
     @Test
     public void testEquiv() {
-        DFA<?, Integer> expected = forVector(equivResult);
+        DFA<?, Integer> expected = forVector(EQUIV_RESULT);
         DFA<?, Integer> actual = DFAs.equiv(testDfa1, testDfa2, testAlphabet);
 
         Assert.assertTrue(Automata.testEquivalence(actual, expected, testAlphabet));
@@ -106,7 +106,7 @@ public class DFAsTest {
 
     @Test
     public void testImpl() {
-        DFA<?, Integer> expected = forVector(implResult);
+        DFA<?, Integer> expected = forVector(IMPL_RESULT);
         DFA<?, Integer> actual = DFAs.impl(testDfa1, testDfa2, testAlphabet);
 
         Assert.assertTrue(Automata.testEquivalence(actual, expected, testAlphabet));
@@ -114,7 +114,7 @@ public class DFAsTest {
 
     @Test
     public void testComplement() {
-        DFA<?, Integer> expected = forVector(vector1Neg);
+        DFA<?, Integer> expected = forVector(VECTOR_1_NEG);
         DFA<?, Integer> actual = DFAs.complement(testDfa1, testAlphabet);
 
         Assert.assertTrue(Automata.testEquivalence(actual, expected, testAlphabet));

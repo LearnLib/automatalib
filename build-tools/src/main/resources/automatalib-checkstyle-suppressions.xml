@@ -5,4 +5,6 @@
 <suppressions>
     <suppress checks="AbstractClassName" files="Word.java|GraphDOTHelper.java"/>
     <suppress checks="." files="target/*"/>
+
+    <suppress checks="MagicNumber" files="src/test/*"/>
 </suppressions>
