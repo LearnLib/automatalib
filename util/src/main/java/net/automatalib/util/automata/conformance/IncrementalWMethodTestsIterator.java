@@ -16,6 +16,7 @@
 package net.automatalib.util.automata.conformance;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -45,7 +46,6 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
     public IncrementalWMethodTestsIterator(Alphabet<I> alphabet) {
         this.alphabet = alphabet;
         this.itemQueue = new StrictPriorityQueue<>(new ItemComparator<>(alphabet), new ItemMerge<>());
-        this.suffixes.add(Word.epsilon()); // *always* assume the empty word as a suffix
     }
 
     public int getMaxDepth() {
@@ -58,7 +58,8 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 
     public void update(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton) {
         int oldNumPrefixes = prefixes.size();
-        boolean newPrefixes = Automata.incrementalStructuralCover(automaton, alphabet, prefixes, prefixes);
+        boolean newPrefixes =
+                Automata.incrementalCover(automaton, alphabet, Collections.emptyList(), prefixes, null, prefixes);
 
         int oldNumSuffixes = suffixes.size();
         boolean newSuffixes = Automata.incrementalCharacterizingSet(automaton, alphabet, suffixes, suffixes);
@@ -88,7 +89,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
     }
 
     private Word<I> startMiddleWord() {
-        return Word.fromLetter(alphabet.getSymbol(0));
+        return Word.epsilon();
     }
 
     @Override
