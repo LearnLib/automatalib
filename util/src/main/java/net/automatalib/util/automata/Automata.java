@@ -372,7 +372,7 @@ public class Automata extends TS {
     public static <I> List<Word<I>> transitionCover(DeterministicAutomaton<?, I, ?> automaton,
                                                     Collection<? extends I> inputs) {
         List<Word<I>> all = new ArrayList<>(automaton.size() * inputs.size());
-        cover(automaton, inputs, all, all);
+        cover(automaton, inputs, null, all);
         return all;
     }
 

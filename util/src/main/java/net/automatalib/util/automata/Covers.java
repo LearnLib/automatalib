@@ -58,15 +58,17 @@ final class Covers {
                     continue;
                 }
 
+                final Word<I> succAs = as.append(in);
+
                 if (reach.get(succ) == null) {
-                    Word<I> succAs = as.append(in);
                     reach.put(succ, succAs);
                     if (states != null) {
                         states.add(succAs);
                     }
                     bfsQueue.add(succ);
-                } else if (transitions != null) {
-                    transitions.add(as.append(in));
+                }
+                if (transitions != null) {
+                    transitions.add(succAs);
                 }
             }
         }
@@ -256,12 +258,11 @@ final class Covers {
                                 newStateCover.add(newAs);
                                 augmented = true;
                             }
-                        } else {
-                            // new transition
-                            if (newTransCover != null) {
-                                newTransCover.add(newAs);
-                                augmented = true;
-                            }
+                        }
+                        // new transition
+                        if (newTransCover != null) {
+                            newTransCover.add(newAs);
+                            augmented = true;
                         }
                     }
                 }

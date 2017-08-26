@@ -65,8 +65,8 @@ public class CoversTest {
         expectedNewStructuralCover.addAll(expectedNewStateCover);
         expectedNewStructuralCover.addAll(expectedNewTransCover);
 
-        Covers.incrementalCover(dfa, alphabet, EMPTY, EMPTY, newStates, newTransitions);
-        Covers.incrementalCover(dfa, alphabet, EMPTY, EMPTY, newStructural, newStructural);
+        Covers.cover(dfa, alphabet, newStates, newTransitions);
+        Covers.cover(dfa, alphabet, newStructural, newStructural);
 
         checkCovers();
         updateAndClearCovers();
