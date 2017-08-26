@@ -15,34 +15,35 @@
  */
 package net.automatalib.commons.util.collections;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
 public class IterablesTest {
 
     @Test
-    public static void testConcat() {
-        List<String> l1 = Arrays.asList("foo", "bar");
-        List<String> l2 = Arrays.asList("baz", "qux");
+    public void testConcat() {
+        final List<String> l1 = Arrays.asList("foo", "bar");
+        final List<String> l2 = Arrays.asList("baz", "qux");
 
-        System.err.println("=================");
-        for (String s : IterableUtil.concat(l1, l2)) {
-            System.err.println(s);
-        }
+        final List<String> joined = new ArrayList<>(4);
+        joined.addAll(l1);
+        joined.addAll(l2);
 
-        System.err.println("=================");
-        for (String s : IterableUtil.concat(Collections.emptyList(), l2)) {
-            System.err.println(s);
-        }
+        final List<String> j1 = Lists.newArrayList(IterableUtil.concat(l1, l2));
+        Assert.assertEquals(joined, j1);
 
-        System.err.println("=================");
-        for (String s : IterableUtil.concat(l1, Collections.emptyList())) {
-            System.err.println(s);
-        }
+        final List<String> j2 = Lists.newArrayList(IterableUtil.concat(Collections.emptyList(), l2));
+        Assert.assertEquals(l2, j2);
+
+        final List<String> j3 = Lists.newArrayList(IterableUtil.concat(l1, Collections.emptyList()));
+        Assert.assertEquals(l1, j3);
     }
 
 }
