@@ -49,72 +49,60 @@ public class HopcroftMinimizationTest {
 
     private static TestDFA<Integer> createTestDFA1() {
         Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
+
+        // @formatter:off
         CompactDFA<Integer> dfa = AutomatonBuilders.newDFA(alphabet)
-                                                   .from("A")
-                                                   .on(0)
-                                                   .to("H")
-                                                   .on(1)
-                                                   .to("B")
-                                                   .from("B")
-                                                   .on(0)
-                                                   .to("H")
-                                                   .on(1)
-                                                   .to("A")
-                                                   .from("C")
-                                                   .on(0)
-                                                   .to("E")
-                                                   .on(1)
-                                                   .to("F")
-                                                   .from("D")
-                                                   .on(0)
-                                                   .to("E")
-                                                   .on(1)
-                                                   .to("F")
-                                                   .from("E")
-                                                   .on(0)
-                                                   .to("F")
-                                                   .on(1)
-                                                   .to("G")
-                                                   .from("F")
-                                                   .on(0, 1)
-                                                   .loop()
-                                                   .from("G")
-                                                   .on(0)
-                                                   .loop()
-                                                   .on(1)
-                                                   .to("F")
-                                                   .from("H")
-                                                   .on(0, 1)
-                                                   .to("C")
-                                                   .withInitial("A")
-                                                   .withAccepting("F", "G")
-                                                   .create();
+                .withInitial("A")
+                .from("A")
+                    .on(0).to("H")
+                    .on(1).to("B")
+                .from("B")
+                    .on(0).to("H")
+                    .on(1).to("A")
+                .from("C")
+                    .on(0).to("E")
+                    .on(1).to("F")
+                .from("D")
+                    .on(0).to("E")
+                    .on(1).to("F")
+                .from("E")
+                    .on(0).to("F")
+                    .on(1).to("G")
+                .from("F")
+                    .on(0, 1).loop()
+                .from("G")
+                    .on(0).loop()
+                    .on(1).to("F")
+                .from("H")
+                    .on(0, 1).to("C")
+                .withAccepting("F", "G")
+                .create();
+        // @formatter:on
+
         return new TestDFA<>(alphabet, dfa, 5, false);
     }
 
     private static TestDFA<Integer> createTestDFA2() {
         Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
+
+        // @formatter:off
         CompactDFA<Integer> dfa = AutomatonBuilders.newDFA(alphabet)
-                                                   .from("A")
-                                                   .on(0)
-                                                   .to("B")
-                                                   .on(1)
-                                                   .to("C")
-                                                   .from("B")
-                                                   .on(0, 1)
-                                                   .to("D")
-                                                   .from("C")
-                                                   .on(0, 1)
-                                                   .to("D")
-                                                   .from("D")
-                                                   .on(0, 1)
-                                                   .to("E")
-                                                   .from("E")
-                                                   .on(0, 1)
-                                                   .loop()
-                                                   .withInitial("A")
-                                                   .withAccepting("E")
-                                                   .create();
+                .withInitial("A")
+                .from("A")
+                    .on(0).to("B")
+                    .on(1).to("C")
+                .from("B")
+                    .on(0, 1).to("D")
+                .from("C")
+                    .on(0, 1).to("D")
+                .from("D")
+                    .on(0, 1).to("E")
+                .from("E")
+                    .on(0, 1).loop()
+                .withAccepting("E")
+                .create();
+        // @formatter:on
+
         return new TestDFA<>(alphabet, dfa, 4, true);
     }
 

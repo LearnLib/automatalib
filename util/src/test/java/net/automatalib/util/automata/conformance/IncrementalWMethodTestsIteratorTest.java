@@ -25,30 +25,20 @@ public class IncrementalWMethodTestsIteratorTest {
     public void main(String[] args) {
         Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
 
-        MealyMachine<?, Character, ?, Character> mealy =
-                AutomatonBuilders.<Character, Character>newMealy(alphabet).from("q0")
-                                                                          .on('a', 'c')
-                                                                          .withOutput('x')
-                                                                          .to("q1")
-                                                                          .on('b')
-                                                                          .withOutput('y')
-                                                                          .loop()
-                                                                          .from("q1")
-                                                                          .on('a')
-                                                                          .withOutput('z')
-                                                                          .to("q2")
-                                                                          .on('b')
-                                                                          .withOutput('y')
-                                                                          .loop()
-                                                                          .on('c')
-                                                                          .withOutput('w')
-                                                                          .to("q0")
-                                                                          .from("q2")
-                                                                          .on('a', 'b', 'c')
-                                                                          .withOutput('u')
-                                                                          .loop()
-                                                                          .withInitial("q0")
-                                                                          .create();
+        // @formatter:off
+        MealyMachine<?, Character, ?, Character> mealy = AutomatonBuilders.<Character, Character>newMealy(alphabet)
+                .withInitial("q0")
+                .from("q0")
+                    .on('a', 'c').withOutput('x').to("q1")
+                    .on('b').withOutput('y').loop()
+                .from("q1")
+                    .on('a').withOutput('z').to("q2")
+                    .on('b').withOutput('y').loop()
+                    .on('c').withOutput('w').to("q0")
+                .from("q2")
+                    .on('a', 'b', 'c').withOutput('u').loop()
+                .create();
+        // @formatter:on
 
         IncrementalWMethodTestsIterator<Character> incIt = new IncrementalWMethodTestsIterator<>(alphabet);
         incIt.setMaxDepth(2);
