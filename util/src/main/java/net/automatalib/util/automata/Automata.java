@@ -362,25 +362,18 @@ public class Automata extends TS {
         return states;
     }
 
-    public static <I> void cover(DeterministicAutomaton<?, I, ?> automaton,
-                                 Collection<? extends I> inputs,
-                                 Collection<? super Word<I>> states,
-                                 Collection<? super Word<I>> transitions) {
-        Covers.cover(automaton, inputs, states, transitions);
-    }
-
-    public static <I> List<Word<I>> transitionCover(DeterministicAutomaton<?, I, ?> automaton,
-                                                    Collection<? extends I> inputs) {
-        List<Word<I>> all = new ArrayList<>(automaton.size() * inputs.size());
-        cover(automaton, inputs, null, all);
-        return all;
-    }
-
     public static <I> boolean incrementalStateCover(DeterministicAutomaton<?, I, ?> automaton,
                                                     Collection<? extends I> inputs,
                                                     Collection<? extends Word<I>> oldStates,
                                                     Collection<? super Word<I>> newStates) {
         return incrementalCover(automaton, inputs, oldStates, Collections.emptyList(), newStates, null);
+    }
+
+    public static <I> void cover(DeterministicAutomaton<?, I, ?> automaton,
+                                 Collection<? extends I> inputs,
+                                 Collection<? super Word<I>> states,
+                                 Collection<? super Word<I>> transitions) {
+        Covers.cover(automaton, inputs, states, transitions);
     }
 
     public static <I> boolean incrementalCover(DeterministicAutomaton<?, I, ?> automaton,
@@ -390,6 +383,20 @@ public class Automata extends TS {
                                                Collection<? super Word<I>> newStates,
                                                Collection<? super Word<I>> newTransitions) {
         return Covers.incrementalCover(automaton, inputs, oldStates, oldTransitions, newStates, newTransitions);
+    }
+
+    public static <I> List<Word<I>> transitionCover(DeterministicAutomaton<?, I, ?> automaton,
+                                                    Collection<? extends I> inputs) {
+        List<Word<I>> all = new ArrayList<>(automaton.size() * inputs.size());
+        cover(automaton, inputs, null, all);
+        return all;
+    }
+
+    public static <I> boolean incrementalTransitionCover(DeterministicAutomaton<?, I, ?> automaton,
+                                                         Collection<? extends I> inputs,
+                                                         Collection<? extends Word<I>> oldTransitions,
+                                                         Collection<? super Word<I>> newTransitions) {
+        return incrementalCover(automaton, inputs, Collections.emptyList(), oldTransitions, null, newTransitions);
     }
 
     public static <I> boolean incrementalStructuralCover(DeterministicAutomaton<?, I, ?> automaton,

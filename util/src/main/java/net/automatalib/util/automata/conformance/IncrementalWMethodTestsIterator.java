@@ -16,7 +16,6 @@
 package net.automatalib.util.automata.conformance;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -58,8 +57,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 
     public void update(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton) {
         int oldNumPrefixes = prefixes.size();
-        boolean newPrefixes =
-                Automata.incrementalCover(automaton, alphabet, Collections.emptyList(), prefixes, null, prefixes);
+        boolean newPrefixes = Automata.incrementalTransitionCover(automaton, alphabet, prefixes, prefixes);
 
         int oldNumSuffixes = suffixes.size();
         boolean newSuffixes = Automata.incrementalCharacterizingSet(automaton, alphabet, suffixes, suffixes);
