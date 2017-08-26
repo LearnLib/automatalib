@@ -49,10 +49,6 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
         this.root = new Node<>(inputAlphabet.size());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.mealy.IncrementalMealyBuilder#lookup(net.automatalib.words.Word, java.util.List)
-     */
     @Override
     public boolean lookup(Word<? extends I> word, List<? super O> output) {
         Node<I, O> curr = root;
@@ -70,10 +66,6 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.mealy.IncrementalMealyBuilder#insert(net.automatalib.words.Word, net.automatalib.words.Word)
-     */
     @Override
     public void insert(Word<? extends I> input, Word<? extends O> outputWord) throws ConflictException {
         Node<I, O> curr = root;
@@ -111,10 +103,6 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
         return new TransitionSystemView();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.IncrementalConstruction#findSeparatingWord(java.lang.Object, java.util.Collection, boolean)
-     */
     @Override
     public Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
                                       Collection<? extends I> inputs,
@@ -166,10 +154,6 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder#hasDefinitiveInformation(net.automatalib.words.Word)
-     */
     @Override
     public boolean hasDefinitiveInformation(Word<? extends I> word) {
         Node<I, O> curr = root;

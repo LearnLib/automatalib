@@ -25,28 +25,16 @@ final class UnmodifiableIterator<E> implements Iterator<E> {
         this.iterator = iterator;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         return iterator.hasNext();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
     @Override
     public E next() {
         return iterator.next();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     @Override
     public void remove() {
         throw new UnsupportedOperationException();

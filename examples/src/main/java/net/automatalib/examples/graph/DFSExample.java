@@ -79,9 +79,6 @@ public final class DFSExample {
         private final Map<N, Integer> dfsNumbers = new HashMap<>();
         private final Map<E, EdgeType> edgeTypes = new HashMap<>();
 
-        /* (non-Javadoc)
-         * @see net.automatalib.util.graphs.traversal.BaseDFSVisitor#explore(java.lang.Object, java.lang.Object)
-         */
         @Override
         public void explore(N node, Void data) {
             dfsNumbers.put(node, dfsNumbers.size());
@@ -131,9 +128,6 @@ public final class DFSExample {
             this.edgeTypes = edgeTypes;
         }
 
-        /* (non-Javadoc)
-         * @see net.automatalib.graphs.dot.EmptyDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
-         */
         @Override
         public boolean getNodeProperties(N node, Map<String, String> properties) {
             String lbl = properties.get("label");
@@ -143,9 +137,6 @@ public final class DFSExample {
             return true;
         }
 
-        /* (non-Javadoc)
-         * @see net.automatalib.graphs.dot.EmptyDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
-         */
         @Override
         public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
             EdgeType et = edgeTypes.get(edge);

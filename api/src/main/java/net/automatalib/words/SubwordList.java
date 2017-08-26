@@ -33,10 +33,6 @@ class SubwordList<I> extends AbstractList<Word<I>> {
         this.reverse = reverse;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#get(int)
-     */
     @Override
     @Nonnull
     public Word<I> get(int index) {
@@ -52,10 +48,6 @@ class SubwordList<I> extends AbstractList<Word<I>> {
         return word.suffix(index);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return word.length() + 1;

@@ -60,19 +60,11 @@ final class SharedWord<I> extends Word<I> {
         this.length = other.size();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#length()
-     */
     @Override
     public int length() {
         return this.length;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#iterator()
-     */
     @Override
     public Iterator<I> iterator() {
         return new Iterator<>(this);
@@ -84,10 +76,6 @@ final class SharedWord<I> extends Word<I> {
         return Arrays.spliterator((I[]) storage, offset, offset + length);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.words.Word#subWord(int, int)
-     */
     @Override
     public Word<I> subWordInternal(int fromIndex, int toIndex) {
         int newOfs = offset + fromIndex;
@@ -101,29 +89,17 @@ final class SharedWord<I> extends Word<I> {
         return new SharedWord<>(storage, newOfs, newLen);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#writeToArray(int, java.lang.Object[], int, int)
-     */
     @Override
     public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
         System.arraycopy(storage, this.offset + offset, array, tgtOfs, num);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.words.Word#getSymbol(int)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public I getSymbol(int index) {
         return (I) storage[offset + index];
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#lastSymbol()
-     */
     @Override
     @SuppressWarnings("unchecked")
     public I lastSymbol() {
@@ -136,10 +112,6 @@ final class SharedWord<I> extends Word<I> {
         return (I) storage[offset];
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#flatten()
-     */
     @Override
     public Word<I> flatten() {
         return this;

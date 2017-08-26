@@ -46,76 +46,44 @@ public abstract class AbstractFastMutableDet<S extends AbstractFastDetState<S, T
         this.inputAlphabet = new SimpleAlphabet<>(inputAlphabet);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.concepts.StateIDs#getStateId(java.lang.Object)
-     */
     @Override
     public int getStateId(S state) {
         return state.getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.concepts.StateIDs#getState(int)
-     */
     @Override
     public S getState(int id) {
         return states.get(id);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.MutableDeterministic#setTransition(java.lang.Object, java.lang.Object, java.lang.Object)
-     */
     @Override
     public void setTransition(S state, I input, T transition) {
         int inputIdx = inputAlphabet.getSymbolIndex(input);
         state.setTransition(inputIdx, transition);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.simple.SimpleDTS#getInitialState()
-     */
     @Override
     public S getInitialState() {
         return initialState;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.MutableDeterministic#setInitialState(java.lang.Object)
-     */
     @Override
     public void setInitialState(S state) {
         this.initialState = state;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.DeterministicTransitionSystem#getTransition(java.lang.Object, java.lang.Object)
-     */
     @Override
     public T getTransition(S state, I input) {
         int inputIdx = inputAlphabet.getSymbolIndex(input);
         return state.getTransition(inputIdx);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.MutableAutomaton#clear()
-     */
     @Override
     public void clear() {
         states.clear();
         this.initialState = null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.MutableAutomaton#addState(java.lang.Object)
-     */
     @Override
     public S addState(SP property) {
         S newState = createState(property);
@@ -123,10 +91,6 @@ public abstract class AbstractFastMutableDet<S extends AbstractFastDetState<S, T
         return newState;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.MutableAutomaton#removeAllTransitions(java.lang.Object)
-     */
     @Override
     public void removeAllTransitions(S state) {
         state.clearTransitions();
@@ -134,29 +98,17 @@ public abstract class AbstractFastMutableDet<S extends AbstractFastDetState<S, T
 
     protected abstract S createState(SP property);
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.ShrinkableAutomaton#removeState(java.lang.Object, java.lang.Object)
-     */
     @Override
     public void removeState(S state, S replacement) {
         ShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
         states.remove(state);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.concepts.InputAlphabetHolder#getInputAlphabet()
-     */
     @Override
     public Alphabet<I> getInputAlphabet() {
         return inputAlphabet;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.abstractimpl.AbstractTS#createDynamicStateMapping()
-     */
     @Override
     public <V> MutableMapping<S, V> createDynamicStateMapping() {
         return new StateIDDynamicMapping<>(this);
@@ -172,28 +124,16 @@ public abstract class AbstractFastMutableDet<S extends AbstractFastDetState<S, T
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.simple.SimpleAutomaton#getStates()
-     */
     @Override
     public Collection<S> getStates() {
         return states;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.abstractimpl.AbstractTS#createStaticStateMapping()
-     */
     @Override
     public <V> MutableMapping<S, V> createStaticStateMapping() {
         return new StateIDStaticMapping<>(this, size());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton#stateIDs()
-     */
     @Override
     public StateIDs<S> stateIDs() {
         return this;

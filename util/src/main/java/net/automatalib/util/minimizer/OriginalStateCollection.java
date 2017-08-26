@@ -41,37 +41,21 @@ class OriginalStateCollection<S> extends AbstractCollection<S> {
         this.stateColl = stateColl;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#iterator()
-     */
     @Override
     public Iterator<S> iterator() {
         final Iterator<? extends State<S, ?>> stateIt = stateColl.iterator();
         return new Iterator<S>() {
 
-            /*
-             * (non-Javadoc)
-             * @see java.util.Iterator#hasNext()
-             */
             @Override
             public boolean hasNext() {
                 return stateIt.hasNext();
             }
 
-            /*
-             * (non-Javadoc)
-             * @see java.util.Iterator#next()
-             */
             @Override
             public S next() {
                 return stateIt.next().getOriginalState();
             }
 
-            /*
-             * (non-Javadoc)
-             * @see java.util.Iterator#remove()
-             */
             @Override
             public void remove() {
                 throw new UnsupportedOperationException("Removal not " + "allowed on this collection!");
@@ -80,10 +64,6 @@ class OriginalStateCollection<S> extends AbstractCollection<S> {
         };
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return stateColl.size();

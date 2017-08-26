@@ -85,9 +85,6 @@ public class DOTComponent extends ImageComponent {
         this.dot = dot;
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.commons.dotutil.ImageComponent#listActions(java.util.List)
-     */
     @Override
     public void listActions(List<Action> actions) {
         super.listActions(actions);

@@ -47,28 +47,16 @@ final class MappedIterator<D, R> implements Iterator<R> {
         this.baseIt = baseIt;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         return baseIt.hasNext();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
     @Override
     public R next() {
         return mapping.get(baseIt.next());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     @Override
     public void remove() {
         baseIt.remove();

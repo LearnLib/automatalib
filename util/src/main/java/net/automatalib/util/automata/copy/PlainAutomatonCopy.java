@@ -39,10 +39,6 @@ final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
         super(in, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transFilter);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.automata.copy.AbstractAutomatonCopy#doCopy()
-     */
     @Override
     public void doCopy() {
         List<StateRec<S1, S2>> outStates = new ArrayList<>(in.size());

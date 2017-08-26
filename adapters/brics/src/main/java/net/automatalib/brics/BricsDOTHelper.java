@@ -41,19 +41,11 @@ final class BricsDOTHelper extends DefaultDOTHelper<State, Transition> {
         this.automaton = automaton;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DefaultDOTHelper#initialNodes()
-     */
     @Override
     protected Collection<? extends State> initialNodes() {
         return automaton.getInitialStates();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
-     */
     @Override
     public boolean getNodeProperties(State node, Map<String, String> properties) {
         if (!super.getNodeProperties(node, properties)) {
@@ -70,10 +62,6 @@ final class BricsDOTHelper extends DefaultDOTHelper<State, Transition> {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
-     */
     @Override
     public boolean getEdgeProperties(State src, Transition edge, State tgt, Map<String, String> properties) {
         if (!super.getEdgeProperties(src, edge, tgt, properties)) {

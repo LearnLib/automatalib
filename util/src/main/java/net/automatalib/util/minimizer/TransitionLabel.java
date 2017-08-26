@@ -130,10 +130,6 @@ final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<Transiti
         return list;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return originalLabel.toString();

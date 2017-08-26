@@ -36,46 +36,26 @@ public final class FastMoore<I, O> extends AbstractFastMutableDet<FastMooreState
         super(alphabet);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.ts.TransitionSystem#getSuccessor(java.lang.Object)
-     */
     @Override
     public FastMooreState<O> getSuccessor(FastMooreState<O> transition) {
         return transition;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.features.StateOutput#getStateOutput(java.lang.Object)
-     */
     @Override
     public O getStateOutput(FastMooreState<O> state) {
         return state.getOutput();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.MutableAutomaton#createTransition(java.lang.Object, java.lang.Object)
-     */
     @Override
     public FastMooreState<O> createTransition(FastMooreState<O> successor, Void properties) {
         return successor;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.features.MutableStateOutput#setStateOutput(java.lang.Object, java.lang.Object)
-     */
     @Override
     public void setStateOutput(FastMooreState<O> state, O output) {
         state.setOutput(output);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.base.fast.FastMutableDet#createState(java.lang.Object)
-     */
     @Override
     protected FastMooreState<O> createState(O property) {
         return new FastMooreState<>(inputAlphabet.size(), property);

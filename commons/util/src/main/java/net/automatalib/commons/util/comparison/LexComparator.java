@@ -35,10 +35,6 @@ final class LexComparator<T extends Iterable<U>, U> implements Comparator<T> {
         this.elemComparator = elemComparator;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
     @Override
     public int compare(T o1, T o2) {
         return CmpUtil.lexCompare(o1, o2, elemComparator);

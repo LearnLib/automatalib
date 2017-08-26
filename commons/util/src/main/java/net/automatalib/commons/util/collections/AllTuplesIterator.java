@@ -46,10 +46,6 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
         firstEmpty = (minLength == 0);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         if (firstEmpty) {
@@ -65,10 +61,6 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
     @Override
     public List<T> next() {
         if (firstEmpty) {
@@ -98,10 +90,6 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
         throw new NoSuchElementException();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     @Override
     public void remove() {
         throw new UnsupportedOperationException();

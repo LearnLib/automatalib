@@ -45,10 +45,6 @@ final class MappingComposition<D, I, R> implements Mapping<D, R> {
         this.second = second;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.misc.util.Mapping#get(java.lang.Object)
-     */
     @Override
     public R get(D elem) {
         I i = first.get(elem);

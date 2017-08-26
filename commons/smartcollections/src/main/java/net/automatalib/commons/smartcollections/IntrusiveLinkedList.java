@@ -30,10 +30,6 @@ package net.automatalib.commons.smartcollections;
  */
 public class IntrusiveLinkedList<T extends LinkedListEntry<T, T>> extends AbstractLinkedList<T, T> {
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.AbstractLinkedList#makeEntry(java.lang.Object)
-     */
     @Override
     protected T makeEntry(T element) {
         return element;

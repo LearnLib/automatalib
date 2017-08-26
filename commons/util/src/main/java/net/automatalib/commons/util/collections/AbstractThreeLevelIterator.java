@@ -32,25 +32,16 @@ public abstract class AbstractThreeLevelIterator<L1, L2, L3, O> implements Itera
 
     protected abstract O combine(L1 l1Object, L2 l2Object, L3 l3Object);
 
-    /* (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         return innerIterator.hasNext();
     }
 
-    /* (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
     @Override
     public O next() {
         return innerIterator.next();
     }
 
-    /* (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     @Override
     public void remove() {
         innerIterator.remove();

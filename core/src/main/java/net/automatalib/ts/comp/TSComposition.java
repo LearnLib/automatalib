@@ -44,10 +44,6 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
         this.ts2 = ts2;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.ts.TransitionSystem#getInitialStates()
-     */
     @Override
     public Set<? extends IPair<S1, S2>> getInitialStates() {
         Collection<? extends S1> init1 = ts1.getInitialStates();
@@ -64,10 +60,6 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.ts.TransitionSystem#getTransitions(java.lang.Object, java.lang.Object)
-     */
     @Override
     public Collection<IPair<T1, T2>> getTransitions(IPair<S1, S2> state, I input) {
         S1 s1 = state.first;
@@ -90,10 +82,6 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.ts.TransitionSystem#getSuccessor(java.lang.Object)
-     */
     @Override
     public IPair<S1, S2> getSuccessor(IPair<T1, T2> transition) {
         T1 t1 = transition.first;

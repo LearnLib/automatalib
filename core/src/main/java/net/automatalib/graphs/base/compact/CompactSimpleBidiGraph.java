@@ -61,9 +61,6 @@ public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<Compa
         return edge.getSource();
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#addIntNode(java.lang.Object)
-     */
     @Override
     public int addIntNode(Void properties) {
         inEdges.ensureCapacity(size + 1);
@@ -72,9 +69,6 @@ public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<Compa
         return node;
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#connect(int, int, java.lang.Object)
-     */
     @Override
     public CompactBidiEdge<EP> connect(int source, int target, EP property) {
         CompactBidiEdge<EP> edge = super.connect(source, target, property);

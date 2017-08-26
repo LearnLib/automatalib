@@ -36,10 +36,6 @@ public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
         this.delegate = delegate;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.GraphDOTHelper#writePreamble(java.lang.Appendable)
-     */
     @Override
     public void writePreamble(Appendable a) throws IOException {
         if (delegate != null) {
@@ -58,10 +54,6 @@ public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
         return Collections.emptySet();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.GraphDOTHelper#writePostamble(java.lang.Appendable)
-     */
     @Override
     public void writePostamble(Mapping<N, String> identifiers, Appendable a) throws IOException {
         if (delegate != null) {
@@ -77,10 +69,6 @@ public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.GraphDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
-     */
     @Override
     public boolean getNodeProperties(N node, Map<String, String> properties) {
         if (delegate != null) {
@@ -99,10 +87,6 @@ public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.GraphDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
-     */
     @Override
     public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
         if (delegate != null) {

@@ -52,19 +52,11 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
         this.alphabetSize = inputAlphabet.size();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.IncrementalConstruction#getInputAlphabet()
-     */
     @Override
     public Alphabet<I> getInputAlphabet() {
         return inputAlphabet;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.IncrementalConstruction#hasDefinitiveInformation(net.automatalib.words.Word)
-     */
     @Override
     public boolean hasDefinitiveInformation(Word<? extends I> word) {
         return lookup(word) != Acceptance.DONT_KNOW;

@@ -247,10 +247,6 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
         return (block.size() == 1);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return originalState.toString();

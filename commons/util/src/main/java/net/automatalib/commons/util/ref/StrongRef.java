@@ -37,10 +37,6 @@ public final class StrongRef<T> implements Ref<T> {
         this.referent = referent;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.misc.util.ref.Ref#get()
-     */
     @Override
     public T get() {
         return referent;

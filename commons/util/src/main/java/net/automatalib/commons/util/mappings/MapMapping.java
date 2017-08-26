@@ -60,10 +60,6 @@ public class MapMapping<D, R> implements MutableMapping<D, R>, Serializable {
         return new MapMapping<>(map);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see edu.udo.ls5.util.Mapping#get(java.lang.Object)
-     */
     @Override
     public R get(D elem) {
         return map.get(elem);

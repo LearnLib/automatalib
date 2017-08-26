@@ -51,19 +51,11 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
         this.limit = limit;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.automata.copy.AbstractAutomatonCopy#doCopy()
-     */
     @Override
     public void doCopy() {
         TSTraversal.traverse(traversalOrder, in, limit, inputs, this);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.ts.traversal.TSTraversalVisitor#processInitial(java.lang.Object, net.automatalib.commons.util.Holder)
-     */
     @Override
     public TSTraversalAction processInitial(S1 state, Holder<S2> outData) {
         if (stateFilter.test(state)) {
@@ -73,19 +65,11 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
         return TSTraversalAction.IGNORE;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.ts.traversal.TSTraversalVisitor#startExploration(java.lang.Object, java.lang.Object)
-     */
     @Override
     public boolean startExploration(S1 state, S2 data) {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.ts.traversal.TSTraversalVisitor#processTransition(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, net.automatalib.commons.util.Holder)
-     */
     @Override
     public TSTraversalAction processTransition(S1 source,
                                                S2 srcData,

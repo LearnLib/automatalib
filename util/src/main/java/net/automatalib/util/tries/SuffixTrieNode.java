@@ -142,19 +142,11 @@ public class SuffixTrieNode<I> extends Word<I> {
             this.current = node;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return !current.isRoot();
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         public I next() {
             if (current.isRoot()) {
@@ -165,10 +157,6 @@ public class SuffixTrieNode<I> extends Word<I> {
             return sym;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             throw new UnsupportedOperationException();

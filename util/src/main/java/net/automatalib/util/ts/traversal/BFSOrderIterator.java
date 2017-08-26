@@ -42,19 +42,11 @@ public class BFSOrderIterator<S, I> implements Iterator<S> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         return !bfsQueue.isEmpty();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
     @Override
     public S next() {
         S state = bfsQueue.poll();
@@ -71,10 +63,6 @@ public class BFSOrderIterator<S, I> implements Iterator<S> {
         return state;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     @Override
     public void remove() {
         throw new UnsupportedOperationException();

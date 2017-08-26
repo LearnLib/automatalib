@@ -53,10 +53,6 @@ public abstract class AbstractFastDetState<S extends AbstractFastDetState<S, T>,
         return (T) transitions.array[inputIdx];
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
         return "s" + getId();

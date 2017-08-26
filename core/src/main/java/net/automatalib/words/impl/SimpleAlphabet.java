@@ -58,10 +58,6 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#add(java.lang.Object)
-     */
     @Override
     public boolean add(I a) {
         int s = size();
@@ -69,28 +65,16 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
         return idx == s;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#iterator()
-     */
     @Override
     public Iterator<I> iterator() {
         return Collections.unmodifiableList(symbols).iterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return symbols.size();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.GrowingAlphabet#addSymbol(java.lang.Object)
-     */
     @Override
     public int addSymbol(I a) {
         //int idx = indexMap.get(a);
@@ -105,37 +89,21 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
         return idx;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#get(int)
-     */
     @Override
     public I get(int index) {
         return getSymbol(index);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.words.Alphabet#getSymbol(int)
-     */
     @Override
     public I getSymbol(int index) {
         return symbols.get(index);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.words.Alphabet#getSymbolIndex(java.lang.Object)
-     */
     @Override
     public int getSymbolIndex(I symbol) {
         return indexMap.get(symbol);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
     @Override
     public int compare(I o1, I o2) {
         return indexMap.get(o1) - indexMap.get(o2);

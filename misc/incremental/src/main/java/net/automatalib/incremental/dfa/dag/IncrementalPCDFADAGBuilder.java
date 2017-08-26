@@ -29,10 +29,6 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         super(inputAlphabet);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder#lookup(net.automatalib.words.Word)
-     */
     @Override
     public Acceptance lookup(Word<? extends I> word) {
         State s = getState(word);
@@ -42,10 +38,6 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         return (s != sink) ? s.getAcceptance() : Acceptance.FALSE;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder#getState(net.automatalib.words.Word)
-     */
     @Override
     protected State getState(Word<? extends I> word) {
         State s = init;
@@ -60,10 +52,6 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         return s;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder#insert(net.automatalib.words.Word, boolean)
-     */
     @Override
     public void insert(Word<? extends I> word, boolean accepting) {
 

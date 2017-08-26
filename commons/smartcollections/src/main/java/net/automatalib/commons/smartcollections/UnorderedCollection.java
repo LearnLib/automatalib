@@ -69,37 +69,21 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         addAll(coll);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.CapacityManagement#ensureCapacity(int)
-     */
     @Override
     public boolean ensureCapacity(int minCapacity) {
         return storage.ensureCapacity(minCapacity);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.CapacityManagement#ensureAdditionalCapacity(int)
-     */
     @Override
     public boolean ensureAdditionalCapacity(int additionalSpace) {
         return ensureCapacity(size + additionalSpace);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.CapacityManagement#hintNextCapacity(int)
-     */
     @Override
     public void hintNextCapacity(int nextCapacityHint) {
         storage.hintNextCapacity(nextCapacityHint);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#get(de.ls5.collections.ElementReference)
-     */
     @Override
     public E get(ElementReference ref) {
         Reference<E> r = asIndexedRef(ref);
@@ -119,10 +103,6 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         return (Reference<E>) ref;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#referencedAdd(java.lang.Object)
-     */
     @Override
     public ElementReference referencedAdd(E elem) {
         ensureCapacity(size + 1);
@@ -132,10 +112,6 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         return ref;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#remove(de.ls5.collections.ElementReference)
-     */
     @Override
     public void remove(ElementReference ref) {
         remove(extractValidIndex(ref));
@@ -165,19 +141,11 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         }
         return false;
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#referenceIterator()
-     */
 
     @Override
     public Iterator<ElementReference> referenceIterator() {
         return new ReferenceIterator();
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#replace(de.ls5.collections.ElementReference, java.lang.Object)
-     */
 
     @Override
     @SuppressWarnings("unchecked")
@@ -199,10 +167,6 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         }
         return idx;
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#choose()
-     */
 
     @Override
     @SuppressWarnings("unchecked")
@@ -212,10 +176,6 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         }
         return ((Reference<E>) storage.array[0]).element;
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#chooseRef()
-     */
 
     @Override
     public ElementReference chooseRef() {
@@ -224,19 +184,11 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         }
         return (ElementReference) storage.array[0];
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.AbstractSmartCollection#references()
-     */
 
     @Override
     public Iterable<ElementReference> references() {
         return this::referenceIterator;
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.AbstractSmartCollection#addAll(T[])
-     */
 
     @Override
     public <T extends E> void addAll(T[] array) {
@@ -260,64 +212,31 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#quickClear()
-     */
     @Override
     public void quickClear() {
         size = 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#deepClear()
-     */
     @Override
     public void deepClear() {
         storage.setAll(null);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#iterator()
-     */
     @Override
     public Iterator<E> iterator() {
         return new ElementIterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#remove(java.lang.Object)
-     */
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
-
     @Override
     public int size() {
         return size;
     }
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#isEmpty()
-     */
 
     @Override
     public boolean isEmpty() {
         return (size == 0);
     }
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#addAll(java.util.Collection)
-     */
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#clear()
-     */
     @Override
     @SuppressWarnings("unchecked")
     public void clear() {
@@ -371,19 +290,11 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
         private int index;
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return (index < size);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         public ElementReference next() {
             if (index >= size) {
@@ -392,10 +303,6 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
             return (ElementReference) storage.array[index++];
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             UnorderedCollection.this.remove(--index);
@@ -409,19 +316,11 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
         private int index;
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return (index < size);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         @SuppressWarnings("unchecked")
         public E next() {
@@ -431,10 +330,6 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
             return ((Reference<E>) storage.array[index++]).element;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             UnorderedCollection.this.remove(--index);

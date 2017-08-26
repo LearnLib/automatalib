@@ -168,19 +168,11 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         return new BinaryHeap<>(initialCapacity, initValues, comparator);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return size;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#get(de.ls5.smartcollections.ElementReference)
-     */
     @Override
     public E get(ElementReference ref) {
         return BinaryHeap.<E>asHeapRef(ref).element;
@@ -207,10 +199,6 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         return entry;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#remove(de.ls5.smartcollections.ElementReference)
-     */
     @Override
     public void remove(ElementReference ref) {
         remove(asHeapRef(ref).index);
@@ -245,19 +233,11 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         }
         e.index = iter;
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#referenceIterator()
-     */
 
     @Override
     public Iterator<ElementReference> referenceIterator() {
         return new ReferenceIterator();
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#replace(de.ls5.smartcollections.ElementReference, java.lang.Object)
-     */
 
     @Override
     public void replace(ElementReference ref, E newElement) {
@@ -265,28 +245,16 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         heapRef.element = newElement;
         keyChanged(ref);
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartPriorityQueue#keyChanged(de.ls5.smartcollections.ElementReference)
-     */
 
     @Override
     public void keyChanged(ElementReference ref) {
         keyChanged(asHeapRef(ref).index);
     }
-    /*
-     * (non-Javadoc)
-     * @see edu.udo.ls5.util.PriorityQueue#keyChanged(edu.udo.ls5.util.PriorityQueue.Entry)
-     */
 
     public void keyChanged(int index) {
         upHeap(index);
         downHeap(index);
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.CapacityManagement#ensureCapacity(int)
-     */
 
     @Override
     public boolean ensureCapacity(int minCapacity) {
@@ -330,37 +298,21 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     private static int parent(int child) {
         return child / 2;
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.CapacityManagement#ensureAdditionalCapacity(int)
-     */
 
     @Override
     public boolean ensureAdditionalCapacity(int additionalCapacity) {
         return ensureCapacity(size + additionalCapacity);
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.CapacityManagement#hintNextCapacity(int)
-     */
 
     @Override
     public void hintNextCapacity(int nextCapacityHint) {
         entries.hintNextCapacity(nextCapacityHint);
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#quickClear()
-     */
 
     @Override
     public void quickClear() {
         size = 0;
     }
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#deepClear()
-     */
 
     @Override
     public void deepClear() {
@@ -386,10 +338,6 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         return peekMin();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see edu.udo.ls5.util.PriorityQueue#peekMin()
-     */
     @Override
     @SuppressWarnings("unchecked")
     public E peekMin() {
@@ -399,10 +347,6 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         return ((Reference<E>) entries.array[0]).element;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see edu.udo.ls5.util.PriorityQueue#extractMin()
-     */
     @Override
     @SuppressWarnings("unchecked")
     public E extractMin() {
@@ -462,19 +406,11 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
 
         private int current;
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return (current < size);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         public ElementReference next() {
             if (current >= size) {
@@ -483,10 +419,6 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
             return (ElementReference) entries.array[current++];
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             BinaryHeap.this.remove(--current);

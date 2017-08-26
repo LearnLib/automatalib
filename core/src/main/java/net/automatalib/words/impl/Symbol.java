@@ -71,10 +71,6 @@ public class Symbol extends AbstractSymbol<Symbol> {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     @Nonnull
     public String toString() {

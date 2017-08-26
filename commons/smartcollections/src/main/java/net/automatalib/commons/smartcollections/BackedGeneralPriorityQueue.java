@@ -90,10 +90,6 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         this.backingQueue = (SmartDynamicPriorityQueue<Entry<E, K>>) backingQueue;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.AbstractSmartCollection#choose()
-     */
     @Override
     public E choose() {
         Entry<E, K> entry = backingQueue.choose();
@@ -103,19 +99,11 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         return entry.element;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.AbstractSmartCollection#chooseRef()
-     */
     @Override
     public ElementReference chooseRef() {
         return backingQueue.chooseRef();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.AbstractSmartCollection#find(java.lang.Object)
-     */
     @Override
     public ElementReference find(Object element) {
         for (ElementReference ref : backingQueue.references()) {
@@ -127,72 +115,43 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.commons.smartcollections.AbstractSmartCollection#quickClear()
-     */
     @Override
     public void quickClear() {
         backingQueue.quickClear();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.commons.smartcollections.AbstractSmartCollection#deepClear()
-     */
     @Override
     public void deepClear() {
         backingQueue.deepClear();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.AbstractSmartCollection#iterator()
-     */
     @Override
     public Iterator<E> iterator() {
         return new ElementIterator<>(backingQueue.iterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#get(de.ls5.smartcollections.ElementReference)
-     */
     @Override
     public E get(ElementReference ref) {
         Entry<E, K> entry = backingQueue.get(ref);
         return entry.element;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#referencedAdd(java.lang.Object)
-     */
     @Override
     public ElementReference referencedAdd(E elem) {
         return add(elem, defaultKey);
     }
 
-    /* (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartGeneralPriorityQueue#add(E, K)
-     */
     @Override
     public ElementReference add(E elem, K key) {
         Entry<E, K> entry = new Entry<>(elem, key);
         return backingQueue.referencedAdd(entry);
     }
 
-    /* (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartGeneralPriorityQueue#setDefaultPriority(int)
-     */
     @Override
     public void setDefaultKey(K defaultKey) {
         this.defaultKey = defaultKey;
     }
 
-    /* (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartGeneralPriorityQueue#changePriority(de.ls5.smartcollections.ElementReference, int)
-     */
     @Override
     public void changeKey(ElementReference ref, K newKey) {
         Entry<E, K> entry = backingQueue.get(ref);
@@ -200,75 +159,43 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         backingQueue.keyChanged(ref);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#remove(de.ls5.smartcollections.ElementReference)
-     */
     @Override
     public void remove(ElementReference ref) {
         backingQueue.remove(ref);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#referenceIterator()
-     */
     @Override
     public Iterator<ElementReference> referenceIterator() {
         return backingQueue.referenceIterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#replace(de.ls5.smartcollections.ElementReference, java.lang.Object)
-     */
     @Override
     public void replace(ElementReference ref, E newElement) {
         Entry<E, K> entry = backingQueue.get(ref);
         entry.element = newElement;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return backingQueue.size();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#isEmpty()
-     */
     @Override
     public boolean isEmpty() {
         return backingQueue.isEmpty();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#clear()
-     */
     @Override
     public void clear() {
         backingQueue.clear();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartPriorityQueue#peekMin()
-     */
     @Override
     public E peekMin() {
         Entry<E, K> min = backingQueue.peekMin();
         return min.element;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartPriorityQueue#extractMin()
-     */
     @Override
     public E extractMin() {
         Entry<E, K> min = backingQueue.extractMin();

@@ -107,10 +107,6 @@ public class IPair<T1, T2> extends AbstractPrintable {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.util.Printable#print(java.lang.Appendable)
-     */
     @Override
     public void print(Appendable a) throws IOException {
         StringUtil.appendObject(a, first);

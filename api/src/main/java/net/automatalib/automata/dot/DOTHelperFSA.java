@@ -25,10 +25,6 @@ public class DOTHelperFSA<S, I> extends DefaultDOTHelperAutomaton<S, I, S, Finit
         super(automaton);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
-     */
     @Override
     public boolean getNodeProperties(S node, Map<String, String> properties) {
         if (!super.getNodeProperties(node, properties)) {

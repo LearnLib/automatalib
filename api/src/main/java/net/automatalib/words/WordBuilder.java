@@ -371,10 +371,6 @@ public final class WordBuilder<I> extends AbstractList<I> {
         lock = true;
         return new SharedWord<>(array, 0, length);
     }
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#add(java.lang.Object)
-     */
 
     @Override
     public boolean add(I e) {
@@ -382,10 +378,6 @@ public final class WordBuilder<I> extends AbstractList<I> {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#get(int)
-     */
     @Override
     public I get(int index) {
         return getSymbol(index);
@@ -404,10 +396,6 @@ public final class WordBuilder<I> extends AbstractList<I> {
         return (I) array[index];
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#set(int, java.lang.Object)
-     */
     @Override
     public I set(int index, I element) {
         I old = getSymbol(index);
@@ -431,10 +419,6 @@ public final class WordBuilder<I> extends AbstractList<I> {
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#clear()
-     */
     @Override
     public void clear() {
         ensureUnlocked();
@@ -444,10 +428,6 @@ public final class WordBuilder<I> extends AbstractList<I> {
         length = 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return length;

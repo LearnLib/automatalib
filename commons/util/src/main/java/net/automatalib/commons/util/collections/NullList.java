@@ -28,10 +28,6 @@ final class NullList extends AbstractList<Object> implements RandomAccess {
         this.size = size;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#get(int)
-     */
     @Override
     public Object get(int index) {
         if (index < 0 || index >= size) {
@@ -40,28 +36,16 @@ final class NullList extends AbstractList<Object> implements RandomAccess {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#iterator()
-     */
     @Override
     public java.util.Iterator<Object> iterator() {
         return new Iterator(size);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#listIterator()
-     */
     @Override
     public ListIterator<Object> listIterator() {
         return new Iterator(size);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return size;
@@ -76,19 +60,11 @@ final class NullList extends AbstractList<Object> implements RandomAccess {
             this.size = size;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.ListIterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return (i < size);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.ListIterator#next()
-         */
         @Override
         public Object next() {
             if (!hasNext()) {
@@ -98,19 +74,11 @@ final class NullList extends AbstractList<Object> implements RandomAccess {
             return null;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.ListIterator#hasPrevious()
-         */
         @Override
         public boolean hasPrevious() {
             return (i > 0);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.ListIterator#previous()
-         */
         @Override
         public Object previous() {
             if (!hasPrevious()) {
@@ -120,46 +88,26 @@ final class NullList extends AbstractList<Object> implements RandomAccess {
             return null;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.ListIterator#nextIndex()
-         */
         @Override
         public int nextIndex() {
             return i;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.ListIterator#previousIndex()
-         */
         @Override
         public int previousIndex() {
             return i - 1;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.ListIterator#remove()
-         */
         @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.ListIterator#set(java.lang.Object)
-         */
         @Override
         public void set(Object e) {
             throw new UnsupportedOperationException();
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.ListIterator#add(java.lang.Object)
-         */
         @Override
         public void add(Object e) {
             throw new UnsupportedOperationException();

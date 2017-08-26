@@ -31,19 +31,11 @@ public class DefaultDOTHelperAutomaton<S, I, T, A extends Automaton<S, I, T>>
         this.automaton = automaton;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DefaultDOTHelper#initialNodes()
-     */
     @Override
     protected Collection<? extends S> initialNodes() {
         return automaton.getInitialStates();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DefaultDOTHelper#getEdgeProperties(java.lang.Object, java.util.Map)
-     */
     @Override
     public boolean getEdgeProperties(S src, TransitionEdge<I, T> edge, S tgt, Map<String, String> properties) {
         if (!super.getEdgeProperties(src, edge, tgt, properties)) {

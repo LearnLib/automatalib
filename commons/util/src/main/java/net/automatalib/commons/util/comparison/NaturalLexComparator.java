@@ -37,10 +37,6 @@ final class NaturalLexComparator<T extends Iterable<U>, U extends Comparable<U>>
         return (NaturalLexComparator<T, U>) INSTANCE;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
     @Override
     public int compare(T o1, T o2) {
         return CmpUtil.lexCompare(o1, o2);

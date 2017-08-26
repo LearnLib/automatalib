@@ -39,10 +39,6 @@ public final class WeakRef<T> implements Ref<T> {
         this.reference = new WeakReference<>(referent);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.misc.util.ref.Ref#get()
-     */
     @Override
     public T get() {
         return reference.get();

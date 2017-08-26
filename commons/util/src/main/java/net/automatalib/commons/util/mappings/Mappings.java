@@ -176,19 +176,11 @@ public final class Mappings {
     public static <D, R> List<R> apply(final Mapping<? super D, R> mapping, final List<? extends D> list) {
         return new AbstractList<R>() {
 
-            /*
-             * (non-Javadoc)
-             * @see java.util.AbstractList#get(int)
-             */
             @Override
             public R get(int index) {
                 return mapping.get(list.get(index));
             }
 
-            /*
-             * (non-Javadoc)
-             * @see java.util.AbstractCollection#size()
-             */
             @Override
             public int size() {
                 return list.size();

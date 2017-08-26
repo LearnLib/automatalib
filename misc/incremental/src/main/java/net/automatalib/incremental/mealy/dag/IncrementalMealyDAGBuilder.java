@@ -88,13 +88,6 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return hasDefinitiveInformation(word);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.automatalib.incremental.IncrementalConstruction#hasDefinitiveInformation
-     * (net.automatalib.words.Word)
-     */
     @Override
     public boolean hasDefinitiveInformation(Word<? extends I> word) {
         State s = getState(word);
@@ -475,10 +468,6 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return new AutomatonView();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.IncrementalConstruction#findSeparatingWord(java.lang.Object, java.util.Collection, boolean)
-     */
     @Override
     public Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
                                       Collection<? extends I> inputs,

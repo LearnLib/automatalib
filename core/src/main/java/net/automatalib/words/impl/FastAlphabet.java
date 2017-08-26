@@ -49,30 +49,18 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> imp
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.words.GrowingAlphabet#addSymbol(java.lang.Object)
-     */
     @Override
     public int addSymbol(@Nonnull I a) {
         add(a);
         return a.getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.words.Alphabet#getSymbol(int)
-     */
     @Override
     @Nonnull
     public I getSymbol(int index) {
         return get(index);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.words.Alphabet#getSymbolIndex(java.lang.Object)
-     */
     @Override
     public int getSymbolIndex(@Nonnull I symbol) {
         int id = symbol.getId();

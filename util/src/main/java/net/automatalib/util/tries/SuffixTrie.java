@@ -77,10 +77,6 @@ public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>, SuffixTrieNode<I>
         this(DEFAULT_GRAPH_REPRESENTABLE, root);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.Graph#getNodes()
-     */
     @Override
     public Collection<SuffixTrieNode<I>> getNodes() {
         if (nodes == null) {
@@ -90,10 +86,6 @@ public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>, SuffixTrieNode<I>
         return Collections.unmodifiableCollection(nodes);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.IndefiniteGraph#getOutgoingEdges(java.lang.Object)
-     */
     @Override
     public Collection<SuffixTrieNode<I>> getOutgoingEdges(SuffixTrieNode<I> node) {
         if (nodes == null) {
@@ -107,10 +99,6 @@ public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>, SuffixTrieNode<I>
         return Collections.singleton(parent);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.IndefiniteGraph#getTarget(java.lang.Object)
-     */
     @Override
     public SuffixTrieNode<I> getTarget(SuffixTrieNode<I> edge) {
         if (nodes == null) {
@@ -120,10 +108,6 @@ public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>, SuffixTrieNode<I>
         return edge;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.graphs.dot.DOTPlottableGraph#getGraphDOTHelper()
-     */
     @Override
     public GraphDOTHelper<SuffixTrieNode<I>, SuffixTrieNode<I>> getGraphDOTHelper() {
         if (nodes == null) {
@@ -132,9 +116,6 @@ public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>, SuffixTrieNode<I>
 
         return new EmptyDOTHelper<SuffixTrieNode<I>, SuffixTrieNode<I>>() {
 
-            /* (non-Javadoc)
-             * @see net.automatalib.graphs.dot.DefaultDOTHelper#getNodeProperties(java.lang.Object, java.util.Map)
-             */
             @Override
             public boolean getNodeProperties(SuffixTrieNode<I> node, Map<String, String> properties) {
                 if (!super.getNodeProperties(node, properties)) {

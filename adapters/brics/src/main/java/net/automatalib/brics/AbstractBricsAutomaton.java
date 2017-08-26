@@ -64,19 +64,11 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
         return automaton;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.acceptors.AcceptorTS#isAccepting(java.lang.Object)
-     */
     @Override
     public boolean isAccepting(State state) {
         return state.isAccept();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.TransitionSystem#getTransitions(java.lang.Object, java.lang.Object)
-     */
     @Override
     public Collection<State> getTransitions(State state, @Nonnull Character input) {
         Collection<Transition> transitions = state.getSortedTransitions(false);
@@ -97,19 +89,11 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.simple.SimpleTS#getInitialStates()
-     */
     @Override
     public Set<State> getInitialStates() {
         return Collections.singleton(automaton.getInitialState());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.simple.SimpleAutomaton#getStates()
-     */
     @Override
     public Collection<State> getStates() {
         return automaton.getStates();
@@ -142,25 +126,11 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
             return new BricsDOTHelper(AbstractBricsAutomaton.this);
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see
-         * net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties
-         * (java.lang.Object)
-         */
         @Override
         public Boolean getNodeProperty(State node) {
             return node.isAccept();
         }
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see
-         * net.automatalib.graphs.UniversalIndefiniteGraph#getEdgeProperties
-         * (java.lang.Object)
-         */
         @Override
         public BricsTransitionProperty getEdgeProperty(Transition edge) {
             return new BricsTransitionProperty(edge);

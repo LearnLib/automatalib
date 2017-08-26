@@ -27,37 +27,21 @@ public class FastNFA<I> extends AbstractFastMutableNondet<FastNFAState, I, FastN
         super(inputAlphabet);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.ts.acceptors.AcceptorTS#isAccepting(java.lang.Object)
-     */
     @Override
     public boolean isAccepting(FastNFAState state) {
         return state.isAccepting();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.fsa.MutableFiniteStateAcceptor#setAccepting(java.lang.Object, boolean)
-     */
     @Override
     public void setAccepting(FastNFAState state, boolean accepting) {
         state.setAccepting(accepting);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.fsa.MutableFSA#addState(boolean)
-     */
     @Override
     public FastNFAState addState(boolean accepting) {
         return addState(Boolean.valueOf(accepting));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.base.fast.FastMutableNondet#createState(java.lang.Object)
-     */
     @Override
     protected FastNFAState createState(Boolean property) {
         return new FastNFAState(inputAlphabet.size(), AbstractWrapperUtil.booleanValue(property));

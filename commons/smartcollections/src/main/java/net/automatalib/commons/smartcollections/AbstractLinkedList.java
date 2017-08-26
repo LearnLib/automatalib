@@ -96,10 +96,6 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         other.clear();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.AbstractSmartCollection#choose()
-     */
     @Override
     public E choose() {
         if (head == null) {
@@ -108,10 +104,6 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         return head.getElement();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.AbstractSmartCollection#chooseRef()
-     */
     @Override
     public ElementReference chooseRef() {
         return head;
@@ -122,20 +114,12 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         return new ElementIterator(head);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#get(de.ls5.smartcollections.ElementReference)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public E get(ElementReference ref) {
         return ((T) ref).getElement();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#referencedAdd(java.lang.Object)
-     */
     @Override
     public ElementReference referencedAdd(E elem) {
         T entry = makeEntry(elem);
@@ -143,10 +127,6 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         return entry;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#remove(de.ls5.smartcollections.ElementReference)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public void remove(ElementReference elem) {
@@ -175,20 +155,12 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         size--;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#referenceIterator()
-     */
     @Override
     @SuppressWarnings("unchecked")
     public Iterator<ElementReference> referenceIterator() {
         return (Iterator<ElementReference>) (Iterator<?>) new LinkedListEntryIterator(head);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#replace(de.ls5.smartcollections.ElementReference, java.lang.Object)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public void replace(ElementReference ref, E newElement) {
@@ -248,28 +220,16 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         size++;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return size;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#isEmpty()
-     */
     @Override
     public boolean isEmpty() {
         return (head == null);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#clear()
-     */
     @Override
     public void clear() {
         head = null;
@@ -431,10 +391,6 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         size++;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartSequence#pred(de.ls5.smartcollections.ElementReference)
-     */
     @Override
     public ElementReference pred(ElementReference ref) {
         return castRef(ref).getPrev();
@@ -453,19 +409,11 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         return (T) ref;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartSequence#succ(de.ls5.smartcollections.ElementReference)
-     */
     @Override
     public ElementReference succ(ElementReference ref) {
         return castRef(ref).getNext();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartSequence#insertBefore(java.lang.Object, de.ls5.smartcollections.ElementReference)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public ElementReference insertBefore(E element, ElementReference ref) {
@@ -495,10 +443,6 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         size++;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartSequence#insertAfter(java.lang.Object, de.ls5.smartcollections.ElementReference)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public ElementReference insertAfter(E element, ElementReference ref) {
@@ -563,19 +507,11 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
             this.current = head;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return (current != null);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         public T next() {
             T e = current;
@@ -583,10 +519,6 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
             return e;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             T next = current.getNext();
@@ -607,19 +539,11 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
             this.current = head;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return (current != null);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         public E next() {
             E e = current.getElement();
@@ -627,10 +551,6 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
             return e;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             T next = current.getNext();

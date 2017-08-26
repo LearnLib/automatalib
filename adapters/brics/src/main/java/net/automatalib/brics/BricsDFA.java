@@ -69,28 +69,16 @@ public class BricsDFA extends AbstractBricsAutomaton implements DFA<State, Chara
         return aut;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.simple.SimpleDTS#getInitialState()
-     */
     @Override
     public State getInitialState() {
         return automaton.getInitialState();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.simple.SimpleDTS#getSuccessor(java.lang.Object, java.lang.Object)
-     */
     @Override
     public State getSuccessor(State state, @Nonnull Character input) {
         return state.step(input.charValue());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.DeterministicTransitionSystem#getTransition(java.lang.Object, java.lang.Object)
-     */
     @Override
     public State getTransition(State state, @Nonnull Character input) {
         return state.step(input.charValue());

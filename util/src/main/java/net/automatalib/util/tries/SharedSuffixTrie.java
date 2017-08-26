@@ -31,9 +31,6 @@ public class SharedSuffixTrie<I> extends SuffixTrie<I> {
         this.alphabet = alphabet;
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.util.tries.SuffixTrie#add(java.lang.Object, net.automatalib.util.tries.SuffixTrieNode)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public SuffixTrieNode<I> add(I symbol, SuffixTrieNode<I> parent) {

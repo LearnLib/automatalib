@@ -43,46 +43,26 @@ public class FastMealy<I, O>
         super(alphabet);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.ts.TransitionSystem#getSuccessor(java.lang.Object)
-     */
     @Override
     public FastMealyState<O> getSuccessor(MealyTransition<FastMealyState<O>, O> transition) {
         return transition.getSuccessor();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.features.TransitionOutput#getTransitionOutput(java.lang.Object)
-     */
     @Override
     public O getTransitionOutput(MealyTransition<FastMealyState<O>, O> transition) {
         return transition.getOutput();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.MutableAutomaton#createTransition(java.lang.Object, java.lang.Object)
-     */
     @Override
     public MealyTransition<FastMealyState<O>, O> createTransition(FastMealyState<O> successor, O properties) {
         return new MealyTransition<>(successor, properties);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.features.MutableTransitionOutput#setTransitionOutput(java.lang.Object, java.lang.Object)
-     */
     @Override
     public void setTransitionOutput(MealyTransition<FastMealyState<O>, O> transition, O output) {
         transition.setOutput(output);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.automata.base.fast.FastMutableDet#createState(java.lang.Object)
-     */
     @Override
     protected FastMealyState<O> createState(Void property) {
         return new FastMealyState<>(inputAlphabet.size());

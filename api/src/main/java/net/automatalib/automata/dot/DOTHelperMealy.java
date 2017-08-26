@@ -27,10 +27,6 @@ public class DOTHelperMealy<S, I, T, O>
         super(automaton);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.dot.DefaultDOTHelperAutomaton#getEdgeProperties(net.automatalib.commons.util.Pair, java.util.Map)
-     */
     @Override
     public boolean getEdgeProperties(S src, TransitionEdge<I, T> edge, S tgt, Map<String, String> properties) {
         if (!super.getEdgeProperties(src, edge, tgt, properties)) {

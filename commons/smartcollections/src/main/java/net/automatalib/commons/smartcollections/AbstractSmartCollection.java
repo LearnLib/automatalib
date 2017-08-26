@@ -36,37 +36,21 @@ import java.util.Objects;
  */
 public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> implements SmartCollection<E> {
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#choose()
-     */
     @Override
     public E choose() {
         return iterator().next();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#chooseRef()
-     */
     @Override
     public ElementReference chooseRef() {
         return referenceIterator().next();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#references()
-     */
     @Override
     public Iterable<ElementReference> references() {
         return this::referenceIterator;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#addAll(java.lang.Iterable)
-     */
     @Override
     public void addAll(Iterable<? extends E> iterable) {
         for (E e : iterable) {
@@ -74,10 +58,6 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#addAll(T[])
-     */
     @Override
     public <T extends E> void addAll(T[] array) {
         for (T t : array) {
@@ -85,10 +65,6 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.SmartCollection#find(java.lang.Object)
-     */
     @Override
     public ElementReference find(Object element) {
         for (ElementReference ref : references()) {
@@ -101,47 +77,27 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#quickClear()
-     */
     @Override
     public void quickClear() {
         clear();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.SmartCollection#deepClear()
-     */
     @Override
     public void deepClear() {
         clear();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#iterator()
-     */
     @Override
     public Iterator<E> iterator() {
         return new DeRefIterator(referenceIterator());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#add(java.lang.Object)
-     */
     @Override
     public boolean add(E e) {
         referencedAdd(e);
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#remove(java.lang.Object)
-     */
     @Override
     public boolean remove(Object element) {
         ElementReference ref = find(element);
@@ -170,28 +126,16 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
             this.refIterator = refIterator;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return refIterator.hasNext();
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         public E next() {
             return get(refIterator.next());
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             refIterator.remove();

@@ -240,10 +240,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         return (Word<I>) word;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -254,10 +250,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         return hash;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -286,10 +278,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Iterable#iterator()
-     */
     @Override
     @Nonnull
     public java.util.Iterator<I> iterator() {
@@ -303,10 +291,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
                                         Spliterator.IMMUTABLE | Spliterator.ORDERED | Spliterator.SUBSIZED);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.commons.util.strings.Printable#print(java.lang.Appendable)
-     */
     @Override
     public void print(Appendable a) throws IOException {
         if (isEmpty()) {
@@ -407,10 +391,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         writeToArray(fromIndex, array, 0, len);
         return new SharedWord<>(array);
     }
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.commons.util.array.ArrayWritable#writeToArray(int, java.lang.Object[], int, int)
-     */
 
     @Override
     public void writeToArray(int offset, Object[] array, int tgtOffset, int length) {
@@ -431,10 +411,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      */
     @Nullable
     public abstract I getSymbol(int index);
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.commons.util.array.ArrayWritable#size()
-     */
 
     @Override
     public final int size() {
@@ -842,19 +818,11 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 
         private int index;
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return (index < Word.this.length());
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         @Nullable
         public I next() {
@@ -864,10 +832,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
             return Word.this.getSymbol(index++);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             throw new UnsupportedOperationException();
@@ -879,30 +843,18 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      */
     private class AsList extends AbstractList<I> {
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.AbstractList#get(int)
-         */
         @Override
         @Nullable
         public I get(int index) {
             return Word.this.getSymbol(index);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.AbstractList#iterator()
-         */
         @Override
         @Nonnull
         public java.util.Iterator<I> iterator() {
             return Word.this.iterator();
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.AbstractCollection#size()
-         */
         @Override
         public int size() {
             return Word.this.length();

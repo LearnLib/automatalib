@@ -43,9 +43,6 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
         return -1;
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.words.abstractimpl.AbstractAlphabet#writeToArray(int, java.lang.Object[], int, int)
-     */
     @Override
     public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
         System.arraycopy(symbols, offset, array, tgtOfs, num);

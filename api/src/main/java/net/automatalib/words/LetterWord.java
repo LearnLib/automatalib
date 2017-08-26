@@ -48,19 +48,11 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         this.letter = letter;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#length()
-     */
     @Override
     public int length() {
         return 1;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#iterator()
-     */
     @Override
     public java.util.Iterator<I> iterator() {
         return new Iterator<>(letter);
@@ -72,10 +64,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         return Collections.singleton(letter).spliterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#subWord(int, int)
-     */
     @Override
     public Word<I> subWordInternal(int fromIndex, int toIndex) {
         if (fromIndex > 0 || toIndex == 0) {
@@ -84,10 +72,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#writeToArray(int, java.lang.Object[], int, int)
-     */
     @Override
     public void writeToArray(int offset, Object[] array, int tgtOffset, int length) {
         if (offset == 0 && length > 0) {
@@ -95,10 +79,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#getSymbol(int)
-     */
     @Override
     public I getSymbol(int index) {
         if (index != 0) {
@@ -107,48 +87,28 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         return letter;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#asList()
-     */
     @Override
     public List<I> asList() {
         return Collections.singletonList(letter);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#lastSymbol()
-     */
     @Override
     public I lastSymbol() {
         return letter;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#append(java.lang.Object)
-     */
     @Override
     public Word<I> append(I symbol) {
         Object[] array = new Object[] {letter, symbol};
         return new SharedWord<>(array);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#prepend(java.lang.Object)
-     */
     @Override
     public Word<I> prepend(I symbol) {
         Object[] array = new Object[] {symbol, letter};
         return new SharedWord<>(array);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#isPrefixOf(net.automatalib.words.Word)
-     */
     @Override
     public boolean isPrefixOf(Word<?> other) {
         if (other.isEmpty()) {
@@ -157,10 +117,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         return Objects.equals(letter, other.getSymbol(0));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#longestCommonPrefix(net.automatalib.words.Word)
-     */
     @Override
     public Word<I> longestCommonPrefix(Word<?> other) {
         if (isPrefixOf(other)) {
@@ -169,10 +125,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         return Word.epsilon();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#isSuffixOf(net.automatalib.words.Word)
-     */
     @Override
     public boolean isSuffixOf(Word<?> other) {
         if (other.isEmpty()) {
@@ -181,10 +133,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         return Objects.equals(letter, other.lastSymbol());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#longestCommonSuffix(net.automatalib.words.Word)
-     */
     @Override
     public Word<I> longestCommonSuffix(Word<?> other) {
         if (isSuffixOf(other)) {
@@ -193,18 +141,11 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         return Word.epsilon();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.words.Word#flatten()
-     */
     @Override
     public Word<I> flatten() {
         return this;
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.words.Word#trimmed()
-     */
     @Override
     public Word<I> trimmed() {
         return this;
@@ -229,19 +170,11 @@ final class LetterWord<I> extends Word<I> implements Serializable {
             this.letter = letter;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return next;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         public I next() {
             if (next) {
@@ -251,10 +184,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
             throw new NoSuchElementException();
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             throw new UnsupportedOperationException();

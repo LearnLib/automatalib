@@ -39,19 +39,11 @@ public class SimpleStateIDs<S> implements StateIDs<S> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.concepts.StateIDs#getStateId(java.lang.Object)
-     */
     @Override
     public int getStateId(S state) {
         return stateIds.get(state).intValue();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.concepts.StateIDs#getState(int)
-     */
     @Override
     public S getState(int id) {
         return states.get(id);

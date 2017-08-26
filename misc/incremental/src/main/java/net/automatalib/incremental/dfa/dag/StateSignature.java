@@ -54,10 +54,6 @@ final class StateSignature {
         return new StateSignature(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         return hashCode;

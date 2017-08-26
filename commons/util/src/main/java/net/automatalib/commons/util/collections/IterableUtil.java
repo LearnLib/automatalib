@@ -24,28 +24,16 @@ public final class IterableUtil {
 
     private static final Iterator<?> EMPTY_ITERATOR = new Iterator<Object>() {
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#hasNext()
-         */
         @Override
         public boolean hasNext() {
             return false;
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#next()
-         */
         @Override
         public Object next() {
             throw new NoSuchElementException();
         }
 
-        /*
-         * (non-Javadoc)
-         * @see java.util.Iterator#remove()
-         */
         @Override
         public void remove() {
             throw new UnsupportedOperationException();

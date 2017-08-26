@@ -29,35 +29,19 @@ package net.automatalib.util.graphs.traversal;
  */
 public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.DFSVisitor#exploreInitial(java.lang.Object)
-     */
     @Override
     public D initialize(N node) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.DFSVisitor#explore(java.lang.Object, java.lang.Object)
-     */
     @Override
     public void explore(N node, D data) {
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.DFSVisitor#finish(java.lang.Object, java.lang.Object)
-     */
     @Override
     public void finish(N node, D data) {
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.DFSVisitor#treeEdge(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
-     */
     @Override
     public D treeEdge(N srcNode, D srcData, E edge, N tgtNode) {
         edge(srcNode, srcData, edge, tgtNode);
@@ -83,10 +67,6 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
     public void edge(N srcNode, D srcData, E edge, N tgtNode) {
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.DFSVisitor#backEdge(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
-     */
     @Override
     public void backEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData) {
         grayTarget(srcNode, srcData, edge, tgtNode, tgtData);
@@ -100,10 +80,6 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
         edge(srcNode, srcData, edge, tgtNode);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.DFSVisitor#crossEdge(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
-     */
     @Override
     public void crossEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData) {
         blackTarget(srcNode, srcData, edge, tgtNode, tgtData);
@@ -113,10 +89,6 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
         nontreeEdge(srcNode, srcData, edge, tgtNode, tgtData);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.DFSVisitor#forwardEdge(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
-     */
     @Override
     public void forwardEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData) {
         blackTarget(srcNode, srcData, edge, tgtNode, tgtData);

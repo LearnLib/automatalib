@@ -257,10 +257,6 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
         return id;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.LinkedListEntry#getElement()
-     */
     @Override
     public Block<S, L> getElement() {
         return this;

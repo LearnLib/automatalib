@@ -30,10 +30,6 @@ final class AcceptanceStatePredicate<S> implements Predicate<S> {
         this.acceptance = acceptance;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see com.google.common.base.Predicate#apply(java.lang.Object)
-     */
     @Override
     public boolean apply(@Nonnull S state) {
         return fsa.isAccepting(state) == acceptance;

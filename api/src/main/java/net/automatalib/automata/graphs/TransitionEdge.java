@@ -41,9 +41,6 @@ public final class TransitionEdge<I, T> {
         return new Property<>(input, uts.getTransitionProperty(transition));
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -53,9 +50,6 @@ public final class TransitionEdge<I, T> {
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -92,9 +86,6 @@ public final class TransitionEdge<I, T> {
             return property;
         }
 
-        /* (non-Javadoc)
-         * @see java.lang.Object#hashCode()
-         */
         @Override
         public int hashCode() {
             final int prime = 31;
@@ -104,9 +95,6 @@ public final class TransitionEdge<I, T> {
             return result;
         }
 
-        /* (non-Javadoc)
-         * @see java.lang.Object#equals(java.lang.Object)
-         */
         @Override
         public boolean equals(Object obj) {
             if (this == obj) {

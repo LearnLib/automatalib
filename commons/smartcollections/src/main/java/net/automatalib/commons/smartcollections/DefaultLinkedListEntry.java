@@ -39,10 +39,6 @@ public class DefaultLinkedListEntry<E> extends AbstractBasicLinkedListEntry<E, D
         this.element = element;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.smartcollections.LinkedListEntry#getElement()
-     */
     @Override
     public E getElement() {
         return element;

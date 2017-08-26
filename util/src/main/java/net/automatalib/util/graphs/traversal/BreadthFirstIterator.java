@@ -37,19 +37,11 @@ final class BreadthFirstIterator<N, E> implements Iterator<N> {
         bfsQueue.addAll(start);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         return !bfsQueue.isEmpty();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
     @Override
     public N next() {
         N result = bfsQueue.poll();
@@ -67,10 +59,6 @@ final class BreadthFirstIterator<N, E> implements Iterator<N> {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     @Override
     public void remove() {
         throw new UnsupportedOperationException();

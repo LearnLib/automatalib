@@ -47,10 +47,6 @@ final class NaturalOrderingComparator<T extends Comparable<T>> implements Compar
         return (NaturalOrderingComparator<T>) INSTANCE;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
     @Override
     public int compare(T o1, T o2) {
         return o1.compareTo(o2);

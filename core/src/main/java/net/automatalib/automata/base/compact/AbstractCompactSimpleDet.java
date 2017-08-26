@@ -100,10 +100,6 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         return alphabet;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.simple.SimpleAutomaton#getStates()
-     */
     @Override
     public Collection<Integer> getStates() {
         return CollectionsUtil.intRange(0, numStates);
@@ -114,28 +110,16 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.abstractimpl.AbstractDeterministicAutomaton#size()
-     */
     @Override
     public int size() {
         return numStates;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.simple.SimpleAutomaton#getStateId(java.lang.Object)
-     */
     @Override
     public int getStateId(Integer state) {
         return state.intValue();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.automata.simple.SimpleAutomaton#getState(int)
-     */
     @Override
     public Integer getState(int id) {
         return id;
@@ -146,10 +130,6 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         return wrapState(getIntState(input));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.SimpleDTS#getInitialState()
-     */
     @Override
     public Integer getInitialState() {
         return wrapState(initial);
@@ -287,10 +267,6 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.DeterministicTransitionSystem#getTransition(java.lang.Object, java.lang.Object)
-     */
 
     @Override
     public Integer getTransition(Integer state, I input) {
@@ -367,10 +343,6 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
 
     public abstract SP getStateProperty(int stateId);
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.UniversalTransitionSystem#getTransitionProperty(java.lang.Object)
-     */
 
     @Override
     public Void getTransitionProperty(Integer transition) {

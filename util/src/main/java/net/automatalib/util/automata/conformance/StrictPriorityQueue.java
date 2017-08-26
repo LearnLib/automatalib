@@ -76,10 +76,6 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
         return (E) storage.array[0];
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Queue#offer(java.lang.Object)
-     */
     @Override
     public boolean offer(E e) {
         return insert(e);
@@ -143,10 +139,6 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Queue#poll()
-     */
     @Override
     public E poll() {
         if (size == 0) {
@@ -210,10 +202,6 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Queue#peek()
-     */
     @Override
     @SuppressWarnings("unchecked")
     public E peek() {
@@ -223,10 +211,6 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
         return (E) storage.array[0];
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#iterator()
-     */
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
@@ -251,28 +235,16 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
         };
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return size;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#isEmpty()
-     */
     @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#toString()
-     */
     @Override
     public String toString() {
         if (size == 0) {

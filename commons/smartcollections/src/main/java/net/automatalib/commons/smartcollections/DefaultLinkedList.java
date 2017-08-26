@@ -25,19 +25,11 @@ package net.automatalib.commons.smartcollections;
  */
 public class DefaultLinkedList<E> extends AbstractLinkedList<E, DefaultLinkedListEntry<E>> {
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.AbstractLinkedList#replace(de.ls5.collections.ElementReference, java.lang.Object)
-     */
     @Override
     public void replace(ElementReference ref, E newElement) {
         castRef(ref).setElement(newElement);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.AbstractLinkedList#makeEntry(java.lang.Object)
-     */
     @Override
     protected DefaultLinkedListEntry<E> makeEntry(E element) {
         return new DefaultLinkedListEntry<>(element);

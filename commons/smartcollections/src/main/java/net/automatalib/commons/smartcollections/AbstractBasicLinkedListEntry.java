@@ -31,37 +31,21 @@ public abstract class AbstractBasicLinkedListEntry<E, T extends AbstractBasicLin
     // predecessor and successor
     private T prev, next;
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.LinkedListEntry#getPrev()
-     */
     @Override
     public T getPrev() {
         return prev;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.LinkedListEntry#setPrev(de.ls5.collections.LinkedListEntry)
-     */
     @Override
     public void setPrev(T prev) {
         this.prev = prev;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.LinkedListEntry#getNext()
-     */
     @Override
     public T getNext() {
         return next;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see de.ls5.collections.LinkedListEntry#setNext(de.ls5.collections.LinkedListEntry)
-     */
     @Override
     public void setNext(T next) {
         this.next = next;

@@ -36,10 +36,6 @@ public class CharStringRange extends AbstractList<String> implements ArrayWritab
         this.delegate = delegate;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#get(int)
-     */
     @Override
     public String get(int index) {
         return String.valueOf(charGet(index));
@@ -50,9 +46,6 @@ public class CharStringRange extends AbstractList<String> implements ArrayWritab
         return (char) i;
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#indexOf(java.lang.Object)
-     */
     @Override
     public int indexOf(Object o) {
         if (o == null || o.getClass() != String.class) {
@@ -68,50 +61,31 @@ public class CharStringRange extends AbstractList<String> implements ArrayWritab
         return delegate.indexOf(s.charAt(0));
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#lastIndexOf(java.lang.Object)
-     */
     @Override
     public int lastIndexOf(Object o) {
         return indexOf(o);
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#iterator()
-     */
     @Override
     public CharStringRangeIterator iterator() {
         return new CharStringRangeIterator(delegate.iterator());
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#listIterator()
-     */
     @Override
     public CharStringRangeIterator listIterator() {
         return new CharStringRangeIterator(delegate.listIterator());
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#listIterator(int)
-     */
     @Override
     public CharStringRangeIterator listIterator(int index) {
         return new CharStringRangeIterator(delegate.listIterator(index));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return delegate.size();
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.commons.util.array.ArrayWritable#writeToArray(int, java.lang.Object[], int, int)
-     */
     @Override
     public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
         int si = offset;

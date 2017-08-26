@@ -26,9 +26,6 @@ public abstract class AbstractCompactNPGraph<E extends CompactEdge<EP>, NP, EP>
         this.npStorage = new ResizingObjectArray();
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.graphs.base.compact.AbstractCompactGraph#addIntNode(java.lang.Object)
-     */
     @Override
     public int addIntNode(NP properties) {
         int node = super.addIntNode(properties);

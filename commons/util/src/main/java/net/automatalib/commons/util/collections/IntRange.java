@@ -36,10 +36,6 @@ final class IntRange extends AbstractList<Integer> implements ArrayWritable<Inte
         this.size = (end - start - 1) / step + 1;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractList#get(int)
-     */
     @Override
     public Integer get(int index) {
         return Integer.valueOf(intGet(index));
@@ -56,9 +52,6 @@ final class IntRange extends AbstractList<Integer> implements ArrayWritable<Inte
         return start + step * i;
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#indexOf(java.lang.Object)
-     */
     @Override
     public int indexOf(Object o) {
         if (o == null || o.getClass() != Integer.class) {
@@ -83,51 +76,32 @@ final class IntRange extends AbstractList<Integer> implements ArrayWritable<Inte
         return normalized;
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#lastIndexOf(java.lang.Object)
-     */
 
     @Override
     public int lastIndexOf(Object o) {
         return indexOf(o);
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#iterator()
-     */
     @Override
     public IntRangeIterator iterator() {
         return new IntRangeIterator(start, step, size);
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#listIterator()
-     */
     @Override
     public IntRangeIterator listIterator() {
         return new IntRangeIterator(start, step, size);
     }
 
-    /* (non-Javadoc)
-     * @see java.util.AbstractList#listIterator(int)
-     */
     @Override
     public IntRangeIterator listIterator(int index) {
         return new IntRangeIterator(start, step, size, index);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.AbstractCollection#size()
-     */
     @Override
     public int size() {
         return size;
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.commons.util.array.ArrayWritable#writeToArray(int, java.lang.Object[], int, int)
-     */
     @Override
     public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
         int x = start + offset * step;

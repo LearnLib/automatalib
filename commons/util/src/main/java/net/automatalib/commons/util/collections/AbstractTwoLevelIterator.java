@@ -33,9 +33,6 @@ public abstract class AbstractTwoLevelIterator<L1, L2, O> implements Iterator<O>
         this.l2Iterator = null;
     }
 
-    /* (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         if (l2Iterator != null && l2Iterator.hasNext()) {
@@ -57,9 +54,6 @@ public abstract class AbstractTwoLevelIterator<L1, L2, O> implements Iterator<O>
 
     protected abstract Iterator<L2> l2Iterator(L1 l1Object);
 
-    /* (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
     @Override
     public O next() {
         if (l2Iterator == null || !l2Iterator.hasNext()) {
@@ -72,9 +66,6 @@ public abstract class AbstractTwoLevelIterator<L1, L2, O> implements Iterator<O>
 
     protected abstract O combine(L1 l1Object, L2 l2Object);
 
-    /* (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     @Override
     public void remove() {
         l2Iterator.remove();

@@ -114,9 +114,6 @@ public abstract class AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP
         return s2;
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.util.automata.copy.AutomatonCopier#doCopy()
-     */
     @Override
     public abstract void doCopy();
 

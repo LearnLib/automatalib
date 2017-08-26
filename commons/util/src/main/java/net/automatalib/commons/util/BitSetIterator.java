@@ -43,19 +43,11 @@ public class BitSetIterator implements Iterator<Integer>, PrimitiveIterator.OfIn
         this.lastBitIdx = -1;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     @Override
     public boolean hasNext() {
         return (currBitIdx != -1);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     @Override
     public void remove() {
         if (lastBitIdx == -1) {
@@ -64,10 +56,6 @@ public class BitSetIterator implements Iterator<Integer>, PrimitiveIterator.OfIn
         bitSet.clear(lastBitIdx);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
     @Override
     public int nextInt() {
         if (currBitIdx == -1) {

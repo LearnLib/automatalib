@@ -32,10 +32,6 @@ public class StateIDGrowingMapping<S, V> implements MutableMapping<S, V> {
         this.storage = new ResizingObjectArray(automaton.size());
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.commons.util.mappings.Mapping#get(java.lang.Object)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public V get(S elem) {
@@ -46,10 +42,6 @@ public class StateIDGrowingMapping<S, V> implements MutableMapping<S, V> {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.commons.util.mappings.MutableMapping#put(java.lang.Object, java.lang.Object)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public V put(S key, V value) {

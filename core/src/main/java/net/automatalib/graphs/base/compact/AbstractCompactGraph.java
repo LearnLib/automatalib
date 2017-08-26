@@ -128,9 +128,6 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
         return Integer.valueOf(id);
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties(java.lang.Object)
-     */
     @Override
     public NP getNodeProperty(Integer node) {
         return getNodeProperties(node.intValue());

@@ -60,39 +60,18 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
         this.listener = listener;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.automatalib.util.graphs.traversal.GraphTraversalVisitor#processInitial
-     * (java.lang.Object, net.automatalib.commons.util.Holder)
-     */
     @Override
     public GraphTraversalAction processInitial(N initialNode, Holder<TarjanSCCRecord> outData) {
         outData.value = createRecord();
         return GraphTraversalAction.EXPLORE;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.automatalib.util.graphs.traversal.GraphTraversalVisitor#startExploration
-     * (java.lang.Object, java.lang.Object)
-     */
     @Override
     public boolean startExploration(N node, TarjanSCCRecord data) {
         records.put(node, data);
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.automatalib.util.graphs.traversal.GraphTraversalVisitor#finishExploration
-     * (java.lang.Object, java.lang.Object)
-     */
     @Override
     public void finishExploration(N node, TarjanSCCRecord data) {
         currentScc.add(data);
@@ -107,14 +86,6 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.automatalib.util.graphs.traversal.GraphTraversalVisitor#processEdge
-     * (java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
-     * net.automatalib.commons.util.Holder)
-     */
     @Override
     public GraphTraversalAction processEdge(N srcNode,
                                             TarjanSCCRecord srcData,
@@ -137,14 +108,6 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
         return GraphTraversalAction.IGNORE;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.automatalib.util.graphs.traversal.GraphTraversalVisitor#backtrackEdge
-     * (java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object,
-     * java.lang.Object)
-     */
     @Override
     public void backtrackEdge(N srcNode, TarjanSCCRecord srcData, E edge, N tgtNode, TarjanSCCRecord tgtData) {
         int tgtLl = tgtData.lowLink;

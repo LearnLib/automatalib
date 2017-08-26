@@ -64,10 +64,6 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetStat
         return initialStates;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.abstractimpl.AbstractTS#createDynamicStateMapping()
-     */
     @Override
     public <V> MutableMapping<S, V> createDynamicStateMapping() {
         StateIDDynamicMapping<S, V> mapping = new StateIDDynamicMapping<>(this);
@@ -145,10 +141,6 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetStat
         return states;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.ts.abstractimpl.AbstractTS#createStaticStateMapping()
-     */
     @Override
     public <V> MutableMapping<S, V> createStaticStateMapping() {
         return new StateIDStaticMapping<>(this, size());

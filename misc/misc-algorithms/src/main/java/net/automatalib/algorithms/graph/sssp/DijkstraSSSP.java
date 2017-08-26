@@ -130,19 +130,11 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.algorithms.graph.sssp.SSSPResult#getInitialNode()
-     */
     @Override
     public N getInitialNode() {
         return init;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.algorithms.graph.sssp.SSSPResult#getShortestPathDistance(java.lang.Object)
-     */
     @Override
     public float getShortestPathDistance(N target) {
         Record<N, E> rec = records.get(target);
@@ -152,10 +144,6 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
         return rec.dist;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.algorithms.graph.sssp.SSSPResult#getShortestPath(java.lang.Object)
-     */
     @Override
     public List<E> getShortestPath(N target) {
         Record<N, E> rec = records.get(target);
@@ -179,10 +167,6 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
         return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.algorithms.graph.sssp.SSSPResult#getShortestPathEdge(java.lang.Object)
-     */
     @Override
     public E getShortestPathEdge(N target) {
         Record<N, E> rec = records.get(target);

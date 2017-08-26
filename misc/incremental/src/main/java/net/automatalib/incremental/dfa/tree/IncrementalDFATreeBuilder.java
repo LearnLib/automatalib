@@ -50,10 +50,6 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         this.root = new Node<>();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.IncrementalConstruction#findSeparatingWord(java.lang.Object, java.util.Collection, boolean)
-     */
     @Override
     @Nullable
     public Word<I> findSeparatingWord(DFA<?, I> target, Collection<? extends I> inputs, boolean omitUndefined) {
@@ -111,10 +107,6 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.dfa.IncrementalDFABuilder#lookup(net.automatalib.words.Word)
-     */
     @Override
     public Acceptance lookup(Word<? extends I> inputWord) {
         Node<I> curr = root;
@@ -130,10 +122,6 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         return curr.getAcceptance();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.dfa.IncrementalDFABuilder#insert(net.automatalib.words.Word, boolean)
-     */
     @Override
     public void insert(Word<? extends I> word, boolean acceptance) {
         Node<I> curr = root;
@@ -158,19 +146,11 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.dfa.IncrementalDFABuilder#asGraph()
-     */
     @Override
     public GraphView asGraph() {
         return new GraphView();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.incremental.dfa.IncrementalDFABuilder#asTransitionSystem()
-     */
     @Override
     public TransitionSystemView asTransitionSystem() {
         return new TransitionSystemView();

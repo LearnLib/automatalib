@@ -47,19 +47,11 @@ final class TraversalGraphCopy<N1, E1, N2, E2, NP2, EP2>
         this.initNodes = initNodes;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.copy.AbstractGraphCopy#doCopy()
-     */
     @Override
     public void doCopy() {
         GraphTraversal.traverse(traversalOrder, inGraph, limit, initNodes, this);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.GraphTraversalVisitor#processInitial(java.lang.Object, net.automatalib.util.graphs.traversal.GraphTraversalAction)
-     */
     @Override
     public GraphTraversalAction processInitial(N1 initialNode, Holder<N2> outData) {
         N2 n2 = copyNode(initialNode);
@@ -67,27 +59,15 @@ final class TraversalGraphCopy<N1, E1, N2, E2, NP2, EP2>
         return GraphTraversalAction.EXPLORE;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.GraphTraversalVisitor#startExploration(java.lang.Object, java.lang.Object)
-     */
     @Override
     public boolean startExploration(N1 node, N2 data) {
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.GraphTraversalVisitor#finishExploration(java.lang.Object, java.lang.Object)
-     */
     @Override
     public void finishExploration(N1 node, N2 data) {
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.GraphTraversalVisitor#processEdge(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, net.automatalib.util.graphs.traversal.GraphTraversalAction)
-     */
     @Override
     public GraphTraversalAction processEdge(N1 srcNode, N2 srcData, E1 edge, N1 tgtNode, Holder<N2> outData) {
         N2 freshTgt = copyEdgeChecked(srcData, edge, tgtNode);
@@ -98,10 +78,6 @@ final class TraversalGraphCopy<N1, E1, N2, E2, NP2, EP2>
         return GraphTraversalAction.IGNORE;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.automatalib.util.graphs.traversal.GraphTraversalVisitor#backtrackEdge(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
-     */
     @Override
     public void backtrackEdge(N1 srcNode, N2 srcData, E1 edge, N1 tgtNode, N2 tgtData) {
     }

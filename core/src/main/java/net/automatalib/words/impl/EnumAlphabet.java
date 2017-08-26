@@ -55,9 +55,6 @@ public class EnumAlphabet<E extends Enum<E>> extends ArrayAlphabet<E> {
         return index >= 0 && index < symbols.length && symbols[index] == symbol;
     }
 
-    /* (non-Javadoc)
-     * @see net.automatalib.words.abstractimpl.AbstractAlphabet#compare(java.lang.Object, java.lang.Object)
-     */
     @Override
     public int compare(E o1, E o2) {
         if (o1 == o2) {
