@@ -26,10 +26,10 @@ limitations under the License.
 
     <name>AutomataLib :: Commons :: DOT Utilities</name>
     <description><![CDATA[
-		This utility artifact contains methods that facilitate interaction with the
-		<a href="http://www.graphviz.org/">GraphVIZ DOT</a> tool, and allows to render and
-		display DOT models directly from within the application.
-	]]></description>
+        This utility artifact contains methods that facilitate interaction with the
+        <a href="http://www.graphviz.org/">GraphVIZ DOT</a> tool, and allows to render and
+        display DOT models directly from within the application.
+    ]]></description>
 
     <parent>
         <groupId>net.automatalib</groupId>

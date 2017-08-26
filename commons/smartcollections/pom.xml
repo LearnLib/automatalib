@@ -25,12 +25,12 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Commons :: Smart Collections</name>
-    <description><![CDATA[
-		This library provides efficient implementations for various collection data structures
-		(esp. linked lists and priority queues), which have very insufficient implementation in
-		the Java Collections Foundations that makes it hard or even impossible to exploit their
-		efficiencies.
-	]]></description>
+    <description>
+        This library provides efficient implementations for various collection data structures
+        (esp. linked lists and priority queues), which have very insufficient implementation in
+        the Java Collections Foundations that makes it hard or even impossible to exploit their
+        efficiencies.
+    </description>
 
     <parent>
         <groupId>net.automatalib</groupId>

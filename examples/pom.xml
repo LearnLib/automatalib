@@ -26,11 +26,11 @@ limitations under the License.
 
     <name>AutomataLib :: Examples</name>
     <description><![CDATA[
-		A collection of various small example applications that illustrate several use cases
-		of AutomataLib.<br />
-		<em>Note:</em> This artifact is not intended as a library, but only exists for educational
-		purposes.
-	]]></description>
+        A collection of various small example applications that illustrate several use cases
+        of AutomataLib.<br />
+        <em>Note:</em> This artifact is not intended as a library, but only exists for educational
+        purposes.
+    ]]></description>
 
     <parent>
         <groupId>net.automatalib</groupId>

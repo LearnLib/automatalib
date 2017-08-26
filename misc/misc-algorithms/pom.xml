@@ -25,13 +25,13 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Misc :: Misc. Algorithms</name>
-    <description><![CDATA[
-		This artifact contains several miscellaneous, well-known algorithms, which however are
-		rather specific in their concrete use case and therefore not fit for the AutomataLib
-		Utilities library. Examples include Dijkstra's algorithm for the SSSP problem, the
-		Floyd-Warshall algorithm for the APSP problem and Tarjan's algorithm for finding
-		all strongly-connected components in a graph.
-	]]></description>
+    <description>
+        This artifact contains several miscellaneous, well-known algorithms, which however are
+        rather specific in their concrete use case and therefore not fit for the AutomataLib
+        Utilities library. Examples include Dijkstra's algorithm for the SSSP problem, the
+        Floyd-Warshall algorithm for the APSP problem and Tarjan's algorithm for finding
+        all strongly-connected components in a graph.
+    </description>
 
     <parent>
         <groupId>net.automatalib</groupId>

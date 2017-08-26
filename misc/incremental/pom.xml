@@ -25,11 +25,11 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Misc :: Incremental</name>
-    <description><![CDATA[
-		A library for incremental automata construction. This artifact contains algorithms
-		for incrementally constructing DFAs (both prefix-closed and non-prefix-closed) and
-		Mealy machines from a finite, incrementally growing set of example inputs/outputs.
-	]]></description>
+    <description>
+        A library for incremental automata construction. This artifact contains algorithms
+        for incrementally constructing DFAs (both prefix-closed and non-prefix-closed) and
+        Mealy machines from a finite, incrementally growing set of example inputs/outputs.
+    </description>
 
     <parent>
         <groupId>net.automatalib</groupId>

@@ -25,11 +25,11 @@ limitations under the License.
     <packaging>pom</packaging>
 
     <name>AutomataLib :: Adapters</name>
-    <description><![CDATA[
-		Common parent metaproject for various adapters, i.e., wrapper class that allow to
-		treat automaton or graph models from other software libraries as AutomataLib automata
-		or graphs.
-	]]></description>
+    <description>
+        Common parent metaproject for various adapters, i.e., wrapper class that allow to
+        treat automaton or graph models from other software libraries as AutomataLib automata
+        or graphs.
+    </description>
 
     <parent>
         <groupId>net.automatalib</groupId>

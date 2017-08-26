@@ -25,13 +25,13 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Core</name>
-    <description><![CDATA[
-		The core artifact of AutomataLib. This library contains concrete implementations for many
-		of the automaton model interfaces defined in the API artifact, as well as abstract
-		base classes that facilitate implementing new automaton model classes. Note that
-		concrete algorithms (traversal, reachability analysis etc.) are not in the scope of this
-		artifact.
-	]]></description>
+    <description>
+        The core artifact of AutomataLib. This library contains concrete implementations for many
+        of the automaton model interfaces defined in the API artifact, as well as abstract
+        base classes that facilitate implementing new automaton model classes. Note that
+        concrete algorithms (traversal, reachability analysis etc.) are not in the scope of this
+        artifact.
+    </description>
 
     <parent>
         <groupId>net.automatalib</groupId>

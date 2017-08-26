@@ -25,11 +25,11 @@ limitations under the License.
     <packaging>pom</packaging>
 
     <name>AutomataLib :: Commons</name>
-    <description><![CDATA[
-		Common parent metaproject for various small Java libraries which are required by AutomataLib,
-		but are not specific to AutomataLib itself (i.e., are not or only indirectly related to
-		modeling automata and graphs).  
-	]]></description>
+    <description>
+        Common parent metaproject for various small Java libraries which are required by AutomataLib,
+        but are not specific to AutomataLib itself (i.e., are not or only indirectly related to
+        modeling automata and graphs).
+    </description>
 
     <parent>
         <groupId>net.automatalib</groupId>

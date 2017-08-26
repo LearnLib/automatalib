@@ -24,9 +24,9 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: XML</name>
-    <description><![CDATA[
-		XML serialization and de-serialization routines for AutomataLib automaton models.
-	]]></description>
+    <description>
+        XML serialization and de-serialization routines for AutomataLib automaton models.
+    </description>
 
     <parent>
         <groupId>net.automatalib</groupId>

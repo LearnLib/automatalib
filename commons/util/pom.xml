@@ -25,10 +25,10 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Commons :: Utilities</name>
-    <description><![CDATA[
-		Basic utility library containing several useful classes (e.g., a Pair class) to ease
-		everyday programming.
-	]]></description>
+    <description>
+        Basic utility library containing several useful classes (e.g., a Pair class) to ease
+        everyday programming.
+    </description>
 
     <parent>
         <groupId>net.automatalib</groupId>
