@@ -32,7 +32,7 @@ public class Location {
 
     private final RichArray<Location> intSuccessors;
     private final RichArray<List<Location>> returnSuccessors;
-    int index;
+    final int index;
     private boolean accepting;
 
     public Location(final VPDAlphabet<?> alphabet, final int index, final boolean accepting) {

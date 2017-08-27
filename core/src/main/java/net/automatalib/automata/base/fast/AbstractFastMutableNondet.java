@@ -43,7 +43,7 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetStat
 
     private final Set<S> initialStates = new HashSet<>();
 
-    protected GrowingAlphabet<I> inputAlphabet;
+    protected final GrowingAlphabet<I> inputAlphabet;
 
     public AbstractFastMutableNondet(Alphabet<I> inputAlphabet) {
         this.inputAlphabet = new SimpleAlphabet<>(inputAlphabet);

@@ -43,12 +43,7 @@ class HashMapInitialPartitioning<S, L> implements InitialPartitioning<S, L> {
     @Override
     public Block<S, L> getBlock(S origState) {
         Object clazz = graph.getNodeProperty(origState);
-        Block<S, L> block = initialBlockMap.get(clazz);
-        if (block == null) {
-            block = new Block<>(numExistingBlocks++);
-            initialBlockMap.put(clazz, block);
-        }
-        return block;
+        return initialBlockMap.computeIfAbsent(clazz, k -> new Block<>(numExistingBlocks++));
     }
 
     @Override

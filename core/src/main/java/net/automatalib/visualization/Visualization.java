@@ -32,7 +32,6 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
 public final class Visualization {
 
     private static final Visualization INSTANCE = new Visualization();
-    private final VPManager manager = new VPManager();
     private final VisualizationProvider provider;
 
     private Visualization() {
@@ -41,6 +40,7 @@ public final class Visualization {
         String providerId = settings.getProperty("visualization.provider");
         VisualizationProvider vp = null;
 
+        VPManager manager = new VPManager();
         manager.load();
 
         if (providerId != null) {

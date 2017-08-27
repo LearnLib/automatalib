@@ -54,8 +54,7 @@ final class TraversalGraphCopy<N1, E1, N2, E2, NP2, EP2>
 
     @Override
     public GraphTraversalAction processInitial(N1 initialNode, Holder<N2> outData) {
-        N2 n2 = copyNode(initialNode);
-        outData.value = n2;
+        outData.value = copyNode(initialNode);
         return GraphTraversalAction.EXPLORE;
     }
 

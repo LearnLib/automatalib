@@ -35,7 +35,7 @@ import net.automatalib.words.impl.Alphabets;
 
 public final class TAFSerialization implements SerializationProvider {
 
-    private static TAFSerialization INSTANCE = new TAFSerialization();
+    private static final TAFSerialization INSTANCE = new TAFSerialization();
 
     private TAFSerialization() {
     }

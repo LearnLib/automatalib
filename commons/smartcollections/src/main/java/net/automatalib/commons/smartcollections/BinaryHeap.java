@@ -39,7 +39,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     private static final int DEFAULT_INITIAL_CAPACITY = 10;
     private final Comparator<? super E> comparator;
     // Entry storage.
-    private ResizingObjectArray entries;
+    private final ResizingObjectArray entries;
     // Number of entries in the queue.
     private int size;
 

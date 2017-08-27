@@ -23,7 +23,9 @@ import org.testng.annotations.Test;
 public class DefaultLinkedListTest {
 
     private DefaultLinkedList<Object> linkedList;
-    private Object first = new Object(), second = new Object(), third = new Object();
+    private final Object first = new Object();
+    private final Object second = new Object();
+    private final Object third = new Object();
     private ElementReference firstRef, secondRef, thirdRef;
 
     @BeforeClass

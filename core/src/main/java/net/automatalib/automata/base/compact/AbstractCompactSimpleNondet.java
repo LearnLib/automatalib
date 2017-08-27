@@ -327,9 +327,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
     public void setTransitions(Integer state, I input, Collection<? extends Integer> transitions) {
         //TIntList successors = new TIntArrayList(transitions.size());
         List<Integer> successors = new ArrayList<>(transitions.size()); // TODO: replace by primitive specialization
-        for (Integer succ : transitions) {
-            successors.add(succ);
-        }
+        successors.addAll(transitions);
         setTransitions(state.intValue(), input, successors);
     }
 

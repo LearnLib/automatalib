@@ -44,7 +44,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
  *
  * @author Malte Isberner
  */
-public class Minimizer<S, L> {
+public final class Minimizer<S, L> {
 
     private static final ThreadLocal<Minimizer<Object, Object>> LOCAL_INSTANCE =
             ThreadLocal.withInitial(Minimizer::new);
@@ -64,12 +64,8 @@ public class Minimizer<S, L> {
 
     /**
      * Default constructor.
-     *
-     * @deprecated Public instantiation is deprecated. Use {@link #getLocalInstance()} or {@link
-     * #minimize(UniversalGraph)}
      */
-    @Deprecated
-    public Minimizer() {
+    private Minimizer() {
     }
 
     /**
@@ -128,8 +124,8 @@ public class Minimizer<S, L> {
      *
      * @return a {@link MinimizationResult} structure, containing the state partition.
      */
-    public final <E> MinimizationResult<S, L> performMinimization(UniversalGraph<S, E, ?, L> graph,
-                                                                  Collection<? extends S> initialNodes) {
+    public <E> MinimizationResult<S, L> performMinimization(UniversalGraph<S, E, ?, L> graph,
+                                                            Collection<? extends S> initialNodes) {
         // Initialize the data structures (esp. state records) and build
         // the initial partition.
         Collection<Block<S, L>> initialBlocks = initialize(graph, initialNodes);
@@ -169,7 +165,7 @@ public class Minimizer<S, L> {
         return result;
     }
 
-    public final <E> MinimizationResult<S, L> performMinimization(UniversalGraph<S, E, ?, L> graph) {
+    public <E> MinimizationResult<S, L> performMinimization(UniversalGraph<S, E, ?, L> graph) {
         return performMinimization(graph, null);
     }
 
@@ -208,11 +204,7 @@ public class Minimizer<S, L> {
                 S origTarget = graph.getTarget(edge);
                 State<S, L> target = stateStorage.get(origTarget);
                 L label = graph.getEdgeProperty(edge);
-                TransitionLabel<S, L> transition = transitionMap.get(label);
-                if (transition == null) {
-                    transition = new TransitionLabel<>(label);
-                    transitionMap.put(label, transition);
-                }
+                TransitionLabel<S, L> transition = transitionMap.computeIfAbsent(label, TransitionLabel::new);
                 Edge<S, L> edgeObj = new Edge<>(state, target, transition);
                 state.addOutgoingEdge(edgeObj);
                 target.addIncomingEdge(edgeObj);

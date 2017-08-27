@@ -22,19 +22,19 @@ import java.util.NoSuchElementException;
 
 final class AllCombinationsIterator<T> implements Iterator<List<T>> {
 
-    private final Iterable<T>[] iterables;
-    private final Iterator<T>[] iterators;
+    private final Iterable<? extends T>[] iterables;
+    private final Iterator<? extends T>[] iterators;
     private final List<T> current;
     private boolean first = true;
 
     @SuppressWarnings("unchecked")
     @SafeVarargs
-    AllCombinationsIterator(Iterable<T>... iterables) {
+    AllCombinationsIterator(Iterable<? extends T>... iterables) {
         this.iterables = iterables;
         this.iterators = new Iterator[iterables.length];
         this.current = new ArrayList<>(iterables.length);
         for (int i = 0; i < iterators.length; i++) {
-            Iterator<T> it = iterables[i].iterator();
+            Iterator<? extends T> it = iterables[i].iterator();
             this.iterators[i] = it;
             this.current.add(it.next());
         }
@@ -43,7 +43,7 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
     @Override
     public boolean hasNext() {
         for (int i = 0; i < iterators.length; i++) {
-            Iterator<T> it = iterators[i];
+            Iterator<? extends T> it = iterators[i];
             if (it == null || it.hasNext()) {
                 return true;
             }
@@ -59,7 +59,7 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
         }
 
         for (int i = 0; i < iterators.length; i++) {
-            Iterator<T> it = iterators[i];
+            Iterator<? extends T> it = iterators[i];
 
             if (iterators[i].hasNext()) {
                 current.set(i, it.next());

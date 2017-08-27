@@ -85,7 +85,7 @@ public class LearnLibV2Serialization implements SerializationProvider {
         doWriteDFA(dfa, alphabet, os);
     }
 
-    private <S, I> void doWriteDFA(DFA<S, I> dfa, Alphabet<I> alphabet, OutputStream os) throws IOException {
+    private <S, I> void doWriteDFA(DFA<S, I> dfa, Alphabet<I> alphabet, OutputStream os) {
         boolean partial = Automata.hasUndefinedInput(dfa, alphabet);
         int numDfaStates = dfa.size();
         int numStates = numDfaStates;
@@ -111,7 +111,7 @@ public class LearnLibV2Serialization implements SerializationProvider {
             if (i == initId) {
                 state = stateIds.getState(0);
             }
-            ps.printf("%d ", dfa.isAccepting(state));
+            ps.printf("%d ", dfa.isAccepting(state) ? 1 : 0);
             orderedStates.add(state);
         }
         if (partial) {

@@ -67,21 +67,21 @@ import net.automatalib.commons.util.strings.AbstractPrintable;
 @ParametersAreNonnullByDefault
 public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I>, Serializable {
 
-    private static String emptyWordRep = "ε";
-    private static String wordDelimLeft = "";
-    private static String wordDelimRight = "";
-    private static String wordSymbolSeparator = " ";
-    private static String wordSymbolDelimLeft = "";
-    private static String wordSymbolDelimRight = "";
+    private static final String EMPTY_WORD_REP;
+    private static final String WORD_DELIM_LEFT;
+    private static final String WORD_DELIM_RIGHT;
+    private static final String WORD_SYMBOL_SEPARATOR;
+    private static final String WORD_SYMBOL_DELIM_LEFT;
+    private static final String WORD_SYMBOL_DELIM_RIGHT;
 
     static {
         AutomataLibSettings settings = AutomataLibSettings.getInstance();
-        emptyWordRep = settings.getProperty("word.empty", "ε");
-        wordDelimLeft = settings.getProperty("word.delim.left", "");
-        wordDelimRight = settings.getProperty("word.delim.right", "");
-        wordSymbolSeparator = settings.getProperty("word.symbol.separator", " ");
-        wordSymbolDelimLeft = settings.getProperty("word.symbol.delim.left", "");
-        wordSymbolDelimRight = settings.getProperty("word.symbol.delim.right", "");
+        EMPTY_WORD_REP = settings.getProperty("word.empty", "ε");
+        WORD_DELIM_LEFT = settings.getProperty("word.delim.left", "");
+        WORD_DELIM_RIGHT = settings.getProperty("word.delim.right", "");
+        WORD_SYMBOL_SEPARATOR = settings.getProperty("word.symbol.separator", " ");
+        WORD_SYMBOL_DELIM_LEFT = settings.getProperty("word.symbol.delim.left", "");
+        WORD_SYMBOL_DELIM_RIGHT = settings.getProperty("word.symbol.delim.right", "");
     }
 
     public static <I> Comparator<Word<? extends I>> canonicalComparator(Comparator<? super I> symComparator) {
@@ -294,17 +294,17 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     @Override
     public void print(Appendable a) throws IOException {
         if (isEmpty()) {
-            a.append(emptyWordRep);
+            a.append(EMPTY_WORD_REP);
         } else {
-            a.append(wordDelimLeft);
+            a.append(WORD_DELIM_LEFT);
             java.util.Iterator<? extends I> symIt = iterator();
             assert symIt.hasNext();
             appendSymbol(a, symIt.next());
             while (symIt.hasNext()) {
-                a.append(wordSymbolSeparator);
+                a.append(WORD_SYMBOL_SEPARATOR);
                 appendSymbol(a, symIt.next());
             }
-            a.append(wordDelimRight);
+            a.append(WORD_DELIM_RIGHT);
         }
     }
 
@@ -318,9 +318,9 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     }
 
     private static void appendSymbol(Appendable a, Object symbol) throws IOException {
-        a.append(wordSymbolDelimLeft);
+        a.append(WORD_SYMBOL_DELIM_LEFT);
         a.append(String.valueOf(symbol));
-        a.append(wordSymbolDelimRight);
+        a.append(WORD_SYMBOL_DELIM_RIGHT);
     }
 
     public Stream<I> stream() {
@@ -783,9 +783,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         int len = length();
         int[] result = new int[len];
         int i = 0;
-        java.util.Iterator<I> it = iterator();
-        while (it.hasNext()) {
-            I sym = it.next();
+        for (I sym : this) {
             int symIdx = toInt.applyAsInt(sym);
             result[i++] = symIdx;
         }

@@ -55,8 +55,7 @@ final class PlottedGraph {
     public boolean updateDOTText(String dotText) {
         try {
             try (InputStream pngIs = DOT.runDOT(dotText, "png")) {
-                BufferedImage img = ImageIO.read(pngIs);
-                this.image = img;
+                this.image = ImageIO.read(pngIs);
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null,

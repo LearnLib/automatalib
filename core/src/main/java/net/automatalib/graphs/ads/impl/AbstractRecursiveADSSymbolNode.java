@@ -42,7 +42,7 @@ public abstract class AbstractRecursiveADSSymbolNode<S, I, O, N extends Recursiv
 
     private I symbol;
 
-    private Map<O, N> successors;
+    private final Map<O, N> successors;
 
     public AbstractRecursiveADSSymbolNode(N parent, I symbol) {
         this.successors = new HashMap<>();

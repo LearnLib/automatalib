@@ -17,12 +17,10 @@ package net.automatalib.util.partitionrefinement;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -111,16 +109,10 @@ public class PaigeTarjan {
     private Block worklistTail;
     // the head of the 'touched' list
     private Block touchedHead;
-    @Nonnull
-    private WorklistPolicy worklistPolicy = WorklistPolicy.FIFO;
 
     public void setSize(int numStates, int numInputs) {
         this.numStates = numStates;
         this.numInputs = numInputs;
-    }
-
-    public void setWorklistPolicy(WorklistPolicy policy) {
-        this.worklistPolicy = Objects.requireNonNull(policy);
     }
 
     public void setBlockForState(Block[] blockForState) {

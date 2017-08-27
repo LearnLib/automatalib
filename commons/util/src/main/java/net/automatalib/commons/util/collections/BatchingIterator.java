@@ -33,9 +33,9 @@ import java.util.NoSuchElementException;
  */
 public class BatchingIterator<T> implements Iterator<List<T>> {
 
-    private int batchSize;
+    private final int batchSize;
 
-    private Iterator<T> source;
+    private final Iterator<T> source;
 
     public BatchingIterator(final Iterator<T> source, final int batchSize) {
         this.batchSize = batchSize;

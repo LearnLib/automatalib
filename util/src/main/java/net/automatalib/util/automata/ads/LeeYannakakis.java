@@ -216,7 +216,7 @@ public final class LeeYannakakis {
             }
         }
 
-        return new SplitTreeResult(st);
+        return new SplitTreeResult<>(st);
     }
 
     private static <S, I, O> ADSNode<S, I, O> extractADS(final MealyMachine<S, I, ?, O> automaton,
@@ -300,9 +300,7 @@ public final class LeeYannakakis {
         final BiMap<Integer, SplitTree<S, I, O>> partitionToNodeMap = HashBiMap.create();
 
         int counter = 0;
-        final Iterator<SplitTree<S, I, O>> partitionIterator = pi.iterator();
-        while (partitionIterator.hasNext()) {
-            final SplitTree<S, I, O> partition = partitionIterator.next();
+        for (SplitTree<S, I, O> partition : pi) {
             for (final S s : partition.getPartition()) {
                 final Integer previousValue = stateToPartitionMap.put(s, counter);
                 assert previousValue == null : new IllegalStateException("Not a true partition");

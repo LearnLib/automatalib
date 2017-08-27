@@ -576,12 +576,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
     }
 
     private static int getStateId(State state, Map<State, Integer> ids) {
-        Integer id = ids.get(state);
-        if (id == null) {
-            id = ids.size();
-            ids.put(state, id);
-        }
-        return id.intValue();
+        return ids.computeIfAbsent(state, k -> ids.size());
     }
 
     // /////////////////////////////////////////////////////////////////////

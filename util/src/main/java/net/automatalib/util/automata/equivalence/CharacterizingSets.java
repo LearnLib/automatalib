@@ -336,11 +336,7 @@ public final class CharacterizingSets {
 
         for (S state : states) {
             Object prop = automaton.getStateProperty(state);
-            List<S> block = result.get(prop);
-            if (block == null) {
-                block = new ArrayList<>();
-                result.put(prop, block);
-            }
+            List<S> block = result.computeIfAbsent(prop, k -> new ArrayList<>());
             block.add(state);
         }
 
@@ -355,11 +351,7 @@ public final class CharacterizingSets {
         while (stateIt.hasNext()) {
             S state = stateIt.next();
             List<Object> trace = buildTrace(automaton, state, suffix);
-            List<S> bucket = bucketMap.get(trace);
-            if (bucket == null) {
-                bucket = new ArrayList<>();
-                bucketMap.put(trace, bucket);
-            }
+            List<S> bucket = bucketMap.computeIfAbsent(trace, k -> new ArrayList<>());
             bucket.add(state);
         }
     }

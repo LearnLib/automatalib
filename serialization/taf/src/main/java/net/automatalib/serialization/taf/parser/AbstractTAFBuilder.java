@@ -145,12 +145,7 @@ abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministi
     }
 
     protected S lookupState(String identifier) {
-        S state = stateMap.get(identifier);
-        if (state == null) {
-            state = automaton.addState();
-            stateMap.put(identifier, state);
-        }
-        return state;
+        return stateMap.computeIfAbsent(identifier, k -> automaton.addState());
     }
 
     protected abstract I translateInput(String c);

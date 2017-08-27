@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- *
- */
 package net.automatalib.util.minimizer;
 
 import java.util.ArrayList;
@@ -47,10 +44,10 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
     private ElementReference partitionReference, splitterQueueReference;
     // The bucket of this block, used for initially arranging the
     // states ordered by their respective blocks during the weak sort.
-    private IntrusiveLinkedList<State<S, L>> bucket = new IntrusiveLinkedList<>();
+    private final IntrusiveLinkedList<State<S, L>> bucket = new IntrusiveLinkedList<>();
     // The sub blocks, i.e., the new blocks that result from
     // splitting this block.
-    private List<UnorderedCollection<State<S, L>>> subBlocks = new ArrayList<>();
+    private final List<UnorderedCollection<State<S, L>>> subBlocks = new ArrayList<>();
     // The total number of elements in all sub blocks, this is used
     // to detect whether an actual split has to be performed.
     private int elementsInSubBlocks;

@@ -510,7 +510,7 @@ public final class PaigeTarjanInitializers {
         boolean partial = false;
 
         while (pending-- > 0) {
-            int stateId = -1;
+            int stateId;
             if (currFalse < falsePtr) {
                 stateId = data[currFalse++];
             } else if (currTrue > truePtr) {
@@ -526,13 +526,11 @@ public final class PaigeTarjanInitializers {
             for (int i = 0; i < numInputs; i++) {
                 I sym = inputs.getSymbol(i);
                 T trans = automaton.getTransition(state, sym);
-                int succId;
                 if (trans == null) {
                     partial = true;
-                    succId = sinkId;
                 } else {
                     S succ = automaton.getSuccessor(trans);
-                    succId = ids.getStateId(succ);
+                    int succId = ids.getStateId(succ);
 
                     if (blockForState[succId] == null) {
                         boolean succClass = initialClassification.test(succ);

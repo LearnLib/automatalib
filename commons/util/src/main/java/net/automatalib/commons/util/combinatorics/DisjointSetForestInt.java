@@ -17,8 +17,8 @@ package net.automatalib.commons.util.combinatorics;
 
 public class DisjointSetForestInt {
 
-    private int[] parent;
-    private int[] rank;
+    private final int[] parent;
+    private final int[] rank;
 
     public DisjointSetForestInt(int initSize) {
         this.parent = new int[initSize];

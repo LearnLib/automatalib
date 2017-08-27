@@ -114,7 +114,7 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
     private class DeRefIterator implements Iterator<E> {
 
         // the reference iterator
-        private Iterator<ElementReference> refIterator;
+        private final Iterator<ElementReference> refIterator;
 
         /**
          * Constructor.

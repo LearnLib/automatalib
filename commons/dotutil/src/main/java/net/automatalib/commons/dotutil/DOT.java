@@ -88,9 +88,8 @@ public final class DOT {
         String[] dotArgs = new String[1 + opts.length];
         dotArgs[0] = dotExe;
         System.arraycopy(opts, 0, dotArgs, 1, opts.length);
-        Process dot = Runtime.getRuntime().exec(dotArgs);
 
-        return dot;
+        return Runtime.getRuntime().exec(dotArgs);
     }
 
     public static Process executeDOT(String format, String... additionalOpts) throws IOException {
@@ -310,8 +309,7 @@ public final class DOT {
      */
     public static DOTComponent createDOTComponent(Reader r) {
         try {
-            DOTComponent dc = new DOTComponent(r);
-            return dc;
+            return new DOTComponent(r);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null,
                                           "Could not run DOT: " + e.getMessage(),

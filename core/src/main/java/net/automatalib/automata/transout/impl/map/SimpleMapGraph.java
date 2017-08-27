@@ -166,13 +166,13 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
     @Override
     public void removeNode(N node) {
         structureMap.remove(node);
-        structureMap.values().stream().forEach(a -> a.remove(node));
+        structureMap.values().forEach(a -> a.remove(node));
     }
 
     @Override
     public void removeNode(N node, N replacement) {
         structureMap.remove(node);
-        structureMap.values().stream().forEach(a -> {
+        structureMap.values().forEach(a -> {
             if (a.remove(node)) {
                 a.add(replacement);
             }

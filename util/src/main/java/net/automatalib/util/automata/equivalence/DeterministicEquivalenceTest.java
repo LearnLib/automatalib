@@ -172,7 +172,7 @@ public class DeterministicEquivalenceTest<I> {
         StateIDs<S> refStateIds = reference.stateIDs();
         StateIDs<S2> otherStateIds = other.stateIDs();
 
-        StatePair<S, S2> currPair = null;
+        StatePair<S, S2> currPair;
         int lastId = otherStateIds.getStateId(otherInit) * refSize + refStateIds.getStateId(refInit);
 
         //TIntObjectMap<Pred<I>> preds = new TIntObjectHashMap<>();

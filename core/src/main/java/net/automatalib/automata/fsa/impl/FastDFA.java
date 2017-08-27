@@ -33,8 +33,7 @@ public final class FastDFA<I> extends AbstractFastMutableDet<FastDFAState, I, Fa
     }
 
     protected FastDFAState createState(boolean accepting) {
-        FastDFAState s = new FastDFAState(inputAlphabet.size(), accepting);
-        return s;
+        return new FastDFAState(inputAlphabet.size(), accepting);
     }
 
     @Override
@@ -49,8 +48,7 @@ public final class FastDFA<I> extends AbstractFastMutableDet<FastDFAState, I, Fa
 
     @Override
     public FastDFAState addState(boolean accepting) {
-        FastDFAState s = addState(Boolean.valueOf(accepting));
-        return s;
+        return addState(Boolean.valueOf(accepting));
     }
 
 }

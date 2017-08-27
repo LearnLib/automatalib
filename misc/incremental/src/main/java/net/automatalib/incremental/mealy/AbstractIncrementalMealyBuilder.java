@@ -29,7 +29,7 @@ import net.automatalib.words.WordBuilder;
 
 public abstract class AbstractIncrementalMealyBuilder<I, O> implements IncrementalMealyBuilder<I, O> {
 
-    protected Alphabet<I> inputAlphabet;
+    protected final Alphabet<I> inputAlphabet;
 
     public AbstractIncrementalMealyBuilder(Alphabet<I> alphabet) {
         this.inputAlphabet = alphabet;
