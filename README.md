@@ -17,8 +17,8 @@ Maintainers
 
 Resources
 ---------
-* **Maven Project Site (latest):** [snapshot](http://misberner.github.io/automatalib/maven-site/latest-snapshot/) | [release](http://misberner.github.io/automatalib/maven-site/latest-release/)
-* **API Documentation (latest):** [snapshot](http://misberner.github.io/automatalib/maven-site/latest-snapshot/apidocs/) | [release](http://misberner.github.io/automatalib/maven-site/latest-release/apidocs/)
+* **Maven Project Site:** [snapshot](http://learnlib.github.io/automatalib/maven-site/latest-snapshot/) | [latest release](http://learnlib.github.io/automatalib/maven-site/latest-release/)
+* **API Documentation:** [snapshot](http://learnlib.github.io/automatalib/maven-site/latest-snapshot/apidocs/) | [latest release](http://learnlib.github.io/automatalib/maven-site/latest-release/apidocs/)
 
 [1]: http://www.apache.org/licenses/LICENSE-2.0
 [2]: http://www.cs.tu-dortmund.de
