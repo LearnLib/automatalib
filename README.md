@@ -13,7 +13,8 @@ Please note that the development of AutomataLib is still in a very early stage. 
 
 Maintainers
 -----------
-* [Malte Isberner][4]
+* [Markus Frohme][5] (2017 - )
+* [Malte Isberner][4] (2013 - 2015)
 
 Resources
 ---------
@@ -24,3 +25,4 @@ Resources
 [2]: http://www.cs.tu-dortmund.de
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
+[5]: https://github.com/mtf90
