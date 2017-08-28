@@ -1,0 +1,12 @@
+language: java
+sudo: false
+dist: trusty
+jdk:
+  - oraclejdk8
+  - openjdk8
+branches:
+  only:
+  - master
+  - develop
+script:
+  - mvn verify -B
