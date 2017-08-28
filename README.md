@@ -19,17 +19,8 @@ Resources
 ---------
 * **Maven Project Site (latest):** [snapshot](http://misberner.github.io/automatalib/maven-site/latest-snapshot/) | [release](http://misberner.github.io/automatalib/maven-site/latest-release/)
 * **API Documentation (latest):** [snapshot](http://misberner.github.io/automatalib/maven-site/latest-snapshot/apidocs/) | [release](http://misberner.github.io/automatalib/maven-site/latest-release/apidocs/)
-* [Q&A @ Google Groups][7] -- [automatalib-qa@googlegroups.com][8]
-* [Discussion @ Google Groups][9] -- [automatalib-discussion@googlegroups.com][10] 
-* [Developers @ Google Groups (closed group)][11] -- [automatalib-devel@googlegroups.com][12]
 
 [1]: http://www.apache.org/licenses/LICENSE-2.0
 [2]: http://www.cs.tu-dortmund.de
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
-[7]: https://groups.google.com/forum/?fromgroups#!forum/automatalib-qa
-[8]: mailto:automatalib-qa@googlegroups.com
-[9]: https://groups.google.com/forum/?fromgroups#!forum/automatalib-discussion
-[10]: mailto:automatalib-discussion@googlegroups.com
-[11]: https://groups.google.com/forum/?fromgroups#!forum/automatalib-devel
-[12]: mailto:automatalib-devel@googlegroups.com
