@@ -24,10 +24,10 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Adapters :: BRICS</name>
-    <description><![CDATA[
-        This artifact contains adapter classes for treating the <tt>Automaton</tt> objects from the
-        <a href="http://www.brics.dk/automaton">BRICS library</a> as AutomataLib models.
-    ]]></description>
+    <description>
+        This artifact contains adapter classes for treating the Automaton objects from the
+        BRICS library (http://www.brics.dk/automaton) as AutomataLib models.
+    </description>
 
     <parent>
         <groupId>net.automatalib</groupId>
