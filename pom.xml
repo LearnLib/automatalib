@@ -32,7 +32,7 @@ limitations under the License.
         This is the parent artifact which does not have any source code. Please refer to the
         "modules" page for more detailed documentation on the single library artifacts.
     </description>
-    <url>http://misberner.github.io/automatalib/maven-site/${project.version}</url>
+    <url>http://learnlib.github.io/automatalib/maven-site/${project.version}</url>
 
     <licenses>
         <license>
@@ -42,7 +42,7 @@ limitations under the License.
     </licenses>
 
     <issueManagement>
-        <url>https://github.com/misberner/automatalib/issues</url>
+        <url>https://github.com/learnlib/automatalib/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 
@@ -89,9 +89,9 @@ limitations under the License.
     =============================== SCM =======================
     -->
     <scm>
-        <connection>scm:git:git@github.com:misberner/automatalib.git</connection>
-        <developerConnection>scm:git:git@github.com:misberner/automatalib.git</developerConnection>
-        <url>https://github.com/misberner/automatalib/tree/develop</url>
+        <connection>scm:git:git@github.com:learnlib/automatalib.git</connection>
+        <developerConnection>scm:git:git@github.com:learnlib/automatalib.git</developerConnection>
+        <url>https://github.com/learnlib/automatalib/tree/develop</url>
         <tag>HEAD</tag>
     </scm>
 

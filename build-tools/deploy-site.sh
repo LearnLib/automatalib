@@ -19,7 +19,7 @@ ABSPATH=`readlink -f $0`
 THIS_DIR=`dirname "$ABSPATH"`
 
 
-GIT_REPO="git@github.com:misberner/automatalib.git"
+GIT_REPO="git@github.com:learnlib/automatalib.git"
 GIT_BRANCH="gh-pages"
 GIT_PATH="/maven-site"
 
