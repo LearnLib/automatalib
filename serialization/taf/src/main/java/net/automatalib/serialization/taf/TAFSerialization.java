@@ -57,7 +57,9 @@ public final class TAFSerialization implements SerializationProvider {
 
     @Override
     public <I> void writeDFA(DFA<?, I> dfa, Alphabet<I> alphabet, OutputStream os) throws IOException {
-        TAFWriter.writeDFA(dfa, alphabet, new OutputStreamWriter(os));
+        try (OutputStreamWriter osw = new OutputStreamWriter(os)) {
+            TAFWriter.writeDFA(dfa, alphabet, osw);
+        }
     }
 
     @Override
