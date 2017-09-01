@@ -596,11 +596,6 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>net.sf.jung</groupId>
-                <artifactId>jung-io</artifactId>
-                <version>${jung.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.jung</groupId>
                 <artifactId>jung-graph-impl</artifactId>
                 <version>${jung.version}</version>
             </dependency>
