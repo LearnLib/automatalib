@@ -43,7 +43,7 @@ class InternalAUTParser {
 
     private final InputStream inputStream;
 
-    private char[] contents;
+    private char[] currentLineContent;
     private int currentLine;
     private int currentPos;
 
@@ -58,7 +58,7 @@ class InternalAUTParser {
             parseHeader(bisr);
             while (parseTransition(bisr)) {}
 
-            // hypothesis construction
+            // automaton construction
             final Map<String, I> inputMap =
                     alphabetSymbols.stream().collect(Collectors.toMap(Function.identity(), inputTransformer));
             final Alphabet<I> alphabet = Alphabets.fromCollection(inputMap.values());
@@ -90,7 +90,7 @@ class InternalAUTParser {
             throw new IllegalArgumentException(buildErrorMessage("Missing description"));
         }
 
-        contents = line.toCharArray();
+        currentLineContent = line.toCharArray();
         currentPos = 0;
 
         shiftToNextNonWhitespace();
@@ -111,7 +111,7 @@ class InternalAUTParser {
             return false;
         }
 
-        contents = line.toCharArray();
+        currentLineContent = line.toCharArray();
         currentLine++;
         currentPos = 0;
 
@@ -136,9 +136,8 @@ class InternalAUTParser {
 
     private void verifyDesAndShift() {
 
-        shiftToNextNonWhitespace();
-
-        if (contents[currentPos] != 'd' || contents[currentPos + 1] != 'e' || contents[currentPos + 2] != 's') {
+        if (currentLineContent[currentPos] != 'd' || currentLineContent[currentPos + 1] != 'e' ||
+            currentLineContent[currentPos + 2] != 's') {
             throw new IllegalArgumentException(buildErrorMessage("Missing 'des' keyword"));
         }
 
@@ -160,7 +159,7 @@ class InternalAUTParser {
 
     private void verifySymbolAndShift(char symbol) {
 
-        if (contents[currentPos] != symbol) {
+        if (currentLineContent[currentPos] != symbol) {
             throw new IllegalArgumentException(buildErrorMessage("Expected: " + symbol));
         }
 
@@ -169,8 +168,8 @@ class InternalAUTParser {
     }
 
     private void shiftToNextNonWhitespace() {
-        for (int i = currentPos; i < contents.length; i++) {
-            switch (contents[i]) {
+        for (int i = currentPos; i < currentLineContent.length; i++) {
+            switch (currentLineContent[i]) {
                 case ' ':
                 case '\t':
                 case '\r': // probably already filtered by readline
@@ -187,12 +186,12 @@ class InternalAUTParser {
 
         final StringBuilder sb = new StringBuilder();
 
-        char sym = contents[currentPos];
+        char sym = currentLineContent[currentPos];
 
         while (Character.isDigit(sym)) {
             sb.append(sym);
             currentPos++;
-            sym = contents[currentPos];
+            sym = currentLineContent[currentPos];
         }
 
         // forward pointer
@@ -202,7 +201,7 @@ class InternalAUTParser {
 
     private String parseLabelAndShift() {
 
-        if (contents[currentPos] == '"') {
+        if (currentLineContent[currentPos] == '"') {
             return parseQuotedLabelAndShift();
         } else {
             return parseNormalLabelAndShift();
@@ -211,23 +210,23 @@ class InternalAUTParser {
 
     private String parseQuotedLabelAndShift() {
         int openingIndex = currentPos;
-        int closingIndex = contents.length - 1;
+        int closingIndex = currentLineContent.length - 1;
 
         // find terminating "
-        while (contents[closingIndex--] != '"') {}
+        while (currentLineContent[closingIndex--] != '"') {}
 
         // skip terminating " as well
         currentPos = closingIndex + 2;
         shiftToNextNonWhitespace();
 
-        return new String(contents, openingIndex + 1, closingIndex - openingIndex);
+        return new String(currentLineContent, openingIndex + 1, closingIndex - openingIndex);
     }
 
     private String parseNormalLabelAndShift() {
 
-        final char firstChar = contents[currentPos];
+        final char firstChar = currentLineContent[currentPos];
 
-        if (contents[currentPos] == '*') {
+        if (currentLineContent[currentPos] == '*') {
             currentPos++;
             shiftToNextNonWhitespace();
             return "*";
@@ -241,14 +240,14 @@ class InternalAUTParser {
             int endIdx = currentPos;
 
             shiftToNextNonWhitespace();
-            return new String(contents, startIdx, endIdx - startIdx);
+            return new String(currentLineContent, startIdx, endIdx - startIdx);
         } else {
             throw new IllegalArgumentException(buildErrorMessage("Invalid unquoted label"));
         }
     }
 
     private boolean isValidIdentifier() {
-        final char currentChar = contents[currentPos];
+        final char currentChar = currentLineContent[currentPos];
         return Character.isLetterOrDigit(currentChar) || currentChar == '_';
     }
 
