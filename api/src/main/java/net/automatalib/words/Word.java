@@ -18,6 +18,7 @@ package net.automatalib.words;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.AbstractList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -199,6 +200,27 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 
     @SafeVarargs
     public static <I> Word<I> fromWords(Word<? extends I>... words) {
+        int totalLength = 0;
+        for (Word<?> w : words) {
+            totalLength += w.length();
+        }
+
+        if (totalLength == 0) {
+            return epsilon();
+        }
+
+        Object[] array = new Object[totalLength];
+
+        int currOfs = 0;
+        for (Word<? extends I> w : words) {
+            AWUtil.safeWrite(w, array, currOfs);
+            currOfs += w.length();
+        }
+
+        return new SharedWord<>(array);
+    }
+
+    public static <I> Word<I> fromWords(Collection<? extends Word<? extends I>> words) {
         int totalLength = 0;
         for (Word<?> w : words) {
             totalLength += w.length();
