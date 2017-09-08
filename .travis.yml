@@ -10,4 +10,4 @@ branches:
   - develop
 install: true # skip mvn install, because we essentially run the same command in the script routine
 script:
-  - mvn verify -B -Pintegration-tests
+  - mvn install -B -Pintegration-tests
