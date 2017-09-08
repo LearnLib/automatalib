@@ -31,13 +31,12 @@ import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
-import net.automatalib.serialization.saf.SAFSerialization.AutomatonType;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
 class SAFInput {
 
-    private static final AutomatonType[] TYPES = SAFSerialization.AutomatonType.values();
+    private static final AutomatonType[] TYPES = AutomatonType.values();
 
     private final DataInput in;
 

@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.function.Function;
 
 import net.automatalib.automata.simple.SimpleAutomaton;
+import net.automatalib.serialization.InputModelData;
 
 /**
  * A parser for automata specified in the AUT format (see http://cadp.inria.fr/man/aut.html for further information).
@@ -32,11 +33,13 @@ public final class AUTParser {
         // prevent instantiation
     }
 
-    public static SimpleAutomaton<Integer, String> readAutomaton(InputStream is) throws IOException {
+    public static InputModelData<String, SimpleAutomaton<Integer, String>> readAutomaton(InputStream is)
+            throws IOException {
         return readAutomaton(is, Function.identity());
     }
 
-    public static <I> SimpleAutomaton<Integer, I> readAutomaton(InputStream is, Function<String, I> inputTransformer)
+    public static <I> InputModelData<I, SimpleAutomaton<Integer, I>> readAutomaton(InputStream is,
+                                                                                   Function<String, I> inputTransformer)
             throws IOException {
         return new InternalAUTParser(is).parse(inputTransformer);
     }

@@ -21,19 +21,16 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.NFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.fsa.impl.compact.CompactNFA;
-import net.automatalib.serialization.SerializationProvider;
+import net.automatalib.serialization.InputModelData;
+import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
 import net.automatalib.serialization.taf.parser.TAFParser;
 import net.automatalib.serialization.taf.writer.TAFWriter;
-import net.automatalib.util.automata.copy.AutomatonCopyMethod;
-import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 
-public final class TAFSerialization implements SerializationProvider {
+public final class TAFSerialization
+        implements InputModelSerializationProvider<String, DFA<?, String>, DFA<Integer, String>> {
 
     private static final TAFSerialization INSTANCE = new TAFSerialization();
 
@@ -45,38 +42,16 @@ public final class TAFSerialization implements SerializationProvider {
     }
 
     @Override
-    public CompactDFA<Integer> readGenericDFA(InputStream is) throws IOException {
-        CompactDFA<String> nativeDfa = readNativeDFA(is);
-        return normalize(nativeDfa, nativeDfa.getInputAlphabet());
-    }
-
-    @Override
-    public CompactDFA<String> readNativeDFA(InputStream is) {
-        return TAFParser.parseDFA(is, PrintStreamDiagnosticListener.getStderrDiagnosticListener());
-    }
-
-    @Override
-    public <I> void writeDFA(DFA<?, I> dfa, Alphabet<I> alphabet, OutputStream os) throws IOException {
+    public void writeModel(OutputStream os, DFA<?, String> model, Alphabet<String> alphabet) throws IOException {
         try (OutputStreamWriter osw = new OutputStreamWriter(os)) {
-            TAFWriter.writeDFA(dfa, alphabet, osw);
+            TAFWriter.writeDFA(model, alphabet, osw);
         }
     }
 
     @Override
-    public CompactNFA<Integer> readGenericNFA(InputStream is) throws IOException {
-        throw new UnsupportedOperationException();
+    public InputModelData<String, DFA<Integer, String>> readModel(InputStream is) throws IOException {
+        final CompactDFA<String> automaton =
+                TAFParser.parseDFA(is, PrintStreamDiagnosticListener.getStderrDiagnosticListener());
+        return new InputModelData<>(automaton, automaton.getInputAlphabet());
     }
-
-    @Override
-    public <I> void writeNFA(NFA<?, I> nfa, Alphabet<I> alphabet, OutputStream os) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-    private static <I> CompactDFA<Integer> normalize(DFA<?, I> dfa, Alphabet<I> alphabet) {
-        Alphabet<Integer> normalizedAlphabet = Alphabets.integers(0, alphabet.size() - 1);
-        CompactDFA<Integer> result = new CompactDFA<>(normalizedAlphabet, dfa.size());
-        AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, dfa, alphabet, result, alphabet::getSymbolIndex);
-        return result;
-    }
-
 }

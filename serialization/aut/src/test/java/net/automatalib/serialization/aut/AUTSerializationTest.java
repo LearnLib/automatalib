@@ -40,7 +40,7 @@ public class AUTSerializationTest {
     public void quotationLabelTest() throws Exception {
         final InputStream is = AUTSerializationTest.class.getResourceAsStream("/quotationTest.aut");
 
-        final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is);
+        final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
 
         Assert.assertEquals(4, automaton.size());
 
@@ -70,7 +70,7 @@ public class AUTSerializationTest {
         AUTWriter.writeAutomaton(automaton, alphabet, baos);
 
         final InputStream is = new ByteArrayInputStream(baos.toByteArray());
-        final SimpleAutomaton<Integer, Integer> deserialized = AUTParser.readAutomaton(is, Integer::parseInt);
+        final SimpleAutomaton<Integer, Integer> deserialized = AUTParser.readAutomaton(is, Integer::parseInt).model;
 
         equalityTest(automaton, deserialized, alphabet);
 
@@ -78,9 +78,7 @@ public class AUTSerializationTest {
         is.close();
     }
 
-    private <S, I> void equalityTest(SimpleAutomaton<S, I> src,
-                                     SimpleAutomaton<S, I> target,
-                                     Alphabet<I> inputs) {
+    private <S, I> void equalityTest(SimpleAutomaton<S, I> src, SimpleAutomaton<S, I> target, Alphabet<I> inputs) {
         for (final S s : src.getStates()) {
             for (final I i : inputs) {
                 Assert.assertEquals(src.getSuccessors(s, i), target.getSuccessors(s, i));

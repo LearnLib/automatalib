@@ -15,18 +15,17 @@
  */
 package net.automatalib.serialization;
 
+import net.automatalib.ts.simple.SimpleTS;
+
 /**
- * A utility interface that unions {@link ModelSerializer} and {@link ModelDeserializer}.
- * <p>
- * This interface allows to specify two independent types (one for serialization, one for de-serialization) which allows
- * implementing classes to specify types more precise. This may be useful if the respective types hold generics as well
- * (which are invariant).
+ * A refinement of the {@link ModelDeserializer} interface for arbitrary models that can react to inputs. Introduces a
+ * new type variable for the input symbol type and limits the model type to {@link SimpleTS}s.
  *
- * @param <OUT>
- *         The type of objects that should be serialized
- * @param <IN>
- *         The type of objects that should be de-serialized
+ * @param <I>
+ *         the type of input symbols
+ * @param <M>
+ *         the type of objects implementing classes can deserialize
  *
  * @author frohme
  */
-public interface SerializationProvider<OUT, IN> extends ModelSerializer<OUT>, ModelDeserializer<IN> {}
+public interface InputModelDeserializer<I, M extends SimpleTS<?, I>> extends ModelDeserializer<InputModelData<I, M>> {}

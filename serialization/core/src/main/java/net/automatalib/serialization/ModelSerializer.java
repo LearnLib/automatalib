@@ -15,18 +15,27 @@
  */
 package net.automatalib.serialization;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
- * A utility interface that unions {@link ModelSerializer} and {@link ModelDeserializer}.
- * <p>
- * This interface allows to specify two independent types (one for serialization, one for de-serialization) which allows
- * implementing classes to specify types more precise. This may be useful if the respective types hold generics as well
- * (which are invariant).
+ * A generic interface for formalizing an arbitrary serializer for a given model type.
  *
- * @param <OUT>
- *         The type of objects that should be serialized
- * @param <IN>
- *         The type of objects that should be de-serialized
+ * @param <M>
+ *         the type of objects implementing classes can serialize
  *
  * @author frohme
  */
-public interface SerializationProvider<OUT, IN> extends ModelSerializer<OUT>, ModelDeserializer<IN> {}
+public interface ModelSerializer<M> {
+
+    void writeModel(OutputStream os, M model) throws IOException;
+
+    default void writeModel(File f, M model) throws IOException {
+        try (FileOutputStream os = new FileOutputStream(f)) {
+            writeModel(os, model);
+        }
+    }
+
+}

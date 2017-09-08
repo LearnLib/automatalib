@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.serialization;
+package net.automatalib.serialization.automaton;
 
 /**
- * A utility interface that unions {@link ModelSerializer} and {@link ModelDeserializer}.
+ * A utility interface that unions {@link SimpleAutomatonSerializer} and {@link SimpleAutomatonDeserializer}.
  * <p>
- * This interface allows to specify two independent types (one for serialization, one for de-serialization) which allows
- * implementing classes to specify types more precise. This may be useful if the respective types hold generics as well
- * (which are invariant).
+ * <b>Note:</b> These model-specific interfaces may be omitted if Java starts supporting higher-kinded generics (or we
+ * switch to a language that supports these).
  *
- * @param <OUT>
- *         The type of objects that should be serialized
- * @param <IN>
- *         The type of objects that should be de-serialized
+ * @param <S>
+ *         The state type of the de-serialized hypothesis
+ * @param <I>
+ *         The default input symbol type
  *
  * @author frohme
  */
-public interface SerializationProvider<OUT, IN> extends ModelSerializer<OUT>, ModelDeserializer<IN> {}
+public interface SimpleAutomatonSerializationProvider<S, I>
+        extends SimpleAutomatonSerializer<I>, SimpleAutomatonDeserializer<S, I> {}

@@ -15,18 +15,26 @@
  */
 package net.automatalib.serialization;
 
+import net.automatalib.ts.simple.SimpleTS;
+import net.automatalib.words.Alphabet;
+
 /**
- * A utility interface that unions {@link ModelSerializer} and {@link ModelDeserializer}.
- * <p>
- * This interface allows to specify two independent types (one for serialization, one for de-serialization) which allows
- * implementing classes to specify types more precise. This may be useful if the respective types hold generics as well
- * (which are invariant).
+ * A utility data class, that allows to pair a model that can react to input symbols with a corresponding value.
  *
- * @param <OUT>
- *         The type of objects that should be serialized
- * @param <IN>
- *         The type of objects that should be de-serialized
+ * @param <I>
+ *         the input symbol type
+ * @param <M>
+ *         the model type
  *
  * @author frohme
  */
-public interface SerializationProvider<OUT, IN> extends ModelSerializer<OUT>, ModelDeserializer<IN> {}
+public final class InputModelData<I, M extends SimpleTS<?, I>> {
+
+    public final M model;
+    public final Alphabet<I> alphabet;
+
+    public InputModelData(M model, Alphabet<I> alphabet) {
+        this.model = model;
+        this.alphabet = alphabet;
+    }
+}

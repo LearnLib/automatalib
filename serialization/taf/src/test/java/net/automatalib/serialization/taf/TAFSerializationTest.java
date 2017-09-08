@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.Random;
 
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.serialization.SerializationProvider;
+import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -37,32 +37,32 @@ public class TAFSerializationTest {
 
     @Test
     public void testGenericSerialization() throws Exception {
-        final Alphabet<Integer> alphabet = Alphabets.integers(0, 2);
+        final Alphabet<String> alphabet = Alphabets.fromArray("0", "1", "2");
 
-        testInternal(alphabet, SerializationProvider::readGenericDFA);
+        testInternal(alphabet, (p, is) -> p.readModel(is).model);
     }
 
     @Test
     public void testSerialization() throws Exception {
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
+        final Alphabet<String> alphabet = Alphabets.fromArray("a", "b", "c");
 
-        testInternal(alphabet, (s, is) -> s.readCustomDFA(is, alphabet));
+        testInternal(alphabet, (p, is) -> p.readModel(is).model);
     }
 
-    private <I> void testInternal(Alphabet<I> alphabet,
-                                  ThrowableBiFunction<SerializationProvider, InputStream, DFA<?, I>> deserializer)
+    private void testInternal(Alphabet<String> alphabet,
+                              ThrowableBiFunction<InputModelSerializationProvider<String, DFA<?, String>, DFA<Integer, String>>, InputStream, DFA<?, String>> deserializer)
             throws IOException {
 
         final Random random = new Random(0);
-        final DFA<?, I> automaton = RandomAutomata.randomDFA(random, 20, alphabet);
+        final DFA<?, String> automaton = RandomAutomata.randomDFA(random, 20, alphabet);
 
         final TAFSerialization serProvider = TAFSerialization.getInstance();
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        serProvider.writeDFA(automaton, alphabet, baos);
+        serProvider.writeModel(baos, automaton, alphabet);
 
         final InputStream is = new ByteArrayInputStream(baos.toByteArray());
-        final DFA<?, I> deserialized = deserializer.apply(serProvider, is);
+        final DFA<?, String> deserialized = deserializer.apply(serProvider, is);
 
         Assert.assertTrue(Automata.testEquivalence(automaton, deserialized, alphabet));
 

@@ -27,8 +27,9 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import net.automatalib.automata.Automaton;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
+import net.automatalib.automata.simple.SimpleAutomaton;
+import net.automatalib.serialization.InputModelData;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -51,7 +52,8 @@ class InternalAUTParser {
         this.inputStream = is;
     }
 
-    public <I> Automaton<Integer, I, ?> parse(Function<String, I> inputTransformer) throws IOException {
+    public <I> InputModelData<I, SimpleAutomaton<Integer, I>> parse(Function<String, I> inputTransformer)
+            throws IOException {
         try (Reader isr = new InputStreamReader(inputStream); BufferedReader bisr = new BufferedReader(isr)) {
 
             // parsing
@@ -79,7 +81,7 @@ class InternalAUTParser {
             }
             result.setInitial(initialState, true);
 
-            return result;
+            return new InputModelData<>(result, alphabet);
         }
     }
 

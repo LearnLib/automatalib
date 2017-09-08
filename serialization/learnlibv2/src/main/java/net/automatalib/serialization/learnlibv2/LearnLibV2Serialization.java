@@ -27,16 +27,16 @@ import javax.annotation.WillNotClose;
 
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.NFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.IOUtil;
-import net.automatalib.serialization.SerializationProvider;
+import net.automatalib.serialization.InputModelData;
+import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
-public class LearnLibV2Serialization implements SerializationProvider {
+public class LearnLibV2Serialization
+        implements InputModelSerializationProvider<Integer, DFA<?, Integer>, DFA<Integer, Integer>> {
 
     private static final LearnLibV2Serialization INSTANCE = new LearnLibV2Serialization();
 
@@ -45,6 +45,20 @@ public class LearnLibV2Serialization implements SerializationProvider {
     }
 
     @Override
+    public void writeModel(OutputStream os, DFA<?, Integer> model, Alphabet<Integer> alphabet) throws IOException {
+        doWriteDFA(model, alphabet, os);
+    }
+
+    public <I> void writeGenericModel(OutputStream os, DFA<?, I> model, Alphabet<I> alphabet) throws IOException {
+        doWriteDFA(model, alphabet, os);
+    }
+
+    @Override
+    public InputModelData<Integer, DFA<Integer, Integer>> readModel(InputStream is) throws IOException {
+        final CompactDFA<Integer> automaton = readGenericDFA(is);
+        return new InputModelData<>(automaton, automaton.getInputAlphabet());
+    }
+
     public CompactDFA<Integer> readGenericDFA(@WillNotClose InputStream is) throws IOException {
         // we DO NOT want to close the input stream
         @SuppressWarnings("resource")
@@ -78,11 +92,6 @@ public class LearnLibV2Serialization implements SerializationProvider {
         }
 
         return result;
-    }
-
-    @Override
-    public <I> void writeDFA(DFA<?, I> dfa, Alphabet<I> alphabet, OutputStream os) throws IOException {
-        doWriteDFA(dfa, alphabet, os);
     }
 
     private <S, I> void doWriteDFA(DFA<S, I> dfa, Alphabet<I> alphabet, OutputStream os) {
@@ -141,15 +150,4 @@ public class LearnLibV2Serialization implements SerializationProvider {
             ps.println();
         }
     }
-
-    @Override
-    public CompactNFA<Integer> readGenericNFA(InputStream is) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <I> void writeNFA(NFA<?, I> nfa, Alphabet<I> alphabet, OutputStream os) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
 }
