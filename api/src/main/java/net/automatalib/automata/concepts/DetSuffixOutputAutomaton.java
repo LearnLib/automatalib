@@ -15,17 +15,34 @@
  */
 package net.automatalib.automata.concepts;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.exception.UndefinedPropertyAccessException;
+
+@ParametersAreNonnullByDefault
 public interface DetSuffixOutputAutomaton<S, I, T, D> extends DetOutputAutomaton<S, I, T, D>, SuffixOutput<I, D> {
 
     @Override
     default D computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        return computeStateOutput(getState(prefix), suffix);
+        final S state = getState(prefix);
+
+        if (state == null) {
+            throw new UndefinedPropertyAccessException("The state accessed by " + prefix + " is undefined");
+        }
+
+        return computeStateOutput(state, suffix);
     }
 
     D computeStateOutput(S state, Iterable<? extends I> input);
 
     @Override
     default D computeOutput(Iterable<? extends I> input) {
-        return computeStateOutput(getInitialState(), input);
+        final S state = getInitialState();
+
+        if (state == null) {
+            throw new UndefinedPropertyAccessException("No initial state defined");
+        }
+
+        return computeStateOutput(state, input);
     }
 }

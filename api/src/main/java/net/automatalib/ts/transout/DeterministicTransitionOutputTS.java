@@ -50,7 +50,9 @@ public interface DeterministicTransitionOutputTS<S, I, T, O>
     }
 
     default boolean trace(Iterable<? extends I> input, List<? super O> output) {
-        return trace(getInitialState(), input, output);
+        final S init = getInitialState();
+
+        return init != null && trace(init, input, output);
     }
 
     default boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {

@@ -17,11 +17,15 @@ package net.automatalib.automata.transout;
 
 import java.util.Collection;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
+import net.automatalib.exception.UndefinedPropertyAccessException;
 import net.automatalib.ts.transout.DeterministicTransitionOutputTS;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
+@ParametersAreNonnullByDefault
 public interface TransitionOutputAutomaton<S, I, T, O>
         extends DetSuffixOutputAutomaton<S, I, T, Word<O>>, DeterministicTransitionOutputTS<S, I, T, O> {
 
@@ -33,7 +37,12 @@ public interface TransitionOutputAutomaton<S, I, T, O>
         } else {
             result = new WordBuilder<>();
         }
-        trace(state, input, result);
+
+        if (!trace(state, input, result)) {
+            throw new UndefinedPropertyAccessException(
+                    "No output can be computed because an intermediate state or transition output is undefined");
+        }
+
         return result.toWord();
     }
 }

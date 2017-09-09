@@ -19,6 +19,7 @@ import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -66,21 +67,33 @@ public class MealyFilterTest {
     @Test
     public void testPruneTransitionWithOutput() {
         Word<Integer> testWord = Word.fromSymbols(1, 1, 1);
-        Assert.assertEquals(testMealy.computeOutput(testWord), Word.fromSymbols("a", "b", "c"));
+        WordBuilder<String> testOutput = new WordBuilder<>(3);
+
+        Assert.assertTrue(testMealy.trace(testWord, testOutput));
+        Assert.assertEquals(testOutput.toWord(), Word.fromSymbols("a", "b", "c"));
+        testOutput.clear();
 
         MealyMachine<?, Integer, ?, String> mealy1 =
                 MealyFilter.pruneTransitionsWithOutput(testMealy, testAlphabet, "c");
         Assert.assertEquals(mealy1.size(), 3);
-        Assert.assertEquals(mealy1.computeOutput(testWord), Word.fromSymbols("a", "b"));
+
+        Assert.assertFalse(mealy1.trace(testWord, testOutput));
+        Assert.assertEquals(testOutput.toWord(), Word.fromSymbols("a", "b"));
+        testOutput.clear();
 
         MealyMachine<?, Integer, ?, String> mealy2 =
                 MealyFilter.pruneTransitionsWithOutput(testMealy, testAlphabet, "b", "c");
         Assert.assertEquals(mealy2.size(), 2);
-        Assert.assertEquals(mealy2.computeOutput(testWord), Word.fromSymbols("a"));
+
+        Assert.assertFalse(mealy2.trace(testWord, testOutput));
+        Assert.assertEquals(testOutput.toWord(), Word.fromSymbols("a"));
+        testOutput.clear();
 
         MealyMachine<?, Integer, ?, String> mealy3 =
                 MealyFilter.pruneTransitionsWithOutput(testMealy, testAlphabet, "a");
         Assert.assertEquals(mealy3.size(), 1);
-        Assert.assertEquals(mealy3.computeOutput(testWord), Word.epsilon());
+
+        Assert.assertFalse(mealy3.trace(testWord, testOutput));
+        Assert.assertEquals(testOutput.toWord(), Word.epsilon());
     }
 }
