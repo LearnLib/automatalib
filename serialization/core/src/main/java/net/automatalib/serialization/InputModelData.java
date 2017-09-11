@@ -19,7 +19,7 @@ import net.automatalib.ts.simple.SimpleTS;
 import net.automatalib.words.Alphabet;
 
 /**
- * A utility data class, that allows to pair a model that can react to input symbols with a corresponding value.
+ * A utility data class, that allows to pair a model that can react to input symbols with a corresponding alphabet.
  *
  * @param <I>
  *         the input symbol type
