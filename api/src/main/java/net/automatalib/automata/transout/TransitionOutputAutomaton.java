@@ -20,7 +20,6 @@ import java.util.Collection;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
-import net.automatalib.exception.UndefinedPropertyAccessException;
 import net.automatalib.ts.transout.DeterministicTransitionOutputTS;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -38,10 +37,7 @@ public interface TransitionOutputAutomaton<S, I, T, O>
             result = new WordBuilder<>();
         }
 
-        if (!trace(state, input, result)) {
-            throw new UndefinedPropertyAccessException(
-                    "No output can be computed because an intermediate state or transition output is undefined");
-        }
+        trace(state, input, result);
 
         return result.toWord();
     }
