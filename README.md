@@ -1,6 +1,7 @@
 AutomataLib
 ===========
 [![Travis CI](https://travis-ci.org/LearnLib/automatalib.svg?branch=develop)](https://travis-ci.org/LearnLib/automatalib)
+[![Coverage Status](https://coveralls.io/repos/github/LearnLib/automatalib/badge.svg?branch=develop)](https://coveralls.io/github/LearnLib/automatalib?branch=develop)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.automatalib/automata-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.automatalib/automata-parent)
 
 AutomataLib is a free, open source ([Apache License, v2.0][1]) Java library for modeling automata, graphs, and transition systems.

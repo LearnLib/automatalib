@@ -142,6 +142,7 @@ limitations under the License.
         <guava.version>22.0</guava.version>
         <findbugs.version>3.0.2</findbugs.version>
         <jacoco.version>0.7.9</jacoco.version>
+        <coveralls.version>4.3.0</coveralls.version>
 
         <jung.version>2.1.1</jung.version>
 
@@ -321,6 +322,11 @@ limitations under the License.
                             <link>${jung.apidocs}</link>
                         </links>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.eluder.coveralls</groupId>
+                    <artifactId>coveralls-maven-plugin</artifactId>
+                    <version>${coveralls.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
