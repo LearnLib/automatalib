@@ -336,14 +336,6 @@ limitations under the License.
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
                     <version>${coveralls.version}</version>
-                    <configuration>
-                        <sourceDirectories>
-                            <!-- TODO: find a more easy-to-maintain solution -->
-                            <sourceDirectory>${basedir}/serialization/taf/target/generated-sources</sourceDirectory>
-                            <sourceDirectory>${basedir}/util/target/generated-sources</sourceDirectory>
-                        </sourceDirectories>
-                        <scanForSources>true</scanForSources>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

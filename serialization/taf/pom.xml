@@ -34,6 +34,24 @@ limitations under the License.
     </parent>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- If we run coverage analysis, skip generated sources -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/InternalTAFParser*.class</exclude>
+                            <exclude>**/ParseException.class</exclude>
+                            <exclude>**/SimpleCharStream.class</exclude>
+                            <exclude>**/Token.class</exclude>
+                            <exclude>**/TokenMgrError.class</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
