@@ -30,6 +30,9 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
 
     @Override
     public I getSymbol(int index) throws IllegalArgumentException {
+        if (index < 0 || index >= symbols.length) {
+            throw new IllegalArgumentException("Index not within its expected bounds");
+        }
         return symbols[index];
     }
 
@@ -40,7 +43,8 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
                 return i;
             }
         }
-        return -1;
+
+        throw new IllegalArgumentException("Alphabet does not contain the queried symbol");
     }
 
     @Override

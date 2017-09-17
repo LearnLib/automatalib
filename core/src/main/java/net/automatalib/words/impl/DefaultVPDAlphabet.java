@@ -18,10 +18,13 @@ package net.automatalib.words.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
 
 /**
@@ -41,6 +44,9 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
                               final Collection<I> callSymbols,
                               final Collection<I> returnSymbols) {
 
+        validateDisjointness(internalSymbols, SymbolType.INTERNAL, callSymbols, returnSymbols);
+        validateDisjointness(callSymbols, SymbolType.CALL, returnSymbols);
+
         internalStart = 0;
         internalEnd = internalSymbols.size();
 
@@ -59,13 +65,21 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
     }
 
     @Override
-    public I getCallSymbol(int index) {
-        return this.getSymbol(index + callStart);
+    public I getCallSymbol(int index) throws IllegalArgumentException {
+        final int idx = index + callStart;
+
+        validateIndex(idx, callStart, callEnd, "Index not within its expected bounds");
+
+        return this.getSymbol(idx);
     }
 
     @Override
-    public int getCallSymbolIndex(final I symbol) {
-        return this.getSymbolIndex(symbol) - callStart;
+    public int getCallSymbolIndex(final I symbol) throws IllegalArgumentException {
+        final int idx = this.getSymbolIndex(symbol);
+
+        validateIndex(idx, callStart, callEnd, "Call alphabet does not contain the queried symbol");
+
+        return idx - callStart;
     }
 
     @Override
@@ -74,13 +88,21 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
     }
 
     @Override
-    public I getInternalSymbol(final int index) {
-        return this.getSymbol(index + internalStart);
+    public I getInternalSymbol(final int index) throws IllegalArgumentException {
+        final int idx = index + internalStart;
+
+        validateIndex(idx, internalStart, internalEnd, "Index not within its expected bounds");
+
+        return this.getSymbol(idx);
     }
 
     @Override
-    public int getInternalSymbolIndex(final I symbol) {
-        return this.getSymbolIndex(symbol) - internalStart;
+    public int getInternalSymbolIndex(final I symbol) throws IllegalArgumentException {
+        final int idx = this.getSymbolIndex(symbol);
+
+        validateIndex(idx, internalStart, internalEnd, "Internal alphabet does not contain the queried symbol");
+
+        return idx - internalStart;
     }
 
     @Override
@@ -89,13 +111,21 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
     }
 
     @Override
-    public I getReturnSymbol(final int index) {
-        return this.getSymbol(index + returnStart);
+    public I getReturnSymbol(final int index) throws IllegalArgumentException {
+        final int idx = index + returnStart;
+
+        validateIndex(idx, returnStart, returnEnd, "Index not within its expected bounds");
+
+        return this.getSymbol(idx);
     }
 
     @Override
-    public int getReturnSymbolIndex(final I symbol) {
-        return this.getSymbolIndex(symbol) - returnStart;
+    public int getReturnSymbolIndex(final I symbol) throws IllegalArgumentException {
+        final int idx = this.getSymbolIndex(symbol);
+
+        validateIndex(idx, returnStart, returnEnd, "Return alphabet does not contain the queried symbol");
+
+        return idx - returnStart;
     }
 
     @Override
@@ -134,16 +164,46 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
     @Nullable
     @Override
     public I getSymbol(final int index) throws IllegalArgumentException {
+        validateIndex(index, 0, symbols.size(), "Index not within its expected bounds");
         return this.symbols.get(index);
     }
 
     @Override
     public int getSymbolIndex(@Nullable final I symbol) throws IllegalArgumentException {
-        return this.symbols.indexOf(symbol);
+        final int localIdx = this.symbols.indexOf(symbol);
+
+        if (localIdx < 0) {
+            throw new IllegalArgumentException("Alphabet does not contain the queried symbol");
+        }
+
+        return localIdx;
     }
 
     @Override
     public int size() {
         return this.symbols.size();
+    }
+
+    private void validateIndex(int idx, int lowerBound, int upperBound, String errorMessage) {
+        if (idx < lowerBound || idx >= upperBound) {
+            throw new IllegalArgumentException(errorMessage);
+        }
+    }
+
+    @SafeVarargs
+    private static <I> void validateDisjointness(Collection<I> source,
+                                                 VPDAlphabet.SymbolType type,
+                                                 Collection<I>... rest) {
+        final Set<I> sourceAsSet = new HashSet<>(source);
+        final int initialSize = sourceAsSet.size();
+
+        for (Collection<I> c : rest) {
+            sourceAsSet.removeAll(c);
+        }
+
+        if (sourceAsSet.size() < initialSize) {
+            throw new IllegalArgumentException(
+                    "The set of " + type + " symbols is not disjoint with the sets of other symbols.");
+        }
     }
 }

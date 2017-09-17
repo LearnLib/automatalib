@@ -30,25 +30,43 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
 
     Alphabet<I> getCallAlphabet();
 
-    I getCallSymbol(int index);
+    /**
+     * The {@link Alphabet#getSymbol(int)} variant for the call alphabet.
+     */
+    I getCallSymbol(int index) throws IllegalArgumentException;
 
-    int getCallSymbolIndex(I symbol);
+    /**
+     * The {@link Alphabet#getSymbolIndex(Object)} variant for the call alphabet.
+     */
+    int getCallSymbolIndex(I symbol) throws IllegalArgumentException;
 
     Collection<? extends I> getCallSymbols();
 
     Alphabet<I> getInternalAlphabet();
 
-    I getInternalSymbol(int index);
+    /**
+     * The {@link Alphabet#getSymbol(int)} variant for the internal alphabet.
+     */
+    I getInternalSymbol(int index) throws IllegalArgumentException;
 
-    int getInternalSymbolIndex(I symbol);
+    /**
+     * The {@link Alphabet#getSymbolIndex(Object)} variant for the internal alphabet.
+     */
+    int getInternalSymbolIndex(I symbol) throws IllegalArgumentException;
 
     Collection<? extends I> getInternalSymbols();
 
     Alphabet<I> getReturnAlphabet();
 
-    I getReturnSymbol(int index);
+    /**
+     * The {@link Alphabet#getSymbol(int)} variant for the return alphabet.
+     */
+    I getReturnSymbol(int index) throws IllegalArgumentException;
 
-    int getReturnSymbolIndex(I symbol);
+    /**
+     * The {@link Alphabet#getSymbolIndex(Object)} variant for the return alphabet.
+     */
+    int getReturnSymbolIndex(I symbol) throws IllegalArgumentException;
 
     Collection<? extends I> getReturnSymbols();
 

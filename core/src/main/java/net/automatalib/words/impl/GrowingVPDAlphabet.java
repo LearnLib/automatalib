@@ -44,17 +44,20 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
 
     @Override
     public int getSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
+        if (!hasValidIndex(symbol, allSyms)) {
+            throw new IllegalArgumentException();
+        }
         return symbol.getGlobalIndex();
     }
 
     @Override
-    public VPDSym<I> getCallSymbol(final int index) {
+    public VPDSym<I> getCallSymbol(final int index) throws IllegalArgumentException {
         return callSyms.get(index);
     }
 
     @Override
-    public int getCallSymbolIndex(final VPDSym<I> symbol) {
-        if (symbol.getType() != SymbolType.CALL) {
+    public int getCallSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
+        if (symbol.getType() != SymbolType.CALL || !hasValidIndex(symbol, callSyms)) {
             throw new IllegalArgumentException();
         }
         return symbol.getLocalIndex();
@@ -66,13 +69,13 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
     }
 
     @Override
-    public VPDSym<I> getInternalSymbol(final int index) {
+    public VPDSym<I> getInternalSymbol(final int index) throws IllegalArgumentException {
         return internalSyms.get(index);
     }
 
     @Override
-    public int getInternalSymbolIndex(final VPDSym<I> symbol) {
-        if (symbol.getType() != SymbolType.INTERNAL) {
+    public int getInternalSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
+        if (symbol.getType() != SymbolType.INTERNAL || !hasValidIndex(symbol, internalSyms)) {
             throw new IllegalArgumentException();
         }
         return symbol.getLocalIndex();
@@ -84,13 +87,13 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
     }
 
     @Override
-    public VPDSym<I> getReturnSymbol(final int index) {
+    public VPDSym<I> getReturnSymbol(final int index) throws IllegalArgumentException {
         return returnSyms.get(index);
     }
 
     @Override
-    public int getReturnSymbolIndex(final VPDSym<I> symbol) {
-        if (symbol.getType() != SymbolType.RETURN) {
+    public int getReturnSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
+        if (symbol.getType() != SymbolType.RETURN || !hasValidIndex(symbol, returnSyms)) {
             throw new IllegalArgumentException();
         }
         return symbol.getLocalIndex();
@@ -145,6 +148,14 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
         localList.add(vpdSym);
 
         return vpdSym;
+    }
+
+    private boolean hasValidIndex(VPDSym<I> symbol, List<VPDSym<I>> localSymbols) {
+        final int localIdx = symbol.getLocalIndex();
+        final int globalIdx = symbol.getGlobalIndex();
+
+        return localIdx >= 0 && localIdx < localSymbols.size() && globalIdx >= 0 && globalIdx < allSyms.size();
+
     }
 
 }
