@@ -26,7 +26,7 @@ import net.automatalib.words.VPDAlphabet;
  *
  * @author Malte Isberner
  */
-public class VPDSym<T> {
+public final class VPDSym<T> {
 
     private final VPDAlphabet.SymbolType type;
     private final T userObject;
@@ -58,5 +58,37 @@ public class VPDSym<T> {
     @Override
     public String toString() {
         return String.valueOf(userObject);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof VPDSym)) {
+            return false;
+        }
+
+        VPDSym<?> vpdSym = (VPDSym<?>) o;
+
+        if (localIndex != vpdSym.localIndex) {
+            return false;
+        }
+        if (globalIndex != vpdSym.globalIndex) {
+            return false;
+        }
+        if (type != vpdSym.type) {
+            return false;
+        }
+        return userObject.equals(vpdSym.userObject);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + userObject.hashCode();
+        result = 31 * result + localIndex;
+        result = 31 * result + globalIndex;
+        return result;
     }
 }
