@@ -344,9 +344,9 @@ public final class WordBuilder<I> extends AbstractList<I> {
      * are invoked on this {@link WordBuilder}.
      *
      * @param fromIndex
-     *         the starting index
+     *         the starting index, inclusive
      * @param toIndex
-     *         the end index
+     *         the end index, exclusive
      *
      * @return the word for the specified subrange
      */
