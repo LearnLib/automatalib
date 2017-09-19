@@ -33,8 +33,6 @@ import java.util.function.IntFunction;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.base.Preconditions;
 
 /**
@@ -179,7 +177,10 @@ public class RichArray<T> implements List<T>, IntFunction<T>, RandomAccess, Seri
         return equals((List<?>) o);
     }
 
-    public boolean equals(@Nonnull List<?> other) {
+    public boolean equals(List<?> other) {
+        if (other == null) {
+            return false;
+        }
         if (other.getClass() == RichArray.class) {
             return equals((RichArray<?>) other);
         }
@@ -198,7 +199,10 @@ public class RichArray<T> implements List<T>, IntFunction<T>, RandomAccess, Seri
         return true;
     }
 
-    public boolean equals(@Nonnull RichArray<?> other) {
+    public boolean equals(RichArray<?> other) {
+        if (other == null) {
+            return false;
+        }
         if (length != other.length) {
             return false;
         }

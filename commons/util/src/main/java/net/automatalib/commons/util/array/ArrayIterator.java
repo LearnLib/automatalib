@@ -16,6 +16,7 @@
 package net.automatalib.commons.util.array;
 
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 public class ArrayIterator<T> implements ListIterator<T> {
 
@@ -49,6 +50,9 @@ public class ArrayIterator<T> implements ListIterator<T> {
 
     @Override
     public T next() {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
         return array[curr++];
     }
 

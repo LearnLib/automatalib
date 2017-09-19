@@ -281,18 +281,17 @@ public final class PaigeTarjanExtractors {
 
             for (I sym : inputs) {
                 T1 origTrans = original.getTransition(rep, sym);
-                Block succBlock;
                 TP tp;
+                S2 resultSucc;
                 if (origTrans != null) {
                     tp = tpExtractor.apply(origTrans);
                     S1 origSucc = original.getSuccessor(origTrans);
                     int origSuccId = origIds.getStateId(origSucc);
-                    succBlock = pt.getBlockForState(origSuccId);
+                    resultSucc = states.get(pt.getBlockForState(origSuccId).id);
                 } else {
-                    succBlock = null;
+                    resultSucc = null;
                     tp = null;
                 }
-                S2 resultSucc = states.get(succBlock.id);
                 result.setTransition(resultState, sym, resultSucc, tp);
             }
         }

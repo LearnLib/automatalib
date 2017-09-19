@@ -17,10 +17,10 @@ package net.automatalib.commons.util.settings;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+import net.automatalib.commons.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +44,7 @@ public class LocalFileSource implements SettingsSource {
 
         Logger log = LoggerFactory.getLogger(getClass());
 
-        try (BufferedReader r = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader r = new BufferedReader(IOUtil.asUTF8Reader(file))) {
             properties.load(r);
         } catch (IOException ex) {
             log.warn("Could not read properties file " + file.getAbsolutePath() + ".", ex);

@@ -130,9 +130,10 @@ public final class BacktrackingSearch {
                 // compute successors
                 final Map<O, SplitTree<S, I, O>> successors = new HashMap<>();
 
-                for (final S s : currentToInitialMapping.keySet()) {
-                    final S nextState = automaton.getSuccessor(s, i);
-                    final O nextOutput = automaton.getOutput(s, i);
+                for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
+                    final S current = entry.getKey();
+                    final S nextState = automaton.getSuccessor(current, i);
+                    final O nextOutput = automaton.getOutput(current, i);
 
                     final SplitTree<S, I, O> child;
                     if (!successors.containsKey(nextOutput)) {
@@ -146,7 +147,7 @@ public final class BacktrackingSearch {
                     if (!child.getPartition().add(nextState)) {
                         continue oneSymbolFuture;
                     }
-                    child.getMapping().put(nextState, node.getMapping().get(currentToInitialMapping.get(s)));
+                    child.getMapping().put(nextState, node.getMapping().get(entry.getValue()));
                 }
 
                 //splitting word
@@ -415,12 +416,8 @@ public final class BacktrackingSearch {
                                                            final Map<S, S> currentToInitialMapping,
                                                            final SearchState<S, I, O> searchState) {
 
-        final Set<S> targets = currentToInitialMapping.keySet();
-
-        if (targets.size() == 1) {
-            final S target = targets.iterator().next();
-
-            return new ADSLeafNode<>(null, currentToInitialMapping.get(target));
+        if (currentToInitialMapping.size() == 1) {
+            return new ADSLeafNode<>(null, currentToInitialMapping.values().iterator().next());
         }
 
         final I i = searchState.symbol;
@@ -428,9 +425,10 @@ public final class BacktrackingSearch {
 
         final Map<O, Map<S, S>> successors = new HashMap<>();
 
-        for (final S s : targets) {
-            final S nextState = automaton.getSuccessor(s, i);
-            final O nextOutput = automaton.getOutput(s, i);
+        for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
+            final S current = entry.getKey();
+            final S nextState = automaton.getSuccessor(current, i);
+            final O nextOutput = automaton.getOutput(current, i);
 
             final Map<S, S> nextMapping;
             if (!successors.containsKey(nextOutput)) {
@@ -441,7 +439,7 @@ public final class BacktrackingSearch {
             }
 
             // invalid input
-            if (nextMapping.put(nextState, currentToInitialMapping.get(s)) != null) {
+            if (nextMapping.put(nextState, entry.getValue()) != null) {
                 throw new IllegalStateException();
             }
         }

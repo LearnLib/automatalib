@@ -16,14 +16,17 @@
 package net.automatalib.commons.dotutil;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.Writer;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+
+import net.automatalib.commons.util.IOUtil;
 
 final class PlottedGraph {
 
@@ -95,8 +98,8 @@ final class PlottedGraph {
     }
 
     public void saveDot(File file) throws IOException {
-        try (FileWriter fw = new FileWriter(file)) {
-            fw.write(dotText);
+        try (Writer w = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
+            w.write(dotText);
         }
     }
 

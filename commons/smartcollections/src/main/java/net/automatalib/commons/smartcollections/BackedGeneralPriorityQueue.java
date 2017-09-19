@@ -69,7 +69,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
             backing = backingClazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             throw new IllegalArgumentException(
-                    "Cannot instantiate backing " + "priority queue of type " + backingClazz.getName() + ": " +
+                    "Cannot instantiate backing priority queue of type " + backingClazz.getName() + ": " +
                     e.getMessage(), e);
         }
         this.backingQueue = (SmartDynamicPriorityQueue<Entry<E, K>>) backing;
@@ -85,7 +85,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
     @SuppressWarnings("unchecked")
     public BackedGeneralPriorityQueue(SmartDynamicPriorityQueue<?> backingQueue) {
         if (!backingQueue.isEmpty()) {
-            throw new IllegalArgumentException("Backing priority queue must " + "be empty upon initialization!");
+            throw new IllegalArgumentException("Backing priority queue must be empty upon initialization!");
         }
         this.backingQueue = (SmartDynamicPriorityQueue<Entry<E, K>>) backingQueue;
     }
@@ -202,6 +202,9 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         return min.element;
     }
 
+    /**
+     * Note: this class has a natural ordering that is inconsistent with equals.
+     */
     private static class Entry<E, K extends Comparable<K>> implements Comparable<Entry<E, K>> {
 
         public E element;

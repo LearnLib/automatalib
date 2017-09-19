@@ -79,7 +79,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
             return null;
         }
 
-        boolean acc = target.isAccepting(init2);
+        boolean acc = init2 != null && target.isAccepting(init2);
         if (init1.getAcceptance().conflicts(acc)) {
             return Word.epsilon();
         }

@@ -18,7 +18,6 @@ package net.automatalib.commons.dotutil;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -53,7 +52,7 @@ public class DOTComponent extends ImageComponent {
             if (result != JFileChooser.APPROVE_OPTION) {
                 return;
             }
-            try (Writer w = new BufferedWriter(new FileWriter(saveDlg.getSelectedFile()))) {
+            try (Writer w = new BufferedWriter(IOUtil.asUTF8Writer(saveDlg.getSelectedFile()))) {
                 w.write(dot);
                 w.close();
             } catch (IOException ex) {

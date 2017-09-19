@@ -34,7 +34,7 @@ public class SharedSuffixTrie<I> extends SuffixTrie<I> {
     @Override
     @SuppressWarnings("unchecked")
     public SuffixTrieNode<I> add(I symbol, SuffixTrieNode<I> parent) {
-        if (parent.getClass() != SharedSuffixTrieNode.class) {
+        if (!(parent instanceof SharedSuffixTrieNode)) {
             throw new IllegalArgumentException("Invalid suffix trie node");
         }
 

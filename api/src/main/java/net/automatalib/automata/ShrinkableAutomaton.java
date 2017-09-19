@@ -44,7 +44,7 @@ public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S
 
     static <S, I, T, SP, TP> void unlinkState(MutableAutomaton<S, I, T, SP, TP> automaton,
                                               S state,
-                                              S replacement,
+                                              @Nullable S replacement,
                                               Collection<I> inputs) {
 
         for (S curr : automaton) {

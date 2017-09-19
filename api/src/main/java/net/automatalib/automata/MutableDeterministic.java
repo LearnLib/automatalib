@@ -133,9 +133,11 @@ public interface MutableDeterministic<S, I, T, SP, TP>
      * @param property
      *         the transition's property
      */
-    default void setTransition(S state, @Nullable I input, S successor, @Nullable TP property) {
-        T trans = createTransition(successor, property);
-        setTransition(state, input, trans);
+    default void setTransition(S state, @Nullable I input, @Nullable S successor, @Nullable TP property) {
+        if (successor != null) {
+            T trans = createTransition(successor, property);
+            setTransition(state, input, trans);
+        }
     }
 
     @Override
@@ -167,13 +169,13 @@ public interface MutableDeterministic<S, I, T, SP, TP>
             return addIntState(null);
         }
 
-        int addIntState(SP property);
+        int addIntState(@Nullable SP property);
 
         default int addIntInitialState() {
             return addIntInitialState(null);
         }
 
-        int addIntInitialState(SP property);
+        int addIntInitialState(@Nullable SP property);
     }
 
     interface StateIntAbstraction<I, T, SP, TP>
@@ -249,7 +251,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
 
         void setTransition(int state, int input, T transition);
 
-        void setTransition(int state, int input, int successor, TP property);
+        void setTransition(int state, int input, int successor, @Nullable TP property);
 
         class DefaultAbstraction<I, T, SP, TP, A extends StateIntAbstraction<I, T, SP, TP>>
                 extends UniversalDeterministicAutomaton.FullIntAbstraction.DefaultAbstraction<I, T, SP, TP, A>

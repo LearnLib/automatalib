@@ -225,6 +225,9 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
             @Override
             @SuppressWarnings("unchecked")
             public E next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
                 return (E) storage.array[idx++];
             }
 

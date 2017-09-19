@@ -176,8 +176,9 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
         return rec.reach;
     }
 
-    /*
-     * Internal data record
+    /**
+     * Internal data record.
+     * Note: this class has a natural ordering that is inconsistent with equals.
      */
     @ParametersAreNonnullByDefault
     private static final class Record<N, E> implements Comparable<Record<N, E>> {
@@ -207,10 +208,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
 
         @Override
         public int compareTo(Record<N, E> o) {
-            if (dist < o.dist) {
-                return -1;
-            }
-            return (dist == o.dist) ? 0 : 1;
+            return Float.compare(dist, o.dist);
         }
     }
 }

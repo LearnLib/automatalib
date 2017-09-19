@@ -15,6 +15,8 @@
  */
 package net.automatalib.words.impl;
 
+import java.io.Serializable;
+
 import net.automatalib.words.VPDAlphabet;
 
 /**
@@ -26,7 +28,7 @@ import net.automatalib.words.VPDAlphabet;
  *
  * @author Malte Isberner
  */
-public final class VPDSym<T> {
+public final class VPDSym<T> implements Serializable {
 
     private final VPDAlphabet.SymbolType type;
     private final T userObject;

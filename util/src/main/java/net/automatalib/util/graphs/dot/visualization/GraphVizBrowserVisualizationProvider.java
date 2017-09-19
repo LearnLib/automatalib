@@ -16,15 +16,17 @@
 package net.automatalib.util.graphs.dot.visualization;
 
 import java.awt.Desktop;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
 import net.automatalib.commons.dotutil.DOT;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.util.graphs.dot.GraphDOT;
@@ -61,10 +63,10 @@ public class GraphVizBrowserVisualizationProvider implements VisualizationProvid
             File imgTmp = File.createTempFile("graphviz-browser", ".png");
             DOT.runDOT(sw.getBuffer().toString(), "png", imgTmp);
             File htmlTmp = File.createTempFile("graphviz-browser", ".html");
-            try (PrintWriter pw = new PrintWriter(htmlTmp)) {
-                pw.print("<html><body><img src=\"");
-                pw.print(imgTmp.toURI().toString());
-                pw.println("\"></body></html>");
+            try (Writer w = new BufferedWriter(IOUtil.asUTF8Writer(htmlTmp))) {
+                w.write("<html><body><img src=\"");
+                w.write(imgTmp.toURI().toString());
+                w.write("\"></body></html>");
             }
             Desktop.getDesktop().browse(htmlTmp.toURI());
             if (modal) {

@@ -19,11 +19,18 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -218,5 +225,13 @@ public final class IOUtil {
             return os;
         }
         return new BufferedOutputStream(os);
+    }
+
+    public static Reader asUTF8Reader(final File file) throws FileNotFoundException {
+        return new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
+    }
+
+    public static Writer asUTF8Writer(final File file) throws FileNotFoundException {
+        return new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
     }
 }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -54,7 +55,8 @@ class InternalAUTParser {
 
     public <I> InputModelData<I, SimpleAutomaton<Integer, I>> parse(Function<String, I> inputTransformer)
             throws IOException {
-        try (Reader isr = new InputStreamReader(inputStream); BufferedReader bisr = new BufferedReader(isr)) {
+        try (Reader isr = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+             BufferedReader bisr = new BufferedReader(isr)) {
 
             // parsing
             parseHeader(bisr);

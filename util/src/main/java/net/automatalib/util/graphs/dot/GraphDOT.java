@@ -17,7 +17,6 @@ package net.automatalib.util.graphs.dot;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.Flushable;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -33,6 +32,7 @@ import net.automatalib.AutomataLibSettings;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.dotutil.DOT;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.strings.StringUtil;
 import net.automatalib.graphs.Graph;
@@ -310,7 +310,7 @@ public final class GraphDOT {
     public static <N, E> void writeToFileRaw(Graph<N, E> graph, GraphDOTHelper<N, E> dotHelper, File file)
             throws IOException {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
             writeRaw(graph, dotHelper, writer);
         }
     }

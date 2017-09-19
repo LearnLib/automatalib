@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -62,7 +64,7 @@ public class LearnLibV2Serialization
     public CompactDFA<Integer> readGenericDFA(@WillNotClose InputStream is) throws IOException {
         // we DO NOT want to close the input stream
         @SuppressWarnings("resource")
-        Scanner sc = new Scanner(IOUtil.asUncompressedInputStream(is));
+        Scanner sc = new Scanner(IOUtil.asUncompressedInputStream(is), StandardCharsets.UTF_8.toString());
 
         int numStates = sc.nextInt();
         int numSymbols = sc.nextInt();
@@ -102,8 +104,14 @@ public class LearnLibV2Serialization
             numStates++;
         }
         int numInputs = alphabet.size();
-        PrintStream ps = new PrintStream(os);
-        ps.printf("%d %d\n", numStates, numInputs);
+        PrintStream ps;
+        try {
+            ps = new PrintStream(os, false, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            // this should in theory never happen
+            throw new IllegalStateException(e);
+        }
+        ps.printf("%d %d%n", numStates, numInputs);
 
         StateIDs<S> stateIds = dfa.stateIDs();
 
