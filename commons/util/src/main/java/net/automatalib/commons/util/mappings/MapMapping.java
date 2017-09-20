@@ -15,7 +15,6 @@
  */
 package net.automatalib.commons.util.mappings;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +29,7 @@ import java.util.Set;
  *
  * @author Malte Isberner
  */
-public class MapMapping<D, R> implements MutableMapping<D, R>, Serializable {
+public class MapMapping<D, R> implements MutableMapping<D, R> {
 
     private final Map<? super D, R> map;
 
