@@ -20,34 +20,38 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Queue;
 import java.util.function.Predicate;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.AbstractIterator;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
 
 final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>> {
 
-    private final Queue<N> bfsQueue = new ArrayDeque<>();
+    private final Queue<N> bfsQueue;
     private final IndefiniteGraph<N, E> graph;
     private final MutableMapping<N, Pred<N, E>> preds;
     private final Predicate<? super N> targetPred;
     private final int limit;
-    private int count;
 
     FindShortestPathsIterator(IndefiniteGraph<N, E> graph,
-                                     Collection<? extends N> start,
-                                     int limit,
-                                     Predicate<? super N> targetPred) {
+                              Collection<? extends N> start,
+                              int limit,
+                              Predicate<? super N> targetPred) {
+        Preconditions.checkArgument(limit >= 0, "Limit must be non-negative");
+        Preconditions.checkNotNull(targetPred, "Predicate must be non-null");
+
         this.graph = graph;
         this.preds = graph.createStaticNodeMapping();
         this.limit = limit;
-        this.targetPred = Objects.requireNonNull(targetPred);
+        this.targetPred = targetPred;
+
+        this.bfsQueue = new ArrayDeque<>(start.size());
 
         for (N startNode : start) {
-            preds.put(startNode, new Pred<>(null, null));
+            preds.put(startNode, new Pred<>(null, null, 0));
             bfsQueue.add(startNode);
         }
     }
@@ -55,19 +59,18 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>>
     @Override
     protected Path<N, E> computeNext() {
         while (!bfsQueue.isEmpty()) {
-            if (count++ == limit) {
-                return endOfData();
-            }
             N curr = bfsQueue.poll();
             if (targetPred.test(curr)) {
                 return makePath(curr);
             }
 
+            final int currentDepth = preds.get(curr).depth;
+
             for (E edge : graph.getOutgoingEdges(curr)) {
                 N tgt = graph.getTarget(edge);
-                Pred<N, E> pred = preds.get(tgt);
-                if (pred == null) {
-                    preds.put(tgt, new Pred<>(curr, edge));
+                Pred<N, E> targetPred = preds.get(tgt);
+                if (targetPred == null && currentDepth < limit) {
+                    preds.put(tgt, new Pred<>(curr, edge, currentDepth + 1));
                     bfsQueue.add(tgt);
                 }
             }
@@ -77,10 +80,10 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>>
     }
 
     private Path<N, E> makePath(N target) {
-        List<E> edges = new ArrayList<>();
-
         N currNode = target;
         Pred<N, E> pred = preds.get(currNode);
+
+        List<E> edges = new ArrayList<>(pred.depth);
 
         while (pred != null && pred.edge != null) {
             edges.add(pred.edge);
@@ -98,10 +101,12 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>>
 
         public final N node;
         public final E edge;
+        public final int depth;
 
-        Pred(N node, E edge) {
+        Pred(N node, E edge, int depth) {
             this.node = node;
             this.edge = edge;
+            this.depth = depth;
         }
     }
 
