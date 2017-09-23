@@ -40,10 +40,7 @@ public interface DeterministicAcceptorTS<S, I>
     @Override
     default boolean accepts(Iterable<? extends I> input) {
         S state = getState(input);
-        if (state == null) {
-            return false;
-        }
-        return isAccepting(state);
+        return state != null && isAccepting(state);
     }
 
     @Override
