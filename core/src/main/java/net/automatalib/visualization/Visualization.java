@@ -16,6 +16,7 @@
 package net.automatalib.visualization;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -73,9 +74,7 @@ public final class Visualization {
     public final <N, E> void visualize(Graph<N, E> graph, boolean modal, GraphDOTHelper<N, ? super E>... addlHelpers) {
         List<GraphDOTHelper<N, ? super E>> helpers = new ArrayList<>(addlHelpers.length + 1);
         helpers.add(graph.getGraphDOTHelper());
-        for (GraphDOTHelper<N, ? super E> h : addlHelpers) {
-            helpers.add(h);
-        }
+        helpers.addAll(Arrays.asList(addlHelpers));
         GraphDOTHelper<N, E> aggHelper = new AggregateDOTHelper<>(helpers);
 
         visualize(graph, aggHelper, modal, Collections.emptyMap());

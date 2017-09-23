@@ -65,10 +65,6 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
     /**
      * Returns the index of the given symbol in the alphabet.
      *
-     * @param symbol
-     *
-     * @return
-     *
      * @throws IllegalArgumentException
      *         if the provided symbol does not belong to the alphabet.
      */

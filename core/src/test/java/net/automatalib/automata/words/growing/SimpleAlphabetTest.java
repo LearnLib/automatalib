@@ -41,7 +41,7 @@ public class SimpleAlphabetTest extends AbstractGrowingAlphabetTest<Integer, Sim
     @Override
     protected SimpleAlphabet<Integer> getInitialAlphabet() {
         final SimpleAlphabet<Integer> result = new SimpleAlphabet<>();
-        INITIAL_SYMBOLS.forEach(result::add);
+        result.addAll(INITIAL_SYMBOLS);
         return result;
     }
 }

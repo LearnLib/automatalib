@@ -119,8 +119,7 @@ public final class LeeYannakakis {
             // a-valid partitions
             for (final Pair<Word<I>, SplitTree<S, I, O>> aPartition : validitySetMap.get(Validity.A_VALID)) {
 
-                assert aPartition.getFirst().size() == 1 :
-                        new IllegalStateException("a-valid inputs should always contain exactly 1 symbol");
+                assert aPartition.getFirst().size() == 1 : "a-valid inputs should always contain exactly 1 symbol";
 
                 final I aValidInput = aPartition.getFirst().firstSymbol();
                 final SplitTree<S, I, O> nodeToRefine = aPartition.getSecond();
@@ -146,8 +145,7 @@ public final class LeeYannakakis {
             // b-valid partitions
             for (final Pair<Word<I>, SplitTree<S, I, O>> bPartition : validitySetMap.get(Validity.B_VALID)) {
 
-                assert bPartition.getFirst().size() == 1 :
-                        new IllegalStateException("b-valid inputs should always contain exactly 1 symbol");
+                assert bPartition.getFirst().size() == 1 : "b-valid inputs should always contain exactly 1 symbol";
 
                 final I bValidInput = bPartition.getFirst().firstSymbol();
                 final SplitTree<S, I, O> nodeToRefine = bPartition.getSecond();
@@ -228,7 +226,7 @@ public final class LeeYannakakis {
         if (currentSet.size() == 1) {
             final S currentNode = currentSet.iterator().next();
 
-            assert currentToInitialMapping.containsKey(currentNode) : new IllegalStateException();
+            assert currentToInitialMapping.containsKey(currentNode);
 
             return new ADSLeafNode<>(predecessor, currentToInitialMapping.get(currentNode));
         }
@@ -303,7 +301,7 @@ public final class LeeYannakakis {
         for (SplitTree<S, I, O> partition : pi) {
             for (final S s : partition.getPartition()) {
                 final Integer previousValue = stateToPartitionMap.put(s, counter);
-                assert previousValue == null : new IllegalStateException("Not a true partition");
+                assert previousValue == null : "Not a true partition";
             }
             partitionToNodeMap.put(counter, partition);
             counter++;
@@ -318,7 +316,7 @@ public final class LeeYannakakis {
 
         final CompactSimpleGraph<I> implicationGraph = new CompactSimpleGraph<>(partitionToNodeMap.size());
 
-        for (final Integer idx : partitionToNodeMap.keySet()) {
+        for (int i = 0; i < partitionToNodeMap.size(); i++) {
             implicationGraph.addIntNode();
         }
 

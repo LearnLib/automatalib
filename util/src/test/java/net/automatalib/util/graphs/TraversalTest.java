@@ -47,9 +47,7 @@ import org.testng.annotations.Test;
  */
 public class TraversalTest {
 
-    private Random random;
     private int size;
-    private Alphabet<Integer> alphabet;
     private CompactDFA<Integer> automaton;
     private UniversalGraph<Integer, TransitionEdge<Integer, Integer>, ?, ?> graph;
 
@@ -57,9 +55,10 @@ public class TraversalTest {
 
     @BeforeClass
     public void setUp() {
-        random = new Random(0);
+        final Random random = new Random(0);
+        final Alphabet<Integer> alphabet = Alphabets.integers(0, 4);
+
         size = 20;
-        alphabet = Alphabets.integers(0, 4);
         automaton = RandomAutomata.randomDFA(random, size, alphabet);
         graph = automaton.transitionGraphView();
 
