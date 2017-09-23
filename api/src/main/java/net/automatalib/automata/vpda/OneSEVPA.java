@@ -67,7 +67,8 @@ public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>, Su
 
     @Override
     default boolean isAccepting(State<L> state) {
-        return isAcceptingLocation(state.getLocation()) && state.getStackContents() == null;
+        return state.getLocation() != null && isAcceptingLocation(state.getLocation()) &&
+               state.getStackContents() == null;
     }
 
     boolean isAcceptingLocation(L loc);
