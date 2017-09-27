@@ -38,13 +38,23 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
 
     @Override
     public int getSymbolIndex(I symbol) throws IllegalArgumentException {
+        final int idx = getSymbolIndexInternal(symbol);
+
+        if (idx >= 0) {
+            return idx;
+        }
+
+        throw new IllegalArgumentException("Alphabet does not contain the queried symbol");
+    }
+
+    private int getSymbolIndexInternal(I symbol) {
         for (int i = 0; i < symbols.length; i++) {
             if (Objects.equals(symbols[i], symbol)) {
                 return i;
             }
         }
 
-        throw new IllegalArgumentException("Alphabet does not contain the queried symbol");
+        return -1;
     }
 
     @Override
@@ -54,7 +64,7 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
 
     @Override
     public boolean containsSymbol(I symbol) {
-        return getSymbolIndex(symbol) != -1;
+        return getSymbolIndexInternal(symbol) != -1;
     }
 
     @Override
