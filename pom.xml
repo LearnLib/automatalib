@@ -459,7 +459,7 @@ limitations under the License.
      -->
     <profiles>
         <profile>
-            <id>integration-tests</id>
+            <id>code-analysis</id>
             <activation>
                 <property>
                     <name>automatalib.release</name>
