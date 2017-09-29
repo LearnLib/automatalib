@@ -29,6 +29,8 @@ import net.automatalib.automata.FiniteAlphabetAutomaton;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
 import net.automatalib.serialization.taf.parser.TAFParser;
 import net.automatalib.util.graphs.dot.GraphDOT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@code taf2dot} - a tool for converting TAF files to GraphVIZ DOT.
@@ -36,6 +38,8 @@ import net.automatalib.util.graphs.dot.GraphDOT;
  * @author Malte Isberner
  */
 public class TAF2DOT {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TAF2DOT.class);
 
     public static void main(String[] args) {
         TAF2DOT app = new TAF2DOT();
@@ -50,7 +54,7 @@ public class TAF2DOT {
 
     public int run(String[] args) throws IOException {
         if (args.length > 2) {
-            System.err.println("Error: taf2dot needs at most two arguments");
+            LOGGER.error("Error: taf2dot needs at most two arguments");
             return 1;
         }
         InputStream in = System.in;

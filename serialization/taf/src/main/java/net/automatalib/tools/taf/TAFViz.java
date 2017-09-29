@@ -18,7 +18,6 @@ package net.automatalib.tools.taf;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,6 +25,8 @@ import net.automatalib.automata.FiniteAlphabetAutomaton;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
 import net.automatalib.serialization.taf.parser.TAFParser;
 import net.automatalib.visualization.Visualization;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@code tafviz} - a tool for visualizing TAF files.
@@ -33,6 +34,8 @@ import net.automatalib.visualization.Visualization;
  * @author Malte Isberner
  */
 public class TAFViz {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TAFViz.class);
 
     public static void main(String[] args) {
         TAFViz app = new TAFViz();
@@ -46,10 +49,8 @@ public class TAFViz {
         for (String arg : args) {
             try (BufferedInputStream is = new BufferedInputStream(new FileInputStream(new File(arg)))) {
                 loadAndVisualize(is);
-            } catch (FileNotFoundException ex) {
-                System.err.println("Error opening file " + arg + ": " + ex.getMessage());
             } catch (IOException ex) {
-                System.err.println("Error reading file " + arg + ": " + ex.getMessage());
+                LOGGER.error("Error opening file {}: {}", arg, ex.getMessage());
             }
         }
         return 0;

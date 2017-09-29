@@ -22,9 +22,13 @@ import javax.swing.JOptionPane;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.dot.GraphDOTHelper;
 import org.kohsuke.MetaInfServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @MetaInfServices(VisualizationProvider.class)
 public class DummyVP implements VisualizationProvider {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DummyVP.class);
 
     @Override
     public String getId() {
@@ -46,8 +50,8 @@ public class DummyVP implements VisualizationProvider {
                                  GraphDOTHelper<N, ? super E> helper,
                                  boolean modal,
                                  Map<String, String> options) {
-        System.err.println("Attempted to visualize graph with " + graph.size() + " nodes, but not usable " +
-                           "visualization provider configured");
+        LOGGER.error("Attempted to visualize graph with {} nodes, but no usable visualization provider configured",
+                     graph.size());
         if (modal) {
             JOptionPane.showMessageDialog(null, "Press OK to continue ...");
         }

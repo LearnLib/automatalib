@@ -29,8 +29,12 @@ import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.graphs.dot.AggregateDOTHelper;
 import net.automatalib.graphs.dot.GraphDOTHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class Visualization {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Visualization.class);
 
     private static final Visualization INSTANCE = new Visualization();
     private final VisualizationProvider provider;
@@ -53,7 +57,7 @@ public final class Visualization {
         }
 
         if (vp == null) {
-            System.err.println("Error setting visualization provider, defaulting to dummy provider...");
+            LOGGER.error("Error setting visualization provider, defaulting to dummy provider...");
         }
 
         provider = vp;

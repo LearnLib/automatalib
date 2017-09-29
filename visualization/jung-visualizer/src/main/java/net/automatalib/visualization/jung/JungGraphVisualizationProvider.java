@@ -51,9 +51,13 @@ import net.automatalib.graphs.dot.GraphDOTHelper.EdgeAttrs;
 import net.automatalib.graphs.dot.GraphDOTHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationProvider;
 import org.kohsuke.MetaInfServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @MetaInfServices(VisualizationProvider.class)
 public class JungGraphVisualizationProvider implements VisualizationProvider {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JungGraphVisualizationProvider.class);
 
     private final PluggableGraphMouse mouse;
 
@@ -167,7 +171,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
         Shape shape = shapeLib.createShape(shapeName);
         if (shape == null) {
-            System.err.println("Could not create shape " + shapeName);
+            LOGGER.error("Could not create shape {}", shapeName);
             shape = shapeLib.createShape("circle");
         }
 
