@@ -31,7 +31,7 @@ public interface DFA<S, I> extends UniversalDeterministicAutomaton<S, I, S, Bool
 
     @Override
     default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        return DetSuffixOutputAutomaton.super.computeSuffixOutput(prefix, suffix);
+        return NFA.super.computeSuffixOutput(prefix, suffix);
     }
 
     @Override
