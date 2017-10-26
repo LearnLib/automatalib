@@ -46,7 +46,7 @@ public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
 
         for (int i = 0; i < size; i++) {
             a.append(START_PREFIX).append(Integer.toString(i));
-            a.append(" [label=\"\" shape=\"none\"];\n");
+            a.append(" [label=\"\" shape=\"none\" width=\"0\" height=\"0\"];\n");
         }
     }
 
