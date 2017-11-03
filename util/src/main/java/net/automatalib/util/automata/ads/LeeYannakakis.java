@@ -42,9 +42,11 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 /**
- * Algorithm of Lee & Yannakakis for computing adaptive distinguishing sequences (of length at most n^2) in O(n^2) time
- * (where n denotes the number of states of the automaton). <br/> See: D. Lee and M. Yannakakis - "Testing Finite-State
- * Machines: State Identification and Verification", IEEE Transactions on Computers 43.3 (1994)
+ * Algorithm of Lee and Yannakakis for computing adaptive distinguishing sequences (of length at most n^2) in O(n^2)
+ * time (where n denotes the number of states of the automaton).
+ * <p>
+ * See: D. Lee and M. Yannakakis - "Testing Finite-State Machines: State Identification and Verification", IEEE
+ * Transactions on Computers 43.3 (1994)
  *
  * @author frohme
  */
@@ -54,7 +56,7 @@ public final class LeeYannakakis {
     }
 
     /**
-     * Computes an ADS using the algorithm of Lee & Yannakakis.
+     * Computes an ADS using the algorithm of Lee and Yannakakis.
      *
      * @param automaton
      *         The automaton for which an ADS should be computed
