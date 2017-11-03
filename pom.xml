@@ -159,7 +159,7 @@ limitations under the License.
         <!-- Javadoc links -->
         <brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
         <java8.apidocs>http://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
-        <guava.apidocs>http://docs.guava-libraries.googlecode.com/git-history/v${guava.version}/javadoc/</guava.apidocs>
+        <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
         <jung.apidocs>http://jung.sourceforge.net/doc/api/</jung.apidocs>
     </properties>
 
