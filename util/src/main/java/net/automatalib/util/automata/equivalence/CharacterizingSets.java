@@ -26,6 +26,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import com.google.common.collect.AbstractIterator;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
@@ -45,6 +48,7 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
+@ParametersAreNonnullByDefault
 public final class CharacterizingSets {
 
     private CharacterizingSets() {
@@ -136,6 +140,11 @@ public final class CharacterizingSets {
         }
     }
 
+    public static <S, I, T> Iterator<Word<I>> characterizingSetIterator(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+                                                                        Collection<? extends I> inputs) {
+        return new IncrementalCharacterizingSetIterator<>(automaton, inputs, Collections.emptyList());
+    }
+
     private static <S, I, T> List<Object> buildTrace(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
                                                      S state,
                                                      Word<I> suffix) {
@@ -203,27 +212,11 @@ public final class CharacterizingSets {
                                                                      Collection<? super Word<I>> newSuffixes) {
 
         boolean refined = false;
-        Map<List<List<Object>>, List<S>> initialPartitioning = new HashMap<>();
 
         // We need a list to ensure a stable iteration order
-        List<? extends Word<I>> oldSuffixList;
-        if (oldSuffixes instanceof List) {
-            oldSuffixList = (List<? extends Word<I>>) oldSuffixes;
-        } else {
-            oldSuffixList = new ArrayList<>(oldSuffixes);
-        }
+        List<? extends Word<I>> oldSuffixList = toList(oldSuffixes);
 
-        Queue<List<S>> blocks = new ArrayDeque<>();
-        for (S state : automaton) {
-            List<List<Object>> sig = buildSignature(automaton, oldSuffixList, state);
-            List<S> block = initialPartitioning.get(sig);
-            if (block == null) {
-                block = new ArrayList<>();
-                blocks.add(block);
-                initialPartitioning.put(sig, block);
-            }
-            block.add(state);
-        }
+        Queue<List<S>> blocks = buildInitialBlocks(automaton, oldSuffixList);
 
         if (!oldSuffixes.contains(Word.epsilon())) {
             if (epsilonRefine(automaton, blocks)) {
@@ -240,6 +233,38 @@ public final class CharacterizingSets {
         }
 
         return refined;
+    }
+
+    public static <S, I, T> Iterator<Word<I>> incrementalCharacterizingSetIterator(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+                                                                                   Collection<? extends I> inputs,
+                                                                                   Collection<? extends Word<I>> oldSuffixes) {
+        return new IncrementalCharacterizingSetIterator<>(automaton, inputs, oldSuffixes);
+    }
+
+    private static <T> List<T> toList(Collection<T> collection) {
+        if (collection instanceof List) {
+            return (List<T>) collection;
+        } else {
+            return new ArrayList<>(collection);
+        }
+    }
+
+    private static <S, I, T> Queue<List<S>> buildInitialBlocks(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+                                                               List<? extends Word<I>> oldSuffixes) {
+        Map<List<List<Object>>, List<S>> initialPartitioning = new HashMap<>();
+        Queue<List<S>> blocks = new ArrayDeque<>();
+        for (S state : automaton) {
+            List<List<Object>> sig = buildSignature(automaton, oldSuffixes, state);
+            List<S> block = initialPartitioning.get(sig);
+            if (block == null) {
+                block = new ArrayList<>();
+                blocks.add(block);
+                initialPartitioning.put(sig, block);
+            }
+            block.add(state);
+        }
+
+        return blocks;
     }
 
     private static <S, I, T> List<List<Object>> buildSignature(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
@@ -356,4 +381,41 @@ public final class CharacterizingSets {
         }
     }
 
+    private static class IncrementalCharacterizingSetIterator<S, I> extends AbstractIterator<Word<I>> {
+
+        private final UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton;
+        private final Collection<? extends I> inputs;
+        private final List<? extends Word<I>> oldSuffixes;
+        private Queue<List<S>> blocks;
+
+        IncrementalCharacterizingSetIterator(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                             Collection<? extends I> inputs,
+                                             Collection<? extends Word<I>> oldSuffixes) {
+            this.automaton = automaton;
+            this.inputs = inputs;
+            this.oldSuffixes = toList(oldSuffixes);
+        }
+
+        @Override
+        protected Word<I> computeNext() {
+
+            // first call
+            if (blocks == null) {
+                blocks = buildInitialBlocks(automaton, oldSuffixes);
+                if (!oldSuffixes.contains(Word.epsilon())) {
+                    if (epsilonRefine(automaton, blocks)) {
+                        return Word.epsilon();
+                    }
+                }
+            }
+
+            final Word<I> suffix = refine(automaton, inputs, blocks);
+
+            if (suffix != null) {
+                return suffix;
+            }
+
+            return endOfData();
+        }
+    }
 }
