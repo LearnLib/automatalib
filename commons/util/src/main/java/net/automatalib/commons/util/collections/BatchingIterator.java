@@ -25,6 +25,9 @@ import java.util.NoSuchElementException;
  * collected eagerly within a batch, the overall batches are computed lazily.
  * <p>
  * The source iterator is consumed in this process.
+ * <p>
+ * <b>Note:</b> Subsequent calls to the {@link #next()} method return a reference to the same batch, and only update the
+ * contents of the batch. If you plan to reuse intermediate results, you'll need to explicitly copy them.
  *
  * @param <T>
  *         type of elements to aggregate
@@ -36,10 +39,12 @@ public class BatchingIterator<T> implements Iterator<List<T>> {
     private final int batchSize;
 
     private final Iterator<T> source;
+    private final List<T> batch;
 
     public BatchingIterator(final Iterator<T> source, final int batchSize) {
         this.batchSize = batchSize;
         this.source = source;
+        this.batch = new ArrayList<>(batchSize);
     }
 
     @Override
@@ -53,13 +58,13 @@ public class BatchingIterator<T> implements Iterator<List<T>> {
             throw new NoSuchElementException();
         }
 
-        final List<T> result = new ArrayList<>(batchSize);
+        this.batch.clear();
 
-        while (source.hasNext() && result.size() < batchSize) {
-            result.add(source.next());
+        while (source.hasNext() && batch.size() < batchSize) {
+            batch.add(source.next());
         }
 
-        return result;
+        return batch;
     }
 
 }
