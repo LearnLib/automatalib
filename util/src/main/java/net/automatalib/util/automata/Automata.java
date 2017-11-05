@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.MutableDeterministic;
@@ -32,6 +34,7 @@ import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.automata.asgraph.AutomatonAsGraph;
 import net.automatalib.util.automata.asgraph.UniversalAutomatonAsGraph;
+import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.util.automata.equivalence.CharacterizingSets;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
@@ -44,6 +47,7 @@ import net.automatalib.util.ts.TS;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
+@ParametersAreNonnullByDefault
 public class Automata extends TS {
 
     public static <S, I, T> Graph<S, TransitionEdge<I, T>> asGraph(Automaton<S, I, T> automaton,
@@ -355,60 +359,67 @@ public class Automata extends TS {
         CharacterizingSets.findCharacterizingSet(automaton, inputs, state, result);
     }
 
+    /**
+     * Convenient method for computing a state cover.
+     *
+     * @param automaton
+     *         the automaton for which the cover should be computed
+     * @param inputs
+     *         the set of input symbols allowed in the cover sequences
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the state cover for the given automaton
+     *
+     * @see Covers#stateCover(DeterministicAutomaton, Collection, Collection)
+     */
     public static <I> List<Word<I>> stateCover(DeterministicAutomaton<?, I, ?> automaton,
                                                Collection<? extends I> inputs) {
-        List<Word<I>> states = new ArrayList<>(automaton.size());
-        cover(automaton, inputs, states, null);
-        return states;
+        final List<Word<I>> result = new ArrayList<>(automaton.size());
+        Covers.stateCover(automaton, inputs, result);
+        return result;
     }
 
-    public static <I> boolean incrementalStateCover(DeterministicAutomaton<?, I, ?> automaton,
-                                                    Collection<? extends I> inputs,
-                                                    Collection<? extends Word<I>> oldStates,
-                                                    Collection<? super Word<I>> newStates) {
-        return incrementalCover(automaton, inputs, oldStates, Collections.emptyList(), newStates, null);
-    }
-
-    public static <I> void cover(DeterministicAutomaton<?, I, ?> automaton,
-                                 Collection<? extends I> inputs,
-                                 Collection<? super Word<I>> states,
-                                 Collection<? super Word<I>> transitions) {
-        Covers.cover(automaton, inputs, states, transitions);
-    }
-
-    public static <I> boolean incrementalCover(DeterministicAutomaton<?, I, ?> automaton,
-                                               Collection<? extends I> inputs,
-                                               Collection<? extends Word<I>> oldStates,
-                                               Collection<? extends Word<I>> oldTransitions,
-                                               Collection<? super Word<I>> newStates,
-                                               Collection<? super Word<I>> newTransitions) {
-        return Covers.incrementalCover(automaton, inputs, oldStates, oldTransitions, newStates, newTransitions);
-    }
-
+    /**
+     * Convenient method for computing a state cover.
+     *
+     * @param automaton
+     *         the automaton for which the cover should be computed
+     * @param inputs
+     *         the set of input symbols allowed in the cover sequences
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the transition cover for the given automaton
+     *
+     * @see Covers#transitionCover(DeterministicAutomaton, Collection, Collection)
+     */
     public static <I> List<Word<I>> transitionCover(DeterministicAutomaton<?, I, ?> automaton,
                                                     Collection<? extends I> inputs) {
-        List<Word<I>> all = new ArrayList<>(automaton.size() * inputs.size());
-        cover(automaton, inputs, null, all);
-        return all;
+        final List<Word<I>> result = new ArrayList<>(automaton.size() * inputs.size());
+        Covers.transitionCover(automaton, inputs, result);
+        return result;
     }
 
-    public static <I> boolean incrementalTransitionCover(DeterministicAutomaton<?, I, ?> automaton,
-                                                         Collection<? extends I> inputs,
-                                                         Collection<? extends Word<I>> oldTransitions,
-                                                         Collection<? super Word<I>> newTransitions) {
-        return incrementalCover(automaton, inputs, Collections.emptyList(), oldTransitions, null, newTransitions);
-    }
-
-    public static <I> boolean incrementalStructuralCover(DeterministicAutomaton<?, I, ?> automaton,
-                                                         Collection<? extends I> inputs,
-                                                         Collection<? extends Word<I>> oldStructural,
-                                                         Collection<? super Word<I>> newStructural) {
-        return incrementalCover(automaton,
-                                inputs,
-                                oldStructural,
-                                Collections.emptyList(),
-                                newStructural,
-                                newStructural);
+    /**
+     * Convenient method for computing a structural cover.
+     *
+     * @param automaton
+     *         the automaton for which the cover should be computed
+     * @param inputs
+     *         the set of input symbols allowed in the cover sequences
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the structural cover for the given automaton
+     *
+     * @see Covers#structuralCover(DeterministicAutomaton, Collection, Collection)
+     */
+    public static <I> List<Word<I>> structuralCover(DeterministicAutomaton<?, I, ?> automaton,
+                                                    Collection<? extends I> inputs) {
+        final List<Word<I>> result = new ArrayList<>(automaton.size() * (inputs.size() + 1));
+        Covers.structuralCover(automaton, inputs, result);
+        return result;
     }
 
     public static <S, I> Iterator<TransRef<S, I, ?>> allDefinedInputsIterator(Automaton<S, I, ?> automaton,

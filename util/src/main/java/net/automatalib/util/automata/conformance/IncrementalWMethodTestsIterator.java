@@ -22,6 +22,7 @@ import java.util.List;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -57,7 +58,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 
     public void update(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton) {
         int oldNumPrefixes = prefixes.size();
-        boolean newPrefixes = Automata.incrementalTransitionCover(automaton, alphabet, prefixes, prefixes);
+        boolean newPrefixes = Covers.incrementalTransitionCover(automaton, alphabet, prefixes, prefixes);
 
         int oldNumSuffixes = suffixes.size();
         boolean newSuffixes = Automata.incrementalCharacterizingSet(automaton, alphabet, suffixes, suffixes);
