@@ -33,9 +33,9 @@ limitations under the License.
 
     <parent>
         <groupId>net.automatalib</groupId>
-        <artifactId>automata-parent</artifactId>
+        <artifactId>automata-build-parent</artifactId>
         <version>0.6.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
     <dependencies>
