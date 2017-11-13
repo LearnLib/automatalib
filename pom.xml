@@ -46,6 +46,15 @@ limitations under the License.
         <system>GitHub Issues</system>
     </issueManagement>
 
+    <mailingLists>
+        <mailingList>
+            <name>Q&amp;A List</name>
+            <subscribe>automatalib-qa+subscribe@googlegroups.com</subscribe>
+            <unsubscribe>automatalib-qa+unsubscribe@googlegroups.com</unsubscribe>
+            <post>automatalib-qa@googlegroups.com</post>
+        </mailingList>
+    </mailingLists>
+
     <developers>
         <developer>
             <id>misberner</id>

@@ -49,6 +49,9 @@ For developing the code base of AutomataLib, it is suggested to use one of the m
   1. Select `File` -> `Import...` and select "Existing Maven Projects".
   1. Select the folder containing the development checkout as the root directory and click `Finish`.
 
+## Mailing Lists
+
+  * [Q&A @ Google Groups][7] -- [automatalib-qa@googlegroups.com][8]
 
 ## Maintainers
 
@@ -66,6 +69,8 @@ For developing the code base of AutomataLib, it is suggested to use one of the m
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
 [5]: https://github.com/mtf90
+[7]: https://groups.google.com/forum/?fromgroups#!forum/automatalib-qa
+[8]: mailto:automatalib-qa@googlegroups.com
 
 [maven-central]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib%22
 [maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib.distribution%22
