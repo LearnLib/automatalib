@@ -132,6 +132,7 @@ limitations under the License.
         -->
         <testng.version>6.11</testng.version>
         <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
+        <source-plugin.version>3.0.1</source-plugin.version>
         <info-reports-plugin.version>2.9</info-reports-plugin.version>
         <compiler-plugin.version>3.6.1</compiler-plugin.version>
         <dependency-plugin.version>3.0.1</dependency-plugin.version>
@@ -326,6 +327,11 @@ limitations under the License.
                             <link>${jung.apidocs}</link>
                         </links>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${source-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -588,7 +594,7 @@ limitations under the License.
             </build>
         </profile>
         <profile>
-            <id>binary-release</id>
+            <id>bundles</id>
             <activation>
                 <property>
                     <name>automatalib.release</name>
@@ -597,24 +603,30 @@ limitations under the License.
             </activation>
             <build>
                 <plugins>
-                    <!--  aggregate javadoc of modules in one jar -->
-                    <!-- Moved to distribution -->
-                    <!--
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>aggregate</id>
-                                <inherited>false</inherited>
+                                <id>attach-javadocs</id>
                                 <goals>
-                                    <goal>aggregate-jar</goal>
+                                    <goal>jar</goal>
                                 </goals>
-                                <phase>prepare-package</phase>
                             </execution>
                         </executions>
                     </plugin>
-                -->
                 </plugins>
             </build>
         </profile>
@@ -625,29 +637,111 @@ limitations under the License.
     -->
     <dependencyManagement>
         <dependencies>
+            <!-- internal dependencies in a 'bill of material' fashion  -->
+            <!-- sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer -->
+
+            <!-- adapters -->
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-adapters-parent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-brics</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- api -->
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- archetypes -->
             <dependency>
-                <groupId>net.automatalib</groupId>
-                <artifactId>automata-build-tools</artifactId>
+                <groupId>net.automatalib.archetypes</groupId>
+                <artifactId>automata-archetypes-parent</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.automatalib.archetypes</groupId>
+                <artifactId>complete</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib.archetypes</groupId>
+                <artifactId>core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib.archetypes</groupId>
+                <artifactId>typical</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- build-parent -->
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-build-parent</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- build-tools -->
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-build-tools</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- commons -->
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-commons-parent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-commons-dotutil</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-commons-smartcollections</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-commons-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- core -->
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- distribution -->
+            <dependency>
+                <groupId>net.automatalib.distribution</groupId>
+                <artifactId>automata-distribution</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- examples -->
             <dependency>
                 <groupId>net.automatalib</groupId>
-                <artifactId>automata-util</artifactId>
+                <artifactId>automata-examples</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- misc -->
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-misc-parent</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -660,29 +754,16 @@ limitations under the License.
                 <artifactId>automata-misc-algorithms</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- serialization -->
             <dependency>
                 <groupId>net.automatalib</groupId>
-                <artifactId>automata-brics</artifactId>
+                <artifactId>automata-serialization-parent</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>
-                <artifactId>automata-commons-util</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.automatalib</groupId>
-                <artifactId>automata-commons-smartcollections</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.automatalib</groupId>
-                <artifactId>automata-commons-dotutil</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.automatalib</groupId>
-                <artifactId>automata-jung-visualizer</artifactId>
+                <artifactId>automata-serialization-aut</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -692,12 +773,12 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>
-                <artifactId>automata-serialization-saf</artifactId>
+                <artifactId>automata-serialization-learnlibv2</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>
-                <artifactId>automata-serialization-learnlibv2</artifactId>
+                <artifactId>automata-serialization-saf</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -705,6 +786,27 @@ limitations under the License.
                 <artifactId>automata-serialization-taf</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <!-- util -->
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- visualization -->
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-visualization-parent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-jung-visualizer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- external dependencies -->
             <dependency>
                 <groupId>dk.brics.automaton</groupId>
                 <artifactId>automaton</artifactId>
