@@ -314,9 +314,8 @@ limitations under the License.
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${javadoc-plugin.version}</version>
                     <configuration>
-                        <quiet>false</quiet>
+                        <quiet>true</quiet>
                         <source>1.8</source>
-                        <verbose>true</verbose>
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
                         <links>
@@ -420,9 +419,8 @@ limitations under the License.
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-                    <quiet>false</quiet>
+                    <quiet>true</quiet>
                     <source>1.8</source>
-                    <verbose>true</verbose>
                     <detectLinks>true</detectLinks>
                     <linksource>false</linksource>
                     <links>
