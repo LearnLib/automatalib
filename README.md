@@ -20,7 +20,8 @@ Also please note that many parts of the library have not yet been thoroughly tes
 ## Build Instructions
 
 For simply using AutomataLib, you may use the Maven artifacts which are available in the [Maven Central repository][maven-central].
-It is also possible to download a bundled [distribution artifact][maven-central-distr], if you want to use AutomataLib without Maven support. Note that AutomataLib requires Java 8.
+It is also possible to download a bundled [distribution artifact][maven-central-distr], if you want to use AutomataLib without Maven support.
+Note, that AutomataLib requires Java 8.
 
 #### Building development versions
 
@@ -32,6 +33,9 @@ git clone -b develop --single-branch https://github.com/LearnLib/automatalib.git
 
 and run a single `mvn clean install`.
 This will build all the required maven artifacts and will install them in your local Maven repository, so that you can reference them in other projects.
+
+If you plan to use a development version of AutomataLib in an environment where no Maven support is available, simply run `mvn clean package -Pbundles`.
+The respective JARs are then available under `distribution/target/bundles`.
 
 #### Developing AutomataLib
 
@@ -49,9 +53,11 @@ For developing the code base of AutomataLib, it is suggested to use one of the m
   1. Select `File` -> `Import...` and select "Existing Maven Projects".
   1. Select the folder containing the development checkout as the root directory and click `Finish`.
 
+
 ## Mailing Lists
 
   * [Q&A @ Google Groups][7] -- [automatalib-qa@googlegroups.com][8]
+
 
 ## Maintainers
 
