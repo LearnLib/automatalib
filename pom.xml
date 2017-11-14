@@ -298,7 +298,7 @@ limitations under the License.
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${release-plugin.version}</version>
                     <configuration>
-                        <arguments>-Psonatype-oss-release -Dautomatalib.release=true -Dmaven.javadoc.failOnError=false
+                        <arguments>-Psonatype-oss-release -Dautomatalib.release=true
                         </arguments>
                         <!-- False to allow adjustment to branching model -->
                         <pushChanges>false</pushChanges>
@@ -319,7 +319,6 @@ limitations under the License.
                         <verbose>true</verbose>
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
-                        <failOnError>false</failOnError>
                         <links>
                             <link>${java8.apidocs}</link>
                             <link>${guava.apidocs}</link>
@@ -426,7 +425,6 @@ limitations under the License.
                     <verbose>true</verbose>
                     <detectLinks>true</detectLinks>
                     <linksource>false</linksource>
-                    <failOnError>false</failOnError>
                     <links>
                         <link>${java8.apidocs}</link>
                         <link>${guava.apidocs}</link>
