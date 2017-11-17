@@ -20,8 +20,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
@@ -29,29 +29,31 @@ import net.automatalib.serialization.taf.parser.TAFParser;
 import net.automatalib.serialization.taf.writer.TAFWriter;
 import net.automatalib.words.Alphabet;
 
-public final class TAFSerialization
-        implements InputModelSerializationProvider<String, DFA<?, String>, DFA<Integer, String>> {
+public final class TAFSerializationMealy
+        implements InputModelSerializationProvider<String, MealyMachine<?, String, ?, ?>, MealyMachine<?, String, ?, String>> {
 
-    private static final TAFSerialization INSTANCE = new TAFSerialization();
+    private static final TAFSerializationMealy INSTANCE = new TAFSerializationMealy();
 
-    private TAFSerialization() {
+    private TAFSerializationMealy() {
     }
 
-    public static TAFSerialization getInstance() {
+    public static TAFSerializationMealy getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public void writeModel(OutputStream os, DFA<?, String> model, Alphabet<String> alphabet) throws IOException {
+    public void writeModel(OutputStream os, MealyMachine<?, String, ?, ?> model, Alphabet<String> alphabet)
+            throws IOException {
         try (OutputStreamWriter osw = new OutputStreamWriter(os)) {
-            TAFWriter.writeDFA(model, alphabet, osw);
+            TAFWriter.writeMealy(model, alphabet, osw);
         }
+
     }
 
     @Override
-    public InputModelData<String, DFA<Integer, String>> readModel(InputStream is) throws IOException {
-        final CompactDFA<String> automaton =
-                TAFParser.parseDFA(is, PrintStreamDiagnosticListener.getStderrDiagnosticListener());
+    public InputModelData<String, MealyMachine<?, String, ?, String>> readModel(InputStream is) throws IOException {
+        final CompactMealy<String, String> automaton =
+                TAFParser.parseMealy(is, PrintStreamDiagnosticListener.getStderrDiagnosticListener());
         return new InputModelData<>(automaton, automaton.getInputAlphabet());
     }
 }

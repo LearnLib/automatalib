@@ -21,8 +21,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
+import net.automatalib.automata.MutableDeterministic;
+import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.serialization.InputModelSerializationProvider;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.serialization.InputModelDeserializer;
+import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -35,46 +41,63 @@ import org.testng.annotations.Test;
  */
 public class TAFSerializationTest {
 
-    @Test
-    public void testGenericSerialization() throws Exception {
-        final Alphabet<String> alphabet = Alphabets.fromArray("0", "1", "2");
+    private static final Alphabet<String> ALPHABET = Alphabets.fromArray("0", "1", "2", "3");
 
-        testInternal(alphabet, (p, is) -> p.readModel(is).model);
+    private static final int AUTOMATON_SIZE = 20;
+
+    @Test
+    public void testDFASerialization() throws Exception {
+
+        final CompactDFA<String> automaton = RandomAutomata.randomDFA(new Random(0), AUTOMATON_SIZE, ALPHABET);
+
+        weedOutTransitions(automaton);
+
+        final TAFSerializationDFA serializer = TAFSerializationDFA.getInstance();
+        final DFA<Integer, String> deserializedModel = writeAndReadModel(automaton, ALPHABET, serializer, serializer);
+
+        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, ALPHABET));
     }
 
     @Test
-    public void testSerialization() throws Exception {
-        final Alphabet<String> alphabet = Alphabets.fromArray("a", "b", "c");
+    public void testMealySerialization() throws Exception {
+        final CompactMealy<String, String> automaton =
+                RandomAutomata.randomMealy(new Random(0), AUTOMATON_SIZE, ALPHABET, ALPHABET);
 
-        testInternal(alphabet, (p, is) -> p.readModel(is).model);
+        weedOutTransitions(automaton);
+
+        final TAFSerializationMealy serializer = TAFSerializationMealy.getInstance();
+
+        final MealyMachine<?, String, ?, String> deserializedModel =
+                writeAndReadModel(automaton, ALPHABET, serializer, serializer);
+
+        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, ALPHABET));
     }
 
-    private void testInternal(Alphabet<String> alphabet,
-                              ThrowableBiFunction<InputModelSerializationProvider<String, DFA<?, String>, DFA<Integer, String>>, InputStream, DFA<?, String>> deserializer)
-            throws IOException {
+    private <T, A extends MutableDeterministic<Integer, String, T, ?, ?>> void weedOutTransitions(A automaton) {
 
         final Random random = new Random(0);
-        final DFA<?, String> automaton = RandomAutomata.randomDFA(random, 20, alphabet);
 
-        final TAFSerialization serProvider = TAFSerialization.getInstance();
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // remove some transitions for partiality
+        for (int i = 0; i < AUTOMATON_SIZE; i++) {
+            final int rState = random.nextInt(AUTOMATON_SIZE);
+            final String rInput = ALPHABET.getSymbol(random.nextInt(ALPHABET.size()));
 
-        serProvider.writeModel(baos, automaton, alphabet);
-
-        final InputStream is = new ByteArrayInputStream(baos.toByteArray());
-        final DFA<?, String> deserialized = deserializer.apply(serProvider, is);
-
-        Assert.assertTrue(Automata.testEquivalence(automaton, deserialized, alphabet));
-
-        baos.close();
-        is.close();
+            automaton.removeTransition(rState, rInput, automaton.getTransition(rState, rInput));
+        }
     }
 
-    // Convenience interface to allow inlining throwing functions
-    @FunctionalInterface
-    private interface ThrowableBiFunction<R, S, T> {
+    private <I, IN extends UniversalAutomaton<?, I, ?, ?, ?>, OUT extends UniversalAutomaton<?, I, ?, ?, ?>> OUT writeAndReadModel(
+            IN source,
+            Alphabet<I> alphabet,
+            InputModelSerializer<I, IN> serializer,
+            InputModelDeserializer<I, OUT> deserializer) throws IOException {
 
-        T apply(R arg1, S arg2) throws IOException;
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        serializer.writeModel(baos, source, alphabet);
+
+        final InputStream is = new ByteArrayInputStream(baos.toByteArray());
+        return deserializer.readModel(is).model;
     }
 
 }
