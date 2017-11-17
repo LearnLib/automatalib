@@ -17,29 +17,38 @@ package net.automatalib.serialization.saf;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
-import net.automatalib.automata.fsa.NFA;
-import net.automatalib.automata.fsa.impl.compact.CompactNFA;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
-import net.automatalib.serialization.InputModelDeserializer;
+import net.automatalib.serialization.InputModelSerializationProvider;
+import net.automatalib.words.Alphabet;
 
-public final class SAFDeserializationNFA implements InputModelDeserializer<Integer, NFA<Integer, Integer>> {
+public final class SAFSerializationDFA
+        implements InputModelSerializationProvider<Integer, DFA<?, Integer>, DFA<Integer, Integer>> {
 
-    private static final SAFDeserializationNFA INSTANCE = new SAFDeserializationNFA();
+    private static final SAFSerializationDFA INSTANCE = new SAFSerializationDFA();
 
-    private SAFDeserializationNFA() {
+    private SAFSerializationDFA() {
     }
 
-    public static SAFDeserializationNFA getInstance() {
+    public static SAFSerializationDFA getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public InputModelData<Integer, NFA<Integer, Integer>> readModel(InputStream is) throws IOException {
+    public InputModelData<Integer, DFA<Integer, Integer>> readModel(InputStream is) throws IOException {
         final InputStream uncompressedStream = IOUtil.asUncompressedInputStream(is);
         SAFInput in = new SAFInput(uncompressedStream);
-        final CompactNFA<Integer> automaton = in.readNativeNFA();
+        final CompactDFA<Integer> automaton = in.readNativeDFA();
         return new InputModelData<>(automaton, automaton.getInputAlphabet());
+    }
+
+    @Override
+    public void writeModel(OutputStream os, DFA<?, Integer> model, Alphabet<Integer> alphabet) throws IOException {
+        SAFOutput out = new SAFOutput(os);
+        out.writeDFA(model, alphabet);
     }
 }
