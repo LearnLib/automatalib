@@ -31,9 +31,15 @@ import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
+import net.automatalib.serialization.AutomatonSerializationException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
+/**
+ * Deserializer for the SAF (simple automaton format).
+ *
+ * @author Malte Isberner
+ */
 class SAFInput {
 
     private static final AutomatonType[] TYPES = AutomatonType.values();
@@ -61,7 +67,7 @@ class SAFInput {
                              alphabet,
                              new CompactDFA.Creator<>(),
                              new AcceptanceDecoder(),
-                             in -> null);
+                             SinglePropertyDecoder.nullDecoder());
     }
 
     public <I, SP, TP, A extends MutableAutomaton<?, I, ?, SP, TP>> A readAutomaton(AutomatonType expectedType,
@@ -72,25 +78,25 @@ class SAFInput {
             throws IOException {
         AutomatonType type = readHeader();
         if (type != expectedType) {
-            throw new RuntimeException();
+            throw new AutomatonSerializationException();
         }
         int alphabetSize = in.readInt();
         if (alphabetSize != alphabet.size()) {
-            throw new RuntimeException();
+            throw new AutomatonSerializationException();
         }
         return readAutomatonBody(alphabet, type.isDeterministic(), creator, spDecoder, tpDecoder);
     }
 
-    public AutomatonType readHeader() throws IOException {
+    private AutomatonType readHeader() throws IOException {
         final int headerSize = 4;
         byte[] header = new byte[headerSize];
         in.readFully(header);
         if (header[0] != 'S' || header[1] != 'A' || header[2] != 'F') {
-            throw new RuntimeException();
+            throw new AutomatonSerializationException();
         }
         byte type = header[3];
         if (type < 0 || type >= TYPES.length) {
-            throw new RuntimeException();
+            throw new AutomatonSerializationException();
         }
         return TYPES[type];
     }
@@ -238,7 +244,10 @@ class SAFInput {
     }
 
     public CompactDFA<Integer> readNativeDFA() throws IOException {
-        return readNativeAutomaton(AutomatonType.DFA, new CompactDFA.Creator<>(), new AcceptanceDecoder(), in -> null);
+        return readNativeAutomaton(AutomatonType.DFA,
+                                   new CompactDFA.Creator<>(),
+                                   new AcceptanceDecoder(),
+                                   SinglePropertyDecoder.nullDecoder());
     }
 
     public <SP, TP, A extends MutableAutomaton<?, Integer, ?, SP, TP>> A readNativeAutomaton(AutomatonType expectedType,
@@ -248,11 +257,11 @@ class SAFInput {
             throws IOException {
         AutomatonType type = readHeader();
         if (type != expectedType) {
-            throw new RuntimeException();
+            throw new AutomatonSerializationException();
         }
         int alphabetSize = in.readInt();
         if (alphabetSize <= 0) {
-            throw new RuntimeException();
+            throw new AutomatonSerializationException();
         }
         Alphabet<Integer> alphabet = Alphabets.integers(0, alphabetSize - 1);
         return readAutomatonBody(alphabet, type.isDeterministic(), creator, spDecoder, tpDecoder);
@@ -263,10 +272,13 @@ class SAFInput {
                              alphabet,
                              new CompactNFA.Creator<>(),
                              new AcceptanceDecoder(),
-                             in -> null);
+                             SinglePropertyDecoder.nullDecoder());
     }
 
     public CompactNFA<Integer> readNativeNFA() throws IOException {
-        return readNativeAutomaton(AutomatonType.NFA, new CompactNFA.Creator<>(), new AcceptanceDecoder(), in -> null);
+        return readNativeAutomaton(AutomatonType.NFA,
+                                   new CompactNFA.Creator<>(),
+                                   new AcceptanceDecoder(),
+                                   SinglePropertyDecoder.nullDecoder());
     }
 }
