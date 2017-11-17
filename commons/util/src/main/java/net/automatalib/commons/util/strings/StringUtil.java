@@ -112,7 +112,7 @@ public final class StringUtil {
             throw new IllegalArgumentException(
                     "Argument to StringUtil.unquote() must begin and end with a double quote ('\"').");
         }
-        unescapeQuotes(s.substring(1, s.length() - 1));
+        unescapeQuotes(s.substring(1, s.length() - 1), a);
     }
 
     /**
