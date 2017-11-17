@@ -50,5 +50,15 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
     </dependencies>
 </project>
