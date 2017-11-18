@@ -32,7 +32,121 @@ limitations under the License.
 
     <packaging>pom</packaging>
 
+    <!--
+    All packaged AutomataLib dependencies.
+
+    Note: These exist for two purposes:
+    - allowing an easy dependencySets specification in the assembly descriptor
+    - enforcing the correct reactor build order
+
+    Sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer
+    -->
+    <dependencies>
+        <!-- adapters -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-brics</artifactId>
+        </dependency>
+
+        <!-- api -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
+        </dependency>
+
+        <!-- commons -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-dotutil</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-smartcollections</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
+        </dependency>
+
+        <!-- core -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+
+        <!-- misc -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-incremental</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-misc-algorithms</artifactId>
+        </dependency>
+
+        <!-- serialization -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-aut</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-learnlibv2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-saf</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-taf</artifactId>
+        </dependency>
+
+        <!-- util -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+
+        <!-- visualization -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-jung-visualizer</artifactId>
+        </dependency>
+    </dependencies>
+
     <profiles>
+        <profile>
+            <id>code-coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>report-aggregate</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report-aggregate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>bundles</id>
             <activation>
@@ -43,19 +157,11 @@ limitations under the License.
             </activation>
 
             <!--
-            All packaged AutomataLib dependencies.
-            Note: These exist for two purposes:
-            - allowing an easy dependencySets specification in the assembly descriptor
-            - enforcing the correct reactor build order
-            sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer
+            Additionally specify source-classified dependencies for building source assemblies.
+            Again, sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer
             -->
             <dependencies>
                 <!-- adapters -->
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-brics</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-brics</artifactId>
@@ -68,11 +174,6 @@ limitations under the License.
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-api</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-api</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
@@ -81,11 +182,6 @@ limitations under the License.
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-commons-dotutil</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-commons-dotutil</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
@@ -93,19 +189,9 @@ limitations under the License.
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-commons-smartcollections</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-commons-smartcollections</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-commons-util</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-commons-util</artifactId>
@@ -118,11 +204,6 @@ limitations under the License.
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-core</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-core</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
@@ -131,19 +212,9 @@ limitations under the License.
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-incremental</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-incremental</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-misc-algorithms</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-misc-algorithms</artifactId>
@@ -156,19 +227,9 @@ limitations under the License.
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-serialization-aut</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-aut</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-core</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-serialization-core</artifactId>
@@ -180,11 +241,6 @@ limitations under the License.
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-serialization-learnlibv2</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-learnlibv2</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
@@ -192,19 +248,9 @@ limitations under the License.
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-serialization-saf</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-saf</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-taf</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-serialization-taf</artifactId>
@@ -217,20 +263,10 @@ limitations under the License.
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-util</artifactId>
                     <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-util</artifactId>
-                    <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
 
                 <!-- visualization -->
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-jung-visualizer</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-jung-visualizer</artifactId>
@@ -329,10 +365,7 @@ limitations under the License.
                     </plugin>
                 </plugins>
             </build>
-
-
         </profile>
     </profiles>
-
 
 </project>

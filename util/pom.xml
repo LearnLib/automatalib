@@ -36,26 +36,6 @@ limitations under the License.
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <!-- If we run coverage analysis, skip generated sources -->
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <exclude>**/AutomatonBuilder*.class</exclude>
-                            <exclude>**/DFABuilder*.class</exclude>
-                            <exclude>**/FSABuilder*.class</exclude>
-                            <exclude>**/MealyBuilder*.class</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>net.automatalib</groupId>

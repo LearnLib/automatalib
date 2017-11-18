@@ -125,6 +125,29 @@ limitations under the License.
                         </dependency>
                     </dependencies>
                 </plugin>
+
+                <!-- If we run coverage analysis, skip generated sources -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <!-- generated builders for automata types -->
+                            <exclude>net/automatalib/util/automata/builders/AutomatonBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/AutomatonBuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/DFABuilder*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/FSABuilder*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/MealyBuilder*.class</exclude>
+
+                            <!-- generated parser for TAF serialization -->
+                            <exclude>net/automatalib/serialization/taf/parser/InternalTAFParser*.class</exclude>
+                            <exclude>net/automatalib/serialization/taf/parser/ParseException.class</exclude>
+                            <exclude>net/automatalib/serialization/taf/parser/SimpleCharStream.class</exclude>
+                            <exclude>net/automatalib/serialization/taf/parser/Token.class</exclude>
+                            <exclude>net/automatalib/serialization/taf/parser/TokenMgrError.class</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
