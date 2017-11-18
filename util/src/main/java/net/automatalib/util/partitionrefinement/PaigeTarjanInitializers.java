@@ -468,7 +468,6 @@ public final class PaigeTarjanInitializers {
         int numStates = automaton.size();
         int numInputs = inputs.size();
 
-        int sinkId = numStates;
         int numStatesWithSink = numStates + 1;
         int posDataLow = numStatesWithSink;
         int predOfsDataLow = posDataLow + numStatesWithSink;
@@ -553,6 +552,8 @@ public final class PaigeTarjanInitializers {
                 predCountBase += numStatesWithSink;
             }
         }
+
+        int sinkId = numStates;
 
         if (partial) {
             int pos;

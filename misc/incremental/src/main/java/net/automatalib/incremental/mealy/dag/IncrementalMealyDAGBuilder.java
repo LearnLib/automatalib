@@ -158,8 +158,6 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
      */
     @Override
     public void insert(Word<? extends I> word, Word<? extends O> outputWord) {
-        int len = word.length();
-
         State curr = init;
         State conf = null;
 
@@ -195,14 +193,15 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             curr = succ;
         }
 
-        State last = curr;
-
+        int len = word.length();
         int prefixLen = path.size();
 
         // The information was already present - we do not need to continue
         if (prefixLen == len) {
             return;
         }
+
+        State last = curr;
 
         if (conf != null) {
             if (conf == last) {
@@ -478,23 +477,21 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
     private <S, T> Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> mealy,
                                                 Collection<? extends I> inputs,
                                                 boolean omitUndefined) {
-        int thisStates = register.size();
-
-        IntDisjointSets uf = new UnionFind(thisStates + mealy.size());
-
-        Map<State, Integer> ids = new HashMap<>();
-
-        State init1 = init;
         S init2 = mealy.getInitialState();
 
         if (init2 == null) {
             return omitUndefined ? null : Word.epsilon();
         }
 
+        State init1 = init;
+
+        Map<State, Integer> ids = new HashMap<>();
         StateIDs<S> mealyIds = mealy.stateIDs();
 
+        int thisStates = register.size();
         int id1 = getStateId(init1, ids), id2 = mealyIds.getStateId(init2) + thisStates;
 
+        IntDisjointSets uf = new UnionFind(thisStates + mealy.size());
         uf.link(id1, id2);
 
         Queue<Record<S, I>> queue = new ArrayDeque<>();

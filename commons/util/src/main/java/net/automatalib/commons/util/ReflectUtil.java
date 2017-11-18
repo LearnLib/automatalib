@@ -56,14 +56,15 @@ public final class ReflectUtil {
                 try {
                     return clazz.getConstructor(primParams);
                 } catch (NoSuchMethodException e2) {
-                }
-            }
+                    Constructor<T>[] ctors = (Constructor<T>[]) clazz.getConstructors();
 
-            Constructor<T>[] ctors = (Constructor<T>[]) clazz.getConstructors();
+                    for (Constructor<T> candidate : ctors) {
+                        if (w2pEquals(candidate.getParameterTypes(), params)) {
+                            return candidate;
+                        }
+                    }
 
-            for (Constructor<T> candidate : ctors) {
-                if (w2pEquals(candidate.getParameterTypes(), params)) {
-                    return candidate;
+                    throw e2;
                 }
             }
 
@@ -168,14 +169,15 @@ public final class ReflectUtil {
                 try {
                     return clazz.getMethod(name, primParams);
                 } catch (NoSuchMethodException e2) {
-                }
-            }
+                    Method[] methods = clazz.getMethods();
 
-            Method[] methods = clazz.getMethods();
+                    for (Method candidate : methods) {
+                        if (w2pEquals(candidate.getParameterTypes())) {
+                            return candidate;
+                        }
+                    }
 
-            for (Method candidate : methods) {
-                if (w2pEquals(candidate.getParameterTypes())) {
-                    return candidate;
+                    throw e2;
                 }
             }
 

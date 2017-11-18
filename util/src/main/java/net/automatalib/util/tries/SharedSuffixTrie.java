@@ -41,7 +41,6 @@ public class SharedSuffixTrie<I> extends SuffixTrie<I> {
         int symbolIdx = alphabet.getSymbolIndex(symbol);
         SharedSuffixTrieNode<I> sparent = (SharedSuffixTrieNode<I>) parent;
 
-        SharedSuffixTrieNode<I> child;
         SharedSuffixTrieNode<I>[] children = sparent.children;
         if (children == null) {
             sparent.children = new SharedSuffixTrieNode[alphabet.size()];
@@ -49,7 +48,7 @@ public class SharedSuffixTrie<I> extends SuffixTrie<I> {
         } else if (children[symbolIdx] != null) {
             return children[symbolIdx];
         }
-        child = new SharedSuffixTrieNode<>(symbol, sparent);
+        SharedSuffixTrieNode<I> child = new SharedSuffixTrieNode<>(symbol, sparent);
         children[symbolIdx] = child;
         return child;
     }

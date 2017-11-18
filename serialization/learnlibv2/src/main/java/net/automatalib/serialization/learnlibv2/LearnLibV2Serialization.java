@@ -103,7 +103,6 @@ public class LearnLibV2Serialization
         if (partial) {
             numStates++;
         }
-        int numInputs = alphabet.size();
         PrintStream ps;
         try {
             ps = new PrintStream(os, false, StandardCharsets.UTF_8.toString());
@@ -111,6 +110,7 @@ public class LearnLibV2Serialization
             // this should in theory never happen
             throw new IllegalStateException(e);
         }
+        int numInputs = alphabet.size();
         ps.printf("%d %d%n", numStates, numInputs);
 
         StateIDs<S> stateIds = dfa.stateIDs();

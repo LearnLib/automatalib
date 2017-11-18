@@ -421,8 +421,6 @@ public final class BacktrackingSearch {
         }
 
         final I i = searchState.symbol;
-        final ADSNode<S, I, O> result = new ADSSymbolNode<>(null, i);
-
         final Map<O, Map<S, S>> successors = new HashMap<>();
 
         for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
@@ -443,6 +441,8 @@ public final class BacktrackingSearch {
                 throw new IllegalStateException();
             }
         }
+
+        final ADSNode<S, I, O> result = new ADSSymbolNode<>(null, i);
 
         for (final Map.Entry<O, Map<S, S>> entry : successors.entrySet()) {
 

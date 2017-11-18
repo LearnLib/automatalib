@@ -183,6 +183,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
             this.edge = null;
             this.distance = distance;
             this.middle = middle;
+            this.numEdges = numEdges;
         }
     }
 }

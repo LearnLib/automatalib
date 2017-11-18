@@ -55,9 +55,6 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
     @Override
     public void insert(Word<? extends I> word, boolean accepting) {
 
-        int len = word.length();
-        Acceptance acc = Acceptance.fromBoolean(accepting);
-
         State curr = init;
         State conf = null;
 
@@ -86,6 +83,8 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
             curr = succ;
         }
 
+        int len = word.length();
+        Acceptance acc = Acceptance.fromBoolean(accepting);
         int prefixLen = path.size();
 
         State last = curr;

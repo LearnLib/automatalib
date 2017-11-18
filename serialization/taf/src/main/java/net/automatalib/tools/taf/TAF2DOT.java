@@ -46,7 +46,7 @@ public class TAF2DOT {
         try {
             app.run(args);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Error running TAF2DOT", ex);
         }
         final int erronousExitCode = 255;
         System.exit(erronousExitCode);

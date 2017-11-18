@@ -254,12 +254,12 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
             return "[]";
         }
         StringBuilder result = new StringBuilder();
-        result.append("[").append(storage.array[0]);
+        result.append('[').append(storage.array[0]);
         for (int i = 1; i < size; i++) {
             result.append(',');
             result.append(storage.array[i]);
         }
-        result.append("]");
+        result.append(']');
         return result.toString();
     }
 

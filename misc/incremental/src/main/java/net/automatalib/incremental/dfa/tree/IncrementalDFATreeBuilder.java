@@ -59,13 +59,12 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
     protected <S> Word<I> doFindSeparatingWord(final DFA<S, I> target,
                                                Collection<? extends I> inputs,
                                                boolean omitUndefined) {
-        Deque<Record<S, I>> dfsStack = new ArrayDeque<>();
-
         S automatonInit = target.getInitialState();
         if (root.getAcceptance().conflicts(target.isAccepting(automatonInit))) {
             return Word.epsilon();
         }
 
+        Deque<Record<S, I>> dfsStack = new ArrayDeque<>();
         dfsStack.push(new Record<>(automatonInit, root, null, inputs.iterator()));
 
         while (!dfsStack.isEmpty()) {

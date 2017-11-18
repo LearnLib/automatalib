@@ -19,6 +19,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,12 +34,17 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Utility methods for operating with <tt>java.io.*</tt> classes.
  *
  * @author Malte Isberner
  */
 public final class IOUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IOUtil.class);
 
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
@@ -101,14 +107,8 @@ public final class IOUtil {
             }
         } finally {
             if (close) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                }
-                try {
-                    os.close();
-                } catch (IOException e) {
-                }
+                closeQuietly(is);
+                closeQuietly(os);
             }
         }
     }
@@ -152,15 +152,22 @@ public final class IOUtil {
             }
         } finally {
             if (close) {
-                try {
-                    r.close();
-                } catch (IOException e) {
-                }
-                try {
-                    w.close();
-                } catch (IOException e) {
-                }
+                closeQuietly(r);
+                closeQuietly(w);
             }
+        }
+    }
+
+    /**
+     * Quitely closes a closeable. Any exception while doing so will be ignored (but logged).
+     *
+     * @param closeable the closeable to close
+     */
+    public static void closeQuietly(Closeable closeable) {
+        try {
+            closeable.close();
+        } catch (IOException e) {
+            LOGGER.error("Could not close closable", e);
         }
     }
 

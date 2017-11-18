@@ -52,8 +52,6 @@ public class DeterministicEquivalenceTest<I> {
             return findSeparatingWordLarge(reference, other, inputs);
         }
 
-        Queue<StatePair<S, S2>> bfsQueue = new ArrayDeque<>();
-
         S refInit = reference.getInitialState();
         S2 otherInit = other.getInitialState();
 
@@ -63,6 +61,7 @@ public class DeterministicEquivalenceTest<I> {
             return Word.epsilon();
         }
 
+        Queue<StatePair<S, S2>> bfsQueue = new ArrayDeque<>();
         bfsQueue.add(new StatePair<>(refInit, otherInit));
 
         StateIDs<S> refStateIds = reference.stateIDs();
@@ -154,8 +153,6 @@ public class DeterministicEquivalenceTest<I> {
     public static <I, S, T, S2, T2> Word<I> findSeparatingWordLarge(UniversalDeterministicAutomaton<S, I, T, ?, ?> reference,
                                                                     UniversalDeterministicAutomaton<S2, I, T2, ?, ?> other,
                                                                     Collection<? extends I> inputs) {
-        Queue<StatePair<S, S2>> bfsQueue = new ArrayDeque<>();
-
         S refInit = reference.getInitialState();
         S2 otherInit = other.getInitialState();
 
@@ -165,6 +162,7 @@ public class DeterministicEquivalenceTest<I> {
             return Word.epsilon();
         }
 
+        Queue<StatePair<S, S2>> bfsQueue = new ArrayDeque<>();
         bfsQueue.add(new StatePair<>(refInit, otherInit));
 
         int refSize = reference.size();

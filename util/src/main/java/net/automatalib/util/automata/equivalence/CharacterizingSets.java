@@ -111,8 +111,6 @@ public final class CharacterizingSets {
         }
 
         while (!currentBlock.isEmpty()) {
-            List<S> nextBlock = new ArrayList<>();
-
             Iterator<S> it = currentBlock.iterator();
 
             Word<I> suffix = null;
@@ -129,6 +127,7 @@ public final class CharacterizingSets {
 
             List<Object> trace = buildTrace(automaton, state, suffix);
 
+            List<S> nextBlock = new ArrayList<>();
             while (it.hasNext()) {
                 S s = it.next();
                 if (checkTrace(automaton, s, suffix, trace)) {

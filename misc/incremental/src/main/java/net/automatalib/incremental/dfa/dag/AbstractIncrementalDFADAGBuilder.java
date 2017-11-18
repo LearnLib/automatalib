@@ -70,20 +70,20 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
             targetStates++;
         }
 
-        IntDisjointSets uf = new UnionFind(thisStates + targetStates);
-
-        State init1 = init;
         S init2 = target.getInitialState();
 
         if (init2 == null && omitUndefined) {
             return null;
         }
 
+        State init1 = init;
+
         boolean acc = init2 != null && target.isAccepting(init2);
         if (init1.getAcceptance().conflicts(acc)) {
             return Word.epsilon();
         }
 
+        IntDisjointSets uf = new UnionFind(thisStates + targetStates);
         StateIDs<S> tgtIds = target.stateIDs();
         int id1 = getStateId(init1, stateIds);
         int id2 = ((init2 != null) ? tgtIds.getStateId(init2) : (targetStates - 1)) + thisStates;

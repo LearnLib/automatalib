@@ -101,13 +101,13 @@ public class SAFOutput {
                                               BlockPropertyEncoder<? super SP> spEncoder,
                                               SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
 
-        final List<S> states = new ArrayList<>(result.getStates());
         final Set<? extends S> initials = result.getInitialStates();
 
         if (initials.size() != 1) {
             throw new IllegalArgumentException();
         }
 
+        final List<S> states = new ArrayList<>(result.getStates());
         final S init = initials.iterator().next();
 
         encodeStatesDet(result, init, states, spEncoder);

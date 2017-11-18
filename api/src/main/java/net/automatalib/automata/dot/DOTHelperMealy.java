@@ -32,12 +32,14 @@ public class DOTHelperMealy<S, I, T, O>
         if (!super.getEdgeProperties(src, edge, tgt, properties)) {
             return false;
         }
-        String label = String.valueOf(edge.getInput()) + " / ";
+
+        final StringBuilder labelBuilder = new StringBuilder();
+        labelBuilder.append(String.valueOf(edge.getInput())).append(" / ");
         O output = automaton.getTransitionOutput(edge.getTransition());
         if (output != null) {
-            label += String.valueOf(output);
+            labelBuilder.append(String.valueOf(output));
         }
-        properties.put(EdgeAttrs.LABEL, label);
+        properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
         return true;
     }
 

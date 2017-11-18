@@ -47,10 +47,7 @@ final class PlottedGraph {
             sb.append(buf, 0, len);
         }
 
-        try {
-            dotText.close();
-        } catch (IOException e) {
-        }
+        IOUtil.closeQuietly(dotText);
 
         updateDOTText(sb.toString());
     }

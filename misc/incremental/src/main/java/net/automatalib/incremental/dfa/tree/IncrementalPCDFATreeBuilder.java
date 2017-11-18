@@ -215,8 +215,6 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
                                            S state,
                                            Collection<? extends I> inputs,
                                            MutableMapping<S, Boolean> deadStates) {
-        Deque<FindLiveRecord<S, I>> dfsStack = new ArrayDeque<>();
-
         if (dfa.isAccepting(state)) {
             return Word.epsilon();
         }
@@ -227,6 +225,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         }
         deadStates.put(state, true);
 
+        Deque<FindLiveRecord<S, I>> dfsStack = new ArrayDeque<>();
         dfsStack.push(new FindLiveRecord<>(state, null, inputs.iterator()));
 
         while (!dfsStack.isEmpty()) {

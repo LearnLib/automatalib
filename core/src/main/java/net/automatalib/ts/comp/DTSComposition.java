@@ -51,16 +51,19 @@ public class DTSComposition<S1, S2, I, T1, T2, TS1 extends DeterministicTransiti
     @Override
     public IPair<T1, T2> getTransition(IPair<S1, S2> state, I input) {
         S1 s1 = state.first;
-        S2 s2 = state.second;
 
         T1 t1 = (s1 == null) ? null : ts1.getTransition(s1, input);
         if (t1 == null && !allowPartial) {
             return null;
         }
+
+        S2 s2 = state.second;
+
         T2 t2 = (s2 == null) ? null : ts2.getTransition(s2, input);
         if (t2 == null && !allowPartial) {
             return null;
         }
+
         return new IPair<>(t1, t2);
     }
 

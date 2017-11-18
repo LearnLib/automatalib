@@ -73,14 +73,14 @@ public class NearLinearEquivalenceTest<I> {
                                                        final Collection<? extends I> inputs,
                                                        final boolean ignoreUndefinedTransitions) {
 
-        IntDisjointSets uf = new UnionFindRemSP(target.size());
-
         Object sprop1 = target.getStateProperty(init1);
         Object sprop2 = target.getStateProperty(init2);
 
         if (!Objects.equals(sprop1, sprop2)) {
             return Word.epsilon();
         }
+
+        IntDisjointSets uf = new UnionFindRemSP(target.size());
 
         StateIDs<S> stateIds = target.stateIDs();
 
@@ -197,8 +197,6 @@ public class NearLinearEquivalenceTest<I> {
                 }
             }
         }
-        int targetStates = target.size();
-        IntDisjointSets uf = new UnionFindRemSP(targetStates + other.size());
 
         S init1 = target.getInitialState();
         S2 init2 = other.getInitialState();
@@ -209,6 +207,9 @@ public class NearLinearEquivalenceTest<I> {
         if (!Objects.equals(sprop1, sprop2)) {
             return Word.epsilon();
         }
+
+        int targetStates = target.size();
+        IntDisjointSets uf = new UnionFindRemSP(targetStates + other.size());
 
         StateIDs<S> targetStateIds = target.stateIDs();
         StateIDs<S2> otherStateIds = other.stateIDs();
@@ -304,10 +305,6 @@ public class NearLinearEquivalenceTest<I> {
     public static <S, S2, I, T, T2> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
                                                                UniversalDeterministicAutomaton<S2, I, T2, ?, ?> other,
                                                                Alphabet<I> inputs) {
-        int targetStates = target.size();
-        IntDisjointSets uf = new UnionFindRemSP(targetStates + other.size());
-
-        int numInputs = inputs.size();
         UniversalDeterministicAutomaton.FullIntAbstraction<T, ?, ?> absTarget = target.fullIntAbstraction(inputs);
         UniversalDeterministicAutomaton.FullIntAbstraction<T2, ?, ?> absOther = other.fullIntAbstraction(inputs);
 
@@ -321,6 +318,9 @@ public class NearLinearEquivalenceTest<I> {
             return Word.epsilon();
         }
 
+        int targetStates = target.size();
+        IntDisjointSets uf = new UnionFindRemSP(targetStates + other.size());
+
         int id1 = init1;
         int id2 = targetStates + init2;
 
@@ -331,6 +331,7 @@ public class NearLinearEquivalenceTest<I> {
         queue.add(new IntRecord(init1, init2));
 
         int lastSym = -1;
+        int numInputs = inputs.size();
 
         IntRecord current;
 

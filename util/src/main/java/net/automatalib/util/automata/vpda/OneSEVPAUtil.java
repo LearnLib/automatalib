@@ -47,13 +47,13 @@ public final class OneSEVPAUtil {
         final L initLoc = sevpa.getInitialLocation();
         final List<L> reachable = new ArrayList<>();
         reachable.add(initLoc);
-        int queuePtr = 0;
         result.set(sevpa.getLocationId(initLoc), Word.epsilon());
 
         if (terminatePred.test(initLoc)) {
             return new ReachResult<>(initLoc, reachable, result);
         }
 
+        int queuePtr = 0;
         while (queuePtr < reachable.size()) {
             final L curr = reachable.get(queuePtr++);
             final Word<I> currAs = result.get(sevpa.getLocationId(curr));

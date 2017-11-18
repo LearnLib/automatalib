@@ -80,7 +80,7 @@ public final class DOT {
                 return true;
             }
         } catch (IOException | InterruptedException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Error executing dot", ex);
         }
         return false;
     }
@@ -133,6 +133,7 @@ public final class DOT {
         try {
             IOUtil.skip(dot.getErrorStream());
         } catch (IOException e) {
+            LOGGER.error("Could not skip over error stream", e);
         }
 
         return dot.getInputStream();

@@ -119,7 +119,6 @@ public final class OneSEVPAMinimizer {
             data[posDataLow + i] = pos;
             int predOfsBase = predOfsDataLow;
 
-            int j = 0;
             final L loc = sevpa.getLocation(i);
             for (I intSym : alphabet.getInternalSymbols()) {
                 final L succ = sevpa.getInternalSuccessor(loc, intSym);
@@ -130,7 +129,6 @@ public final class OneSEVPAMinimizer {
                 final int succId = sevpa.getLocationId(succ);
                 data[--data[predOfsBase + succId]] = i;
                 predOfsBase += numStates;
-                j++;
             }
             for (I callSym : alphabet.getCallSymbols()) {
                 for (I retSym : alphabet.getReturnSymbols()) {
@@ -140,14 +138,12 @@ public final class OneSEVPAMinimizer {
                         int succId = sevpa.getLocationId(succ);
                         data[--data[predOfsBase + succId]] = i;
                         predOfsBase += numStates;
-                        j++;
 
                         stackSym = sevpa.encodeStackSym(loc, callSym);
                         succ = sevpa.getReturnSuccessor(src, retSym, stackSym);
                         succId = sevpa.getLocationId(succ);
                         data[--data[predOfsBase + succId]] = i;
                         predOfsBase += numStates;
-                        j++;
                     }
                 }
             }

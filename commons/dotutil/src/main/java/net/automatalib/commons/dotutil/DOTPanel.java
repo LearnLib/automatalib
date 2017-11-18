@@ -35,7 +35,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DOTPanel extends JPanel {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DOTPanel.class);
 
     private static final long serialVersionUID = 1L;
     private final ImageComponent imgComponent;
@@ -216,6 +221,7 @@ public class DOTPanel extends JPanel {
         try {
             addGraph(name, new StringReader(dotText));
         } catch (IOException e) {
+            LOGGER.error("Could not add graph", e);
         }
     }
 

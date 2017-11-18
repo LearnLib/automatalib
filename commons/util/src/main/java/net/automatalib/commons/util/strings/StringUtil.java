@@ -18,12 +18,17 @@ package net.automatalib.commons.util.strings;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Misceallanous utility functions for {@link String}s.
  *
  * @author Malte Isberner
  */
 public final class StringUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StringUtil.class);
 
     private static final String IDENTIFIER_REGEX = "[a-zA-Z_]\\w*";
 
@@ -37,6 +42,7 @@ public final class StringUtil {
         try {
             enquote(s, sb);
         } catch (IOException e) {
+            LOGGER.error("Could not enquote String", e);
         }
         return sb.toString();
     }
@@ -103,6 +109,7 @@ public final class StringUtil {
         try {
             unquote(s, sb);
         } catch (IOException e) {
+            LOGGER.error("Could not unquote String", e);
         }
         return sb.toString();
     }
@@ -129,6 +136,7 @@ public final class StringUtil {
         try {
             unescapeQuotes(s, sb);
         } catch (IOException e) {
+            LOGGER.error("Could not unescape quotes", e);
         }
         return sb.toString();
     }
@@ -163,6 +171,7 @@ public final class StringUtil {
         try {
             escapeQuotes(s, sb);
         } catch (IOException e) {
+            LOGGER.error("Could not escape quotes", e);
         }
         return sb.toString();
     }
