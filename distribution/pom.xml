@@ -299,6 +299,23 @@ limitations under the License.
                             <dependencySourceIncludes>
                                 <dependencySourceInclude>net.automatalib:*</dependencySourceInclude>
                             </dependencySourceIncludes>
+                            <additionalDependencies>
+                                <additionalDependency>
+                                    <groupId>com.github.misberner.duzzt</groupId>
+                                    <artifactId>duzzt-annotations</artifactId>
+                                    <version>${duzzt.version}</version>
+                                </additionalDependency>
+                                <additionalDependency>
+                                    <groupId>dk.brics.automaton</groupId>
+                                    <artifactId>automaton</artifactId>
+                                    <version>${brics-automaton.version}</version>
+                                </additionalDependency>
+                                <additionalDependency>
+                                    <groupId>org.kohsuke.metainf-services</groupId>
+                                    <artifactId>metainf-services</artifactId>
+                                    <version>${metainf-services.version}</version>
+                                </additionalDependency>
+                            </additionalDependencies>
                         </configuration>
                         <executions>
                             <execution>
