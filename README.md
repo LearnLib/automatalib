@@ -54,6 +54,12 @@ For developing the code base of AutomataLib, it is suggested to use one of the m
   1. Select the folder containing the development checkout as the root directory and click `Finish`.
 
 
+## Documentation
+
+* **Maven Project Site:** [snapshot](http://learnlib.github.io/automatalib/maven-site/latest-snapshot/) | [latest release](http://learnlib.github.io/automatalib/maven-site/latest-release/)
+* **API Documentation:** [snapshot](http://learnlib.github.io/automatalib/maven-site/latest-snapshot/apidocs/) | [latest release](http://learnlib.github.io/automatalib/maven-site/latest-release/apidocs/)
+
+
 ## Mailing Lists
 
   * [Q&A @ Google Groups][7] -- [automatalib-qa@googlegroups.com][8]
@@ -63,12 +69,6 @@ For developing the code base of AutomataLib, it is suggested to use one of the m
 
 * [Markus Frohme][5] (2017 - )
 * [Malte Isberner][4] (2013 - 2015)
-
-
-## Resources
-
-* **Maven Project Site:** [snapshot](http://learnlib.github.io/automatalib/maven-site/latest-snapshot/) | [latest release](http://learnlib.github.io/automatalib/maven-site/latest-release/)
-* **API Documentation:** [snapshot](http://learnlib.github.io/automatalib/maven-site/latest-snapshot/apidocs/) | [latest release](http://learnlib.github.io/automatalib/maven-site/latest-release/apidocs/)
 
 [1]: http://www.apache.org/licenses/LICENSE-2.0
 [2]: http://www.cs.tu-dortmund.de
