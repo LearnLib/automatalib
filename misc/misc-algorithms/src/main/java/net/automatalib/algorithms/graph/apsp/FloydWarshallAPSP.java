@@ -45,7 +45,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
     @Nonnull
     private final NodeIDs<N> ids;
     @Nonnull
-    private final APSPRecord<N, E>[][] table;
+    private final APSPRecord<E>[][] table;
 
     @SuppressWarnings("unchecked")
     public FloydWarshallAPSP(Graph<N, E> graph, EdgeWeights<E> ew) {
@@ -70,7 +70,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
 
                 int j = ids.getNodeId(tgt);
                 float w = ew.getEdgeWeight(edge);
-                APSPRecord<N, E> prev = table[i][j];
+                APSPRecord<E> prev = table[i][j];
                 if (prev == null || prev.distance > w) {
                     table[i][j] = new APSPRecord<>(edge, w);
                 }
@@ -94,13 +94,13 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
                         continue;
                     }
 
-                    APSPRecord<N, E> currRec = table[i][j];
+                    APSPRecord<E> currRec = table[i][j];
 
                     if (k == i || k == j) {
                         continue;
                     }
 
-                    APSPRecord<N, E> part1 = table[i][k], part2 = table[k][j];
+                    APSPRecord<E> part1 = table[i][k], part2 = table[k][j];
 
                     if (part1 == null || part2 == null) {
                         continue;
@@ -127,7 +127,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
     public float getShortestPathDistance(N src, N tgt) {
         int srcId = ids.getNodeId(src), tgtId = ids.getNodeId(tgt);
 
-        APSPRecord<N, E> rec = table[srcId][tgtId];
+        APSPRecord<E> rec = table[srcId][tgtId];
         if (rec == null) {
             return GraphAlgorithms.INVALID_DISTANCE;
         }
@@ -139,7 +139,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
     public List<E> getShortestPath(N src, N tgt) {
         int srcId = ids.getNodeId(src), tgtId = ids.getNodeId(tgt);
 
-        APSPRecord<N, E> rec = table[srcId][tgtId];
+        APSPRecord<E> rec = table[srcId][tgtId];
 
         if (rec == null) {
             return null;
@@ -152,7 +152,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
         return result;
     }
 
-    private void buildPath(List<E> path, int srcId, int tgtId, APSPRecord<N, E> rec) {
+    private void buildPath(List<E> path, int srcId, int tgtId, APSPRecord<E> rec) {
         if (rec.middle == -1) {
             path.add(rec.edge);
             return;
@@ -164,7 +164,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
     }
 
     @ParametersAreNonnullByDefault
-    private static final class APSPRecord<N, E> {
+    private static final class APSPRecord<E> {
 
         @Nullable
         public final E edge;
