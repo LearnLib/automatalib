@@ -43,12 +43,12 @@ public class StateIDGrowingMapping<S, V> implements MutableMapping<S, V> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V put(S key, V value) {
         int id = stateIds.getStateId(key);
         if (id >= storage.array.length) {
             storage.ensureCapacity(automaton.size());
         }
+        @SuppressWarnings("unchecked")
         V old = (V) storage.array[id];
         storage.array[id] = value;
         return old;

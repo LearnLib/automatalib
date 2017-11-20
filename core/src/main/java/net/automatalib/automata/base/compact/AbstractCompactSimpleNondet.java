@@ -383,7 +383,6 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void addAlphabetSymbol(I symbol) {
 
         if (this.alphabet.containsSymbol(symbol)) {
@@ -393,6 +392,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
         final int oldAlphabetSize = this.alphabetSize;
         final int newAlphabetSize = oldAlphabetSize + 1;
         final int newArraySize = this.transitions.length + this.stateCapacity;
+        @SuppressWarnings("unchecked")
         final Set<Integer>[] newTransitions = new Set[newArraySize];
 
         for (int i = 0; i < this.numStates; i++) {

@@ -55,12 +55,12 @@ public class StateIDDynamicMapping<S extends NumericID, V> implements MutableMap
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V put(S key, V value) {
         int id = key.getId();
         if (id >= storage.array.length) {
             storage.ensureCapacity(automaton.size());
         }
+        @SuppressWarnings("unchecked")
         V old = (V) storage.array[id];
         storage.array[id] = value;
         return old;

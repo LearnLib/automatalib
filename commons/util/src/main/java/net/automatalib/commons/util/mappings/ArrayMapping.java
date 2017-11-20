@@ -42,10 +42,10 @@ public final class ArrayMapping<K extends NumericID, V> implements MutableMappin
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V put(K key, V value) {
         int id = key.getId();
         storage.ensureCapacity(id + 1);
+        @SuppressWarnings("unchecked")
         V old = (V) storage.array[id];
         storage.array[id] = value;
         return old;

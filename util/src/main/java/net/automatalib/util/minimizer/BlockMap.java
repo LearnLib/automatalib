@@ -67,9 +67,9 @@ public class BlockMap<V> implements MutableMapping<Block<?, ?>, V> {
      * @param value
      *         the value.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public V put(Block<?, ?> block, V value) {
+        @SuppressWarnings("unchecked")
         V old = (V) storage[block.getId()];
         storage[block.getId()] = value;
         return old;
