@@ -231,7 +231,7 @@ public final class GraphTraversal {
                 continue;
             }
 
-            Collection<? extends E> edges = graph.getOutgoingEdges(currNode);
+            Collection<E> edges = graph.getOutgoingEdges(currNode);
 
             for (E edge : edges) {
 

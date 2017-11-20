@@ -19,8 +19,8 @@ import java.util.Collection;
 
 public interface PowersetViewTS<S, I, T, OS, OT> extends DeterministicTransitionSystem<S, I, T> {
 
-    Collection<? extends OS> getOriginalStates(S state);
+    Collection<OS> getOriginalStates(S state);
 
-    Collection<? extends OT> getOriginalTransitions(T transition);
+    Collection<OT> getOriginalTransitions(T transition);
 
 }

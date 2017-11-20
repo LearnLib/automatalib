@@ -68,13 +68,13 @@ public interface DeterministicTransitionSystem<S, I, T> extends TransitionSystem
 
     @Override
     @Nonnull
-    default Set<? extends S> getSuccessors(S state, I input) {
+    default Set<S> getSuccessors(S state, I input) {
         return SimpleDTS.super.getSuccessors(state, input);
     }
 
     @Override
     @Nonnull
-    default Collection<? extends T> getTransitions(S state, I input) {
+    default Collection<T> getTransitions(S state, I input) {
         return transToSet(getTransition(state, input));
     }
 

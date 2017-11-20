@@ -46,7 +46,7 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
     }
 
     @Override
-    default Collection<? extends N> getAdjacentTargets(N node) {
+    default Collection<N> getAdjacentTargets(N node) {
         return adjacentTargetsStream(node).collect(Collectors.toList());
     }
 
@@ -61,15 +61,13 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
     }
 
     @Nonnull
-    @SuppressWarnings("unchecked")
     default Stream<E> outgoingEdgesStream(N node) {
-        return (Stream<E>) getOutgoingEdges(node).stream();
+        return getOutgoingEdges(node).stream();
     }
 
     @Nonnull
-    @SuppressWarnings("unchecked")
     default Iterator<E> outgoingEdgesIterator(N node) {
-        return (Iterator<E>) getOutgoingEdges(node).iterator();
+        return getOutgoingEdges(node).iterator();
     }
 
     /**
@@ -81,7 +79,7 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
      * @return a {@link Collection} of all outgoing edges, or <code>null</code> if the node has no outgoing edges.
      */
     @Nonnull
-    Collection<? extends E> getOutgoingEdges(N node);
+    Collection<E> getOutgoingEdges(N node);
 
     @Nonnull
     default Iterable<E> outgoingEdges(N node) {
@@ -89,10 +87,10 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
     }
 
     @Nonnull
-    default Collection<? extends E> getEdgesBetween(N from, N to) {
+    default Collection<E> getEdgesBetween(N from, N to) {
         return getOutgoingEdges(from).stream()
                                      .filter(e -> Objects.equals(getTarget(e), to))
-                                     .collect(Collectors.<E>toList());
+                                     .collect(Collectors.toList());
     }
 
     /**

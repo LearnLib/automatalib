@@ -74,7 +74,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
             return new DefaultDOTHelper<N, E>() {
 
                 @Override
-                public Collection<? extends N> initialNodes() {
+                public Collection<N> initialNodes() {
                     return Collections.singleton(getInitialNode());
                 }
 

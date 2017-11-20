@@ -443,7 +443,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @return a (non-materialized) list containing all prefixes
      */
     @Nonnull
-    public List<? extends Word<I>> prefixes(boolean longestFirst) {
+    public List<Word<I>> prefixes(boolean longestFirst) {
         return new SubwordList<>(this, true, longestFirst);
     }
 
@@ -457,7 +457,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @return a (non-materialized) list containing all suffix
      */
     @Nonnull
-    public List<? extends Word<I>> suffixes(boolean longestFirst) {
+    public List<Word<I>> suffixes(boolean longestFirst) {
         return new SubwordList<>(this, false, longestFirst);
     }
 

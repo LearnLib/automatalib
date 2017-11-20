@@ -67,7 +67,7 @@ public interface FiniteStateAcceptor<S, I> extends AcceptorTS<S, I>,
         }
 
         @Override
-        public GraphDOTHelper<S, ? super TransitionEdge<I, S>> getGraphDOTHelper() {
+        public GraphDOTHelper<S, TransitionEdge<I, S>> getGraphDOTHelper() {
             return new DOTHelperFSA<>(automaton);
         }
     }

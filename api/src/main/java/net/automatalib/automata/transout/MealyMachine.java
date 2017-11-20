@@ -45,7 +45,7 @@ public interface MealyMachine<S, I, T, O> extends UniversalDeterministicAutomato
         }
 
         @Override
-        public GraphDOTHelper<S, ? super TransitionEdge<I, T>> getGraphDOTHelper() {
+        public GraphDOTHelper<S, TransitionEdge<I, T>> getGraphDOTHelper() {
             return new DOTHelperMealy<>(automaton);
         }
     }

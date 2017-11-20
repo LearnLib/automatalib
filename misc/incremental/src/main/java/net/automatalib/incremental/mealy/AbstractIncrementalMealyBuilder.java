@@ -60,7 +60,7 @@ public abstract class AbstractIncrementalMealyBuilder<I, O> implements Increment
             return new DefaultDOTHelper<N, E>() {
 
                 @Override
-                public Collection<? extends N> initialNodes() {
+                public Collection<N> initialNodes() {
                     return Collections.singleton(getInitialNode());
                 }
 

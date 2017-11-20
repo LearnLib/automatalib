@@ -54,7 +54,7 @@ public interface SimpleTS<S, I> {
      * by this input.
      */
     @Nonnull
-    default Set<? extends S> getSuccessors(S state, Iterable<? extends I> input) {
+    default Set<S> getSuccessors(S state, Iterable<? extends I> input) {
         return getSuccessors(Collections.singleton(state), input);
     }
 
@@ -70,7 +70,7 @@ public interface SimpleTS<S, I> {
      * @return the set of successors reachable by this input, or <code>null</code> if no successor states are reachable.
      */
     @Nonnull
-    default Set<? extends S> getSuccessors(Collection<? extends S> states, Iterable<? extends I> input) {
+    default Set<S> getSuccessors(Collection<? extends S> states, Iterable<? extends I> input) {
         Set<S> current = new HashSet<>(states);
         Set<S> succs = new HashSet<>();
 
@@ -101,7 +101,7 @@ public interface SimpleTS<S, I> {
      * by this input.
      */
     @Nonnull
-    Set<? extends S> getSuccessors(S state, @Nullable I input);
+    Set<S> getSuccessors(S state, @Nullable I input);
 
     /**
      * Retrieves the set of all states reachable by the given sequence of input symbols from an initial state. Calling
@@ -114,7 +114,7 @@ public interface SimpleTS<S, I> {
      * state is reachable.
      */
     @Nonnull
-    default Set<? extends S> getStates(Iterable<? extends I> input) {
+    default Set<S> getStates(Iterable<? extends I> input) {
         return getSuccessors(getInitialStates(), input);
     }
 
@@ -124,7 +124,7 @@ public interface SimpleTS<S, I> {
      * @return the initial states.
      */
     @Nonnull
-    Set<? extends S> getInitialStates();
+    Set<S> getInitialStates();
 
     /**
      * Creates a {@link MutableMapping} allowing to associate arbitrary data with this transition system's states. The

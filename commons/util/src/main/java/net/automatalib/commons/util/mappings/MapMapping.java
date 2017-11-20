@@ -31,7 +31,7 @@ import java.util.Set;
  */
 public class MapMapping<D, R> implements MutableMapping<D, R> {
 
-    private final Map<? super D, R> map;
+    private final Map<D, R> map;
 
     public MapMapping(Map<D, R> map, boolean copy) {
         if (!copy) {
@@ -51,7 +51,7 @@ public class MapMapping<D, R> implements MutableMapping<D, R> {
      * @param map
      *         the underlying {@link java.util.Map} object.
      */
-    public MapMapping(Map<? super D, R> map) {
+    public MapMapping(Map<D, R> map) {
         this.map = map;
     }
 
@@ -79,7 +79,7 @@ public class MapMapping<D, R> implements MutableMapping<D, R> {
      *
      * @see java.util.Map#entrySet()
      */
-    public Set<? extends Map.Entry<? super D, R>> entrySet() {
+    public Set<Map.Entry<D, R>> entrySet() {
         return map.entrySet();
     }
 }

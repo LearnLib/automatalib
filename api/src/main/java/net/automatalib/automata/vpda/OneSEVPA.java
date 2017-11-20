@@ -46,7 +46,7 @@ public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>, Su
 
     int getLocationId(L loc);
 
-    List<? extends L> getLocations();
+    List<L> getLocations();
 
     int getNumStackSymbols();
 

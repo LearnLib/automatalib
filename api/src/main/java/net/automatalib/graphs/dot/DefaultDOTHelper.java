@@ -50,7 +50,7 @@ public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
         }
     }
 
-    protected Collection<? extends N> initialNodes() {
+    protected Collection<N> initialNodes() {
         return Collections.emptySet();
     }
 
@@ -60,7 +60,7 @@ public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
             delegate.writePostamble(identifiers, a);
         }
 
-        Collection<? extends N> initials = initialNodes();
+        Collection<N> initials = initialNodes();
 
         int i = 0;
         for (N init : initials) {

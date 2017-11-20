@@ -31,12 +31,12 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<? extends 
     }
 
     @Override
-    public Set<? extends S> getInitialState() {
+    public Set<S> getInitialState() {
         return ts.getInitialStates();
     }
 
     @Override
-    public Set<? extends S> getSuccessor(Set<? extends T> transition) {
+    public Set<S> getSuccessor(Set<? extends T> transition) {
         Set<S> result = new HashSet<>();
         for (T trans : transition) {
             result.add(ts.getSuccessor(trans));
@@ -45,10 +45,10 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<? extends 
     }
 
     @Override
-    public Set<? extends S> getSuccessor(Set<? extends S> state, I input) {
+    public Set<S> getSuccessor(Set<? extends S> state, I input) {
         Set<S> result = new HashSet<>();
         for (S s : state) {
-            Collection<? extends T> transitions = ts.getTransitions(s, input);
+            Collection<T> transitions = ts.getTransitions(s, input);
             for (T t : transitions) {
                 result.add(ts.getSuccessor(t));
             }
@@ -58,22 +58,24 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<? extends 
     }
 
     @Override
-    public Set<? extends T> getTransition(Set<? extends S> state, I input) {
+    public Set<T> getTransition(Set<? extends S> state, I input) {
         Set<T> result = new HashSet<>();
         for (S s : state) {
-            Collection<? extends T> transitions = ts.getTransitions(s, input);
+            Collection<T> transitions = ts.getTransitions(s, input);
             result.addAll(transitions);
         }
         return result;
     }
 
     @Override
-    public Collection<? extends S> getOriginalStates(Set<? extends S> state) {
-        return state;
+    @SuppressWarnings("unchecked")
+    public Collection<S> getOriginalStates(Set<? extends S> state) {
+        return (Collection<S>) state;
     }
 
     @Override
-    public Collection<? extends T> getOriginalTransitions(Set<? extends T> transition) {
-        return transition;
+    @SuppressWarnings("unchecked")
+    public Collection<T> getOriginalTransitions(Set<? extends T> transition) {
+        return (Collection<T>) transition;
     }
 }

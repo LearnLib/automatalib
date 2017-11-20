@@ -40,6 +40,7 @@ class TransitionCoverIterator<I> extends AbstractTwoLevelIterator<Word<I>, I, Wo
 
     private final Collection<I> inputs;
 
+    @SuppressWarnings("unchecked")
     TransitionCoverIterator(DeterministicAutomaton<?, I, ?> automaton, Collection<? extends I> inputs) {
         super(new IncrementalStateCoverIterator<>(automaton, inputs, Collections.emptyList()));
         this.inputs = (Collection<I>) inputs;

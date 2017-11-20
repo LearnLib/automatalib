@@ -86,7 +86,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      *
      * @return all nodes in the specified subtree, including the root node itself
      */
-    default Collection<? extends N> getNodesForRoot(final N root) {
+    default Collection<N> getNodesForRoot(final N root) {
         final List<N> result = new LinkedList<>();
         final Queue<N> queue = new LinkedList<>();
 
@@ -111,7 +111,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
     Map<O, N> getChildren();
 
     @Override
-    default Collection<? extends N> getOutgoingEdges(final N node) {
+    default Collection<N> getOutgoingEdges(final N node) {
         return Collections.unmodifiableCollection(node.getChildren().values());
     }
 

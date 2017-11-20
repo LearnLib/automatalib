@@ -42,7 +42,7 @@ final class BricsDOTHelper extends DefaultDOTHelper<State, Transition> {
     }
 
     @Override
-    protected Collection<? extends State> initialNodes() {
+    protected Collection<State> initialNodes() {
         return automaton.getInitialStates();
     }
 

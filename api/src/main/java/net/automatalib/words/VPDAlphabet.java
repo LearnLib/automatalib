@@ -40,7 +40,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
      */
     int getCallSymbolIndex(I symbol) throws IllegalArgumentException;
 
-    Collection<? extends I> getCallSymbols();
+    Collection<I> getCallSymbols();
 
     Alphabet<I> getInternalAlphabet();
 
@@ -54,7 +54,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
      */
     int getInternalSymbolIndex(I symbol) throws IllegalArgumentException;
 
-    Collection<? extends I> getInternalSymbols();
+    Collection<I> getInternalSymbols();
 
     Alphabet<I> getReturnAlphabet();
 
@@ -68,7 +68,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
      */
     int getReturnSymbolIndex(I symbol) throws IllegalArgumentException;
 
-    Collection<? extends I> getReturnSymbols();
+    Collection<I> getReturnSymbols();
 
     int getNumCalls();
 

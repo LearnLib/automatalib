@@ -32,7 +32,7 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
 public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
 
     @Override
-    default GraphDOTHelper<N, ? super E> getGraphDOTHelper() {
+    default GraphDOTHelper<N, E> getGraphDOTHelper() {
         return new EmptyDOTHelper<>();
     }
 

@@ -45,8 +45,8 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
 
     @Override
     @Nonnull
-    default Set<? extends S> getSuccessors(S state, @Nullable I input) {
-        Collection<? extends T> transitions = getTransitions(state, input);
+    default Set<S> getSuccessors(S state, @Nullable I input) {
+        Collection<T> transitions = getTransitions(state, input);
         if (transitions.isEmpty()) {
             return Collections.emptySet();
         }
@@ -71,7 +71,7 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
      * @return the transitions triggered by the given input
      */
     @Nonnull
-    Collection<? extends T> getTransitions(S state, @Nullable I input);
+    Collection<T> getTransitions(S state, @Nullable I input);
 
     /**
      * Retrieves the successor state of a given transition.

@@ -52,11 +52,12 @@ public class WpMethodTestsIterator<I> extends ConcatIterator<Word<I>> {
     public WpMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
                                  Collection<? extends I> alphabet,
                                  int maxDepth) {
-        super(buildIterators(automaton, (Collection<I>) alphabet, maxDepth));
+        super(buildIterators(automaton, alphabet, maxDepth));
     }
 
+    @SuppressWarnings("unchecked")
     private static <I> Iterator<Word<I>>[] buildIterators(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
-                                                          Collection<I> inputs,
+                                                          Collection<? extends I> inputs,
                                                           int maxDepth) {
 
         final Set<Word<I>> stateCover = Sets.newHashSetWithExpectedSize(automaton.size());
@@ -127,7 +128,7 @@ public class WpMethodTestsIterator<I> extends ConcatIterator<Word<I>> {
             extends AbstractThreeLevelIterator<List<I>, Word<I>, Word<I>, Word<I>> {
 
         private final UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton;
-        private final Collection<I> inputs;
+        private final Collection<? extends I> inputs;
 
         private final MutableMapping<S, List<Word<I>>> localSuffixSets;
         private final Iterable<Word<I>> prefixes;
@@ -135,7 +136,7 @@ public class WpMethodTestsIterator<I> extends ConcatIterator<Word<I>> {
         private final WordBuilder<I> wordBuilder = new WordBuilder<>();
 
         SecondPhaseIterator(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
-                            Collection<I> inputs,
+                            Collection<? extends I> inputs,
                             Iterable<Word<I>> prefixes,
                             Iterable<List<I>> middleParts) {
             super(middleParts.iterator());

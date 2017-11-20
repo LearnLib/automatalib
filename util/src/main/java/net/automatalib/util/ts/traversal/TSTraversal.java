@@ -188,7 +188,7 @@ public final class TSTraversal {
 
             inputs_loop:
             for (I input : inputs) {
-                Collection<? extends T> transitions = ts.getTransitions(state, input);
+                Collection<T> transitions = ts.getTransitions(state, input);
 
                 for (T trans : transitions) {
                     S succ = ts.getSuccessor(trans);

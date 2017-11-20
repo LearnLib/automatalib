@@ -33,7 +33,7 @@ public final class AGHelper {
         List<TransitionEdge<I, T>> result = new ArrayList<>();
 
         for (I input : inputAlphabet) {
-            Collection<? extends T> transitions = aut.getTransitions(state, input);
+            Collection<T> transitions = aut.getTransitions(state, input);
             if (transitions == null) {
                 continue;
             }

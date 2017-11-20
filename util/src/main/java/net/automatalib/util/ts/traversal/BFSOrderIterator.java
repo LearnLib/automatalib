@@ -34,7 +34,7 @@ public class BFSOrderIterator<S, I> implements Iterator<S> {
     public BFSOrderIterator(SimpleTS<S, I> ts, Collection<? extends I> inputs) {
         this.ts = ts;
         this.inputs = inputs;
-        Collection<? extends S> initial = ts.getInitialStates();
+        Collection<S> initial = ts.getInitialStates();
         bfsQueue.addAll(initial);
         seen = ts.createStaticStateMapping();
         for (S state : initial) {
@@ -52,7 +52,7 @@ public class BFSOrderIterator<S, I> implements Iterator<S> {
         S state = bfsQueue.poll();
 
         for (I input : inputs) {
-            Collection<? extends S> succs = ts.getSuccessors(state, input);
+            Collection<S> succs = ts.getSuccessors(state, input);
             for (S succ : succs) {
                 if (seen.put(succ, VisitedState.VISITED) != VisitedState.VISITED) {
                     bfsQueue.add(succ);

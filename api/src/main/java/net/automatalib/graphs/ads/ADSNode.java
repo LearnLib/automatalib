@@ -35,7 +35,7 @@ public interface ADSNode<S, I, O> extends RecursiveADSNode<S, I, O, ADSNode<S, I
 
     @Nonnull
     @Override
-    default Collection<? extends ADSNode<S, I, O>> getNodes() {
+    default Collection<ADSNode<S, I, O>> getNodes() {
         return getNodesForRoot(this);
     }
 }

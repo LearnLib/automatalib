@@ -361,7 +361,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
     }
 
     @Override
-    public Collection<? extends Integer> getTransitions(Integer state, I input) {
+    public Collection<Integer> getTransitions(Integer state, I input) {
         //return new TIntSetDecorator(getTransitions(state.intValue(), input));
         return getTransitions(state.intValue(), input); // TODO: replace by primitive specialization
     }
@@ -377,7 +377,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
     }
 
     @Override
-    public Set<? extends Integer> getInitialStates() {
+    public Set<Integer> getInitialStates() {
         //return new TIntSetDecorator(initial);
         return initial; // TODO: replace by primitive specialization
     }

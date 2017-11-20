@@ -41,24 +41,24 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 
     @Override
     @Nonnull
-    default Set<? extends S> getSuccessors(S state, Iterable<? extends I> input) {
+    default Set<S> getSuccessors(S state, Iterable<? extends I> input) {
         return stateToSet(getSuccessor(state, input));
     }
 
     @Override
     @Nonnull
-    default Set<? extends S> getSuccessors(S state, @Nullable I input) {
+    default Set<S> getSuccessors(S state, @Nullable I input) {
         return stateToSet(getSuccessor(state, input));
     }
 
     @Override
     @Nonnull
-    default Set<? extends S> getStates(Iterable<? extends I> input) {
+    default Set<S> getStates(Iterable<? extends I> input) {
         return stateToSet(getState(input));
     }
 
     @Override
-    default Set<? extends S> getInitialStates() {
+    default Set<S> getInitialStates() {
         return stateToSet(getInitialState());
     }
 

@@ -53,7 +53,7 @@ public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S
             }
 
             for (I input : inputs) {
-                Collection<? extends T> transitions = automaton.getTransitions(curr, input);
+                Collection<T> transitions = automaton.getTransitions(curr, input);
                 if (transitions.isEmpty()) {
                     continue;
                 }

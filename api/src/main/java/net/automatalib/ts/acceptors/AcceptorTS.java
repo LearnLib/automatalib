@@ -43,7 +43,7 @@ public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boo
      * @return <code>true</code> if the input word is accepted, <code>false</code> otherwise.
      */
     default boolean accepts(Iterable<? extends I> input) {
-        Collection<? extends S> states = getStates(input);
+        Collection<S> states = getStates(input);
 
         return isAccepting(states);
     }

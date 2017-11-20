@@ -43,22 +43,20 @@ public interface IndefiniteSimpleGraph<N> {
     }
 
     @Nonnull
-    @SuppressWarnings("unchecked")
     default Iterator<N> adjacentTargetsIterator(N node) {
-        return (Iterator<N>) getAdjacentTargets(node).iterator();
+        return getAdjacentTargets(node).iterator();
     }
 
     @Nonnull
-    Collection<? extends N> getAdjacentTargets(N node);
+    Collection<N> getAdjacentTargets(N node);
 
     default boolean isConnected(N source, N target) {
         return adjacentTargetsStream(source).anyMatch(n -> Objects.equals(n, target));
     }
 
     @Nonnull
-    @SuppressWarnings("unchecked")
     default Stream<N> adjacentTargetsStream(N node) {
-        return (Stream<N>) getAdjacentTargets(node).stream();
+        return getAdjacentTargets(node).stream();
     }
 
     @Nonnull
@@ -89,7 +87,7 @@ public interface IndefiniteSimpleGraph<N> {
         }
 
         @Override
-        public Collection<? extends N> getAdjacentTargets(N node) {
+        public Collection<N> getAdjacentTargets(N node) {
             return simpleGraph.getAdjacentTargets(node);
         }
 
@@ -99,7 +97,7 @@ public interface IndefiniteSimpleGraph<N> {
         }
 
         @Override
-        public Collection<? extends N> getOutgoingEdges(N node) {
+        public Collection<N> getOutgoingEdges(N node) {
             return simpleGraph.getAdjacentTargets(node);
         }
 

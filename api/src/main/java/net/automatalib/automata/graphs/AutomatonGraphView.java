@@ -45,7 +45,7 @@ public class AutomatonGraphView<S, I, T, A extends Automaton<S, I, T>>
     }
 
     @Override
-    public Collection<? extends TransitionEdge<I, T>> getOutgoingEdges(S node) {
+    public Collection<TransitionEdge<I, T>> getOutgoingEdges(S node) {
         return createTransitionEdges(automaton, inputs, node);
     }
 
@@ -55,7 +55,7 @@ public class AutomatonGraphView<S, I, T, A extends Automaton<S, I, T>>
         List<TransitionEdge<I, T>> result = new ArrayList<>();
 
         for (I input : inputs) {
-            Collection<? extends T> transitions = automaton.getTransitions(state, input);
+            Collection<T> transitions = automaton.getTransitions(state, input);
             for (T t : transitions) {
                 result.add(new TransitionEdge<>(input, t));
             }
@@ -70,7 +70,7 @@ public class AutomatonGraphView<S, I, T, A extends Automaton<S, I, T>>
     }
 
     @Override
-    public GraphDOTHelper<S, ? super TransitionEdge<I, T>> getGraphDOTHelper() {
+    public GraphDOTHelper<S, TransitionEdge<I, T>> getGraphDOTHelper() {
         return new DefaultDOTHelperAutomaton<>(automaton);
     }
 }

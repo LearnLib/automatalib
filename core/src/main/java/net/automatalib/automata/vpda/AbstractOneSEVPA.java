@@ -104,13 +104,13 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
 
     @Nonnull
     @Override
-    public Collection<? extends L> getNodes() {
+    public Collection<L> getNodes() {
         return Collections.unmodifiableCollection(getLocations());
     }
 
     @Nonnull
     @Override
-    public Collection<? extends SevpaViewEdge<L, I>> getOutgoingEdges(final L location) {
+    public Collection<SevpaViewEdge<L, I>> getOutgoingEdges(final L location) {
 
         final List<SevpaViewEdge<L, I>> result = new ArrayList<>(alphabet.size());
 
@@ -150,11 +150,11 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
     }
 
     @Override
-    public GraphDOTHelper<L, ? super SevpaViewEdge<L, I>> getGraphDOTHelper() {
+    public GraphDOTHelper<L, SevpaViewEdge<L, I>> getGraphDOTHelper() {
         return new DefaultDOTHelper<L, SevpaViewEdge<L, I>>() {
 
             @Override
-            protected Collection<? extends L> initialNodes() {
+            protected Collection<L> initialNodes() {
                 return Collections.singleton(getInitialLocation());
             }
 

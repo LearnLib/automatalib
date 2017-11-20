@@ -101,7 +101,7 @@ public class SAFOutput {
                                               BlockPropertyEncoder<? super SP> spEncoder,
                                               SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
 
-        final Set<? extends S> initials = result.getInitialStates();
+        final Set<S> initials = result.getInitialStates();
 
         if (initials.size() != 1) {
             throw new IllegalArgumentException();
@@ -120,7 +120,7 @@ public class SAFOutput {
                                                  SinglePropertyEncoder<? super TP> tpEncoder) throws IOException {
 
         final List<S> states = new ArrayList<>(source.getStates());
-        final Set<? extends S> initials = source.getInitialStates();
+        final Set<S> initials = source.getInitialStates();
 
         encodeStatesNondet(source, initials, states, spEncoder);
         encodeTransitionsNondet(source, alphabet, states, tpEncoder);
@@ -143,7 +143,7 @@ public class SAFOutput {
             for (int j = 0; j < alphabet.size(); j++) {
                 final I sym = alphabet.getSymbol(j);
 
-                final Collection<? extends T> succs = source.getTransitions(state, sym);
+                final Collection<T> succs = source.getTransitions(state, sym);
 
                 if (succs.size() > 1) {
                     throw new IllegalArgumentException("Not deterministic");
@@ -190,7 +190,7 @@ public class SAFOutput {
             for (int j = 0; j < alphabet.size(); j++) {
                 final I sym = alphabet.getSymbol(j);
 
-                final Collection<? extends T> succs = source.getTransitions(state, sym);
+                final Collection<T> succs = source.getTransitions(state, sym);
 
                 out.writeInt(succs.size());
 

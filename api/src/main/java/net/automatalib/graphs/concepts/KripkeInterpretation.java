@@ -43,5 +43,5 @@ public interface KripkeInterpretation<N, AP> {
      * @return the set of atomic propositions that hold at the given node
      */
     @Nonnull
-    Set<? extends AP> getAtomicPropositions(N node);
+    Set<AP> getAtomicPropositions(N node);
 }

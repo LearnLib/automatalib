@@ -48,7 +48,7 @@ class SimpleDFRecord<S, I, T> {
         }
         while (inputsIterator.hasNext()) {
             input = inputsIterator.next();
-            Collection<? extends T> transitions = ts.getTransitions(state, input);
+            Collection<T> transitions = ts.getTransitions(state, input);
             if (!transitions.isEmpty()) {
                 transitionIterator = transitions.iterator();
                 break;

@@ -59,7 +59,7 @@ public class FastPowersetDTS<S extends NumericID, I, T>
         FastPowersetState<S> succ = new FastPowersetState<>();
 
         for (S s : state) {
-            Collection<? extends S> succs = ts.getSuccessors(s, input);
+            Collection<S> succs = ts.getSuccessors(s, input);
             for (S succS : succs) {
                 succ.add(succS, succS.getId());
             }
@@ -72,20 +72,21 @@ public class FastPowersetDTS<S extends NumericID, I, T>
     public Set<? extends T> getTransition(FastPowersetState<S> state, I input) {
         Set<T> result = new HashSet<>();
         for (S s : state) {
-            Collection<? extends T> transitions = ts.getTransitions(s, input);
+            Collection<T> transitions = ts.getTransitions(s, input);
             result.addAll(transitions);
         }
         return result;
     }
 
     @Override
-    public Collection<? extends S> getOriginalStates(FastPowersetState<S> state) {
+    public Collection<S> getOriginalStates(FastPowersetState<S> state) {
         return state;
     }
 
     @Override
-    public Collection<? extends T> getOriginalTransitions(Set<? extends T> transition) {
-        return transition;
+    @SuppressWarnings("unchecked")
+    public Collection<T> getOriginalTransitions(Set<? extends T> transition) {
+        return (Collection<T>) transition;
     }
 
 }

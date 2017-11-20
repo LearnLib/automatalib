@@ -92,6 +92,7 @@ public final class CollectionsUtil {
         return new CharStringRange(start, end);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> List<? extends T> randomAccessList(Collection<? extends T> coll) {
         if (coll instanceof List && coll instanceof RandomAccess) {
             return (List<? extends T>) coll;
@@ -99,11 +100,11 @@ public final class CollectionsUtil {
         return new ArrayList<>(coll);
     }
 
-    public static <T> Iterable<List<T>> allTuples(final Iterable<T> domain, final int length) {
+    public static <T> Iterable<List<T>> allTuples(final Iterable<? extends T> domain, final int length) {
         return allTuples(domain, length, length);
     }
 
-    public static <T> Iterable<List<T>> allTuples(final Iterable<T> domain, final int minLength, final int maxLength) {
+    public static <T> Iterable<List<T>> allTuples(final Iterable<? extends T> domain, final int minLength, final int maxLength) {
         // Check if domain is empty
         // If it is, then the empty tuple (if not excluded by minLength > 0) is still part of the result
         // Otherwise, the result is empty

@@ -64,7 +64,7 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
     }
 
     @Override
-    public Collection<? extends VPDSym<I>> getCallSymbols() {
+    public Collection<VPDSym<I>> getCallSymbols() {
         return callSyms;
     }
 
@@ -82,7 +82,7 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
     }
 
     @Override
-    public Collection<? extends VPDSym<I>> getInternalSymbols() {
+    public Collection<VPDSym<I>> getInternalSymbols() {
         return internalSyms;
     }
 
@@ -100,7 +100,7 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
     }
 
     @Override
-    public Collection<? extends VPDSym<I>> getReturnSymbols() {
+    public Collection<VPDSym<I>> getReturnSymbols() {
         return returnSyms;
     }
 

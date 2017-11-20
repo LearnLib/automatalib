@@ -46,12 +46,12 @@ public class DeterministicPowersetView<S, I, T>
     }
 
     @Override
-    public Collection<? extends S> getOriginalStates(S state) {
+    public Collection<S> getOriginalStates(S state) {
         return Collections.singleton(state);
     }
 
     @Override
-    public Collection<? extends T> getOriginalTransitions(T transition) {
+    public Collection<T> getOriginalTransitions(T transition) {
         return Collections.singleton(transition);
     }
 

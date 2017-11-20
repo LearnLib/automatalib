@@ -48,10 +48,10 @@ public class AUTSerializationTest {
         final String input2 = "GET !true !7 !CONS (A, CONS (B, NIL))";
         final String input3 = "SEND !\"hello\" !\"world\"";
 
-        final Set<? extends Integer> s0 = automaton.getInitialStates();
-        final Set<? extends Integer> s1 = automaton.getSuccessors(s0, Collections.singletonList(input1));
-        final Set<? extends Integer> s2 = automaton.getSuccessors(s0, Collections.singletonList(input2));
-        final Set<? extends Integer> s3 = automaton.getSuccessors(s0, Arrays.asList(input2, input3));
+        final Set<Integer> s0 = automaton.getInitialStates();
+        final Set<Integer> s1 = automaton.getSuccessors(s0, Collections.singletonList(input1));
+        final Set<Integer> s2 = automaton.getSuccessors(s0, Collections.singletonList(input2));
+        final Set<Integer> s3 = automaton.getSuccessors(s0, Arrays.asList(input2, input3));
 
         Assert.assertEquals(Collections.singleton(0), s0);
         Assert.assertEquals(Collections.singleton(1), s1);

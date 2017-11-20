@@ -112,7 +112,7 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
         }
 
         @Override
-        public Collection<? extends Transition> getOutgoingEdges(State node) {
+        public Collection<Transition> getOutgoingEdges(State node) {
             return node.getTransitions();
         }
 

@@ -32,7 +32,7 @@ public class DefaultDOTHelperAutomaton<S, I, T, A extends Automaton<S, I, T>>
     }
 
     @Override
-    protected Collection<? extends S> initialNodes() {
+    protected Collection<S> initialNodes() {
         return automaton.getInitialStates();
     }
 

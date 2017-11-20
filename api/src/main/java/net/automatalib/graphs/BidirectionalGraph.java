@@ -43,7 +43,7 @@ public interface BidirectionalGraph<N, E> extends Graph<N, E> {
      * @return all incoming edges of the specified node.
      */
     @Nonnull
-    Collection<? extends E> getIncomingEdges(N node);
+    Collection<E> getIncomingEdges(N node);
 
     /**
      * Retrieves the source node of a given edge.

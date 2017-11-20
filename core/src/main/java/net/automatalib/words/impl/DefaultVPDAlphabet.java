@@ -83,7 +83,7 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
     }
 
     @Override
-    public Collection<? extends I> getCallSymbols() {
+    public Collection<I> getCallSymbols() {
         return this.symbols.subList(callStart, callEnd);
     }
 
@@ -106,7 +106,7 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
     }
 
     @Override
-    public Collection<? extends I> getInternalSymbols() {
+    public Collection<I> getInternalSymbols() {
         return this.symbols.subList(internalStart, internalEnd);
     }
 
@@ -129,7 +129,7 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> {
     }
 
     @Override
-    public Collection<? extends I> getReturnSymbols() {
+    public Collection<I> getReturnSymbols() {
         return this.symbols.subList(returnStart, returnEnd);
     }
 

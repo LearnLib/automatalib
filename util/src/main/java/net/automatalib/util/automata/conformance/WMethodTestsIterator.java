@@ -50,8 +50,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<List<I>,
     public WMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
                                 Collection<? extends I> inputs,
                                 int maxDepth) {
-        super(CollectionsUtil.allTuples((Collection<I>) inputs, 0, maxDepth).iterator());
-
+        super(CollectionsUtil.<I>allTuples(inputs, 0, maxDepth).iterator());
         this.prefixes = new ReusableIterator<>(Covers.transitionCoverIterator(automaton, inputs),
                                                new ArrayList<>(automaton.size() * inputs.size()));
 

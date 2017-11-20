@@ -41,7 +41,6 @@ public class DeterministicEquivalenceTest<I> {
         return findSeparatingWord(reference, other, inputs);
     }
 
-    @SuppressWarnings("unchecked")
     public static <I, S, T, S2, T2> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> reference,
                                                                UniversalDeterministicAutomaton<S2, I, T2, ?, ?> other,
                                                                Collection<? extends I> inputs) {
@@ -70,6 +69,7 @@ public class DeterministicEquivalenceTest<I> {
         StatePair<S, S2> currPair;
         int lastId = otherStateIds.getStateId(otherInit) * refSize + refStateIds.getStateId(refInit);
 
+        @SuppressWarnings("unchecked")
         Pred<I>[] preds = new Pred[totalStates];
         preds[lastId] = new Pred<>(-1, null);
 

@@ -81,7 +81,7 @@ public class DefaultOneSEVPA<I> extends AbstractOneSEVPA<Location, I> {
         return loc.getIndex();
     }
 
-    public List<? extends Location> getLocations() {
+    public List<Location> getLocations() {
         return locations;
     }
 

@@ -52,18 +52,16 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
      * @return the nodes in this graph
      */
     @Nonnull
-    Collection<? extends N> getNodes();
+    Collection<N> getNodes();
 
     @Override
-    @SuppressWarnings("unchecked")
     @Nonnull
     default Iterator<N> iterator() {
-        return (Iterator<N>) Iterators.unmodifiableIterator(getNodes().iterator());
+        return Iterators.unmodifiableIterator(getNodes().iterator());
     }
 
-    @SuppressWarnings("unchecked")
     default Stream<N> nodesStream() {
-        return (Stream<N>) getNodes().stream();
+        return getNodes().stream();
     }
 
     @Nonnull
@@ -92,7 +90,7 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
         }
 
         @Override
-        public Collection<? extends N> getNodes() {
+        public Collection<N> getNodes() {
             return simpleGraph.getNodes();
         }
 

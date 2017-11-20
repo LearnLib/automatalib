@@ -100,7 +100,7 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
     }
 
     @Override
-    public Collection<? extends N> getAdjacentTargets(N node) {
+    public Collection<N> getAdjacentTargets(N node) {
         return getOutgoingEdges(node);
     }
 
@@ -110,7 +110,7 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
     }
 
     @Override
-    public Collection<? extends N> getOutgoingEdges(N node) {
+    public Collection<N> getOutgoingEdges(N node) {
         return Collections.unmodifiableCollection(structureMap.getOrDefault(node, Collections.emptySet()));
     }
 
@@ -120,7 +120,7 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
     }
 
     @Override
-    public Set<? extends N> getNodes() {
+    public Set<N> getNodes() {
         return Collections.unmodifiableSet(structureMap.keySet());
     }
 

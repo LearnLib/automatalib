@@ -47,7 +47,7 @@ public abstract class AbstractAutomatonGraphView<S, A extends Automaton<S, ?, ?>
     }
 
     @Override
-    public Collection<? extends S> getNodes() {
+    public Collection<S> getNodes() {
         return automaton.getStates();
     }
 

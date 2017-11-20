@@ -31,7 +31,7 @@ public final class Graphs {
     private Graphs() {
     }
 
-    public static <N, E> Mapping<N, ? extends Collection<? extends E>> incomingEdges(final Graph<N, E> graph) {
+    public static <N, E> Mapping<N, Collection<E>> incomingEdges(final Graph<N, E> graph) {
         if (graph instanceof BidirectionalGraph) {
             final BidirectionalGraph<N, E> bdGraph = (BidirectionalGraph<N, E>) graph;
             return bdGraph::getIncomingEdges;
@@ -40,7 +40,7 @@ public final class Graphs {
         MutableMapping<N, Collection<E>> inEdgesMapping = graph.createStaticNodeMapping();
 
         for (N node : graph) {
-            Collection<? extends E> outEdges = graph.getOutgoingEdges(node);
+            Collection<E> outEdges = graph.getOutgoingEdges(node);
             for (E e : outEdges) {
                 N tgt = graph.getTarget(e);
                 Collection<E> inEdges = inEdgesMapping.get(tgt);

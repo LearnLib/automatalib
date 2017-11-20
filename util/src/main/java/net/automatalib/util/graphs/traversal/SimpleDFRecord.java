@@ -24,7 +24,7 @@ class SimpleDFRecord<N, E> {
 
     public final N node;
 
-    private Iterator<? extends E> edgeIterator;
+    private Iterator<E> edgeIterator;
 
     SimpleDFRecord(N node) {
         this.node = node;
@@ -38,7 +38,7 @@ class SimpleDFRecord<N, E> {
         if (edgeIterator != null) {
             return false;
         }
-        Collection<? extends E> outEdges = graph.getOutgoingEdges(node);
+        Collection<E> outEdges = graph.getOutgoingEdges(node);
         this.edgeIterator = outEdges.iterator();
         return true;
     }

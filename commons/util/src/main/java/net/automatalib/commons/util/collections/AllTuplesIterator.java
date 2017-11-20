@@ -22,13 +22,13 @@ import java.util.NoSuchElementException;
 
 final class AllTuplesIterator<T> implements Iterator<List<T>> {
 
-    private final Iterable<T> iterable;
+    private final Iterable<? extends T> iterable;
     private final List<T> current;
-    private final Iterator<T>[] iterators;
+    private final Iterator<? extends T>[] iterators;
     private boolean firstEmpty;
 
     @SuppressWarnings("unchecked")
-    AllTuplesIterator(Iterable<T> iterable, int minLength, int maxLength) {
+    AllTuplesIterator(Iterable<? extends T> iterable, int minLength, int maxLength) {
         if (maxLength < minLength || minLength < 0) {
             throw new IllegalArgumentException();
         }
@@ -38,7 +38,7 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
         this.iterable = iterable;
 
         for (int i = 1; i < minLength; i++) {
-            Iterator<T> it = iterable.iterator();
+            Iterator<? extends T> it = iterable.iterator();
             iterators[i] = it;
             current.add(it.next());
         }
@@ -53,7 +53,7 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
         }
 
         for (int i = 0; i < iterators.length; i++) {
-            Iterator<T> it = iterators[i];
+            Iterator<? extends T> it = iterators[i];
             if (it == null || it.hasNext()) {
                 return true;
             }
@@ -69,7 +69,7 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
         }
 
         for (int i = 0; i < iterators.length; i++) {
-            Iterator<T> it = iterators[i];
+            Iterator<? extends T> it = iterators[i];
             if (it == null) {
                 it = iterable.iterator();
                 iterators[i] = it;

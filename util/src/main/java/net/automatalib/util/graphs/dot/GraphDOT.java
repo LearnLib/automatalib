@@ -95,7 +95,7 @@ public final class GraphDOT {
     @SafeVarargs
     public static <N, E> void write(Graph<N, E> graph, Appendable a, GraphDOTHelper<N, ? super E>... additionalHelpers)
             throws IOException {
-        GraphDOTHelper<N, ? super E> helper = graph.getGraphDOTHelper();
+        GraphDOTHelper<N, E> helper = graph.getGraphDOTHelper();
         writeRaw(graph, helper, a, additionalHelpers);
     }
 
@@ -241,7 +241,7 @@ public final class GraphDOT {
             if (srcId == null) {
                 continue;
             }
-            Collection<? extends E> outEdges = graph.getOutgoingEdges(node);
+            Collection<E> outEdges = graph.getOutgoingEdges(node);
             if (outEdges.isEmpty()) {
                 continue;
             }

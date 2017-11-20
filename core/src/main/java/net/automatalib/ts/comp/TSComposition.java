@@ -45,9 +45,9 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
     }
 
     @Override
-    public Set<? extends IPair<S1, S2>> getInitialStates() {
-        Collection<? extends S1> init1 = ts1.getInitialStates();
-        Collection<? extends S2> init2 = ts2.getInitialStates();
+    public Set<IPair<S1, S2>> getInitialStates() {
+        Collection<S1> init1 = ts1.getInitialStates();
+        Collection<S2> init2 = ts2.getInitialStates();
 
         Set<IPair<S1, S2>> result = new HashSet<>(init1.size() * init2.size());
 
@@ -64,8 +64,8 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
     public Collection<IPair<T1, T2>> getTransitions(IPair<S1, S2> state, I input) {
         S1 s1 = state.first;
         S2 s2 = state.second;
-        Collection<? extends T1> trans1 = ts1.getTransitions(s1, input);
-        Collection<? extends T2> trans2 = ts2.getTransitions(s2, input);
+        Collection<T1> trans1 = ts1.getTransitions(s1, input);
+        Collection<T2> trans2 = ts2.getTransitions(s2, input);
 
         if (trans1.isEmpty() || trans2.isEmpty()) {
             return Collections.emptySet();

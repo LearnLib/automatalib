@@ -42,7 +42,7 @@ public class Path<N, E> extends AbstractList<E> {
         return this::nodeIterator;
     }
 
-    public List<? extends E> edgeList() {
+    public List<E> edgeList() {
         return Collections.unmodifiableList(edgeList);
     }
 
