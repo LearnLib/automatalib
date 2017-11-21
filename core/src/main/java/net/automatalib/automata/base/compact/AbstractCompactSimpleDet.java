@@ -26,7 +26,7 @@ import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDeterministic<Integer, I, Integer, SP, Void>,
@@ -40,7 +40,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
     public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
     public static final int DEFAULT_INIT_CAPACITY = 11;
 
-    protected final GrowingAlphabet<I> alphabet;
+    protected Alphabet<I> alphabet;
     protected final float resizeFactor;
     protected int alphabetSize;
     protected int[] transitions;
@@ -53,7 +53,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
     }
 
     public AbstractCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.alphabetSize = alphabet.size();
         this.transitions = new int[stateCapacity * alphabetSize];
         Arrays.fill(this.transitions, 0, this.transitions.length, INVALID_STATE);
@@ -419,7 +419,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         }
 
         this.transitions = newTransitions;
-        this.alphabet.addSymbol(symbol);
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.alphabetSize = newAlphabetSize;
     }
 

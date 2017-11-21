@@ -29,7 +29,7 @@ import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutomaton<Integer, I, Integer, SP, Void>,
@@ -40,7 +40,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
     public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
     public static final int DEFAULT_INIT_CAPACITY = 11;
 
-    protected final GrowingAlphabet<I> alphabet;
+    protected Alphabet<I> alphabet;
     //protected final TIntSet initial;
     protected final Set<Integer> initial; // TODO: replace by primitive specialization
     private final float resizeFactor;
@@ -400,7 +400,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
         }
 
         this.transitions = newTransitions;
-        this.alphabet.addSymbol(symbol);
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.alphabetSize = newAlphabetSize;
     }
 }

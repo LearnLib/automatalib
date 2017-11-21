@@ -29,8 +29,7 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetState<T>, I, T, SP, TP>
         implements ShrinkableAutomaton<S, I, T, SP, TP>,
@@ -43,10 +42,10 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetStat
 
     private final Set<S> initialStates = new HashSet<>();
 
-    protected final GrowingAlphabet<I> inputAlphabet;
+    protected Alphabet<I> inputAlphabet;
 
     public AbstractFastMutableNondet(Alphabet<I> inputAlphabet) {
-        this.inputAlphabet = new SimpleAlphabet<>(inputAlphabet);
+        this.inputAlphabet = inputAlphabet;
     }
 
     @Override
@@ -128,7 +127,11 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetStat
 
     @Override
     public void addAlphabetSymbol(I symbol) {
-        this.inputAlphabet.addSymbol(symbol);
+        if (this.inputAlphabet.containsSymbol(symbol)) {
+            return;
+        }
+
+        this.inputAlphabet = Alphabets.withNewSymbol(this.inputAlphabet, symbol);
         final int newAlphabetSize = this.inputAlphabet.size();
 
         for (final S s : this.getStates()) {

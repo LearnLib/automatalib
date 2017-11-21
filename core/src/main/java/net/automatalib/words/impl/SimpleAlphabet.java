@@ -17,14 +17,14 @@ package net.automatalib.words.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.Maps;
+import net.automatalib.commons.util.collections.IterableUtil;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
@@ -44,14 +44,15 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
 
     @Nonnull
     //private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>(10, 0.75f, -1);
-    private final Map<I, Integer> indexMap = new HashMap<>(); // TODO: replace by primitive specialization
+    private final Map<I, Integer> indexMap; // TODO: replace by primitive specialization
 
     public SimpleAlphabet() {
-        this.symbols = new ArrayList<>();
+        this(new ArrayList<>());
     }
 
     public SimpleAlphabet(Collection<? extends I> symbols) {
         this.symbols = new ArrayList<>(symbols);
+        this.indexMap = Maps.newHashMapWithExpectedSize(symbols.size()); // TODO: replace by primitive specialization
         int i = 0;
         for (I sym : this.symbols) {
             indexMap.put(sym, i++);
@@ -67,7 +68,7 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
 
     @Override
     public Iterator<I> iterator() {
-        return Collections.unmodifiableList(symbols).iterator();
+        return IterableUtil.unmodifiableIterator(symbols.iterator());
     }
 
     @Override

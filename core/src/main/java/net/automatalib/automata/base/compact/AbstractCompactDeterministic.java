@@ -24,8 +24,7 @@ import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.Alphabets;
 
 public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements MutableDeterministic<Integer, I, T, SP, TP>,
                                                                             StateIDs<Integer>,
@@ -38,7 +37,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
     public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
     public static final int DEFAULT_INIT_CAPACITY = 11;
 
-    protected final GrowingAlphabet<I> alphabet;
+    protected Alphabet<I> alphabet;
     protected final float resizeFactor;
     protected int alphabetSize;
     protected Object[] transitions;
@@ -51,7 +50,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
     }
 
     public AbstractCompactDeterministic(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.alphabetSize = alphabet.size();
         this.transitions = new Object[stateCapacity * alphabetSize];
         this.resizeFactor = resizeFactor;
@@ -303,7 +302,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
         }
 
         this.transitions = newTransitions;
-        this.alphabet.addSymbol(symbol);
+        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.alphabetSize = newAlphabetSize;
     }
 

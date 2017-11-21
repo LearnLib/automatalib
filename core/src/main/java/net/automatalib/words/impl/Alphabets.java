@@ -15,12 +15,14 @@
  */
 package net.automatalib.words.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 
 public final class Alphabets {
 
@@ -70,6 +72,34 @@ public final class Alphabets {
             return (Alphabet<I>) coll;
         }
         return new SimpleAlphabet<>(coll);
+    }
+
+    /**
+     * Returns an alphabet, which consists of the original alphabet including new input symbol. If the passed alphabet
+     * instance already is a {@link GrowingAlphabet}, its {@link GrowingAlphabet#addSymbol(Object)} is invoked and the
+     * very same instance is returned. Otherwise a new (generic) {@link GrowingAlphabet} instance is created and all
+     * symbol are added.
+     *
+     * @param alphabet
+     *         the source alphabet to extend
+     * @param symbol
+     *         the input symbol to add
+     * @param <I>
+     *         input symbol type
+     *
+     * @return a alphabet which consists of the original alphabet including the new input symbol
+     */
+    public static <I> GrowingAlphabet<I> withNewSymbol(final Alphabet<I> alphabet, final I symbol) {
+        if (alphabet instanceof GrowingAlphabet) {
+            GrowingAlphabet<I> growingAlphabet = (GrowingAlphabet<I>) alphabet;
+            growingAlphabet.addSymbol(symbol);
+            return growingAlphabet;
+        } else {
+            final List<I> alphabetAsList = new ArrayList<>(alphabet.size() + 1);
+            alphabetAsList.addAll(alphabet);
+            alphabetAsList.add(symbol);
+            return new SimpleAlphabet<>(alphabetAsList);
+        }
     }
 
 }
