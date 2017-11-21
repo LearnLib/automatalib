@@ -115,10 +115,6 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
         setAccepting(stateId, (property != null) && property.booleanValue());
     }
 
-    public CompactDFA<I> determinize() {
-        return null;
-    }
-
     public static final class Creator<I> implements AutomatonCreator<CompactNFA<I>, I> {
 
         @Override
