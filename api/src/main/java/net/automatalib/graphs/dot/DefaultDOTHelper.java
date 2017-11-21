@@ -89,10 +89,7 @@ public class DefaultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
 
     @Override
     public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
-        if (delegate != null) {
-            return delegate.getEdgeProperties(src, edge, tgt, properties);
-        }
-        return true;
+        return delegate == null || delegate.getEdgeProperties(src, edge, tgt, properties);
     }
 
 }

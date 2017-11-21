@@ -40,8 +40,8 @@ import net.automatalib.words.impl.Alphabets;
 class InternalAUTParser {
 
     private int initialState;
-    private Set<String> alphabetSymbols = new HashSet<>();
-    private Map<Integer, Map<String, Integer>> transitionMap = new HashMap<>();
+    private final Set<String> alphabetSymbols = new HashSet<>();
+    private final Map<Integer, Map<String, Integer>> transitionMap = new HashMap<>();
 
     private final InputStream inputStream;
 

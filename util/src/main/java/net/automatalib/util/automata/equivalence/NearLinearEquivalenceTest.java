@@ -155,21 +155,13 @@ public class NearLinearEquivalenceTest<I> {
             return null;
         }
 
-        int ceLength = current.depth;
-        if (lastSym != null) {
-            ceLength++;
-        }
+        int position = current.depth + 1;
 
-        WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
-
-        int index = ceLength;
-
-        if (lastSym != null) {
-            wb.setSymbol(--index, lastSym);
-        }
+        WordBuilder<I> wb = new WordBuilder<>(null, position);
+        wb.setSymbol(--position, lastSym);
 
         while (current.reachedFrom != null) {
-            wb.setSymbol(--index, current.reachedBy);
+            wb.setSymbol(--position, current.reachedBy);
             current = current.reachedFrom;
         }
 
@@ -281,21 +273,13 @@ public class NearLinearEquivalenceTest<I> {
             return null;
         }
 
-        int ceLength = current.depth;
-        if (lastSym != null) {
-            ceLength++;
-        }
+        int position = current.depth + 1;
 
-        WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
-
-        int index = ceLength;
-
-        if (lastSym != null) {
-            wb.setSymbol(--index, lastSym);
-        }
+        WordBuilder<I> wb = new WordBuilder<>(null, position);
+        wb.setSymbol(--position, lastSym);
 
         while (current.reachedFrom != null) {
-            wb.setSymbol(--index, current.reachedBy);
+            wb.setSymbol(--position, current.reachedBy);
             current = current.reachedFrom;
         }
 
@@ -389,21 +373,13 @@ public class NearLinearEquivalenceTest<I> {
             return null;
         }
 
-        int ceLength = current.depth;
-        if (lastSym != -1) {
-            ceLength++;
-        }
+        int position = current.depth + 1;
 
-        WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
-
-        int index = ceLength;
-
-        if (lastSym != -1) {
-            wb.setSymbol(--index, inputs.getSymbol(lastSym));
-        }
+        WordBuilder<I> wb = new WordBuilder<>(null, position);
+        wb.setSymbol(--position, inputs.getSymbol(lastSym));
 
         while (current.reachedFrom != null) {
-            wb.setSymbol(--index, inputs.getSymbol(current.reachedBy));
+            wb.setSymbol(--position, inputs.getSymbol(current.reachedBy));
             current = current.reachedFrom;
         }
 

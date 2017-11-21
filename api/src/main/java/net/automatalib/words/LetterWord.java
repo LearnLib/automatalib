@@ -111,10 +111,7 @@ final class LetterWord<I> extends Word<I> implements Serializable {
 
     @Override
     public boolean isPrefixOf(Word<?> other) {
-        if (other.isEmpty()) {
-            return false;
-        }
-        return Objects.equals(letter, other.getSymbol(0));
+        return !other.isEmpty() && Objects.equals(letter, other.getSymbol(0));
     }
 
     @Override
@@ -127,10 +124,7 @@ final class LetterWord<I> extends Word<I> implements Serializable {
 
     @Override
     public boolean isSuffixOf(Word<?> other) {
-        if (other.isEmpty()) {
-            return false;
-        }
-        return Objects.equals(letter, other.lastSymbol());
+        return !other.isEmpty() && Objects.equals(letter, other.lastSymbol());
     }
 
     @Override

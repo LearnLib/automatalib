@@ -41,7 +41,7 @@ public class SimpleNodeIDs<N> implements NodeIDs<N> {
 
     @Override
     public int getNodeId(N node) {
-        return nodeIds.get(node).intValue();
+        return nodeIds.get(node);
     }
 
     @Override

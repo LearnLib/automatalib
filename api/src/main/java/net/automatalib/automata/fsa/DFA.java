@@ -37,10 +37,7 @@ public interface DFA<S, I> extends UniversalDeterministicAutomaton<S, I, S, Bool
     @Override
     default Boolean computeStateOutput(S state, Iterable<? extends I> input) {
         S tgt = getSuccessor(state, input);
-        if (tgt == null) {
-            return false;
-        }
-        return isAccepting(tgt);
+        return tgt != null && isAccepting(tgt);
     }
 
     @Override
@@ -51,10 +48,7 @@ public interface DFA<S, I> extends UniversalDeterministicAutomaton<S, I, S, Bool
     @Override
     default boolean accepts(Iterable<? extends I> input) {
         S tgt = getState(input);
-        if (tgt == null) {
-            return false;
-        }
-        return isAccepting(tgt);
+        return tgt != null && isAccepting(tgt);
     }
 
     default boolean isAccepting(Collection<? extends S> states) {

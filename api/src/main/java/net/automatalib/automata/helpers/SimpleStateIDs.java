@@ -41,7 +41,7 @@ public class SimpleStateIDs<S> implements StateIDs<S> {
 
     @Override
     public int getStateId(S state) {
-        return stateIds.get(state).intValue();
+        return stateIds.get(state);
     }
 
     @Override

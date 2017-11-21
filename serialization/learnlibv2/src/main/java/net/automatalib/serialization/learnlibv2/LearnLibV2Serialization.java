@@ -47,11 +47,11 @@ public class LearnLibV2Serialization
     }
 
     @Override
-    public void writeModel(OutputStream os, DFA<?, Integer> model, Alphabet<Integer> alphabet) throws IOException {
+    public void writeModel(OutputStream os, DFA<?, Integer> model, Alphabet<Integer> alphabet) {
         doWriteDFA(model, alphabet, os);
     }
 
-    public <I> void writeGenericModel(OutputStream os, DFA<?, I> model, Alphabet<I> alphabet) throws IOException {
+    public <I> void writeGenericModel(OutputStream os, DFA<?, I> model, Alphabet<I> alphabet) {
         doWriteDFA(model, alphabet, os);
     }
 

@@ -62,10 +62,8 @@ public final class TransitionEdge<I, T> {
             return false;
         }
         TransitionEdge<?, ?> other = (TransitionEdge<?, ?>) obj;
-        if (!Objects.equals(input, other.input)) {
-            return false;
-        }
-        return Objects.equals(transition, other.transition);
+
+        return Objects.equals(input, other.input) && Objects.equals(transition, other.transition);
     }
 
     public static final class Property<I, TP> {
@@ -107,10 +105,8 @@ public final class TransitionEdge<I, T> {
                 return false;
             }
             Property<?, ?> other = (Property<?, ?>) obj;
-            if (!Objects.equals(input, other.input)) {
-                return false;
-            }
-            return Objects.equals(property, other.property);
+
+            return Objects.equals(input, other.input) && Objects.equals(property, other.property);
         }
 
     }

@@ -62,7 +62,7 @@ public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boo
 
     @Override
     default Boolean getStateProperty(S state) {
-        return Boolean.valueOf(isAccepting(state));
+        return isAccepting(state);
     }
 
     @Override

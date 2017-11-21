@@ -44,7 +44,7 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
 
     @Override
     default S addState(Boolean property) {
-        boolean acc = (property != null) && property.booleanValue();
+        boolean acc = (property != null) && property;
         return addState(acc);
     }
 
@@ -61,13 +61,13 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
 
     @Override
     default S addInitialState(Boolean property) {
-        boolean acc = (property != null) && property.booleanValue();
+        boolean acc = (property != null) && property;
         return addInitialState(acc);
     }
 
     @Override
     default void setStateProperty(S state, Boolean property) {
-        boolean acc = (property != null) && property.booleanValue();
+        boolean acc = (property != null) && property;
         setAccepting(state, acc);
     }
 

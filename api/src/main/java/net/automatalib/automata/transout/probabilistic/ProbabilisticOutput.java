@@ -62,10 +62,8 @@ public final class ProbabilisticOutput<O> {
             return false;
         }
         ProbabilisticOutput<?> other = (ProbabilisticOutput<?>) obj;
-        if (!Objects.equals(output, other.output)) {
-            return false;
-        }
-        return (probability == other.probability);
+
+        return Objects.equals(output, other.output) && (probability == other.probability);
     }
 
 }
