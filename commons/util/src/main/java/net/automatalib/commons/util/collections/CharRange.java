@@ -15,12 +15,13 @@
  */
 package net.automatalib.commons.util.collections;
 
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.RandomAccess;
 
 import net.automatalib.commons.util.array.ArrayWritable;
 
-public class CharRange extends AbstractList<Character> implements ArrayWritable<Character>, RandomAccess {
+public class CharRange extends AbstractList<Character> implements ArrayWritable<Character>, RandomAccess, Serializable {
 
     private final IntRange delegate;
 
