@@ -45,7 +45,6 @@ public final class ReflectUtil {
     private ReflectUtil() {
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>... params)
             throws SecurityException, NoSuchMethodException {
         try {
@@ -56,6 +55,7 @@ public final class ReflectUtil {
                 try {
                     return clazz.getConstructor(primParams);
                 } catch (NoSuchMethodException e2) {
+                    @SuppressWarnings("unchecked")
                     Constructor<T>[] ctors = (Constructor<T>[]) clazz.getConstructors();
 
                     for (Constructor<T> candidate : ctors) {

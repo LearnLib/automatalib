@@ -17,7 +17,7 @@ package net.automatalib.automata.fsa.impl;
 
 import net.automatalib.automata.base.fast.AbstractFastNondetState;
 
-public class FastNFAState extends AbstractFastNondetState<FastNFAState, FastNFAState> {
+public class FastNFAState extends AbstractFastNondetState<FastNFAState> {
 
     private boolean accepting;
 

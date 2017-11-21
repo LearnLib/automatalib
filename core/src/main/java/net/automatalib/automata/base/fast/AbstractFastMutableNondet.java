@@ -32,7 +32,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.SimpleAlphabet;
 
-public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetState<S, T>, I, T, SP, TP>
+public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetState<T>, I, T, SP, TP>
         implements ShrinkableAutomaton<S, I, T, SP, TP>,
                    UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>,
                    StateIDs<S>,

@@ -21,11 +21,10 @@ import java.util.HashSet;
 import net.automatalib.commons.util.array.ResizingObjectArray;
 import net.automatalib.commons.util.nid.AbstractMutableNumericID;
 
-public abstract class AbstractFastNondetState<S extends AbstractFastNondetState<S, T>, T> extends AbstractMutableNumericID {
+public abstract class AbstractFastNondetState<T> extends AbstractMutableNumericID {
 
     private final ResizingObjectArray transitions;
 
-    @SuppressWarnings("unchecked")
     public AbstractFastNondetState(int initialNumOfInputs) {
         this.transitions = new ResizingObjectArray(initialNumOfInputs);
     }

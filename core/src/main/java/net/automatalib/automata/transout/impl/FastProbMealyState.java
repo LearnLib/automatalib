@@ -18,7 +18,7 @@ package net.automatalib.automata.transout.impl;
 import net.automatalib.automata.base.fast.AbstractFastNondetState;
 
 public class FastProbMealyState<O>
-        extends AbstractFastNondetState<FastProbMealyState<O>, ProbMealyTransition<FastProbMealyState<O>, O>> {
+        extends AbstractFastNondetState<ProbMealyTransition<FastProbMealyState<O>, O>> {
 
     public FastProbMealyState(int numInputs) {
         super(numInputs);
