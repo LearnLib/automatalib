@@ -62,7 +62,9 @@ For developing the code base of AutomataLib, it is suggested to use one of the m
 
 ## Mailing Lists
 
-  * [Q&A @ Google Groups][7] -- [automatalib-qa@googlegroups.com][8]
+  * [Q&A @ Google Groups][automatalib-qa] -- General questions regarding the usage of Automatalib.
+  * [Discussion @ Google Groups][automatalib-discussion] -- Discussions about the internals of AutomataLib.
+  * [Devel (private) @ Google Groups][automatalib-devel] -- Discussions about future development plans.
 
 
 ## Maintainers
@@ -75,8 +77,10 @@ For developing the code base of AutomataLib, it is suggested to use one of the m
 [3]: http://www.learnlib.de
 [4]: https://github.com/misberner
 [5]: https://github.com/mtf90
-[7]: https://groups.google.com/forum/?fromgroups#!forum/automatalib-qa
-[8]: mailto:automatalib-qa@googlegroups.com
+
+[automatalib-qa]: https://groups.google.com/d/forum/automatalib-qa
+[automatalib-discussion]: https://groups.google.com/d/forum/automatalib-discussion
+[automatalib-devel]: https://groups.google.com/d/forum/automatalib-devel
 
 [maven-central]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib%22
 [maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib.distribution%22

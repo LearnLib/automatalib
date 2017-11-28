@@ -53,6 +53,18 @@ limitations under the License.
             <unsubscribe>automatalib-qa+unsubscribe@googlegroups.com</unsubscribe>
             <post>automatalib-qa@googlegroups.com</post>
         </mailingList>
+        <mailingList>
+            <name>Discussion List</name>
+            <subscribe>automatalib-discussion+subscribe@googlegroups.com</subscribe>
+            <unsubscribe>automatalib-discussion+unsubscribe@googlegroups.com</unsubscribe>
+            <post>automatalib-discussion@googlegroups.com</post>
+        </mailingList>
+        <mailingList>
+            <name>Developers List</name>
+            <subscribe>automatalib-devel+subscribe@googlegroups.com</subscribe>
+            <unsubscribe>automatalib-devel+unsubscribe@googlegroups.com</unsubscribe>
+            <post>automatalib-devel@googlegroups.com</post>
+        </mailingList>
     </mailingLists>
 
     <developers>
