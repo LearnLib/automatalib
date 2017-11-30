@@ -691,12 +691,15 @@ limitations under the License.
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-scm-publish-plugin</artifactId>
                         <configuration>
-                            <pubScmUrl>scm:git:git@github.com:LearnLib/automatalib.git</pubScmUrl>
+                            <pubScmUrl>${project.scm.connection}</pubScmUrl>
                             <scmBranch>gh-pages</scmBranch>
                             <tryUpdate>true</tryUpdate>
-                            <!-- allow final adjustments (e.g. changing the LATEST link to the new version) -->
+                            <!--
+                            Sets everything up, but does not commit any changes. Perfect for us to perform final
+                            adjustments (such as updating the LATEST symlink, etc.)
+                            -->
+                            <dryRun>true</dryRun>
                             <skipCheckin>true</skipCheckin>
-                            <!-- do not remove old documentation -->
                             <skipDeletedFiles>true</skipDeletedFiles>
                         </configuration>
                     </plugin>
