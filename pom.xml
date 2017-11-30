@@ -156,6 +156,7 @@ limitations under the License.
         <pmd-plugin.version>3.8</pmd-plugin.version>
         <release-plugin.version>2.5.3</release-plugin.version>
         <reports-plugin.version>2.9</reports-plugin.version>
+        <scm-publish-plugin.version>1.1</scm-publish-plugin.version>
         <site-plugin.version>3.6</site-plugin.version>
         <source-plugin.version>3.0.1</source-plugin.version>
         <surefire-plugin.version>2.20</surefire-plugin.version>
@@ -217,23 +218,8 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>${site-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>attach-descriptor</id>
-                            <goals>
-                                <goal>attach-descriptor</goal>
-                            </goals>
-                        </execution>
-                        <!-- Skip site creation; this will be done by deploy-site-github -->
-                        <execution>
-                            <id>default-site</id>
-                            <phase>site</phase>
-                            <configuration>
-                                <skip>true</skip>
-                            </configuration>
-                        </execution>
-                    </executions>
                     <configuration>
+                        <!-- Skip site deployment; this will be done by scm-publish plugin -->
                         <skipDeploy>true</skipDeploy>
                     </configuration>
                 </plugin>
@@ -307,12 +293,11 @@ limitations under the License.
                     <version>${release-plugin.version}</version>
                     <configuration>
                         <arguments>-Dautomatalib.release=true</arguments>
+                        <goals>deploy site site:stage scm-publish:publish-scm</goals>
                         <!-- False to allow adjustment to branching model -->
                         <pushChanges>false</pushChanges>
                         <!-- Automatically use the parent version for all submodules, do not prompt for each one -->
                         <autoVersionSubmodules>true</autoVersionSubmodules>
-                        <!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
-                        <preparationGoals>clean install</preparationGoals>
                         <tagNameFormat>automatalib-@{version}</tagNameFormat>
                     </configuration>
                 </plugin>
@@ -373,40 +358,24 @@ limitations under the License.
                     <artifactId>maven-enforcer-plugin</artifactId>
                     <version>${enforcer-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-publish-plugin</artifactId>
+                    <version>${scm-publish-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
                 <executions>
-                    <!-- Deploy site @ GitHub pages -->
-                    <!--
-                        Note: In order to be able to deploy the Maven site,
-                        you need the script deploy-site-github to reside
-                        in your PATH, or manually specify the path to the
-                        executable script using the "deploy-site-github.exec"
-                        property.
-                        You can download the shell script from this URL:
-                        https://raw.github.com/misberner/shell-scripts/master/maven/deploy-site-github.sh
-                    -->
                     <execution>
-                        <id>deploy-site-github</id>
+                        <id>attach-descriptor</id>
                         <inherited>false</inherited>
-                        <phase>site-deploy</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>attach-descriptor</goal>
                         </goals>
-                        <configuration>
-                            <executable>${deploy-site-github.exec}</executable>
-                            <workingDirectory>${project.basedir}</workingDirectory>
-                            <arguments>
-                                <argument>-p</argument> <!-- Purge contents before copying -->
-                                <argument>-P/maven-site</argument>
-                                <argument>-V</argument>
-                                <argument>-l</argument>
-                            </arguments>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -690,6 +659,40 @@ limitations under the License.
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>automatalib.release</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <configuration>
+                            <!-- Adjust directory structure to our gh-pages branch -->
+                            <stagingDirectory>${session.executionRootDirectory}/target/staging/maven-site/${project.version}</stagingDirectory>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-publish-plugin</artifactId>
+                        <configuration>
+                            <pubScmUrl>scm:git:git@github.com:LearnLib/automatalib.git</pubScmUrl>
+                            <scmBranch>gh-pages</scmBranch>
+                            <tryUpdate>true</tryUpdate>
+                            <!-- allow final adjustments (e.g. changing the LATEST link to the new version) -->
+                            <skipCheckin>true</skipCheckin>
+                            <!-- do not remove old documentation -->
+                            <skipDeletedFiles>true</skipDeletedFiles>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
