@@ -56,8 +56,8 @@ For developing the code base of AutomataLib, it is suggested to use one of the m
 
 ## Documentation
 
-* **Maven Project Site:** [snapshot](http://learnlib.github.io/automatalib/maven-site/latest-snapshot/) | [latest release](http://learnlib.github.io/automatalib/maven-site/latest-release/)
-* **API Documentation:** [snapshot](http://learnlib.github.io/automatalib/maven-site/latest-snapshot/apidocs/) | [latest release](http://learnlib.github.io/automatalib/maven-site/latest-release/apidocs/)
+* **Maven Project Site:** [latest release](http://learnlib.github.io/automatalib/maven-site/latest/) | [older versions](http://learnlib.github.io/automatalib/maven-site/)
+* **API Documentation:** [latest release](http://learnlib.github.io/automatalib/maven-site/latest/apidocs/) | [older versions](http://learnlib.github.io/automatalib/maven-site/)
 
 
 ## Mailing Lists
