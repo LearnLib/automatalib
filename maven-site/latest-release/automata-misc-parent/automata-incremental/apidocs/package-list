@@ -1,7 +1,0 @@
-net.automatalib.incremental
-net.automatalib.incremental.dfa
-net.automatalib.incremental.dfa.dag
-net.automatalib.incremental.dfa.tree
-net.automatalib.incremental.mealy
-net.automatalib.incremental.mealy.dag
-net.automatalib.incremental.mealy.tree

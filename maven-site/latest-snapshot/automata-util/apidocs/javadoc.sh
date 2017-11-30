@@ -1,1 +1,0 @@
-/usr/lib/jvm/java-8-openjdk/jre/../bin/javadoc @options @packages
