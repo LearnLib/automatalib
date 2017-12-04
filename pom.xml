@@ -168,6 +168,7 @@ limitations under the License.
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
         <guava.version>22.0</guava.version>
         <jung.version>2.1.1</jung.version>
+        <logback.version>1.2.3</logback.version>
         <metainf-services.version>1.7</metainf-services.version>
         <slf4j.version>1.7.25</slf4j.version>
         <testng.version>6.11</testng.version>
@@ -468,7 +469,7 @@ limitations under the License.
                                 </goals>
                                 <configuration>
                                     <failOnWarning>true</failOnWarning>
-                                    <!-- workaround our default slf4j-nop dependency -->
+                                    <!-- workaround for APT / slf4j test dependencies -->
                                     <ignoreNonCompile>true</ignoreNonCompile>
                                 </configuration>
                             </execution>
@@ -952,9 +953,9 @@ limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-nop</artifactId>
-                <version>${slf4j.version}</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
             </dependency>
 
             <dependency>
@@ -965,15 +966,6 @@ limitations under the License.
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <!-- prevent error messages about missing slf4j implementation during test executions -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-nop</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <!--
     ================================= DISTRIBUTION ==============================
