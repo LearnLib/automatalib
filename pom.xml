@@ -817,11 +817,12 @@ limitations under the License.
             </dependency>
 
             <!-- examples -->
-            <dependency>
+            <!-- artifact will not be deployed, so don't allow any accidental reference to it -->
+            <!--dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-examples</artifactId>
                 <version>${project.version}</version>
-            </dependency>
+            </dependency-->
 
             <!-- misc -->
             <dependency>
