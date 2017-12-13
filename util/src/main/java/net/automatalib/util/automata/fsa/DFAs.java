@@ -15,7 +15,9 @@
  */
 package net.automatalib.util.automata.fsa;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.fsa.DFA;
@@ -369,4 +371,30 @@ public final class DFAs {
         return HopcroftMinimization.minimizeDFA(dfa);
     }
 
+    /**
+     * Computes whether the given DFA is prefix-closed.
+     *
+     * @param dfa the DFA to check
+     * @param alphabet the Alphabet
+     * @param <S> the type of state
+     * @param <I> the type of input
+     *
+     * @return whether the DFA is prefix-closed.
+     */
+    public static <S, I> boolean isPrefixClosed(DFA<S, I> dfa, Alphabet<I> alphabet) {
+        boolean prefixClosed = true;
+        final List<S> states = new ArrayList<>(dfa.getStates());
+        for (int s = 0; s < states.size() && prefixClosed; s++) {
+            final S state = states.get(s);
+            if (!dfa.isAccepting(state)) {
+                for (int i = 0; i < alphabet.size() && prefixClosed; i++) {
+                    final I input = alphabet.getSymbol(i);
+                    final S next = dfa.getSuccessor(state, input);
+                    prefixClosed = next == null || !dfa.isAccepting(next);
+                }
+            }
+        }
+
+        return prefixClosed;
+    }
 }

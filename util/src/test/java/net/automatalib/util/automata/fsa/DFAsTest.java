@@ -120,4 +120,27 @@ public class DFAsTest {
         Assert.assertTrue(Automata.testEquivalence(actual, expected, testAlphabet));
     }
 
+    @Test
+    public void testIsPrefixClosed() {
+        {
+            DFA<?, Integer> dfa = forVector(VECTOR_1);
+            Assert.assertFalse(DFAs.isPrefixClosed(dfa, testAlphabet));
+        }
+        {
+            DFA<?, Integer> dfa = forVector(VECTOR_1_NEG);
+            Assert.assertFalse(DFAs.isPrefixClosed(dfa, testAlphabet));
+        }
+        {
+            DFA<?, Integer> dfa = forVector(VECTOR_2);
+            Assert.assertFalse(DFAs.isPrefixClosed(dfa, testAlphabet));
+        }
+        {
+            DFA<?, Integer> dfa = forVector(new boolean[] {true, true, true, true});
+            Assert.assertTrue(DFAs.isPrefixClosed(dfa, testAlphabet));
+        }
+        {
+            DFA<?, Integer> dfa = forVector(new boolean[] {false, false, false, false});
+            Assert.assertTrue(DFAs.isPrefixClosed(dfa, testAlphabet));
+        }
+    }
 }
