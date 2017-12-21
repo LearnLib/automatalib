@@ -15,8 +15,8 @@
  */
 package net.automatalib.graphs;
 
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * Graph interface. Like an {@link IndefiniteGraph}, but with the additional requirement that the set of nodes be
@@ -32,8 +32,8 @@ import net.automatalib.graphs.dot.GraphDOTHelper;
 public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
 
     @Override
-    default GraphDOTHelper<N, E> getGraphDOTHelper() {
-        return new EmptyDOTHelper<>();
+    default VisualizationHelper<N, E> getVisualizationHelper() {
+        return new DefaultVisualizationHelper<>();
     }
 
     @Override

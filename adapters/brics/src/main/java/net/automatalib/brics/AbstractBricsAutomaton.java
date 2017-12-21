@@ -30,7 +30,7 @@ import net.automatalib.automata.fsa.FiniteStateAcceptor;
 import net.automatalib.automata.graphs.AbstractAutomatonGraphView;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.graphs.concepts.GraphViewable;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * Base class for Brics automata adapters.
@@ -122,8 +122,8 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
         }
 
         @Override
-        public GraphDOTHelper<State, Transition> getGraphDOTHelper() {
-            return new BricsDOTHelper(AbstractBricsAutomaton.this);
+        public VisualizationHelper<State, Transition> getVisualizationHelper() {
+            return new BricsVisualizationHelper(AbstractBricsAutomaton.this);
         }
 
         @Override

@@ -23,9 +23,9 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.graphs.concepts.NodeIDs;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.graphs.helpers.SimpleNodeIDs;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * The finite version of a {@link IndefiniteSimpleGraph}.
@@ -69,8 +69,8 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
         return new SimpleNodeIDs<>(this);
     }
 
-    default GraphDOTHelper<N, ?> getGraphDOTHelper() {
-        return new EmptyDOTHelper<>();
+    default VisualizationHelper<N, ?> getVisualizationHelper() {
+        return new DefaultVisualizationHelper<>();
     }
 
     default Graph<N, ?> asNormalGraph() {

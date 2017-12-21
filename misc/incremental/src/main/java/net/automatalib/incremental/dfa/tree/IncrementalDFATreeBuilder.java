@@ -30,12 +30,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.graphs.dot.DelegateDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -218,8 +218,8 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 
         @Override
         @Nonnull
-        public GraphDOTHelper<Node<I>, Edge<I>> getGraphDOTHelper() {
-            return new DelegateDOTHelper<Node<I>, Edge<I>>(super.getGraphDOTHelper()) {
+        public VisualizationHelper<Node<I>, Edge<I>> getVisualizationHelper() {
+            return new DelegateVisualizationHelper<Node<I>, Edge<I>>(super.getVisualizationHelper()) {
 
                 private int id;
 

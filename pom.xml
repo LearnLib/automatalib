@@ -732,6 +732,13 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- algorithms -->
+            <!--<dependency>-->
+                <!--<groupId>net.automatalib</groupId>-->
+                <!--<artifactId>automata-algorithms</artifactId>-->
+                <!--<version>${project.version}</version>-->
+            <!--</dependency>-->
+
             <!-- api -->
             <dependency>
                 <groupId>net.automatalib</groupId>
@@ -860,6 +867,11 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>
+                <artifactId>automata-serialization-dot</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
                 <artifactId>automata-serialization-learnlibv2</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -887,6 +899,11 @@ limitations under the License.
                 <artifactId>automata-visualization-parent</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-dot-visualizer</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>

@@ -40,7 +40,6 @@ limitations under the License.
     <modules>
         <module>util</module>
         <module>smartcollections</module>
-        <module>dotutil</module>
     </modules>
 </project>
 

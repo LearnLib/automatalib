@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -56,8 +56,8 @@ public abstract class AbstractIncrementalMealyBuilder<I, O> implements Increment
     public abstract static class AbstractGraphView<I, O, N, E> implements GraphView<I, O, N, E> {
 
         @Override
-        public GraphDOTHelper<N, E> getGraphDOTHelper() {
-            return new DefaultDOTHelper<N, E>() {
+        public VisualizationHelper<N, E> getVisualizationHelper() {
+            return new DefaultVisualizationHelper<N, E>() {
 
                 @Override
                 public Collection<N> initialNodes() {

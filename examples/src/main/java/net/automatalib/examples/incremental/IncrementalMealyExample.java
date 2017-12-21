@@ -16,13 +16,11 @@
 package net.automatalib.examples.incremental;
 
 import java.io.IOException;
-import java.io.Writer;
 
-import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
-import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -55,20 +53,14 @@ public final class IncrementalMealyExample {
     public static void build(IncrementalMealyBuilder<Character, Character> incMealy) throws IOException {
         System.out.println("  Inserting " + W_1 + " / " + W_1_O);
         incMealy.insert(W_1, W_1_O);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incMealy.asGraph(), w);
-        }
+        Visualization.visualize(incMealy.asGraph());
 
         System.out.println("  Inserting " + W_2 + " / " + W_2_O);
         incMealy.insert(W_2, W_2_O);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incMealy.asGraph(), w);
-        }
+        Visualization.visualize(incMealy.asGraph());
 
         System.out.println("  Inserting " + W_3 + " / " + W_3_O);
         incMealy.insert(W_3, W_3_O);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incMealy.asGraph(), w);
-        }
+        Visualization.visualize(incMealy.asGraph());
     }
 }

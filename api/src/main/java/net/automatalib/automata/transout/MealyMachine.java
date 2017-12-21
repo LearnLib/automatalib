@@ -18,12 +18,12 @@ package net.automatalib.automata.transout;
 import java.util.Collection;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.dot.DOTHelperMealy;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
+import net.automatalib.automata.visualization.MealyVisualizationHelper;
 import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.ts.transout.MealyTransitionSystem;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * @author fh
@@ -45,8 +45,8 @@ public interface MealyMachine<S, I, T, O> extends UniversalDeterministicAutomato
         }
 
         @Override
-        public GraphDOTHelper<S, TransitionEdge<I, T>> getGraphDOTHelper() {
-            return new DOTHelperMealy<>(automaton);
+        public VisualizationHelper<S, TransitionEdge<I, T>> getVisualizationHelper() {
+            return new MealyVisualizationHelper<>(automaton);
         }
     }
 }

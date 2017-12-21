@@ -36,6 +36,7 @@ limitations under the License.
     <modules>
         <module>core</module>
         <module>aut</module>
+        <module>dot</module>
         <module>saf</module>
         <module>taf</module>
         <module>learnlibv2</module>

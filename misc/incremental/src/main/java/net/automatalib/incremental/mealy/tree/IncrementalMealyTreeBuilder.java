@@ -30,12 +30,12 @@ import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.graphs.dot.DelegateDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
 import net.automatalib.ts.transout.MealyTransitionSystem;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -226,8 +226,8 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
         }
 
         @Override
-        public GraphDOTHelper<Node<I, O>, AnnotatedEdge<I, O>> getGraphDOTHelper() {
-            return new DelegateDOTHelper<Node<I, O>, AnnotatedEdge<I, O>>(super.getGraphDOTHelper()) {
+        public VisualizationHelper<Node<I, O>, AnnotatedEdge<I, O>> getVisualizationHelper() {
+            return new DelegateVisualizationHelper<Node<I, O>, AnnotatedEdge<I, O>>(super.getVisualizationHelper()) {
 
                 private int id;
 

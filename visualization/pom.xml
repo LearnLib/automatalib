@@ -36,6 +36,7 @@ limitations under the License.
     </parent>
 
     <modules>
+        <module>dot-visualizer</module>
         <module>jung-visualizer</module>
     </modules>
 </project>

@@ -15,10 +15,10 @@
  */
 package net.automatalib.visualization;
 
+import java.util.List;
 import java.util.Map;
 
 import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 
 public interface VisualizationProvider {
 
@@ -39,7 +39,7 @@ public interface VisualizationProvider {
     boolean checkUsable();
 
     <N, E> void visualize(Graph<N, E> graph,
-                          GraphDOTHelper<N, ? super E> helper,
+                          List<VisualizationHelper<N, ? super E>> helpers,
                           boolean modal,
                           Map<String, String> visOptions);
 }

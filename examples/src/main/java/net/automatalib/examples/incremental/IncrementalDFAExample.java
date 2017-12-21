@@ -16,13 +16,11 @@
 package net.automatalib.examples.incremental;
 
 import java.io.IOException;
-import java.io.Writer;
 
-import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalDFATreeBuilder;
-import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -54,26 +52,18 @@ public final class IncrementalDFAExample {
 
         System.out.println("  Inserting " + w1 + " as accepted");
         incDfa.insert(w1, true);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incDfa.asGraph(), w);
-        }
+        Visualization.visualize(incDfa.asGraph());
 
         System.out.println("  Inserting " + w2 + " as rejected");
         incDfa.insert(w2, false);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incDfa.asGraph(), w);
-        }
+        Visualization.visualize(incDfa.asGraph());
 
         System.out.println("  Inserting " + w3 + " as accepted");
         incDfa.insert(w3, true);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incDfa.asGraph(), w);
-        }
+        Visualization.visualize(incDfa.asGraph());
 
         System.out.println("  Inserting " + w4 + " as accepted");
         incDfa.insert(w4, true);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incDfa.asGraph(), w);
-        }
+        Visualization.visualize(incDfa.asGraph());
     }
 }

@@ -24,8 +24,8 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.VPDAlphabet;
 
 /**
@@ -150,8 +150,8 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
     }
 
     @Override
-    public GraphDOTHelper<L, SevpaViewEdge<L, I>> getGraphDOTHelper() {
-        return new DefaultDOTHelper<L, SevpaViewEdge<L, I>>() {
+    public VisualizationHelper<L, SevpaViewEdge<L, I>> getVisualizationHelper() {
+        return new DefaultVisualizationHelper<L, SevpaViewEdge<L, I>>() {
 
             @Override
             protected Collection<L> initialNodes() {
@@ -160,6 +160,7 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
 
             @Override
             public boolean getNodeProperties(final L node, final Map<String, String> properties) {
+                super.getNodeProperties(node, properties);
 
                 properties.put(NodeAttrs.SHAPE,
                                isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);

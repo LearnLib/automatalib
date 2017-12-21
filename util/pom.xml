@@ -53,19 +53,10 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-dotutil</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.github.misberner.duzzt</groupId>
             <artifactId>duzzt-processor</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.kohsuke.metainf-services</groupId>
-            <artifactId>metainf-services</artifactId>
         </dependency>
 
         <dependency>

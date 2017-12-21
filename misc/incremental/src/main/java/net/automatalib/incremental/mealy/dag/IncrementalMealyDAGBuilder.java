@@ -34,11 +34,11 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.UnionFind;
-import net.automatalib.graphs.dot.DelegateDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
 import net.automatalib.ts.transout.MealyTransitionSystem;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -644,8 +644,8 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         }
 
         @Override
-        public GraphDOTHelper<State, TransitionRecord> getGraphDOTHelper() {
-            return new DelegateDOTHelper<State, TransitionRecord>(super.getGraphDOTHelper()) {
+        public VisualizationHelper<State, TransitionRecord> getVisualizationHelper() {
+            return new DelegateVisualizationHelper<State, TransitionRecord>(super.getVisualizationHelper()) {
 
                 private int id;
 

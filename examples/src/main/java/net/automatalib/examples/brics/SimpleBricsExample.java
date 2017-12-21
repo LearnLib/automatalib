@@ -16,7 +16,6 @@
 package net.automatalib.examples.brics;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,8 +23,7 @@ import dk.brics.automaton.Automaton;
 import dk.brics.automaton.RegExp;
 import net.automatalib.brics.AbstractBricsAutomaton;
 import net.automatalib.brics.BricsNFA;
-import net.automatalib.commons.dotutil.DOT;
-import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Word;
 
 public final class SimpleBricsExample {
@@ -41,9 +39,7 @@ public final class SimpleBricsExample {
         AbstractBricsAutomaton ba = new BricsNFA(a);
 
         // Then, display a DOT representation of this automaton
-        Writer w = DOT.createDotWriter(true);
-        GraphDOT.write(ba, w);
-        w.close();
+        Visualization.visualize(ba, true);
 
         // Test whether the following words are accepted
         List<Word<Character>> testWords = Arrays.asList(Word.fromString("abd"),

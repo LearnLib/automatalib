@@ -15,12 +15,12 @@
  */
 package net.automatalib.visualization;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
 import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class DummyVP implements VisualizationProvider {
 
     @Override
     public <N, E> void visualize(Graph<N, E> graph,
-                                 GraphDOTHelper<N, ? super E> helper,
+                                 List<VisualizationHelper<N, ? super E>> helpers,
                                  boolean modal,
                                  Map<String, String> options) {
         LOGGER.error("Attempted to visualize graph with {} nodes, but no usable visualization provider configured",

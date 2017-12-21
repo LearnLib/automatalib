@@ -46,10 +46,11 @@ import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.NodeIDs;
-import net.automatalib.graphs.dot.GraphDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper.EdgeAttrs;
-import net.automatalib.graphs.dot.GraphDOTHelper.NodeAttrs;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
+import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationProvider;
+import net.automatalib.visualization.helper.AggregateVisualizationHelper;
 import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,11 +88,11 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
     @Override
     public <N, E> void visualize(Graph<N, E> graph,
-                                 GraphDOTHelper<N, ? super E> helper,
+                                 List<VisualizationHelper<N, ? super E>> helpers,
                                  boolean modal,
                                  Map<String, String> options) {
 
-        DirectedGraph<NodeVisualization, EdgeVisualization> visGraph = createVisualizationGraph(graph, helper);
+        DirectedGraph<NodeVisualization, EdgeVisualization> visGraph = createVisualizationGraph(graph, helpers);
 
         Layout<NodeVisualization, EdgeVisualization> layout = new KKLayout<>(visGraph);
 
@@ -107,7 +108,9 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
     }
 
     public static <N, E> DirectedGraph<NodeVisualization, EdgeVisualization> createVisualizationGraph(Graph<N, E> graph,
-                                                                                                      GraphDOTHelper<N, ? super E> helper) {
+                                                                                                      List<VisualizationHelper<N, ? super E>> helpers) {
+
+        final VisualizationHelper<N, E> helper = new AggregateVisualizationHelper<>(helpers);
 
         Map<String, String> defaultProps = new HashMap<>();
         helper.getGlobalNodeProperties(defaultProps);

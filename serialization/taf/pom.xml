@@ -63,10 +63,6 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.testng</groupId>

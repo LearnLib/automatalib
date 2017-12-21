@@ -16,13 +16,11 @@
 package net.automatalib.examples.incremental;
 
 import java.io.IOException;
-import java.io.Writer;
 
-import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalPCDFADAGBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalPCDFATreeBuilder;
-import net.automatalib.util.graphs.dot.GraphDOT;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -53,20 +51,14 @@ public final class IncrementalPCDFAExample {
 
         System.out.println("  Inserting " + w1 + " as accepted");
         incPcDfa.insert(w1, true);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incPcDfa.asGraph(), w);
-        }
+        Visualization.visualize(incPcDfa.asGraph());
 
         System.out.println("  Inserting " + w2 + " as rejected");
         incPcDfa.insert(w2, false);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incPcDfa.asGraph(), w);
-        }
+        Visualization.visualize(incPcDfa.asGraph());
 
         System.out.println("  Inserting " + w3 + " as accepted");
         incPcDfa.insert(w3, true);
-        try (Writer w = DOT.createDotWriter(true)) {
-            GraphDOT.write(incPcDfa.asGraph(), w);
-        }
+        Visualization.visualize(incPcDfa.asGraph());
     }
 }

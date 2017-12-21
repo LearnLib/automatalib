@@ -23,8 +23,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * An interface representing a node in an adaptive distinguishing sequence (which essentially forms a decision tree).
@@ -123,8 +122,8 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
     // default methods for graph interface
 
     @Override
-    default GraphDOTHelper<N, N> getGraphDOTHelper() {
-        return new DefaultDOTHelper<N, N>() {
+    default VisualizationHelper<N, N> getVisualizationHelper() {
+        return new VisualizationHelper<N, N>() {
 
             @Override
             public boolean getNodeProperties(final N node, final Map<String, String> properties) {

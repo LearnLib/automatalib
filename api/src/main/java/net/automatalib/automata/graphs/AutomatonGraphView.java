@@ -21,8 +21,8 @@ import java.util.List;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.automata.dot.DefaultDOTHelperAutomaton;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.automata.visualization.AutomatonVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 public class AutomatonGraphView<S, I, T, A extends Automaton<S, I, T>>
         extends AbstractAutomatonGraphView<S, A, TransitionEdge<I, T>> {
@@ -70,7 +70,7 @@ public class AutomatonGraphView<S, I, T, A extends Automaton<S, I, T>>
     }
 
     @Override
-    public GraphDOTHelper<S, TransitionEdge<I, T>> getGraphDOTHelper() {
-        return new DefaultDOTHelperAutomaton<>(automaton);
+    public VisualizationHelper<S, TransitionEdge<I, T>> getVisualizationHelper() {
+        return new AutomatonVisualizationHelper<>(automaton);
     }
 }

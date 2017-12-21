@@ -73,10 +73,6 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-dotutil</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
         </dependency>
         <dependency>
@@ -93,6 +89,11 @@ limitations under the License.
             <artifactId>automaton</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-dot-visualizer</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

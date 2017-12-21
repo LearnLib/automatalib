@@ -16,17 +16,16 @@
 package net.automatalib.examples.graph;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.automatalib.commons.dotutil.DOT;
 import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.graphs.base.compact.CompactSimpleGraph;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.util.graphs.dot.GraphDOT;
 import net.automatalib.util.graphs.traversal.BaseDFSVisitor;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.visualization.Visualization;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper.EdgeStyles;
 
 public final class DFSExample {
 
@@ -53,16 +52,14 @@ public final class DFSExample {
         GraphTraversal.dfs(graph, n0, vis);
         DFSResultDOTHelper<Integer, CompactEdge<Void>> helper = new DFSResultDOTHelper<>(vis);
 
-        Writer w = DOT.createDotWriter(true);
-        GraphDOT.write(graph, w, helper);
-        w.close();
+        Visualization.visualize(graph, helper);
     }
 
     public enum EdgeType {
-        TREE("bold"),
-        FORWARD("dotted"),
-        BACK("solid"),
-        CROSS("dashed");
+        TREE(EdgeStyles.BOLD),
+        FORWARD(EdgeStyles.DOTTED),
+        BACK(EdgeStyles.SOLID),
+        CROSS(EdgeStyles.DASHED);
 
         private final String style;
 
@@ -115,7 +112,7 @@ public final class DFSExample {
         }
     }
 
-    public static class DFSResultDOTHelper<N, E> extends EmptyDOTHelper<N, E> {
+    public static class DFSResultDOTHelper<N, E> implements VisualizationHelper<N, E> {
 
         private final Map<N, Integer> dfsNumbers;
         private final Map<E, EdgeType> edgeTypes;
@@ -131,10 +128,10 @@ public final class DFSExample {
 
         @Override
         public boolean getNodeProperties(N node, Map<String, String> properties) {
-            String lbl = properties.get("label");
+            String lbl = properties.get(NodeAttrs.LABEL);
             Integer dfsNum = dfsNumbers.get(node);
             assert dfsNum != null;
-            properties.put("label", lbl + " [#" + dfsNum + "]");
+            properties.put(NodeAttrs.LABEL, lbl + " [#" + dfsNum + "]");
             return true;
         }
 
@@ -142,7 +139,7 @@ public final class DFSExample {
         public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
             EdgeType et = edgeTypes.get(edge);
             assert et != null;
-            properties.put("style", et.getStyle());
+            properties.put(EdgeAttrs.STYLE, et.getStyle());
             return true;
         }
     }

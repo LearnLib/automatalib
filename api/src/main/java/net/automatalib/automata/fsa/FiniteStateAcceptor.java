@@ -23,13 +23,13 @@ import java.util.List;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.concepts.OutputAutomaton;
 import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.automata.dot.DOTHelperFSA;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
+import net.automatalib.automata.visualization.FSAVisualizationHelper;
 import net.automatalib.commons.util.collections.IterableUtil;
 import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.ts.acceptors.AcceptorTS;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * <code>FiniteStateAcceptor</code>s accept regular languages.
@@ -67,8 +67,8 @@ public interface FiniteStateAcceptor<S, I> extends AcceptorTS<S, I>,
         }
 
         @Override
-        public GraphDOTHelper<S, TransitionEdge<I, S>> getGraphDOTHelper() {
-            return new DOTHelperFSA<>(automaton);
+        public VisualizationHelper<S, TransitionEdge<I, S>> getVisualizationHelper() {
+            return new FSAVisualizationHelper<>(automaton);
         }
     }
 }

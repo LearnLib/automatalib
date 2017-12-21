@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.dot.EmptyDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>, SuffixTrieNode<I>> {
 
@@ -109,12 +109,12 @@ public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>, SuffixTrieNode<I>
     }
 
     @Override
-    public GraphDOTHelper<SuffixTrieNode<I>, SuffixTrieNode<I>> getGraphDOTHelper() {
+    public VisualizationHelper<SuffixTrieNode<I>, SuffixTrieNode<I>> getVisualizationHelper() {
         if (nodes == null) {
             throw new UnsupportedOperationException("This trie is not graph representable");
         }
 
-        return new EmptyDOTHelper<SuffixTrieNode<I>, SuffixTrieNode<I>>() {
+        return new DefaultVisualizationHelper<SuffixTrieNode<I>, SuffixTrieNode<I>>() {
 
             @Override
             public boolean getNodeProperties(SuffixTrieNode<I> node, Map<String, String> properties) {

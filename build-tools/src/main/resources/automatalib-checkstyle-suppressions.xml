@@ -19,7 +19,7 @@ limitations under the License.
         "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-    <suppress checks="AbstractClassName" files="Word.java|GraphDOTHelper.java"/>
+    <suppress checks="AbstractClassName" files="Word.java|VisualizationHelper.java"/>
     <suppress checks="." files="target/*"/>
 
     <suppress checks="MagicNumber" files="src/test/*"/>

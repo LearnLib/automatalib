@@ -21,9 +21,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import net.automatalib.graphs.dot.DefaultDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.ConflictException;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
@@ -70,8 +70,8 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
     protected abstract static class AbstractGraphView<I, N, E> implements GraphView<I, N, E> {
 
         @Override
-        public GraphDOTHelper<N, E> getGraphDOTHelper() {
-            return new DefaultDOTHelper<N, E>() {
+        public VisualizationHelper<N, E> getVisualizationHelper() {
+            return new DefaultVisualizationHelper<N, E>() {
 
                 @Override
                 public Collection<N> initialNodes() {

@@ -32,10 +32,10 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.UnionFind;
-import net.automatalib.graphs.dot.DelegateDOTHelper;
-import net.automatalib.graphs.dot.GraphDOTHelper;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.Acceptance;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -547,8 +547,8 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
 
         @Override
         @Nonnull
-        public GraphDOTHelper<State, EdgeRecord> getGraphDOTHelper() {
-            return new DelegateDOTHelper<State, EdgeRecord>(super.getGraphDOTHelper()) {
+        public VisualizationHelper<State, EdgeRecord> getVisualizationHelper() {
+            return new DelegateVisualizationHelper<State, EdgeRecord>(super.getVisualizationHelper()) {
 
                 private int id;
 
