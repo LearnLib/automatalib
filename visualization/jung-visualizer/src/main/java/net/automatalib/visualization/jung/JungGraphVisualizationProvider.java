@@ -23,6 +23,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +44,14 @@ import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
+import edu.uci.ics.jung.visualization.renderers.Renderer;
+import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper.CommonAttrs;
+import net.automatalib.visualization.VisualizationHelper.CommonStyles;
 import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationProvider;
@@ -98,6 +103,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
         VisualizationViewer<NodeVisualization, EdgeVisualization> vv = new VisualizationViewer<>(layout);
         setupRenderContext(vv.getRenderContext());
+        setupRenderer(vv.getRenderer());
         vv.setGraphMouse(mouse);
 
         final JDialog frame = new JDialog((Dialog) null, "Visualization", modal);
@@ -156,6 +162,11 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
         ctx.setEdgeLabelTransformer(EdgeVisualization.LABEL);
         ctx.setEdgeDrawPaintTransformer(EdgeVisualization.DRAW_COLOR);
+        ctx.setEdgeStrokeTransformer(EdgeVisualization.STROKE);
+    }
+
+    public static void setupRenderer(Renderer<NodeVisualization, EdgeVisualization> renderer) {
+        renderer.getVertexLabelRenderer().setPosition(Position.AUTO);
     }
 
     protected static NodeVisualization createNodeVisualization(Map<String, String> props, int id) {
@@ -163,7 +174,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
         if (label == null) {
             label = "v" + id;
         }
-        Color drawColor = getColor(props, "color", Color.BLACK);
+        Color drawColor = getColor(props, CommonAttrs.COLOR, Color.BLACK);
         Color fillColor = getColor(props, "fillcolor", Color.WHITE);
 
         String shapeName = props.get(NodeAttrs.SHAPE);
@@ -178,29 +189,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
             shape = shapeLib.createShape("circle");
         }
 
-        String[] styles = {};
-        String styleAttr = props.get("style");
-        if (styleAttr != null) {
-            styles = styleAttr.toLowerCase().split(",");
-        }
-        List<String> styleList = Arrays.asList(styles);
-
-        float penWidth = 1.0f;
-        Stroke stroke;
-        if (styleList.contains("bold")) {
-            penWidth = 3.0f;
-        }
-
-        final float miterLimit = 10.0f;
-        if (styleList.contains("dashed")) {
-            float[] dash = {miterLimit};
-            stroke = new BasicStroke(penWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, miterLimit, dash, 0.0f);
-        } else if (styleList.contains("dotted")) {
-            float[] dash = {penWidth, miterLimit};
-            stroke = new BasicStroke(penWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, miterLimit, dash, 0.0f);
-        } else {
-            stroke = new BasicStroke(penWidth);
-        }
+        final Stroke stroke = getStroke(props);
 
         return new NodeVisualization(label, drawColor, fillColor, shape, stroke);
     }
@@ -210,9 +199,10 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
         if (label == null) {
             label = "";
         }
-        Color drawColor = getColor(props, "color", Color.BLACK);
+        final Color drawColor = getColor(props, CommonAttrs.COLOR, Color.BLACK);
+        final Stroke stroke = getStroke(props);
 
-        return new EdgeVisualization(label, drawColor);
+        return new EdgeVisualization(label, drawColor, stroke);
     }
 
     protected static Color getColor(Map<String, String> props, String propName, Color defColor) {
@@ -225,6 +215,33 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
             return defColor;
         }
         return col;
+    }
+
+    private static Stroke getStroke(Map<String, String> properties) {
+
+        final List<String> styleList;
+        String styleAttr = properties.get(NodeAttrs.STYLE);
+        if (styleAttr != null) {
+            styleList = Arrays.asList(styleAttr.toLowerCase().split(","));
+        } else {
+            styleList = Collections.emptyList();
+        }
+
+        float penWidth = 1.0f;
+        if (styleList.contains(CommonStyles.BOLD)) {
+            penWidth = 3.0f;
+        }
+
+        final float miterLimit = 10.0f;
+        if (styleList.contains(CommonStyles.DASHED)) {
+            float[] dash = {miterLimit};
+            return new BasicStroke(penWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, miterLimit, dash, 0.0f);
+        } else if (styleList.contains(CommonStyles.DOTTED)) {
+            float[] dotted = {penWidth, miterLimit};
+            return new BasicStroke(penWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, miterLimit, dotted, 0.0f);
+        } else {
+            return new BasicStroke(penWidth);
+        }
     }
 
     public static final class NodeVisualization {
@@ -254,13 +271,16 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
         public static final Function<EdgeVisualization, String> LABEL = input -> input.label;
         public static final Function<EdgeVisualization, Paint> DRAW_COLOR = input -> input.drawColor;
+        public static final Function<EdgeVisualization, Stroke> STROKE = input -> input.stroke;
 
         public final String label;
         public final Color drawColor;
+        public final Stroke stroke;
 
-        public EdgeVisualization(String label, Color drawColor) {
+        public EdgeVisualization(String label, Color drawColor, Stroke stroke) {
             this.label = label;
             this.drawColor = drawColor;
+            this.stroke = stroke;
         }
     }
 
