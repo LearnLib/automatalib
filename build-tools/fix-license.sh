@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (C) 2013-2017 TU Dortmund
+# Copyright (C) 2013-2018 TU Dortmund
 # This file is part of AutomataLib, http://www.automatalib.net/.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
