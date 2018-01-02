@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 public class ProviderTest {
 
     @Test
-    public void testProviderConfiguration() throws Exception {
+    public void testProviderConfiguration() {
 
         if (!DOT.checkUsable()) {
             // Do not fail on platforms, where DOT is not installed
