@@ -84,6 +84,11 @@ limitations under the License.
             <artifactId>graphviz-awt-shapes</artifactId>
             <version>0.0.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+        </dependency>
     </dependencies>
 </project>
 
