@@ -25,7 +25,7 @@ limitations under the License.
 
     <name>AutomataLib :: Build Parent</name>
     <description>
-        A utility parent, that defines certain plugin executions for the build process. May be used to define
+        A utility artifact, that defines certain plugin executions for the build process. May be used to define
         dependencies on the "build-tools" artifact without introducing cyclic dependencies with the general parent.
     </description>
 

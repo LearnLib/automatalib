@@ -24,7 +24,7 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Serialization :: DOT</name>
-    <description>(De-)Serializers for the DOT Format</description>
+    <description>Serializers for the DOT Format</description>
 
     <parent>
         <groupId>net.automatalib</groupId>

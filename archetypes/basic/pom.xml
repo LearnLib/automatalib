@@ -24,6 +24,9 @@ limitations under the License.
     <packaging>maven-archetype</packaging>
 
     <name>AutomataLib :: Archetypes :: Basic</name>
+    <description>
+        The basic archetype, which provides preconfigured dependencies for the basic usage of AutomataLib.
+    </description>
 
     <parent>
         <groupId>net.automatalib.archetypes</groupId>

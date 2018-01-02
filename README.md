@@ -13,9 +13,18 @@ AutomataLib is developed at the [Dortmund University of Technology, Germany][2].
 Its original purpose is to serve as the automaton framework for the [LearnLib][3] active automata learning library.
 However, it is completely independent of LearnLib and can be used for other projects as well.
 
-Please note that the development of AutomataLib is still in a very early stage.
-Currently, it mainly focuses on Deterministic Finite Automata (DFA) and Mealy machines.
-Also please note that many parts of the library have not yet been thoroughly tested.
+AutomataLib supports modeling a variety of graph-based structures.
+Currently, it covers generic transition systems, Deterministic Finite Automata (DFA) and Mealy machines as well as more advanced structures such as Visibly Pushdown Automata (VPDA).
+
+Models of AutomataLib can be (de-)serialized (from) to one of the various supported serialization formats and may be visualized using either the GraphViz or JUNG library.
+Furthermore, a plethora of graph-/automata-based algorithms is implemented, covering the following topics:
+
+* graph theory (traversal, shortest paths, strongly-connected components)
+* automata theory (equivalence, minimization)
+* model checking (adaptive distinguishing sequences, W(p)Method, characterizing sets, state cover, transition cover)
+
+While we strive to deliver code at a high quality, please note, that there exist parts of the library that still need thorough testing.
+Contributions -- whether it is in the form of new features, better documentation or tests -- are welcome.
 
 ## Build Instructions
 

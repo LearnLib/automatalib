@@ -24,6 +24,9 @@ limitations under the License.
     <packaging>maven-archetype</packaging>
 
     <name>AutomataLib :: Archetypes :: Complete</name>
+    <description>
+        The complete archetype, which provides preconfigured dependencies on all artifacts of AutomataLib.
+    </description>
 
     <parent>
         <groupId>net.automatalib.archetypes</groupId>
