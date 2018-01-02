@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.algorithms.graph.apsp;
+package net.automatalib.util.graphs.apsp;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,10 +23,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.algorithms.graph.GraphAlgorithms;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.EdgeWeights;
 import net.automatalib.graphs.concepts.NodeIDs;
+import net.automatalib.util.graphs.Graphs;
 
 /**
  * Implementation of the Floyd-Warshall dynamic programming algorithm for the all pairs shortest paths problem.
@@ -129,7 +129,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
 
         APSPRecord<E> rec = table[srcId][tgtId];
         if (rec == null) {
-            return GraphAlgorithms.INVALID_DISTANCE;
+            return Graphs.INVALID_DISTANCE;
         }
 
         return rec.distance;

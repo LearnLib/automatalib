@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.algorithms.graph.apsp;
+package net.automatalib.util.graphs.apsp;
 
 import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.algorithms.graph.GraphAlgorithms;
+import net.automatalib.util.graphs.Graphs;
 
 /**
  * Result interface for the all pairs shortest paths problem.
@@ -44,7 +44,7 @@ public interface APSPResult<N, E> {
      *         the target node
      *
      * @return the length of the shortest path from {@code src} to {@code tgt}, or {@link
-     * GraphAlgorithms#INVALID_DISTANCE} if there exists no such path.
+     * Graphs#INVALID_DISTANCE} if there exists no such path.
      */
     float getShortestPathDistance(N src, N tgt);
 

@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.algorithms.graph.apsp;
+package net.automatalib.util.graphs.apsp;
 
 import java.util.Arrays;
 import java.util.List;
 
-import net.automatalib.algorithms.graph.GraphAlgorithms;
 import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.graphs.base.compact.CompactSimpleGraph;
 import net.automatalib.graphs.concepts.EdgeWeights;
+import net.automatalib.util.graphs.Graphs;
 import net.automatalib.util.graphs.concepts.PropertyEdgeWeights;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -71,7 +71,7 @@ public class FloydWarshallAPSPTest {
         assertSPDist(apsp, n0, n4, 10.3f); // n0 -> n1 -> n3 -> n4
         assertSPNodes(apsp, n0, n4, n0, n1, n3, n4);
 
-        assertSPDist(apsp, n1, n0, GraphAlgorithms.INVALID_DISTANCE);
+        assertSPDist(apsp, n1, n0, Graphs.INVALID_DISTANCE);
         assertSPDist(apsp, n1, n2, 3.0f); // n1 -> n2
         assertSPNodes(apsp, n1, n2, n1, n2);
         assertSPDist(apsp, n1, n3, 7.0f); // n1 -> n3
@@ -79,7 +79,7 @@ public class FloydWarshallAPSPTest {
         assertSPDist(apsp, n1, n4, 8.0f); // n1 -> n3 -> n4
         assertSPNodes(apsp, n1, n4, n1, n3, n4);
 
-        assertSPDist(apsp, n2, n0, GraphAlgorithms.INVALID_DISTANCE);
+        assertSPDist(apsp, n2, n0, Graphs.INVALID_DISTANCE);
         assertSPDist(apsp, n2, n1, 1.0f); // n2 -> n1
         assertSPNodes(apsp, n2, n1, n2, n1);
         assertSPDist(apsp, n2, n3, 8.0f); // n2 -> n1 -> n3
@@ -87,7 +87,7 @@ public class FloydWarshallAPSPTest {
         assertSPDist(apsp, n2, n4, 5.1f); // n2 -> n4
         assertSPNodes(apsp, n2, n4, n2, n4);
 
-        assertSPDist(apsp, n3, n0, GraphAlgorithms.INVALID_DISTANCE);
+        assertSPDist(apsp, n3, n0, Graphs.INVALID_DISTANCE);
         assertSPDist(apsp, n3, n1, 11.0f); // n3 -> n4 -> n1
         assertSPNodes(apsp, n3, n1, n3, n4, n1);
         assertSPDist(apsp, n3, n2, 14.0f); // n3 -> n4 -> n1 -> n2
@@ -95,7 +95,7 @@ public class FloydWarshallAPSPTest {
         assertSPDist(apsp, n3, n4, 1.0f); // n3 -> n4
         assertSPNodes(apsp, n3, n4, n3, n4);
 
-        assertSPDist(apsp, n4, n0, GraphAlgorithms.INVALID_DISTANCE);
+        assertSPDist(apsp, n4, n0, Graphs.INVALID_DISTANCE);
         assertSPDist(apsp, n4, n1, 10.0f); // n4 -> n1
         assertSPNodes(apsp, n4, n1, n4, n1);
         assertSPDist(apsp, n4, n2, 13.0f); // n4 -> n1 -> n2
@@ -112,7 +112,7 @@ public class FloydWarshallAPSPTest {
                                Integer src,
                                Integer tgt,
                                Integer... expNodes) {
-        List<Integer> nodes = GraphAlgorithms.toNodeList(res.getShortestPath(src, tgt), graph, src);
+        List<Integer> nodes = Graphs.toNodeList(res.getShortestPath(src, tgt), graph, src);
         Assert.assertEquals(nodes, Arrays.asList(expNodes));
     }
 

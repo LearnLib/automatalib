@@ -30,7 +30,7 @@ limitations under the License.
         <Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS"/>
         <Or>
             <Class name="net.automatalib.commons.smartcollections.BackedGeneralPriorityQueue$Entry"/>
-            <Class name="net.automatalib.algorithms.graph.sssp.DijkstraSSSP$Record"/>
+            <Class name="net.automatalib.util.graphs.sssp.DijkstraSSSP$Record"/>
         </Or>
     </Match>
     <Match>

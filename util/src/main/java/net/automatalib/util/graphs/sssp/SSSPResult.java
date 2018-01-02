@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.algorithms.graph.sssp;
+package net.automatalib.util.graphs.sssp;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.algorithms.graph.GraphAlgorithms;
+import net.automatalib.util.graphs.Graphs;
 
 /**
  * Result interface for the single-source shortest path (SSSP) problem.
@@ -51,7 +51,7 @@ public interface SSSPResult<N, E> {
      *         the target node
      *
      * @return the length of the shortest path from the initial node to the given target node, or {@link
-     * GraphAlgorithms#INVALID_DISTANCE} if there exists no such path.
+     * Graphs#INVALID_DISTANCE} if there exists no such path.
      */
     float getShortestPathDistance(N target);
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.algorithms.graph.sssp;
+package net.automatalib.util.graphs.sssp;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,13 +23,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.algorithms.graph.GraphAlgorithms;
 import net.automatalib.commons.smartcollections.BinaryHeap;
 import net.automatalib.commons.smartcollections.ElementReference;
 import net.automatalib.commons.smartcollections.SmartDynamicPriorityQueue;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.EdgeWeights;
+import net.automatalib.util.graphs.Graphs;
 
 /**
  * Implementation of Dijkstras algorithm for the single-source shortest path problem.
@@ -139,7 +139,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
     public float getShortestPathDistance(N target) {
         Record<N, E> rec = records.get(target);
         if (rec == null) {
-            return GraphAlgorithms.INVALID_DISTANCE;
+            return Graphs.INVALID_DISTANCE;
         }
         return rec.dist;
     }

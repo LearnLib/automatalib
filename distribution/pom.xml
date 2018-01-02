@@ -72,15 +72,10 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
-        <!-- misc -->
+        <!-- incremental -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-incremental</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-misc-algorithms</artifactId>
         </dependency>
 
         <!-- serialization -->
@@ -206,17 +201,10 @@ limitations under the License.
                     <classifier>sources</classifier>
                 </dependency>
 
-                <!-- misc -->
+                <!-- incremental -->
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-incremental</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-misc-algorithms</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

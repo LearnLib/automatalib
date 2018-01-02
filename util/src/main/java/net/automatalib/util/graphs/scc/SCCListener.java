@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.algorithms.graph.scc;
+package net.automatalib.util.graphs.scc;
 
-final class TarjanSCCRecord {
+import java.util.Collection;
 
-    public final int number;
-    public int lowLink;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-    TarjanSCCRecord(int number) {
-        this.number = number;
-        this.lowLink = number;
-    }
+@ParametersAreNonnullByDefault
+public interface SCCListener<N> {
 
+    void foundSCC(Collection<? extends N> scc);
 }

@@ -121,7 +121,7 @@ limitations under the License.
         <module>core</module>
         <module>distribution</module>
         <module>examples</module>
-        <module>misc</module>
+        <module>incremental</module>
         <module>util</module>
         <module>serialization</module>
         <module>visualization</module>
@@ -732,13 +732,6 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- algorithms -->
-            <!--<dependency>-->
-                <!--<groupId>net.automatalib</groupId>-->
-                <!--<artifactId>automata-algorithms</artifactId>-->
-                <!--<version>${project.version}</version>-->
-            <!--</dependency>-->
-
             <!-- api -->
             <dependency>
                 <groupId>net.automatalib</groupId>
@@ -830,21 +823,10 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency-->
 
-            <!-- misc -->
-            <dependency>
-                <groupId>net.automatalib</groupId>
-                <artifactId>automata-misc-parent</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-            </dependency>
+            <!-- incremental -->
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-incremental</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.automatalib</groupId>
-                <artifactId>automata-misc-algorithms</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

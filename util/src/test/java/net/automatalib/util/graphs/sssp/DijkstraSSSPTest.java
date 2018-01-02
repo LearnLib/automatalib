@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.algorithms.graph.sssp;
+package net.automatalib.util.graphs.sssp;
 
 import java.util.Arrays;
 import java.util.List;
 
-import net.automatalib.algorithms.graph.GraphAlgorithms;
 import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.graphs.base.compact.CompactSimpleGraph;
 import net.automatalib.graphs.concepts.EdgeWeights;
+import net.automatalib.util.graphs.Graphs;
 import net.automatalib.util.graphs.concepts.PropertyEdgeWeights;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -72,7 +72,7 @@ public class DijkstraSSSPTest {
         assertSPNodes(sssp, n3, n0, n1, n3);
         assertSPDist(sssp, n4, 10.3f); // n0 -> n1 -> n3 -> n4
         assertSPNodes(sssp, n4, n0, n1, n3, n4);
-        assertSPDist(sssp, n5, GraphAlgorithms.INVALID_DISTANCE);
+        assertSPDist(sssp, n5, Graphs.INVALID_DISTANCE);
     }
 
     private static <N> void assertSPDist(SSSPResult<N, ?> res, N tgt, float dist) {
@@ -80,7 +80,7 @@ public class DijkstraSSSPTest {
     }
 
     private void assertSPNodes(SSSPResult<Integer, CompactEdge<Float>> res, Integer tgt, Integer... expNodes) {
-        List<Integer> nodes = GraphAlgorithms.toNodeList(res.getShortestPath(tgt), graph, res.getInitialNode());
+        List<Integer> nodes = Graphs.toNodeList(res.getShortestPath(tgt), graph, res.getInitialNode());
         Assert.assertEquals(nodes, Arrays.asList(expNodes));
     }
 }

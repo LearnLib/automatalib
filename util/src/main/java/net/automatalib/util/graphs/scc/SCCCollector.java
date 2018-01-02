@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.algorithms.graph.scc;
+package net.automatalib.util.graphs.scc;
 
 import java.util.ArrayList;
 import java.util.Collection;
