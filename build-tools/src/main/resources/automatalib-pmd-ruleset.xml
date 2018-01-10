@@ -63,10 +63,4 @@ limitations under the License.
     </rule>
     <rule ref="rulesets/java/unusedcode.xml"/>
 
-    <!-- generated classes for TAF serialization -->
-    <exclude-pattern>.*/net/automatalib/serialization/taf/parser/InternalTAFParser.*</exclude-pattern>
-    <exclude-pattern>.*/net/automatalib/serialization/taf/parser/ParseException.*</exclude-pattern>
-    <exclude-pattern>.*/net/automatalib/serialization/taf/parser/SimpleCharStream.*</exclude-pattern>
-    <exclude-pattern>.*/net/automatalib/serialization/taf/parser/Token.*</exclude-pattern>
-    <exclude-pattern>.*/net/automatalib/serialization/taf/parser/TokenMgrError.*</exclude-pattern>
 </ruleset>
