@@ -100,7 +100,7 @@ public final class HopcroftMinimization {
      *
      * @return a minimized version of the specified Mealy machine
      */
-    public static <I, O, A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy) {
+    public static <S, I, T, O, A extends MealyMachine<S, I, T, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy) {
         return minimizeMealy(mealy, PruningMode.PRUNE_AFTER);
     }
 
@@ -115,12 +115,9 @@ public final class HopcroftMinimization {
      *
      * @return a minimized version of the specified Mealy machine
      */
-    public static <I, O, A extends MealyMachine<?, I, ?, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy,
+    public static <S, I, T, O, A extends MealyMachine<S, I, T, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy,
                                                                                                                        PruningMode pruningMode) {
-        return doMinimizeMealy((MealyMachine<?, I, ?, O>) mealy,
-                               mealy.getInputAlphabet(),
-                               new CompactMealy.Creator<>(),
-                               pruningMode);
+        return doMinimizeMealy(mealy, mealy.getInputAlphabet(), new CompactMealy.Creator<>(), pruningMode);
     }
 
     private static <S, I, T, O, A extends MutableDeterministic<?, I, ?, Void, O>> A doMinimizeMealy(MealyMachine<S, I, T, O> mealy,
@@ -189,7 +186,7 @@ public final class HopcroftMinimization {
      *
      * @return a minimized version of the specified DFA
      */
-    public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa) {
+    public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa) {
         return minimizeDFA(dfa, PruningMode.PRUNE_AFTER);
     }
 
@@ -204,9 +201,9 @@ public final class HopcroftMinimization {
      *
      * @return a minimized version of the specified DFA
      */
-    public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa,
+    public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa,
                                                                                               PruningMode pruningMode) {
-        return doMinimizeDFA((DFA<?, I>) dfa, dfa.getInputAlphabet(), new CompactDFA.Creator<>(), pruningMode);
+        return doMinimizeDFA(dfa, dfa.getInputAlphabet(), new CompactDFA.Creator<>(), pruningMode);
     }
 
     private static <S, I, A extends MutableDeterministic<?, I, ?, Boolean, Void>> A doMinimizeDFA(DFA<S, I> dfa,

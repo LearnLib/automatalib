@@ -367,7 +367,7 @@ public final class DFAs {
      *
      * @return a minimized version of the specified DFA
      */
-    public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimize(A dfa) {
+    public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimize(A dfa) {
         return HopcroftMinimization.minimizeDFA(dfa);
     }
 
