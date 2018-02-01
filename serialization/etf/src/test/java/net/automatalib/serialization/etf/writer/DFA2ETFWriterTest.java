@@ -21,6 +21,7 @@ import java.util.Random;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.IOUtil;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -47,6 +48,22 @@ public class DFA2ETFWriterTest {
         DFA2ETFWriter.write(sw, automaton, alphabet);
 
         final InputStream is = DFA2ETFWriterTest.class.getResourceAsStream("/DFA-testWrite.etf");
+        final String expected = IOUtils.toString(IOUtil.asUTF8Reader(is));
+
+        Assert.assertEquals(sw.toString(), expected);
+    }
+
+    @Test
+    public void testEmptyLanguage() throws Exception {
+        final StringWriter sw = new StringWriter();
+
+        final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
+        final DFA<?, Character> emptyLanguage =
+                AutomatonBuilders.newDFA(alphabet).withInitial("q0").from("q0").on('a').loop().create();
+
+        DFA2ETFWriter.write(sw, emptyLanguage, alphabet);
+
+        final InputStream is = DFA2ETFWriterTest.class.getResourceAsStream("/DFA-testEmptyLanguage.etf");
         final String expected = IOUtils.toString(IOUtil.asUTF8Reader(is));
 
         Assert.assertEquals(sw.toString(), expected);
