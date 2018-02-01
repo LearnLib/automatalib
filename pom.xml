@@ -96,6 +96,18 @@ limitations under the License.
         </developer>
     </developers>
 
+    <contributors>
+        <contributor>
+            <name>Jeroen Meijer</name>
+            <email>j.j.g.meijer@utwente.nl</email>
+            <organization>University of Twente, Formal Methods and Tools</organization>
+            <organizationUrl>http://fmt.cs.utwente.nl/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+    </contributors>
+
     <!--
     =============================== SCM =======================
     -->
