@@ -175,6 +175,7 @@ limitations under the License.
         <surefire-plugin.version>2.20</surefire-plugin.version>
 
         <!-- dependency versions -->
+        <apache-commons.version>3.5</apache-commons.version>
         <brics-automaton.version>1.11-8</brics-automaton.version>
         <checkstyle.version>8.1</checkstyle.version>
         <duzzt.version>0.0.2</duzzt.version>
@@ -875,6 +876,16 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>net.automatalib</groupId>
+                <artifactId>automata-serialization-etf</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-serialization-fsm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib</groupId>
                 <artifactId>automata-serialization-learnlibv2</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -930,6 +941,11 @@ limitations under the License.
                 <artifactId>jsr305</artifactId>
                 <version>${findbugs-annotations.version}</version>
                 <!-- <scope>provided</scope> -->
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache-commons.version}</version>
             </dependency>
 
             <!-- JUNG dependencies -->
