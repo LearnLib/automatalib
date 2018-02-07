@@ -1,37 +1,37 @@
-/* Copyright (C) 2013-2014 TU Dortmund
+/* Copyright (C) 2013-2018 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
- * AutomataLib is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 3.0 as published by the Free Software Foundation.
- * 
- * AutomataLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with AutomataLib; if not, see
- * http://www.gnu.de/documents/lgpl.en.html.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package net.automatalib.graphs.concepts;
 
 import javax.annotation.Nullable;
 
 /**
- * Initial node concept. Graphs implementing this interface expose a designated
- * initial node.
- * 
- * @author Malte Isberner
+ * Initial node concept. Graphs implementing this interface expose a designated initial node.
  *
- * @param <N> node class.
+ * @param <N>
+ *         node class.
+ *
+ * @author Malte Isberner
  */
 public interface InitialNode<N> {
-	/**
-	 * Retrieves the initial node, or {@code null} if this graph does not have an initial
-	 * node.
-	 * @return the initial node.
-	 */
-	@Nullable
-	public N getInitialNode();
+
+    /**
+     * Retrieves the initial node, or {@code null} if this graph does not have an initial node.
+     *
+     * @return the initial node.
+     */
+    @Nullable
+    N getInitialNode();
 }

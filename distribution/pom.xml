@@ -1,281 +1,429 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2013-2018 TU Dortmund
+This file is part of AutomataLib, http://www.automatalib.net/.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>net.automatalib</groupId>
-    <artifactId>automata-parent</artifactId>
-    <version>0.5.2</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
-  
-  <groupId>net.automatalib.distribution</groupId>
-  <artifactId>automata-distribution</artifactId>
-  <name>AutomataLib :: Distribution</name>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-build-parent</artifactId>
+        <version>0.7.0</version>
+        <relativePath>../build-parent/pom.xml</relativePath>
+    </parent>
 
-  <packaging>pom</packaging>
+    <groupId>net.automatalib.distribution</groupId>
+    <artifactId>automata-distribution</artifactId>
+    <name>AutomataLib :: Distribution</name>
 
-  <profiles>
-    <profile>
-      <id>bundles</id>
-      <activation>
-        <property>
-          <name>automatalib.release</name>
-          <value>true</value>
-        </property>
-      </activation>
+    <description>
+        An afrtifact that aggregates all other artifacts of AutomataLib to produce an Uber-JAR that can be used in
+        non-maven environments. Likewise, this single artifact may be used in maven-aware environments to declare a
+        dependency on all AutomataLib artifacts.
+    </description>
 
-      <!--
-      All packaged AutomataLib dependencies.
-      Note: These exist for two purposes:
-      - allowing an easy dependencySets specification in the assembly descriptor
-      - enforcing the correct reactor build order
-      -->
-      <dependencies>
+    <packaging>pom</packaging>
+
+    <!--
+    All packaged AutomataLib dependencies.
+
+    Note: These exist for two purposes:
+    - allowing an easy dependencySets specification in the assembly descriptor
+    - enforcing the correct reactor build order
+
+    Sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer
+    -->
+    <dependencies>
+        <!-- adapters -->
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-api</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-api</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-brics</artifactId>
         </dependency>
 
+        <!-- api -->
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-core</artifactId>
-          <version>${project.version}</version>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-api</artifactId>
         </dependency>
+
+        <!-- commons -->
+
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-core</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
 
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-util</artifactId>
-          <version>${project.version}</version>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
         </dependency>
+
+        <!-- core -->
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-util</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+        </dependency>
+
+        <!-- incremental -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-incremental</artifactId>
+        </dependency>
+
+        <!-- serialization -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-aut</artifactId>
         </dependency>
 
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-commons-util</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-commons-util</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-core</artifactId>
         </dependency>
 
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-commons-dotutil</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-commons-dotutil</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-dot</artifactId>
         </dependency>
 
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-commons-smartcollections</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-commons-smartcollections</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-learnlibv2</artifactId>
         </dependency>
 
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-incremental</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-incremental</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-saf</artifactId>
         </dependency>
 
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-brics</artifactId>
-          <version>${project.version}</version>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-taf</artifactId>
         </dependency>
+
+        <!-- util -->
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-brics</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+
+        <!-- visualization -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-dot-visualizer</artifactId>
         </dependency>
 
         <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-misc-algorithms</artifactId>
-          <version>${project.version}</version>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-jung-visualizer</artifactId>
         </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-misc-algorithms</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
-        </dependency>
-        
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-jung-visualizer</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-jung-visualizer</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
-        </dependency>
-        
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-serialization-core</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-serialization-core</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
-        </dependency>
-        
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-serialization-saf</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-serialization-saf</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
-        </dependency>
-        
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-serialization-learnlibv2</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-serialization-learnlibv2</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
-        </dependency>
+    </dependencies>
 
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-serialization-taf</artifactId>
-          <version>${project.version}</version>
-        </dependency>
-        <dependency>
-          <groupId>net.automatalib</groupId>
-          <artifactId>automata-serialization-taf</artifactId>
-          <version>${project.version}</version>
-          <classifier>sources</classifier>
-        </dependency>
-      </dependencies>
+    <profiles>
+        <profile>
+            <id>code-coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>report-aggregate</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>report-aggregate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>bundles</id>
+            <activation>
+                <property>
+                    <name>automatalib.release</name>
+                    <value>true</value>
+                </property>
+            </activation>
 
-      <build>
-        <plugins>
-      		<plugin>
-      			<groupId>org.apache.maven.plugins</groupId>
-      			<artifactId>maven-assembly-plugin</artifactId>
-      			<configuration>
-      				<outputDirectory>${project.build.directory}/bundles</outputDirectory>
-      				<appendAssemblyId>true</appendAssemblyId>
-      				<finalName>automatalib-${project.version}</finalName>
-      			</configuration>
-      			<executions>
-      				<execution>
-      					<id>bundle</id>
-      					<goals>
-      						<goal>single</goal>
-      					</goals>
-      					<phase>package</phase>
-      					<configuration>
-      						<descriptors>
-      							<descriptor>src/main/assembly/automatalib-bundle.xml</descriptor>
-      						</descriptors>
-      					</configuration>
-      				</execution>
-      				<execution>
-      					<id>dependencies-bundle</id>
-      					<goals>
-      						<goal>single</goal>
-      					</goals>
-      					<phase>package</phase>
-      					<configuration>
-      						<descriptors>
-      							<descriptor>src/main/assembly/automatalib-dependencies-bundle.xml</descriptor>
-      						</descriptors>
-      					</configuration>
-      				</execution>
-      				<execution>
-      					<id>sources</id>
-      					<goals>
-      						<goal>single</goal>
-      					</goals>
-      					<phase>package</phase>
-      					<configuration>
-      						<descriptors>
-      							<descriptor>src/main/assembly/automatalib-sources.xml</descriptor>
-      						</descriptors>
-      					</configuration>
-      				</execution>
-      			</executions>
-      		</plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <inherited>false</inherited>
-            <configuration>
-              <finalName>automatalib-${project.version}</finalName>
-              <jarOutputDirectory>${project.build.directory}/bundles</jarOutputDirectory>
-              <includeDependencySources>true</includeDependencySources>
-              <dependencySourceIncludes>
-                <dependencySourceInclude>net.automatalib:*</dependencySourceInclude>
-              </dependencySourceIncludes>
-            </configuration>
-            <executions>
-              <execution>
-                <id>aggregate</id>
-                <goals>
-                  <goal>aggregate-jar</goal>
-                </goals>
-                <phase>package</phase>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
+            <!--
+            Additionally specify source-classified dependencies for building source assemblies.
+            Again, sorted alphabetically/hierarchical to allow for a better check for completeness using a file explorer
+            -->
+            <dependencies>
+                <!-- adapters -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-brics</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
 
+                <!-- api -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-api</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
 
-    </profile>
-  </profiles>
-  
-  
+                <!-- commons -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-commons-smartcollections</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-commons-util</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- core -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-core</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- incremental -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-incremental</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- serialization -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-serialization-aut</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-serialization-core</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-serialization-dot</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-serialization-learnlibv2</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-serialization-saf</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-serialization-taf</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- util -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-util</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- visualization -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-dot-visualizer</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-jung-visualizer</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/bundles</outputDirectory>
+                            <appendAssemblyId>true</appendAssemblyId>
+                            <finalName>automatalib-${project.version}</finalName>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>bundle</id>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>src/main/assembly/automatalib-bundle.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>dependencies-bundle</id>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>src/main/assembly/automatalib-dependencies-bundle.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>sources</id>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>src/main/assembly/automatalib-sources.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <finalName>automatalib-${project.version}</finalName>
+                            <jarOutputDirectory>${project.build.directory}/bundles</jarOutputDirectory>
+                            <includeDependencySources>true</includeDependencySources>
+                            <dependencySourceIncludes>
+                                <dependencySourceInclude>net.automatalib:*</dependencySourceInclude>
+                            </dependencySourceIncludes>
+                            <additionalDependencies>
+                                <additionalDependency>
+                                    <groupId>com.github.misberner.duzzt</groupId>
+                                    <artifactId>duzzt-annotations</artifactId>
+                                    <version>${duzzt.version}</version>
+                                </additionalDependency>
+                                <additionalDependency>
+                                    <groupId>dk.brics.automaton</groupId>
+                                    <artifactId>automaton</artifactId>
+                                    <version>${brics-automaton.version}</version>
+                                </additionalDependency>
+                                <additionalDependency>
+                                    <groupId>org.kohsuke.metainf-services</groupId>
+                                    <artifactId>metainf-services</artifactId>
+                                    <version>${metainf-services.version}</version>
+                                </additionalDependency>
+                            </additionalDependencies>
+                        </configuration>
+                        <!--
+                        Due to a bug (or intended behavior?) in the maven-javadoc-plugin (see e.g. MJAVADOC-400,
+                        MJAVADOC-311, MJAVADOC-134) the aggregated javadoc JAR is only created, if the plugin is
+                        executed from the same directory.
+
+                        Thus, if we build or deploy from the parent project, the aggregated javadoc JAR is skipped. To
+                        workaround this issue, we programmatically invoke the javadoc plugin using the exec-plugin and
+                        attach the generated JAR afterwards.
+
+                        If this issue is fixed in future versions of the javadoc plugin, this workaround can be removed.
+                        -->
+                        <!--<executions>-->
+                            <!--<execution>-->
+                                <!--<id>aggregate</id>-->
+                                <!--<goals>-->
+                                    <!--<goal>aggregate-jar</goal>-->
+                                <!--</goals>-->
+                                <!--<phase>package</phase>-->
+                            <!--</execution>-->
+                        <!--</executions>-->
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>aggragete-javadoc</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>mvn</executable>
+                                    <workingDirectory>${project.basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>-Pbundles</argument>
+                                        <argument>javadoc:aggregate-jar</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add-javadoc-jar</id>
+                                <goals>
+                                    <goal>attach-artifact</goal>
+                                </goals>
+                                <configuration>
+                                    <artifacts>
+                                        <artifact>
+                                            <file>
+                                                ${project.build.directory}/bundles/automatalib-${project.version}-javadoc.jar
+                                            </file>
+                                            <classifier>javadoc</classifier>
+                                        </artifact>
+                                    </artifacts>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

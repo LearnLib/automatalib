@@ -1,18 +1,17 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2018 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
- * AutomataLib is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 3.0 as published by the Free Software Foundation.
- * 
- * AutomataLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with AutomataLib; if not, see
- * http://www.gnu.de/documents/lgpl.en.html.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package net.automatalib.graphs.base.compact;
 
@@ -26,129 +25,119 @@ import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
 
-public abstract class AbstractCompactGraph<E extends CompactEdge<EP>,NP, EP>
-		implements MutableGraph<Integer, E, NP, EP>, NodeIDs<Integer> {
+public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
+        implements MutableGraph<Integer, E, NP, EP>, NodeIDs<Integer> {
 
-	protected int size;
-	protected final ResizingObjectArray edges;
-	
-	public AbstractCompactGraph() {
-		this.size = 0;
-		this.edges = new ResizingObjectArray();
-	}
-	
-	public AbstractCompactGraph(int initialCapacity) {
-		this.edges = new ResizingObjectArray(initialCapacity);
-	}
+    protected final ResizingObjectArray edges;
+    protected int size;
 
-	@SuppressWarnings("unchecked")
-	protected List<E> getOutEdgeList(int node) {
-		return (List<E>)edges.array[node];
-	}
+    public AbstractCompactGraph() {
+        this.size = 0;
+        this.edges = new ResizingObjectArray();
+    }
 
-	@Override
-	public Collection<Integer> getNodes() {
-		return CollectionsUtil.intRange(0, size);
-	}
+    public AbstractCompactGraph(int initialCapacity) {
+        this.edges = new ResizingObjectArray(initialCapacity);
+    }
 
-	@Override
-	public NodeIDs<Integer> nodeIDs() {
-		return this;
-	}
+    @Override
+    public Collection<Integer> getNodes() {
+        return CollectionsUtil.intRange(0, size);
+    }
 
-	@Override
-	public Collection<E> getOutgoingEdges(Integer node) {
-		return getOutgoingEdges(node.intValue());
-	}
+    @Override
+    public NodeIDs<Integer> nodeIDs() {
+        return this;
+    }
 
-	public Collection<E> getOutgoingEdges(int node) {
-		List<E> edgeList = getOutEdgeList(node);
-		return Collections.unmodifiableCollection(edgeList);
-	}
+    @Override
+    public Collection<E> getOutgoingEdges(Integer node) {
+        return getOutgoingEdges(node.intValue());
+    }
 
-	@Override
-	public Integer getTarget(E edge) {
-		return Integer.valueOf(edge.getTarget());
-	}
+    public Collection<E> getOutgoingEdges(int node) {
+        List<E> edgeList = getOutEdgeList(node);
+        return Collections.unmodifiableCollection(edgeList);
+    }
 
-	@Override
-	public Integer addNode(NP properties) {
-		return Integer.valueOf(addIntNode(properties));
-	}
+    @SuppressWarnings("unchecked")
+    protected List<E> getOutEdgeList(int node) {
+        return (List<E>) edges.array[node];
+    }
 
-	public int addIntNode() {
-		return addIntNode(null);
-	}
+    @Override
+    public Integer getTarget(E edge) {
+        return Integer.valueOf(edge.getTarget());
+    }
 
-	public int addIntNode(NP properties) {
-		edges.ensureCapacity(size + 1);
-		edges.array[size] = new ArrayList<CompactEdge<EP>>();
-		int n = size++;
-		setNodeProperty(n, properties);
-		return n;
-	}
+    @Override
+    public Integer addNode(NP properties) {
+        return Integer.valueOf(addIntNode(properties));
+    }
 
-	@Override
-	public E connect(Integer source, Integer target, EP properties) {
-		return connect(source.intValue(), target.intValue(), properties);
-	}
+    public int addIntNode(NP properties) {
+        edges.ensureCapacity(size + 1);
+        edges.array[size] = new ArrayList<CompactEdge<EP>>();
+        int n = size++;
+        setNodeProperty(n, properties);
+        return n;
+    }
 
-	public E connect(int source, int target, EP property) {
-		E edge = createEdge(source, target, property);
-		List<E> edges = getOutEdgeList(source);
-		edge.outIndex = edges.size();
-		edges.add(edge);
-		return edge;
-	}
+    public int addIntNode() {
+        return addIntNode(null);
+    }
 
-	public CompactEdge<EP> connect(int source, int target) {
-		return connect(source, target, null);
-	}
+    @Override
+    public void setNodeProperty(Integer node, NP property) {
+        setNodeProperty(node.intValue(), property);
+    }
 
-	@Override
-	public int getNodeId(Integer node) {
-		return node.intValue();
-	}
+    public abstract void setNodeProperty(int node, NP property);
 
-	@Override
-	public Integer getNode(int id) {
-		return Integer.valueOf(id);
-	}
-	
-	public abstract NP getNodeProperties(int node);
-	
-	public abstract void setNodeProperty(int node, NP property);
-	
-	
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.MutableGraph#setNodeProperty(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public void setNodeProperty(Integer node, NP property) {
-		setNodeProperty(node.intValue(), property);
-	}
+    @Override
+    public E connect(Integer source, Integer target, EP properties) {
+        return connect(source.intValue(), target.intValue(), properties);
+    }
 
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.MutableGraph#setEdgeProperty(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public void setEdgeProperty(E edge, EP property) {
-		edge.setProperty(property);
-	}
+    public E connect(int source, int target, EP property) {
+        E edge = createEdge(source, target, property);
+        List<E> edges = getOutEdgeList(source);
+        edge.outIndex = edges.size();
+        edges.add(edge);
+        return edge;
+    }
 
-	/* (non-Javadoc)
-	 * @see net.automatalib.graphs.UniversalIndefiniteGraph#getNodeProperties(java.lang.Object)
-	 */
-	@Override
-	public NP getNodeProperty(Integer node) {
-		return getNodeProperties(node.intValue());
-	}
-	
-	@Override
-	public EP getEdgeProperty(E edge) {
-		return edge.getProperty();
-	}
+    public CompactEdge<EP> connect(int source, int target) {
+        return connect(source, target, null);
+    }
 
-	protected abstract E createEdge(int source, int target, EP property);
+    protected abstract E createEdge(int source, int target, EP property);
+
+    @Override
+    public void setEdgeProperty(E edge, EP property) {
+        edge.setProperty(property);
+    }
+
+    @Override
+    public int getNodeId(Integer node) {
+        return node.intValue();
+    }
+
+    @Override
+    public Integer getNode(int id) {
+        return Integer.valueOf(id);
+    }
+
+    @Override
+    public NP getNodeProperty(Integer node) {
+        return getNodeProperties(node.intValue());
+    }
+
+    public abstract NP getNodeProperties(int node);
+
+    @Override
+    public EP getEdgeProperty(E edge) {
+        return edge.getProperty();
+    }
 
 }

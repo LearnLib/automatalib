@@ -1,4 +1,0 @@
-/**
- * 
- */
-package net.automatalib.words;

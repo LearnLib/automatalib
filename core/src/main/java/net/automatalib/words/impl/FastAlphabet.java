@@ -1,18 +1,17 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2018 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
- * AutomataLib is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 3.0 as published by the Free Software Foundation.
- * 
- * AutomataLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with AutomataLib; if not, see
- * http://www.gnu.de/documents/lgpl.en.html.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package net.automatalib.words.impl;
 
@@ -26,72 +25,60 @@ import net.automatalib.commons.util.nid.MutableNumericID;
 import net.automatalib.words.GrowingAlphabet;
 
 /**
- * A fast alphabet implementation, that assumes identifiers are stored directly in the
- * input symbols.
- * 
- * @author Malte Isberner 
+ * A fast alphabet implementation, that assumes identifiers are stored directly in the input symbols.
  *
- * @param <I> input symbol class.
+ * @param <I>
+ *         input symbol class.
+ *
+ * @author Malte Isberner
  */
-public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I>
-		implements GrowingAlphabet<I> {
+public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> implements GrowingAlphabet<I> {
 
-	
-	public FastAlphabet() {
-		
-	}
-	
-	public FastAlphabet(List<? extends I> symbols) {
-		for(I sym : symbols)
-			addSymbol(sym);
-	}
-	
-	@SafeVarargs
-	public FastAlphabet(I ...symbols) {
-		this(Arrays.asList(symbols));
-	}
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.words.Alphabet#getSymbol(int)
-	 */
-	@Override
-	@Nonnull
-	public I getSymbol(int index) {
-		return get(index);
-	}
+    public FastAlphabet() {
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.words.Alphabet#getSymbolIndex(java.lang.Object)
-	 */
-	@Override
-	public int getSymbolIndex(@Nonnull I symbol) {
-		int id = symbol.getId();
-		if (id < 0 || id >= size() || get(id) != symbol) {
-			throw new IllegalArgumentException("Invalid symbol: " + symbol + " does not belong to this alphabet");
-		}
-		return id;
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.words.GrowingAlphabet#addSymbol(java.lang.Object)
-	 */
-	@Override
-	public int addSymbol(@Nonnull I a) {
-		add(a);
-		return a.getId();
-	}
+    @SafeVarargs
+    public FastAlphabet(I... symbols) {
+        this(Arrays.asList(symbols));
+    }
 
-	@Override
-	public int compare(@Nonnull I o1, @Nonnull I o2) {
-		return o1.getId() - o2.getId();
-	}
+    public FastAlphabet(List<? extends I> symbols) {
+        for (I sym : symbols) {
+            addSymbol(sym);
+        }
+    }
 
-	@Override
-	public boolean containsSymbol(I symbol) {
-		int index = symbol.getId();
-		return index >= 0 && index < size() && get(index) == symbol;
-	}
+    @Override
+    public int addSymbol(@Nonnull I a) {
+        add(a);
+        return a.getId();
+    }
+
+    @Override
+    @Nonnull
+    public I getSymbol(int index) {
+        return get(index);
+    }
+
+    @Override
+    public int getSymbolIndex(@Nonnull I symbol) {
+        int id = symbol.getId();
+        if (id < 0 || id >= size() || get(id) != symbol) {
+            throw new IllegalArgumentException("Invalid symbol: " + symbol + " does not belong to this alphabet");
+        }
+        return id;
+    }
+
+    @Override
+    public int compare(@Nonnull I o1, @Nonnull I o2) {
+        return o1.getId() - o2.getId();
+    }
+
+    @Override
+    public boolean containsSymbol(I symbol) {
+        int index = symbol.getId();
+        return index >= 0 && index < size() && get(index) == symbol;
+    }
 
 }

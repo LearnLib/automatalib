@@ -1,135 +1,118 @@
-/* Copyright (C) 2013 TU Dortmund
+/* Copyright (C) 2013-2018 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
- * 
- * AutomataLib is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License version 3.0 as published by the Free Software Foundation.
- * 
- * AutomataLib is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with AutomataLib; if not, see
- * http://www.gnu.de/documents/lgpl.en.html.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package net.automatalib.words.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.Maps;
+import net.automatalib.commons.util.collections.IterableUtil;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
-
 /**
- * A simple alphabet implementation, that does not impose any restriction on the input
- * symbol class. However, the id lookup for a symbol might be slightly slower.
- * 
- * @author Malte Isberner 
+ * A simple alphabet implementation, that does not impose any restriction on the input symbol class. However, the id
+ * lookup for a symbol might be slightly slower.
  *
- * @param <I> input symbol type
+ * @param <I>
+ *         input symbol type
+ *
+ * @author Malte Isberner
  */
 public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlphabet<I> {
-	
-	@Nonnull
-	private final List<I> symbols = new ArrayList<I>();
-	
-	@Nonnull
-	private final Map<I,Integer> indexMap = new HashMap<I,Integer>();
-	
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractList#add(java.lang.Object)
-	 */
-	@Override
-	public boolean add(I a) {
-		int s = size();
-		int idx = addSymbol(a);
-		if(idx != s)
-			return false;
-		return true;
-	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see net.automatalib.words.GrowingAlphabet#addSymbol(java.lang.Object)
-	 */
-	@Override
-	public int addSymbol(I a) {
-		Integer idx = indexMap.get(a);
-		if(idx != null)
-			return idx;
-		idx = size();
-		symbols.add(a);
-		indexMap.put(a, idx);
-		return idx;
-	}
+    @Nonnull
+    private final List<I> symbols;
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractList#iterator()
-	 */
-	@Override
-	public Iterator<I> iterator() {
-		return Collections.unmodifiableList(symbols).iterator();
-	}
+    @Nonnull
+    //private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>(10, 0.75f, -1);
+    private final Map<I, Integer> indexMap; // TODO: replace by primitive specialization
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractCollection#size()
-	 */
-	@Override
-	public int size() {
-		return symbols.size();
-	}
+    public SimpleAlphabet() {
+        this(new ArrayList<>());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.words.Alphabet#getSymbol(int)
-	 */
-	@Override
-	public I getSymbol(int index) {
-		return symbols.get(index);
-	}
+    public SimpleAlphabet(Collection<? extends I> symbols) {
+        this.symbols = new ArrayList<>(symbols);
+        this.indexMap = Maps.newHashMapWithExpectedSize(symbols.size()); // TODO: replace by primitive specialization
+        int i = 0;
+        for (I sym : this.symbols) {
+            indexMap.put(sym, i++);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see de.ls5.words.Alphabet#getSymbolIndex(java.lang.Object)
-	 */
-	@Override
-	public int getSymbolIndex(I symbol) {
-		return indexMap.get(symbol);
-	}
+    @Override
+    public boolean add(I a) {
+        int s = size();
+        int idx = addSymbol(a);
+        return idx == s;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.AbstractList#get(int)
-	 */
-	@Override
-	public I get(int index) {
-		return getSymbol(index);
-	}
+    @Override
+    public Iterator<I> iterator() {
+        return IterableUtil.unmodifiableIterator(symbols.iterator());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public int compare(I o1, I o2) {
-		return indexMap.get(o1) - indexMap.get(o2);
-	}
-	
-	@Override
-	public boolean containsSymbol(I symbol) {
-		return indexMap.containsKey(symbol);
-	}
+    @Override
+    public int size() {
+        return symbols.size();
+    }
+
+    @Override
+    public int addSymbol(I a) {
+        //int idx = indexMap.get(a);
+        //if(idx != -1)
+        Integer idx = indexMap.get(a); // TODO: replace by primitive specialization
+        if (idx != null) {
+            return idx;
+        }
+        idx = size();
+        symbols.add(a);
+        indexMap.put(a, idx);
+        return idx;
+    }
+
+    @Override
+    public I get(int index) {
+        return getSymbol(index);
+    }
+
+    @Override
+    public I getSymbol(int index) {
+        return symbols.get(index);
+    }
+
+    @Override
+    public int getSymbolIndex(I symbol) {
+        return indexMap.get(symbol);
+    }
+
+    @Override
+    public int compare(I o1, I o2) {
+        return indexMap.get(o1) - indexMap.get(o2);
+    }
+
+    @Override
+    public boolean containsSymbol(I symbol) {
+        return indexMap.containsKey(symbol);
+    }
 
 }
