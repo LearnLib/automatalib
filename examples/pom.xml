@@ -28,7 +28,7 @@ limitations under the License.
         A collection of various small example applications that illustrate several use cases
         of AutomataLib.
         *Note:* This artifact is not intended as a library, but only exists for educational
-        purposes.
+        purposes. No artifacts are deployed for this module.
     </description>
 
     <parent>
