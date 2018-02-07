@@ -751,17 +751,12 @@ limitations under the License.
             </dependency>
             <dependency>
                 <groupId>net.automatalib.archetypes</groupId>
+                <artifactId>basic</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.automatalib.archetypes</groupId>
                 <artifactId>complete</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.automatalib.archetypes</groupId>
-                <artifactId>core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.automatalib.archetypes</groupId>
-                <artifactId>typical</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
