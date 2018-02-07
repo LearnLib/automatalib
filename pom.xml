@@ -72,21 +72,6 @@ limitations under the License.
 
     <developers>
         <developer>
-            <id>misberner</id>
-            <name>Malte Isberner</name>
-            <email>malte.isberner@gmail.com</email>
-            <organization>TU Dortmund, Chair for Programming Systems</organization>
-            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
-            <roles>
-                <role>Developer</role>
-            </roles>
-            <properties>
-                <picUrl>
-                    http://www.gravatar.com/avatar/c44dc4164f1a9a597ec0c24425d1b89d.png
-                </picUrl>
-            </properties>
-        </developer>
-        <developer>
             <id>mtf90</id>
             <name>Markus Frohme</name>
             <email>markus.frohme@udo.edu</email>
@@ -94,7 +79,22 @@ limitations under the License.
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
+                <role>Maintainer</role>
             </roles>
+        </developer>
+        <developer>
+            <id>misberner</id>
+            <name>Malte Isberner</name>
+            <email>malte.isberner@gmail.com</email>
+            <roles>
+                <role>Developer (inactive)</role>
+                <role>Maintainer (inactive)</role>
+            </roles>
+            <properties>
+                <picUrl>
+                    http://www.gravatar.com/avatar/c44dc4164f1a9a597ec0c24425d1b89d.png
+                </picUrl>
+            </properties>
         </developer>
     </developers>
 
