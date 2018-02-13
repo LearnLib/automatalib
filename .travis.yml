@@ -29,8 +29,6 @@ install: true # skip mvn install, because we essentially run the same command in
 
 script:
   - mvn install -B -Pcode-analysis,code-coverage,bundles
-
-after_success:
   - mvn coveralls:report
 
 jobs:
