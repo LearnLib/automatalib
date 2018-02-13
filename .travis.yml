@@ -1,25 +1,45 @@
 language: java
+
 sudo: false
 dist: trusty
+
 jdk:
   - oraclejdk8
   - openjdk8
+
 addons:
   apt:
     packages:
     - graphviz # required for testing the DOT provider
+
 cache:
   directories:
   - $HOME/.m2
+
 before_cache:
   # do not cache our local archives
   - rm -rf $HOME/.m2/repository/net/automatalib/
+
 branches:
   only:
   - master
   - develop
+
 install: true # skip mvn install, because we essentially run the same command in the script routine
+
 script:
   - mvn install -B -Pcode-analysis,code-coverage,bundles
+
 after_success:
   - mvn coveralls:report
+
+jobs:
+  include:
+    - stage: deploy
+      if: branch = develop # only auto deploy snapshots
+      jvm: openjdk8 # use openjdk build
+      install: true # skip the normal build
+      script: skip # skip the normal build
+      deploy:
+        provider: script
+        script: mvn --settings build-tools/travis-settings.xml -DskipTests=true deploy
