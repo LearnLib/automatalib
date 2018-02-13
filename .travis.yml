@@ -34,10 +34,12 @@ script:
 jobs:
   include:
     - stage: deploy
-      if: branch = develop # only auto deploy snapshots
       jvm: openjdk8 # use openjdk build
       install: true # skip the normal build
       script: skip # skip the normal build
       deploy:
+        # define deployment in deploy phase, which is skipped for pull-requests
         provider: script
         script: mvn --settings build-tools/travis-settings.xml -DskipTests=true deploy
+        on:
+          branch: develop # only auto deploy snapshots
