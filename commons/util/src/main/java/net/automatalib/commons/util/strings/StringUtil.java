@@ -18,11 +18,12 @@ package net.automatalib.commons.util.strings;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import net.automatalib.commons.util.array.ArrayIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Misceallanous utility functions for {@link String}s.
+ * Miscellaneous utility functions for {@link String}s.
  *
  * @author Malte Isberner
  */
@@ -30,7 +31,7 @@ public final class StringUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StringUtil.class);
 
-    private static final String IDENTIFIER_REGEX = "[a-zA-Z_]\\w*";
+    private static final String IDENTIFIER_REGEX = "[a-zA-Z_]*\\w*";
 
     private static Pattern identifierPattern;
 
@@ -71,11 +72,7 @@ public final class StringUtil {
     }
 
     public static void enquoteIfNecessary(String s, Appendable a) throws IOException {
-        if (!getIdentifierPattern().matcher(s).matches()) {
-            enquote(s, a);
-        } else {
-            a.append(s);
-        }
+        enquoteIfNecessary(s, a, getIdentifierPattern());
     }
 
     public static String enquoteIfNecessary(String s, Pattern p) {
@@ -105,6 +102,11 @@ public final class StringUtil {
     }
 
     public static String unquote(String s) {
+        if (s.length() < 2) {
+            throw new IllegalArgumentException(
+                    "Argument to StringUtil.unquote() must begin and end with a double quote ('\"').");
+        }
+
         StringBuilder sb = new StringBuilder(s.length() - 2);
         try {
             unquote(s, sb);
@@ -142,11 +144,17 @@ public final class StringUtil {
     }
 
     public static void unescapeQuotes(String s, Appendable a) throws IOException {
-        int eos = s.length() - 1;
-        for (int i = 0; i < eos; i++) {
-            char c = s.charAt(i);
+        if (s.isEmpty()) {
+            return;
+        }
+
+        int idx = 0;
+        final int eos = s.length() - 1;
+
+        for (; idx < eos; idx++) {
+            char c = s.charAt(idx);
             if (c == '\\') {
-                c = s.charAt(++i);
+                c = s.charAt(++idx);
                 if (c != '"' && c != '\\') {
                     a.append('\\');
                 }
@@ -154,7 +162,10 @@ public final class StringUtil {
             a.append(c);
         }
 
-        a.append(s.charAt(eos));
+        // only append last symbol, if it wasn't forwarded in the loop
+        if (idx < s.length()) {
+            a.append(s.charAt(eos));
+        }
     }
 
     /**
@@ -188,37 +199,11 @@ public final class StringUtil {
     }
 
     public static void appendArray(Appendable a, Object[] array, String sepString) throws IOException {
-        boolean first = true;
-
-        for (Object o : array) {
-            if (first) {
-                first = false;
-            } else {
-                a.append(sepString);
-            }
-            appendObject(a, o);
-        }
-    }
-
-    public static void appendObject(Appendable a, Object obj) throws IOException {
-        if (obj instanceof Printable) {
-            ((Printable) obj).print(a);
-        } else {
-            a.append(String.valueOf(obj));
-        }
+        appendIterable(a, () -> new ArrayIterator<>(array), sepString);
     }
 
     public static void appendArrayEnquoted(Appendable a, Object[] array, String sepString) throws IOException {
-        boolean first = true;
-
-        for (Object o : array) {
-            if (first) {
-                first = false;
-            } else {
-                a.append(sepString);
-            }
-            enquote(String.valueOf(o), a);
-        }
+        appendIterableEnquoted(a, () -> new ArrayIterator<>(array), sepString);
     }
 
     public static void appendIterable(Appendable a, Iterable<?> it, String sepString) throws IOException {
@@ -243,11 +228,15 @@ public final class StringUtil {
             } else {
                 a.append(sepString);
             }
-            if (o == null) {
-                a.append("null");
-            } else {
-                enquote(o.toString(), a);
-            }
+            enquote(String.valueOf(o), a);
+        }
+    }
+
+    public static void appendObject(Appendable a, Object obj) throws IOException {
+        if (obj instanceof Printable) {
+            ((Printable) obj).print(a);
+        } else {
+            a.append(String.valueOf(obj));
         }
     }
 }
