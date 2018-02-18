@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.transout;
+package net.automatalib.automata;
 
-import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * @author frohme
+ */
 public class DFATests {
 
     @Test
-    public void testOutputOfUndefinedTransitions() throws Exception {
+    public void testOutputOfUndefinedTransitions() {
         final Alphabet<Character> sigma = Alphabets.characters('a', 'b');
         final CompactDFA<Character> dfa = new CompactDFA<>(sigma);
 
@@ -36,14 +37,8 @@ public class DFATests {
         dfa.setTransition(q0, (Character) 'a', q1);
         dfa.setTransition(q1, (Character) 'b', q0);
 
-        checkOutput(dfa, Word.fromCharSequence("ababab"), true);
-        checkOutput(dfa, Word.fromCharSequence("aabb"), false);
-        checkOutput(dfa, Word.fromCharSequence("baba"), false);
-    }
-
-    private static <S, I> void checkOutput(final DFA<S, I> dfa, final Word<I> word, final Boolean expected) {
-        Assert.assertEquals(dfa.computeOutput(word), expected);
-        Assert.assertEquals(dfa.computeStateOutput(dfa.getInitialState(), word), expected);
-        Assert.assertEquals(dfa.computeSuffixOutput(word.prefix(word.length()), word.suffix(word.length())), expected);
+        SharedTestUtils.checkOutput(dfa, Word.fromCharSequence("ababab"), true);
+        SharedTestUtils.checkOutput(dfa, Word.fromCharSequence("aabb"), false);
+        SharedTestUtils.checkOutput(dfa, Word.fromCharSequence("baba"), false);
     }
 }
