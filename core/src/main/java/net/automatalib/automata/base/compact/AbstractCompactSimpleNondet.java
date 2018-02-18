@@ -93,7 +93,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
         this.stateCapacity = other.stateCapacity;
 
         //this.initial = new TIntHashSet(other.initial);
-        this.initial = new HashSet<>(); // TODO: replace by primitive specialization
+        this.initial = new HashSet<>(other.initial); // TODO: replace by primitive specialization
     }
 
     protected static Integer wrapState(int id) {
