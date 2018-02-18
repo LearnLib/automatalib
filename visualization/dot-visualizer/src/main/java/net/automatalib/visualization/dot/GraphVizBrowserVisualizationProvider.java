@@ -16,7 +16,6 @@
 package net.automatalib.visualization.dot;
 
 import java.awt.Desktop;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -63,7 +62,7 @@ public class GraphVizBrowserVisualizationProvider implements VisualizationProvid
             File imgTmp = File.createTempFile("graphviz-browser", ".png");
             DOT.runDOT(sw.getBuffer().toString(), "png", imgTmp);
             File htmlTmp = File.createTempFile("graphviz-browser", ".html");
-            try (Writer w = new BufferedWriter(IOUtil.asUTF8Writer(htmlTmp))) {
+            try (Writer w = IOUtil.asBufferedUTF8Writer(htmlTmp)) {
                 w.write("<html><body><img src=\"");
                 w.write(imgTmp.toURI().toString());
                 w.write("\"></body></html>");

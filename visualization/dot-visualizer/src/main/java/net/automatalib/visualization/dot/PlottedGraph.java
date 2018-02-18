@@ -16,7 +16,6 @@
 package net.automatalib.visualization.dot;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -95,7 +94,7 @@ final class PlottedGraph {
     }
 
     public void saveDot(File file) throws IOException {
-        try (Writer w = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
+        try (Writer w = IOUtil.asBufferedUTF8Writer(file)) {
             w.write(dotText);
         }
     }

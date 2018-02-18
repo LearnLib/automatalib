@@ -17,14 +17,14 @@ package net.automatalib.serialization.aut;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
+import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.simple.SimpleAutomaton;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -65,9 +65,9 @@ public final class AUTWriter {
             }
         }
 
-        try (OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
-            writeHeader(automaton, transitions, osw);
-            writeTransitions(automaton, transitions, inputTransformer, osw);
+        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+            writeHeader(automaton, transitions, w);
+            writeTransitions(automaton, transitions, inputTransformer, w);
         }
     }
 

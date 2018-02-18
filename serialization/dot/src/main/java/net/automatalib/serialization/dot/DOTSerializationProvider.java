@@ -17,9 +17,9 @@ package net.automatalib.serialization.dot;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
+import java.io.Writer;
 
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.serialization.ModelSerializer;
 
@@ -38,8 +38,8 @@ public final class DOTSerializationProvider<N, E> implements ModelSerializer<Gra
 
     @Override
     public void writeModel(OutputStream os, Graph<N, E> model) throws IOException {
-        try (OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
-            GraphDOT.write(model, osw);
+        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+            GraphDOT.write(model, w);
         }
     }
 }

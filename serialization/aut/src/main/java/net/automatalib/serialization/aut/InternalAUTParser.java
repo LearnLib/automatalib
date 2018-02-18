@@ -18,9 +18,7 @@ package net.automatalib.serialization.aut;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,6 +28,7 @@ import java.util.stream.Collectors;
 
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.simple.SimpleAutomaton;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -55,7 +54,7 @@ class InternalAUTParser {
 
     public <I> InputModelData<I, SimpleAutomaton<Integer, I>> parse(Function<String, I> inputTransformer)
             throws IOException {
-        try (Reader isr = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        try (Reader isr = IOUtil.asUTF8Reader(inputStream);
              BufferedReader bisr = new BufferedReader(isr)) {
 
             // parsing

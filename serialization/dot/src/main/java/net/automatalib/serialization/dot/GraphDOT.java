@@ -15,10 +15,10 @@
  */
 package net.automatalib.serialization.dot;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.Flushable;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -310,7 +310,7 @@ public final class GraphDOT {
                                              DefaultDOTVisualizationHelper<N, E> dotHelper,
                                              File file) throws IOException {
 
-        try (BufferedWriter writer = new BufferedWriter(IOUtil.asUTF8Writer(file))) {
+        try (Writer writer = IOUtil.asBufferedUTF8Writer(file)) {
             writeRaw(graph, new DefaultDOTVisualizationHelper<>(dotHelper), writer);
         }
     }

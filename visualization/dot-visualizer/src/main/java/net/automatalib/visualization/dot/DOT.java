@@ -23,18 +23,15 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
@@ -145,7 +142,7 @@ public final class DOT {
         Process dot = executeDOT(format, additionalOpts);
 
         OutputStream dotIn = dot.getOutputStream();
-        Writer dotWriter = new OutputStreamWriter(dotIn, StandardCharsets.UTF_8);
+        Writer dotWriter = IOUtil.asBufferedUTF8Writer(dotIn);
 
         IOUtil.copy(r, dotWriter);
 
@@ -162,7 +159,7 @@ public final class DOT {
      * Invokes the DOT utility on a file. Convenience method, see {@link #runDOT(Reader, String, String...)}.
      */
     public static InputStream runDOT(File dotFile, String format, String... additionalOpts) throws IOException {
-        return runDOT(IOUtil.asUTF8Reader(dotFile), format, additionalOpts);
+        return runDOT(IOUtil.asBufferedUTF8Reader(dotFile), format, additionalOpts);
     }
 
     /**
@@ -190,7 +187,7 @@ public final class DOT {
         Process dot = executeDOT(format, "-o" + out.getAbsolutePath());
 
         OutputStream dotIn = dot.getOutputStream();
-        Writer dotWriter = new OutputStreamWriter(dotIn, StandardCharsets.UTF_8);
+        Writer dotWriter = IOUtil.asBufferedUTF8Writer(dotIn);
 
         IOUtil.copy(r, dotWriter);
         dot.getErrorStream().close();
@@ -207,7 +204,7 @@ public final class DOT {
      * String, File)}.
      */
     public static void runDOT(File dotFile, String format, File out) throws IOException {
-        runDOT(IOUtil.asUTF8Reader(dotFile), format, out);
+        runDOT(IOUtil.asBufferedUTF8Reader(dotFile), format, out);
     }
 
     /**
@@ -248,7 +245,7 @@ public final class DOT {
      *         if the specified file was not found.
      */
     public static void renderDOTExternal(File dotFile, String format) throws FileNotFoundException {
-        renderDOTExternal(IOUtil.asUTF8Reader(dotFile), format);
+        renderDOTExternal(IOUtil.asBufferedUTF8Reader(dotFile), format);
     }
 
     /**
@@ -259,7 +256,7 @@ public final class DOT {
      *         if the specified file was not found.
      */
     public static void renderDOT(File dotFile, boolean modal) throws FileNotFoundException {
-        renderDOT(IOUtil.asUTF8Reader(dotFile), modal);
+        renderDOT(IOUtil.asBufferedUTF8Reader(dotFile), modal);
     }
 
     /**
@@ -385,7 +382,7 @@ public final class DOT {
      *         if reading from the file fails or the pipe to the DOT process breaks.
      */
     public static BufferedImage renderDOTImage(File dotFile) throws IOException {
-        return renderDOTImage(new BufferedReader(IOUtil.asUTF8Reader(dotFile)));
+        return renderDOTImage(IOUtil.asBufferedUTF8Reader(dotFile));
     }
 
     /**

@@ -161,7 +161,8 @@ public final class IOUtil {
     /**
      * Quitely closes a closeable. Any exception while doing so will be ignored (but logged).
      *
-     * @param closeable the closeable to close
+     * @param closeable
+     *         the closeable to close
      */
     public static void closeQuietly(Closeable closeable) {
         try {
@@ -227,6 +228,16 @@ public final class IOUtil {
         return new BufferedInputStream(is);
     }
 
+    /**
+     * Ensures that the returned stream is a buffered version of the supplied output stream. The result must not
+     * necessarily be an instance of {@link BufferedOutputStream}, it can also be, e.g., a {@link ByteArrayOutputStream},
+     * depending on the type of the supplied output stream.
+     *
+     * @param os
+     *         the output stream
+     *
+     * @return a buffered version of {@code os}
+     */
     public static OutputStream asBufferedOutputStream(OutputStream os) {
         if (os instanceof BufferedOutputStream || os instanceof ByteArrayOutputStream) {
             return os;
@@ -234,11 +245,99 @@ public final class IOUtil {
         return new BufferedOutputStream(os);
     }
 
-    public static Reader asUTF8Reader(final File file) throws FileNotFoundException {
-        return new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
+    /**
+     * Returns a reader that parses the contents of the given file with {@link StandardCharsets#UTF_8} encoding.
+     * Additionally buffers the input stream to improve performance.
+     * <p>
+     * Implementation note: the input stream (byte-wise representation) will be buffered, not the reader (character-wise
+     * representation).
+     *
+     * @param file
+     *         the file to read
+     *
+     * @return a (buffered) reader for the file contents.
+     *
+     * @throws FileNotFoundException
+     *         if no such file exists.
+     */
+    public static Reader asBufferedUTF8Reader(final File file) throws FileNotFoundException {
+        return asBufferedUTF8Reader(new FileInputStream(file));
     }
 
-    public static Writer asUTF8Writer(final File file) throws FileNotFoundException {
-        return new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
+    /**
+     * Returns a reader that parses the contents of the given input stream with {@link StandardCharsets#UTF_8} encoding.
+     * If the given input stream is not already a buffering input stream, additionally buffers the input stream to
+     * improve performance.
+     * <p>
+     * Implementation note: the input stream (byte-wise representation) will be buffered, not the reader (character-wise
+     * representation).
+     *
+     * @param is
+     *         the input stream to read
+     *
+     * @return a (buffered) reader for the file contents.
+     */
+    public static Reader asBufferedUTF8Reader(final InputStream is) {
+        return asUTF8Reader(asBufferedInputStream(is));
+    }
+
+    /**
+     * Returns a reader that parses the contents of the given input stream with {@link StandardCharsets#UTF_8} encoding.
+     *
+     * @param is
+     *         the input stream to read
+     *
+     * @return a reader for the file contents.
+     */
+    public static Reader asUTF8Reader(final InputStream is) {
+        return new InputStreamReader(is, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Returns a writer that writes contents to the given file with {@link StandardCharsets#UTF_8} encoding.
+     * Additionally buffers the input stream to improve performance.
+     * <p>
+     * Implementation note: the input stream (byte-wise representation) will be buffered, not the reader (character-wise
+     * representation).
+     *
+     * @param file
+     *         the file to write to
+     *
+     * @return a (buffered) writer for the file contents.
+     *
+     * @throws FileNotFoundException
+     *         if no such file exists.
+     */
+    public static Writer asBufferedUTF8Writer(final File file) throws FileNotFoundException {
+        return asBufferedUTF8Writer(new FileOutputStream(file));
+    }
+
+    /**
+     * Returns a writer that writes contents to the given output stream with {@link StandardCharsets#UTF_8} encoding.
+     * If the given output stream is not already a buffering output stream, additionally buffers the output stream to
+     * improve performance.
+     * <p>
+     * Implementation note: the input stream (byte-wise representation) will be buffered, not the reader (character-wise
+     * representation).
+     *
+     * @param os
+     *         the output stream to write to
+     *
+     * @return a (buffered) writer for the file contents.
+     */
+    public static Writer asBufferedUTF8Writer(final OutputStream os) {
+        return asUTF8Writer(asBufferedOutputStream(os));
+    }
+
+    /**
+     * Returns a writer that writes contents to the given output stream with {@link StandardCharsets#UTF_8} encoding.
+     *
+     * @param os
+     *         the output stream to write to
+     *
+     * @return a (buffered) writer for the file contents.
+     */
+    public static Writer asUTF8Writer(final OutputStream os) {
+        return new OutputStreamWriter(os, StandardCharsets.UTF_8);
     }
 }
