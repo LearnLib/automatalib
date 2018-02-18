@@ -149,7 +149,7 @@ limitations under the License.
         <findbugs-plugin.version>3.0.5</findbugs-plugin.version>
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>2.9</info-reports-plugin.version>
-        <jacoco-plugin.version>0.7.9</jacoco-plugin.version>
+        <jacoco-plugin.version>0.8.0</jacoco-plugin.version>
         <javacc-plugin.version>2.6</javacc-plugin.version>
         <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
