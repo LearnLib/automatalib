@@ -15,7 +15,6 @@
  */
 package net.automatalib.examples.brics;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public final class SimpleBricsExample {
     private SimpleBricsExample() {
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // Create a BRICS automaton from a regular expression ...
         RegExp r = new RegExp("ab+(c|d)*e?");
         Automaton a = r.toAutomaton();

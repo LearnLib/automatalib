@@ -15,7 +15,6 @@
  */
 package net.automatalib.examples.graph;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +31,7 @@ public final class DFSExample {
     private DFSExample() {
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
 
         int n0 = graph.addIntNode(), n1 = graph.addIntNode(), n2 = graph.addIntNode(), n3 = graph.addIntNode(), n4 =

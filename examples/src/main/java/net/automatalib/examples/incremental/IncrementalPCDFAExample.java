@@ -15,8 +15,6 @@
  */
 package net.automatalib.examples.incremental;
 
-import java.io.IOException;
-
 import net.automatalib.incremental.dfa.IncrementalDFABuilder;
 import net.automatalib.incremental.dfa.dag.IncrementalPCDFADAGBuilder;
 import net.automatalib.incremental.dfa.tree.IncrementalPCDFATreeBuilder;
@@ -32,7 +30,7 @@ public final class IncrementalPCDFAExample {
     private IncrementalPCDFAExample() {
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         System.out.println("Incremental construction using a tree");
         IncrementalDFABuilder<Character> incPcDfaTree = new IncrementalPCDFATreeBuilder<>(ALPHABET);
         build(incPcDfaTree);
@@ -44,7 +42,7 @@ public final class IncrementalPCDFAExample {
         build(incPcDfaDag);
     }
 
-    public static void build(IncrementalDFABuilder<Character> incPcDfa) throws IOException {
+    public static void build(IncrementalDFABuilder<Character> incPcDfa) {
         Word<Character> w1 = Word.fromString("abc");
         Word<Character> w2 = Word.fromString("acb");
         Word<Character> w3 = Word.fromString("ac");

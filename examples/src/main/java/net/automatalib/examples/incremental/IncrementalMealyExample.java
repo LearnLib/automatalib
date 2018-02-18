@@ -15,8 +15,6 @@
  */
 package net.automatalib.examples.incremental;
 
-import java.io.IOException;
-
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
@@ -38,7 +36,7 @@ public final class IncrementalMealyExample {
     private IncrementalMealyExample() {
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         System.out.println("Incremental construction using a tree");
         IncrementalMealyBuilder<Character, Character> incMealyTree = new IncrementalMealyTreeBuilder<>(ALPHABET);
         build(incMealyTree);
@@ -50,7 +48,7 @@ public final class IncrementalMealyExample {
         build(incMealyDag);
     }
 
-    public static void build(IncrementalMealyBuilder<Character, Character> incMealy) throws IOException {
+    public static void build(IncrementalMealyBuilder<Character, Character> incMealy) {
         System.out.println("  Inserting " + W_1 + " / " + W_1_O);
         incMealy.insert(W_1, W_1_O);
         Visualization.visualize(incMealy.asGraph());
