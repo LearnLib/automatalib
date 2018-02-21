@@ -297,8 +297,8 @@ public final class IOUtil {
      * Returns a writer that writes contents to the given file with {@link StandardCharsets#UTF_8} encoding.
      * Additionally buffers the input stream to improve performance.
      * <p>
-     * Implementation note: the input stream (byte-wise representation) will be buffered, not the reader (character-wise
-     * representation).
+     * Implementation note: the output stream (byte-wise representation) will be buffered, not the writer (character-
+     * wise representation).
      *
      * @param file
      *         the file to write to
@@ -317,8 +317,8 @@ public final class IOUtil {
      * If the given output stream is not already a buffering output stream, additionally buffers the output stream to
      * improve performance.
      * <p>
-     * Implementation note: the input stream (byte-wise representation) will be buffered, not the reader (character-wise
-     * representation).
+     * Implementation note: the output stream (byte-wise representation) will be buffered, not the writer (character-
+     * wise representation).
      *
      * @param os
      *         the output stream to write to
