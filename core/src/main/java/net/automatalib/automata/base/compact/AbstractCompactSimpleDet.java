@@ -25,6 +25,7 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
+import net.automatalib.ts.powerset.DeterministicPowersetView;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.SimpleAlphabet;
@@ -423,4 +424,8 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         this.alphabetSize = newAlphabetSize;
     }
 
+    @Override
+    public DeterministicPowersetView<Integer, I, Integer> powersetView() {
+        return new DeterministicPowersetView<>(this);
+    }
 }
