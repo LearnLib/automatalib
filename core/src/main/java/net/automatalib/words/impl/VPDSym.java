@@ -17,6 +17,7 @@ package net.automatalib.words.impl;
 
 import java.io.Serializable;
 
+import lombok.EqualsAndHashCode;
 import net.automatalib.words.VPDAlphabet;
 
 /**
@@ -28,6 +29,7 @@ import net.automatalib.words.VPDAlphabet;
  *
  * @author Malte Isberner
  */
+@EqualsAndHashCode
 public final class VPDSym<T> implements Serializable {
 
     private final VPDAlphabet.SymbolType type;
@@ -60,37 +62,5 @@ public final class VPDSym<T> implements Serializable {
     @Override
     public String toString() {
         return String.valueOf(userObject);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof VPDSym)) {
-            return false;
-        }
-
-        VPDSym<?> vpdSym = (VPDSym<?>) o;
-
-        if (localIndex != vpdSym.localIndex) {
-            return false;
-        }
-        if (globalIndex != vpdSym.globalIndex) {
-            return false;
-        }
-        if (type != vpdSym.type) {
-            return false;
-        }
-        return userObject.equals(vpdSym.userObject);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = type.hashCode();
-        result = 31 * result + userObject.hashCode();
-        result = 31 * result + localIndex;
-        result = 31 * result + globalIndex;
-        return result;
     }
 }

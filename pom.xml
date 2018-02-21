@@ -153,6 +153,7 @@ limitations under the License.
         <javacc-plugin.version>2.6</javacc-plugin.version>
         <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+        <lombok.version>1.16.20</lombok.version>
         <pmd-plugin.version>3.8</pmd-plugin.version>
         <release-plugin.version>2.5.3</release-plugin.version>
         <reports-plugin.version>2.9</reports-plugin.version>
@@ -943,6 +944,13 @@ limitations under the License.
                 <groupId>org.kohsuke.metainf-services</groupId>
                 <artifactId>metainf-services</artifactId>
                 <version>${metainf-services.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
                 <scope>provided</scope>
             </dependency>
 
