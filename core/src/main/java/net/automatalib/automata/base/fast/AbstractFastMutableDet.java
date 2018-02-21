@@ -27,6 +27,7 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
+import net.automatalib.ts.powerset.DeterministicPowersetView;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -141,5 +142,10 @@ public abstract class AbstractFastMutableDet<S extends AbstractFastDetState<S, T
     @Override
     public StateIDs<S> stateIDs() {
         return this;
+    }
+
+    @Override
+    public DeterministicPowersetView<S, I, T> powersetView() {
+        return new DeterministicPowersetView<>(this);
     }
 }

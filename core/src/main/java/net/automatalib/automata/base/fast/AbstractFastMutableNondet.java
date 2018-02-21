@@ -29,6 +29,7 @@ import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
+import net.automatalib.ts.powerset.FastPowersetDTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -156,4 +157,8 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetStat
         return this;
     }
 
+    @Override
+    public FastPowersetDTS<S, I, T> powersetView() {
+        return new FastPowersetDTS<>(this);
+    }
 }
