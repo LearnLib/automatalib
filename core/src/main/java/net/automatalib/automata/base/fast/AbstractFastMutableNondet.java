@@ -16,6 +16,7 @@
 package net.automatalib.automata.base.fast;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -73,7 +74,8 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetStat
     @Override
     public Collection<T> getTransitions(S state, I input) {
         int inputIdx = inputAlphabet.getSymbolIndex(input);
-        return state.getTransitions(inputIdx);
+        final Collection<T> result = state.getTransitions(inputIdx);
+        return result == null ? Collections.emptySet() : result;
     }
 
     @Override
