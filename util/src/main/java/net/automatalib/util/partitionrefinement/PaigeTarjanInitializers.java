@@ -394,14 +394,6 @@ public final class PaigeTarjanInitializers {
         data[predOfsDataLow] += predDataLow;
         prefixSum(data, predOfsDataLow, predDataLow);
 
-        if (partial) {
-            int predOfsIdx = predOfsDataLow + sinkId;
-            for (int i = 0; i < numInputs; i++) {
-                data[--data[predOfsIdx]] = sinkId;
-                predOfsIdx += numStatesWithSink;
-            }
-        }
-
         for (int i = 0; i < reachableStates; i++) {
             int stateId = statesBuff[i];
             Block b = blockForState[stateId];
@@ -434,6 +426,8 @@ public final class PaigeTarjanInitializers {
         pt.setPredData(data);
         pt.setSize(numStatesWithSink, numInputs);
         pt.setBlockForState(blockForState);
+
+        pt.removeEmptyBlocks();
 
         return ids;
     }
@@ -505,6 +499,7 @@ public final class PaigeTarjanInitializers {
         int currFalse = 0;
         int currTrue = numStatesWithSink;
 
+        int sinkId = numStates;
         int pending = 1;
         boolean partial = false;
 
@@ -525,11 +520,14 @@ public final class PaigeTarjanInitializers {
             for (int i = 0; i < numInputs; i++) {
                 I sym = inputs.getSymbol(i);
                 T trans = automaton.getTransition(state, sym);
+                final int succId;
+
                 if (trans == null) {
+                    succId = sinkId;
                     partial = true;
                 } else {
                     S succ = automaton.getSuccessor(trans);
-                    int succId = ids.getStateId(succ);
+                    succId = ids.getStateId(succ);
 
                     if (blockForState[succId] == null) {
                         boolean succClass = initialClassification.test(succ);
@@ -545,15 +543,12 @@ public final class PaigeTarjanInitializers {
                         data[posDataLow + succId] = succPos;
                         pending++;
                     }
-
-                    data[predCountBase + succId]++;
                 }
 
+                data[predCountBase + succId]++;
                 predCountBase += numStatesWithSink;
             }
         }
-
-        int sinkId = numStates;
 
         if (partial) {
             int pos;
@@ -582,14 +577,6 @@ public final class PaigeTarjanInitializers {
 
         data[predOfsDataLow] += predDataLow;
         prefixSum(data, predOfsDataLow, predDataLow);
-
-        if (partial) {
-            int predOfsIdx = predOfsDataLow + sinkId;
-            for (int i = 0; i < numInputs; i++) {
-                data[--data[predOfsIdx]] = sinkId;
-                predOfsIdx += numStatesWithSink;
-            }
-        }
 
         for (int i = 0; i < falsePtr; i++) {
             int stateId = data[i];
