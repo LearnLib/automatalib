@@ -139,12 +139,12 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 
                 WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());
                 wb.append(input);
-
                 dfsStack.pop();
-                do {
+
+                while (!dfsStack.isEmpty()) {
                     wb.append(rec.incomingInput);
                     rec = dfsStack.pop();
-                } while (!dfsStack.isEmpty());
+                }
                 return wb.reverse().toWord();
             }
 
