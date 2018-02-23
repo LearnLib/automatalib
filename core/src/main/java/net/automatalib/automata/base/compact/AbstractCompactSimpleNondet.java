@@ -30,7 +30,6 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutomaton<Integer, I, Integer, SP, Void>,
                                                                     UniversalFiniteAlphabetAutomaton<Integer, I, Integer, SP, Void>,
@@ -56,7 +55,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
 
     @SuppressWarnings("unchecked")
     public AbstractCompactSimpleNondet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.alphabetSize = alphabet.size();
         //this.transitions = new TIntSet[stateCapacity * alphabetSize];
         this.transitions = new Set[stateCapacity * alphabetSize]; // TODO: replace by primitive specialization
@@ -77,7 +76,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
     }
 
     protected AbstractCompactSimpleNondet(Alphabet<I> alphabet, AbstractCompactSimpleNondet<?, ?> other) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.alphabetSize = alphabet.size();
         this.transitions = other.transitions.clone();
         for (int i = 0; i < transitions.length; i++) {

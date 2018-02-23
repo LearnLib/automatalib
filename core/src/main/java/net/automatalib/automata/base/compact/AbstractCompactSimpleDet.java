@@ -28,7 +28,6 @@ import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.ts.powerset.DeterministicPowersetView;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.SimpleAlphabet;
 
 public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDeterministic<Integer, I, Integer, SP, Void>,
                                                                  UniversalFiniteAlphabetAutomaton<Integer, I, Integer, SP, Void>,
@@ -79,7 +78,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
                                        int initial,
                                        int[] transitions,
                                        float resizeFactor) {
-        this.alphabet = new SimpleAlphabet<>(alphabet);
+        this.alphabet = alphabet;
         this.alphabetSize = alphabet.size();
         this.numStates = numStates;
         if (initial < 0 || initial >= numStates) {
