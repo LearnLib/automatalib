@@ -15,12 +15,13 @@
  */
 package net.automatalib.automata.transout.probabilistic;
 
-import java.util.Objects;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import lombok.EqualsAndHashCode;
+
 @ParametersAreNonnullByDefault
+@EqualsAndHashCode
 public final class ProbabilisticOutput<O> {
 
     private final float probability;
@@ -40,30 +41,4 @@ public final class ProbabilisticOutput<O> {
     public O getOutput() {
         return output;
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Objects.hashCode(output);
-        result = prime * result + Float.floatToIntBits(probability);
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (obj.getClass() != ProbabilisticOutput.class) {
-            return false;
-        }
-        ProbabilisticOutput<?> other = (ProbabilisticOutput<?>) obj;
-
-        return Objects.equals(output, other.output) && (probability == other.probability);
-    }
-
 }

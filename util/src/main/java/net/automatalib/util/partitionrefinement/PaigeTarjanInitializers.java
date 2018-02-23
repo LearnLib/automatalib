@@ -15,7 +15,6 @@
  */
 package net.automatalib.util.partitionrefinement;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -23,6 +22,7 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
+import lombok.EqualsAndHashCode;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
@@ -696,6 +696,7 @@ public final class PaigeTarjanInitializers {
                                                                      Alphabet<I> alphabet);
     }
 
+    @EqualsAndHashCode
     private static final class CompleteStateSignature {
 
         private final Object[] properties;
@@ -761,26 +762,6 @@ public final class PaigeTarjanInitializers {
                 properties[i] = automaton.getTransitionProperty(state, sym);
             }
             return new CompleteStateSignature(properties);
-        }
-
-        @Override
-        public int hashCode() {
-            return Arrays.hashCode(properties);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null) {
-                return false;
-            }
-            if (o.getClass() != CompleteStateSignature.class) {
-                return false;
-            }
-            CompleteStateSignature other = (CompleteStateSignature) o;
-            return Arrays.equals(properties, other.properties);
         }
     }
 

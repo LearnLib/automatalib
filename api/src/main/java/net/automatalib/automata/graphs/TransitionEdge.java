@@ -15,10 +15,10 @@
  */
 package net.automatalib.automata.graphs;
 
-import java.util.Objects;
-
+import lombok.EqualsAndHashCode;
 import net.automatalib.ts.UniversalTransitionSystem;
 
+@EqualsAndHashCode
 public final class TransitionEdge<I, T> {
 
     private final I input;
@@ -41,31 +41,7 @@ public final class TransitionEdge<I, T> {
         return new Property<>(input, uts.getTransitionProperty(transition));
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Objects.hashCode(input);
-        result = prime * result + Objects.hashCode(transition);
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (obj.getClass() != TransitionEdge.class) {
-            return false;
-        }
-        TransitionEdge<?, ?> other = (TransitionEdge<?, ?>) obj;
-
-        return Objects.equals(input, other.input) && Objects.equals(transition, other.transition);
-    }
-
+    @EqualsAndHashCode
     public static final class Property<I, TP> {
 
         private final I input;
@@ -83,31 +59,5 @@ public final class TransitionEdge<I, T> {
         public TP getProperty() {
             return property;
         }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + Objects.hashCode(input);
-            result = prime * result + Objects.hashCode(property);
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (obj.getClass() != Property.class) {
-                return false;
-            }
-            Property<?, ?> other = (Property<?, ?>) obj;
-
-            return Objects.equals(input, other.input) && Objects.equals(property, other.property);
-        }
-
     }
 }
