@@ -173,19 +173,28 @@ public class NearLinearEquivalenceTest<I> {
         return findSeparatingWord(target, other, inputs);
     }
 
-    @SuppressWarnings("unchecked")
     public static <S, S2, I, T, T2> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
                                                                UniversalDeterministicAutomaton<S2, I, T2, ?, ?> other,
                                                                Collection<? extends I> inputs) {
+        return findSeparatingWord(target, other, inputs, false);
+    }
+
+    public static <S, S2, I, T, T2> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
+                                                               UniversalDeterministicAutomaton<S2, I, T2, ?, ?> other,
+                                                               Collection<? extends I> inputs,
+                                                               boolean ignoreUndefinedTransitions) {
 
         if (inputs instanceof Alphabet && target instanceof InputAlphabetHolder &&
             other instanceof InputAlphabetHolder) {
+            @SuppressWarnings("unchecked")
             Alphabet<I> alphabet = (Alphabet<I>) inputs;
+            @SuppressWarnings("unchecked")
             Alphabet<I> targetAlphabet = ((InputAlphabetHolder<I>) target).getInputAlphabet();
             if (alphabet.equals(targetAlphabet)) {
+                @SuppressWarnings("unchecked")
                 Alphabet<I> otherAlphabet = ((InputAlphabetHolder<I>) other).getInputAlphabet();
                 if (alphabet.equals(otherAlphabet)) {
-                    return findSeparatingWord(target, other, alphabet);
+                    return findSeparatingWord(target, other, alphabet, ignoreUndefinedTransitions);
                 }
             }
         }
@@ -228,7 +237,9 @@ public class NearLinearEquivalenceTest<I> {
                 T trans1 = target.getTransition(state1, sym);
                 T2 trans2 = other.getTransition(state2, sym);
 
-                if (trans1 == null) {
+                if (ignoreUndefinedTransitions && (trans1 == null || trans2 == null)) {
+                    continue;
+                } else if (trans1 == null) {
                     if (trans2 == null) {
                         continue;
                     }
@@ -289,6 +300,13 @@ public class NearLinearEquivalenceTest<I> {
     public static <S, S2, I, T, T2> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
                                                                UniversalDeterministicAutomaton<S2, I, T2, ?, ?> other,
                                                                Alphabet<I> inputs) {
+        return findSeparatingWord(target, other, inputs, false);
+    }
+
+    public static <S, S2, I, T, T2> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
+                                                               UniversalDeterministicAutomaton<S2, I, T2, ?, ?> other,
+                                                               Alphabet<I> inputs,
+                                                               boolean ignoreUndefinedTransitions) {
         UniversalDeterministicAutomaton.FullIntAbstraction<T, ?, ?> absTarget = target.fullIntAbstraction(inputs);
         UniversalDeterministicAutomaton.FullIntAbstraction<T2, ?, ?> absOther = other.fullIntAbstraction(inputs);
 
@@ -328,7 +346,9 @@ public class NearLinearEquivalenceTest<I> {
                 T trans1 = absTarget.getTransition(state1, sym);
                 T2 trans2 = absOther.getTransition(state2, sym);
 
-                if (trans1 == null) {
+                if (ignoreUndefinedTransitions && (trans1 == null || trans2 == null)) {
+                    continue;
+                } else if (trans1 == null) {
                     if (trans2 == null) {
                         continue;
                     }
