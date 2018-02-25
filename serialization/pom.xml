@@ -18,12 +18,6 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>automata-serialization-parent</artifactId>
-    <packaging>pom</packaging>
-
-    <name>AutomataLib :: Serialization</name>
-    <description>Serialization parent metaproject for various (de-)serialization methods.</description>
-
     <parent>
         <groupId>net.automatalib</groupId>
         <artifactId>automata-build-parent</artifactId>
@@ -31,14 +25,20 @@ limitations under the License.
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
+    <artifactId>automata-serialization-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <name>AutomataLib :: Serialization</name>
+    <description>Serialization parent metaproject for various (de-)serialization methods.</description>
+
     <modules>
         <module>core</module>
         <module>aut</module>
         <module>dot</module>
+        <module>etf</module>
+        <module>fsm</module>
         <module>saf</module>
         <module>taf</module>
         <module>learnlibv2</module>
-        <module>etf</module>
-        <module>fsm</module>
     </modules>
 </project>

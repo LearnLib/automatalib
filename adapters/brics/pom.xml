@@ -18,6 +18,13 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-adapters-parent</artifactId>
+        <version>0.8.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>automata-brics</artifactId>
     <packaging>jar</packaging>
 
@@ -26,13 +33,6 @@ limitations under the License.
         This artifact contains adapter classes for treating the Automaton objects from the
         BRICS library (http://www.brics.dk/automaton) as AutomataLib models.
     </description>
-
-    <parent>
-        <groupId>net.automatalib</groupId>
-        <artifactId>automata-adapters-parent</artifactId>
-        <version>0.8.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
 
     <dependencies>
         <dependency>
@@ -59,6 +59,4 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
-
 </project>
-

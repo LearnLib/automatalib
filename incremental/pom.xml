@@ -18,6 +18,13 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-build-parent</artifactId>
+        <version>0.8.0-SNAPSHOT</version>
+        <relativePath>../build-parent/pom.xml</relativePath>
+    </parent>
+
     <artifactId>automata-incremental</artifactId>
     <packaging>jar</packaging>
 
@@ -27,13 +34,6 @@ limitations under the License.
         for incrementally constructing DFAs (both prefix-closed and non-prefix-closed) and
         Mealy machines from a finite, incrementally growing set of example inputs/outputs.
     </description>
-
-    <parent>
-        <groupId>net.automatalib</groupId>
-        <artifactId>automata-build-parent</artifactId>
-        <version>0.8.0-SNAPSHOT</version>
-        <relativePath>../build-parent/pom.xml</relativePath>
-    </parent>
 
     <dependencies>
         <dependency>

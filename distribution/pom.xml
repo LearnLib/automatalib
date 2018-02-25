@@ -17,6 +17,7 @@ limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>net.automatalib</groupId>
         <artifactId>automata-build-parent</artifactId>
@@ -26,15 +27,14 @@ limitations under the License.
 
     <groupId>net.automatalib.distribution</groupId>
     <artifactId>automata-distribution</artifactId>
-    <name>AutomataLib :: Distribution</name>
+    <packaging>pom</packaging>
 
+    <name>AutomataLib :: Distribution</name>
     <description>
         An artifact that aggregates all other artifacts of AutomataLib to produce an Uber-JAR that can be used in
         non-maven environments. Likewise, this single artifact may be used in maven-aware environments to declare a
         dependency on all AutomataLib artifacts.
     </description>
-
-    <packaging>pom</packaging>
 
     <!--
     All packaged AutomataLib dependencies.
@@ -449,5 +449,4 @@ limitations under the License.
             </build>
         </profile>
     </profiles>
-
 </project>

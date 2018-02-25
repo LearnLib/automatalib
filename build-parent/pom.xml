@@ -18,6 +18,13 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>net.automatalib</groupId>
+        <artifactId>automata-parent</artifactId>
+        <version>0.8.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>automata-build-parent</artifactId>
     <packaging>pom</packaging>
 
@@ -27,12 +34,34 @@ limitations under the License.
         dependencies on the "build-tools" artifact without introducing cyclic dependencies with the general parent.
     </description>
 
-    <parent>
-        <groupId>net.automatalib</groupId>
-        <artifactId>automata-parent</artifactId>
-        <version>0.8.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- If we run coverage analysis, skip generated sources -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <!-- generated builders for automata types -->
+                            <exclude>net/automatalib/util/automata/builders/AutomatonBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/AutomatonBuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/DFABuilder*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/FSABuilder*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/MealyBuilder*.class</exclude>
+
+                            <!-- generated parser for TAF serialization -->
+                            <exclude>net/automatalib/serialization/taf/parser/InternalTAFParser*.class</exclude>
+                            <exclude>net/automatalib/serialization/taf/parser/ParseException.class</exclude>
+                            <exclude>net/automatalib/serialization/taf/parser/SimpleCharStream.class</exclude>
+                            <exclude>net/automatalib/serialization/taf/parser/Token.class</exclude>
+                            <exclude>net/automatalib/serialization/taf/parser/TokenMgrError.class</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <profiles>
         <profile>
@@ -163,33 +192,4 @@ limitations under the License.
             </build>
         </profile>
     </profiles>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <!-- If we run coverage analysis, skip generated sources -->
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <!-- generated builders for automata types -->
-                            <exclude>net/automatalib/util/automata/builders/AutomatonBuilder.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/AutomatonBuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/DFABuilder*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/FSABuilder*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/MealyBuilder*.class</exclude>
-
-                            <!-- generated parser for TAF serialization -->
-                            <exclude>net/automatalib/serialization/taf/parser/InternalTAFParser*.class</exclude>
-                            <exclude>net/automatalib/serialization/taf/parser/ParseException.class</exclude>
-                            <exclude>net/automatalib/serialization/taf/parser/SimpleCharStream.class</exclude>
-                            <exclude>net/automatalib/serialization/taf/parser/Token.class</exclude>
-                            <exclude>net/automatalib/serialization/taf/parser/TokenMgrError.class</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>

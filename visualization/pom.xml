@@ -18,14 +18,6 @@ limitations under the License.
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>automata-visualization-parent</artifactId>
-    <packaging>pom</packaging>
-
-    <name>AutomataLib :: Visualization</name>
-    <description>
-        Automata and Graph visualization libraries.
-    </description>
-
     <parent>
         <groupId>net.automatalib</groupId>
         <artifactId>automata-build-parent</artifactId>
@@ -33,9 +25,14 @@ limitations under the License.
         <relativePath>../build-parent/pom.xml</relativePath>
     </parent>
 
+    <artifactId>automata-visualization-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <name>AutomataLib :: Visualization</name>
+    <description>Automata and Graph visualization libraries.</description>
+
     <modules>
         <module>dot-visualizer</module>
         <module>jung-visualizer</module>
     </modules>
 </project>
-
