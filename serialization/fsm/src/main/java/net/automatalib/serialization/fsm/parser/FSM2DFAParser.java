@@ -258,7 +258,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
             getInputs().add(input);
 
             // add the new transition
-            final Integer prev = transitions.put(Pair.make(from, input), to);
+            final Integer prev = transitions.put(Pair.of(from, input), to);
             if (prev != null) {
                 throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), getStreamTokenizer());
             }

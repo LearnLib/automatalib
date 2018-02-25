@@ -138,7 +138,7 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
             final O output = getOutputParser().apply(getStreamTokenizer().sval);
 
             // create the Mealy machine transition
-            final Pair<O, Integer> prev = getTransitions().put(Pair.make(from, input), Pair.make(output, to));
+            final Pair<O, Integer> prev = getTransitions().put(Pair.of(from, input), Pair.of(output, to));
 
             // check for non-determinism
             if (prev != null) {

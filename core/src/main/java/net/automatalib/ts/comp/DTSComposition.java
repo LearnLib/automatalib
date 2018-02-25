@@ -15,11 +15,11 @@
  */
 package net.automatalib.ts.comp;
 
-import net.automatalib.commons.util.IPair;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.DeterministicTransitionSystem;
 
 public class DTSComposition<S1, S2, I, T1, T2, TS1 extends DeterministicTransitionSystem<S1, I, T1>, TS2 extends DeterministicTransitionSystem<S2, I, T2>>
-        implements DeterministicTransitionSystem<IPair<S1, S2>, I, IPair<T1, T2>> {
+        implements DeterministicTransitionSystem<Pair<S1, S2>, I, Pair<T1, T2>> {
 
     protected final TS1 ts1;
     protected final TS2 ts2;
@@ -44,34 +44,34 @@ public class DTSComposition<S1, S2, I, T1, T2, TS1 extends DeterministicTransiti
     }
 
     @Override
-    public IPair<S1, S2> getInitialState() {
-        return new IPair<>(ts1.getInitialState(), ts2.getInitialState());
+    public Pair<S1, S2> getInitialState() {
+        return Pair.of(ts1.getInitialState(), ts2.getInitialState());
     }
 
     @Override
-    public IPair<T1, T2> getTransition(IPair<S1, S2> state, I input) {
-        S1 s1 = state.first;
+    public Pair<T1, T2> getTransition(Pair<S1, S2> state, I input) {
+        S1 s1 = state.getFirst();
 
         T1 t1 = (s1 == null) ? null : ts1.getTransition(s1, input);
         if (t1 == null && !allowPartial) {
             return null;
         }
 
-        S2 s2 = state.second;
+        S2 s2 = state.getSecond();
 
         T2 t2 = (s2 == null) ? null : ts2.getTransition(s2, input);
         if (t2 == null && !allowPartial) {
             return null;
         }
 
-        return new IPair<>(t1, t2);
+        return Pair.of(t1, t2);
     }
 
     @Override
-    public IPair<S1, S2> getSuccessor(IPair<T1, T2> transition) {
-        T1 t1 = transition.first;
-        T2 t2 = transition.second;
-        return new IPair<>((t1 == null) ? null : ts1.getSuccessor(t1), (t2 == null) ? null : ts2.getSuccessor(t2));
+    public Pair<S1, S2> getSuccessor(Pair<T1, T2> transition) {
+        T1 t1 = transition.getFirst();
+        T2 t2 = transition.getSecond();
+        return Pair.of((t1 == null) ? null : ts1.getSuccessor(t1), (t2 == null) ? null : ts2.getSuccessor(t2));
     }
 
 }

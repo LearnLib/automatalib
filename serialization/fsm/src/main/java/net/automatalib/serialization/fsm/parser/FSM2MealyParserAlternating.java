@@ -139,7 +139,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
             letters.add(letter);
 
             // create a transition
-            final boolean isNew = transitionsFSM.put(from, Pair.make(letter, to));
+            final boolean isNew = transitionsFSM.put(from, Pair.of(letter, to));
 
             // test for non-determinism
             if (!isNew) {
@@ -191,14 +191,14 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
                 getInputs().add(i);
 
                 // recursive call to makeTransitions (we continue with output)
-                makeTransitions(to, Pair.make(currentState, i), newStates);
+                makeTransitions(to, Pair.of(currentState, i), newStates);
             } else { // the transition is output
 
                 // transform the string from the FSM to actual output
                 final O o = getOutputParser().apply(letter);
 
                 // create an actual Mealy machine transition
-                final Pair<O, Integer> prev = getTransitions().put(inputTrans, Pair.make(o, to));
+                final Pair<O, Integer> prev = getTransitions().put(inputTrans, Pair.of(o, to));
 
                 // check for non-determinism
                 if (prev != null) {

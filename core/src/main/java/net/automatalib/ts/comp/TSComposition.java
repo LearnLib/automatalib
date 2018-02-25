@@ -22,11 +22,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.automatalib.commons.util.IPair;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.TransitionSystem;
 
 public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I, T1>, TS2 extends TransitionSystem<S2, I, T2>>
-        implements TransitionSystem<IPair<S1, S2>, I, IPair<T1, T2>> {
+        implements TransitionSystem<Pair<S1, S2>, I, Pair<T1, T2>> {
 
     protected final TS1 ts1;
     protected final TS2 ts2;
@@ -45,15 +45,15 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
     }
 
     @Override
-    public Set<IPair<S1, S2>> getInitialStates() {
+    public Set<Pair<S1, S2>> getInitialStates() {
         Collection<S1> init1 = ts1.getInitialStates();
         Collection<S2> init2 = ts2.getInitialStates();
 
-        Set<IPair<S1, S2>> result = new HashSet<>(init1.size() * init2.size());
+        Set<Pair<S1, S2>> result = new HashSet<>(init1.size() * init2.size());
 
         for (S1 s1 : init1) {
             for (S2 s2 : init2) {
-                result.add(new IPair<>(s1, s2));
+                result.add(Pair.of(s1, s2));
             }
         }
 
@@ -61,9 +61,9 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
     }
 
     @Override
-    public Collection<IPair<T1, T2>> getTransitions(IPair<S1, S2> state, I input) {
-        S1 s1 = state.first;
-        S2 s2 = state.second;
+    public Collection<Pair<T1, T2>> getTransitions(Pair<S1, S2> state, I input) {
+        S1 s1 = state.getFirst();
+        S2 s2 = state.getSecond();
         Collection<T1> trans1 = ts1.getTransitions(s1, input);
         Collection<T2> trans2 = ts2.getTransitions(s2, input);
 
@@ -71,11 +71,11 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
             return Collections.emptySet();
         }
 
-        List<IPair<T1, T2>> result = new ArrayList<>(trans1.size() * trans2.size());
+        List<Pair<T1, T2>> result = new ArrayList<>(trans1.size() * trans2.size());
 
         for (T1 t1 : trans1) {
             for (T2 t2 : trans2) {
-                result.add(new IPair<>(t1, t2));
+                result.add(Pair.of(t1, t2));
             }
         }
 
@@ -83,10 +83,10 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
     }
 
     @Override
-    public IPair<S1, S2> getSuccessor(IPair<T1, T2> transition) {
-        T1 t1 = transition.first;
-        T2 t2 = transition.second;
-        return new IPair<>(ts1.getSuccessor(t1), ts2.getSuccessor(t2));
+    public Pair<S1, S2> getSuccessor(Pair<T1, T2> transition) {
+        T1 t1 = transition.getFirst();
+        T2 t2 = transition.getSecond();
+        return Pair.of(ts1.getSuccessor(t1), ts2.getSuccessor(t2));
     }
 
 }

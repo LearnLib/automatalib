@@ -23,7 +23,7 @@ import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.commons.util.strings.StringUtil;
 
 /**
- * Immutable pair class.
+ * Immutable triple class.
  * <p>
  * <b>Note</b>: this class should only be used for internal representations of tuples with value type semantics (e.g.
  * equality, only if all components are equal).
@@ -32,15 +32,17 @@ import net.automatalib.commons.util.strings.StringUtil;
  * that has meaningful identifiers for the individual components.
  *
  * @param <T1>
- *         type of the pair's first component.
+ *         type of the triple's first component.
  * @param <T2>
- *         type of the pair's second component.
+ *         type of the triple's second component.
+ * @param <T3>
+ *         type of the triple's third component.
  *
  * @author Malte Isberner
  * @author frohme
  */
 @Data
-public final class Pair<T1, T2> extends AbstractPrintable implements Serializable {
+public final class Triple<T1, T2, T3> extends AbstractPrintable implements Serializable {
 
     private static final long serialVersionUID = -1L;
 
@@ -49,14 +51,15 @@ public final class Pair<T1, T2> extends AbstractPrintable implements Serializabl
      */
     private final T1 first;
     private final T2 second;
+    private final T3 third;
 
     /**
      * Convenience function for creating a pair, allowing the user to omit the type parameters.
      *
-     * @see #Pair(Object, Object)
+     * @see #Triple(Object, Object, Object)
      */
-    public static <T1, T2> Pair<T1, T2> of(T1 first, T2 second) {
-        return new Pair<>(first, second);
+    public static <T1, T2, T3> Triple<T1, T2, T3> of(T1 first, T2 second, T3 third) {
+        return new Triple<>(first, second, third);
     }
 
     @Override
@@ -64,5 +67,8 @@ public final class Pair<T1, T2> extends AbstractPrintable implements Serializabl
         StringUtil.appendObject(a, first);
         a.append(", ");
         StringUtil.appendObject(a, second);
+        a.append(", ");
+        StringUtil.appendObject(a, third);
     }
+
 }

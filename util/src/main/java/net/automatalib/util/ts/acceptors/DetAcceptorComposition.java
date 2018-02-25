@@ -15,12 +15,12 @@
  */
 package net.automatalib.util.ts.acceptors;
 
-import net.automatalib.commons.util.IPair;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 import net.automatalib.ts.comp.DTSComposition;
 
 public class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorTS<S1, I>, A2 extends DeterministicAcceptorTS<S2, I>>
-        extends DTSComposition<S1, S2, I, S1, S2, A1, A2> implements DeterministicAcceptorTS<IPair<S1, S2>, I> {
+        extends DTSComposition<S1, S2, I, S1, S2, A1, A2> implements DeterministicAcceptorTS<Pair<S1, S2>, I> {
 
     private final AcceptanceCombiner combiner;
 
@@ -30,7 +30,7 @@ public class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorT
     }
 
     @Override
-    public boolean isAccepting(IPair<S1, S2> state) {
+    public boolean isAccepting(Pair<S1, S2> state) {
         S1 s1 = state.getFirst();
         S2 s2 = state.getSecond();
         boolean acc1 = (s1 != null) && ts1.isAccepting(s1);
