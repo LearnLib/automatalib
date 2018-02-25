@@ -176,7 +176,6 @@ limitations under the License.
         <surefire-plugin.version>2.20</surefire-plugin.version>
 
         <!-- dependency versions -->
-        <apache-commons.version>3.5</apache-commons.version>
         <brics-automaton.version>1.11-8</brics-automaton.version>
         <checkstyle.version>8.1</checkstyle.version>
         <duzzt.version>0.0.2</duzzt.version>
@@ -942,11 +941,6 @@ limitations under the License.
                 <artifactId>jsr305</artifactId>
                 <version>${findbugs-annotations.version}</version>
                 <!-- <scope>provided</scope> -->
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${apache-commons.version}</version>
             </dependency>
 
             <!-- JUNG dependencies -->

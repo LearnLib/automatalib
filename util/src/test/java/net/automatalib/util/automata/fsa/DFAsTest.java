@@ -128,15 +128,15 @@ public class DFAsTest {
 
         Assert.assertFalse(DFAs.isPrefixClosed(forVector(VECTOR_2), testAlphabet));
 
-        Assert.assertTrue(DFAs.isPrefixClosed(forVector(new boolean[] {true, true, true, true}), testAlphabet));
+        Assert.assertTrue(DFAs.isPrefixClosed(forVector(true, true, true, true), testAlphabet));
 
-        Assert.assertTrue(DFAs.isPrefixClosed(forVector(new boolean[] {false, false, false, false}), testAlphabet));
+        Assert.assertTrue(DFAs.isPrefixClosed(forVector(false, false, false, false), testAlphabet));
     }
 
     @Test
     public void testAcceptsEmptyLanguage() {
-        Assert.assertTrue(DFAs.acceptsEmptyLanguage(forVector(new boolean[] {false})));
+        Assert.assertTrue(DFAs.acceptsEmptyLanguage(forVector(false)));
 
-        Assert.assertFalse(DFAs.acceptsEmptyLanguage(forVector(new boolean[] {true})));
+        Assert.assertFalse(DFAs.acceptsEmptyLanguage(forVector(true)));
     }
 }

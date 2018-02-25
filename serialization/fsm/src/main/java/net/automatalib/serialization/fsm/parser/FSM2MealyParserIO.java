@@ -16,35 +16,38 @@
 package net.automatalib.serialization.fsm.parser;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 
 /**
  * Parse a Mealy machine from an FSM source, with straightforward edge semantics.
  *
- * @author Jeroen Meijer
+ * @param <I>
+ *         the input type
+ * @param <O>
+ *         the output type
  *
- * @param <I> the input type
- * @param <O> the output type
+ * @author Jeroen Meijer
  */
 public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O> {
 
     /**
      * Constructs a new FSM2MealyParserIO. Use one of the static parse() methods to actually parse an FSM source.
      *
-     * @param reader the Reader.
-     * @param inputParser the input parser (see {@link #inputParser}).
-     * @param outputParser the output parser (similar to {@code inputParser}.
+     * @param reader
+     *         the Reader.
+     * @param inputParser
+     *         the input parser (see {@link #inputParser}).
+     * @param outputParser
+     *         the output parser (similar to {@code inputParser}.
      */
     private FSM2MealyParserIO(Reader reader, Function<String, I> inputParser, Function<String, O> outputParser) {
         super(reader, inputParser, outputParser);
@@ -85,8 +88,10 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
     /**
      * Parse a transition.
      *
-     * @throws FSMParseException when the transition is illegal.
-     * @throws IOException see {@link StreamTokenizer#nextToken()}.
+     * @throws FSMParseException
+     *         when the transition is illegal.
+     * @throws IOException
+     *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
     protected void parseTransition() throws FSMParseException, IOException {
@@ -158,46 +163,50 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
     }
 
     public static <I, O> CompactMealy<I, O> parse(Reader reader,
-                                            Function<String, I> inputParser, Function<String, O> outputParser) throws
-            IOException, FSMParseException {
+                                                  Function<String, I> inputParser,
+                                                  Function<String, O> outputParser)
+            throws IOException, FSMParseException {
         return new FSM2MealyParserIO<>(reader, inputParser, outputParser).parseMealy();
     }
 
     public static <I, O> CompactMealy<I, O> parse(File file,
-                                            Function<String, I> inputParser, Function<String, O> outputParser) throws
-            IOException, FSMParseException {
-        return parse(new FileInputStream(file), inputParser, outputParser);
+                                                  Function<String, I> inputParser,
+                                                  Function<String, O> outputParser)
+            throws IOException, FSMParseException {
+        return parse(IOUtil.asBufferedUTF8Reader(file), inputParser, outputParser);
     }
 
     public static <I, O> CompactMealy<I, O> parse(String string,
-                                            Function<String, I> inputParser, Function<String, O> outputParser) throws
-            IOException, FSMParseException {
+                                                  Function<String, I> inputParser,
+                                                  Function<String, O> outputParser)
+            throws IOException, FSMParseException {
         return parse(new StringReader(string), inputParser, outputParser);
     }
 
     public static <I, O> CompactMealy<I, O> parse(InputStream inputStream,
-                                            Function<String, I> inputParser, Function<String, O> outputParser)
+                                                  Function<String, I> inputParser,
+                                                  Function<String, O> outputParser)
             throws IOException, FSMParseException {
-        return parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8), inputParser, outputParser);
+        return parse(IOUtil.asBufferedUTF8Reader(inputStream), inputParser, outputParser);
     }
 
-    public static <E> CompactMealy<E, E> parse(Reader reader,
-                                         Function<String, E> edgeParser) throws IOException, FSMParseException {
+    public static <E> CompactMealy<E, E> parse(Reader reader, Function<String, E> edgeParser)
+            throws IOException, FSMParseException {
         return parse(reader, edgeParser, edgeParser);
     }
 
-    public static <E> CompactMealy<E, E> parse(File file,
-                                         Function<String, E> edgeParser) throws IOException, FSMParseException {
+    public static <E> CompactMealy<E, E> parse(File file, Function<String, E> edgeParser)
+            throws IOException, FSMParseException {
         return parse(file, edgeParser, edgeParser);
     }
 
-    public static <E> CompactMealy<E, E> parse(String string,
-                                         Function<String, E> edgeParser) throws IOException, FSMParseException {
+    public static <E> CompactMealy<E, E> parse(String string, Function<String, E> edgeParser)
+            throws IOException, FSMParseException {
         return parse(string, edgeParser, edgeParser);
     }
 
-    public static <E> CompactMealy<E, E> parse(InputStream inputStream,
-                                         Function<String, E> edgeParser) throws IOException, FSMParseException {
+    public static <E> CompactMealy<E, E> parse(InputStream inputStream, Function<String, E> edgeParser)
+            throws IOException, FSMParseException {
         return parse(inputStream, edgeParser, edgeParser);
     }
 }

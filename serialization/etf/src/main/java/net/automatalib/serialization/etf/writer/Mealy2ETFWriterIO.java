@@ -16,7 +16,6 @@
 package net.automatalib.serialization.etf.writer;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -124,10 +123,10 @@ public final class Mealy2ETFWriterIO<S, I, T, O> extends AbstractETFWriter<I, Me
     }
 
     public static <I, O> void write(File file, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) throws IOException {
-        write(new FileOutputStream(file), mealy, inputs);
+        write(IOUtil.asBufferedUTF8Writer(file), mealy, inputs);
     }
 
     public static <I, O> void write(OutputStream outputStream, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) {
-        write(IOUtil.asUTF8Writer(outputStream), mealy, inputs);
+        write(IOUtil.asBufferedUTF8Writer(outputStream), mealy, inputs);
     }
 }

@@ -16,7 +16,6 @@
 package net.automatalib.serialization.etf.writer;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -128,10 +127,10 @@ public final class DFA2ETFWriter<S, I> extends AbstractETFWriter<I, DFA<S, I>> {
     }
 
     public static <I> void write(File file, DFA<?, I> dfa, Alphabet<I> inputs) throws IOException {
-        write(new FileOutputStream(file), dfa, inputs);
+        write(IOUtil.asBufferedUTF8Writer(file), dfa, inputs);
     }
 
     public static <I> void write(OutputStream outputStream, DFA<?, I> dfa, Alphabet<I> inputs) {
-        write(IOUtil.asUTF8Writer(outputStream), dfa, inputs);
+        write(IOUtil.asBufferedUTF8Writer(outputStream), dfa, inputs);
     }
 }

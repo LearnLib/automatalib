@@ -16,14 +16,11 @@
 package net.automatalib.serialization.fsm.parser;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -31,6 +28,7 @@ import java.util.TreeMap;
 import java.util.function.Function;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -38,7 +36,8 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * Parses an FSM to a DFA.
  *
- * @param <I> the input type
+ * @param <I>
+ *         the input type
  */
 public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
 
@@ -80,12 +79,20 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
 
     /**
      * Constructs an FSM2DFAParser. To parse a DFA use one of the parse() methods.
-     * @param reader the Reader
-     * @param inputParser the input parser (see {@link AbstractFSMParser#inputParser}).
-     * @param acceptingDataVariableName the variable name for acceptance (see {@link #acceptingDataVariableName})
-     * @param acceptingDataValue the string for acceptance (see {@link #acceptingDataValue})
+     *
+     * @param reader
+     *         the Reader
+     * @param inputParser
+     *         the input parser (see {@link AbstractFSMParser#inputParser}).
+     * @param acceptingDataVariableName
+     *         the variable name for acceptance (see {@link #acceptingDataVariableName})
+     * @param acceptingDataValue
+     *         the string for acceptance (see {@link #acceptingDataValue})
      */
-    private FSM2DFAParser(Reader reader, Function<String, I> inputParser, String acceptingDataVariableName, String acceptingDataValue) {
+    private FSM2DFAParser(Reader reader,
+                          Function<String, I> inputParser,
+                          String acceptingDataVariableName,
+                          String acceptingDataValue) {
         super(reader, inputParser);
         this.acceptingDataVariableName = acceptingDataVariableName;
         this.acceptingDataValue = acceptingDataValue;
@@ -93,11 +100,13 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
 
     /**
      * Parse a data definition.
-     *
+     * <p>
      * This line is only parsed when we still have to find {@link #acceptIndex}, and {@link #acceptValue}.
      *
-     * @throws FSMParseException when the data definition is illegal.
-     * @throws IOException see {@link StreamTokenizer#nextToken()}.
+     * @throws FSMParseException
+     *         when the data definition is illegal.
+     * @throws IOException
+     *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
     protected void parseDataDefinition() throws FSMParseException, IOException {
@@ -149,9 +158,8 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
 
                 // throw an Exception when the string containing acceptance information is not found in the current line
                 if (acceptValue == -1) {
-                    throw new FSMParseException(
-                            String.format(ACCEPT_VALUE_NOT_FOUND, acceptingDataValue),
-                            getStreamTokenizer());
+                    throw new FSMParseException(String.format(ACCEPT_VALUE_NOT_FOUND, acceptingDataValue),
+                                                getStreamTokenizer());
                 }
             }
         }
@@ -161,32 +169,34 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      * Checks the data definition by ensuring the index in the state vector containing acceptance information is
      * defined.
      *
-     * @throws FSMParseException when the acceptance information could not be found.
+     * @throws FSMParseException
+     *         when the acceptance information could not be found.
      */
     @Override
     protected void checkDataDefinitions() throws FSMParseException {
         if (acceptIndex == -1) {
-            throw new FSMParseException(
-                    String.format(ACCEPT_NOT_FOUND, acceptingDataVariableName),
-                    getStreamTokenizer());
+            throw new FSMParseException(String.format(ACCEPT_NOT_FOUND, acceptingDataVariableName),
+                                        getStreamTokenizer());
         }
     }
 
     /**
      * Parse a state vector.
-     *
+     * <p>
      * This method will only search for whether the state is accepting or not. The state index will be equal to the
      * current {@link #getPartLineNumber()}.
      *
-     * @throws FSMParseException when the current line is an illegal state vector.
-     * @throws IOException see {@link StreamTokenizer#nextToken()}.
+     * @throws FSMParseException
+     *         when the current line is an illegal state vector.
+     * @throws IOException
+     *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
     protected void parseStateVector() throws FSMParseException, IOException {
         Boolean accepting = null;
         for (int i = 0;
-                 i <= acceptIndex && getStreamTokenizer().nextToken() == StreamTokenizer.TT_WORD && accepting == null;
-                 i++) {
+             i <= acceptIndex && getStreamTokenizer().nextToken() == StreamTokenizer.TT_WORD && accepting == null;
+             i++) {
             final String value = getStreamTokenizer().sval;
             if (i == acceptIndex) {
                 try {
@@ -197,7 +207,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
             }
         }
         if (accepting == null) {
-            throw new FSMParseException( String.format(ACCEPT_INDEX_NOT_FOUND, acceptIndex), getStreamTokenizer());
+            throw new FSMParseException(String.format(ACCEPT_INDEX_NOT_FOUND, acceptIndex), getStreamTokenizer());
         } else {
             states.put(getPartLineNumber(), accepting);
         }
@@ -214,8 +224,10 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
     /**
      * Parse a transition by searching the current line for the source state, target state and the input.
      *
-     * @throws FSMParseException when the current line is an illegal transition.
-     * @throws IOException see {@link StreamTokenizer#nextToken()}.
+     * @throws FSMParseException
+     *         when the current line is an illegal transition.
+     * @throws IOException
+     *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
     protected void parseTransition() throws FSMParseException, IOException {
@@ -280,8 +292,10 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      *
      * @return the DFA represented by the FSM file.
      *
-     * @throws FSMParseException see {@link #parse()}.
-     * @throws IOException see {@link #parse()}.
+     * @throws FSMParseException
+     *         see {@link #parse()}.
+     * @throws IOException
+     *         see {@link #parse()}.
      */
     private CompactDFA<I> parseDFA() throws FSMParseException, IOException {
 
@@ -299,7 +313,8 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
         // add all the transitions
         for (Map.Entry<Pair<Integer, I>, Integer> transition : transitions.entrySet()) {
             dfa.addTransition(transition.getKey().getFirst() - 1,
-                              transition.getKey().getSecond(), transition.getValue() - 1);
+                              transition.getKey().getSecond(),
+                              transition.getValue() - 1);
         }
 
         return dfa;
@@ -308,34 +323,31 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
     public static <I> CompactDFA<I> parse(Reader reader,
                                           Function<String, I> inputParser,
                                           String acceptingDataVariableName,
-                                          String acceptingDataValue) throws
-            IOException, FSMParseException {
+                                          String acceptingDataValue) throws IOException, FSMParseException {
         return new FSM2DFAParser<>(reader, inputParser, acceptingDataVariableName, acceptingDataValue).parseDFA();
     }
 
     public static <I> CompactDFA<I> parse(File file,
-                                   Function<String, I> inputParser,
-                                   String acceptingDataVariableName,
-                                   String acceptingDataValue) throws
-            IOException, FSMParseException {
-        return parse(new FileInputStream(file), inputParser,
-                acceptingDataVariableName,
-                acceptingDataValue);
+                                          Function<String, I> inputParser,
+                                          String acceptingDataVariableName,
+                                          String acceptingDataValue) throws IOException, FSMParseException {
+        return parse(IOUtil.asBufferedUTF8Reader(file), inputParser, acceptingDataVariableName, acceptingDataValue);
     }
 
     public static <I> CompactDFA<I> parse(String string,
                                           Function<String, I> inputParser,
                                           String acceptingDataVariableName,
-                                          String acceptingDataValue) throws
-            IOException, FSMParseException {
+                                          String acceptingDataValue) throws IOException, FSMParseException {
         return parse(new StringReader(string), inputParser, acceptingDataVariableName, acceptingDataValue);
     }
 
     public static <I> CompactDFA<I> parse(InputStream inputStream,
                                           Function<String, I> inputParser,
-                                          String acceptingDataVariableName, String acceptingDataValue)
-            throws IOException, FSMParseException {
-        return parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8), inputParser, acceptingDataVariableName,
-                acceptingDataValue);
+                                          String acceptingDataVariableName,
+                                          String acceptingDataValue) throws IOException, FSMParseException {
+        return parse(IOUtil.asBufferedUTF8Reader(inputStream),
+                     inputParser,
+                     acceptingDataVariableName,
+                     acceptingDataValue);
     }
 }

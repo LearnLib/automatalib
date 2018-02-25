@@ -382,9 +382,10 @@ public final class DFAs {
      * @return whether the DFA is prefix-closed.
      */
     public static <S, I> boolean isPrefixClosed(DFA<S, I> dfa, Alphabet<I> alphabet) {
-        return dfa.getStates().parallelStream().allMatch(
-                s -> dfa.isAccepting(s)
-                     || alphabet.parallelStream().allMatch(i -> !dfa.isAccepting(dfa.getSuccessors(s, i))));
+        return dfa.getStates()
+                  .parallelStream()
+                  .allMatch(s -> dfa.isAccepting(s) ||
+                                 alphabet.parallelStream().noneMatch(i -> dfa.isAccepting(dfa.getSuccessors(s, i))));
     }
 
     /**

@@ -115,8 +115,9 @@ public final class HopcroftMinimization {
      *
      * @return a minimized version of the specified Mealy machine
      */
-    public static <S, I, T, O, A extends MealyMachine<S, I, T, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(A mealy,
-                                                                                                                       PruningMode pruningMode) {
+    public static <S, I, T, O, A extends MealyMachine<S, I, T, O> & InputAlphabetHolder<I>> CompactMealy<I, O> minimizeMealy(
+            A mealy,
+            PruningMode pruningMode) {
         return doMinimizeMealy(mealy, mealy.getInputAlphabet(), new CompactMealy.Creator<>(), pruningMode);
     }
 
@@ -202,7 +203,7 @@ public final class HopcroftMinimization {
      * @return a minimized version of the specified DFA
      */
     public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimizeDFA(A dfa,
-                                                                                              PruningMode pruningMode) {
+                                                                                                 PruningMode pruningMode) {
         return doMinimizeDFA(dfa, dfa.getInputAlphabet(), new CompactDFA.Creator<>(), pruningMode);
     }
 

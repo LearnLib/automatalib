@@ -16,18 +16,18 @@
 package net.automatalib.serialization.etf.writer;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Map;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.IOUtil;
+import net.automatalib.commons.util.Triple;
 import net.automatalib.words.Alphabet;
-import org.apache.commons.lang3.tuple.Triple;
 
 /**
  * Write a Mealy machine with alternating edge semantics.
@@ -152,8 +152,11 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
         for (int i = 0; i < oldStates.size(); i++) {
             pw.printf("\"%s\"%n", oldStates.inverse().get(i));
         }
+
+        final Map<Integer, Triple<S, O, S>> inverseTransitions = outputTransitions.inverse();
         for (int i = 0; i < outputTransitions.size(); i++) {
-            pw.printf("\"%s\"%n", outputTransitions.inverse().get(oldStates.size() + i));
+            final Triple<S, O, S> t = inverseTransitions.get(oldStates.size() + i);
+            pw.printf("\"(%s,%s,%s)\"%n", t.getFirst(), t.getSecond(), t.getThird());
         }
         pw.println("end sort");
 
@@ -171,10 +174,10 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
     }
 
     public static <I, O> void write(File file, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) throws IOException {
-        write(new FileOutputStream(file), mealy, inputs);
+        write(IOUtil.asBufferedUTF8Writer(file), mealy, inputs);
     }
 
     public static <I, O> void write(OutputStream outputStream, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) {
-        write(IOUtil.asUTF8Writer(outputStream), mealy, inputs);
+        write(IOUtil.asBufferedUTF8Writer(outputStream), mealy, inputs);
     }
 }
