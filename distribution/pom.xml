@@ -100,6 +100,16 @@ limitations under the License.
 
         <dependency>
             <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-etf</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-fsm</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-learnlibv2</artifactId>
         </dependency>
 
@@ -231,6 +241,20 @@ limitations under the License.
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-serialization-dot</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-serialization-etf</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-serialization-fsm</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

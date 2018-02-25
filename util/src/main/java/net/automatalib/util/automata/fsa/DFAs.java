@@ -365,8 +365,39 @@ public final class DFAs {
      *
      * @return a minimized version of the specified DFA
      */
-    public static <I, A extends DFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> minimize(A dfa) {
+    public static <S, I, A extends DFA<S, I> & InputAlphabetHolder<I>> CompactDFA<I> minimize(A dfa) {
         return HopcroftMinimization.minimizeDFA(dfa);
     }
 
+    /**
+     * Computes whether the language of the given DFA is prefix-closed.
+     *
+     * Assumes all states in the given {@link DFA} are reachable from the initial state.
+     *
+     * @param dfa the DFA to check
+     * @param alphabet the Alphabet
+     * @param <S> the type of state
+     * @param <I> the type of input
+     *
+     * @return whether the DFA is prefix-closed.
+     */
+    public static <S, I> boolean isPrefixClosed(DFA<S, I> dfa, Alphabet<I> alphabet) {
+        return dfa.getStates().parallelStream().allMatch(
+                s -> dfa.isAccepting(s)
+                     || alphabet.parallelStream().allMatch(i -> !dfa.isAccepting(dfa.getSuccessors(s, i))));
+    }
+
+    /**
+     * Computes whether the given {@link DFA} accepts the empty language.
+     *
+     * Assumes all states in the given {@link DFA} are reachable from the initial state.
+     *
+     * @param dfa the {@link DFA} to check.
+     * @param <S> the state type.
+     *
+     * @return whether the given {@link DFA} accepts the empty language.
+     */
+    public static <S> boolean acceptsEmptyLanguage(DFA<S, ?> dfa) {
+        return dfa.getStates().stream().noneMatch(dfa::isAccepting);
+    }
 }
