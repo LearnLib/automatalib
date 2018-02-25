@@ -52,8 +52,6 @@ public final class Pair<T1, T2> extends AbstractPrintable implements Serializabl
 
     /**
      * Convenience function for creating a pair, allowing the user to omit the type parameters.
-     *
-     * @see #Pair(Object, Object)
      */
     public static <T1, T2> Pair<T1, T2> of(T1 first, T2 second) {
         return new Pair<>(first, second);

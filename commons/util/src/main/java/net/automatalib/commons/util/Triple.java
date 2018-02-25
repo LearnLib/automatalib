@@ -54,9 +54,7 @@ public final class Triple<T1, T2, T3> extends AbstractPrintable implements Seria
     private final T3 third;
 
     /**
-     * Convenience function for creating a pair, allowing the user to omit the type parameters.
-     *
-     * @see #Triple(Object, Object, Object)
+     * Convenience function for creating a triple, allowing the user to omit the type parameters.
      */
     public static <T1, T2, T3> Triple<T1, T2, T3> of(T1 first, T2 second, T3 third) {
         return new Triple<>(first, second, third);
