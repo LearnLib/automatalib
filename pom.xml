@@ -189,6 +189,7 @@ limitations under the License.
         <site-plugin.version>3.6</site-plugin.version>
         <source-plugin.version>3.0.1</source-plugin.version>
         <surefire-plugin.version>2.20</surefire-plugin.version>
+        <tidy-pom.vesion>1.1.0</tidy-pom.vesion>
 
         <!-- dependency versions -->
         <brics-automaton.version>1.11-8</brics-automaton.version>
@@ -679,6 +680,11 @@ limitations under the License.
                         </compilerArgs>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>tidy-maven-plugin</artifactId>
+                    <version>${tidy-pom.vesion}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -786,6 +792,19 @@ limitations under the License.
                                     <!-- workaround for APT / slf4j test dependencies -->
                                     <ignoreNonCompile>true</ignoreNonCompile>
                                 </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>tidy-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>validate</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
                             </execution>
                         </executions>
                     </plugin>
