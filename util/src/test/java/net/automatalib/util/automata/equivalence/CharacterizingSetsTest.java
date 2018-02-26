@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.automata.equivalence;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -22,8 +23,8 @@ import java.util.Random;
 import java.util.Set;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -39,31 +40,51 @@ public class CharacterizingSetsTest {
 
     private static final Random RANDOM = new Random(0);
     private static final int AUTOMATON_SIZE = 20;
+    private static final Alphabet<Integer> INPUT_ALPHABET = Alphabets.integers(0, 5);
+    private static final Alphabet<Character> OUTPUT_ALPHABET = Alphabets.characters('a', 'f');
+
+    private static final CompactDFA<Integer> DFA = RandomAutomata.randomDFA(RANDOM, AUTOMATON_SIZE, INPUT_ALPHABET);
+    private static final CompactMealy<Integer, Character> MEALY =
+            RandomAutomata.randomMealy(RANDOM, AUTOMATON_SIZE, INPUT_ALPHABET, OUTPUT_ALPHABET);
 
     @Test
     public void characterizingDFATest() {
-        final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);
+        final List<Word<Integer>> characterizingSet = Automata.characterizingSet(DFA, INPUT_ALPHABET);
 
-        final DFA<?, Integer> dfa = RandomAutomata.randomDFA(RANDOM, AUTOMATON_SIZE, alphabet);
-        final List<Word<Integer>> characterizingSet = Automata.characterizingSet(dfa, alphabet);
+        final Set<Set<Integer>> distinguishedStates = checkCharacterizingSet(DFA, characterizingSet);
+        isPairwiseDistinguished(DFA, distinguishedStates);
+    }
 
-        checkCharacterizingSet(dfa, characterizingSet);
+    @Test
+    public void characterizingDFASingleTest() {
+        final Integer state = DFA.getState(AUTOMATON_SIZE / 2);
+        final List<Word<Integer>> characterizingSet = new ArrayList<>();
+        CharacterizingSets.findCharacterizingSet(DFA, INPUT_ALPHABET, state, characterizingSet);
+
+        final Set<Set<Integer>> distinguishedStates = checkCharacterizingSet(DFA, characterizingSet);
+        isSingleDistinguished(DFA, distinguishedStates, state);
     }
 
     @Test
     public void characterizingMealyTest() {
-        final Alphabet<Integer> inputAlphabet = Alphabets.integers(0, 5);
-        final Alphabet<Character> outputAlphabet = Alphabets.characters('a', 'f');
+        final List<Word<Integer>> characterizingSet = Automata.characterizingSet(MEALY, INPUT_ALPHABET);
 
-        final MealyMachine<?, Integer, ?, Character> mealy =
-                RandomAutomata.randomMealy(RANDOM, AUTOMATON_SIZE, inputAlphabet, outputAlphabet);
-        final List<Word<Integer>> characterizingSet = Automata.characterizingSet(mealy, inputAlphabet);
-
-        checkCharacterizingSet(mealy, characterizingSet);
+        final Set<Set<Integer>> distinguishedStates = checkCharacterizingSet(MEALY, characterizingSet);
+        isPairwiseDistinguished(MEALY, distinguishedStates);
     }
 
-    private <S, I, T, SP, TP> void checkCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
-                                                          Collection<Word<I>> characterizingSet) {
+    @Test
+    public void characterizingMealySingleTest() {
+        final Integer state = MEALY.getState(AUTOMATON_SIZE / 2);
+        final List<Word<Integer>> characterizingSet = new ArrayList<>();
+        CharacterizingSets.findCharacterizingSet(MEALY, INPUT_ALPHABET, state, characterizingSet);
+
+        final Set<Set<Integer>> distinguishedStates = checkCharacterizingSet(MEALY, characterizingSet);
+        isSingleDistinguished(MEALY, distinguishedStates, state);
+    }
+
+    private <S, I, T, SP, TP> Set<Set<S>> checkCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
+                                                                 Collection<Word<I>> characterizingSet) {
 
         final Set<Set<S>> distinguishedStates = new HashSet<>();
 
@@ -79,7 +100,7 @@ public class CharacterizingSetsTest {
             distinguishedStates.add(currentlyDistinguishedStates);
         }
 
-        isPairwiseDistinguished(automaton, distinguishedStates);
+        return distinguishedStates;
     }
 
     private <S, I, T, SP, TP> boolean isDistinguished(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
@@ -139,4 +160,24 @@ public class CharacterizingSetsTest {
         }
     }
 
+    private <S, I, T, SP, TP> void isSingleDistinguished(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
+                                                         Set<Set<S>> distinguishedStates,
+                                                         S state) {
+        for (final S s : automaton.getStates()) {
+            if (s.equals(state)) {
+                continue;
+            }
+
+            boolean distinguishedByOneWord = false;
+
+            for (final Set<S> d : distinguishedStates) {
+                if (d.contains(state)) {
+                    distinguishedByOneWord = true;
+                    break;
+                }
+            }
+
+            Assert.assertTrue(distinguishedByOneWord, "States " + s + ',' + state + " are not distinguished");
+        }
+    }
 }
