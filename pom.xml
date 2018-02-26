@@ -189,7 +189,7 @@ limitations under the License.
         <site-plugin.version>3.6</site-plugin.version>
         <source-plugin.version>3.0.1</source-plugin.version>
         <surefire-plugin.version>2.20</surefire-plugin.version>
-        <tidy-pom.vesion>1.1.0</tidy-pom.vesion>
+        <tidy-pom.version>1.1.0</tidy-pom.version>
 
         <!-- dependency versions -->
         <brics-automaton.version>1.11-8</brics-automaton.version>
@@ -683,7 +683,7 @@ limitations under the License.
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>tidy-maven-plugin</artifactId>
-                    <version>${tidy-pom.vesion}</version>
+                    <version>${tidy-pom.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
