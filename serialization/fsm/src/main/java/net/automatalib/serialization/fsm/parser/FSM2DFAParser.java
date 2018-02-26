@@ -305,7 +305,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
         final CompactDFA<I> dfa = new CompactDFA<>(alphabet);
 
         // add all the states
-        states.entrySet().forEach(s -> dfa.addState(s.getValue()));
+        states.forEach((key, value) -> dfa.addState(value));
 
         // set the initial state (substract one because the StreamTokenizer starts counting at 1
         dfa.setInitialState(states.firstKey() - 1);

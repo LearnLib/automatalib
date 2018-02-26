@@ -25,7 +25,7 @@ import net.automatalib.words.Word;
 /**
  * Utility class, that stores information about access sequences of automaton states.
  *
- * @param <I>
+ * @param <S>
  *         automaton state type
  * @param <I>
  *         input symbol type
