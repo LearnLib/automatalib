@@ -18,18 +18,22 @@ package net.automatalib.visualization.dot;
 import net.automatalib.visualization.VPManager;
 import net.automatalib.visualization.VisualizationProvider;
 import org.testng.Assert;
+import org.testng.SkipException;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class ProviderTest {
 
-    @Test
-    public void testProviderConfiguration() {
-
+    @BeforeClass
+    public void checkDOT() {
         if (!DOT.checkUsable()) {
             // Do not fail on platforms, where DOT is not installed
-            return;
+            throw new SkipException("DOT is not installed");
         }
+    }
 
+    @Test
+    public void testProviderConfiguration() {
         final VPManager vpManager = new VPManager();
 
         vpManager.load();
