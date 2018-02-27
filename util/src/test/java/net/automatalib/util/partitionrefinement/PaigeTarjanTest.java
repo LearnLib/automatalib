@@ -77,7 +77,7 @@ public class PaigeTarjanTest {
 
     private static void testDFAInternal(CompactDFA<Character> dfa,
                                         int expectedPrunedStates,
-                                        int expectedUprunedStates) {
+                                        int expectedUnprunedStates) {
 
         final Alphabet<Character> alphabet = dfa.getInputAlphabet();
         final PaigeTarjan pt = new PaigeTarjan();
@@ -105,7 +105,7 @@ public class PaigeTarjanTest {
                                                                                            dfa::getStateProperty,
                                                                                            null,
                                                                                            false);
-        checkDFA(unprunedResult, expectedUprunedStates);
+        checkDFA(unprunedResult, expectedUnprunedStates);
     }
 
     private static void checkDFA(CompactDFA<Character> dfa, int expectedStates) {
@@ -162,7 +162,7 @@ public class PaigeTarjanTest {
 
     private static void testMealyInternal(CompactMealy<Character, Character> mealy,
                                           int expectedPrunedStates,
-                                          int expectedUprunedStates) {
+                                          int expectedUnprunedStates) {
 
         final Alphabet<Character> alphabet = mealy.getInputAlphabet();
         final Function<? super Integer, ?> initialClassification =
@@ -192,7 +192,7 @@ public class PaigeTarjanTest {
                                                                                                         null,
                                                                                                         mealy::getTransitionProperty,
                                                                                                         false);
-        checkMealy(unprunedResult, expectedUprunedStates);
+        checkMealy(unprunedResult, expectedUnprunedStates);
     }
 
     private static void checkMealy(CompactMealy<Character, Character> mealy, int expectedStates) {
