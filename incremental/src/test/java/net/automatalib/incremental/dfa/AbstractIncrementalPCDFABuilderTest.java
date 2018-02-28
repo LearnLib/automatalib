@@ -151,4 +151,18 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
         Assert.assertEquals(sepWord, Word.fromString("acba"));
     }
 
+    @Test
+    public void testCounterexampleOfLengthOne() {
+        final IncrementalDFABuilder<Character> incPcDfa = createIncrementalPCDFABuilder(TEST_ALPHABET);
+        incPcDfa.insert(Word.fromCharSequence("a"), true);
+
+        final CompactDFA<Character> dfa = new CompactDFA<>(TEST_ALPHABET);
+        final Integer q0 = dfa.addInitialState(true);
+        final Integer q1 = dfa.addState(false);
+
+        dfa.addTransition(q0, 'a', q1);
+
+        final Word<Character> ce = incPcDfa.findSeparatingWord(dfa, TEST_ALPHABET, false);
+        Assert.assertNotNull(ce);
+    }
 }
