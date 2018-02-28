@@ -91,10 +91,10 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
                 wb.append(input);
 
                 dfsStack.pop();
-                do {
+                while (!dfsStack.isEmpty()) {
                     wb.append(rec.incomingInput);
                     rec = dfsStack.pop();
-                } while (!dfsStack.isEmpty());
+                }
                 wb.reverse();
                 if (liveSuffix != null) {
                     wb.append(liveSuffix);

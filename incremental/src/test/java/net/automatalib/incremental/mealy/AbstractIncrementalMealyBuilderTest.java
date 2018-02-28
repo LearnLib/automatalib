@@ -169,4 +169,19 @@ public abstract class AbstractIncrementalMealyBuilderTest {
         Assert.assertEquals(sepWord, Word.fromString("acb"));
     }
 
+    @Test
+    public void testCounterexampleOfLengthOne() {
+        final IncrementalMealyBuilder<Character, Character> incMealy = createIncrementalMealyBuilder(TEST_ALPHABET);
+        incMealy.insert(Word.fromCharSequence("a"), Word.fromCharSequence("x"));
+
+        final CompactMealy<Character, Character> dfa = new CompactMealy<>(TEST_ALPHABET);
+        final Integer q0 = dfa.addInitialState();
+        final Integer q1 = dfa.addState();
+
+        dfa.addTransition(q0, 'a', q1, 'y');
+
+        final Word<Character> ce = incMealy.findSeparatingWord(dfa, TEST_ALPHABET, false);
+        Assert.assertNotNull(ce);
+    }
+
 }
