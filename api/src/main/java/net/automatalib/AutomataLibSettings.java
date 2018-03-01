@@ -35,11 +35,11 @@ public final class AutomataLibSettings {
         return INSTANCE;
     }
 
-    public String getProperty(String propName) {
-        return properties.getProperty("automatalib." + propName);
+    public String getProperty(AutomataLibProperty property) {
+        return properties.getProperty(property.getPropertyKey());
     }
 
-    public String getProperty(String propName, String defaultValue) {
-        return properties.getProperty("automatalib." + propName, defaultValue);
+    public String getProperty(AutomataLibProperty property, String defaultValue) {
+        return properties.getProperty(property.getPropertyKey(), defaultValue);
     }
 }

@@ -36,6 +36,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.array.AWUtil;
 import net.automatalib.commons.util.array.ArrayWritable;
@@ -78,12 +79,12 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 
     static {
         AutomataLibSettings settings = AutomataLibSettings.getInstance();
-        EMPTY_WORD_REP = settings.getProperty("word.empty", "ε");
-        WORD_DELIM_LEFT = settings.getProperty("word.delim.left", "");
-        WORD_DELIM_RIGHT = settings.getProperty("word.delim.right", "");
-        WORD_SYMBOL_SEPARATOR = settings.getProperty("word.symbol.separator", " ");
-        WORD_SYMBOL_DELIM_LEFT = settings.getProperty("word.symbol.delim.left", "");
-        WORD_SYMBOL_DELIM_RIGHT = settings.getProperty("word.symbol.delim.right", "");
+        EMPTY_WORD_REP = settings.getProperty(AutomataLibProperty.WORD_EMPTY_REP, "ε");
+        WORD_DELIM_LEFT = settings.getProperty(AutomataLibProperty.WORD_DELIM_LEFT, "");
+        WORD_DELIM_RIGHT = settings.getProperty(AutomataLibProperty.WORD_DELIM_RIGHT, "");
+        WORD_SYMBOL_SEPARATOR = settings.getProperty(AutomataLibProperty.WORD_SYMBOL_SEPARATOR, " ");
+        WORD_SYMBOL_DELIM_LEFT = settings.getProperty(AutomataLibProperty.WORD_SYMBOL_DELIM_LEFT, "");
+        WORD_SYMBOL_DELIM_RIGHT = settings.getProperty(AutomataLibProperty.WORD_DELIM_RIGHT, "");
     }
 
     public static <I> Comparator<Word<? extends I>> canonicalComparator(Comparator<? super I> symComparator) {

@@ -15,12 +15,13 @@
  */
 package net.automatalib.commons.util.settings;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.Reader;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import net.automatalib.commons.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +41,8 @@ public abstract class AbstractClassPathFileSource implements SettingsSource {
             Enumeration<URL> resourceUrls = getClass().getClassLoader().getResources(fileName);
             while (resourceUrls.hasMoreElements()) {
                 URL url = resourceUrls.nextElement();
-                try (BufferedInputStream is = new BufferedInputStream(url.openStream())) {
-                    properties.load(is);
+                try (Reader r = IOUtil.asBufferedUTF8Reader(url.openStream())) {
+                    properties.load(r);
                 } catch (IOException ex) {
                     log.error("Could not read property file " + url + ".", ex);
                 }

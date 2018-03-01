@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.graphs.TransitionEdge;
@@ -40,7 +41,7 @@ public final class Visualization {
     private Visualization() {
         AutomataLibSettings settings = AutomataLibSettings.getInstance();
 
-        String providerId = settings.getProperty("visualization.provider");
+        String providerId = settings.getProperty(AutomataLibProperty.VISUALIZATION_PROVIDER);
         VisualizationProvider vp = null;
 
         VPManager manager = new VPManager();

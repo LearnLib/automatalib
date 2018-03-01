@@ -44,6 +44,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
+import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.IOUtil;
 import org.slf4j.Logger;
@@ -67,8 +68,8 @@ public final class DOT {
     static {
         AutomataLibSettings settings = AutomataLibSettings.getInstance();
 
-        String dotExePath = settings.getProperty("dot.exe.dir");
-        String dotExeName = settings.getProperty("dot.exe.name", "dot");
+        String dotExePath = settings.getProperty(AutomataLibProperty.DOT_EXE_DIR);
+        String dotExeName = settings.getProperty(AutomataLibProperty.DOT_EXE_NAME, "dot");
 
         String dotExe = dotExeName;
         if (dotExePath != null) {
