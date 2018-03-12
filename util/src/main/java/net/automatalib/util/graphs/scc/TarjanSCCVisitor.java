@@ -42,11 +42,11 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
 
     private static final int NODE_FINISHED = -1;
     private final MutableMapping<N, TarjanSCCRecord> records;
-    private final List<TarjanSCCRecord> currentScc = new ArrayList<>();
-    private final List<N> currentSccNodes = new ArrayList<>();
+    private final List<N> nodes = new ArrayList<>();
     private final SCCListener<N> listener;
     private int counter;
-
+    private int openRecords;
+    
     /**
      * Constructor.
      *
@@ -62,28 +62,28 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
 
     @Override
     public GraphTraversalAction processInitial(N initialNode, Holder<TarjanSCCRecord> outData) {
-        outData.value = createRecord();
-        return GraphTraversalAction.EXPLORE;
+      outData.value = createRecord();
+      return GraphTraversalAction.EXPLORE;
     }
 
     @Override
     public boolean startExploration(N node, TarjanSCCRecord data) {
         records.put(node, data);
+        nodes.add(node);
+        
         return true;
     }
 
     @Override
     public void finishExploration(N node, TarjanSCCRecord data) {
-        currentScc.add(data);
-        currentSccNodes.add(node);
-        if (data.lowLink == data.number) {
-            for (TarjanSCCRecord tr : currentScc) {
-                tr.lowLink = NODE_FINISHED;
-            }
-            listener.foundSCC(currentSccNodes);
-            currentScc.clear();
-            currentSccNodes.clear();
-        }
+      --openRecords;
+      data.done = true;
+      if (openRecords == 0){
+        nodes.forEach((n) ->{
+          TarjanSCCRecord record = records.get(n);
+          listener.foundSCCNode(record.lowLink, n);
+        });
+      }
     }
 
     @Override
@@ -93,14 +93,15 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
                                             N tgtNode,
                                             Holder<TarjanSCCRecord> dataHolder) {
         TarjanSCCRecord rec = records.get(tgtNode);
+
         if (rec == null) {
             rec = createRecord();
             dataHolder.value = rec;
             return GraphTraversalAction.EXPLORE;
         }
 
-        if (rec.lowLink != NODE_FINISHED) {
-            int tgtNum = rec.number;
+        if (!isSCCClosed(rec.lowLink)) {
+            int tgtNum = rec.lowLink;
             if (tgtNum < srcData.lowLink) {
                 srcData.lowLink = tgtNum;
             }
@@ -117,7 +118,18 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
     }
 
     private TarjanSCCRecord createRecord() {
+        ++openRecords;
         return new TarjanSCCRecord(counter++);
+    }
+    
+    private boolean isSCCClosed(int lowlink){
+      return nodes.stream().map((node) ->{
+        TarjanSCCRecord record = records.get(node);
+        if(record.lowLink == lowlink && !record.done){
+          return false;
+        }
+        return true;
+      }).reduce(true, (a,b) -> a && b);
     }
 
     public boolean hasVisited(N node) {
