@@ -21,8 +21,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.util.graphs.Graphs;
-
 /**
  * Result interface for the single-source shortest path (SSSP) problem.
  *

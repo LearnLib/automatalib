@@ -110,7 +110,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements TSTraver
         out.addTransition(source2, input2, succ2, tp);
         outData.value = succ2;
 
-        return (ignore) ? TSTraversalAction.IGNORE : TSTraversalAction.EXPLORE;
+        return ignore ? TSTraversalAction.IGNORE : TSTraversalAction.EXPLORE;
     }
 
     public Mapping<S1, S2> getStateMapping() {

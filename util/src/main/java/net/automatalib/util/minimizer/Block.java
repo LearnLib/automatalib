@@ -242,7 +242,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
      * @return <code>true</code> iff this block is a singleton, <code>false</code> otherwise.
      */
     public boolean isSingleton() {
-        return (states.size() == 1);
+        return states.size() == 1;
     }
 
     /**

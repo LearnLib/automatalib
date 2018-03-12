@@ -191,7 +191,7 @@ public class Automata extends TS {
     public static <I> boolean testEquivalence(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
                                               UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
                                               Collection<? extends I> inputs) {
-        return (findSeparatingWord(reference, other, inputs) == null);
+        return findSeparatingWord(reference, other, inputs) == null;
     }
 
     public static <I> boolean testEquivalence(final OneSEVPA<?, I> sevpa1,

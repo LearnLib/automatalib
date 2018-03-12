@@ -15,14 +15,12 @@
  */
 package net.automatalib.util.automata.ads;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.ads.ADSNode;

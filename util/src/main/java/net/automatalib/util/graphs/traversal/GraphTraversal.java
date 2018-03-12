@@ -114,11 +114,10 @@ public final class GraphTraversal {
             N currNode = current.node;
             D currData = current.data;
 
-            if (current.start(graph)) {
-                if (!vis.startExploration(currNode, currData)) {
+            if (current.start(graph) 
+                    && !vis.startExploration(currNode, currData)) {
                     dfsStack.pop();
                     continue;
-                }
             }
 
             LastEdge<E, N, D> lastEdge = current.getLastEdge();

@@ -133,7 +133,7 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
     }
 
     public boolean hasVisited(N node) {
-        return (records.get(node) != null);
+        return records.get(node) != null;
     }
 
 }

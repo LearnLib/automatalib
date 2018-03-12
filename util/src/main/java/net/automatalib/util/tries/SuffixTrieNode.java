@@ -104,7 +104,7 @@ public class SuffixTrieNode<I> extends Word<I> {
     }
 
     public boolean isRoot() {
-        return (parent == null);
+        return parent == null;
     }
 
     public Word<I> getSuffix() {

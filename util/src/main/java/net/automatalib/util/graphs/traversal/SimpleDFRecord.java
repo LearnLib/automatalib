@@ -31,7 +31,7 @@ class SimpleDFRecord<N, E> {
     }
 
     public final boolean wasStarted() {
-        return (edgeIterator != null);
+        return edgeIterator != null;
     }
 
     public final boolean start(IndefiniteGraph<N, E> graph) {

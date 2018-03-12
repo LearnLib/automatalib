@@ -320,7 +320,7 @@ public final class DFAs {
                                    dfa,
                                    inputs,
                                    out,
-                                   b -> (b == null) || !b,
+                                   b -> b == null || !b,
                                    t -> null);
         MutableDFAs.complete(out, inputs, false, true);
         return out;
