@@ -17,6 +17,12 @@ limitations under the License.
 -->
 <FindBugsFilter>
     <Match>
+        <!-- Looks like a false positive -->
+        <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
+        <Class name="net.automatalib.serialization.ModelDeserializer"/>
+        <Method name="readModel" params="java.io.File" returns="java.lang.Object" />
+    </Match>
+    <Match>
         <!-- TODO: mostly due to performance. However, usage should be checked again -->
         <Bug pattern="EI_EXPOSE_REP2"/>
         <Or>

@@ -75,10 +75,10 @@ limitations under the License.
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
                         <configuration>
-                            <excludeFilterFile>/automatalib-findbugs-exclusions.xml</excludeFilterFile>
+                            <excludeFilterFile>/automatalib-spotbugs-exclusions.xml</excludeFilterFile>
                             <effort>Max</effort>
                         </configuration>
                         <dependencies>
