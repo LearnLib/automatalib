@@ -3,10 +3,6 @@ language: java
 sudo: false
 dist: trusty
 
-jdk:
-  - oraclejdk8
-  - openjdk8
-
 addons:
   apt:
     packages:
@@ -27,16 +23,25 @@ branches:
 
 install: true # skip mvn install, because we essentially run the same command in the script routine
 
-script:
-  - mvn install -B -Pcode-analysis,code-coverage,bundles --fail-at-end
-  - mvn coveralls:report
+script: mvn install -B -Pcode-analysis,bundles --fail-at-end
+
+matrix:
+  include:
+  - jdk: openjdk8
+  - jdk: oraclejdk8
+  - jdk: oraclejdk9
+    env: FOO=BAR # test values for now. Future versions may set MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
 
 jobs:
   include:
-    - stage: deploy
-      jdk: openjdk8 # use openjdk build
-      install: true # skip the normal build
-      script: skip # skip the normal build
+    - stage: Coverage
+      jdk: openjdk8 # use openjdk8 build
+      script:
+        - mvn install -B -Pcode-coverage
+        - mvn coveralls:report
+    - stage: Deploy
+      jdk: openjdk8 # use openjdk8 build
+      script: skip # skip regular build
       deploy:
         # define deployment in deploy phase, which is skipped for pull-requests
         provider: script
