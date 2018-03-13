@@ -3,8 +3,6 @@ language: java
 sudo: false
 dist: trusty
 
-env: # important! otherwise no JDK-specific envs can be set in matrix:include
-
 addons:
   apt:
     packages:
@@ -27,19 +25,29 @@ install: true # skip mvn install, because we essentially run the same command in
 
 script: mvn install -B -Pcode-analysis,bundles
 
+jdk:
+  - openjdk8
+  - oraclejdk8
+  - oraclejdk9
+
+env: # important! otherwise allow_failures is not picked up
+
+matrix:
+  include:
+  - jdk: oraclejdk9
+    env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
+  allow_failures:
+  - jdk: oraclejdk9
+    env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
+
 jobs:
   include:
-    - stage: Test
-      jdk: openjdk8
-    - jdk: oraclejdk8
-    - jdk: oraclejdk9
-      env: FOO=BAR # test values for now. Future versions may set MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
-    - stage: Coverage
+    - stage: coverage
       jdk: openjdk8 # use openjdk8 build
       script:
         - mvn install -B -Pcode-coverage
         - mvn coveralls:report
-    - stage: Deploy
+    - stage: deploy
       jdk: openjdk8 # use openjdk8 build
       script: skip # skip regular build
       deploy:
