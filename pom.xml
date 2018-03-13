@@ -197,7 +197,7 @@ limitations under the License.
         <checkstyle.version>8.1</checkstyle.version>
         <duzzt.version>0.0.2</duzzt.version>
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
-        <guava.version>22.0</guava.version>
+        <guava.version>24.0-jre</guava.version>
         <jung.version>2.1.1</jung.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.16.20</lombok.version>
