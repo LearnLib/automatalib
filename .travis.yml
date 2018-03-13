@@ -8,6 +8,8 @@ jdk:
   - oraclejdk8
   - oraclejdk9
 
+env: # important! otherwise no JDK-specific envs can be set in matrix:include
+
 addons:
   apt:
     packages:
