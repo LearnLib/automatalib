@@ -241,7 +241,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      * @return <code>true</code> if the containing block is a singleton, <code>false</code> otherwise.
      */
     public boolean isSingletonBlock() {
-        return block.size() == 1;
+        return (block.size() == 1);
     }
 
     @Override

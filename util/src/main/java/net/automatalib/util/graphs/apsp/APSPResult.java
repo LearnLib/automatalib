@@ -20,6 +20,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.util.graphs.Graphs;
+
 /**
  * Result interface for the all pairs shortest paths problem.
  *

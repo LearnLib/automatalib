@@ -81,10 +81,11 @@ public final class TSTraversal {
             S source = current.state;
             D data = current.data;
 
-            if (current.start(ts)
-                    && !vis.startExploration(source, data)) {
+            if (current.start(ts)) {
+                if (!vis.startExploration(source, data)) {
                     dfsStack.pop();
                     continue;
+                }
             }
 
             if (!current.hasNextTransition(ts)) {

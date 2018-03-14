@@ -219,7 +219,7 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
 
             @Override
             public boolean hasNext() {
-                return idx < size;
+                return (idx < size);
             }
 
             @Override
