@@ -15,7 +15,6 @@
  */
 package net.automatalib.util.graphs.scc;
 
-
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault

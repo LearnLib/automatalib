@@ -20,15 +20,15 @@ final class TarjanSCCRecord {
     public final int number;
     public int lowLink;
     public boolean done;
-    
+
     TarjanSCCRecord(int number) {
         this.number = number;
         this.lowLink = number;
         this.done = false;
     }
-    
+
     @Override
-    public String toString(){
-      return String.format("TarjanSCCRecord(number = %d ,lowLink = %d, done = %b)", number, lowLink, done);
+    public String toString() {
+        return String.format("TarjanSCCRecord(number = %d ,lowLink = %d, done = %b)", number, lowLink, done);
     }
 }

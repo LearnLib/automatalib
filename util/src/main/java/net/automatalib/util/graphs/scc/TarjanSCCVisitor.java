@@ -46,7 +46,7 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
     private final SCCListener<N> listener;
     private int counter;
     private int openRecords;
-    
+
     /**
      * Constructor.
      *
@@ -62,28 +62,28 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
 
     @Override
     public GraphTraversalAction processInitial(N initialNode, Holder<TarjanSCCRecord> outData) {
-      outData.value = createRecord();
-      return GraphTraversalAction.EXPLORE;
+        outData.value = createRecord();
+        return GraphTraversalAction.EXPLORE;
     }
 
     @Override
     public boolean startExploration(N node, TarjanSCCRecord data) {
         records.put(node, data);
         nodes.add(node);
-        
+
         return true;
     }
 
     @Override
     public void finishExploration(N node, TarjanSCCRecord data) {
-      --openRecords;
-      data.done = true;
-      if (openRecords == 0){
-        nodes.forEach((n) ->{
-          TarjanSCCRecord record = records.get(n);
-          listener.foundSCCNode(record.lowLink, n);
-        });
-      }
+        --openRecords;
+        data.done = true;
+        if (openRecords == 0) {
+            nodes.forEach((n) -> {
+                TarjanSCCRecord record = records.get(n);
+                listener.foundSCCNode(record.lowLink, n);
+            });
+        }
     }
 
     @Override
@@ -121,15 +121,15 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
         ++openRecords;
         return new TarjanSCCRecord(counter++);
     }
-    
-    private boolean isSCCClosed(int lowlink){
-      return nodes.stream().map((node) ->{
-        TarjanSCCRecord record = records.get(node);
-        if(record.lowLink == lowlink && !record.done){
-          return false;
-        }
-        return true;
-      }).reduce(true, (a,b) -> a && b);
+
+    private boolean isSCCClosed(int lowlink) {
+        return nodes.stream().map((node) -> {
+            TarjanSCCRecord record = records.get(node);
+            if (record.lowLink == lowlink && !record.done) {
+                return false;
+            }
+            return true;
+        }).reduce(true, (a, b) -> a && b);
     }
 
     public boolean hasVisited(N node) {
