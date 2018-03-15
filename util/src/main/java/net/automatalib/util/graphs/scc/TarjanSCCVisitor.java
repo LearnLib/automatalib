@@ -17,6 +17,7 @@ package net.automatalib.util.graphs.scc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -40,10 +41,21 @@ import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
 @ParametersAreNonnullByDefault
 public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, TarjanSCCRecord> {
 
-    private static final int NODE_FINISHED = -1;
+    private static final int SCC_FINISHED = -1;
     private final MutableMapping<N, TarjanSCCRecord> records;
-    private final List<TarjanSCCRecord> currentScc = new ArrayList<>();
-    private final List<N> currentSccNodes = new ArrayList<>();
+
+    /**
+     * The stack for currently investigated SCCs.
+     * <p>
+     * Note: Due to the nature of DFS traversal, we may encounter new SCCs before we finished currently instigated ones.
+     * As a result, when finishing an SCC, one has to check, to not pop to many records from this stack.
+     */
+    private final List<TarjanSCCRecord> currentSccRecordStack = new ArrayList<>();
+
+    /**
+     * The node equivalent of {@link #currentSccRecordStack}. The same characteristics apply to this stack.
+     */
+    private final List<N> currentSccNodeStack = new ArrayList<>();
     private final SCCListener<N> listener;
     private int counter;
 
@@ -53,7 +65,7 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
      * @param graph
      *         the graph
      * @param listener
-     *         the SCC listener to use, <b>may not be null</b>
+     *         the SCC listener to use, <b>must not be null</b>
      */
     public TarjanSCCVisitor(Graph<N, E> graph, SCCListener<N> listener) {
         records = graph.createStaticNodeMapping();
@@ -74,15 +86,30 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
 
     @Override
     public void finishExploration(N node, TarjanSCCRecord data) {
-        currentScc.add(data);
-        currentSccNodes.add(node);
-        if (data.lowLink == data.number) {
-            for (TarjanSCCRecord tr : currentScc) {
-                tr.lowLink = NODE_FINISHED;
+        currentSccRecordStack.add(data);
+        currentSccNodeStack.add(node);
+
+        // finished the initial node of this SCC
+        if (data.sccId == data.number) {
+            final int currScc = data.sccId;
+            int numOfNodes = 0;
+            final ListIterator<TarjanSCCRecord> iter = currentSccRecordStack.listIterator(currentSccRecordStack.size());
+
+            while (iter.hasPrevious()) {
+                final TarjanSCCRecord prev = iter.previous();
+                if (prev.sccId == currScc) {
+                    numOfNodes++;
+                    prev.sccId = SCC_FINISHED;
+                    iter.remove();
+                } else {
+                    break;
+                }
             }
-            listener.foundSCC(currentSccNodes);
-            currentScc.clear();
-            currentSccNodes.clear();
+
+            final int nodeStackSize = currentSccNodeStack.size();
+            final List<N> sccNodes = currentSccNodeStack.subList(nodeStackSize - numOfNodes, nodeStackSize);
+            listener.foundSCC(sccNodes);
+            sccNodes.clear();
         }
     }
 
@@ -99,10 +126,14 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
             return GraphTraversalAction.EXPLORE;
         }
 
-        if (rec.lowLink != NODE_FINISHED) {
-            int tgtNum = rec.number;
-            if (tgtNum < srcData.lowLink) {
-                srcData.lowLink = tgtNum;
+        if (rec.sccId != SCC_FINISHED) {
+            int tgtId = rec.sccId;
+            /*
+             * if our successor has a lower scc id than we do, it belongs to an SCC of one of our ascendants,
+             * Thus we have detected a cycle and belong to the same SCC.
+             */
+            if (tgtId < srcData.sccId) {
+                srcData.sccId = tgtId;
             }
         }
         return GraphTraversalAction.IGNORE;
@@ -110,9 +141,13 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
 
     @Override
     public void backtrackEdge(N srcNode, TarjanSCCRecord srcData, E edge, N tgtNode, TarjanSCCRecord tgtData) {
-        int tgtLl = tgtData.lowLink;
-        if (tgtData.lowLink != NODE_FINISHED && tgtLl < srcData.lowLink) {
-            srcData.lowLink = tgtLl;
+        int tgtId = tgtData.sccId;
+        /*
+         * if during backtracking, we detect our successor has a lower scc id than we do, it belongs to an SCC of one of
+         * our ascendants. Thus we have detected a cycle and belong to the same SCC.
+         */
+        if (tgtId != SCC_FINISHED && tgtId < srcData.sccId) {
+            srcData.sccId = tgtId;
         }
     }
 

@@ -17,12 +17,21 @@ package net.automatalib.util.graphs.scc;
 
 final class TarjanSCCRecord {
 
+    /**
+     * The index of this record in the order of discovery, i.e. the record belongs to the {@link #number}-th node
+     * discovered during DFS traversal.
+     */
     public final int number;
-    public int lowLink;
+
+    /**
+     * The id of the SCC of the node. Initially it is assumed that each nodes has its on SCC, thus this value is
+     * initialized with {@link #number}.
+     */
+    public int sccId;
 
     TarjanSCCRecord(int number) {
         this.number = number;
-        this.lowLink = number;
+        this.sccId = number;
     }
 
 }
