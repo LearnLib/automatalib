@@ -16,9 +16,8 @@
 package net.automatalib.util.graphs.scc;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,18 +25,16 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class SCCCollector<N> implements SCCListener<N> {
 
-    private final Map<Integer, List<N>> sccs = new HashMap<>();
+    private final List<List<N>> sccList = new ArrayList<>();
 
     @Override
-    public void foundSCCNode(Integer lowLink, N scc) {
-        List<N> sccForLowLink = sccs.getOrDefault(lowLink, new ArrayList<>());
-        sccForLowLink.add(scc);
-        sccs.put(lowLink, sccForLowLink);
+    public void foundSCC(Collection<? extends N> scc) {
+        sccList.add(new ArrayList<>(scc));
     }
 
     @Nonnull
     public List<List<N>> getSCCList() {
-        return new ArrayList<>(sccs.values());
+        return sccList;
     }
 
 }

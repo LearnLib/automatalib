@@ -15,10 +15,12 @@
  */
 package net.automatalib.util.graphs.scc;
 
+import java.util.Collection;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public interface SCCListener<N> {
 
-    void foundSCCNode(Integer lowLink, N scc);
+    void foundSCC(Collection<? extends N> scc);
 }
