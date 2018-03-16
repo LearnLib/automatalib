@@ -47,8 +47,9 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
     /**
      * The stack for currently investigated SCCs.
      * <p>
-     * Note: Due to the nature of DFS traversal, we may encounter new SCCs before we finished currently instigated ones.
-     * As a result, when finishing an SCC, one has to check, to not pop to many records from this stack.
+     * Note: Due to the nature of DFS traversal, we may encounter new SCCs before we have finished currently
+     * investigated ones. As a result, when finishing an SCC, one has to check, to not pop too many records from this
+     * stack.
      */
     private final List<TarjanSCCRecord> currentSccRecordStack = new ArrayList<>();
 
