@@ -31,8 +31,31 @@ public interface IncrementalMealyBuilder<I, O> extends IncrementalConstruction<M
 
     Word<O> lookup(Word<? extends I> inputWord);
 
+    /**
+     * Retrieves the output word for the given input word. If no definitive information for the input word exists, the
+     * output for the longest known prefix will be returned.
+     *
+     * @param inputWord
+     *         the input word
+     * @param output
+     *         a consumer for constructing the output word
+     *
+     * @return <tt>true</tt> if the information contained was complete (in this case, <code>word.length() ==
+     * output.size()</code> will hold), <tt>false</tt> otherwise.
+     */
     boolean lookup(Word<? extends I> inputWord, List<? super O> output);
 
+    /**
+     * Incorporates a pair of input/output words into the stored information.
+     *
+     * @param inputWord
+     *         the input word
+     * @param outputWord
+     *         the corresponding output word
+     *
+     * @throws ConflictException
+     *         if this information conflicts with information already stored
+     */
     void insert(Word<? extends I> inputWord, Word<? extends O> outputWord) throws ConflictException;
 
     @Override

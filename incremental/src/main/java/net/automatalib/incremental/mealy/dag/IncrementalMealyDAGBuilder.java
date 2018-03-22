@@ -116,18 +116,6 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return s;
     }
 
-    /**
-     * Retrieves the output word for the given input word. If no definitive information for the input word exists, the
-     * output for the longest known prefix will be returned.
-     *
-     * @param word
-     *         the input word
-     * @param output
-     *         a {@link WordBuilder} for constructing the output word
-     *
-     * @return <tt>true</tt> if the information contained was complete (in this case, <code>word.length() ==
-     * output.size()</code> will hold), <tt>false</tt> otherwise.
-     */
     @SuppressWarnings("unchecked")
     @Override
     public boolean lookup(Word<? extends I> word, List<? super O> output) {
@@ -145,17 +133,6 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return true;
     }
 
-    /**
-     * Incorporates a pair of input/output words into the stored information.
-     *
-     * @param word
-     *         the input word
-     * @param outputWord
-     *         the corresponding output word
-     *
-     * @throws ConflictException
-     *         if this information conflicts with information already stored
-     */
     @Override
     public void insert(Word<? extends I> word, Word<? extends O> outputWord) {
         State curr = init;
