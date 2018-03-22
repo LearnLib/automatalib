@@ -78,7 +78,7 @@ public final class Alphabets {
      * Returns an alphabet, which consists of the original alphabet including new input symbol. If the passed alphabet
      * instance already is a {@link GrowingAlphabet}, its {@link GrowingAlphabet#addSymbol(Object)} is invoked and the
      * very same instance is returned. Otherwise a new (generic) {@link GrowingAlphabet} instance is created and all
-     * symbol are added.
+     * symbols are added.
      *
      * @param alphabet
      *         the source alphabet to extend
