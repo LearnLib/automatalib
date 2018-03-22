@@ -48,7 +48,7 @@ public class ListAlphabet<I> extends AbstractAlphabet<I> {
 
     @Override
     public boolean containsSymbol(I symbol) {
-        return list.indexOf(symbol) != -1;
+        return list.contains(symbol);
     }
 
     @Override
