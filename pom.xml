@@ -298,8 +298,6 @@ limitations under the License.
                     <configuration>
                         <arguments>-Dautomatalib.release=true</arguments>
                         <goals>deploy site site:stage scm-publish:publish-scm</goals>
-                        <!-- False to allow adjustment to branching model -->
-                        <pushChanges>false</pushChanges>
                         <!-- Automatically use the parent version for all submodules, do not prompt for each one -->
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
