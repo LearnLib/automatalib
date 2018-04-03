@@ -20,6 +20,7 @@ branches:
   only:
   - master
   - develop
+  - release
 
 install: true # skip mvn install, because we essentially run the same command in the script routine
 
