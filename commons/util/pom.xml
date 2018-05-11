@@ -30,7 +30,7 @@ limitations under the License.
     <parent>
         <groupId>net.automatalib</groupId>
         <artifactId>automata-commons-parent</artifactId>
-        <version>0.7.1</version>
+        <version>0.8.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
