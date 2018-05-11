@@ -1,0 +1,17 @@
+net.automatalib.automata.base
+net.automatalib.automata.base.compact
+net.automatalib.automata.base.fast
+net.automatalib.automata.fsa.impl
+net.automatalib.automata.fsa.impl.compact
+net.automatalib.automata.transout.impl
+net.automatalib.automata.transout.impl.compact
+net.automatalib.automata.transout.impl.map
+net.automatalib.automata.vpda
+net.automatalib.graphs.ads.impl
+net.automatalib.graphs.base.compact
+net.automatalib.ts.comp
+net.automatalib.ts.powerset
+net.automatalib.visualization
+net.automatalib.visualization.helper
+net.automatalib.words.abstractimpl
+net.automatalib.words.impl
