@@ -614,6 +614,7 @@ limitations under the License.
                     <version>${javadoc-plugin.version}</version>
                     <configuration>
                         <quiet>true</quiet>
+                        <source>${maven.compiler.source}</source>
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
                         <links>
@@ -733,6 +734,7 @@ limitations under the License.
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <quiet>true</quiet>
+                    <source>${maven.compiler.source}</source>
                     <detectLinks>true</detectLinks>
                     <linksource>false</linksource>
                     <links>
