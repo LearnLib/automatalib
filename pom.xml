@@ -195,7 +195,7 @@ limitations under the License.
         <!-- dependency versions -->
         <brics-automaton.version>1.11-8</brics-automaton.version>
         <checkstyle.version>8.1</checkstyle.version>
-        <duzzt.version>0.0.2</duzzt.version>
+        <duzzt.version>0.1.0</duzzt.version>
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
         <guava.version>24.0-jre</guava.version>
         <jung.version>2.1.1</jung.version>
