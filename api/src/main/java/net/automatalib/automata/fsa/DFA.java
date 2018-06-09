@@ -51,6 +51,7 @@ public interface DFA<S, I> extends UniversalDeterministicAutomaton<S, I, S, Bool
         return tgt != null && isAccepting(tgt);
     }
 
+    @Override
     default boolean isAccepting(Collection<? extends S> states) {
         return DeterministicAcceptorTS.super.isAccepting(states);
     }

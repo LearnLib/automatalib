@@ -16,9 +16,10 @@
 package net.automatalib.serialization;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import net.automatalib.commons.util.IOUtil;
 
 /**
  * A generic interface for formalizing an arbitrary serializer for a given model type.
@@ -33,7 +34,7 @@ public interface ModelSerializer<M> {
     void writeModel(OutputStream os, M model) throws IOException;
 
     default void writeModel(File f, M model) throws IOException {
-        try (FileOutputStream os = new FileOutputStream(f)) {
+        try (OutputStream os = IOUtil.asBufferedOutputStream(f)) {
             writeModel(os, model);
         }
     }

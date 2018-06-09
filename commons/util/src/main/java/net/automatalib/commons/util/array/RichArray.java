@@ -65,7 +65,7 @@ public class RichArray<T> implements List<T>, IntFunction<T>, RandomAccess, Seri
 
     @SuppressWarnings("unchecked")
     public RichArray(Collection<? extends T> coll) {
-        this(coll.toArray((T[]) new Object[coll.size()]));
+        this(coll.toArray((T[]) new Object[0]));
     }
 
     public RichArray(T[] contents) {

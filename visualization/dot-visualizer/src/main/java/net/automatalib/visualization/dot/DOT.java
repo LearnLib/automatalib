@@ -242,10 +242,10 @@ public final class DOT {
      * Renders a GraphVIZ description from a file, using an external program for displaying. Convenience method, see
      * {@link #renderDOTExternal(Reader, String)}.
      *
-     * @throws FileNotFoundException
-     *         if the specified file was not found.
+     * @throws IOException
+     *         if opening the file resulted in errors.
      */
-    public static void renderDOTExternal(File dotFile, String format) throws FileNotFoundException {
+    public static void renderDOTExternal(File dotFile, String format) throws IOException {
         renderDOTExternal(IOUtil.asBufferedUTF8Reader(dotFile), format);
     }
 
@@ -254,9 +254,9 @@ public final class DOT {
      * #renderDOT(Reader, boolean)}.
      *
      * @throws FileNotFoundException
-     *         if the specified file was not found.
+     *         if opening the file resulted in errors.
      */
-    public static void renderDOT(File dotFile, boolean modal) throws FileNotFoundException {
+    public static void renderDOT(File dotFile, boolean modal) throws IOException {
         renderDOT(IOUtil.asBufferedUTF8Reader(dotFile), modal);
     }
 

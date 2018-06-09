@@ -198,7 +198,7 @@ public abstract class AbstractFSMParser<I> {
             streamTokenizer.pushBack();
             switch (part) {
                 case DataDefinition: {
-                    if (streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && streamTokenizer.sval.equals("---")) {
+                    if (streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && "---".equals(streamTokenizer.sval)) {
                         // we entered the part with the state vectors
                         part = Part.StateVectors;
                         partLineNumber = 0;
@@ -210,7 +210,7 @@ public abstract class AbstractFSMParser<I> {
                     break;
                 }
                 case StateVectors: {
-                    if (streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && streamTokenizer.sval.equals("---")) {
+                    if (streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && "---".equals(streamTokenizer.sval)) {
                         // we entered the part with the transitions.
                         part = Part.Transitions;
                         partLineNumber = 0;

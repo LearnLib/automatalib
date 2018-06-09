@@ -599,15 +599,14 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         int len = length();
 
         int totalSize = len;
-        for (int i = 0; i < words.length; i++) {
-            totalSize += words[i].length();
+        for (Word<? extends I> word : words) {
+            totalSize += word.length();
         }
 
         Object[] array = new Object[totalSize];
         writeToArray(0, array, 0, len);
         int currOfs = len;
-        for (int i = 0; i < words.length; i++) {
-            Word<? extends I> w = words[i];
+        for (Word<? extends I> w : words) {
             int wLen = w.length();
             w.writeToArray(0, array, currOfs, wLen);
             currOfs += wLen;

@@ -21,9 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,6 +29,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
@@ -229,6 +227,22 @@ public final class IOUtil {
     }
 
     /**
+     * Returns an input stream that reads the contents of the given file. Additionally buffers the input stream to
+     * improve performance.
+     *
+     * @param file
+     *         the file to read
+     *
+     * @return a (buffered) input stream for the file contents.
+     *
+     * @throws IOException
+     *         if accessing the file results in an I/O error.
+     */
+    public static InputStream asBufferedInputStream(File file) throws IOException {
+        return asBufferedInputStream(Files.newInputStream(file.toPath()));
+    }
+
+    /**
      * Ensures that the returned stream is a buffered version of the supplied output stream. The result must not
      * necessarily be an instance of {@link BufferedOutputStream}, it can also be, e.g., a {@link ByteArrayOutputStream},
      * depending on the type of the supplied output stream.
@@ -246,22 +260,35 @@ public final class IOUtil {
     }
 
     /**
+     * Returns an output stream that writes the contents to the given file. Additionally buffers the input stream to
+     * improve performance.
+     *
+     * @param file
+     *         the file to write to
+     *
+     * @return a (buffered) output stream for the file contents.
+     *
+     * @throws IOException
+     *         if accessing the file results in an I/O error.
+     */
+    public static OutputStream asBufferedOutputStream(File file) throws IOException {
+        return asBufferedOutputStream(Files.newOutputStream(file.toPath()));
+    }
+
+    /**
      * Returns a reader that parses the contents of the given file with {@link StandardCharsets#UTF_8} encoding.
      * Additionally buffers the input stream to improve performance.
-     * <p>
-     * Implementation note: the input stream (byte-wise representation) will be buffered, not the reader (character-wise
-     * representation).
      *
      * @param file
      *         the file to read
      *
      * @return a (buffered) reader for the file contents.
      *
-     * @throws FileNotFoundException
-     *         if no such file exists.
+     * @throws IOException
+     *         if accessing the file results in an I/O error.
      */
-    public static Reader asBufferedUTF8Reader(final File file) throws FileNotFoundException {
-        return asBufferedUTF8Reader(new FileInputStream(file));
+    public static Reader asBufferedUTF8Reader(final File file) throws IOException {
+        return Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8);
     }
 
     /**
@@ -296,20 +323,17 @@ public final class IOUtil {
     /**
      * Returns a writer that writes contents to the given file with {@link StandardCharsets#UTF_8} encoding.
      * Additionally buffers the input stream to improve performance.
-     * <p>
-     * Implementation note: the output stream (byte-wise representation) will be buffered, not the writer (character-
-     * wise representation).
      *
      * @param file
      *         the file to write to
      *
      * @return a (buffered) writer for the file contents.
      *
-     * @throws FileNotFoundException
-     *         if no such file exists.
+     * @throws IOException
+     *         if writing to the file results in I/O errors.
      */
-    public static Writer asBufferedUTF8Writer(final File file) throws FileNotFoundException {
-        return asBufferedUTF8Writer(new FileOutputStream(file));
+    public static Writer asBufferedUTF8Writer(final File file) throws IOException {
+        return Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8);
     }
 
     /**

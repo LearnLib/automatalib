@@ -17,10 +17,11 @@ package net.automatalib.serialization;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import net.automatalib.commons.util.IOUtil;
 
 /**
  * A generic interface for formalizing an arbitrary deserializer for a given model type.
@@ -41,7 +42,7 @@ public interface ModelDeserializer<M> {
     }
 
     default M readModel(File f) throws IOException {
-        try (FileInputStream is = new FileInputStream(f)) {
+        try (InputStream is = IOUtil.asBufferedInputStream(f)) {
             return readModel(is);
         }
     }

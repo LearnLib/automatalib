@@ -22,8 +22,10 @@ import java.util.function.Function;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.ts.UniversalTransitionSystem;
-import net.automatalib.util.ts.TSIterators.DefinedInputsIterator;
-import net.automatalib.util.ts.TSIterators.UndefinedInputsIterator;
+import net.automatalib.util.ts.iterators.AllDefinedInputsIterator;
+import net.automatalib.util.ts.iterators.AllUndefinedInputsIterator;
+import net.automatalib.util.ts.iterators.DefinedInputsIterator;
+import net.automatalib.util.ts.iterators.UndefinedInputsIterator;
 import net.automatalib.util.ts.traversal.BFSOrderIterator;
 
 public class TS {
@@ -68,7 +70,7 @@ public class TS {
     public static <S, I> Iterator<TransRef<S, I, ?>> allDefinedInputsIterator(TransitionSystem<S, I, ?> ts,
                                                                               Iterator<? extends S> stateIt,
                                                                               Iterable<? extends I> inputs) {
-        return new TSIterators.AllDefinedInputsIterator<>(stateIt, ts, inputs);
+        return new AllDefinedInputsIterator<>(stateIt, ts, inputs);
     }
 
     public static <S, I> Iterable<I> undefinedInputs(final TransitionSystem<S, I, ?> ts,
@@ -92,7 +94,7 @@ public class TS {
     public static <S, I> Iterator<TransRef<S, I, ?>> allUndefinedTransitionsIterator(TransitionSystem<S, I, ?> ts,
                                                                                      Iterator<? extends S> stateIt,
                                                                                      Iterable<? extends I> inputs) {
-        return new TSIterators.AllUndefinedInputsIterator<>(stateIt, ts, inputs);
+        return new AllUndefinedInputsIterator<>(stateIt, ts, inputs);
     }
 
     public static final class TransRef<S, I, T> {

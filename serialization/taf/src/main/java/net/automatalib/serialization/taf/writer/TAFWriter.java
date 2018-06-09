@@ -15,10 +15,9 @@
  */
 package net.automatalib.serialization.taf.writer;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,6 +35,7 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.strings.StringUtil;
 
@@ -76,7 +76,7 @@ public final class TAFWriter {
             StringBuilder sb = new StringBuilder();
             writeDFA(dfa, inputs, sb);
         } catch (IOException ex) {
-            throw new AssertionError();
+            throw new AssertionError(ex);
         }
     }
 
@@ -90,7 +90,7 @@ public final class TAFWriter {
     }
 
     public static <I> void writeDFA(DFA<?, I> dfa, Collection<? extends I> inputs, File out) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(out))) {
+        try (Writer bw = IOUtil.asBufferedUTF8Writer(out)) {
             writeDFA(dfa, inputs, bw);
         }
     }
@@ -209,7 +209,7 @@ public final class TAFWriter {
 
     public static <I> void writeMealy(MealyMachine<?, I, ?, ?> mealy, Collection<? extends I> inputs, File out)
             throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(out))) {
+        try (Writer bw = IOUtil.asBufferedUTF8Writer(out)) {
             writeMealy(mealy, inputs, bw);
         }
     }
@@ -225,7 +225,7 @@ public final class TAFWriter {
             StringBuilder sb = new StringBuilder();
             writeMealy(mealy, inputs, sb);
         } catch (IOException ex) {
-            throw new AssertionError();
+            throw new AssertionError(ex);
         }
     }
 

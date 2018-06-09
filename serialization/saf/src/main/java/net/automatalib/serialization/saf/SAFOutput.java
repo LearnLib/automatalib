@@ -15,12 +15,9 @@
  */
 package net.automatalib.serialization.saf;
 
-import java.io.BufferedOutputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -31,6 +28,7 @@ import java.util.Set;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.NFA;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -50,8 +48,8 @@ public class SAFOutput {
         this.out = out;
     }
 
-    SAFOutput(File file) throws FileNotFoundException {
-        this(new BufferedOutputStream(new FileOutputStream(file)));
+    SAFOutput(File file) throws IOException {
+        this(IOUtil.asBufferedOutputStream(file));
     }
 
     public <I> void writeDFA(DFA<?, I> automaton, Alphabet<I> alphabet) throws IOException {

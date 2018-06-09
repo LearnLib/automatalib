@@ -31,11 +31,8 @@ public final class StringUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StringUtil.class);
 
-    private static final String IDENTIFIER_REGEX = "[a-zA-Z_]*\\w*";
-
-    private static Pattern identifierPattern;
-
     private StringUtil() {
+        // prevent instantiation
     }
 
     public static String enquote(String s) {
@@ -55,10 +52,7 @@ public final class StringUtil {
     }
 
     public static Pattern getIdentifierPattern() {
-        if (identifierPattern == null) {
-            identifierPattern = Pattern.compile(IDENTIFIER_REGEX);
-        }
-        return identifierPattern;
+        return LazyPatternHolder.INSTANCE;
     }
 
     public static String enquoteIfNecessary(String s) {
@@ -67,7 +61,7 @@ public final class StringUtil {
             enquoteIfNecessary(s, sb);
             return sb.toString();
         } catch (IOException ex) {
-            throw new AssertionError();
+            throw new AssertionError("StringBuilder should not throw", ex);
         }
     }
 
@@ -81,7 +75,7 @@ public final class StringUtil {
             enquoteIfNecessary(s, sb, p);
             return sb.toString();
         } catch (IOException ex) {
-            throw new AssertionError();
+            throw new AssertionError("StringBuilder should not throw", ex);
         }
     }
 
@@ -238,5 +232,15 @@ public final class StringUtil {
         } else {
             a.append(String.valueOf(obj));
         }
+    }
+
+    /**
+     * Lazy holder for identifier pattern. See
+     * <a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom">
+     * Initialization-on-demand holder idiom</a>
+     */
+    private static class LazyPatternHolder {
+
+        private static Pattern INSTANCE = Pattern.compile("[a-zA-Z_]*\\w*");
     }
 }

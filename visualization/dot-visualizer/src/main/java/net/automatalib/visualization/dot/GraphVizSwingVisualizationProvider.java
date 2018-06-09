@@ -38,6 +38,7 @@ public class GraphVizSwingVisualizationProvider implements VisualizationProvider
         return "graphviz-swing";
     }
 
+    @Override
     public int getPriority() {
         return PRIORITY;
     }

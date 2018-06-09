@@ -17,7 +17,7 @@ package net.automatalib.automata.fsa.impl;
 
 import net.automatalib.automata.base.fast.AbstractFastMutableNondet;
 import net.automatalib.automata.fsa.MutableNFA;
-import net.automatalib.commons.util.AbstractWrapperUtil;
+import net.automatalib.commons.util.WrapperUtil;
 import net.automatalib.words.Alphabet;
 
 public class FastNFA<I> extends AbstractFastMutableNondet<FastNFAState, I, FastNFAState, Boolean, Void>
@@ -44,7 +44,7 @@ public class FastNFA<I> extends AbstractFastMutableNondet<FastNFAState, I, FastN
 
     @Override
     protected FastNFAState createState(Boolean property) {
-        return new FastNFAState(inputAlphabet.size(), AbstractWrapperUtil.booleanValue(property));
+        return new FastNFAState(inputAlphabet.size(), WrapperUtil.booleanValue(property));
     }
 
 }

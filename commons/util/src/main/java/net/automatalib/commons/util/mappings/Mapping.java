@@ -44,6 +44,7 @@ public interface Mapping<D, R> extends Function<D, R> {
      *
      * @return the object from the range corresponding to <code>elem</code>.
      */
+    @Override
     default R apply(D elem) {
         return get(elem);
     }

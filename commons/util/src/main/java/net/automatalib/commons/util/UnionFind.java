@@ -43,6 +43,7 @@ public final class UnionFind implements IntDisjointSets {
         }
     }
 
+    @Override
     public int size() {
         return p.length;
     }
@@ -55,6 +56,7 @@ public final class UnionFind implements IntDisjointSets {
      *
      * @return the identifier of the set which contains the given element
      */
+    @Override
     public int find(int x) {
         int curr = x;
         int currp = p[curr];
@@ -84,6 +86,7 @@ public final class UnionFind implements IntDisjointSets {
      *
      * @return the identifier of the resulting set (either <tt>x</tt> or <tt>y</tt>)
      */
+    @Override
     public int link(int x, int y) {
         int rx = rank[x], ry = rank[y];
         if (rx > ry) {

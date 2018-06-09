@@ -21,7 +21,7 @@ import java.util.Random;
 import net.automatalib.automata.MutableDeterministic;
 
 public class RandomDeterministicAutomatonGenerator<S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>>
-        extends AbstractRandomAutomatonGenerator<S, I, T, SP, TP, A> {
+        extends RandomAutomatonGenerator<S, I, T, SP, TP, A> {
 
     public RandomDeterministicAutomatonGenerator(Random random,
                                                  Collection<? extends I> inputs,

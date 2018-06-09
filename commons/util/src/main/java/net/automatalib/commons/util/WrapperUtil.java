@@ -15,7 +15,11 @@
  */
 package net.automatalib.commons.util;
 
-public abstract class AbstractWrapperUtil {
+public final class WrapperUtil {
+
+    private WrapperUtil() {
+        // prevent instantiation
+    }
 
     public static boolean booleanValue(Boolean b) {
         return booleanValue(b, false);
