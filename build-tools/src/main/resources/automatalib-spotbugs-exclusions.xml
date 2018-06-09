@@ -17,12 +17,6 @@ limitations under the License.
 -->
 <FindBugsFilter>
     <Match>
-        <!-- Looks like a false positive -->
-        <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
-        <Class name="net.automatalib.serialization.ModelDeserializer"/>
-        <Method name="readModel" params="java.io.File" returns="java.lang.Object" />
-    </Match>
-    <Match>
         <!-- TODO: mostly due to performance. However, usage should be checked again -->
         <Bug pattern="EI_EXPOSE_REP2"/>
         <Or>
@@ -57,10 +51,7 @@ limitations under the License.
     </Match>
     <Match>
         <!-- TODO: this module/package currently contains generated javaCC code, we cannot easily change -->
-        <Or>
-            <Package name="~net\.automatalib\.serialization\.taf.*"/>
-            <Class name="net.automatalib.tools.taf.TAF2DOT"/>
-        </Or>
+        <Package name="~net\.automatalib\.serialization\.taf.*"/>
         <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT,EI_EXPOSE_REP2,VA_FORMAT_STRING_USES_NEWLINE"/>
     </Match>
 </FindBugsFilter>
