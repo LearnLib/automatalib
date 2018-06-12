@@ -95,7 +95,7 @@ public class FastMealyTest {
 
         trace.add(IN_A);
 
-        Assert.assertEquals(fm.getSuccessor(fm.getInitialState(), trace), null);
+        Assert.assertNull(fm.getSuccessor(fm.getInitialState(), trace));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class FastMealyTest {
 
         trace.add(IN_A);
 
-        Assert.assertEquals(fm.getSuccessor(fm.getInitialState(), trace), null);
+        Assert.assertNull(fm.getSuccessor(fm.getInitialState(), trace));
     }
 
     @Test
