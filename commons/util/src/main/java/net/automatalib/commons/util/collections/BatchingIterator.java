@@ -60,7 +60,7 @@ public class BatchingIterator<T> implements Iterator<List<T>> {
 
         this.batch.clear();
 
-        while (source.hasNext() && batch.size() < batchSize) {
+        while (batch.size() < batchSize && source.hasNext()) {
             batch.add(source.next());
         }
 
