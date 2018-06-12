@@ -110,7 +110,7 @@ public final class CollectionsUtil {
         // Otherwise, the result is empty
         if (!domain.iterator().hasNext()) {
             if (minLength == 0) {
-                return Collections.singletonList(Collections.<T>emptyList());
+                return Collections.singletonList(Collections.emptyList());
             }
             return Collections.emptyList();
         }
@@ -121,7 +121,7 @@ public final class CollectionsUtil {
     @SafeVarargs
     public static <T> Iterable<List<T>> allCombinations(final Iterable<T>... iterables) {
         if (iterables.length == 0) {
-            return Collections.singletonList(Collections.<T>emptyList());
+            return Collections.singletonList(Collections.emptyList());
         }
 
         return () -> {

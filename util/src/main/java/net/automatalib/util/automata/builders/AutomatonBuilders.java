@@ -41,7 +41,7 @@ public final class AutomatonBuilders {
     }
 
     public static <I, O> MealyBuilder<Integer, I, CompactMealyTransition<O>, O, CompactMealy<I, O>> newMealy(Alphabet<I> alphabet) {
-        return forMealy(new CompactMealy<I, O>(alphabet));
+        return forMealy(new CompactMealy<>(alphabet));
     }
 
     public static <S, I, T, O, A extends MutableMealyMachine<S, ? super I, T, ? super O>> MealyBuilder<S, I, T, O, A> forMealy(

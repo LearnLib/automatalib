@@ -121,7 +121,7 @@ public final class TAFWriter {
                                                                                                       state,
                                                                                                       i)))
                                                                      .filter(p -> p.getSecond() != null)
-                                                                     .collect(Collectors.groupingBy(p -> new Pair<S, Object>(
+                                                                     .collect(Collectors.groupingBy(p -> new Pair<>(
                                                                                                             automaton.getSuccessor(p.getSecond()),
                                                                                                             automaton.getTransitionProperty(p.getSecond())),
                                                                                                     Collectors.mapping(

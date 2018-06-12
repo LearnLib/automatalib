@@ -63,7 +63,7 @@ public class SharedWordTest extends AbstractNonemptyWordTest {
         return Arrays.asList(new EmptyWord(),
                              new SharedWord<>(Arrays.asList(1, 3)),
                              new SharedWord<>(new Object[] {1, 3, 3}),
-                             new LetterWord<Object>(1));
+                             new LetterWord<>(1));
     }
 
     @Override
