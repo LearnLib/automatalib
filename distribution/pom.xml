@@ -379,6 +379,11 @@ limitations under the License.
                             </dependencySourceIncludes>
                             <additionalDependencies>
                                 <additionalDependency>
+                                    <groupId>com.github.misberner.buildergen</groupId>
+                                    <artifactId>buildergen</artifactId>
+                                    <version>${buildergen.version}</version>
+                                </additionalDependency>
+                                <additionalDependency>
                                     <groupId>com.github.misberner.duzzt</groupId>
                                     <artifactId>duzzt-annotations</artifactId>
                                     <version>${duzzt.version}</version>
