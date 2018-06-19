@@ -11,6 +11,7 @@ addons:
 cache:
   directories:
   - $HOME/.m2
+  - $HOME/ltsmin
 
 before_cache:
   # do not cache our local archives
@@ -22,7 +23,10 @@ branches:
   - develop
   - release
 
-install: true # skip mvn install, because we essentially run the same command in the script routine
+install:
+  # install LTSmin
+  - build-tools/install-ltsmin.sh
+  - PATH="$PATH:$HOME/ltsmin/bin"
 
 script: mvn install -B -Pcode-analysis,bundles
 

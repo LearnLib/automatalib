@@ -115,6 +115,7 @@ limitations under the License.
         <module>distribution</module>
         <module>examples</module>
         <module>incremental</module>
+        <module>modelchecking</module>
         <module>util</module>
         <module>serialization</module>
         <module>visualization</module>
@@ -193,6 +194,7 @@ limitations under the License.
         <tidy-pom.version>1.1.0</tidy-pom.version>
 
         <!-- dependency versions -->
+        <buildergen.version>0.1</buildergen.version>
         <brics-automaton.version>1.11-8</brics-automaton.version>
         <checkstyle.version>8.1</checkstyle.version>
         <duzzt.version>0.1.0</duzzt.version>
@@ -202,6 +204,7 @@ limitations under the License.
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.16.22</lombok.version>
         <metainf-services.version>1.7</metainf-services.version>
+        <mockito.version>2.18.3</mockito.version>
         <slf4j.version>1.7.25</slf4j.version>
         <testng.version>6.11</testng.version>
 
@@ -326,6 +329,19 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- model-checkers -->
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-modelchecking-parent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-modelchecking-ltsmin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- serialization -->
             <dependency>
                 <groupId>net.automatalib</groupId>
@@ -440,6 +456,14 @@ limitations under the License.
             </dependency>
 
             <dependency>
+                <groupId>com.github.misberner.buildergen</groupId>
+                <artifactId>buildergen</artifactId>
+                <version>${buildergen.version}</version>
+                <!-- Compile-time only -->
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>com.github.misberner.duzzt</groupId>
                 <artifactId>duzzt-processor</artifactId>
                 <version>${duzzt.version}</version>
@@ -477,6 +501,13 @@ limitations under the License.
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

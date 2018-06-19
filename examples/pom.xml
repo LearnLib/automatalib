@@ -57,6 +57,10 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-brics</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-modelchecking-ltsmin</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>dk.brics.automaton</groupId>

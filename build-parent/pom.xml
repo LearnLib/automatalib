@@ -56,6 +56,11 @@ limitations under the License.
                             <exclude>net/automatalib/serialization/taf/parser/SimpleCharStream.class</exclude>
                             <exclude>net/automatalib/serialization/taf/parser/Token.class</exclude>
                             <exclude>net/automatalib/serialization/taf/parser/TokenMgrError.class</exclude>
+
+                            <!-- generated builders for model checkers -->
+                            <exclude>net/automatalib/modelcheckers/ltsmin/LTSminLTLAlternatingBuilder.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/ltsmin/LTSminLTLDFABuilder.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/ltsmin/LTSminLTLIOBuilder.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

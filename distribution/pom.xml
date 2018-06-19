@@ -82,6 +82,12 @@ limitations under the License.
             <artifactId>automata-incremental</artifactId>
         </dependency>
 
+        <!-- model-checkers -->
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-modelchecking-ltsmin</artifactId>
+        </dependency>
+
         <!-- serialization -->
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -219,6 +225,14 @@ limitations under the License.
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-incremental</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <!-- model-checkers -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-modelchecking-ltsmin</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
