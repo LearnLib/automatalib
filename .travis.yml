@@ -26,7 +26,7 @@ branches:
 install:
   # install LTSmin
   - build-tools/install-ltsmin.sh
-  - PATH="$PATH:$HOME/ltsmin/bin"
+  - PATH="$PATH:$HOME/ltsmin/v3.0.0/bin"
 
 script: mvn install -B -Pcode-analysis,bundles
 
