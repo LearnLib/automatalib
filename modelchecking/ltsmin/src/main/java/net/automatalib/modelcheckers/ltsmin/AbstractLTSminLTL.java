@@ -17,6 +17,9 @@ package net.automatalib.modelcheckers.ltsmin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,6 +27,7 @@ import java.util.function.Function;
 
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.automata.concepts.Output;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelChecker;
@@ -31,6 +35,8 @@ import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
 import net.automatalib.serialization.fsm.parser.FSMParseException;
 import net.automatalib.ts.simple.SimpleDTS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An LTL model checker using LTSmin.
@@ -62,6 +68,8 @@ import net.automatalib.ts.simple.SimpleDTS;
  */
 public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I, ?>, L extends Lasso<?, ? extends A, I, ?>>
         extends AbstractUnfoldingModelChecker<I, A, String, L> implements ModelChecker<I, A, String, L> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminLTL.class);
 
     /**
      * @see #isKeepFiles()
@@ -209,8 +217,10 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
         try {
             // run the etf2lts-mc binary
             ProcessBuilder processBuilder = new ProcessBuilder(commandLines);
+            processBuilder.redirectErrorStream(true);
             ltsmin = processBuilder.start();
             ltsmin.waitFor();
+            logProcessOutput(ltsmin);
         } catch (IOException | InterruptedException e) {
             throw new ModelCheckingException(e);
         }
@@ -250,8 +260,10 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
             try {
                 // convert the GCF to FSM
                 ProcessBuilder processBuilder = new ProcessBuilder(commandLines);
+                processBuilder.redirectErrorStream(true);
                 convert = processBuilder.start();
                 convert.waitFor();
+                logProcessOutput(convert);
             } catch (IOException | InterruptedException e) {
                 throw new ModelCheckingException(e);
             }
@@ -282,6 +294,15 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
         }
 
         return result;
+    }
+
+    private static void logProcessOutput(Process p) throws IOException {
+        if (LOGGER.isDebugEnabled()) {
+            final Reader r = IOUtil.asBufferedUTF8Reader(p.getInputStream());
+            final Writer w = new StringWriter();
+            IOUtil.copy(r, w);
+            LOGGER.debug(w.toString());
+        }
     }
 
     /**
