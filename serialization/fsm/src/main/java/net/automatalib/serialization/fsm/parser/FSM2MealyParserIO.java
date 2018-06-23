@@ -54,38 +54,6 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
     }
 
     /**
-     * We do not need to parse data definitions.
-     */
-    @Override
-    protected void parseDataDefinition() {
-
-    }
-
-    /**
-     * Do not need to check them either.
-     */
-    @Override
-    protected void checkDataDefinitions() {
-
-    }
-
-    /**
-     * Add a state for a line.
-     */
-    @Override
-    protected void parseStateVector() {
-        getStates().add(getPartLineNumber());
-    }
-
-    /**
-     * Skip any checks.
-     */
-    @Override
-    protected void checkStateVectors() {
-
-    }
-
-    /**
      * Parse a transition.
      *
      * @throws FSMParseException
@@ -158,9 +126,7 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
      * Do nothing.
      */
     @Override
-    protected void checkTransitions() throws FSMParseException {
-
-    }
+    protected void checkTransitions() {}
 
     public static <I, O> CompactMealy<I, O> parse(Reader reader,
                                                   Function<String, I> inputParser,

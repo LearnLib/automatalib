@@ -217,9 +217,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      * Does nothing.
      */
     @Override
-    protected void checkStateVectors() {
-
-    }
+    protected void checkStateVectors() {}
 
     /**
      * Parse a transition by searching the current line for the source state, target state and the input.
@@ -283,9 +281,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      * Do nothing.
      */
     @Override
-    protected void checkTransitions() throws FSMParseException {
-
-    }
+    protected void checkTransitions() {}
 
     /**
      * Constructs the actual {@link net.automatalib.automata.fsa.DFA}.

@@ -15,7 +15,7 @@
  */
 package net.automatalib.automata.transout.impl;
 
-import net.automatalib.automata.base.fast.AbstractFastDetState;
+import net.automatalib.automata.base.fast.AbstractFastState;
 
 /**
  * A state in a {@link FastMealy} automaton.
@@ -25,7 +25,7 @@ import net.automatalib.automata.base.fast.AbstractFastDetState;
  *
  * @author Malte Isberner
  */
-public final class FastMealyState<O> extends AbstractFastDetState<FastMealyState<O>, MealyTransition<FastMealyState<O>, O>> {
+public final class FastMealyState<O> extends AbstractFastState<MealyTransition<FastMealyState<O>, O>> {
 
     public FastMealyState(int numInputs) {
         super(numInputs);

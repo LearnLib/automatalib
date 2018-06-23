@@ -15,9 +15,9 @@
  */
 package net.automatalib.automata.fsa.impl;
 
-import net.automatalib.automata.base.fast.AbstractFastDetState;
+import net.automatalib.automata.base.fast.AbstractFastState;
 
-public final class FastDFAState extends AbstractFastDetState<FastDFAState, FastDFAState> {
+public final class FastDFAState extends AbstractFastState<FastDFAState> {
 
     private boolean accepting;
 
