@@ -53,8 +53,17 @@ public abstract class AbstractFastMutableDet<S extends AbstractFastState<T>, I, 
     }
 
     @Override
+    public void removeState(S state, S replacement) {
+        super.removeState(state, replacement);
+
+        if (state.equals(initialState)) {
+            this.initialState = replacement;
+        }
+    }
+
+    @Override
     public void clear() {
-        states.clear();
+        super.clear();
         this.initialState = null;
     }
 

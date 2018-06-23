@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.ts.powerset.FastPowersetDTS;
 import net.automatalib.words.Alphabet;
 
@@ -47,7 +46,7 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastState<Coll
 
     @Override
     public void clear() {
-        states.clear();
+        super.clear();
         initialStates.clear();
     }
 
@@ -68,10 +67,10 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastState<Coll
 
     @Override
     public void removeState(S state, S replacement) {
-        ShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
-        states.remove(state);
-        if (initialStates.remove(state)) {
-            initialStates.add(state);
+        super.removeState(state, replacement);
+
+        if (initialStates.remove(state) && replacement != null) {
+            initialStates.add(replacement);
         }
     }
 

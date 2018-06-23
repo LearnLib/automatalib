@@ -25,6 +25,7 @@ import net.automatalib.automata.base.StateIDDynamicMapping;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
+import net.automatalib.commons.util.nid.IDChangeNotifier;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -41,7 +42,8 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
                    Serializable {
 
     protected Alphabet<I> inputAlphabet;
-    protected final DynamicList<S> states = new DynamicList<>();
+    private final DynamicList<S> states = new DynamicList<>();
+    private final transient IDChangeNotifier<S> tracker = new IDChangeNotifier<>();
 
     public AbstractFastMutable(Alphabet<I> inputAlphabet) {
         this.inputAlphabet = inputAlphabet;
@@ -74,7 +76,12 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
     @Override
     public void removeState(S state, S replacement) {
         ShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
-        states.remove(state);
+        states.remove(state, tracker);
+    }
+
+    @Override
+    public void clear() {
+        states.clear();
     }
 
     @Override
@@ -84,7 +91,9 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
 
     @Override
     public <V> MutableMapping<S, V> createDynamicStateMapping() {
-        return new StateIDDynamicMapping<>(this);
+        final StateIDDynamicMapping<S, V> mapping = new StateIDDynamicMapping<>(this);
+        tracker.addListener(mapping, true);
+        return mapping;
     }
 
     @Override

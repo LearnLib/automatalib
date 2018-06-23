@@ -15,8 +15,8 @@
  */
 package net.automatalib.automata;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -59,7 +59,7 @@ public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S
                 }
 
                 boolean modified = false;
-                List<T> modTransitions = new LinkedList<>(transitions); // TODO
+                List<T> modTransitions = new ArrayList<>(transitions);
 
                 ListIterator<T> it = modTransitions.listIterator();
                 while (it.hasNext()) {
