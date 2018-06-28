@@ -58,7 +58,7 @@ public class GraphVizBrowserVisualizationProvider implements VisualizationProvid
                                  boolean modal,
                                  Map<String, String> visOptions) {
         try (StringWriter sw = new StringWriter()) {
-            GraphDOT.writeRaw(graph, GraphDOT.toDOTVisualizationHelper(helpers), sw);
+            GraphDOT.write(graph, sw, GraphDOT.toDOTVisualizationHelper(helpers));
             File imgTmp = File.createTempFile("graphviz-browser", ".png");
             DOT.runDOT(sw.getBuffer().toString(), "png", imgTmp);
             File htmlTmp = File.createTempFile("graphviz-browser", ".html");

@@ -36,15 +36,11 @@ import net.automatalib.commons.util.strings.StringUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UndirectedGraph;
 import net.automatalib.graphs.concepts.GraphViewable;
-import net.automatalib.util.automata.Automata;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 
 /**
  * Methods for rendering a {@link Graph} or {@link Automaton} in the GraphVIZ DOT format.
- * <p>
- * This class does not take care of actually processing the generated DOT data. For this, please take a look at the
- * <tt>automata-commons-dotutil</tt> artifact.
  *
  * @author Malte Isberner
  */
@@ -59,12 +55,72 @@ public final class GraphDOT {
     }
 
     /**
+     * Renders an {@link Automaton} in the GraphVIZ DOT format.
+     *
+     * @param automaton
+     *         the automaton to render.
+     * @param inputAlphabet
+     *         the input alphabet to consider
+     * @param a
+     *         the appendable to write to
+     *
+     * @throws IOException
+     *         if writing to <tt>a</tt> fails
+     */
+    public static <S, I, T> void write(Automaton<S, I, T> automaton,
+                                       Collection<? extends I> inputAlphabet,
+                                       Appendable a) throws IOException {
+        write(automaton.transitionGraphView(inputAlphabet), a);
+    }
+
+    /**
+     * Renders an {@link Automaton} in the GraphVIZ DOT format.
+     *
+     * @param automaton
+     *         the automaton to render.
+     * @param inputAlphabet
+     *         the input alphabet to consider
+     * @param a
+     *         the appendable to write to
+     * @param additionalHelpers
+     *         additional helpers for providing visualization properties.
+     *
+     * @throws IOException
+     *         if writing to <tt>a</tt> fails
+     */
+    @SafeVarargs
+    public static <S, I, T> void write(Automaton<S, I, T> automaton,
+                                       Collection<? extends I> inputAlphabet,
+                                       Appendable a,
+                                       VisualizationHelper<S, ? super TransitionEdge<I, T>>... additionalHelpers)
+            throws IOException {
+        write(automaton.transitionGraphView(inputAlphabet), a, additionalHelpers);
+    }
+
+    /**
      * Renders a {@link Graph} in the GraphVIZ DOT format.
      *
      * @param graph
      *         the graph to render
      * @param a
      *         the appendable to write to.
+     *
+     * @throws IOException
+     *         if writing to <tt>a</tt> fails.
+     */
+    public static <N, E> void write(Graph<N, E> graph, Appendable a) throws IOException {
+        writeRaw(graph, a, toDOTVisualizationHelper(graph.getVisualizationHelper()));
+    }
+
+    /**
+     * Renders a {@link Graph} in the GraphVIZ DOT format.
+     *
+     * @param graph
+     *         the graph to render
+     * @param a
+     *         the appendable to write to.
+     * @param additionalHelpers
+     *         additional helpers for providing visualization properties.
      *
      * @throws IOException
      *         if writing to <tt>a</tt> fails.
@@ -72,77 +128,14 @@ public final class GraphDOT {
     @SafeVarargs
     public static <N, E> void write(Graph<N, E> graph,
                                     Appendable a,
-                                    DOTVisualizationHelper<N, ? super E>... additionalHelpers) throws IOException {
-        DOTVisualizationHelper<N, E> helper = toDOTVisualizationHelper(graph.getVisualizationHelper());
-        writeRaw(graph, helper, a, additionalHelpers);
-    }
+                                    VisualizationHelper<N, ? super E>... additionalHelpers) throws IOException {
 
-    /**
-     * Renders an {@link Automaton} in the GraphVIZ DOT format.
-     *
-     * @param automaton
-     *         the automaton to render.
-     * @param helper
-     *         the helper to use for rendering
-     * @param inputAlphabet
-     *         the input alphabet to consider
-     * @param a
-     *         the appendable to write to.
-     *
-     * @throws IOException
-     *         if writing to <tt>a</tt> fails.
-     */
-    @SafeVarargs
-    public static <S, I, T> void write(Automaton<S, I, T> automaton,
-                                       DOTVisualizationHelper<S, ? super TransitionEdge<I, T>> helper,
-                                       Collection<? extends I> inputAlphabet,
-                                       Appendable a,
-                                       DOTVisualizationHelper<S, ? super TransitionEdge<I, T>>... additionalHelpers)
-            throws IOException {
-        Graph<S, TransitionEdge<I, T>> ag = Automata.asGraph(automaton, inputAlphabet);
-        writeRaw(ag, helper, a, additionalHelpers);
-    }
+        final List<VisualizationHelper<N, ? super E>> helpers = new ArrayList<>(additionalHelpers.length + 1);
 
-    /**
-     * Renders an {@link Automaton} in the GraphVIZ DOT format.
-     *
-     * @param automaton
-     *         the automaton to render.
-     * @param inputAlphabet
-     *         the input alphabet to consider
-     * @param a
-     *         the appendable to write to
-     *
-     * @throws IOException
-     *         if writing to <tt>a</tt> fails
-     */
-    @SafeVarargs
-    public static <S, I, T> void write(Automaton<S, I, T> automaton,
-                                       Collection<? extends I> inputAlphabet,
-                                       Appendable a,
-                                       DOTVisualizationHelper<S, ? super TransitionEdge<I, T>>... additionalHelpers)
-            throws IOException {
-
-        write(automaton.transitionGraphView(inputAlphabet), a, additionalHelpers);
-    }
-
-    @SafeVarargs
-    public static <N, E> void writeRaw(Graph<N, E> graph,
-                                       DOTVisualizationHelper<N, ? super E> helper,
-                                       Appendable a,
-                                       DOTVisualizationHelper<N, ? super E>... additionalHelpers) throws IOException {
-        List<DOTVisualizationHelper<N, ? super E>> helpers = new ArrayList<>(additionalHelpers.length + 1);
-        helpers.add(helper);
+        helpers.add(graph.getVisualizationHelper());
         helpers.addAll(Arrays.asList(additionalHelpers));
 
-        writeRaw(graph, a, helpers);
-    }
-
-    public static <N, E> void writeRaw(Graph<N, E> graph,
-                                       Appendable a,
-                                       List<DOTVisualizationHelper<N, ? super E>> helpers) throws IOException {
-        DOTVisualizationHelper<N, E> aggHelper = new AggregateDOTVisualizationHelper<>(helpers);
-        writeRaw(graph, aggHelper, a);
+        writeRaw(graph, a, toDOTVisualizationHelper(helpers));
     }
 
     /**
@@ -150,17 +143,17 @@ public final class GraphDOT {
      *
      * @param graph
      *         the graph to render
-     * @param dotHelperOrNull
-     *         the helper to use for rendering. Can be {@code null}
      * @param a
      *         the appendable to write to
+     * @param dotHelperOrNull
+     *         the helper to use for rendering. Can be {@code null}
      *
      * @throws IOException
      *         if writing to <tt>a</tt> fails
      */
-    public static <N, E> void writeRaw(Graph<N, E> graph,
-                                       DOTVisualizationHelper<N, ? super E> dotHelperOrNull,
-                                       Appendable a) throws IOException {
+    private static <N, E> void writeRaw(Graph<N, E> graph,
+                                        Appendable a,
+                                        DOTVisualizationHelper<N, ? super E> dotHelperOrNull) throws IOException {
 
         final DOTVisualizationHelper<N, ? super E> dotHelper;
 
@@ -260,7 +253,10 @@ public final class GraphDOT {
 
         a.append('\n');
         renderInitialArrowTip(initialNodes, a);
+
         dotHelper.writePostamble(a);
+        a.append('\n');
+
         a.append("}\n");
         if (a instanceof Flushable) {
             ((Flushable) a).flush();
@@ -301,8 +297,12 @@ public final class GraphDOT {
         for (String init : initialNodes) {
             a.append(startPrefix)
              .append(Integer.toString(i))
-             .append(" [label=\"\" shape=\"none\" width=\"0\" height=\"0\"];\n");
-            a.append(startPrefix).append(Integer.toString(i++)).append(" -> ").append(init).append(";\n");
+             .append(" [label=\"\" shape=\"none\" width=\"0\" height=\"0\"];\n")
+             .append(startPrefix)
+             .append(Integer.toString(i++))
+             .append(" -> ")
+             .append(init)
+             .append(";\n");
         }
     }
 
@@ -311,7 +311,7 @@ public final class GraphDOT {
                                              File file) throws IOException {
 
         try (Writer writer = IOUtil.asBufferedUTF8Writer(file)) {
-            writeRaw(graph, new DefaultDOTVisualizationHelper<>(dotHelper), writer);
+            writeRaw(graph, writer, new DefaultDOTVisualizationHelper<>(dotHelper));
         }
     }
 

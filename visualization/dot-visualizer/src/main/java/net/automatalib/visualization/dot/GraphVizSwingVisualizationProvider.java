@@ -54,7 +54,7 @@ public class GraphVizSwingVisualizationProvider implements VisualizationProvider
                                  boolean modal,
                                  Map<String, String> visOptions) {
         try (Writer w = DOT.createDotWriter(modal)) {
-            GraphDOT.writeRaw(graph, GraphDOT.toDOTVisualizationHelper(helper), w);
+            GraphDOT.write(graph, w, GraphDOT.toDOTVisualizationHelper(helper));
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error rendering graph: " + ex.getMessage());
         }
