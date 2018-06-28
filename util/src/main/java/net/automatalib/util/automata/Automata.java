@@ -32,8 +32,6 @@ import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.util.automata.asgraph.AutomatonAsGraph;
-import net.automatalib.util.automata.asgraph.UniversalAutomatonAsGraph;
 import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.util.automata.equivalence.CharacterizingSets;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
@@ -52,7 +50,7 @@ public class Automata extends TS {
 
     public static <S, I, T> Graph<S, TransitionEdge<I, T>> asGraph(Automaton<S, I, T> automaton,
                                                                    Collection<? extends I> inputs) {
-        return new AutomatonAsGraph<>(automaton, inputs);
+        return automaton.transitionGraphView(inputs);
     }
 
     public static <S, I, T, SP, TP, SO, TO, A extends MutableDeterministic<SO, ? super I, TO, ? super SP, ? super TP>> A minimize(
@@ -103,7 +101,7 @@ public class Automata extends TS {
     public static <S, I, T, SP, TP> UniversalGraph<S, TransitionEdge<I, T>, SP, TransitionEdge.Property<I, TP>> asUniversalGraph(
             UniversalAutomaton<S, I, T, SP, TP> automaton,
             Collection<? extends I> inputs) {
-        return new UniversalAutomatonAsGraph<>(automaton, inputs);
+        return automaton.transitionGraphView(inputs);
     }
 
     @SuppressWarnings("unchecked")
