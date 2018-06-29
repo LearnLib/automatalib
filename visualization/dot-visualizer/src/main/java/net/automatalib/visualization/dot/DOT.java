@@ -301,7 +301,7 @@ public final class DOT {
 
             @Override
             public void keyTyped(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
                     frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
                 }
             }

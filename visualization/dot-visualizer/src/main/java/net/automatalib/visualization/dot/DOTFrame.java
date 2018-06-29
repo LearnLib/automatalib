@@ -15,9 +15,12 @@
  */
 package net.automatalib.visualization.dot;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.Reader;
 
+import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -42,9 +45,17 @@ public class DOTFrame extends JFrame {
         menu.add(dotPanel.getRenameAction());
         menu.addSeparator();
         menu.add(dotPanel.getClearAction());
+        menu.add(new AbstractAction("Close") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DOTFrame.this.dispatchEvent(new WindowEvent(DOTFrame.this, WindowEvent.WINDOW_CLOSING));
+            }
+        });
         setJMenuBar(new JMenuBar());
         getJMenuBar().add(menu);
 
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
     }
 
