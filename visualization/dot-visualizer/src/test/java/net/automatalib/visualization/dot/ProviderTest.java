@@ -15,13 +15,24 @@
  */
 package net.automatalib.visualization.dot;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Random;
+
+import javax.swing.SwingUtilities;
+
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.system.JVMUtil;
 import net.automatalib.visualization.VPManager;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.visualization.VisualizationProvider;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+/**
+ * @author frohme
+ */
 public class ProviderTest {
 
     @BeforeClass
@@ -44,4 +55,21 @@ public class ProviderTest {
         Assert.assertTrue(swingProvider instanceof GraphVizSwingVisualizationProvider);
         Assert.assertTrue(browserProvider instanceof GraphVizBrowserVisualizationProvider);
     }
+
+    // Headless GUI testing is a pain. Therefore just check that we don't throw any exceptions for now.
+    @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 10000)
+    public void testDisplay() throws InterruptedException, InvocationTargetException {
+
+        if (JVMUtil.getCanonicalSpecVersion() > 8) {
+            throw new SkipException("The headless AWT environment currently only works with Java 8 and below");
+        }
+
+        TestUtil.configureHeadlessMode();
+
+        final CompactDFA<Integer> dfa = TestUtil.generateRandomAutomaton(new Random(42));
+
+        // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.
+        SwingUtilities.invokeAndWait(() -> Visualization.visualize(dfa, false));
+    }
+
 }
