@@ -15,28 +15,66 @@
  */
 package net.automatalib.automata.transout.impl.compact;
 
+import java.util.Arrays;
+
+import javax.annotation.Nullable;
+
 import net.automatalib.automata.AutomatonCreator;
+import net.automatalib.automata.base.compact.AbstractCompact;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
+import net.automatalib.automata.base.compact.AbstractCompactGenericDeterministic;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.words.Alphabet;
 
 public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactMealyTransition<O>, Void, O>
         implements MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O> {
 
+    private int[] transitions;
+    private Object[] outputs;
+
     public CompactMealy(Alphabet<I> alphabet, float resizeFactor) {
-        super(alphabet, resizeFactor);
+        this(alphabet, DEFAULT_INIT_CAPACITY, resizeFactor);
     }
 
     public CompactMealy(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
+        transitions = new int[stateCapacity * alphabetSize];
+        Arrays.fill(transitions, 0, transitions.length, AbstractCompact.INVALID_STATE);
+        outputs = new Object[stateCapacity * alphabetSize];
     }
 
     public CompactMealy(Alphabet<I> alphabet, int stateCapacity) {
-        super(alphabet, stateCapacity);
+        this(alphabet, stateCapacity, DEFAULT_RESIZE_FACTOR);
     }
 
     public CompactMealy(Alphabet<I> alphabet) {
-        super(alphabet);
+        this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
+    }
+
+    @Override
+    protected void increaseStateCapacity(int oldCapacity, int newCapacity) {
+        final int[] newTransitions = new int[newCapacity * alphabetSize];
+        final Object[] newOutputs = new Object[newCapacity * alphabetSize];
+        System.arraycopy(transitions, 0, newTransitions, 0, oldCapacity * alphabetSize);
+        System.arraycopy(outputs, 0, newOutputs, 0, oldCapacity * alphabetSize);
+        Arrays.fill(newTransitions, oldCapacity * alphabetSize, newCapacity * alphabetSize, AbstractCompact.INVALID_STATE);
+        this.transitions = newTransitions;
+        this.outputs = newOutputs;
+    }
+
+    @Override
+    protected void increaseAlphabetCapacity(int oldAlphabetSize, int newAlphabetSize, int newCapacity) {
+        final int[] newTransitions = new int[newCapacity];
+        final Object[] newOutputs = new Object[newCapacity];
+
+        for (int i = 0; i < this.size(); i++) {
+            System.arraycopy(transitions, i * oldAlphabetSize, newTransitions, i * newAlphabetSize, oldAlphabetSize);
+            System.arraycopy(outputs, i * oldAlphabetSize, newOutputs, i * newAlphabetSize, oldAlphabetSize);
+            Arrays.fill(newTransitions, i * newAlphabetSize + oldAlphabetSize, (i + 1) * newAlphabetSize, AbstractCompact.INVALID_STATE);
+        }
+
+        transitions = newTransitions;
+        outputs = newOutputs;
     }
 
     @Override
@@ -52,6 +90,12 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     @Override
     public void setTransitionProperty(CompactMealyTransition<O> transition, O property) {
         transition.setOutput(property);
+    }
+
+    @Override
+    public void removeAllTransitions(Integer state) {
+        Arrays.fill(transitions, state, state + alphabetSize, AbstractCompact.INVALID_STATE);
+        Arrays.fill(outputs, state, state + alphabetSize, null);
     }
 
     @Override
@@ -79,8 +123,34 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     }
 
     @Override
-    public CompactMealyTransition<O> copyTransition(CompactMealyTransition<O> trans, int succId) {
-        return new CompactMealyTransition<>(succId, trans.getOutput());
+    public void setTransition(int state, int input, CompactMealyTransition<O> transition) {
+        setTransition(state, input, transition.getSuccId(), transition.getOutput());
+    }
+
+    @Override
+    public void setTransition(int state, int input, int successor, @Nullable O property) {
+        transitions[state * alphabetSize + input] = successor;
+        outputs[state * alphabetSize + input] = property;
+    }
+
+    @Override
+    public void clear() {
+        int endIdx = size() * alphabetSize;
+        Arrays.fill(transitions, 0, endIdx, AbstractCompact.INVALID_STATE);
+        Arrays.fill(outputs, 0, endIdx, null);
+
+        super.clear();
+    }
+
+    @Override
+    public CompactMealyTransition<O> getTransition(int state, int input) {
+        final Integer succ = makeId(transitions[state * alphabetSize + input]);
+
+        if (succ == null) {
+            return null;
+        }
+
+        return new CompactMealyTransition<>(succ, (O)outputs[state * alphabetSize + input]);
     }
 
     public static final class Creator<I, O> implements AutomatonCreator<CompactMealy<I, O>, I> {

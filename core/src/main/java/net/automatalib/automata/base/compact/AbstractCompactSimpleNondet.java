@@ -27,27 +27,18 @@ import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 
-public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutomaton<Integer, I, Integer, SP, Void>,
-                                                                    UniversalFiniteAlphabetAutomaton<Integer, I, Integer, SP, Void>,
-                                                                    StateIDs<Integer>,
-                                                                    GrowableAlphabetAutomaton<I> {
+public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact<I, Integer, SP, Void> implements
+                                                                                                       MutableAutomaton<Integer, I, Integer, SP, Void>,
+                                                                                                       UniversalFiniteAlphabetAutomaton<Integer, I, Integer, SP, Void>,
+                                                                                                       StateIDs<Integer>,
+                                                                                                       GrowableAlphabetAutomaton<I> {
 
-    public static final float DEFAULT_RESIZE_FACTOR = 1.5f;
-    public static final int DEFAULT_INIT_CAPACITY = 11;
-
-    protected Alphabet<I> alphabet;
     //protected final TIntSet initial;
     protected final Set<Integer> initial; // TODO: replace by primitive specialization
-    private final float resizeFactor;
-    protected int alphabetSize;
     //protected TIntSet[] transitions;
     protected Set<Integer>[] transitions; // TODO: replace by primitive specialization
-    protected int stateCapacity;
-    protected int numStates;
 
     public AbstractCompactSimpleNondet(Alphabet<I> alphabet) {
         this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
@@ -55,29 +46,17 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
 
     @SuppressWarnings("unchecked")
     public AbstractCompactSimpleNondet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-        this.alphabet = alphabet;
-        this.alphabetSize = alphabet.size();
+        super(alphabet, stateCapacity, resizeFactor);
+
         //this.transitions = new TIntSet[stateCapacity * alphabetSize];
         this.transitions = new Set[stateCapacity * alphabetSize]; // TODO: replace by primitive specialization
-
-        this.resizeFactor = resizeFactor;
-        this.stateCapacity = stateCapacity;
 
         //this.initial = new TIntHashSet();
         this.initial = new HashSet<>(); // TODO: replace by primitive specialization
     }
 
-    public AbstractCompactSimpleNondet(Alphabet<I> alphabet, int stateCapacity) {
-        this(alphabet, stateCapacity, DEFAULT_RESIZE_FACTOR);
-    }
-
-    public AbstractCompactSimpleNondet(Alphabet<I> alphabet, float resizeFactor) {
-        this(alphabet, DEFAULT_INIT_CAPACITY, resizeFactor);
-    }
-
     protected AbstractCompactSimpleNondet(Alphabet<I> alphabet, AbstractCompactSimpleNondet<?, ?> other) {
-        this.alphabet = alphabet;
-        this.alphabetSize = alphabet.size();
+        super(alphabet, other);
         this.transitions = other.transitions.clone();
         for (int i = 0; i < transitions.length; i++) {
             //TIntSet tgts = transitions[i];
@@ -87,71 +66,29 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
                 transitions[i] = new HashSet<>(tgts); // TODO: replace by primitive specialization
             }
         }
-        this.numStates = other.numStates;
-        this.resizeFactor = other.resizeFactor;
-        this.stateCapacity = other.stateCapacity;
 
         //this.initial = new TIntHashSet(other.initial);
         this.initial = new HashSet<>(other.initial); // TODO: replace by primitive specialization
     }
 
-    protected static Integer wrapState(int id) {
-        if (id < 0) {
-            return null;
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void increaseStateCapacity(int oldCapacity, int newCapacity) {
+        final Set[] newTransitions = new Set[newCapacity];
+        System.arraycopy(transitions, 0, newTransitions, 0, oldCapacity);
+        this.transitions = (Set<Integer>[]) newTransitions;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void increaseAlphabetCapacity(int oldAlphabetSize, int newAlphabetSize, int newCapacity) {
+        final Set[] newTransitions = new Set[newCapacity];
+
+        for (int i = 0; i < this.size(); i++) {
+            System.arraycopy(transitions, i * oldAlphabetSize, newTransitions, i * newAlphabetSize, oldAlphabetSize);
         }
-        return Integer.valueOf(id);
-    }
 
-    @Override
-    public Alphabet<I> getInputAlphabet() {
-        return alphabet;
-    }
-
-    @Override
-    public Collection<Integer> getStates() {
-        return CollectionsUtil.intRange(0, numStates);
-    }
-
-    @Override
-    public StateIDs<Integer> stateIDs() {
-        return this;
-    }
-
-    @Override
-    public int size() {
-        return numStates;
-    }
-
-    @Override
-    public int getStateId(Integer state) {
-        return state.intValue();
-    }
-
-    @Override
-    public Integer getState(int id) {
-        return id;
-    }
-
-    //public TIntCollection getIntInitialStates() {
-    public Set<Integer> getIntInitialStates() { // TODO: replace by primitive specialization
-        return initial;
-    }
-
-    //public TIntCollection getIntTransitions(int state, I input) {
-    public Set<Integer> getIntTransitions(int state, I input) { // TODO: replace by primitive specialization
-        int transId = state * alphabetSize + alphabet.getSymbolIndex(input);
-        return successors(transId);
-    }
-
-    //protected TIntSet successors(int transId) {
-    protected Set<Integer> successors(int transId) { // TODO: replace by primitive specialization
-        //TIntSet successors = transitions[transId];
-        Set<Integer> successors = transitions[transId]; // TODO: replace by primitive specialization
-        if (successors == null) {
-            //return EMPTY_SET;
-            return Collections.emptySet(); // TODO: replace by primitive specialization
-        }
-        return successors;
+        transitions = (Set<Integer>[]) newTransitions;
     }
 
     @Override
@@ -164,51 +101,6 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
     @Override
     public Void getTransitionProperty(Integer transition) {
         return null;
-    }
-
-    public int addIntState() {
-        return addIntState(null);
-    }
-
-    public int addIntState(SP property) {
-        int stateId = numStates++;
-        ensureCapacity(numStates);
-        initState(stateId, property);
-        return stateId;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void ensureCapacity(int newCapacity) {
-        if (newCapacity <= stateCapacity) {
-            return;
-        }
-
-        int newCap = (int) (stateCapacity * resizeFactor);
-        if (newCap < newCapacity) {
-            newCap = newCapacity;
-        }
-
-        //TIntSet[] newTrans = new TIntSet[newCap * alphabetSize];
-        Set<Integer>[] newTrans = new Set[newCap * alphabetSize]; // TODO: replace by primitive specialization
-        System.arraycopy(transitions, 0, newTrans, 0, stateCapacity * alphabetSize);
-        this.transitions = newTrans;
-        ensureCapacity(stateCapacity, newCap);
-        this.stateCapacity = newCap;
-    }
-
-    protected void ensureCapacity(int oldCap, int newCap) {
-    }
-
-    protected abstract void initState(int stateId, SP property);
-
-    public int addIntInitialState() {
-        return addIntInitialState(null);
-    }
-
-    public int addIntInitialState(SP property) {
-        int state = addIntState(property);
-        setInitial(state, true);
-        return state;
     }
 
     @Override
@@ -226,15 +118,10 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
 
     @Override
     public void clear() {
-        Arrays.fill(transitions, 0, numStates * alphabetSize, null);
-        this.numStates = 0;
-
+        Arrays.fill(transitions, 0, size() * alphabetSize, null);
         this.initial.clear();
-    }
 
-    @Override
-    public Integer addState(SP property) {
-        return addIntState(property);
+        super.clear();
     }
 
     @Override
@@ -291,11 +178,11 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
         Arrays.fill(transitions, base, base + alphabetSize, null);
     }
 
-
     @Override
     public Integer createTransition(Integer successor, Void properties) {
         return successor;
     }
+
     @Override
     public void addTransition(Integer state, I input, Integer transition) {
         addTransition(state.intValue(), input, transition.intValue());
@@ -372,34 +259,14 @@ public abstract class AbstractCompactSimpleNondet<I, SP> implements MutableAutom
 
     //public TIntSet getTransitions(int state, int inputIdx) {
     public Set<Integer> getTransitions(int state, int inputIdx) { // TODO: replace by primitive specialization
-        return successors(state * alphabetSize + inputIdx);
+        Set<Integer> transition = transitions[state * alphabetSize + inputIdx];
+
+        return transition == null ? Collections.emptySet() : transition;
     }
 
     @Override
     public Set<Integer> getInitialStates() {
         //return new TIntSetDecorator(initial);
         return initial; // TODO: replace by primitive specialization
-    }
-
-    @Override
-    public void addAlphabetSymbol(I symbol) {
-
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
-        }
-
-        final int oldAlphabetSize = this.alphabetSize;
-        final int newAlphabetSize = oldAlphabetSize + 1;
-        final int newArraySize = this.transitions.length + this.stateCapacity;
-        @SuppressWarnings("unchecked")
-        final Set<Integer>[] newTransitions = new Set[newArraySize];
-
-        for (int i = 0; i < this.numStates; i++) {
-            System.arraycopy(transitions, i * oldAlphabetSize, newTransitions, i * newAlphabetSize, oldAlphabetSize);
-        }
-
-        this.transitions = newTransitions;
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        this.alphabetSize = newAlphabetSize;
     }
 }

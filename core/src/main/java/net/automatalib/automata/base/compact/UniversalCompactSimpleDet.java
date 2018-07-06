@@ -19,37 +19,16 @@ import java.util.Arrays;
 
 import net.automatalib.words.Alphabet;
 
-public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDet<I, SP> {
+public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeterministic<I, SP> {
 
     private Object[] stateProperties;
-
-    public UniversalCompactSimpleDet(Alphabet<I> alphabet, float resizeFactor) {
-        super(alphabet, resizeFactor);
-    }
-
-    public UniversalCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-        super(alphabet, stateCapacity, resizeFactor);
-    }
-
-    public UniversalCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity) {
-        super(alphabet, stateCapacity);
-    }
 
     public UniversalCompactSimpleDet(Alphabet<I> alphabet) {
         super(alphabet);
     }
 
-    @Override
-    public void initState(int stateId, SP property) {
-        stateProperties[stateId] = property;
-    }
-
-    @Override
-    protected void ensureCapacity(int oldCap, int newCap) {
-        super.ensureCapacity(oldCap, newCap);
-        Object[] newProps = new Object[newCap];
-        System.arraycopy(stateProperties, 0, newProps, 0, stateProperties.length);
-        stateProperties = newProps;
+    public UniversalCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
+        super(alphabet, stateCapacity, resizeFactor);
     }
 
     @Override
@@ -68,5 +47,7 @@ public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDet<I
     public SP getStateProperty(int stateId) {
         return (SP) stateProperties[stateId];
     }
+
+
 
 }

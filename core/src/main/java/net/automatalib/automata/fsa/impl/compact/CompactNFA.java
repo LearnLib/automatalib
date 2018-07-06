@@ -26,18 +26,8 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
 
     private final BitSet accepting;
 
-    public CompactNFA(Alphabet<I> alphabet, float resizeFactor) {
-        super(alphabet, resizeFactor);
-        this.accepting = new BitSet();
-    }
-
-    public CompactNFA(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
-        super(alphabet, stateCapacity, resizeFactor);
-        this.accepting = new BitSet();
-    }
-
     public CompactNFA(Alphabet<I> alphabet, int stateCapacity) {
-        super(alphabet, stateCapacity);
+        super(alphabet, stateCapacity, DEFAULT_RESIZE_FACTOR);
         this.accepting = new BitSet();
     }
 
@@ -96,12 +86,6 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
     @Override
     public Boolean getStateProperty(int stateId) {
         return isAccepting(stateId);
-    }
-
-    @Override
-    protected void initState(int stateId, Boolean property) {
-        boolean bval = (property != null) && property.booleanValue();
-        this.accepting.set(stateId, bval);
     }
 
     @Override
