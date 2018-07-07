@@ -61,6 +61,7 @@ public final class LibLoader {
         Path tmpDir = null;
         try {
             tmpDir = Files.createTempDirectory(getClass().getName());
+            tmpDir.toFile().deleteOnExit();
             Field field = ClassLoader.class.getDeclaredField("usr_paths");
             field.setAccessible(true);
             String[] paths = (String[]) field.get(null);
@@ -79,10 +80,28 @@ public final class LibLoader {
         return INSTANCE;
     }
 
+    /**
+     * Loads a native library. Uses {@link LoadPolicy#PREFER_SHIPPED} as the default loading policy.
+     *
+     * @param clazz
+     *         The class whose classloader should be used to resolve shipped libraries
+     * @param name
+     *         The name of the class.
+     */
     public void loadLibrary(Class<?> clazz, String name) {
         loadLibrary(clazz, name, LoadPolicy.PREFER_SHIPPED);
     }
 
+    /**
+     * Loads a native library with the given {@link LoadPolicy load policy}.
+     *
+     * @param clazz
+     *         The class whose classloader should be used to resolve shipped libraries
+     * @param name
+     *         The name of the class.
+     * @param policy
+     *         The load policy.
+     */
     public void loadLibrary(Class<?> clazz, String name, LoadPolicy policy) {
         if (loaded.contains(name)) {
             return;
@@ -118,7 +137,7 @@ public final class LibLoader {
                 loadSystemLibrary(name);
                 break;
             default:
-                throw new IllegalStateException("Unkown policy " + policy);
+                throw new IllegalStateException("Unknown policy " + policy);
         }
 
         loaded.add(name);
