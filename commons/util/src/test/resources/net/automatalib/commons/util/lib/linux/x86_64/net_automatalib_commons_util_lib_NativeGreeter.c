@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 #include "net_automatalib_commons_util_lib_NativeGreeter.h"
-#include <string>
+#include <stdio.h>
+#include <string.h>
 
 JNIEXPORT jstring JNICALL Java_net_automatalib_commons_util_lib_NativeGreeter_greet
-(JNIEnv* env, jobject obj, jstring string) {
+(JNIEnv *env, jobject obj, jstring string) {
 
-	const char* input = env->GetStringUTFChars(string, 0);
-	std::string str(input);
+	const char* input = (*env)->GetStringUTFChars(env, string, 0);
+	size_t inputLength = strlen(input);
 
-	std::string result = std::string("Hello ") + input;
+	char result[inputLength + 6];
 
-	return env->NewStringUTF(result.c_str());
+	strcpy(result, "Hello ");
+	strcat(result, input);
+
+	return (*env)->NewStringUTF(env, result);
 }
