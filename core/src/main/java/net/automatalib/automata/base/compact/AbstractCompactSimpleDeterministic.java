@@ -62,23 +62,8 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     }
 
     @Override
-    protected void increaseStateCapacity(int oldCapacity, int newCapacity) {
-        final int[] newTransitions = new int[newCapacity * alphabetSize];
-        System.arraycopy(transitions, 0, newTransitions, 0, oldCapacity * alphabetSize);
-        Arrays.fill(newTransitions, oldCapacity * alphabetSize, newCapacity * alphabetSize, AbstractCompact.INVALID_STATE);
-        this.transitions = newTransitions;
-    }
-
-    @Override
-    protected void increaseAlphabetCapacity(int oldAlphabetSize, int newAlphabetSize, int newCapacity) {
-        final int[] newTransitions = new int[newCapacity * alphabetSize];
-
-        for (int i = 0; i < this.size(); i++) {
-            System.arraycopy(transitions, i * oldAlphabetSize, newTransitions, i * newAlphabetSize, oldAlphabetSize);
-            Arrays.fill(newTransitions, i * newAlphabetSize + oldAlphabetSize, (i + 1) * newAlphabetSize, AbstractCompact.INVALID_STATE);
-        }
-
-        transitions = newTransitions;
+    protected void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type) {
+        this.transitions = updateStorage(this.transitions, oldSizeHint, newSizeHint, type);
     }
 
     @Override

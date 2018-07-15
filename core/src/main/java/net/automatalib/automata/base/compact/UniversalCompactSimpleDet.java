@@ -48,6 +48,12 @@ public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeter
         return (SP) stateProperties[stateId];
     }
 
+    @Override
+    protected void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type) {
+        this.stateProperties = updateStorage(this.stateProperties, oldSizeHint, newSizeHint, type);
+        super.updateStorage(oldSizeHint, newSizeHint, type);
+    }
+
 
 
 }

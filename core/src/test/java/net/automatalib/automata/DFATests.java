@@ -31,11 +31,11 @@ public class DFATests {
         final Alphabet<Character> sigma = Alphabets.characters('a', 'b');
         final CompactDFA<Character> dfa = new CompactDFA<>(sigma);
 
-        final Integer q0 = dfa.addInitialState(true);
-        final Integer q1 = dfa.addState(false);
+        final int q0 = dfa.addIntInitialState(true);
+        final int q1 = dfa.addIntState(false);
 
-        dfa.setTransition(q0, (Character) 'a', q1);
-        dfa.setTransition(q1, (Character) 'b', q0);
+        dfa.setTransition(q0, sigma.getSymbolIndex('a'), q1);
+        dfa.setTransition(q1, sigma.getSymbolIndex('b'), q0);
 
         SharedTestUtils.checkOutput(dfa, Word.fromCharSequence("ababab"), true);
         SharedTestUtils.checkOutput(dfa, Word.fromCharSequence("aabb"), false);

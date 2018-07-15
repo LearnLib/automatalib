@@ -72,23 +72,8 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected void increaseStateCapacity(int oldCapacity, int newCapacity) {
-        final Set[] newTransitions = new Set[newCapacity];
-        System.arraycopy(transitions, 0, newTransitions, 0, oldCapacity);
-        this.transitions = (Set<Integer>[]) newTransitions;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void increaseAlphabetCapacity(int oldAlphabetSize, int newAlphabetSize, int newCapacity) {
-        final Set[] newTransitions = new Set[newCapacity];
-
-        for (int i = 0; i < this.size(); i++) {
-            System.arraycopy(transitions, i * oldAlphabetSize, newTransitions, i * newAlphabetSize, oldAlphabetSize);
-        }
-
-        transitions = (Set<Integer>[]) newTransitions;
+    protected void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type) {
+        this.transitions = (Set<Integer>[]) updateStorage(this.transitions, oldSizeHint, newSizeHint, type);
     }
 
     @Override
@@ -128,8 +113,6 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     public void setStateProperty(Integer state, SP property) {
         setStateProperty(state.intValue(), property);
     }
-
-    public abstract void setStateProperty(int stateId, SP property);
 
     @Override
     public void setTransitionProperty(Integer transition, Void property) {

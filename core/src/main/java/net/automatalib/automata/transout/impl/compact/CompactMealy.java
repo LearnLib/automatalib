@@ -52,29 +52,9 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     }
 
     @Override
-    protected void increaseStateCapacity(int oldCapacity, int newCapacity) {
-        final int[] newTransitions = new int[newCapacity * alphabetSize];
-        final Object[] newOutputs = new Object[newCapacity * alphabetSize];
-        System.arraycopy(transitions, 0, newTransitions, 0, oldCapacity * alphabetSize);
-        System.arraycopy(outputs, 0, newOutputs, 0, oldCapacity * alphabetSize);
-        Arrays.fill(newTransitions, oldCapacity * alphabetSize, newCapacity * alphabetSize, AbstractCompact.INVALID_STATE);
-        this.transitions = newTransitions;
-        this.outputs = newOutputs;
-    }
-
-    @Override
-    protected void increaseAlphabetCapacity(int oldAlphabetSize, int newAlphabetSize, int newCapacity) {
-        final int[] newTransitions = new int[newCapacity];
-        final Object[] newOutputs = new Object[newCapacity];
-
-        for (int i = 0; i < this.size(); i++) {
-            System.arraycopy(transitions, i * oldAlphabetSize, newTransitions, i * newAlphabetSize, oldAlphabetSize);
-            System.arraycopy(outputs, i * oldAlphabetSize, newOutputs, i * newAlphabetSize, oldAlphabetSize);
-            Arrays.fill(newTransitions, i * newAlphabetSize + oldAlphabetSize, (i + 1) * newAlphabetSize, AbstractCompact.INVALID_STATE);
-        }
-
-        transitions = newTransitions;
-        outputs = newOutputs;
+    protected void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type) {
+        this.transitions = updateStorage(this.transitions, oldSizeHint, newSizeHint, type);
+        this.outputs = updateStorage(this.outputs, oldSizeHint, newSizeHint, type);
     }
 
     @Override
@@ -114,8 +94,7 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     }
 
     @Override
-    public void setStateProperty(int state, Void property) {
-    }
+    public void setStateProperty(int state, Void property) {}
 
     @Override
     public Void getStateProperty(int stateId) {

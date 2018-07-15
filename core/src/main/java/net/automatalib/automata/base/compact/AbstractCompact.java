@@ -1,6 +1,7 @@
 package net.automatalib.automata.base.compact;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 
 import net.automatalib.automata.GrowableAlphabetAutomaton;
@@ -105,7 +106,8 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
         final int newCap = Math.max((int) (stateCapacity * resizeFactor), newCapacity);
 
-        increaseStateCapacity(stateCapacity, newCap);
+        updateStorage(this.stateCapacity, newCap, UpdateType.STATE);
+
         this.stateCapacity = newCap;
     }
 
@@ -116,19 +118,72 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
             return;
         }
 
-        final int oldAlphabetSize = this.alphabetSize;
-        final int newAlphabetSize = oldAlphabetSize + 1;
-        final int newArraySize = newAlphabetSize * this.stateCapacity;
-
-        increaseAlphabetCapacity(oldAlphabetSize, newAlphabetSize, newArraySize);
+        updateStorage(this.alphabetSize, this.alphabetSize + 1, UpdateType.ALPHABET);
 
         this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        this.alphabetSize = newAlphabetSize;
+        this.alphabetSize++;
     }
 
-    protected abstract void increaseStateCapacity(int oldCapacity, int newCapacity);
+    protected enum UpdateType {
+        STATE,
+        ALPHABET
+    }
 
-    protected abstract void increaseAlphabetCapacity(int oldAlphabetSize, int newAlphabetSize, int newCapacity);
+    protected abstract void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type);
+
+    protected final int[] updateStorage(int[] oldStorage, int oldSizeHint, int newSizeHint, UpdateType type) {
+        switch (type) {
+            case STATE: {
+                final int[] newStorage = new int[newSizeHint * alphabetSize];
+                System.arraycopy(oldStorage, 0, newStorage, 0, oldSizeHint * alphabetSize);
+                Arrays.fill(newStorage,
+                            oldSizeHint * alphabetSize,
+                            newSizeHint * alphabetSize,
+                            AbstractCompact.INVALID_STATE);
+                return newStorage;
+            }
+            case ALPHABET: {
+                final int[] newStorage = new int[newSizeHint * numStates];
+                for (int i = 0; i < numStates; i++) {
+                    System.arraycopy(oldStorage, i * oldSizeHint, newStorage, i * newSizeHint, oldSizeHint);
+                    Arrays.fill(newStorage,
+                                i * newSizeHint + oldSizeHint,
+                                (i + 1) * newSizeHint,
+                                AbstractCompact.INVALID_STATE);
+                }
+                return newStorage;
+            }
+            default:
+                throw new IllegalArgumentException("Unknown update type: " + type);
+        }
+    }
+
+    protected final Object[] updateStorage(Object[] oldStorage, int oldSizeHint, int newSizeHint, UpdateType type) {
+        switch (type) {
+            case STATE: {
+                final Object[] newStorage = new Object[newSizeHint * alphabetSize];
+                System.arraycopy(oldStorage, 0, newStorage, 0, oldSizeHint * alphabetSize);
+                Arrays.fill(newStorage,
+                            oldSizeHint * alphabetSize,
+                            newSizeHint * alphabetSize,
+                            AbstractCompact.INVALID_STATE);
+                return newStorage;
+            }
+            case ALPHABET: {
+                final Object[] newStorage = new Object[newSizeHint * numStates];
+                for (int i = 0; i < numStates; i++) {
+                    System.arraycopy(oldStorage, i * oldSizeHint, newStorage, i * newSizeHint, oldSizeHint);
+                    Arrays.fill(newStorage,
+                                i * newSizeHint + oldSizeHint,
+                                (i + 1) * newSizeHint,
+                                AbstractCompact.INVALID_STATE);
+                }
+                return newStorage;
+            }
+            default:
+                throw new IllegalArgumentException("Unknown update type: " + type);
+        }
+    }
 
     protected static int getId(Integer id) {
         return (id != null) ? id.intValue() : INVALID_STATE;
@@ -137,5 +192,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     protected static Integer makeId(int id) {
         return (id != INVALID_STATE) ? Integer.valueOf(id) : null;
     }
+
+    public abstract void setStateProperty(int state, SP property);
 
 }

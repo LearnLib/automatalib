@@ -62,21 +62,8 @@ public abstract class AbstractCompactGenericDeterministic<I, T, SP, TP>
     }
 
     @Override
-    protected void increaseStateCapacity(int oldCapacity, int newCapacity) {
-        final Object[] newTransitions = new Object[newCapacity * alphabetSize];
-        System.arraycopy(transitions, 0, newTransitions, 0, oldCapacity * alphabetSize);
-        this.transitions = newTransitions;
-    }
-
-    @Override
-    protected void increaseAlphabetCapacity(int oldAlphabetSize, int newAlphabetSize, int newCapacity) {
-        final Object[] newTransitions = new Object[newCapacity * alphabetSize];
-
-        for (int i = 0; i < this.size(); i++) {
-            System.arraycopy(transitions, i * oldAlphabetSize, newTransitions, i * newAlphabetSize, oldAlphabetSize);
-        }
-
-        transitions = newTransitions;
+    protected void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type) {
+        this.transitions = updateStorage(this.transitions, oldSizeHint, newSizeHint, type);
     }
 
     @Override

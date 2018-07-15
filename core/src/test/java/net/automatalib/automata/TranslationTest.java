@@ -36,13 +36,13 @@ public class TranslationTest {
         final Alphabet<Integer> sigma2 = Alphabets.integers(1, 3);
         final CompactDFA<Character> dfa = new CompactDFA<>(sigma);
 
-        final Integer q0 = dfa.addInitialState(true);
-        final Integer q1 = dfa.addState(false);
-        final Integer q2 = dfa.addState(false);
+        final int q0 = dfa.addIntInitialState(true);
+        final int q1 = dfa.addIntState(false);
+        final int q2 = dfa.addIntState(false);
 
-        dfa.setTransition(q0, (Character) 'a', q1);
-        dfa.setTransition(q1, (Character) 'b', q2);
-        dfa.setTransition(q2, (Character) 'c', q0);
+        dfa.setTransition(q0, sigma.getSymbolIndex('a'), q1);
+        dfa.setTransition(q1, sigma.getSymbolIndex('b'), q2);
+        dfa.setTransition(q2, sigma.getSymbolIndex('c'), q0);
 
         final CompactDFA<Integer> translated = dfa.translate(sigma2);
 
@@ -58,9 +58,9 @@ public class TranslationTest {
         final Alphabet<Integer> sigma2 = Alphabets.integers(1, 3);
         final CompactNFA<Character> nfa = new CompactNFA<>(sigma);
 
-        final Integer q0 = nfa.addInitialState(true);
-        final Integer q1 = nfa.addState(false);
-        final Integer q2 = nfa.addState(false);
+        final int q0 = nfa.addInitialState(true);
+        final int q1 = nfa.addState(false);
+        final int q2 = nfa.addState(false);
 
         nfa.setTransitions(q0, (Character) 'a', Arrays.asList(q0, q1));
         nfa.setTransitions(q1, (Character) 'b', Arrays.asList(q0, q2));
