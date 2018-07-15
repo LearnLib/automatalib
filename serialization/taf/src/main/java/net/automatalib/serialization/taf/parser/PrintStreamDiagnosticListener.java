@@ -33,13 +33,13 @@ public class PrintStreamDiagnosticListener implements TAFParseDiagnosticListener
 
     @Override
     public void error(int line, int col, String msgFmt, Object... args) {
-        ps.printf("Error: at line %d, column %d: %s\n", line, col, MessageFormat.format(msgFmt, args));
+        ps.printf("Error: at line %d, column %d: %s%n", line, col, MessageFormat.format(msgFmt, args));
         ps.flush();
     }
 
     @Override
     public void warning(int line, int col, String msgFmt, Object... args) {
-        ps.printf("Warning: at line %d, column %d: %s\n", line, col, MessageFormat.format(msgFmt, args));
+        ps.printf("Warning: at line %d, column %d: %s%n", line, col, MessageFormat.format(msgFmt, args));
         ps.flush();
     }
 

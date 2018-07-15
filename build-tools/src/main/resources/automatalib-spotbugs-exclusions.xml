@@ -50,8 +50,16 @@ limitations under the License.
         <Class name="net.automatalib.commons.util.array.RichArray"/>
     </Match>
     <Match>
+        <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT"/>
         <!-- TODO: this module/package currently contains generated javaCC code, we cannot easily change -->
-        <Package name="~net\.automatalib\.serialization\.taf.*"/>
-        <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT,EI_EXPOSE_REP2,VA_FORMAT_STRING_USES_NEWLINE"/>
+        <Or>
+            <Class name="net.automatalib.serialization.taf.parser.InternalTAFParser"/>
+            <Class name="net.automatalib.serialization.taf.parser.InternalTAFParserConstants"/>
+            <Class name="net.automatalib.serialization.taf.parser.InternalTAFParserTokenManager"/>
+            <Class name="net.automatalib.serialization.taf.parser.ParseException"/>
+            <Class name="net.automatalib.serialization.taf.parser.SimpleCharStream"/>
+            <Class name="net.automatalib.serialization.taf.parser.Token"/>
+            <Class name="net.automatalib.serialization.taf.parser.TokenMgrError"/>
+        </Or>
     </Match>
 </FindBugsFilter>
