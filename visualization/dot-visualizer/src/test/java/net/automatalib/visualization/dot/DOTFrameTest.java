@@ -24,12 +24,21 @@ import javax.swing.SwingUtilities;
 
 import net.automatalib.commons.util.system.JVMUtil;
 import org.testng.SkipException;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * @author frohme
  */
 public class DOTFrameTest {
+
+    @BeforeClass
+    public void checkDOT() {
+        if (!DOT.checkUsable()) {
+            // Do not fail on platforms, where DOT is not installed
+            throw new SkipException("DOT is not installed");
+        }
+    }
 
     // Headless GUI testing is a pain. Therefore just check that we don't throw any exceptions for now.
     @Test(timeOut = 10000)

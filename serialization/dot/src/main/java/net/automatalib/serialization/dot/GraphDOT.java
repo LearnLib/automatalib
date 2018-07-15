@@ -168,7 +168,8 @@ public final class GraphDOT {
         if (directed) {
             a.append("di");
         }
-        a.append("graph g {\n");
+
+        a.append("graph g {").append(System.lineSeparator());
 
         Map<String, String> props = new HashMap<>();
 
@@ -176,7 +177,7 @@ public final class GraphDOT {
         if (!props.isEmpty()) {
             a.append('\t').append("node");
             appendParams(props, a);
-            a.append(";\n");
+            a.append(';').append(System.lineSeparator());
         }
 
         props.clear();
@@ -184,11 +185,11 @@ public final class GraphDOT {
         if (!props.isEmpty()) {
             a.append('\t').append("edge");
             appendParams(props, a);
-            a.append(";\n");
+            a.append(';').append(System.lineSeparator());
         }
 
         dotHelper.writePreamble(a);
-        a.append('\n');
+        a.append(System.lineSeparator());
 
         MutableMapping<N, String> nodeNames = graph.createStaticNodeMapping();
         Set<String> initialNodes = new HashSet<>();
@@ -210,7 +211,7 @@ public final class GraphDOT {
 
             a.append('\t').append(id);
             appendParams(props, a);
-            a.append(";\n");
+            a.append(';').append(System.lineSeparator());
             nodeNames.put(node, id);
         }
 
@@ -247,17 +248,17 @@ public final class GraphDOT {
                 }
                 a.append(tgtId);
                 appendParams(props, a);
-                a.append(";\n");
+                a.append(';').append(System.lineSeparator());
             }
         }
 
-        a.append('\n');
+        a.append(System.lineSeparator());
         renderInitialArrowTip(initialNodes, a);
 
         dotHelper.writePostamble(a);
-        a.append('\n');
+        a.append(System.lineSeparator());
 
-        a.append("}\n");
+        a.append('}').append(System.lineSeparator());
         if (a instanceof Flushable) {
             ((Flushable) a).flush();
         }
@@ -297,12 +298,14 @@ public final class GraphDOT {
         for (String init : initialNodes) {
             a.append(startPrefix)
              .append(Integer.toString(i))
-             .append(" [label=\"\" shape=\"none\" width=\"0\" height=\"0\"];\n")
+             .append(" [label=\"\" shape=\"none\" width=\"0\" height=\"0\"];")
+             .append(System.lineSeparator())
              .append(startPrefix)
              .append(Integer.toString(i++))
              .append(" -> ")
              .append(init)
-             .append(";\n");
+             .append(';')
+             .append(System.lineSeparator());
         }
     }
 
