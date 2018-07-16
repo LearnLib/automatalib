@@ -122,12 +122,12 @@ public class DOTSerializationTest {
 
         @Override
         public void writePreamble(Appendable a) throws IOException {
-            a.append("// this is a preamble\n");
+            a.append("// this is a preamble").append(System.lineSeparator());
         }
 
         @Override
         public void writePostamble(Appendable a) throws IOException {
-            a.append("// this is a postamble\n");
+            a.append("// this is a postamble").append(System.lineSeparator());
         }
 
         @Override
