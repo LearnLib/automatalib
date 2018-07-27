@@ -91,7 +91,7 @@ public final class AUTWriter {
         appendable.append(Integer.toString(transitions.size()));
         appendable.append(", ");
         appendable.append(Integer.toString(automaton.size()));
-        appendable.append(")");
+        appendable.append(')');
         appendable.append(System.lineSeparator());
     }
 
@@ -109,7 +109,7 @@ public final class AUTWriter {
             appendable.append(inputTransformer.apply(trans.input));
             appendable.append(", ");
             appendable.append(Integer.toString(stateIds.getStateId(trans.dest)));
-            appendable.append(")");
+            appendable.append(')');
             appendable.append(System.lineSeparator());
         }
     }

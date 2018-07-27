@@ -146,7 +146,7 @@ public final class TAFWriter {
         writeIndent();
         out.append(type).append(' ');
         writeStringCollection(inputs);
-        out.append(" {\n");
+        out.append(" {").append(System.lineSeparator());
         indent++;
     }
 
@@ -156,7 +156,7 @@ public final class TAFWriter {
         if (options != null && !options.isEmpty()) {
             out.append(options.toString()).append(' ');
         }
-        out.append("{\n");
+        out.append('{').append(System.lineSeparator());
         indent++;
     }
 
@@ -166,19 +166,19 @@ public final class TAFWriter {
         if (output != null) {
             out.append(" / ").append(output.toString());
         }
-        out.append(" -> ").append(target).append('\n');
+        out.append(" -> ").append(target).append(System.lineSeparator());
     }
 
     private void endState() throws IOException {
         --indent;
         writeIndent();
-        out.append("}\n");
+        out.append('}').append(System.lineSeparator());
     }
 
     private void end() throws IOException {
         --indent;
         writeIndent();
-        out.append("}\n");
+        out.append('}').append(System.lineSeparator());
     }
 
     private void writeIndent() throws IOException {
