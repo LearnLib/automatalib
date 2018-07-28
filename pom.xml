@@ -586,6 +586,9 @@ limitations under the License.
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>javacc-maven-plugin</artifactId>
                     <version>${javacc-plugin.version}</version>
+                    <configuration>
+                        <outputDirectory>${project.build.directory}/generated-sources/</outputDirectory>
+                    </configuration>
                     <executions>
                         <execution>
                             <id>javacc</id>
@@ -945,6 +948,7 @@ limitations under the License.
                                             </pluginExecutionFilter>
                                             <action>
                                                 <execute>
+                                                    <runOnConfiguration>true</runOnConfiguration>
                                                     <runOnIncremental>true</runOnIncremental>
                                                 </execute>
                                             </action>
