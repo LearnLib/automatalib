@@ -17,17 +17,12 @@ package net.automatalib.modelcheckers.ltsmin;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Function;
 
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.automata.concepts.Output;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.commons.util.process.ProcessUtil;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelChecker;
@@ -184,46 +179,26 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
         }
 
         // the command lines for the ProcessBuilder
-        final List<String> commandLines = new ArrayList<>();
+        final String[] ltsminCommandLine = new String[] {// add the etf2lts-mc binary
+                                                         LTSminUtil.ETF2LTS_MC,
+                                                         // add the ETF file that contains the LTS of the hypothesis
+                                                         etf.getAbsolutePath(),
+                                                         // add the LTL formula
+                                                         "--ltl=" + formula,
+                                                         // use Buchi automata created by spot
+                                                         "--buchi-type=spotba",
+                                                         // use the Union-Find strategy
+                                                         "--strategy=ufscc",
+                                                         // write the lasso to this file
+                                                         "--trace=" + gcf.getAbsolutePath(),
+                                                         // use only one thread (hypotheses are always small)
+                                                         "--threads=1",
+                                                         // use LTSmin LTL semantics
+                                                         "--ltl-semantics=ltsmin",
+                                                         // do not abort on partial LTSs
+                                                         "--allow-undefined-edges"};
 
-        // add the etf2lts-mc binary
-        commandLines.add(LTSminUtil.ETF2LTS_MC);
-
-        // add the ETF file that contains the LTS of the hypothesis
-        commandLines.add(etf.getAbsolutePath());
-
-        // add the LTL formula
-        commandLines.add("--ltl=" + formula);
-
-        // use Buchi automata created by spot
-        commandLines.add("--buchi-type=spotba");
-
-        // use the Union-Find strategy
-        commandLines.add("--strategy=ufscc");
-
-        // write the lasso to this file
-        commandLines.add("--trace=" + gcf.getAbsolutePath());
-
-        // use only one thread (hypotheses are always small)
-        commandLines.add("--threads=1");
-
-        // use LTSmin LTL semantics
-        commandLines.add("--ltl-semantics=ltsmin");
-
-        // do not abort on partial LTSs
-        commandLines.add("--allow-undefined-edges");
-
-        final Process ltsmin;
-        try {
-            // run the etf2lts-mc binary
-            ProcessBuilder processBuilder = new ProcessBuilder(commandLines);
-            processBuilder.redirectErrorStream(true);
-            ltsmin = processBuilder.start();
-            ltsmin.waitFor();
-            logProcessOutput(ltsmin);
-        } catch (IOException | InterruptedException e) {
-            throw new ModelCheckingException(e);
-        }
+        final int ltsminExitValue = runCommandLine(ltsminCommandLine);
 
         // check if we need to delete the ETF
         if (!keepFiles && !etf.delete()) {
@@ -232,9 +207,8 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
 
         final L result;
 
-        if (ltsmin.exitValue() == 1) {
+        if (ltsminExitValue == 1) {
             // we have found a counterexample
-            commandLines.clear();
 
             final File fsm;
             try {
@@ -244,32 +218,19 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
                 throw new ModelCheckingException(ioe);
             }
 
-            // add the ltsmin-convert binary
-            commandLines.add(LTSminUtil.LTSMIN_CONVERT);
+            final String[] convertCommandLine = new String[] {// add the ltsmin-convert binary
+                                                              LTSminUtil.LTSMIN_CONVERT,
+                                                              // use the GCF as input
+                                                              gcf.getAbsolutePath(),
+                                                              // use the FSM as output
+                                                              fsm.getAbsolutePath(),
+                                                              // required option
+                                                              "--rdwr"};
 
-            // use the GCF as input
-            commandLines.add(gcf.getAbsolutePath());
-
-            // use the FSM as output
-            commandLines.add(fsm.getAbsolutePath());
-
-            // required option
-            commandLines.add("--rdwr");
-
-            final Process convert;
-            try {
-                // convert the GCF to FSM
-                ProcessBuilder processBuilder = new ProcessBuilder(commandLines);
-                processBuilder.redirectErrorStream(true);
-                convert = processBuilder.start();
-                convert.waitFor();
-                logProcessOutput(convert);
-            } catch (IOException | InterruptedException e) {
-                throw new ModelCheckingException(e);
-            }
+            final int convertExitValue = runCommandLine(convertCommandLine);
 
             // check the conversion is successful
-            if (convert.exitValue() != 0) {
+            if (convertExitValue != 0) {
                 throw new ModelCheckingException("Could not convert gcf to fsm");
             }
 
@@ -296,12 +257,11 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
         return result;
     }
 
-    private static void logProcessOutput(Process p) throws IOException {
-        if (LOGGER.isDebugEnabled()) {
-            final Reader r = IOUtil.asBufferedUTF8Reader(p.getInputStream());
-            final Writer w = new StringWriter();
-            IOUtil.copy(r, w);
-            LOGGER.debug(w.toString());
+    private static int runCommandLine(String[] commandLine) throws ModelCheckingException {
+        try {
+            return ProcessUtil.invokeProcess(commandLine, LOGGER::debug);
+        } catch (IOException | InterruptedException e) {
+            throw new ModelCheckingException(e);
         }
     }
 

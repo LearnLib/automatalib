@@ -17,11 +17,10 @@ package net.automatalib.modelcheckers.ltsmin;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
+import net.automatalib.commons.util.process.ProcessUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,26 +93,22 @@ public final class LTSminUtil {
     private static boolean checkUsable(String bin) {
 
         // the command lines for the ProcessBuilder
-        final List<String> commandLines = new ArrayList<>();
+        final String[] commandLine = new String[] {// add the binary
+                                                   bin,
+                                                   // just run a version check
+                                                   "--version"};
 
-        // add the binary
-        commandLines.add(bin);
-
-        // just run a version check
-        commandLines.add("--version");
-
-        final Process check;
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(commandLines);
-            check = processBuilder.start();
-            check.waitFor();
+            final int exitValue = ProcessUtil.invokeProcess(commandLine);
+
+            if (exitValue != VERSION_EXIT) {
+                LOGGER.error(String.format(CHECK,
+                                           bin,
+                                           String.format("Command '%s --version' did not exit with 255", bin)));
+                return false;
+            }
         } catch (IOException | InterruptedException e) {
             LOGGER.error(String.format(CHECK, bin, e.toString()), e);
-            return false;
-        }
-
-        if (check.exitValue() != VERSION_EXIT) {
-            LOGGER.error(String.format(CHECK, bin, String.format("Command '%s --version' did not exit with 255", bin)));
             return false;
         }
 

@@ -15,10 +15,8 @@
  */
 package net.automatalib.serialization.dot;
 
-import java.io.File;
 import java.io.Flushable;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,7 +28,6 @@ import java.util.Set;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.strings.StringUtil;
 import net.automatalib.graphs.Graph;
@@ -306,15 +303,6 @@ public final class GraphDOT {
              .append(init)
              .append(';')
              .append(System.lineSeparator());
-        }
-    }
-
-    public static <N, E> void writeToFileRaw(Graph<N, E> graph,
-                                             DefaultDOTVisualizationHelper<N, E> dotHelper,
-                                             File file) throws IOException {
-
-        try (Writer writer = IOUtil.asBufferedUTF8Writer(file)) {
-            writeRaw(graph, writer, new DefaultDOTVisualizationHelper<>(dotHelper));
         }
     }
 

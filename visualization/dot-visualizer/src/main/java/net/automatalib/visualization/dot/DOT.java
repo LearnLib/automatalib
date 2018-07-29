@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -47,6 +46,7 @@ import javax.swing.JScrollPane;
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.IOUtil;
+import net.automatalib.commons.util.process.ProcessUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,32 +90,28 @@ public final class DOT {
 
     public static boolean checkUsable() {
         try {
-            Process p = executeDOTRaw("-V");
-
-            int result = p.waitFor();
-            if (result == 0) {
-                return true;
-            }
+            final String[] dotCheck = buildRawDOTCommand("-V");
+            return ProcessUtil.invokeProcess(dotCheck) == 0;
         } catch (IOException | InterruptedException ex) {
             LOGGER.error("Error executing dot", ex);
         }
         return false;
     }
 
-    public static Process executeDOTRaw(String... opts) throws IOException {
+    public static String[] buildRawDOTCommand(String... opts) {
         String[] dotArgs = new String[1 + opts.length];
         dotArgs[0] = dotExe;
         System.arraycopy(opts, 0, dotArgs, 1, opts.length);
 
-        return Runtime.getRuntime().exec(dotArgs);
+        return dotArgs;
     }
 
-    public static Process executeDOT(String format, String... additionalOpts) throws IOException {
+    public static String[] buildDOTCommand(String format, String... additionalOpts) {
         String[] dotArgs = new String[1 + additionalOpts.length];
         dotArgs[0] = "-T" + format;
         System.arraycopy(additionalOpts, 0, dotArgs, 1, additionalOpts.length);
 
-        return executeDOTRaw(dotArgs);
+        return buildRawDOTCommand(dotArgs);
     }
 
     /**
@@ -140,20 +136,11 @@ public final class DOT {
      *         if reading from the specified reader fails.
      */
     public static InputStream runDOT(Reader r, String format, String... additionalOpts) throws IOException {
-        Process dot = executeDOT(format, additionalOpts);
+        String[] dotCommand = buildDOTCommand(format, additionalOpts);
 
-        OutputStream dotIn = dot.getOutputStream();
-        Writer dotWriter = IOUtil.asBufferedUTF8Writer(dotIn);
+        Process p = ProcessUtil.buildProcess(dotCommand, r, null, LOGGER::warn);
 
-        IOUtil.copy(r, dotWriter);
-
-        try {
-            IOUtil.skip(dot.getErrorStream());
-        } catch (IOException e) {
-            LOGGER.error("Could not skip over error stream", e);
-        }
-
-        return dot.getInputStream();
+        return p.getInputStream();
     }
 
     /**
@@ -185,18 +172,12 @@ public final class DOT {
      *         if an I/O error occurs reading from the given input or writing to the output file.
      */
     public static void runDOT(Reader r, String format, File out) throws IOException {
-        Process dot = executeDOT(format, "-o" + out.getAbsolutePath());
+        String[] dotCommand = buildDOTCommand(format, "-o" + out.getAbsolutePath());
 
-        OutputStream dotIn = dot.getOutputStream();
-        Writer dotWriter = IOUtil.asBufferedUTF8Writer(dotIn);
-
-        IOUtil.copy(r, dotWriter);
-        dot.getErrorStream().close();
-        dot.getInputStream().close();
         try {
-            dot.waitFor();
+            ProcessUtil.invokeProcess(dotCommand, r, LOGGER::warn);
         } catch (InterruptedException ex) {
-            LOGGER.warn("Interrupted while waiting for 'dot' process to exit.", ex);
+            LOGGER.error("Interrupted while waiting for 'dot' process to exit.", ex);
         }
     }
 
@@ -401,7 +382,7 @@ public final class DOT {
 
             @Override
             public void close() throws IOException {
-                renderDOT(getBuffer().toString(), modal);
+                renderDOT(toString(), modal);
                 super.close();
             }
         };
