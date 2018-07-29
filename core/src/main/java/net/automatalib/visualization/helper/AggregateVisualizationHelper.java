@@ -25,16 +25,15 @@ public class AggregateVisualizationHelper<N, E> implements VisualizationHelper<N
 
     private final List<VisualizationHelper<N, ? super E>> helpers;
 
-    public AggregateVisualizationHelper() {
-        helpers = new ArrayList<>();
+    public AggregateVisualizationHelper(VisualizationHelper<N, ? super E> rootVisualizer,
+                                        List<? extends VisualizationHelper<N, ? super E>> helpers) {
+        this.helpers = new ArrayList<>(helpers.size() + 1);
+        this.helpers.add(rootVisualizer);
+        this.helpers.addAll(helpers);
     }
 
     public AggregateVisualizationHelper(List<? extends VisualizationHelper<N, ? super E>> helpers) {
         this.helpers = new ArrayList<>(helpers);
-    }
-
-    public void add(VisualizationHelper<N, ? super E> helper) {
-        this.helpers.add(helper);
     }
 
     @Override

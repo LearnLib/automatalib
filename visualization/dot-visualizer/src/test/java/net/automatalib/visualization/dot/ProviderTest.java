@@ -49,8 +49,8 @@ public class ProviderTest {
 
         vpManager.load();
 
-        final VisualizationProvider swingProvider = vpManager.getProviderByName("graphviz-swing");
-        final VisualizationProvider browserProvider = vpManager.getProviderByName("graphviz-browser");
+        final VisualizationProvider swingProvider = vpManager.getProviderById("graphviz-swing");
+        final VisualizationProvider browserProvider = vpManager.getProviderById("graphviz-browser");
 
         Assert.assertTrue(swingProvider instanceof GraphVizSwingVisualizationProvider);
         Assert.assertTrue(browserProvider instanceof GraphVizBrowserVisualizationProvider);

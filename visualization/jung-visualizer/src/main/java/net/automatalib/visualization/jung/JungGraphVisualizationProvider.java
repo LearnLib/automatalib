@@ -82,22 +82,18 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
     }
 
     @Override
-    public int getPriority() {
-        return 0;
-    }
-
-    @Override
     public boolean checkUsable() {
         return true;
     }
 
     @Override
     public <N, E> void visualize(Graph<N, E> graph,
-                                 List<VisualizationHelper<N, ? super E>> helpers,
+                                 List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> options) {
 
-        DirectedGraph<NodeVisualization, EdgeVisualization> visGraph = createVisualizationGraph(graph, helpers);
+        DirectedGraph<NodeVisualization, EdgeVisualization> visGraph =
+                createVisualizationGraph(graph, additionalHelpers);
 
         Layout<NodeVisualization, EdgeVisualization> layout = new KKLayout<>(visGraph);
 
@@ -114,9 +110,10 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
     }
 
     public static <N, E> DirectedGraph<NodeVisualization, EdgeVisualization> createVisualizationGraph(Graph<N, E> graph,
-                                                                                                      List<VisualizationHelper<N, ? super E>> helpers) {
+                                                                                                      List<VisualizationHelper<N, ? super E>> additionalHelpers) {
 
-        final VisualizationHelper<N, E> helper = new AggregateVisualizationHelper<>(helpers);
+        final VisualizationHelper<N, E> helper =
+                new AggregateVisualizationHelper<>(graph.getVisualizationHelper(), additionalHelpers);
 
         Map<String, String> defaultProps = new HashMap<>();
         helper.getGlobalNodeProperties(defaultProps);

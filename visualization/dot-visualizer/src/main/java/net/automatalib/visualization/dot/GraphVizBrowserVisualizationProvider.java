@@ -54,11 +54,11 @@ public class GraphVizBrowserVisualizationProvider implements VisualizationProvid
 
     @Override
     public <N, E> void visualize(Graph<N, E> graph,
-                                 List<VisualizationHelper<N, ? super E>> helpers,
+                                 List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> visOptions) {
         try (StringWriter sw = new StringWriter()) {
-            GraphDOT.write(graph, sw, GraphDOT.toDOTVisualizationHelper(helpers));
+            GraphDOT.write(graph, sw, additionalHelpers);
             File imgTmp = File.createTempFile("graphviz-browser", ".png");
             DOT.runDOT(sw.getBuffer().toString(), "png", imgTmp);
             File htmlTmp = File.createTempFile("graphviz-browser", ".html");

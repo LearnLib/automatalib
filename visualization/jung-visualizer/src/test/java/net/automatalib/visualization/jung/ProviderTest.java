@@ -44,7 +44,7 @@ public class ProviderTest {
 
         vpManager.load();
 
-        final VisualizationProvider provider = vpManager.getProviderByName("jung");
+        final VisualizationProvider provider = vpManager.getProviderById("jung");
 
         Assert.assertTrue(provider instanceof JungGraphVisualizationProvider);
     }

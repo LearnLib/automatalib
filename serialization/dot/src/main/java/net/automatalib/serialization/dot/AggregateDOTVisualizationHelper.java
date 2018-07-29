@@ -16,7 +16,6 @@
 package net.automatalib.serialization.dot;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.visualization.helper.AggregateVisualizationHelper;
@@ -25,10 +24,6 @@ public class AggregateDOTVisualizationHelper<N, E> extends AggregateVisualizatio
         implements DOTVisualizationHelper<N, E> {
 
     private final List<? extends DOTVisualizationHelper<N, ? super E>> helpers;
-
-    public AggregateDOTVisualizationHelper() {
-        this(Collections.emptyList());
-    }
 
     public AggregateDOTVisualizationHelper(List<? extends DOTVisualizationHelper<N, ? super E>> visualizationHelpers) {
         super(visualizationHelpers);

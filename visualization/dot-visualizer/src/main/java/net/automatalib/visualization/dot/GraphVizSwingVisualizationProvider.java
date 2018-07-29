@@ -50,11 +50,11 @@ public class GraphVizSwingVisualizationProvider implements VisualizationProvider
 
     @Override
     public <N, E> void visualize(Graph<N, E> graph,
-                                 List<VisualizationHelper<N, ? super E>> helper,
+                                 List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> visOptions) {
         try (Writer w = DOT.createDotWriter(modal)) {
-            GraphDOT.write(graph, w, GraphDOT.toDOTVisualizationHelper(helper));
+            GraphDOT.write(graph, w, additionalHelpers);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error rendering graph: " + ex.getMessage());
         }

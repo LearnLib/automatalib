@@ -15,11 +15,9 @@
  */
 package net.automatalib.visualization;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import net.automatalib.AutomataLibProperty;
@@ -48,7 +46,7 @@ public final class Visualization {
         manager.load();
 
         if (providerId != null) {
-            vp = manager.getProviderByName(providerId);
+            vp = manager.getProviderById(providerId);
         }
 
         if (vp == null) {
@@ -63,23 +61,23 @@ public final class Visualization {
     }
 
     @SafeVarargs
-    public static <N, E> void visualize(Graph<N, E> graph, VisualizationHelper<N, ? super E>... helpers) {
-        visualize(graph, true, helpers);
+    public static <N, E> void visualize(Graph<N, E> graph, VisualizationHelper<N, ? super E>... additionalHelpers) {
+        visualize(graph, true, additionalHelpers);
     }
 
     @SafeVarargs
     public static <N, E> void visualize(Graph<N, E> graph,
                                         boolean modal,
-                                        VisualizationHelper<N, ? super E>... helpers) {
-        visualize(graph, modal, Collections.emptyMap(), helpers);
+                                        VisualizationHelper<N, ? super E>... additionalHelpers) {
+        visualize(graph, modal, Collections.emptyMap(), additionalHelpers);
     }
 
     @SafeVarargs
     public static <N, E> void visualize(Graph<N, E> graph,
                                         boolean modal,
                                         Map<String, String> options,
-                                        VisualizationHelper<N, ? super E>... helpers) {
-        INSTANCE.visualizeInternal(graph, modal, options, helpers);
+                                        VisualizationHelper<N, ? super E>... additionalHelpers) {
+        INSTANCE.visualizeInternal(graph, modal, options, additionalHelpers);
     }
 
     public static void visualize(GraphViewable gv) {
@@ -97,16 +95,16 @@ public final class Visualization {
     @SafeVarargs
     public static <S, I, T> void visualize(Automaton<S, I, T> graph,
                                            Collection<? extends I> inputs,
-                                           VisualizationHelper<S, ? super TransitionEdge<I, T>>... helpers) {
-        visualize(graph, inputs, true, helpers);
+                                           VisualizationHelper<S, ? super TransitionEdge<I, T>>... additionalHelpers) {
+        visualize(graph, inputs, true, additionalHelpers);
     }
 
     @SafeVarargs
     public static <S, I, T> void visualize(Automaton<S, I, T> graph,
                                            Collection<? extends I> inputs,
                                            boolean modal,
-                                           VisualizationHelper<S, ? super TransitionEdge<I, T>>... helpers) {
-        visualize(graph, inputs, modal, Collections.emptyMap(), helpers);
+                                           VisualizationHelper<S, ? super TransitionEdge<I, T>>... additionalHelpers) {
+        visualize(graph, inputs, modal, Collections.emptyMap(), additionalHelpers);
     }
 
     @SafeVarargs
@@ -114,21 +112,16 @@ public final class Visualization {
                                            Collection<? extends I> inputs,
                                            boolean modal,
                                            Map<String, String> options,
-                                           VisualizationHelper<S, ? super TransitionEdge<I, T>>... helpers) {
-        INSTANCE.visualizeInternal(graph.transitionGraphView(inputs), modal, options, helpers);
+                                           VisualizationHelper<S, ? super TransitionEdge<I, T>>... additionalHelpers) {
+        INSTANCE.visualizeInternal(graph.transitionGraphView(inputs), modal, options, additionalHelpers);
     }
 
     @SafeVarargs
     private final <N, E> void visualizeInternal(Graph<N, E> graph,
                                                 boolean modal,
                                                 Map<String, String> options,
-                                                VisualizationHelper<N, ? super E>... helpers) {
-
-        List<VisualizationHelper<N, ? super E>> allHelpers = new ArrayList<>(helpers.length + 1);
-        allHelpers.add(graph.getVisualizationHelper());
-        allHelpers.addAll(Arrays.asList(helpers));
-
-        provider.visualize(graph, allHelpers, modal, options);
+                                                VisualizationHelper<N, ? super E>... additionalHelpers) {
+        provider.visualize(graph, Arrays.asList(additionalHelpers), modal, options);
     }
 
 }

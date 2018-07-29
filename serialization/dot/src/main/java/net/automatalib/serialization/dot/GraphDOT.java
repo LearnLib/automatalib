@@ -91,6 +91,29 @@ public final class GraphDOT {
                                        Appendable a,
                                        VisualizationHelper<S, ? super TransitionEdge<I, T>>... additionalHelpers)
             throws IOException {
+        write(automaton, inputAlphabet, a, Arrays.asList(additionalHelpers));
+    }
+
+    /**
+     * Renders an {@link Automaton} in the GraphVIZ DOT format.
+     *
+     * @param automaton
+     *         the automaton to render.
+     * @param inputAlphabet
+     *         the input alphabet to consider
+     * @param a
+     *         the appendable to write to
+     * @param additionalHelpers
+     *         additional helpers for providing visualization properties.
+     *
+     * @throws IOException
+     *         if writing to <tt>a</tt> fails
+     */
+    public static <S, I, T> void write(Automaton<S, I, T> automaton,
+                                       Collection<? extends I> inputAlphabet,
+                                       Appendable a,
+                                       List<VisualizationHelper<S, ? super TransitionEdge<I, T>>> additionalHelpers)
+            throws IOException {
         write(automaton.transitionGraphView(inputAlphabet), a, additionalHelpers);
     }
 
@@ -126,11 +149,30 @@ public final class GraphDOT {
     public static <N, E> void write(Graph<N, E> graph,
                                     Appendable a,
                                     VisualizationHelper<N, ? super E>... additionalHelpers) throws IOException {
+        write(graph, a, Arrays.asList(additionalHelpers));
+    }
 
-        final List<VisualizationHelper<N, ? super E>> helpers = new ArrayList<>(additionalHelpers.length + 1);
+    /**
+     * Renders a {@link Graph} in the GraphVIZ DOT format.
+     *
+     * @param graph
+     *         the graph to render
+     * @param a
+     *         the appendable to write to.
+     * @param additionalHelpers
+     *         additional helpers for providing visualization properties.
+     *
+     * @throws IOException
+     *         if writing to <tt>a</tt> fails.
+     */
+    public static <N, E> void write(Graph<N, E> graph,
+                                    Appendable a,
+                                    List<VisualizationHelper<N, ? super E>> additionalHelpers) throws IOException {
+
+        final List<VisualizationHelper<N, ? super E>> helpers = new ArrayList<>(additionalHelpers.size() + 1);
 
         helpers.add(graph.getVisualizationHelper());
-        helpers.addAll(Arrays.asList(additionalHelpers));
+        helpers.addAll(additionalHelpers);
 
         writeRaw(graph, a, toDOTVisualizationHelper(helpers));
     }
