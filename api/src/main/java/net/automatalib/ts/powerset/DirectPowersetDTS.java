@@ -22,7 +22,7 @@ import java.util.Set;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
 
-public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<? extends S>, I, Set<? extends T>, S, T> {
+public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<S>, I, Set<T>, S, T> {
 
     private final TransitionSystem<S, I, T> ts;
 
@@ -36,7 +36,7 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<? extends 
     }
 
     @Override
-    public Set<S> getSuccessor(Set<? extends T> transition) {
+    public Set<S> getSuccessor(Set<T> transition) {
         Set<S> result = new HashSet<>();
         for (T trans : transition) {
             result.add(ts.getSuccessor(trans));
@@ -45,7 +45,7 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<? extends 
     }
 
     @Override
-    public Set<S> getSuccessor(Set<? extends S> state, I input) {
+    public Set<S> getSuccessor(Set<S> state, I input) {
         Set<S> result = new HashSet<>();
         for (S s : state) {
             Collection<T> transitions = ts.getTransitions(s, input);
@@ -58,7 +58,7 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<? extends 
     }
 
     @Override
-    public Set<T> getTransition(Set<? extends S> state, I input) {
+    public Set<T> getTransition(Set<S> state, I input) {
         Set<T> result = new HashSet<>();
         for (S s : state) {
             Collection<T> transitions = ts.getTransitions(s, input);
@@ -68,14 +68,12 @@ public class DirectPowersetDTS<S, I, T> implements PowersetViewTS<Set<? extends 
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Collection<S> getOriginalStates(Set<? extends S> state) {
-        return (Collection<S>) state;
+    public Collection<S> getOriginalStates(Set<S> state) {
+        return state;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Collection<T> getOriginalTransitions(Set<? extends T> transition) {
-        return (Collection<T>) transition;
+    public Collection<T> getOriginalTransitions(Set<T> transition) {
+        return transition;
     }
 }

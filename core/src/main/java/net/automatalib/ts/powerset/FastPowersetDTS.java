@@ -25,8 +25,8 @@ import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;
 
 public class FastPowersetDTS<S extends NumericID, I, T>
-        implements DeterministicTransitionSystem<FastPowersetState<S>, I, Set<? extends T>>,
-                   PowersetViewTS<FastPowersetState<S>, I, Set<? extends T>, S, T> {
+        implements DeterministicTransitionSystem<FastPowersetState<S>, I, Set<T>>,
+                   PowersetViewTS<FastPowersetState<S>, I, Set<T>, S, T> {
 
     private final TransitionSystem<S, I, T> ts;
 
@@ -44,7 +44,7 @@ public class FastPowersetDTS<S extends NumericID, I, T>
     }
 
     @Override
-    public FastPowersetState<S> getSuccessor(Set<? extends T> transition) {
+    public FastPowersetState<S> getSuccessor(Set<T> transition) {
         FastPowersetState<S> succ = new FastPowersetState<>();
         for (T t : transition) {
             S succS = ts.getSuccessor(t);
@@ -69,7 +69,7 @@ public class FastPowersetDTS<S extends NumericID, I, T>
     }
 
     @Override
-    public Set<? extends T> getTransition(FastPowersetState<S> state, I input) {
+    public Set<T> getTransition(FastPowersetState<S> state, I input) {
         Set<T> result = new HashSet<>();
         for (S s : state) {
             Collection<T> transitions = ts.getTransitions(s, input);
@@ -84,9 +84,8 @@ public class FastPowersetDTS<S extends NumericID, I, T>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Collection<T> getOriginalTransitions(Set<? extends T> transition) {
-        return (Collection<T>) transition;
+    public Collection<T> getOriginalTransitions(Set<T> transition) {
+        return transition;
     }
 
 }
