@@ -6,7 +6,10 @@ branches:
   - develop
   - release
 
+clone_depth: 50
+
 init:
+  - cmd: git config --global core.autocrlf true
   - cmd: mvn --version
 
 environment:
