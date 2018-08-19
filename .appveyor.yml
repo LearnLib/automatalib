@@ -7,7 +7,6 @@ branches:
   - release
 
 init:
-  - cmd: git config --global core.autocrlf true
   - cmd: mvn --version
 
 environment:
