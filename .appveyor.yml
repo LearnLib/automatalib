@@ -12,7 +12,6 @@ init:
 environment:
   matrix:
   - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
-  - JAVA_HOME: C:\Program Files\Java\jdk9
   - JAVA_HOME: C:\Program Files\Java\jdk10
 
 cache:
