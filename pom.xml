@@ -181,7 +181,7 @@ limitations under the License.
         <info-reports-plugin.version>2.9</info-reports-plugin.version>
         <jacoco-plugin.version>0.8.0</jacoco-plugin.version>
         <javacc-plugin.version>2.6</javacc-plugin.version>
-        <javadoc-plugin.version>3.0.0</javadoc-plugin.version>
+        <javadoc-plugin.version>3.0.1</javadoc-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <pmd-plugin.version>3.10.0</pmd-plugin.version>
         <release-plugin.version>2.5.3</release-plugin.version>
