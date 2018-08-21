@@ -70,8 +70,10 @@ public class DefaultDOTVisualizationHelper<N, E> extends DefaultVisualizationHel
         }
     }
 
+    @Override
     public void writePreamble(Appendable a) throws IOException {}
 
+    @Override
     public void writePostamble(Appendable a) throws IOException {}
 
 }

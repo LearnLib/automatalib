@@ -38,7 +38,7 @@ public abstract class AbstractClassPathFileSource implements SettingsSource {
         Logger log = LoggerFactory.getLogger(getClass());
 
         try {
-            Enumeration<URL> resourceUrls = getClass().getClassLoader().getResources(fileName);
+            Enumeration<URL> resourceUrls = Thread.currentThread().getContextClassLoader().getResources(fileName);
             while (resourceUrls.hasMoreElements()) {
                 URL url = resourceUrls.nextElement();
                 try (Reader r = IOUtil.asBufferedUTF8Reader(url.openStream())) {

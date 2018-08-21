@@ -155,6 +155,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         return getIntTransition(state, input);
     }
 
+    @Override
     public void setInitialState(int state) {
         this.initial = state;
     }
@@ -174,10 +175,12 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         return successor;
     }
 
+    @Override
     public int addIntState() {
         return addIntState(null);
     }
 
+    @Override
     public int addIntState(SP property) {
         int stateId = numStates++;
         ensureCapacity(numStates);
@@ -185,10 +188,12 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         return stateId;
     }
 
+    @Override
     public int addIntInitialState() {
         return addIntInitialState(null);
     }
 
+    @Override
     public int addIntInitialState(SP property) {
         int state = addIntState(property);
         setInitialState(state);
@@ -259,6 +264,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         return transitions[transId];
     }
 
+    @Override
     public int getIntInitialState() {
         return initial;
     }
@@ -266,7 +272,6 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
     public StateIntAbstraction<I, Integer, SP, Void> stateIntAbstraction() {
         return this;
     }
-
 
     @Override
     public Integer getTransition(Integer state, I input) {
@@ -314,6 +319,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         setStateProperty(state.intValue(), property);
     }
 
+    @Override
     public abstract void setStateProperty(int stateId, SP property);
 
     @Override
@@ -341,6 +347,7 @@ public abstract class AbstractCompactSimpleDet<I, SP> implements MutableDetermin
         return getStateProperty(state.intValue());
     }
 
+    @Override
     public abstract SP getStateProperty(int stateId);
 
 

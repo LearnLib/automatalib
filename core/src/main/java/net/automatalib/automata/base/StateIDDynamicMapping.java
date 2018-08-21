@@ -35,7 +35,7 @@ public class StateIDDynamicMapping<S extends NumericID, V> implements MutableMap
     @SuppressWarnings("unchecked")
     public V get(S elem) {
         int id = elem.getId();
-        if (id < storage.array.length) {
+        if (id >= 0 && id < storage.array.length) {
             return (V) storage.array[id];
         }
         return null;

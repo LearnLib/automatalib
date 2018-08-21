@@ -61,12 +61,12 @@ public interface IndefiniteSimpleGraph<N> {
 
     @Nonnull
     default <V> MutableMapping<N, V> createStaticNodeMapping() {
-        return new MapMapping<>(new HashMap<N, V>());
+        return new MapMapping<>(new HashMap<>());
     }
 
     @Nonnull
     default <V> MutableMapping<N, V> createDynamicNodeMapping() {
-        return new MapMapping<>(new HashMap<N, V>());
+        return new MapMapping<>(new HashMap<>());
     }
 
     default IndefiniteGraph<N, ?> asNormalGraph() {

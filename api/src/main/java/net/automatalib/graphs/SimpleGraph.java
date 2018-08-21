@@ -73,6 +73,7 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
         return new DefaultVisualizationHelper<>();
     }
 
+    @Override
     default Graph<N, ?> asNormalGraph() {
         return new NormalGraphView<>(this);
     }

@@ -15,9 +15,11 @@
  */
 package net.automatalib.automata.fsa.impl;
 
-import net.automatalib.automata.base.fast.AbstractFastNondetState;
+import java.util.Collection;
 
-public class FastNFAState extends AbstractFastNondetState<FastNFAState> {
+import net.automatalib.automata.base.fast.AbstractFastState;
+
+public class FastNFAState extends AbstractFastState<Collection<FastNFAState>> {
 
     private boolean accepting;
 

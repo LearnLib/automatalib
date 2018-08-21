@@ -79,6 +79,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractOneSEVPA<Pair<L1, L2>, I
         return sevpa1.getLocationId(loc.getFirst()) * sevpa2.size() + sevpa2.getLocationId(loc.getSecond());
     }
 
+    @Override
     public List<Pair<L1, L2>> getLocations() {
         final List<Pair<L1, L2>> locations = new ArrayList<>(sevpa1.size() * sevpa2.size());
 

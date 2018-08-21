@@ -192,14 +192,13 @@ public final class WordBuilder<I> extends AbstractList<I> {
         }
 
         int allLen = 0;
-        for (int i = 0; i < words.length; i++) {
-            allLen += words[i].length();
+        for (Word<? extends I> w : words) {
+            allLen += w.length();
         }
 
         ensureAdditionalCapacity(allLen);
 
-        for (int i = 0; i < words.length; i++) {
-            Word<? extends I> word = words[i];
+        for (Word<? extends I> word : words) {
             int wLen = word.length();
             word.writeToArray(0, array, length, wLen);
             length += wLen;

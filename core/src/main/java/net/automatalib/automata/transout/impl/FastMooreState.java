@@ -15,7 +15,7 @@
  */
 package net.automatalib.automata.transout.impl;
 
-import net.automatalib.automata.base.fast.AbstractFastDetState;
+import net.automatalib.automata.base.fast.AbstractFastState;
 
 /**
  * A state in a {@link FastMoore} automaton.
@@ -25,7 +25,7 @@ import net.automatalib.automata.base.fast.AbstractFastDetState;
  *
  * @author Malte Isberner
  */
-public final class FastMooreState<O> extends AbstractFastDetState<FastMooreState<O>, FastMooreState<O>> {
+public final class FastMooreState<O> extends AbstractFastState<FastMooreState<O>> {
 
     private O output;
 

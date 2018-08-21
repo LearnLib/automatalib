@@ -15,13 +15,10 @@
  */
 package net.automatalib.serialization.saf;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -31,6 +28,7 @@ import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.serialization.AutomatonSerializationException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -58,8 +56,8 @@ class SAFInput {
         this.in = in;
     }
 
-    SAFInput(File file) throws FileNotFoundException {
-        this(new BufferedInputStream(new FileInputStream(file)));
+    SAFInput(File file) throws IOException {
+        this(IOUtil.asBufferedInputStream(file));
     }
 
     public <I> CompactDFA<I> readDFA(Alphabet<I> alphabet) throws IOException {

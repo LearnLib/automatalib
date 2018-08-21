@@ -36,7 +36,7 @@ public enum LoadPolicy {
      */
     SHIPPED_ONLY,
     /**
-     * Only try to laod the system version of the requested library.
+     * Only try to load the system version of the requested library.
      */
     SYSTEM_ONLY
 }

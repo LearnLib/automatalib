@@ -42,8 +42,7 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
 
     @Override
     public boolean hasNext() {
-        for (int i = 0; i < iterators.length; i++) {
-            Iterator<? extends T> it = iterators[i];
+        for (Iterator<? extends T> it : iterators) {
             if (it == null || it.hasNext()) {
                 return true;
             }

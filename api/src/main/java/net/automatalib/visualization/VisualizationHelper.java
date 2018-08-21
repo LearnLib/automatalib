@@ -69,15 +69,19 @@ public interface VisualizationHelper<N, E> {
      */
     boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties);
 
-    abstract class CommonAttrs {
+    class CommonAttrs {
 
         public static final String LABEL = "label";
         public static final String COLOR = "color";
         public static final String TEXLBL = "texlbl";
         public static final String STYLE = "style";
+
+        private CommonAttrs() {
+            // prevent instantiation
+        }
     }
 
-    abstract class NodeAttrs extends CommonAttrs {
+    final class NodeAttrs extends CommonAttrs {
 
         public static final String SHAPE = "shape";
         public static final String WIDTH = "width";
@@ -86,15 +90,23 @@ public interface VisualizationHelper<N, E> {
 
         public static final String INITIAL = "initial";
         public static final String ACCEPTING = "accepting";
+
+        private NodeAttrs() {
+            // prevent instantiation
+        }
     }
 
-    abstract class EdgeAttrs extends CommonAttrs {
+    final class EdgeAttrs extends CommonAttrs {
 
         public static final String PENWIDTH = "penwidth";
         public static final String ARROWHEAD = "arrowhead";
+
+        private EdgeAttrs() {
+            // prevent instantiation
+        }
     }
 
-    abstract class NodeShapes {
+    final class NodeShapes {
 
         public static final String NONE = "none";
 
@@ -108,23 +120,40 @@ public interface VisualizationHelper<N, E> {
         public static final String DOUBLEOCTAGON = "doubleoctagon";
 
         public static final String BOX = "box";
+
+        private NodeShapes() {
+            // prevent instantiation
+        }
     }
 
-    abstract class CommonStyles {
+    class CommonStyles {
 
         public static final String DASHED = "dashed";
         public static final String DOTTED = "dotted";
         public static final String SOLID = "solid";
         public static final String BOLD = "bold";
+
+        private CommonStyles() {
+            // prevent instantiation
+        }
     }
 
-    abstract class NodeStyles extends CommonStyles {
+    final class NodeStyles extends CommonStyles {
 
         public static final String FILLED = "filled";
         public static final String INVISIBLE = "invisible";
         public static final String DIAGONALS = "diagonals";
         public static final String ROUNDED = "rounded";
+
+        private NodeStyles() {
+            // prevent instantiation
+        }
     }
 
-    abstract class EdgeStyles extends CommonStyles {}
+    final class EdgeStyles extends CommonStyles {
+
+        private EdgeStyles() {
+            // prevent instantiation
+        }
+    }
 }

@@ -39,7 +39,7 @@ public interface Automaton<S, I, T> extends TransitionSystem<S, I, T>, SimpleAut
 
     /**
      * Obtains a {@link Graph graph} view of the transition graph of this automaton, taking into account the specified
-     * input symbols. The transitions are represented as {@link TransitionEdge}s in the grpah.
+     * input symbols. The transitions are represented as {@link TransitionEdge}s in the graph.
      *
      * @param inputs
      *         the input symbols to consider

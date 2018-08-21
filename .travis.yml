@@ -11,6 +11,7 @@ addons:
 cache:
   directories:
   - $HOME/.m2
+  - $HOME/ltsmin
 
 before_cache:
   # do not cache our local archives
@@ -22,21 +23,20 @@ branches:
   - develop
   - release
 
-install: true # skip mvn install, because we essentially run the same command in the script routine
+install:
+  # install LTSmin
+  - build-tools/install-ltsmin.sh
+  - PATH="$PATH:$HOME/ltsmin/v3.0.0/bin"
 
 script: mvn install -B -Pcode-analysis,bundles
 
 jobs:
   fast_finish: true
-  allow_failures:
-    - jdk: oraclejdk9
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
   include:
     - jdk: openjdk8
-    - jdk: oraclejdk8
-    - jdk: oraclejdk9
-    - jdk: oraclejdk9
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=1.9 -Dmaven.compiler.target=1.9"
+    - jdk: openjdk10
+    - jdk: openjdk10
+      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=10 -Dmaven.compiler.target=10"
     - stage: coverage
       jdk: openjdk8 # use openjdk8 build
       script:

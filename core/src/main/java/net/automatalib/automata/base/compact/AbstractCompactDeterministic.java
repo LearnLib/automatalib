@@ -69,10 +69,12 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
         setTransition(stateId, inputIdx, succId, null);
     }
 
+    @Override
     public void setTransition(int state, int inputIdx, T trans) {
         transitions[state * alphabetSize + inputIdx] = trans;
     }
 
+    @Override
     public void setTransition(int stateId, int inputIdx, int succId, TP property) {
         setTransition(stateId, inputIdx, createTransition(succId, property));
     }
@@ -82,10 +84,12 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
         setTransition(getId(state), alphabet.getSymbolIndex(input), transition);
     }
 
+    @Override
     public void setTransition(int state, I input, T trans) {
         setTransition(state, alphabet.getSymbolIndex(input), trans);
     }
 
+    @Override
     public void setTransition(int stateId, I input, int succId, TP property) {
         setTransition(stateId, input, createTransition(succId, property));
     }
@@ -99,6 +103,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
         setInitialState(getId(state));
     }
 
+    @Override
     public void setInitialState(int stateId) {
         initial = stateId;
     }
@@ -164,20 +169,24 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
         return makeId(initial);
     }
 
+    @Override
     public int addIntState() {
         return addIntState(null);
     }
 
+    @Override
     public int addIntState(SP property) {
         int newState = createState();
         setStateProperty(newState, property);
         return newState;
     }
 
+    @Override
     public int addIntInitialState() {
         return addIntInitialState(null);
     }
 
+    @Override
     public int addIntInitialState(SP property) {
         int newState = addIntState(property);
         setInitialState(newState);
@@ -195,6 +204,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
         setStateProperty(state.intValue(), property);
     }
 
+    @Override
     public abstract void setStateProperty(int state, SP property);
 
     public final void ensureCapacity(int newCapacity) {
@@ -217,6 +227,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
     protected void ensureCapacity() {
     }
 
+    @Override
     public T getTransition(int stateId, I input) {
 
         if(alphabet.containsSymbol(input))
@@ -225,6 +236,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public T getTransition(int stateId, int inputIdx) {
         return (T) transitions[stateId * alphabetSize + inputIdx];
     }
@@ -241,6 +253,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
         return getStateProperty(getId(state));
     }
 
+    @Override
     public abstract SP getStateProperty(int stateId);
 
     @Override
@@ -271,6 +284,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
         return createTransition(getId(succ), property);
     }
 
+    @Override
     public abstract T createTransition(int succId, TP property);
 
     @Override

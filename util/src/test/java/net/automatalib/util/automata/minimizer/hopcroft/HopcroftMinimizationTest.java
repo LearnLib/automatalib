@@ -15,9 +15,7 @@
  */
 package net.automatalib.util.automata.minimizer.hopcroft;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.Automaton;
@@ -32,22 +30,13 @@ import net.automatalib.util.automata.minimizer.hopcroft.HopcroftMinimization.Pru
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
 public class HopcroftMinimizationTest {
 
-    private List<TestDFA<?>> testDfas;
-
-    @BeforeClass
-    public void setUp() {
-        testDfas = new ArrayList<>();
-        testDfas.add(createTestDFA1());
-        testDfas.add(createTestDFA2());
-    }
-
-    private static TestDFA<Integer> createTestDFA1() {
+    @Test
+    public void createTestDFA1() {
         Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
 
         // @formatter:off
@@ -79,10 +68,11 @@ public class HopcroftMinimizationTest {
                 .create();
         // @formatter:on
 
-        return new TestDFA<>(alphabet, dfa, 5, false);
+        testMinimizeDFA(new TestDFA<>(alphabet, dfa, 5, false));
     }
 
-    private static TestDFA<Integer> createTestDFA2() {
+    @Test
+    public void createTestDFA2() {
         Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
 
         // @formatter:off
@@ -103,14 +93,43 @@ public class HopcroftMinimizationTest {
                 .create();
         // @formatter:on
 
-        return new TestDFA<>(alphabet, dfa, 4, true);
+        testMinimizeDFA(new TestDFA<>(alphabet, dfa, 4, true));
     }
 
     @Test
-    public void testDfas() {
-        for (TestDFA<?> testDfa : testDfas) {
-            testMinimizeDFA(testDfa);
-        }
+    public void createTestDFA3() {
+        final Alphabet<Character> alphabet = Alphabets.characters('a', 'b');
+        final char input1 = 'a';
+        final char input2 = 'b';
+
+        // @formatter:off
+        final DFA<?, Character> dfa = AutomatonBuilders.newDFA(alphabet)
+                .withInitial("s0")
+                .from("s0")
+                   .on(input1).to("s2")
+                   .on(input2).to("s1")
+                .from("s1")
+                   .on(input1).loop()
+                   .on(input2).loop()
+                .from("s2")
+                   .on(input1).to("s1")
+                   .on(input2).to("s3")
+                .from("s3")
+                   .on(input1).to("s4")
+                   .on(input2).to("s1")
+                .from("s4")
+                   .on(input1).to("s5")
+                   .on(input2).to("s6")
+                .from("s5")
+                   .on(input1, input2).loop()
+                .from("s6")
+                   .on(input1).to("s4")
+                   .on(input2).to("s5")
+                .withAccepting("s0", "s1", "s2", "s3")
+                .create();
+        // @formatter:on
+
+        testMinimizeDFA(new TestDFA<>(alphabet, dfa, 5, true));
     }
 
     private <I> void testMinimizeDFA(TestDFA<I> testDfa) {

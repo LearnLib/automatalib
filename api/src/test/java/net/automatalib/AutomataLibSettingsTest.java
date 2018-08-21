@@ -46,6 +46,9 @@ public class AutomataLibSettingsTest {
                 case DOT_EXE_NAME:
                     Assert.assertEquals("dot.exe", settings.getProperty(AutomataLibProperty.DOT_EXE_NAME));
                     break;
+                case LTSMIN_PATH:
+                    Assert.assertEquals("ltsmin", settings.getProperty(AutomataLibProperty.LTSMIN_PATH));
+                    break;
                 case VISUALIZATION_PROVIDER:
                     Assert.assertEquals("provider", settings.getProperty(AutomataLibProperty.VISUALIZATION_PROVIDER));
                     break;

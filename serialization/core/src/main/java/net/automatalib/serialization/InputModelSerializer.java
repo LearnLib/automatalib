@@ -16,10 +16,10 @@
 package net.automatalib.serialization;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.ts.simple.SimpleTS;
 import net.automatalib.words.Alphabet;
 
@@ -39,7 +39,7 @@ public interface InputModelSerializer<I, M extends SimpleTS<?, I>> extends Model
     void writeModel(OutputStream os, M model, Alphabet<I> alphabet) throws IOException;
 
     default void writeModel(File f, M model, Alphabet<I> alphabet) throws IOException {
-        try (FileOutputStream os = new FileOutputStream(f)) {
+        try (OutputStream os = IOUtil.asBufferedOutputStream(f)) {
             writeModel(os, model, alphabet);
         }
     }

@@ -134,11 +134,11 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create() {
-        return new BinaryHeap<>(DEFAULT_INITIAL_CAPACITY, CmpUtil.<E>naturalOrderingComparator());
+        return new BinaryHeap<>(DEFAULT_INITIAL_CAPACITY, CmpUtil.naturalOrderingComparator());
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create(int initialCapacity) {
-        return new BinaryHeap<>(initialCapacity, CmpUtil.<E>naturalOrderingComparator());
+        return new BinaryHeap<>(initialCapacity, CmpUtil.naturalOrderingComparator());
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create(Collection<? extends E> initValues) {

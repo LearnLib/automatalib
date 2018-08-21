@@ -32,12 +32,9 @@ import net.automatalib.commons.util.IOUtil;
 
 public class DOTComponent extends ImageComponent {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    private String dot;
+    private final String dot;
 
     private final Action saveDotAction = new AbstractAction("Save DOT") {
 
@@ -53,7 +50,6 @@ public class DOTComponent extends ImageComponent {
             }
             try (Writer w = IOUtil.asBufferedUTF8Writer(saveDlg.getSelectedFile())) {
                 w.write(dot);
-                w.close();
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(DOTComponent.this,
                                               "Could not save DOT file: " + ex.getMessage(),
@@ -64,14 +60,7 @@ public class DOTComponent extends ImageComponent {
 
     };
 
-    public DOTComponent() {
-    }
-
     public DOTComponent(Reader dotReader) throws IOException {
-        renderDot(dotReader);
-    }
-
-    private void renderDot(Reader dotReader) throws IOException {
         StringWriter w = new StringWriter();
 
         IOUtil.copy(dotReader, w);

@@ -40,6 +40,7 @@ public class UnionFindRemSP implements IntDisjointSets {
         }
     }
 
+    @Override
     public int size() {
         return p.length;
     }
@@ -136,6 +137,7 @@ public class UnionFindRemSP implements IntDisjointSets {
      *
      * @return the identifier of the resulting set (either <tt>x</tt> or <tt>y</tt>)
      */
+    @Override
     public int link(int x, int y) {
         if (x < y) {
             p[x] = y;

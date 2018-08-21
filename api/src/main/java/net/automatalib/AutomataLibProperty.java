@@ -37,6 +37,13 @@ public enum AutomataLibProperty {
     DOT_EXE_NAME("dot.exe.name"),
 
     /**
+     * {@code automatalib.ltsmin.path}.
+     * <p>
+     * Path to the binary folder of the LTSmin installation.
+     */
+    LTSMIN_PATH("ltsmin.path"),
+
+    /**
      * {@code automatalib.visualization.provider}.
      * <p>
      * Property for setting the implementation of the visualization provider. The implementation must be available on

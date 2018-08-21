@@ -63,38 +63,6 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     }
 
     /**
-     * We don not care about data definitions.
-     */
-    @Override
-    protected void parseDataDefinition() {
-
-    }
-
-    /**
-     * We do not need to check data definitions.
-     */
-    @Override
-    protected void checkDataDefinitions() {
-
-    }
-
-    /**
-     * Parse a state vector by simply recording the line number in the current part.
-     */
-    @Override
-    protected void parseStateVector() {
-        getStates().add(getPartLineNumber());
-    }
-
-    /**
-     * We do not check the state vectors.
-     */
-    @Override
-    protected void checkStateVectors() {
-
-    }
-
-    /**
      * Parse a transition.
      *
      * @throws FSMParseException

@@ -15,6 +15,7 @@
  */
 package net.automatalib.commons.smartcollections;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -66,8 +67,8 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
     public BackedGeneralPriorityQueue(Class<? extends SmartDynamicPriorityQueue<?>> backingClazz) {
         SmartDynamicPriorityQueue<?> backing;
         try {
-            backing = backingClazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            backing = backingClazz.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new IllegalArgumentException(
                     "Cannot instantiate backing priority queue of type " + backingClazz.getName() + ": " +
                     e.getMessage(), e);

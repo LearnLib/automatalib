@@ -47,7 +47,7 @@ public class DummyVP implements VisualizationProvider {
 
     @Override
     public <N, E> void visualize(Graph<N, E> graph,
-                                 List<VisualizationHelper<N, ? super E>> helpers,
+                                 List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> options) {
         LOGGER.error("Attempted to visualize graph with {} nodes, but no usable visualization provider configured",

@@ -20,26 +20,68 @@ import java.util.Map;
 
 import net.automatalib.graphs.Graph;
 
+/**
+ * @author Malte Isberner
+ */
 public interface VisualizationProvider {
 
-    default String getName() {
-        return getId();
-    }
-
+    /**
+     * Returns the id of the visualization provider. This value is used and matched against the
+     * {@link net.automatalib.AutomataLibProperty#VISUALIZATION_PROVIDER} property to select the chosen visualization
+     * provider.
+     *
+     * @return the id of the provider
+     */
     String getId();
 
+    /**
+     * Returns a description of the provider.
+     *
+     * @return the description of the provider
+     */
     default String getDescription() {
         return "";
     }
 
+    /**
+     * Returns the priority of the provider. If no provider is selected via the
+     * {@link net.automatalib.AutomataLibProperty#VISUALIZATION_PROVIDER} property, the provider with the highest
+     * priority is chosen.
+     *
+     * @return the priority of the provider
+     */
     default int getPriority() {
         return 0;
     }
 
+    /**
+     * Checks whether the provider is supported on the current platform.
+     *
+     * @return {@code true} if the provider is able to visualiza, {@code false} otherwise
+     *
+     * @see #visualize(Graph, List, boolean, Map)
+     */
     boolean checkUsable();
 
+    /**
+     * Visualizes the given graph by means of executing the visualization implementation.
+     *
+     * @param graph
+     *         the graph model to visualize
+     * @param additionalHelpers
+     *         additional helpers to influence the visualization
+     * @param modal
+     *         a flag, whether the visualized graph should be displayed in a modal dialog (halting the current program
+     *         execution) or not.
+     * @param visOptions
+     *         additional options for the provider
+     * @param <N>
+     *         the node type of the graph model
+     * @param <E>
+     *         the edge type of the graph model
+     */
     <N, E> void visualize(Graph<N, E> graph,
-                          List<VisualizationHelper<N, ? super E>> helpers,
+                          List<VisualizationHelper<N, ? super E>> additionalHelpers,
                           boolean modal,
                           Map<String, String> visOptions);
 }

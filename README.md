@@ -1,6 +1,7 @@
 # AutomataLib
 
-[![Travis CI](https://travis-ci.org/LearnLib/automatalib.svg?branch=develop)](https://travis-ci.org/LearnLib/automatalib)
+[![Build Status](https://travis-ci.org/LearnLib/automatalib.svg?branch=develop)](https://travis-ci.org/LearnLib/automatalib)
+[![Build Status](https://ci.appveyor.com/api/projects/status/55pxipcu7ei7ak5g?svg=true)](https://ci.appveyor.com/project/mtf90/automatalib)
 [![Coverage Status](https://coveralls.io/repos/github/LearnLib/automatalib/badge.svg?branch=develop)](https://coveralls.io/github/LearnLib/automatalib?branch=develop)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.automatalib/automata-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.automatalib/automata-parent)
 

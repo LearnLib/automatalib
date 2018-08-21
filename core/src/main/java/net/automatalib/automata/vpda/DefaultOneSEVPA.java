@@ -55,6 +55,7 @@ public class DefaultOneSEVPA<I> extends AbstractOneSEVPA<Location, I> {
         return loc;
     }
 
+    @Override
     public int size() {
         return locations.size();
     }
@@ -77,10 +78,12 @@ public class DefaultOneSEVPA<I> extends AbstractOneSEVPA<Location, I> {
         return locations.get(id);
     }
 
+    @Override
     public int getLocationId(final Location loc) {
         return loc.getIndex();
     }
 
+    @Override
     public List<Location> getLocations() {
         return locations;
     }
@@ -95,6 +98,7 @@ public class DefaultOneSEVPA<I> extends AbstractOneSEVPA<Location, I> {
         return loc.isAccepting();
     }
 
+    @Override
     public Location getInitialLocation() {
         return initLoc;
     }

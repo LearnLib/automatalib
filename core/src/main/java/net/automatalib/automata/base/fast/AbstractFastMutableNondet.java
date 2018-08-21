@@ -20,44 +20,16 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.automatalib.automata.GrowableAlphabetAutomaton;
-import net.automatalib.automata.ShrinkableAutomaton;
-import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
-import net.automatalib.automata.base.StateIDDynamicMapping;
-import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.helpers.StateIDStaticMapping;
-import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.commons.util.nid.DynamicList;
-import net.automatalib.commons.util.nid.IDChangeNotifier;
 import net.automatalib.ts.powerset.FastPowersetDTS;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 
-public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetState<T>, I, T, SP, TP>
-        implements ShrinkableAutomaton<S, I, T, SP, TP>,
-                   UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>,
-                   StateIDs<S>,
-                   GrowableAlphabetAutomaton<I> {
-
-    private final DynamicList<S> states = new DynamicList<>();
-    private final IDChangeNotifier<S> tracker = new IDChangeNotifier<>();
+public abstract class AbstractFastMutableNondet<S extends AbstractFastState<Collection<T>>, I, T, SP, TP>
+        extends AbstractFastMutable<S, I, T, SP, TP> {
 
     private final Set<S> initialStates = new HashSet<>();
 
-    protected Alphabet<I> inputAlphabet;
-
     public AbstractFastMutableNondet(Alphabet<I> inputAlphabet) {
-        this.inputAlphabet = inputAlphabet;
-    }
-
-    @Override
-    public int getStateId(S state) {
-        return state.getId();
-    }
-
-    @Override
-    public S getState(int id) {
-        return states.get(id);
+        super(inputAlphabet);
     }
 
     @Override
@@ -66,30 +38,16 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetStat
     }
 
     @Override
-    public <V> MutableMapping<S, V> createDynamicStateMapping() {
-        StateIDDynamicMapping<S, V> mapping = new StateIDDynamicMapping<>(this);
-        tracker.addListener(mapping, true);
-        return mapping;
-    }
-
-    @Override
     public Collection<T> getTransitions(S state, I input) {
         int inputIdx = inputAlphabet.getSymbolIndex(input);
-        final Collection<T> result = state.getTransitions(inputIdx);
+        final Collection<T> result = state.getTransitionObject(inputIdx);
         return result == null ? Collections.emptySet() : result;
     }
 
     @Override
     public void clear() {
-        states.clear();
+        super.clear();
         initialStates.clear();
-    }
-
-    @Override
-    public S addState(SP property) {
-        S newState = createState(property);
-        states.add(newState);
-        return newState;
     }
 
     @Override
@@ -104,57 +62,16 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastNondetStat
     @Override
     public void setTransitions(S state, I input, Collection<? extends T> transitions) {
         int inputIdx = inputAlphabet.getSymbolIndex(input);
-        state.setTransitions(inputIdx, transitions);
+        state.setTransitionObject(inputIdx, new HashSet<>(transitions));
     }
-
-    @Override
-    public void removeAllTransitions(S state) {
-        state.clearTransitions();
-    }
-
-    protected abstract S createState(SP property);
 
     @Override
     public void removeState(S state, S replacement) {
-        ShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
-        states.remove(state);
-        if (initialStates.remove(state)) {
-            initialStates.add(state);
+        super.removeState(state, replacement);
+
+        if (initialStates.remove(state) && replacement != null) {
+            initialStates.add(replacement);
         }
-    }
-
-    @Override
-    public Alphabet<I> getInputAlphabet() {
-        return inputAlphabet;
-    }
-
-    @Override
-    public void addAlphabetSymbol(I symbol) {
-        if (this.inputAlphabet.containsSymbol(symbol)) {
-            return;
-        }
-
-        this.inputAlphabet = Alphabets.withNewSymbol(this.inputAlphabet, symbol);
-        final int newAlphabetSize = this.inputAlphabet.size();
-
-        for (final S s : this.getStates()) {
-            s.ensureInputCapacity(newAlphabetSize);
-        }
-    }
-
-    @Override
-    public Collection<S> getStates() {
-        return states;
-    }
-
-    @Override
-    public <V> MutableMapping<S, V> createStaticStateMapping() {
-        return new StateIDStaticMapping<>(this, size());
-    }
-
-    @Override
-    public StateIDs<S> stateIDs() {
-        return this;
     }
 
     @Override

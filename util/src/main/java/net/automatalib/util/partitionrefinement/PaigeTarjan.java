@@ -248,11 +248,15 @@ public class PaigeTarjan {
     public void computeCoarsestStablePartition() {
         Block curr;
         while ((curr = poll()) != null) {
-            int currLow = curr.low, currHigh = curr.high;
+            int blockRange = curr.high - curr.low;
+            // copy blockData, because #moveLeft() may change its data while we iterate over it
+            // TODO maybe find an implementation that does not need to workaround this concurrent modification
+            int[] blockCopy = new int[blockRange];
+            System.arraycopy(blockData, curr.low, blockCopy, 0, blockRange);
             int predOfsBase = predOfsDataLow;
             for (int i = 0; i < numInputs; i++) {
-                for (int j = currLow; j < currHigh; j++) {
-                    int state = blockData[j];
+                for (int j = 0; j < blockRange; j++) {
+                    int state = blockCopy[j];
                     int predOfsIdx = predOfsBase + state;
                     int predLow = predOfsData[predOfsIdx], predHigh = predOfsData[predOfsIdx + 1];
                     for (int k = predLow; k < predHigh; k++) {

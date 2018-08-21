@@ -18,10 +18,11 @@ package net.automatalib.serialization.taf;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
@@ -44,8 +45,8 @@ public final class TAFSerializationMealy
     @Override
     public void writeModel(OutputStream os, MealyMachine<?, String, ?, ?> model, Alphabet<String> alphabet)
             throws IOException {
-        try (OutputStreamWriter osw = new OutputStreamWriter(os)) {
-            TAFWriter.writeMealy(model, alphabet, osw);
+        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+            TAFWriter.writeMealy(model, alphabet, w);
         }
 
     }

@@ -57,17 +57,24 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-brics</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-modelchecking-ltsmin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-dot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-dot-visualizer</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>dk.brics.automaton</groupId>
             <artifactId>automaton</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-dot-visualizer</artifactId>
-            <scope>runtime</scope>
-        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

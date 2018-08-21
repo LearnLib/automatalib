@@ -15,10 +15,12 @@
  */
 package net.automatalib.automata.transout.impl;
 
-import net.automatalib.automata.base.fast.AbstractFastNondetState;
+import java.util.Collection;
+
+import net.automatalib.automata.base.fast.AbstractFastState;
 
 public class FastProbMealyState<O>
-        extends AbstractFastNondetState<ProbMealyTransition<FastProbMealyState<O>, O>> {
+        extends AbstractFastState<Collection<ProbMealyTransition<FastProbMealyState<O>, O>>> {
 
     public FastProbMealyState(int numInputs) {
         super(numInputs);

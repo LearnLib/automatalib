@@ -134,7 +134,7 @@ public interface SimpleTS<S, I> {
      */
     @Nonnull
     default <V> MutableMapping<S, V> createStaticStateMapping() {
-        return new MapMapping<>(new HashMap<S, V>());
+        return new MapMapping<>(new HashMap<>());
     }
 
     /**
@@ -145,7 +145,7 @@ public interface SimpleTS<S, I> {
      */
     @Nonnull
     default <V> MutableMapping<S, V> createDynamicStateMapping() {
-        return new MapMapping<>(new HashMap<S, V>());
+        return new MapMapping<>(new HashMap<>());
     }
 
 }

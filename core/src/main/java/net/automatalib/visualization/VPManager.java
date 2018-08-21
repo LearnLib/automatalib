@@ -49,8 +49,8 @@ public class VPManager {
         return bestProvider;
     }
 
-    public VisualizationProvider getProviderByName(String name) {
-        return providers.get(name);
+    public VisualizationProvider getProviderById(String id) {
+        return providers.get(id);
     }
 
 }

@@ -30,12 +30,10 @@ public class StringIndexGenerator {
     private final char base;
 
     public StringIndexGenerator(Case charCase) {
-        switch (charCase) {
-            case LOWER:
-                this.base = 'a';
-                break;
-            default: // case UPPER:
-                this.base = 'A';
+        if (charCase == Case.LOWER) {
+            this.base = 'a';
+        } else {
+            this.base = 'A';
         }
     }
 

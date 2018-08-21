@@ -258,7 +258,7 @@ public class RandomAutomata {
                                    inputs,
                                    Collections.singleton(null),
                                    outputs,
-                                   new CompactMealy<I, O>(inputs),
+                                   new CompactMealy<>(inputs),
                                    minimize);
     }
 

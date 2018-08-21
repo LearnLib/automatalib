@@ -36,7 +36,7 @@ public class StateIDGrowingMapping<S, V> implements MutableMapping<S, V> {
     @SuppressWarnings("unchecked")
     public V get(S elem) {
         int id = stateIds.getStateId(elem);
-        if (id < storage.array.length) {
+        if (id >= 0 && id < storage.array.length) {
             return (V) storage.array[id];
         }
         return null;

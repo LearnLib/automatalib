@@ -25,7 +25,7 @@ import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.random.RandomUtil;
 
-public abstract class AbstractRandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomaton<S, I, T, SP, TP>> {
+public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomaton<S, I, T, SP, TP>> {
 
     protected final RandomUtil random;
     protected final List<? extends I> inputs;
@@ -34,11 +34,11 @@ public abstract class AbstractRandomAutomatonGenerator<S, I, T, SP, TP, A extend
     protected final ArrayList<S> states;
     protected final A automaton;
 
-    public AbstractRandomAutomatonGenerator(Random random,
-                                            Collection<? extends I> inputs,
-                                            Collection<? extends SP> stateProps,
-                                            Collection<? extends TP> transProps,
-                                            A automaton) {
+    public RandomAutomatonGenerator(Random random,
+                                    Collection<? extends I> inputs,
+                                    Collection<? extends SP> stateProps,
+                                    Collection<? extends TP> transProps,
+                                    A automaton) {
         this.random = new RandomUtil(random);
 
         if (stateProps == null) {

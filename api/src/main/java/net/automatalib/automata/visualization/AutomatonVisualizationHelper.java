@@ -31,6 +31,7 @@ public class AutomatonVisualizationHelper<S, I, T, A extends Automaton<S, I, T>>
         this.automaton = automaton;
     }
 
+    @Override
     protected Collection<S> initialNodes() {
         return automaton.getInitialStates();
     }

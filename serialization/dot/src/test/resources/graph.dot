@@ -1,0 +1,29 @@
+digraph g {
+// this is a preamble
+
+	s0 [shape="doublecircle" label="0"];
+	s1 [shape="circle" label="1"];
+	s2 [shape="doublecircle" label="2"];
+	s3 [shape="circle" label="3"];
+	s4 [shape="doublecircle" label="4"];
+	s5 [shape="circle" label="5"];
+	s6 [shape="doublecircle" label="6"];
+	s7 [shape="circle" label="7"];
+	s8 [shape="doublecircle" label="8"];
+	s9 [shape="circle" label="9"];
+	s10 [shape="doublecircle" label="10"];
+	s0 -> s1 [color="red" label="null"];
+	s1 -> s2 [color="red" label="null"];
+	s2 -> s3 [color="red" label="null"];
+	s3 -> s4 [color="red" label="null"];
+	s4 -> s5 [color="red" label="null"];
+	s5 -> s6 [color="red" label="null"];
+	s6 -> s7 [color="red" label="null"];
+	s7 -> s8 [color="red" label="null"];
+	s8 -> s9 [color="red" label="null"];
+	s9 -> s10 [color="red" label="null"];
+	s10 -> s0 [color="red" label="null"];
+
+// this is a postamble
+
+}
