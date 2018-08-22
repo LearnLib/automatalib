@@ -17,23 +17,30 @@ package net.automatalib.modelcheckers.ltsmin;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.exception.ModelCheckingException;
-import net.automatalib.modelchecking.DFALassoImpl;
 import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import org.testng.annotations.Test;
 
 /**
  * @author Jeroen Meijer
  */
-public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>, LTSminLTLDFA<String>, DFALasso<?, String>> {
+public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>> {
+
+    private LTSminLTLDFA<String> modelChecker;
 
     @Override
-    protected LTSminLTLDFA<String> createModelChecker() {
-        return new LTSminLTLDFABuilder<String>().withString2Input(s -> s).create();
+    public LTSminLTLDFA<String> getModelChecker() {
+        return modelChecker;
     }
 
     @Override
-    protected DFALasso<?, String> createLasso() {
+    protected void newModelChecker() {
+        modelChecker = new LTSminLTLDFABuilder<String>().withString2Input(s -> s).create();
+    }
+
+    @Override
+    protected DFALasso<String> createLasso() {
         return new DFALassoImpl<>(createAutomaton(), getAlphabet(), 4);
     }
 

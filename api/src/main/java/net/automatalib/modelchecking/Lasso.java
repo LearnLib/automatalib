@@ -17,14 +17,13 @@ package net.automatalib.modelchecking;
 
 import java.util.SortedSet;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.simple.SimpleAutomaton;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Word;
 
 /**
@@ -34,10 +33,6 @@ import net.automatalib.words.Word;
  * actually the finite representation (by unrolling the loop) of the infinite word, including information how many times
  * the loop of the lasso is unrolled.
  *
- * @param <S>
- *         the state type of the automaton that contains the infinite word.
- * @param <A>
- *         the automaton type which contains the lasso.
  * @param <I>
  *         the input type
  * @param <D>
@@ -46,8 +41,7 @@ import net.automatalib.words.Word;
  * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public interface Lasso<S, A extends SimpleDTS<S, I> & Output<I, D>, I, D>
-        extends SimpleDTS<Integer, I>, Output<I, D>, SimpleAutomaton<Integer, I>, InputAlphabetHolder<I> {
+public interface Lasso<I, D> extends DetOutputAutomaton<Integer, I, Integer, D>, InputAlphabetHolder<I> {
 
     /**
      * Gets the finite representation of the lasso.
@@ -78,37 +72,42 @@ public interface Lasso<S, A extends SimpleDTS<S, I> & Output<I, D>, I, D>
     D getOutput();
 
     /**
-     * Gets the automaton containing the lasso.
-     *
-     * @return the automaton type a.
-     */
-    A getAutomaton();
-
-    /**
      * The sorted set containing some symbol indices after which the begin state of the loop is visited.
      */
     SortedSet<Integer> getLoopBeginIndices();
 
     /**
+     * Returns the number of times the loop is unfolded.
+     *
+     * The returned value is always greater than 0.
+     *
+     * @return the number of times the loop is unfolded.
+     */
+    int getUnfolds();
+
+    /**
+     * Returns the original automaton from which this lasso is constructed.
+     *
+     * @return the original automaton.
+     */
+    @Nullable
+    DetOutputAutomaton<?, I, ?, D> getAutomaton();
+
+    /**
      * A DFALasso is a lasso for {@link DFA}s.
      *
-     * @param <S>
-     *         the state type of the DFA that contains the lasso.
      * @param <I>
      *         the input type
      */
-    interface DFALasso<S, I> extends Lasso<S, DFA<S, I>, I, Boolean>, DFA<Integer, I> {}
+    interface DFALasso<I> extends Lasso<I, Boolean>, DFA<Integer, I> {}
 
     /**
      * A MealyLasso is a lasso for {@link MealyMachine}s.
      *
-     * @param <S>
-     *         the state type of the Mealy machine that contains the lasso.
      * @param <I>
      *         the input type
      * @param <O>
      *         the output type
      */
-    interface MealyLasso<S, I, T, O>
-            extends Lasso<S, MealyMachine<S, I, ?, O>, I, Word<O>>, MealyMachine<Integer, I, T, O> {}
+    interface MealyLasso<I, O> extends Lasso<I, Word<O>>, MealyMachine<Integer, I, Integer, O> {}
 }

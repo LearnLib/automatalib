@@ -21,17 +21,19 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
+import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.MealyLassoImpl;
-import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
+import net.automatalib.modelchecking.lasso.MealyLassoImpl;
 import net.automatalib.serialization.fsm.parser.FSMParseException;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.util.automata.transout.MealyFilter;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
 /**
@@ -48,9 +50,8 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Jeroen Meijer
  */
-public abstract class AbstractLTSminLTLMealy<I, O>
-        extends AbstractLTSminLTL<I, MealyMachine<?, I, ?, O>, MealyLasso<?, I, ?, O>>
-        implements MealyModelChecker<I, O, String, MealyLasso<?, I, ?, O>>, MealyModelCheckerLasso<I, O, String> {
+public abstract class AbstractLTSminLTLMealy<I, O> extends AbstractLTSminLTL<I, MealyMachine<?, I, ?, O>, Word<O>>
+        implements MealyModelCheckerLasso<I, O, String> {
 
     /**
      * @see #getString2Output()
@@ -98,6 +99,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
      *
      * @return the Colleciton.
      */
+    @Override
     public Collection<? super O> getSkipOutputs() {
         return skipOutputs;
     }
@@ -105,6 +107,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
     /**
      * Sets a set of outputs that need to be skipped while writing the Mealy machine to ETF.
      */
+    @Override
     public void setSkipOutputs(Collection<? super O> skipOutputs) {
         this.skipOutputs = skipOutputs;
     }
@@ -159,26 +162,35 @@ public abstract class AbstractLTSminLTLMealy<I, O>
             throws IOException;
 
     /**
-     * Converts the FSM to a Lasso.
+     * Converts the FSM file to a {@link MealyLasso}.
      *
-     * @param fsm
-     *         the FSM to read.
-     * @param hypothesis
-     *         the hypothesis used to compute the number of loop unfolds.
+     * @param automaton
+     *         the DFA used to compute the number of loop unrolls.
      *
-     * @return the {@link MealyLasso}.
-     *
-     * @throws IOException
-     *         see {@link #fsm2Mealy(File)}.
-     * @throws FSMParseException
-     *         see {@link #fsm2Mealy(File)}.
+     * @see AbstractLTSminLTL#findCounterExample(Object, Collection, Object)
      */
+    @Nullable
     @Override
-    protected final MealyLasso<?, I, CompactMealyTransition<O>, O> fsm2Lasso(File fsm,
-                                                                             MealyMachine<?, I, ?, O> hypothesis)
-            throws IOException, FSMParseException {
-        CompactMealy<I, O> mealy = fsm2Mealy(fsm);
+    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, String property)
+            throws ModelCheckingException {
+        final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
-        return new MealyLassoImpl<>(mealy, mealy.getInputAlphabet(), computeUnfolds(hypothesis.size()));
+        final MealyLasso<I, O> result;
+
+        if (fsm != null) {
+            final CompactMealy<I, O> mealy;
+
+            try {
+                mealy = fsm2Mealy(fsm);
+            } catch (IOException | FSMParseException e) {
+                throw new ModelCheckingException(e);
+            }
+
+            result = new MealyLassoImpl<>(mealy, mealy.getInputAlphabet(), computeUnfolds(automaton.size()));
+        } else {
+            result = null;
+        }
+
+        return result;
     }
 }

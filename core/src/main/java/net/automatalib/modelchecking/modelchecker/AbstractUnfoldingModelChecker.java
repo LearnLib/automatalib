@@ -13,12 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelchecking.modelchecker;
 
-import net.automatalib.automata.concepts.Output;
-import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
-import net.automatalib.ts.simple.SimpleDTS;
 
 /**
  * An {@link ModelCheckerLasso} that can unfold loops of lassos.
@@ -34,13 +31,9 @@ import net.automatalib.ts.simple.SimpleDTS;
  * @param <I> the input type
  * @param <A> the automaton type
  * @param <P> the property type
- * @param <L> the Lasso type
+ * @param <D> the output type
  */
-public abstract class AbstractUnfoldingModelChecker<I,
-                                            A extends SimpleDTS<?, I> & Output<I, ?>,
-                                            P,
-                                            L extends Lasso<?, ? extends A, I, ?>>
-        implements ModelCheckerLasso<I, A, P, L> {
+public abstract class AbstractUnfoldingModelChecker<I, A, P, D> implements ModelCheckerLasso<I, A, P, D> {
 
     /**
      * The minimum number of unfolds.
@@ -67,21 +60,6 @@ public abstract class AbstractUnfoldingModelChecker<I,
     protected AbstractUnfoldingModelChecker(int minimumUnfolds, double multiplier) throws IllegalArgumentException {
         setMinimumUnfolds(minimumUnfolds);
         setMultiplier(multiplier);
-    }
-
-    /**
-     * Compute the number of unfolds according to {@code size}.
-     *
-     * @param size the number of states in the hypothesis.
-     *
-     * @return the number of times the loop of a lasso has to be unfolded.
-     */
-    protected final int computeUnfolds(int size) {
-        if (size < 1) {
-            throw new IllegalArgumentException("Illegal size: " + size);
-        }
-        final int relativeUnfolds = (int) Math.ceil(size * multiplier);
-        return Math.max(minimumUnfolds, relativeUnfolds);
     }
 
     @Override

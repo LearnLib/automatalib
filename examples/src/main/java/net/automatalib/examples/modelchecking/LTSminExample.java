@@ -58,19 +58,19 @@ public final class LTSminExample {
                                                               .create();
 
         // We can eventually read a 'b'
-        final MealyLasso<?, Character, ?, Character> ce1 =
+        final MealyLasso<Character, Character> ce1 =
                 ltsmin.findCounterExample(mealy, inputAlphabet, "X input == \"b\"");
 
         System.out.println("First property is satisfied: " + Objects.isNull(ce1));
 
         // Globally, whenever we output a '1' the next output must be '2'
-        final MealyLasso<?, Character, ?, Character> ce2 =
+        final MealyLasso<Character, Character> ce2 =
                 ltsmin.findCounterExample(mealy, inputAlphabet, "[] (output == \"1\" -> X output == \"2\")");
 
         System.out.println("Second property is satisfied: " + Objects.isNull(ce2));
 
         // Eventually, we observe output '2' when performing input 'a'
-        final MealyLasso<?, Character, ?, Character> ce3 =
+        final MealyLasso<Character, Character> ce3 =
                 ltsmin.findCounterExample(mealy, inputAlphabet, "<> (input == \"a\" && output == \"2\")");
 
         System.out.println("Second property is satisfied: " + Objects.isNull(ce3));

@@ -13,36 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelchecking;
+package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-
+import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 
 /**
  * A DFALasso is a lasso for {@link DFA}s.
  *
- * @param <S>
- *         the state type of the DFA that contains the lasso.
  * @param <I>
  *         the input type
  *
  * @author Jeroen Meijer
  */
-public class DFALassoImpl<S, I> extends AbstractLasso<S, DFA<S, I>, I, Boolean>
-        implements DFA<Integer, I>, DFALasso<S, I> {
+public class DFALassoImpl<I> extends AbstractLasso<I, Boolean> implements DFALasso<I> {
 
-    public DFALassoImpl(DFA<S, I> automaton, Collection<? extends I> inputs, int unfoldTimes) {
+    public DFALassoImpl(DetOutputAutomaton<?, I, ?, Boolean> automaton,
+                        Collection<? extends I> inputs,
+                        int unfoldTimes) {
         super(automaton, inputs, unfoldTimes);
-    }
-
-    @Nullable
-    @Override
-    public Integer getTransition(Integer state, @Nullable I input) {
-        return getSuccessor(state, input);
     }
 
     /**

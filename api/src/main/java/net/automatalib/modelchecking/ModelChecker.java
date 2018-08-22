@@ -20,13 +20,16 @@ import java.util.Collection;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.exception.ModelCheckingException;
+import net.automatalib.words.Word;
 
 /**
- * A ModelChecker checks whether a given hypothesis satisfies a given property. If the property can not be satisfied it
- * provides a counterexample.
+ * A model checker checks whether a given automaton satisfies a given property. If the property can not be satisfied it
+ * provides counter examples. In fact, the counter examples is an automaton which language is a subset of the language
+ * of the given automaton.
  *
  * @param <I>
  *         the input type
@@ -34,34 +37,74 @@ import net.automatalib.exception.ModelCheckingException;
  *         the automaton type
  * @param <P>
  *         the property type
- * @param <R>
- *         the type of a counterexample
+ * @param <D>
+ *         the output type
  *
  * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public interface ModelChecker<I, A, P, R> {
+public interface ModelChecker<I, A, P, D> {
 
     /**
-     * Try to find a counterexample for the given {@code property} and {@code hypothesis}.
+     * Try to find counter examples for the given {@code property} and {@code automaton}.
      *
-     * @param hypothesis
+     * @param automaton
      *         the automaton to check the property on.
      * @param inputs
      *         the alphabet.
      * @param property
      *         the property.
      *
-     * @return the counterexample, or {@code null} if a counterexample does not exist.
+     * @return the counter examples, or {@code null} if no counter examples exist.
      *
      * @throws ModelCheckingException
-     *         when a model checker can not check the property.
+     *         when this model checker can not check the property.
      */
     @Nullable
-    R findCounterExample(A hypothesis, Collection<? extends I> inputs, P property) throws ModelCheckingException;
+    DetOutputAutomaton<?, I, ?, D> findCounterExample(A automaton, Collection<? extends I> inputs, P property)
+            throws ModelCheckingException;
 
-    interface DFAModelChecker<I, P, R extends DFA<?, I>> extends ModelChecker<I, DFA<?, I>, P, R> {}
+    interface DFAModelChecker<I, P> extends ModelChecker<I, DFA<?, I>, P, Boolean> {
 
-    interface MealyModelChecker<I, O, P, R extends MealyMachine<?, I, ?, O>>
-            extends ModelChecker<I, MealyMachine<?, I, ?, O>, P, R> {}
+        @Nullable
+        @Override
+        DFA<?, I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, P property)
+                throws ModelCheckingException;
+    }
+
+    /**
+     * A model checker for Mealy machines. Key about the {@link MealyMachine} type here is that it may not be
+     * input-complete. Implementations of {@link MealyMachine}s should in these cases not return any output for a given
+     * input sequence. I.e. {@link MealyMachine#computeOutput(Iterable)} should return null when its argument is not
+     * accepted.
+     *
+     * @see ModelChecker
+     */
+    interface MealyModelChecker<I, O, P> extends ModelChecker<I, MealyMachine<?, I, ?, O>, P, Word<O>> {
+
+        @Nullable
+        @Override
+        MealyMachine<?, I, ?, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
+                                                    Collection<? extends I> inputs, P property)
+                throws ModelCheckingException;
+
+        /**
+         * Returns the outputs for which all transitions should be removed.
+         *
+         * That is, before the model checker tries to find a counter example to the automaton every transition
+         * which output symbol is in the returned collection is removed.
+         *
+         * @return the outputs.
+         */
+        Collection<? super O> getSkipOutputs();
+
+        /**
+         * Sets the outputs which should be skipped.
+         *
+         * @see #getSkipOutputs()
+         *
+         * @param skipOutputs the outputs.
+         */
+        void setSkipOutputs(Collection<? super O> skipOutputs);
+    }
 }

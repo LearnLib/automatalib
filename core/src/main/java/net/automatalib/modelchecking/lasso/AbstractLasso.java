@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelchecking;
+package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,8 +25,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.automata.concepts.Output;
+import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.commons.util.collections.CollectionsUtil;
+import net.automatalib.modelchecking.Lasso;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -37,7 +38,7 @@ import net.automatalib.words.impl.Alphabets;
  * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public abstract class AbstractLasso<S, A extends SimpleDTS<S, I> & Output<I, D>, I, D> implements Lasso<S, A, I, D> {
+public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
 
     public static final String NO_LASSO = "Automaton is not lasso shaped";
 
@@ -62,19 +63,24 @@ public abstract class AbstractLasso<S, A extends SimpleDTS<S, I> & Output<I, D>,
     private final D output;
 
     /**
-     * @see #getAutomaton()
-     */
-    private final A automaton;
-
-    /**
      * @see #getInputAlphabet()
      */
     private final Alphabet<I> inputAlphabet;
 
     /**
+     * @see #getUnfolds()
+     */
+    private final int unfolds;
+
+    /**
      * @see #getLoopBeginIndices()
      */
     private final SortedSet<Integer> loopBeginIndices = new TreeSet<>();
+
+    /**
+     * @see #getAutomaton()
+     */
+    private final DetOutputAutomaton<?, I, ?, D> automaton;
 
     /**
      * Constructs a finite representation of a given automaton (that contains a lasso), by unrolling the loop {@code
@@ -86,12 +92,16 @@ public abstract class AbstractLasso<S, A extends SimpleDTS<S, I> & Output<I, D>,
      *         the input alphabet.
      * @param unfoldTimes
      *         the number of times the loop needs to be unrolled, must be {@code > 0}.
+     *
+     * @param <S> the state type
      */
-    public AbstractLasso(A automaton, Collection<? extends I> inputs, int unfoldTimes) {
+    public <S> AbstractLasso(DetOutputAutomaton<S, I, ?, D> automaton, Collection<? extends I> inputs, int unfoldTimes) {
         assert unfoldTimes > 0;
 
         // save the original automaton
         this.automaton = automaton;
+
+        this.unfolds = unfoldTimes;
 
         // construct the input alphabet
         inputAlphabet = Alphabets.fromCollection(inputs);
@@ -150,6 +160,16 @@ public abstract class AbstractLasso<S, A extends SimpleDTS<S, I> & Output<I, D>,
     }
 
     @Override
+    public DetOutputAutomaton<?, I, ?, D> getAutomaton() {
+        return automaton;
+    }
+
+    @Override
+    public int getUnfolds() {
+        return unfolds;
+    }
+
+    @Override
     public Word<I> getWord() {
         return word;
     }
@@ -167,11 +187,6 @@ public abstract class AbstractLasso<S, A extends SimpleDTS<S, I> & Output<I, D>,
     @Override
     public D getOutput() {
         return output;
-    }
-
-    @Override
-    public A getAutomaton() {
-        return automaton;
     }
 
     @Override
@@ -220,4 +235,9 @@ public abstract class AbstractLasso<S, A extends SimpleDTS<S, I> & Output<I, D>,
         return inputAlphabet;
     }
 
+    @Nullable
+    @Override
+    public Integer getTransition(Integer state, @Nullable I input) {
+        return getSuccessor(state, input);
+    }
 }

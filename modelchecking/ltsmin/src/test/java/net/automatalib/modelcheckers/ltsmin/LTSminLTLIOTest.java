@@ -15,11 +15,8 @@
  */
 package net.automatalib.modelcheckers.ltsmin;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.MealyLassoImpl;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.modelchecking.lasso.MealyLassoImpl;
 
 /**
  * Tests whether LTSminLTLAlternating actually uses regular edge semantics.
@@ -27,27 +24,23 @@ import net.automatalib.util.automata.builders.AutomatonBuilders;
  * @author Jeroen Meijer
  * @see LTSminLTLAlternatingTest
  */
-public class LTSminLTLIOTest extends AbstractLTSminLTLMealyTest<LTSminLTLIO<String, String>> {
+public class LTSminLTLIOTest extends AbstractLTSminLTLMealyTest {
+
+    private LTSminLTLIO<String, String> modelChecker;
 
     @Override
-    protected LTSminLTLIO<String, String> createModelChecker() {
-        return new LTSminLTLIOBuilder<String, String>().withString2Input(s -> s).withString2Output(s -> s).create();
+    public LTSminLTLIO<String, String> getModelChecker() {
+        return modelChecker;
     }
 
     @Override
-    protected MealyLasso<?, String, ?, String> createLasso() {
+    protected void newModelChecker() {
+        modelChecker = new LTSminLTLIOBuilder<String, String>().withString2Input(s -> s).withString2Output(s -> s).create();
+    }
+
+    @Override
+    protected MealyLasso<String, String> createLasso() {
         return new MealyLassoImpl<>(createAutomaton(), getAlphabet(), 4);
-    }
-
-    @Override
-    protected MealyMachine<?, String, ?, String> createAutomaton() {
-        return AutomatonBuilders.forMealy(new CompactMealy<String, String>(getAlphabet()))
-                                .withInitial("q0")
-                                .from("q0")
-                                .on("a")
-                                .withOutput("1")
-                                .loop()
-                                .create();
     }
 
     @Override
