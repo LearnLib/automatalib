@@ -229,9 +229,10 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
 
     @Override
     public T getTransition(int stateId, I input) {
-
-        if(alphabet.containsSymbol(input))
+        if (alphabet.containsSymbol(input)) {
             return getTransition(stateId, alphabet.getSymbolIndex(input));
+        }
+
         return null;
     }
 
@@ -243,8 +244,10 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> implements Muta
 
     @Override
     public T getTransition(Integer state, I input) {
-        if(alphabet.containsSymbol(input))
+        if (alphabet.containsSymbol(input)) {
             return getTransition(getId(state), alphabet.getSymbolIndex(input));
+        }
+
         return null;
     }
 
