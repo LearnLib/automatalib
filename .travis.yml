@@ -23,14 +23,12 @@ branches:
   - develop
   - release
 
-env:
-  global:
-  - MAVEN_OPTS="$MAVEN_OPTS --settings ${TRAVIS_BUILD_DIR}/build-tools/travis-settings.xml"
-
 install:
   # install LTSmin
   - build-tools/install-ltsmin.sh
   - PATH="$PATH:$HOME/ltsmin/v3.0.0/bin"
+  # override any "sane" defaults of Travis VMs
+  - cp ${TRAVIS_BUILD_DIR}/build-tools/travis-settings.xml ${HOME}/.m2/settings.xml
 
 script: mvn install -B -Pcode-analysis,bundles
 
