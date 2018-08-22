@@ -23,6 +23,10 @@ branches:
   - develop
   - release
 
+env:
+  global:
+  - MAVEN_OPTS="$MAVEN_OPTS --settings ${TRAVIS_BUILD_DIR}/build-tools/travis-settings.xml"
+
 install:
   # install LTSmin
   - build-tools/install-ltsmin.sh
@@ -48,6 +52,6 @@ jobs:
       deploy:
         # define deployment in deploy phase, which is skipped for pull-requests
         provider: script
-        script: mvn --settings build-tools/travis-settings.xml -DskipTests=true deploy
+        script: mvn -DskipTests=true deploy
         on:
           branch: develop # only auto deploy snapshots
