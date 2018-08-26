@@ -62,8 +62,8 @@ public abstract class AbstractCompactGenericDeterministic<I, T, SP, TP>
     }
 
     @Override
-    protected void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type) {
-        this.transitions = updateStorage(this.transitions, oldSizeHint, newSizeHint, type);
+    protected void updateStorage(UpdatePayload payload) {
+        this.transitions = updateStorage(this.transitions, null, payload);
     }
 
     @Override

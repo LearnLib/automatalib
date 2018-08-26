@@ -71,7 +71,7 @@ public class GrowingAlphabetAutomatonTest {
         // set and test initial transitions
         this.testInitialTransitions(automaton, s1, s2, s3);
 
-        // add new ALPHABET symbol
+        // add new alphabet symbol
         automaton.addAlphabetSymbol(3);
 
         // set and test new transitions

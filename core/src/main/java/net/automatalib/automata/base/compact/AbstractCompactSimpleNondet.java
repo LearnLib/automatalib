@@ -72,8 +72,9 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     }
 
     @Override
-    protected void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type) {
-        this.transitions = (Set<Integer>[]) updateStorage(this.transitions, oldSizeHint, newSizeHint, type);
+    @SuppressWarnings("unchecked")
+    protected void updateStorage(UpdatePayload payload) {
+        this.transitions = (Set<Integer>[]) updateStorage(this.transitions, Set[]::new, null, payload);
     }
 
     @Override

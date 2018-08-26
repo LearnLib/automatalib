@@ -157,13 +157,13 @@ public interface MutableDeterministic<S, I, T, SP, TP>
 
     interface IntAbstraction<T, SP, TP> extends UniversalDeterministicAutomaton.IntAbstraction<T, SP, TP> {
 
-        void setStateProperty(int state, SP property);
+        void setStateProperty(int state, @Nullable SP property);
 
-        void setTransitionProperty(T transition, TP property);
+        void setTransitionProperty(T transition, @Nullable TP property);
 
         void setInitialState(int state);
 
-        T createTransition(int successor, TP property);
+        T createTransition(int successor, @Nullable TP property);
 
         default int addIntState() {
             return addIntState(null);
@@ -181,9 +181,9 @@ public interface MutableDeterministic<S, I, T, SP, TP>
     interface StateIntAbstraction<I, T, SP, TP>
             extends IntAbstraction<T, SP, TP>, UniversalDeterministicAutomaton.StateIntAbstraction<I, T, SP, TP> {
 
-        void setTransition(int state, I input, T transition);
+        void setTransition(int state, I input, @Nullable T transition);
 
-        void setTransition(int state, I input, int successor, TP property);
+        void setTransition(int state, I input, int successor, @Nullable TP property);
 
         class DefaultAbstraction<S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>>
                 extends UniversalDeterministicAutomaton.StateIntAbstraction.DefaultAbstraction<S, I, T, SP, TP, A>
@@ -194,22 +194,22 @@ public interface MutableDeterministic<S, I, T, SP, TP>
             }
 
             @Override
-            public void setStateProperty(int state, SP property) {
+            public void setStateProperty(int state, @Nullable SP property) {
                 automaton.setStateProperty(intToState(state), property);
             }
 
             @Override
-            public void setTransition(int state, I input, T transition) {
+            public void setTransition(int state, I input, @Nullable T transition) {
                 automaton.setTransition(intToState(state), input, transition);
             }
 
             @Override
-            public void setTransition(int state, I input, int successor, TP property) {
+            public void setTransition(int state, I input, int successor, @Nullable TP property) {
                 automaton.setTransition(intToState(state), input, intToState(successor), property);
             }
 
             @Override
-            public void setTransitionProperty(T transition, TP property) {
+            public void setTransitionProperty(T transition, @Nullable TP property) {
                 automaton.setTransitionProperty(transition, property);
             }
 
@@ -219,7 +219,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
             }
 
             @Override
-            public T createTransition(int successor, TP property) {
+            public T createTransition(int successor, @Nullable TP property) {
                 return automaton.createTransition(intToState(successor), property);
             }
 
@@ -229,7 +229,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
             }
 
             @Override
-            public int addIntState(SP property) {
+            public int addIntState(@Nullable SP property) {
                 return stateToInt(automaton.addState(property));
             }
 
@@ -239,7 +239,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
             }
 
             @Override
-            public int addIntInitialState(SP property) {
+            public int addIntInitialState(@Nullable SP property) {
                 return stateToInt(automaton.addInitialState(property));
             }
 
@@ -249,7 +249,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
     interface FullIntAbstraction<T, SP, TP>
             extends IntAbstraction<T, SP, TP>, UniversalDeterministicAutomaton.FullIntAbstraction<T, SP, TP> {
 
-        void setTransition(int state, int input, T transition);
+        void setTransition(int state, int input, @Nullable T transition);
 
         void setTransition(int state, int input, int successor, @Nullable TP property);
 
@@ -262,22 +262,22 @@ public interface MutableDeterministic<S, I, T, SP, TP>
             }
 
             @Override
-            public void setTransition(int state, int input, T transition) {
+            public void setTransition(int state, int input, @Nullable T transition) {
                 stateAbstraction.setTransition(state, intToSym(input), transition);
             }
 
             @Override
-            public void setTransition(int state, int input, int successor, TP property) {
+            public void setTransition(int state, int input, int successor, @Nullable TP property) {
                 stateAbstraction.setTransition(state, intToSym(input), successor, property);
             }
 
             @Override
-            public void setStateProperty(int state, SP property) {
+            public void setStateProperty(int state, @Nullable SP property) {
                 stateAbstraction.setStateProperty(state, property);
             }
 
             @Override
-            public void setTransitionProperty(T transition, TP property) {
+            public void setTransitionProperty(T transition, @Nullable TP property) {
                 stateAbstraction.setTransitionProperty(transition, property);
             }
 
@@ -287,7 +287,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
             }
 
             @Override
-            public T createTransition(int successor, TP property) {
+            public T createTransition(int successor, @Nullable TP property) {
                 return stateAbstraction.createTransition(successor, property);
             }
 
@@ -297,7 +297,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
             }
 
             @Override
-            public int addIntState(SP property) {
+            public int addIntState(@Nullable SP property) {
                 return stateAbstraction.addIntState(property);
             }
 
@@ -307,7 +307,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
             }
 
             @Override
-            public int addIntInitialState(SP property) {
+            public int addIntInitialState(@Nullable SP property) {
                 return stateAbstraction.addIntInitialState(property);
             }
 

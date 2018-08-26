@@ -22,7 +22,6 @@ import javax.annotation.Nullable;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.AbstractCompact;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
-import net.automatalib.automata.base.compact.AbstractCompactGenericDeterministic;
 import net.automatalib.automata.transout.MutableMealyMachine;
 import net.automatalib.words.Alphabet;
 
@@ -31,10 +30,6 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
 
     private int[] transitions;
     private Object[] outputs;
-
-    public CompactMealy(Alphabet<I> alphabet, float resizeFactor) {
-        this(alphabet, DEFAULT_INIT_CAPACITY, resizeFactor);
-    }
 
     public CompactMealy(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
@@ -52,9 +47,9 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     }
 
     @Override
-    protected void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type) {
-        this.transitions = updateStorage(this.transitions, oldSizeHint, newSizeHint, type);
-        this.outputs = updateStorage(this.outputs, oldSizeHint, newSizeHint, type);
+    protected void updateStorage(UpdatePayload payload) {
+        this.transitions = updateStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
+        this.outputs = updateStorage(this.outputs, null, payload);
     }
 
     @Override
@@ -129,7 +124,7 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
             return null;
         }
 
-        return new CompactMealyTransition<>(succ, (O)outputs[state * alphabetSize + input]);
+        return new CompactMealyTransition<>(succ, (O) outputs[state * alphabetSize + input]);
     }
 
     public static final class Creator<I, O> implements AutomatonCreator<CompactMealy<I, O>, I> {

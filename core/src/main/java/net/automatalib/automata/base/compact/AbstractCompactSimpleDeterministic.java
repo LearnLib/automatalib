@@ -62,8 +62,8 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     }
 
     @Override
-    protected void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type) {
-        this.transitions = updateStorage(this.transitions, oldSizeHint, newSizeHint, type);
+    protected void updateStorage(UpdatePayload payload) {
+        this.transitions = updateStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
     }
 
     @Override

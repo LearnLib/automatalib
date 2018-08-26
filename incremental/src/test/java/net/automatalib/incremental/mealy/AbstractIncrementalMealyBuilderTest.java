@@ -161,7 +161,7 @@ public abstract class AbstractIncrementalMealyBuilderTest {
         sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, false);
         Assert.assertNull(sepWord);
 
-        testMealy.getTransition(s5, (Character) 'b').setOutput('w');
+        testMealy.setTransition(s5, (Character) 'b', testMealy.getSuccessor(s5, (Character) 'b'), (Character) 'w');
 
         sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, true);
         Assert.assertEquals(sepWord, Word.fromString("acb"));

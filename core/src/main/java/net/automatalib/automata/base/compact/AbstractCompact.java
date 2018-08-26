@@ -1,8 +1,23 @@
+/* Copyright (C) 2013-2018 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.automata.base.compact;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.IntFunction;
 
 import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.MutableAutomaton;
@@ -47,6 +62,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
     public AbstractCompact(Alphabet<I> alphabet, AbstractCompact<?, ?, ?, ?> other) {
         this(alphabet, other.stateCapacity, other.resizeFactor);
+        this.numStates = other.numStates;
     }
 
     public AbstractCompact(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
@@ -106,7 +122,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
         final int newCap = Math.max((int) (stateCapacity * resizeFactor), newCapacity);
 
-        updateStorage(this.stateCapacity, newCap, UpdateType.STATE);
+        updateStorage(new UpdatePayload(this.stateCapacity, newCap, UpdateType.NEW_STATE));
 
         this.stateCapacity = newCap;
     }
@@ -118,71 +134,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
             return;
         }
 
-        updateStorage(this.alphabetSize, this.alphabetSize + 1, UpdateType.ALPHABET);
+        updateStorage(new UpdatePayload(this.alphabetSize, this.alphabetSize + 1, UpdateType.NEW_ALPHABET_SYMBOL));
 
         this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.alphabetSize++;
-    }
-
-    protected enum UpdateType {
-        STATE,
-        ALPHABET
-    }
-
-    protected abstract void updateStorage(int oldSizeHint, int newSizeHint, UpdateType type);
-
-    protected final int[] updateStorage(int[] oldStorage, int oldSizeHint, int newSizeHint, UpdateType type) {
-        switch (type) {
-            case STATE: {
-                final int[] newStorage = new int[newSizeHint * alphabetSize];
-                System.arraycopy(oldStorage, 0, newStorage, 0, oldSizeHint * alphabetSize);
-                Arrays.fill(newStorage,
-                            oldSizeHint * alphabetSize,
-                            newSizeHint * alphabetSize,
-                            AbstractCompact.INVALID_STATE);
-                return newStorage;
-            }
-            case ALPHABET: {
-                final int[] newStorage = new int[newSizeHint * numStates];
-                for (int i = 0; i < numStates; i++) {
-                    System.arraycopy(oldStorage, i * oldSizeHint, newStorage, i * newSizeHint, oldSizeHint);
-                    Arrays.fill(newStorage,
-                                i * newSizeHint + oldSizeHint,
-                                (i + 1) * newSizeHint,
-                                AbstractCompact.INVALID_STATE);
-                }
-                return newStorage;
-            }
-            default:
-                throw new IllegalArgumentException("Unknown update type: " + type);
-        }
-    }
-
-    protected final Object[] updateStorage(Object[] oldStorage, int oldSizeHint, int newSizeHint, UpdateType type) {
-        switch (type) {
-            case STATE: {
-                final Object[] newStorage = new Object[newSizeHint * alphabetSize];
-                System.arraycopy(oldStorage, 0, newStorage, 0, oldSizeHint * alphabetSize);
-                Arrays.fill(newStorage,
-                            oldSizeHint * alphabetSize,
-                            newSizeHint * alphabetSize,
-                            AbstractCompact.INVALID_STATE);
-                return newStorage;
-            }
-            case ALPHABET: {
-                final Object[] newStorage = new Object[newSizeHint * numStates];
-                for (int i = 0; i < numStates; i++) {
-                    System.arraycopy(oldStorage, i * oldSizeHint, newStorage, i * newSizeHint, oldSizeHint);
-                    Arrays.fill(newStorage,
-                                i * newSizeHint + oldSizeHint,
-                                (i + 1) * newSizeHint,
-                                AbstractCompact.INVALID_STATE);
-                }
-                return newStorage;
-            }
-            default:
-                throw new IllegalArgumentException("Unknown update type: " + type);
-        }
     }
 
     protected static int getId(Integer id) {
@@ -194,5 +149,78 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     }
 
     public abstract void setStateProperty(int state, SP property);
+
+    protected abstract void updateStorage(UpdatePayload payload);
+
+    protected final int[] updateStorage(int[] oldStorage, int defaultValue, UpdatePayload payload) {
+        return updateStorage(oldStorage, payload, int[]::new, (arr, idx) -> arr[idx] = defaultValue);
+    }
+
+    protected final Object[] updateStorage(Object[] oldStorage, Object defaultValue, UpdatePayload payload) {
+        return updateStorage(oldStorage, payload, Object[]::new, (arr, idx) -> arr[idx] = defaultValue);
+    }
+
+    protected final <T> T[] updateStorage(T[] oldStorage,
+                                          IntFunction<T[]> arrayConstructor,
+                                          T defaultValue,
+                                          UpdatePayload payload) {
+        return updateStorage(oldStorage, payload, arrayConstructor, (arr, idx) -> arr[idx] = defaultValue);
+    }
+
+    private <T> T updateStorage(T oldStorage,
+                                UpdatePayload payload,
+                                IntFunction<T> arrayConstructor,
+                                ArrayInitializer<T> initializer) {
+        final int oldSizeHint = payload.oldSizeHint;
+        final int newSizeHint = payload.newSizeHint;
+
+        switch (payload.type) {
+            case NEW_STATE: {
+                final T newStorage = arrayConstructor.apply(newSizeHint * alphabetSize);
+                System.arraycopy(oldStorage, 0, newStorage, 0, oldSizeHint * alphabetSize);
+
+                for (int i = oldSizeHint * alphabetSize; i < newSizeHint * alphabetSize; i++) {
+                    initializer.setDefaultValue(newStorage, i);
+                }
+                return newStorage;
+            }
+            case NEW_ALPHABET_SYMBOL: {
+                final T newStorage = arrayConstructor.apply(newSizeHint * numStates);
+                for (int i = 0; i < numStates; i++) {
+                    System.arraycopy(oldStorage, i * oldSizeHint, newStorage, i * newSizeHint, oldSizeHint);
+
+                    for (int j = i * newSizeHint + oldSizeHint; j < (i + 1) * newSizeHint; j++) {
+                        initializer.setDefaultValue(newStorage, j);
+                    }
+                }
+                return newStorage;
+            }
+            default:
+                throw new IllegalArgumentException("Unknown update type: " + payload.type);
+        }
+    }
+
+    private enum UpdateType {
+        NEW_STATE,
+        NEW_ALPHABET_SYMBOL
+    }
+
+    protected static class UpdatePayload {
+
+        private final int oldSizeHint;
+        private final int newSizeHint;
+        private final UpdateType type;
+
+        UpdatePayload(int oldSizeHint, int newSizeHint, UpdateType type) {
+            this.oldSizeHint = oldSizeHint;
+            this.newSizeHint = newSizeHint;
+            this.type = type;
+        }
+    }
+
+    private interface ArrayInitializer<T> {
+
+        void setDefaultValue(T array, int idx);
+    }
 
 }

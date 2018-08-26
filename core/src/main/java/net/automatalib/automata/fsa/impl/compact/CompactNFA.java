@@ -70,7 +70,11 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
     }
 
     public void setAccepting(int stateId, boolean accepting) {
-        this.accepting.set(stateId);
+        if (accepting) {
+            this.accepting.set(stateId);
+        } else {
+            this.accepting.clear(stateId);
+        }
     }
 
     @Override
