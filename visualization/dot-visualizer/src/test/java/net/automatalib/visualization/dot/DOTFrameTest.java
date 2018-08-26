@@ -41,7 +41,7 @@ public class DOTFrameTest {
     }
 
     // Headless GUI testing is a pain. Therefore just check that we don't throw any exceptions for now.
-    @Test(timeOut = 10000)
+    @Test(timeOut = 30000)
     public void testFrame() throws InvocationTargetException, InterruptedException {
 
         if (JVMUtil.getCanonicalSpecVersion() > 8) {

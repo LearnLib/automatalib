@@ -50,7 +50,7 @@ public class ProviderTest {
     }
 
     // Headless GUI testing is a pain. Therefore just check that we don't throw any exceptions for now.
-    @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 10000)
+    @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 30000)
     public void testDisplay() throws InterruptedException, InvocationTargetException {
 
         if (JVMUtil.getCanonicalSpecVersion() > 8) {
