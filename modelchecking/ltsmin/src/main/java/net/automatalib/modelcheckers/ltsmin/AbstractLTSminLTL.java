@@ -212,6 +212,14 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
             if (convertExitValue != 0) {
                 throw new ModelCheckingException("Could not convert gcf to fsm");
             }
+        } else if (ltsminExitValue != 0) {
+            final String msg;
+            if (LOGGER.isDebugEnabled()) {
+                msg = "Could not model check ETF, please check LTSmin's debug information to see why.";
+            } else {
+                msg = "Could not model check ETF, to see why, enable debug logging.";
+            }
+            throw new ModelCheckingException(msg);
         } else {
             fsm = null;
         }
