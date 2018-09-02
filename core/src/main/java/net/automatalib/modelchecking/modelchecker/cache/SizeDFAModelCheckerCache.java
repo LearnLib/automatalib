@@ -18,32 +18,26 @@ package net.automatalib.modelchecking.modelchecker.cache;
 import java.util.Collection;
 
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.simple.SimpleAutomaton;
-import net.automatalib.modelchecking.ModelCheckerCache;
+import net.automatalib.modelchecking.ModelChecker;
+import net.automatalib.modelchecking.ModelCheckerCache.DFAModelCheckerCache;
 
 /**
  * A DFAModelCheckerCache that invalidates the cached counter examples when
- * {@link #findCounterExample(SimpleAutomaton, Collection, Object)} is called with a DFA with a size different, and
+ * {@link ModelChecker#findCounterExample(Object, Collection, Object)} is called with a DFA with a size different, and
  * an input alphabet different than the previous call.
- *
+ * <p>
  * In active learning the automaton increases in size with every proper counter example. Hence these caches are useful
  * in between calls to disproving properties and finding counter examples to hypotheses.
  *
- * @param <I> the input type
- * @param <P> the property type
+ * @param <I>
+ *         the input type
+ * @param <P>
+ *         the property type
  */
-public class SizeDFAModelCheckerCache<I, P> extends SizeModelCheckerCache<I, DFA<?, I>, P, DFA<?, I>>
-        implements ModelCheckerCache.DFAModelCheckerCache<I, P> {
+public class SizeDFAModelCheckerCache<I, P, R> extends SizeModelCheckerCache<I, DFA<?, I>, P, R>
+        implements DFAModelCheckerCache<I, P, R> {
 
-    private final DFAModelChecker<I, P> modelChecker;
-
-    public SizeDFAModelCheckerCache(DFAModelChecker<I, P> modelChecker) {
-        super(modelChecker::findCounterExample);
-        this.modelChecker = modelChecker;
-    }
-
-    @Override
-    public DFAModelChecker<I, P> getModelChecker() {
-        return modelChecker;
+    public SizeDFAModelCheckerCache(DFAModelChecker<I, P, R> modelChecker) {
+        super(modelChecker);
     }
 }

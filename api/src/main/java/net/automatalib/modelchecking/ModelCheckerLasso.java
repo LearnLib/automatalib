@@ -15,17 +15,12 @@
  */
 package net.automatalib.modelchecking;
 
-import java.util.Collection;
-
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.words.Word;
 
 /**
  * A model checker where the counterexample is a lasso.
@@ -36,13 +31,13 @@ import net.automatalib.words.Word;
  *         the automaton type.
  * @param <P>
  *         the property type.
- * @param <D>
- *         the output type.
+ * @param <R>
+ *         the type of a counterexample
  *
  * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public interface ModelCheckerLasso<I, A, P, D> extends ModelChecker<I, A, P, D> {
+public interface ModelCheckerLasso<I, A, P, R extends Lasso<I, ?>> extends ModelChecker<I, A, P, R> {
 
     /**
      * Return the multiplier for the number of times a loop of the lasso must be unrolled, relative to the size of the
@@ -85,7 +80,8 @@ public interface ModelCheckerLasso<I, A, P, D> extends ModelChecker<I, A, P, D> 
     /**
      * Compute the number of unfolds according to {@code size}.
      *
-     * @param size the number of states in the hypothesis.
+     * @param size
+     *         the number of states in the hypothesis.
      *
      * @return the number of times the loop of a lasso has to be unfolded.
      */
@@ -97,27 +93,10 @@ public interface ModelCheckerLasso<I, A, P, D> extends ModelChecker<I, A, P, D> 
         return Math.max(getMinimumUnfolds(), relativeUnfolds);
     }
 
-    @Nullable
-    @Override
-    Lasso<I, D> findCounterExample(A automaton, Collection<? extends I> inputs, P property)
-            throws ModelCheckingException;
-
     interface DFAModelCheckerLasso<I, P>
-            extends ModelCheckerLasso<I, DFA<?, I>, P, Boolean>, DFAModelChecker<I, P> {
-
-        @Nullable
-        @Override
-        DFALasso<I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, P property)
-                throws ModelCheckingException;
-    }
+            extends ModelCheckerLasso<I, DFA<?, I>, P, DFALasso<I>>, DFAModelChecker<I, P, DFALasso<I>> {}
 
     interface MealyModelCheckerLasso<I, O, P>
-            extends ModelCheckerLasso<I, MealyMachine<?, I, ?, O>, P, Word<O>>,
-                    MealyModelChecker<I, O, P> {
-
-        @Nullable
-        @Override
-        MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs,
-                                            P property) throws ModelCheckingException;
-    }
+            extends ModelCheckerLasso<I, MealyMachine<?, I, ?, O>, P, MealyLasso<I, O>>,
+                    MealyModelChecker<I, O, P, MealyLasso<I, O>> {}
 }

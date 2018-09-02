@@ -16,20 +16,23 @@
 package net.automatalib.modelchecking.modelchecker.cache;
 
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.ModelCheckerLassoCache;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
+import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
+import net.automatalib.modelchecking.ModelCheckerLassoCache.MealyModelCheckerLassoCache;
+import net.automatalib.modelchecking.modelchecker.cache.InternalModelCheckerDelegator.MealyModelCheckerLassoDelegator;
 
 /**
  * @see SizeDFAModelCheckerCache
  */
 public class SizeMealyModelCheckerLassoCache<I, O, P>
-        extends SizeModelCheckerCache<I, MealyMachine<?, I, ?, O>, P, Lasso.MealyLasso<I, O>>
-        implements ModelCheckerLassoCache.MealyModelCheckerLassoCache<I, O, P> {
+        extends SizeModelCheckerCache<I, MealyMachine<?, I, ?, O>, P, MealyLasso<I, O>> implements
+                                                                                        MealyModelCheckerLassoCache<I, O, P>,
+                                                                                        MealyModelCheckerLassoDelegator<MealyModelCheckerLasso<I, O, P>, I, O, P> {
 
     private final MealyModelCheckerLasso<I, O, P> modelChecker;
 
     public SizeMealyModelCheckerLassoCache(MealyModelCheckerLasso<I, O, P> modelChecker) {
-        super(modelChecker::findCounterExample);
+        super(modelChecker);
         this.modelChecker = modelChecker;
     }
 

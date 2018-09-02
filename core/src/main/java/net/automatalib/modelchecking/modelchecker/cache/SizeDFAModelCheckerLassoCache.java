@@ -16,20 +16,22 @@
 package net.automatalib.modelchecking.modelchecker.cache;
 
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.ModelCheckerLasso;
-import net.automatalib.modelchecking.ModelCheckerLassoCache;
+import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
+import net.automatalib.modelchecking.ModelCheckerLassoCache.DFAModelCheckerLassoCache;
+import net.automatalib.modelchecking.modelchecker.cache.InternalModelCheckerDelegator.ModelCheckerLassoDelegator;
 
 /**
  * @see SizeDFAModelCheckerCache
  */
-public class SizeDFAModelCheckerLassoCache<I, P> extends SizeModelCheckerCache<I, DFA<?, I>, P, Lasso.DFALasso<I>>
-        implements ModelCheckerLassoCache.DFAModelCheckerLassoCache<I, P> {
+public class SizeDFAModelCheckerLassoCache<I, P> extends SizeModelCheckerCache<I, DFA<?, I>, P, DFALasso<I>> implements
+                                                                                                             DFAModelCheckerLassoCache<I, P>,
+                                                                                                             ModelCheckerLassoDelegator<DFAModelCheckerLasso<I, P>, I, DFA<?, I>, P, DFALasso<I>> {
 
-    private final ModelCheckerLasso.DFAModelCheckerLasso<I, P> modelChecker;
+    private final DFAModelCheckerLasso<I, P> modelChecker;
 
     public SizeDFAModelCheckerLassoCache(DFAModelCheckerLasso<I, P> modelChecker) {
-        super(modelChecker::findCounterExample);
+        super(modelChecker);
         this.modelChecker = modelChecker;
     }
 

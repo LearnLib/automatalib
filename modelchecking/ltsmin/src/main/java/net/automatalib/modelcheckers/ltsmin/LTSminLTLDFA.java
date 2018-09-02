@@ -54,7 +54,7 @@ import net.automatalib.words.impl.Alphabets;
  * @author Jeroen Meijer
  * @see DFAs#isPrefixClosed(DFA, Alphabet)
  */
-public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, Boolean>
+public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>>
         implements DFAModelCheckerLasso<I, String> {
 
     /**

@@ -33,7 +33,6 @@ import net.automatalib.serialization.fsm.parser.FSMParseException;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.util.automata.transout.MealyFilter;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
 /**
@@ -50,7 +49,8 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Jeroen Meijer
  */
-public abstract class AbstractLTSminLTLMealy<I, O> extends AbstractLTSminLTL<I, MealyMachine<?, I, ?, O>, Word<O>>
+public abstract class AbstractLTSminLTLMealy<I, O>
+        extends AbstractLTSminLTL<I, MealyMachine<?, I, ?, O>, MealyLasso<I, O>>
         implements MealyModelCheckerLasso<I, O, String> {
 
     /**
@@ -171,8 +171,9 @@ public abstract class AbstractLTSminLTLMealy<I, O> extends AbstractLTSminLTL<I, 
      */
     @Nullable
     @Override
-    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, String property)
-            throws ModelCheckingException {
+    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
+                                               Collection<? extends I> inputs,
+                                               String property) throws ModelCheckingException {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
         final MealyLasso<I, O> result;

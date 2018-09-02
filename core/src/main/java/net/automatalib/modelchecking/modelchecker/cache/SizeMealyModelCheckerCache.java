@@ -16,24 +16,26 @@
 package net.automatalib.modelchecking.modelchecker.cache;
 
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.modelchecking.ModelCheckerCache;
+import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
+import net.automatalib.modelchecking.ModelCheckerCache.MealyModelCheckerCache;
+import net.automatalib.modelchecking.modelchecker.cache.InternalModelCheckerDelegator.MealyModelCheckerDelegator;
 
 /**
  * @see SizeDFAModelCheckerCache
  */
-public class SizeMealyModelCheckerCache<I, O, P>
-        extends SizeModelCheckerCache<I, MealyMachine<?, I, ?, O>, P, MealyMachine<?, I, ?, O>>
-        implements ModelCheckerCache.MealyModelCheckerCache<I, O, P> {
+public class SizeMealyModelCheckerCache<I, O, P, R> extends SizeModelCheckerCache<I, MealyMachine<?, I, ?, O>, P, R>
+        implements MealyModelCheckerCache<I, O, P, R>,
+                   MealyModelCheckerDelegator<MealyModelChecker<I, O, P, R>, I, O, P, R> {
 
-    private final MealyModelChecker<I, O, P> modelChecker;
+    private final MealyModelChecker<I, O, P, R> mealyModelChecker;
 
-    public SizeMealyModelCheckerCache(MealyModelChecker<I, O, P> modelChecker) {
-        super(modelChecker::findCounterExample);
-        this.modelChecker = modelChecker;
+    public SizeMealyModelCheckerCache(MealyModelChecker<I, O, P, R> modelChecker) {
+        super(modelChecker);
+        this.mealyModelChecker = modelChecker;
     }
 
     @Override
-    public MealyModelChecker<I, O, P> getModelChecker() {
-        return modelChecker;
+    public MealyModelChecker<I, O, P, R> getModelChecker() {
+        return mealyModelChecker;
     }
 }

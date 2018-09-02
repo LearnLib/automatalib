@@ -24,16 +24,21 @@ import javax.annotation.Nullable;
 import net.automatalib.automata.simple.SimpleAutomaton;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.modelchecking.ModelChecker;
+import net.automatalib.modelchecking.ModelCheckerCache;
 
 /**
  * An implementation of a cache for model checkers. Based on the size and input alphabet.
  *
- * @param <I> the input type
- * @param <A> the automaton type
- * @param <P> the property type
- * @param <R> the result type of a call to {@link #findCounterExample(SimpleAutomaton, Collection, Object)}.
+ * @param <I>
+ *         the input type
+ * @param <A>
+ *         the automaton type
+ * @param <P>
+ *         the property type
+ * @param <R>
+ *         the result type of a call to {@link #findCounterExample(SimpleAutomaton, Collection, Object)}.
  */
-class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> {
+class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> implements ModelCheckerCache<I, A, P, R> {
 
     /**
      * The actual cache.
@@ -48,15 +53,16 @@ class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> {
     /**
      * A function to any ModelChecker.findCounterExample.
      */
-    private final Uncached<A, I, P, R> uncached;
+    private final ModelChecker<I, A, P, R> modelChecker;
 
     /**
      * Constructs a new {@link SizeModelCheckerCache}.
      *
-     * @param uncached a function to any ModelChecker.findCounterExample.
+     * @param modelChecker
+     *         a function to any ModelChecker.findCounterExample.
      */
-    SizeModelCheckerCache(Uncached<A, I, P, R> uncached) {
-        this.uncached = uncached;
+    SizeModelCheckerCache(ModelChecker<I, A, P, R> modelChecker) {
+        this.modelChecker = modelChecker;
     }
 
     /**
@@ -65,6 +71,7 @@ class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> {
      * @see ModelChecker#findCounterExample(Object, Collection, Object)
      */
     @Nullable
+    @Override
     public R findCounterExample(A automaton, Collection<? extends I> inputs, P property) {
         if (automaton.size() > size) {
             counterExamples.clear();
@@ -73,16 +80,11 @@ class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> {
         size = automaton.size();
 
         return counterExamples.computeIfAbsent(Pair.of(inputs, property),
-                                               key -> uncached.find(automaton, inputs, property));
+                                               key -> modelChecker.findCounterExample(automaton, inputs, property));
     }
 
+    @Override
     public void clear() {
         counterExamples.clear();
-    }
-
-    @FunctionalInterface
-    interface Uncached<A, I, P, R> {
-
-        R find(A automaton, Collection<? extends I> inputs, P property);
     }
 }

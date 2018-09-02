@@ -20,11 +20,9 @@ import java.util.Collection;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.exception.ModelCheckingException;
-import net.automatalib.words.Word;
 
 /**
  * A model checker checks whether a given automaton satisfies a given property. If the property can not be satisfied it
@@ -37,13 +35,13 @@ import net.automatalib.words.Word;
  *         the automaton type
  * @param <P>
  *         the property type
- * @param <D>
- *         the output type
+ * @param <R>
+ *         the type of a counterexample
  *
  * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public interface ModelChecker<I, A, P, D> {
+public interface ModelChecker<I, A, P, R> {
 
     /**
      * Try to find counter examples for the given {@code property} and {@code automaton}.
@@ -61,16 +59,9 @@ public interface ModelChecker<I, A, P, D> {
      *         when this model checker can not check the property.
      */
     @Nullable
-    DetOutputAutomaton<?, I, ?, D> findCounterExample(A automaton, Collection<? extends I> inputs, P property)
-            throws ModelCheckingException;
+    R findCounterExample(A automaton, Collection<? extends I> inputs, P property) throws ModelCheckingException;
 
-    interface DFAModelChecker<I, P> extends ModelChecker<I, DFA<?, I>, P, Boolean> {
-
-        @Nullable
-        @Override
-        DFA<?, I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, P property)
-                throws ModelCheckingException;
-    }
+    interface DFAModelChecker<I, P, R> extends ModelChecker<I, DFA<?, I>, P, R> {}
 
     /**
      * A model checker for Mealy machines. Key about the {@link MealyMachine} type here is that it may not be
@@ -80,18 +71,12 @@ public interface ModelChecker<I, A, P, D> {
      *
      * @see ModelChecker
      */
-    interface MealyModelChecker<I, O, P> extends ModelChecker<I, MealyMachine<?, I, ?, O>, P, Word<O>> {
-
-        @Nullable
-        @Override
-        MealyMachine<?, I, ?, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
-                                                    Collection<? extends I> inputs, P property)
-                throws ModelCheckingException;
+    interface MealyModelChecker<I, O, P, R> extends ModelChecker<I, MealyMachine<?, I, ?, O>, P, R> {
 
         /**
          * Returns the outputs for which all transitions should be removed.
-         *
-         * That is, before the model checker tries to find a counter example to the automaton every transition
+         * <p>
+         * That is, before the model checker tries to find a counterexample to the automaton every transition
          * which output symbol is in the returned collection is removed.
          *
          * @return the outputs.
@@ -101,9 +86,10 @@ public interface ModelChecker<I, A, P, D> {
         /**
          * Sets the outputs which should be skipped.
          *
-         * @see #getSkipOutputs()
+         * @param skipOutputs
+         *         the outputs.
          *
-         * @param skipOutputs the outputs.
+         * @see #getSkipOutputs()
          */
         void setSkipOutputs(Collection<? super O> skipOutputs);
     }

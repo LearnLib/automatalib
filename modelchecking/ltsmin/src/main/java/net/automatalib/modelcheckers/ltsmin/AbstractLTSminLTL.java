@@ -24,6 +24,7 @@ import net.automatalib.AutomataLibSettings;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.commons.util.process.ProcessUtil;
 import net.automatalib.exception.ModelCheckingException;
+import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.modelchecker.AbstractUnfoldingModelChecker;
 import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
@@ -50,8 +51,8 @@ import org.slf4j.LoggerFactory;
  *         the input type.
  * @param <A>
  *         the automaton type.
- * @param <D>
- *         the output type.
+ * @param <L>
+ *         the Lasso type.
  *
  * @author Jeroen Meijer
  * @see <a href="http://ltsmin.utwente.nl">http://ltsmin.utwente.nl</a>
@@ -59,8 +60,8 @@ import org.slf4j.LoggerFactory;
  * @see AbstractETFWriter
  * @see AutomataLibSettings
  */
-public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I, ?>, D>
-        extends AbstractUnfoldingModelChecker<I, A, String, D> {
+public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I, ?>, L extends Lasso<I, ?>>
+        extends AbstractUnfoldingModelChecker<I, A, String, L> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminLTL.class);
 

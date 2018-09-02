@@ -15,25 +15,31 @@
  */
 package net.automatalib.modelchecking.modelchecker;
 
+import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
 
 /**
  * An {@link ModelCheckerLasso} that can unfold loops of lassos.
- *
+ * <p>
  * Unfolding a lasso is done according to two conditions:
- *  1. the lasso has to be unfolded a minimum number of times ({@link #getMinimumUnfolds()}.
- *  2. the lasso has to be unfolded relative to the number of states in an hypothesis, multiplied by some double
- *  ({@link #getMultiplier()}.
- *
+ * 1. the lasso has to be unfolded a minimum number of times ({@link #getMinimumUnfolds()}.
+ * 2. the lasso has to be unfolded relative to the number of states in an hypothesis, multiplied by some double
+ * ({@link #getMultiplier()}.
+ * <p>
  * Note that one can unfold a lasso a fixed number of times if the multiplier is set to {@code 0.0}.
  * Also note that a lasso needs to be unfolded at least once, and the multiplier can not be negative.
  *
- * @param <I> the input type
- * @param <A> the automaton type
- * @param <P> the property type
- * @param <D> the output type
+ * @param <I>
+ *         the input type
+ * @param <A>
+ *         the automaton type
+ * @param <P>
+ *         the property type
+ * @param <L>
+ *         the Lasso type
  */
-public abstract class AbstractUnfoldingModelChecker<I, A, P, D> implements ModelCheckerLasso<I, A, P, D> {
+public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, ?>>
+        implements ModelCheckerLasso<I, A, P, L> {
 
     /**
      * The minimum number of unfolds.
@@ -52,10 +58,13 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, D> implements Model
     /**
      * Constructs a new AbstractUnfoldingModelChecker.
      *
-     * @param minimumUnfolds the minimum number of unfolds.
-     * @param multiplier the multiplier
+     * @param minimumUnfolds
+     *         the minimum number of unfolds.
+     * @param multiplier
+     *         the multiplier
      *
-     * @throws IllegalArgumentException when {@code minimumUnfolds < 1 || multiplier < 0.0}.
+     * @throws IllegalArgumentException
+     *         when {@code minimumUnfolds < 1 || multiplier < 0.0}.
      */
     protected AbstractUnfoldingModelChecker(int minimumUnfolds, double multiplier) throws IllegalArgumentException {
         setMinimumUnfolds(minimumUnfolds);

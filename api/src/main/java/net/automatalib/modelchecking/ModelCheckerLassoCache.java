@@ -19,17 +19,24 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
 
 /**
  * @see ModelCheckerCache
+ *
+ * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public interface ModelCheckerLassoCache<I, A, P, D> extends ModelCheckerCache<I, A, P, D>, ModelCheckerLassoDelegate<I, A, P, D> {
+public interface ModelCheckerLassoCache<I, A, P, R extends Lasso<I, ?>>
+        extends ModelCheckerCache<I, A, P, R>, ModelCheckerLasso<I, A, P, R> {
 
-    interface DFAModelCheckerLassoCache<I, P> extends ModelCheckerLassoCache<I, DFA<?, I>, P, Boolean>,
-            DFAModelCheckerLassoDelegate<I, P> {}
+    interface DFAModelCheckerLassoCache<I, P> extends ModelCheckerLassoCache<I, DFA<?, I>, P, DFALasso<I>>,
+                                                      DFAModelCheckerCache<I, P, DFALasso<I>>,
+                                                      DFAModelCheckerLasso<I, P> {}
 
-    interface MealyModelCheckerLassoCache<I, O, P> extends
-            ModelCheckerLassoCache<I, MealyMachine<?, I, ?, O>, P, Word<O>>, MealyModelCheckerLassoDelegate<I, O, P> {}
+    interface MealyModelCheckerLassoCache<I, O, P>
+            extends ModelCheckerLassoCache<I, MealyMachine<?, I, ?, O>, P, MealyLasso<I, O>>,
+                    MealyModelCheckerCache<I, O, P, MealyLasso<I, O>>,
+                    MealyModelCheckerLasso<I, O, P> {}
 }

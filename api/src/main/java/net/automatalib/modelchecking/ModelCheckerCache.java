@@ -21,27 +21,31 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.words.Word;
 
 /**
  * A model checker that caches calls to {@link #findCounterExample(Object, Collection, Object)}.
  *
- * @param <I> the input type
- * @param <A> the automaton type
- * @param <P> the property type
- * @param <D> the output type
+ * @param <I>
+ *         the input type
+ * @param <A>
+ *         the automaton type
+ * @param <P>
+ *         the property type
+ * @param <R>
+ *         the type of a counterexample
+ *
+ * @author Jeroen Meijer
  */
 @ParametersAreNonnullByDefault
-public interface ModelCheckerCache<I, A, P, D> extends ModelCheckerDelegate<I, A, P, D> {
+public interface ModelCheckerCache<I, A, P, R> extends ModelChecker<I, A, P, R> {
 
     /**
      * Clears the cache.
      */
     void clear();
 
-    interface DFAModelCheckerCache<I, P> extends ModelCheckerCache<I, DFA<?, I>, P, Boolean>,
-            DFAModelCheckerDelegate<I, P> {}
+    interface DFAModelCheckerCache<I, P, R> extends ModelCheckerCache<I, DFA<?, I>, P, R>, DFAModelChecker<I, P, R> {}
 
-    interface MealyModelCheckerCache<I, O, P> extends ModelCheckerCache<I, MealyMachine<?, I, ?, O>, P, Word<O>>,
-            MealyModelCheckerDelegate<I, O, P> {}
+    interface MealyModelCheckerCache<I, O, P, R>
+            extends ModelCheckerCache<I, MealyMachine<?, I, ?, O>, P, R>, MealyModelChecker<I, O, P, R> {}
 }
