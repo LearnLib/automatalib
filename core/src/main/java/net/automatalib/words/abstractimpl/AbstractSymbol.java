@@ -17,7 +17,6 @@ package net.automatalib.words.abstractimpl;
 
 import net.automatalib.commons.util.nid.AbstractMutableNumericID;
 
-@SuppressWarnings("PMD")
 public abstract class AbstractSymbol<S> extends AbstractMutableNumericID implements Comparable<S> {
 
 }
