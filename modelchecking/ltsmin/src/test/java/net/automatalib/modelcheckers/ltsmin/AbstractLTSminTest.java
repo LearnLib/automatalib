@@ -15,10 +15,10 @@
  */
 package net.automatalib.modelcheckers.ltsmin;
 
+import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.concepts.Output;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -27,44 +27,58 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * Tests for AbstractLTSminLTL with arbitrary LTSs.
+ * Tests for AbstractLTSmin with arbitrary LTSs.
  *
  * @author Jeroen Meijer
  */
-public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Output<String, ?>>
-        extends AbstractUnfoldingModelCheckerTest<A> {
+public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
 
     private final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
 
-    private Lasso<?, ?> lasso;
+    private DetOutputAutomaton<?, String, ?, ?> counterExample;
 
     private A automaton;
 
     private String falseProperty;
 
+    private Word<String> input;
+
     public Alphabet<String> getAlphabet() {
         return alphabet;
     }
 
-    protected abstract Lasso<?, ?> createLasso();
+    protected abstract DetOutputAutomaton<?, String, ?, ?> createCounterExample();
 
     protected abstract A createAutomaton();
 
     protected abstract String createFalseProperty();
 
+    protected abstract Word<String> getInput();
+
+    protected abstract int getMinimumMajorVersion();
+
+    protected abstract int getMinimumMinorVersion();
+
+    protected abstract int getMinimumPatchVersion();
+
+    protected abstract AbstractLTSmin<String, A, R> getModelChecker();
+
+    protected abstract void newModelChecker();
+
     @BeforeClass
     public void setupBeforeClass() {
-        if (!LTSminUtil.checkUsable()) {
+        if (!LTSminUtil.checkUsable(getMinimumMajorVersion(), getMinimumMinorVersion(), getMinimumPatchVersion())) {
             throw new SkipException("LTSmin not installed");
         }
     }
 
     @BeforeMethod
     public void setUp() throws Exception {
-        super.setUp();
-        lasso = createLasso();
+        newModelChecker();
+        counterExample = createCounterExample();
         automaton = createAutomaton();
         falseProperty = createFalseProperty();
+        input = getInput();
     }
 
     /**
@@ -72,10 +86,10 @@ public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Out
      */
     @Test
     public void testFindCounterExample() {
-        Lasso<?, ?> lasso = getModelChecker().findCounterExample(automaton, alphabet, "true");
-        Assert.assertNull(lasso);
+        R noCE = getModelChecker().findCounterExample(automaton, alphabet, "true");
+        Assert.assertNull(noCE);
 
-        Lasso<?, ?> actualLasso = getModelChecker().findCounterExample(automaton, alphabet, falseProperty);
-        Assert.assertEquals(actualLasso.getWord(), this.lasso.getWord());
+        R ce = getModelChecker().findCounterExample(automaton, alphabet, falseProperty);
+        Assert.assertEquals(counterExample.computeOutput(input), ce.computeOutput(input));
     }
 }

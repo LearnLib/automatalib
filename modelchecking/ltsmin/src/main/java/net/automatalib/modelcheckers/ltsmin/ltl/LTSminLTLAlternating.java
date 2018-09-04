@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelcheckers.ltsmin.ltl;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating;
-import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.modelcheckers.ltsmin.LTSminAlternating;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
 
 /**
  * An LTL model checker using LTSmin for Mealy machines using alternating edge semantics.
- * <p>
- * The implementation uses {@link FSM2MealyParserAlternating}, and {@link Mealy2ETFWriterAlternating}, to read the
- * {@link net.automatalib.modelchecking.Lasso.MealyLasso}, and write the {@link MealyMachine} respectively.
  *
  * @param <I>
  *         the input type
@@ -42,7 +32,8 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Jeroen Meijer
  */
-public class LTSminLTLAlternating<I, O> extends AbstractLTSminLTLMealy<I, O> {
+public class LTSminLTLAlternating<I, O> extends AbstractLTSminLTLMealy<I, O>
+        implements LTSminAlternating<I, O, MealyLasso<I, O>> {
 
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public LTSminLTLAlternating(boolean keepFiles,
@@ -54,15 +45,11 @@ public class LTSminLTLAlternating<I, O> extends AbstractLTSminLTLMealy<I, O> {
         super(keepFiles, string2Input, string2Output, minimumUnfolds, multiplier, skipOutputs);
     }
 
+    /**
+     * @return {@code false}, because only lassos should be read from FSMs.
+     */
     @Override
-    protected CompactMealy<I, O> fsm2Mealy(File fsm) throws IOException, FSMParseException {
-        return FSM2MealyParserAlternating.parse(fsm, getString2Input(), getString2Output());
-    }
-
-    @Override
-    protected void mealy2ETF(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, File etf)
-            throws IOException {
-        final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
-        Mealy2ETFWriterAlternating.write(etf, automaton, alphabet);
+    public boolean requiresOriginalAutomaton() {
+        return false;
     }
 }

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelcheckers.ltsmin.ltl;
 
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.lasso.MealyLassoImpl;
+import org.testng.annotations.BeforeMethod;
 
 /**
  * Tests whether LTSminLTLAlternating actually uses alternating edge semantics.
@@ -28,19 +29,30 @@ public class LTSminLTLAlternatingTest extends AbstractLTSminLTLMealyTest {
 
     private LTSminLTLAlternating<String, String> modelChecker;
 
+    @BeforeMethod
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+    }
+
     @Override
     public LTSminLTLAlternating<String, String> getModelChecker() {
         return modelChecker;
     }
 
     @Override
-    protected void newModelChecker() {
+    public String getSkipFormula() {
+        return "!(letter == \"b\")";
+    }
+
+    @Override
+    public void newModelChecker() {
         modelChecker = new LTSminLTLAlternatingBuilder<String, String>().withString2Input(s -> s).
                 withString2Output(s -> s).create();
     }
 
     @Override
-    protected MealyLasso<String, String> createLasso() {
+    protected MealyLasso<String, String> createCounterExample() {
         return new MealyLassoImpl<>(createAutomaton(), getAlphabet(), 4);
     }
 

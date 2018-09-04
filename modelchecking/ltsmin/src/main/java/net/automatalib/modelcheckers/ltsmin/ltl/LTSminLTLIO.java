@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelcheckers.ltsmin.ltl;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO;
-import net.automatalib.serialization.fsm.parser.FSM2MealyParserIO;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.modelcheckers.ltsmin.LTSminIO;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
 
 /**
- * An LTL model checker using LTSmin for Mealy machines using alternating edge semantics.
- * <p>
- * The implementation uses {@link FSM2MealyParserIO}, and {@link Mealy2ETFWriterIO}, to read the {@link
- * net.automatalib.modelchecking.Lasso.MealyLasso}, and write the {@link MealyMachine} respectively.
+ * An LTL model checker using LTSmin for Mealy machines using synchronous edge semantics.
  *
  * @param <I>
  *         the input type
@@ -42,7 +32,7 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Jeroen Meijer
  */
-public class LTSminLTLIO<I, O> extends AbstractLTSminLTLMealy<I, O> {
+public class LTSminLTLIO<I, O> extends AbstractLTSminLTLMealy<I, O> implements LTSminIO<I, O, MealyLasso<I, O>> {
 
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public LTSminLTLIO(boolean keepFiles,
@@ -52,17 +42,5 @@ public class LTSminLTLIO<I, O> extends AbstractLTSminLTLMealy<I, O> {
                        double multiplier,
                        Collection<? super O> skipOutputs) {
         super(keepFiles, string2Input, string2Output, minimumUnfolds, multiplier, skipOutputs);
-    }
-
-    @Override
-    protected CompactMealy<I, O> fsm2Mealy(File fsm) throws IOException, FSMParseException {
-        return FSM2MealyParserIO.parse(fsm, getString2Input(), getString2Output());
-    }
-
-    @Override
-    protected void mealy2ETF(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, File etf)
-            throws IOException {
-        final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
-        Mealy2ETFWriterIO.write(etf, automaton, alphabet);
     }
 }

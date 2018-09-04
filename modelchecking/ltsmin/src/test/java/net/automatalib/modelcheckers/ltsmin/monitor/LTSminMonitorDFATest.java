@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelcheckers.ltsmin.monitor;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.exception.ModelCheckingException;
@@ -25,22 +25,22 @@ import org.testng.annotations.Test;
 /**
  * @author Jeroen Meijer
  */
-public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>> {
+public class LTSminMonitorDFATest extends AbstractLTSminMonitorTest<DFA<?, String>, DFA<?, String>> {
 
-    private LTSminLTLDFA<String> modelChecker;
+    private LTSminMonitorDFA<String> modelChecker;
 
     @Override
-    public LTSminLTLDFA<String> getModelChecker() {
+    public LTSminMonitorDFA<String> getModelChecker() {
         return modelChecker;
     }
 
     @Override
-    protected void newModelChecker() {
-        modelChecker = new LTSminLTLDFABuilder<String>().withString2Input(s -> s).create();
+    public void newModelChecker() {
+        modelChecker = new LTSminMonitorDFABuilder<String>().withString2Input(s -> s).create();
     }
 
     @Override
-    protected DFALasso<String> createLasso() {
+    protected DFALasso<String> createCounterExample() {
         return new DFALassoImpl<>(createAutomaton(), getAlphabet(), 4);
     }
 

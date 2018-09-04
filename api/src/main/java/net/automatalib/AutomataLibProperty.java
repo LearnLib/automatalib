@@ -44,6 +44,25 @@ public enum AutomataLibProperty {
     LTSMIN_PATH("ltsmin.path"),
 
     /**
+     * {@code ltsmin.check.version}.
+     * <p>
+     * Whether to check LTSmin versions, e.g. when working with a development version of LTSmin which has not yet
+     * been released you may want to set this property to "false".
+     * <p>
+     * If set to "false" the check will be skipped, if set to anything else the check will be done.
+     */
+    LTSMIN_CHECK_VERSION("ltsmin.check.version"),
+
+    /**
+     * {@code ltsmin.verbose}.
+     * <p>
+     * Whether to make LTSmin's output more verbose.
+     * <p>
+     * If set to anything else but "false", LTSmin's output will be more verbose.
+     */
+    LTSMIN_VERBOSE("ltsmin.verbose"),
+
+    /**
      * {@code automatalib.visualization.provider}.
      * <p>
      * Property for setting the implementation of the visualization provider. The implementation must be available on

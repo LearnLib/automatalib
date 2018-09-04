@@ -18,6 +18,8 @@ package net.automatalib.serialization.etf.writer;
 import java.io.PrintWriter;
 import java.io.Writer;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.Automaton;
 import net.automatalib.words.Alphabet;
 
@@ -28,6 +30,7 @@ import net.automatalib.words.Alphabet;
  *
  * @author Jeroen Meijer
  */
+@ParametersAreNonnullByDefault
 public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> {
 
     private final PrintWriter printWriter;
