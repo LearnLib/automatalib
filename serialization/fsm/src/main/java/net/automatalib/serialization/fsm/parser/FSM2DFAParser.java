@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.IOUtil;
@@ -281,7 +282,13 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      * Do nothing.
      */
     @Override
-    protected void checkTransitions() {}
+    protected void checkTransitions() {
+        // Only if no states are defined we add all from the transitions we found.
+        // This is necessary because states are not necessarily defined in FSMs.
+        if (states.isEmpty()) {
+            transitions.keySet().forEach(e -> states.put(e.getFirst(), true));
+        }
+    }
 
     /**
      * Constructs the actual {@link net.automatalib.automata.fsa.DFA}.

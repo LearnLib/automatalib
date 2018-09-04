@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * This class provides methods to parse automata in FSM format.
  *
@@ -31,6 +33,7 @@ import java.util.function.Function;
  *
  * @author Jeroen Meijer
  */
+@ParametersAreNonnullByDefault
 public abstract class AbstractFSMParser<I> {
 
     /**

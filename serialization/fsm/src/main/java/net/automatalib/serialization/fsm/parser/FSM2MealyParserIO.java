@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.commons.util.IOUtil;
@@ -122,11 +123,14 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
         }
     }
 
-    /**
-     * Do nothing.
-     */
     @Override
-    protected void checkTransitions() {}
+    protected void checkTransitions() {
+        // Only if no states are defined we add all from the transitions we found.
+        // This is necessary because states are not necessarily defined in FSMs.
+        if (getStates().isEmpty()) {
+            getStates().addAll(getTransitions().keySet().stream().map(p -> p.getFirst()).collect(Collectors.toList()));
+        }
+    }
 
     public static <I, O> CompactMealy<I, O> parse(Reader reader,
                                                   Function<String, I> inputParser,
