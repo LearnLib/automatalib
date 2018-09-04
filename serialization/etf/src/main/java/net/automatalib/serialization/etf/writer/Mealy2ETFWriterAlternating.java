@@ -26,7 +26,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.IOUtil;
-import net.automatalib.commons.util.Triple;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -96,7 +96,7 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
         pw.println("end init");
 
         // create a bi-map for transitions containing output
-        final BiMap<Triple<S, O, S>, Integer> outputTransitions = HashBiMap.create();
+        final BiMap<Pair<O, S>, Integer> outputTransitions = HashBiMap.create();
 
         // create a bi-map that maps output to integers
         final BiMap<O, Integer> outputIndices = HashBiMap.create();
@@ -116,7 +116,7 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
                     final O o = mealy.getTransitionOutput(t);
 
                     // construct a triple that serves as a key in the outputTransitions bi-map
-                    final Triple<S, O, S> outputTransition = Triple.of(s, o, n);
+                    final Pair<O, S> outputTransition = Pair.of(o, n);
 
                     // compute the integer value of the intermediate state (this may be a new state)
                     final Integer intermediateState = outputTransitions.computeIfAbsent(
@@ -153,10 +153,10 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
             pw.printf("\"%s\"%n", oldStates.inverse().get(i));
         }
 
-        final Map<Integer, Triple<S, O, S>> inverseTransitions = outputTransitions.inverse();
+        final Map<Integer, Pair<O, S>> inverseTransitions = outputTransitions.inverse();
         for (int i = 0; i < outputTransitions.size(); i++) {
-            final Triple<S, O, S> t = inverseTransitions.get(oldStates.size() + i);
-            pw.printf("\"(%s,%s,%s)\"%n", t.getFirst(), t.getSecond(), t.getThird());
+            final Pair<O, S> t = inverseTransitions.get(oldStates.size() + i);
+            pw.printf("\"(%s,%s)\"%n", t.getFirst(), t.getSecond());
         }
         pw.println("end sort");
 
