@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.IOUtil;
