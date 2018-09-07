@@ -26,6 +26,23 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.ts.powerset.DeterministicPowersetView;
 import net.automatalib.words.Alphabet;
 
+/**
+ * Abstract super class that refines {@link AbstractCompact} for deterministic automata. This class provides default
+ * implementations for several of the {@link MutableDeterministic.FullIntAbstraction} concepts, such that subclasses
+ * only need to care about the primitive-based implementations.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <SP>
+ *         state property type
+ * @param <TP>
+ *         transition property type
+ *
+ * @author frohme
+ * @author Malte Isberner
+ */
 @ParametersAreNonnullByDefault
 public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends AbstractCompact<I, T, SP, TP> implements
                                                                                                        MutableDeterministic<Integer, I, T, SP, TP>,
@@ -34,10 +51,6 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
                                                                                                        Serializable {
 
     private int initial = AbstractCompact.INVALID_STATE;
-
-    public AbstractCompactDeterministic(Alphabet<I> alphabet) {
-        this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
-    }
 
     public AbstractCompactDeterministic(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
@@ -50,7 +63,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
 
     @Override
     public void setInitialState(@Nullable Integer state) {
-        setInitialState(getId(state));
+        setInitialState(toId(state));
     }
 
     @Override
@@ -71,12 +84,12 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
 
     @Override
     public Integer getInitialState() {
-        return makeId(initial);
+        return toState(initial);
     }
 
     @Override
-    public T getTransition(int state, I input) {
-        return getTransition(state, alphabet.getSymbolIndex(input));
+    public T getTransition(int state, @Nullable I input) {
+        return getTransition(state, getSymbolIndex(input));
     }
 
     @Nullable
@@ -87,17 +100,17 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
 
     @Override
     public void setTransition(Integer state, @Nullable I input, @Nullable T transition) {
-        setTransition(state.intValue(), alphabet.getSymbolIndex(input), transition);
+        setTransition(state.intValue(), getSymbolIndex(input), transition);
     }
 
     @Override
     public void setTransition(int state, I input, T transition) {
-        setTransition(state, alphabet.getSymbolIndex(input), transition);
+        setTransition(state, getSymbolIndex(input), transition);
     }
 
     @Override
     public void setTransition(int state, I input, int successor, TP property) {
-        setTransition(state, alphabet.getSymbolIndex(input), successor, property);
+        setTransition(state, getSymbolIndex(input), successor, property);
     }
 
     @Override
@@ -112,23 +125,14 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
     }
 
     @Override
-    public int addIntState(@Nullable SP property) {
-        return addState(property);
-    }
-
-    @Override
     public int addIntInitialState(@Nullable SP property) {
-        return addInitialState(property);
-    }
-
-    @Override
-    public int numInputs() {
-        return alphabetSize;
+        this.initial = addIntState(property);
+        return this.initial;
     }
 
     @Override
     public Integer getSuccessor(T transition) {
-        return makeId(getIntSuccessor(transition));
+        return toState(getIntSuccessor(transition));
     }
 
     @Override
@@ -139,7 +143,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
 
     @Override
     public FullIntAbstraction<T, SP, TP> fullIntAbstraction(Alphabet<I> alphabet) {
-        if (Objects.equals(this.alphabet, alphabet)) {
+        if (Objects.equals(getInputAlphabet(), alphabet)) {
             return this;
         }
         return MutableDeterministic.super.fullIntAbstraction(alphabet);

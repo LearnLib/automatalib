@@ -17,18 +17,34 @@ package net.automatalib.automata.base.compact;
 
 import java.util.Arrays;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.words.Alphabet;
 
+/**
+ * A {@link AbstractCompactSimpleDeterministic}-based implementation for automata that need to store generic state
+ * properties.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <SP>
+ *         state property type
+ *
+ * @author frohme
+ * @author Malte Isberner
+ */
+@ParametersAreNonnullByDefault
 public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeterministic<I, SP> {
 
     private Object[] stateProperties;
 
     public UniversalCompactSimpleDet(Alphabet<I> alphabet) {
-        super(alphabet);
+        this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
     }
 
     public UniversalCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
+        this.stateProperties = new Object[stateCapacity * numInputs()];
     }
 
     @Override
@@ -49,7 +65,7 @@ public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeter
     }
 
     @Override
-    protected void updateStorage(UpdatePayload payload) {
+    protected void updateStorage(Payload payload) {
         this.stateProperties = updateStorage(this.stateProperties, null, payload);
         super.updateStorage(payload);
     }

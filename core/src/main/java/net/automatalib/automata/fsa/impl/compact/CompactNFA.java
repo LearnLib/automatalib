@@ -32,8 +32,7 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
     }
 
     public CompactNFA(Alphabet<I> alphabet) {
-        super(alphabet);
-        this.accepting = new BitSet();
+        this(alphabet, DEFAULT_INIT_CAPACITY);
     }
 
     protected CompactNFA(Alphabet<I> alphabet, CompactNFA<?> other) {
@@ -42,10 +41,10 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
     }
 
     public <I2> CompactNFA<I2> translate(Alphabet<I2> newAlphabet) {
-        if (alphabet.size() != newAlphabet.size()) {
+        if (numInputs() != newAlphabet.size()) {
             throw new IllegalArgumentException(
                     "Can only translate automata with matching alphabet sizes, found: " + newAlphabet.size() +
-                    " (new) vs. " + alphabetSize + " (old)");
+                    " (new) vs. " + numInputs() + " (old)");
         }
         return new CompactNFA<>(newAlphabet, this);
     }
@@ -88,11 +87,6 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
     }
 
     @Override
-    public Boolean getStateProperty(int stateId) {
-        return isAccepting(stateId);
-    }
-
-    @Override
     public void clear() {
         accepting.clear(0, size());
         super.clear();
@@ -100,7 +94,7 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
 
     @Override
     public void setStateProperty(int stateId, Boolean property) {
-        setAccepting(stateId, (property != null) && property.booleanValue());
+        setAccepting(stateId, (property != null) && property);
     }
 
     public static final class Creator<I> implements AutomatonCreator<CompactNFA<I>, I> {

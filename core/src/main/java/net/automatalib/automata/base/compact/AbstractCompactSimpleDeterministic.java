@@ -16,23 +16,36 @@
 package net.automatalib.automata.base.compact;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.words.Alphabet;
 
+/**
+ * Abstract super class that refines {@link AbstractCompactDeterministic} for transition-property-less automata. As a
+ * result, transitions may be represented as integers (where a transition object effectively <i>is</i> the successor).
+ * <p>
+ * Provides further default implementations for {@link FullIntAbstraction} concepts.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <SP>
+ *         state property type
+ *
+ * @author frohme
+ * @author Malte Isberner
+ */
+@ParametersAreNonnullByDefault
 public abstract class AbstractCompactSimpleDeterministic<I, SP>
         extends AbstractCompactDeterministic<I, Integer, SP, Void> {
 
     protected int[] transitions;
 
-    public AbstractCompactSimpleDeterministic(Alphabet<I> alphabet) {
-        this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
-    }
-
     public AbstractCompactSimpleDeterministic(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
-        this.transitions = new int[stateCapacity * alphabetSize];
+        this.transitions = new int[stateCapacity * numInputs()];
         Arrays.fill(this.transitions, 0, this.transitions.length, AbstractCompact.INVALID_STATE);
     }
 
@@ -47,22 +60,24 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     }
 
     @Override
-    public Integer createTransition(Integer successor, Void properties) {
-        return successor;
+    // Overridden for performance reasons (to prevent autoboxing of default implementation)
+    public Integer getState(Iterable<? extends I> input) {
+        return toState(getIntSuccessor(getIntInitialState(), input));
     }
 
     @Override
-    public int getIntSuccessor(Integer transition) {
-        return transition;
+    // Overridden for performance reasons (to prevent autoboxing of default implementation)
+    public Integer getSuccessor(Integer state, Iterable<? extends I> input) {
+        return toState(getIntSuccessor(state.intValue(), input));
     }
 
     @Override
     public Integer getTransition(int state, int input) {
-        return makeId(transitions[state * alphabetSize + input]);
+        return toState(transitions[toMemoryIndex(state, input)]);
     }
 
     @Override
-    protected void updateStorage(UpdatePayload payload) {
+    protected void updateStorage(Payload payload) {
         this.transitions = updateStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
     }
 
@@ -71,12 +86,14 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
 
     @Override
     public void removeAllTransitions(Integer state) {
-        Arrays.fill(transitions, state, state + alphabetSize, AbstractCompact.INVALID_STATE);
+        final int lower = state * numInputs();
+        final int upper = lower + numInputs();
+        Arrays.fill(transitions, lower, upper, AbstractCompact.INVALID_STATE);
     }
 
     @Override
     public void setTransition(int state, int input, Integer transition) {
-        setTransition(state, input, getId(transition));
+        setTransition(state, input, toId(transition));
     }
 
     @Override
@@ -85,7 +102,7 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     }
 
     public void setTransition(int state, int inputIdx, int succ) {
-        transitions[state * alphabetSize + inputIdx] = succ;
+        transitions[toMemoryIndex(state, inputIdx)] = succ;
     }
 
     @Nullable
@@ -96,8 +113,24 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
 
     @Override
     public void clear() {
-        int endIdx = size() * alphabetSize;
-        Arrays.fill(transitions, 0, endIdx, AbstractCompact.INVALID_STATE);
+        Arrays.fill(transitions, 0, size() * numInputs(), AbstractCompact.INVALID_STATE);
         super.clear();
+    }
+
+    @Override
+    public int getIntSuccessor(Integer transition) {
+        return toId(transition);
+    }
+
+    private int getIntSuccessor(int state, Iterable<? extends I> input) {
+        int current = state;
+
+        Iterator<? extends I> inputIt = input.iterator();
+
+        while (current >= 0 && inputIt.hasNext()) {
+            current = transitions[toMemoryIndex(current, getSymbolIndex(inputIt.next()))];
+        }
+
+        return current;
     }
 }

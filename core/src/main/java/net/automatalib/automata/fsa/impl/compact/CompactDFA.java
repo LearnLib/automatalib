@@ -27,8 +27,7 @@ public class CompactDFA<I> extends AbstractCompactSimpleDeterministic<I, Boolean
     private final BitSet acceptance;
 
     public CompactDFA(Alphabet<I> alphabet) {
-        super(alphabet);
-        this.acceptance = new BitSet();
+        this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
     }
 
     public CompactDFA(Alphabet<I> alphabet, int stateCapacity) {
@@ -54,9 +53,9 @@ public class CompactDFA<I> extends AbstractCompactSimpleDeterministic<I, Boolean
     }
 
     public <I2> CompactDFA<I2> translate(Alphabet<I2> newAlphabet) {
-        if (newAlphabet.size() != alphabetSize) {
+        if (newAlphabet.size() != numInputs()) {
             throw new IllegalArgumentException(
-                    "Alphabet sizes must match, but they do not (old/new): " + alphabetSize + " vs. " +
+                    "Alphabet sizes must match, but they do not (old/new): " + numInputs() + " vs. " +
                     newAlphabet.size());
         }
         return new CompactDFA<>(newAlphabet, this);
@@ -89,8 +88,7 @@ public class CompactDFA<I> extends AbstractCompactSimpleDeterministic<I, Boolean
 
     @Override
     public void setStateProperty(int stateId, Boolean property) {
-        boolean bval = property != null && property.booleanValue();
-        setAccepting(stateId, bval);
+        setAccepting(stateId, property != null && property);
     }
 
     @Override
