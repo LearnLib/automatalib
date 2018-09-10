@@ -76,7 +76,7 @@ public interface ModelChecker<I, A, P, R> {
         /**
          * Returns the outputs for which all transitions should be removed.
          * <p>
-         * That is, before the model checker tries to find a counterexample to the automaton every transition
+         * That is, before the model checker tries to find a counter example to the automaton every transition
          * which output symbol is in the returned collection is removed.
          *
          * @return the outputs.
