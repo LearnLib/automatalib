@@ -18,6 +18,7 @@ package net.automatalib.commons.util.collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 public final class IterableUtil {
 
@@ -91,6 +92,14 @@ public final class IterableUtil {
     @SafeVarargs
     public static <T> Iterable<List<T>> allCombinations(Iterable<? extends T>... iterables) {
         return () -> allCombinationsIterator(iterables);
+    }
+
+    public static <T, S> Iterator<S> transforming(Iterator<? extends T> iterator, Function<? super T, S> transformer) {
+        return new TransformingIterator<>(iterator, transformer);
+    }
+
+    public static <T, S> Iterable<S> transforming(Iterable<? extends T> iterable, Function<? super T, S> transformer) {
+        return () -> transforming(iterable.iterator(), transformer);
     }
 
 }

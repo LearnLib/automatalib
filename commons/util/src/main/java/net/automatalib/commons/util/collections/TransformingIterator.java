@@ -16,13 +16,16 @@
 package net.automatalib.commons.util.collections;
 
 import java.util.Iterator;
+import java.util.function.Function;
 
-public abstract class AbstractTransformingIterator<I, E> implements Iterator<E> {
+public class TransformingIterator<I, E> implements Iterator<E> {
 
     private final Iterator<? extends I> iterator;
+    private final Function<? super I, E> transformer;
 
-    public AbstractTransformingIterator(Iterator<? extends I> iterator) {
+    public TransformingIterator(Iterator<? extends I> iterator, Function<? super I, E> transformer) {
         this.iterator = iterator;
+        this.transformer = transformer;
     }
 
     @Override
@@ -33,10 +36,8 @@ public abstract class AbstractTransformingIterator<I, E> implements Iterator<E> 
     @Override
     public E next() {
         I internal = iterator.next();
-        return transform(internal);
+        return transformer.apply(internal);
     }
-
-    protected abstract E transform(I internal);
 
     @Override
     public void remove() {
