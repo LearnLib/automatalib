@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Output<String, ?>, M extends AbstractLTSminLTL<String, A, L>, L extends Lasso<?, ? extends A, String, ?>>
         extends AbstractUnfoldingModelCheckerTest<M> {
 
-    private final Alphabet<String> alphabet = Alphabets.fromArray("a", "b");
+    private final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
 
     private L lasso;
 

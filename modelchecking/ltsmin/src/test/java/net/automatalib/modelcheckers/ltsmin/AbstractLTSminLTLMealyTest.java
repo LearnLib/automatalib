@@ -42,7 +42,7 @@ public abstract class AbstractLTSminLTLMealyTest<M extends AbstractLTSminLTLMeal
         skip.add("1");
         getModelChecker().setSkipOutputs(skip);
 
-        final Alphabet<String> alphabet = Alphabets.fromArray("a");
+        final Alphabet<String> alphabet = Alphabets.singleton("a");
         final MealyMachine<?, String, ?, String> mealy =
                 AutomatonBuilders.forMealy(new CompactMealy<String, String>(alphabet))
                                  .from("q0")

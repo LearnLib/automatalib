@@ -41,7 +41,7 @@ import org.testng.annotations.Test;
  */
 public class TAFSerializationTest {
 
-    private static final Alphabet<String> ALPHABET = Alphabets.fromArray("0", "1", "2", "3");
+    private static final Alphabet<String> ALPHABET = Alphabets.closedCharStringRange('0', '3');
 
     private static final int AUTOMATON_SIZE = 20;
 
