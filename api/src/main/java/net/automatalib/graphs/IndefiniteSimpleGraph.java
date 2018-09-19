@@ -16,7 +16,6 @@
 package net.automatalib.graphs;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -61,12 +60,12 @@ public interface IndefiniteSimpleGraph<N> {
 
     @Nonnull
     default <V> MutableMapping<N, V> createStaticNodeMapping() {
-        return new MapMapping<>(new HashMap<>());
+        return new MapMapping<>();
     }
 
     @Nonnull
     default <V> MutableMapping<N, V> createDynamicNodeMapping() {
-        return new MapMapping<>(new HashMap<>());
+        return new MapMapping<>();
     }
 
     default IndefiniteGraph<N, ?> asNormalGraph() {

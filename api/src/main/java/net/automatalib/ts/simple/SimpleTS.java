@@ -17,7 +17,6 @@ package net.automatalib.ts.simple;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -134,7 +133,7 @@ public interface SimpleTS<S, I> {
      */
     @Nonnull
     default <V> MutableMapping<S, V> createStaticStateMapping() {
-        return new MapMapping<>(new HashMap<>());
+        return new MapMapping<>();
     }
 
     /**
@@ -145,7 +144,7 @@ public interface SimpleTS<S, I> {
      */
     @Nonnull
     default <V> MutableMapping<S, V> createDynamicStateMapping() {
-        return new MapMapping<>(new HashMap<>());
+        return new MapMapping<>();
     }
 
 }

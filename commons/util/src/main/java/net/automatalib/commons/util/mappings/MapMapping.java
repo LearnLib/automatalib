@@ -37,7 +37,7 @@ public class MapMapping<D, R> implements MutableMapping<D, R> {
         if (!copy) {
             this.map = map;
         } else {
-            this.map = new HashMap<>();
+            this.map = new HashMap<>(map);
         }
     }
 
