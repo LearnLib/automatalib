@@ -20,6 +20,7 @@ import java.util.BitSet;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.AbstractCompactSimpleNondet;
 import net.automatalib.automata.fsa.MutableNFA;
+import net.automatalib.commons.util.WrapperUtil;
 import net.automatalib.words.Alphabet;
 
 public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> implements MutableNFA<Integer, I> {
@@ -94,7 +95,7 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
 
     @Override
     public void setStateProperty(int stateId, Boolean property) {
-        setAccepting(stateId, (property != null) && property);
+        setAccepting(stateId, WrapperUtil.booleanValue(property));
     }
 
     public static final class Creator<I> implements AutomatonCreator<CompactNFA<I>, I> {
