@@ -149,8 +149,7 @@ public final class ReflectUtil {
 
         if (m == null) {
             return null;
-        }
-        else if (returnType == null) {
+        } else if (returnType == null) {
             return m;
         }
 
