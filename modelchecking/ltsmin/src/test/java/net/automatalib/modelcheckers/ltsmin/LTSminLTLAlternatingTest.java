@@ -15,11 +15,8 @@
  */
 package net.automatalib.modelcheckers.ltsmin;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.MealyLassoImpl;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.modelchecking.lasso.MealyLassoImpl;
 
 /**
  * Tests whether LTSminLTLAlternating actually uses alternating edge semantics.
@@ -27,28 +24,24 @@ import net.automatalib.util.automata.builders.AutomatonBuilders;
  * @author Jeroen Meijer
  * @see LTSminLTLIOTest
  */
-public class LTSminLTLAlternatingTest extends AbstractLTSminLTLMealyTest<LTSminLTLAlternating<String, String>> {
+public class LTSminLTLAlternatingTest extends AbstractLTSminLTLMealyTest {
+
+    private LTSminLTLAlternating<String, String> modelChecker;
 
     @Override
-    protected LTSminLTLAlternating<String, String> createModelChecker() {
-        return new LTSminLTLAlternatingBuilder<String, String>().withString2Input(s -> s).
+    public LTSminLTLAlternating<String, String> getModelChecker() {
+        return modelChecker;
+    }
+
+    @Override
+    protected void newModelChecker() {
+        modelChecker = new LTSminLTLAlternatingBuilder<String, String>().withString2Input(s -> s).
                 withString2Output(s -> s).create();
     }
 
     @Override
-    protected MealyLasso<?, String, ?, String> createLasso() {
+    protected MealyLasso<String, String> createLasso() {
         return new MealyLassoImpl<>(createAutomaton(), getAlphabet(), 4);
-    }
-
-    @Override
-    protected MealyMachine<?, String, ?, String> createAutomaton() {
-        return AutomatonBuilders.forMealy(new CompactMealy<String, String>(getAlphabet()))
-                                .withInitial("q0")
-                                .from("q0")
-                                .on("a")
-                                .withOutput("1")
-                                .loop()
-                                .create();
     }
 
     @Override

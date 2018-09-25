@@ -15,6 +15,8 @@
  */
 package net.automatalib.modelchecking;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.modelchecking.Lasso.DFALasso;
@@ -30,11 +32,12 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
  * @param <P>
  *         the property type.
  * @param <R>
- *         the type of lasso.
+ *         the type of a counterexample
  *
  * @author Jeroen Meijer
  */
-public interface ModelCheckerLasso<I, A, P, R extends Lasso<?, ? extends A, I, ?>> extends ModelChecker<I, A, P, R> {
+@ParametersAreNonnullByDefault
+public interface ModelCheckerLasso<I, A, P, R extends Lasso<I, ?>> extends ModelChecker<I, A, P, R> {
 
     /**
      * Return the multiplier for the number of times a loop of the lasso must be unrolled, relative to the size of the
@@ -74,10 +77,26 @@ public interface ModelCheckerLasso<I, A, P, R extends Lasso<?, ? extends A, I, ?
      */
     void setMinimumUnfolds(int minimumUnfolds) throws IllegalArgumentException;
 
+    /**
+     * Compute the number of unfolds according to {@code size}.
+     *
+     * @param size
+     *         the number of states in the hypothesis.
+     *
+     * @return the number of times the loop of a lasso has to be unfolded.
+     */
+    default int computeUnfolds(int size) {
+        if (size < 1) {
+            throw new IllegalArgumentException("Illegal size: " + size);
+        }
+        final int relativeUnfolds = (int) Math.ceil(size * getMultiplier());
+        return Math.max(getMinimumUnfolds(), relativeUnfolds);
+    }
+
     interface DFAModelCheckerLasso<I, P>
-            extends ModelCheckerLasso<I, DFA<?, I>, P, DFALasso<?, I>>, DFAModelChecker<I, P, DFALasso<?, I>> {}
+            extends ModelCheckerLasso<I, DFA<?, I>, P, DFALasso<I>>, DFAModelChecker<I, P, DFALasso<I>> {}
 
     interface MealyModelCheckerLasso<I, O, P>
-            extends ModelCheckerLasso<I, MealyMachine<?, I, ?, O>, P, MealyLasso<?, I, ?, O>>,
-                    MealyModelChecker<I, O, P, MealyLasso<?, I, ?, O>> {}
+            extends ModelCheckerLasso<I, MealyMachine<?, I, ?, O>, P, MealyLasso<I, O>>,
+                    MealyModelChecker<I, O, P, MealyLasso<I, O>> {}
 }

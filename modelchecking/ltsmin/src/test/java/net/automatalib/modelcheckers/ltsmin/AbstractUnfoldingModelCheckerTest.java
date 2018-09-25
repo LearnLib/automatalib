@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelcheckers.ltsmin;
 
+import net.automatalib.modelchecking.modelchecker.AbstractUnfoldingModelChecker;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -22,52 +23,48 @@ import org.testng.annotations.Test;
 /**
  * @author Jeroen Meijer
  */
-public abstract class AbstractUnfoldingModelCheckerTest<M extends AbstractUnfoldingModelChecker<?, ?, ?, ?>> {
+public abstract class AbstractUnfoldingModelCheckerTest<A> {
 
-    private M modelChecker;
+    public abstract AbstractUnfoldingModelChecker<String, A, String, ?> getModelChecker();
 
-    public M getModelChecker() {
-        return modelChecker;
-    }
-
-    protected abstract M createModelChecker();
+    protected abstract void newModelChecker();
 
     @BeforeMethod
     public void setUp() throws Exception {
-        modelChecker = createModelChecker();
+        newModelChecker();
     }
 
     @Test
     public void testComputeUnfolds() {
-        Assert.assertEquals(modelChecker.computeUnfolds(1), 3);
-        modelChecker.setMultiplier(2.0);
-        Assert.assertEquals(modelChecker.computeUnfolds(2), 4);
+        Assert.assertEquals(getModelChecker().computeUnfolds(1), 3);
+        getModelChecker().setMultiplier(2.0);
+        Assert.assertEquals(getModelChecker().computeUnfolds(2), 4);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testComputeUnfoldsExcept() {
-        modelChecker.computeUnfolds(0);
+        getModelChecker().computeUnfolds(0);
     }
 
     @Test
     public void testSetMinimumUnfolds() {
-        modelChecker.setMinimumUnfolds(1337);
-        Assert.assertEquals(modelChecker.getMinimumUnfolds(), 1337);
+        getModelChecker().setMinimumUnfolds(1337);
+        Assert.assertEquals(getModelChecker().getMinimumUnfolds(), 1337);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetMinimumUnfoldsExcept() {
-        modelChecker.setMinimumUnfolds(0);
+        getModelChecker().setMinimumUnfolds(0);
     }
 
     @Test
     public void testSetMultiplier() {
-        modelChecker.setMultiplier(1337.0);
-        Assert.assertEquals(modelChecker.getMultiplier(), 1337.0, 0.0);
+        getModelChecker().setMultiplier(1337.0);
+        Assert.assertEquals(getModelChecker().getMultiplier(), 1337.0, 0.0);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetMultiplierExcept() {
-        modelChecker.setMultiplier(-1.0);
+        getModelChecker().setMultiplier(-1.0);
     }
 }

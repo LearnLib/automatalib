@@ -20,18 +20,19 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.exception.ModelCheckingException;
-import net.automatalib.modelchecking.DFALassoImpl;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
+import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.serialization.etf.writer.DFA2ETFWriter;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
 import net.automatalib.serialization.fsm.parser.FSMParseException;
-import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automata.fsa.DFAs;
@@ -53,7 +54,7 @@ import net.automatalib.words.impl.Alphabets;
  * @author Jeroen Meijer
  * @see DFAs#isPrefixClosed(DFA, Alphabet)
  */
-public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<?, I>>
+public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>>
         implements DFAModelCheckerLasso<I, String> {
 
     /**
@@ -118,15 +119,33 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<?,
     /**
      * Converts the FSM file to a {@link DFALasso}.
      *
-     * @param hypothesis
+     * @param automaton
      *         the DFA used to compute the number of loop unrolls.
      *
-     * @see AbstractLTSminLTL#fsm2Lasso(File, SimpleDTS)
+     * @see AbstractLTSminLTL#findCounterExample(Object, Collection, Object)
      */
+    @Nullable
     @Override
-    protected DFALasso<?, I> fsm2Lasso(File fsm, DFA<?, I> hypothesis) throws IOException, FSMParseException {
-        CompactDFA<I> dfa = FSM2DFAParser.parse(fsm, getString2Input(), LABEL_NAME, LABEL_VALUE);
+    public DFALasso<I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, String property)
+            throws ModelCheckingException {
+        final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
-        return new DFALassoImpl<>(dfa, dfa.getInputAlphabet(), computeUnfolds(hypothesis.size()));
+        final DFALasso<I> result;
+
+        if (fsm != null) {
+            final CompactDFA<I> dfa;
+
+            try {
+                dfa = FSM2DFAParser.parse(fsm, getString2Input(), LABEL_NAME, LABEL_VALUE);
+            } catch (IOException | FSMParseException e) {
+                throw new ModelCheckingException(e);
+            }
+
+            result = new DFALassoImpl<>(dfa, dfa.getInputAlphabet(), computeUnfolds(automaton.size()));
+        } else {
+            result = null;
+        }
+
+        return result;
     }
 }

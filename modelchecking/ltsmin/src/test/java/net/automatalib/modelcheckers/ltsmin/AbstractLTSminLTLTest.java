@@ -31,12 +31,12 @@ import org.testng.annotations.Test;
  *
  * @author Jeroen Meijer
  */
-public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Output<String, ?>, M extends AbstractLTSminLTL<String, A, L>, L extends Lasso<?, ? extends A, String, ?>>
-        extends AbstractUnfoldingModelCheckerTest<M> {
+public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Output<String, ?>>
+        extends AbstractUnfoldingModelCheckerTest<A> {
 
     private final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
 
-    private L lasso;
+    private Lasso<?, ?> lasso;
 
     private A automaton;
 
@@ -46,7 +46,7 @@ public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Out
         return alphabet;
     }
 
-    protected abstract L createLasso();
+    protected abstract Lasso<?, ?> createLasso();
 
     protected abstract A createAutomaton();
 
@@ -72,10 +72,10 @@ public abstract class AbstractLTSminLTLTest<A extends SimpleDTS<?, String> & Out
      */
     @Test
     public void testFindCounterExample() {
-        L lasso = getModelChecker().findCounterExample(automaton, alphabet, "true");
+        Lasso<?, ?> lasso = getModelChecker().findCounterExample(automaton, alphabet, "true");
         Assert.assertNull(lasso);
 
-        L actualLasso = getModelChecker().findCounterExample(automaton, alphabet, falseProperty);
+        Lasso<?, ?> actualLasso = getModelChecker().findCounterExample(automaton, alphabet, falseProperty);
         Assert.assertEquals(actualLasso.getWord(), this.lasso.getWord());
     }
 }

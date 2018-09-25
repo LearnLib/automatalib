@@ -25,10 +25,9 @@ import net.automatalib.automata.concepts.Output;
 import net.automatalib.commons.util.process.ProcessUtil;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.ModelChecker;
+import net.automatalib.modelchecking.modelchecker.AbstractUnfoldingModelChecker;
 import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
 import net.automatalib.ts.simple.SimpleDTS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @param <I>
  *         the input type.
  * @param <A>
- *         the output type.
+ *         the automaton type.
  * @param <L>
  *         the Lasso type.
  *
@@ -61,8 +60,8 @@ import org.slf4j.LoggerFactory;
  * @see AbstractETFWriter
  * @see AutomataLibSettings
  */
-public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I, ?>, L extends Lasso<?, ? extends A, I, ?>>
-        extends AbstractUnfoldingModelChecker<I, A, String, L> implements ModelChecker<I, A, String, L> {
+public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I, ?>, L extends Lasso<I, ?>>
+        extends AbstractUnfoldingModelChecker<I, A, String, L> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminLTL.class);
 
@@ -138,29 +137,11 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
     protected abstract void automaton2ETF(A automaton, Collection<? extends I> inputs, File etf) throws IOException;
 
     /**
-     * Reads the {@code fsm} and converts it to a {@link Lasso}.
-     *
-     * @param fsm
-     *         the FSM to read.
-     * @param automaton
-     *         the automaton that was used as a hypothesis.
-     *
-     * @return the {@link Lasso}.
-     *
-     * @throws IOException
-     *         when {@code fsm} can not be read correctly.
-     * @throws FSMParseException
-     *         when the FSM definition in {@code fsm} is invalid.
-     */
-    protected abstract L fsm2Lasso(File fsm, A automaton) throws IOException, FSMParseException;
-
-    /**
-     * Finds a counterexample for the given {@code formula}, and given {@code hypothesis}.
+     * Finds a counterexample for the given {@code formula}, and given {@code hypothesis} in FSM format.
      *
      * @see AbstractLTSminLTL
      */
-    @Override
-    public final L findCounterExample(A hypothesis, Collection<? extends I> inputs, String formula)
+    protected final File findCounterExampleFSM(A hypothesis, Collection<? extends I> inputs, String formula)
             throws ModelCheckingException {
 
         final File etf, gcf;
@@ -205,12 +186,11 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
             throw new ModelCheckingException("Could not delete file: " + etf.getAbsolutePath());
         }
 
-        final L result;
+        final File fsm;
 
         if (ltsminExitValue == 1) {
             // we have found a counterexample
 
-            final File fsm;
             try {
                 // create a file for the FSM
                 fsm = File.createTempFile("gcf2fsm", ".fsm");
@@ -233,20 +213,16 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
             if (convertExitValue != 0) {
                 throw new ModelCheckingException("Could not convert gcf to fsm");
             }
-
-            try {
-                // convert the FSM to a Lasso
-                result = fsm2Lasso(fsm, hypothesis);
-
-                // check if we must keep the FSM file
-                if (!keepFiles && !fsm.delete()) {
-                    throw new ModelCheckingException("Could not delete file: " + fsm.getAbsolutePath());
-                }
-            } catch (IOException | FSMParseException e) {
-                throw new ModelCheckingException(e);
+        } else if (ltsminExitValue != 0) {
+            final String msg;
+            if (LOGGER.isDebugEnabled()) {
+                msg = "Could not model check ETF, please check LTSmin's debug information to see why.";
+            } else {
+                msg = "Could not model check ETF, to see why, enable debug logging.";
             }
+            throw new ModelCheckingException(msg);
         } else {
-            result = null;
+            fsm = null;
         }
 
         // check if we must keep the GCF
@@ -254,7 +230,7 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
             throw new ModelCheckingException("Could not delete file: " + gcf.getAbsolutePath());
         }
 
-        return result;
+        return fsm;
     }
 
     private static int runCommandLine(String[] commandLine) throws ModelCheckingException {

@@ -20,7 +20,6 @@ import java.util.HashSet;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -33,8 +32,10 @@ import org.testng.annotations.Test;
 /**
  * @author Jeroen Meijer
  */
-public abstract class AbstractLTSminLTLMealyTest<M extends AbstractLTSminLTLMealy<String, String>>
-        extends AbstractLTSminLTLTest<MealyMachine<?, String, ?, String>, M, MealyLasso<?, String, ?, String>> {
+public abstract class AbstractLTSminLTLMealyTest extends AbstractLTSminLTLTest<MealyMachine<?, String, ?, String>> {
+
+    @Override
+    public abstract AbstractLTSminLTLMealy<String, String> getModelChecker();
 
     @Test
     public void testSkipOutputs() throws Exception {
@@ -67,5 +68,16 @@ public abstract class AbstractLTSminLTLMealyTest<M extends AbstractLTSminLTLMeal
         if (!etf.delete()) {
             throw new Exception();
         }
+    }
+
+    @Override
+    protected MealyMachine<?, String, ?, String> createAutomaton() {
+        return AutomatonBuilders.forMealy(new CompactMealy<String, String>(getAlphabet()))
+                                .withInitial("q0")
+                                .from("q0")
+                                .on("a")
+                                .withOutput("1")
+                                .loop()
+                                .create();
     }
 }
