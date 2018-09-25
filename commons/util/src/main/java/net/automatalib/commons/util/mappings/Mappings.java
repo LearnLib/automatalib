@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Iterators;
+
 /**
  * Collection of various methods dealing with {@link Mapping}s.
  *
@@ -159,7 +161,7 @@ public final class Mappings {
      * @return the mapped iterator.
      */
     public static <D, R> Iterator<R> apply(Mapping<? super D, R> mapping, Iterator<? extends D> baseIt) {
-        return new MappedIterator<D, R>(mapping, baseIt);
+        return Iterators.transform(baseIt, mapping::get);
     }
 
     /**

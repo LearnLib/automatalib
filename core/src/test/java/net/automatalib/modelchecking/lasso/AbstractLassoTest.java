@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractLassoTest<L extends AbstractLasso<String, ?>> {
 
-    private Alphabet<String> alphabet = Alphabets.fromArray("a");
+    private final Alphabet<String> alphabet = Alphabets.singleton("a");
 
     private L lasso1;
     private L lasso2;

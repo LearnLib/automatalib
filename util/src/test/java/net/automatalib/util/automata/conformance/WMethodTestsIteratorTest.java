@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Streams;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.commons.util.collections.IterableUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -47,11 +47,11 @@ public class WMethodTestsIteratorTest {
 
         final List<Word<Integer>> transCover = Automata.transitionCover(dfa, alphabet);
         final Iterable<Word<Integer>> middleTuples =
-                IterableUtil.transforming(CollectionsUtil.allTuples(alphabet, 0, maxDepth), Word::fromList);
+                Iterables.transform(CollectionsUtil.allTuples(alphabet, 0, maxDepth), Word::fromList);
         final List<Word<Integer>> characterizingSet = Automata.characterizingSet(dfa, alphabet);
 
         final List<Word<Integer>> wMethodWords =
-                Streams.stream(CollectionsUtil.allCombinations(transCover, middleTuples, characterizingSet))
+                Streams.stream(CollectionsUtil.cartesianProduct(transCover, middleTuples, characterizingSet))
                        .map(Word::fromWords)
                        .collect(Collectors.toList());
 

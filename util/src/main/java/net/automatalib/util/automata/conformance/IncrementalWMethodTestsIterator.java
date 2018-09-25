@@ -108,11 +108,6 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
         return result;
     }
 
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
     private Word<I> assembleWord(Item<I> item) {
         Word<I> prefix = prefixes.get(item.prefixIdx);
         Word<I> suffix = suffixes.get(item.suffixIdx);

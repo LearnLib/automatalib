@@ -124,11 +124,6 @@ public class ExtensionWord<I> extends Word<I> {
             return letter;
         }
 
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
 }

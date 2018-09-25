@@ -23,11 +23,12 @@ import java.util.Set;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.util.collections.AbstractThreeLevelIterator;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.commons.util.collections.ConcatIterator;
+import net.automatalib.commons.util.collections.DelegatingIterator;
 import net.automatalib.commons.util.collections.ReusableIterator;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.util.automata.Automata;
@@ -47,7 +48,7 @@ import net.automatalib.words.WordBuilder;
  * @author frohme
  */
 @ParametersAreNonnullByDefault
-public class WpMethodTestsIterator<I> extends ConcatIterator<Word<I>> {
+public class WpMethodTestsIterator<I> extends DelegatingIterator<Word<I>> {
 
     public WpMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
                                  Collection<? extends I> alphabet,
@@ -56,9 +57,9 @@ public class WpMethodTestsIterator<I> extends ConcatIterator<Word<I>> {
     }
 
     @SuppressWarnings("unchecked")
-    private static <I> Iterator<Word<I>>[] buildIterators(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
-                                                          Collection<? extends I> inputs,
-                                                          int maxDepth) {
+    private static <I> Iterator<Word<I>> buildIterators(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+                                                        Collection<? extends I> inputs,
+                                                        int maxDepth) {
 
         final Set<Word<I>> stateCover = Sets.newHashSetWithExpectedSize(automaton.size());
         final Set<Word<I>> transitionCover = Sets.newHashSetWithExpectedSize(automaton.size() * inputs.size());
@@ -89,7 +90,7 @@ public class WpMethodTestsIterator<I> extends ConcatIterator<Word<I>> {
                                                                                                      0,
                                                                                                      maxDepth));
 
-        return new Iterator[] {firstIterator, secondIterator};
+        return Iterators.concat(firstIterator, secondIterator);
     }
 
     private static class FirstPhaseIterator<I> extends AbstractThreeLevelIterator<List<I>, Word<I>, Word<I>, Word<I>> {
@@ -118,6 +119,7 @@ public class WpMethodTestsIterator<I> extends ConcatIterator<Word<I>> {
 
         @Override
         protected Word<I> combine(List<I> middle, Word<I> prefix, Word<I> suffix) {
+            wordBuilder.ensureAdditionalCapacity(prefix.size() + middle.size() + suffix.size());
             Word<I> word = wordBuilder.append(prefix).append(middle).append(suffix).toWord();
             wordBuilder.clear();
             return word;
@@ -173,6 +175,7 @@ public class WpMethodTestsIterator<I> extends ConcatIterator<Word<I>> {
 
         @Override
         protected Word<I> combine(List<I> middle, Word<I> prefix, Word<I> suffix) {
+            wordBuilder.ensureAdditionalCapacity(prefix.size() + middle.size() + suffix.size());
             Word<I> word = wordBuilder.append(prefix).append(middle).append(suffix).toWord();
             wordBuilder.clear();
             return word;

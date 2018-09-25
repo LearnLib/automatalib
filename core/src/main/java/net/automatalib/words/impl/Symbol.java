@@ -23,7 +23,7 @@ import lombok.EqualsAndHashCode;
 import net.automatalib.words.abstractimpl.AbstractSymbol;
 
 @ParametersAreNonnullByDefault
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class Symbol extends AbstractSymbol<Symbol> {
 
     @Nullable

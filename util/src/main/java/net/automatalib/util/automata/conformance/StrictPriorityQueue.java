@@ -20,6 +20,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import net.automatalib.commons.util.array.ArrayIterator;
 import net.automatalib.commons.util.array.ResizingObjectArray;
 
 /**
@@ -212,30 +213,9 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Iterator<E> iterator() {
-        return new Iterator<E>() {
-
-            private int idx;
-
-            @Override
-            public boolean hasNext() {
-                return (idx < size);
-            }
-
-            @Override
-            @SuppressWarnings("unchecked")
-            public E next() {
-                if (!hasNext()) {
-                    throw new NoSuchElementException();
-                }
-                return (E) storage.array[idx++];
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
+        return new ArrayIterator<>((E[]) storage.array);
     }
 
     @Override

@@ -241,6 +241,6 @@ public final class StringUtil {
      */
     private static class LazyPatternHolder {
 
-        private static Pattern INSTANCE = Pattern.compile("[a-zA-Z_]*\\w*");
+        private static final Pattern INSTANCE = Pattern.compile("[a-zA-Z_]*\\w*");
     }
 }

@@ -19,6 +19,8 @@ import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.google.common.collect.Iterators;
+
 /**
  * Class that maps a {@link Collection} of states to a collection of the respective original states.
  *
@@ -43,25 +45,7 @@ class OriginalStateCollection<S> extends AbstractCollection<S> {
 
     @Override
     public Iterator<S> iterator() {
-        final Iterator<? extends State<S, ?>> stateIt = stateColl.iterator();
-        return new Iterator<S>() {
-
-            @Override
-            public boolean hasNext() {
-                return stateIt.hasNext();
-            }
-
-            @Override
-            public S next() {
-                return stateIt.next().getOriginalState();
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("Removal not " + "allowed on this collection!");
-            }
-
-        };
+        return Iterators.transform(stateColl.iterator(), State::getOriginalState);
     }
 
     @Override

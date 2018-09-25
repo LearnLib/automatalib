@@ -44,8 +44,8 @@ public class DFALassoTest extends AbstractLassoTest<DFALassoImpl<String>> {
 
     private class DFAMock implements DFA<Integer, String> {
 
-        private Word<String> prefix;
-        private Word<String> word;
+        private final Word<String> prefix;
+        private final Word<String> word;
 
         DFAMock(Word<String> prefix, Word<String> loop) {
             this.prefix = prefix;

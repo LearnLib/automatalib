@@ -77,6 +77,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<List<I>,
 
     @Override
     protected Word<I> combine(List<I> middle, Word<I> prefix, Word<I> suffix) {
+        wordBuilder.ensureAdditionalCapacity(prefix.size() + middle.size() + suffix.size());
         Word<I> word = wordBuilder.append(prefix).append(middle).append(suffix).toWord();
         wordBuilder.clear();
         return word;

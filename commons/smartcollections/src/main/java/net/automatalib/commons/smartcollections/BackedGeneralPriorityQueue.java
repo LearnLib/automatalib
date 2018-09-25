@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import com.google.common.collect.Iterators;
+
 /**
  * A {@link SmartGeneralPriorityQueue} implementation that is backed by a {@link SmartDynamicPriorityQueue}.
  * <p>
@@ -128,7 +130,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
 
     @Override
     public Iterator<E> iterator() {
-        return new ElementIterator<>(backingQueue.iterator());
+        return Iterators.transform(backingQueue.iterator(), e -> e.element);
     }
 
     @Override
@@ -220,31 +222,6 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         public int compareTo(Entry<E, K> o) {
             return key.compareTo(o.key);
         }
-    }
-
-    private static class ElementIterator<E> implements Iterator<E> {
-
-        private final Iterator<? extends Entry<E, ?>> entryIterator;
-
-        ElementIterator(Iterator<? extends Entry<E, ?>> entryIterator) {
-            this.entryIterator = entryIterator;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return entryIterator.hasNext();
-        }
-
-        @Override
-        public E next() {
-            return entryIterator.next().element;
-        }
-
-        @Override
-        public void remove() {
-            entryIterator.remove();
-        }
-
     }
 
 }

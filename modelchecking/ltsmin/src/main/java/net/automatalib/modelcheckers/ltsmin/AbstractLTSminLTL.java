@@ -251,7 +251,7 @@ public abstract class AbstractLTSminLTL<I, A extends SimpleDTS<?, I> & Output<I,
         /**
          * Whether or not we made sure the LTSmin binaries can be run.
          */
-        private static boolean AVAILABLE = LTSminUtil.checkUsable();
+        private static final boolean AVAILABLE = LTSminUtil.checkUsable();
     }
 
     public static final class BuilderDefaults {

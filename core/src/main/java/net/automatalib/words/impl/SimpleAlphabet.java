@@ -23,8 +23,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
-import net.automatalib.commons.util.collections.IterableUtil;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
@@ -68,7 +68,7 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
 
     @Override
     public Iterator<I> iterator() {
-        return IterableUtil.unmodifiableIterator(symbols.iterator());
+        return Iterators.unmodifiableIterator(symbols.iterator());
     }
 
     @Override

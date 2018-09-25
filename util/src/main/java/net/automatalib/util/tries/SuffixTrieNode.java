@@ -156,10 +156,5 @@ public class SuffixTrieNode<I> extends Word<I> {
             current = current.parent;
             return sym;
         }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
     }
 }

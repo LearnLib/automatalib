@@ -59,9 +59,4 @@ final class BreadthFirstIterator<N, E> implements Iterator<N> {
         return result;
     }
 
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
 }

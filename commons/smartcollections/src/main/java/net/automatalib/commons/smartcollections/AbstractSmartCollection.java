@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 
+import com.google.common.collect.Iterators;
+
 /**
  * This class eases the implementation of the {@link SmartCollection} interface. It is comparable to {@link
  * AbstractCollection} from the Java Collections Framework.
@@ -89,7 +91,7 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
 
     @Override
     public Iterator<E> iterator() {
-        return new DeRefIterator(referenceIterator());
+        return Iterators.transform(referenceIterator(), this::get);
     }
 
     @Override
@@ -106,40 +108,6 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
         }
         remove(ref);
         return true;
-    }
-
-    /**
-     * An iterator for iterating over the concrete elements, based on the iteration over the element references.
-     */
-    private class DeRefIterator implements Iterator<E> {
-
-        // the reference iterator
-        private final Iterator<ElementReference> refIterator;
-
-        /**
-         * Constructor.
-         *
-         * @param refIterator
-         *         the reference iterator.
-         */
-        DeRefIterator(Iterator<ElementReference> refIterator) {
-            this.refIterator = refIterator;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return refIterator.hasNext();
-        }
-
-        @Override
-        public E next() {
-            return get(refIterator.next());
-        }
-
-        @Override
-        public void remove() {
-            refIterator.remove();
-        }
     }
 
 }

@@ -20,12 +20,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * An iterator that iterates over the cartesian product of its given source domains. Each intermediate combination of
+ * elements is computed lazily.
+ * <p>
+ * <b>Note:</b> Subsequent calls to the {@link #next()} method return a reference to the same list, and only update the
+ * contents of the list. If you plan to reuse intermediate results, you'll need to explicitly copy them.
+ *
+ * @param <T>
+ *         type of elements
+ */
 final class AllCombinationsIterator<T> implements Iterator<List<T>> {
 
     private final Iterable<? extends T>[] iterables;
     private final Iterator<? extends T>[] iterators;
     private final List<T> current;
     private boolean first = true;
+    private boolean empty;
 
     @SuppressWarnings("unchecked")
     @SafeVarargs
@@ -35,6 +46,10 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
         this.current = new ArrayList<>(iterables.length);
         for (int i = 0; i < iterators.length; i++) {
             Iterator<? extends T> it = iterables[i].iterator();
+            if (!it.hasNext()) {
+                empty = true;
+                break;
+            }
             this.iterators[i] = it;
             this.current.add(it.next());
         }
@@ -42,6 +57,10 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
 
     @Override
     public boolean hasNext() {
+        if (empty) {
+            return false;
+        }
+
         for (Iterator<? extends T> it : iterators) {
             if (it == null || it.hasNext()) {
                 return true;
@@ -52,7 +71,9 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
 
     @Override
     public List<T> next() {
-        if (first) {
+        if (empty) {
+            throw new NoSuchElementException();
+        } else if (first) {
             first = false;
             return current;
         }
@@ -71,11 +92,6 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
         }
 
         throw new NoSuchElementException();
-    }
-
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
     }
 
 }

@@ -835,11 +835,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
             }
             return Word.this.getSymbol(index++);
         }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
     }
 
     /*

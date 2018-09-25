@@ -16,16 +16,14 @@
 package net.automatalib.commons.util.collections;
 
 import java.util.Iterator;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
-public class TransformingIterator<I, E> implements Iterator<E> {
+public class DelegatingIterator<E> implements Iterator<E> {
 
-    private final Iterator<? extends I> iterator;
-    private final Function<? super I, E> transformer;
+    private final Iterator<E> iterator;
 
-    public TransformingIterator(Iterator<? extends I> iterator, Function<? super I, E> transformer) {
+    public DelegatingIterator(Iterator<E> iterator) {
         this.iterator = iterator;
-        this.transformer = transformer;
     }
 
     @Override
@@ -35,8 +33,7 @@ public class TransformingIterator<I, E> implements Iterator<E> {
 
     @Override
     public E next() {
-        I internal = iterator.next();
-        return transformer.apply(internal);
+        return iterator.next();
     }
 
     @Override
@@ -44,4 +41,8 @@ public class TransformingIterator<I, E> implements Iterator<E> {
         iterator.remove();
     }
 
+    @Override
+    public void forEachRemaining(Consumer<? super E> action) {
+        iterator.forEachRemaining(action);
+    }
 }

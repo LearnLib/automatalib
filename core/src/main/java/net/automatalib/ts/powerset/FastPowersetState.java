@@ -23,7 +23,7 @@ import java.util.List;
 
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(of = "bs")
+@EqualsAndHashCode(of = "bs", callSuper = false)
 public class FastPowersetState<S> extends AbstractSet<S> {
 
     private final BitSet bs = new BitSet();

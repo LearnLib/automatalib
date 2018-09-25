@@ -63,9 +63,4 @@ public class BFSOrderIterator<S, I> implements Iterator<S> {
         return state;
     }
 
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
 }

@@ -134,11 +134,6 @@ public class Path<N, E> extends AbstractList<E> {
             E edge = edgeIt.next();
             return graph.getTarget(edge);
         }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
     }
 
     private class NodeList extends AbstractList<N> {

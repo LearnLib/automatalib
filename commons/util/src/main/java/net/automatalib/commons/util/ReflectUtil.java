@@ -17,105 +17,103 @@ package net.automatalib.commons.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
+import com.google.common.primitives.Primitives;
+
+/**
+ * Utility methods for using Java reflection.
+ *
+ * @author frohme
+ * @author Malte Isberner
+ */
 public final class ReflectUtil {
-
-    private static final Class<?>[][] W2P_MAPPING = {{Void.class, void.class},
-                                                     {Boolean.class, boolean.class},
-                                                     {Byte.class, byte.class},
-                                                     {Character.class, char.class},
-                                                     {Short.class, short.class},
-                                                     {Integer.class, int.class},
-                                                     {Long.class, long.class},
-                                                     {Float.class, float.class},
-                                                     {Double.class, double.class}};
-
-    private static final Map<Class<?>, Class<?>> W2P_MAP;
-
-    static {
-        W2P_MAP = new HashMap<>();
-
-        for (Class<?>[] w2p : W2P_MAPPING) {
-            W2P_MAP.put(w2p[0], w2p[1]);
-        }
-    }
 
     private ReflectUtil() {
     }
 
-    public static <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>... params)
-            throws SecurityException, NoSuchMethodException {
+    /**
+     * Tries to find a constructor that is able to accept parameters of the given types. First tries to find the
+     * constructor matching the exact parameter types. If such a constructor does not exist, tries to find any (the
+     * first match of arbitrary order) constructor that is able to accept the parameter types by means of auto-boxing,
+     * i.e. a {@code Constructor(int)} would be returned for the parameters class {@code Integer.class}.
+     * <p>
+     * Returns {@code null} if no such constructor could be found.
+     *
+     * @param clazz
+     *         the class which should be scanned for constructors
+     * @param params
+     *         the types of the constructor arguments
+     * @param <T>
+     *         the class type
+     *
+     * @return A constructor that is able of accepting parameters of the specified types, {@code null} if such a
+     * constructor could not be found.
+     */
+    public static <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>... params) {
         try {
             return clazz.getConstructor(params);
         } catch (NoSuchMethodException e) {
-            Class<?>[] primParams = wrapperToPrimitive(params);
-            if (primParams != params) {
-                try {
-                    return clazz.getConstructor(primParams);
-                } catch (NoSuchMethodException e2) {
-                    @SuppressWarnings("unchecked")
-                    Constructor<T>[] ctors = (Constructor<T>[]) clazz.getConstructors();
+            @SuppressWarnings("unchecked")
+            Constructor<T>[] ctors = (Constructor<T>[]) clazz.getConstructors();
 
-                    for (Constructor<T> candidate : ctors) {
-                        if (w2pEquals(candidate.getParameterTypes(), params)) {
-                            return candidate;
-                        }
-                    }
-
-                    throw e2;
+            for (Constructor<T> candidate : ctors) {
+                if (w2pEquals(candidate.getParameterTypes(), params)) {
+                    return candidate;
                 }
             }
 
-            throw e;
+            return null;
         }
     }
 
-    public static boolean w2pEquals(Class<?>[] a, Class<?>... b) {
-        if (a.length != b.length) {
-            return false;
-        }
+    /**
+     * Tries to find a method of the given name that is able to accept parameters of the given types. First tries to
+     * find the method matching the exact parameter types. If such a method does not exist, tries to find any (the first
+     * match of arbitrary order) method that is able to accept the parameter types by means of auto-boxing, i.e. a
+     * {@code Method(int)} would be returned for the parameters class {@code Integer.class}.
+     * <p>
+     * Returns {@code null} if no such method could be found.
+     *
+     * @param clazz
+     *         the class which should be scanned for methods
+     * @param name
+     *         the name of the method
+     * @param params
+     *         the types of the method arguments
+     *
+     * @return A method that is able to accept parameters of the specified types, {@code null} if such a method could
+     * not be found.
+     */
+    public static Method findMethod(Class<?> clazz, String name, Class<?>... params) {
+        try {
+            return clazz.getMethod(name, params);
+        } catch (NoSuchMethodException e) {
+            Method[] methods = clazz.getMethods();
 
-        for (int i = 0; i < a.length; i++) {
-            if (!w2pEquals(a[i], b[i])) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static boolean w2pEquals(Class<?> a, Class<?> b) {
-        final Class<?> wrappedA = wrapperToPrimitive(a);
-        final Class<?> wrappedB = wrapperToPrimitive(b);
-        return wrappedA.equals(wrappedB);
-    }
-
-    public static Class<?>[] wrapperToPrimitive(Class<?>... clazzes) {
-        Class<?>[] result = clazzes;
-        for (int i = 0; i < result.length; i++) {
-            Class<?> curr = result[i];
-            Class<?> prim = wrapperToPrimitive(curr);
-            if (prim != curr) {
-                if (result == clazzes) {
-                    result = clazzes.clone();
+            for (Method candidate : methods) {
+                if (candidate.getName().equals(name) && w2pEquals(candidate.getParameterTypes(), params)) {
+                    return candidate;
                 }
-                result[i] = prim;
             }
-        }
 
-        return result;
+            return null;
+        }
     }
 
-    public static Class<?> wrapperToPrimitive(Class<?> wrapperClazz) {
-        Class<?> prim = W2P_MAP.get(wrapperClazz);
-        if (prim == null) {
-            return wrapperClazz;
-        }
-        return prim;
-    }
-
+    /**
+     * See {@link #findMethod(Class, String, Class...)}. This variation does not required the types of input parameters,
+     * but can handle the actual objects, which should be passed to the method.
+     *
+     * @param clazz
+     *         the class which should be scanned for methods
+     * @param name
+     *         the name of the method
+     * @param args
+     *         the objects that should be passed to the method
+     *
+     * @return A method that is able to accept of the specified objects, {@code null} if such a method could not be
+     * found.
+     */
     public static Method findMatchingMethod(Class<?> clazz, String name, Object... args) {
         for (Method m : clazz.getMethods()) {
             if (!m.getName().equals(name)) {
@@ -130,7 +128,62 @@ public final class ReflectUtil {
         return null;
     }
 
-    public static boolean isMatch(Class<?>[] paramTypes, Object... args) {
+    /**
+     * See {@link #findMethod(Class, String, Class...)}. This variation allows to additionally narrow the method by
+     * specifying its return type.
+     *
+     * @param clazz
+     *         the class which should be scanned for methods
+     * @param name
+     *         the name of the method
+     * @param returnType
+     *         the type of the returned object
+     * @param params
+     *         the types of the method arguments
+     *
+     * @return A method that is able to accept of the specified objects, {@code null} if such a method could not be
+     * found.
+     */
+    public static Method findMethodRT(Class<?> clazz, String name, Class<?> returnType, Class<?>... params) {
+        Method m = findMethod(clazz, name, params);
+
+        if (m == null) {
+            return null;
+        }
+        else if (returnType == null) {
+            return m;
+        }
+
+        Class<?> rt = m.getReturnType();
+
+        if (w2pEquals(rt, returnType) || returnType.isAssignableFrom(rt)) {
+            return m;
+        }
+
+        return null;
+    }
+
+    private static boolean w2pEquals(Class<?>[] a, Class<?>... b) {
+        if (a.length != b.length) {
+            return false;
+        }
+
+        for (int i = 0; i < a.length; i++) {
+            if (!w2pEquals(a[i], b[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean w2pEquals(Class<?> a, Class<?> b) {
+        final Class<?> wrappedA = Primitives.unwrap(a);
+        final Class<?> wrappedB = Primitives.unwrap(b);
+        return wrappedA.equals(wrappedB);
+    }
+
+    private static boolean isMatch(Class<?>[] paramTypes, Object... args) {
         if (paramTypes.length != args.length) {
             return false;
         }
@@ -143,7 +196,7 @@ public final class ReflectUtil {
                     return false;
                 }
                 Class<?> argType = arg.getClass();
-                if (paramType != wrapperToPrimitive(argType)) {
+                if (paramType != Primitives.unwrap(argType)) {
                     return false;
                 }
             } else {
@@ -157,50 +210,5 @@ public final class ReflectUtil {
         }
 
         return true;
-    }
-
-    public static Method findMethod(Class<?> clazz, String name, Class<?>... params)
-            throws SecurityException, NoSuchMethodException {
-        try {
-            return clazz.getMethod(name, params);
-        } catch (NoSuchMethodException e) {
-            Class<?>[] primParams = wrapperToPrimitive(params);
-            if (primParams != params) {
-                try {
-                    return clazz.getMethod(name, primParams);
-                } catch (NoSuchMethodException e2) {
-                    Method[] methods = clazz.getMethods();
-
-                    for (Method candidate : methods) {
-                        if (w2pEquals(candidate.getParameterTypes())) {
-                            return candidate;
-                        }
-                    }
-
-                    throw e2;
-                }
-            }
-
-            throw e;
-        }
-    }
-
-    public static Method findMethodRT(Class<?> clazz, String name, Class<?> returnType, Class<?>... params)
-            throws SecurityException, NoSuchMethodException {
-        Method m = findMethod(clazz, name, params);
-
-        if (returnType == null) {
-            return m;
-        }
-
-        Class<?> rt = m.getReturnType();
-
-        if (w2pEquals(rt, returnType) || returnType.isAssignableFrom(rt)) {
-            return m;
-        }
-
-        throw new NoSuchMethodException(
-                "Method with matching parameters but incompatible return type " + rt.getName() + " (expected " +
-                returnType.getName() + ") found");
     }
 }

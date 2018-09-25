@@ -89,9 +89,4 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
         throw new NoSuchElementException();
     }
 
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
 }

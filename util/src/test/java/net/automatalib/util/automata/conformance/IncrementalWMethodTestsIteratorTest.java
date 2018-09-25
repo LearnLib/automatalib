@@ -26,7 +26,6 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -107,13 +106,9 @@ public class IncrementalWMethodTestsIteratorTest {
         final List<Word<Character>> transitionCover = Automata.transitionCover(mealy, alphabet);
 
         final Iterable<List<Word<Character>>> wMethodIter =
-                CollectionsUtil.allCombinations(transitionCover, allMidTuples, characterizingSet);
+                CollectionsUtil.cartesianProduct(transitionCover, allMidTuples, characterizingSet);
 
-        return Streams.stream(wMethodIter).map(l -> {
-            final WordBuilder<Character> wb = new WordBuilder<>();
-            l.forEach(wb::append);
-            return wb.toWord();
-        }).collect(Collectors.toSet());
+        return Streams.stream(wMethodIter).map(Word::fromWords).collect(Collectors.toSet());
     }
 
     private Set<Word<Character>> computeIteratorTests() {

@@ -178,11 +178,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
             throw new NoSuchElementException();
         }
 
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
 }
