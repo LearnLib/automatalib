@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
+import net.automatalib.automata.transout.impl.MealyTransition;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 import org.testng.Assert;
@@ -43,7 +43,7 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
         Assert.assertEquals(lasso.getOutput(), Word.fromSymbols(MealyMachineMock.OUTPUT));
     }
 
-    private class MealyMachineMock implements MealyMachine<Integer, String, CompactMealyTransition<String>, String> {
+    private class MealyMachineMock implements MealyMachine<Integer, String, MealyTransition<Integer, String>, String> {
 
         public static final String OUTPUT = "test";
 
@@ -57,7 +57,7 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
 
         @Nullable
         @Override
-        public String getTransitionOutput(CompactMealyTransition<String> transition) {
+        public String getTransitionOutput(MealyTransition<Integer, String> transition) {
             return OUTPUT;
         }
 
@@ -69,13 +69,13 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
 
         @Nullable
         @Override
-        public CompactMealyTransition<String> getTransition(Integer state, @Nullable String input) {
-            final CompactMealyTransition<String> result;
+        public MealyTransition<Integer, String> getTransition(Integer state, @Nullable String input) {
+            final MealyTransition<Integer, String> result;
             if (word.getSymbol(state).equals(input)) {
                 if (state < word.length() - 1) {
-                    result = new CompactMealyTransition<>(state + 1, OUTPUT);
+                    result = new MealyTransition<>(state + 1, OUTPUT);
                 } else {
-                    result = new CompactMealyTransition<>(prefix.length(), OUTPUT);
+                    result = new MealyTransition<>(prefix.length(), OUTPUT);
                 }
             } else {
                 result = null;
@@ -86,8 +86,8 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
 
         @Nonnull
         @Override
-        public Integer getSuccessor(CompactMealyTransition<String> transition) {
-            return transition.getSuccId();
+        public Integer getSuccessor(MealyTransition<Integer, String> transition) {
+            return transition.getSuccessor();
         }
 
         @Nullable

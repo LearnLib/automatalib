@@ -19,14 +19,16 @@ import java.io.Serializable;
 
 public class CompactMealyTransition<O> implements Serializable {
 
+    private int memoryIdx;
     private final int succId;
     private O output;
 
-    public CompactMealyTransition(int succId) {
-        this(succId, null);
+    CompactMealyTransition(int succId, O output) {
+        this(-1, succId, output);
     }
 
-    public CompactMealyTransition(int succId, O output) {
+    CompactMealyTransition(int memoryIdx, int succId, O output) {
+        this.memoryIdx = memoryIdx;
         this.succId = succId;
         this.output = output;
     }
@@ -39,7 +41,19 @@ public class CompactMealyTransition<O> implements Serializable {
         return output;
     }
 
-    public void setOutput(O output) {
+    void setOutput(O output) {
         this.output = output;
+    }
+
+    int getMemoryIdx() {
+        return memoryIdx;
+    }
+
+    void setMemoryIdx(int memoryIdx) {
+        this.memoryIdx = memoryIdx;
+    }
+
+    boolean isAutomatonTransition() {
+        return memoryIdx >= 0;
     }
 }

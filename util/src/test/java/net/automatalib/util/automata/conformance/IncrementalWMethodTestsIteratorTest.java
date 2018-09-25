@@ -85,7 +85,7 @@ public class IncrementalWMethodTestsIteratorTest {
         mealy.addTransition(q3, 'a', q3, 'x');
         mealy.addTransition(q3, 'b', q3, 'y');
         mealy.addTransition(q3, 'c', q3, 'z');
-        mealy.setTransition(q2, alphabet.getSymbolIndex('c'), q3);
+        mealy.setTransition(q2, (Character) 'c', q3, mealy.getOutput(q2, 'c'));
 
         incIt.update(mealy);
 

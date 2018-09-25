@@ -18,27 +18,25 @@ package net.automatalib.automata.fsa.impl.compact;
 import java.util.BitSet;
 
 import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.automata.base.compact.AbstractCompactSimpleDet;
+import net.automatalib.automata.base.compact.AbstractCompactSimpleDeterministic;
 import net.automatalib.automata.fsa.MutableDFA;
+import net.automatalib.commons.util.WrapperUtil;
 import net.automatalib.words.Alphabet;
 
-public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implements MutableDFA<Integer, I> {
+public class CompactDFA<I> extends AbstractCompactSimpleDeterministic<I, Boolean> implements MutableDFA<Integer, I> {
 
     private final BitSet acceptance;
 
     public CompactDFA(Alphabet<I> alphabet) {
-        super(alphabet);
-        this.acceptance = new BitSet();
+        this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
     }
 
     public CompactDFA(Alphabet<I> alphabet, int stateCapacity) {
-        super(alphabet, stateCapacity);
-        this.acceptance = new BitSet();
+        this(alphabet, stateCapacity, DEFAULT_RESIZE_FACTOR);
     }
 
     public CompactDFA(Alphabet<I> alphabet, float resizeFactor) {
-        super(alphabet, resizeFactor);
-        this.acceptance = new BitSet();
+        this(alphabet, DEFAULT_INIT_CAPACITY, resizeFactor);
     }
 
     public CompactDFA(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
@@ -56,9 +54,9 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
     }
 
     public <I2> CompactDFA<I2> translate(Alphabet<I2> newAlphabet) {
-        if (newAlphabet.size() != alphabetSize) {
+        if (newAlphabet.size() != numInputs()) {
             throw new IllegalArgumentException(
-                    "Alphabet sizes must match, but they do not (old/new): " + alphabetSize + " vs. " +
+                    "Alphabet sizes must match, but they do not (old/new): " + numInputs() + " vs. " +
                     newAlphabet.size());
         }
         return new CompactDFA<>(newAlphabet, this);
@@ -79,24 +77,8 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
     }
 
     @Override
-    public Integer addInitialState(boolean accepting) {
-        return super.addInitialState(Boolean.valueOf(accepting));
-    }
-
-    @Override
     public Integer addState(boolean accepting) {
         return addState(Boolean.valueOf(accepting));
-    }
-
-    @Override
-    public void initState(int stateId, Boolean property) {
-        boolean bval = property != null && property.booleanValue();
-        setAccepting(stateId, bval);
-    }
-
-    @Override
-    public void ensureCapacity(int oldCap, int newCap) {
-        acceptance.set(newCap);
     }
 
     @Override
@@ -107,8 +89,7 @@ public class CompactDFA<I> extends AbstractCompactSimpleDet<I, Boolean> implemen
 
     @Override
     public void setStateProperty(int stateId, Boolean property) {
-        boolean bval = property != null && property.booleanValue();
-        setAccepting(stateId, bval);
+        setAccepting(stateId, WrapperUtil.booleanValue(property));
     }
 
     @Override

@@ -17,6 +17,7 @@ package net.automatalib.automata.fsa.impl;
 
 import net.automatalib.automata.base.fast.AbstractFastMutableDet;
 import net.automatalib.automata.fsa.MutableDFA;
+import net.automatalib.commons.util.WrapperUtil;
 import net.automatalib.words.Alphabet;
 
 public final class FastDFA<I> extends AbstractFastMutableDet<FastDFAState, I, FastDFAState, Boolean, Void>
@@ -28,8 +29,7 @@ public final class FastDFA<I> extends AbstractFastMutableDet<FastDFAState, I, Fa
 
     @Override
     protected FastDFAState createState(Boolean accepting) {
-        boolean acc = (accepting != null) && accepting.booleanValue();
-        return createState(acc);
+        return createState(WrapperUtil.booleanValue(accepting));
     }
 
     protected FastDFAState createState(boolean accepting) {

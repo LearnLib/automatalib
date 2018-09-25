@@ -17,39 +17,34 @@ package net.automatalib.automata.base.compact;
 
 import java.util.Arrays;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import net.automatalib.words.Alphabet;
 
-public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDet<I, SP> {
+/**
+ * A {@link AbstractCompactSimpleDeterministic}-based implementation for automata that need to store generic state
+ * properties.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <SP>
+ *         state property type
+ *
+ * @author frohme
+ * @author Malte Isberner
+ */
+@ParametersAreNonnullByDefault
+public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeterministic<I, SP> {
 
     private Object[] stateProperties;
 
-    public UniversalCompactSimpleDet(Alphabet<I> alphabet, float resizeFactor) {
-        super(alphabet, resizeFactor);
+    public UniversalCompactSimpleDet(Alphabet<I> alphabet) {
+        this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
     }
 
     public UniversalCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
-    }
-
-    public UniversalCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity) {
-        super(alphabet, stateCapacity);
-    }
-
-    public UniversalCompactSimpleDet(Alphabet<I> alphabet) {
-        super(alphabet);
-    }
-
-    @Override
-    public void initState(int stateId, SP property) {
-        stateProperties[stateId] = property;
-    }
-
-    @Override
-    protected void ensureCapacity(int oldCap, int newCap) {
-        super.ensureCapacity(oldCap, newCap);
-        Object[] newProps = new Object[newCap];
-        System.arraycopy(stateProperties, 0, newProps, 0, stateProperties.length);
-        stateProperties = newProps;
+        this.stateProperties = new Object[stateCapacity * numInputs()];
     }
 
     @Override
@@ -67,6 +62,12 @@ public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDet<I
     @SuppressWarnings("unchecked")
     public SP getStateProperty(int stateId) {
         return (SP) stateProperties[stateId];
+    }
+
+    @Override
+    protected void updateStorage(Payload payload) {
+        this.stateProperties = updateStorage(this.stateProperties, null, payload);
+        super.updateStorage(payload);
     }
 
 }
