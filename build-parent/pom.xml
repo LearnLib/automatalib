@@ -62,9 +62,9 @@ limitations under the License.
                             <exclude>net/automatalib/modelcheckers/ltsmin/ltl/LTSminLTLDFABuilder.class</exclude>
                             <exclude>net/automatalib/modelcheckers/ltsmin/ltl/LTSminLTLIOBuilder.class</exclude>
 
-                            <exclude>net/automatalib/modelcheckers/ltsmin/monitor/LTSminLTLAlternatingBuilder.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/monitor/LTSminLTLDFABuilder.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/monitor/LTSminLTLIOBuilder.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/ltsmin/monitor/LTSminMonitorAlternatingBuilder.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/ltsmin/monitor/LTSminMonitorDFABuilder.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/ltsmin/monitor/LTSminMonitorIOBuilder.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
