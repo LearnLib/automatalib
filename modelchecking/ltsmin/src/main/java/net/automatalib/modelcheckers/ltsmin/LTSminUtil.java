@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
@@ -66,6 +67,11 @@ public final class LTSminUtil {
      * @see #isVerbose()
      */
     private static boolean verbose;
+
+    /**
+     * The pattern for LTSmin versioning scheme: v[major].[minor].[patch].
+     */
+    public static final Pattern VERSION_PATTERN = Pattern.compile("v[0-9]+\\.[0-9]+\\.[0-9]+");
 
     static {
         AutomataLibSettings settings = AutomataLibSettings.getInstance();
@@ -219,19 +225,29 @@ public final class LTSminUtil {
                 return false;
             } else {
                 LOGGER.debug("Installed version is {}", stringWriter.toString());
-                final int[] actualVersion = getVersion(stringWriter.toString());
 
-                final int[] expectedVersion = new int[] {major, minor, patch};
+                if (VERSION_PATTERN.matcher(stringWriter.toString()).matches()) {
+                    final int[] actualVersion = getVersion(stringWriter.toString());
 
-                final boolean result = isVersionGreaterOrEqualThan(actualVersion, expectedVersion);
-                if (!result) {
-                    LOGGER.warn("Installed version of '{}' is too old: required v{}.{}.{}, but found {}.", bin, major,
-                                minor, patch, stringWriter.toString());
+                    final int[] expectedVersion = new int[] {major, minor, patch};
+
+                    final boolean result = isVersionGreaterOrEqualThan(actualVersion, expectedVersion);
+                    if (!result) {
+                        LOGGER.warn("Installed version of '{}' is too old: required v{}.{}.{}, but found {}.",
+                                    bin,
+                                    major,
+                                    minor,
+                                    patch,
+                                    stringWriter.toString());
+                    } else {
+                        LOGGER.debug("Installed version is okay.");
+                    }
+
+                    return result;
                 } else {
-                    LOGGER.debug("Installed version is okay.");
+                    LOGGER.error("Installed LTSmin version does not match v<major>.<minor>.<patch>.");
+                    return false;
                 }
-
-                return result;
             }
         } catch (IOException | InterruptedException e) {
             LOGGER.error(String.format(CHECK, bin, e.toString()), e);
