@@ -167,6 +167,16 @@ limitations under the License.
                     </plugin>
                 </plugins>
             </build>
+            <dependencies>
+                <!-- when checking coverage, make sure we run the examples (+ITs) before report aggregation -->
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-examples</artifactId>
+                    <version>${project.version}</version>
+                    <scope>test</scope>
+                    <optional>true</optional>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
             <id>bundles</id>
