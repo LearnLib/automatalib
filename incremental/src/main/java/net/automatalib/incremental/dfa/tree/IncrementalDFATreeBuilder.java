@@ -40,6 +40,18 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
+/**
+ * Incrementally builds a tree, from a set of positive and negative words. Using {@link #insert(Word, boolean)}, either
+ * the set of words definitely in the target language or definitely <i>not</i> in the target language is augmented. The
+ * {@link #lookup(Word)} method then returns, for a given word, whether this word is in the set of definitely accepted
+ * words ({@link Acceptance#TRUE}), definitely rejected words ({@link Acceptance#FALSE}), or neither ({@link
+ * Acceptance#DONT_KNOW}).
+ *
+ * @param <I>
+ *         input symbol class
+ *
+ * @author Malte Isberner
+ */
 public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<I> {
 
     @Nonnull

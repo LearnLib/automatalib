@@ -28,6 +28,22 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
+/**
+ * The prefix-closed version of {@link IncrementalDFATreeBuilder}. Contrary to the regular lookup semantics, where an
+ * exact response to a lookup can only be given, if the exact word has been observed before, the prefix-closed semantics
+ * behave as follows:
+ *
+ * <ul>
+ * <li>prefixes of previously observed accepted words will result in a {@link Acceptance#TRUE} response as well.</li>
+ * <li>continuations of previously observed rejected words will result in a {@link Acceptance#FALSE} response as
+ * well.</li>
+ * </ul>
+ *
+ * @param <I>
+ *         input symbol class
+ *
+ * @author Malte Isberner
+ */
 public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I> {
 
     private Node<I> sink;
