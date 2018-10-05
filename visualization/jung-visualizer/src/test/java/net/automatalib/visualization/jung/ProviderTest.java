@@ -57,9 +57,6 @@ public class ProviderTest {
             throw new SkipException("The headless AWT environment currently only works with Java 8");
         }
 
-        System.setProperty("awt.toolkit", "net.java.openjdk.cacio.ctc.CTCToolkit");
-        System.setProperty("java.awt.graphicsenv", "net.java.openjdk.cacio.ctc.CTCGraphicsEnvironment");
-
         final Random random = new Random(42);
         final CompactDFA<Integer> dfa = RandomAutomata.randomDFA(random, 10, Alphabets.integers(1, 6));
 

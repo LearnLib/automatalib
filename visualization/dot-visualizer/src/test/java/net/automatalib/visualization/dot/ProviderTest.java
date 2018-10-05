@@ -64,8 +64,6 @@ public class ProviderTest {
             throw new SkipException("The headless AWT environment currently only works with Java 8 and below");
         }
 
-        TestUtil.configureHeadlessMode();
-
         final CompactDFA<Integer> dfa = TestUtil.generateRandomAutomaton(new Random(42));
 
         // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.

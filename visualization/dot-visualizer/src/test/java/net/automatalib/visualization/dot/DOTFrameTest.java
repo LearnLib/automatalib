@@ -48,8 +48,6 @@ public class DOTFrameTest {
             throw new SkipException("The headless AWT environment currently only works with Java 8 and below");
         }
 
-        TestUtil.configureHeadlessMode();
-
         final Random random = new Random(42);
 
         // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.

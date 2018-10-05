@@ -37,11 +37,6 @@ public final class TestUtil {
         // prevent instantiation
     }
 
-    static void configureHeadlessMode() {
-        System.setProperty("awt.toolkit", "net.java.openjdk.cacio.ctc.CTCToolkit");
-        System.setProperty("java.awt.graphicsenv", "net.java.openjdk.cacio.ctc.CTCGraphicsEnvironment");
-    }
-
     static CompactDFA<Integer> generateRandomAutomaton(Random random) {
         return RandomAutomata.randomDFA(random, AUTOMATON_SIZE, INPUT_ALPHABET);
     }
