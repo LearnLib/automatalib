@@ -35,35 +35,39 @@ import net.automatalib.automata.fsa.DFA;
 public class BricsDFA extends AbstractBricsAutomaton implements DFA<State, Character> {
 
     /**
-     * Constructor. If the specified automaton is not deterministic, this will result in an {@link
-     * IllegalArgumentException}.
+     * Constructor. If the given {@link Automaton} is not deterministic, it will be automatically determinized by
+     * invoking {@link Automaton#determinize()}.
+     * <p>
+     * <b>Note:</b> Brics automata may only be partially defined (especially when created from regular expressions). If
+     * you plan to use this wrapper in any structural analysis (e.g. for determining equivalence), consider using
+     * {@link #BricsDFA(Automaton, boolean)} instead.
      *
      * @param automaton
      *         the Brics automaton to wrap.
      */
     public BricsDFA(Automaton automaton) {
-        this(automaton, false);
+        this(requireDeterministic(automaton), false);
     }
 
     /**
-     * Constructor. If <tt>mayDeterminize</tt> is false, this constructor behaves as the above {@link
-     * #BricsDFA(Automaton)}. Otherwise, if the specified automaton is not deterministic, it is determinized beforehand
-     * by invoking {@link Automaton#determinize()}.
+     * Constructor. If the given {@link Automaton} is not deterministic, it will be automatically determinized by
+     * invoking {@link Automaton#determinize()}.
+     * <p>
+     * If the parameter {@code totalize} is set to {@code true}, an additional sink state will be added to the automaton
+     * and all otherwise undefined transitions will transition the automaton into the sink. <b>Note:</b> this mutates
+     * the original {@code automaton}.
      *
      * @param automaton
      *         the Brics automaton to wrap.
-     * @param mayDeterminize
-     *         whether or not a possible nondeterministic automaton may be determinized.
+     * @param totalize
+     *         flag, indicating whether the automaton should have a total transition function.
      */
-    public BricsDFA(Automaton automaton, boolean mayDeterminize) {
-        super(requireDeterministic(automaton, mayDeterminize));
+    public BricsDFA(Automaton automaton, boolean totalize) {
+        super(requireDeterministic(automaton), totalize);
     }
 
-    private static Automaton requireDeterministic(Automaton aut, boolean mayDeterminize) {
+    private static Automaton requireDeterministic(Automaton aut) {
         if (aut.isDeterministic()) {
-            if (!mayDeterminize) {
-                throw new IllegalArgumentException("A BricsDFA expects a deterministic automaton");
-            }
             aut.determinize();
         }
         return aut;

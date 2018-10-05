@@ -18,6 +18,7 @@ package net.automatalib.brics;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -46,13 +47,33 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
      * Constructor.
      *
      * @param automaton
-     *         the Brics automaton object.
+     *         the Brics automaton to wrap.
+     * @param totalize
+     *         flag, indicating whether the automaton should have a total transition function.
+     *
+     * @see Automaton#totalize()
      */
-    public AbstractBricsAutomaton(Automaton automaton) {
-        if (automaton == null) {
-            throw new IllegalArgumentException("Provided Brics automaton must not be null");
+    public AbstractBricsAutomaton(Automaton automaton, boolean totalize) {
+        this.automaton = Objects.requireNonNull(automaton);
+
+        if (totalize) {
+            State s = new State();
+            s.addTransition(new Transition(Character.MIN_VALUE, Character.MAX_VALUE, s));
+            for (State p : getStates()) {
+                int maxi = Character.MIN_VALUE;
+                for (Transition t : p.getSortedTransitions(false)) {
+                    if (t.getMin() > maxi) {
+                        p.addTransition(new Transition((char) maxi, (char) (t.getMin() - 1), s));
+                    }
+                    if (t.getMin() + 1 > maxi) {
+                        maxi = t.getMax() + 1;
+                    }
+                }
+                if (maxi <= Character.MAX_VALUE) {
+                    p.addTransition(new Transition((char) maxi, Character.MAX_VALUE, s));
+                }
+            }
         }
-        this.automaton = automaton;
     }
 
     /**

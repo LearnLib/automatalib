@@ -34,11 +34,31 @@ public class BricsNFA extends AbstractBricsAutomaton implements NFA<State, Chara
 
     /**
      * Constructor.
+     * <p>
+     * <b>Note:</b> Brics automata may only be partially defined (especially when created from regular expressions). If
+     * you plan to use this wrapper in any structural analysis (e.g. for determining equivalence), consider using
+     * {@link #BricsNFA(Automaton, boolean)} instead.
      *
      * @param automaton
-     *         the Brics automaton object
+     *         the Brics automaton to wrap.
      */
     public BricsNFA(Automaton automaton) {
-        super(automaton);
+        this(automaton, false);
+    }
+
+    /**
+     * Constructor.
+     * <p>
+     * If the parameter {@code totalize} is set to {@code true}, an additional sink state will be added to the automaton
+     * and all otherwise undefined transitions will transition the automaton into the sink. <b>Note:</b> this mutates
+     * the original {@code automaton}.
+     *
+     * @param automaton
+     *         the Brics automaton to wrap.
+     * @param totalize
+     *         flag, indicating whether the automaton should have a total transition function.
+     */
+    public BricsNFA(Automaton automaton, boolean totalize) {
+        super(automaton, totalize);
     }
 }

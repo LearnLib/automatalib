@@ -24,7 +24,13 @@ import dk.brics.automaton.Automaton;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.builders.DFABuilder;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -39,13 +45,7 @@ public class BricsDFATest {
     public void setUp() {
         RegExp re = new RegExp("a(b*|cc+)d?e");
         this.bricsAutomaton = re.toAutomaton();
-        dfa = new BricsDFA(bricsAutomaton, true);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testNondetAutomaton() {
-        RegExp nondetRe = new RegExp("ab|ac");
-        new BricsDFA(nondetRe.toAutomaton());
+        dfa = new BricsDFA(bricsAutomaton);
     }
 
     @Test
@@ -78,4 +78,25 @@ public class BricsDFATest {
         }
     }
 
+    @Test
+    public void testEquivalence() {
+        final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
+        final DFA<?, Character> target = new DFABuilder<>(new CompactDFA<>(alphabet)).withInitial("s0")
+                                                                                     .from("s0")
+                                                                                     .on('a', 'b', 'c')
+                                                                                     .loop()
+                                                                                     .create();
+
+        final Automaton automaton1 = new RegExp("[a-b]{2}").toAutomaton();
+        final Automaton automaton2 = new RegExp("[a-b]{2}").toAutomaton();
+
+        final BricsDFA partialBrics = new BricsDFA(automaton1);
+        final BricsDFA totalBrics = new BricsDFA(automaton2, true);
+
+        final Word<Character> partialSeqWord = Automata.findShortestSeparatingWord(target, partialBrics, alphabet);
+        final Word<Character> totalSeqWord = Automata.findShortestSeparatingWord(target, totalBrics, alphabet);
+
+        Assert.assertEquals(partialSeqWord, Word.fromLetter('c'));
+        Assert.assertEquals(totalSeqWord, Word.fromSymbols('a', 'a'));
+    }
 }
