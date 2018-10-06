@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.ts;
+package net.automatalib.util.automata.copy;
 
-import java.util.function.Predicate;
+/**
+ * @author frohme
+ */
+public class StateByStateCopyTest extends AbstractAutomatonCopyTest {
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
-@FunctionalInterface
-public interface TransitionPredicate<S, I, T> {
-
-    default Predicate<? super T> toUnaryPredicate(final S source, final I input) {
-        return trans -> apply(source, input, trans);
+    @Override
+    protected AutomatonCopyMethod getCopyMethod() {
+        return AutomatonCopyMethod.STATE_BY_STATE;
     }
-
-    boolean apply(S source, @Nullable I input, T transition);
 }

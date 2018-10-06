@@ -84,6 +84,12 @@ public abstract class AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP
             T1 trans1 = transitions1It.next();
             S1 succ1 = in.getSuccessor(trans1);
             S2 succ2 = stateMapping.get(succ1);
+
+            // do not create transitions with undefined successor
+            if (succ2 == null) {
+                continue;
+            }
+
             TP2 prop = tpMapping.apply(trans1);
             T2 trans2 = out.createTransition(succ2, prop);
             transitions2.add(trans2);
