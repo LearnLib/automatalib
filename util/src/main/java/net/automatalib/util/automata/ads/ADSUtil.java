@@ -78,7 +78,7 @@ public final class ADSUtil {
             tempInput = nextInput;
         }
 
-        return new Pair<>(head, tempADS);
+        return Pair.of(head, tempADS);
     }
 
     public static <S, I, O> Set<ADSNode<S, I, O>> collectLeaves(final ADSNode<S, I, O> root) {
@@ -114,7 +114,7 @@ public final class ADSUtil {
             parentIter = parentIter.getParent();
         }
 
-        return new Pair<>(inputBuilder.reverse().toWord(), outputBuilder.reverse().toWord());
+        return Pair.of(inputBuilder.reverse().toWord(), outputBuilder.reverse().toWord());
     }
 
     public static <S, I, O> O getOutputForSuccessor(final ADSNode<S, I, O> node, final ADSNode<S, I, O> successor) {

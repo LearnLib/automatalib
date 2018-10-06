@@ -18,7 +18,7 @@ package net.automatalib.commons.util;
 import java.io.IOException;
 import java.io.Serializable;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.commons.util.strings.StringUtil;
 
@@ -27,7 +27,7 @@ import net.automatalib.commons.util.strings.StringUtil;
  * <p>
  * <b>Note</b>: this class should only be used for internal representations of tuples with value type semantics (e.g.
  * equality, only if all components are equal).
- *
+ * <p>
  * Whenever a public interface returns an aggregation of individual objects, a separate class should be created/used
  * that has meaningful identifiers for the individual components.
  *
@@ -39,7 +39,7 @@ import net.automatalib.commons.util.strings.StringUtil;
  * @author Malte Isberner
  * @author frohme
  */
-@Data
+@EqualsAndHashCode(callSuper = false)
 public final class Pair<T1, T2> extends AbstractPrintable implements Serializable {
 
     private static final long serialVersionUID = -1L;
@@ -50,11 +50,24 @@ public final class Pair<T1, T2> extends AbstractPrintable implements Serializabl
     private final T1 first;
     private final T2 second;
 
+    private Pair(T1 first, T2 second) {
+        this.first = first;
+        this.second = second;
+    }
+
     /**
      * Convenience function for creating a pair, allowing the user to omit the type parameters.
      */
     public static <T1, T2> Pair<T1, T2> of(T1 first, T2 second) {
         return new Pair<>(first, second);
+    }
+
+    public T1 getFirst() {
+        return first;
+    }
+
+    public T2 getSecond() {
+        return second;
     }
 
     @Override

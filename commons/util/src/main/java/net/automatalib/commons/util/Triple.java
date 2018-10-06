@@ -18,7 +18,7 @@ package net.automatalib.commons.util;
 import java.io.IOException;
 import java.io.Serializable;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.commons.util.strings.StringUtil;
 
@@ -27,7 +27,7 @@ import net.automatalib.commons.util.strings.StringUtil;
  * <p>
  * <b>Note</b>: this class should only be used for internal representations of tuples with value type semantics (e.g.
  * equality, only if all components are equal).
- *
+ * <p>
  * Whenever a public interface returns an aggregation of individual objects, a separate class should be created/used
  * that has meaningful identifiers for the individual components.
  *
@@ -41,7 +41,7 @@ import net.automatalib.commons.util.strings.StringUtil;
  * @author Malte Isberner
  * @author frohme
  */
-@Data
+@EqualsAndHashCode(callSuper = false)
 public final class Triple<T1, T2, T3> extends AbstractPrintable implements Serializable {
 
     private static final long serialVersionUID = -1L;
@@ -53,11 +53,29 @@ public final class Triple<T1, T2, T3> extends AbstractPrintable implements Seria
     private final T2 second;
     private final T3 third;
 
+    private Triple(T1 first, T2 second, T3 third) {
+        this.first = first;
+        this.second = second;
+        this.third = third;
+    }
+
     /**
      * Convenience function for creating a triple, allowing the user to omit the type parameters.
      */
     public static <T1, T2, T3> Triple<T1, T2, T3> of(T1 first, T2 second, T3 third) {
         return new Triple<>(first, second, third);
+    }
+
+    public T1 getFirst() {
+        return first;
+    }
+
+    public T2 getSecond() {
+        return second;
+    }
+
+    public T3 getThird() {
+        return third;
     }
 
     @Override

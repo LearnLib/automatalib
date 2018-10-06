@@ -64,14 +64,14 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractOneSEVPA<Pair<L1, L2>, I
         if (succ2 == null) {
             return null;
         }
-        return new Pair<>(succ1, succ2);
+        return Pair.of(succ1, succ2);
     }
 
     @Override
     public Pair<L1, L2> getLocation(final int id) {
         final int l1Id = id / sevpa2.size();
         final int l2Id = id % sevpa2.size();
-        return new Pair<>(sevpa1.getLocation(l1Id), sevpa2.getLocation(l2Id));
+        return Pair.of(sevpa1.getLocation(l1Id), sevpa2.getLocation(l2Id));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractOneSEVPA<Pair<L1, L2>, I
 
         for (L1 l1 : sevpa1.getLocations()) {
             for (L2 l2 : sevpa2.getLocations()) {
-                locations.add(new Pair<>(l1, l2));
+                locations.add(Pair.of(l1, l2));
             }
         }
 
@@ -104,7 +104,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractOneSEVPA<Pair<L1, L2>, I
         if (succ2 == null) {
             return null;
         }
-        return new Pair<>(succ1, succ2);
+        return Pair.of(succ1, succ2);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractOneSEVPA<Pair<L1, L2>, I
 
     @Override
     public Pair<L1, L2> getInitialLocation() {
-        return new Pair<>(sevpa1.getInitialLocation(), sevpa2.getInitialLocation());
+        return Pair.of(sevpa1.getInitialLocation(), sevpa2.getInitialLocation());
     }
 
     @Override

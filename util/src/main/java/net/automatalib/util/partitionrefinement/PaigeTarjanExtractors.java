@@ -173,7 +173,7 @@ public final class PaigeTarjanExtractors {
         states.update(initBlock.id, resInit);
 
         Deque<Pair<S1, S2>> queue = new ArrayDeque<>();
-        queue.add(new Pair<>(init, resInit));
+        queue.add(Pair.of(init, resInit));
 
         Pair<S1, S2> curr;
         while ((curr = queue.poll()) != null) {

@@ -343,7 +343,7 @@ public final class LeeYannakakis {
                         B.getPartition().stream().map(s -> automaton.getOutput(s, i)).collect(Collectors.toSet());
 
                 if (outputs.size() > 1) {
-                    result.get(Validity.A_VALID).add(new Pair<>(Word.fromSymbols(i), B));
+                    result.get(Validity.A_VALID).add(Pair.of(Word.fromSymbols(i), B));
                     partitionToClassificationMap.put(stateToPartitionMap.get(B.getPartition().iterator().next()),
                                                      Validity.A_VALID);
                     continue partitionLoop;
@@ -363,7 +363,7 @@ public final class LeeYannakakis {
                                                  .collect(Collectors.toSet());
 
                 if (successors.size() > 1) {
-                    result.get(Validity.B_VALID).add(new Pair<>(Word.fromSymbols(i), B));
+                    result.get(Validity.B_VALID).add(Pair.of(Word.fromSymbols(i), B));
                     partitionToClassificationMap.put(stateToPartitionMap.get(B.getPartition().iterator().next()),
                                                      Validity.B_VALID);
                     continue partitionLoop;
@@ -395,7 +395,7 @@ public final class LeeYannakakis {
             }
 
             //if we haven't continued the loop up until here, there is no valid input
-            result.get(Validity.INVALID).add(new Pair<>(null, B));
+            result.get(Validity.INVALID).add(Pair.of(null, B));
         }
 
         //check remaining potential Cs
@@ -418,12 +418,12 @@ public final class LeeYannakakis {
                     final List<I> word =
                             path.edgeList().stream().map(CompactEdge::getProperty).collect(Collectors.toList());
 
-                    result.get(Validity.C_VALID).add(new Pair<>(Word.fromList(word), pendingC));
+                    result.get(Validity.C_VALID).add(Pair.of(Word.fromList(word), pendingC));
                     continue pendingCLoop;
                 }
             }
 
-            result.get(Validity.INVALID).add(new Pair<>(null, pendingC));
+            result.get(Validity.INVALID).add(Pair.of(null, pendingC));
         }
 
         return result;

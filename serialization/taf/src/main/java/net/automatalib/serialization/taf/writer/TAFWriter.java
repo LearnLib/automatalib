@@ -116,14 +116,13 @@ public final class TAFWriter {
             beginState(name, options);
 
             Map<Pair<S, Object>, List<I>> groupedTransitions = inputs.stream()
-                                                                     .map(i -> new Pair<I, T>(i,
-                                                                                              automaton.getTransition(
-                                                                                                      state,
-                                                                                                      i)))
+                                                                     .map(i -> Pair.of(i,
+                                                                                       automaton.getTransition(state,
+                                                                                                               i)))
                                                                      .filter(p -> p.getSecond() != null)
-                                                                     .collect(Collectors.groupingBy(p -> new Pair<>(
-                                                                                                            automaton.getSuccessor(p.getSecond()),
-                                                                                                            automaton.getTransitionProperty(p.getSecond())),
+                                                                     .collect(Collectors.groupingBy(p -> Pair.of(
+                                                                             automaton.getSuccessor(p.getSecond()),
+                                                                             automaton.getTransitionProperty(p.getSecond())),
                                                                                                     Collectors.mapping(
                                                                                                             Pair::getFirst,
                                                                                                             Collectors.toList())));
