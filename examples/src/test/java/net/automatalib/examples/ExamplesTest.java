@@ -45,7 +45,7 @@ public class ExamplesTest {
 
     @BeforeClass
     public void setupAutoClose() {
-        // As soon as we observe an event that indicates a new window, close it to prevent blocking the ITs.
+        // As soon as we observe an event that indicates a new window, close it to prevent blocking the tests.
         Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
             final WindowEvent windowEvent = (WindowEvent) event;
             final Window w = windowEvent.getWindow();

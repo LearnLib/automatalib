@@ -168,7 +168,7 @@ limitations under the License.
                 </plugins>
             </build>
             <dependencies>
-                <!-- when checking coverage, make sure we run the examples (+ITs) before report aggregation -->
+                <!-- when checking coverage, make sure we run the example tests before report aggregation -->
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-examples</artifactId>
