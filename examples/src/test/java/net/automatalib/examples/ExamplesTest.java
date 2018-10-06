@@ -27,6 +27,7 @@ import javax.swing.SwingUtilities;
 import net.automatalib.commons.util.system.JVMUtil;
 import net.automatalib.examples.brics.SimpleBricsExample;
 import net.automatalib.examples.dot.DOTExample;
+import net.automatalib.examples.graph.DFSExample;
 import net.automatalib.examples.incremental.IncrementalDFAExample;
 import net.automatalib.examples.incremental.IncrementalMealyExample;
 import net.automatalib.examples.incremental.IncrementalPCDFAExample;
@@ -69,6 +70,12 @@ public class ExamplesTest {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    @Test
+    public void testDFSExample() throws InvocationTargetException, InterruptedException {
+        checkJVMCompatibility();
+        SwingUtilities.invokeAndWait(() -> DFSExample.main(new String[0]));
     }
 
     @Test
