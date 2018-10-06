@@ -37,11 +37,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * Run the examples as part of integration testing.
+ * Run the examples as part of (integration) testing.
  *
  * @author frohme
  */
-public class ExamplesIT {
+public class ExamplesTest {
 
     @BeforeClass
     public void setupAutoClose() {

@@ -111,7 +111,7 @@ limitations under the License.
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
+                <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>
                         <awt.toolkit>net.java.openjdk.cacio.ctc.CTCToolkit</awt.toolkit>

@@ -177,7 +177,6 @@ limitations under the License.
         <deploy-plugin.version>2.8.2</deploy-plugin.version>
         <enforcer-plugin.version>1.4.1</enforcer-plugin.version>
         <exec-plugin.version>1.6.0</exec-plugin.version>
-        <failsafe-plugin.version>2.21.0</failsafe-plugin.version>
         <gpg-plugin.version>1.6</gpg-plugin.version>
         <info-reports-plugin.version>2.9</info-reports-plugin.version>
         <jacoco-plugin.version>0.8.0</jacoco-plugin.version>
@@ -582,22 +581,6 @@ limitations under the License.
                     <configuration>
                         <enableAssertions>true</enableAssertions>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>${failsafe-plugin.version}</version>
-                    <configuration>
-                        <enableAssertions>true</enableAssertions>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>integration-test</goal>
-                                <goal>verify</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
