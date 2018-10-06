@@ -17,6 +17,9 @@ package net.automatalib.automata.transout.impl.compact;
 
 import java.io.Serializable;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class CompactMealyTransition<O> implements Serializable {
 
     private int memoryIdx;
