@@ -186,7 +186,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
             if (wb != null) {
                 assert output != null;
 
-                final O o = output.computeOutput(wb.toWord()).lastSymbol();
+                final O o = output.computeOutput(wb).lastSymbol();
 
                 // create an actual Mealy machine transition
                 final Pair<O, Integer> prev = getTransitions().put(inputTrans, Pair.of(o, getStates().size()));

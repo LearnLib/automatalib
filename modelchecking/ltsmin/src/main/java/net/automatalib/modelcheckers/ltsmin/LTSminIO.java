@@ -42,7 +42,8 @@ import net.automatalib.words.impl.Alphabets;
 public interface LTSminIO<I, O, R> extends LTSminMealy<I, O, R> {
 
     @Override
-    default CompactMealy<I, O> fsm2Mealy(File fsm, MealyMachine originalAutomaton) throws IOException, FSMParseException {
+    default CompactMealy<I, O> fsm2Mealy(File fsm, MealyMachine<?, I, ?, O> originalAutomaton)
+            throws IOException, FSMParseException {
         return FSM2MealyParserIO.parse(fsm, getString2Input(), getString2Output());
     }
 

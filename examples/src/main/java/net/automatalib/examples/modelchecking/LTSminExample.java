@@ -31,7 +31,7 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * Example for using LTSmin to perform modelchecking. Make sure to correctly setup your LTSmin installation.
  * <p>
- * This example requires at least LTSmin >= 3.1.0.
+ * This example requires at least an LTSmin version ≥ 3.1.0.
  *
  * @author frohme
  * @author Jeroen Meijer

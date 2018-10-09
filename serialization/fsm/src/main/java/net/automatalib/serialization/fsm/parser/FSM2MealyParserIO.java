@@ -128,7 +128,7 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
         // Only if no states are defined we add all from the transitions we found.
         // This is necessary because states are not necessarily defined in FSMs.
         if (getStates().isEmpty()) {
-            getStates().addAll(getTransitions().keySet().stream().map(p -> p.getFirst()).collect(Collectors.toList()));
+            getStates().addAll(getTransitions().keySet().stream().map(Pair::getFirst).collect(Collectors.toList()));
         }
     }
 
