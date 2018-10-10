@@ -76,6 +76,7 @@ limitations under the License.
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
 
