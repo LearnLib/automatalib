@@ -89,11 +89,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
 
     @Override
     public T getTransition(int state, @Nullable I input) {
-        if (getInputAlphabet().containsSymbol(input)) {
-            return getTransition(state, getSymbolIndex(input));
-        } else {
-            return null;
-        }
+        return getTransition(state, getSymbolIndex(input));
     }
 
     @Nullable

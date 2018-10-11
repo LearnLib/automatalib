@@ -15,9 +15,11 @@
  */
 package net.automatalib.serialization.fsm.parser;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Function;
 
+import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -36,7 +38,7 @@ import org.testng.annotations.Test;
  *
  * @author Jeroen Meijer
  */
-public class FSM2MealyParserAlternatingTest {
+public class FSM2MealyParserAlternatingTest extends  AbstractFSM2AutParserTest {
 
     @Test
     public void testParse() throws Exception {
@@ -55,5 +57,17 @@ public class FSM2MealyParserAlternatingTest {
                 withInitial("q0").create();
 
         Assert.assertTrue(Automata.testEquivalence(actualMealy, expectedMealy, alphabet));
+    }
+
+    @Override
+    protected AbstractCompactDeterministic<Character, ?, ?, ?> getAut() throws IOException, FSMParseException {
+        final InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm");
+
+        final Function<String, Character> ep = s -> s.charAt(0);
+
+        final CompactMealy<Character, Character> mealy = FSM2MealyParserAlternating.parse(is, ep, ep);
+        is.close();
+
+        return mealy;
     }
 }

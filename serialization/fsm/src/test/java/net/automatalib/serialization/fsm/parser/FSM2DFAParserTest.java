@@ -15,9 +15,11 @@
  */
 package net.automatalib.serialization.fsm.parser;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Function;
 
+import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -31,7 +33,7 @@ import org.testng.annotations.Test;
  *
  * @author Jeroen Meijer
  */
-public class FSM2DFAParserTest {
+public class FSM2DFAParserTest extends AbstractFSM2AutParserTest {
 
     @Test
     public void testParse1() throws Exception {
@@ -68,5 +70,17 @@ public class FSM2DFAParserTest {
                 withAccepting("q0").withInitial("q0").create();
 
         Assert.assertTrue(Automata.testEquivalence(actualDFA, expectedDFA, alphabet));
+    }
+
+    @Override
+    protected AbstractCompactDeterministic<Character, ?, ?, ?> getAut() throws IOException, FSMParseException {
+        final InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm");
+
+        final Function<String, Character> ip = s -> s.charAt(0);
+
+        final CompactDFA<Character> dfa = FSM2DFAParser.parse(is, ip, "label", "accept");
+        is.close();
+
+        return dfa;
     }
 }
