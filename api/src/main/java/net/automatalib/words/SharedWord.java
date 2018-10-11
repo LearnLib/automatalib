@@ -57,7 +57,7 @@ final class SharedWord<I> extends Word<I> {
      */
     @SuppressWarnings("unchecked")
     SharedWord(List<? extends I> other) {
-        this.storage = (I[]) other.toArray();
+        this.storage = other.toArray((I[]) new Object[other.size()]);
         this.offset = 0;
         this.length = other.size();
     }
