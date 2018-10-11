@@ -20,21 +20,21 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 import net.automatalib.graphs.BidirectionalGraph;
 
 public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<CompactBidiEdge<EP>, EP>
         implements BidirectionalGraph<Integer, CompactBidiEdge<EP>> {
 
-    private final ResizingObjectArray inEdges;
+    private final ResizingArrayStorage<List<CompactBidiEdge<EP>>> inEdges;
 
     public CompactSimpleBidiGraph() {
-        this.inEdges = new ResizingObjectArray();
+        this.inEdges = new ResizingArrayStorage<>(List.class);
     }
 
     public CompactSimpleBidiGraph(int initialCapacity) {
         super(initialCapacity);
-        this.inEdges = new ResizingObjectArray(initialCapacity);
+        this.inEdges = new ResizingArrayStorage<>(List.class, initialCapacity);
     }
 
     @Override
@@ -47,9 +47,8 @@ public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<Compa
         return Collections.unmodifiableCollection(inEdges);
     }
 
-    @SuppressWarnings("unchecked")
     protected List<CompactBidiEdge<EP>> getInEdgeList(int node) {
-        return (List<CompactBidiEdge<EP>>) inEdges.array[node];
+        return inEdges.array[node];
     }
 
     @Override
@@ -65,7 +64,7 @@ public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<Compa
     public int addIntNode(Void properties) {
         inEdges.ensureCapacity(size + 1);
         int node = super.addIntNode(properties);
-        inEdges.array[node] = new ArrayList<CompactBidiEdge<EP>>();
+        inEdges.array[node] = new ArrayList<>();
         return node;
     }
 

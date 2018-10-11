@@ -15,19 +15,19 @@
  */
 package net.automatalib.automata.base.fast;
 
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 import net.automatalib.commons.util.nid.AbstractMutableNumericID;
 
 public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
 
-    private final ResizingObjectArray transitions;
+    private final ResizingArrayStorage<T> transitions;
 
     public AbstractFastState(int initialNumOfInputs) {
-        this.transitions = new ResizingObjectArray(initialNumOfInputs);
+        this.transitions = new ResizingArrayStorage<>(Object.class, initialNumOfInputs);
     }
 
     /**
-     * See {@link ResizingObjectArray#ensureCapacity(int)}.
+     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
      */
     public final boolean ensureInputCapacity(int capacity) {
         return this.transitions.ensureCapacity(capacity);
@@ -48,9 +48,8 @@ public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
         // do nothing in particular, but sub-classes may cleanup additional resources
     }
 
-    @SuppressWarnings("unchecked")
     public final T getTransitionObject(int inputIdx) {
-        return (T) transitions.array[inputIdx];
+        return transitions.array[inputIdx];
     }
 
     @Override

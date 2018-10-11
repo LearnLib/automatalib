@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 
 /**
  * This class implements a collection for storing objects in no particular order.
@@ -37,7 +37,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
     private static final int DEFAULT_INITIAL_CAPACITY = 10;
     // The collection's storage
-    private final ResizingObjectArray storage;
+    private final ResizingArrayStorage<Reference<E>> storage;
     private int size;
 
     /**
@@ -55,7 +55,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
      */
     public UnorderedCollection(int initialCapacity) {
         final int capacity = initialCapacity <= 0 ? DEFAULT_INITIAL_CAPACITY : initialCapacity;
-        this.storage = new ResizingObjectArray(capacity);
+        this.storage = new ResizingArrayStorage<>(Reference.class, capacity);
     }
 
     /**
@@ -120,11 +120,10 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
     /**
      * Removes an element by its index.
      */
-    @SuppressWarnings("unchecked")
     private void remove(int index) {
         int lastIndex = --size;
-        Reference<E> removed = (Reference<E>) storage.array[index];
-        Reference<E> lastElem = (Reference<E>) storage.array[lastIndex];
+        Reference<E> removed = storage.array[index];
+        Reference<E> lastElem = storage.array[lastIndex];
         storage.array[index] = lastElem;
         lastElem.index = index;
         removed.index = -1;
@@ -148,10 +147,9 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void replace(ElementReference ref, E newElement) {
         int idx = extractValidIndex(ref);
-        ((Reference<E>) storage.array[idx]).element = newElement;
+        storage.array[idx].element = newElement;
     }
 
     /**
@@ -169,12 +167,11 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public E choose() {
         if (size == 0) {
             return null;
         }
-        return ((Reference<E>) storage.array[0]).element;
+        return storage.array[0].element;
     }
 
     @Override
@@ -182,7 +179,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         if (size == 0) {
             throw new NoSuchElementException();
         }
-        return (ElementReference) storage.array[0];
+        return storage.array[0];
     }
 
     @Override
@@ -238,10 +235,9 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void clear() {
         for (int i = 0; i < size; i++) {
-            ((Reference<E>) storage.array[i]).index = -1;
+            storage.array[i].index = -1;
             storage.array[i] = null;
         }
         size = 0;
@@ -300,7 +296,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
             if (index >= size) {
                 throw new NoSuchElementException();
             }
-            return (ElementReference) storage.array[index++];
+            return storage.array[index++];
         }
 
         @Override
@@ -322,12 +318,11 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public E next() {
             if (index >= size) {
                 throw new NoSuchElementException();
             }
-            return ((Reference<E>) storage.array[index++]).element;
+            return storage.array[index++].element;
         }
 
         @Override

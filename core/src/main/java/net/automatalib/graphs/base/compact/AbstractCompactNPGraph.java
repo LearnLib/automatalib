@@ -15,15 +15,15 @@
  */
 package net.automatalib.graphs.base.compact;
 
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 
 public abstract class AbstractCompactNPGraph<E extends CompactEdge<EP>, NP, EP>
         extends AbstractCompactGraph<E, NP, EP> {
 
-    protected final ResizingObjectArray npStorage;
+    protected final ResizingArrayStorage<NP> npStorage;
 
     public AbstractCompactNPGraph() {
-        this.npStorage = new ResizingObjectArray();
+        this.npStorage = new ResizingArrayStorage<>(Object.class);
     }
 
     @Override
@@ -40,9 +40,8 @@ public abstract class AbstractCompactNPGraph<E extends CompactEdge<EP>, NP, EP>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public NP getNodeProperties(int node) {
-        return (NP) npStorage.array[node];
+        return npStorage.array[node];
     }
 
 }

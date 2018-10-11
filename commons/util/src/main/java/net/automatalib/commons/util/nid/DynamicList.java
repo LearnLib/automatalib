@@ -20,11 +20,11 @@ import java.util.AbstractList;
 import java.util.Iterator;
 
 import net.automatalib.commons.util.array.ArrayWritable;
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 
 public class DynamicList<T extends MutableNumericID> extends AbstractList<T> implements ArrayWritable<T>, Serializable {
 
-    private final ResizingObjectArray storage = new ResizingObjectArray();
+    private final ResizingArrayStorage<T> storage = new ResizingArrayStorage<>(MutableNumericID.class);
 
     private int size;
 
@@ -88,12 +88,11 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
         return elem;
     }
 
-    @SuppressWarnings("unchecked")
     public T safeGet(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
-        return (T) storage.array[index];
+        return storage.array[index];
     }
 
     @Override
@@ -106,12 +105,11 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Invalid index " + index);
         }
-        return (T) storage.array[index];
+        return storage.array[index];
     }
 
     @Override
@@ -146,7 +144,6 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
         };
     }
 
-    @SuppressWarnings("unchecked")
     public void swap(int a, int b) {
         if (a == b) {
             return;
@@ -157,11 +154,11 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
         if (b < 0 || b >= size) {
             throw new IndexOutOfBoundsException("Invalid index " + b);
         }
-        Object tmp = storage.array[a];
+        T tmp = storage.array[a];
         storage.array[a] = storage.array[b];
         storage.array[b] = tmp;
-        ((T) storage.array[a]).setId(a);
-        ((T) storage.array[b]).setId(b);
+        storage.array[a].setId(a);
+        storage.array[b].setId(b);
     }
 
     @Override

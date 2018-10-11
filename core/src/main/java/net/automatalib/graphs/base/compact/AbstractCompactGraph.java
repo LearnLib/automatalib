@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
@@ -28,16 +28,16 @@ import net.automatalib.graphs.concepts.NodeIDs;
 public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
         implements MutableGraph<Integer, E, NP, EP>, NodeIDs<Integer> {
 
-    protected final ResizingObjectArray edges;
+    protected final ResizingArrayStorage<List<E>> edges;
     protected int size;
 
     public AbstractCompactGraph() {
         this.size = 0;
-        this.edges = new ResizingObjectArray();
+        this.edges = new ResizingArrayStorage<>(List.class);
     }
 
     public AbstractCompactGraph(int initialCapacity) {
-        this.edges = new ResizingObjectArray(initialCapacity);
+        this.edges = new ResizingArrayStorage<>(List.class, initialCapacity);
     }
 
     @Override
@@ -60,9 +60,8 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
         return Collections.unmodifiableCollection(edgeList);
     }
 
-    @SuppressWarnings("unchecked")
     protected List<E> getOutEdgeList(int node) {
-        return (List<E>) edges.array[node];
+        return edges.array[node];
     }
 
     @Override
@@ -77,7 +76,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
 
     public int addIntNode(NP properties) {
         edges.ensureCapacity(size + 1);
-        edges.array[size] = new ArrayList<CompactEdge<EP>>();
+        edges.array[size] = new ArrayList<>();
         int n = size++;
         setNodeProperty(n, properties);
         return n;

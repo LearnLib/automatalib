@@ -16,7 +16,7 @@
 package net.automatalib.automata.base;
 
 import net.automatalib.automata.Automaton;
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.IDChangeListener;
 import net.automatalib.commons.util.nid.NumericID;
@@ -24,26 +24,25 @@ import net.automatalib.commons.util.nid.NumericID;
 public class StateIDDynamicMapping<S extends NumericID, V> implements MutableMapping<S, V>, IDChangeListener<S> {
 
     private final Automaton<S, ?, ?> automaton;
-    private final ResizingObjectArray storage;
+    private final ResizingArrayStorage<V> storage;
 
     public StateIDDynamicMapping(Automaton<S, ?, ?> automaton) {
         this.automaton = automaton;
-        this.storage = new ResizingObjectArray(automaton.size());
+        this.storage = new ResizingArrayStorage<>(Object.class, automaton.size());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V get(S elem) {
         int id = elem.getId();
         if (id >= 0 && id < storage.array.length) {
-            return (V) storage.array[id];
+            return storage.array[id];
         }
         return null;
     }
 
     @Override
     public void idChanged(S obj, int newId, int oldId) {
-        Object oldValue = null;
+        V oldValue = null;
         if (oldId > 0 && oldId < storage.array.length) {
             oldValue = storage.array[oldId];
             storage.array[oldId] = null;
@@ -60,8 +59,7 @@ public class StateIDDynamicMapping<S extends NumericID, V> implements MutableMap
         if (id >= storage.array.length) {
             storage.ensureCapacity(automaton.size());
         }
-        @SuppressWarnings("unchecked")
-        V old = (V) storage.array[id];
+        V old = storage.array[id];
         storage.array[id] = value;
         return old;
     }

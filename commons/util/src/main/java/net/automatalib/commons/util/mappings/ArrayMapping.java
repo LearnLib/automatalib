@@ -15,38 +15,36 @@
  */
 package net.automatalib.commons.util.mappings;
 
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 import net.automatalib.commons.util.nid.IDChangeListener;
 import net.automatalib.commons.util.nid.NumericID;
 
 public final class ArrayMapping<K extends NumericID, V> implements MutableMapping<K, V>, IDChangeListener<K> {
 
-    private final ResizingObjectArray storage;
+    private final ResizingArrayStorage<V> storage;
 
     public ArrayMapping() {
-        storage = new ResizingObjectArray();
+        storage = new ResizingArrayStorage<>(Object.class);
     }
 
     public ArrayMapping(int initialSize) {
-        storage = new ResizingObjectArray(initialSize);
+        storage = new ResizingArrayStorage<>(Object.class, initialSize);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V get(K elem) {
         int id = elem.getId();
         if (id >= storage.array.length) {
             return null;
         }
-        return (V) storage.array[id];
+        return storage.array[id];
     }
 
     @Override
     public V put(K key, V value) {
         int id = key.getId();
         storage.ensureCapacity(id + 1);
-        @SuppressWarnings("unchecked")
-        V old = (V) storage.array[id];
+        V old = storage.array[id];
         storage.array[id] = value;
         return old;
     }
@@ -59,7 +57,7 @@ public final class ArrayMapping<K extends NumericID, V> implements MutableMappin
             }
             return;
         }
-        Object oldVal = null;
+        V oldVal = null;
         if (oldId < storage.array.length) {
             oldVal = storage.array[oldId];
             storage.array[oldId] = oldVal;

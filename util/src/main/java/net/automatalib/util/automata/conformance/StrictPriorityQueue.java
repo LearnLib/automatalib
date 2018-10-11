@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import net.automatalib.commons.util.array.ArrayIterator;
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 
 /**
  * A priority queue which enforces that no two elements that it contains are equal wrt. the specified comparator (i.e.,
@@ -43,7 +43,7 @@ import net.automatalib.commons.util.array.ResizingObjectArray;
  */
 public class StrictPriorityQueue<E> extends AbstractQueue<E> {
 
-    private final ResizingObjectArray storage = new ResizingObjectArray();
+    private final ResizingArrayStorage<E> storage = new ResizingArrayStorage<>(Object.class);
     private final Comparator<? super E> comparator;
     private final MergeOperation<E> mergeOp;
     private int size;
@@ -69,12 +69,11 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
      *
      * @return the minimum element in the queue
      */
-    @SuppressWarnings("unchecked")
     public E peekMin() {
         if (size == 0) {
             throw new NoSuchElementException();
         }
-        return (E) storage.array[0];
+        return storage.array[0];
     }
 
     @Override
@@ -107,16 +106,15 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
      * @return {@code true} if the element has been inserted, {@code false} if it has been merged with an existing
      * element.
      */
-    @SuppressWarnings("unchecked")
     private boolean upHeap() {
         int currIdx = size - 1;
-        E elem = (E) storage.array[currIdx];
+        E elem = storage.array[currIdx];
 
         int steps = 0;
 
         while (currIdx > 0) {
             int parentIdx = currIdx / 2;
-            E parent = (E) storage.array[parentIdx];
+            E parent = storage.array[parentIdx];
             int cmp = comparator.compare(elem, parent);
             if (cmp == 0) {
                 storage.array[parentIdx] = mergeOp.merge(parent, elem);
@@ -156,18 +154,17 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
      *
      * @return the minimum element in the queue
      */
-    @SuppressWarnings("unchecked")
     public E extractMin() {
         if (size == 0) {
             throw new NoSuchElementException();
         }
-        E result = (E) storage.array[0];
+        E result = storage.array[0];
         size--;
         if (size > 0) {
             storage.array[0] = storage.array[size];
             downHeap();
         }
-        storage.array[size] = 0;
+        storage.array[size] = null;
 
         return result;
     }
@@ -175,21 +172,20 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
     /**
      * Sifts the topmost element down into the heap until the heap condition is restored.
      */
-    @SuppressWarnings("unchecked")
     private void downHeap() {
-        E elem = (E) storage.array[0];
+        E elem = storage.array[0];
         int currIdx = 0;
 
         while (2 * currIdx < size) {
             int leftChildIdx = 2 * currIdx;
-            E leftChild = (E) storage.array[leftChildIdx];
+            E leftChild = storage.array[leftChildIdx];
             if (comparator.compare(elem, leftChild) > 0) {
                 storage.array[currIdx] = leftChild;
                 storage.array[leftChildIdx] = elem;
                 currIdx = leftChildIdx;
             } else if (2 * currIdx + 1 < size) {
                 int rightChildIdx = 2 * currIdx + 1;
-                E rightChild = (E) storage.array[rightChildIdx];
+                E rightChild = storage.array[rightChildIdx];
                 if (comparator.compare(elem, rightChild) > 0) {
                     storage.array[currIdx] = rightChild;
                     storage.array[rightChildIdx] = elem;
@@ -204,18 +200,16 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public E peek() {
         if (size == 0) {
             return null;
         }
-        return (E) storage.array[0];
+        return storage.array[0];
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Iterator<E> iterator() {
-        return new ArrayIterator<>((E[]) storage.array);
+        return new ArrayIterator<>(storage.array);
     }
 
     @Override

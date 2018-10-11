@@ -15,20 +15,20 @@
  */
 package net.automatalib.graphs.base.compact;
 
-import net.automatalib.commons.util.array.ResizingObjectArray;
+import net.automatalib.commons.util.array.ResizingArrayStorage;
 
 public class CompactGraph<NP, EP> extends AbstractCompactGraph<CompactEdge<EP>, NP, EP> {
 
-    private final ResizingObjectArray nodeProperties;
+    private final ResizingArrayStorage<NP> nodeProperties;
 
     public CompactGraph() {
         super();
-        this.nodeProperties = new ResizingObjectArray();
+        this.nodeProperties = new ResizingArrayStorage<>(Object.class);
     }
 
     public CompactGraph(int initialCapacity) {
         super(initialCapacity);
-        this.nodeProperties = new ResizingObjectArray(initialCapacity);
+        this.nodeProperties = new ResizingArrayStorage<>(Object.class, initialCapacity);
     }
 
     @Override
@@ -45,10 +45,9 @@ public class CompactGraph<NP, EP> extends AbstractCompactGraph<CompactEdge<EP>, 
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public NP getNodeProperties(int node) {
         if (node < nodeProperties.array.length) {
-            return (NP) nodeProperties.array[node];
+            return nodeProperties.array[node];
         }
         return null;
     }

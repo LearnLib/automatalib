@@ -15,12 +15,15 @@
  */
 package net.automatalib.commons.util.array;
 
+import java.io.Serializable;
+import java.util.Arrays;
+
 /**
  * Class that provides a resizable <tt>int</tt> array storage.
  *
  * @author Malte Isberner
  */
-public final class ResizingIntArray {
+public final class ResizingIntArray implements Serializable {
 
     /**
      * The arrays default initial capacity.
@@ -69,18 +72,9 @@ public final class ResizingIntArray {
             return false;
         }
 
-        int newCapacity = (array.length * 3) / 2 + 1;
-        if (newCapacity < nextCapacityHint) {
-            newCapacity = nextCapacityHint;
-        }
+        final int newCapacity = ArrayUtil.computeNewCapacity(array.length, minCapacity, nextCapacityHint);
 
-        if (newCapacity < minCapacity) {
-            newCapacity = minCapacity;
-        }
-
-        int[] newArray = new int[newCapacity];
-        System.arraycopy(array, 0, newArray, 0, array.length);
-        array = newArray;
+        array = Arrays.copyOf(array, newCapacity);
         nextCapacityHint = 0;
         return true;
     }

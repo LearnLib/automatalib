@@ -15,6 +15,7 @@
  */
 package net.automatalib.commons.util.array;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
@@ -26,14 +27,13 @@ import java.util.Arrays;
  *
  * @author Malte Isberner
  */
-public class ResizingArrayStorage<T> {
+public class ResizingArrayStorage<T> implements Serializable {
 
     /**
      * The default initial capacity of the array storage.
      */
     public static final int DEFAULT_INITIAL_CAPACITY = 10;
 
-    private final Class<T[]> arrayClazz;
     public T[] array;
     private int nextCapacityHint;
 
@@ -44,7 +44,7 @@ public class ResizingArrayStorage<T> {
      * @param arrayClazz
      *         the class of the storage array.
      */
-    public ResizingArrayStorage(Class<T[]> arrayClazz) {
+    public ResizingArrayStorage(Class<? super T> arrayClazz) {
         this(arrayClazz, DEFAULT_INITIAL_CAPACITY);
     }
 
@@ -57,12 +57,8 @@ public class ResizingArrayStorage<T> {
      *         the initial capacity.
      */
     @SuppressWarnings("unchecked")
-    public ResizingArrayStorage(Class<T[]> arrayClazz, int initialCapacity) {
-
-        final int capacity = initialCapacity <= 0 ? DEFAULT_INITIAL_CAPACITY : initialCapacity;
-
-        this.array = (T[]) Array.newInstance(arrayClazz.getComponentType(), capacity);
-        this.arrayClazz = arrayClazz;
+    public ResizingArrayStorage(Class<? super T> arrayClazz, int initialCapacity) {
+        this.array = (T[]) Array.newInstance(arrayClazz, Math.max(0, initialCapacity));
     }
 
     /**
@@ -78,14 +74,7 @@ public class ResizingArrayStorage<T> {
             return false;
         }
 
-        int newCapacity = (array.length * 3) / 2 + 1;
-        if (newCapacity < nextCapacityHint) {
-            newCapacity = nextCapacityHint;
-        }
-
-        if (newCapacity < minCapacity) {
-            newCapacity = minCapacity;
-        }
+        final int newCapacity = ArrayUtil.computeNewCapacity(array.length, minCapacity, nextCapacityHint);
 
         array = Arrays.copyOf(array, newCapacity);
         nextCapacityHint = 0;
@@ -134,10 +123,11 @@ public class ResizingArrayStorage<T> {
     }
 
     public void swap(ResizingArrayStorage<T> other) {
-        if (arrayClazz != other.arrayClazz) {
+        final Class<?> myType = array.getClass().getComponentType();
+        final Class<?> otherType = other.array.getClass().getComponentType();
+        if (myType != otherType) {
             throw new IllegalArgumentException(
-                    "Cannot swap array storages of different array classes (" + arrayClazz.getSimpleName() + " vs. " +
-                    other.arrayClazz.getSimpleName());
+                    "Cannot swap array storages of different array classes (" + myType + " vs. " + otherType + ")");
         }
         T[] arrayTmp = array;
         int hintTmp = nextCapacityHint;

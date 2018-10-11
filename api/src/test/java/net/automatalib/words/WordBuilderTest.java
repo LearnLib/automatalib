@@ -106,6 +106,18 @@ public class WordBuilderTest {
         wb.repeatAppend(3, abc);
         Assert.assertEquals(9, wb.size());
         Assert.assertEquals(abcabcabc, wb.toWord());
+
+
+        final int bigChunkSize = 27;
+        wb.clear();
+        wb.repeatAppend(bigChunkSize, abc);
+        Assert.assertEquals(bigChunkSize * 3, wb.size());
+
+        Word<Character> buffer = Word.epsilon();
+        for (int i = 0; i < bigChunkSize; i++) {
+            buffer = buffer.concat(abc);
+        }
+        Assert.assertEquals(buffer, wb.toWord());
     }
 
     @Test
