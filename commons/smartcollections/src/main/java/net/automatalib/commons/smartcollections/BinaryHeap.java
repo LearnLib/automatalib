@@ -369,9 +369,9 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
 
     /**
      * Class for entries in a priority queue. Entry objects are returned by the {@link
-     * SmartDynamicPriorityQueue#insert(Comparable)} method and are passed to the {@link
-     * SmartDynamicPriorityQueue#keyChanged(Reference)} method. The usage of entry objects eliminates the necessity of
-     * an extra element to index mapping.
+     * SmartDynamicPriorityQueue#referencedAdd(Object)} method and are passed to the {@link
+     * SmartDynamicPriorityQueue#keyChanged(ElementReference)} method. The usage of entry objects eliminates the
+     * necessity of an extra element to index mapping.
      *
      * @param <E>
      *         element class.

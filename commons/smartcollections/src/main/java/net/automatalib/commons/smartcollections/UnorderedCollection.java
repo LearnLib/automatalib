@@ -192,7 +192,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         int sizeInc = array.length;
         ensureCapacity(size + sizeInc);
         for (int index = size, i = 0; i < array.length; index++, i++) {
-            storage.array[index] = new Reference<E>(array[i], index);
+            storage.array[index] = new Reference<>(array[i], index);
         }
         size += sizeInc;
     }
