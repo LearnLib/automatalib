@@ -126,7 +126,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
             final CompactMealy<I, O> mealy;
 
             try {
-                mealy = fsm2Mealy(fsm, automaton);
+                mealy = fsm2Mealy(fsm, automaton, inputs);
 
                 // check if we must keep the FSM
                 if (!isKeepFiles() && !fsm.delete()) {

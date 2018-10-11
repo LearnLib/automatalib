@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -133,50 +135,58 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
     }
 
     public static <I, O> CompactMealy<I, O> parse(Reader reader,
+                                                  Optional<? extends Collection<? extends I>> requiredInputs,
                                                   Function<String, I> inputParser,
                                                   Function<String, O> outputParser)
             throws IOException, FSMParseException {
-        return new FSM2MealyParserIO<>(reader, inputParser, outputParser).parseMealy();
+        return new FSM2MealyParserIO<>(reader, inputParser, outputParser).parseMealy(requiredInputs);
     }
 
     public static <I, O> CompactMealy<I, O> parse(File file,
+                                                  Optional<? extends Collection<? extends I>> requiredInputs,
                                                   Function<String, I> inputParser,
                                                   Function<String, O> outputParser)
             throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(file), inputParser, outputParser);
+        return parse(IOUtil.asBufferedUTF8Reader(file), requiredInputs, inputParser, outputParser);
     }
 
     public static <I, O> CompactMealy<I, O> parse(String string,
+                                                  Optional<? extends Collection<? extends I>> requiredInputs,
                                                   Function<String, I> inputParser,
                                                   Function<String, O> outputParser)
             throws IOException, FSMParseException {
-        return parse(new StringReader(string), inputParser, outputParser);
+        return parse(new StringReader(string), requiredInputs, inputParser, outputParser);
     }
 
     public static <I, O> CompactMealy<I, O> parse(InputStream inputStream,
+                                                  Optional<? extends Collection<? extends I>> requiredInputs,
                                                   Function<String, I> inputParser,
                                                   Function<String, O> outputParser)
             throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(inputStream), inputParser, outputParser);
+        return parse(IOUtil.asBufferedUTF8Reader(inputStream), requiredInputs, inputParser, outputParser);
     }
 
-    public static <E> CompactMealy<E, E> parse(Reader reader, Function<String, E> edgeParser)
-            throws IOException, FSMParseException {
-        return parse(reader, edgeParser, edgeParser);
+    public static <E> CompactMealy<E, E> parse(Reader reader,
+                                               Optional<? extends Collection<? extends E>> requiredInputs,
+                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
+        return parse(reader, requiredInputs, edgeParser, edgeParser);
     }
 
-    public static <E> CompactMealy<E, E> parse(File file, Function<String, E> edgeParser)
-            throws IOException, FSMParseException {
-        return parse(file, edgeParser, edgeParser);
+    public static <E> CompactMealy<E, E> parse(File file,
+                                               Optional<? extends Collection<? extends E>> requiredInputs,
+                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
+        return parse(file, requiredInputs, edgeParser, edgeParser);
     }
 
-    public static <E> CompactMealy<E, E> parse(String string, Function<String, E> edgeParser)
-            throws IOException, FSMParseException {
-        return parse(string, edgeParser, edgeParser);
+    public static <E> CompactMealy<E, E> parse(String string,
+                                               Optional<? extends Collection<? extends E>> requiredInputs,
+                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
+        return parse(string, requiredInputs, edgeParser, edgeParser);
     }
 
-    public static <E> CompactMealy<E, E> parse(InputStream inputStream, Function<String, E> edgeParser)
-            throws IOException, FSMParseException {
-        return parse(inputStream, edgeParser, edgeParser);
+    public static <E> CompactMealy<E, E> parse(InputStream inputStream,
+                                               Optional<? extends Collection<? extends E>> requiredInputs,
+                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
+        return parse(inputStream, requiredInputs, edgeParser, edgeParser);
     }
 }

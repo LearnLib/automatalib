@@ -17,8 +17,10 @@ package net.automatalib.serialization.fsm.parser;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -121,17 +123,28 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      * Constructs the actual {@link net.automatalib.automata.transout.MealyMachine}, using {@link #states}, and
      * {@link #transitions}.
      *
+     * @param requiredInputs
+     *         An optional containing the inputs which should constitute the input alphabet of the returned automaton.
+     *         If {@code Optional.empty()}, the inputs will be automatically gathered from the provided FSM file.
+     *
      * @return the Mealy machine defined in the FSM source.
      *
      * @throws FSMParseException (see {@link #parse()}).
      * @throws IOException (see {@link #parse()}).
      */
-    protected CompactMealy<I, O> parseMealy() throws FSMParseException, IOException {
+    protected CompactMealy<I, O> parseMealy(Optional<? extends Collection<? extends I>> requiredInputs)
+            throws FSMParseException, IOException {
 
         parse();
 
         // create the alphabet
-        final Alphabet<I> alphabet = Alphabets.fromCollection(getInputs());
+        final Alphabet<I> alphabet;
+
+        if (requiredInputs.isPresent()) {
+            alphabet = Alphabets.fromCollection(requiredInputs.get());
+        } else {
+            alphabet = Alphabets.fromCollection(getInputs());
+        }
 
         // create a CompactMealy
         final CompactMealy<I, O> mealy = new CompactMealy<>(alphabet);
@@ -143,15 +156,15 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
         mealy.setInitialState(stateMap.computeIfAbsent(states.iterator().next(), i -> mealy.addState()));
 
         // iterate over all transitions, add them to the CompactMealy
-        for (Map.Entry<Pair<Integer, I>, Pair<O, Integer>> transition : getTransitions().entrySet()) {
-            final Integer from = stateMap.computeIfAbsent(transition.getKey().getFirst(), i -> mealy.addState());
-            final Integer to = stateMap.computeIfAbsent(transition.getValue().getSecond(), i -> mealy.addState());
+        getTransitions().entrySet().stream().filter(e -> alphabet.containsSymbol(e.getKey().getSecond())).forEach(e -> {
+            final Integer from = stateMap.computeIfAbsent(e.getKey().getFirst(), i -> mealy.addState());
+            final Integer to = stateMap.computeIfAbsent(e.getValue().getSecond(), i -> mealy.addState());
 
-            final I i = transition.getKey().getSecond();
-            final O o = transition.getValue().getFirst();
+            final I i = e.getKey().getSecond();
+            final O o = e.getValue().getFirst();
 
             mealy.addTransition(from, i, to, o);
-        }
+        });
 
         return mealy;
     }

@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.ltsmin.integration;
 
 import java.io.File;
+import java.util.Optional;
 
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO;
@@ -33,6 +34,6 @@ public class IO2ETF2FSM2IOTest extends AbstractMealy2ETF2FSM2MealyTest {
 
     @Override
     protected CompactMealy<String, String> fsm2Automaton(File fsm) throws Exception {
-        return FSM2MealyParserIO.parse(fsm, s -> s);
+        return FSM2MealyParserIO.parse(fsm, Optional.empty(), s -> s);
     }
 }

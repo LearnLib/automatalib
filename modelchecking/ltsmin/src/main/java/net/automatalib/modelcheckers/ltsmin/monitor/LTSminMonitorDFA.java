@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.ltsmin.monitor;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
@@ -61,7 +62,7 @@ public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA
         try {
             final CompactDFA<I> result;
             if (fsm != null) {
-                result = FSM2DFAParser.parse(fsm, getString2Input(), LABEL_NAME, LABEL_VALUE);
+                result = FSM2DFAParser.parse(fsm, Optional.of(inputs), getString2Input(), LABEL_NAME, LABEL_VALUE);
 
                 // check if we must keep the FSM
                 if (!isKeepFiles() && !fsm.delete()) {

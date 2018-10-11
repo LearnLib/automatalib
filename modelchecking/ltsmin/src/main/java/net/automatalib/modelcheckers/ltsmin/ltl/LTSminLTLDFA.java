@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.ltsmin.ltl;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
@@ -79,7 +80,7 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
             final CompactDFA<I> dfa;
 
             try {
-                dfa = FSM2DFAParser.parse(fsm, getString2Input(), LABEL_NAME, LABEL_VALUE);
+                dfa = FSM2DFAParser.parse(fsm, Optional.of(inputs), getString2Input(), LABEL_NAME, LABEL_VALUE);
 
                 // check if we must keep the FSM
                 if (!isKeepFiles() && !fsm.delete()) {

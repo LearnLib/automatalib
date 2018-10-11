@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Optional;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
@@ -49,14 +50,18 @@ public interface LTSminAlternating<I, O, R> extends LTSminMealy<I, O, R> {
     boolean requiresOriginalAutomaton();
 
     @Override
-    default CompactMealy<I, O> fsm2Mealy(File fsm, MealyMachine<?, I, ?, O> originalAutomaton)
-            throws IOException, FSMParseException {
+    default CompactMealy<I, O> fsm2Mealy(File fsm,
+                                         MealyMachine<?, I, ?, O> originalAutomaton,
+                                         Collection<? extends I> inputs) throws IOException, FSMParseException {
 
         // Here we optionally provide the parse method with the original automaton. So that an implementation can
         // decide whether undefined outputs are allowed in the fsm or not.
         // If the original automaton is not required, yet there is an undefined output in the FSM an exception will
         // be thrown.
-        return FSM2MealyParserAlternating.parse(fsm, getString2Input(), getString2Output(),
+        return FSM2MealyParserAlternating.parse(fsm,
+                                                Optional.of(inputs),
+                                                getString2Input(),
+                                                getString2Output(),
                                                 requiresOriginalAutomaton() ? originalAutomaton : null);
     }
 

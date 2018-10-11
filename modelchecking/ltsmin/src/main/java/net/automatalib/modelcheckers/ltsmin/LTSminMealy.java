@@ -49,6 +49,8 @@ public interface LTSminMealy<I, O, R>
      *         the FSM to convert.
      * @param originalAutomaton
      *         the original automaton on which the property is checked.
+     * @param inputs
+     *         the alphabet for the returned automaton.
      *
      * @return the {@link CompactMealy}.
      *
@@ -57,7 +59,8 @@ public interface LTSminMealy<I, O, R>
      * @throws FSMParseException
      *         when {@code fsm} is invalid.
      */
-    CompactMealy<I, O> fsm2Mealy(File fsm, MealyMachine<?, I, ?, O> originalAutomaton) throws IOException, FSMParseException;
+    CompactMealy<I, O> fsm2Mealy(File fsm, MealyMachine<?, I, ?, O> originalAutomaton, Collection<? extends I> inputs)
+            throws IOException, FSMParseException;
 
     /**
      * Writes the given {@link MealyMachine} to the {@code etf} file.

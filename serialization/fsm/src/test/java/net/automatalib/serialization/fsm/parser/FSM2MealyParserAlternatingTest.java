@@ -17,9 +17,10 @@ package net.automatalib.serialization.fsm.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
-import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -38,7 +39,7 @@ import org.testng.annotations.Test;
  *
  * @author Jeroen Meijer
  */
-public class FSM2MealyParserAlternatingTest extends  AbstractFSM2AutParserTest {
+public class FSM2MealyParserAlternatingTest extends AbstractFSM2ParserTest {
 
     @Test
     public void testParse() throws Exception {
@@ -46,7 +47,8 @@ public class FSM2MealyParserAlternatingTest extends  AbstractFSM2AutParserTest {
 
         final Function<String, Character> ep = s -> s.charAt(0);
 
-        final CompactMealy<Character, Character> actualMealy = FSM2MealyParserAlternating.parse(is, ep, ep);
+        final CompactMealy<Character, Character> actualMealy =
+                FSM2MealyParserAlternating.parse(is, Optional.empty(), ep, ep);
         is.close();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
@@ -60,12 +62,13 @@ public class FSM2MealyParserAlternatingTest extends  AbstractFSM2AutParserTest {
     }
 
     @Override
-    protected AbstractCompactDeterministic<Character, ?, ?, ?> getAut() throws IOException, FSMParseException {
+    protected CompactMealy<Character, Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
+            throws IOException, FSMParseException {
         final InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm");
 
         final Function<String, Character> ep = s -> s.charAt(0);
 
-        final CompactMealy<Character, Character> mealy = FSM2MealyParserAlternating.parse(is, ep, ep);
+        final CompactMealy<Character, Character> mealy = FSM2MealyParserAlternating.parse(is, requiredInputs, ep, ep);
         is.close();
 
         return mealy;

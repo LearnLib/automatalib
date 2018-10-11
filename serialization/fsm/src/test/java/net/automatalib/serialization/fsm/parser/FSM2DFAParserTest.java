@@ -17,9 +17,10 @@ package net.automatalib.serialization.fsm.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
-import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -33,7 +34,7 @@ import org.testng.annotations.Test;
  *
  * @author Jeroen Meijer
  */
-public class FSM2DFAParserTest extends AbstractFSM2AutParserTest {
+public class FSM2DFAParserTest extends AbstractFSM2ParserTest {
 
     @Test
     public void testParse1() throws Exception {
@@ -41,7 +42,7 @@ public class FSM2DFAParserTest extends AbstractFSM2AutParserTest {
 
         final Function<String, Character> ip = s -> s.charAt(0);
 
-        final CompactDFA<Character> actualDFA = FSM2DFAParser.parse(is, ip, "label", "accept");
+        final CompactDFA<Character> actualDFA = FSM2DFAParser.parse(is, Optional.empty(), ip, "label", "accept");
         is.close();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'b');
@@ -60,7 +61,7 @@ public class FSM2DFAParserTest extends AbstractFSM2AutParserTest {
 
         final Function<String, Character> ip = s -> s.charAt(0);
 
-        final CompactDFA<Character> actualDFA = FSM2DFAParser.parse(is, ip, "label", "accept");
+        final CompactDFA<Character> actualDFA = FSM2DFAParser.parse(is, Optional.empty(), ip, "label", "accept");
         is.close();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
@@ -73,12 +74,13 @@ public class FSM2DFAParserTest extends AbstractFSM2AutParserTest {
     }
 
     @Override
-    protected AbstractCompactDeterministic<Character, ?, ?, ?> getAut() throws IOException, FSMParseException {
+    protected CompactDFA<Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
+            throws IOException, FSMParseException {
         final InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm");
 
         final Function<String, Character> ip = s -> s.charAt(0);
 
-        final CompactDFA<Character> dfa = FSM2DFAParser.parse(is, ip, "label", "accept");
+        final CompactDFA<Character> dfa = FSM2DFAParser.parse(is, requiredInputs, ip, "label", "accept");
         is.close();
 
         return dfa;

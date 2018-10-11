@@ -119,7 +119,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
         try {
-            final CompactMealy<I, O> result = fsm != null ? fsm2Mealy(fsm, automaton) : null;
+            final CompactMealy<I, O> result = fsm != null ? fsm2Mealy(fsm, automaton, inputs) : null;
 
             // check if we must keep the FSM
             if (!isKeepFiles() && fsm != null && !fsm.delete()) {

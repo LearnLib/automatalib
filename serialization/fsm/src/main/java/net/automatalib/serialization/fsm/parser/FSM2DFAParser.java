@@ -21,8 +21,10 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
@@ -292,6 +294,10 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
     /**
      * Constructs the actual {@link net.automatalib.automata.fsa.DFA}.
      *
+     * @param requiredInputs
+     *         An optional containing the inputs which should constitute the input alphabet of the returned automaton.
+     *         If {@code Optional.empty()}, the inputs will be automatically gathered from the provided FSM file.
+     *
      * @return the DFA represented by the FSM file.
      *
      * @throws FSMParseException
@@ -299,11 +305,19 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      * @throws IOException
      *         see {@link #parse()}.
      */
-    private CompactDFA<I> parseDFA() throws FSMParseException, IOException {
+    private CompactDFA<I> parseDFA(Optional<? extends Collection<? extends I>> requiredInputs)
+            throws FSMParseException, IOException {
 
         parse();
 
-        final Alphabet<I> alphabet = Alphabets.fromCollection(getInputs());
+        final Alphabet<I> alphabet;
+
+        if (requiredInputs.isPresent()) {
+            alphabet = Alphabets.fromCollection(requiredInputs.get());
+        } else {
+            alphabet = Alphabets.fromCollection(getInputs());
+        }
+
         final CompactDFA<I> dfa = new CompactDFA<>(alphabet);
 
         // add all the states
@@ -313,41 +327,56 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
         dfa.setInitialState(states.firstKey() - 1);
 
         // add all the transitions
-        for (Map.Entry<Pair<Integer, I>, Integer> transition : transitions.entrySet()) {
-            dfa.addTransition(transition.getKey().getFirst() - 1,
-                              transition.getKey().getSecond(),
-                              transition.getValue() - 1);
-        }
+        transitions.entrySet()
+                   .stream()
+                   .filter(e -> alphabet.containsSymbol(e.getKey().getSecond()))
+                   .forEach(e -> dfa.addTransition(e.getKey().getFirst() - 1,
+                                                   e.getKey().getSecond(),
+                                                   e.getValue() - 1));
 
         return dfa;
     }
 
     public static <I> CompactDFA<I> parse(Reader reader,
+                                          Optional<? extends Collection<? extends I>> requiredInputs,
                                           Function<String, I> inputParser,
                                           String acceptingDataVariableName,
                                           String acceptingDataValue) throws IOException, FSMParseException {
-        return new FSM2DFAParser<>(reader, inputParser, acceptingDataVariableName, acceptingDataValue).parseDFA();
+        return new FSM2DFAParser<>(reader, inputParser, acceptingDataVariableName, acceptingDataValue).parseDFA(
+                requiredInputs);
     }
 
     public static <I> CompactDFA<I> parse(File file,
+                                          Optional<? extends Collection<? extends I>> requiredInputs,
                                           Function<String, I> inputParser,
                                           String acceptingDataVariableName,
                                           String acceptingDataValue) throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(file), inputParser, acceptingDataVariableName, acceptingDataValue);
+        return parse(IOUtil.asBufferedUTF8Reader(file),
+                     requiredInputs,
+                     inputParser,
+                     acceptingDataVariableName,
+                     acceptingDataValue);
     }
 
     public static <I> CompactDFA<I> parse(String string,
+                                          Optional<? extends Collection<? extends I>> requiredInputs,
                                           Function<String, I> inputParser,
                                           String acceptingDataVariableName,
                                           String acceptingDataValue) throws IOException, FSMParseException {
-        return parse(new StringReader(string), inputParser, acceptingDataVariableName, acceptingDataValue);
+        return parse(new StringReader(string),
+                     requiredInputs,
+                     inputParser,
+                     acceptingDataVariableName,
+                     acceptingDataValue);
     }
 
     public static <I> CompactDFA<I> parse(InputStream inputStream,
+                                          Optional<? extends Collection<? extends I>> requiredInputs,
                                           Function<String, I> inputParser,
                                           String acceptingDataVariableName,
                                           String acceptingDataValue) throws IOException, FSMParseException {
         return parse(IOUtil.asBufferedUTF8Reader(inputStream),
+                     requiredInputs,
                      inputParser,
                      acceptingDataVariableName,
                      acceptingDataValue);

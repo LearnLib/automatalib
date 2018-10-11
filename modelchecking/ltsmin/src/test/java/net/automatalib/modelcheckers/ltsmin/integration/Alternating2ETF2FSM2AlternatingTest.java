@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.ltsmin.integration;
 
 import java.io.File;
+import java.util.Optional;
 
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating;
@@ -33,6 +34,6 @@ public class Alternating2ETF2FSM2AlternatingTest extends AbstractMealy2ETF2FSM2M
 
     @Override
     protected CompactMealy<String, String> fsm2Automaton(File fsm) throws Exception {
-        return FSM2MealyParserAlternating.parse(fsm, s -> s);
+        return FSM2MealyParserAlternating.parse(fsm, Optional.empty(), s -> s);
     }
 }
