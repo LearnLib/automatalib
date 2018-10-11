@@ -21,23 +21,22 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 public class StateIDStaticMapping<S, V> implements MutableMapping<S, V> {
 
     private final StateIDs<S> stateIds;
-    private final Object[] storage;
+    private final V[] storage;
 
+    @SuppressWarnings("unchecked")
     public StateIDStaticMapping(StateIDs<S> stateIds, int size) {
         this.stateIds = stateIds;
-        this.storage = new Object[size];
+        this.storage = (V[]) new Object[size];
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V get(S elem) {
-        return (V) storage[stateIds.getStateId(elem)];
+        return storage[stateIds.getStateId(elem)];
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public V put(S key, V value) {
-        V old = (V) storage[stateIds.getStateId(key)];
+        V old = storage[stateIds.getStateId(key)];
         storage[stateIds.getStateId(key)] = value;
         return old;
     }

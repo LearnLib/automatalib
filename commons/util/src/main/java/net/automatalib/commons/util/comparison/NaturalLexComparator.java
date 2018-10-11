@@ -29,8 +29,7 @@ import java.util.Comparator;
  */
 final class NaturalLexComparator<T extends Iterable<U>, U extends Comparable<U>> implements Comparator<T> {
 
-    @SuppressWarnings("rawtypes")
-    private static final NaturalLexComparator<?, ?> INSTANCE = new NaturalLexComparator();
+    private static final NaturalLexComparator<?, ?> INSTANCE = new NaturalLexComparator<>();
 
     @SuppressWarnings("unchecked")
     public static <T extends Iterable<U>, U extends Comparable<U>> NaturalLexComparator<T, U> getInstance() {

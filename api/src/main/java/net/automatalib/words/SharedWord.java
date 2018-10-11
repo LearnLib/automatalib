@@ -31,7 +31,7 @@ import java.util.Spliterator;
  */
 final class SharedWord<I> extends Word<I> {
 
-    private final Object[] storage;
+    private final I[] storage;
     private final int offset;
     private final int length;
 
@@ -42,8 +42,9 @@ final class SharedWord<I> extends Word<I> {
         this(storage, 0, storage.length);
     }
 
+    @SuppressWarnings("unchecked")
     SharedWord(Object[] storage, int offset, int length) {
-        this.storage = storage;
+        this.storage = (I[]) storage;
         this.offset = offset;
         this.length = length;
     }
@@ -54,8 +55,9 @@ final class SharedWord<I> extends Word<I> {
      * @param other
      *         the list of input symbols.
      */
+    @SuppressWarnings("unchecked")
     SharedWord(List<? extends I> other) {
-        this.storage = other.toArray();
+        this.storage = (I[]) other.toArray();
         this.offset = 0;
         this.length = other.size();
     }
@@ -71,9 +73,8 @@ final class SharedWord<I> extends Word<I> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Spliterator<I> spliterator() {
-        return Arrays.spliterator((I[]) storage, offset, offset + length);
+        return Arrays.spliterator(storage, offset, offset + length);
     }
 
     @Override
@@ -95,21 +96,18 @@ final class SharedWord<I> extends Word<I> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public I getSymbol(int index) {
-        return (I) storage[offset + index];
+        return storage[offset + index];
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public I lastSymbol() {
-        return (I) storage[offset + length - 1];
+        return storage[offset + length - 1];
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public I firstSymbol() {
-        return (I) storage[offset];
+        return storage[offset];
     }
 
     @Override
@@ -137,7 +135,7 @@ final class SharedWord<I> extends Word<I> {
      */
     private static final class Iterator<I> implements java.util.ListIterator<I> {
 
-        private final Object[] storage;
+        private final I[] storage;
         private final int startIdx, endIdx;
         private int currIdx;
 
@@ -158,12 +156,11 @@ final class SharedWord<I> extends Word<I> {
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public I next() {
             if (currIdx >= endIdx) {
                 throw new NoSuchElementException();
             }
-            return (I) storage[currIdx++];
+            return storage[currIdx++];
         }
 
         @Override
@@ -172,9 +169,8 @@ final class SharedWord<I> extends Word<I> {
         }
 
         @Override
-        @SuppressWarnings("unchecked")
         public I previous() {
-            return (I) storage[--currIdx];
+            return storage[--currIdx];
         }
 
         @Override

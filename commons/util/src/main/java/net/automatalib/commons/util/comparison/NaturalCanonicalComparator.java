@@ -20,8 +20,7 @@ import java.util.List;
 
 final class NaturalCanonicalComparator<T extends List<U>, U extends Comparable<U>> implements Comparator<T> {
 
-    @SuppressWarnings("rawtypes")
-    private static final NaturalCanonicalComparator<?, ?> INSTANCE = new NaturalCanonicalComparator();
+    private static final NaturalCanonicalComparator<?, ?> INSTANCE = new NaturalCanonicalComparator<>();
 
     @SuppressWarnings("unchecked")
     public static <T extends List<U>, U extends Comparable<U>> NaturalCanonicalComparator<T, U> getInstance() {

@@ -56,7 +56,6 @@ public class WpMethodTestsIterator<I> extends DelegatingIterator<Word<I>> {
         super(buildIterators(automaton, alphabet, maxDepth));
     }
 
-    @SuppressWarnings("unchecked")
     private static <I> Iterator<Word<I>> buildIterators(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
                                                         Collection<? extends I> inputs,
                                                         int maxDepth) {
