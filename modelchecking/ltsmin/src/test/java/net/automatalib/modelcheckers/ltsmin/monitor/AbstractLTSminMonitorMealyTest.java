@@ -45,6 +45,17 @@ public abstract class AbstractLTSminMonitorMealyTest
 
     public abstract String getSkipFormula();
 
+    @Override
+    protected MealyMachine<?, String, ?, String> createCounterExample() {
+        return AutomatonBuilders.forMealy(new CompactMealy<String, String>(getAlphabet()))
+                                .withInitial("q0")
+                                .from("q0")
+                                .on("a")
+                                .withOutput("1")
+                                .to("q1")
+                                .create();
+    }
+
     @Test
     public void testSkipOutputs() throws Exception {
         final HashSet<String> skip = new HashSet<>();

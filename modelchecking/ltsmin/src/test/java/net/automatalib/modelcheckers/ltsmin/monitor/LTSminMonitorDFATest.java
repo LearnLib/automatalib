@@ -17,8 +17,6 @@ package net.automatalib.modelcheckers.ltsmin.monitor;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.exception.ModelCheckingException;
-import net.automatalib.modelchecking.Lasso.DFALasso;
-import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import org.testng.annotations.Test;
 
@@ -40,8 +38,14 @@ public class LTSminMonitorDFATest extends AbstractLTSminMonitorTest<DFA<?, Strin
     }
 
     @Override
-    protected DFALasso<String> createCounterExample() {
-        return new DFALassoImpl<>(createAutomaton(), getAlphabet(), 4);
+    protected DFA<?, String> createCounterExample() {
+        return AutomatonBuilders.newDFA(getAlphabet())
+                                .withInitial("q0")
+                                .withAccepting("q1")
+                                .from("q0")
+                                .on("a")
+                                .to("q1")
+                                .create();
     }
 
     @Override

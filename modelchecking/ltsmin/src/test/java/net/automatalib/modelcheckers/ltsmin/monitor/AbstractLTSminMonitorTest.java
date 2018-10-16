@@ -19,13 +19,12 @@ import net.automatalib.automata.concepts.Output;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSminTest;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 
 public abstract class AbstractLTSminMonitorTest<A, R extends Output<String, ?>> extends AbstractLTSminTest<A, R> {
 
     @Override
     protected Word<String> getInput() {
-        return new WordBuilder<String>().repeatAppend(4, "a").toWord();
+        return Word.fromSymbols("a");
     }
 
     @Override

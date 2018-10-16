@@ -15,9 +15,6 @@
  */
 package net.automatalib.modelcheckers.ltsmin.monitor;
 
-import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.lasso.MealyLassoImpl;
-
 /**
  * Tests whether LTSminMonitorAlternating actually uses regular edge semantics.
  *
@@ -41,11 +38,6 @@ public class LTSminMonitorIOTest extends AbstractLTSminMonitorMealyTest {
     @Override
     public void newModelChecker() {
         modelChecker = new LTSminMonitorIOBuilder<String, String>().withString2Input(s -> s).withString2Output(s -> s).create();
-    }
-
-    @Override
-    protected MealyLasso<String, String> createCounterExample() {
-        return new MealyLassoImpl<>(createAutomaton(), getAlphabet(), 4);
     }
 
     @Override
