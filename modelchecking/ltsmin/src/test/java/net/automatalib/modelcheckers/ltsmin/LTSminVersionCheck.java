@@ -36,4 +36,9 @@ public class LTSminVersionCheck {
         Assert.assertEquals(LTSminVersion.parse(v300beta), LTSminVersion.of(3, 0, 0));
         Assert.assertEquals(LTSminVersion.parse(v300broken), LTSminVersion.of(0, 0, 0));
     }
+
+    @Test
+    public void testSupports() {
+        Assert.assertTrue(LTSminVersion.of(3, 1, 0).supports(LTSminVersion.of(3, 0, 1)));
+    }
 }
