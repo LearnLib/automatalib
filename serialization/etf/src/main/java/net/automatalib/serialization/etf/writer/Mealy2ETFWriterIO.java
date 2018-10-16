@@ -15,14 +15,12 @@
  */
 package net.automatalib.serialization.etf.writer;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.words.Alphabet;
@@ -32,24 +30,20 @@ import net.automatalib.words.Alphabet;
  *
  * @author Jeroen Meijer
  *
- * @param <S> the state type
  * @param <I> the input type
- * @param <T> the transition type
  * @param <O> the output type
  */
-public final class Mealy2ETFWriterIO<S, I, T, O> extends AbstractETFWriter<I, MealyMachine<S, I, T, O>> {
+public final class Mealy2ETFWriterIO<I, O> extends AbstractETFWriter<I, MealyMachine<?, I, ?, O>> {
 
-    private Mealy2ETFWriterIO(Writer writer) {
-        super(writer);
-    }
+    private static final Mealy2ETFWriterIO<?, ?> INSTANCE = new Mealy2ETFWriterIO<>();
 
     /**
      * Write the edge type. An edge has two edge labels: input of type input, and output of type output.
+     *
+     * @param pw the Writer.
      */
     @Override
-    protected void writeEdge() {
-        final PrintWriter pw = getPrintWriter();
-
+    protected void writeEdge(PrintWriter pw) {
         pw.println("begin edge");
         pw.println("input:input");
         pw.println("output:output");
@@ -66,16 +60,21 @@ public final class Mealy2ETFWriterIO<S, I, T, O> extends AbstractETFWriter<I, Me
      *  - the input alphabet (for the input labels on edges),
      *  - the output alphabet (for the output labels on edges).
      *
+     * @param pw the Writer.
      * @param mealy the Mealy machine to write.
      * @param inputs the alphabet.
      */
     @Override
-    protected void writeETF(MealyMachine<S, I, T, O> mealy, Alphabet<I> inputs) {
-        final PrintWriter pw = getPrintWriter();
+    protected void writeETF(PrintWriter pw, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) {
+        writeETFInternal(pw, mealy, inputs);
+    }
+
+    private <S, T> void writeETFInternal(PrintWriter pw, MealyMachine<S, I, T, O> mealy, Alphabet<I> inputs) {
+        final StateIDs<S> stateIDs = mealy.stateIDs();
 
         // write the initial state
         pw.println("begin init");
-        pw.printf("%d%n", mealy.stateIDs().getStateId(mealy.getInitialState()));
+        pw.printf("%d%n", stateIDs.getStateId(mealy.getInitialState()));
         pw.println("end init");
 
         // write the state ids
@@ -96,10 +95,10 @@ public final class Mealy2ETFWriterIO<S, I, T, O> extends AbstractETFWriter<I, Me
                     outputIndices.computeIfAbsent(o, ii -> outputIndices.size());
                     final S n = mealy.getSuccessor(t);
                     pw.printf("%s/%s %d %d%n",
-                            mealy.stateIDs().getStateId(s),
-                            mealy.stateIDs().getStateId(n),
-                            inputs.getSymbolIndex(i),
-                            outputIndices.get(o));
+                              stateIDs.getStateId(s),
+                              stateIDs.getStateId(n),
+                              inputs.getSymbolIndex(i),
+                              outputIndices.get(o));
                 }
             }
         }
@@ -118,15 +117,15 @@ public final class Mealy2ETFWriterIO<S, I, T, O> extends AbstractETFWriter<I, Me
         pw.println("end sort");
     }
 
-    public static <S, I, T, O> void write(Writer writer, MealyMachine<S, I, T, O> mealy, Alphabet<I> inputs) {
-        new Mealy2ETFWriterIO<S, I, T, O>(writer).write(mealy, inputs);
+    @Override
+    public void writeModel(OutputStream os, MealyMachine<?, I, ?, O> model, Alphabet<I> alphabet) {
+        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedUTF8Writer(os))) {
+            write(pw, model, alphabet);
+        }
     }
 
-    public static <I, O> void write(File file, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) throws IOException {
-        write(IOUtil.asBufferedUTF8Writer(file), mealy, inputs);
-    }
-
-    public static <I, O> void write(OutputStream outputStream, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) {
-        write(IOUtil.asBufferedUTF8Writer(outputStream), mealy, inputs);
+    @SuppressWarnings("unchecked")
+    public static <I, O> Mealy2ETFWriterIO<I, O> getInstance() {
+        return (Mealy2ETFWriterIO<I, O>) INSTANCE;
     }
 }

@@ -41,6 +41,10 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-serialization-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>

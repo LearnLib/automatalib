@@ -15,12 +15,10 @@
  */
 package net.automatalib.serialization.etf.writer;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 
+import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.words.Alphabet;
@@ -30,26 +28,19 @@ import net.automatalib.words.Alphabet;
  *
  * @author Jeroen Meijer
  *
- * @param <S> the state type.
  * @param <I> the input type.
  */
-public final class DFA2ETFWriter<S, I> extends AbstractETFWriter<I, DFA<S, I>> {
+public final class DFA2ETFWriter<I> extends AbstractETFWriter<I, DFA<?, I>> {
 
-    /**
-     * Constructs a new DFA2ETFWriter. Writing a DFA should be done with one of the static write methods.
-     *
-     * @param writer the Writer.
-     */
-    private DFA2ETFWriter(Writer writer) {
-        super(writer);
-    }
+    private static final DFA2ETFWriter<?> INSTANCE = new DFA2ETFWriter<>();
 
     /**
      * Writes the type of the edge. A DFA edge contains one label, named 'letter', of type 'letter.
+     *
+     * @param pw the Writer.
      */
     @Override
-    protected void writeEdge() {
-        final PrintWriter pw = getPrintWriter();
+    protected void writeEdge(PrintWriter pw) {
         pw.println("begin edge");
         pw.println("letter:letter");
         pw.println("end edge");
@@ -65,16 +56,21 @@ public final class DFA2ETFWriter<S, I> extends AbstractETFWriter<I, DFA<S, I>> {
      *  - the state labels (rejecting/accepting),
      *  - the mapping from states to state labels.
      *
+     * @param pw the Writer.
      * @param dfa the DFA to write.
      * @param inputs the alphabet.
      */
     @Override
-    protected void writeETF(DFA<S, I> dfa, Alphabet<I> inputs) {
-        final PrintWriter pw = getPrintWriter();
+    protected void writeETF(PrintWriter pw, DFA<?, I> dfa, Alphabet<I> inputs) {
+        writeETFInternal(pw, dfa, inputs);
+    }
+
+    private <S> void writeETFInternal(PrintWriter pw, DFA<S, I> dfa, Alphabet<I> inputs) {
+        final StateIDs<S> stateIDs = dfa.stateIDs();
 
         // write the initial state
         pw.println("begin init");
-        pw.printf("%d%n", dfa.stateIDs().getStateId(dfa.getInitialState()));
+        pw.printf("%d%n", stateIDs.getStateId(dfa.getInitialState()));
         pw.println("end init");
 
         // write the valuations of the state ids
@@ -99,8 +95,8 @@ public final class DFA2ETFWriter<S, I> extends AbstractETFWriter<I, DFA<S, I>> {
                 if (t != null) {
                     pw.printf(
                             "%d/%d %d%n",
-                            dfa.stateIDs().getStateId(s),
-                            dfa.stateIDs().getStateId(t),
+                            stateIDs.getStateId(s),
+                            stateIDs.getStateId(t),
                             inputs.getSymbolIndex(i));
                 }
             }
@@ -116,21 +112,22 @@ public final class DFA2ETFWriter<S, I> extends AbstractETFWriter<I, DFA<S, I>> {
         // write the state labels for each state, e.g. whether it is accepting/rejecting.
         pw.println("begin map label:label");
         for (S s : dfa.getStates()) {
-            final int stateId = dfa.stateIDs().getStateId(s);
+            final int stateId = stateIDs.getStateId(s);
             pw.printf("%d %d%n", stateId, dfa.isAccepting(s) ? 1 : 0);
         }
         pw.println("end map");
     }
 
-    public static <S, I> void write(Writer writer, DFA<S, I> dfa, Alphabet<I> inputs) {
-        new DFA2ETFWriter<S, I>(writer).write(dfa, inputs);
+    @Override
+    public void writeModel(OutputStream os, DFA<?, I> model, Alphabet<I> alphabet) {
+        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedUTF8Writer(os))) {
+            write(pw, model, alphabet);
+        }
     }
 
-    public static <I> void write(File file, DFA<?, I> dfa, Alphabet<I> inputs) throws IOException {
-        write(IOUtil.asBufferedUTF8Writer(file), dfa, inputs);
+    @SuppressWarnings("unchecked")
+    public static <I> DFA2ETFWriter<I> getInstance() {
+        return (DFA2ETFWriter<I>) INSTANCE;
     }
 
-    public static <I> void write(OutputStream outputStream, DFA<?, I> dfa, Alphabet<I> inputs) {
-        write(IOUtil.asBufferedUTF8Writer(outputStream), dfa, inputs);
-    }
 }

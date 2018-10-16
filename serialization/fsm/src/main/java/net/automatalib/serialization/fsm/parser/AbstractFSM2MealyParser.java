@@ -16,17 +16,22 @@
 package net.automatalib.serialization.fsm.parser;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
+import java.io.StreamTokenizer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -37,7 +42,7 @@ import net.automatalib.words.impl.Alphabets;
  * @param <I> the input type.
  * @param <O> the output type.
  */
-public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I> {
+public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I> implements ModelDeserializer<CompactMealy<I, O>> {
 
     /**
      * A Function that transform strings from the FSM source to actual output.
@@ -57,12 +62,16 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
     /**
      * Constructs a new AbstractFSM2MealyParser.
      *
-     * @param reader the reader
+     * @param targetInputs
+     *         An collection containing the inputs which should constitute the input alphabet of the parsed automaton.
+     *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser the input parser (see {@link #inputParser}).
      * @param outputParser the output parser (similar to {@code inputParser}).
      */
-    protected AbstractFSM2MealyParser(Reader reader, Function<String, I> inputParser, Function<String, O> outputParser) {
-        super(reader, inputParser);
+    protected AbstractFSM2MealyParser(@Nullable Collection<? extends I> targetInputs,
+                                      Function<String, I> inputParser,
+                                      Function<String, O> outputParser) {
+        super(targetInputs, inputParser);
         this.outputParser = outputParser;
     }
 
@@ -97,19 +106,19 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      * We don not care about data definitions.
      */
     @Override
-    protected void parseDataDefinition() {}
+    protected void parseDataDefinition(StreamTokenizer streamTokenizer) {}
 
     /**
      * We do not need to check data definitions.
      */
     @Override
-    protected void checkDataDefinitions() {}
+    protected void checkDataDefinitions(StreamTokenizer streamTokenizer) {}
 
     /**
      * Parse a state vector by simply recording the line number in the current part.
      */
     @Override
-    protected void parseStateVector() {
+    protected void parseStateVector(StreamTokenizer streamTokenizer) {
         getStates().add(getPartLineNumber());
     }
 
@@ -117,31 +126,27 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      * We do not check the state vectors.
      */
     @Override
-    protected void checkStateVectors() {}
+    protected void checkStateVectors(StreamTokenizer streamTokenizer) {}
 
     /**
      * Constructs the actual {@link net.automatalib.automata.transout.MealyMachine}, using {@link #states}, and
      * {@link #transitions}.
      *
-     * @param requiredInputs
-     *         An optional containing the inputs which should constitute the input alphabet of the returned automaton.
-     *         If {@code Optional.empty()}, the inputs will be automatically gathered from the provided FSM file.
-     *
      * @return the Mealy machine defined in the FSM source.
      *
-     * @throws FSMParseException (see {@link #parse()}).
-     * @throws IOException (see {@link #parse()}).
+     * @throws FSMParseException (see {@link #parse(Reader)}).
+     * @throws IOException (see {@link #parse(Reader)}).
      */
-    protected CompactMealy<I, O> parseMealy(Optional<? extends Collection<? extends I>> requiredInputs)
+    protected CompactMealy<I, O> parseMealy(Reader reader)
             throws FSMParseException, IOException {
 
-        parse();
+        parse(reader);
 
         // create the alphabet
         final Alphabet<I> alphabet;
 
-        if (requiredInputs.isPresent()) {
-            alphabet = Alphabets.fromCollection(requiredInputs.get());
+        if (targetInputs != null) {
+            alphabet = Alphabets.fromCollection(targetInputs);
         } else {
             alphabet = Alphabets.fromCollection(getInputs());
         }
@@ -166,6 +171,15 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
             mealy.addTransition(from, i, to, o);
         });
 
+        // clean our state for next parse call
+        states.clear();
+        transitions.clear();
+
         return mealy;
+    }
+
+    @Override
+    public CompactMealy<I, O> readModel(InputStream is) throws IOException {
+        return parseMealy(IOUtil.asBufferedUTF8Reader(is));
     }
 }

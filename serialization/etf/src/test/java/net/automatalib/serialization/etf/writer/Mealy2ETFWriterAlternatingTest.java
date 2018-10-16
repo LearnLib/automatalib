@@ -15,8 +15,9 @@
  */
 package net.automatalib.serialization.etf.writer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import com.google.common.io.CharStreams;
@@ -34,21 +35,22 @@ import org.testng.annotations.Test;
  * @author Jeroen Meijer
  */
 public class Mealy2ETFWriterAlternatingTest {
+
     @Test
     public void testWrite() throws Exception {
-        final StringWriter sw = new StringWriter();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
 
         final Random random = new Random(0);
-        final MealyMachine<?, Character, ?, Character> automaton = RandomAutomata.randomMealy(random, 20, alphabet,
-                alphabet);
+        final MealyMachine<?, Character, ?, Character> automaton =
+                RandomAutomata.randomMealy(random, 20, alphabet, alphabet);
 
-        Mealy2ETFWriterAlternating.write(sw, automaton, alphabet);
+        Mealy2ETFWriterAlternating.<Character, Character>getInstance().writeModel(baos, automaton, alphabet);
 
         final InputStream is = DFA2ETFWriterTest.class.getResourceAsStream("/Alt-testWrite.etf");
         final String expected = CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
 
-        Assert.assertEquals(sw.toString(), expected);
+        Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
     }
 }

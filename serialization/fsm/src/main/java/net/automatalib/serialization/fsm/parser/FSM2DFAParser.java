@@ -15,23 +15,23 @@
  */
 package net.automatalib.serialization.fsm.parser;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StreamTokenizer;
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -41,7 +41,7 @@ import net.automatalib.words.impl.Alphabets;
  * @param <I>
  *         the input type
  */
-public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
+public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements ModelDeserializer<CompactDFA<I>> {
 
     // some Exception messages
     public static final String ACCEPT_NOT_FOUND = "accepting state label (%s) not found";
@@ -82,8 +82,9 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
     /**
      * Constructs an FSM2DFAParser. To parse a DFA use one of the parse() methods.
      *
-     * @param reader
-     *         the Reader
+     * @param targetInputs
+     *         An collection containing the inputs which should constitute the input alphabet of the parsed automaton.
+     *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser
      *         the input parser (see {@link AbstractFSMParser#inputParser}).
      * @param acceptingDataVariableName
@@ -91,11 +92,11 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      * @param acceptingDataValue
      *         the string for acceptance (see {@link #acceptingDataValue})
      */
-    private FSM2DFAParser(Reader reader,
+    private FSM2DFAParser(Collection<? extends I> targetInputs,
                           Function<String, I> inputParser,
                           String acceptingDataVariableName,
                           String acceptingDataValue) {
-        super(reader, inputParser);
+        super(targetInputs, inputParser);
         this.acceptingDataVariableName = acceptingDataVariableName;
         this.acceptingDataValue = acceptingDataValue;
     }
@@ -111,44 +112,44 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseDataDefinition() throws FSMParseException, IOException {
+    protected void parseDataDefinition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
         if (acceptIndex == -1 && acceptValue == -1) {
 
             // check we will read an identifier.
-            if (getStreamTokenizer().nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_IDENTIFIER, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
+                throw new FSMParseException(EXPECT_IDENTIFIER, streamTokenizer);
             }
 
-            final String dataVariableName = getStreamTokenizer().sval;
+            final String dataVariableName = streamTokenizer.sval;
 
             if (dataVariableName.equals(acceptingDataVariableName)) {
                 acceptIndex = getPartLineNumber();
 
                 // skip a (
-                if (getStreamTokenizer().nextToken() != '(') {
-                    throw new FSMParseException(String.format(EXPECT_CHAR, '('), getStreamTokenizer());
+                if (streamTokenizer.nextToken() != '(') {
+                    throw new FSMParseException(String.format(EXPECT_CHAR, '('), streamTokenizer);
                 }
 
                 // skip a number
-                if (getStreamTokenizer().nextToken() != StreamTokenizer.TT_WORD) {
-                    throw new FSMParseException(EXPECT_NUMBER, getStreamTokenizer());
+                if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
+                    throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
                 }
 
                 // skip a )
-                if (getStreamTokenizer().nextToken() != ')') {
-                    throw new FSMParseException(String.format(EXPECT_CHAR, ')'), getStreamTokenizer());
+                if (streamTokenizer.nextToken() != ')') {
+                    throw new FSMParseException(String.format(EXPECT_CHAR, ')'), streamTokenizer);
                 }
 
                 // skip an identifier
-                if (getStreamTokenizer().nextToken() != StreamTokenizer.TT_WORD) {
-                    throw new FSMParseException(EXPECT_IDENTIFIER, getStreamTokenizer());
+                if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
+                    throw new FSMParseException(EXPECT_IDENTIFIER, streamTokenizer);
                 }
 
                 int dataValueIndex = 0;
 
                 // find the string containing the acceptance information
-                while (getStreamTokenizer().nextToken() == '"' && acceptValue == -1) {
-                    final String dataValue = getStreamTokenizer().sval;
+                while (streamTokenizer.nextToken() == '"' && acceptValue == -1) {
+                    final String dataValue = streamTokenizer.sval;
                     if (dataValue.equals(acceptingDataValue)) {
                         acceptValue = dataValueIndex;
                     } else {
@@ -156,12 +157,12 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
                     }
                 }
                 // push back the EOL, or EOF we accidentally read
-                getStreamTokenizer().pushBack();
+                streamTokenizer.pushBack();
 
                 // throw an Exception when the string containing acceptance information is not found in the current line
                 if (acceptValue == -1) {
                     throw new FSMParseException(String.format(ACCEPT_VALUE_NOT_FOUND, acceptingDataValue),
-                                                getStreamTokenizer());
+                                                streamTokenizer);
                 }
             }
         }
@@ -175,10 +176,10 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      *         when the acceptance information could not be found.
      */
     @Override
-    protected void checkDataDefinitions() throws FSMParseException {
+    protected void checkDataDefinitions(StreamTokenizer streamTokenizer) throws FSMParseException {
         if (acceptIndex == -1) {
             throw new FSMParseException(String.format(ACCEPT_NOT_FOUND, acceptingDataVariableName),
-                                        getStreamTokenizer());
+                                        streamTokenizer);
         }
     }
 
@@ -194,22 +195,22 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseStateVector() throws FSMParseException, IOException {
+    protected void parseStateVector(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
         Boolean accepting = null;
         for (int i = 0;
-             i <= acceptIndex && getStreamTokenizer().nextToken() == StreamTokenizer.TT_WORD && accepting == null;
+             i <= acceptIndex && streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && accepting == null;
              i++) {
-            final String value = getStreamTokenizer().sval;
+            final String value = streamTokenizer.sval;
             if (i == acceptIndex) {
                 try {
                     accepting = acceptValue == Integer.parseInt(value);
                 } catch (NumberFormatException nfe) {
-                    throw new FSMParseException(nfe, getStreamTokenizer());
+                    throw new FSMParseException(nfe, streamTokenizer);
                 }
             }
         }
         if (accepting == null) {
-            throw new FSMParseException(String.format(ACCEPT_INDEX_NOT_FOUND, acceptIndex), getStreamTokenizer());
+            throw new FSMParseException(String.format(ACCEPT_INDEX_NOT_FOUND, acceptIndex), streamTokenizer);
         } else {
             states.put(getPartLineNumber(), accepting);
         }
@@ -219,7 +220,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      * Does nothing.
      */
     @Override
-    protected void checkStateVectors() {}
+    protected void checkStateVectors(StreamTokenizer streamTokenizer) {}
 
     /**
      * Parse a transition by searching the current line for the source state, target state and the input.
@@ -230,41 +231,41 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition() throws FSMParseException, IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
         try {
             // check whether we will read a number
-            if (getStreamTokenizer().nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
+                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the source state index
-            int from = Integer.parseInt(getStreamTokenizer().sval);
+            int from = Integer.parseInt(streamTokenizer.sval);
 
             // check if such a state exists
             if (!states.isEmpty() && !states.containsKey(from)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, from), getStreamTokenizer());
+                throw new FSMParseException(String.format(NO_SUCH_STATE, from), streamTokenizer);
             }
 
             // check whether we will read a number
-            if (getStreamTokenizer().nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
+                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the target state
-            int to = Integer.parseInt(getStreamTokenizer().sval);
+            int to = Integer.parseInt(streamTokenizer.sval);
 
             // check if such a state exists
             if (!states.isEmpty() && !states.containsKey(to)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, to), getStreamTokenizer());
+                throw new FSMParseException(String.format(NO_SUCH_STATE, to), streamTokenizer);
             }
 
             // check we will read a string
-            if (getStreamTokenizer().nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != '"') {
+                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the input on the transition
-            final I input = getInputParser().apply(getStreamTokenizer().sval);
+            final I input = getInputParser().apply(streamTokenizer.sval);
 
             // add it to the set of inputs
             getInputs().add(input);
@@ -272,10 +273,10 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
             // add the new transition
             final Integer prev = transitions.put(Pair.of(from, input), to);
             if (prev != null) {
-                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), getStreamTokenizer());
+                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
             }
         } catch (NumberFormatException nfe) {
-            throw new FSMParseException(nfe, getStreamTokenizer());
+            throw new FSMParseException(nfe, streamTokenizer);
         }
     }
 
@@ -283,7 +284,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
      * Do nothing.
      */
     @Override
-    protected void checkTransitions() {
+    protected void checkTransitions(StreamTokenizer streamTokenizer) {
         // Only if no states are defined we add all from the transitions we found.
         // This is necessary because states are not necessarily defined in FSMs.
         if (states.isEmpty()) {
@@ -294,26 +295,22 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
     /**
      * Constructs the actual {@link net.automatalib.automata.fsa.DFA}.
      *
-     * @param requiredInputs
-     *         An optional containing the inputs which should constitute the input alphabet of the returned automaton.
-     *         If {@code Optional.empty()}, the inputs will be automatically gathered from the provided FSM file.
-     *
      * @return the DFA represented by the FSM file.
      *
      * @throws FSMParseException
-     *         see {@link #parse()}.
+     *         see {@link #parse(Reader)}.
      * @throws IOException
-     *         see {@link #parse()}.
+     *         see {@link #parse(Reader)}.
      */
-    private CompactDFA<I> parseDFA(Optional<? extends Collection<? extends I>> requiredInputs)
+    private CompactDFA<I> parseDFA(Reader reader)
             throws FSMParseException, IOException {
 
-        parse();
+        parse(reader);
 
         final Alphabet<I> alphabet;
 
-        if (requiredInputs.isPresent()) {
-            alphabet = Alphabets.fromCollection(requiredInputs.get());
+        if (targetInputs != null) {
+            alphabet = Alphabets.fromCollection(targetInputs);
         } else {
             alphabet = Alphabets.fromCollection(getInputs());
         }
@@ -334,51 +331,28 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> {
                                                    e.getKey().getSecond(),
                                                    e.getValue() - 1));
 
+        // clear our state for next parse call
+        states.clear();
+        transitions.clear();
+
         return dfa;
     }
 
-    public static <I> CompactDFA<I> parse(Reader reader,
-                                          Optional<? extends Collection<? extends I>> requiredInputs,
-                                          Function<String, I> inputParser,
-                                          String acceptingDataVariableName,
-                                          String acceptingDataValue) throws IOException, FSMParseException {
-        return new FSM2DFAParser<>(reader, inputParser, acceptingDataVariableName, acceptingDataValue).parseDFA(
-                requiredInputs);
+    @Override
+    public CompactDFA<I> readModel(InputStream is) throws IOException {
+        return parseDFA(IOUtil.asBufferedUTF8Reader(is));
     }
 
-    public static <I> CompactDFA<I> parse(File file,
-                                          Optional<? extends Collection<? extends I>> requiredInputs,
-                                          Function<String, I> inputParser,
-                                          String acceptingDataVariableName,
-                                          String acceptingDataValue) throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(file),
-                     requiredInputs,
-                     inputParser,
-                     acceptingDataVariableName,
-                     acceptingDataValue);
+    public static <I> FSM2DFAParser<I> getParser(@Nullable Collection<? extends I> targetInputs,
+                                                 Function<String, I> inputParser,
+                                                 String acceptingDataVariableName,
+                                                 String acceptingDataValue) {
+        return new FSM2DFAParser<>(targetInputs, inputParser, acceptingDataVariableName, acceptingDataValue);
     }
 
-    public static <I> CompactDFA<I> parse(String string,
-                                          Optional<? extends Collection<? extends I>> requiredInputs,
-                                          Function<String, I> inputParser,
-                                          String acceptingDataVariableName,
-                                          String acceptingDataValue) throws IOException, FSMParseException {
-        return parse(new StringReader(string),
-                     requiredInputs,
-                     inputParser,
-                     acceptingDataVariableName,
-                     acceptingDataValue);
-    }
-
-    public static <I> CompactDFA<I> parse(InputStream inputStream,
-                                          Optional<? extends Collection<? extends I>> requiredInputs,
-                                          Function<String, I> inputParser,
-                                          String acceptingDataVariableName,
-                                          String acceptingDataValue) throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(inputStream),
-                     requiredInputs,
-                     inputParser,
-                     acceptingDataVariableName,
-                     acceptingDataValue);
+    public static <I> FSM2DFAParser<I> getParser(Function<String, I> inputParser,
+                                                 String acceptingDataVariableName,
+                                                 String acceptingDataValue) {
+        return getParser(null, inputParser, acceptingDataVariableName, acceptingDataValue);
     }
 }

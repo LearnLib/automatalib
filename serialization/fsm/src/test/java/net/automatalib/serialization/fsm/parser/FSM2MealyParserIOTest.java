@@ -31,13 +31,12 @@ import org.testng.annotations.Test;
 
 /**
  * Tests forFSM2MealyParserIO.
- *
- * This tests will involve parsing Mealy machines where transitions in the FSM can be directly mapped to transitions
- * in the Mealy machine (opposed to alternating edge semantics).
- *
- * @see FSM2MealyParserAlternatingTest
+ * <p>
+ * This tests will involve parsing Mealy machines where transitions in the FSM can be directly mapped to transitions in
+ * the Mealy machine (opposed to alternating edge semantics).
  *
  * @author Jeroen Meijer
+ * @see FSM2MealyParserAlternatingTest
  */
 public class FSM2MealyParserIOTest extends AbstractFSM2ParserTest {
 
@@ -47,7 +46,7 @@ public class FSM2MealyParserIOTest extends AbstractFSM2ParserTest {
 
         final Function<String, Character> ep = s -> s.charAt(0);
 
-        final CompactMealy<Character, Character> actualMealy = FSM2MealyParserIO.parse(is, Optional.empty(), ep, ep);
+        final CompactMealy<Character, Character> actualMealy = FSM2MealyParserIO.getParser(ep).readModel(is);
         is.close();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
@@ -67,7 +66,8 @@ public class FSM2MealyParserIOTest extends AbstractFSM2ParserTest {
 
         final Function<String, Character> ep = s -> s.charAt(0);
 
-        final CompactMealy<Character, Character> mealy = FSM2MealyParserIO.parse(is, requiredInputs, ep, ep);
+        final CompactMealy<Character, Character> mealy =
+                FSM2MealyParserIO.getParser(requiredInputs.orElse(null), ep).readModel(is);
         is.close();
 
         return mealy;

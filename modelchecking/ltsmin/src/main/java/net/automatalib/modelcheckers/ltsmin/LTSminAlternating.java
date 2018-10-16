@@ -18,14 +18,12 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Optional;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
 import net.automatalib.serialization.fsm.parser.FSMParseException;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
 /**
@@ -58,18 +56,15 @@ public interface LTSminAlternating<I, O, R> extends LTSminMealy<I, O, R> {
         // decide whether undefined outputs are allowed in the fsm or not.
         // If the original automaton is not required, yet there is an undefined output in the FSM an exception will
         // be thrown.
-        return FSM2MealyParserAlternating.parse(fsm,
-                                                Optional.of(inputs),
-                                                getString2Input(),
-                                                getString2Output(),
-                                                requiresOriginalAutomaton() ? originalAutomaton : null);
+        return FSM2MealyParserAlternating.getParser(inputs,
+                                                    requiresOriginalAutomaton() ? originalAutomaton : null,
+                                                    getString2Input(),
+                                                    getString2Output()).readModel(fsm);
     }
 
     @Override
     default void mealy2ETF(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, File etf)
             throws IOException {
-        final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
-
-        Mealy2ETFWriterAlternating.write(etf, automaton, alphabet);
+        Mealy2ETFWriterAlternating.<I, O>getInstance().writeModel(etf, automaton, Alphabets.fromCollection(inputs));
     }
 }

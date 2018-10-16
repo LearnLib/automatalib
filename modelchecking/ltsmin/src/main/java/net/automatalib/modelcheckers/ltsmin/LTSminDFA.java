@@ -76,8 +76,7 @@ public interface LTSminDFA<I, R> extends LTSmin<I, DFA<?, I>, R>, ModelChecker.D
      * @param <S>
      *         the state type
      *
-     * @throws IOException
-     *         see {@link DFA2ETFWriter#write(File, DFA, Alphabet)}.
+     * @throws IOException if the dfa couldn't be written to the provided file.
      */
     default <S> void dfa2ETF(DFA<S, I> dfa, Collection<? extends I> inputs, File etf) throws IOException {
         // check that the DFA rejects the empty language
@@ -100,6 +99,6 @@ public interface LTSminDFA<I, R> extends LTSmin<I, DFA<?, I>, R>, ModelChecker.D
                                    copy,
                                    dfa::isAccepting,
                                    (s, i, t) -> true);
-        DFA2ETFWriter.write(etf, copy, alphabet);
+        DFA2ETFWriter.<I>getInstance().writeModel(etf, copy, alphabet);
     }
 }

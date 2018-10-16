@@ -15,19 +15,14 @@
  */
 package net.automatalib.serialization.fsm.parser;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.io.StreamTokenizer;
-import java.io.StringReader;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.commons.util.IOUtil;
+import javax.annotation.Nullable;
+
 import net.automatalib.commons.util.Pair;
 
 /**
@@ -45,15 +40,16 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
     /**
      * Constructs a new FSM2MealyParserIO. Use one of the static parse() methods to actually parse an FSM source.
      *
-     * @param reader
-     *         the Reader.
+     * @param targetInputs
+     *         An collection containing the inputs which should constitute the input alphabet of the parsed automaton.
+     *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser
      *         the input parser (see {@link #inputParser}).
      * @param outputParser
      *         the output parser (similar to {@code inputParser}.
      */
-    private FSM2MealyParserIO(Reader reader, Function<String, I> inputParser, Function<String, O> outputParser) {
-        super(reader, inputParser, outputParser);
+    private FSM2MealyParserIO(Collection<? extends I> targetInputs, Function<String, I> inputParser, Function<String, O> outputParser) {
+        super(targetInputs, inputParser, outputParser);
     }
 
     /**
@@ -65,68 +61,68 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition() throws FSMParseException, IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
         try {
 
             // check we will read a state index
-            if (getStreamTokenizer().nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
+                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the source state index
-            int from = Integer.parseInt(getStreamTokenizer().sval);
+            int from = Integer.parseInt(streamTokenizer.sval);
 
             // check if such a state exists
             if (!getStates().isEmpty() && !getStates().contains(from)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, from), getStreamTokenizer());
+                throw new FSMParseException(String.format(NO_SUCH_STATE, from), streamTokenizer);
             }
 
             // check we will read a state index
-            if (getStreamTokenizer().nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
+                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the target state index
-            int to = Integer.parseInt(getStreamTokenizer().sval);
+            int to = Integer.parseInt(streamTokenizer.sval);
 
             // check if such a state exists
             if (!getStates().isEmpty() && !getStates().contains(to)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, to), getStreamTokenizer());
+                throw new FSMParseException(String.format(NO_SUCH_STATE, to), streamTokenizer);
             }
 
             // check we will read an input edge label
-            if (getStreamTokenizer().nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != '"') {
+                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the input, and convert the input string to actual input
-            final I input = getInputParser().apply(getStreamTokenizer().sval);
+            final I input = getInputParser().apply(streamTokenizer.sval);
 
             // add it to the set of inputs
             getInputs().add(input);
 
             // check we will read an output edge label
-            if (getStreamTokenizer().nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != '"') {
+                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the output, and convert the output string to actual output
-            final O output = getOutputParser().apply(getStreamTokenizer().sval);
+            final O output = getOutputParser().apply(streamTokenizer.sval);
 
             // create the Mealy machine transition
             final Pair<O, Integer> prev = getTransitions().put(Pair.of(from, input), Pair.of(output, to));
 
             // check for non-determinism
             if (prev != null) {
-                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), getStreamTokenizer());
+                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
             }
         } catch (NumberFormatException nfe) {
-            throw new FSMParseException(nfe, getStreamTokenizer());
+            throw new FSMParseException(nfe, streamTokenizer);
         }
     }
 
     @Override
-    protected void checkTransitions() {
+    protected void checkTransitions(StreamTokenizer streamTokenizer) {
         // Only if no states are defined we add all from the transitions we found.
         // This is necessary because states are not necessarily defined in FSMs.
         if (getStates().isEmpty()) {
@@ -134,59 +130,23 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
         }
     }
 
-    public static <I, O> CompactMealy<I, O> parse(Reader reader,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser)
-            throws IOException, FSMParseException {
-        return new FSM2MealyParserIO<>(reader, inputParser, outputParser).parseMealy(requiredInputs);
+    public static <I, O> FSM2MealyParserIO<I, O> getParser(@Nullable Collection<? extends I> targetInputs,
+                                                           Function<String, I> inputParser,
+                                                           Function<String, O> outputParser) {
+        return new FSM2MealyParserIO<>(targetInputs, inputParser, outputParser);
     }
 
-    public static <I, O> CompactMealy<I, O> parse(File file,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser)
-            throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(file), requiredInputs, inputParser, outputParser);
+    public static <I, O> FSM2MealyParserIO<I, O> getParser(Function<String, I> inputParser,
+                                                           Function<String, O> outputParser) {
+        return getParser(null, inputParser, outputParser);
     }
 
-    public static <I, O> CompactMealy<I, O> parse(String string,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser)
-            throws IOException, FSMParseException {
-        return parse(new StringReader(string), requiredInputs, inputParser, outputParser);
+    public static <E> FSM2MealyParserIO<E, E> getParser(@Nullable Collection<? extends E> targetInputs,
+                                                        Function<String, E> edgeParser) {
+        return getParser(targetInputs, edgeParser, edgeParser);
     }
 
-    public static <I, O> CompactMealy<I, O> parse(InputStream inputStream,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser)
-            throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(inputStream), requiredInputs, inputParser, outputParser);
-    }
-
-    public static <E> CompactMealy<E, E> parse(Reader reader,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
-        return parse(reader, requiredInputs, edgeParser, edgeParser);
-    }
-
-    public static <E> CompactMealy<E, E> parse(File file,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
-        return parse(file, requiredInputs, edgeParser, edgeParser);
-    }
-
-    public static <E> CompactMealy<E, E> parse(String string,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
-        return parse(string, requiredInputs, edgeParser, edgeParser);
-    }
-
-    public static <E> CompactMealy<E, E> parse(InputStream inputStream,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
-        return parse(inputStream, requiredInputs, edgeParser, edgeParser);
+    public static <E> FSM2MealyParserIO<E, E> getParser(Function<String, E> edgeParser) {
+        return getParser(edgeParser, edgeParser);
     }
 }

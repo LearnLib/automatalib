@@ -17,7 +17,6 @@ package net.automatalib.modelcheckers.ltsmin.integration;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Optional;
 import java.util.function.Function;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -39,12 +38,12 @@ public class DFA2ETF2FSM2DFATest extends AbstractAut2ETF2FSM2AutTest<CompactDFA<
 
     @Override
     protected void automaton2ETF(CompactDFA<String> automaton, File etf) throws Exception {
-        DFA2ETFWriter.write(etf, automaton, automaton.getInputAlphabet());
+        DFA2ETFWriter.<String>getInstance().writeModel(etf, automaton, automaton.getInputAlphabet());
     }
 
     @Override
     protected CompactDFA<String> fsm2Automaton(File fsm) throws Exception {
         final Function<String, String> s2s = s -> s;
-        return FSM2DFAParser.parse(fsm, Optional.empty(), s2s, LTSminDFA.LABEL_NAME, LTSminDFA.LABEL_VALUE);
+        return FSM2DFAParser.getParser(s2s, LTSminDFA.LABEL_NAME, LTSminDFA.LABEL_VALUE).readModel(fsm);
     }
 }

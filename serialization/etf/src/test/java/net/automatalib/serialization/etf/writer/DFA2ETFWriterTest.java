@@ -15,8 +15,9 @@
  */
 package net.automatalib.serialization.etf.writer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import com.google.common.io.CharStreams;
@@ -38,34 +39,34 @@ public class DFA2ETFWriterTest {
 
     @Test
     public void testWrite() throws Exception {
-        final StringWriter sw = new StringWriter();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
 
         final Random random = new Random(0);
         final DFA<?, Character> automaton = RandomAutomata.randomDFA(random, 20, alphabet);
 
-        DFA2ETFWriter.write(sw, automaton, alphabet);
+        DFA2ETFWriter.<Character>getInstance().writeModel(baos, automaton, alphabet);
 
         final InputStream is = DFA2ETFWriterTest.class.getResourceAsStream("/DFA-testWrite.etf");
         final String expected = CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
 
-        Assert.assertEquals(sw.toString(), expected);
+        Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
     }
 
     @Test
     public void testEmptyLanguage() throws Exception {
-        final StringWriter sw = new StringWriter();
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
         final DFA<?, Character> emptyLanguage =
                 AutomatonBuilders.newDFA(alphabet).withInitial("q0").from("q0").on('a').loop().create();
 
-        DFA2ETFWriter.write(sw, emptyLanguage, alphabet);
+        DFA2ETFWriter.<Character>getInstance().writeModel(baos, emptyLanguage, alphabet);
 
         final InputStream is = DFA2ETFWriterTest.class.getResourceAsStream("/DFA-testEmptyLanguage.etf");
         final String expected = CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
 
-        Assert.assertEquals(sw.toString(), expected);
+        Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
     }
 }

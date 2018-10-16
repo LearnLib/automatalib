@@ -18,14 +18,12 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Optional;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserIO;
 import net.automatalib.serialization.fsm.parser.FSMParseException;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
 /**
@@ -46,13 +44,12 @@ public interface LTSminIO<I, O, R> extends LTSminMealy<I, O, R> {
     default CompactMealy<I, O> fsm2Mealy(File fsm,
                                          MealyMachine<?, I, ?, O> originalAutomaton,
                                          Collection<? extends I> inputs) throws IOException, FSMParseException {
-        return FSM2MealyParserIO.parse(fsm, Optional.of(inputs), getString2Input(), getString2Output());
+        return FSM2MealyParserIO.getParser(inputs, getString2Input(), getString2Output()).readModel(fsm);
     }
 
     @Override
     default void mealy2ETF(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, File etf)
             throws IOException {
-        final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
-        Mealy2ETFWriterIO.write(etf, automaton, alphabet);
+        Mealy2ETFWriterIO.<I, O>getInstance().writeModel(etf, automaton, Alphabets.fromCollection(inputs));
     }
 }

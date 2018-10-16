@@ -47,8 +47,7 @@ public class FSM2MealyParserAlternatingTest extends AbstractFSM2ParserTest {
 
         final Function<String, Character> ep = s -> s.charAt(0);
 
-        final CompactMealy<Character, Character> actualMealy =
-                FSM2MealyParserAlternating.parse(is, Optional.empty(), ep, ep);
+        final CompactMealy<Character, Character> actualMealy = FSM2MealyParserAlternating.getParser(ep).readModel(is);
         is.close();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
@@ -68,7 +67,8 @@ public class FSM2MealyParserAlternatingTest extends AbstractFSM2ParserTest {
 
         final Function<String, Character> ep = s -> s.charAt(0);
 
-        final CompactMealy<Character, Character> mealy = FSM2MealyParserAlternating.parse(is, requiredInputs, ep, ep);
+        final CompactMealy<Character, Character> mealy = FSM2MealyParserAlternating.getParser(requiredInputs.orElse(
+                null), null, ep).readModel(is);
         is.close();
 
         return mealy;

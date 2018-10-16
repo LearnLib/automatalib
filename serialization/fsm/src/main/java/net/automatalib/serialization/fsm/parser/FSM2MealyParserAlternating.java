@@ -15,16 +15,11 @@
  */
 package net.automatalib.serialization.fsm.parser;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.io.StreamTokenizer;
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -34,8 +29,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -72,20 +65,15 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     private final Multimap<Integer, Pair<String, Integer>> transitionsFSM = ArrayListMultimap.create();
 
     /**
-     * The alphabet in the FSM source, that consists of both input, and output.
-     */
-    private final Set<String> letters = new HashSet<>();
-
-    /**
      * @see FSM2MealyParserAlternating
      */
     private final Output<I, Word<O>> output;
 
-    private FSM2MealyParserAlternating(Reader reader,
+    private FSM2MealyParserAlternating(@Nullable Collection<? extends I> targetInputs,
+                                       @Nullable Output<I, Word<O>> output,
                                        Function<String, I> inputParser,
-                                       Function<String, O> outputParser,
-                                       @Nullable Output<I, Word<O>> output) {
-        super(reader, inputParser, outputParser);
+                                       Function<String, O> outputParser) {
+        super(targetInputs, inputParser, outputParser);
         this.output = output;
     }
 
@@ -98,54 +86,51 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition() throws FSMParseException, IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
         try {
             // check we read a state number
-            if (getStreamTokenizer().nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
+                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the source state index
-            int from = Integer.parseInt(getStreamTokenizer().sval);
+            int from = Integer.parseInt(streamTokenizer.sval);
 
             // check such a state exists
             if (!getStates().isEmpty() && !getStates().contains(from)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, from), getStreamTokenizer());
+                throw new FSMParseException(String.format(NO_SUCH_STATE, from), streamTokenizer);
             }
 
             // check we read a state number
-            if (getStreamTokenizer().nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
+                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the target state index
-            int to = Integer.parseInt(getStreamTokenizer().sval);
+            int to = Integer.parseInt(streamTokenizer.sval);
 
             // check such a state exists
             if (!getStates().isEmpty() && !getStates().contains(to)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, to), getStreamTokenizer());
+                throw new FSMParseException(String.format(NO_SUCH_STATE, to), streamTokenizer);
             }
 
             // check we will read an edge label
-            if (getStreamTokenizer().nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, getStreamTokenizer());
+            if (streamTokenizer.nextToken() != '"') {
+                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the letter
-            final String letter = getStreamTokenizer().sval;
-
-            // add it to the set of letters
-            letters.add(letter);
+            final String letter = streamTokenizer.sval;
 
             // create a transition
             final boolean isNew = transitionsFSM.put(from, Pair.of(letter, to));
 
             // test for non-determinism
             if (!isNew) {
-                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, from), getStreamTokenizer());
+                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, from), streamTokenizer);
             }
         } catch (NumberFormatException | NoSuchElementException e) {
-            throw new FSMParseException(e, getStreamTokenizer());
+            throw new FSMParseException(e, streamTokenizer);
         }
     }
 
@@ -173,7 +158,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      *         when non-determinism is detected.
      */
     private void makeTransitions(Integer currentState, Pair<Integer, I> inputTrans, Set<Integer> newStates,
-                                 int inputLength, @Nullable WordBuilder<I> wb)
+                                 int inputLength, @Nullable WordBuilder<I> wb, StreamTokenizer streamTokenizer)
             throws FSMParseException {
 
         // indicate we have seen currentState
@@ -194,11 +179,11 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
 
                 // check for non-determinism
                 if (prev != null) {
-                    throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), getStreamTokenizer());
+                    throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
                 }
             } else {
                 throw new FSMParseException(String.format(INPUT_HAS_NO_OUTPUT, inputTrans.getSecond(),
-                                                          inputTrans.getFirst()), getStreamTokenizer());
+                                                          inputTrans.getFirst()), streamTokenizer);
             }
         }
 
@@ -226,7 +211,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
                 }
 
                 // recursive call to makeTransitions (we continue with output)
-                makeTransitions(to, Pair.of(currentState, i), newStates, inputLength + 1, wb);
+                makeTransitions(to, Pair.of(currentState, i), newStates, inputLength + 1, wb, streamTokenizer);
             } else { // the transition is output
 
                 // transform the string from the FSM to actual output
@@ -237,12 +222,12 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
 
                 // check for non-determinism
                 if (prev != null) {
-                    throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), getStreamTokenizer());
+                    throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
                 }
 
                 // continue if we have not seen the target state yet
                 if (newStates.contains(to)) {
-                    makeTransitions(to, null, newStates, inputLength, wb);
+                    makeTransitions(to, null, newStates, inputLength, wb, streamTokenizer);
                 }
             }
 
@@ -261,7 +246,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      *         when the Mealy machine is partial.
      */
     @Override
-    protected void checkTransitions() throws FSMParseException {
+    protected void checkTransitions(StreamTokenizer streamTokenizer) throws FSMParseException {
 
         // Only if no states are defined we add all from the transitions we found.
         // This is necessary because states are not necessarily defined in FSMs.
@@ -276,135 +261,33 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
         final Integer initialState = getStates().iterator().next();
 
         // make the actual FSM transitions
-        makeTransitions(initialState, null, newStates, 0, output != null ? new WordBuilder<>() : null);
+        makeTransitions(initialState, null, newStates, 0, output != null ? new WordBuilder<>() : null, streamTokenizer);
 
         // check we do not have a partial FSM
         if (!newStates.isEmpty()) {
-            throw new FSMParseException(String.format(PARTIAL_FSM, newStates, initialState), getStreamTokenizer());
+            throw new FSMParseException(String.format(PARTIAL_FSM, newStates, initialState), streamTokenizer);
         }
     }
 
-    public static <I, O> CompactMealy<I, O> parse(Reader reader,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser,
-                                                  @Nullable Output<I, Word<O>> output)
-            throws IOException, FSMParseException {
-        return new FSM2MealyParserAlternating<>(reader, inputParser, outputParser, output).parseMealy(requiredInputs);
+    public static <I, O> FSM2MealyParserAlternating<I, O> getParser(@Nullable Collection<? extends I> targetInputs,
+                                                                    @Nullable Output<I, Word<O>> output,
+                                                                    Function<String, I> inputParser,
+                                                                    Function<String, O> outputParser) {
+        return new FSM2MealyParserAlternating<>(targetInputs, output, inputParser, outputParser);
     }
 
-    public static <I, O> CompactMealy<I, O> parse(Reader reader,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser)
-            throws IOException, FSMParseException {
-        return parse(reader, requiredInputs, inputParser, outputParser, null);
+    public static <I, O> FSM2MealyParserAlternating<I, O> getParser(Function<String, I> inputParser,
+                                                                    Function<String, O> outputParser) {
+        return getParser(null, null, inputParser, outputParser);
     }
 
-    public static <I, O> CompactMealy<I, O> parse(File file,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser)
-            throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(file), requiredInputs, inputParser, outputParser);
+    public static <E> FSM2MealyParserAlternating<E, E> getParser(@Nullable Collection<? extends E> targetInputs,
+                                                                 @Nullable Output<E, Word<E>> output,
+                                                                 Function<String, E> edgeParser) {
+        return getParser(targetInputs, output, edgeParser, edgeParser);
     }
 
-    public static <I, O> CompactMealy<I, O> parse(String string,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser)
-            throws IOException, FSMParseException {
-        return parse(new StringReader(string), requiredInputs, inputParser, outputParser);
-    }
-
-    public static <I, O> CompactMealy<I, O> parse(InputStream inputStream,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser)
-            throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(inputStream), requiredInputs, inputParser, outputParser);
-    }
-
-    public static <E> CompactMealy<E, E> parse(Reader reader,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
-        return parse(reader, requiredInputs, edgeParser, edgeParser);
-    }
-
-    public static <E> CompactMealy<E, E> parse(File file,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
-        return parse(file, requiredInputs, edgeParser, edgeParser);
-    }
-
-    public static <E> CompactMealy<E, E> parse(String string,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
-        return parse(string, requiredInputs, edgeParser, edgeParser);
-    }
-
-    public static <E> CompactMealy<E, E> parse(InputStream inputStream,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser) throws IOException, FSMParseException {
-        return parse(inputStream, requiredInputs, edgeParser, edgeParser);
-    }
-
-    public static <I, O> CompactMealy<I, O> parse(File file,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser,
-                                                  @Nullable Output<I, Word<O>> output)
-            throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(file), requiredInputs, inputParser, outputParser, output);
-    }
-
-    public static <I, O> CompactMealy<I, O> parse(String string,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser,
-                                                  @Nullable Output<I, Word<O>> output)
-            throws IOException, FSMParseException {
-        return parse(new StringReader(string), requiredInputs, inputParser, outputParser, output);
-    }
-
-    public static <I, O> CompactMealy<I, O> parse(InputStream inputStream,
-                                                  Optional<? extends Collection<? extends I>> requiredInputs,
-                                                  Function<String, I> inputParser,
-                                                  Function<String, O> outputParser,
-                                                  @Nullable Output<I, Word<O>> output)
-            throws IOException, FSMParseException {
-        return parse(IOUtil.asBufferedUTF8Reader(inputStream), requiredInputs, inputParser, outputParser, output);
-    }
-
-    public static <E> CompactMealy<E, E> parse(Reader reader,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser,
-                                               @Nullable Output<E, Word<E>> output)
-            throws IOException, FSMParseException {
-        return parse(reader, requiredInputs, edgeParser, edgeParser, output);
-    }
-
-    public static <E> CompactMealy<E, E> parse(File file,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser,
-                                               @Nullable Output<E, Word<E>> output)
-            throws IOException, FSMParseException {
-        return parse(file, requiredInputs, edgeParser, edgeParser, output);
-    }
-
-    public static <E> CompactMealy<E, E> parse(String string,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser,
-                                               @Nullable Output<E, Word<E>> output)
-            throws IOException, FSMParseException {
-        return parse(string, requiredInputs, edgeParser, edgeParser, output);
-    }
-
-    public static <E> CompactMealy<E, E> parse(InputStream inputStream,
-                                               Optional<? extends Collection<? extends E>> requiredInputs,
-                                               Function<String, E> edgeParser,
-                                               @Nullable Output<E, Word<E>> output)
-            throws IOException, FSMParseException {
-        return parse(inputStream, requiredInputs, edgeParser, edgeParser, output);
+    public static <E> FSM2MealyParserAlternating<E, E> getParser(Function<String, E> edgeParser) {
+        return getParser(edgeParser, edgeParser);
     }
 }
