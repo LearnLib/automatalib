@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import net.automatalib.commons.util.array.ArrayIterator;
+import com.google.common.collect.Iterators;
 import net.automatalib.commons.util.array.ResizingArrayStorage;
 
 /**
@@ -209,7 +209,7 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return new ArrayIterator<>(storage.array);
+        return Iterators.forArray(storage.array);
     }
 
     @Override

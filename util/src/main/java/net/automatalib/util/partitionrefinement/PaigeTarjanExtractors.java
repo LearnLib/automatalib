@@ -26,7 +26,7 @@ import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.array.RichArray;
+import net.automatalib.commons.util.array.ArrayStorage;
 import net.automatalib.commons.util.functions.FunctionsUtil;
 import net.automatalib.words.Alphabet;
 
@@ -168,9 +168,9 @@ public final class PaigeTarjanExtractors {
         int initId = origIds.getStateId(init);
         SP initSp = spExtractor.apply(init);
         S2 resInit = result.addInitialState(initSp);
-        RichArray<S2> states = new RichArray<>(numBlocks);
+        ArrayStorage<S2> states = new ArrayStorage<>(numBlocks);
         Block initBlock = pt.getBlockForState(initId);
-        states.update(initBlock.id, resInit);
+        states.set(initBlock.id, resInit);
 
         Deque<Pair<S1, S2>> queue = new ArrayDeque<>();
         queue.add(Pair.of(init, resInit));
@@ -192,7 +192,7 @@ public final class PaigeTarjanExtractors {
                     if (resSucc == null) {
                         SP succSp = spExtractor.apply(succ);
                         resSucc = result.addState(succSp);
-                        states.update(succBlockId, resSucc);
+                        states.set(succBlockId, resSucc);
                     }
                     result.setTransition(resState, sym, resSucc, tp);
                 }
@@ -265,14 +265,14 @@ public final class PaigeTarjanExtractors {
         int numBlocks = pt.getNumBlocks();
 
         A result = creator.createAutomaton(inputs, numBlocks);
-        RichArray<S2> states = new RichArray<>(numBlocks);
+        ArrayStorage<S2> states = new ArrayStorage<>(numBlocks);
 
         for (Block curr : pt.blockList()) {
             int blockId = curr.id;
             S1 rep = origIds.getState(pt.getRepresentative(curr));
             SP sp = spExtractor.apply(rep);
             S2 resState = result.addState(sp);
-            states.update(blockId, resState);
+            states.set(blockId, resState);
         }
         for (Block curr : pt.blockList()) {
             int blockId = curr.id;

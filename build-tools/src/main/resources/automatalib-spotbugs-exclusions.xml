@@ -19,11 +19,7 @@ limitations under the License.
     <Match>
         <!-- TODO: mostly due to performance. However, usage should be checked again -->
         <Bug pattern="EI_EXPOSE_REP2"/>
-        <Or>
-            <Class name="net.automatalib.commons.util.array.RichArray"/>
-            <Class name="net.automatalib.commons.util.array.ArrayIterator"/>
-            <Class name="net.automatalib.util.partitionrefinement.PaigeTarjan"/>
-        </Or>
+        <Class name="net.automatalib.util.partitionrefinement.PaigeTarjan"/>
     </Match>
     <Match>
         <!-- mostly internal structures, where this behavior is fine -->
@@ -45,7 +41,7 @@ limitations under the License.
     <Match>
         <Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
         <!-- we want to cut cloning hierarchy here -->
-        <Class name="net.automatalib.commons.util.array.RichArray"/>
+        <Class name="net.automatalib.commons.util.array.ArrayStorage"/>
     </Match>
     <Match>
         <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT"/>

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import net.automatalib.automata.vpda.OneSEVPA;
-import net.automatalib.commons.util.array.RichArray;
+import net.automatalib.commons.util.array.ArrayStorage;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
@@ -42,7 +42,7 @@ public final class OneSEVPAUtil {
                                                                   final VPDAlphabet<I> alphabet,
                                                                   final boolean computeAs,
                                                                   final Predicate<? super L> terminatePred) {
-        final RichArray<Word<I>> result = new RichArray<>(sevpa.size());
+        final ArrayStorage<Word<I>> result = new ArrayStorage<>(sevpa.size());
 
         final L initLoc = sevpa.getInitialLocation();
         final List<L> reachable = new ArrayList<>();
@@ -116,8 +116,8 @@ public final class OneSEVPAUtil {
         return new ReachResult<>(null, reachable, result);
     }
 
-    public static <L, I> RichArray<Word<I>> computeAccessSequences(final OneSEVPA<L, I> sevpa,
-                                                                   final VPDAlphabet<I> alphabet) {
+    public static <L, I> ArrayStorage<Word<I>> computeAccessSequences(final OneSEVPA<L, I> sevpa,
+                                                                      final VPDAlphabet<I> alphabet) {
         return computeAccessSequences(sevpa, alphabet, true, l -> false).accessSequences;
     }
 
@@ -157,11 +157,11 @@ public final class OneSEVPAUtil {
 
         public final L terminateLoc;
         public final List<L> reachableLocs;
-        public final RichArray<Word<I>> accessSequences;
+        public final ArrayStorage<Word<I>> accessSequences;
 
         public ReachResult(final L terminateLoc,
                            final List<L> reachableLocs,
-                           final RichArray<Word<I>> accessSequences) {
+                           final ArrayStorage<Word<I>> accessSequences) {
             this.terminateLoc = terminateLoc;
             this.reachableLocs = reachableLocs;
             this.accessSequences = accessSequences;

@@ -18,9 +18,8 @@ package net.automatalib.automata.vpda;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
-import net.automatalib.commons.util.array.RichArray;
+import net.automatalib.commons.util.array.ArrayStorage;
 import net.automatalib.words.VPDAlphabet;
 
 /**
@@ -30,16 +29,16 @@ import net.automatalib.words.VPDAlphabet;
  */
 public class Location {
 
-    private final RichArray<Location> intSuccessors;
-    private final RichArray<List<Location>> returnSuccessors;
+    private final ArrayStorage<Location> intSuccessors;
+    private final ArrayStorage<List<Location>> returnSuccessors;
     final int index;
     private boolean accepting;
 
     public Location(final VPDAlphabet<?> alphabet, final int index, final boolean accepting) {
         this.index = index;
         this.accepting = accepting;
-        this.intSuccessors = new RichArray<>(alphabet.getNumInternals());
-        this.returnSuccessors = new RichArray<>(alphabet.getNumReturns(), (Supplier<List<Location>>) ArrayList::new);
+        this.intSuccessors = new ArrayStorage<>(alphabet.getNumInternals());
+        this.returnSuccessors = new ArrayStorage<>(alphabet.getNumReturns(), ArrayList::new);
     }
 
     public int getIndex() {

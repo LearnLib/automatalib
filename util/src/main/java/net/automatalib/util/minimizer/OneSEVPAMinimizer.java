@@ -18,7 +18,7 @@ package net.automatalib.util.minimizer;
 import net.automatalib.automata.vpda.DefaultOneSEVPA;
 import net.automatalib.automata.vpda.Location;
 import net.automatalib.automata.vpda.OneSEVPA;
-import net.automatalib.commons.util.array.RichArray;
+import net.automatalib.commons.util.array.ArrayStorage;
 import net.automatalib.util.partitionrefinement.Block;
 import net.automatalib.util.partitionrefinement.PaigeTarjan;
 import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;
@@ -164,7 +164,8 @@ public final class OneSEVPAMinimizer {
         final int numBlocks = pt.getNumBlocks();
         final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, numBlocks);
 
-        final RichArray<Location> resultLocs = new RichArray<>(numBlocks, () -> result.addLocation(false));
+        final ArrayStorage<Location> resultLocs =
+                new ArrayStorage<>(numBlocks, () -> result.addLocation(false));
 
         for (Block curr : pt.blockList()) {
             final int blockId = curr.id;

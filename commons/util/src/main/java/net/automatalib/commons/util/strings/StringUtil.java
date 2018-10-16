@@ -18,7 +18,7 @@ package net.automatalib.commons.util.strings;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import net.automatalib.commons.util.array.ArrayIterator;
+import com.google.common.collect.Iterators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -193,11 +193,11 @@ public final class StringUtil {
     }
 
     public static void appendArray(Appendable a, Object[] array, String sepString) throws IOException {
-        appendIterable(a, () -> new ArrayIterator<>(array), sepString);
+        appendIterable(a, () -> Iterators.forArray(array), sepString);
     }
 
     public static void appendArrayEnquoted(Appendable a, Object[] array, String sepString) throws IOException {
-        appendIterableEnquoted(a, () -> new ArrayIterator<>(array), sepString);
+        appendIterableEnquoted(a, () -> Iterators.forArray(array), sepString);
     }
 
     public static void appendIterable(Appendable a, Iterable<?> it, String sepString) throws IOException {
