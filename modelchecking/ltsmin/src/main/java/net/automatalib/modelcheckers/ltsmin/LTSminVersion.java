@@ -99,7 +99,17 @@ public final class LTSminVersion {
      * @return {@code true}, if {@code this} version supports the given required version, {@code false} otherwise.
      */
     public boolean supports(LTSminVersion required) {
-        return major >= required.major && minor >= required.minor && patch >= required.patch;
+        if (required.major > major) {
+            return true;
+        } else if (required.major == major) {
+            if (required.minor > minor) {
+                return true;
+            } else if (required.patch >= patch) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
