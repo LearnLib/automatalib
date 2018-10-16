@@ -212,6 +212,12 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
 
                 // recursive call to makeTransitions (we continue with output)
                 makeTransitions(to, Pair.of(currentState, i), newStates, inputLength + 1, wb, streamTokenizer);
+
+                // truncate the word builder, but only if we need it for computing undefined outputs.
+                if (wb != null) {
+                    assert wb.size() > inputLength;
+                    wb.truncate(inputLength);
+                }
             } else { // the transition is output
 
                 // transform the string from the FSM to actual output
@@ -229,12 +235,6 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
                 if (newStates.contains(to)) {
                     makeTransitions(to, null, newStates, inputLength, wb, streamTokenizer);
                 }
-            }
-
-            // truncate the word builder, but only if we need it for computing undefined outputs.
-            if (wb != null) {
-                assert wb.size() > inputLength;
-                wb.truncate(inputLength);
             }
         }
     }
