@@ -17,7 +17,6 @@ package net.automatalib.modelcheckers.ltsmin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -75,16 +74,6 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
     private final Function<String, I> string2Input;
 
     /**
-     * @see #isAvailable()
-     */
-    private static Boolean isAvailable;
-
-    /**
-     * The version for which we last checked availability.
-     */
-    private static int[] availableVersion;
-
-    /**
      * Constructs a new AbstractLTSmin.
      *
      * @param keepFiles
@@ -100,42 +89,17 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
         this.keepFiles = keepFiles;
         this.string2Input = string2Input;
 
-        if (!isAvailable()) {
-            throw new ModelCheckingException(
-                    String.format(
-                            "LTSmin binary could not be executed correctly, minimum version required is v%d.%d.%d",
-                            getMinimumMajorVersion(), getMinimumMinorVersion(), getMinimumPatchVersion()));
+        if (!LTSminUtil.supports(getMinimumRequiredVersion())) {
+            throw new ModelCheckingException("LTSmin binary could not be detected in the correct version");
         }
     }
 
-    private static void setAvailableVersion(int[] availableVersion) {
-        AbstractLTSmin.availableVersion = availableVersion;
-    }
-
-    private static void setIsAvailable(Boolean isAvailable) {
-        AbstractLTSmin.isAvailable = isAvailable;
-    }
-
     /**
-     * Returns the minimum required major version of LTSmin.
+     * Returns the minimum required version of LTSmin.
      *
      * @return the major version.
      */
-    protected abstract int getMinimumMajorVersion();
-
-    /**
-     * Returns the minimum required minor version of LTSmin.
-     *
-     * @return the minor version.
-     */
-    protected abstract int getMinimumMinorVersion();
-
-    /**
-     * Returns the minimum required patch version of LTSmin.
-     *
-     * @return the patch version.
-     */
-    protected abstract int getMinimumPatchVersion();
+    protected abstract LTSminVersion getMinimumRequiredVersion();
 
     /**
      * Returns the extra command line options that should be given to the etf2lts-mc binary.
@@ -144,31 +108,6 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      */
     protected abstract List<String> getExtraCommandLineOptions();
 
-    /**
-     * Returns whether the LTSmin binaries are available, and match the minimum required version.
-     *
-     * @see #getMinimumMajorVersion()
-     * @see #getMinimumMinorVersion()
-     * @see #getMinimumPatchVersion()
-     *
-     * @return whether the binaries are available.
-     */
-    public boolean isAvailable() {
-        if (isAvailable == null || availableVersion == null || !Arrays.equals(availableVersion, new int[] {
-                getMinimumMajorVersion(), getMinimumMinorVersion(), getMinimumPatchVersion()})) {
-
-            setIsAvailable(LTSminUtil.checkUsable(getMinimumMajorVersion(), getMinimumMinorVersion(),
-                                                 getMinimumPatchVersion()));
-
-            if (isAvailable) {
-                setAvailableVersion(new int[] {getMinimumMajorVersion(), getMinimumMinorVersion(), getMinimumPatchVersion()});
-            } else {
-                setAvailableVersion(null);
-            }
-        }
-
-        return isAvailable;
-    }
 
     @Override
     public boolean isKeepFiles() {
@@ -182,6 +121,16 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
 
     /**
      * Finds a counterexample for the given {@code formula}, and given {@code hypothesis} in FSM format.
+     *
+     * @param hypothesis
+     *         the hypothesis to check
+     * @param inputs
+     *         the inputs which should be regarded for checking
+     * @param formula
+     *         the formula that should be checked
+     *
+     * @return a file containing the FSM representation for the found counterexample, or {@code null} if no such
+     * counterexample could be found.
      *
      * @see AbstractLTSmin
      */

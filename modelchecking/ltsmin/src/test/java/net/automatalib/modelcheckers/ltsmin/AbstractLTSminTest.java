@@ -55,11 +55,7 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
 
     protected abstract Word<String> getInput();
 
-    protected abstract int getMinimumMajorVersion();
-
-    protected abstract int getMinimumMinorVersion();
-
-    protected abstract int getMinimumPatchVersion();
+    protected abstract LTSminVersion getRequiredVersion();
 
     protected abstract AbstractLTSmin<String, A, R> getModelChecker();
 
@@ -67,8 +63,8 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
 
     @BeforeClass
     public void setupBeforeClass() {
-        if (!LTSminUtil.checkUsable(getMinimumMajorVersion(), getMinimumMinorVersion(), getMinimumPatchVersion())) {
-            throw new SkipException("LTSmin not installed");
+        if (!LTSminUtil.supports(getRequiredVersion())) {
+            throw new SkipException("LTSmin not installed in proper version");
         }
     }
 

@@ -24,6 +24,7 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.commons.util.process.ProcessUtil;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -51,8 +52,8 @@ public abstract class AbstractAut2ETF2FSM2AutTest<
 
     @BeforeClass
     public void setupBeforeClass() {
-        if (!LTSminUtil.checkUsable(3, 1, 0)) {
-            throw new SkipException("LTSmin not installed");
+        if (!LTSminUtil.supports(LTSminVersion.of(3, 1, 0))) {
+            throw new SkipException("LTSmin not installed in proper version");
         }
     }
 

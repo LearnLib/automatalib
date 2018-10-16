@@ -21,6 +21,7 @@ import java.util.function.Function;
 import com.google.common.collect.Lists;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 
 /**
  * An LTSmin model checker for monitors.
@@ -33,11 +34,7 @@ import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
  */
 public abstract class AbstractLTSminMonitor<I, A, R> extends AbstractLTSmin<I, A, R> {
 
-    public static final int MAJOR = 3;
-
-    public static final int MINOR = 1;
-
-    public static final int PATCH = 0;
+    public static final LTSminVersion REQUIRED_VERSION = LTSminVersion.of(3, 1, 0);
 
     /**
      * Constructs a new AbstractLTSminMonitor.
@@ -49,18 +46,8 @@ public abstract class AbstractLTSminMonitor<I, A, R> extends AbstractLTSmin<I, A
     }
 
     @Override
-    protected int getMinimumMajorVersion() {
-        return MAJOR;
-    }
-
-    @Override
-    protected int getMinimumMinorVersion() {
-        return MINOR;
-    }
-
-    @Override
-    protected int getMinimumPatchVersion() {
-        return PATCH;
+    protected LTSminVersion getMinimumRequiredVersion() {
+        return REQUIRED_VERSION;
     }
 
     @Override

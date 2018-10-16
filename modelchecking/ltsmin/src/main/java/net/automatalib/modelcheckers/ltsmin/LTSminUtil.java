@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Paths;
-import java.util.regex.Pattern;
 
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
@@ -59,19 +58,11 @@ public final class LTSminUtil {
     private static final int VERSION_EXIT = 255;
 
     /**
-     * @see #isCheckVersion()
-     */
-    private static boolean checkVersion;
-
-    /**
-     * @see #isVerbose()
+     * A flag for triggering verbose LTSmin output.
      */
     private static boolean verbose;
 
-    /**
-     * The pattern for LTSmin versioning scheme: v[major].[minor].[patch].
-     */
-    public static final Pattern VERSION_PATTERN = Pattern.compile("v[0-9]+\\.[0-9]+\\.[0-9]+");
+    private static LTSminVersion detectedVersion;
 
     static {
         AutomataLibSettings settings = AutomataLibSettings.getInstance();
@@ -81,10 +72,10 @@ public final class LTSminUtil {
         ETF2LTS_MC = Paths.get(ltsMinPath, "etf2lts-mc").toString();
         LTSMIN_CONVERT = Paths.get(ltsMinPath, "ltsmin-convert").toString();
 
-        checkVersion = !settings.getProperty(AutomataLibProperty.LTSMIN_CHECK_VERSION, "true").equalsIgnoreCase("false");
-
-        verbose = !settings.getProperty(AutomataLibProperty.LTSMIN_VERBOSE, LOGGER.isDebugEnabled() ? "true" : "false")
+        verbose = !settings.getProperty(AutomataLibProperty.LTSMIN_VERBOSE, Boolean.toString(LOGGER.isDebugEnabled()))
                            .equalsIgnoreCase("false");
+
+        detectLTSmin();
     }
 
     private LTSminUtil() {
@@ -92,126 +83,80 @@ public final class LTSminUtil {
     }
 
     /**
-     * Whether to perform an LTSmin version check.
+     * Returns whether or not an LTSmin installation was detected.
+     *
+     * @return {@code true} if an LTSmin installation was detected, {@code false} otherwise.
      */
-    public static boolean isCheckVersion() {
-        return checkVersion;
+    public static boolean isInstalled() {
+        return detectedVersion != null;
     }
 
     /**
-     * @see #isCheckVersion()
+     * Returns the detected version of the LTSmin installation. {@code null} if LTSmin is not installed.
+     *
+     * @return the detected version of the LTSmin installation. {@code null} if LTSmin is not installed.
+     *
+     * @see #isInstalled()
      */
-    public static void setCheckVersion(boolean checkVersion) {
-        LTSminUtil.checkVersion = checkVersion;
+    public static LTSminVersion getVersion() {
+        return detectedVersion;
     }
 
     /**
-     * Whether to make LTSmin's output more verbose.
+     * Checks whether the currently detected LTSmin installation supports the queried version.
+     *
+     * @param requiredVersion
+     *         the required version
+     *
+     * @return {@code true} if LTSmin is installed in the proper version, {@code false} otherwise.
+     */
+    public static boolean supports(LTSminVersion requiredVersion) {
+        return isInstalled() && detectedVersion.supports(requiredVersion);
+    }
+
+    /**
+     * Returns whether to make LTSmin's output more verbose.
      */
     public static boolean isVerbose() {
         return verbose;
     }
 
     /**
-     * @see #isVerbose()
+     * Programmitically set, whether to make LTSmin's output more verbose.
      */
     public static void setVerbose(boolean verbose) {
         LTSminUtil.verbose = verbose;
     }
 
     /**
-     * Returns an array of length 3 from a version string.
-     *
-     * The version string should match the regex: "^v?[0-9]+\.[0-9]+\.[0-9]+.*".
-     *
-     * @param version the version string to split.
-     *
-     * @return the split version string.
-     */
-    private static int[] getVersion(String version) {
-        final String afterV = version.replace("v", "");
-
-        final String[] versionPart = afterV.split("-");
-
-        assert versionPart.length > 0;
-
-        final String beforeMin = versionPart[0];
-
-        final String[] parts = beforeMin.split("\\.");
-
-        assert parts.length == 3;
-
-        return new int[] {Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2])};
-    }
-
-    /**
-     * Returns whether the lhs version is greater or equal than the rhs version.
-     *
-     * @param lhs the left-hand side version.
-     * @param rhs the right-hand side version.
-     *
-     * @return whether lhs >= rhs.
-     */
-    private static boolean isVersionGreaterOrEqualThan(int[] lhs, int[] rhs) {
-        assert lhs.length == 3 && rhs.length == 3;
-
-        boolean isEqual = true;
-        boolean isGreater = false;
-        for (int i = 0; i < 3 && isEqual; i++) {
-            isEqual = lhs[i] == rhs[i];
-            isGreater = lhs[i] > rhs[i];
-        }
-
-        return isGreater || isEqual;
-    }
-
-    /**
-     * Checks whether the required binaries for the {@link AbstractLTSmin LTSmin modelchecker} can be executed, by
-     * performing a version check.
-     *
-     * @param major
-     *          the major version.
-     * @param minor
-     *          the minor version.
-     * @param patch
-     *          the patch version.
-     *
-     * @return {@code true} if the binary returned with the expected exit value, {@code false} otherwise.
+     * (Re-)Checks whether the required binaries for the {@link AbstractLTSmin LTSmin modelchecker} can be executed, by
+     * performing a version check. The results to these checks can be accessed by {@link #isInstalled()} and {@link
+     * #getVersion()}.
      *
      * @see #ETF2LTS_MC
      * @see #LTSMIN_CONVERT
      */
-    public static boolean checkUsable(int major, int minor, int patch) {
-        if (checkVersion) {
-            return checkUsable(ETF2LTS_MC, major, minor, patch) && checkUsable(LTSMIN_CONVERT, major, minor, patch);
-        } else {
-            LOGGER.warn("Skipping LTSmin version check!");
-            return true;
+    public static void detectLTSmin() {
+        final LTSminVersion etf2ltsVersion = detectLTSmin(ETF2LTS_MC);
+        final LTSminVersion ltsminConvertVersion = detectLTSmin(LTSMIN_CONVERT);
+
+        if (etf2ltsVersion != null && ltsminConvertVersion != null) {
+            if (!etf2ltsVersion.equals(ltsminConvertVersion)) {
+                LOGGER.warn("Found differing etf2lts version '{}' and lstminConver version '{}'. Choosing the former",
+                            etf2ltsVersion,
+                            ltsminConvertVersion);
+            }
+            detectedVersion = etf2ltsVersion;
         }
     }
 
-    /**
-     * Checks whether the given binary can be executed, by performing a version check.
-     *
-     * @param bin
-     *         the binary to check.
-     * @param major
-     *          the major version.
-     * @param minor
-     *          the minor version.
-     * @param patch
-     *          the patch version.
-     *
-     * @return {@code true} if the binary returned with the expected exit value, {@code false} otherwise.
-     */
-    private static boolean checkUsable(String bin, int major, int minor, int patch) {
+    private static LTSminVersion detectLTSmin(String bin) {
 
         // the command lines for the ProcessBuilder
         final String[] commandLine = new String[] {// add the binary
                                                    bin,
                                                    // just run a version check
                                                    "--version"};
-        LOGGER.debug("Checking '{}' for version >= v{}.{}.{}", bin, major, minor, patch);
 
         final StringWriter stringWriter = new StringWriter();
 
@@ -219,39 +164,16 @@ public final class LTSminUtil {
             final int exitValue = ProcessUtil.invokeProcess(commandLine, stringWriter::append);
 
             if (exitValue != VERSION_EXIT) {
-                LOGGER.error(String.format(CHECK,
+                LOGGER.debug(String.format(CHECK,
                                            bin,
                                            String.format("Command '%s --version' did not exit with 255", bin)));
-                return false;
+                return null;
             } else {
-                LOGGER.debug("Installed version is {}", stringWriter.toString());
-
-                if (VERSION_PATTERN.matcher(stringWriter.toString()).matches()) {
-                    final int[] actualVersion = getVersion(stringWriter.toString());
-
-                    final int[] expectedVersion = new int[] {major, minor, patch};
-
-                    final boolean result = isVersionGreaterOrEqualThan(actualVersion, expectedVersion);
-                    if (!result) {
-                        LOGGER.warn("Installed version of '{}' is too old: required v{}.{}.{}, but found {}.",
-                                    bin,
-                                    major,
-                                    minor,
-                                    patch,
-                                    stringWriter.toString());
-                    } else {
-                        LOGGER.debug("Installed version is okay.");
-                    }
-
-                    return result;
-                } else {
-                    LOGGER.error("Installed LTSmin version does not match v<major>.<minor>.<patch>.");
-                    return false;
-                }
+                return LTSminVersion.parse(stringWriter.toString());
             }
         } catch (IOException | InterruptedException e) {
             LOGGER.error(String.format(CHECK, bin, e.toString()), e);
-            return false;
+            return null;
         }
     }
 }

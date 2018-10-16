@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLIO;
 import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLIOBuilder;
 import net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorIO;
@@ -101,7 +102,10 @@ public final class LTSminExample {
         System.out.println("Fourth property is satisfied: " + Objects.isNull(ce4b));
         System.out.println("Counterexample prefix+loop: " + ce4b.getPrefix() + ':' + ce4b.getLoop());
 
-        LTSminUtil.setCheckVersion(false);
+        // The following code requires v3.1.0
+        if (!LTSminUtil.supports(LTSminVersion.of(3, 1, 0))) {
+            return;
+        }
 
         // do LTL model checking with monitors
         final LTSminMonitorIO<Character, Character> ltsminMonitor =

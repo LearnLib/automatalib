@@ -49,9 +49,6 @@ public class AutomataLibSettingsTest {
                 case LTSMIN_PATH:
                     Assert.assertEquals("ltsmin", settings.getProperty(AutomataLibProperty.LTSMIN_PATH));
                     break;
-                case LTSMIN_CHECK_VERSION:
-                    Assert.assertEquals("true", settings.getProperty(AutomataLibProperty.LTSMIN_CHECK_VERSION));
-                    break;
                 case LTSMIN_VERBOSE:
                     Assert.assertEquals("false", settings.getProperty(AutomataLibProperty.LTSMIN_VERBOSE));
                     break;

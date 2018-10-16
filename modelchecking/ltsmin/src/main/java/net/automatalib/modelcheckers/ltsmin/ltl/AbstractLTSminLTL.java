@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
 import net.automatalib.modelchecking.modelchecker.AbstractUnfoldingModelChecker;
@@ -39,11 +40,7 @@ import net.automatalib.modelchecking.modelchecker.AbstractUnfoldingModelChecker;
 public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends AbstractLTSmin<I, A, L>
         implements ModelCheckerLasso<I, A, String, L> {
 
-    public static final int MAJOR = 3;
-
-    public static final int MINOR = 0;
-
-    public static final int PATCH = 0;
+    public static final LTSminVersion REQUIRED_VERSION = LTSminVersion.of(3, 0, 0);
 
     private final AbstractUnfoldingModelChecker<I, A, String, L> unfolder;
 
@@ -70,18 +67,8 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
     }
 
     @Override
-    protected int getMinimumMajorVersion() {
-        return MAJOR;
-    }
-
-    @Override
-    protected int getMinimumMinorVersion() {
-        return MINOR;
-    }
-
-    @Override
-    protected int getMinimumPatchVersion() {
-        return PATCH;
+    protected LTSminVersion getMinimumRequiredVersion() {
+        return REQUIRED_VERSION;
     }
 
     @Override

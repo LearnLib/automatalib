@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.ltsmin.ltl;
 
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSminTest;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -40,18 +41,8 @@ public abstract class AbstractLTSminLTLTest<A, L extends Lasso<String, ?>> exten
     public abstract AbstractLTSminLTL<String, A, L> getModelChecker();
 
     @Override
-    protected int getMinimumMajorVersion() {
-        return AbstractLTSminLTL.MAJOR;
-    }
-
-    @Override
-    protected int getMinimumMinorVersion() {
-        return AbstractLTSminLTL.MINOR;
-    }
-
-    @Override
-    protected int getMinimumPatchVersion() {
-        return AbstractLTSminLTL.PATCH;
+    protected LTSminVersion getRequiredVersion() {
+        return AbstractLTSminLTL.REQUIRED_VERSION;
     }
 
     @Test

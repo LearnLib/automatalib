@@ -31,12 +31,6 @@ import org.testng.annotations.Test;
 public abstract class AbstractLTSminLTLMealyTest
         extends AbstractLTSminLTLTest<MealyMachine<?, String, ?, String>, MealyLasso<String, String>> {
 
-    public static final int SKIP_REQUIRE_MAJOR = 3;
-
-    public static final int SKIP_REQUIRE_MINOR = 1;
-
-    public static final int SKIP_REQUIRE_PATCH = 0;
-
     @BeforeMethod
     @Override
     public void setUp() throws Exception {

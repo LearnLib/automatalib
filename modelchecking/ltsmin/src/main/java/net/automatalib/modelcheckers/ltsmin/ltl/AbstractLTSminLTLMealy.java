@@ -106,14 +106,6 @@ public abstract class AbstractLTSminLTLMealy<I, O>
         this.skipOutputs = skipOutputs;
     }
 
-    /**
-     * Converts the FSM file to a {@link MealyLasso}.
-     *
-     * @param automaton
-     *         the MealyMachine used to compute the number of loop unrolls.
-     *
-     * @see AbstractLTSminLTL#findCounterExample(Object, Collection, Object)
-     */
     @Nullable
     @Override
     public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, String property)

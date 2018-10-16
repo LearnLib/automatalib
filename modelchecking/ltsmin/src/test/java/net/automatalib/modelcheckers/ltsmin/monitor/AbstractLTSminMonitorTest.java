@@ -17,6 +17,7 @@ package net.automatalib.modelcheckers.ltsmin.monitor;
 
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSminTest;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
@@ -31,17 +32,7 @@ public abstract class AbstractLTSminMonitorTest<A, R extends Output<String, ?>> 
     public abstract AbstractLTSminMonitor<String, A, R> getModelChecker();
 
     @Override
-    protected int getMinimumMajorVersion() {
-        return AbstractLTSminMonitor.MAJOR;
-    }
-
-    @Override
-    protected int getMinimumMinorVersion() {
-        return AbstractLTSminMonitor.MINOR;
-    }
-
-    @Override
-    protected int getMinimumPatchVersion() {
-        return AbstractLTSminMonitor.PATCH;
+    protected LTSminVersion getRequiredVersion() {
+        return AbstractLTSminMonitor.REQUIRED_VERSION;
     }
 }
