@@ -13,38 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
-
-import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.lasso.MealyLassoImpl;
+package net.automatalib.modelcheckers.ltsmin.monitor;
 
 /**
- * Tests whether LTSminLTLAlternating actually uses regular edge semantics.
+ * Tests whether LTSminLTLAlternating actually uses alternating edge semantics.
  *
  * @author Jeroen Meijer
- * @see LTSminLTLAlternatingTest
+ * @see LTSminMonitorIOTest
  */
-public class LTSminLTLIOTest extends AbstractLTSminLTLMealyTest {
+public class LTSminMonitorAlternatingTest extends AbstractLTSminMonitorMealyTest {
 
-    private LTSminLTLIO<String, String> modelChecker;
+    private LTSminMonitorAlternating<String, String> modelChecker;
 
     @Override
-    public LTSminLTLIO<String, String> getModelChecker() {
+    public LTSminMonitorAlternating<String, String> getModelChecker() {
         return modelChecker;
     }
 
     @Override
-    protected void newModelChecker() {
-        modelChecker = new LTSminLTLIOBuilder<String, String>().withString2Input(s -> s).withString2Output(s -> s).create();
+    public String getSkipFormula() {
+        return "!(letter == \"b\")";
     }
 
     @Override
-    protected MealyLasso<String, String> createLasso() {
-        return new MealyLassoImpl<>(createAutomaton(), getAlphabet(), 4);
+    public void newModelChecker() {
+        modelChecker = new LTSminMonitorAlternatingBuilder<String, String>().withString2Input(s -> s).
+                withString2Output(s -> s).create();
     }
 
     @Override
     protected String createFalseProperty() {
-        return "input == \"b\"";
+        return "X letter == \"a\"";
     }
 }

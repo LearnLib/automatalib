@@ -15,7 +15,10 @@
  */
 package net.automatalib.serialization.fsm.parser;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
@@ -28,15 +31,14 @@ import org.testng.annotations.Test;
 
 /**
  * Tests forFSM2MealyParserIO.
- *
- * This tests will involve parsing Mealy machines where transitions in the FSM can be directly mapped to transitions
- * in the Mealy machine (opposed to alternating edge semantics).
- *
- * @see FSM2MealyParserAlternatingTest
+ * <p>
+ * This tests will involve parsing Mealy machines where transitions in the FSM can be directly mapped to transitions in
+ * the Mealy machine (opposed to alternating edge semantics).
  *
  * @author Jeroen Meijer
+ * @see FSM2MealyParserAlternatingTest
  */
-public class FSM2MealyParserIOTest {
+public class FSM2MealyParserIOTest extends AbstractFSM2ParserTest {
 
     @Test
     public void testParse() throws Exception {
@@ -44,7 +46,7 @@ public class FSM2MealyParserIOTest {
 
         final Function<String, Character> ep = s -> s.charAt(0);
 
-        final CompactMealy<Character, Character> actualMealy = FSM2MealyParserIO.parse(is, ep, ep);
+        final CompactMealy<Character, Character> actualMealy = FSM2MealyParserIO.getParser(ep).readModel(is);
         is.close();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
@@ -55,5 +57,19 @@ public class FSM2MealyParserIOTest {
                 withInitial("q0").create();
 
         Assert.assertTrue(Automata.testEquivalence(actualMealy, expectedMealy, alphabet));
+    }
+
+    @Override
+    protected CompactMealy<Character, Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
+            throws IOException, FSMParseException {
+        final InputStream is = FSM2MealyParserIOTest.class.getResourceAsStream("/MealyIO.fsm");
+
+        final Function<String, Character> ep = s -> s.charAt(0);
+
+        final CompactMealy<Character, Character> mealy =
+                FSM2MealyParserIO.getParser(requiredInputs.orElse(null), ep).readModel(is);
+        is.close();
+
+        return mealy;
     }
 }

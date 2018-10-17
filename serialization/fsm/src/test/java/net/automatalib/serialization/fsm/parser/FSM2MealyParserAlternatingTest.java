@@ -15,7 +15,10 @@
  */
 package net.automatalib.serialization.fsm.parser;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
@@ -36,7 +39,7 @@ import org.testng.annotations.Test;
  *
  * @author Jeroen Meijer
  */
-public class FSM2MealyParserAlternatingTest {
+public class FSM2MealyParserAlternatingTest extends AbstractFSM2ParserTest {
 
     @Test
     public void testParse() throws Exception {
@@ -44,7 +47,7 @@ public class FSM2MealyParserAlternatingTest {
 
         final Function<String, Character> ep = s -> s.charAt(0);
 
-        final CompactMealy<Character, Character> actualMealy = FSM2MealyParserAlternating.parse(is, ep, ep);
+        final CompactMealy<Character, Character> actualMealy = FSM2MealyParserAlternating.getParser(ep).readModel(is);
         is.close();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
@@ -55,5 +58,19 @@ public class FSM2MealyParserAlternatingTest {
                 withInitial("q0").create();
 
         Assert.assertTrue(Automata.testEquivalence(actualMealy, expectedMealy, alphabet));
+    }
+
+    @Override
+    protected CompactMealy<Character, Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
+            throws IOException, FSMParseException {
+        final InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm");
+
+        final Function<String, Character> ep = s -> s.charAt(0);
+
+        final CompactMealy<Character, Character> mealy = FSM2MealyParserAlternating.getParser(requiredInputs.orElse(
+                null), null, ep).readModel(is);
+        is.close();
+
+        return mealy;
     }
 }

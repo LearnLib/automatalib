@@ -13,39 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelcheckers.ltsmin.ltl;
 
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.lasso.MealyLassoImpl;
+import org.testng.annotations.BeforeMethod;
 
 /**
- * Tests whether LTSminLTLAlternating actually uses alternating edge semantics.
+ * Tests whether LTSminLTLAlternating actually uses regular edge semantics.
  *
  * @author Jeroen Meijer
- * @see LTSminLTLIOTest
+ * @see LTSminLTLAlternatingTest
  */
-public class LTSminLTLAlternatingTest extends AbstractLTSminLTLMealyTest {
+public class LTSminLTLIOTest extends AbstractLTSminLTLMealyTest {
 
-    private LTSminLTLAlternating<String, String> modelChecker;
+    private LTSminLTLIO<String, String> modelChecker;
+
+    @BeforeMethod
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+    }
 
     @Override
-    public LTSminLTLAlternating<String, String> getModelChecker() {
+    public LTSminLTLIO<String, String> getModelChecker() {
         return modelChecker;
     }
 
     @Override
-    protected void newModelChecker() {
-        modelChecker = new LTSminLTLAlternatingBuilder<String, String>().withString2Input(s -> s).
-                withString2Output(s -> s).create();
+    public String getSkipFormula() {
+        return "!(input == \"b\")";
     }
 
     @Override
-    protected MealyLasso<String, String> createLasso() {
+    public void newModelChecker() {
+        modelChecker = new LTSminLTLIOBuilder<String, String>().withString2Input(s -> s).withString2Output(s -> s).create();
+    }
+
+    @Override
+    protected MealyLasso<String, String> createCounterExample() {
         return new MealyLassoImpl<>(createAutomaton(), getAlphabet(), 4);
     }
 
     @Override
     protected String createFalseProperty() {
-        return "X letter == \"a\"";
+        return "input == \"b\"";
     }
 }

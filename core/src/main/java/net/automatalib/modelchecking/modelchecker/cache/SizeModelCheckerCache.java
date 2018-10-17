@@ -18,6 +18,8 @@ package net.automatalib.modelchecking.modelchecker.cache;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -41,9 +43,11 @@ import net.automatalib.modelchecking.ModelCheckerCache;
 class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> implements ModelCheckerCache<I, A, P, R> {
 
     /**
-     * The actual cache.
+     * The actual cache. We need to wrap R in an {@link Optional} because {@link Map#computeIfAbsent(Object, Function)}
+     * does not accept null values. Results from {@link ModelChecker#findCounterExample(Object, Collection, Object)} can
+     * be null however.
      */
-    private final Map<Pair<Collection<? extends I>, P>, R> counterExamples = new HashMap<>();
+    private final Map<Pair<Collection<? extends I>, P>, Optional<R>> counterExamples = new HashMap<>();
 
     /**
      * The size of the last automaton.
@@ -79,8 +83,9 @@ class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> implements
 
         size = automaton.size();
 
-        return counterExamples.computeIfAbsent(Pair.of(inputs, property),
-                                               key -> modelChecker.findCounterExample(automaton, inputs, property));
+        return counterExamples.computeIfAbsent(
+                Pair.of(inputs, property),
+                key -> Optional.ofNullable(modelChecker.findCounterExample(automaton, inputs, property))).orElse(null);
     }
 
     @Override

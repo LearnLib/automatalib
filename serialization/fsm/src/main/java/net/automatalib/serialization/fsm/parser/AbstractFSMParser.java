@@ -18,9 +18,13 @@ package net.automatalib.serialization.fsm.parser;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StreamTokenizer;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * This class provides methods to parse automata in FSM format.
@@ -31,6 +35,7 @@ import java.util.function.Function;
  *
  * @author Jeroen Meijer
  */
+@ParametersAreNonnullByDefault
 public abstract class AbstractFSMParser<I> {
 
     /**
@@ -46,8 +51,6 @@ public abstract class AbstractFSMParser<I> {
     public static final String EXPECT_IDENTIFIER= "expecting identifier";
     public static final String EXPECT_STRING = "expecting string";
 
-    private final Reader reader;
-
     /**
      * The function that transforms strings in the FSM file to input.
      */
@@ -59,37 +62,27 @@ public abstract class AbstractFSMParser<I> {
     private int partLineNumber;
 
     /**
-     * The StreamTokenizer, that tokenizes tokens in the FSM file.
-     */
-    private final StreamTokenizer streamTokenizer;
-
-    /**
-     * The set that contains all inputs that end up in the input alphabet.
+     * The set that contains all inputs that end up in the input alphabet (read from the file).
      */
     private final Set<I> inputs = new HashSet<>();
 
     /**
+     * The set that contains all inputs that end up in the input alphabet (provided by the user, may be {@code null}).
+     */
+    @Nullable
+    protected final Collection<? extends I> targetInputs;
+
+    /**
      * Constructs a new AbstractFSMParser and defines all possible tokens.
      *
-     * @param reader the Reader
+     * @param targetInputs
+     *         An collection containing the inputs which should constitute the input alphabet of the parsed automaton.
+     *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser the Function that parses strings in the FSM file to input.
      */
-    protected AbstractFSMParser(Reader reader, Function<String, I> inputParser) {
+    protected AbstractFSMParser(@Nullable Collection<? extends I> targetInputs, Function<String, I> inputParser) {
         this.inputParser = inputParser;
-        this.reader = reader;
-        streamTokenizer = new StreamTokenizer(reader);
-        streamTokenizer.resetSyntax();
-        streamTokenizer.wordChars('a', 'z');
-        streamTokenizer.wordChars('A', 'Z');
-        streamTokenizer.wordChars('-', '-');
-        streamTokenizer.wordChars('_', '_');
-        streamTokenizer.wordChars('0', '9');
-        streamTokenizer.wordChars('á', ' ');
-        streamTokenizer.whitespaceChars(0, ' ');
-        streamTokenizer.quoteChar('"');
-        streamTokenizer.eolIsSignificant(true);
-        streamTokenizer.ordinaryChar('(');
-        streamTokenizer.ordinaryChar(')');
+        this.targetInputs = targetInputs;
     }
 
     /**
@@ -113,9 +106,25 @@ public abstract class AbstractFSMParser<I> {
     /**
      * Gets the StreamTokenizer, that tokenizes tokens in the FSM file.
      *
+     * @param reader
+     *         the source of the FSM file
+     *
      * @return the StreamTokenizer.
      */
-    protected StreamTokenizer getStreamTokenizer() {
+    protected StreamTokenizer getStreamTokenizer(Reader reader) {
+        final StreamTokenizer streamTokenizer = new StreamTokenizer(reader);
+        streamTokenizer.resetSyntax();
+        streamTokenizer.wordChars('a', 'z');
+        streamTokenizer.wordChars('A', 'Z');
+        streamTokenizer.wordChars('-', '-');
+        streamTokenizer.wordChars('_', '_');
+        streamTokenizer.wordChars('0', '9');
+        streamTokenizer.wordChars('á', ' ');
+        streamTokenizer.whitespaceChars(0, ' ');
+        streamTokenizer.quoteChar('"');
+        streamTokenizer.eolIsSignificant(true);
+        streamTokenizer.ordinaryChar('(');
+        streamTokenizer.ordinaryChar(')');
         return streamTokenizer;
     }
 
@@ -131,68 +140,91 @@ public abstract class AbstractFSMParser<I> {
     /**
      * Parse a data definition.
      *
+     * @param streamTokenizer
+     *         tokenizer containing the input
+     *
      * @throws FSMParseException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void parseDataDefinition() throws FSMParseException, IOException;
+    protected abstract void parseDataDefinition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
 
     /**
      * Perform some actions after all data definitions have been parsed.
      *
+     * @param streamTokenizer
+     *         tokenizer containing the input
+     *
      * @throws FSMParseException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void checkDataDefinitions() throws FSMParseException, IOException;
+    protected abstract void checkDataDefinitions(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
 
     /**
      * Parse a state vector.
      *
+     * @param streamTokenizer
+     *         tokenizer containing the input
+     *
      * @throws FSMParseException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void parseStateVector() throws FSMParseException, IOException;
+    protected abstract void parseStateVector(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
 
     /**
      * Perform some actions after all state vectors have been parsed.
      *
+     * @param streamTokenizer
+     *         tokenizer containing the input
+     *
      * @throws FSMParseException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void checkStateVectors() throws FSMParseException, IOException;
+    protected abstract void checkStateVectors(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
 
     /**
      * Parse a transition.
      *
-     * @throws FSMParseException when the FSM source is invalid.
-     * @throws IOException when FSM source could not be read.
-     */
-    protected abstract void parseTransition() throws FSMParseException, IOException;
-
-    /**
-     * Perform some actions after all transitions have been parsed.
+     * @param streamTokenizer
+     *         tokenizer containing the input
      *
      * @throws FSMParseException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void checkTransitions() throws FSMParseException, IOException;
+    protected abstract void parseTransition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
+
+    /**
+     * Perform some actions after all transitions have been parsed.
+     *
+     * @param streamTokenizer
+     *         tokenizer containing the input
+     *
+     * @throws FSMParseException when the FSM source is invalid.
+     * @throws IOException when FSM source could not be read.
+     */
+    protected abstract void checkTransitions(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
 
     /**
      * Parsed the FSM file line-by-line.
-     * At first this method expects to parse data definitions, and calls {@link #parseDataDefinition()} for each data
-     * definition. After "---" is encountered {@link #checkDataDefinitions()} is called, and this method expects to
-     * parse state vectors. The behavior is similar for state vectors and transitions.
+     * At first this method expects to parse data definitions, and calls {@link #parseDataDefinition(StreamTokenizer)}
+     * for each data definition. After "---" is encountered {@link #checkDataDefinitions(StreamTokenizer)} is called,
+     * and this method expects to parse state vectors. The behavior is similar for state vectors and transitions.
      * For each line this method will increment {@link #partLineNumber}, and reset it when a new part in the FSM file
      * begins.
      *
      * Note that {@link StreamTokenizer} allows one to push back tokens. This is used whenever we have checked type
      * type of token we are going to read.
      *
+     * @param reader
+     *         the source of the FSM file
+     *
      * @throws FSMParseException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected void parse() throws FSMParseException, IOException {
+    protected void parse(Reader reader) throws FSMParseException, IOException {
         Part part = Part.DataDefinition;
         partLineNumber = 0;
+
+        final StreamTokenizer streamTokenizer = getStreamTokenizer(reader);
 
         while (streamTokenizer.nextToken() != StreamTokenizer.TT_EOF) {
             streamTokenizer.pushBack();
@@ -202,10 +234,10 @@ public abstract class AbstractFSMParser<I> {
                         // we entered the part with the state vectors
                         part = Part.StateVectors;
                         partLineNumber = 0;
-                        checkDataDefinitions();
+                        checkDataDefinitions(streamTokenizer);
                     } else {
                         streamTokenizer.pushBack();
-                        parseDataDefinition();
+                        parseDataDefinition(streamTokenizer);
                     }
                     break;
                 }
@@ -214,15 +246,15 @@ public abstract class AbstractFSMParser<I> {
                         // we entered the part with the transitions.
                         part = Part.Transitions;
                         partLineNumber = 0;
-                        checkStateVectors();
+                        checkStateVectors(streamTokenizer);
                     } else {
                         streamTokenizer.pushBack();
-                        parseStateVector();
+                        parseStateVector(streamTokenizer);
                     }
                     break;
                 }
                 case Transitions: {
-                    parseTransition();
+                    parseTransition(streamTokenizer);
                     break;
                 }
                 default: throw new AssertionError();
@@ -231,7 +263,7 @@ public abstract class AbstractFSMParser<I> {
             while (streamTokenizer.nextToken() != StreamTokenizer.TT_EOL) {}
             partLineNumber++;
         }
-        checkTransitions();
+        checkTransitions(streamTokenizer);
         reader.close();
     }
 }

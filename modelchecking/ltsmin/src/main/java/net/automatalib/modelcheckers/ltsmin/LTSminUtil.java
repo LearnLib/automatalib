@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.ltsmin;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Paths;
 
 import net.automatalib.AutomataLibProperty;
@@ -35,12 +36,12 @@ public final class LTSminUtil {
     /**
      * Path to the "etf2lts-mc" binary.
      */
-    static final String ETF2LTS_MC;
+    public static final String ETF2LTS_MC;
 
     /**
      * Path to the "ltsmin-convert" binary.
      */
-    static final String LTSMIN_CONVERT;
+    public static final String LTSMIN_CONVERT;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LTSminUtil.class);
 
@@ -56,6 +57,13 @@ public final class LTSminUtil {
      */
     private static final int VERSION_EXIT = 255;
 
+    /**
+     * A flag for triggering verbose LTSmin output.
+     */
+    private static boolean verbose;
+
+    private static LTSminVersion detectedVersion;
+
     static {
         AutomataLibSettings settings = AutomataLibSettings.getInstance();
 
@@ -63,6 +71,11 @@ public final class LTSminUtil {
 
         ETF2LTS_MC = Paths.get(ltsMinPath, "etf2lts-mc").toString();
         LTSMIN_CONVERT = Paths.get(ltsMinPath, "ltsmin-convert").toString();
+
+        verbose = !settings.getProperty(AutomataLibProperty.LTSMIN_VERBOSE, Boolean.toString(LOGGER.isDebugEnabled()))
+                           .equalsIgnoreCase("false");
+
+        detectLTSmin();
     }
 
     private LTSminUtil() {
@@ -70,27 +83,74 @@ public final class LTSminUtil {
     }
 
     /**
-     * Checks whether the required binaries for the {@link AbstractLTSminLTL LTSmin modelchecker} can be executed, by
-     * performing a version check.
+     * Returns whether or not an LTSmin installation was detected.
      *
-     * @return {@code true} if the binary returned with the expected exit value, {@code false} otherwise.
+     * @return {@code true} if an LTSmin installation was detected, {@code false} otherwise.
+     */
+    public static boolean isInstalled() {
+        return detectedVersion != null;
+    }
+
+    /**
+     * Returns the detected version of the LTSmin installation. {@code null} if LTSmin is not installed.
+     *
+     * @return the detected version of the LTSmin installation. {@code null} if LTSmin is not installed.
+     *
+     * @see #isInstalled()
+     */
+    public static LTSminVersion getVersion() {
+        return detectedVersion;
+    }
+
+    /**
+     * Checks whether the currently detected LTSmin installation supports the queried version.
+     *
+     * @param requiredVersion
+     *         the required version
+     *
+     * @return {@code true} if LTSmin is installed in the proper version, {@code false} otherwise.
+     */
+    public static boolean supports(LTSminVersion requiredVersion) {
+        return isInstalled() && detectedVersion.supports(requiredVersion);
+    }
+
+    /**
+     * Returns whether to make LTSmin's output more verbose.
+     */
+    public static boolean isVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Programmitically set, whether to make LTSmin's output more verbose.
+     */
+    public static void setVerbose(boolean verbose) {
+        LTSminUtil.verbose = verbose;
+    }
+
+    /**
+     * (Re-)Checks whether the required binaries for the {@link AbstractLTSmin LTSmin modelchecker} can be executed, by
+     * performing a version check. The results to these checks can be accessed by {@link #isInstalled()} and {@link
+     * #getVersion()}.
      *
      * @see #ETF2LTS_MC
      * @see #LTSMIN_CONVERT
      */
-    public static boolean checkUsable() {
-        return checkUsable(ETF2LTS_MC) && checkUsable(LTSMIN_CONVERT);
+    public static void detectLTSmin() {
+        final LTSminVersion etf2ltsVersion = detectLTSmin(ETF2LTS_MC);
+        final LTSminVersion ltsminConvertVersion = detectLTSmin(LTSMIN_CONVERT);
+
+        if (etf2ltsVersion != null && ltsminConvertVersion != null) {
+            if (!etf2ltsVersion.equals(ltsminConvertVersion)) {
+                LOGGER.warn("Found differing etf2lts version '{}' and lstminConver version '{}'. Choosing the former",
+                            etf2ltsVersion,
+                            ltsminConvertVersion);
+            }
+            detectedVersion = etf2ltsVersion;
+        }
     }
 
-    /**
-     * Checks whether the given binary can be executed, by performing a version check.
-     *
-     * @param bin
-     *         the binary to check.
-     *
-     * @return {@code true} if the binary returned with the expected exit value, {@code false} otherwise.
-     */
-    private static boolean checkUsable(String bin) {
+    private static LTSminVersion detectLTSmin(String bin) {
 
         // the command lines for the ProcessBuilder
         final String[] commandLine = new String[] {// add the binary
@@ -98,20 +158,22 @@ public final class LTSminUtil {
                                                    // just run a version check
                                                    "--version"};
 
+        final StringWriter stringWriter = new StringWriter();
+
         try {
-            final int exitValue = ProcessUtil.invokeProcess(commandLine);
+            final int exitValue = ProcessUtil.invokeProcess(commandLine, stringWriter::append);
 
             if (exitValue != VERSION_EXIT) {
-                LOGGER.error(String.format(CHECK,
+                LOGGER.debug(String.format(CHECK,
                                            bin,
                                            String.format("Command '%s --version' did not exit with 255", bin)));
-                return false;
+                return null;
+            } else {
+                return LTSminVersion.parse(stringWriter.toString());
             }
         } catch (IOException | InterruptedException e) {
             LOGGER.error(String.format(CHECK, bin, e.toString()), e);
-            return false;
+            return null;
         }
-
-        return true;
     }
 }

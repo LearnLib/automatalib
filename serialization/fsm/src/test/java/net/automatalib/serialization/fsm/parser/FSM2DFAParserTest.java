@@ -15,7 +15,10 @@
  */
 package net.automatalib.serialization.fsm.parser;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -24,6 +27,7 @@ import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -31,15 +35,20 @@ import org.testng.annotations.Test;
  *
  * @author Jeroen Meijer
  */
-public class FSM2DFAParserTest {
+public class FSM2DFAParserTest extends AbstractFSM2ParserTest {
+
+    private FSM2DFAParser<Character> parser;
+
+    @BeforeClass
+    public void setUp() {
+        parser = FSM2DFAParser.getParser(s -> s.charAt(0), "label", "accept");
+    }
 
     @Test
     public void testParse1() throws Exception {
         final InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA1.fsm");
 
-        final Function<String, Character> ip = s -> s.charAt(0);
-
-        final CompactDFA<Character> actualDFA = FSM2DFAParser.parse(is, ip, "label", "accept");
+        final CompactDFA<Character> actualDFA = parser.readModel(is);
         is.close();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'b');
@@ -56,9 +65,7 @@ public class FSM2DFAParserTest {
     public void testParse2() throws Exception {
         final InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm");
 
-        final Function<String, Character> ip = s -> s.charAt(0);
-
-        final CompactDFA<Character> actualDFA = FSM2DFAParser.parse(is, ip, "label", "accept");
+        final CompactDFA<Character> actualDFA = parser.readModel(is);
         is.close();
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
@@ -68,5 +75,19 @@ public class FSM2DFAParserTest {
                 withAccepting("q0").withInitial("q0").create();
 
         Assert.assertTrue(Automata.testEquivalence(actualDFA, expectedDFA, alphabet));
+    }
+
+    @Override
+    protected CompactDFA<Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
+            throws IOException, FSMParseException {
+        final InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm");
+
+        final Function<String, Character> ip = s -> s.charAt(0);
+
+        final CompactDFA<Character> dfa =
+                FSM2DFAParser.getParser(requiredInputs.orElse(null), ip, "label", "accept").readModel(is);
+        is.close();
+
+        return dfa;
     }
 }

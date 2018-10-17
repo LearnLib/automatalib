@@ -16,9 +16,11 @@
 package net.automatalib.serialization.etf.writer;
 
 import java.io.PrintWriter;
-import java.io.Writer;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.Automaton;
+import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -28,19 +30,16 @@ import net.automatalib.words.Alphabet;
  *
  * @author Jeroen Meijer
  */
-public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> {
-
-    private final PrintWriter printWriter;
-
-    protected AbstractETFWriter(Writer writer) {
-        printWriter = new PrintWriter(writer);
-    }
+@ParametersAreNonnullByDefault
+public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> implements InputModelSerializer<I, A> {
 
     /**
      * Write the state vector. The state vector contains one variable of type "id", named "id".
      * Valuations for "id" could be identical to the state names of automata.
+     *
+     * @param printWriter the Writer.
      */
-    private void writeState() {
+    private void writeState(PrintWriter printWriter) {
         printWriter.println("begin state");
         printWriter.println("id:id");
         printWriter.println("end state");
@@ -49,8 +48,10 @@ public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> {
     /**
      * Write an edge in the LTS. Edges in specializations could be different; e.g. Mealy machines have two edge
      * labels, and DFAs have one edge.
+     *
+     * @param printWriter the Writer.
      */
-    protected abstract void writeEdge();
+    protected abstract void writeEdge(PrintWriter printWriter);
 
     /**
      * Write parts of the ETF that are dependent on A.
@@ -58,22 +59,20 @@ public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> {
      * @param a the automaton to write.
      * @param inputs the alphabet.
      */
-    protected abstract void writeETF(A a, Alphabet<I> inputs);
+    protected abstract void writeETF(PrintWriter printWriter, A a, Alphabet<I> inputs);
 
     /**
-     * Write the full ETF, and close the {@link #printWriter}.
+     * Write the full ETF.
      *
+     * @param printWriter the Writer.
      * @param a the automaton to write.
      * @param inputs the alphabet.
      */
-    protected final void write(A a, Alphabet<I> inputs) {
-        writeState();
-        writeEdge();
-        writeETF(a, inputs);
+    protected final void write(PrintWriter printWriter, A a, Alphabet<I> inputs) {
+        writeState(printWriter);
+        writeEdge(printWriter);
+        writeETF(printWriter, a, inputs);
         printWriter.close();
     }
 
-    protected PrintWriter getPrintWriter() {
-        return printWriter;
-    }
 }

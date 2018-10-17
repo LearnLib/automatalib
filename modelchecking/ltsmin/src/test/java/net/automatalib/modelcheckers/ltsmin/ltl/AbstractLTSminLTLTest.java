@@ -13,25 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelcheckers.ltsmin.ltl;
 
-import net.automatalib.modelchecking.modelchecker.AbstractUnfoldingModelChecker;
+import net.automatalib.modelcheckers.ltsmin.AbstractLTSminTest;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
+import net.automatalib.modelchecking.Lasso;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeroen Meijer
- */
-public abstract class AbstractUnfoldingModelCheckerTest<A> {
-
-    public abstract AbstractUnfoldingModelChecker<String, A, String, ?> getModelChecker();
-
-    protected abstract void newModelChecker();
+public abstract class AbstractLTSminLTLTest<A, L extends Lasso<String, ?>> extends AbstractLTSminTest<A, L> {
 
     @BeforeMethod
+    @Override
     public void setUp() throws Exception {
-        newModelChecker();
+        super.setUp();
+    }
+
+    @Override
+    protected Word<String> getInput() {
+        return new WordBuilder<String>().repeatAppend(4, "a").toWord();
+    }
+
+    @Override
+    public abstract AbstractLTSminLTL<String, A, L> getModelChecker();
+
+    @Override
+    protected LTSminVersion getRequiredVersion() {
+        return AbstractLTSminLTL.REQUIRED_VERSION;
     }
 
     @Test

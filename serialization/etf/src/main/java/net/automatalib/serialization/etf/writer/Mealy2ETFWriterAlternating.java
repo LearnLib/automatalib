@@ -15,18 +15,15 @@
  */
 package net.automatalib.serialization.etf.writer;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.Map;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.commons.util.IOUtil;
-import net.automatalib.commons.util.Triple;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -38,30 +35,21 @@ import net.automatalib.words.Alphabet;
  *
  * @author Jeroen Meijer
  *
- * @param <S> the state type
  * @param <I> the input type
- * @param <T> the transition type
  * @param <O> the output type
  */
-public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWriter<I, MealyMachine<S, I, T, O>> {
+public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I, MealyMachine<?, I, ?, O>> {
 
-    /**
-     * Constructs a new Mealy2ETFWriterAlternating. Writing a Mealy machine should be done with one of the write
-     * methods.
-     *
-     * @param writer the Writer.
-     */
-    private Mealy2ETFWriterAlternating(Writer writer) {
-        super(writer);
-    }
+    private static final Mealy2ETFWriterAlternating<?, ?> INSTANCE = new Mealy2ETFWriterAlternating<>();
 
     /**
      * With alternating edge semantics, there are only edges with one label. Both input and output of the Mealy
      * machine is generalized to a label named 'letter', of type 'letter'.
+     *
+     * @param pw the Writer.
      */
     @Override
-    protected void writeEdge() {
-        final PrintWriter pw = getPrintWriter();
+    protected void writeEdge(PrintWriter pw) {
         pw.println("begin edge");
         pw.println("letter:letter");
         pw.println("end edge");
@@ -79,12 +67,16 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
      * Note that in this context, the alphabet that is written to ETF is not just the inputs, it is the union of
      * inputs and outputs, of type 'letter'.
      *
+     * @param pw the Writer.
      * @param mealy the MealyMachine to write to ETF.
      * @param inputs the alphabet, the input alphabet.
      */
     @Override
-    protected void writeETF(MealyMachine<S, I, T, O> mealy, Alphabet<I> inputs) {
-        final PrintWriter pw = getPrintWriter();
+    protected void writeETF(PrintWriter pw, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) {
+        writeETFInternal(pw, mealy, inputs);
+    }
+
+    private <S, T> void writeETFInternal(PrintWriter pw, MealyMachine<S, I, T, O> mealy, Alphabet<I> inputs) {
 
         // create a bi-mapping from states to integers
         final BiMap<S, Integer> oldStates = HashBiMap.create();
@@ -96,7 +88,7 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
         pw.println("end init");
 
         // create a bi-map for transitions containing output
-        final BiMap<Triple<S, O, S>, Integer> outputTransitions = HashBiMap.create();
+        final BiMap<Pair<O, S>, Integer> outputTransitions = HashBiMap.create();
 
         // create a bi-map that maps output to integers
         final BiMap<O, Integer> outputIndices = HashBiMap.create();
@@ -116,7 +108,7 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
                     final O o = mealy.getTransitionOutput(t);
 
                     // construct a triple that serves as a key in the outputTransitions bi-map
-                    final Triple<S, O, S> outputTransition = Triple.of(s, o, n);
+                    final Pair<O, S> outputTransition = Pair.of(o, n);
 
                     // compute the integer value of the intermediate state (this may be a new state)
                     final Integer intermediateState = outputTransitions.computeIfAbsent(
@@ -153,10 +145,10 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
             pw.printf("\"%s\"%n", oldStates.inverse().get(i));
         }
 
-        final Map<Integer, Triple<S, O, S>> inverseTransitions = outputTransitions.inverse();
+        final Map<Integer, Pair<O, S>> inverseTransitions = outputTransitions.inverse();
         for (int i = 0; i < outputTransitions.size(); i++) {
-            final Triple<S, O, S> t = inverseTransitions.get(oldStates.size() + i);
-            pw.printf("\"(%s,%s,%s)\"%n", t.getFirst(), t.getSecond(), t.getThird());
+            final Pair<O, S> t = inverseTransitions.get(oldStates.size() + i);
+            pw.printf("\"(%s,%s)\"%n", t.getFirst(), t.getSecond());
         }
         pw.println("end sort");
 
@@ -169,15 +161,15 @@ public final class Mealy2ETFWriterAlternating<S, I, T, O> extends AbstractETFWri
         pw.println("end sort");
     }
 
-    public static <S, I, T, O> void write(Writer writer, MealyMachine<S, I, T, O> mealy, Alphabet<I> inputs) {
-        new Mealy2ETFWriterAlternating<S, I, T, O>(writer).write(mealy, inputs);
+    @Override
+    public void writeModel(OutputStream os, MealyMachine<?, I, ?, O> model, Alphabet<I> alphabet) {
+        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedUTF8Writer(os))) {
+            write(pw, model, alphabet);
+        }
     }
 
-    public static <I, O> void write(File file, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) throws IOException {
-        write(IOUtil.asBufferedUTF8Writer(file), mealy, inputs);
-    }
-
-    public static <I, O> void write(OutputStream outputStream, MealyMachine<?, I, ?, O> mealy, Alphabet<I> inputs) {
-        write(IOUtil.asBufferedUTF8Writer(outputStream), mealy, inputs);
+    @SuppressWarnings("unchecked")
+    public static <I, O> Mealy2ETFWriterAlternating<I, O> getInstance() {
+        return (Mealy2ETFWriterAlternating<I, O>) INSTANCE;
     }
 }

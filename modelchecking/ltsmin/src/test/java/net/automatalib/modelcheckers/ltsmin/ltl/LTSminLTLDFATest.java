@@ -13,21 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelcheckers.ltsmin.ltl;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
  * @author Jeroen Meijer
  */
-public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>> {
+public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>, DFALasso<String>> {
 
     private LTSminLTLDFA<String> modelChecker;
+
+    @BeforeMethod
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+    }
 
     @Override
     public LTSminLTLDFA<String> getModelChecker() {
@@ -35,12 +42,12 @@ public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>> {
     }
 
     @Override
-    protected void newModelChecker() {
+    public void newModelChecker() {
         modelChecker = new LTSminLTLDFABuilder<String>().withString2Input(s -> s).create();
     }
 
     @Override
-    protected DFALasso<String> createLasso() {
+    protected DFALasso<String> createCounterExample() {
         return new DFALassoImpl<>(createAutomaton(), getAlphabet(), 4);
     }
 

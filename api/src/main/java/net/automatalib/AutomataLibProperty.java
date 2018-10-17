@@ -44,6 +44,15 @@ public enum AutomataLibProperty {
     LTSMIN_PATH("ltsmin.path"),
 
     /**
+     * {@code ltsmin.verbose}.
+     * <p>
+     * Whether to make LTSmin's output more verbose.
+     * <p>
+     * If set to anything else but "false", LTSmin's output will be more verbose.
+     */
+    LTSMIN_VERBOSE("ltsmin.verbose"),
+
+    /**
      * {@code automatalib.visualization.provider}.
      * <p>
      * Property for setting the implementation of the visualization provider. The implementation must be available on

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelcheckers.ltsmin.ltl;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,21 +26,14 @@ import javax.annotation.Nullable;
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.exception.ModelCheckingException;
+import net.automatalib.modelcheckers.ltsmin.LTSminMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.modelchecking.lasso.MealyLassoImpl;
 import net.automatalib.serialization.fsm.parser.FSMParseException;
-import net.automatalib.ts.simple.SimpleDTS;
-import net.automatalib.util.automata.transout.MealyFilter;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 
 /**
  * An LTL model checker using LTSmin for Mealy machines.
- * <p>
- * A feature of this {@link net.automatalib.modelchecking.ModelChecker}, is that one can remove particular output
- * symbols from the a given MealyMachine hypothesis. This is useful when those symbols are actually symbols representing
- * system deadlocks. When checking LTL formulae special attention has to be given to deadlock situations.
  *
  * @param <I>
  *         the input type.
@@ -51,7 +44,7 @@ import net.automatalib.words.impl.Alphabets;
  */
 public abstract class AbstractLTSminLTLMealy<I, O>
         extends AbstractLTSminLTL<I, MealyMachine<?, I, ?, O>, MealyLasso<I, O>>
-        implements MealyModelCheckerLasso<I, O, String> {
+        implements MealyModelCheckerLasso<I, O, String>, LTSminMealy<I, O, MealyLasso<I, O>> {
 
     /**
      * @see #getString2Output()
@@ -90,6 +83,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
      *
      * @return the Function.
      */
+    @Override
     public Function<String, O> getString2Output() {
         return string2Output;
     }
@@ -112,68 +106,10 @@ public abstract class AbstractLTSminLTLMealy<I, O>
         this.skipOutputs = skipOutputs;
     }
 
-    /**
-     * Converts the given {@code fsm} to a {@link CompactMealy}.
-     *
-     * @param fsm
-     *         the FSM to convert.
-     *
-     * @return the {@link CompactMealy}.
-     *
-     * @throws IOException
-     *         when {@code fsm} can not be read.
-     * @throws FSMParseException
-     *         when {@code fsm} is invalid.
-     */
-    protected abstract CompactMealy<I, O> fsm2Mealy(File fsm) throws IOException, FSMParseException;
-
-    /**
-     * Writes the {@link MealyMachine} to the {@code etf} file while pruning way the outputs given in {@link
-     * #getSkipOutputs()}.
-     *
-     * @param mealyMachine
-     *         the {@link MealyMachine} to write.
-     *
-     * @throws IOException
-     *         see {@link #mealy2ETF(MealyMachine, Collection, File)}.
-     * @see AbstractLTSminLTL#automaton2ETF(SimpleDTS, Collection, File)
-     */
-    @Override
-    protected final void automaton2ETF(MealyMachine<?, I, ?, O> mealyMachine, Collection<? extends I> inputs, File etf)
-            throws IOException {
-        final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
-        mealy2ETF(MealyFilter.pruneTransitionsWithOutput(mealyMachine, alphabet, skipOutputs), inputs, etf);
-    }
-
-    /**
-     * Writes the given {@link MealyMachine} to the {@code etf} file.
-     *
-     * @param automaton
-     *         the {@link MealyMachine} to write.
-     * @param inputs
-     *         the alphabet.
-     * @param etf
-     *         the file to write to.
-     *
-     * @throws IOException
-     *         when {@code etf} can not be read.
-     */
-    protected abstract void mealy2ETF(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, File etf)
-            throws IOException;
-
-    /**
-     * Converts the FSM file to a {@link MealyLasso}.
-     *
-     * @param automaton
-     *         the DFA used to compute the number of loop unrolls.
-     *
-     * @see AbstractLTSminLTL#findCounterExample(Object, Collection, Object)
-     */
     @Nullable
     @Override
-    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
-                                               Collection<? extends I> inputs,
-                                               String property) throws ModelCheckingException {
+    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, String property)
+            throws ModelCheckingException {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
         final MealyLasso<I, O> result;
@@ -182,7 +118,12 @@ public abstract class AbstractLTSminLTLMealy<I, O>
             final CompactMealy<I, O> mealy;
 
             try {
-                mealy = fsm2Mealy(fsm);
+                mealy = fsm2Mealy(fsm, automaton, inputs);
+
+                // check if we must keep the FSM
+                if (!isKeepFiles() && !fsm.delete()) {
+                    throw new ModelCheckingException("Could not delete file: " + fsm.getAbsolutePath());
+                }
             } catch (IOException | FSMParseException e) {
                 throw new ModelCheckingException(e);
             }

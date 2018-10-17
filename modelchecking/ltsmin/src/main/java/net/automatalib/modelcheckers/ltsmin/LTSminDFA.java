@@ -18,21 +18,13 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.exception.ModelCheckingException;
-import net.automatalib.modelchecking.Lasso.DFALasso;
-import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
-import net.automatalib.modelchecking.lasso.DFALassoImpl;
+import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.etf.writer.DFA2ETFWriter;
-import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automata.fsa.DFAs;
@@ -40,40 +32,35 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
 /**
- * An LTL model checker using LTSmin for DFAs.
- * <p>
- * An important feature of this {@link net.automatalib.modelchecking.ModelChecker.DFAModelChecker}, is that it will
- * check if a given DFA hypothesis is prefix-closed.
+ * A model checker using LTSmin for DFAs.
+ *
+ * An important feature of this {@link DFAModelChecker}, is that it will check if a given DFA hypothesis is
+ * prefix-closed.
  * <p>
  * Another important feature is that rejecting states are NOT part of the LTS. This avoids the need for an unconditional
  * fairness constraint in LTL formulae.
  *
- * @param <I>
- *         the input type
+ * @param <I> the input type.
+ * @param <R> the type of a counterexample
+ *
+ * @see DFAs#isPrefixClosed(DFA, Alphabet)
  *
  * @author Jeroen Meijer
- * @see DFAs#isPrefixClosed(DFA, Alphabet)
  */
-public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>>
-        implements DFAModelCheckerLasso<I, String> {
+public interface LTSminDFA<I, R> extends LTSmin<I, DFA<?, I>, R>, ModelChecker.DFAModelChecker<I, String, R> {
 
     /**
      * The index in the FSM state vector for accept/reject.
      */
-    public static final String LABEL_NAME = "label";
+    String LABEL_NAME = "label";
 
     /**
      * The value in the state vector for acceptance.
      */
-    public static final String LABEL_VALUE = "accept";
-
-    @GenerateBuilder(defaults = BuilderDefaults.class)
-    public LTSminLTLDFA(boolean keepFiles, Function<String, I> string2Input, int minimumUnfolds, double multiplier) {
-        super(keepFiles, string2Input, minimumUnfolds, multiplier);
-    }
+    String LABEL_VALUE = "accept";
 
     @Override
-    protected void automaton2ETF(DFA<?, I> automaton, Collection<? extends I> inputs, File etf) throws IOException {
+    default void automaton2ETF(DFA<?, I> automaton, Collection<? extends I> inputs, File etf) throws IOException {
         dfa2ETF(automaton, inputs, etf);
     }
 
@@ -89,10 +76,9 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
      * @param <S>
      *         the state type
      *
-     * @throws IOException
-     *         see {@link DFA2ETFWriter#write(File, DFA, Alphabet)}.
+     * @throws IOException if the dfa couldn't be written to the provided file.
      */
-    private <S> void dfa2ETF(DFA<S, I> dfa, Collection<? extends I> inputs, File etf) throws IOException {
+    default <S> void dfa2ETF(DFA<S, I> dfa, Collection<? extends I> inputs, File etf) throws IOException {
         // check that the DFA rejects the empty language
         if (DFAs.acceptsEmptyLanguage(dfa)) {
             throw new ModelCheckingException("DFA accepts the empty language, the LTS for such a DFA is not defined.");
@@ -113,39 +99,6 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
                                    copy,
                                    dfa::isAccepting,
                                    (s, i, t) -> true);
-        DFA2ETFWriter.write(etf, copy, alphabet);
-    }
-
-    /**
-     * Converts the FSM file to a {@link DFALasso}.
-     *
-     * @param automaton
-     *         the DFA used to compute the number of loop unrolls.
-     *
-     * @see AbstractLTSminLTL#findCounterExample(Object, Collection, Object)
-     */
-    @Nullable
-    @Override
-    public DFALasso<I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, String property)
-            throws ModelCheckingException {
-        final File fsm = findCounterExampleFSM(automaton, inputs, property);
-
-        final DFALasso<I> result;
-
-        if (fsm != null) {
-            final CompactDFA<I> dfa;
-
-            try {
-                dfa = FSM2DFAParser.parse(fsm, getString2Input(), LABEL_NAME, LABEL_VALUE);
-            } catch (IOException | FSMParseException e) {
-                throw new ModelCheckingException(e);
-            }
-
-            result = new DFALassoImpl<>(dfa, dfa.getInputAlphabet(), computeUnfolds(automaton.size()));
-        } else {
-            result = null;
-        }
-
-        return result;
+        DFA2ETFWriter.<I>getInstance().writeModel(etf, copy, alphabet);
     }
 }
