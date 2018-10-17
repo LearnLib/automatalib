@@ -32,7 +32,9 @@ import net.automatalib.examples.incremental.IncrementalDFAExample;
 import net.automatalib.examples.incremental.IncrementalMealyExample;
 import net.automatalib.examples.incremental.IncrementalPCDFAExample;
 import net.automatalib.examples.modelchecking.LTSminExample;
+import net.automatalib.examples.modelchecking.LTSminMonitorExample;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -98,11 +100,20 @@ public class ExamplesTest {
 
     @Test
     public void testLTSminExample() {
-        if (!LTSminUtil.checkUsable()) {
-            throw new SkipException("LTSmin is not installed");
+        if (!LTSminUtil.supports(LTSminVersion.of(3, 0, 0))) {
+            throw new SkipException("LTSmin is not installed in the proper version");
         }
 
         LTSminExample.main(new String[0]);
+    }
+
+    @Test
+    public void testLTSminMonitorExample() {
+        if (!LTSminUtil.supports(LTSminVersion.of(3, 1, 0))) {
+            throw new SkipException("LTSmin is not installed in the proper version");
+        }
+
+        LTSminMonitorExample.main(new String[0]);
     }
 
     private static void checkJVMCompatibility() {
