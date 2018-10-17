@@ -35,7 +35,7 @@ public final class LTSminVersion {
     /**
      * The pattern for LTSmin versioning scheme: 'v[major].[minor].[patch][ignoredSuffix]'.
      */
-    private static final Pattern VERSION_PATTERN = Pattern.compile("v([0-9]+)\\.([0-9]+)\\.([0-9]+)\\.*");
+    private static final Pattern VERSION_PATTERN = Pattern.compile("^v([0-9]+)\\.([0-9]+)\\.([0-9]+)");
 
     private final int major, minor, patch;
 

@@ -31,14 +31,19 @@ public class LTSminVersionCheck {
         final String v300 = "v3.0.0";
         final String v300beta = "v3.0.0-beta1";
         final String v300broken = "v3.0broken.0";
+        final String noV = "3.0.0";
+        final String prefixV = "prefixv3.0.0";
 
         Assert.assertEquals(LTSminVersion.parse(v300), LTSminVersion.of(3, 0, 0));
         Assert.assertEquals(LTSminVersion.parse(v300beta), LTSminVersion.of(3, 0, 0));
         Assert.assertEquals(LTSminVersion.parse(v300broken), LTSminVersion.of(0, 0, 0));
+        Assert.assertEquals(LTSminVersion.parse(noV), LTSminVersion.of(0, 0, 0));
+        Assert.assertEquals(LTSminVersion.parse(prefixV), LTSminVersion.of(0, 0, 0));
     }
 
     @Test
     public void testSupports() {
         Assert.assertTrue(LTSminVersion.of(3, 1, 0).supports(LTSminVersion.of(3, 0, 1)));
+        Assert.assertFalse(LTSminVersion.of(3, 0, 1).supports(LTSminVersion.of(3, 1, 0)));
     }
 }
