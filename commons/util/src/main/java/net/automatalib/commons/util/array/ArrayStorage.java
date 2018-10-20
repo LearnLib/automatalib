@@ -17,6 +17,7 @@ package net.automatalib.commons.util.array;
 
 import java.io.Serializable;
 import java.util.AbstractList;
+import java.util.Collection;
 import java.util.RandomAccess;
 import java.util.function.Supplier;
 
@@ -45,6 +46,10 @@ public class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Se
         for (int i = 0; i < size; i++) {
             storage[i] = supplier.get();
         }
+    }
+
+    public ArrayStorage(Collection<? extends T> collection) {
+        storage = collection.toArray(new Object[0]);
     }
 
     private ArrayStorage(Object[] storage) {
