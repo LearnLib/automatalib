@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
  *
  * @author frohme
  */
-public class LTSminVersionCheck {
+public class LTSminVersionTest {
 
     @Test
     public void testParse() {
@@ -43,7 +43,19 @@ public class LTSminVersionCheck {
 
     @Test
     public void testSupports() {
-        Assert.assertTrue(LTSminVersion.of(3, 1, 0).supports(LTSminVersion.of(3, 0, 1)));
-        Assert.assertFalse(LTSminVersion.of(3, 0, 1).supports(LTSminVersion.of(3, 1, 0)));
+        // major version
+        Assert.assertTrue(LTSminVersion.of(3, 0, 0).supports(LTSminVersion.of(3, 0, 0)));
+        Assert.assertTrue(LTSminVersion.of(4, 0, 0).supports(LTSminVersion.of(3, 0, 0)));
+        Assert.assertFalse(LTSminVersion.of(2, 0, 0).supports(LTSminVersion.of(3, 0, 0)));
+
+        // minor version
+        Assert.assertTrue(LTSminVersion.of(3, 1, 0).supports(LTSminVersion.of(3, 1, 0)));
+        Assert.assertTrue(LTSminVersion.of(3, 2, 0).supports(LTSminVersion.of(3, 1, 0)));
+        Assert.assertFalse(LTSminVersion.of(3, 1, 0).supports(LTSminVersion.of(3, 2, 0)));
+
+        // patch version
+        Assert.assertTrue(LTSminVersion.of(3, 1, 0).supports(LTSminVersion.of(3, 1, 0)));
+        Assert.assertTrue(LTSminVersion.of(3, 1, 1).supports(LTSminVersion.of(3, 1, 0)));
+        Assert.assertFalse(LTSminVersion.of(3, 1, 0).supports(LTSminVersion.of(3, 1, 1)));
     }
 }
