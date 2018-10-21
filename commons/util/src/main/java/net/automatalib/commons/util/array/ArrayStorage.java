@@ -49,7 +49,7 @@ public class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Se
     }
 
     public ArrayStorage(Collection<? extends T> collection) {
-        storage = collection.toArray(new Object[0]);
+        storage = collection.toArray();
     }
 
     private ArrayStorage(Object[] storage) {
