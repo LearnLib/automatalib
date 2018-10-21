@@ -18,7 +18,6 @@ package net.automatalib.commons.smartcollections;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 import net.automatalib.commons.util.array.ResizingArrayStorage;
 
@@ -131,17 +130,6 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
     }
 
     @Override
-    public boolean remove(Object elem) {
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(storage.array[i], elem)) {
-                remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public Iterator<ElementReference> referenceIterator() {
         return new ReferenceIterator();
     }
@@ -201,8 +189,10 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
     public boolean addAll(Collection<? extends E> coll) {
         int sizeInc = coll.size();
         ensureCapacity(size + sizeInc);
+        int idx = size;
         for (E elem : coll) {
-            storage.array[size] = new Reference<>(elem, size);
+            storage.array[idx] = new Reference<>(elem, idx);
+            idx++;
         }
         size += sizeInc;
 
