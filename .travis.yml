@@ -41,38 +41,36 @@ jobs:
   fast_finish: true
   include:
     # Run code analysis and documentation generation only in our core environments (since it's an expensive task)
-    - os: linux
-      jdk: openjdk8
+    - jdk: openjdk8
       script: mvn install -B -Pcode-analysis,bundles
-    - os: linux
-      jdk: openjdk11
+    - jdk: openjdk11
       script: mvn install -B -Pcode-analysis,bundles
     # Run "normal" tests in other environments
-    - stage: Integration Test
+    - stage: Integration Tests
+      jdk: openjdk11
+      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=11 -Dmaven.compiler.target=11"
     - os: osx
       jdk: openjdk8
+      # Force old xcode version so JDK8 isn't overridden from newer xcode version
+      osx_image: xcode9.3
     - os: osx
       jdk: openjdk11
-    - os: windows
-      jdk: openjdk8
-      language: shell
-      before_install:
-      - cinst jdk8 -params 'installdir=C:\\jdk8'
-      - export JAVA_HOME="C:\jdk8"
-      - export PATH=${JAVA_HOME}/bin:${PATH}
-      - cinst maven -params 'installdir=C:\\maven'
-      - export M2_HOME="C:\maven"
-      - export PATH=${M2_HOME}/bin:${PATH}
-    - os: windows
-      jdk: openjdk11
-      language: shell
-      before_install:
-      - cinst jdk11 -params 'installdir=C:\\jdk11'
-      - export JAVA_HOME="C:\jdk11"
-      - export PATH=${JAVA_HOME}/bin:${PATH}
-      - cinst maven -params 'installdir=C:\\maven'
-      - export M2_HOME="C:\maven"
-      - export PATH=${M2_HOME}/bin:${PATH}
+#    - os: windows
+#      jdk: oraclejdk8
+#      language: shell
+#      before_install:
+#      - cinst jdk8 -params 'installdir=C:\\jdk8'
+#      - export JAVA_HOME="C:\jdk8"
+#      - export PATH=${JAVA_HOME}/bin:${PATH}
+#      - cinst maven -params 'installdir=C:\\maven'
+#    - os: windows
+#      jdk: oraclejdk11
+#      language: shell
+#      before_install:
+#      - cinst jdk11 -params 'installdir=C:\\jdk11'
+#      - export JAVA_HOME="C:\jdk11"
+#      - export PATH=${JAVA_HOME}/bin:${PATH}
+#      - cinst maven -params 'installdir=C:\\maven'
     # Run coverage in default environment
     - stage: Coverage
       jdk: openjdk8
