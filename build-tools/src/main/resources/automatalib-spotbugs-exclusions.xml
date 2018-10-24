@@ -56,4 +56,16 @@ limitations under the License.
             <Class name="net.automatalib.serialization.taf.parser.TokenMgrError"/>
         </Or>
     </Match>
+    <Match>
+        <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/756 -->
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+        <Or>
+            <Class name="net.automatalib.serialization.taf.parser.TAFParser"/>
+            <Class name="net.automatalib.serialization.aut.InternalAUTParser"/>
+            <Class name="net.automatalib.serialization.dot.DOTSerializationProvider"/>
+            <Class name="net.automatalib.visualization.dot.DOTComponent$1"/>
+            <Class name="net.automatalib.visualization.dot.GraphVizBrowserVisualizationProvider"/>
+            <Class name="net.automatalib.visualization.dot.PlottedGraph"/>
+        </Or>
+    </Match>
 </FindBugsFilter>
