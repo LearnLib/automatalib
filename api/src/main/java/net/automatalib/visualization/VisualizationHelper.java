@@ -35,11 +35,11 @@ public interface VisualizationHelper<N, E> {
 
     /**
      * Retrieves the properties for rendering a single node. Additionally, the return value allows to control whether or
-     * not to omit this node from rendering. If <tt>false</tt> is returned, the node will not be rendered. Consequently,
+     * not to omit this node from rendering. If {@code false} is returned, the node will not be rendered. Consequently,
      * any modifications to the properties map will have no effect.
      * <p>
      * The properties are stored in the {@link Map} argument. Note that if an implementation of a base class is
-     * overridden, it is probably a good idea to call <tt>super.getNodeProperties(node, properties);</tt> at the
+     * overridden, it is probably a good idea to call {@code super.getNodeProperties(node, properties);} at the
      * beginning of the method.
      *
      * @param node
@@ -53,11 +53,11 @@ public interface VisualizationHelper<N, E> {
 
     /**
      * Retrieves the properties for rendering a single edge. Additionally, the return value allows to control whether or
-     * not to omit this edge from rendering. If <tt>false</tt> is returned, the edge will not be rendered. Consequently,
+     * not to omit this edge from rendering. If {@code false} is returned, the edge will not be rendered. Consequently,
      * any modifications to the properties map will have no effect.
      * <p>
      * The properties are stored in the {@link Map} argument. Note that if an implementation of a base class is
-     * overridden, it is probably a good idea to call <tt>super.getEdgeProperties(node, properties);</tt> at the
+     * overridden, it is probably a good idea to call {@code super.getEdgeProperties(node, properties);} at the
      * beginning of the method.
      *
      * @param edge

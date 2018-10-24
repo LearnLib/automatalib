@@ -32,8 +32,8 @@ public final class CmpUtil {
     /**
      * Compares two {@link List}s with respect to canonical ordering.
      * <p>
-     * In canonical ordering, a sequence <tt>o1</tt> is less than a sequence <tt>o2</tt> if <tt>o1</tt> is shorter than
-     * <tt>o2</tt>, or if they have the same length and <tt>o1</tt> is lexicographically smaller than <tt>o2</tt>.
+     * In canonical ordering, a sequence {@code o1} is less than a sequence {@code o2} if {@code o1} is shorter than
+     * {@code o2}, or if they have the same length and {@code o1} is lexicographically smaller than {@code o2}.
      *
      * @param o1
      *         the first list
@@ -67,8 +67,8 @@ public final class CmpUtil {
     /**
      * Compares two {@link List}s of {@link Comparable} elements with respect to canonical ordering.
      * <p>
-     * In canonical ordering, a sequence <tt>o1</tt> is less than a sequence <tt>o2</tt> if <tt>o1</tt> is shorter than
-     * <tt>o2</tt>, or if they have the same length and <tt>o1</tt> is lexicographically smaller than <tt>o2</tt>.
+     * In canonical ordering, a sequence {@code o1} is less than a sequence {@code o2} if {@code o1} is shorter than
+     * {@code o2}, or if they have the same length and {@code o1} is lexicographically smaller than {@code o2}.
      *
      * @param o1
      *         the first list

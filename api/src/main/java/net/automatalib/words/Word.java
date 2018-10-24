@@ -318,7 +318,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     /**
      * Checks if this word is empty, i.e., contains no symbols.
      *
-     * @return <tt>true</tt> if this word is empty, <tt>false</tt> otherwise.
+     * @return {@code true} if this word is empty, {@code false} otherwise.
      */
     public boolean isEmpty() {
         return (length() == 0);
@@ -381,7 +381,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 
     /**
      * Internal subword operation implementation. In contrast to {@link #subWord(int, int)}, no range checks need to be
-     * performed. As this method is flagged as <tt>protected</tt>, implementations may rely on the specified indices
+     * performed. As this method is flagged as {@code protected}, implementations may rely on the specified indices
      * being valid.
      *
      * @param fromIndex
@@ -414,7 +414,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @param index
      *         the position
      *
-     * @return symbol at position i, <tt>null</tt> if no such symbol exists
+     * @return symbol at position i, {@code null} if no such symbol exists
      */
     @Nullable
     public abstract I getSymbol(int index);
@@ -463,8 +463,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     }
 
     /**
-     * Retrieves the next word after this in canonical order. Figuratively speaking, if there are <tt>k</tt> alphabet
-     * symbols, one can think of a word of length <tt>n</tt> as an <tt>n</tt>-digit radix-<tt>k</tt> representation of
+     * Retrieves the next word after this in canonical order. Figuratively speaking, if there are {@code k} alphabet
+     * symbols, one can think of a word of length {@code n} as an {@code n}-digit radix-{@code k} representation of
      * the number. The next word in canonical order is the representation for the number represented by this word plus
      * one.
      *
@@ -621,7 +621,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @param other
      *         the other word
      *
-     * @return <tt>true</tt> if this word is a prefix of the other word, <tt>false</tt> otherwise.
+     * @return {@code true} if this word is a prefix of the other word, {@code false} otherwise.
      */
     public boolean isPrefixOf(Word<?> other) {
         int len = length(), otherLen = other.length();
@@ -688,7 +688,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @param other
      *         the other word
      *
-     * @return <tt>true</tt> if this word is a suffix of the other word, <tt>false</tt> otherwise.
+     * @return {@code true} if this word is a suffix of the other word, {@code false} otherwise.
      */
     public boolean isSuffixOf(Word<?> other) {
         int len = length(), otherLen = other.length();

@@ -225,7 +225,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
      * @param word
      *         the word
      *
-     * @return the state reached by the given word, or <tt>null</tt> if no state is reachable by that word
+     * @return the state reached by the given word, or {@code null} if no state is reachable by that word
      */
     @Override
     protected State getState(Word<? extends I> word) {

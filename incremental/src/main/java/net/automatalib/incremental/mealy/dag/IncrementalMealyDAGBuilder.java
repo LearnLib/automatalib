@@ -95,7 +95,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
     }
 
     /**
-     * Retrieves the (internal) state reached by the given input word, or <tt>null</tt> if no information about the
+     * Retrieves the (internal) state reached by the given input word, or {@code null} if no information about the
      * input word is present.
      *
      * @param word

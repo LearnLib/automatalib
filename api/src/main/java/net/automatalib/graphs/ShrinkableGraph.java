@@ -41,7 +41,7 @@ public interface ShrinkableGraph<N, E> extends Graph<N, E> {
 
     /**
      * Removes a node from this graph, and redirects all incoming edges to the given replacement node (node that
-     * outgoing edges are still removed). If a <tt>null</tt> replacement is specified, then this function behaves
+     * outgoing edges are still removed). If a {@code null} replacement is specified, then this function behaves
      * equivalently to the above {@link #removeNode(Object)}.
      *
      * @param node

@@ -56,7 +56,7 @@ final class State {
     /**
      * Checks whether this node is a confluence node (i.e. has more than one incoming transitions).
      *
-     * @return <tt>true</tt> if this node is a confluence node, <tt>false</tt> otherwise.
+     * @return {@code true} if this node is a confluence node, {@code false} otherwise.
      */
     public boolean isConfluence() {
         return (numIncoming > 1);

@@ -57,11 +57,11 @@ public interface IncrementalConstruction<A, I> {
      * @param inputs
      *         the set of input symbols to consider
      * @param omitUndefined
-     *         if this is set to <tt>true</tt>, then undefined transitions in the <tt>target</tt> model will be
+     *         if this is set to {@code true}, then undefined transitions in the {@code target} model will be
      *         interpreted as "unspecified/don't know" and omitted in the equivalence test. Otherwise, they will be
      *         interpreted in the usual manner (e.g., non-accepting sink in case of DFAs).
      *
-     * @return a separating word, or <tt>null</tt> if no difference could be found.
+     * @return a separating word, or {@code null} if no difference could be found.
      */
     @Nullable
     Word<I> findSeparatingWord(A target, Collection<? extends I> inputs, boolean omitUndefined);
@@ -72,7 +72,7 @@ public interface IncrementalConstruction<A, I> {
      * @param word
      *         the word
      *
-     * @return <tt>true</tt> if this class has definitive information about the word, <tt>false</tt> otherwise.
+     * @return {@code true} if this class has definitive information about the word, {@code false} otherwise.
      */
     boolean hasDefinitiveInformation(Word<? extends I> word);
 

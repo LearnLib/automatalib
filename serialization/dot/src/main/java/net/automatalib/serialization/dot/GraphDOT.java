@@ -62,7 +62,7 @@ public final class GraphDOT {
      *         the appendable to write to
      *
      * @throws IOException
-     *         if writing to <tt>a</tt> fails
+     *         if writing to {@code a} fails
      */
     public static <S, I, T> void write(Automaton<S, I, T> automaton,
                                        Collection<? extends I> inputAlphabet,
@@ -83,7 +83,7 @@ public final class GraphDOT {
      *         additional helpers for providing visualization properties.
      *
      * @throws IOException
-     *         if writing to <tt>a</tt> fails
+     *         if writing to {@code a} fails
      */
     @SafeVarargs
     public static <S, I, T> void write(Automaton<S, I, T> automaton,
@@ -107,7 +107,7 @@ public final class GraphDOT {
      *         additional helpers for providing visualization properties.
      *
      * @throws IOException
-     *         if writing to <tt>a</tt> fails
+     *         if writing to {@code a} fails
      */
     public static <S, I, T> void write(Automaton<S, I, T> automaton,
                                        Collection<? extends I> inputAlphabet,
@@ -126,7 +126,7 @@ public final class GraphDOT {
      *         the appendable to write to.
      *
      * @throws IOException
-     *         if writing to <tt>a</tt> fails.
+     *         if writing to {@code a} fails.
      */
     public static <N, E> void write(Graph<N, E> graph, Appendable a) throws IOException {
         writeRaw(graph, a, toDOTVisualizationHelper(graph.getVisualizationHelper()));
@@ -143,7 +143,7 @@ public final class GraphDOT {
      *         additional helpers for providing visualization properties.
      *
      * @throws IOException
-     *         if writing to <tt>a</tt> fails.
+     *         if writing to {@code a} fails.
      */
     @SafeVarargs
     public static <N, E> void write(Graph<N, E> graph,
@@ -163,7 +163,7 @@ public final class GraphDOT {
      *         additional helpers for providing visualization properties.
      *
      * @throws IOException
-     *         if writing to <tt>a</tt> fails.
+     *         if writing to {@code a} fails.
      */
     public static <N, E> void write(Graph<N, E> graph,
                                     Appendable a,
@@ -188,7 +188,7 @@ public final class GraphDOT {
      *         the helper to use for rendering. Can be {@code null}
      *
      * @throws IOException
-     *         if writing to <tt>a</tt> fails
+     *         if writing to {@code a} fails
      */
     private static <N, E> void writeRaw(Graph<N, E> graph,
                                         Appendable a,

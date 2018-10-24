@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * Class that provides a resizable <tt>int</tt> array storage.
+ * Class that provides a resizable {@code int} array storage.
  *
  * @author Malte Isberner
  */

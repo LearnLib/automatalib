@@ -211,7 +211,7 @@ public class Automata extends TS {
      * @param inputs
      *         the input symbols to consider
      *
-     * @return a separating word, or <tt>null</tt> if no such word could be found.
+     * @return a separating word, or {@code null} if no such word could be found.
      */
     public static <I> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
                                                  UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
@@ -237,7 +237,7 @@ public class Automata extends TS {
      * @param inputs
      *         the input symbols to consider
      *
-     * @return a separating word, or <tt>null</tt> if no such word could be found
+     * @return a separating word, or {@code null} if no such word could be found
      */
     public static <S, I> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
                                                     S state1,

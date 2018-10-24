@@ -73,7 +73,7 @@ public final class Mappings {
      * Returns a mapping that maps objects to their {@link String} representation, as obtained by {@link
      * String#valueOf(Object)}.
      *
-     * @return the "<tt>toString()</tt>" mapping
+     * @return the "{@code toString()}" mapping
      */
     @SuppressWarnings("unchecked")
     public static <D> Mapping<D, String> toStringMapping() {

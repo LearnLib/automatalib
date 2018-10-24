@@ -56,7 +56,7 @@ public interface SSSPResult<N, E> {
     float getShortestPathDistance(N target);
 
     /**
-     * Retrieves the shortest path from the initial node to the given one (as a sequence of edges), or <tt>null</tt> if
+     * Retrieves the shortest path from the initial node to the given one (as a sequence of edges), or {@code null} if
      * there exists no such path.
      * <p>
      * Note that implementations might construct these paths on-the-fly.
@@ -64,19 +64,19 @@ public interface SSSPResult<N, E> {
      * @param target
      *         the target node
      *
-     * @return the path from the initial node to the given target node, or <tt>null</tt> if there exists no such path.
+     * @return the path from the initial node to the given target node, or {@code null} if there exists no such path.
      */
     @Nullable
     List<E> getShortestPath(N target);
 
     /**
      * Retrieves the incoming edge via which the given node is reached on the shortest path. If the node is not
-     * reachable or it is the initial node, <tt>null</tt> is returned.
+     * reachable or it is the initial node, {@code null} is returned.
      *
      * @param target
      *         the target node
      *
-     * @return the reaching edge on the shortest path, or <tt>null</tt>.
+     * @return the reaching edge on the shortest path, or {@code null}.
      */
     @Nullable
     E getShortestPathEdge(N target);

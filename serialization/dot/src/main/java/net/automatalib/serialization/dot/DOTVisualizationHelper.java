@@ -36,7 +36,7 @@ public interface DOTVisualizationHelper<N, E> extends VisualizationHelper<N, E> 
      *         the {@link Appendable} to write to
      *
      * @throws IOException
-     *         if writing to <tt>a</tt> throws.
+     *         if writing to {@code a} throws.
      */
     void writePreamble(Appendable a) throws IOException;
 
@@ -47,7 +47,7 @@ public interface DOTVisualizationHelper<N, E> extends VisualizationHelper<N, E> 
      *         the {@link Appendable} to write to
      *
      * @throws IOException
-     *         if writing to <tt>a</tt> throws.
+     *         if writing to {@code a} throws.
      */
     void writePostamble(Appendable a) throws IOException;
 

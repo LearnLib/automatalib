@@ -34,7 +34,7 @@ import net.automatalib.commons.util.array.ResizingArrayStorage;
  * the storage does not have to be duplicated unless it either is required due to capacity adjustment <i>or</i> a
  * non-appending change (such as {@link #setSymbol(int, Object)} or {@link #truncate(int)}) is made.
  * <p>
- * Nearly all modification methods of this class return a <tt>this</tt>-reference, allowing constructs such as {@code
+ * Nearly all modification methods of this class return a {@code this}-reference, allowing constructs such as {@code
  * builder.append(foo).append(bar).append(baz)}.
  *
  * @param <I>
@@ -66,8 +66,8 @@ public final class WordBuilder<I> extends AbstractList<I> {
     }
 
     /**
-     * Constructor. Initializes the builder with a sequence of <tt>count</tt> times the specified symbol. Note that this
-     * constructor runs in constant time if <tt>initSym</tt> is <tt>null</tt>.
+     * Constructor. Initializes the builder with a sequence of {@code count} times the specified symbol. Note that this
+     * constructor runs in constant time if {@code initSym} is {@code null}.
      *
      * @param initSym
      *         the initial symbol
@@ -85,7 +85,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
     }
 
     /**
-     * Constructor. Initializes the builder with a sequence of <tt>count</tt> times the specified symbol, while
+     * Constructor. Initializes the builder with a sequence of {@code count} times the specified symbol, while
      * allocating the specified initial capacity.
      *
      * @param capacity
@@ -139,7 +139,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
      * @param symbol
      *         the symbol to append
      *
-     * @return <tt>this</tt>
+     * @return {@code this}
      */
     public WordBuilder<I> append(I symbol) {
         ensureAdditionalCapacity(1);
@@ -162,7 +162,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
      * @param word
      *         the word to append.
      *
-     * @return <tt>this</tt>
+     * @return {@code this}
      */
     public WordBuilder<I> append(Word<? extends I> word) {
         int wLen = word.length();
@@ -178,7 +178,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
      * @param words
      *         the words to append
      *
-     * @return <tt>this</tt>
+     * @return {@code this}
      */
     @SafeVarargs
     public final WordBuilder<I> append(Word<? extends I>... words) {
@@ -208,7 +208,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
      * @param symbols
      *         the symbols to append
      *
-     * @return <tt>this</tt>
+     * @return {@code this}
      */
     @SafeVarargs
     public final WordBuilder<I> append(I... symbols) {
@@ -246,14 +246,14 @@ public final class WordBuilder<I> extends AbstractList<I> {
     }
 
     /**
-     * Appends <tt>num</tt> copies of the given word to the contents of the initial storage.
+     * Appends {@code num} copies of the given word to the contents of the initial storage.
      *
      * @param num
      *         the number of copies
      * @param word
      *         the word
      *
-     * @return <tt>this</tt>
+     * @return {@code this}
      */
     public WordBuilder<I> repeatAppend(int num, Word<I> word) {
         if (num == 0) {
@@ -274,14 +274,14 @@ public final class WordBuilder<I> extends AbstractList<I> {
     }
 
     /**
-     * Appends <tt>num</tt> copies of a symbol to the contents of the internal storage.
+     * Appends {@code num} copies of a symbol to the contents of the internal storage.
      *
      * @param num
      *         the number of copies
      * @param symbol
      *         the symbol
      *
-     * @return <tt>this</tt>
+     * @return {@code this}
      */
     public WordBuilder<I> repeatAppend(int num, I symbol) {
         if (num == 0) {
@@ -305,7 +305,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
      * @param truncLen
      *         the length to truncate to
      *
-     * @return <tt>this</tt>
+     * @return {@code this}
      */
     public WordBuilder<I> truncate(int truncLen) {
         if (truncLen >= length) {
@@ -405,7 +405,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
      * @param symbol
      *         the symbol to set
      *
-     * @return <tt>this</tt>
+     * @return {@code this}
      */
     public WordBuilder<I> setSymbol(int index, I symbol) {
         ensureUnlocked();

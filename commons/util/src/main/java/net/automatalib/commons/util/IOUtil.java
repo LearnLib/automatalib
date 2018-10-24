@@ -36,7 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility methods for operating with <tt>java.io.*</tt> classes.
+ * Utility methods for operating with {@code java.io.*} classes.
  *
  * @author Malte Isberner
  */

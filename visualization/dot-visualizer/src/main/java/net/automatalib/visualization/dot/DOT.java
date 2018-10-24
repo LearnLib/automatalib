@@ -372,7 +372,7 @@ public final class DOT {
      * rendering result appears.
      *
      * @param modal
-     *         whether or not this window is modal (if set to <tt>true</tt>, calls to {@link Writer#close()} will
+     *         whether or not this window is modal (if set to {@code true}, calls to {@link Writer#close()} will
      *         block.
      *
      * @return the writer

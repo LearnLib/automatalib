@@ -61,7 +61,7 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
 
     /**
      * Inserts an edge in the graph, with the default property. Calling this method should be equivalent to invoking
-     * {@link #connect(Object, Object, Object)} with a <tt>null</tt> property value.
+     * {@link #connect(Object, Object, Object)} with a {@code null} property value.
      *
      * @param source
      *         the source node

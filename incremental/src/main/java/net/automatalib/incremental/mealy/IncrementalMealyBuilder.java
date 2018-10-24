@@ -40,8 +40,8 @@ public interface IncrementalMealyBuilder<I, O> extends IncrementalConstruction<M
      * @param output
      *         a consumer for constructing the output word
      *
-     * @return <tt>true</tt> if the information contained was complete (in this case, <code>word.length() ==
-     * output.size()</code> will hold), <tt>false</tt> otherwise.
+     * @return {@code true} if the information contained was complete (in this case, {@code word.length() ==
+     * output.size()} will hold), {@code false} otherwise.
      */
     boolean lookup(Word<? extends I> inputWord, List<? super O> output);
 

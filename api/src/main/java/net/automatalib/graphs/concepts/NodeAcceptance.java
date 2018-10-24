@@ -36,7 +36,7 @@ public interface NodeAcceptance<N> {
      * @param node
      *         the node
      *
-     * @return <tt>true</tt> if the given node is an accepting node, <tt>false</tt> otherwise.
+     * @return {@code true} if the given node is an accepting node, {@code false} otherwise.
      */
     boolean isAcceptingNode(N node);
 }

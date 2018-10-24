@@ -84,7 +84,7 @@ public final class UnionFind implements IntDisjointSets {
      * @param y
      *         the second set
      *
-     * @return the identifier of the resulting set (either <tt>x</tt> or <tt>y</tt>)
+     * @return the identifier of the resulting set (either {@code x} or {@code y})
      */
     @Override
     public int link(int x, int y) {
