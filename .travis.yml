@@ -29,31 +29,63 @@ env:
 
 install:
   # install LTSmin
-  - build-tools/install-ltsmin.sh
+  - ${TRAVIS_BUILD_DIR}/build-tools/install-ltsmin.sh
   - PATH="$PATH:$HOME/ltsmin/$LTSMIN_VERSION/bin"
   # override any "sane" defaults of Travis VMs
+  - mkdir -p ${HOME}/.m2
   - cp ${TRAVIS_BUILD_DIR}/build-tools/travis-settings.xml ${HOME}/.m2/settings.xml
 
-script: mvn install -B -Pcode-analysis,bundles
+script: mvn install -B
 
 jobs:
   fast_finish: true
   include:
-    - jdk: openjdk8
-    - jdk: openjdk10
-    - jdk: openjdk10
-      env: MAVEN_OPTS="$MAVEN_OPTS -Dmaven.compiler.source=10 -Dmaven.compiler.target=10"
-    - stage: coverage
-      jdk: openjdk8 # use openjdk8 build
+    # Run code analysis and documentation generation only in our core environments (since it's an expensive task)
+    - os: linux
+      jdk: openjdk8
+      script: mvn install -B -Pcode-analysis,bundles
+    - os: linux
+      jdk: openjdk11
+      script: mvn install -B -Pcode-analysis,bundles
+    # Run "normal" tests in other environments
+    - stage: Integration Test
+    - os: osx
+      jdk: openjdk8
+    - os: osx
+      jdk: openjdk11
+    - os: windows
+      jdk: openjdk8
+      language: shell
+      before_install:
+      - cinst jdk8 -params 'installdir=C:\\jdk8'
+      - export JAVA_HOME="C:\jdk8"
+      - export PATH=${JAVA_HOME}/bin:${PATH}
+      - cinst maven -params 'installdir=C:\\maven'
+      - export M2_HOME="C:\maven"
+      - export PATH=${M2_HOME}/bin:${PATH}
+    - os: windows
+      jdk: openjdk11
+      language: shell
+      before_install:
+      - cinst jdk11 -params 'installdir=C:\\jdk11'
+      - export JAVA_HOME="C:\jdk11"
+      - export PATH=${JAVA_HOME}/bin:${PATH}
+      - cinst maven -params 'installdir=C:\\maven'
+      - export M2_HOME="C:\maven"
+      - export PATH=${M2_HOME}/bin:${PATH}
+    # Run coverage in default environment
+    - stage: Coverage
+      jdk: openjdk8
       script:
         - mvn install -B -Pcode-coverage
         - mvn coveralls:report
-    - stage: deploy
-      jdk: openjdk8 # use openjdk8 build
-      script: skip # skip regular build
+      # Run deployment in default environment
+    - stage: Deploy
+      jdk: openjdk8
+      # skip regular build and define deployment in deploy phase, which is skipped for pull-requests
+      script: skip
       deploy:
-        # define deployment in deploy phase, which is skipped for pull-requests
         provider: script
-        script: mvn -DskipTests=true deploy
+        script: mvn -B -DskipTests=true deploy
         on:
           branch: develop # only auto deploy snapshots
