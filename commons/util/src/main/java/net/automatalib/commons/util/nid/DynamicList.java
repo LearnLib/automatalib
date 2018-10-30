@@ -19,8 +19,8 @@ import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Iterator;
 
-import net.automatalib.commons.util.array.ArrayWritable;
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ArrayWritable;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
 public class DynamicList<T extends MutableNumericID> extends AbstractList<T> implements ArrayWritable<T>, Serializable {
 

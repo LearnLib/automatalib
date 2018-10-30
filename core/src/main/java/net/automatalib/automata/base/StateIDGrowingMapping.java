@@ -17,7 +17,7 @@ package net.automatalib.automata.base;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.commons.util.mappings.MutableMapping;
 
 public class StateIDGrowingMapping<S, V> implements MutableMapping<S, V> {

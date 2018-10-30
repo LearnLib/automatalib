@@ -15,7 +15,7 @@
  */
 package net.automatalib.commons.util.mappings;
 
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.commons.util.nid.IDChangeListener;
 import net.automatalib.commons.util.nid.NumericID;
 

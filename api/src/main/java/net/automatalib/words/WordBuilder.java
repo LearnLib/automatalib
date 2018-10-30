@@ -19,8 +19,8 @@ import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.automatalib.commons.util.array.ArrayUtil;
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ArrayUtil;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
 /**
  * A class for dynamically building {@link Word}s.

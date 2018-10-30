@@ -19,8 +19,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import net.automatalib.commons.util.array.ResizingArrayStorage;
-
 /**
  * This class implements a collection for storing objects in no particular order.
  * <p>

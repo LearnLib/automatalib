@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.commons.util.array;
+package net.automatalib.commons.smartcollections;
 
 import java.util.Collection;
 
@@ -28,8 +28,8 @@ import java.util.Collection;
  * {@code num < size()} is unspecified.</li> </ul>
  *
  * @param <T>
- *         type class. This is a marker parameter that is not reflected in the signatures, but respected by the methods
- *         in {@link AWUtil}.
+ *         type class. This is a marker parameter that is not reflected in the signatures, but can be respected by
+ *         methods requiring type information.
  *
  * @author Malte Isberner
  */

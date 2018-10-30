@@ -15,7 +15,7 @@
  */
 package net.automatalib.graphs.base.compact;
 
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
 public class CompactGraph<NP, EP> extends AbstractCompactGraph<CompactEdge<EP>, NP, EP> {
 

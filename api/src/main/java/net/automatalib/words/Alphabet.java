@@ -23,7 +23,7 @@ import java.util.function.ToIntFunction;
 
 import javax.annotation.Nullable;
 
-import net.automatalib.commons.util.array.ArrayWritable;
+import net.automatalib.commons.smartcollections.ArrayWritable;
 import net.automatalib.commons.util.mappings.Mapping;
 
 /**

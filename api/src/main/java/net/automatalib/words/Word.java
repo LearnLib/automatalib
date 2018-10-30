@@ -38,8 +38,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
+import net.automatalib.commons.smartcollections.ArrayWritable;
 import net.automatalib.commons.util.array.AWUtil;
-import net.automatalib.commons.util.array.ArrayWritable;
 import net.automatalib.commons.util.strings.AbstractPrintable;
 
 /**

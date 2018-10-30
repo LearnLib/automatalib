@@ -22,9 +22,6 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import net.automatalib.commons.util.array.ResizingArrayStorage;
-import net.automatalib.commons.util.comparison.CmpUtil;
-
 /**
  * A {@link PriorityQueue} implementation using a binary heap.
  *
@@ -133,20 +130,20 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create() {
-        return new BinaryHeap<>(DEFAULT_INITIAL_CAPACITY, CmpUtil.naturalOrderingComparator());
+        return new BinaryHeap<>(DEFAULT_INITIAL_CAPACITY, Comparator.naturalOrder());
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create(int initialCapacity) {
-        return new BinaryHeap<>(initialCapacity, CmpUtil.naturalOrderingComparator());
+        return new BinaryHeap<>(initialCapacity, Comparator.naturalOrder());
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create(Collection<? extends E> initValues) {
-        return new BinaryHeap<>(0, initValues, CmpUtil.naturalOrderingComparator());
+        return new BinaryHeap<>(0, initValues, Comparator.naturalOrder());
     }
 
     public static <E extends Comparable<E>> BinaryHeap<E> create(int initialCapacity,
                                                                  Collection<? extends E> initValues) {
-        return new BinaryHeap<>(initialCapacity, initValues, CmpUtil.naturalOrderingComparator());
+        return new BinaryHeap<>(initialCapacity, initValues, Comparator.naturalOrder());
     }
 
     public static <E> BinaryHeap<E> createCmp(Comparator<? super E> comparator) {

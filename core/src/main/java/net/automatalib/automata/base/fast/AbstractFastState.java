@@ -15,7 +15,7 @@
  */
 package net.automatalib.automata.base.fast;
 
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.commons.util.nid.AbstractMutableNumericID;
 
 public abstract class AbstractFastState<T> extends AbstractMutableNumericID {

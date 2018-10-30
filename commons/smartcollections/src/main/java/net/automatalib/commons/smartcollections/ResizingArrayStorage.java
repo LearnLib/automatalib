@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.commons.util.array;
+package net.automatalib.commons.smartcollections;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -27,7 +27,7 @@ import java.util.Arrays;
  *
  * @author Malte Isberner
  */
-public class ResizingArrayStorage<T> implements Serializable {
+public final class ResizingArrayStorage<T> implements CapacityManagement, Serializable {
 
     /**
      * The default initial capacity of the array storage.
@@ -61,14 +61,7 @@ public class ResizingArrayStorage<T> implements Serializable {
         this.array = (T[]) Array.newInstance(arrayClazz, Math.max(0, initialCapacity));
     }
 
-    /**
-     * Ensures that the storage has room for at least the specified number of elements.
-     *
-     * @param minCapacity
-     *         the minimal number of elements the storage array has to provide room for.
-     *
-     * @return <code>true</code> iff the storage array had to be resized, <code>false</code> otherwise.
-     */
+    @Override
     public boolean ensureCapacity(int minCapacity) {
         if (minCapacity <= array.length) {
             return false;
@@ -79,6 +72,16 @@ public class ResizingArrayStorage<T> implements Serializable {
         array = Arrays.copyOf(array, newCapacity);
         nextCapacityHint = 0;
         return true;
+    }
+
+    @Override
+    public boolean ensureAdditionalCapacity(int additionalCapacity) {
+        return ensureCapacity(array.length + additionalCapacity);
+    }
+
+    @Override
+    public void hintNextCapacity(int nextCapacityHint) {
+        this.nextCapacityHint = nextCapacityHint;
     }
 
     /**
@@ -98,16 +101,6 @@ public class ResizingArrayStorage<T> implements Serializable {
 
         array = Arrays.copyOf(array, maxCapacity);
         return true;
-    }
-
-    /**
-     * Sets the minimum new capacity that the storage will have after the next resize.
-     *
-     * @param nextCapacityHint
-     *         the minimum next capacity hint.
-     */
-    public void hintNextCapacity(int nextCapacityHint) {
-        this.nextCapacityHint = nextCapacityHint;
     }
 
     /**

@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.google.common.collect.Iterators;
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
 /**
  * A priority queue which enforces that no two elements that it contains are equal wrt. the specified comparator (i.e.,

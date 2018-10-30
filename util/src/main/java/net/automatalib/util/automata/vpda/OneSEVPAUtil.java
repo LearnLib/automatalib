@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import net.automatalib.automata.vpda.OneSEVPA;
-import net.automatalib.commons.util.array.ArrayStorage;
+import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 

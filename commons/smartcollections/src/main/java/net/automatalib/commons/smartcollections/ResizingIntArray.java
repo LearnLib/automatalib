@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.commons.util.array;
+package net.automatalib.commons.smartcollections;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ import java.util.Arrays;
  *
  * @author Malte Isberner
  */
-public final class ResizingIntArray implements Serializable {
+public final class ResizingIntArray implements CapacityManagement, Serializable {
 
     /**
      * The arrays default initial capacity.
@@ -57,16 +57,7 @@ public final class ResizingIntArray implements Serializable {
         this.array = new int[capacity];
     }
 
-    /**
-     * Hints the next required capacity. The next time the array is resized, it is resized to (at least) this capacity.
-     *
-     * @param nextCapacityHint
-     *         the next capacity hint.
-     */
-    public void hintNextCapacity(int nextCapacityHint) {
-        this.nextCapacityHint = nextCapacityHint;
-    }
-
+    @Override
     public boolean ensureCapacity(int minCapacity) {
         if (minCapacity <= array.length) {
             return false;
@@ -79,6 +70,26 @@ public final class ResizingIntArray implements Serializable {
         return true;
     }
 
+    @Override
+    public boolean ensureAdditionalCapacity(int additionalCapacity) {
+        return ensureCapacity(array.length + additionalCapacity);
+    }
+
+    @Override
+    public void hintNextCapacity(int nextCapacityHint) {
+        this.nextCapacityHint = nextCapacityHint;
+    }
+
+    /**
+     * Shrinks the storage to the specified maximum capacity.
+     * <p>
+     * If the current capacity is less or equal to the specified capacity, nothing happens.
+     *
+     * @param maxCapacity
+     *         the maximal number of elements the storage array has to provide room for.
+     *
+     * @return <code>true</code> iff the storage array had to be resized, <code>false</code> otherwise.
+     */
     public boolean shrink(int maxCapacity) {
         if (maxCapacity >= array.length) {
             return false;

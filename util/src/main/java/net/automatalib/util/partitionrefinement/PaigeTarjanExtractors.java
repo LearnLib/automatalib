@@ -25,8 +25,8 @@ import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.concepts.StateIDs;
+import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.array.ArrayStorage;
 import net.automatalib.commons.util.functions.FunctionsUtil;
 import net.automatalib.words.Alphabet;
 

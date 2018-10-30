@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.RandomAccess;
 
-import net.automatalib.commons.util.array.ArrayWritable;
+import net.automatalib.commons.smartcollections.ArrayWritable;
 
 final class IntRange extends AbstractList<Integer> implements ArrayWritable<Integer>, RandomAccess, Serializable {
 

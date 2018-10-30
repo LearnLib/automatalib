@@ -17,6 +17,8 @@ package net.automatalib.commons.util.array;
 
 import java.util.Arrays;
 
+import net.automatalib.commons.smartcollections.ArrayWritable;
+
 /**
  * Utility class for writing containers to arrays.
  * <p>

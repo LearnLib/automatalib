@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.commons.util.array.ResizingArrayStorage;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.graphs.BidirectionalGraph;
 
 public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<CompactBidiEdge<EP>, EP>
