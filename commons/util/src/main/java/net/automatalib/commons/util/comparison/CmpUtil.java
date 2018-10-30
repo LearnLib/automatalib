@@ -179,7 +179,7 @@ public final class CmpUtil {
      * @return the lexicographical comparator.
      */
     public static <U extends Comparable<U>, T extends Iterable<U>> Comparator<T> lexComparator() {
-        return NaturalLexComparator.getInstance();
+        return CmpUtil::lexCompare;
     }
 
     /**
@@ -202,7 +202,7 @@ public final class CmpUtil {
      * @see #canonicalCompare(List, List)
      */
     public static <T extends List<U>, U extends Comparable<U>> Comparator<T> canonicalComparator() {
-        return NaturalCanonicalComparator.getInstance();
+        return CmpUtil::canonicalCompare;
     }
 
     /**
@@ -218,24 +218,8 @@ public final class CmpUtil {
      *
      * @return a safe comparator using the specified underlying comparator.
      */
-    public static <T> Comparator<T> safeComparator(Comparator<T> baseComp, NullOrdering nullOrd) {
-        return new SafeComparator<>(baseComp, nullOrd);
-    }
-
-    /**
-     * Retrieves a {@link Comparator} that compares elements according to their natural ordering (i.e., they have to
-     * implement the {@link Comparable} interface.
-     * <p>
-     * If this comparator is used on elements that don't implement this interface, this may result in a {@link
-     * ClassCastException}.
-     *
-     * @param <T>
-     *         element class.
-     *
-     * @return the natural ordering comparator.
-     */
-    public static <T extends Comparable<T>> Comparator<T> naturalOrderingComparator() {
-        return NaturalOrderingComparator.getInstance();
+    public static <T> Comparator<T> safeComparator(Comparator<? super T> baseComp, NullOrdering nullOrd) {
+        return nullOrd.toComparator(baseComp);
     }
 
     /**
@@ -248,19 +232,32 @@ public final class CmpUtil {
         /**
          * <code>null</code> elements are smaller than all regular elements.
          */
-        MIN(-1),
+        MIN {
+            @Override
+            <T> Comparator<T> toComparator(Comparator<? super T> baseComp) {
+                return Comparator.nullsFirst(baseComp);
+            }
+        },
         /**
          * <code>null</code> elements are bigger than all regular elements.
          */
-        MAX(1);
+        MAX {
+            @Override
+            <T> Comparator<T> toComparator(Comparator<? super T> baseComp) {
+                return Comparator.nullsLast(baseComp);
+            }
+        };
 
         /**
-         * Value that determines the result of the comparison, when only the first value is a <code>null</code> value.
+         * Returns the null-safe comparator, given a base comparator for non-null values.
+         *
+         * @param baseComp
+         *         the base comparator for ordering non-null elements
+         * @param <T>
+         *         element type
+         *
+         * @return the null-safe comparator
          */
-        public final int firstNullResult;
-
-        NullOrdering(int firstNullResult) {
-            this.firstNullResult = firstNullResult;
-        }
+        abstract <T> Comparator<T> toComparator(Comparator<? super T> baseComp);
     }
 }
