@@ -82,9 +82,6 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
     @DSLAction
     @SafeVarargs
     public final void on(I firstInput, I... otherInputs) {
-        if (otherInputs.length == 0) {
-            this.currentInputs = Collections.singletonList(firstInput);
-        }
         this.currentInputs = new ArrayList<>(1 + otherInputs.length);
         this.currentInputs.add(firstInput);
         Collections.addAll(this.currentInputs, otherInputs);

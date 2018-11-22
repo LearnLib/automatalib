@@ -66,8 +66,8 @@ public class DOTSerializationTest {
         final CompactMoore<Integer, Character> automaton =
                 AutomatonBuilders.<Integer, Character>newMoore(Alphabets.integers(1, 2))
                         .withInitial("s0", 'a')
-                        .withState("s1", 'b')
-                        .withState("s2", 'c')
+                        .withOutput("s1", 'b')
+                        .withOutput("s2", 'c')
                         .from("s0").on(1).to("s1")
                         .from("s1").on(1).to("s2")
                         .from("s2").on(1).to("s0")

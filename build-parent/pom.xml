@@ -46,10 +46,14 @@ limitations under the License.
                             <!-- generated builders for automata types -->
                             <exclude>net/automatalib/util/automata/builders/AutomatonBuilder.class</exclude>
                             <exclude>net/automatalib/util/automata/builders/AutomatonBuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/DFABuilder*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/FSABuilder*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/MealyBuilder*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/MooreBuilder*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/DFABuilder.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/DFABuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/FSABuilder.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/FSABuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/MealyBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/MealyBuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/MooreBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automata/builders/MooreBuilder$*.class</exclude>
 
                             <!-- generated parser for TAF serialization -->
                             <exclude>net/automatalib/serialization/taf/parser/InternalTAFParser*.class</exclude>

@@ -21,7 +21,6 @@ import net.automatalib.automata.fsa.MutableFSA;
 
 @GenerateEmbeddedDSL(name = "FSABuilder",
                      enableAllMethods = false,
-                     includeInherited = true,
                      syntax = "(((from (on <<to* loop? to*>>)+)+)|withAccepting|withInitial)* create")
 class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends AutomatonBuilderImpl<S, I, S, Boolean, Void, A> {
 

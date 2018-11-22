@@ -17,11 +17,13 @@ package net.automatalib.util.automata.builders;
 
 import com.github.misberner.duzzt.annotations.DSLAction;
 import com.github.misberner.duzzt.annotations.GenerateEmbeddedDSL;
+import com.github.misberner.duzzt.annotations.SubExpr;
 import net.automatalib.automata.transout.MutableMooreMachine;
 
 @GenerateEmbeddedDSL(name = "MooreBuilder",
                      enableAllMethods = false,
-                     syntax = "(((from (on <<to* loop? to*>>)+)+)|withState|withInitial)* create")
+                     syntax = "(withOutput|<transition>)* withInitial (withOutput|<transition>)* create",
+                     where = {@SubExpr(name = "transition", definedAs = "from (on (to|loop))+")})
 public class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T, ? super O>>
         extends AutomatonBuilderImpl<S, I, T, O, Void, A> {
 
@@ -38,11 +40,11 @@ public class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? sup
     @DSLAction(autoVarArgs = false)
     public void withInitial(Object stateId, O output) {
         super.withInitial(stateId);
-        withState(stateId, output);
+        withOutput(stateId, output);
     }
 
     @DSLAction(autoVarArgs = false)
-    public void withState(Object stateId, O output) {
+    public void withOutput(Object stateId, O output) {
         super.withStateProperty(output, stateId);
     }
 }

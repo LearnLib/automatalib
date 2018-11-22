@@ -34,4 +34,10 @@ class MealyBuilderImpl<S, I, T, O, A extends MutableMealyMachine<S, ? super I, T
     public void withOutput(O output) {
         super.withProperty(output);
     }
+
+    @Override
+    @DSLAction(autoVarArgs = false)
+    public void withInitial(Object stateId) {
+        super.withInitial(stateId);
+    }
 }
