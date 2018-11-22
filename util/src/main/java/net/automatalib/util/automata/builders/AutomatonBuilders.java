@@ -18,8 +18,10 @@ package net.automatalib.util.automata.builders;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.automata.transout.MutableMooreMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
 import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
+import net.automatalib.automata.transout.impl.compact.CompactMoore;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -47,5 +49,14 @@ public final class AutomatonBuilders {
     public static <S, I, T, O, A extends MutableMealyMachine<S, ? super I, T, ? super O>> MealyBuilder<S, I, T, O, A> forMealy(
             A mealy) {
         return new MealyBuilder<>(mealy);
+    }
+
+    public static <I, O> MooreBuilder<Integer, I, Integer, O, CompactMoore<I, O>> newMoore(Alphabet<I> alphabet) {
+        return forMoore(new CompactMoore<>(alphabet));
+    }
+
+    public static <S, I, T, O, A extends MutableMooreMachine<S, ? super I, T, ? super O>> MooreBuilder<S, I, T, O, A> forMoore(
+            A moore) {
+        return new MooreBuilder<>(moore);
     }
 }

@@ -15,8 +15,16 @@
  */
 package net.automatalib.automata.transout;
 
+import java.util.Collection;
+
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateOutput;
+import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.graphs.TransitionEdge.Property;
+import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
+import net.automatalib.automata.visualization.MooreVisualizationHelper;
+import net.automatalib.graphs.UniversalGraph;
+import net.automatalib.visualization.VisualizationHelper;
 
 public interface MooreMachine<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, O, Void>,
                                                   StateOutput<S, O>,
@@ -35,5 +43,23 @@ public interface MooreMachine<S, I, T, O> extends UniversalDeterministicAutomato
     @Override
     default O getTransitionOutput(T transition) {
         return getStateOutput(getSuccessor(transition));
+    }
+
+    @Override
+    default UniversalGraph<S, TransitionEdge<I, T>, O, Property<I, Void>> transitionGraphView(Collection<? extends I> inputs) {
+        return new MooreGraphView<>(this, inputs);
+    }
+
+    class MooreGraphView<S, I, T, O, A extends MooreMachine<S, I, T, O>>
+            extends UniversalAutomatonGraphView<S, I, T, O, Void, A> {
+
+        public MooreGraphView(A automaton, Collection<? extends I> inputs) {
+            super(automaton, inputs);
+        }
+
+        @Override
+        public VisualizationHelper<S, TransitionEdge<I, T>> getVisualizationHelper() {
+            return new MooreVisualizationHelper<>(automaton);
+        }
     }
 }

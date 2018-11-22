@@ -26,6 +26,7 @@ import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.automata.transout.impl.FastMoore;
 import net.automatalib.automata.transout.impl.FastProbMealy;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMoore;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -152,6 +153,11 @@ public class GrowingAlphabetAutomatonTest {
     @Test
     public void testFastProbMealy() throws Exception {
         this.testGrowableAutomaton(new FastProbMealy<>(ALPHABET));
+    }
+
+    @Test
+    public void testCompactMoore() throws Exception {
+        this.testGrowableOutputAutomaton(new CompactMoore<>(ALPHABET));
     }
 
     @Test

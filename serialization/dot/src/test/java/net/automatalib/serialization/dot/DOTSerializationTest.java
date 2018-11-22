@@ -23,6 +23,7 @@ import java.util.Map;
 
 import net.automatalib.automata.transout.MealyMachine;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMoore;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.graphs.base.compact.CompactSimpleGraph;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -38,7 +39,7 @@ import org.testng.annotations.Test;
 public class DOTSerializationTest {
 
     @Test
-    public void testRegularExport() throws IOException {
+    public void testRegularMealyExport() throws IOException {
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
 
@@ -57,6 +58,27 @@ public class DOTSerializationTest {
 
         ThrowingWriter writer = w -> GraphDOT.write(automaton, alphabet, w);
         checkDOTOutput(writer, "/mealy.dot");
+    }
+
+    @Test
+    public void testRegularMooreExport() throws IOException {
+        // @formatter:off
+        final CompactMoore<Integer, Character> automaton =
+                AutomatonBuilders.<Integer, Character>newMoore(Alphabets.integers(1, 2))
+                        .withInitial("s0", 'a')
+                        .withState("s1", 'b')
+                        .withState("s2", 'c')
+                        .from("s0").on(1).to("s1")
+                        .from("s1").on(1).to("s2")
+                        .from("s2").on(1).to("s0")
+                        .from("s0").on(2).to("s2")
+                        .from("s1").on(2).to("s0")
+                        .from("s2").on(2).to("s1")
+                .create();
+        // @formatter:on
+
+        ThrowingWriter writer = w -> GraphDOT.write(automaton, w);
+        checkDOTOutput(writer, "/moore.dot");
     }
 
     @Test

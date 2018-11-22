@@ -31,6 +31,7 @@ import net.automatalib.automata.transout.impl.FastMealy;
 import net.automatalib.automata.transout.impl.FastMoore;
 import net.automatalib.automata.transout.impl.FastProbMealy;
 import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMoore;
 import net.automatalib.automata.transout.probabilistic.ProbabilisticOutput;
 import net.automatalib.commons.util.random.RandomUtil;
 import net.automatalib.words.Alphabet;
@@ -85,6 +86,11 @@ public class MutableAutomatonTest {
     @Test
     public void testFastProbMealy() {
         this.checkAutomaton(FastProbMealy::new, ALPHABET, EMPTY_PROPS, PROB_TRANS_PROPS);
+    }
+
+    @Test
+    public void testCompactMoore() {
+        this.checkAutomaton(CompactMoore::new, ALPHABET, STATE_PROPS, EMPTY_PROPS);
     }
 
     @Test
