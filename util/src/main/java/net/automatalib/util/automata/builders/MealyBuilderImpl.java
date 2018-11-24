@@ -18,7 +18,7 @@ package net.automatalib.util.automata.builders;
 import com.github.misberner.duzzt.annotations.DSLAction;
 import com.github.misberner.duzzt.annotations.GenerateEmbeddedDSL;
 import com.github.misberner.duzzt.annotations.SubExpr;
-import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.automata.transducers.MutableMealyMachine;
 
 @GenerateEmbeddedDSL(name = "MealyBuilder",
                      syntax = "<transition>* withInitial <transition>* create",

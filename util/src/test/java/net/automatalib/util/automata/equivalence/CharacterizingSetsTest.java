@@ -24,7 +24,7 @@ import java.util.Set;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;

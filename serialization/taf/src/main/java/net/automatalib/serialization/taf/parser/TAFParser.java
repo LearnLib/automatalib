@@ -23,7 +23,7 @@ import java.io.StringReader;
 
 import net.automatalib.automata.FiniteAlphabetAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.IOUtil;
 
 /**

@@ -17,11 +17,11 @@ package net.automatalib.util.automata.builders;
 
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.transout.MutableMealyMachine;
-import net.automatalib.automata.transout.MutableMooreMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
-import net.automatalib.automata.transout.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.MutableMealyMachine;
+import net.automatalib.automata.transducers.MutableMooreMachine;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
+import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.words.Alphabet;
 
 /**

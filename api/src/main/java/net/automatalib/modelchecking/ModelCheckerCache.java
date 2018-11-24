@@ -20,7 +20,7 @@ import java.util.Collection;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 
 /**
  * A model checker that caches calls to {@link #findCounterExample(Object, Collection, Object)}.

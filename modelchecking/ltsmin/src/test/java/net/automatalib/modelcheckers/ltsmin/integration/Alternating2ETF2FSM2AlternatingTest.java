@@ -17,7 +17,7 @@ package net.automatalib.modelcheckers.ltsmin.integration;
 
 import java.io.File;
 
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
 

@@ -22,7 +22,7 @@
  * net.automatalib.automata.DeterministicAutomaton deterministic}.
  * <p>
  * The {@link net.automatalib.automata.Automaton Automaton} interface has no inherent semantics. Special types of
- * automata, such as {@link net.automatalib.automata.fsa.DFA DFAs} or {@link net.automatalib.automata.transout.MealyMachine
+ * automata, such as {@link net.automatalib.automata.fsa.DFA DFAs} or {@link net.automatalib.automata.transducers.MealyMachine
  * Mealy machines} can be found in the respective subpackages.
  *
  * @author Malte Isberner

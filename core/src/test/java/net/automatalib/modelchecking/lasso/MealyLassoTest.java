@@ -20,8 +20,8 @@ import java.util.Collection;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.MealyTransition;
+import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.impl.MealyTransition;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
 import org.testng.Assert;

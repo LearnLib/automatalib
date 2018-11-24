@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelcheckers.ltsmin.LTSminAlternating;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
 

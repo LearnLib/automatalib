@@ -29,10 +29,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
-import net.automatalib.ts.transout.MealyTransitionSystem;
+import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.helper.DelegateVisualizationHelper;

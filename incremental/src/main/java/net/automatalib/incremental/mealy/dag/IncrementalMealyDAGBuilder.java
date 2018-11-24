@@ -31,12 +31,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.UnionFind;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
-import net.automatalib.ts.transout.MealyTransitionSystem;
+import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Alphabet;

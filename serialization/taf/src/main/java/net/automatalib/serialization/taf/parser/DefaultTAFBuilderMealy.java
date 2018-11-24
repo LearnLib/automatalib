@@ -18,8 +18,8 @@ package net.automatalib.serialization.taf.parser;
 import java.util.Collection;
 import java.util.Set;
 
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.transout.impl.compact.CompactMealyTransition;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 
 final class DefaultTAFBuilderMealy

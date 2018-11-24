@@ -28,7 +28,7 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.serialization.ModelDeserializer;
@@ -129,7 +129,7 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
     protected void checkStateVectors(StreamTokenizer streamTokenizer) {}
 
     /**
-     * Constructs the actual {@link net.automatalib.automata.transout.MealyMachine}, using {@link #states}, and
+     * Constructs the actual {@link net.automatalib.automata.transducers.MealyMachine}, using {@link #states}, and
      * {@link #transitions}.
      *
      * @return the Mealy machine defined in the FSM source.

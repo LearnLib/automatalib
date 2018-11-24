@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Maps;
 import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.graphs.ads.impl.ADSLeafNode;

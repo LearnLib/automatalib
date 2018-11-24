@@ -18,7 +18,7 @@ package net.automatalib.util.automata.ads;
 import java.util.Optional;
 import java.util.Set;
 
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.graphs.ads.impl.ADSLeafNode;
 import net.automatalib.words.Alphabet;

@@ -23,7 +23,7 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.predicates.TransitionPredicates;

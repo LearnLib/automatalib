@@ -21,9 +21,9 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.transout.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.graphs.base.compact.CompactSimpleGraph;
 import net.automatalib.util.automata.builders.AutomatonBuilders;

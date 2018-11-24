@@ -17,7 +17,7 @@ package net.automatalib.serialization.taf.parser;
 
 import java.util.Collection;
 
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 
 /**
  * Interface for a {@link TAFBuilder} that builds Mealy machines.

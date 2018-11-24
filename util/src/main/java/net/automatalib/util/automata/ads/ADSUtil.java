@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.math.LongMath;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.graphs.ads.impl.ADSSymbolNode;

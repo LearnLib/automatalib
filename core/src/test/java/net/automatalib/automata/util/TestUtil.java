@@ -19,9 +19,9 @@ import java.util.function.Function;
 
 import net.automatalib.automata.fsa.impl.FastNFA;
 import net.automatalib.automata.fsa.impl.FastNFAState;
-import net.automatalib.automata.transout.MutableMealyMachine;
-import net.automatalib.automata.transout.MutableMooreMachine;
-import net.automatalib.automata.transout.impl.FastMealy;
+import net.automatalib.automata.transducers.MutableMealyMachine;
+import net.automatalib.automata.transducers.MutableMooreMachine;
+import net.automatalib.automata.transducers.impl.FastMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;

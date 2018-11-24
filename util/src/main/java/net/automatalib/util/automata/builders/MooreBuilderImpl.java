@@ -18,7 +18,7 @@ package net.automatalib.util.automata.builders;
 import com.github.misberner.duzzt.annotations.DSLAction;
 import com.github.misberner.duzzt.annotations.GenerateEmbeddedDSL;
 import com.github.misberner.duzzt.annotations.SubExpr;
-import net.automatalib.automata.transout.MutableMooreMachine;
+import net.automatalib.automata.transducers.MutableMooreMachine;
 
 @GenerateEmbeddedDSL(name = "MooreBuilder",
                      enableAllMethods = false,

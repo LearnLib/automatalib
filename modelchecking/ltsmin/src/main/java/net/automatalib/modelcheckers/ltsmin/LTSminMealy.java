@@ -20,11 +20,11 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.fsm.parser.FSMParseException;
-import net.automatalib.util.automata.transout.MealyFilter;
+import net.automatalib.util.automata.transducers.MealyFilter;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 

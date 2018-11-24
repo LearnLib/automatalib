@@ -17,7 +17,7 @@ package net.automatalib.automata.visualization;
 
 import java.util.Map;
 
-import net.automatalib.automata.transout.MooreMachine;
+import net.automatalib.automata.transducers.MooreMachine;
 
 public class MooreVisualizationHelper<S, I, T, O>
         extends AutomatonVisualizationHelper<S, I, T, MooreMachine<S, I, T, O>> {

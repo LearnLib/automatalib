@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import com.google.common.io.CharStreams;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;

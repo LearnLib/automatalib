@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.automatalib.automata.concepts.DetOutputAutomaton;
-import net.automatalib.automata.transout.MealyMachine;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.words.Word;
 

@@ -17,7 +17,7 @@ package net.automatalib.util.automata.ads;
 
 import java.util.Arrays;
 
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.annotations.Test;

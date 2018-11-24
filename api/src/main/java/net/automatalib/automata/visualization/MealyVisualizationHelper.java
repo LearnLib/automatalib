@@ -18,7 +18,7 @@ package net.automatalib.automata.visualization;
 import java.util.Map;
 
 import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.automata.transout.TransitionOutputAutomaton;
+import net.automatalib.automata.transducers.TransitionOutputAutomaton;
 
 public class MealyVisualizationHelper<S, I, T, O>
         extends AutomatonVisualizationHelper<S, I, T, TransitionOutputAutomaton<S, I, T, O>> {

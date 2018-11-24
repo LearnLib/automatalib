@@ -17,8 +17,8 @@ package net.automatalib.modelcheckers.ltsmin.monitor;
 
 import java.util.HashSet;
 
-import net.automatalib.automata.transout.MealyMachine;
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import org.testng.Assert;
 import org.testng.annotations.Test;

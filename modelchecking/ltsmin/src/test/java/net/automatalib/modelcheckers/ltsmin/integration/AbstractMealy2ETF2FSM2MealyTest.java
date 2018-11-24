@@ -17,7 +17,7 @@ package net.automatalib.modelcheckers.ltsmin.integration;
 
 import java.io.InputStream;
 
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.serialization.taf.parser.TAFParser;
 
 /**
