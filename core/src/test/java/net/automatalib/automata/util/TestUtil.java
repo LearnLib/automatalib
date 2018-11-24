@@ -15,10 +15,13 @@
  */
 package net.automatalib.automata.util;
 
+import java.util.function.Function;
+
 import net.automatalib.automata.fsa.impl.FastNFA;
 import net.automatalib.automata.fsa.impl.FastNFAState;
+import net.automatalib.automata.transout.MutableMealyMachine;
+import net.automatalib.automata.transout.MutableMooreMachine;
 import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.Symbol;
@@ -27,22 +30,28 @@ public final class TestUtil {
 
     public static final Symbol IN_A = new Symbol("a");
     public static final Symbol IN_B = new Symbol("b");
+    public static final Alphabet<Symbol> ALPHABET = new FastAlphabet<>();
 
     public static final String OUT_OK = "ok";
     public static final String OUT_ERROR = "error";
+
+    static {
+        ALPHABET.add(IN_A);
+        ALPHABET.add(IN_B);
+    }
 
     private TestUtil() {
         // prevent instantiation
     }
 
     public static FastMealy<Symbol, String> constructMealy() {
-        Alphabet<Symbol> alpha = new FastAlphabet<>();
-        alpha.add(IN_A);
-        alpha.add(IN_B);
+        return constructMealy(FastMealy::new);
+    }
 
-        FastMealy<Symbol, String> fm = new FastMealy<>(alpha);
+    public static <S, T, M extends MutableMealyMachine<S, Symbol, T, String>> M constructMealy(Function<Alphabet<Symbol>, M> constructor) {
+        M fm = constructor.apply(ALPHABET);
 
-        FastMealyState<String> s0 = fm.addInitialState(), s1 = fm.addState(), s2 = fm.addState();
+        S s0 = fm.addInitialState(), s1 = fm.addState(), s2 = fm.addState();
 
         fm.addTransition(s0, IN_A, s1, OUT_OK);
         fm.addTransition(s0, IN_B, s0, OUT_ERROR);
@@ -56,12 +65,25 @@ public final class TestUtil {
         return fm;
     }
 
-    public static FastNFA<Symbol> constructNFA() {
-        Alphabet<Symbol> alpha = new FastAlphabet<>();
-        alpha.add(IN_A);
-        alpha.add(IN_B);
+    public static <S, T, M extends MutableMooreMachine<S, Symbol, T, String>> M constructMoore(Function<Alphabet<Symbol>, M> constructor) {
+        M fm = constructor.apply(ALPHABET);
 
-        FastNFA<Symbol> fnfa = new FastNFA<>(alpha);
+        S s0 = fm.addInitialState(OUT_OK), s1 = fm.addState(OUT_ERROR), s2 = fm.addState(OUT_OK);
+
+        fm.addTransition(s0, IN_A, s2, null);
+        fm.addTransition(s0, IN_B, s1, null);
+
+        fm.addTransition(s1, IN_A, s1, null);
+        fm.addTransition(s1, IN_B, s0, null);
+
+        fm.addTransition(s2, IN_A, s0, null);
+        fm.addTransition(s2, IN_B, s1, null);
+
+        return fm;
+    }
+
+    public static FastNFA<Symbol> constructNFA() {
+        FastNFA<Symbol> fnfa = new FastNFA<>(ALPHABET);
 
         FastNFAState s0 = fnfa.addInitialState(), s1 = fnfa.addState(true), s2 = fnfa.addState();
 

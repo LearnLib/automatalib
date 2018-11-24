@@ -15,17 +15,17 @@
  */
 package net.automatalib.automata.transout;
 
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
+import net.automatalib.automata.transout.impl.compact.CompactMoore;
 import net.automatalib.automata.util.TestUtil;
 import net.automatalib.words.impl.Symbol;
 
 /**
  * @author frohme
  */
-public class CompactMealyTest extends AbstractMutableMealyTest {
+public class CompactMooreTest extends AbstractMutableMooreTest {
 
     @Override
-    protected MutableMealyMachine<?, Symbol, ?, String> getMealy() {
-        return TestUtil.constructMealy(CompactMealy::new);
+    protected MutableMooreMachine<?, Symbol, ?, String> getMoore() {
+        return TestUtil.constructMoore(CompactMoore::new);
     }
 }

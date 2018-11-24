@@ -13,19 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.transout;
+package net.automatalib.ts.transout;
 
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.util.TestUtil;
-import net.automatalib.words.impl.Symbol;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-/**
- * @author frohme
- */
-public class CompactMealyTest extends AbstractMutableMealyTest {
+import net.automatalib.ts.UniversalDTS;
+
+@ParametersAreNonnullByDefault
+public interface MooreTransitionSystem<S, I, T, O>
+        extends DeterministicStateOutputTS<S, I, T, O>, UniversalDTS<S, I, T, O, Void> {
 
     @Override
-    protected MutableMealyMachine<?, Symbol, ?, String> getMealy() {
-        return TestUtil.constructMealy(CompactMealy::new);
+    default Void getTransitionProperty(S state, I input) {
+        return null;
+    }
+
+    @Override
+    default Void getTransitionProperty(T transition) {
+        return null;
+    }
+
+    @Override
+    default O getStateProperty(S state) {
+        return getStateOutput(state);
     }
 }

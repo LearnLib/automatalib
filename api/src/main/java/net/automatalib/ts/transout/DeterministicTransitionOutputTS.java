@@ -21,11 +21,10 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.concepts.TransitionOutput;
-import net.automatalib.ts.DeterministicTransitionSystem;
 
 @ParametersAreNonnullByDefault
 public interface DeterministicTransitionOutputTS<S, I, T, O>
-        extends DeterministicTransitionSystem<S, I, T>, TransitionOutput<T, O> {
+        extends DeterministicOutputTS<S, I, T, O>, TransitionOutput<T, O> {
 
     /**
      * Retrieves the output for the given input symbol in the given state. This is roughly equivalent to calling {@link
@@ -49,12 +48,7 @@ public interface DeterministicTransitionOutputTS<S, I, T, O>
         return getTransitionOutput(trans);
     }
 
-    default boolean trace(Iterable<? extends I> input, List<? super O> output) {
-        final S init = getInitialState();
-
-        return init != null && trace(init, input, output);
-    }
-
+    @Override
     default boolean trace(S state, Iterable<? extends I> input, List<? super O> output) {
         S iter = state;
 

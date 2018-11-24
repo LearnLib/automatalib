@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.transout;
+package net.automatalib.ts.transout;
 
-import net.automatalib.automata.transout.impl.compact.CompactMealy;
-import net.automatalib.automata.util.TestUtil;
-import net.automatalib.words.impl.Symbol;
+import java.util.List;
 
-/**
- * @author frohme
- */
-public class CompactMealyTest extends AbstractMutableMealyTest {
+import javax.annotation.ParametersAreNonnullByDefault;
 
-    @Override
-    protected MutableMealyMachine<?, Symbol, ?, String> getMealy() {
-        return TestUtil.constructMealy(CompactMealy::new);
+import net.automatalib.ts.DeterministicTransitionSystem;
+
+@ParametersAreNonnullByDefault
+public interface DeterministicOutputTS<S, I, T, O> extends DeterministicTransitionSystem<S, I, T> {
+
+    default boolean trace(Iterable<? extends I> input, List<? super O> output) {
+        final S init = getInitialState();
+
+        return init != null && trace(init, input, output);
     }
+
+    boolean trace(S state, Iterable<? extends I> input, List<? super O> output);
 }

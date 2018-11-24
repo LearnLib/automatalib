@@ -15,110 +15,17 @@
  */
 package net.automatalib.automata.transout;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.automatalib.automata.transout.impl.FastMealy;
-import net.automatalib.automata.transout.impl.FastMealyState;
-import net.automatalib.automata.transout.impl.MealyTransition;
 import net.automatalib.automata.util.TestUtil;
 import net.automatalib.words.impl.Symbol;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
- * @author Maik Merten
+ * @author frohme
  */
-public class FastMealyTest {
+public class FastMealyTest extends AbstractMutableMealyTest {
 
-    @Test
-    public void testTrace() {
-
-        FastMealy<Symbol, String> fm = TestUtil.constructMealy();
-
-        List<Symbol> trace = new ArrayList<>();
-        trace.add(TestUtil.IN_A);
-        trace.add(TestUtil.IN_A);
-        trace.add(TestUtil.IN_A);
-
-        List<String> output = new ArrayList<>();
-        fm.trace(trace, output);
-
-        Assert.assertEquals(output.size(), 3);
-
-        Assert.assertEquals(output.get(0), TestUtil.OUT_OK);
-        Assert.assertEquals(output.get(1), TestUtil.OUT_OK);
-        Assert.assertEquals(output.get(2), TestUtil.OUT_ERROR);
-
+    @Override
+    protected MutableMealyMachine<?, Symbol, ?, String> getMealy() {
+        return TestUtil.constructMealy(FastMealy::new);
     }
-
-    @Test
-    public void testRemoveTransition() {
-        FastMealy<Symbol, String> fm = TestUtil.constructMealy();
-
-        List<Symbol> trace = new ArrayList<>();
-        trace.add(TestUtil.IN_A);
-        trace.add(TestUtil.IN_A);
-
-        FastMealyState<String> state = fm.getSuccessor(fm.getInitialState(), trace);
-        MealyTransition<FastMealyState<String>, String> trans = fm.getTransition(state, TestUtil.IN_A);
-
-        fm.removeTransition(state, TestUtil.IN_A, trans);
-
-        trace.add(TestUtil.IN_A);
-
-        Assert.assertNull(fm.getSuccessor(fm.getInitialState(), trace));
-    }
-
-    @Test
-    public static void testRemoveAllTransitions() {
-        FastMealy<Symbol, String> fm = TestUtil.constructMealy();
-
-        List<Symbol> trace = new ArrayList<>();
-        trace.add(TestUtil.IN_A);
-        trace.add(TestUtil.IN_A);
-
-        FastMealyState<String> state = fm.getSuccessor(fm.getInitialState(), trace);
-
-        fm.removeAllTransitions(state, TestUtil.IN_A);
-
-        trace.add(TestUtil.IN_A);
-
-        Assert.assertNull(fm.getSuccessor(fm.getInitialState(), trace));
-    }
-
-    @Test
-    public void testRedefineTransition() {
-        FastMealy<Symbol, String> fm = TestUtil.constructMealy();
-
-        List<Symbol> trace = new ArrayList<>();
-        trace.add(TestUtil.IN_A);
-        trace.add(TestUtil.IN_A);
-
-        // find last state in 3-state automaton
-        FastMealyState<String> laststate = fm.getSuccessor(fm.getInitialState(), trace);
-
-        // prepare and execute trace
-        trace.add(TestUtil.IN_A);
-        List<String> output = new ArrayList<>();
-        fm.trace(trace, output);
-
-        // compare trace output with expectations
-        Assert.assertEquals(output.size(), 3);
-        Assert.assertEquals(output.get(2), TestUtil.OUT_ERROR);
-
-        // redefine transition with diverging output
-        fm.removeAllTransitions(laststate, TestUtil.IN_A);
-        fm.addTransition(laststate, TestUtil.IN_A, fm.getInitialState(), TestUtil.OUT_OK);
-
-        // retrace
-        output.clear();
-        fm.trace(trace, output);
-
-        // compare output
-        Assert.assertEquals(output.size(), 3);
-        Assert.assertEquals(output.get(2), TestUtil.OUT_OK);
-
-    }
-
 }
