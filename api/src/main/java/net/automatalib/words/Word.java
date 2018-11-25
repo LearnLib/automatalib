@@ -108,9 +108,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         if (symbols.length == 1) {
             return fromLetter(symbols[0]);
         }
-        Object[] array = new Object[symbols.length];
-        System.arraycopy(symbols, 0, array, 0, symbols.length);
-        return new SharedWord<>(symbols);
+        return new SharedWord<>(symbols.clone());
     }
 
     /**
@@ -162,7 +160,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         }
         Object[] array = new Object[length];
         System.arraycopy(symbols, offset, array, 0, length);
-        return new SharedWord<>(symbols);
+        return new SharedWord<>(array);
     }
 
     /**

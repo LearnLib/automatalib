@@ -36,20 +36,26 @@ public class WordTest {
         final Word<Character> b = Word.fromLetter('b');
         final Word<Character> c = Word.fromLetter('c');
 
-        Assert.assertEquals(Word.epsilon(), Word.fromList(Collections.emptyList()));
-        Assert.assertEquals(reference, Word.fromList(Arrays.asList('a', 'b', 'c')));
+        Assert.assertEquals(Word.fromList(Collections.emptyList()), Word.epsilon());
+        Assert.assertEquals(Word.fromList(Arrays.asList('a', 'b', 'c')), reference);
 
-        Assert.assertEquals(Word.epsilon(), Word.fromSymbols());
-        Assert.assertEquals(reference, Word.fromSymbols('a', 'b', 'c'));
+        Assert.assertEquals(Word.fromSymbols(), Word.epsilon());
+        Assert.assertEquals(Word.fromSymbols('a', 'b', 'c'), reference);
 
-        Assert.assertEquals(Word.epsilon(), Word.fromWords());
-        Assert.assertEquals(reference, Word.fromWords(a, b, c));
+        Assert.assertEquals(Word.fromWords(), Word.epsilon());
+        Assert.assertEquals(Word.fromWords(a, b, c), reference);
 
-        Assert.assertEquals(Word.epsilon(), Word.fromWords(Collections.emptyList()));
-        Assert.assertEquals(reference, Word.fromWords(Arrays.asList(a, b, c)));
+        Assert.assertEquals(Word.fromWords(Collections.emptyList()), Word.epsilon());
+        Assert.assertEquals(Word.fromWords(Arrays.asList(a, b, c)), reference);
 
-        Assert.assertEquals(Word.epsilon(), Word.fromArray(referenceAsArray, 0, 0));
-        Assert.assertEquals(reference, Word.fromArray(referenceAsArray, 0, 2));
+        Assert.assertEquals(Word.fromArray(referenceAsArray, 0, 0), Word.epsilon());
+
+        final Word<Character> wordFromArray = Word.fromArray(referenceAsArray, 1, 2);
+        Assert.assertEquals(wordFromArray, reference.subWord(1));
+
+        // check that mutating the source does not alter the word
+        referenceAsArray[1] = 'x';
+        Assert.assertEquals(wordFromArray, reference.subWord(1));
     }
 
     @Test

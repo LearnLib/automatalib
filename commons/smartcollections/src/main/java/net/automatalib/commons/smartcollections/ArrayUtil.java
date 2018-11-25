@@ -34,7 +34,7 @@ public final class ArrayUtil {
      * @param requiredCapacity
      *         the immediately required capacity
      *
-     * @return
+     * @return the size of an array that is guaranteed to hold {@code requiredCapacity} number of elements.
      *
      * @see #computeNewCapacity(int, int, int)
      */

@@ -47,8 +47,7 @@ public class MealyFilterTest {
 
         int first = -1;
 
-        for (int i = 0; i < outputs.length; i++) {
-            String out = outputs[i];
+        for (String out : outputs) {
             int next = mealy.addState();
             if (prev < 0) {
                 first = next;

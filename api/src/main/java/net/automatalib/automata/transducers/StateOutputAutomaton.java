@@ -31,7 +31,9 @@ public interface StateOutputAutomaton<S, I, T, O>
     @Override
     default Word<O> computeStateOutput(S state, Iterable<? extends I> input) {
         WordBuilder<O> result;
-        if (input instanceof Collection) {
+        if (input instanceof Word) {
+            result = new WordBuilder<>(((Word<?>) input).length() + 1);
+        } else if (input instanceof Collection) {
             result = new WordBuilder<>(((Collection<?>) input).size() + 1);
         } else {
             result = new WordBuilder<>();

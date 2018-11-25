@@ -16,9 +16,11 @@
 package net.automatalib.automata.transducers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.automatalib.automata.util.TestUtil;
+import net.automatalib.words.Word;
 import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -35,20 +37,16 @@ public abstract class AbstractMutableMealyTest {
     public void testTrace() {
         MutableMealyMachine<?, Symbol, ?, String> fm = getMealy();
 
-        List<Symbol> trace = new ArrayList<>();
-        trace.add(TestUtil.IN_A);
-        trace.add(TestUtil.IN_A);
-        trace.add(TestUtil.IN_A);
+        final List<Symbol> trace = Arrays.asList(TestUtil.IN_A, TestUtil.IN_A, TestUtil.IN_A);
+        final Word<String> output = fm.computeOutput(trace);
 
-        List<String> output = new ArrayList<>();
-
-        Assert.assertTrue(fm.trace(trace, output));
+        Assert.assertTrue(fm.trace(trace, new ArrayList<>(trace.size())));
 
         Assert.assertEquals(output.size(), 3);
 
-        Assert.assertEquals(output.get(0), TestUtil.OUT_OK);
-        Assert.assertEquals(output.get(1), TestUtil.OUT_OK);
-        Assert.assertEquals(output.get(2), TestUtil.OUT_ERROR);
+        Assert.assertEquals(output.getSymbol(0), TestUtil.OUT_OK);
+        Assert.assertEquals(output.getSymbol(1), TestUtil.OUT_OK);
+        Assert.assertEquals(output.getSymbol(2), TestUtil.OUT_ERROR);
     }
 
     @Test

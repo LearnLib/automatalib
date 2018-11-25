@@ -15,8 +15,6 @@
  */
 package net.automatalib.commons.util.strings;
 
-import java.io.IOException;
-
 /**
  * Abstract base class for printables.
  * <p>
@@ -29,18 +27,7 @@ public abstract class AbstractPrintable implements Printable {
 
     @Override
     public String toString() {
-        return toString(this);
+        return Printable.toString(this);
     }
 
-    public static String toString(Printable p) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            p.print(sb);
-        } catch (IOException e) {
-            throw new IllegalStateException("Unexpected IOException thrown during operation on StringBuilder.", e);
-            // THIS SHOULD NOT HAPPEN
-            // since the StringBuilder methods do not throw.
-        }
-        return sb.toString();
-    }
 }
