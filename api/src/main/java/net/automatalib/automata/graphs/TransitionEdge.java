@@ -15,10 +15,10 @@
  */
 package net.automatalib.automata.graphs;
 
-import lombok.EqualsAndHashCode;
+import java.util.Objects;
+
 import net.automatalib.ts.UniversalTransitionSystem;
 
-@EqualsAndHashCode
 public final class TransitionEdge<I, T> {
 
     private final I input;
@@ -41,7 +41,27 @@ public final class TransitionEdge<I, T> {
         return new Property<>(input, uts.getTransitionProperty(transition));
     }
 
-    @EqualsAndHashCode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TransitionEdge)) {
+            return false;
+        }
+
+        final TransitionEdge<?, ?> that = (TransitionEdge<?, ?>) o;
+        return Objects.equals(input, that.input) && Objects.equals(transition, that.transition);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = 31 * result + Objects.hashCode(input);
+        result = 31 * result + Objects.hashCode(transition);
+        return result;
+    }
+
     public static final class Property<I, TP> {
 
         private final I input;
@@ -58,6 +78,27 @@ public final class TransitionEdge<I, T> {
 
         public TP getProperty() {
             return property;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Property)) {
+                return false;
+            }
+
+            final Property<?, ?> that = (Property<?, ?>) o;
+            return Objects.equals(input, that.input) && Objects.equals(property, that.property);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = 1;
+            result = 31 * result + Objects.hashCode(input);
+            result = 31 * result + Objects.hashCode(property);
+            return result;
         }
     }
 }

@@ -17,8 +17,8 @@ package net.automatalib.commons.util;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Objects;
 
-import lombok.EqualsAndHashCode;
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.commons.util.strings.StringUtil;
 
@@ -39,7 +39,6 @@ import net.automatalib.commons.util.strings.StringUtil;
  * @author Malte Isberner
  * @author frohme
  */
-@EqualsAndHashCode(callSuper = false)
 public final class Pair<T1, T2> extends AbstractPrintable implements Serializable {
 
     private static final long serialVersionUID = -1L;
@@ -75,5 +74,26 @@ public final class Pair<T1, T2> extends AbstractPrintable implements Serializabl
         StringUtil.appendObject(a, first);
         a.append(", ");
         StringUtil.appendObject(a, second);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Pair)) {
+            return false;
+        }
+
+        final Pair<?, ?> that = (Pair<?, ?>) o;
+        return Objects.equals(first, that.first) && Objects.equals(second, that.second);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = 31 * result + Objects.hashCode(first);
+        result = 31 * result + Objects.hashCode(second);
+        return result;
     }
 }

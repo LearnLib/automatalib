@@ -16,11 +16,9 @@
 package net.automatalib.automata.transducers.impl.compact;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-import lombok.EqualsAndHashCode;
-
-@EqualsAndHashCode
-public class CompactMealyTransition<O> implements Serializable {
+public final class CompactMealyTransition<O> implements Serializable {
 
     private int memoryIdx;
     private final int succId;
@@ -58,5 +56,27 @@ public class CompactMealyTransition<O> implements Serializable {
 
     boolean isAutomatonTransition() {
         return memoryIdx >= 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof CompactMealyTransition)) {
+            return false;
+        }
+
+        final CompactMealyTransition<?> that = (CompactMealyTransition<?>) o;
+        return memoryIdx == that.memoryIdx && succId == that.succId && Objects.equals(output, that.output);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = 31 * result + Integer.hashCode(memoryIdx);
+        result = 31 * result + Integer.hashCode(succId);
+        result = 31 * result + Objects.hashCode(output);
+        return result;
     }
 }

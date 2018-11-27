@@ -17,11 +17,10 @@ package net.automatalib.commons.smartcollections;
 
 import java.io.Serializable;
 import java.util.AbstractList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.RandomAccess;
 import java.util.function.Supplier;
-
-import lombok.EqualsAndHashCode;
 
 /**
  * A thin wrapper around a simple {@code Object[]} array. Mainly used (and useful) for heavily generic and array-based
@@ -32,8 +31,7 @@ import lombok.EqualsAndHashCode;
  *
  * @author frohme
  */
-@EqualsAndHashCode(callSuper = false)
-public class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Serializable, Cloneable {
+public final class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Serializable, Cloneable {
 
     private final Object[] storage;
 
@@ -77,5 +75,23 @@ public class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Se
     @Override
     public ArrayStorage<T> clone() {
         return new ArrayStorage<>(storage.clone());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ArrayStorage)) {
+            return false;
+        }
+
+        final ArrayStorage<?> that = (ArrayStorage<?>) o;
+        return Arrays.equals(storage, that.storage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(storage);
     }
 }

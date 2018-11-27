@@ -16,14 +16,12 @@
 package net.automatalib.brics;
 
 import dk.brics.automaton.Transition;
-import lombok.EqualsAndHashCode;
 
 /**
  * The properties of an edge in a Brics automaton.
  *
  * @author Malte Isberner
  */
-@EqualsAndHashCode
 public class BricsTransitionProperty {
 
     private final char min;
@@ -88,4 +86,24 @@ public class BricsTransitionProperty {
         return sb.toString();
     }
 
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BricsTransitionProperty)) {
+            return false;
+        }
+
+        final BricsTransitionProperty that = (BricsTransitionProperty) o;
+        return min == that.min && max == that.max;
+    }
+
+    @Override
+    public final int hashCode() {
+        int result = 1;
+        result = 31 * result + Character.hashCode(min);
+        result = 31 * result + Character.hashCode(max);
+        return result;
+    }
 }

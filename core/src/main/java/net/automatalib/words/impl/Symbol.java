@@ -15,15 +15,15 @@
  */
 package net.automatalib.words.impl;
 
+import java.util.Objects;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import lombok.EqualsAndHashCode;
 import net.automatalib.words.abstractimpl.AbstractSymbol;
 
 @ParametersAreNonnullByDefault
-@EqualsAndHashCode(callSuper = false)
 public class Symbol extends AbstractSymbol<Symbol> {
 
     @Nullable
@@ -49,4 +49,21 @@ public class Symbol extends AbstractSymbol<Symbol> {
         return String.valueOf(userObject);
     }
 
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Symbol)) {
+            return false;
+        }
+
+        final Symbol that = (Symbol) o;
+        return Objects.equals(userObject, that.userObject);
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hashCode(userObject);
+    }
 }

@@ -20,10 +20,8 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
-import lombok.EqualsAndHashCode;
-
-@EqualsAndHashCode(of = "bs", callSuper = false)
 public class FastPowersetState<S> extends AbstractSet<S> {
 
     private final BitSet bs = new BitSet();
@@ -52,4 +50,21 @@ public class FastPowersetState<S> extends AbstractSet<S> {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof FastPowersetState)) {
+            return false;
+        }
+
+        final FastPowersetState<?> that = (FastPowersetState<?>) o;
+        return Objects.equals(bs, that.bs);
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hashCode(bs);
+    }
 }

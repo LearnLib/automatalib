@@ -17,8 +17,8 @@ package net.automatalib.commons.util;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Objects;
 
-import lombok.EqualsAndHashCode;
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.commons.util.strings.StringUtil;
 
@@ -41,7 +41,6 @@ import net.automatalib.commons.util.strings.StringUtil;
  * @author Malte Isberner
  * @author frohme
  */
-@EqualsAndHashCode(callSuper = false)
 public final class Triple<T1, T2, T3> extends AbstractPrintable implements Serializable {
 
     private static final long serialVersionUID = -1L;
@@ -87,4 +86,26 @@ public final class Triple<T1, T2, T3> extends AbstractPrintable implements Seria
         StringUtil.appendObject(a, third);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Triple)) {
+            return false;
+        }
+
+        final Triple<?, ?, ?> that = (Triple<?, ?, ?>) o;
+        return Objects.equals(first, that.first) && Objects.equals(second, that.second) &&
+               Objects.equals(third, that.third);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = 31 * result + Objects.hashCode(first);
+        result = 31 * result + Objects.hashCode(second);
+        result = 31 * result + Objects.hashCode(third);
+        return result;
+    }
 }

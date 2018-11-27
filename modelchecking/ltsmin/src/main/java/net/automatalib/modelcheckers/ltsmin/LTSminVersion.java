@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.EqualsAndHashCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,6 @@ import org.slf4j.LoggerFactory;
  *
  * @author frohme
  */
-@EqualsAndHashCode
 public final class LTSminVersion {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LTSminVersion.class);
@@ -48,12 +46,14 @@ public final class LTSminVersion {
     /**
      * Returns an {@link LTSminVersion} instance described by the provided versions.
      *
-     * @param major the major version
-     * @param minor the minor version
-     * @param patch the patch version
+     * @param major
+     *         the major version
+     * @param minor
+     *         the minor version
+     * @param patch
+     *         the patch version
      *
      * @return A {@link LTSminVersion} instance described by the provided versions.
-     *
      */
     public static LTSminVersion of(int major, int minor, int patch) {
         return new LTSminVersion(major, minor, patch);
@@ -115,5 +115,27 @@ public final class LTSminVersion {
     @Override
     public String toString() {
         return String.format("v%d.%d.%d", major, minor, patch);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof LTSminVersion)) {
+            return false;
+        }
+
+        final LTSminVersion that = (LTSminVersion) o;
+        return major == that.major && minor == that.minor && patch == that.patch;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = 31 * result + Integer.hashCode(major);
+        result = 31 * result + Integer.hashCode(minor);
+        result = 31 * result + Integer.hashCode(patch);
+        return result;
     }
 }

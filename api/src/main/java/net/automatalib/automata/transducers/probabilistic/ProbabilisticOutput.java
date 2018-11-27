@@ -15,13 +15,12 @@
  */
 package net.automatalib.automata.transducers.probabilistic;
 
+import java.util.Objects;
+
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import lombok.EqualsAndHashCode;
-
 @ParametersAreNonnullByDefault
-@EqualsAndHashCode
 public final class ProbabilisticOutput<O> {
 
     private final float probability;
@@ -40,5 +39,26 @@ public final class ProbabilisticOutput<O> {
     @Nullable
     public O getOutput() {
         return output;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ProbabilisticOutput)) {
+            return false;
+        }
+
+        final ProbabilisticOutput<?> that = (ProbabilisticOutput<?>) o;
+        return Float.compare(probability, that.probability) == 0 && Objects.equals(output, that.output);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = 31 * result + Float.hashCode(probability);
+        result = 31 * result + Objects.hashCode(output);
+        return result;
     }
 }
