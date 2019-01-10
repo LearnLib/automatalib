@@ -44,7 +44,7 @@ public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeter
 
     public UniversalCompactSimpleDet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
-        this.stateProperties = new Object[stateCapacity * numInputs()];
+        this.stateProperties = new Object[stateCapacity];
     }
 
     @Override

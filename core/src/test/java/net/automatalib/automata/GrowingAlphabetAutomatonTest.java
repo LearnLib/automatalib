@@ -15,7 +15,10 @@
  */
 package net.automatalib.automata;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
 
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.impl.FastDFA;
@@ -38,7 +41,8 @@ import org.testng.annotations.Test;
  */
 public class GrowingAlphabetAutomatonTest {
 
-    private static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 2);
+    private static final Alphabet<Integer> ALPHABET = Alphabets.fromArray(1, 2);
+    private static final Alphabet<Integer> EMPTY_ALPHABET = Alphabets.fromArray();
 
     private static final Word<Integer> A1 = Word.epsilon();
     private static final Word<Integer> A2 = Word.fromSymbols(1);
@@ -52,17 +56,76 @@ public class GrowingAlphabetAutomatonTest {
 
     @Test
     public void testCompactDFA() throws Exception {
-        this.testGrowableOutputAutomaton(new CompactDFA<>(ALPHABET));
+        this.testGrowableOutputAutomaton(CompactDFA::new);
     }
 
     private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer> & Output<Integer, D>, S, D, T, SP, TP> void testGrowableOutputAutomaton(
-            final M automaton) {
-        this.testGrowableAutomaton(automaton);
-        this.testOutput(automaton);
+            final Function<Alphabet<Integer>, M> creator) {
+
+        final List<M> automata = testGrowableAutomaton(creator);
+
+        for (M m : automata) {
+            this.testOutput(m);
+        }
     }
 
-    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> void testGrowableAutomaton(
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> List<M> testGrowableAutomaton(
+            final Function<Alphabet<Integer>, M> creator) {
+        final M m1 = creator.apply(ALPHABET);
+        final M m2 = creator.apply(EMPTY_ALPHABET);
+        final M m3 = creator.apply(EMPTY_ALPHABET);
+
+        testGrowableAutomatonRegular(m1);
+        testGrowableAutomatonWithEmptyAlphabetStatesFirst(m2);
+        testGrowableAutomatonWithEmptyAlphabetSymbolsFirst(m3);
+
+        return Arrays.asList(m1, m2, m3);
+    }
+
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> void testGrowableAutomatonRegular(
             final M automaton) {
+
+        // add states
+        final S s1 = automaton.addInitialState();
+        final S s2 = automaton.addState();
+        final S s3 = automaton.addState();
+
+        // set and test initial transitions
+        this.testInitialTransitions(automaton, s1, s2, s3);
+
+        // add new alphabet symbol
+        automaton.addAlphabetSymbol(3);
+
+        // set and test new transitions
+        this.testNewTransitions(automaton, s1, s2, s3);
+    }
+
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> void testGrowableAutomatonWithEmptyAlphabetStatesFirst(
+            final M automaton) {
+
+        // add states
+        final S s1 = automaton.addInitialState();
+        final S s2 = automaton.addState();
+        final S s3 = automaton.addState();
+
+        automaton.addAlphabetSymbol(1);
+        automaton.addAlphabetSymbol(2);
+
+        // set and test initial transitions
+        this.testInitialTransitions(automaton, s1, s2, s3);
+
+        // add new alphabet symbol
+        automaton.addAlphabetSymbol(3);
+
+        // set and test new transitions
+        this.testNewTransitions(automaton, s1, s2, s3);
+    }
+
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> void testGrowableAutomatonWithEmptyAlphabetSymbolsFirst(
+            final M automaton) {
+
+        automaton.addAlphabetSymbol(1);
+        automaton.addAlphabetSymbol(2);
 
         // add states
         final S s1 = automaton.addInitialState();
@@ -127,41 +190,41 @@ public class GrowingAlphabetAutomatonTest {
 
     @Test
     public void testCompactNFA() throws Exception {
-        this.testGrowableOutputAutomaton(new CompactNFA<>(ALPHABET));
+        this.testGrowableOutputAutomaton(CompactNFA::new);
     }
 
     @Test
     public void testFastDFA() throws Exception {
-        this.testGrowableOutputAutomaton(new FastDFA<>(ALPHABET));
+        this.testGrowableOutputAutomaton(FastDFA::new);
     }
 
     @Test
     public void testFastNFA() throws Exception {
-        this.testGrowableOutputAutomaton(new FastNFA<>(ALPHABET));
+        this.testGrowableOutputAutomaton(FastNFA::new);
     }
 
     @Test
     public void testCompactMealy() throws Exception {
-        this.testGrowableOutputAutomaton(new CompactMealy<>(ALPHABET));
+        this.testGrowableOutputAutomaton(CompactMealy::new);
     }
 
     @Test
     public void testFastMealy() throws Exception {
-        this.testGrowableOutputAutomaton(new FastMealy<>(ALPHABET));
+        this.testGrowableOutputAutomaton(FastMealy::new);
     }
 
     @Test
     public void testFastProbMealy() throws Exception {
-        this.testGrowableAutomaton(new FastProbMealy<>(ALPHABET));
+        this.testGrowableAutomaton(FastProbMealy::new);
     }
 
     @Test
     public void testCompactMoore() throws Exception {
-        this.testGrowableOutputAutomaton(new CompactMoore<>(ALPHABET));
+        this.testGrowableOutputAutomaton(CompactMoore::new);
     }
 
     @Test
     public void testFastMoore() throws Exception {
-        this.testGrowableOutputAutomaton(new FastMoore<>(ALPHABET));
+        this.testGrowableOutputAutomaton(FastMoore::new);
     }
 }

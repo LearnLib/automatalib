@@ -129,7 +129,12 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
         final int newCap = Math.max((int) (stateCapacity * resizeFactor), newCapacity);
 
-        updateStorage(Payload.of(this.stateCapacity, newCap, numStates, alphabetSize, UpdateOperation.NEW_STATE));
+        updateStorage(Payload.of(stateCapacity,
+                                 newCap,
+                                 numStates,
+                                 stateCapacity,
+                                 alphabetSize,
+                                 UpdateOperation.NEW_STATE));
 
         this.stateCapacity = newCap;
     }
@@ -146,9 +151,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
             return;
         }
 
-        updateStorage(Payload.of(this.alphabetSize,
-                                 this.alphabetSize + 1,
+        updateStorage(Payload.of(alphabetSize,
+                                 alphabetSize + 1,
                                  numStates,
+                                 stateCapacity,
                                  alphabetSize,
                                  UpdateOperation.NEW_ALPHABET_SYMBOL));
 
@@ -300,8 +306,9 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
                                 IntFunction<T> arrayConstructor,
                                 ArrayInitializer<T> initializer) {
 
-                final T newStorage = arrayConstructor.apply(p.newSizeHint * p.numStates);
+                final T newStorage = arrayConstructor.apply(p.newSizeHint * p.stateCapacity);
 
+                // chunk existing data
                 for (int i = 0; i < p.numStates; i++) {
                     System.arraycopy(oldStorage, i * p.oldSizeHint, newStorage, i * p.newSizeHint, p.oldSizeHint);
 
@@ -309,6 +316,12 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
                         initializer.setDefaultValue(newStorage, j);
                     }
                 }
+
+                // initialize remaining space
+                for (int i = p.newSizeHint * p.numStates; i < p.newSizeHint * p.stateCapacity; i++) {
+                    initializer.setDefaultValue(newStorage, i);
+                }
+
                 return newStorage;
             }
         };
@@ -355,22 +368,30 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
         private final int newSizeHint;
         private final int alphabetSize;
         private final int numStates;
+        private final int stateCapacity;
         private final UpdateOperation type;
 
-        private Payload(int oldSizeHint, int newSizeHint, int numStates, int alphabetSize, UpdateOperation type) {
+        private Payload(int oldSizeHint,
+                        int newSizeHint,
+                        int numStates,
+                        int stateCapacity,
+                        int alphabetSize,
+                        UpdateOperation type) {
             this.oldSizeHint = oldSizeHint;
             this.newSizeHint = newSizeHint;
             this.alphabetSize = alphabetSize;
             this.numStates = numStates;
+            this.stateCapacity = stateCapacity;
             this.type = type;
         }
 
         private static Payload of(int oldSizeHint,
                                   int newSizeHint,
                                   int numStates,
+                                  int stateCapacity,
                                   int alphabetSize,
                                   UpdateOperation type) {
-            return new Payload(oldSizeHint, newSizeHint, numStates, alphabetSize, type);
+            return new Payload(oldSizeHint, newSizeHint, numStates, stateCapacity, alphabetSize, type);
         }
     }
 
