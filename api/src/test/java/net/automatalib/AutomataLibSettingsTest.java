@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 public class AutomataLibSettingsTest {
 
     @BeforeSuite
-    public void setUp() {
+    public static void setUp() {
         final File properties =
                 new File(AutomataLibSettingsTest.class.getResource("/automatalib.properties").getFile());
         System.setProperty("automatalib.properties", properties.getAbsolutePath());

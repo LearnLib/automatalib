@@ -84,7 +84,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         WORD_DELIM_RIGHT = settings.getProperty(AutomataLibProperty.WORD_DELIM_RIGHT, "");
         WORD_SYMBOL_SEPARATOR = settings.getProperty(AutomataLibProperty.WORD_SYMBOL_SEPARATOR, " ");
         WORD_SYMBOL_DELIM_LEFT = settings.getProperty(AutomataLibProperty.WORD_SYMBOL_DELIM_LEFT, "");
-        WORD_SYMBOL_DELIM_RIGHT = settings.getProperty(AutomataLibProperty.WORD_DELIM_RIGHT, "");
+        WORD_SYMBOL_DELIM_RIGHT = settings.getProperty(AutomataLibProperty.WORD_SYMBOL_DELIM_RIGHT, "");
     }
 
     public static <I> Comparator<Word<? extends I>> canonicalComparator(Comparator<? super I> symComparator) {

@@ -18,7 +18,9 @@ package net.automatalib.words;
 import java.util.Arrays;
 import java.util.Collections;
 
+import net.automatalib.AutomataLibSettingsTest;
 import org.testng.Assert;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 /**
@@ -27,6 +29,11 @@ import org.testng.annotations.Test;
  * @author frohme
  */
 public class WordTest {
+
+    @BeforeSuite
+    public static void setUp() {
+        AutomataLibSettingsTest.setUp();
+    }
 
     @Test
     public void fromTest() {
@@ -106,5 +113,15 @@ public class WordTest {
         Assert.assertEquals(bc, abc.subWord(1));
         Assert.assertEquals(abc, abc.subWord(0));
         Assert.assertEquals(b, abc.subWord(1, 2));
+    }
+
+    @Test
+    public void toStringTest() {
+        final Word<Character> empty = Word.epsilon();
+        final Word<Character> abc = Word.fromCharSequence("abc");
+
+        // See configuration in AutomataLibSettingsTest & automatalib.properties
+        Assert.assertEquals(empty.toString(), "OVERRIDDEN");
+        Assert.assertEquals(abc.toString(), "delim_leftsymbol_delim_leftasymbol_delim_rightsymbol_sepsymbol_delim_leftbsymbol_delim_rightsymbol_sepsymbol_delim_leftcsymbol_delim_rightdelim_right");
     }
 }
