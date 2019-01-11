@@ -15,9 +15,11 @@
  */
 package net.automatalib.automata.base.fast;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.automatalib.ts.powerset.FastPowersetDTS;
@@ -77,5 +79,21 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastState<Coll
     @Override
     public FastPowersetDTS<S, I, T> powersetView() {
         return new FastPowersetDTS<>(this);
+    }
+
+    @Override
+    public Collection<I> getLocalInputs(S state) {
+        final Alphabet<I> alphabet = getInputAlphabet();
+        final int alphabetSize = alphabet.size();
+        final List<I> result = new ArrayList<>(alphabetSize);
+
+        for (int i = 0; i < alphabetSize; i++) {
+            final Collection<T> trans = state.getTransitionObject(i);
+            if (trans != null && !trans.isEmpty()) {
+                result.add(alphabet.getSymbol(i));
+            }
+        }
+
+        return result;
     }
 }

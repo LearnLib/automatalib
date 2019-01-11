@@ -17,6 +17,7 @@ package net.automatalib.automata.transducers.impl;
 
 import net.automatalib.automata.base.fast.AbstractFastMutableDet;
 import net.automatalib.automata.transducers.MutableMealyMachine;
+import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -30,8 +31,9 @@ import net.automatalib.words.Alphabet;
  * @author Malte Isberner
  */
 public class FastMealy<I, O>
-        extends AbstractFastMutableDet<FastMealyState<O>, I, MealyTransition<FastMealyState<O>, O>, Void, O>
-        implements MutableMealyMachine<FastMealyState<O>, I, MealyTransition<FastMealyState<O>, O>, O> {
+        extends AbstractFastMutableDet<FastMealyState<O>, I, MealyTransition<FastMealyState<O>, O>, Void, O> implements
+                                                                                                             MutableMealyMachine<FastMealyState<O>, I, MealyTransition<FastMealyState<O>, O>, O>,
+                                                                                                             StateLocalInputMealyMachine<FastMealyState<O>, I, MealyTransition<FastMealyState<O>, O>, O> {
 
     /**
      * Constructor. Initializes a new (empty) Mealy machine with the given input alphabet.

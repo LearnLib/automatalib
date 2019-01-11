@@ -16,7 +16,9 @@
 package net.automatalib.automata.base.compact;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.IntFunction;
 
 import javax.annotation.Nullable;
@@ -27,6 +29,7 @@ import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.MutableDeterministic.FullIntAbstraction;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
+import net.automatalib.automata.concepts.StateLocalInput;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -56,6 +59,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
                                                                StateIDs<Integer>,
                                                                UniversalFiniteAlphabetAutomaton<Integer, I, T, SP, TP>,
                                                                GrowableAlphabetAutomaton<I>,
+                                                               StateLocalInput<Integer, I>,
                                                                Serializable {
 
     protected static final float DEFAULT_RESIZE_FACTOR = 1.5f;
@@ -160,6 +164,18 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
         this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
         this.alphabetSize++;
+    }
+
+    @Override
+    public Collection<I> getLocalInputs(Integer state) {
+        final List<I> result = new ArrayList<>(alphabet.size());
+        for (final I i : alphabet) {
+            if (!getTransitions(state, i).isEmpty()) {
+                result.add(i);
+            }
+        }
+
+        return result;
     }
 
     public abstract void setStateProperty(int state, @Nullable SP property);

@@ -16,6 +16,9 @@
 package net.automatalib.automata.base.fast;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import net.automatalib.automata.ShrinkableDeterministic;
 import net.automatalib.ts.powerset.DeterministicPowersetView;
@@ -70,5 +73,20 @@ public abstract class AbstractFastMutableDet<S extends AbstractFastState<T>, I, 
     @Override
     public DeterministicPowersetView<S, I, T> powersetView() {
         return new DeterministicPowersetView<>(this);
+    }
+
+    @Override
+    public Collection<I> getLocalInputs(S state) {
+        final Alphabet<I> alphabet = getInputAlphabet();
+        final int alphabetSize = alphabet.size();
+        final List<I> result = new ArrayList<>(alphabetSize);
+
+        for (int i = 0; i < alphabetSize; i++) {
+            if (state.getTransitionObject(i) != null) {
+                result.add(alphabet.getSymbol(i));
+            }
+        }
+
+        return result;
     }
 }

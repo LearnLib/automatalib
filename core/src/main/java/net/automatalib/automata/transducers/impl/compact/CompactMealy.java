@@ -24,11 +24,13 @@ import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.AbstractCompact;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.transducers.MutableMealyMachine;
+import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.words.Alphabet;
 
 @ParametersAreNonnullByDefault
-public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactMealyTransition<O>, Void, O>
-        implements MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O> {
+public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactMealyTransition<O>, Void, O> implements
+                                                                                                            MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O>,
+                                                                                                            StateLocalInputMealyMachine<Integer, I, CompactMealyTransition<O>, O> {
 
     private int[] transitions;
     private Object[] outputs;

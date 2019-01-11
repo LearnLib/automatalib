@@ -16,6 +16,9 @@
 package net.automatalib.automata.base.compact;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Nonnull;
@@ -159,4 +162,16 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
         return new DeterministicPowersetView<>(this);
     }
 
+    @Override
+    public Collection<I> getLocalInputs(Integer state) {
+        final Alphabet<I> alphabet = getInputAlphabet();
+        final List<I> result = new ArrayList<>(alphabet.size());
+        for (final I i : alphabet) {
+            if (getTransition(state, i) != null) {
+                result.add(i);
+            }
+        }
+
+        return result;
+    }
 }
