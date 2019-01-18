@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 import dk.brics.automaton.Automaton;
+import dk.brics.automaton.BasicAutomata;
+import dk.brics.automaton.BasicOperations;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
@@ -43,14 +45,37 @@ public class BricsDFATest {
 
     @BeforeClass
     public void setUp() {
-        RegExp re = new RegExp("a(b*|cc+)d?e");
-        this.bricsAutomaton = re.toAutomaton();
-        dfa = new BricsDFA(bricsAutomaton);
+        // manually construct automaton accepting the regular expression "a(b*|bb+)c?d"
+        // we do this manually to ensure non-determinism to check our determinization
+        final Automaton a = BasicAutomata.makeChar('a');
+        final Automaton b = BasicAutomata.makeChar('b');
+        final Automaton c = BasicAutomata.makeChar('c');
+        final Automaton d = BasicAutomata.makeChar('d');
+
+        this.bricsAutomaton = BasicOperations.concatenate(Arrays.asList(a,
+                                                                        BasicOperations.union(BasicOperations.repeat(b),
+                                                                                              BasicOperations.repeat(b,
+                                                                                                                     2)),
+                                                                        BasicOperations.optional(c),
+                                                                        d));
+        assert !this.bricsAutomaton.isDeterministic();
+        this.dfa = new BricsDFA(bricsAutomaton);
+    }
+
+    @Test
+    public void testDeterminism() {
+        final Alphabet<Character> alphabet = Alphabets.characters('a', 'd');
+
+        for (State s : this.dfa) {
+            for (Character i : alphabet) {
+                Assert.assertTrue(this.dfa.getTransitions(s, i).size() <= 1);
+            }
+        }
     }
 
     @Test
     public void testWordAcceptance() {
-        List<String> strings = Arrays.asList("ae", "abbe", "abbde", "acce", "acde", "abcde");
+        List<String> strings = Arrays.asList("ad", "acd", "abbe", "abbce", "acce", "abcd");
 
         for (String s : strings) {
             Assert.assertEquals(dfa.accepts(Word.fromString(s)), bricsAutomaton.run(s));
