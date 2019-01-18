@@ -67,7 +67,7 @@ public class BricsDFA extends AbstractBricsAutomaton implements DFA<State, Chara
     }
 
     private static Automaton requireDeterministic(Automaton aut) {
-        if (aut.isDeterministic()) {
+        if (!aut.isDeterministic()) {
             aut.determinize();
         }
         return aut;
