@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata;
+package net.automatalib;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -21,7 +21,7 @@ import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.GrowingAlphabet;
 
 /**
- * Interface for declaring, that an automaton supports adding new alphabet symbols after its instantiation.
+ * Interface for declaring that a data structure supports adding new alphabet symbols after its instantiation.
  *
  * @param <I>
  *         input alphabet type
@@ -29,19 +29,25 @@ import net.automatalib.words.GrowingAlphabet;
  * @author frohme
  */
 @ParametersAreNonnullByDefault
-public interface GrowableAlphabetAutomaton<I> {
+public interface SupportsGrowingAlphabet<I> {
 
     /**
-     * Adds a new symbol to the alphabet of the automaton. Behavior depends on the implementation:
-     * <p>
-     * <ul> <li>Duplicate symbols may: be handled accordingly, be ignored or result in an error.</li> <li>After a new
-     * symbol has been added the new transitions do not have to be defined.</li> </ul>
+     * Notifies the data structure that a new symbol should be added to the alphabet. Behavior depends on the
+     * implementation:
+     * <ul>
+     * <li>After adding a new symbol, the symbol-related data may either be initialized with default values or
+     * undefined.</li>
+     * <li>Duplicate symbols may: (1) be handled accordingly, (2) be ignored or (3) result in an error.</li>
+     * </ul>
+     * Some data structures may need to be properly initialized (e.g. with a {@link GrowingAlphabet}) to handle
+     * potentially shared state across multiple instances. If the needed requirements are not met, a {@link
+     * GrowingAlphabetNotSupportedException} can be thrown.
      *
      * @param symbol
-     *         The symbol to add to the alphabet.
+     *         the symbol to add to the alphabet.
      *
      * @throws GrowingAlphabetNotSupportedException
-     *         if the automaton was not properly initialized (e.g. with a {@link GrowingAlphabet}).
+     *         if the data structure was not properly initialized (e.g. with a {@link GrowingAlphabet}).
      */
     void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException;
 

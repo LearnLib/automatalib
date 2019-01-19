@@ -18,7 +18,7 @@ package net.automatalib.automata.base.fast;
 import java.io.Serializable;
 import java.util.Collection;
 
-import net.automatalib.automata.GrowableAlphabetAutomaton;
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.base.StateIDDynamicMapping;
@@ -40,7 +40,7 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
         implements ShrinkableAutomaton<S, I, T, SP, TP>,
                    UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>,
                    StateIDs<S>,
-                   GrowableAlphabetAutomaton<I>,
+                   SupportsGrowingAlphabet<I>,
                    StateLocalInput<S, I>,
                    Serializable {
 

@@ -20,7 +20,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.automatalib.automata.GrowableAlphabetAutomaton;
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.graphs.Graph;
 import net.automatalib.incremental.ConflictException;
@@ -29,7 +29,7 @@ import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Word;
 
 public interface IncrementalMealyBuilder<I, O>
-        extends IncrementalConstruction<MealyMachine<?, I, ?, O>, I>, GrowableAlphabetAutomaton<I> {
+        extends IncrementalConstruction<MealyMachine<?, I, ?, O>, I>, SupportsGrowingAlphabet<I> {
 
     Word<O> lookup(Word<? extends I> inputWord);
 

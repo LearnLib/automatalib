@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastNFA;
@@ -57,7 +58,7 @@ public class GrowingAlphabetAutomatonTest {
     private static final Word<Integer> B3 = Word.fromSymbols(1, 2, 3);
     private static final Word<Integer> B4 = Word.fromSymbols(1, 2, 3, 3);
 
-    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer> & Output<Integer, D>, S, D, T, SP, TP> void testGrowableOutputAutomaton(
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & SupportsGrowingAlphabet<Integer> & Output<Integer, D>, S, D, T, SP, TP> void testGrowableOutputAutomaton(
             final Function<Alphabet<Integer>, M> creator) {
 
         final List<M> automata = testGrowableAutomaton(creator);
@@ -67,7 +68,7 @@ public class GrowingAlphabetAutomatonTest {
         }
     }
 
-    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> List<M> testGrowableAutomaton(
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & SupportsGrowingAlphabet<Integer>, S, T, SP, TP> List<M> testGrowableAutomaton(
             final Function<Alphabet<Integer>, M> creator) {
         final M err = creator.apply(ALPHABET);
         final M m1 = creator.apply(GROWING_ALPHABET);
@@ -82,7 +83,7 @@ public class GrowingAlphabetAutomatonTest {
         return Arrays.asList(m1, m2, m3);
     }
 
-    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> void testGrowableAutomatonRegular(
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & SupportsGrowingAlphabet<Integer>, S, T, SP, TP> void testGrowableAutomatonRegular(
             final M automaton) {
 
         // add states
@@ -100,7 +101,7 @@ public class GrowingAlphabetAutomatonTest {
         this.testNewTransitions(automaton, s1, s2, s3);
     }
 
-    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> void testGrowableAutomatonWithEmptyAlphabetStatesFirst(
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & SupportsGrowingAlphabet<Integer>, S, T, SP, TP> void testGrowableAutomatonWithEmptyAlphabetStatesFirst(
             final M automaton) {
 
         // add states
@@ -121,7 +122,7 @@ public class GrowingAlphabetAutomatonTest {
         this.testNewTransitions(automaton, s1, s2, s3);
     }
 
-    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> void testGrowableAutomatonWithEmptyAlphabetSymbolsFirst(
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP> & SupportsGrowingAlphabet<Integer>, S, T, SP, TP> void testGrowableAutomatonWithEmptyAlphabetSymbolsFirst(
             final M automaton) {
 
         automaton.addAlphabetSymbol(1);

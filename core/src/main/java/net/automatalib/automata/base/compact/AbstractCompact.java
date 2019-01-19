@@ -25,7 +25,7 @@ import java.util.function.IntFunction;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import net.automatalib.automata.GrowableAlphabetAutomaton;
+import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.MutableDeterministic.FullIntAbstraction;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
@@ -60,7 +60,7 @@ import net.automatalib.words.impl.Alphabets;
 public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<Integer, I, T, SP, TP>,
                                                                StateIDs<Integer>,
                                                                UniversalFiniteAlphabetAutomaton<Integer, I, T, SP, TP>,
-                                                               GrowableAlphabetAutomaton<I>,
+                                                               SupportsGrowingAlphabet<I>,
                                                                StateLocalInput<Integer, I>,
                                                                Serializable {
 
