@@ -54,7 +54,7 @@ public abstract class AbstractLTSminLTLMealyTest
     public abstract String getSkipFormula();
 
     @Test
-    public void testSkipOutputs() throws Exception {
+    public void testSkipOutputs() {
         final HashSet<String> skip = new HashSet<>();
         skip.add("2");
         getModelChecker().setSkipOutputs(skip);

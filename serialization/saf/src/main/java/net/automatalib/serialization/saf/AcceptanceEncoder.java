@@ -24,7 +24,7 @@ final class AcceptanceEncoder implements BlockPropertyEncoder<Boolean> {
     private int mask;
 
     @Override
-    public void start(DataOutput out) throws IOException {
+    public void start(DataOutput out) {
         currAcc = 0;
         mask = 1;
     }

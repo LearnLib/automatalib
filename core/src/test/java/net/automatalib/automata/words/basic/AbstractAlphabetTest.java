@@ -41,7 +41,7 @@ public abstract class AbstractAlphabetTest<I, M extends Alphabet<I>> {
     private M alphabet;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public void setUp() {
         this.alphabetSymbols = getAlphabetSymbols();
         this.nonAlphabetSymbols = getNonAlphabetSymbols();
         this.alphabet = getAlphabet();

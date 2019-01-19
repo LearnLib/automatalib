@@ -87,7 +87,7 @@ public class AUTSerializationTest {
     }
 
     @Test
-    public void errorTest() throws Exception {
+    public void errorTest() {
         final InputStream e1 = AUTSerializationTest.class.getResourceAsStream("/error1.aut");
         final InputStream e2 = AUTSerializationTest.class.getResourceAsStream("/error2.aut");
         final InputStream e3 = AUTSerializationTest.class.getResourceAsStream("/error3.aut");

@@ -43,7 +43,7 @@ public class IncrementalWMethodTestsIteratorTest {
     private Set<Word<Character>> initialWMethodTests;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public void setUp() {
         alphabet = Alphabets.characters('a', 'c');
 
         // @formatter:off

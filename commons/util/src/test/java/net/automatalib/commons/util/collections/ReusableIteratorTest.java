@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 public class ReusableIteratorTest {
 
     @Test
-    public void testIterator() throws Exception {
+    public void testIterator() {
 
         final int size = 10;
         final Iterator<Integer> iterator = IntStream.range(0, size).iterator();

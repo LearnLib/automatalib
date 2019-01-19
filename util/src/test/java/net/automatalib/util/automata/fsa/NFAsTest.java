@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
 @Test
 public class NFAsTest {
 
-    public void testDeterminize() throws Exception {
+    public void testDeterminize() {
         Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
 
         CompactNFA<Integer> nfa = new CompactNFA<>(alphabet);

@@ -66,7 +66,7 @@ public class WordTest {
     }
 
     @Test
-    public void toArrayTest() throws Exception {
+    public void toArrayTest() {
         final Word<Character> reference = Word.fromCharSequence("abc");
         Character[] referenceAsArray;
 
@@ -93,7 +93,7 @@ public class WordTest {
     }
 
     @Test
-    public void transformTest() throws Exception {
+    public void transformTest() {
         final Word<Character> source = Word.fromCharSequence("abc");
         final Word<String> target = Word.fromSymbols("aa", "bb", "cc");
 
@@ -103,7 +103,7 @@ public class WordTest {
     }
 
     @Test
-    public void subwordTest() throws Exception {
+    public void subwordTest() {
         final Word<Character> b = Word.fromLetter('b');
         final Word<Character> c = Word.fromLetter('c');
         final Word<Character> bc = Word.fromSymbols('b', 'c');

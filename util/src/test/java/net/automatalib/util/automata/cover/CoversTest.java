@@ -137,7 +137,7 @@ public class CoversTest {
     }
 
     @Test
-    public void testCovers() throws Exception {
+    public void testCovers() {
         final Random random = new Random(42);
         final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);
         final DFA<?, Integer> dfa = RandomAutomata.randomDFA(random, 15, alphabet);

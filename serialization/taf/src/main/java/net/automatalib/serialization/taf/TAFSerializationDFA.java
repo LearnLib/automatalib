@@ -26,6 +26,7 @@ import net.automatalib.commons.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
+import net.automatalib.serialization.taf.parser.TAFParseException;
 import net.automatalib.serialization.taf.parser.TAFParser;
 import net.automatalib.serialization.taf.writer.TAFWriter;
 import net.automatalib.words.Alphabet;
@@ -50,7 +51,7 @@ public final class TAFSerializationDFA
     }
 
     @Override
-    public InputModelData<String, DFA<Integer, String>> readModel(InputStream is) throws IOException {
+    public InputModelData<String, DFA<Integer, String>> readModel(InputStream is) throws TAFParseException {
         final CompactDFA<String> automaton =
                 TAFParser.parseDFA(is, PrintStreamDiagnosticListener.getStderrDiagnosticListener());
         return new InputModelData<>(automaton, automaton.getInputAlphabet());

@@ -37,7 +37,7 @@ import org.testng.annotations.Test;
 public class OneSEVPAMinimizerTest {
 
     @Test
-    public void testMinimization() throws Exception {
+    public void testMinimization() {
 
         final VPDAlphabet<Character> alphabet = new DefaultVPDAlphabet<>(Arrays.asList('1', '2', '3'),
                                                                          Arrays.asList('a', 'b', 'c'),

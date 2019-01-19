@@ -40,7 +40,7 @@ public class DeterministicEquivalenceTestTest {
     private static final int AUTOMATON_SIZE_LARGE = 200;
 
     @Test
-    public void testEquivalenceDFA() throws Exception {
+    public void testEquivalenceDFA() {
         final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);
         final DFA<?, Integer> a1 = RandomAutomata.randomDFA(RANDOM, AUTOMATON_SIZE_SMALL, alphabet);
         final DFA<?, Integer> a2 = RandomAutomata.randomDFA(RANDOM, AUTOMATON_SIZE_SMALL, alphabet);
@@ -50,7 +50,7 @@ public class DeterministicEquivalenceTestTest {
     }
 
     @Test
-    public void testEquivalenceDFALarge() throws Exception {
+    public void testEquivalenceDFALarge() {
         final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);
         final DFA<?, Integer> a1 = RandomAutomata.randomDFA(RANDOM, AUTOMATON_SIZE_LARGE, alphabet, false);
         final DFA<?, Integer> a2 = RandomAutomata.randomDFA(RANDOM, AUTOMATON_SIZE_LARGE, alphabet, false);
@@ -60,7 +60,7 @@ public class DeterministicEquivalenceTestTest {
     }
 
     @Test
-    public void testEquivalenceMealy() throws Exception {
+    public void testEquivalenceMealy() {
         final Alphabet<Integer> inputAlphabet = Alphabets.integers(0, 5);
         final Alphabet<Character> outputAlphabet = Alphabets.characters('a', 'f');
         final MealyMachine<?, Integer, ?, Character> a1 =

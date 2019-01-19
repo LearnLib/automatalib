@@ -41,7 +41,7 @@ public abstract class AbstractGrowingAlphabetTest<I, M extends GrowingAlphabet<I
     private M alphabet;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public void setUp() {
         this.initialAlphabetSymbols = getInitialAlphabetSymbols();
         this.additionalAlphabetSymbols = getAdditionalAlphabetSymbols();
         this.alphabet = getInitialAlphabet();

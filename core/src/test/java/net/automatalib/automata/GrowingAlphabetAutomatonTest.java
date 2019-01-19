@@ -189,47 +189,47 @@ public class GrowingAlphabetAutomatonTest {
     }
 
     @Test
-    public void testCompactDFA() throws Exception {
+    public void testCompactDFA() {
         this.testGrowableOutputAutomaton(CompactDFA::new);
     }
 
     @Test
-    public void testCompactNFA() throws Exception {
+    public void testCompactNFA() {
         this.testGrowableOutputAutomaton(CompactNFA::new);
     }
 
     @Test
-    public void testFastDFA() throws Exception {
+    public void testFastDFA() {
         this.testGrowableOutputAutomaton(FastDFA::new);
     }
 
     @Test
-    public void testFastNFA() throws Exception {
+    public void testFastNFA() {
         this.testGrowableOutputAutomaton(FastNFA::new);
     }
 
     @Test
-    public void testCompactMealy() throws Exception {
+    public void testCompactMealy() {
         this.testGrowableOutputAutomaton(CompactMealy::new);
     }
 
     @Test
-    public void testFastMealy() throws Exception {
+    public void testFastMealy() {
         this.testGrowableOutputAutomaton(FastMealy::new);
     }
 
     @Test
-    public void testFastProbMealy() throws Exception {
+    public void testFastProbMealy() {
         this.testGrowableAutomaton(FastProbMealy::new);
     }
 
     @Test
-    public void testCompactMoore() throws Exception {
+    public void testCompactMoore() {
         this.testGrowableOutputAutomaton(CompactMoore::new);
     }
 
     @Test
-    public void testFastMoore() throws Exception {
+    public void testFastMoore() {
         this.testGrowableOutputAutomaton(FastMoore::new);
     }
 }
