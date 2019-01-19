@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
@@ -39,14 +40,41 @@ import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.Alphabets;
 
 public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyBuilder<I, O> {
 
     private final Node<I, O> root;
+    private int alphabetSize;
 
     public IncrementalMealyTreeBuilder(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
-        this.root = new Node<>(inputAlphabet.size());
+        this.alphabetSize = inputAlphabet.size();
+        this.root = new Node<>(alphabetSize);
+    }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+        if (!this.inputAlphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
+        }
+
+        final int newAlphabetSize = this.inputAlphabet.size();
+        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
+        if (alphabetSize < newAlphabetSize) {
+            ensureInputCapacity(root, alphabetSize, newAlphabetSize);
+            alphabetSize = newAlphabetSize;
+        }
+    }
+
+    private void ensureInputCapacity(Node<I, O> node, int oldAlphabetSize, int newAlphabetSize) {
+        node.ensureInputCapacity(newAlphabetSize);
+        for (int i = 0; i < oldAlphabetSize; i++) {
+            final Node<I, O> child = node.getSuccessor(i);
+            if (child != null) {
+                ensureInputCapacity(child, oldAlphabetSize, newAlphabetSize);
+            }
+        }
     }
 
     @Override
@@ -87,7 +115,7 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
     }
 
     private Node<I, O> insertNode(Node<I, O> parent, int symIdx, O output) {
-        Node<I, O> succ = new Node<>(inputAlphabet.size());
+        Node<I, O> succ = new Node<>(alphabetSize);
         Edge<I, O> edge = new Edge<>(output, succ);
         parent.setEdge(symIdx, edge);
         return succ;
@@ -192,8 +220,8 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyB
 
         @Override
         public Collection<AnnotatedEdge<I, O>> getOutgoingEdges(Node<I, O> node) {
-            List<AnnotatedEdge<I, O>> result = new ArrayList<>();
-            for (int i = 0; i < inputAlphabet.size(); i++) {
+            List<AnnotatedEdge<I, O>> result = new ArrayList<>(alphabetSize);
+            for (int i = 0; i < alphabetSize; i++) {
                 Edge<I, O> edge = node.getEdge(i);
                 if (edge != null) {
                     result.add(new AnnotatedEdge<>(edge, inputAlphabet.getSymbol(i)));

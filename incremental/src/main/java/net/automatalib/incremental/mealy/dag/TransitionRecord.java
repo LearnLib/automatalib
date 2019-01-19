@@ -15,12 +15,12 @@
  */
 package net.automatalib.incremental.mealy.dag;
 
-public final class TransitionRecord {
+public final class TransitionRecord<O> {
 
-    public final State source;
+    public final State<O> source;
     public final int transIdx;
 
-    public TransitionRecord(State source, int transIdx) {
+    public TransitionRecord(State<O> source, int transIdx) {
         this.source = source;
         this.transIdx = transIdx;
     }

@@ -211,7 +211,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
             sig = new StateSignature(alphabetSize, Acceptance.DONT_KNOW);
             I sym = suffix.getSymbol(i);
             int idx = inputAlphabet.getSymbolIndex(sym);
-            sig.successors[idx] = last;
+            sig.successors.array[idx] = last;
             sig.updateHashCode();
             last = replaceOrRegister(sig);
         }

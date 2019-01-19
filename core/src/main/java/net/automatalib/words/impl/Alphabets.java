@@ -15,12 +15,12 @@
  */
 package net.automatalib.words.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.commons.util.collections.CollectionsUtil;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 
@@ -75,30 +75,25 @@ public final class Alphabets {
     }
 
     /**
-     * Returns an alphabet, which consists of the original alphabet including new input symbol. If the passed alphabet
-     * instance already is a {@link GrowingAlphabet}, its {@link GrowingAlphabet#addSymbol(Object)} is invoked and the
-     * very same instance is returned. Otherwise a new (generic) {@link GrowingAlphabet} instance is created and all
-     * symbols are added.
+     * Casts the given alphabet to a {@link GrowingAlphabet} if possible (i.e. the given alphabet is actually an
+     * instance of a {@link GrowingAlphabet}). Throws a {@link GrowingAlphabetNotSupportedException} otherwise.
      *
      * @param alphabet
-     *         the source alphabet to extend
-     * @param symbol
-     *         the input symbol to add
+     *         the alphabet to cast
      * @param <I>
      *         input symbol type
      *
-     * @return a alphabet which consists of the original alphabet including the new input symbol
+     * @return the same alphabet instance, casted to a {@link GrowingAlphabet}.
+     *
+     * @throws GrowingAlphabetNotSupportedException
+     *         if the given alphabet is not an instance of {@link GrowingAlphabet}.
      */
-    public static <I> GrowingAlphabet<I> withNewSymbol(final Alphabet<I> alphabet, final I symbol) {
+    public static <I> GrowingAlphabet<I> toGrowingAlphabetOrThrowException(final Alphabet<I> alphabet)
+            throws GrowingAlphabetNotSupportedException {
         if (alphabet instanceof GrowingAlphabet) {
-            GrowingAlphabet<I> growingAlphabet = (GrowingAlphabet<I>) alphabet;
-            growingAlphabet.addSymbol(symbol);
-            return growingAlphabet;
+            return (GrowingAlphabet<I>) alphabet;
         } else {
-            final List<I> alphabetAsList = new ArrayList<>(alphabet.size() + 1);
-            alphabetAsList.addAll(alphabet);
-            alphabetAsList.add(symbol);
-            return new SimpleAlphabet<>(alphabetAsList);
+            throw new GrowingAlphabetNotSupportedException(alphabet);
         }
     }
 

@@ -18,6 +18,7 @@ package net.automatalib.incremental.dfa.tree;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
 
 /**
@@ -32,7 +33,7 @@ import net.automatalib.incremental.dfa.Acceptance;
 public final class Node<I> {
 
     private Acceptance acceptance;
-    private Node<I>[] children;
+    private ResizingArrayStorage<Node<I>> children;
 
     /**
      * Constructor. Constructs a new node with no children and an acceptance value of {@link Acceptance#DONT_KNOW}
@@ -83,7 +84,7 @@ public final class Node<I> {
         if (children == null) {
             return null;
         }
-        return children[idx];
+        return children.array[idx];
     }
 
     /**
@@ -96,16 +97,26 @@ public final class Node<I> {
      * @param child
      *         the new child
      */
-    @SuppressWarnings("unchecked")
     public void setChild(int idx, int alphabetSize, Node<I> child) {
         if (children == null) {
-            children = new Node[alphabetSize];
+            children = new ResizingArrayStorage<>(Node.class, alphabetSize);
         }
-        children[idx] = child;
+        children.array[idx] = child;
     }
 
     public void makeSink() {
         children = null;
         acceptance = Acceptance.FALSE;
+    }
+
+    /**
+     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
+     */
+    boolean ensureInputCapacity(int capacity) {
+        if (this.children == null) {
+            return false;
+        }
+
+        return this.children.ensureCapacity(capacity);
     }
 }

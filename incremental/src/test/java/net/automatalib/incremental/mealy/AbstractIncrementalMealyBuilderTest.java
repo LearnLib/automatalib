@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.SimpleAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -182,6 +184,28 @@ public abstract class AbstractIncrementalMealyBuilderTest {
 
         final Word<Character> ce = incMealy.findSeparatingWord(dfa, TEST_ALPHABET, false);
         Assert.assertNotNull(ce);
+    }
+
+    @Test(dependsOnMethods = "testLookup")
+    public void testNewInputSymbol() {
+        final GrowingAlphabet<Character> alphabet = new SimpleAlphabet<>(TEST_ALPHABET);
+        final IncrementalMealyBuilder<Character, Character> growableBuilder = createIncrementalMealyBuilder(alphabet);
+
+        growableBuilder.addAlphabetSymbol('d');
+        growableBuilder.addAlphabetSymbol('d');
+
+        final Word<Character> input1 = Word.fromCharSequence("dcba");
+        final Word<Character> output1 = Word.fromCharSequence("1234");
+
+        growableBuilder.insert(input1, output1);
+
+        Assert.assertTrue(growableBuilder.hasDefinitiveInformation(input1));
+        Assert.assertEquals(growableBuilder.lookup(input1), output1);
+
+        final Word<Character> input2 = Word.fromCharSequence("dddd");
+
+        Assert.assertFalse(growableBuilder.hasDefinitiveInformation(input2));
+        Assert.assertEquals(growableBuilder.lookup(input2), Word.fromLetter('1'));
     }
 
 }

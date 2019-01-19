@@ -15,51 +15,40 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import java.util.Objects;
-
-import net.automatalib.incremental.ConflictException;
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
 final class Node<I, O> {
 
-    private final Edge<I, O>[] outEdges;
+    private final ResizingArrayStorage<Edge<I, O>> outEdges;
 
-    @SuppressWarnings("unchecked")
     Node(int alphabetSize) {
-        this.outEdges = new Edge[alphabetSize];
+        this.outEdges = new ResizingArrayStorage<>(Edge.class, alphabetSize);
     }
 
     public Edge<I, O> getEdge(int idx) {
-        return outEdges[idx];
+        return outEdges.array[idx];
     }
 
     public void setEdge(int idx, Edge<I, O> edge) {
-        outEdges[idx] = edge;
+        outEdges.array[idx] = edge;
     }
 
     public void setSuccessor(int idx, O output, Node<I, O> succ) {
-        outEdges[idx] = new Edge<>(output, succ);
+        outEdges.array[idx] = new Edge<>(output, succ);
     }
 
     public Node<I, O> getSuccessor(int idx) {
-        Edge<I, O> edge = outEdges[idx];
+        Edge<I, O> edge = outEdges.array[idx];
         if (edge != null) {
             return edge.getTarget();
         }
         return null;
     }
 
-    public Node<I, O> successor(int idx, O output) throws ConflictException {
-        Edge<I, O> edge = outEdges[idx];
-        if (edge != null) {
-            if (!Objects.equals(output, edge.getOutput())) {
-                throw new ConflictException("Output mismatch: '" + output + "' vs '" + edge.getOutput() + "'");
-            }
-            return edge.getTarget();
-        }
-        Node<I, O> succ = new Node<>(outEdges.length);
-        edge = new Edge<>(output, succ);
-        outEdges[idx] = edge;
-
-        return succ;
+    /**
+     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
+     */
+    boolean ensureInputCapacity(int capacity) {
+        return this.outEdges.ensureCapacity(capacity);
     }
 }

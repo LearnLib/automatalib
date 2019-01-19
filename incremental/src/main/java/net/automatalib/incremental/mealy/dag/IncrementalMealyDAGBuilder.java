@@ -34,6 +34,7 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.UnionFind;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
@@ -42,6 +43,7 @@ import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * Incrementally builds an (acyclic) Mealy machine, from a set of input and corresponding output words.
@@ -55,9 +57,9 @@ import net.automatalib.words.WordBuilder;
  */
 public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBuilder<I, O> {
 
-    private final Map<StateSignature, State> register = new HashMap<>();
-    private final int alphabetSize;
-    private final State init;
+    private final Map<StateSignature<O>, State<O>> register = new HashMap<>();
+    private int alphabetSize;
+    private final State<O> init;
 
     /**
      * Constructor.
@@ -68,9 +70,23 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
     public IncrementalMealyDAGBuilder(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
         this.alphabetSize = inputAlphabet.size();
-        StateSignature initSig = new StateSignature(alphabetSize);
-        this.init = new State(initSig);
+        StateSignature<O> initSig = new StateSignature<>(alphabetSize);
+        this.init = new State<>(initSig);
         register.put(null, init);
+    }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+        if (!this.inputAlphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
+        }
+
+        final int newAlphabetSize = this.inputAlphabet.size();
+        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
+        if (alphabetSize < newAlphabetSize) {
+            register.values().forEach(n -> n.ensureInputCapacity(newAlphabetSize));
+            alphabetSize = newAlphabetSize;
+        }
     }
 
     /**
@@ -90,21 +106,21 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
 
     @Override
     public boolean hasDefinitiveInformation(Word<? extends I> word) {
-        State s = getState(word);
+        State<O> s = getState(word);
         return (s != null);
     }
 
     /**
-     * Retrieves the (internal) state reached by the given input word, or {@code null} if no information about the
-     * input word is present.
+     * Retrieves the (internal) state reached by the given input word, or {@code null} if no information about the input
+     * word is present.
      *
      * @param word
      *         the input word
      *
      * @return the corresponding state
      */
-    private State getState(Word<? extends I> word) {
-        State s = init;
+    private State<O> getState(Word<? extends I> word) {
+        State<O> s = init;
 
         for (I sym : word) {
             int idx = inputAlphabet.getSymbolIndex(sym);
@@ -116,17 +132,16 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return s;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean lookup(Word<? extends I> word, List<? super O> output) {
-        State curr = init;
+        State<O> curr = init;
         for (I sym : word) {
             int idx = inputAlphabet.getSymbolIndex(sym);
-            State succ = curr.getSuccessor(idx);
+            State<O> succ = curr.getSuccessor(idx);
             if (succ == null) {
                 return false;
             }
-            output.add((O) curr.getOutput(idx));
+            output.add(curr.getOutput(idx));
             curr = succ;
         }
 
@@ -135,10 +150,10 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
 
     @Override
     public void insert(Word<? extends I> word, Word<? extends O> outputWord) {
-        State curr = init;
-        State conf = null;
+        State<O> curr = init;
+        State<O> conf = null;
 
-        Deque<PathElem> path = new ArrayDeque<>();
+        Deque<PathElem<O>> path = new ArrayDeque<>();
 
         // Find the internal state in the automaton that can be reached by a
         // maximal prefix of the word (i.e., a path of secured information)
@@ -151,7 +166,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             }
 
             int idx = inputAlphabet.getSymbolIndex(sym);
-            State succ = curr.getSuccessor(idx);
+            State<O> succ = curr.getSuccessor(idx);
             if (succ == null) {
                 break;
             }
@@ -166,7 +181,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
                         "Error inserting " + word.prefix(path.size() + 1) + " / " + outputWord.prefix(path.size() + 1) +
                         ": Incompatible output symbols: " + outSym + " vs " + curr.getOutput(idx));
             }
-            path.push(new PathElem(curr, idx));
+            path.push(new PathElem<>(curr, idx));
             curr = succ;
         }
 
@@ -178,7 +193,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             return;
         }
 
-        State last = curr;
+        State<O> last = curr;
 
         if (conf != null) {
             if (conf == last) {
@@ -186,7 +201,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             }
             last = hiddenClone(last);
             if (conf == null) {
-                State prev = path.peek().state;
+                State<O> prev = path.peek().state;
                 if (prev != init) {
                     updateSignature(prev, path.peek().transIdx, last);
                 } else {
@@ -211,7 +226,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         int suffTransIdx = inputAlphabet.getSymbolIndex(sym);
         O suffTransOut = suffixOut.firstSymbol();
 
-        State suffixState = createSuffix(suffix.subWord(1), suffixOut.subWord(1));
+        State<O> suffixState = createSuffix(suffix.subWord(1), suffixOut.subWord(1));
 
         if (last != init) {
             last = unhide(last, suffTransIdx, suffixState, suffTransOut);
@@ -230,10 +245,10 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             // prefixes reaching the confluence state (we do not know anything
             // about them
             // plus the suffix).
-            PathElem next;
+            PathElem<O> next;
             do {
                 next = path.pop();
-                State state = next.state;
+                State<O> state = next.state;
                 int idx = next.transIdx;
                 state = clone(state, idx, last);
                 last = state;
@@ -243,10 +258,10 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         // Finally, we have to refresh all the signatures, iterating backwards
         // until the updating becomes stable.
         while (path.size() > 1) {
-            PathElem next = path.pop();
-            State state = next.state;
+            PathElem<O> next = path.pop();
+            State<O> state = next.state;
             int idx = next.transIdx;
-            State updated = updateSignature(state, idx, last);
+            State<O> updated = updateSignature(state, idx, last);
             if (state == updated) {
                 return;
             }
@@ -258,16 +273,16 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         updateInitSignature(finalIdx, last);
     }
 
-    private State hiddenClone(State other) {
-        StateSignature sig = other.getSignature().duplicate();
+    private State<O> hiddenClone(State<O> other) {
+        StateSignature<O> sig = other.getSignature().duplicate();
 
         for (int i = 0; i < alphabetSize; i++) {
-            State succ = sig.successors[i];
+            State<O> succ = sig.successors.array[i];
             if (succ != null) {
                 succ.increaseIncoming();
             }
         }
-        return new State(sig);
+        return new State<>(sig);
     }
 
     /**
@@ -283,17 +298,17 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
      * @return the resulting state, which can either be the same as the input state (if the new signature is unique), or
      * the result of merging with another state.
      */
-    private State updateSignature(State state, int idx, State succ) {
-        StateSignature sig = state.getSignature();
-        if (sig.successors[idx] == succ) {
+    private State<O> updateSignature(State<O> state, int idx, State<O> succ) {
+        StateSignature<O> sig = state.getSignature();
+        if (sig.successors.array[idx] == succ) {
             return state;
         }
 
         register.remove(sig);
-        if (sig.successors[idx] != null) {
-            sig.successors[idx].decreaseIncoming();
+        if (sig.successors.array[idx] != null) {
+            sig.successors.array[idx].decreaseIncoming();
         }
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         succ.increaseIncoming();
         sig.updateHashCode();
         return replaceOrRegister(state);
@@ -308,16 +323,16 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
      * @param succ
      *         the new successor state
      */
-    private void updateInitSignature(int idx, State succ) {
-        StateSignature sig = init.getSignature();
-        State oldSucc = sig.successors[idx];
+    private void updateInitSignature(int idx, State<O> succ) {
+        StateSignature<O> sig = init.getSignature();
+        State<O> oldSucc = sig.successors.array[idx];
         if (oldSucc == succ) {
             return;
         }
         if (oldSucc != null) {
             oldSucc.decreaseIncoming();
         }
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         succ.increaseIncoming();
     }
 
@@ -331,40 +346,40 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
      * @param out
      *         the output symbol
      */
-    private void updateInitSignature(int idx, State succ, O out) {
-        StateSignature sig = init.getSignature();
-        State oldSucc = sig.successors[idx];
-        if (oldSucc == succ && Objects.equals(out, sig.outputs[idx])) {
+    private void updateInitSignature(int idx, State<O> succ, O out) {
+        StateSignature<O> sig = init.getSignature();
+        State<O> oldSucc = sig.successors.array[idx];
+        if (oldSucc == succ && Objects.equals(out, sig.outputs.array[idx])) {
             return;
         }
         if (oldSucc != null) {
             oldSucc.decreaseIncoming();
         }
-        sig.successors[idx] = succ;
-        sig.outputs[idx] = out;
+        sig.successors.array[idx] = succ;
+        sig.outputs.array[idx] = out;
         succ.increaseIncoming();
     }
 
-    private void hide(State state) {
+    private void hide(State<O> state) {
         assert state != init;
-        StateSignature sig = state.getSignature();
+        StateSignature<O> sig = state.getSignature();
 
         register.remove(sig);
     }
 
-    private State createSuffix(Word<? extends I> suffix, Word<? extends O> suffixOut) {
-        StateSignature sig = new StateSignature(alphabetSize);
+    private State<O> createSuffix(Word<? extends I> suffix, Word<? extends O> suffixOut) {
+        StateSignature<O> sig = new StateSignature<>(alphabetSize);
         sig.updateHashCode();
-        State last = replaceOrRegister(sig);
+        State<O> last = replaceOrRegister(sig);
 
         int len = suffix.length();
         for (int i = len - 1; i >= 0; i--) {
-            sig = new StateSignature(alphabetSize);
+            sig = new StateSignature<>(alphabetSize);
             I sym = suffix.getSymbol(i);
             O outsym = suffixOut.getSymbol(i);
             int idx = inputAlphabet.getSymbolIndex(sym);
-            sig.successors[idx] = last;
-            sig.outputs[idx] = outsym;
+            sig.successors.array[idx] = last;
+            sig.outputs.array[idx] = outsym;
             sig.updateHashCode();
             last = replaceOrRegister(sig);
         }
@@ -372,39 +387,39 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return last;
     }
 
-    private State unhide(State state, int idx, State succ, O out) {
-        StateSignature sig = state.getSignature();
-        State prevSucc = sig.successors[idx];
+    private State<O> unhide(State<O> state, int idx, State<O> succ, O out) {
+        StateSignature<O> sig = state.getSignature();
+        State<O> prevSucc = sig.successors.array[idx];
         if (prevSucc != null) {
             prevSucc.decreaseIncoming();
         }
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         if (succ != null) {
             succ.increaseIncoming();
         }
-        sig.outputs[idx] = out;
+        sig.outputs.array[idx] = out;
         sig.updateHashCode();
         return replaceOrRegister(state);
     }
 
-    private State clone(State other, int idx, State succ) {
-        StateSignature sig = other.getSignature();
-        if (sig.successors[idx] == succ) {
+    private State<O> clone(State<O> other, int idx, State<O> succ) {
+        StateSignature<O> sig = other.getSignature();
+        if (sig.successors.array[idx] == succ) {
             return other;
         }
         sig = sig.duplicate();
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         sig.updateHashCode();
         return replaceOrRegister(sig);
     }
 
-    private State replaceOrRegister(State state) {
-        StateSignature sig = state.getSignature();
-        State other = register.get(sig);
+    private State<O> replaceOrRegister(State<O> state) {
+        StateSignature<O> sig = state.getSignature();
+        State<O> other = register.get(sig);
         if (other != null) {
             if (state != other) {
-                for (int i = 0; i < sig.successors.length; i++) {
-                    State succ = sig.successors[i];
+                for (int i = 0; i < sig.successors.array.length; i++) {
+                    State<O> succ = sig.successors.array[i];
                     if (succ != null) {
                         succ.decreaseIncoming();
                     }
@@ -417,16 +432,16 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return state;
     }
 
-    private State replaceOrRegister(StateSignature sig) {
-        State state = register.get(sig);
+    private State<O> replaceOrRegister(StateSignature<O> sig) {
+        State<O> state = register.get(sig);
         if (state != null) {
             return state;
         }
 
-        state = new State(sig);
+        state = new State<>(sig);
         register.put(sig, state);
-        for (int i = 0; i < sig.successors.length; i++) {
-            State succ = sig.successors[i];
+        for (int i = 0; i < sig.successors.array.length; i++) {
+            State<O> succ = sig.successors.array[i];
             if (succ != null) {
                 succ.increaseIncoming();
             }
@@ -460,9 +475,9 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             return omitUndefined ? null : Word.epsilon();
         }
 
-        State init1 = init;
+        State<O> init1 = init;
 
-        Map<State, Integer> ids = new HashMap<>();
+        Map<State<O>, Integer> ids = new HashMap<>();
         StateIDs<S> mealyIds = mealy.stateIDs();
 
         int thisStates = register.size();
@@ -471,22 +486,22 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         IntDisjointSets uf = new UnionFind(thisStates + mealy.size());
         uf.link(id1, id2);
 
-        Queue<Record<S, I>> queue = new ArrayDeque<>();
+        Queue<Record<S, I, O>> queue = new ArrayDeque<>();
 
         queue.offer(new Record<>(init1, init2));
 
         I lastSym = null;
 
-        Record<S, I> current;
+        Record<S, I, O> current;
 
         explore:
         while ((current = queue.poll()) != null) {
-            State state1 = current.state1;
+            State<O> state1 = current.state1;
             S state2 = current.state2;
 
             for (I sym : inputs) {
                 int idx = inputAlphabet.getSymbolIndex(sym);
-                State succ1 = state1.getSuccessor(idx);
+                State<O> succ1 = state1.getSuccessor(idx);
                 if (succ1 == null) {
                     continue;
                 }
@@ -549,7 +564,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return wb.toWord();
     }
 
-    private static int getStateId(State state, Map<State, Integer> ids) {
+    private static <O> int getStateId(State<O> state, Map<State<O>, Integer> ids) {
         return ids.computeIfAbsent(state, k -> ids.size());
     }
 
@@ -557,19 +572,19 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
     // Equivalence test //
     // /////////////////////////////////////////////////////////////////////
 
-    private static final class Record<S, I> {
+    private static final class Record<S, I, O> {
 
-        private final State state1;
+        private final State<O> state1;
         private final S state2;
         private final I reachedVia;
-        private final Record<S, I> reachedFrom;
+        private final Record<S, I, O> reachedFrom;
         private final int depth;
 
-        Record(State state1, S state2) {
+        Record(State<O> state1, S state2) {
             this(state1, state2, null, null);
         }
 
-        Record(State state1, S state2, Record<S, I> reachedFrom, I reachedVia) {
+        Record(State<O> state1, S state2, Record<S, I, O> reachedFrom, I reachedVia) {
             this.state1 = state1;
             this.state2 = state2;
             this.reachedFrom = reachedFrom;
@@ -578,56 +593,55 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         }
     }
 
-    public class GraphView extends AbstractGraphView<I, O, State, TransitionRecord> {
+    public class GraphView extends AbstractGraphView<I, O, State<O>, TransitionRecord<O>> {
 
         @Override
-        public Collection<TransitionRecord> getOutgoingEdges(State node) {
-            List<TransitionRecord> edges = new ArrayList<>();
+        public Collection<TransitionRecord<O>> getOutgoingEdges(State<O> node) {
+            List<TransitionRecord<O>> edges = new ArrayList<>(alphabetSize);
             for (int i = 0; i < alphabetSize; i++) {
                 if (node.getSuccessor(i) != null) {
-                    edges.add(new TransitionRecord(node, i));
+                    edges.add(new TransitionRecord<>(node, i));
                 }
             }
             return edges;
         }
 
         @Override
-        public State getTarget(TransitionRecord edge) {
+        public State<O> getTarget(TransitionRecord<O> edge) {
             return edge.source.getSuccessor(edge.transIdx);
         }
 
         @Override
-        public Collection<State> getNodes() {
+        public Collection<State<O>> getNodes() {
             return Collections.unmodifiableCollection(register.values());
         }
 
         @Override
         @Nullable
-        public I getInputSymbol(TransitionRecord edge) {
+        public I getInputSymbol(TransitionRecord<O> edge) {
             return inputAlphabet.getSymbol(edge.transIdx);
         }
 
         @Override
         @Nullable
-        @SuppressWarnings("unchecked")
-        public O getOutputSymbol(TransitionRecord edge) {
-            return (O) edge.source.getOutput(edge.transIdx);
+        public O getOutputSymbol(TransitionRecord<O> edge) {
+            return edge.source.getOutput(edge.transIdx);
         }
 
         @Override
         @Nonnull
-        public State getInitialNode() {
+        public State<O> getInitialNode() {
             return init;
         }
 
         @Override
-        public VisualizationHelper<State, TransitionRecord> getVisualizationHelper() {
-            return new DelegateVisualizationHelper<State, TransitionRecord>(super.getVisualizationHelper()) {
+        public VisualizationHelper<State<O>, TransitionRecord<O>> getVisualizationHelper() {
+            return new DelegateVisualizationHelper<State<O>, TransitionRecord<O>>(super.getVisualizationHelper()) {
 
                 private int id;
 
                 @Override
-                public boolean getNodeProperties(State node, Map<String, String> properties) {
+                public boolean getNodeProperties(State<O> node, Map<String, String> properties) {
                     if (!super.getNodeProperties(node, properties)) {
                         return false;
                     }
@@ -643,33 +657,32 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
 
     }
 
-    public class AutomatonView implements MealyTransitionSystem<State, I, TransitionRecord, O> {
+    public class AutomatonView implements MealyTransitionSystem<State<O>, I, TransitionRecord<O>, O> {
 
         @Override
-        public State getSuccessor(TransitionRecord transition) {
-            State src = transition.source;
+        public State<O> getSuccessor(TransitionRecord<O> transition) {
+            State<O> src = transition.source;
             return src.getSuccessor(transition.transIdx);
         }
 
         @Override
-        public State getInitialState() {
+        public State<O> getInitialState() {
             return init;
         }
 
         @Override
-        public TransitionRecord getTransition(State state, I input) {
+        public TransitionRecord<O> getTransition(State<O> state, I input) {
             int inputIdx = inputAlphabet.getSymbolIndex(input);
             if (state.getSuccessor(inputIdx) == null) {
                 return null;
             }
-            return new TransitionRecord(state, inputIdx);
+            return new TransitionRecord<>(state, inputIdx);
         }
 
         @Override
-        @SuppressWarnings("unchecked")
-        public O getTransitionOutput(TransitionRecord transition) {
-            State src = transition.source;
-            return (O) src.getOutput(transition.transIdx);
+        public O getTransitionOutput(TransitionRecord<O> transition) {
+            State<O> src = transition.source;
+            return src.getOutput(transition.transIdx);
         }
     }
 }

@@ -230,7 +230,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         }
         sig.acceptance = Acceptance.FALSE;
         for (int i = 0; i < alphabetSize; i++) {
-            State succ = sig.successors[i];
+            State succ = sig.successors.array[i];
             if (succ != null) {
                 purge(succ);
             }
@@ -268,7 +268,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
             StateSignature sig = new StateSignature(alphabetSize, intermediate);
             I sym = suffix.getSymbol(i);
             int idx = inputAlphabet.getSymbolIndex(sym);
-            sig.successors[idx] = last;
+            sig.successors.array[idx] = last;
             last = replaceOrRegister(sig);
         }
 

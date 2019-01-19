@@ -32,6 +32,7 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.UnionFind;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.visualization.VisualizationHelper;
@@ -39,6 +40,7 @@ import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.Alphabets;
 
 public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDFABuilder<I> {
 
@@ -51,6 +53,20 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         StateSignature sig = new StateSignature(alphabetSize, Acceptance.DONT_KNOW);
         this.init = new State(sig);
         register.put(null, init);
+    }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+        if (!this.inputAlphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
+        }
+
+        final int newAlphabetSize = this.inputAlphabet.size();
+        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
+        if (alphabetSize < newAlphabetSize) {
+            register.values().forEach(n -> n.ensureInputCapacity(newAlphabetSize));
+            alphabetSize = newAlphabetSize;
+        }
     }
 
     @Override
@@ -191,20 +207,20 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
 
     protected void updateInitSignature(int idx, State succ) {
         StateSignature sig = init.getSignature();
-        State oldSucc = sig.successors[idx];
+        State oldSucc = sig.successors.array[idx];
         if (oldSucc == succ) {
             return;
         }
         if (oldSucc != null) {
             oldSucc.decreaseIncoming();
         }
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         succ.increaseIncoming();
     }
 
     protected void updateInitSignature(Acceptance acc, int idx, State succ) {
         StateSignature sig = init.getSignature();
-        State oldSucc = sig.successors[idx];
+        State oldSucc = sig.successors.array[idx];
         Acceptance oldAcc = sig.acceptance;
         if (oldSucc == succ && oldAcc == acc) {
             return;
@@ -212,7 +228,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         if (oldSucc != null) {
             oldSucc.decreaseIncoming();
         }
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         succ.increaseIncoming();
         sig.acceptance = acc;
     }
@@ -255,15 +271,15 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         assert (state != init);
 
         StateSignature sig = state.getSignature();
-        if (sig.successors[idx] == succ) {
+        if (sig.successors.array[idx] == succ) {
             return state;
         }
         register.remove(sig);
-        if (sig.successors[idx] != null) {
-            sig.successors[idx].decreaseIncoming();
+        if (sig.successors.array[idx] != null) {
+            sig.successors.array[idx].decreaseIncoming();
         }
 
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         succ.increaseIncoming();
         sig.updateHashCode();
         return replaceOrRegister(state);
@@ -273,11 +289,11 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         assert (state != init);
 
         StateSignature sig = state.getSignature();
-        if (sig.successors[idx] == succ && sig.acceptance == acc) {
+        if (sig.successors.array[idx] == succ && sig.acceptance == acc) {
             return state;
         }
         register.remove(sig);
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         sig.acceptance = acc;
         return replaceOrRegister(state);
     }
@@ -296,8 +312,8 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         State other = register.get(sig);
         if (other != null) {
             if (state != other) {
-                for (int i = 0; i < sig.successors.length; i++) {
-                    State succ = sig.successors[i];
+                for (int i = 0; i < sig.successors.array.length; i++) {
+                    State succ = sig.successors.array[i];
                     if (succ != null) {
                         succ.decreaseIncoming();
                     }
@@ -326,8 +342,8 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
 
         state = new State(sig);
         register.put(sig, state);
-        for (int i = 0; i < sig.successors.length; i++) {
-            State succ = sig.successors[i];
+        for (int i = 0; i < sig.successors.array.length; i++) {
+            State succ = sig.successors.array[i];
             if (succ != null) {
                 succ.increaseIncoming();
             }
@@ -340,7 +356,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
 
         StateSignature sig = other.getSignature().duplicate();
         for (int i = 0; i < alphabetSize; i++) {
-            State succ = sig.successors[i];
+            State succ = sig.successors.array[i];
             if (succ != null) {
                 succ.increaseIncoming();
             }
@@ -360,11 +376,11 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
 
         StateSignature sig = state.getSignature();
         sig.acceptance = acc;
-        State prevSucc = sig.successors[idx];
+        State prevSucc = sig.successors.array[idx];
         if (prevSucc != null) {
             prevSucc.decreaseIncoming();
         }
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         if (succ != null) {
             succ.increaseIncoming();
         }
@@ -377,11 +393,11 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         assert (state != init);
 
         StateSignature sig = state.getSignature();
-        State prevSucc = sig.successors[idx];
+        State prevSucc = sig.successors.array[idx];
         if (prevSucc != null) {
             prevSucc.decreaseIncoming();
         }
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         if (succ != null) {
             succ.increaseIncoming();
         }
@@ -429,11 +445,11 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         assert (other != init);
 
         StateSignature sig = other.getSignature();
-        if (sig.successors[idx] == succ) {
+        if (sig.successors.array[idx] == succ) {
             return other;
         }
         sig = sig.duplicate();
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         sig.updateHashCode();
         return replaceOrRegister(sig);
     }
@@ -442,11 +458,11 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         assert (other != init);
 
         StateSignature sig = other.getSignature();
-        if (sig.successors[idx] == succ && sig.acceptance == acc) {
+        if (sig.successors.array[idx] == succ && sig.acceptance == acc) {
             return other;
         }
         sig = sig.duplicate();
-        sig.successors[idx] = succ;
+        sig.successors.array[idx] = succ;
         sig.acceptance = acc;
         return replaceOrRegister(sig);
     }
@@ -513,7 +529,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
             StateSignature sig = node.getSignature();
             List<EdgeRecord> result = new ArrayList<>();
             for (int i = 0; i < alphabetSize; i++) {
-                if (sig.successors[i] != null) {
+                if (sig.successors.array[i] != null) {
                     result.add(new EdgeRecord(node, i));
                 }
             }

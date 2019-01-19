@@ -61,6 +61,17 @@ public final class ResizingArrayStorage<T> implements CapacityManagement, Serial
         this.array = (T[]) Array.newInstance(arrayClazz, Math.max(0, initialCapacity));
     }
 
+    /**
+     * Copy-constructor which (shallowly) clones the storage of the other {@link ResizingArrayStorage}.
+     *
+     * @param other
+     *         the other storage whose data should be (shallowly) cloned
+     */
+    public ResizingArrayStorage(ResizingArrayStorage<T> other) {
+        this.array = other.array.clone();
+        this.nextCapacityHint = other.nextCapacityHint;
+    }
+
     @Override
     public boolean ensureCapacity(int minCapacity) {
         if (minCapacity <= array.length) {

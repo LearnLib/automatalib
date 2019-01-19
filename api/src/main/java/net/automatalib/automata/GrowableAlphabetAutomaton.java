@@ -17,6 +17,9 @@ package net.automatalib.automata;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
+import net.automatalib.words.GrowingAlphabet;
+
 /**
  * Interface for declaring, that an automaton supports adding new alphabet symbols after its instantiation.
  *
@@ -36,7 +39,10 @@ public interface GrowableAlphabetAutomaton<I> {
      *
      * @param symbol
      *         The symbol to add to the alphabet.
+     *
+     * @throws GrowingAlphabetNotSupportedException
+     *         if the automaton was not properly initialized (e.g. with a {@link GrowingAlphabet}).
      */
-    void addAlphabetSymbol(I symbol);
+    void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException;
 
 }

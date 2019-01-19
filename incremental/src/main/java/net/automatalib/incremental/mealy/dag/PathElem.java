@@ -15,12 +15,12 @@
  */
 package net.automatalib.incremental.mealy.dag;
 
-final class PathElem {
+final class PathElem<O> {
 
-    public final State state;
+    public final State<O> state;
     public final int transIdx;
 
-    PathElem(State state, int transIdx) {
+    PathElem(State<O> state, int transIdx) {
         this.state = state;
         this.transIdx = transIdx;
     }

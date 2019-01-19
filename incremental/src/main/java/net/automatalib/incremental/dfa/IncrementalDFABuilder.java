@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.automatalib.automata.GrowableAlphabetAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.graphs.Graph;
 import net.automatalib.incremental.ConflictException;
@@ -35,7 +36,7 @@ import net.automatalib.words.Word;
  * @author Malte Isberner
  */
 @ParametersAreNonnullByDefault
-public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?, I>, I> {
+public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?, I>, I>, GrowableAlphabetAutomaton<I> {
 
     /**
      * Looks up the tri-state acceptance value for a given word.

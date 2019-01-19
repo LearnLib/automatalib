@@ -18,8 +18,10 @@ package net.automatalib.incremental.dfa;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.SimpleAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -164,5 +166,31 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
 
         final Word<Character> ce = incPcDfa.findSeparatingWord(dfa, TEST_ALPHABET, false);
         Assert.assertNotNull(ce);
+    }
+
+    @Test(dependsOnMethods = "testLookup")
+    public void testNewInputSymbol() {
+        final GrowingAlphabet<Character> alphabet = new SimpleAlphabet<>(TEST_ALPHABET);
+        final IncrementalDFABuilder<Character> growableBuilder = createIncrementalPCDFABuilder(alphabet);
+
+        growableBuilder.addAlphabetSymbol('d');
+        growableBuilder.addAlphabetSymbol('d');
+
+        final Word<Character> input1 = Word.fromCharSequence("dcba");
+
+        growableBuilder.insert(input1, true);
+
+        Assert.assertTrue(growableBuilder.hasDefinitiveInformation(input1));
+        Assert.assertEquals(growableBuilder.lookup(input1), Acceptance.TRUE);
+        Assert.assertEquals(growableBuilder.lookup(input1.prefix(2)), Acceptance.TRUE);
+
+        final Word<Character> input2 = Word.fromCharSequence("dddd");
+
+        Assert.assertFalse(growableBuilder.hasDefinitiveInformation(input2));
+        Assert.assertEquals(growableBuilder.lookup(input2), Acceptance.DONT_KNOW);
+
+        growableBuilder.insert(input2, false);
+        Assert.assertEquals(growableBuilder.lookup(input2), Acceptance.FALSE);
+        Assert.assertEquals(growableBuilder.lookup(input2.append('d')), Acceptance.FALSE);
     }
 }

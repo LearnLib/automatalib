@@ -30,6 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.Acceptance;
@@ -39,6 +40,7 @@ import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import net.automatalib.words.impl.Alphabets;
 
 /**
  * Incrementally builds a tree, from a set of positive and negative words. Using {@link #insert(Word, boolean)}, either
@@ -60,6 +62,30 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
     public IncrementalDFATreeBuilder(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
         this.root = new Node<>();
+    }
+
+    @Override
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+        if (!this.inputAlphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
+        }
+
+        final int newAlphabetSize = this.inputAlphabet.size();
+        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
+        if (alphabetSize < newAlphabetSize) {
+            ensureInputCapacity(root, alphabetSize, newAlphabetSize);
+            alphabetSize = newAlphabetSize;
+        }
+    }
+
+    private void ensureInputCapacity(Node<I> node, int oldAlphabetSize, int newAlphabetSize) {
+        node.ensureInputCapacity(newAlphabetSize);
+        for (int i = 0; i < oldAlphabetSize; i++) {
+            final Node<I> child = node.getChild(i);
+            if (child != null) {
+                ensureInputCapacity(child, oldAlphabetSize, newAlphabetSize);
+            }
+        }
     }
 
     @Override
@@ -194,7 +220,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 
         @Override
         public Collection<Edge<I>> getOutgoingEdges(Node<I> node) {
-            List<Edge<I>> result = new ArrayList<>();
+            List<Edge<I>> result = new ArrayList<>(alphabetSize);
             for (int i = 0; i < alphabetSize; i++) {
                 Node<I> succ = node.getChild(i);
                 if (succ != null) {

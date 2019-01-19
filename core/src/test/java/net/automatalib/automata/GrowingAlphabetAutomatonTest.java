@@ -30,9 +30,11 @@ import net.automatalib.automata.transducers.impl.FastMoore;
 import net.automatalib.automata.transducers.impl.FastProbMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.SimpleAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,8 +43,9 @@ import org.testng.annotations.Test;
  */
 public class GrowingAlphabetAutomatonTest {
 
-    private static final Alphabet<Integer> ALPHABET = Alphabets.fromArray(1, 2);
-    private static final Alphabet<Integer> EMPTY_ALPHABET = Alphabets.fromArray();
+    private static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 2);
+    private static final Alphabet<Integer> GROWING_ALPHABET = new SimpleAlphabet<>(Arrays.asList(1, 2));
+    private static final Alphabet<Integer> EMPTY_GROWING_ALPHABET = new SimpleAlphabet<>();
 
     private static final Word<Integer> A1 = Word.epsilon();
     private static final Word<Integer> A2 = Word.fromSymbols(1);
@@ -53,11 +56,6 @@ public class GrowingAlphabetAutomatonTest {
     private static final Word<Integer> B2 = Word.fromSymbols(1, 3);
     private static final Word<Integer> B3 = Word.fromSymbols(1, 2, 3);
     private static final Word<Integer> B4 = Word.fromSymbols(1, 2, 3, 3);
-
-    @Test
-    public void testCompactDFA() throws Exception {
-        this.testGrowableOutputAutomaton(CompactDFA::new);
-    }
 
     private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer> & Output<Integer, D>, S, D, T, SP, TP> void testGrowableOutputAutomaton(
             final Function<Alphabet<Integer>, M> creator) {
@@ -71,10 +69,12 @@ public class GrowingAlphabetAutomatonTest {
 
     private <M extends MutableAutomaton<S, Integer, T, SP, TP> & GrowableAlphabetAutomaton<Integer>, S, T, SP, TP> List<M> testGrowableAutomaton(
             final Function<Alphabet<Integer>, M> creator) {
-        final M m1 = creator.apply(ALPHABET);
-        final M m2 = creator.apply(EMPTY_ALPHABET);
-        final M m3 = creator.apply(EMPTY_ALPHABET);
+        final M err = creator.apply(ALPHABET);
+        final M m1 = creator.apply(GROWING_ALPHABET);
+        final M m2 = creator.apply(EMPTY_GROWING_ALPHABET);
+        final M m3 = creator.apply(EMPTY_GROWING_ALPHABET);
 
+        Assert.expectThrows(GrowingAlphabetNotSupportedException.class, () -> testGrowableAutomatonRegular(err));
         testGrowableAutomatonRegular(m1);
         testGrowableAutomatonWithEmptyAlphabetStatesFirst(m2);
         testGrowableAutomatonWithEmptyAlphabetSymbolsFirst(m3);
@@ -186,6 +186,11 @@ public class GrowingAlphabetAutomatonTest {
         Assert.assertEquals(automaton.getStates(B2), Collections.singleton(s3));
         Assert.assertEquals(automaton.getStates(B3), Collections.singleton(s3));
         Assert.assertEquals(automaton.getStates(B4), Collections.singleton(s3));
+    }
+
+    @Test
+    public void testCompactDFA() throws Exception {
+        this.testGrowableOutputAutomaton(CompactDFA::new);
     }
 
     @Test

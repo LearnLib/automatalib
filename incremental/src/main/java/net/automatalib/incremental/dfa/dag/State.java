@@ -15,6 +15,7 @@
  */
 package net.automatalib.incremental.dfa.dag;
 
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
 
 /**
@@ -83,7 +84,7 @@ final class State {
      * @return the successor state for the given index
      */
     public State getSuccessor(int idx) {
-        return signature.successors[idx];
+        return signature.successors.array[idx];
     }
 
     /**
@@ -105,5 +106,12 @@ final class State {
 
     public boolean isSink() {
         return (signature == null);
+    }
+
+    /**
+     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
+     */
+    boolean ensureInputCapacity(int capacity) {
+        return signature.successors.ensureCapacity(capacity);
     }
 }

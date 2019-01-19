@@ -15,12 +15,14 @@
  */
 package net.automatalib.incremental.mealy.dag;
 
-public final class State {
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
-    private final StateSignature signature;
+public final class State<O> {
+
+    private final StateSignature<O> signature;
     private int numIncoming;
 
-    public State(StateSignature signature) {
+    public State(StateSignature<O> signature) {
         this.signature = signature;
     }
 
@@ -40,15 +42,22 @@ public final class State {
         return (numIncoming > 1);
     }
 
-    public State getSuccessor(int idx) {
-        return signature.successors[idx];
+    public State<O> getSuccessor(int idx) {
+        return signature.successors.array[idx];
     }
 
-    public Object getOutput(int idx) {
-        return signature.outputs[idx];
+    public O getOutput(int idx) {
+        return signature.outputs.array[idx];
     }
 
-    public StateSignature getSignature() {
+    public StateSignature<O> getSignature() {
         return signature;
+    }
+
+    /**
+     * See {@link ResizingArrayStorage#ensureCapacity(int)}.
+     */
+    boolean ensureInputCapacity(int capacity) {
+        return signature.successors.ensureCapacity(capacity) | signature.outputs.ensureCapacity(capacity);
     }
 }

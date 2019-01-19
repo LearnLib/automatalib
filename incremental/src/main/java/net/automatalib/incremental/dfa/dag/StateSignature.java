@@ -17,6 +17,7 @@ package net.automatalib.incremental.dfa.dag;
 
 import java.util.Arrays;
 
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
 
 /**
@@ -27,18 +28,18 @@ import net.automatalib.incremental.dfa.Acceptance;
  */
 final class StateSignature {
 
-    public final State[] successors;
+    public final ResizingArrayStorage<State> successors;
     public Acceptance acceptance;
     private int hashCode;
 
     StateSignature(int numSuccs, Acceptance acceptance) {
-        this.successors = new State[numSuccs];
+        this.successors = new ResizingArrayStorage<>(State.class, numSuccs);
         this.acceptance = acceptance;
         updateHashCode();
     }
 
     StateSignature(StateSignature other) {
-        this.successors = other.successors.clone();
+        this.successors = new ResizingArrayStorage<>(other.successors);
         this.acceptance = other.acceptance;
     }
 
@@ -46,7 +47,7 @@ final class StateSignature {
         final int prime = 31;
         int result = 1;
         result = prime * result + acceptance.hashCode();
-        result = prime * result + Arrays.hashCode(successors);
+        result = prime * result + Arrays.hashCode(successors.array);
         hashCode = result;
     }
 
@@ -77,8 +78,8 @@ final class StateSignature {
         if (acceptance != other.acceptance) {
             return false;
         }
-        for (int i = 0; i < successors.length; i++) {
-            if (successors[i] != other.successors[i]) {
+        for (int i = 0; i < successors.array.length; i++) {
+            if (successors.array[i] != other.successors.array[i]) {
                 return false;
             }
         }

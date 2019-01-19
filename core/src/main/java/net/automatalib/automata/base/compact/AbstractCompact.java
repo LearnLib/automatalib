@@ -31,6 +31,7 @@ import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.concepts.StateLocalInput;
 import net.automatalib.commons.util.collections.CollectionsUtil;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -66,7 +67,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     protected static final int DEFAULT_INIT_CAPACITY = 11;
     protected static final int INVALID_STATE = FullIntAbstraction.INVALID_STATE;
 
-    private Alphabet<I> alphabet;
+    private final Alphabet<I> alphabet;
     private final float resizeFactor;
     private int alphabetSize;
     private int stateCapacity;
@@ -149,21 +150,25 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     }
 
     @Override
-    public final void addAlphabetSymbol(I symbol) {
+    public final void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
 
-        if (this.alphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.alphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
         }
 
-        updateStorage(Payload.of(alphabetSize,
-                                 alphabetSize + 1,
-                                 numStates,
-                                 stateCapacity,
-                                 alphabetSize,
-                                 UpdateOperation.NEW_ALPHABET_SYMBOL));
+        final int newAlphabetSize = this.alphabet.size();
 
-        this.alphabet = Alphabets.withNewSymbol(this.alphabet, symbol);
-        this.alphabetSize++;
+        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
+        if (alphabetSize < newAlphabetSize) {
+            updateStorage(Payload.of(alphabetSize,
+                                     newAlphabetSize,
+                                     numStates,
+                                     stateCapacity,
+                                     alphabetSize,
+                                     UpdateOperation.NEW_ALPHABET_SYMBOL));
+
+            this.alphabetSize = newAlphabetSize;
+        }
     }
 
     @Override

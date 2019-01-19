@@ -27,6 +27,7 @@ import net.automatalib.automata.concepts.StateLocalInput;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -43,7 +44,7 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
                    StateLocalInput<S, I>,
                    Serializable {
 
-    protected Alphabet<I> inputAlphabet;
+    protected final Alphabet<I> inputAlphabet;
     private final DynamicList<S> states = new DynamicList<>();
     private final transient IDChangeNotifier<S> tracker = new IDChangeNotifier<>();
 
@@ -99,13 +100,13 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
+    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
 
-        if (this.inputAlphabet.containsSymbol(symbol)) {
-            return;
+        if (!this.inputAlphabet.containsSymbol(symbol)) {
+            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
         }
 
-        this.inputAlphabet = Alphabets.withNewSymbol(this.inputAlphabet, symbol);
+        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
         final int newAlphabetSize = this.inputAlphabet.size();
 
         for (final S s : this.getStates()) {

@@ -39,7 +39,7 @@ import net.automatalib.words.Word;
 public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFABuilder<I> {
 
     protected final Alphabet<I> inputAlphabet;
-    protected final int alphabetSize;
+    protected int alphabetSize;
 
     /**
      * Constructor.

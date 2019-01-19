@@ -18,31 +18,33 @@ package net.automatalib.incremental.mealy.dag;
 import java.util.Arrays;
 import java.util.Objects;
 
-final class StateSignature {
+import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
-    public final State[] successors;
-    public final Object[] outputs;
+final class StateSignature<O> {
+
+    public final ResizingArrayStorage<State<O>> successors;
+    public final ResizingArrayStorage<O> outputs;
     private int hashCode;
 
     StateSignature(int numSuccs) {
-        this.successors = new State[numSuccs];
-        this.outputs = new Object[numSuccs];
+        this.successors = new ResizingArrayStorage<>(State.class, numSuccs);
+        this.outputs = new ResizingArrayStorage<>(Object.class, numSuccs);
     }
 
-    StateSignature(StateSignature other) {
-        this.successors = other.successors.clone();
-        this.outputs = other.outputs.clone();
+    StateSignature(StateSignature<O> other) {
+        this.successors = new ResizingArrayStorage<>(other.successors);
+        this.outputs = new ResizingArrayStorage<>(other.outputs);
     }
 
-    public StateSignature duplicate() {
-        return new StateSignature(this);
+    public StateSignature<O> duplicate() {
+        return new StateSignature<>(this);
     }
 
     public void updateHashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(outputs);
-        result = prime * result + Arrays.hashCode(successors);
+        result = prime * result + Arrays.hashCode(outputs.array);
+        result = prime * result + Arrays.hashCode(successors.array);
         hashCode = result;
     }
 
@@ -66,13 +68,13 @@ final class StateSignature {
         if (hashCode != other.hashCode) {
             return false;
         }
-        for (int i = 0; i < successors.length; i++) {
-            if (successors[i] != other.successors[i]) {
+        for (int i = 0; i < successors.array.length; i++) {
+            if (successors.array[i] != other.successors.array[i]) {
                 return false;
             }
         }
-        for (int i = 0; i < outputs.length; i++) {
-            if (!Objects.equals(outputs[i], other.outputs[i])) {
+        for (int i = 0; i < outputs.array.length; i++) {
+            if (!Objects.equals(outputs.array[i], other.outputs.array[i])) {
                 return false;
             }
         }
