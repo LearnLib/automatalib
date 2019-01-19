@@ -17,6 +17,7 @@ package net.automatalib.automata.base.compact;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.IntFunction;
@@ -134,12 +135,15 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
         final int newCap = Math.max((int) (stateCapacity * resizeFactor), newCapacity);
 
-        updateStorage(Payload.of(stateCapacity,
-                                 newCap,
-                                 numStates,
-                                 stateCapacity,
-                                 alphabetSize,
-                                 UpdateOperation.NEW_STATE));
+        final Payload p = Payload.of(stateCapacity,
+                                     newCap,
+                                     numStates,
+                                     stateCapacity,
+                                     alphabetSize,
+                                     TransitionUpdateOperation.NEW_STATE);
+
+        updateStateStorage(p);
+        updateTransitionStorage(p);
 
         this.stateCapacity = newCap;
     }
@@ -160,12 +164,12 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
         // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
         if (alphabetSize < newAlphabetSize) {
-            updateStorage(Payload.of(alphabetSize,
-                                     newAlphabetSize,
-                                     numStates,
-                                     stateCapacity,
-                                     alphabetSize,
-                                     UpdateOperation.NEW_ALPHABET_SYMBOL));
+            updateTransitionStorage(Payload.of(alphabetSize,
+                                               newAlphabetSize,
+                                               numStates,
+                                               stateCapacity,
+                                               alphabetSize,
+                                               TransitionUpdateOperation.NEW_ALPHABET_SYMBOL));
 
             this.alphabetSize = newAlphabetSize;
         }
@@ -186,18 +190,50 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     public abstract void setStateProperty(int state, @Nullable SP property);
 
     /**
-     * Implementing classes need to implement this method in order to react to changes to the layout of their
-     * array-based data, e.g. due to calls to {@link #addState()} or {@link #addAlphabetSymbol(Object)}.
+     * Implementing classes should override this method in order to react to changes to the layout of their array-based
+     * state data, e.g. due to calls to {@link #addState()}.
      * <p>
-     * Subclasses may use one of the {@link #updateStorage(Object[], IntFunction, Object, Payload)}... methods, to
-     * conveniently delegate this task to this base class. This leaves subclasses only with the task to invoke the
+     * Subclasses may use one of the {@link #updateStateStorage(Object[], Object, Payload)}... methods to conveniently
+     * delegate this task to this base class. This leaves subclasses only with the task to invoke the provided update
+     * methods for each of their local array storages.
+     *
+     * @param payload
+     *         the payload containing the necessary information for the update operation. This object must be passed
+     *         as-is to the {@link #updateStateStorage(Object[], Object, Payload)}... methods.
+     */
+    protected void updateStateStorage(Payload payload) {}
+
+    /**
+     * Return a copy of the provided array with updated memory layout.
+     *
+     * @param oldStorage
+     *         the current array
+     * @param defaultValue
+     *         default value for newly allocated array positions
+     * @param payload
+     *         the payload object
+     *
+     * @return a copy of the provided array with updated memory layout.
+     */
+    protected final Object[] updateStateStorage(Object[] oldStorage, @Nullable Object defaultValue, Payload payload) {
+        final Object[] result = Arrays.copyOf(oldStorage, payload.newSizeHint);
+        Arrays.fill(result, oldStorage.length, result.length, defaultValue);
+        return result;
+    }
+
+    /**
+     * Implementing classes should override this method in order to react to changes to the layout of their array-based
+     * transition data, e.g. due to calls to {@link #addState()} or {@link #addAlphabetSymbol(Object)}.
+     * <p>
+     * Subclasses may use one of the {@link #updateTransitionStorage(Object[], IntFunction, Object, Payload)}... methods
+     * to conveniently delegate this task to this base class. This leaves subclasses only with the task to invoke the
      * provided update methods for each of their local array storages.
      *
      * @param payload
      *         the payload containing the necessary information for the update operation. This object must be passed
-     *         as-is to the {@link #updateStorage(Object[], IntFunction, Object, Payload)}... methods.
+     *         as-is to the {@link #updateTransitionStorage(Object[], IntFunction, Object, Payload)}... methods.
      */
-    protected abstract void updateStorage(Payload payload);
+    protected void updateTransitionStorage(Payload payload) {}
 
     /**
      * Return a copy of the provided array with updated memory layout.
@@ -211,10 +247,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      *
      * @return a copy of the provided array with updated memory layout.
      *
-     * @see #updateStorage(Object[], Object, Payload)
-     * @see #updateStorage(Object[], IntFunction, Object, Payload)
+     * @see #updateTransitionStorage(Object[], Object, Payload)
+     * @see #updateTransitionStorage(Object[], IntFunction, Object, Payload)
      */
-    protected final int[] updateStorage(int[] oldStorage, int defaultValue, Payload payload) {
+    protected final int[] updateTransitionStorage(int[] oldStorage, int defaultValue, Payload payload) {
         return payload.type.updateStorage(oldStorage, payload, int[]::new, (arr, idx) -> arr[idx] = defaultValue);
     }
 
@@ -230,10 +266,12 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      *
      * @return a copy of the provided array with updated memory layout.
      *
-     * @see #updateStorage(int[], int, Payload)
-     * @see #updateStorage(Object[], IntFunction, Object, Payload)
+     * @see #updateTransitionStorage(int[], int, Payload)
+     * @see #updateTransitionStorage(Object[], IntFunction, Object, Payload)
      */
-    protected final Object[] updateStorage(Object[] oldStorage, @Nullable Object defaultValue, Payload payload) {
+    protected final Object[] updateTransitionStorage(Object[] oldStorage,
+                                                     @Nullable Object defaultValue,
+                                                     Payload payload) {
         return payload.type.updateStorage(oldStorage, payload, Object[]::new, (arr, idx) -> arr[idx] = defaultValue);
     }
 
@@ -249,13 +287,13 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      *
      * @return a copy of the provided array with updated memory layout.
      *
-     * @see #updateStorage(int[], int, Payload)
-     * @see #updateStorage(Object[], Object, Payload)
+     * @see #updateTransitionStorage(int[], int, Payload)
+     * @see #updateTransitionStorage(Object[], Object, Payload)
      */
-    protected final <T> T[] updateStorage(T[] oldStorage,
-                                          IntFunction<T[]> arrayConstructor,
-                                          @Nullable T defaultValue,
-                                          Payload payload) {
+    protected final <T> T[] updateTransitionStorage(T[] oldStorage,
+                                                    IntFunction<T[]> arrayConstructor,
+                                                    @Nullable T defaultValue,
+                                                    Payload payload) {
         return payload.type.updateStorage(oldStorage, payload, arrayConstructor, (arr, idx) -> arr[idx] = defaultValue);
     }
 
@@ -293,9 +331,9 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
     /**
      * An enum containing the different kind of update operations. Each enum constant implements the required {@link
-     * UpdateOperation#updateStorage(Object, Payload, IntFunction, ArrayInitializer)} method.
+     * TransitionUpdateOperation#updateStorage(Object, Payload, IntFunction, ArrayInitializer)} method.
      */
-    private enum UpdateOperation {
+    private enum TransitionUpdateOperation {
         /**
          * A new state is added to the automaton. As a result, new space must be allocated at the end of the current
          * memory.
@@ -390,14 +428,14 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
         private final int alphabetSize;
         private final int numStates;
         private final int stateCapacity;
-        private final UpdateOperation type;
+        private final TransitionUpdateOperation type;
 
         private Payload(int oldSizeHint,
                         int newSizeHint,
                         int numStates,
                         int stateCapacity,
                         int alphabetSize,
-                        UpdateOperation type) {
+                        TransitionUpdateOperation type) {
             this.oldSizeHint = oldSizeHint;
             this.newSizeHint = newSizeHint;
             this.alphabetSize = alphabetSize;
@@ -411,7 +449,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
                                   int numStates,
                                   int stateCapacity,
                                   int alphabetSize,
-                                  UpdateOperation type) {
+                                  TransitionUpdateOperation type) {
             return new Payload(oldSizeHint, newSizeHint, numStates, stateCapacity, alphabetSize, type);
         }
     }

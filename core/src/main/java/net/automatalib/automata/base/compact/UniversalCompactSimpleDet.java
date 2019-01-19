@@ -65,9 +65,9 @@ public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeter
     }
 
     @Override
-    protected void updateStorage(Payload payload) {
-        this.stateProperties = updateStorage(this.stateProperties, null, payload);
-        super.updateStorage(payload);
+    protected void updateStateStorage(Payload payload) {
+        this.stateProperties = updateStateStorage(this.stateProperties, null, payload);
+        super.updateStateStorage(payload);
     }
 
 }

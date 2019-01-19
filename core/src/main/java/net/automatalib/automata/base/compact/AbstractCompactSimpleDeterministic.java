@@ -77,8 +77,8 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     }
 
     @Override
-    protected void updateStorage(Payload payload) {
-        this.transitions = updateStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
+    protected void updateTransitionStorage(Payload payload) {
+        this.transitions = updateTransitionStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
     }
 
     @Override

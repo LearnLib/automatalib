@@ -55,9 +55,9 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     }
 
     @Override
-    protected void updateStorage(Payload payload) {
-        this.transitions = updateStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
-        this.outputs = updateStorage(this.outputs, null, payload);
+    protected void updateTransitionStorage(Payload payload) {
+        this.transitions = updateTransitionStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
+        this.outputs = updateTransitionStorage(this.outputs, null, payload);
     }
 
     @Override
