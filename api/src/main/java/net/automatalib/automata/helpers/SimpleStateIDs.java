@@ -16,10 +16,10 @@
 package net.automatalib.automata.helpers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.simple.SimpleAutomaton;
 
@@ -31,7 +31,7 @@ public class SimpleStateIDs<S> implements StateIDs<S> {
     public SimpleStateIDs(SimpleAutomaton<S, ?> automaton) {
         this.states = new ArrayList<>(automaton.getStates());
         int numStates = this.states.size();
-        this.stateIds = new HashMap<>(numStates);
+        this.stateIds = Maps.newHashMapWithExpectedSize(numStates);
 
         for (int i = 0; i < numStates; i++) {
             S state = this.states.get(i);

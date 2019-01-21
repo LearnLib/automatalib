@@ -388,12 +388,12 @@ public final class AutomatonLowLevelCopy {
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, SP1, TP1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> copy(AutomatonCopyMethod method,
-                                                                                   UniversalAutomaton<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
-                                                                                   Collection<? extends I> inputs,
-                                                                                   MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
-                                                                                   Function<? super SP1, ? extends SP2> spTransform,
-                                                                                   Function<? super TP1, ? extends TP2> tpTransform) {
+    public static <S1, I, T1, SP1, TP1, S2, T2, SP2, TP2> Mapping<S1, S2> copy(AutomatonCopyMethod method,
+                                                                               UniversalAutomaton<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
+                                                                               Collection<? extends I> inputs,
+                                                                               MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
+                                                                               Function<? super SP1, ? extends SP2> spTransform,
+                                                                               Function<? super TP1, ? extends TP2> tpTransform) {
         return copy(method, in, inputs, out, spTransform, tpTransform, s -> true, (s, i, t) -> true);
     }
 
@@ -438,14 +438,14 @@ public final class AutomatonLowLevelCopy {
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, SP1, TP1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> copy(AutomatonCopyMethod method,
-                                                                                   UniversalAutomaton<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
-                                                                                   Collection<? extends I> inputs,
-                                                                                   MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
-                                                                                   Function<? super SP1, ? extends SP2> spTransform,
-                                                                                   Function<? super TP1, ? extends TP2> tpTransform,
-                                                                                   Predicate<? super S1> stateFilter,
-                                                                                   TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
+    public static <S1, I, T1, SP1, TP1, S2, T2, SP2, TP2> Mapping<S1, S2> copy(AutomatonCopyMethod method,
+                                                                               UniversalAutomaton<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
+                                                                               Collection<? extends I> inputs,
+                                                                               MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
+                                                                               Function<? super SP1, ? extends SP2> spTransform,
+                                                                               Function<? super TP1, ? extends TP2> tpTransform,
+                                                                               Predicate<? super S1> stateFilter,
+                                                                               TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
         return copy(method, in, inputs, out, i -> i, spTransform, tpTransform, stateFilter, transFilter);
     }
 
@@ -569,8 +569,7 @@ public final class AutomatonLowLevelCopy {
                                                                    UniversalAutomaton<S1, ? super I, T1, ? extends SP, ? extends TP> in,
                                                                    Collection<? extends I> inputs,
                                                                    MutableAutomaton<S2, I, T2, ? super SP, ? super TP> out) {
-        Predicate<? super S1> stateFilter = s -> true;
-        return copy(method, in, inputs, out, stateFilter, (s, i, t) -> true);
+        return copy(method, in, inputs, out, s -> true, (s, i, t) -> true);
     }
 
     /**

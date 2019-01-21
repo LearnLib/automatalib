@@ -15,16 +15,15 @@
  */
 package net.automatalib.automata.base.compact;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.collect.Sets;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -186,10 +185,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
 
     @Override
     public void setTransitions(Integer state, I input, Collection<? extends Integer> transitions) {
-        //TIntList successors = new TIntArrayList(transitions.size());
-        List<Integer> successors = new ArrayList<>(transitions.size()); // TODO: replace by primitive specialization
-        successors.addAll(transitions);
-        setTransitions(state.intValue(), input, successors);
+        setTransitions(state.intValue(), input, transitions);
     }
 
     //public void setTransitions(int state, I input, TIntCollection successors) {
@@ -208,7 +204,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
         Set<Integer> succs = transitions[transIdx]; // TODO: replace by primitive specialization
         if (succs == null) {
             //succs = new TIntHashSet(successors);
-            succs = new HashSet<>(); // TODO: replace by primitive specialization
+            succs = Sets.newHashSetWithExpectedSize(successors.size()); // TODO: replace by primitive specialization
             transitions[transIdx] = succs;
         } else {
             succs.clear();
