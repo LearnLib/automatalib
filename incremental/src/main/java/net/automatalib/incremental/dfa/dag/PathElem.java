@@ -15,7 +15,9 @@
  */
 package net.automatalib.incremental.dfa.dag;
 
-final class PathElem {
+import java.io.Serializable;
+
+final class PathElem implements Serializable {
 
     public final State state;
     public final int transIdx;

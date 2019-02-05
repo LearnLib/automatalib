@@ -15,7 +15,9 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-final class Edge<I, O> {
+import java.io.Serializable;
+
+final class Edge<I, O> implements Serializable {
 
     private final O output;
     private final Node<I, O> target;

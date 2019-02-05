@@ -15,12 +15,13 @@
  */
 package net.automatalib.incremental.mealy.dag;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
-final class StateSignature<O> {
+final class StateSignature<O> implements Serializable {
 
     public final ResizingArrayStorage<State<O>> successors;
     public final ResizingArrayStorage<O> outputs;

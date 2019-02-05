@@ -15,9 +15,11 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
+import java.io.Serializable;
+
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
-final class Node<I, O> {
+final class Node<I, O> implements Serializable {
 
     private final ResizingArrayStorage<Edge<I, O>> outEdges;
 

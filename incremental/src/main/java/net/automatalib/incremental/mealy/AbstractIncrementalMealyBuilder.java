@@ -15,6 +15,7 @@
  */
 package net.automatalib.incremental.mealy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +28,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-public abstract class AbstractIncrementalMealyBuilder<I, O> implements IncrementalMealyBuilder<I, O> {
+public abstract class AbstractIncrementalMealyBuilder<I, O> implements IncrementalMealyBuilder<I, O>, Serializable {
 
     protected final Alphabet<I> inputAlphabet;
 
