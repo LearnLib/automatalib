@@ -22,7 +22,7 @@ Furthermore, a plethora of graph-/automata-based algorithms is implemented, cove
 
 * graph theory (traversal, shortest paths, strongly-connected components)
 * automata theory (equivalence, minimization)
-* model checking (adaptive distinguishing sequences, W(p)Method, characterizing sets, state cover, transition cover)
+* model checking (adaptive distinguishing sequences, W(p)Method, characterizing sets, state/transition covers, LTL checking (via [LTSMin][ltsmin]))
 
 While we strive to deliver code at a high quality, please note, that there exist parts of the library that still need thorough testing.
 Contributions -- whether it is in the form of new features, better documentation or tests -- are welcome.
@@ -96,3 +96,4 @@ For developing the code base of AutomataLib, it is suggested to use one of the m
 [maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib.distribution%22
 [intellij]: https://www.jetbrains.com/idea/
 [eclipse]: https://www.eclipse.org/
+[ltsmin]: https://ltsmin.utwente.nl/
