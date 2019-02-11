@@ -1,0 +1,245 @@
+/* Copyright (C) 2013-2019 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package net.automatalib.incremental.mealy.tree;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.Iterators;
+import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.incremental.ConflictException;
+import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
+import net.automatalib.ts.output.MealyTransitionSystem;
+import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.helper.DelegateVisualizationHelper;
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+
+public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends AbstractIncrementalMealyBuilder<I, O> {
+
+    protected final N root;
+
+    public AbstractIncrementalMealyTreeBuilder(N root) {
+        this.root = root;
+    }
+
+    @Override
+    public boolean lookup(Word<? extends I> word, List<? super O> output) {
+        N curr = root;
+
+        for (I sym : word) {
+            Edge<N, O> edge = getEdge(curr, sym);
+            if (edge == null) {
+                return false;
+            }
+            output.add(edge.getOutput());
+            curr = edge.getTarget();
+        }
+
+        return true;
+    }
+
+    @Override
+    public void insert(Word<? extends I> input, Word<? extends O> outputWord) throws ConflictException {
+        N curr = root;
+
+        Iterator<? extends O> outputIt = outputWord.iterator();
+        for (I sym : input) {
+            O out = outputIt.next();
+            Edge<N, O> edge = getEdge(curr, sym);
+            if (edge == null) {
+                curr = insertNode(curr, sym, out);
+            } else {
+                if (!Objects.equal(out, edge.getOutput())) {
+                    throw new ConflictException();
+                }
+                curr = edge.getTarget();
+            }
+        }
+    }
+
+    @Override
+    public GraphView asGraph() {
+        return new GraphView();
+    }
+
+    @Override
+    public TransitionSystemView asTransitionSystem() {
+        return new TransitionSystemView();
+    }
+
+    @Override
+    public Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
+                                      Collection<? extends I> inputs,
+                                      boolean omitUndefined) {
+        return doFindSeparatingWord(target, inputs, omitUndefined);
+    }
+
+    private <S, T> Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> target,
+                                                Collection<? extends I> inputs,
+                                                boolean omitUndefined) {
+        Deque<Record<S, N, I>> dfsStack = new ArrayDeque<>();
+
+        dfsStack.push(new Record<>(target.getInitialState(), root, null, inputs.iterator()));
+
+        while (!dfsStack.isEmpty()) {
+            Record<S, N, I> rec = dfsStack.peek();
+            if (!rec.inputIt.hasNext()) {
+                dfsStack.pop();
+                continue;
+            }
+            I input = rec.inputIt.next();
+            Edge<N, O> edge = getEdge(rec.treeNode, input);
+            if (edge == null) {
+                continue;
+            }
+
+            T trans = target.getTransition(rec.automatonState, input);
+            if (omitUndefined && trans == null) {
+                continue;
+            }
+            if (trans == null || !Objects.equal(target.getTransitionOutput(trans), edge.getOutput())) {
+
+                WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());
+                wb.append(input);
+                dfsStack.pop();
+
+                while (!dfsStack.isEmpty()) {
+                    wb.append(rec.incomingInput);
+                    rec = dfsStack.pop();
+                }
+                return wb.reverse().toWord();
+            }
+
+            dfsStack.push(new Record<>(target.getSuccessor(trans), edge.getTarget(), input, inputs.iterator()));
+        }
+
+        return null;
+    }
+
+    protected abstract Edge<N, O> getEdge(N node, I symbol);
+
+    protected abstract N createNode();
+
+    protected abstract N insertNode(N parent, I symIdx, O output);
+
+    protected abstract Collection<AnnotatedEdge<N, I, O>> getOutgoingEdges(N node);
+
+    private static final class Record<S, N, I> {
+
+        private final S automatonState;
+        private final N treeNode;
+        private final I incomingInput;
+        private final Iterator<? extends I> inputIt;
+
+        Record(S automatonState, N treeNode, I incomingInput, Iterator<? extends I> inputIt) {
+            this.automatonState = automatonState;
+            this.treeNode = treeNode;
+            this.inputIt = inputIt;
+            this.incomingInput = incomingInput;
+        }
+    }
+
+    public class GraphView extends AbstractGraphView<I, O, N, AnnotatedEdge<N, I, O>> {
+
+        @Override
+        public Collection<N> getNodes() {
+            List<N> result = new ArrayList<>();
+            Iterators.addAll(result, GraphTraversal.dfIterator(this, Collections.singleton(root)));
+            return result;
+        }
+
+        @Override
+        public Collection<AnnotatedEdge<N, I, O>> getOutgoingEdges(N node) {
+            return AbstractIncrementalMealyTreeBuilder.this.getOutgoingEdges(node);
+        }
+
+        @Override
+        public N getTarget(AnnotatedEdge<N, I, O> edge) {
+            return edge.getTarget();
+        }
+
+        @Override
+        @Nullable
+        public I getInputSymbol(AnnotatedEdge<N, I, O> edge) {
+            return edge.getInput();
+        }
+
+        @Override
+        @Nullable
+        public O getOutputSymbol(AnnotatedEdge<N, I, O> edge) {
+            return edge.getOutput();
+        }
+
+        @Override
+        @Nonnull
+        public N getInitialNode() {
+            return root;
+        }
+
+        @Override
+        public VisualizationHelper<N, AnnotatedEdge<N, I, O>> getVisualizationHelper() {
+            return new DelegateVisualizationHelper<N, AnnotatedEdge<N, I, O>>(super.getVisualizationHelper()) {
+
+                private int id;
+
+                @Override
+                public boolean getNodeProperties(N node, Map<String, String> properties) {
+                    if (!super.getNodeProperties(node, properties)) {
+                        return false;
+                    }
+                    properties.put(NodeAttrs.LABEL, "n" + (id++));
+                    return true;
+                }
+            };
+        }
+
+    }
+
+    public class TransitionSystemView implements MealyTransitionSystem<N, I, Edge<N, O>, O> {
+
+        @Override
+        public Edge<N, O> getTransition(N state, I input) {
+            return getEdge(state, input);
+        }
+
+        @Override
+        public N getSuccessor(Edge<N, O> transition) {
+            return transition.getTarget();
+        }
+
+        @Override
+        public N getInitialState() {
+            return root;
+        }
+
+        @Override
+        public O getTransitionOutput(Edge<N, O> transition) {
+            return transition.getOutput();
+        }
+    }
+}

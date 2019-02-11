@@ -19,28 +19,24 @@ import java.io.Serializable;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 
-final class Node<I, O> implements Serializable {
+final class Node<O> implements Serializable {
 
-    private final ResizingArrayStorage<Edge<I, O>> outEdges;
+    private final ResizingArrayStorage<Edge<Node<O>, O>> outEdges;
 
     Node(int alphabetSize) {
         this.outEdges = new ResizingArrayStorage<>(Edge.class, alphabetSize);
     }
 
-    public Edge<I, O> getEdge(int idx) {
+    Edge<Node<O>, O> getEdge(int idx) {
         return outEdges.array[idx];
     }
 
-    public void setEdge(int idx, Edge<I, O> edge) {
+    void setEdge(int idx, Edge<Node<O>, O> edge) {
         outEdges.array[idx] = edge;
     }
 
-    public void setSuccessor(int idx, O output, Node<I, O> succ) {
-        outEdges.array[idx] = new Edge<>(output, succ);
-    }
-
-    public Node<I, O> getSuccessor(int idx) {
-        Edge<I, O> edge = outEdges.array[idx];
+    Node<O> getSuccessor(int idx) {
+        Edge<Node<O>, O> edge = outEdges.array[idx];
         if (edge != null) {
             return edge.getTarget();
         }

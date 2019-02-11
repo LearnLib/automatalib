@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.incremental.mealy.tree;
+package net.automatalib.incremental.mealy;
 
-import java.io.Serializable;
+import net.automatalib.incremental.mealy.tree.dynamic.DynamicIncrementalMealyTreeBuilder;
+import net.automatalib.words.Alphabet;
 
-public final class Edge<N, O> implements Serializable {
+/**
+ * @author frohme
+ */
+public class DynamicIncrementalTreeBuilder extends AbstractIncrementalMealyBuilderTest {
 
-    private final O output;
-    private final N target;
-
-    public Edge(O output, N target) {
-        this.output = output;
-        this.target = target;
-    }
-
-    public O getOutput() {
-        return output;
-    }
-
-    public N getTarget() {
-        return target;
+    @Override
+    protected <I, O> IncrementalMealyBuilder<I, O> createIncrementalMealyBuilder(Alphabet<I> alphabet) {
+        return new DynamicIncrementalMealyTreeBuilder<>();
     }
 }

@@ -23,7 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.graphs.Graph;
 import net.automatalib.ts.DeterministicTransitionSystem;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 /**
@@ -39,14 +38,6 @@ import net.automatalib.words.Word;
  */
 @ParametersAreNonnullByDefault
 public interface IncrementalConstruction<A, I> {
-
-    /**
-     * Retrieves the input alphabet of this construction.
-     *
-     * @return the input alphabet
-     */
-    @Nonnull
-    Alphabet<I> getInputAlphabet();
 
     /**
      * Checks the current state of the construction against a given target model, and returns a word exposing a

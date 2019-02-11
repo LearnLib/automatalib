@@ -30,6 +30,7 @@ import java.util.Queue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.IntDisjointSets;
@@ -55,9 +56,11 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author Malte Isberner
  */
-public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBuilder<I, O> {
+public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBuilder<I, O>
+        implements InputAlphabetHolder<I> {
 
     private final Map<StateSignature<O>, State<O>> register = new HashMap<>();
+    private final Alphabet<I> inputAlphabet;
     private int alphabetSize;
     private final State<O> init;
 
@@ -68,7 +71,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
      *         the input alphabet to use
      */
     public IncrementalMealyDAGBuilder(Alphabet<I> inputAlphabet) {
-        super(inputAlphabet);
+        this.inputAlphabet = inputAlphabet;
         this.alphabetSize = inputAlphabet.size();
         StateSignature<O> initSig = new StateSignature<>(alphabetSize);
         this.init = new State<>(initSig);
@@ -566,6 +569,12 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
 
     private static <O> int getStateId(State<O> state, Map<State<O>, Integer> ids) {
         return ids.computeIfAbsent(state, k -> ids.size());
+    }
+
+    @Nonnull
+    @Override
+    public Alphabet<I> getInputAlphabet() {
+        return inputAlphabet;
     }
 
     // /////////////////////////////////////////////////////////////////////

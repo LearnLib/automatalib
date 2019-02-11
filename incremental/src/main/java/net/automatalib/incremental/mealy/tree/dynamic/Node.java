@@ -13,25 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.incremental.mealy.tree;
+package net.automatalib.incremental.mealy.tree.dynamic;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public final class Edge<N, O> implements Serializable {
+import com.google.common.collect.Maps;
+import net.automatalib.incremental.mealy.tree.Edge;
 
-    private final O output;
-    private final N target;
+final class Node<I, O> implements Serializable {
 
-    public Edge(O output, N target) {
-        this.output = output;
-        this.target = target;
+    private final Map<I, Edge<Node<I, O>, O>> outEdges;
+
+    Node(int expectedSize) {
+        this.outEdges = Maps.newHashMapWithExpectedSize(expectedSize);
     }
 
-    public O getOutput() {
-        return output;
+    Node() {
+        this.outEdges = new HashMap<>();
     }
 
-    public N getTarget() {
-        return target;
+    Edge<Node<I, O>, O> getEdge(I input) {
+        return outEdges.get(input);
+    }
+
+    void setEdge(I symbol, Edge<Node<I, O>, O> edge) {
+        outEdges.put(symbol, edge);
+    }
+
+    Map<I, Edge<Node<I, O>, O>> getOutEdges() {
+        return outEdges;
     }
 }

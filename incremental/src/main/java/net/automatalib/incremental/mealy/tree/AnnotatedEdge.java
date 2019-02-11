@@ -15,17 +15,17 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-public final class AnnotatedEdge<I, O> {
+public final class AnnotatedEdge<N, I, O> {
 
-    private final Edge<I, O> edge;
+    private final Edge<N, O> edge;
     private final I input;
 
-    public AnnotatedEdge(Edge<I, O> edge, I input) {
+    public AnnotatedEdge(Edge<N, O> edge, I input) {
         this.edge = edge;
         this.input = input;
     }
 
-    public Edge<I, O> getEdge() {
+    public Edge<N, O> getEdge() {
         return edge;
     }
 
@@ -37,7 +37,7 @@ public final class AnnotatedEdge<I, O> {
         return edge.getOutput();
     }
 
-    public Node<I, O> getTarget() {
+    public N getTarget() {
         return edge.getTarget();
     }
 }

@@ -24,22 +24,10 @@ import java.util.Map;
 
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 public abstract class AbstractIncrementalMealyBuilder<I, O> implements IncrementalMealyBuilder<I, O>, Serializable {
-
-    protected final Alphabet<I> inputAlphabet;
-
-    public AbstractIncrementalMealyBuilder(Alphabet<I> alphabet) {
-        this.inputAlphabet = alphabet;
-    }
-
-    @Override
-    public Alphabet<I> getInputAlphabet() {
-        return inputAlphabet;
-    }
 
     @Override
     public boolean hasDefinitiveInformation(Word<? extends I> word) {

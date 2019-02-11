@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
@@ -37,7 +38,7 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFABuilder<I>, Serializable {
+public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFABuilder<I>, InputAlphabetHolder<I>, Serializable {
 
     protected final Alphabet<I> inputAlphabet;
     protected int alphabetSize;
