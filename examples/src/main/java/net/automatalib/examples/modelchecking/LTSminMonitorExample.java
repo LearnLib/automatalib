@@ -18,6 +18,8 @@ package net.automatalib.examples.modelchecking;
 import java.util.Objects;
 
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
+import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorIO;
 import net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorIOBuilder;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
@@ -43,6 +45,10 @@ public final class LTSminMonitorExample {
 
     public static void main(String[] args) {
 
+        if (!LTSminUtil.supports(LTSminVersion.of(3, 1, 0))) {
+            throw new IllegalStateException("The required version of LTSmin is not supported");
+        }
+
         final Alphabet<Character> inputAlphabet = Alphabets.characters('a', 'c');
 
         // @formatter:off
@@ -54,7 +60,7 @@ public final class LTSminMonitorExample {
                 .create();
         // @formatter:on
 
-        // We can eventually read a 'b'
+        // There is only a 'b' transition possible in the next state
         final String p1 = "X input == \"b\"";
 
         // Globally, whenever we output a '1' the next output must be '2'

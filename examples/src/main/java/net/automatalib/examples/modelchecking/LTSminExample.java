@@ -22,8 +22,6 @@ import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLIO;
 import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLIOBuilder;
-import net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorIO;
-import net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorIOBuilder;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
@@ -32,7 +30,7 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * Example for using LTSmin to perform modelchecking. Make sure to correctly setup your LTSmin installation.
  * <p>
- * This example requires at least an LTSmin version ≥ 3.1.0.
+ * This example requires at least an LTSmin version ≥ 3.0.0.
  *
  * @author frohme
  * @author Jeroen Meijer
@@ -46,6 +44,10 @@ public final class LTSminExample {
     }
 
     public static void main(String[] args) {
+
+        if (!LTSminUtil.supports(LTSminVersion.of(3, 0, 0))) {
+            throw new IllegalStateException("The required version of LTSmin is not supported");
+        }
 
         final Alphabet<Character> inputAlphabet = Alphabets.characters('a', 'c');
 
@@ -65,7 +67,7 @@ public final class LTSminExample {
                                                               .withMinimumUnfolds(3)
                                                               .create();
 
-        // We can eventually read a 'b'
+        // There is only a 'b' transition possible in the next state
         final String p1 = "X input == \"b\"";
 
         // Globally, whenever we output a '1' the next output must be '2'
@@ -80,63 +82,22 @@ public final class LTSminExample {
         System.out.println("performing LTL model checking with Buchi automata");
         System.out.println();
 
-        final MealyLasso<Character, Character> ce1b =
-                ltsminBuchi.findCounterExample(mealy, inputAlphabet, p1);
+        final MealyLasso<Character, Character> ce1b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p1);
 
         System.out.println("First property is satisfied: " + Objects.isNull(ce1b));
 
-        final MealyLasso<Character, Character> ce2b =
-                ltsminBuchi.findCounterExample(mealy, inputAlphabet, p2);
+        final MealyLasso<Character, Character> ce2b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p2);
 
         System.out.println("Second property is satisfied: " + Objects.isNull(ce2b));
 
-        final MealyLasso<Character, Character> ce3b =
-                ltsminBuchi.findCounterExample(mealy, inputAlphabet, p3);
+        final MealyLasso<Character, Character> ce3b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p3);
 
         System.out.println("Third property is satisfied: " + Objects.isNull(ce3b));
         System.out.println("Counterexample prefix+loop: " + ce3b.getPrefix() + ':' + ce3b.getLoop());
 
-        final MealyLasso<Character, Character> ce4b =
-                ltsminBuchi.findCounterExample(mealy, inputAlphabet, p4);
+        final MealyLasso<Character, Character> ce4b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p4);
 
         System.out.println("Fourth property is satisfied: " + Objects.isNull(ce4b));
         System.out.println("Counterexample prefix+loop: " + ce4b.getPrefix() + ':' + ce4b.getLoop());
-
-        // The following code requires v3.1.0
-        if (!LTSminUtil.supports(LTSminVersion.of(3, 1, 0))) {
-            return;
-        }
-
-        // do LTL model checking with monitors
-        final LTSminMonitorIO<Character, Character> ltsminMonitor =
-                new LTSminMonitorIOBuilder<Character, Character>()
-                        .withString2Input(s -> s.charAt(0))
-                        .withString2Output(s -> s.charAt(0))
-                        .create();
-
-        System.out.println();
-        System.out.println("performing LTL model checking with monitors");
-        System.out.println();
-
-        final MealyMachine<?, Character, ?, Character> ce1m =
-                ltsminMonitor.findCounterExample(mealy, inputAlphabet, p1);
-
-        System.out.println("First property is satisfied: " + Objects.isNull(ce1m));
-
-        final MealyMachine<?, Character, ?, Character> ce2m =
-                ltsminMonitor.findCounterExample(mealy, inputAlphabet, p2);
-
-        System.out.println("Second property is satisfied: " + Objects.isNull(ce2m));
-
-        final MealyMachine<?, Character, ?, Character> ce3m =
-                ltsminMonitor.findCounterExample(mealy, inputAlphabet, p3);
-
-        System.out.println("Third property is satisfied: " + Objects.isNull(ce3m));
-
-        final MealyMachine<?, Character, ?, Character> ce4m =
-                ltsminMonitor.findCounterExample(mealy, inputAlphabet, p4);
-
-        System.out.println("Fourth property is satisfied: " + Objects.isNull(ce4m));
-        System.out.println("Counterexample length: " + (ce4m.size()));
     }
 }
