@@ -34,9 +34,7 @@ import net.automatalib.words.GrowingAlphabet;
  */
 public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> implements GrowingAlphabet<I> {
 
-    public FastAlphabet() {
-
-    }
+    public FastAlphabet() {}
 
     @SafeVarargs
     public FastAlphabet(I... symbols) {
