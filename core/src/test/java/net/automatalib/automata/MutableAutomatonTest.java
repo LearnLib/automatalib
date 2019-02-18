@@ -46,12 +46,12 @@ public class MutableAutomatonTest {
 
     private static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 6);
     private static final int SIZE = 10;
-    private static final List<Boolean> STATE_PROPS = Arrays.asList(false, true);
-    private static final List<Character> TRANS_PROPS = Arrays.asList('a', 'b', 'c');
-    private static final List<ProbabilisticOutput<Character>> PROB_TRANS_PROPS =
+    static final List<Boolean> STATE_PROPS = Arrays.asList(false, true);
+    static final List<Character> TRANS_PROPS = Arrays.asList('a', 'b', 'c');
+    static final List<ProbabilisticOutput<Character>> PROB_TRANS_PROPS =
             TRANS_PROPS.stream().map(p -> new ProbabilisticOutput<>(0.5f, p)).collect(Collectors.toList());
-    private static final List<Void> EMPTY_PROPS = Collections.emptyList();
-    private static final Random RANDOM = new Random(42);
+    static final List<Void> EMPTY_PROPS = Collections.emptyList();
+    static final Random RANDOM = new Random(42);
 
     @Test
     public void testCompactDFA() {
@@ -126,10 +126,10 @@ public class MutableAutomatonTest {
         return automaton;
     }
 
-    private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void fillRandomly(M automaton,
-                                                                                             Alphabet<I> alphabet,
-                                                                                             List<SP> stateProps,
-                                                                                             List<TP> transProps) {
+    static <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void fillRandomly(M automaton,
+                                                                                            Alphabet<I> alphabet,
+                                                                                            List<SP> stateProps,
+                                                                                            List<TP> transProps) {
         final StateIDs<S> stateIDs = automaton.stateIDs();
 
         for (final S s : automaton) {
