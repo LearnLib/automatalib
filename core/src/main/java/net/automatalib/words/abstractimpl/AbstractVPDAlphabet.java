@@ -44,6 +44,10 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
                 return getCallSymbolIndex(symbol);
             }
 
+            @Override
+            public boolean containsSymbol(I symbol) {
+                return getCallSymbols().contains(symbol);
+            }
         };
     }
 
@@ -65,6 +69,11 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
             public int size() {
                 return getNumInternals();
             }
+
+            @Override
+            public boolean containsSymbol(I symbol) {
+                return getInternalSymbols().contains(symbol);
+            }
         };
     }
 
@@ -85,6 +94,11 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
             @Override
             public int size() {
                 return getNumReturns();
+            }
+
+            @Override
+            public boolean containsSymbol(I symbol) {
+                return getReturnSymbols().contains(symbol);
             }
         };
     }
