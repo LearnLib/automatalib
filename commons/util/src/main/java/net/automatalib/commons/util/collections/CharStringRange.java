@@ -48,6 +48,11 @@ public class CharStringRange extends AbstractList<String> implements ArrayWritab
     }
 
     @Override
+    public boolean contains(Object o) {
+        return indexOf(o) >= 0;
+    }
+
+    @Override
     public int indexOf(Object o) {
         if (o == null || o.getClass() != String.class) {
             return -1;

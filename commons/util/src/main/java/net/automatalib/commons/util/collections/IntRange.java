@@ -54,6 +54,11 @@ final class IntRange extends AbstractList<Integer> implements ArrayWritable<Inte
     }
 
     @Override
+    public boolean contains(Object o) {
+        return indexOf(o) >= 0;
+    }
+
+    @Override
     public int indexOf(Object o) {
         if (o == null || o.getClass() != Integer.class) {
             return -1;
