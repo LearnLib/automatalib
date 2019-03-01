@@ -73,7 +73,7 @@ public final class OneSEVPAMinimizer {
 
             int predCountBase = predOfsDataLow;
 
-            for (I intSym : alphabet.getInternalSymbols()) {
+            for (I intSym : alphabet.getInternalAlphabet()) {
                 final L succ = sevpa.getInternalSuccessor(loc, intSym);
                 if (succ == null) {
                     throw new IllegalArgumentException();
@@ -83,8 +83,8 @@ public final class OneSEVPAMinimizer {
                 data[predCountBase + succId]++;
                 predCountBase += numStates;
             }
-            for (I callSym : alphabet.getCallSymbols()) {
-                for (I retSym : alphabet.getReturnSymbols()) {
+            for (I callSym : alphabet.getCallAlphabet()) {
+                for (I retSym : alphabet.getReturnAlphabet()) {
                     for (L src : sevpa.getLocations()) {
                         int stackSym = sevpa.encodeStackSym(src, callSym);
                         L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
@@ -120,7 +120,7 @@ public final class OneSEVPAMinimizer {
             int predOfsBase = predOfsDataLow;
 
             final L loc = sevpa.getLocation(i);
-            for (I intSym : alphabet.getInternalSymbols()) {
+            for (I intSym : alphabet.getInternalAlphabet()) {
                 final L succ = sevpa.getInternalSuccessor(loc, intSym);
                 if (succ == null) {
                     throw new IllegalArgumentException();
@@ -130,8 +130,8 @@ public final class OneSEVPAMinimizer {
                 data[--data[predOfsBase + succId]] = i;
                 predOfsBase += numStates;
             }
-            for (I callSym : alphabet.getCallSymbols()) {
-                for (I retSym : alphabet.getReturnSymbols()) {
+            for (I callSym : alphabet.getCallAlphabet()) {
+                for (I retSym : alphabet.getReturnAlphabet()) {
                     for (L src : sevpa.getLocations()) {
                         int stackSym = sevpa.encodeStackSym(src, callSym);
                         L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
@@ -175,15 +175,15 @@ public final class OneSEVPAMinimizer {
             final Location resultLoc = resultLocs.get(blockId);
             resultLoc.setAccepting(original.isAcceptingLocation(repLoc));
 
-            for (I intSym : alphabet.getInternalSymbols()) {
+            for (I intSym : alphabet.getInternalAlphabet()) {
                 final L origSucc = original.getInternalSuccessor(repLoc, intSym);
                 final int origSuccId = original.getLocationId(origSucc);
                 final int resSuccId = pt.getBlockForState(origSuccId).id;
                 final Location resSucc = resultLocs.get(resSuccId);
                 result.setInternalSuccessor(resultLoc, intSym, resSucc);
             }
-            for (I callSym : alphabet.getCallSymbols()) {
-                for (I retSym : alphabet.getReturnSymbols()) {
+            for (I callSym : alphabet.getCallAlphabet()) {
+                for (I retSym : alphabet.getReturnAlphabet()) {
                     for (Block b : pt.blockList()) {
                         final int stackRepId = pt.getRepresentative(b);
                         final L stackRep = original.getLocation(stackRepId);

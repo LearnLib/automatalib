@@ -58,7 +58,7 @@ public final class OneSEVPAUtil {
             final L curr = reachable.get(queuePtr++);
             final Word<I> currAs = result.get(sevpa.getLocationId(curr));
 
-            for (I intSym : alphabet.getInternalSymbols()) {
+            for (I intSym : alphabet.getInternalAlphabet()) {
                 final L succ = sevpa.getInternalSuccessor(curr, intSym);
                 final int succIdx = sevpa.getLocationId(succ);
                 if (result.get(succIdx) != null) {
@@ -72,8 +72,8 @@ public final class OneSEVPAUtil {
                 reachable.add(succ);
             }
 
-            for (I callSym : alphabet.getCallSymbols()) {
-                for (I returnSym : alphabet.getReturnSymbols()) {
+            for (I callSym : alphabet.getCallAlphabet()) {
+                for (I returnSym : alphabet.getReturnAlphabet()) {
                     for (int i = 0; i < queuePtr; i++) {
                         final L src = reachable.get(i);
                         int stackSym = sevpa.encodeStackSym(src, callSym);

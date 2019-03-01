@@ -131,17 +131,17 @@ public class RandomAutomata {
         }
 
         for (Location loc : result.getLocations()) {
-            for (I intSym : alphabet.getInternalSymbols()) {
+            for (I intSym : alphabet.getInternalAlphabet()) {
                 if (result.getInternalSuccessor(loc, intSym) == null) {
                     final Location tgtLoc = result.getLocation(r.nextInt(result.size()));
                     result.setInternalSuccessor(loc, intSym, tgtLoc);
                 }
             }
 
-            for (I callSym : alphabet.getCallSymbols()) {
+            for (I callSym : alphabet.getCallAlphabet()) {
                 for (Location stackLoc : result.getLocations()) {
                     int stackSym = result.encodeStackSym(stackLoc, callSym);
-                    for (I retSym : alphabet.getReturnSymbols()) {
+                    for (I retSym : alphabet.getReturnAlphabet()) {
                         if (result.getReturnSuccessor(loc, retSym, stackSym) == null) {
                             final Location tgtLoc = result.getLocation(r.nextInt(result.size()));
                             result.setReturnSuccessor(loc, retSym, stackSym, tgtLoc);

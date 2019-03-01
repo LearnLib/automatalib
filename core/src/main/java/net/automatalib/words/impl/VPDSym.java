@@ -35,7 +35,7 @@ public final class VPDSym<T> implements Serializable {
     private final T userObject;
     private final int localIndex, globalIndex;
 
-    public VPDSym(final T userObject, final VPDAlphabet.SymbolType type, final int localIndex, final int globalIndex) {
+    VPDSym(final T userObject, final VPDAlphabet.SymbolType type, final int localIndex, final int globalIndex) {
         this.userObject = userObject;
         this.type = type;
         this.localIndex = localIndex;

@@ -17,9 +17,7 @@ package net.automatalib.automata.words.basic;
 
 import java.util.List;
 
-import net.automatalib.automata.words.util.DefaultVPDAlphabetTestUtil;
 import net.automatalib.automata.words.util.GrowingVPDAlphabetTestUtil;
-import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.impl.GrowingVPDAlphabet;
 import net.automatalib.words.impl.VPDSym;
 
@@ -40,13 +38,6 @@ public class GrowingVPDAlphabetTest extends AbstractAlphabetTest<VPDSym<Characte
 
     @Override
     protected GrowingVPDAlphabet<Character> getAlphabet() {
-        final GrowingVPDAlphabet<Character> result = new GrowingVPDAlphabet<>();
-
-        DefaultVPDAlphabetTestUtil.INTERNAL_SYMBOLS.forEach(s -> result.addNewSymbol(s,
-                                                                                     VPDAlphabet.SymbolType.INTERNAL));
-        DefaultVPDAlphabetTestUtil.CALL_SYMBOLS.forEach(s -> result.addNewSymbol(s, VPDAlphabet.SymbolType.CALL));
-        DefaultVPDAlphabetTestUtil.RETURN_SYMBOLS.forEach(s -> result.addNewSymbol(s, VPDAlphabet.SymbolType.RETURN));
-
-        return result;
+        return GrowingVPDAlphabetTestUtil.ALPHABET;
     }
 }

@@ -16,9 +16,13 @@
 package net.automatalib.words.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.VPDAlphabet;
+import net.automatalib.words.abstractimpl.AbstractAlphabet;
 import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
 
 /**
@@ -30,103 +34,23 @@ import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
  *
  * @author Malte Isberner
  */
-public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
+public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> implements VPDAlphabet<VPDSym<I>> {
 
-    private final List<VPDSym<I>> allSyms = new ArrayList<>();
-    private final List<VPDSym<I>> callSyms = new ArrayList<>();
-    private final List<VPDSym<I>> returnSyms = new ArrayList<>();
-    private final List<VPDSym<I>> internalSyms = new ArrayList<>();
+    private final List<VPDSym<I>> allSyms;
+    private final List<VPDSym<I>> callSyms;
+    private final List<VPDSym<I>> internalSyms;
+    private final List<VPDSym<I>> returnSyms;
 
-    @Override
-    public VPDSym<I> getSymbol(final int index) throws IllegalArgumentException {
-        return allSyms.get(index);
+    public GrowingVPDAlphabet() {
+        this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
-    @Override
-    public int getSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
-        if (!hasValidIndex(symbol, allSyms)) {
-            throw new IllegalArgumentException();
-        }
-        return symbol.getGlobalIndex();
-    }
-
-    @Override
-    public VPDSym<I> getCallSymbol(final int index) throws IllegalArgumentException {
-        return callSyms.get(index);
-    }
-
-    @Override
-    public int getCallSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
-        if (symbol.getType() != SymbolType.CALL || !hasValidIndex(symbol, callSyms)) {
-            throw new IllegalArgumentException();
-        }
-        return symbol.getLocalIndex();
-    }
-
-    @Override
-    public Collection<VPDSym<I>> getCallSymbols() {
-        return callSyms;
-    }
-
-    @Override
-    public VPDSym<I> getInternalSymbol(final int index) throws IllegalArgumentException {
-        return internalSyms.get(index);
-    }
-
-    @Override
-    public int getInternalSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
-        if (symbol.getType() != SymbolType.INTERNAL || !hasValidIndex(symbol, internalSyms)) {
-            throw new IllegalArgumentException();
-        }
-        return symbol.getLocalIndex();
-    }
-
-    @Override
-    public Collection<VPDSym<I>> getInternalSymbols() {
-        return internalSyms;
-    }
-
-    @Override
-    public VPDSym<I> getReturnSymbol(final int index) throws IllegalArgumentException {
-        return returnSyms.get(index);
-    }
-
-    @Override
-    public int getReturnSymbolIndex(final VPDSym<I> symbol) throws IllegalArgumentException {
-        if (symbol.getType() != SymbolType.RETURN || !hasValidIndex(symbol, returnSyms)) {
-            throw new IllegalArgumentException();
-        }
-        return symbol.getLocalIndex();
-    }
-
-    @Override
-    public Collection<VPDSym<I>> getReturnSymbols() {
-        return returnSyms;
-    }
-
-    @Override
-    public int getNumCalls() {
-        return callSyms.size();
-    }
-
-    @Override
-    public int getNumInternals() {
-        return internalSyms.size();
-    }
-
-    @Override
-    public int getNumReturns() {
-        return returnSyms.size();
-    }
-
-    @Override
-    public SymbolType getSymbolType(final VPDSym<I> symbol) {
-        return symbol.getType();
-    }
-
-    @Override
-    public int size() {
-        return allSyms.size();
+    private GrowingVPDAlphabet(List<VPDSym<I>> internalSyms, List<VPDSym<I>> callSyms, List<VPDSym<I>> returnSyms) {
+        super(new AlphabetView<>(internalSyms), new AlphabetView<>(callSyms), new AlphabetView<>(returnSyms));
+        this.internalSyms = internalSyms;
+        this.callSyms = callSyms;
+        this.returnSyms = returnSyms;
+        this.allSyms = new ArrayList<>();
     }
 
     public VPDSym<I> addNewSymbol(final I userObject, final SymbolType type) {
@@ -150,12 +74,69 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> {
         return vpdSym;
     }
 
-    private boolean hasValidIndex(VPDSym<I> symbol, List<VPDSym<I>> localSymbols) {
-        final int localIdx = symbol.getLocalIndex();
-        final int globalIdx = symbol.getGlobalIndex();
-
-        return localIdx >= 0 && localIdx < localSymbols.size() && globalIdx >= 0 && globalIdx < allSyms.size();
-
+    @Override
+    public SymbolType getSymbolType(VPDSym<I> symbol) {
+        return symbol.getType();
     }
 
+    @Override
+    public int size() {
+        return allSyms.size();
+    }
+
+    @Nullable
+    @Override
+    public VPDSym<I> getSymbol(int index) throws IllegalArgumentException {
+        return allSyms.get(index);
+    }
+
+    @Override
+    public int getSymbolIndex(@Nullable VPDSym<I> symbol) throws IllegalArgumentException {
+        if (symbol == null || !containsSymbol(symbol)) {
+            throw new IllegalArgumentException();
+        }
+
+        return symbol.getGlobalIndex();
+    }
+
+    @Override
+    public boolean containsSymbol(VPDSym<I> symbol) {
+        final int idx = symbol.getGlobalIndex();
+        return idx < allSyms.size() && allSyms.get(idx) == symbol;
+    }
+
+    private static class AlphabetView<I> extends AbstractAlphabet<VPDSym<I>> implements Alphabet<VPDSym<I>> {
+
+        private final List<VPDSym<I>> list;
+
+        AlphabetView(List<VPDSym<I>> list) {
+            this.list = list;
+        }
+
+        @Nullable
+        @Override
+        public VPDSym<I> getSymbol(int index) throws IllegalArgumentException {
+            return list.get(index);
+        }
+
+        @Override
+        public int getSymbolIndex(@Nullable VPDSym<I> symbol) throws IllegalArgumentException {
+            if (symbol == null || !containsSymbol(symbol)) {
+                throw new IllegalArgumentException();
+            }
+
+            return symbol.getLocalIndex();
+        }
+
+        @Override
+        public boolean containsSymbol(VPDSym<I> symbol) {
+            final int idx = symbol.getLocalIndex();
+            return idx < list.size() && list.get(idx) == symbol;
+        }
+
+        @Override
+        public int size() {
+            return list.size();
+        }
+    }
 }

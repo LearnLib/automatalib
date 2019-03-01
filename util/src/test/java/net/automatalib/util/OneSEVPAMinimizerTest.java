@@ -15,7 +15,6 @@
  */
 package net.automatalib.util;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -27,6 +26,7 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.util.automata.vpda.OneSEVPAs;
 import net.automatalib.words.VPDAlphabet;
+import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultVPDAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -39,9 +39,9 @@ public class OneSEVPAMinimizerTest {
     @Test
     public void testMinimization() {
 
-        final VPDAlphabet<Character> alphabet = new DefaultVPDAlphabet<>(Arrays.asList('1', '2', '3'),
-                                                                         Arrays.asList('a', 'b', 'c'),
-                                                                         Arrays.asList('r', 's', 't'));
+        final VPDAlphabet<Character> alphabet = new DefaultVPDAlphabet<>(Alphabets.characters('1', '3'),
+                                                                         Alphabets.characters('a', 'c'),
+                                                                         Alphabets.characters('r', 't'));
         final int size = 10;
         final double accProb = 0.5;
         final double initRetProb = 0.1;
@@ -78,7 +78,7 @@ public class OneSEVPAMinimizerTest {
 
         outer:
         for (final Location l : automaton.getLocations()) {
-            for (final I i : alphabet.getInternalSymbols()) {
+            for (final I i : alphabet.getInternalAlphabet()) {
                 final Location succ = automaton.getInternalSuccessor(l, i);
                 if (!locationCache.add(succ)) {
                     incomingLoc = l;
@@ -97,12 +97,12 @@ public class OneSEVPAMinimizerTest {
         final Location locCopy = automaton.addLocation(automaton.isAcceptingLocation(locToCopy));
 
         // make return transitions of old states behave identical for the new stack symbol
-        for (final I callSym : alphabet.getCallSymbols()) {
+        for (final I callSym : alphabet.getCallAlphabet()) {
             final int oldStackSym = automaton.encodeStackSym(locToCopy, callSym);
             final int newStackSym = automaton.encodeStackSym(locCopy, callSym);
 
             for (final Location l : oldStates) {
-                for (final I retSym : alphabet.getReturnSymbols()) {
+                for (final I retSym : alphabet.getReturnAlphabet()) {
                     final Location oldReturn = automaton.getReturnSuccessor(l, retSym, oldStackSym);
                     automaton.setReturnSuccessor(l, retSym, newStackSym, oldReturn);
                 }
@@ -110,13 +110,13 @@ public class OneSEVPAMinimizerTest {
         }
 
         // make internal transitions of new state behave identical to the state to copy
-        for (final I i : alphabet.getInternalSymbols()) {
+        for (final I i : alphabet.getInternalAlphabet()) {
             final Location target = automaton.getInternalSuccessor(locToCopy, i);
             automaton.setInternalSuccessor(locCopy, i, target);
         }
 
         // make return transitions of new state behave identical to the state to copy
-        for (final I i : alphabet.getReturnSymbols()) {
+        for (final I i : alphabet.getReturnAlphabet()) {
             for (int stackSym = 0; stackSym < automaton.getNumStackSymbols(); stackSym++) {
                 final Location target = automaton.getReturnSuccessor(locToCopy, i, stackSym);
                 automaton.setReturnSuccessor(locCopy, i, stackSym, target);

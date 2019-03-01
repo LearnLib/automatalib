@@ -15,6 +15,12 @@
  */
 package net.automatalib.words.abstractimpl;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
 
@@ -25,82 +31,164 @@ import net.automatalib.words.VPDAlphabet;
  */
 public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> implements VPDAlphabet<I> {
 
+    private final Alphabet<I> internalAlphabet;
+    private final Alphabet<I> callAlphabet;
+    private final Alphabet<I> returnAlphabet;
+
+    public AbstractVPDAlphabet(Alphabet<I> internalAlphabet, Alphabet<I> callAlphabet, Alphabet<I> returnAlphabet) {
+        validateDisjointness(internalAlphabet, SymbolType.INTERNAL, callAlphabet, returnAlphabet);
+        validateDisjointness(callAlphabet, SymbolType.CALL, returnAlphabet);
+
+        this.internalAlphabet = internalAlphabet;
+        this.callAlphabet = callAlphabet;
+        this.returnAlphabet = returnAlphabet;
+    }
+
     @Override
     public Alphabet<I> getCallAlphabet() {
-        return new AbstractAlphabet<I>() {
+        return callAlphabet;
+    }
 
-            @Override
-            public I getSymbol(final int index) throws IllegalArgumentException {
-                return getCallSymbol(index);
-            }
+    @Override
+    public I getCallSymbol(int index) throws IllegalArgumentException {
+        return callAlphabet.getSymbol(index);
+    }
 
-            @Override
-            public int size() {
-                return getNumCalls();
-            }
+    @Override
+    public int getCallSymbolIndex(I symbol) throws IllegalArgumentException {
+        return callAlphabet.getSymbolIndex(symbol);
+    }
 
-            @Override
-            public int getSymbolIndex(final I symbol) throws IllegalArgumentException {
-                return getCallSymbolIndex(symbol);
-            }
-
-            @Override
-            public boolean containsSymbol(I symbol) {
-                return getCallSymbols().contains(symbol);
-            }
-        };
+    @Override
+    public int getNumCalls() {
+        return callAlphabet.size();
     }
 
     @Override
     public Alphabet<I> getInternalAlphabet() {
-        return new AbstractAlphabet<I>() {
+        return internalAlphabet;
+    }
 
-            @Override
-            public I getSymbol(final int index) throws IllegalArgumentException {
-                return getInternalSymbol(index);
-            }
+    @Override
+    public I getInternalSymbol(int index) throws IllegalArgumentException {
+        return internalAlphabet.getSymbol(index);
+    }
 
-            @Override
-            public int getSymbolIndex(final I symbol) throws IllegalArgumentException {
-                return getInternalSymbolIndex(symbol);
-            }
+    @Override
+    public int getInternalSymbolIndex(I symbol) throws IllegalArgumentException {
+        return internalAlphabet.getSymbolIndex(symbol);
+    }
 
-            @Override
-            public int size() {
-                return getNumInternals();
-            }
-
-            @Override
-            public boolean containsSymbol(I symbol) {
-                return getInternalSymbols().contains(symbol);
-            }
-        };
+    @Override
+    public int getNumInternals() {
+        return internalAlphabet.size();
     }
 
     @Override
     public Alphabet<I> getReturnAlphabet() {
-        return new AbstractAlphabet<I>() {
-
-            @Override
-            public I getSymbol(final int index) throws IllegalArgumentException {
-                return getReturnSymbol(index);
-            }
-
-            @Override
-            public int getSymbolIndex(final I symbol) throws IllegalArgumentException {
-                return getReturnSymbolIndex(symbol);
-            }
-
-            @Override
-            public int size() {
-                return getNumReturns();
-            }
-
-            @Override
-            public boolean containsSymbol(I symbol) {
-                return getReturnSymbols().contains(symbol);
-            }
-        };
+        return returnAlphabet;
     }
 
+    @Override
+    public I getReturnSymbol(int index) throws IllegalArgumentException {
+        return returnAlphabet.getSymbol(index);
+    }
+
+    @Override
+    public int getReturnSymbolIndex(I symbol) throws IllegalArgumentException {
+        return returnAlphabet.getSymbolIndex(symbol);
+    }
+
+    @Override
+    public int getNumReturns() {
+        return returnAlphabet.size();
+    }
+
+    @Override
+    public SymbolType getSymbolType(I symbol) {
+        if (internalAlphabet.containsSymbol(symbol)) {
+            return SymbolType.INTERNAL;
+        } else if (callAlphabet.containsSymbol(symbol)) {
+            return SymbolType.CALL;
+        } else if (returnAlphabet.containsSymbol(symbol)) {
+            return SymbolType.RETURN;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public int size() {
+        return internalAlphabet.size() + callAlphabet.size() + returnAlphabet.size();
+    }
+
+    @Nullable
+    @Override
+    public I getSymbol(int index) throws IllegalArgumentException {
+        int localIndex = index;
+
+        if (localIndex < internalAlphabet.size()) {
+            return internalAlphabet.getSymbol(localIndex);
+        } else {
+            localIndex -= internalAlphabet.size();
+        }
+
+        if (localIndex < callAlphabet.size()) {
+            return callAlphabet.getSymbol(localIndex);
+        } else {
+            localIndex -= callAlphabet.size();
+        }
+
+        if (localIndex < returnAlphabet.size()) {
+            return returnAlphabet.getSymbol(localIndex);
+        } else {
+            throw new IllegalArgumentException("Index not within its expected bounds");
+        }
+    }
+
+    @Override
+    public int getSymbolIndex(@Nullable I symbol) throws IllegalArgumentException {
+        int offset = 0;
+
+        if (internalAlphabet.containsSymbol(symbol)) {
+            return internalAlphabet.getSymbolIndex(symbol);
+        } else {
+            offset += internalAlphabet.size();
+        }
+
+        if (callAlphabet.containsSymbol(symbol)) {
+            return offset + callAlphabet.getSymbolIndex(symbol);
+        } else {
+            offset += callAlphabet.size();
+        }
+
+        if (returnAlphabet.containsSymbol(symbol)) {
+            return offset + returnAlphabet.getSymbolIndex(symbol);
+        } else {
+            throw new IllegalArgumentException("Alphabet does not contain the queried symbol");
+        }
+    }
+
+    @Override
+    public boolean containsSymbol(I symbol) {
+        return internalAlphabet.containsSymbol(symbol) || callAlphabet.containsSymbol(symbol) ||
+               returnAlphabet.containsSymbol(symbol);
+    }
+
+    @SafeVarargs
+    private static <I> void validateDisjointness(Collection<I> source,
+                                                 VPDAlphabet.SymbolType type,
+                                                 Collection<I>... rest) {
+        final Set<I> sourceAsSet = new HashSet<>(source);
+        final int initialSize = sourceAsSet.size();
+
+        for (Collection<I> c : rest) {
+            sourceAsSet.removeAll(c);
+        }
+
+        if (sourceAsSet.size() < initialSize) {
+            throw new IllegalArgumentException(
+                    "The set of " + type + " symbols is not disjoint with the sets of other symbols.");
+        }
+    }
 }

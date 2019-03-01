@@ -15,8 +15,6 @@
  */
 package net.automatalib.words;
 
-import java.util.Collection;
-
 /**
  * Alphabet definition for visible push-down automata. Partitions the overall input alphabet into call-, internal-, and
  * return symbols.
@@ -40,7 +38,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
      */
     int getCallSymbolIndex(I symbol) throws IllegalArgumentException;
 
-    Collection<I> getCallSymbols();
+    int getNumCalls();
 
     Alphabet<I> getInternalAlphabet();
 
@@ -54,7 +52,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
      */
     int getInternalSymbolIndex(I symbol) throws IllegalArgumentException;
 
-    Collection<I> getInternalSymbols();
+    int getNumInternals();
 
     Alphabet<I> getReturnAlphabet();
 
@@ -68,13 +66,9 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
      */
     int getReturnSymbolIndex(I symbol) throws IllegalArgumentException;
 
-    Collection<I> getReturnSymbols();
-
-    int getNumCalls();
-
-    int getNumInternals();
-
     int getNumReturns();
+
+    SymbolType getSymbolType(I symbol);
 
     default int callReturnBalance(Word<I> word) {
         int crb = 0;
@@ -91,8 +85,6 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
         }
         return crb;
     }
-
-    SymbolType getSymbolType(I symbol);
 
     default boolean isCallMatched(Word<I> word) {
         int crb = 0;
