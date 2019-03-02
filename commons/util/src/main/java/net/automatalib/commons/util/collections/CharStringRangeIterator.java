@@ -17,7 +17,7 @@ package net.automatalib.commons.util.collections;
 
 import java.util.ListIterator;
 
-public class CharStringRangeIterator implements ListIterator<String> {
+public final class CharStringRangeIterator implements ListIterator<String> {
 
     private final IntRangeIterator delegate;
 
@@ -40,7 +40,7 @@ public class CharStringRangeIterator implements ListIterator<String> {
 
     @Override
     public String next() {
-        return String.valueOf((char) delegate.intNext());
+        return String.valueOf((char) delegate.nextInt());
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CharStringRangeIterator implements ListIterator<String> {
 
     @Override
     public String previous() {
-        return String.valueOf((char) delegate.intPrevious());
+        return String.valueOf((char) delegate.previousInt());
     }
 
     @Override

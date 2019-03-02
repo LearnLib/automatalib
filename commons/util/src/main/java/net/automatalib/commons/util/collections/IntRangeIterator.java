@@ -17,8 +17,9 @@ package net.automatalib.commons.util.collections;
 
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.PrimitiveIterator;
 
-public class IntRangeIterator implements ListIterator<Integer> {
+public final class IntRangeIterator implements ListIterator<Integer>, PrimitiveIterator.OfInt {
 
     private final int low;
     private final int step;
@@ -36,11 +37,7 @@ public class IntRangeIterator implements ListIterator<Integer> {
         this.curr = startIdx;
     }
 
-    public final Integer value(int idx) {
-        return Integer.valueOf(intValue(idx));
-    }
-
-    public final int intValue(int idx) {
+    private int intValue(int idx) {
         return low + step * idx;
     }
 
@@ -49,7 +46,8 @@ public class IntRangeIterator implements ListIterator<Integer> {
         return curr < size;
     }
 
-    public int intNext() {
+    @Override
+    public int nextInt() {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
@@ -58,7 +56,7 @@ public class IntRangeIterator implements ListIterator<Integer> {
 
     @Override
     public Integer next() {
-        return Integer.valueOf(intNext());
+        return PrimitiveIterator.OfInt.super.next();
     }
 
     @Override
@@ -68,10 +66,10 @@ public class IntRangeIterator implements ListIterator<Integer> {
 
     @Override
     public Integer previous() {
-        return Integer.valueOf(intPrevious());
+        return previousInt();
     }
 
-    public int intPrevious() {
+    public int previousInt() {
         if (!hasPrevious()) {
             throw new NoSuchElementException();
         }
@@ -80,18 +78,12 @@ public class IntRangeIterator implements ListIterator<Integer> {
 
     @Override
     public int nextIndex() {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
-        }
-        return curr;
+        return hasNext() ? curr : size;
     }
 
     @Override
     public int previousIndex() {
-        if (!hasPrevious()) {
-            throw new NoSuchElementException();
-        }
-        return curr - 1;
+        return hasPrevious() ? curr - 1 : -1;
     }
 
     @Override
