@@ -36,7 +36,7 @@ import java.text.MessageFormat;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import net.automatalib.commons.util.strings.StringUtil;
 
 class InternalTAFParser {
@@ -156,7 +156,7 @@ Alphabet<String> charStringRange():
 
 Alphabet<String> stringSet():
 {
-	Alphabet<String> result = new SimpleAlphabet<String>();
+	Alphabet<String> result = new GrowingMapAlphabet<String>();
 	String s;
 }
 {

@@ -35,7 +35,7 @@ import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -45,8 +45,8 @@ import org.testng.annotations.Test;
 public class GrowingAlphabetAutomatonTest {
 
     private static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 2);
-    private static final Alphabet<Integer> GROWING_ALPHABET = new SimpleAlphabet<>(Arrays.asList(1, 2));
-    private static final Alphabet<Integer> EMPTY_GROWING_ALPHABET = new SimpleAlphabet<>();
+    private static final Alphabet<Integer> GROWING_ALPHABET = new GrowingMapAlphabet<>(Alphabets.integers(1, 2));
+    private static final Alphabet<Integer> EMPTY_GROWING_ALPHABET = new GrowingMapAlphabet<>();
 
     private static final Word<Integer> A1 = Word.epsilon();
     private static final Word<Integer> A2 = Word.fromSymbols(1);

@@ -15,33 +15,28 @@
  */
 package net.automatalib.automata.words.growing;
 
-import java.util.Arrays;
 import java.util.List;
 
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.automata.words.util.AlphabetTestUtil;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 
 /**
  * @author frohme
  */
-public class SimpleAlphabetTest extends AbstractGrowingAlphabetTest<Integer, SimpleAlphabet<Integer>> {
-
-    private static final List<Integer> INITIAL_SYMBOLS = Arrays.asList(1, 2, 3, 4, 5);
-    private static final List<Integer> ADDITIONAL_SYMBOLS = Arrays.asList(-1, 13, 42);
+public class GrowingMapAlphabetTest extends AbstractGrowingAlphabetTest<Integer, GrowingMapAlphabet<Integer>> {
 
     @Override
     protected List<Integer> getInitialAlphabetSymbols() {
-        return INITIAL_SYMBOLS;
+        return AlphabetTestUtil.CONTAINED_SYMBOLS_LIST;
     }
 
     @Override
     protected List<Integer> getAdditionalAlphabetSymbols() {
-        return ADDITIONAL_SYMBOLS;
+        return AlphabetTestUtil.NON_CONTAINED_SYMBOLS_LIST;
     }
 
     @Override
-    protected SimpleAlphabet<Integer> getInitialAlphabet() {
-        final SimpleAlphabet<Integer> result = new SimpleAlphabet<>();
-        result.addAll(INITIAL_SYMBOLS);
-        return result;
+    protected GrowingMapAlphabet<Integer> getInitialAlphabet() {
+        return new GrowingMapAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_LIST);
     }
 }

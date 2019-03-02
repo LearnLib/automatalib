@@ -18,12 +18,12 @@ package net.automatalib.automata.words.basic;
 import java.util.List;
 
 import net.automatalib.automata.words.util.AlphabetTestUtil;
-import net.automatalib.words.impl.ArrayAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 
 /**
  * @author frohme
  */
-public class ArrayAlphabetTest extends AbstractAlphabetTest<Integer, ArrayAlphabet<Integer>> {
+public class GrowingMapAlphabetTest extends AbstractAlphabetTest<Integer, GrowingMapAlphabet<Integer>> {
 
     @Override
     protected List<Integer> getAlphabetSymbols() {
@@ -36,7 +36,7 @@ public class ArrayAlphabetTest extends AbstractAlphabetTest<Integer, ArrayAlphab
     }
 
     @Override
-    protected ArrayAlphabet<Integer> getAlphabet() {
-        return new ArrayAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_ARR);
+    protected GrowingMapAlphabet<Integer> getAlphabet() {
+        return new GrowingMapAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_LIST);
     }
 }

@@ -21,7 +21,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -173,7 +173,7 @@ public abstract class AbstractIncrementalDFABuilderTest {
 
     @Test(dependsOnMethods = "testLookup")
     public void testNewInputSymbol() {
-        final GrowingAlphabet<Character> alphabet = new SimpleAlphabet<>(TEST_ALPHABET);
+        final GrowingAlphabet<Character> alphabet = new GrowingMapAlphabet<>(TEST_ALPHABET);
         final IncrementalDFABuilder<Character> growableBuilder = createIncrementalDFABuilder(alphabet);
 
         growableBuilder.addAlphabetSymbol('d');

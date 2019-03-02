@@ -24,7 +24,7 @@ import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -188,7 +188,7 @@ public abstract class AbstractIncrementalMealyBuilderTest {
 
     @Test(dependsOnMethods = "testLookup")
     public void testNewInputSymbol() {
-        final GrowingAlphabet<Character> alphabet = new SimpleAlphabet<>(TEST_ALPHABET);
+        final GrowingAlphabet<Character> alphabet = new GrowingMapAlphabet<>(TEST_ALPHABET);
         final IncrementalMealyBuilder<Character, Character> growableBuilder = createIncrementalMealyBuilder(alphabet);
 
         growableBuilder.addAlphabetSymbol('d');

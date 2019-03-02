@@ -36,9 +36,7 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPD
     public DefaultVPDAlphabet(final Collection<I> internalSymbols,
                               final Collection<I> callSymbols,
                               final Collection<I> returnSymbols) {
-        this(new SimpleAlphabet<>(internalSymbols),
-             new SimpleAlphabet<>(callSymbols),
-             new SimpleAlphabet<>(returnSymbols));
+        this(new MapAlphabet<>(internalSymbols), new MapAlphabet<>(callSymbols), new MapAlphabet<>(returnSymbols));
     }
 
     public DefaultVPDAlphabet(final Alphabet<I> internalAlphabet,

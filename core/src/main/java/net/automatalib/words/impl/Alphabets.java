@@ -71,7 +71,7 @@ public final class Alphabets {
         if (coll instanceof Alphabet) {
             return (Alphabet<I>) coll;
         }
-        return new SimpleAlphabet<>(coll);
+        return new MapAlphabet<>(coll);
     }
 
     /**

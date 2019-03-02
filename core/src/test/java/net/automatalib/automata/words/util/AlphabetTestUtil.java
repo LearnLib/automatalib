@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.words.basic;
+package net.automatalib.automata.words.util;
 
 import java.util.List;
 
-import net.automatalib.automata.words.util.AlphabetTestUtil;
-import net.automatalib.words.impl.ArrayAlphabet;
+import com.google.common.collect.Lists;
 
 /**
+ * Utilities for regular {@link net.automatalib.words.Alphabet} tests.
+ *
  * @author frohme
  */
-public class ArrayAlphabetTest extends AbstractAlphabetTest<Integer, ArrayAlphabet<Integer>> {
+public final class AlphabetTestUtil {
 
-    @Override
-    protected List<Integer> getAlphabetSymbols() {
-        return AlphabetTestUtil.CONTAINED_SYMBOLS_LIST;
-    }
+    public static final Integer[] CONTAINED_SYMBOLS_ARR = new Integer[] {1, 2, 3, 4, 5};
+    public static final Integer[] NON_CONTAINED_SYMBOLS_ARR = new Integer[] {-1, 13, 42};
+    public static final List<Integer> CONTAINED_SYMBOLS_LIST = Lists.newArrayList(CONTAINED_SYMBOLS_ARR);
+    public static final List<Integer> NON_CONTAINED_SYMBOLS_LIST = Lists.newArrayList(NON_CONTAINED_SYMBOLS_ARR);
 
-    @Override
-    protected List<Integer> getNonAlphabetSymbols() {
-        return AlphabetTestUtil.NON_CONTAINED_SYMBOLS_LIST;
-    }
-
-    @Override
-    protected ArrayAlphabet<Integer> getAlphabet() {
-        return new ArrayAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_ARR);
+    private AlphabetTestUtil() {
+        // prevent instantiation
     }
 }

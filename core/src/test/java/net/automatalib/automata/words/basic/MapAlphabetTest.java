@@ -15,31 +15,25 @@
  */
 package net.automatalib.automata.words.basic;
 
-import java.util.Arrays;
 import java.util.List;
 
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.automata.words.util.AlphabetTestUtil;
+import net.automatalib.words.impl.MapAlphabet;
 
-/**
- * @author frohme
- */
-public class SimpleAlphabetTest extends AbstractAlphabetTest<Integer, SimpleAlphabet<Integer>> {
-
-    private static final List<Integer> CONTAINED_SYMBOLS = Arrays.asList(1, 2, 3, 4, 5);
-    private static final List<Integer> NON_CONTAINED_SYMBOLS = Arrays.asList(-1, 13, 42);
+public class MapAlphabetTest extends AbstractAlphabetTest<Integer, MapAlphabet<Integer>> {
 
     @Override
     protected List<Integer> getAlphabetSymbols() {
-        return CONTAINED_SYMBOLS;
+        return AlphabetTestUtil.CONTAINED_SYMBOLS_LIST;
     }
 
     @Override
     protected List<Integer> getNonAlphabetSymbols() {
-        return NON_CONTAINED_SYMBOLS;
+        return AlphabetTestUtil.NON_CONTAINED_SYMBOLS_LIST;
     }
 
     @Override
-    protected SimpleAlphabet<Integer> getAlphabet() {
-        return new SimpleAlphabet<>(CONTAINED_SYMBOLS);
+    protected MapAlphabet<Integer> getAlphabet() {
+        return new MapAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_LIST);
     }
 }

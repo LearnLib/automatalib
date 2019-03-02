@@ -17,38 +17,35 @@ package net.automatalib.words.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.Maps;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
 /**
- * A simple alphabet implementation, that does not impose any restriction on the input symbol class. However, the id
- * lookup for a symbol might be slightly slower.
+ * A map-based alphabet implementation, that does not impose any restriction on the input symbol class. This
+ * implementation stores the alphabet symbols in a {@link List} for fast idx -> symbol look up as well as a {@link Map}
+ * for fast symbol -> idx look ups.
  *
  * @param <I>
  *         input symbol type
  *
  * @author Malte Isberner
  */
-public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlphabet<I> {
+public class MapAlphabet<I> extends AbstractAlphabet<I> {
 
     @Nonnull
-    private final List<I> symbols;
+    protected final List<I> symbols;
 
     @Nonnull
     //private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>(10, 0.75f, -1);
-    private final Map<I, Integer> indexMap; // TODO: replace by primitive specialization
+    protected final Map<I, Integer> indexMap; // TODO: replace by primitive specialization
 
-    public SimpleAlphabet() {
-        this(new ArrayList<>());
-    }
-
-    public SimpleAlphabet(Collection<? extends I> symbols) {
+    public MapAlphabet(Collection<? extends I> symbols) {
         this.symbols = new ArrayList<>(symbols);
         this.indexMap = Maps.newHashMapWithExpectedSize(symbols.size()); // TODO: replace by primitive specialization
         int i = 0;
@@ -57,30 +54,14 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
         }
     }
 
-    @Override
-    public boolean add(I a) {
-        int s = size();
-        int idx = addSymbol(a);
-        return idx == s;
+    MapAlphabet() {
+        this.symbols = new ArrayList<>();
+        this.indexMap = new HashMap<>(); // TODO: replace by primitive specialization
     }
 
     @Override
     public int size() {
         return symbols.size();
-    }
-
-    @Override
-    public int addSymbol(I a) {
-        //int idx = indexMap.get(a);
-        //if(idx != -1)
-        Integer idx = indexMap.get(a); // TODO: replace by primitive specialization
-        if (idx != null) {
-            return idx;
-        }
-        idx = size();
-        symbols.add(a);
-        indexMap.put(a, idx);
-        return idx;
     }
 
     @Override
@@ -102,5 +83,4 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
     public boolean containsSymbol(I symbol) {
         return indexMap.containsKey(symbol);
     }
-
 }

@@ -35,7 +35,7 @@ import net.automatalib.automata.util.TestUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.FastAlphabet;
-import net.automatalib.words.impl.SimpleAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -60,9 +60,10 @@ public class SerializationTest {
                                {Alphabets.characters('a', 'c')},
                                {Alphabets.closedCharStringRange('a', 'c')},
                                {Alphabets.fromEnum(InputEnum.class)},
+                               {Alphabets.fromCollection(TestUtil.ALPHABET)},
                                {Alphabets.singleton("singleton")},
                                {new FastAlphabet<>(TestUtil.IN_A, TestUtil.IN_B)},
-                               {new SimpleAlphabet<>(TestUtil.ALPHABET)},
+                               {new GrowingMapAlphabet<>(TestUtil.ALPHABET)},
                                {Alphabets.fromArray('a', 'b', 'c')}};
     }
 
