@@ -15,11 +15,15 @@
  */
 package net.automatalib.words.impl;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.collect.Iterators;
+import net.automatalib.commons.util.collections.UnmodifiableListIterator;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
 @ParametersAreNonnullByDefault
@@ -52,12 +56,17 @@ public class ListAlphabet<I> extends AbstractAlphabet<I> {
     }
 
     @Override
-    public I get(int index) {
-        return list.get(index);
+    public int size() {
+        return list.size();
     }
 
     @Override
-    public int size() {
-        return list.size();
+    public Iterator<I> iterator() {
+        return Iterators.unmodifiableIterator(list.iterator());
+    }
+
+    @Override
+    public ListIterator<I> listIterator(int index) {
+        return new UnmodifiableListIterator<>(list.listIterator(index));
     }
 }

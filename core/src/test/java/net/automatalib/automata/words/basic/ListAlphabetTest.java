@@ -15,9 +15,9 @@
  */
 package net.automatalib.automata.words.basic;
 
-import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import net.automatalib.words.impl.ListAlphabet;
 
 /**
@@ -25,8 +25,8 @@ import net.automatalib.words.impl.ListAlphabet;
  */
 public class ListAlphabetTest extends AbstractAlphabetTest<Integer, ListAlphabet<Integer>> {
 
-    private static final List<Integer> CONTAINED_SYMBOLS = Arrays.asList(1, 2, 3, 4, 5);
-    private static final List<Integer> NON_CONTAINED_SYMBOLS = Arrays.asList(-1, 13, 42);
+    private static final List<Integer> CONTAINED_SYMBOLS = Lists.newArrayList(1, 2, 3, 4, 5);
+    private static final List<Integer> NON_CONTAINED_SYMBOLS = Lists.newArrayList(-1, 13, 42);
 
     @Override
     protected List<Integer> getAlphabetSymbols() {

@@ -15,7 +15,9 @@
  */
 package net.automatalib.automata.words.basic;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Alphabet;
@@ -121,6 +123,27 @@ public abstract class AbstractAlphabetTest<I, M extends Alphabet<I>> {
             for (int i = 1; i < numOfSyms; i++) {
                 Assert.assertEquals(alphabetSymbols.get(i), target[i]);
             }
+        }
+    }
+
+    @Test
+    public void testImmutableIterator() {
+        final Iterator<I> iter = alphabet.iterator();
+        Assert.assertTrue(iter.hasNext());
+        Assert.assertNotNull(iter.next());
+        Assert.assertThrows(UnsupportedOperationException.class, iter::remove);
+
+        if (alphabet instanceof List) {
+            @SuppressWarnings("unchecked")
+            final List<I> alphabetAsList = (List<I>) alphabet;
+
+            final ListIterator<I> listIter = alphabetAsList.listIterator();
+            Assert.assertTrue(listIter.hasNext());
+            I next = listIter.next();
+            Assert.assertNotNull(next);
+            Assert.assertThrows(UnsupportedOperationException.class, listIter::remove);
+            Assert.assertThrows(UnsupportedOperationException.class, () -> listIter.set(next));
+            Assert.assertThrows(UnsupportedOperationException.class, () -> listIter.add(next));
         }
     }
 }
