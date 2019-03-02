@@ -17,13 +17,11 @@ package net.automatalib.words.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
@@ -67,11 +65,6 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
     }
 
     @Override
-    public Iterator<I> iterator() {
-        return Iterators.unmodifiableIterator(symbols.iterator());
-    }
-
-    @Override
     public int size() {
         return symbols.size();
     }
@@ -88,11 +81,6 @@ public class SimpleAlphabet<I> extends AbstractAlphabet<I> implements GrowingAlp
         symbols.add(a);
         indexMap.put(a, idx);
         return idx;
-    }
-
-    @Override
-    public I get(int index) {
-        return getSymbol(index);
     }
 
     @Override
