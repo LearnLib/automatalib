@@ -28,8 +28,8 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
 /**
  * A map-based alphabet implementation, that does not impose any restriction on the input symbol class. This
- * implementation stores the alphabet symbols in a {@link List} for fast idx to symbol looks up as well as a {@link Map}
- * for fast symbol to idx look ups.
+ * implementation stores the alphabet symbols in a {@link List} for fast idx to symbol look-ups as well as a {@link Map}
+ * for fast symbol to idx look-ups.
  *
  * @param <I>
  *         input symbol type
