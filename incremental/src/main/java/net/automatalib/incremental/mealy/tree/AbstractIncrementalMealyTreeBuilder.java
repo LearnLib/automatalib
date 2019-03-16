@@ -34,8 +34,8 @@ import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.visualization.DelegateVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 

@@ -34,6 +34,11 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.automata.transducers.probabilistic.ProbabilisticOutput;
 import net.automatalib.commons.util.random.RandomUtil;
+import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.ts.modal.ModalContractEdgeProperty.EdgeColor;
+import net.automatalib.ts.modal.ModalContractEdgePropertyImpl;
+import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.MutableModalContractEdgeProperty;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
@@ -44,14 +49,20 @@ import org.testng.annotations.Test;
  */
 public class MutableAutomatonTest {
 
+    static final Random RANDOM = new Random(42);
     private static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 6);
     private static final int SIZE = 10;
     static final List<Boolean> STATE_PROPS = Arrays.asList(false, true);
     static final List<Character> TRANS_PROPS = Arrays.asList('a', 'b', 'c');
     static final List<ProbabilisticOutput<Character>> PROB_TRANS_PROPS =
             TRANS_PROPS.stream().map(p -> new ProbabilisticOutput<>(0.5f, p)).collect(Collectors.toList());
+    static final List<MutableModalContractEdgeProperty> MC_TRANS_PROPS = TRANS_PROPS.stream()
+                                                                                    .map(p -> new ModalContractEdgePropertyImpl(
+                                                                                            ModalType.MUST,
+                                                                                            RANDOM.nextBoolean(),
+                                                                                            EdgeColor.GREEN))
+                                                                                    .collect(Collectors.toList());
     static final List<Void> EMPTY_PROPS = Collections.emptyList();
-    static final Random RANDOM = new Random(42);
 
     @Test
     public void testCompactDFA() {
@@ -98,10 +109,15 @@ public class MutableAutomatonTest {
         this.checkAutomaton(FastMoore::new, ALPHABET, STATE_PROPS, EMPTY_PROPS);
     }
 
+    @Test
+    public void testCompactMTS() {
+        this.checkAutomaton(CompactMTS::new, ALPHABET, EMPTY_PROPS, MC_TRANS_PROPS);
+    }
+
     private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void checkAutomaton(AutomatonCreator<M, I> creator,
                                                                                                Alphabet<I> alphabet,
                                                                                                List<SP> stateProps,
-                                                                                               List<TP> transProps) {
+                                                                                               List<? extends TP> transProps) {
         final M automaton = createAndCheckInitialAutomaton(creator, alphabet);
 
         fillRandomly(automaton, alphabet, stateProps, transProps);
@@ -129,7 +145,7 @@ public class MutableAutomatonTest {
     static <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void fillRandomly(M automaton,
                                                                                             Alphabet<I> alphabet,
                                                                                             List<SP> stateProps,
-                                                                                            List<TP> transProps) {
+                                                                                            List<? extends TP> transProps) {
         final StateIDs<S> stateIDs = automaton.stateIDs();
 
         for (final S s : automaton) {

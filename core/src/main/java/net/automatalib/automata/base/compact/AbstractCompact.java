@@ -215,8 +215,8 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      *
      * @return a copy of the provided array with updated memory layout.
      */
-    protected final Object[] updateStateStorage(Object[] oldStorage, @Nullable Object defaultValue, Payload payload) {
-        final Object[] result = Arrays.copyOf(oldStorage, payload.newSizeHint);
+    protected final <T> T[] updateStateStorage(T[] oldStorage, @Nullable T defaultValue, Payload payload) {
+        final T[] result = Arrays.copyOf(oldStorage, payload.newSizeHint);
         Arrays.fill(result, oldStorage.length, result.length, defaultValue);
         return result;
     }
