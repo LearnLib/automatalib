@@ -170,6 +170,14 @@ public class ModalConjunctionTest {
     }
 
     @Test
+    void errorAlphabet() {
+        CompactMTS<Character> block2 = new CompactMTS<>(Alphabets.characters('a', 'c'));
+        block2.addInitialState();
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> new ModalConjunction<>(block0, block2, CompactMTS::new));
+    }
+
+    @Test
     void sameTarget() {
         block1.addTransition(b1s1, 'b', b1s0, new ModalEdgePropertyImpl(ModalType.MAY));
 

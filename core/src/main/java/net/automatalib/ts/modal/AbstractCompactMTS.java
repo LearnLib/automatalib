@@ -248,37 +248,4 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
 
     protected abstract TP getDefaultTransitionProperty();
 
-    //        @Override
-    //        public CompactNFA<I> asNFA() {
-    //            CompactNFA<I> nfa = new CompactNFA<>(alphabet, size());
-    //
-    //            HashMap<State, Integer> mapping = new HashMap<>(size());
-    //
-    //            for (State state : getStates()) {
-    //                Integer si;
-    //                if (initialStates.contains(state)) {
-    //                    si = nfa.addInitialState(true);
-    //                } else {
-    //                    si = nfa.addState(true);
-    //                }
-    //                mapping.put(state, si);
-    //            }
-    //
-    //            for (Entry<TransitionIndex, Map<State, Transition<I, TP>>> entry : transitions.entrySet()) {
-    //
-    //                for (Entry<State, Transition<I, TP>> current : entry.getValue().entrySet()) {
-    //                    Transition<I, TP> tg = current.getValue();
-    //
-    //                    assert Objects.equals(getState(entry.getKey()), tg.getPredecessor());
-    //                    assert Objects.equals(getLabel(entry.getKey()), tg.getLabel());
-    //                    assert Objects.equals(current.getKey(), tg.getSuccessor());
-    //
-    //                    nfa.addTransition(mapping.get(tg.getPredecessor()), tg.getLabel(), mapping.get(tg.getSuccessor()));
-    //                }
-    //            }
-    //            assert nfa.size() == size();
-    //
-    //            return nfa;
-    //        }
-
 }

@@ -27,9 +27,6 @@ import net.automatalib.ts.modal.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,32 +48,14 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
                      ModalTransitionSystem<S1, I, T1, TP1> mc1,
                      AutomatonCreator<A, I> creator) {
 
-        // TODO: generalize implementation to be able to handle non deterministic MTSs
-        if (mc0.getInitialStates().size() != 1) {
-            throw new IllegalArgumentException(
-                    "conjunction input mts needs to have exactly one initial state, found: " +
-                    mc0.getInitialStates().size());
-        }
-        if (mc1.getInitialStates().size() != 1) {
-            throw new IllegalArgumentException(
-                    "conjunction input mts needs to have exactly one initial state, found: " +
-                    mc1.getInitialStates().size());
+        if (!mc0.getInputAlphabet().equals(mc1.getInputAlphabet())) {
+            throw new IllegalArgumentException("conjunction input mts have to have the same input alphabet");
         }
 
         this.mc0 = mc0;
         this.mc1 = mc1;
 
-        final Alphabet<I> alphabet;
-
-        if (mc0.getInputAlphabet().equals(mc1.getInputAlphabet())) {
-            alphabet = mc0.getInputAlphabet();
-        } else {
-            final GrowingAlphabet<I> growingAlphabet = new GrowingMapAlphabet<>(mc0.getInputAlphabet());
-            growingAlphabet.addAll(mc1.getInputAlphabet());
-            alphabet = growingAlphabet;
-        }
-
-        this.result = creator.createAutomaton(alphabet);
+        this.result = creator.createAutomaton(mc0.getInputAlphabet());
     }
 
     @Override
@@ -86,13 +65,15 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
 
     @Override
     public void initialize(Deque<Pair<S0, S1>> stack, Map<Pair<S0, S1>, S> mapping) {
-        final Pair<S0, S1> init =
-                Pair.of(mc0.getInitialStates().iterator().next(), mc1.getInitialStates().iterator().next());
-        final S newState = result.addInitialState();
+        for (final S0 s0 : mc0.getInitialStates()) {
+            for (final S1 s1 : mc1.getInitialStates()) {
+                final Pair<S0, S1> init = Pair.of(s0, s1);
+                final S newState = result.addInitialState();
 
-        mapping.put(init, newState);
-        LOGGER.debug("new mapping: {} -> {}", init, newState);
-        stack.addLast(init);
+                mapping.put(init, newState);
+                stack.addLast(init);
+            }
+        }
     }
 
     @Override

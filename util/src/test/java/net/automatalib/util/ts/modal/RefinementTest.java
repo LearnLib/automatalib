@@ -24,7 +24,7 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class PartialOrderTest {
+public class RefinementTest {
 
     @Test
     public void refinementOfTest01() {
@@ -49,7 +49,7 @@ public class PartialOrderTest {
         b.addTransition(bs1, "a", bs1, null);
         b.addTransition(bs0, "b", bs0, null);
 
-        Assert.assertTrue(PartialOrder.refinementOf(a, b, alphabet));
+        Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class PartialOrderTest {
         b.addTransition(bs0, "a", bs0, null);
         b.addTransition(bs0, "c", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
 
-        Assert.assertFalse(PartialOrder.refinementOf(a, b, alphabet));
+        Assert.assertFalse(MTSUtil.isRefinementOf(a, b, alphabet));
     }
 
     /*
@@ -95,7 +95,7 @@ public class PartialOrderTest {
 
         b.addTransition(bs0, "a", bs0, null);
 
-        Assert.assertTrue(PartialOrder.refinementOf(a, b, alphabet));
+        Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class PartialOrderTest {
         b.addTransition(bs0, "a", bs0, null);
         b.addTransition(bs0, "b", bs0, null);
 
-        Assert.assertTrue(PartialOrder.refinementRelation(a, b, alphabet).contains(Pair.of(as0, bs0)));
-        Assert.assertTrue(PartialOrder.refinementOf(a, b, alphabet));
+        Assert.assertTrue(MTSUtil.refinementRelation(a, b, alphabet).contains(Pair.of(as0, bs0)));
+        Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
     }
 }

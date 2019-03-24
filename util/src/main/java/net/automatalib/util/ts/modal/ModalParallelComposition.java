@@ -48,24 +48,8 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
     private final A result;
 
     ModalParallelComposition(ModalTransitionSystem<S0, I, T0, TP0> mc0,
-                                    ModalTransitionSystem<S1, I, T1, TP1> mc1,
-                                    AutomatonCreator<A, I> output) {
-
-        // TODO: generalize implementation to be able to handle non deterministic MTSs
-        if (mc0.getInitialStates().size() != 1) {
-            LOGGER.warn("Composition input mts needs to have exactly one initial state, found: {}",
-                        mc0.getInitialStates());
-            throw new IllegalArgumentException(
-                    "composition input mts needs to have exactly one initial state, found: " +
-                    mc0.getInitialStates().size());
-        }
-        if (mc1.getInitialStates().size() != 1) {
-            LOGGER.warn("Composition input mts needs to have exactly one initial state, found: {}",
-                        mc0.getInitialStates());
-            throw new IllegalArgumentException(
-                    "composition input mts needs to have exactly one initial state, found: " +
-                    mc1.getInitialStates().size());
-        }
+                             ModalTransitionSystem<S1, I, T1, TP1> mc1,
+                             AutomatonCreator<A, I> output) {
 
         this.mc0 = mc0;
         this.mc1 = mc1;
@@ -93,13 +77,15 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
 
     @Override
     public void initialize(Deque<Pair<S0, S1>> stack, Map<Pair<S0, S1>, S> mapping) {
-        final Pair<S0, S1> init =
-                Pair.of(mc0.getInitialStates().iterator().next(), mc1.getInitialStates().iterator().next());
-        final S newState = result.addInitialState();
+        for (final S0 s0 : mc0.getInitialStates()) {
+            for (final S1 s1 : mc1.getInitialStates()) {
+                final Pair<S0, S1> init = Pair.of(s0, s1);
+                final S newState = result.addInitialState();
 
-        mapping.put(init, newState);
-        LOGGER.debug("new mapping: {} -> {}", init, newState);
-        stack.addLast(init);
+                mapping.put(init, newState);
+                stack.addLast(init);
+            }
+        }
     }
 
     @Override
