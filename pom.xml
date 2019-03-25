@@ -196,7 +196,7 @@ limitations under the License.
         <buildergen.version>0.1</buildergen.version>
         <brics-automaton.version>1.11-8</brics-automaton.version>
         <cacio.version>1.9</cacio.version>
-        <checkstyle.version>8.14</checkstyle.version>
+        <checkstyle.version>8.18</checkstyle.version>
         <duzzt.version>0.1.0</duzzt.version>
         <findbugs-annotations.version>3.0.2</findbugs-annotations.version>
         <guava.version>27.0-jre</guava.version>
