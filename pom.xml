@@ -165,6 +165,9 @@ limitations under the License.
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
+        <!-- custom properties -->
+        <javadoc-plugin.conf.release>8</javadoc-plugin.conf.release>
+
         <!-- plugin versions -->
         <antrun-plugin.version>1.8</antrun-plugin.version>
         <archetype-plugin.version>3.0.1</archetype-plugin.version>
@@ -644,6 +647,7 @@ limitations under the License.
                     <configuration>
                         <quiet>true</quiet>
                         <source>${maven.compiler.source}</source>
+                        <release>${javadoc-plugin.conf.release}</release>
                         <detectLinks>true</detectLinks>
                         <linksource>false</linksource>
                         <links>
@@ -764,6 +768,7 @@ limitations under the License.
                 <configuration>
                     <quiet>true</quiet>
                     <source>${maven.compiler.source}</source>
+                    <release>${javadoc-plugin.conf.release}</release>
                     <detectLinks>true</detectLinks>
                     <linksource>false</linksource>
                     <links>
