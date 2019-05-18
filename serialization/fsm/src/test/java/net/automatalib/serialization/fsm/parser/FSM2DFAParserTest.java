@@ -79,7 +79,7 @@ public class FSM2DFAParserTest extends AbstractFSM2ParserTest {
 
     @Override
     protected CompactDFA<Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
-            throws IOException, FSMParseException {
+            throws IOException {
         final InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm");
 
         final Function<String, Character> ip = s -> s.charAt(0);

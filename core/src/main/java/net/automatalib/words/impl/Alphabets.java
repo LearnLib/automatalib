@@ -88,8 +88,7 @@ public final class Alphabets {
      * @throws GrowingAlphabetNotSupportedException
      *         if the given alphabet is not an instance of {@link GrowingAlphabet}.
      */
-    public static <I> GrowingAlphabet<I> toGrowingAlphabetOrThrowException(final Alphabet<I> alphabet)
-            throws GrowingAlphabetNotSupportedException {
+    public static <I> GrowingAlphabet<I> toGrowingAlphabetOrThrowException(final Alphabet<I> alphabet) {
         if (alphabet instanceof GrowingAlphabet) {
             return (GrowingAlphabet<I>) alphabet;
         } else {

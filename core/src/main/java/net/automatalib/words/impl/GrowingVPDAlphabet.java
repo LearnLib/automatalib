@@ -86,12 +86,12 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> implem
 
     @Nullable
     @Override
-    public VPDSym<I> getSymbol(int index) throws IllegalArgumentException {
+    public VPDSym<I> getSymbol(int index) {
         return allSyms.get(index);
     }
 
     @Override
-    public int getSymbolIndex(@Nullable VPDSym<I> symbol) throws IllegalArgumentException {
+    public int getSymbolIndex(@Nullable VPDSym<I> symbol) {
         if (symbol == null || !containsSymbol(symbol)) {
             throw new IllegalArgumentException();
         }
@@ -115,12 +115,12 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> implem
 
         @Nullable
         @Override
-        public VPDSym<I> getSymbol(int index) throws IllegalArgumentException {
+        public VPDSym<I> getSymbol(int index) {
             return list.get(index);
         }
 
         @Override
-        public int getSymbolIndex(@Nullable VPDSym<I> symbol) throws IllegalArgumentException {
+        public int getSymbolIndex(@Nullable VPDSym<I> symbol) {
             if (symbol == null || !containsSymbol(symbol)) {
                 throw new IllegalArgumentException();
             }

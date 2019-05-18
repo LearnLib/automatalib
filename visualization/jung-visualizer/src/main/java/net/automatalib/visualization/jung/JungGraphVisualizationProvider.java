@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.JDialog;
@@ -219,7 +220,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
         final List<String> styleList;
         String styleAttr = properties.get(NodeAttrs.STYLE);
         if (styleAttr != null) {
-            styleList = Arrays.asList(styleAttr.toLowerCase().split(","));
+            styleList = Arrays.asList(styleAttr.toLowerCase(Locale.ROOT).split(","));
         } else {
             styleList = Collections.emptyList();
         }

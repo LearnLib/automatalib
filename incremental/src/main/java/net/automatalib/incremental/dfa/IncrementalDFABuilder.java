@@ -60,7 +60,7 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
      * @throws ConflictException
      *         if the newly provided information conflicts with existing information
      */
-    void insert(Word<? extends I> word, boolean accepting) throws ConflictException;
+    void insert(Word<? extends I> word, boolean accepting);
 
     /**
      * Inserts a new word into the automaton. This is a convenience method equivalent to invoking {@code insert(word,
@@ -73,7 +73,7 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
      *         if the newly provided information conflicts with existing information
      * @see #insert(Word, boolean)
      */
-    void insert(Word<? extends I> word) throws ConflictException;
+    void insert(Word<? extends I> word);
 
     @Override
     @Nonnull

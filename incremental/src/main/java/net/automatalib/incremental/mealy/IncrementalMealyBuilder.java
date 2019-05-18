@@ -58,7 +58,7 @@ public interface IncrementalMealyBuilder<I, O>
      * @throws ConflictException
      *         if this information conflicts with information already stored
      */
-    void insert(Word<? extends I> inputWord, Word<? extends O> outputWord) throws ConflictException;
+    void insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
 
     @Override
     GraphView<I, O, ?, ?> asGraph();

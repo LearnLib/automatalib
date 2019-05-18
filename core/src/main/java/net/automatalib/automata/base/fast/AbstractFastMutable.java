@@ -27,7 +27,6 @@ import net.automatalib.automata.concepts.StateLocalInput;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -100,7 +99,7 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
 
         if (!this.inputAlphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);

@@ -32,7 +32,6 @@ import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.concepts.StateLocalInput;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -154,7 +153,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     }
 
     @Override
-    public final void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public final void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);

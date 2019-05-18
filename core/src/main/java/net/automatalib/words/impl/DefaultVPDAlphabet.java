@@ -50,7 +50,7 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPD
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public I getSymbol(int index) throws IllegalArgumentException {
+    public I getSymbol(int index) {
         if (index < globalSymbolCache.length) {
             return (I) globalSymbolCache[index];
         }

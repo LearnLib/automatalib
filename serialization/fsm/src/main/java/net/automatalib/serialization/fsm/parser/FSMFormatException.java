@@ -17,26 +17,26 @@ package net.automatalib.serialization.fsm.parser;
 
 import java.io.StreamTokenizer;
 
-import net.automatalib.serialization.AutomatonSerializationException;
+import net.automatalib.serialization.FormatException;
 
 /**
  * Exception that may be thrown whenever an FSM is illegal.
  *
  * @author Jeroen Meijer
  */
-public class FSMParseException extends AutomatonSerializationException {
+public class FSMFormatException extends FormatException {
 
     public static final String MESSAGE = "Unable to parse FSM: %s at line %d";
 
-    public FSMParseException(String message) {
+    public FSMFormatException(String message) {
         super(message);
     }
 
-    public FSMParseException(final String message, final StreamTokenizer streamTokenizer) {
+    public FSMFormatException(final String message, final StreamTokenizer streamTokenizer) {
         super(String.format(MESSAGE, message, streamTokenizer.lineno()));
     }
 
-    public FSMParseException(Exception e, final StreamTokenizer streamTokenizer) {
+    public FSMFormatException(Exception e, final StreamTokenizer streamTokenizer) {
         super(String.format(MESSAGE, e.getMessage(), streamTokenizer.lineno()));
     }
 }

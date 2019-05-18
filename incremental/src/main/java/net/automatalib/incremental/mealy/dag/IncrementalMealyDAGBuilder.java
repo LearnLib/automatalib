@@ -35,7 +35,6 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.UnionFind;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
@@ -79,7 +78,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         if (!this.inputAlphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
         }

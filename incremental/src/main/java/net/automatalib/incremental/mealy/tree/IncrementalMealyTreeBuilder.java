@@ -22,7 +22,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -39,7 +38,7 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyT
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         if (!inputAlphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(inputAlphabet).addSymbol(symbol);
         }

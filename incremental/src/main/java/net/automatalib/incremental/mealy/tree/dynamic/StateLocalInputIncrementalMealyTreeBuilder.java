@@ -92,8 +92,7 @@ public class StateLocalInputIncrementalMealyTreeBuilder<I, O>
     }
 
     @Override
-    public void insert(Word<? extends I> input, Word<? extends OutputAndLocalInputs<I, O>> outputWord)
-            throws ConflictException {
+    public void insert(Word<? extends I> input, Word<? extends OutputAndLocalInputs<I, O>> outputWord) {
 
         Node<I, OutputAndLocalInputs<I, O>> curr = root;
         final Iterator<? extends OutputAndLocalInputs<I, O>> outputIt = outputWord.iterator();

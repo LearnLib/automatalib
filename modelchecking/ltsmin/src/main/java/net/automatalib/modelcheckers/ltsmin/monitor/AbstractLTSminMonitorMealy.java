@@ -31,7 +31,7 @@ import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminMealy;
 import net.automatalib.modelcheckers.ltsmin.ltl.AbstractLTSminLTL;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
+import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import net.automatalib.words.Word;
 
 /**
@@ -114,8 +114,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
     @Nullable
     @Override
     public MealyMachine<?, I, ?, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
-                                                       Collection<? extends I> inputs, String property)
-            throws ModelCheckingException {
+                                                       Collection<? extends I> inputs, String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
         try {
@@ -170,7 +169,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
                     return result.getStates();
                 }
             };
-        } catch (IOException | FSMParseException e) {
+        } catch (IOException | FSMFormatException e) {
             throw new ModelCheckingException(e);
         }
     }

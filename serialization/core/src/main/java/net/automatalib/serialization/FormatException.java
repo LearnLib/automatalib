@@ -15,22 +15,21 @@
  */
 package net.automatalib.serialization;
 
-public class ParameterMismatchException extends AutomatonSerializationException {
+public class FormatException extends IllegalArgumentException {
 
     private static final long serialVersionUID = 1L;
 
-    public ParameterMismatchException() {
-    }
+    public FormatException() {}
 
-    public ParameterMismatchException(String message, Throwable cause) {
+    public FormatException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ParameterMismatchException(String message) {
+    public FormatException(String message) {
         super(message);
     }
 
-    public ParameterMismatchException(Throwable cause) {
+    public FormatException(Throwable cause) {
         super(cause);
     }
 

@@ -57,7 +57,7 @@ public interface ModelCheckerLasso<I, A, P, R extends Lasso<I, ?>> extends Model
      * @throws IllegalArgumentException
      *         when {@code multiplier < 0.0}.
      */
-    void setMultiplier(double multiplier) throws IllegalArgumentException;
+    void setMultiplier(double multiplier);
 
     /**
      * Returns the minimum number of times a loop must be unrolled.
@@ -75,7 +75,7 @@ public interface ModelCheckerLasso<I, A, P, R extends Lasso<I, ?>> extends Model
      * @throws IllegalArgumentException
      *         when {@code minimumUnfolds < 1}.
      */
-    void setMinimumUnfolds(int minimumUnfolds) throws IllegalArgumentException;
+    void setMinimumUnfolds(int minimumUnfolds);
 
     /**
      * Compute the number of unfolds according to {@code size}.

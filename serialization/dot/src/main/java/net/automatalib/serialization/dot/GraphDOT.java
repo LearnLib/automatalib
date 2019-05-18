@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -320,7 +321,8 @@ public final class GraphDOT {
             a.append(e.getKey()).append("=");
             // HTML labels have to be enclosed in <> instead of ""
             final String htmlTag = "<HTML>";
-            if (key.equals(VisualizationHelper.CommonAttrs.LABEL) && value.toUpperCase().startsWith(htmlTag)) {
+            if (key.equals(VisualizationHelper.CommonAttrs.LABEL) &&
+                value.toUpperCase(Locale.ROOT).startsWith(htmlTag)) {
                 a.append('<').append(value.substring(htmlTag.length())).append('>');
             } else {
                 StringUtil.enquote(e.getValue(), a);

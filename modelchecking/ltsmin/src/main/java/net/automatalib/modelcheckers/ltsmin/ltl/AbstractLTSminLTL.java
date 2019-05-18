@@ -22,7 +22,6 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
-import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelchecking.Lasso;
@@ -50,17 +49,16 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
      * @param multiplier the multiplier.
      * @param minimumUnfolds the minimum number of unfolds.
      *
-     * @see AbstractLTSmin
+     * @see AbstractLTSmin#AbstractLTSmin(boolean, Function)
      */
     protected AbstractLTSminLTL(boolean keepFiles, Function<String, I> string2Input,
-                                int minimumUnfolds, double multiplier) throws ModelCheckingException {
+                                int minimumUnfolds, double multiplier) {
         super(keepFiles, string2Input);
         unfolder = new AbstractUnfoldingModelChecker<I, A, String, L>(minimumUnfolds, multiplier) {
 
             @Nullable
             @Override
-            public L findCounterExample(A automaton, Collection<? extends I> inputs, String property)
-                    throws ModelCheckingException {
+            public L findCounterExample(A automaton, Collection<? extends I> inputs, String property) {
                 return null;
             }
         };
@@ -85,7 +83,7 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
     }
 
     @Override
-    public void setMultiplier(double multiplier) throws IllegalArgumentException {
+    public void setMultiplier(double multiplier) {
         unfolder.setMultiplier(multiplier);
     }
 
@@ -95,7 +93,7 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
     }
 
     @Override
-    public void setMinimumUnfolds(int minimumUnfolds) throws IllegalArgumentException {
+    public void setMinimumUnfolds(int minimumUnfolds) {
         unfolder.setMinimumUnfolds(minimumUnfolds);
     }
 

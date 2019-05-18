@@ -66,7 +66,7 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, 
      * @throws IllegalArgumentException
      *         when {@code minimumUnfolds < 1 || multiplier < 0.0}.
      */
-    protected AbstractUnfoldingModelChecker(int minimumUnfolds, double multiplier) throws IllegalArgumentException {
+    protected AbstractUnfoldingModelChecker(int minimumUnfolds, double multiplier) {
         setMinimumUnfolds(minimumUnfolds);
         setMultiplier(multiplier);
     }
@@ -78,7 +78,7 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, 
     }
 
     @Override
-    public void setMinimumUnfolds(int minimumUnfolds) throws IllegalArgumentException {
+    public void setMinimumUnfolds(int minimumUnfolds) {
         if (minimumUnfolds < 1) {
             throw new IllegalArgumentException("must unfold at least once");
         }
@@ -86,7 +86,7 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, 
     }
 
     @Override
-    public void setMultiplier(double multiplier) throws IllegalArgumentException {
+    public void setMultiplier(double multiplier) {
         if (multiplier < 0.0) {
             throw new IllegalArgumentException("multiplier must be >= 0.0");
         }

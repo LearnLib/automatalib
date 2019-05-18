@@ -30,7 +30,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.Acceptance;
@@ -65,7 +64,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         if (!this.inputAlphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
         }

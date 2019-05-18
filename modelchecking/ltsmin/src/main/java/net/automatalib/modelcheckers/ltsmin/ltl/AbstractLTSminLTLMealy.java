@@ -30,7 +30,7 @@ import net.automatalib.modelcheckers.ltsmin.LTSminMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.modelchecking.lasso.MealyLassoImpl;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
+import net.automatalib.serialization.fsm.parser.FSMFormatException;
 
 /**
  * An LTL model checker using LTSmin for Mealy machines.
@@ -108,8 +108,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
 
     @Nullable
     @Override
-    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, String property)
-            throws ModelCheckingException {
+    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
         final MealyLasso<I, O> result;
@@ -124,7 +123,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
                 if (!isKeepFiles() && !fsm.delete()) {
                     throw new ModelCheckingException("Could not delete file: " + fsm.getAbsolutePath());
                 }
-            } catch (IOException | FSMParseException e) {
+            } catch (IOException | FSMFormatException e) {
                 throw new ModelCheckingException(e);
             }
 

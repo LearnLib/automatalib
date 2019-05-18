@@ -31,7 +31,7 @@ import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
+import net.automatalib.serialization.fsm.parser.FSMFormatException;
 
 /**
  * An LTL model checker using LTSmin for DFAs.
@@ -69,8 +69,7 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
      */
     @Nullable
     @Override
-    public DFALasso<I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, String property)
-            throws ModelCheckingException {
+    public DFALasso<I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
         final DFALasso<I> result;
@@ -85,7 +84,7 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
                 if (!isKeepFiles() && !fsm.delete()) {
                     throw new ModelCheckingException("Could not delete file: " + fsm.getAbsolutePath());
                 }
-            } catch (IOException | FSMParseException e) {
+            } catch (IOException | FSMFormatException e) {
                 throw new ModelCheckingException(e);
             }
 

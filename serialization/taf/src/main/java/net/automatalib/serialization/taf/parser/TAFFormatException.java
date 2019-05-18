@@ -13,25 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.serialization;
+package net.automatalib.serialization.taf.parser;
 
-public class AutomatonSerializationException extends RuntimeException {
+import net.automatalib.serialization.FormatException;
+
+/**
+ * Exception to signal fatal errors during parsing TAF inputs.
+ *
+ * @author Malte Isberner
+ */
+public class TAFFormatException extends FormatException {
 
     private static final long serialVersionUID = 1L;
 
-    public AutomatonSerializationException() {
-    }
-
-    public AutomatonSerializationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public AutomatonSerializationException(String message) {
+    public TAFFormatException(String message) {
         super(message);
     }
 
-    public AutomatonSerializationException(Throwable cause) {
-        super(cause);
+    public TAFFormatException(String message, Throwable cause) {
+        super(message, cause);
     }
 
+    public TAFFormatException(Throwable cause) {
+        super(cause);
+    }
 }

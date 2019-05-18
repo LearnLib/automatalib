@@ -49,6 +49,6 @@ public interface SupportsGrowingAlphabet<I> {
      * @throws GrowingAlphabetNotSupportedException
      *         if the data structure was not properly initialized (e.g. with a {@link GrowingAlphabet}).
      */
-    void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException;
+    void addAlphabetSymbol(I symbol);
 
 }

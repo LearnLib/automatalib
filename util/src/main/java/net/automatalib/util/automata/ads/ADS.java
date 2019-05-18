@@ -78,10 +78,18 @@ public final class ADS {
     /**
      * See {@link #compute(MealyMachine, Alphabet, Set)}. Internal version that uses a {@link SplitTree} for state
      * tracking.
+     *
+     * @throws IllegalArgumentException
+     *         if <ul>
+     *         <li>the partition of the provided node is empty</li>
+     *         <li>the partition of the provided node contains a single element, which is not mapped in the node's
+     *         mapping</li>
+     *         <li>the partition of the provided node contains as many states as the automaton</li>
+     *         </ul>
      */
     static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
                                                         final Alphabet<I> input,
-                                                        final SplitTree<S, I, O> node) throws IllegalArgumentException {
+                                                        final SplitTree<S, I, O> node) {
 
         if (node.getPartition().isEmpty()) {
             throw new IllegalArgumentException("Empty partitions should be handled by the specific algorithm");

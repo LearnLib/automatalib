@@ -175,24 +175,24 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
     @Override
     public <T extends E> void addAll(T[] array) {
-        int sizeInc = array.length;
-        ensureCapacity(size + sizeInc);
-        for (int index = size, i = 0; i < array.length; index++, i++) {
-            storage.array[index] = new Reference<>(array[i], index);
+        ensureCapacity(size + array.length);
+        for (T t : array) {
+            storage.array[size] = new Reference<>(t, size);
+            size++;
         }
-        size += sizeInc;
     }
 
     @Override
     public boolean addAll(Collection<? extends E> coll) {
-        int sizeInc = coll.size();
-        ensureCapacity(size + sizeInc);
-        int idx = size;
-        for (E elem : coll) {
-            storage.array[idx] = new Reference<>(elem, idx);
-            idx++;
+        if (coll.isEmpty()) {
+            return false;
         }
-        size += sizeInc;
+
+        ensureCapacity(size + coll.size());
+        for (E elem : coll) {
+            storage.array[size] = new Reference<>(elem, size);
+            size++;
+        }
 
         return true;
     }

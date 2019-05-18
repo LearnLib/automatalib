@@ -35,7 +35,7 @@ public class EnumAlphabet<E extends Enum<E>> extends ArrayAlphabet<E> {
     }
 
     @Override
-    public int getSymbolIndex(E symbol) throws IllegalArgumentException {
+    public int getSymbolIndex(E symbol) {
         if (symbol == null) {
             int lastIdx = symbols.length - 1;
             if (symbols[lastIdx] == null) {

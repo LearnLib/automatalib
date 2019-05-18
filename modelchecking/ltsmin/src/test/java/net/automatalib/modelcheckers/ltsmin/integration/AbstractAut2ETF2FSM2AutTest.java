@@ -57,7 +57,7 @@ public abstract class AbstractAut2ETF2FSM2AutTest<
         }
     }
 
-    protected abstract A taf2Automaton();
+    protected abstract A taf2Automaton() throws Exception;
 
     protected abstract void automaton2ETF(A automaton, File etf) throws Exception;
 

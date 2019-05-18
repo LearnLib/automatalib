@@ -55,18 +55,18 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
     /**
      * Parse a transition.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when the transition is illegal.
      * @throws IOException
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException {
         try {
 
             // check we will read a state index
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
+                throw new FSMFormatException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the source state index
@@ -74,12 +74,12 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
 
             // check if such a state exists
             if (!getStates().isEmpty() && !getStates().contains(from)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, from), streamTokenizer);
+                throw new FSMFormatException(String.format(NO_SUCH_STATE, from), streamTokenizer);
             }
 
             // check we will read a state index
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
+                throw new FSMFormatException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the target state index
@@ -87,12 +87,12 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
 
             // check if such a state exists
             if (!getStates().isEmpty() && !getStates().contains(to)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, to), streamTokenizer);
+                throw new FSMFormatException(String.format(NO_SUCH_STATE, to), streamTokenizer);
             }
 
             // check we will read an input edge label
             if (streamTokenizer.nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
+                throw new FSMFormatException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the input, and convert the input string to actual input
@@ -103,7 +103,7 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
 
             // check we will read an output edge label
             if (streamTokenizer.nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
+                throw new FSMFormatException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the output, and convert the output string to actual output
@@ -114,10 +114,10 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
 
             // check for non-determinism
             if (prev != null) {
-                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
+                throw new FSMFormatException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
             }
         } catch (NumberFormatException nfe) {
-            throw new FSMParseException(nfe, streamTokenizer);
+            throw new FSMFormatException(nfe, streamTokenizer);
         }
     }
 

@@ -83,9 +83,10 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @throws ModelCheckingException
      *         when the LTSmin binaries can not be run successfully.
+     *
+     * @see AbstractLTSmin
      */
-    protected AbstractLTSmin(boolean keepFiles,
-                             Function<String, I> string2Input) throws ModelCheckingException {
+    protected AbstractLTSmin(boolean keepFiles, Function<String, I> string2Input) {
         this.keepFiles = keepFiles;
         this.string2Input = string2Input;
 
@@ -134,8 +135,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @see AbstractLTSmin
      */
-    protected final File findCounterExampleFSM(A hypothesis, Collection<? extends I> inputs, String formula)
-            throws ModelCheckingException {
+    protected final File findCounterExampleFSM(A hypothesis, Collection<? extends I> inputs, String formula) {
 
         final File etf, gcf;
         try {
@@ -238,7 +238,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
         return fsm;
     }
 
-    static int runCommandLine(List<String> commandLine) throws ModelCheckingException {
+    static int runCommandLine(List<String> commandLine) {
         final String[] commands = new String[commandLine.size()];
         commandLine.toArray(commands);
         try {

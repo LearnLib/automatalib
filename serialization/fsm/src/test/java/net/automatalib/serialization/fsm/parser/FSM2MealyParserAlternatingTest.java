@@ -62,7 +62,7 @@ public class FSM2MealyParserAlternatingTest extends AbstractFSM2ParserTest {
 
     @Override
     protected CompactMealy<Character, Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
-            throws IOException, FSMParseException {
+            throws IOException {
         final InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm");
 
         final Function<String, Character> ep = s -> s.charAt(0);

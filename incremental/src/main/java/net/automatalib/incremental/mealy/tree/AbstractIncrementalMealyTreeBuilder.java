@@ -64,7 +64,7 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
     }
 
     @Override
-    public void insert(Word<? extends I> input, Word<? extends O> outputWord) throws ConflictException {
+    public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
         N curr = root;
 
         Iterator<? extends O> outputIt = outputWord.iterator();

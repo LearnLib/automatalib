@@ -29,7 +29,7 @@ import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminDFA;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
+import net.automatalib.serialization.fsm.parser.FSMFormatException;
 
 /**
  * A monitor model checker using LTSmin for DFAs.
@@ -54,8 +54,7 @@ public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA
      */
     @Nullable
     @Override
-    public DFA<?, I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, String property)
-            throws ModelCheckingException {
+    public DFA<?, I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
         try {
@@ -78,7 +77,7 @@ public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA
             }
 
             return result;
-        } catch (IOException | FSMParseException e) {
+        } catch (IOException | FSMFormatException e) {
             throw new ModelCheckingException(e);
         }
     }

@@ -105,13 +105,15 @@ public interface SmartCollection<E> extends Collection<E> {
     boolean remove(@Nullable Object element);
 
     /**
-     * Retrieves an arbitrary element from the collection. If the collection is empty, a {@link NoSuchElementException}
-     * is thrown
+     * Retrieves an arbitrary element from the collection.
      *
      * @return an arbitrary element from the collection
+     *
+     * @throws NoSuchElementException
+     *         if the collection is empty
      */
     @Nullable
-    E choose() throws NoSuchElementException;
+    E choose();
 
     /**
      * Retrieves the reference to an arbitrary element from the collection. If the collection is empty, a {@link

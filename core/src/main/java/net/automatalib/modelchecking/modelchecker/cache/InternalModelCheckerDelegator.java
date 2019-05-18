@@ -59,7 +59,7 @@ interface InternalModelCheckerDelegator<MC extends ModelChecker<I, A, P, R>, I, 
         }
 
         @Override
-        default void setMultiplier(double multiplier) throws IllegalArgumentException {
+        default void setMultiplier(double multiplier) {
             getModelChecker().setMultiplier(multiplier);
         }
 
@@ -69,7 +69,7 @@ interface InternalModelCheckerDelegator<MC extends ModelChecker<I, A, P, R>, I, 
         }
 
         @Override
-        default void setMinimumUnfolds(int minimumUnfolds) throws IllegalArgumentException {
+        default void setMinimumUnfolds(int minimumUnfolds) {
             getModelChecker().setMinimumUnfolds(minimumUnfolds);
         }
     }

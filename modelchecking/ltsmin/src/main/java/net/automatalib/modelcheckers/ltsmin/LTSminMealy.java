@@ -23,7 +23,7 @@ import java.util.function.Function;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.modelchecking.ModelChecker;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
+import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import net.automatalib.util.automata.transducers.MealyFilter;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -56,11 +56,11 @@ public interface LTSminMealy<I, O, R>
      *
      * @throws IOException
      *         when {@code fsm} can not be read.
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when {@code fsm} is invalid.
      */
     CompactMealy<I, O> fsm2Mealy(File fsm, MealyMachine<?, I, ?, O> originalAutomaton, Collection<? extends I> inputs)
-            throws IOException, FSMParseException;
+            throws IOException;
 
     /**
      * Writes the given {@link MealyMachine} to the {@code etf} file.

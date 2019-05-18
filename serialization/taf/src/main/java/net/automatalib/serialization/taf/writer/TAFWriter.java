@@ -67,7 +67,7 @@ public final class TAFWriter {
         } else if (automaton instanceof MealyMachine) {
             writeMealy((MealyMachine<?, I, ?, ?>) automaton, inputs, out);
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Unknown type " + automaton.getClass().getSimpleName());
         }
     }
 

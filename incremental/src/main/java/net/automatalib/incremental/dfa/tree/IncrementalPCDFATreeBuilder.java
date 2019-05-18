@@ -144,7 +144,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
     }
 
     @Override
-    public void insert(Word<? extends I> word, boolean acceptance) throws ConflictException {
+    public void insert(Word<? extends I> word, boolean acceptance) {
         if (acceptance) {
             insertTrue(word);
         } else {
@@ -157,7 +157,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         return new TransitionSystemView();
     }
 
-    private void insertTrue(Word<? extends I> word) throws ConflictException {
+    private void insertTrue(Word<? extends I> word) {
         Node<I> curr = root;
 
         int idx = 0;
@@ -183,7 +183,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         curr.setAcceptance(Acceptance.TRUE);
     }
 
-    private void insertFalse(Word<? extends I> word) throws ConflictException {
+    private void insertFalse(Word<? extends I> word) {
         Node<I> curr = root;
         Node<I> prev = null;
         int lastSymIdx = -1;

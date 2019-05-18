@@ -80,17 +80,17 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     /**
      * Parse a transition.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when the FSM source is invalid.
      * @throws IOException
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException {
         try {
             // check we read a state number
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
+                throw new FSMFormatException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the source state index
@@ -98,12 +98,12 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
 
             // check such a state exists
             if (!getStates().isEmpty() && !getStates().contains(from)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, from), streamTokenizer);
+                throw new FSMFormatException(String.format(NO_SUCH_STATE, from), streamTokenizer);
             }
 
             // check we read a state number
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
+                throw new FSMFormatException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the target state index
@@ -111,12 +111,12 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
 
             // check such a state exists
             if (!getStates().isEmpty() && !getStates().contains(to)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, to), streamTokenizer);
+                throw new FSMFormatException(String.format(NO_SUCH_STATE, to), streamTokenizer);
             }
 
             // check we will read an edge label
             if (streamTokenizer.nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
+                throw new FSMFormatException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the letter
@@ -127,10 +127,10 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
 
             // test for non-determinism
             if (!isNew) {
-                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, from), streamTokenizer);
+                throw new FSMFormatException(String.format(NON_DETERMINISM_DETECTED, from), streamTokenizer);
             }
         } catch (NumberFormatException | NoSuchElementException e) {
-            throw new FSMParseException(e, streamTokenizer);
+            throw new FSMFormatException(e, streamTokenizer);
         }
     }
 
@@ -154,12 +154,11 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      * @param wb
      *         the word builder containing all the input symbols on the DFS stack.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when non-determinism is detected.
      */
     private void makeTransitions(Integer currentState, Pair<Integer, I> inputTrans, Set<Integer> newStates,
-                                 int inputLength, @Nullable WordBuilder<I> wb, StreamTokenizer streamTokenizer)
-            throws FSMParseException {
+                                 int inputLength, @Nullable WordBuilder<I> wb, StreamTokenizer streamTokenizer) {
 
         // indicate we have seen currentState
         newStates.remove(currentState);
@@ -179,11 +178,11 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
 
                 // check for non-determinism
                 if (prev != null) {
-                    throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
+                    throw new FSMFormatException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
                 }
             } else {
-                throw new FSMParseException(String.format(INPUT_HAS_NO_OUTPUT, inputTrans.getSecond(),
-                                                          inputTrans.getFirst()), streamTokenizer);
+                throw new FSMFormatException(String.format(INPUT_HAS_NO_OUTPUT, inputTrans.getSecond(),
+                                                           inputTrans.getFirst()), streamTokenizer);
             }
         }
 
@@ -228,7 +227,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
 
                 // check for non-determinism
                 if (prev != null) {
-                    throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
+                    throw new FSMFormatException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
                 }
 
                 // continue if we have not seen the target state yet
@@ -242,11 +241,11 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     /**
      * Creates the actual Mealy machine transitions.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when the Mealy machine is partial.
      */
     @Override
-    protected void checkTransitions(StreamTokenizer streamTokenizer) throws FSMParseException {
+    protected void checkTransitions(StreamTokenizer streamTokenizer) {
 
         // Only if no states are defined we add all from the transitions we found.
         // This is necessary because states are not necessarily defined in FSMs.
@@ -265,7 +264,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
 
         // check we do not have a partial FSM
         if (!newStates.isEmpty()) {
-            throw new FSMParseException(String.format(PARTIAL_FSM, newStates, initialState), streamTokenizer);
+            throw new FSMFormatException(String.format(PARTIAL_FSM, newStates, initialState), streamTokenizer);
         }
     }
 

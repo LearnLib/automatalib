@@ -64,7 +64,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @throws UnsupportedOperationException
      *         if trying to set an input symbol on a leaf node (see {@link #isLeaf()}).
      */
-    void setSymbol(I symbol) throws UnsupportedOperationException;
+    void setSymbol(I symbol);
 
     /**
      * Returns the parent node of {@code this} node.
@@ -180,5 +180,5 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @throws UnsupportedOperationException
      *         if trying to set a hypothesis state on an inner node (see {@link #isLeaf()}).
      */
-    void setHypothesisState(S state) throws UnsupportedOperationException;
+    void setHypothesisState(S state);
 }

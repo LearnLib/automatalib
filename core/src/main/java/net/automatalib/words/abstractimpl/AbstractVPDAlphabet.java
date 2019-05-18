@@ -50,12 +50,12 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
-    public I getCallSymbol(int index) throws IllegalArgumentException {
+    public I getCallSymbol(int index) {
         return callAlphabet.getSymbol(index);
     }
 
     @Override
-    public int getCallSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getCallSymbolIndex(I symbol) {
         return callAlphabet.getSymbolIndex(symbol);
     }
 
@@ -70,12 +70,12 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
-    public I getInternalSymbol(int index) throws IllegalArgumentException {
+    public I getInternalSymbol(int index) {
         return internalAlphabet.getSymbol(index);
     }
 
     @Override
-    public int getInternalSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getInternalSymbolIndex(I symbol) {
         return internalAlphabet.getSymbolIndex(symbol);
     }
 
@@ -90,12 +90,12 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
-    public I getReturnSymbol(int index) throws IllegalArgumentException {
+    public I getReturnSymbol(int index) {
         return returnAlphabet.getSymbol(index);
     }
 
     @Override
-    public int getReturnSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getReturnSymbolIndex(I symbol) {
         return returnAlphabet.getSymbolIndex(symbol);
     }
 
@@ -124,7 +124,7 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
 
     @Nullable
     @Override
-    public I getSymbol(int index) throws IllegalArgumentException {
+    public I getSymbol(int index) {
         int localIndex = index;
 
         if (localIndex < internalAlphabet.size()) {
@@ -147,7 +147,7 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
-    public int getSymbolIndex(@Nullable I symbol) throws IllegalArgumentException {
+    public int getSymbolIndex(@Nullable I symbol) {
         int offset = 0;
 
         if (internalAlphabet.containsSymbol(symbol)) {

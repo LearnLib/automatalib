@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.mealy.tree.AbstractIncrementalMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.AnnotatedEdge;
 import net.automatalib.incremental.mealy.tree.Edge;
@@ -52,7 +51,7 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractIncrementa
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         // we do not need to do anything, because this implementation can handle arbitrarily seized alphabets
     }
 

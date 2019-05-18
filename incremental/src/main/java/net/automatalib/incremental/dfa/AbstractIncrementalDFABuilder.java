@@ -23,7 +23,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.incremental.ConflictException;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
@@ -65,7 +64,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
     }
 
     @Override
-    public void insert(Word<? extends I> word) throws ConflictException {
+    public void insert(Word<? extends I> word) {
         insert(word, true);
     }
 

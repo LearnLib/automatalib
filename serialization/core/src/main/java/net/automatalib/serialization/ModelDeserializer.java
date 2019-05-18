@@ -33,20 +33,42 @@ import net.automatalib.commons.util.IOUtil;
  */
 public interface ModelDeserializer<M> {
 
+    /**
+     * Reads the contents from the given input stream and de-serializes it into a model instance.
+     *
+     * @param is
+     *         the input stream to read data from
+     *
+     * @return the de-serialized model
+     *
+     * @throws IOException
+     *         if an error occurred while reading from the stream
+     * @throws FormatException
+     *         if the content of the stream was not in the expected format
+     */
     M readModel(InputStream is) throws IOException;
 
+    /**
+     * Convenience method for {@link #readModel(InputStream)}, that reads from a given {@link URL}.
+     */
     default M readModel(URL url) throws IOException {
         try (InputStream is = url.openStream()) {
             return readModel(is);
         }
     }
 
+    /**
+     * Convenience method for {@link #readModel(InputStream)}, that reads from a given {@link File}.
+     */
     default M readModel(File f) throws IOException {
         try (InputStream is = IOUtil.asBufferedInputStream(f)) {
             return readModel(is);
         }
     }
 
+    /**
+     * Convenience method for {@link #readModel(InputStream)}, that reads from a given byte array.
+     */
     default M readModel(byte[] buf) throws IOException {
         try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
             return readModel(is);

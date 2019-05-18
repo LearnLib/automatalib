@@ -31,7 +31,7 @@ import net.automatalib.serialization.taf.parser.TAFParser;
 public class DFA2ETF2FSM2DFATest extends AbstractAut2ETF2FSM2AutTest<CompactDFA<String>> {
 
     @Override
-    protected CompactDFA<String> taf2Automaton() {
+    protected CompactDFA<String> taf2Automaton() throws Exception {
         final InputStream is = DFA2ETF2FSM2DFATest.class.getResourceAsStream("/DFA.taf");
         return TAFParser.parseDFA(is, null);
     }

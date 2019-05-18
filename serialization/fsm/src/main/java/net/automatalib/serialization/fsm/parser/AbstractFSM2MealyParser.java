@@ -134,11 +134,10 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      *
      * @return the Mealy machine defined in the FSM source.
      *
-     * @throws FSMParseException (see {@link #parse(Reader)}).
+     * @throws FSMFormatException (see {@link #parse(Reader)}).
      * @throws IOException (see {@link #parse(Reader)}).
      */
-    protected CompactMealy<I, O> parseMealy(Reader reader)
-            throws FSMParseException, IOException {
+    protected CompactMealy<I, O> parseMealy(Reader reader) throws IOException {
 
         parse(reader);
 

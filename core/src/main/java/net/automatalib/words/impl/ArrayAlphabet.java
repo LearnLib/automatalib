@@ -29,7 +29,7 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
     }
 
     @Override
-    public I getSymbol(int index) throws IllegalArgumentException {
+    public I getSymbol(int index) {
         if (index < 0 || index >= symbols.length) {
             throw new IllegalArgumentException("Index not within its expected bounds");
         }
@@ -37,7 +37,7 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
     }
 
     @Override
-    public int getSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getSymbolIndex(I symbol) {
         final int idx = getSymbolIndexInternal(symbol);
 
         if (idx >= 0) {

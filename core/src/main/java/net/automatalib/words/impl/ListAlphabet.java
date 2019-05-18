@@ -37,12 +37,16 @@ public class ListAlphabet<I> extends AbstractAlphabet<I> {
     }
 
     @Override
-    public I getSymbol(int index) throws IllegalArgumentException {
-        return list.get(index);
+    public I getSymbol(int index) {
+        try {
+            return list.get(index);
+        } catch (IndexOutOfBoundsException ioobe) {
+            throw new IllegalArgumentException(ioobe);
+        }
     }
 
     @Override
-    public int getSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getSymbolIndex(I symbol) {
         int idx = list.indexOf(symbol);
         if (idx == -1) {
             throw new IllegalArgumentException("Symbol " + symbol + " is not contained in the alphabet");

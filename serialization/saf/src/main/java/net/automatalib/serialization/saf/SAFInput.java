@@ -29,7 +29,7 @@ import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.IOUtil;
-import net.automatalib.serialization.AutomatonSerializationException;
+import net.automatalib.serialization.FormatException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -76,11 +76,11 @@ class SAFInput {
             throws IOException {
         AutomatonType type = readHeader();
         if (type != expectedType) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         int alphabetSize = in.readInt();
         if (alphabetSize != alphabet.size()) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         return readAutomatonBody(alphabet, type.isDeterministic(), creator, spDecoder, tpDecoder);
     }
@@ -90,11 +90,11 @@ class SAFInput {
         byte[] header = new byte[headerSize];
         in.readFully(header);
         if (header[0] != 'S' || header[1] != 'A' || header[2] != 'F') {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         byte type = header[3];
         if (type < 0 || type >= TYPES.length) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         return TYPES[type];
     }
@@ -255,11 +255,11 @@ class SAFInput {
             throws IOException {
         AutomatonType type = readHeader();
         if (type != expectedType) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         int alphabetSize = in.readInt();
         if (alphabetSize <= 0) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         Alphabet<Integer> alphabet = Alphabets.integers(0, alphabetSize - 1);
         return readAutomatonBody(alphabet, type.isDeterministic(), creator, spDecoder, tpDecoder);

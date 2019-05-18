@@ -17,6 +17,7 @@ package net.automatalib.commons.util.lib;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -39,10 +40,10 @@ public final class PlatformProperties {
             LOG.warn("You may experience issues with the resolution of native libraries.");
         }
 
-        String osName = System.getProperty("os.name").toLowerCase().replace(' ', '_').replace('/', '_');
+        String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT).replace(' ', '_').replace('/', '_');
         OS_NAME = aliases.getProperty("os." + osName, osName);
 
-        String osArch = System.getProperty("os.arch").toLowerCase().replace(' ', '_').replace('/', '_');
+        String osArch = System.getProperty("os.arch").toLowerCase(Locale.ROOT).replace(' ', '_').replace('/', '_');
         OS_ARCH = aliases.getProperty("arch." + osArch, osArch);
 
         OS_VERSION = System.getProperty("os.version");

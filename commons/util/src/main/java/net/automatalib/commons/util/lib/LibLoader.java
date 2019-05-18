@@ -87,6 +87,9 @@ public final class LibLoader {
      *         The class whose classloader should be used to resolve shipped libraries
      * @param name
      *         The name of the class.
+     *
+     * @throws LoadLibraryException
+     *         if the library could not be loaded correctly
      */
     public void loadLibrary(Class<?> clazz, String name) {
         loadLibrary(clazz, name, LoadPolicy.PREFER_SHIPPED);
@@ -101,6 +104,9 @@ public final class LibLoader {
      *         The name of the class.
      * @param policy
      *         The load policy.
+     *
+     * @throws LoadLibraryException
+     *         if the library could not be loaded correctly
      */
     public void loadLibrary(Class<?> clazz, String name, LoadPolicy policy) {
         if (loaded.contains(name)) {
@@ -143,7 +149,7 @@ public final class LibLoader {
         loaded.add(name);
     }
 
-    private void loadShippedLibrary(Class<?> clazz, String name) throws LoadLibraryException {
+    private void loadShippedLibrary(Class<?> clazz, String name) {
         String libFileName = libPrefix + name + "." + libExtension;
         String libResourcePath =
                 "/lib/" + PlatformProperties.OS_NAME + "/" + PlatformProperties.OS_ARCH + "/" + libFileName;
@@ -167,7 +173,7 @@ public final class LibLoader {
         }
     }
 
-    private void loadSystemLibrary(String name) throws LoadLibraryException {
+    private void loadSystemLibrary(String name) {
         try {
             System.loadLibrary(name);
         } catch (SecurityException | UnsatisfiedLinkError ex) {

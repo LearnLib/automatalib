@@ -67,7 +67,7 @@ public final class StateEquivalence {
      */
     public static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
                                                                final Alphabet<I> input,
-                                                               final Set<S> states) throws IllegalArgumentException {
+                                                               final Set<S> states) {
 
         if (states.size() != 2) {
             throw new IllegalArgumentException("StateEquivalence can only distinguish 2 states");
