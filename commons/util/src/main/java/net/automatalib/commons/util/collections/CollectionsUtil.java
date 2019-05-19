@@ -71,6 +71,26 @@ public final class CollectionsUtil {
         return allTuples(domain, length, length);
     }
 
+    /**
+     * Returns an iterator that iterates over all tuples of the given source domain whose length (dimension) is within
+     * the specified range. Each intermediate combination of elements is computed lazily.
+     * <p>
+     * <b>Note:</b> Subsequent calls to the returned iterator's {@link Iterator#next() next()} method return a
+     * reference to the same list, and only update the contents of the list. If you plan to reuse intermediate results,
+     * you'll need to explicitly copy them.
+     *
+     * @param domain
+     *         the iterables for the source domains
+     * @param minLength
+     *         the minimal length of the tuple
+     * @param maxLength
+     *         the maximum length of the tuple
+     * @param <T>
+     *         type of elements
+     *
+     * @return an iterator that iterates over all tuples of the given source domain whose length (dimension) is within
+     * the specified range
+     */
     public static <T> Iterable<List<T>> allTuples(final Iterable<? extends T> domain,
                                                   final int minLength,
                                                   final int maxLength) {
