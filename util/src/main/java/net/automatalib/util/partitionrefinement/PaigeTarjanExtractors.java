@@ -18,6 +18,7 @@ package net.automatalib.util.partitionrefinement;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.PrimitiveIterator;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
@@ -269,14 +270,24 @@ public final class PaigeTarjanExtractors {
 
         for (Block curr : pt.blockList()) {
             int blockId = curr.id;
-            S1 rep = origIds.getState(pt.getRepresentative(curr));
+            S1 rep = findNonSinkRepresentative(pt, curr, origIds);
+
+            if (rep == null) { // artificial sink should not be added
+                continue;
+            }
+
             SP sp = spExtractor.apply(rep);
             S2 resState = result.addState(sp);
             states.set(blockId, resState);
         }
         for (Block curr : pt.blockList()) {
             int blockId = curr.id;
-            S1 rep = origIds.getState(pt.getRepresentative(curr));
+            S1 rep = findNonSinkRepresentative(pt, curr, origIds);
+
+            if (rep == null) { // artificial sink should not be added
+                continue;
+            }
+
             S2 resultState = states.get(blockId);
 
             for (I sym : inputs) {
@@ -341,5 +352,23 @@ public final class PaigeTarjanExtractors {
         resultAbs.setInitialState(pt.getBlockForState(origInit).id);
 
         return result;
+    }
+
+    private static <S> S findNonSinkRepresentative(PaigeTarjan pt, Block block, StateIDs<S> origIds) {
+
+        S rep = origIds.getState(pt.getRepresentative(block));
+
+        if (rep == null) { // check if existing states share block with sink
+            final PrimitiveIterator.OfInt repIter = pt.statesInBlockIterator(block);
+            while (repIter.hasNext()) {
+                int nextRep = repIter.nextInt();
+                rep = origIds.getState(nextRep);
+                if (rep != null) {
+                    return rep;
+                }
+            }
+        }
+
+        return rep;
     }
 }

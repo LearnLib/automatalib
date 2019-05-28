@@ -406,13 +406,18 @@ public final class PaigeTarjanInitializers {
             int predOfsBase = predOfsDataLow;
 
             for (int j = 0; j < numInputs; j++) {
-                I sym = inputs.getSymbol(j);
-                S succ = automaton.getSuccessor(state, sym);
-                int succId;
-                if (succ == null) {
+                final int succId;
+
+                if (state == null) { // state is new artificial sink
                     succId = sinkId;
                 } else {
-                    succId = ids.getStateId(succ);
+                    I sym = inputs.getSymbol(j);
+                    S succ = automaton.getSuccessor(state, sym);
+                    if (succ == null) {
+                        succId = sinkId;
+                    } else {
+                        succId = ids.getStateId(succ);
+                    }
                 }
 
                 data[--data[predOfsBase + succId]] = stateId;
@@ -583,17 +588,22 @@ public final class PaigeTarjanInitializers {
             S state = ids.getState(stateId);
             int predOfsBase = predOfsDataLow;
             for (int j = 0; j < numInputs; j++) {
-                I sym = inputs.getSymbol(j);
-                T trans = automaton.getTransition(state, sym);
-                int succId;
-                if (trans == null) {
+                final int succId;
+
+                if (state == null) { // state is new artificial sink
                     succId = sinkId;
                 } else {
-                    S succ = automaton.getSuccessor(trans);
-                    succId = ids.getStateId(succ);
+                    I sym = inputs.getSymbol(j);
+                    T trans = automaton.getTransition(state, sym);
+                    if (trans == null) {
+                        succId = sinkId;
+                    } else {
+                        S succ = automaton.getSuccessor(trans);
+                        succId = ids.getStateId(succ);
+                    }
                 }
-                data[--data[predOfsBase + succId]] = stateId;
 
+                data[--data[predOfsBase + succId]] = stateId;
                 predOfsBase += numStatesWithSink;
             }
         }
@@ -603,17 +613,22 @@ public final class PaigeTarjanInitializers {
             S state = ids.getState(stateId);
             int predOfsBase = predOfsDataLow;
             for (int j = 0; j < numInputs; j++) {
-                I sym = inputs.getSymbol(j);
-                T trans = automaton.getTransition(state, sym);
-                int succId;
-                if (trans == null) {
+                final int succId;
+
+                if (state == null) { // state is new artificial sink
                     succId = sinkId;
                 } else {
-                    S succ = automaton.getSuccessor(trans);
-                    succId = ids.getStateId(succ);
+                    I sym = inputs.getSymbol(j);
+                    T trans = automaton.getTransition(state, sym);
+                    if (trans == null) {
+                        succId = sinkId;
+                    } else {
+                        S succ = automaton.getSuccessor(trans);
+                        succId = ids.getStateId(succ);
+                    }
                 }
-                data[--data[predOfsBase + succId]] = stateId;
 
+                data[--data[predOfsBase + succId]] = stateId;
                 predOfsBase += numStatesWithSink;
             }
         }
