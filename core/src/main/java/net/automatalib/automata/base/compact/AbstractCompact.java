@@ -102,12 +102,12 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
     @Override
     public int getStateId(Integer state) {
-        return toId(state);
+        return (state < 0 || state >= numStates) ? INVALID_STATE : state.intValue();
     }
 
     @Override
     public Integer getState(int id) {
-        return toState(id);
+        return (id < 0 || id >= numStates) ? null : id;
     }
 
     @Override

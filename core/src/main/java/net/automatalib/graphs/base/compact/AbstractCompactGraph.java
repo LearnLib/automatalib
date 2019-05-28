@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import net.automatalib.automata.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.graphs.MutableGraph;
@@ -119,12 +120,12 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
 
     @Override
     public int getNodeId(Integer node) {
-        return node.intValue();
+        return (node < 0 || node >= size) ? FullIntAbstraction.INVALID_STATE : node.intValue();
     }
 
     @Override
     public Integer getNode(int id) {
-        return Integer.valueOf(id);
+        return (id < 0 || id >= size) ? null : Integer.valueOf(id);
     }
 
     @Override

@@ -15,14 +15,36 @@
  */
 package net.automatalib.graphs.concepts;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+/**
+ * An interface for translating between graph nodes and their primitive representations as integers.
+ *
+ * @param <N>
+ *         node type of the graph
+ */
 @ParametersAreNonnullByDefault
 public interface NodeIDs<N> {
 
+    /**
+     * Returns for a given node of the graph an integer uniquely identifying the node.
+     *
+     * @param node
+     *         the node whose id should be retrieved
+     *
+     * @return the (positive) id of the given graph node. May return a negative value, if {@code node} does not belong
+     * to the graph.
+     */
     int getNodeId(N node);
 
-    @Nonnull
+    /**
+     * Return for a given id the node of the graph identified by it.
+     *
+     * @param id
+     *         the id of the node to be returned
+     *
+     * @return the graph node identified by the given {@code id}. May return {@code null} if the given {@code id} does
+     * not identify a node of the graph.
+     */
     N getNode(int id);
 }

@@ -58,7 +58,7 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
 
     @Override
     public S getState(int id) {
-        return states.get(id);
+        return (id < 0 || id >= states.size()) ? null : states.get(id);
     }
 
     @Override
