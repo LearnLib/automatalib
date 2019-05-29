@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.graphs.scc;
+package net.automatalib.util.graphs;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author Malte Isberner
  * @author Malte Mues
  */
-public class TarjanSCCTest {
+public class SCCTest {
 
     @Test
     public void testExample1() {
@@ -225,6 +225,6 @@ public class TarjanSCCTest {
     }
 
     private Set<Set<Integer>> computeSCCs(CompactSimpleGraph<Void> graph) {
-        return SCCs.collectSCCs(graph).stream().map(HashSet::new).collect(Collectors.toSet());
+        return Graphs.collectSCCs(graph).stream().map(HashSet::new).collect(Collectors.toSet());
     }
 }

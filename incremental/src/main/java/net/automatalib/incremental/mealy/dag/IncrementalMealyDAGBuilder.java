@@ -91,21 +91,6 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         }
     }
 
-    /**
-     * Checks whether there exists secured information about the output for the given word.
-     *
-     * @param word
-     *         the input word
-     *
-     * @return a boolean indicating whether information about the output for the given input word exists.
-     *
-     * @deprecated since 2014-01-22. Use {@link #hasDefinitiveInformation(Word)}
-     */
-    @Deprecated
-    public boolean isComplete(Word<? extends I> word) {
-        return hasDefinitiveInformation(word);
-    }
-
     @Override
     public boolean hasDefinitiveInformation(Word<? extends I> word) {
         State<O> s = getState(word);

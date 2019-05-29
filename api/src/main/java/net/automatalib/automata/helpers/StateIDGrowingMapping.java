@@ -13,27 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.base;
+package net.automatalib.automata.helpers;
 
-import net.automatalib.automata.Automaton;
+import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.commons.util.nid.IDChangeListener;
-import net.automatalib.commons.util.nid.NumericID;
 
-public class StateIDDynamicMapping<S extends NumericID, V> implements MutableMapping<S, V>, IDChangeListener<S> {
+public class StateIDGrowingMapping<S, V> implements MutableMapping<S, V> {
 
-    private final Automaton<S, ?, ?> automaton;
+    private final StateIDs<S> stateIds;
     private final ResizingArrayStorage<V> storage;
 
-    public StateIDDynamicMapping(Automaton<S, ?, ?> automaton) {
-        this.automaton = automaton;
-        this.storage = new ResizingArrayStorage<>(Object.class, automaton.size());
+    public StateIDGrowingMapping(StateIDs<S> stateIds, int size) {
+        this.stateIds = stateIds;
+        this.storage = new ResizingArrayStorage<>(Object.class, size);
     }
 
     @Override
     public V get(S elem) {
-        int id = elem.getId();
+        int id = stateIds.getStateId(elem);
         if (id >= 0 && id < storage.array.length) {
             return storage.array[id];
         }
@@ -41,23 +39,10 @@ public class StateIDDynamicMapping<S extends NumericID, V> implements MutableMap
     }
 
     @Override
-    public void idChanged(S obj, int newId, int oldId) {
-        V oldValue = null;
-        if (oldId > 0 && oldId < storage.array.length) {
-            oldValue = storage.array[oldId];
-            storage.array[oldId] = null;
-        }
-        if (newId >= storage.array.length) {
-            storage.ensureCapacity(automaton.size());
-        }
-        storage.array[newId] = oldValue;
-    }
-
-    @Override
     public V put(S key, V value) {
-        int id = key.getId();
+        int id = stateIds.getStateId(key);
         if (id >= storage.array.length) {
-            storage.ensureCapacity(automaton.size());
+            storage.ensureCapacity(id + 1);
         }
         V old = storage.array[id];
         storage.array[id] = value;

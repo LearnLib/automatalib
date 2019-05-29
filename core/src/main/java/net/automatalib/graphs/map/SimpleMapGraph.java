@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.transducers.impl.map;
+package net.automatalib.graphs.map;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -55,21 +55,7 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
      * for a single node is stored using {@link HashSet}s.
      */
     public SimpleMapGraph() {
-        this(new HashMap<>(), HashSet::new);
-    }
-
-    /**
-     * Initializes a graph using the given adjacency structure, and adjacency information for a single node is stored in
-     * data structures created via the provided supplier.
-     *
-     * @param structureMap
-     *         the map for the overall graph structure
-     * @param adjCollSupplier
-     *         the supplier for per-node adjacency collections
-     */
-    public SimpleMapGraph(Map<N, Collection<N>> structureMap, Supplier<? extends Collection<N>> adjCollSupplier) {
-        this.structureMap = structureMap;
-        this.adjCollSupplier = adjCollSupplier;
+        this(HashSet::new);
     }
 
     /**
@@ -92,6 +78,20 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
      */
     public SimpleMapGraph(Map<N, Collection<N>> structureMap) {
         this(structureMap, HashSet::new);
+    }
+
+    /**
+     * Initializes a graph using the given adjacency structure, and adjacency information for a single node is stored in
+     * data structures created via the provided supplier.
+     *
+     * @param structureMap
+     *         the map for the overall graph structure
+     * @param adjCollSupplier
+     *         the supplier for per-node adjacency collections
+     */
+    public SimpleMapGraph(Map<N, Collection<N>> structureMap, Supplier<? extends Collection<N>> adjCollSupplier) {
+        this.structureMap = structureMap;
+        this.adjCollSupplier = adjCollSupplier;
     }
 
     @Override

@@ -34,7 +34,7 @@ public final class ArrayMapping<K extends NumericID, V> implements MutableMappin
     @Override
     public V get(K elem) {
         int id = elem.getId();
-        if (id >= storage.array.length) {
+        if (id < 0 || id >= storage.array.length) {
             return null;
         }
         return storage.array[id];

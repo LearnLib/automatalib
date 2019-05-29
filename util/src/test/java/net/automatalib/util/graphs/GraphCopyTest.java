@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.graphs.copy;
+package net.automatalib.util.graphs;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +30,7 @@ import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.util.automata.random.RandomAutomata;
+import net.automatalib.util.graphs.copy.GraphCopy;
 import net.automatalib.util.traversal.TraversalOrder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;

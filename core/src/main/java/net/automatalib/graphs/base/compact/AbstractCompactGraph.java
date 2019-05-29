@@ -33,7 +33,6 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     protected int size;
 
     public AbstractCompactGraph() {
-        this.size = 0;
         this.edges = new ResizingArrayStorage<>(List.class);
     }
 
@@ -57,8 +56,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     }
 
     public Collection<E> getOutgoingEdges(int node) {
-        List<E> edgeList = getOutEdgeList(node);
-        return Collections.unmodifiableCollection(edgeList);
+        return Collections.unmodifiableCollection(getOutEdgeList(node));
     }
 
     protected List<E> getOutEdgeList(int node) {

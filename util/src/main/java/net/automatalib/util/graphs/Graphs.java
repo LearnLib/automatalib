@@ -25,7 +25,6 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.BidirectionalGraph;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.IndefiniteGraph;
-import net.automatalib.graphs.UniversalIndefiniteGraph;
 import net.automatalib.graphs.concepts.EdgeWeights;
 import net.automatalib.util.graphs.apsp.APSPResult;
 import net.automatalib.util.graphs.apsp.FloydWarshallAPSP;
@@ -82,16 +81,6 @@ public final class Graphs {
                                                      N start,
                                                      Predicate<? super N> targetPred) {
         return ShortestPaths.shortestPath(graph, start, limit, targetPred);
-    }
-
-    @Deprecated
-    public static <N, NP> Mapping<N, NP> nodeProperties(final UniversalIndefiniteGraph<N, ?, NP, ?> graph) {
-        return graph::getNodeProperty;
-    }
-
-    @Deprecated
-    public static <E, EP> Mapping<E, EP> edgeProperties(final UniversalIndefiniteGraph<?, E, ?, EP> graph) {
-        return graph::getEdgeProperty;
     }
 
     /**

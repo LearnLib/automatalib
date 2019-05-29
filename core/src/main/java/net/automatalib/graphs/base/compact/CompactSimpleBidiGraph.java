@@ -43,8 +43,7 @@ public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<Compa
     }
 
     public Collection<CompactBidiEdge<EP>> getIncomingEdges(int node) {
-        List<CompactBidiEdge<EP>> inEdges = getInEdgeList(node);
-        return Collections.unmodifiableCollection(inEdges);
+        return Collections.unmodifiableCollection(getInEdgeList(node));
     }
 
     protected List<CompactBidiEdge<EP>> getInEdgeList(int node) {
@@ -71,7 +70,7 @@ public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<Compa
     @Override
     public CompactBidiEdge<EP> connect(int source, int target, EP property) {
         CompactBidiEdge<EP> edge = super.connect(source, target, property);
-        List<CompactBidiEdge<EP>> inEdges = getInEdgeList(source);
+        List<CompactBidiEdge<EP>> inEdges = getInEdgeList(target);
         edge.inIndex = inEdges.size();
         inEdges.add(edge);
         return edge;

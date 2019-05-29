@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.graphs.sssp;
+package net.automatalib.util.graphs;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,14 +21,14 @@ import java.util.List;
 import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.graphs.base.compact.CompactSimpleGraph;
 import net.automatalib.graphs.concepts.EdgeWeights;
-import net.automatalib.util.graphs.Graphs;
 import net.automatalib.util.graphs.concepts.PropertyEdgeWeights;
+import net.automatalib.util.graphs.sssp.SSSPResult;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
-public class DijkstraSSSPTest {
+public class SSSPTest {
 
     Integer n0, n1, n2, n3, n4, n5;
     private CompactSimpleGraph<Float> graph;
@@ -61,8 +61,7 @@ public class DijkstraSSSPTest {
 
     @Test
     public void testSSSP() {
-        DijkstraSSSP<Integer, CompactEdge<Float>> sssp = new DijkstraSSSP<>(graph, n0, weights);
-        sssp.findSSSP();
+        SSSPResult<Integer, CompactEdge<Float>> sssp = Graphs.findSSSP(graph, n0, weights);
 
         assertSPDist(sssp, n1, 2.3f); // n0 -> n1
         assertSPNodes(sssp, n1, n0, n1);

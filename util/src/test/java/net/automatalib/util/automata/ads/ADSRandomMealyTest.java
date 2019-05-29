@@ -49,7 +49,7 @@ public class ADSRandomMealyTest extends AbstractADSTest {
     }
 
     @DataProvider(name = "randomMealies")
-    public static Iterator<Object[]> getParameteres() {
+    public static Iterator<Object[]> getParameters() {
 
         final List<Object[]> result = new LinkedList<>();
 

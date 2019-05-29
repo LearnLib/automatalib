@@ -64,14 +64,6 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     }
 
     /**
-     * Deprecated. Use {@link #concat(AbstractLinkedList)}.
-     */
-    @Deprecated
-    public void addCompletely(AbstractLinkedList<? extends E, ? extends T> other) {
-        concat(other);
-    }
-
-    /**
      * Concatenates two linked lists. All elements of the specified list (which will be empty afterwards) are added at
      * the end of this list. This operation runs in constant time.
      *

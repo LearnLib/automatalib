@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.automata.minimizer.hopcroft;
+package net.automatalib.util.automata.minimizer;
 
 import java.util.Collection;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.util.automata.minimizer.hopcroft.HopcroftMinimization.PruningMode;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
-public class HopcroftMinimizationTest {
+public abstract class AbstractMinimizationTest {
 
     @Test
     public void createTestDFA1() {
@@ -103,7 +102,7 @@ public class HopcroftMinimizationTest {
         final char input2 = 'b';
 
         // @formatter:off
-        final DFA<?, Character> dfa = AutomatonBuilders.newDFA(alphabet)
+        final CompactDFA<Character> dfa = AutomatonBuilders.newDFA(alphabet)
                 .withInitial("s0")
                 .from("s0")
                    .on(input1).to("s2")
@@ -132,33 +131,24 @@ public class HopcroftMinimizationTest {
         testMinimizeDFA(new TestDFA<>(alphabet, dfa, 5, true));
     }
 
-    private <I> void testMinimizeDFA(TestDFA<I> testDfa) {
-        testMinimizeDFA(testDfa.alphabet, testDfa.dfa, testDfa.minimalSize, testDfa.initiallyConnected);
-    }
+    private <I> void testMinimizeDFA(TestDFA<I> test) {
 
-    protected <I> void testMinimizeDFA(Alphabet<I> alphabet,
-                                       DFA<?, I> dfa,
-                                       int expectedStateCount,
-                                       boolean initiallyConnected) {
-        CompactDFA<I> resultBefore = HopcroftMinimization.minimizeDFA(dfa, alphabet, PruningMode.PRUNE_BEFORE);
-        Assert.assertEquals(resultBefore.size(), expectedStateCount);
-        assertMinimal(resultBefore);
+        final DFA<?, I> result = minimize(test.dfa, test.alphabet);
 
-        CompactDFA<I> resultAfter = HopcroftMinimization.minimizeDFA(dfa, alphabet, PruningMode.PRUNE_AFTER);
-        Assert.assertEquals(resultAfter.size(), expectedStateCount);
-        assertMinimal(resultAfter);
-
-        CompactDFA<I> resultUnpruned = HopcroftMinimization.minimizeDFA(dfa, alphabet, PruningMode.DONT_PRUNE);
-        if (initiallyConnected) {
-            Assert.assertEquals(resultUnpruned.size(), expectedStateCount);
-            assertMinimal(resultUnpruned);
+        if (test.initiallyConnected || isPruned()) {
+            Assert.assertEquals(result.size(), test.minimalSize);
+            assertMinimal(result, test.alphabet);
         } else {
-            assertAllInequivalent(resultUnpruned, alphabet);
+            assertAllInequivalent(result, test.alphabet);
         }
     }
 
-    protected static <S, I> void assertAllInequivalent(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
-                                                       Collection<? extends I> inputs) {
+    protected abstract <I> DFA<?, I> minimize(MutableDFA<?, I> dfa, Alphabet<I> alphabet);
+
+    protected abstract boolean isPruned();
+
+    private static <S, I> void assertAllInequivalent(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                                     Collection<? extends I> inputs) {
         StateIDs<S> ids = automaton.stateIDs();
         int size = automaton.size();
         for (int i = 0; i < size - 1; i++) {
@@ -170,18 +160,13 @@ public class HopcroftMinimizationTest {
         }
     }
 
-    protected static <I, A extends UniversalDeterministicAutomaton<?, I, ?, ?, ?> & InputAlphabetHolder<I>> void assertMinimal(
-            A automaton) {
-        assertMinimal(automaton, automaton.getInputAlphabet());
-    }
-
-    protected static <I> void assertMinimal(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
-                                            Collection<? extends I> inputs) {
+    private static <I> void assertMinimal(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+                                          Collection<? extends I> inputs) {
         assertAllReachable(automaton, inputs);
         assertAllInequivalent(automaton, inputs);
     }
 
-    protected static <I> void assertAllReachable(Automaton<?, I, ?> automaton, Collection<? extends I> inputs) {
+    private static <I> void assertAllReachable(Automaton<?, I, ?> automaton, Collection<? extends I> inputs) {
         int numReachable = Iterators.size(Automata.bfsOrderIterator(automaton, inputs));
         Assert.assertEquals(numReachable, automaton.size());
     }
@@ -189,11 +174,11 @@ public class HopcroftMinimizationTest {
     private static class TestDFA<I> {
 
         public final Alphabet<I> alphabet;
-        public final DFA<?, I> dfa;
+        public final MutableDFA<?, I> dfa;
         public final int minimalSize;
         public final boolean initiallyConnected;
 
-        TestDFA(Alphabet<I> alphabet, DFA<?, I> dfa, int minimalSize, boolean initiallyConnected) {
+        TestDFA(Alphabet<I> alphabet, MutableDFA<?, I> dfa, int minimalSize, boolean initiallyConnected) {
             this.alphabet = alphabet;
             this.dfa = dfa;
             this.minimalSize = minimalSize;

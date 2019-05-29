@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.helpers.SimpleStateIDs;
+import net.automatalib.automata.helpers.StateIDGrowingMapping;
 import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.simple.SimpleTS;
@@ -56,6 +57,11 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
     @Nonnull
     default <V> MutableMapping<S, V> createStaticStateMapping() {
         return new StateIDStaticMapping<>(stateIDs(), size());
+    }
+
+    @Override
+    default <V> MutableMapping<S, V> createDynamicStateMapping() {
+        return new StateIDGrowingMapping<>(stateIDs(), size());
     }
 
     @Nonnull

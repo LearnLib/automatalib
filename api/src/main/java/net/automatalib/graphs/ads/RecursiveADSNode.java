@@ -15,9 +15,10 @@
  */
 package net.automatalib.graphs.ads;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -86,8 +87,8 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @return all nodes in the specified subtree, including the root node itself
      */
     default Collection<N> getNodesForRoot(final N root) {
-        final List<N> result = new LinkedList<>();
-        final Queue<N> queue = new LinkedList<>();
+        final List<N> result = new ArrayList<>();
+        final Queue<N> queue = new ArrayDeque<>();
 
         queue.add(root);
 

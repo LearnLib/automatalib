@@ -15,14 +15,15 @@
  */
 package net.automatalib.commons.util.mappings;
 
-import java.util.AbstractCollection;
-import java.util.AbstractList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
 /**
  * Collection of various methods dealing with {@link Mapping}s.
@@ -131,18 +132,7 @@ public final class Mappings {
      * @return the mapped collection.
      */
     public static <D, R> Collection<R> apply(final Mapping<? super D, R> mapping, final Collection<? extends D> coll) {
-        return new AbstractCollection<R>() {
-
-            @Override
-            public Iterator<R> iterator() {
-                return apply(mapping, coll.iterator());
-            }
-
-            @Override
-            public int size() {
-                return coll.size();
-            }
-        };
+        return Collections2.transform(coll, mapping::get);
     }
 
     /**
@@ -176,18 +166,7 @@ public final class Mappings {
      * @return the mapped list.
      */
     public static <D, R> List<R> apply(final Mapping<? super D, R> mapping, final List<? extends D> list) {
-        return new AbstractList<R>() {
-
-            @Override
-            public R get(int index) {
-                return mapping.get(list.get(index));
-            }
-
-            @Override
-            public int size() {
-                return list.size();
-            }
-        };
+        return Lists.transform(list, mapping::get);
     }
 
     /**
@@ -206,7 +185,7 @@ public final class Mappings {
      * @return the mapped iterable.
      */
     public static <D, R> Iterable<R> apply(final Mapping<? super D, R> mapping, final Iterable<? extends D> it) {
-        return () -> apply(mapping, it.iterator());
+        return Iterables.transform(it, mapping::get);
     }
 
     public static <D> D idGet(Mapping<D, D> mapping, D key) {

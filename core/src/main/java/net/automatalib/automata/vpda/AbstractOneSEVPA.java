@@ -80,7 +80,7 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
                 return new State<>(succ, state.getStackContents());
             }
             default:
-                throw new IllegalStateException("Unkown symbol type " + type);
+                throw new IllegalStateException("Unknown symbol type " + type);
         }
     }
 
@@ -164,7 +164,7 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
 
                 properties.put(NodeAttrs.SHAPE,
                                isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);
-                properties.put(NodeAttrs.LABEL, Integer.toString(getLocationId(node)));
+                properties.put(NodeAttrs.LABEL, "L" + getLocationId(node));
 
                 return true;
             }
@@ -182,7 +182,8 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
                     properties.put(EdgeAttrs.LABEL, by.toString());
                 } else if (alphabet.isReturnSymbol(by)) {
                     properties.put(EdgeAttrs.LABEL,
-                                   by.toString() + "/(" + getStackLoc(stack) + ',' + getCallSym(stack) + ')');
+                                   by.toString() + "/(L" + getLocationId(getStackLoc(stack)) + ',' + getCallSym(stack) +
+                                   ')');
                 } else {
                     throw new IllegalArgumentException();
                 }

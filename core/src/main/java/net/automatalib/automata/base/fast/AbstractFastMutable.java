@@ -21,9 +21,9 @@ import java.util.Collection;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
-import net.automatalib.automata.base.StateIDDynamicMapping;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.concepts.StateLocalInput;
+import net.automatalib.commons.util.mappings.ArrayMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
@@ -93,7 +93,7 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
 
     @Override
     public <V> MutableMapping<S, V> createDynamicStateMapping() {
-        final StateIDDynamicMapping<S, V> mapping = new StateIDDynamicMapping<>(this);
+        final ArrayMapping<S, V> mapping = new ArrayMapping<>(size());
         tracker.addListener(mapping, true);
         return mapping;
     }
