@@ -44,6 +44,8 @@ import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
  */
 public final class GraphDOT {
 
+    private static final String INITIAL_LABEL = "__start";
+
     private GraphDOT() {
     }
 
@@ -333,21 +335,21 @@ public final class GraphDOT {
 
     private static void renderInitialArrowTip(Set<String> initialNodes, Appendable a) throws IOException {
 
-        final String startPrefix = "__start";
-
         int i = 0;
         for (String init : initialNodes) {
-            a.append(startPrefix)
-             .append(Integer.toString(i))
+            a.append(initialLabel(i))
              .append(" [label=\"\" shape=\"none\" width=\"0\" height=\"0\"];")
              .append(System.lineSeparator())
-             .append(startPrefix)
-             .append(Integer.toString(i++))
+             .append(initialLabel(i++))
              .append(" -> ")
              .append(init)
              .append(';')
              .append(System.lineSeparator());
         }
+    }
+
+    static String initialLabel(int n) {
+        return INITIAL_LABEL + n;
     }
 
     public static <N, E> DOTVisualizationHelper<N, E> toDOTVisualizationHelper(VisualizationHelper<N, E> helper) {

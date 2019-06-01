@@ -20,16 +20,15 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
+import java.util.function.Function;
 
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.commons.util.IOUtil;
-import net.automatalib.graphs.base.compact.CompactSimpleGraph;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -39,69 +38,53 @@ import org.testng.annotations.Test;
 public class DOTSerializationTest {
 
     @Test
-    public void testRegularMealyExport() throws IOException {
+    public void testRegularDFASerialization() throws IOException {
 
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
+        final CompactDFA<String> dfa = DOTSerializationUtil.DFA;
 
-        // @formatter:off
-        final MealyMachine<?, Character, ?, Character> automaton =
-                AutomatonBuilders.forMealy(new CompactMealy<Character, Character>(alphabet))
-                                 .withInitial("s0")
-                                 .from("s0")
-                                    .on('a').withOutput('1').to("s1")
-                                 .from("s1")
-                                    .on('b').withOutput('2').to("s2")
-                                 .from("s2")
-                                    .on('c').withOutput('3').to("s0")
-                                 .create();
-        // @formatter:on
+        ThrowingWriter writer = w -> GraphDOT.write(dfa, dfa.getInputAlphabet(), w);
+        checkDOTOutput(writer, DOTSerializationUtil.DFA_RESOURCE);
+    }
 
-        ThrowingWriter writer = w -> GraphDOT.write(automaton, alphabet, w);
-        checkDOTOutput(writer, "/mealy.dot");
+    @Test
+    public void testRegularNFASerialization() throws IOException {
+
+        final CompactNFA<String> nfa = DOTSerializationUtil.NFA;
+
+        ThrowingWriter writer = w -> GraphDOT.write(nfa, nfa.getInputAlphabet(), w);
+        checkDOTOutput(writer, DOTSerializationUtil.NFA_RESOURCE);
+    }
+
+    @Test
+    public void testRegularMealySerialization() throws IOException {
+
+        final CompactMealy<String, String> mealy = DOTSerializationUtil.MEALY;
+
+        ThrowingWriter writer = w -> GraphDOT.write(mealy, mealy.getInputAlphabet(), w);
+        checkDOTOutput(writer, DOTSerializationUtil.MEALY_RESOURCE);
     }
 
     @Test
     public void testRegularMooreExport() throws IOException {
-        // @formatter:off
-        final CompactMoore<Integer, Character> automaton =
-                AutomatonBuilders.<Integer, Character>newMoore(Alphabets.integers(1, 2))
-                        .withInitial("s0", 'a')
-                        .withOutput("s1", 'b')
-                        .withOutput("s2", 'c')
-                        .from("s0").on(1).to("s1")
-                        .from("s1").on(1).to("s2")
-                        .from("s2").on(1).to("s0")
-                        .from("s0").on(2).to("s2")
-                        .from("s1").on(2).to("s0")
-                        .from("s2").on(2).to("s1")
-                .create();
-        // @formatter:on
 
-        ThrowingWriter writer = w -> GraphDOT.write(automaton, w);
-        checkDOTOutput(writer, "/moore.dot");
+        final CompactMoore<String, String> moore = DOTSerializationUtil.MOORE;
+
+        ThrowingWriter writer = w -> GraphDOT.write(moore, moore.getInputAlphabet(), w);
+        checkDOTOutput(writer, DOTSerializationUtil.MOORE_RESOURCE);
     }
 
     @Test
     public void testVisualizationHelper() throws IOException {
 
-        final CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
-
-        final int init = graph.addIntNode();
-        int iter = init;
-
-        for (int i = 0; i < 10; i++) {
-            int next = graph.addIntNode();
-            graph.connect(iter, next);
-            iter = next;
-        }
-
-        graph.connect(iter, init);
+        final CompactGraph<String, String> graph = DOTSerializationUtil.GRAPH;
 
         ThrowingWriter writer = w -> GraphDOT.write(graph,
                                                     w,
                                                     GraphDOT.toDOTVisualizationHelper(new RedTransitionHelper<>()),
-                                                    new PreambleHelper<>());
-        checkDOTOutput(writer, "/graph.dot");
+                                                    new PreambleHelper<>(),
+                                                    new PropertyHelper<>(graph::getNodeProperty,
+                                                                         graph::getEdgeProperty));
+        checkDOTOutput(writer, DOTSerializationUtil.GRAPH_RESOURCE);
     }
 
     private void checkDOTOutput(ThrowingWriter writer, String resource) throws IOException {
@@ -109,8 +92,7 @@ public class DOTSerializationTest {
         final StringWriter dotWriter = new StringWriter();
         final StringWriter expectedWriter = new StringWriter();
 
-        final Reader mealyReader =
-                IOUtil.asBufferedUTF8Reader(DOTSerializationTest.class.getResourceAsStream(resource));
+        final Reader mealyReader = IOUtil.asBufferedUTF8Reader(DOTSerializationUtil.getResource(resource).openStream());
         IOUtil.copy(mealyReader, expectedWriter);
 
         writer.write(dotWriter);
@@ -159,6 +141,29 @@ public class DOTSerializationTest {
 
         @Override
         public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
+            return true;
+        }
+    }
+
+    private static class PropertyHelper<N, E, NP, EP> implements VisualizationHelper<N, E> {
+
+        private final Function<N, NP> npExtractor;
+        private final Function<E, EP> epExtractor;
+
+        PropertyHelper(Function<N, NP> npExtractor, Function<E, EP> epExtractor) {
+            this.npExtractor = npExtractor;
+            this.epExtractor = epExtractor;
+        }
+
+        @Override
+        public boolean getNodeProperties(N node, Map<String, String> properties) {
+            properties.put(NodeAttrs.LABEL, String.valueOf(npExtractor.apply(node)));
+            return true;
+        }
+
+        @Override
+        public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
+            properties.put(EdgeAttrs.LABEL, String.valueOf(epExtractor.apply(edge)));
             return true;
         }
     }

@@ -17,6 +17,7 @@ package net.automatalib.automata.transducers.impl.compact;
 
 import javax.annotation.Nullable;
 
+import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.UniversalCompactSimpleDet;
 import net.automatalib.automata.transducers.MutableMooreMachine;
 import net.automatalib.words.Alphabet;
@@ -41,6 +42,19 @@ public class CompactMoore<I, O> extends UniversalCompactSimpleDet<I, O>
     @Override
     public O getStateOutput(Integer state) {
         return getStateProperty(state);
+    }
+
+    public static final class Creator<I, O> implements AutomatonCreator<CompactMoore<I, O>, I> {
+
+        @Override
+        public CompactMoore<I, O> createAutomaton(Alphabet<I> alphabet, int sizeHint) {
+            return new CompactMoore<>(alphabet, sizeHint, DEFAULT_RESIZE_FACTOR);
+        }
+
+        @Override
+        public CompactMoore<I, O> createAutomaton(Alphabet<I> alphabet) {
+            return new CompactMoore<>(alphabet);
+        }
     }
 
 }

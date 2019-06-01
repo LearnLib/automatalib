@@ -52,7 +52,7 @@ public interface ModelDeserializer<M> {
      * Convenience method for {@link #readModel(InputStream)}, that reads from a given {@link URL}.
      */
     default M readModel(URL url) throws IOException {
-        try (InputStream is = url.openStream()) {
+        try (InputStream is = IOUtil.asBufferedInputStream(url.openStream())) {
             return readModel(is);
         }
     }

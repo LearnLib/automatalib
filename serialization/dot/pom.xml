@@ -46,13 +46,22 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.paypal.digraph</groupId>
+            <artifactId>digraph-parser</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
