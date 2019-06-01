@@ -17,6 +17,7 @@ package net.automatalib.util.automata.builders;
 
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.MutableMooreMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
@@ -40,6 +41,10 @@ public final class AutomatonBuilders {
 
     public static <S, I, A extends MutableDFA<S, ? super I>> DFABuilder<S, I, A> forDFA(A dfa) {
         return new DFABuilder<>(dfa);
+    }
+
+    public static <I> FSABuilder<Integer, I, CompactNFA<I>> newNFA(Alphabet<I> alphabet) {
+        return new FSABuilder<>(new CompactNFA<>(alphabet));
     }
 
     public static <I, O> MealyBuilder<Integer, I, CompactMealyTransition<O>, O, CompactMealy<I, O>> newMealy(Alphabet<I> alphabet) {

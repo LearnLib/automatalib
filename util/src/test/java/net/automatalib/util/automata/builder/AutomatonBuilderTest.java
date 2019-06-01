@@ -16,7 +16,7 @@
 package net.automatalib.util.automata.builder;
 
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
-import net.automatalib.util.automata.builders.FSABuilder;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -33,7 +33,7 @@ public class AutomatonBuilderTest {
         final Alphabet<Integer> alphabet = Alphabets.integers(1, 6);
 
         // @formatter:off
-        final CompactNFA<Integer> nfa = new FSABuilder<>(new CompactNFA<>(alphabet))
+        final CompactNFA<Integer> nfa = AutomatonBuilders.newNFA(alphabet)
                 .withInitial("i0", "i1", "i2")
                 .withAccepting("s0")
                 .from("i0").on(1, 2).to("s0")
