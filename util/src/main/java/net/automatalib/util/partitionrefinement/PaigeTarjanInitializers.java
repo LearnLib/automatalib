@@ -40,8 +40,7 @@ import net.automatalib.words.Alphabet;
  */
 public final class PaigeTarjanInitializers {
 
-    private PaigeTarjanInitializers() {
-    }
+    private PaigeTarjanInitializers() {}
 
     /**
      * Initializes the partition refinement data structure from a given abstracted deterministic automaton, using a

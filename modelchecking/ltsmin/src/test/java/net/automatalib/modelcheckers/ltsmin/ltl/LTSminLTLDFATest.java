@@ -20,7 +20,6 @@ import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -29,12 +28,6 @@ import org.testng.annotations.Test;
 public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>, DFALasso<String>> {
 
     private LTSminLTLDFA<String> modelChecker;
-
-    @BeforeMethod
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
 
     @Override
     public LTSminLTLDFA<String> getModelChecker() {

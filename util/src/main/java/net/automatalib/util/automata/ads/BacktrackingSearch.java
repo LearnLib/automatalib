@@ -46,8 +46,7 @@ import net.automatalib.words.Word;
  */
 public final class BacktrackingSearch {
 
-    private BacktrackingSearch() {
-    }
+    private BacktrackingSearch() {}
 
     /**
      * Computes an ADS by constructing (growing) splitting words for the current set of states and recursively computing

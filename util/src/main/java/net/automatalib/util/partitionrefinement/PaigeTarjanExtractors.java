@@ -43,8 +43,7 @@ import net.automatalib.words.Alphabet;
  */
 public final class PaigeTarjanExtractors {
 
-    private PaigeTarjanExtractors() {
-    }
+    private PaigeTarjanExtractors() {}
 
     /**
      * Translates the results of a coarsest stable partition computation into a deterministic automaton.

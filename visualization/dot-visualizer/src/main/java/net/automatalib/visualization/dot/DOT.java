@@ -81,8 +81,7 @@ public final class DOT {
         DOT.dotExe = dotExe;
     }
 
-    private DOT() {
-    }
+    private DOT() {}
 
     public static void setDotExe(String dotExe) {
         DOT.dotExe = dotExe;

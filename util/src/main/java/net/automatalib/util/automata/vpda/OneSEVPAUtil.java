@@ -31,8 +31,7 @@ import net.automatalib.words.Word;
  */
 public final class OneSEVPAUtil {
 
-    private OneSEVPAUtil() {
-    }
+    private OneSEVPAUtil() {}
 
     public static <L, I> List<L> findReachableLocations(final OneSEVPA<L, I> sevpa, final VPDAlphabet<I> alphabet) {
         return computeAccessSequences(sevpa, alphabet, false, l -> false).reachableLocs;

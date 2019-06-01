@@ -18,7 +18,6 @@ package net.automatalib.util.minimizer;
 import net.automatalib.automata.vpda.DefaultOneSEVPA;
 import net.automatalib.automata.vpda.Location;
 import net.automatalib.automata.vpda.OneSEVPA;
-import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.util.partitionrefinement.Block;
 import net.automatalib.util.partitionrefinement.PaigeTarjan;
 import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;
@@ -31,8 +30,7 @@ import net.automatalib.words.VPDAlphabet;
  */
 public final class OneSEVPAMinimizer {
 
-    private OneSEVPAMinimizer() {
-    }
+    private OneSEVPAMinimizer() {}
 
     public static <I> DefaultOneSEVPA<I> minimize(final OneSEVPA<?, I> sevpa, final VPDAlphabet<I> alphabet) {
         final PaigeTarjan pt = new PaigeTarjan();
@@ -164,22 +162,24 @@ public final class OneSEVPAMinimizer {
         final int numBlocks = pt.getNumBlocks();
         final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, numBlocks);
 
-        final ArrayStorage<Location> resultLocs =
-                new ArrayStorage<>(numBlocks, () -> result.addLocation(false));
+        final Location[] resultLocs = new Location[numBlocks];
+        for (int i = 0; i < resultLocs.length; i++) {
+            resultLocs[i] = result.addLocation(false);
+        }
 
         for (Block curr : pt.blockList()) {
             final int blockId = curr.id;
             final int rep = pt.getRepresentative(curr);
             final L repLoc = original.getLocation(rep);
 
-            final Location resultLoc = resultLocs.get(blockId);
+            final Location resultLoc = resultLocs[blockId];
             resultLoc.setAccepting(original.isAcceptingLocation(repLoc));
 
             for (I intSym : alphabet.getInternalAlphabet()) {
                 final L origSucc = original.getInternalSuccessor(repLoc, intSym);
                 final int origSuccId = original.getLocationId(origSucc);
                 final int resSuccId = pt.getBlockForState(origSuccId).id;
-                final Location resSucc = resultLocs.get(resSuccId);
+                final Location resSucc = resultLocs[resSuccId];
                 result.setInternalSuccessor(resultLoc, intSym, resSucc);
             }
             for (I callSym : alphabet.getCallAlphabet()) {
@@ -187,13 +187,13 @@ public final class OneSEVPAMinimizer {
                     for (Block b : pt.blockList()) {
                         final int stackRepId = pt.getRepresentative(b);
                         final L stackRep = original.getLocation(stackRepId);
-                        final Location resultStackRep = resultLocs.get(b.id);
+                        final Location resultStackRep = resultLocs[b.id];
 
                         final int origStackSym = original.encodeStackSym(stackRep, callSym);
                         final L origSucc = original.getReturnSuccessor(repLoc, retSym, origStackSym);
                         final int origSuccId = original.getLocationId(origSucc);
                         final int resSuccId = pt.getBlockForState(origSuccId).id;
-                        final Location resSucc = resultLocs.get(resSuccId);
+                        final Location resSucc = resultLocs[resSuccId];
 
                         final int stackSym = result.encodeStackSym(resultStackRep, callSym);
                         result.setReturnSuccessor(resultLoc, retSym, stackSym, resSucc);
@@ -203,7 +203,7 @@ public final class OneSEVPAMinimizer {
         }
 
         final int origInit = original.getLocationId(original.getInitialLocation());
-        result.setInitialLocation(resultLocs.get(pt.getBlockForState(origInit).id));
+        result.setInitialLocation(resultLocs[pt.getBlockForState(origInit).id]);
 
         return result;
     }

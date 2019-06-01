@@ -34,8 +34,7 @@ import net.automatalib.words.Alphabet;
 
 public final class NFAs {
 
-    private NFAs() {
-    }
+    private NFAs() {}
 
     public static <I> CompactDFA<I> determinize(NFA<?, I> nfa, Alphabet<I> inputAlphabet) {
         return determinize(nfa, inputAlphabet, false, true);

@@ -134,7 +134,7 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
             }
 
             protected final S intToState(int stateId) {
-                return (stateId >= 0) ? stateIds.getState(stateId) : null;
+                return stateIds.getState(stateId);
             }
 
             @Override

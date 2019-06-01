@@ -25,11 +25,9 @@ public interface BlockPropertyEncoder<P> {
         return (out, p) -> {};
     }
 
-    default void start(DataOutput out) throws IOException {
-    }
+    default void start(DataOutput out) throws IOException {}
 
     void encodeProperty(DataOutput out, P property) throws IOException;
 
-    default void finish(DataOutput out) throws IOException {
-    }
+    default void finish(DataOutput out) throws IOException {}
 }

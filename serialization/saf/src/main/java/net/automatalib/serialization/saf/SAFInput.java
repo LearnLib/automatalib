@@ -108,12 +108,10 @@ class SAFInput {
         int numStates = in.readInt();
         A result = creator.createAutomaton(alphabet, numStates);
 
-        // this cast is required ..
-        final MutableAutomaton<?, I, ?, SP, TP> resultWithCorrectType = result;
         if (deterministic) {
-            decodeBodyDet(resultWithCorrectType, alphabet, numStates, spDecoder, tpDecoder);
+            decodeBodyDet((MutableAutomaton<?, I, ?, SP, TP>) result, alphabet, numStates, spDecoder, tpDecoder);
         } else {
-            decodeBodyNondet(resultWithCorrectType, alphabet, numStates, spDecoder, tpDecoder);
+            decodeBodyNondet((MutableAutomaton<?, I, ?, SP, TP>) result, alphabet, numStates, spDecoder, tpDecoder);
         }
 
         return result;

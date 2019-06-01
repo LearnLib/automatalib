@@ -30,11 +30,13 @@ final class StateSignature<O> implements Serializable {
     StateSignature(int numSuccs) {
         this.successors = new ResizingArrayStorage<>(State.class, numSuccs);
         this.outputs = new ResizingArrayStorage<>(Object.class, numSuccs);
+        updateHashCode();
     }
 
     StateSignature(StateSignature<O> other) {
         this.successors = new ResizingArrayStorage<>(other.successors);
         this.outputs = new ResizingArrayStorage<>(other.outputs);
+        updateHashCode();
     }
 
     public StateSignature<O> duplicate() {

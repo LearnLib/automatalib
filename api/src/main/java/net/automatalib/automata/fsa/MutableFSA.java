@@ -72,8 +72,7 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
     }
 
     @Override
-    default void setTransitionProperty(S transition, Void property) {
-    }
+    default void setTransitionProperty(S transition, Void property) {}
 
     @Override
     default S createTransition(S successor, Void properties) {

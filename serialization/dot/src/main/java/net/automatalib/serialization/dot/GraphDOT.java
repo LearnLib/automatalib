@@ -46,8 +46,7 @@ public final class GraphDOT {
 
     private static final String INITIAL_LABEL = "__start";
 
-    private GraphDOT() {
-    }
+    private GraphDOT() {}
 
     public static void write(GraphViewable gv, Appendable a) throws IOException {
         Graph<?, ?> graph = gv.graphView();

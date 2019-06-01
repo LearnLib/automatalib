@@ -26,8 +26,7 @@ import net.automatalib.ts.TransitionPredicate;
 
 public final class TransitionPredicates {
 
-    private TransitionPredicates() {
-    }
+    private TransitionPredicates() {}
 
     public static <S, I, T> TransitionPredicate<S, I, T> safePred(TransitionPredicate<S, I, T> pred,
                                                                   boolean nullValue) {

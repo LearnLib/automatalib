@@ -17,11 +17,8 @@ package net.automatalib.util.automata.copy;
 
 import net.automatalib.commons.util.mappings.Mapping;
 
-public interface LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> {
+public interface LowLevelAutomatonCopier<S1, S2> {
 
-    /**
-     *
-     */
     void doCopy();
 
     Mapping<S1, S2> getStateMapping();

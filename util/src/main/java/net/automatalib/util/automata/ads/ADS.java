@@ -31,8 +31,7 @@ import net.automatalib.words.Alphabet;
  */
 public final class ADS {
 
-    private ADS() {
-    }
+    private ADS() {}
 
     /**
      * Compute an adaptive distinguishing sequence for the given automaton and the given set of states.

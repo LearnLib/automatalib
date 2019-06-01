@@ -35,8 +35,7 @@ public final class TAFSerializationDFA
 
     private static final TAFSerializationDFA INSTANCE = new TAFSerializationDFA();
 
-    private TAFSerializationDFA() {
-    }
+    private TAFSerializationDFA() {}
 
     public static TAFSerializationDFA getInstance() {
         return INSTANCE;

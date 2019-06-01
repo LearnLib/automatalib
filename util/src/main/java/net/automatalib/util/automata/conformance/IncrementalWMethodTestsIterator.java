@@ -145,7 +145,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 
         @Override
         public String toString() {
-            return Integer.toString(prefixIdx) + " | " + middle + " | " + Integer.toString(suffixIdx);
+            return prefixIdx + " | " + middle + " | " + suffixIdx;
         }
     }
 

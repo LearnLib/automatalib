@@ -32,8 +32,7 @@ import net.automatalib.words.Alphabet;
  */
 public final class AutomatonBuilders {
 
-    private AutomatonBuilders() {
-    }
+    private AutomatonBuilders() {}
 
     public static <I> DFABuilder<Integer, I, CompactDFA<I>> newDFA(Alphabet<I> alphabet) {
         return forDFA(new CompactDFA<>(alphabet));

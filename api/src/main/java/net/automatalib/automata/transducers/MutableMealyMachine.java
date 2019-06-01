@@ -25,8 +25,7 @@ public interface MutableMealyMachine<S, I, T, O>
         extends MealyMachine<S, I, T, O>, MutableDeterministic<S, I, T, Void, O>, MutableTransitionOutput<T, O> {
 
     @Override
-    default void setStateProperty(S state, Void property) {
-    }
+    default void setStateProperty(S state, Void property) {}
 
     @Override
     default void setTransitionProperty(T transition, O property) {

@@ -137,14 +137,14 @@ public final class AutomatonLowLevelCopy {
         final TransitionPredicate<? super S1, ? super I1, ? super T1> safeTransFilter =
                 TransitionPredicates.safePred(transFilter, true);
 
-        LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> copier = method.createLowLevelCopier(in,
-                                                                                                       inputs,
-                                                                                                       out,
-                                                                                                       inputsMapping,
-                                                                                                       safeSpMapping,
-                                                                                                       safeTpMapping,
-                                                                                                       safeStateFilter,
-                                                                                                       safeTransFilter);
+        LowLevelAutomatonCopier<S1, S2> copier = method.createLowLevelCopier(in,
+                                                                             inputs,
+                                                                             out,
+                                                                             inputsMapping,
+                                                                             safeSpMapping,
+                                                                             safeTpMapping,
+                                                                             safeStateFilter,
+                                                                             safeTransFilter);
         copier.doCopy();
         return copier.getStateMapping();
     }

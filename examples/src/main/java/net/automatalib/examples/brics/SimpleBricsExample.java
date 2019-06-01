@@ -27,8 +27,7 @@ import net.automatalib.words.Word;
 
 public final class SimpleBricsExample {
 
-    private SimpleBricsExample() {
-    }
+    private SimpleBricsExample() {}
 
     public static void main(String[] args) {
         // Create a BRICS automaton from a regular expression ...

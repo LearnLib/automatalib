@@ -28,8 +28,7 @@ import net.automatalib.visualization.VisualizationHelper.EdgeStyles;
 
 public final class DFSExample {
 
-    private DFSExample() {
-    }
+    private DFSExample() {}
 
     public static void main(String[] args) {
         CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
@@ -139,6 +138,7 @@ public final class DFSExample {
             EdgeType et = edgeTypes.get(edge);
             assert et != null;
             properties.put(EdgeAttrs.STYLE, et.getStyle());
+            properties.remove(EdgeAttrs.LABEL);
             return true;
         }
     }

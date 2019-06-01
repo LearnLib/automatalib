@@ -31,8 +31,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
 @ParametersAreNonnullByDefault
 public final class SCCs {
 
-    private SCCs() {
-    }
+    private SCCs() {}
 
     /**
      * Collects all strongly-connected components in a graph. The SCCs are returned as a list of lists.

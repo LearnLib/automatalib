@@ -27,8 +27,7 @@ public final class IncrementalDFAExample {
 
     private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'c');
 
-    private IncrementalDFAExample() {
-    }
+    private IncrementalDFAExample() {}
 
     public static void main(String[] args) {
         System.out.println("Incremental construction using a Tree");

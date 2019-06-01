@@ -34,8 +34,7 @@ import net.automatalib.commons.util.IOUtil;
  */
 public final class TAFParser {
 
-    private TAFParser() {
-    }
+    private TAFParser() {}
 
     public static CompactDFA<String> parseDFA(InputStream stream, TAFParseDiagnosticListener listener)
             throws IOException {

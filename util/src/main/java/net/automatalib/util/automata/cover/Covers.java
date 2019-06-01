@@ -37,8 +37,7 @@ import net.automatalib.words.Word;
 @ParametersAreNonnullByDefault
 public final class Covers {
 
-    private Covers() {
-    }
+    private Covers() {}
 
     /**
      * Computes a state cover for a given automaton.

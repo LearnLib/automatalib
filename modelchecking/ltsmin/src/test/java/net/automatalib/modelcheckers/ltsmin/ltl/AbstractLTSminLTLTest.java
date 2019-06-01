@@ -21,16 +21,9 @@ import net.automatalib.modelchecking.Lasso;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public abstract class AbstractLTSminLTLTest<A, L extends Lasso<String, ?>> extends AbstractLTSminTest<A, L> {
-
-    @BeforeMethod
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
 
     @Override
     protected Word<String> getInput() {

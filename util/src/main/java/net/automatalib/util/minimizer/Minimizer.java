@@ -65,8 +65,7 @@ public final class Minimizer<S, L> {
     /**
      * Default constructor.
      */
-    private Minimizer() {
-    }
+    private Minimizer() {}
 
     /**
      * Minimizes an automaton. The automaton is not minimized directly, instead, a {@link MinimizationResult} structure

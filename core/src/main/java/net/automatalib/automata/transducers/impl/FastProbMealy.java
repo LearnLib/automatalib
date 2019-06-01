@@ -64,8 +64,7 @@ public class FastProbMealy<I, O>
     }
 
     @Override
-    public void setStateProperty(FastProbMealyState<O> state, Void property) {
-    }
+    public void setStateProperty(FastProbMealyState<O> state, Void property) {}
 
     @Override
     public void setTransitionProperty(ProbMealyTransition<FastProbMealyState<O>, O> transition,

@@ -85,12 +85,11 @@ public class SAFOutput {
 
         final int numStates = automaton.size();
         out.writeInt(numStates);
-        // this cast is required ..
-        final UniversalAutomaton<?, I, ?, SP, TP> resultWithCorrectType = automaton;
+
         if (deterministic) {
-            encodeBodyDet(resultWithCorrectType, alphabet, spDecoder, tpDecoder);
+            encodeBodyDet(automaton, alphabet, spDecoder, tpDecoder);
         } else {
-            encodeBodyNondet(resultWithCorrectType, alphabet, spDecoder, tpDecoder);
+            encodeBodyNondet(automaton, alphabet, spDecoder, tpDecoder);
         }
     }
 

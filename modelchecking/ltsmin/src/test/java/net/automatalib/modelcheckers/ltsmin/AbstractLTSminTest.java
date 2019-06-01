@@ -69,7 +69,7 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
     }
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         newModelChecker();
         counterExample = createCounterExample();
         automaton = createAutomaton();

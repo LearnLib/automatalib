@@ -54,8 +54,7 @@ import net.automatalib.words.Alphabet;
  */
 public final class HopcroftMinimization {
 
-    private HopcroftMinimization() {
-    }
+    private HopcroftMinimization() {}
 
     /**
      * Minimizes the given Mealy machine. The result is returned in the form of a {@link CompactMealy}, and pruning (see

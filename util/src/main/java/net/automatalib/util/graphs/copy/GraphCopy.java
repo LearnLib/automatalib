@@ -28,8 +28,7 @@ import net.automatalib.util.traversal.TraversalOrder;
 
 public final class GraphCopy {
 
-    private GraphCopy() {
-    }
+    private GraphCopy() {}
 
     public static <N1, E1, N2, E2, NP2, EP2> Mapping<N1, N2> copyPlain(UniversalGraph<N1, E1, ? extends NP2, ? extends EP2> in,
                                                                        MutableGraph<N2, E2, NP2, EP2> out) {

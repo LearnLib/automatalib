@@ -42,8 +42,7 @@ public final class Graphs {
      */
     public static final float INVALID_DISTANCE = Float.NEGATIVE_INFINITY;
 
-    private Graphs() {
-    }
+    private Graphs() {}
 
     public static <N, E> Mapping<N, Collection<E>> incomingEdges(final Graph<N, E> graph) {
         if (graph instanceof BidirectionalGraph) {

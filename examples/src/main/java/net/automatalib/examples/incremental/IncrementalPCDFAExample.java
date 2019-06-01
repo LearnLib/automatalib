@@ -27,8 +27,7 @@ public final class IncrementalPCDFAExample {
 
     private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'c');
 
-    private IncrementalPCDFAExample() {
-    }
+    private IncrementalPCDFAExample() {}
 
     public static void main(String[] args) {
         System.out.println("Incremental construction using a tree");

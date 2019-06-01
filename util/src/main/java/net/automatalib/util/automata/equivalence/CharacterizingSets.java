@@ -51,8 +51,7 @@ import net.automatalib.words.Word;
 @ParametersAreNonnullByDefault
 public final class CharacterizingSets {
 
-    private CharacterizingSets() {
-    }
+    private CharacterizingSets() {}
 
     /**
      * Computes a characterizing set for the given automaton.

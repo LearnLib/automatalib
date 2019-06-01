@@ -17,7 +17,6 @@ package net.automatalib.modelcheckers.ltsmin.ltl;
 
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.lasso.MealyLassoImpl;
-import org.testng.annotations.BeforeMethod;
 
 /**
  * Tests whether LTSminLTLAlternating actually uses alternating edge semantics.
@@ -28,12 +27,6 @@ import org.testng.annotations.BeforeMethod;
 public class LTSminLTLAlternatingTest extends AbstractLTSminLTLMealyTest {
 
     private LTSminLTLAlternating<String, String> modelChecker;
-
-    @BeforeMethod
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
 
     @Override
     public LTSminLTLAlternating<String, String> getModelChecker() {

@@ -29,8 +29,7 @@ import net.automatalib.util.traversal.TraversalOrder;
 
 public final class GraphTraversal {
 
-    private GraphTraversal() {
-    } // prevent inheritance
+    private GraphTraversal() {} // prevent inheritance
 
     public static <N, E, D> boolean traverse(TraversalOrder order,
                                              IndefiniteGraph<N, E> graph,

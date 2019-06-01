@@ -90,7 +90,7 @@ public class MutableAutomatonTest {
 
     @Test
     public void testCompactMoore() {
-        this.checkAutomaton(CompactMoore::new, ALPHABET, STATE_PROPS, EMPTY_PROPS);
+        this.checkAutomaton(new CompactMoore.Creator<>(), ALPHABET, STATE_PROPS, EMPTY_PROPS);
     }
 
     @Test

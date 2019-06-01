@@ -35,8 +35,7 @@ import net.automatalib.words.WordBuilder;
  */
 public final class ADSUtil {
 
-    private ADSUtil() {
-    }
+    private ADSUtil() {}
 
     public static <S, I, O> int computeLength(final ADSNode<S, I, O> node) {
         if (node.isLeaf()) {

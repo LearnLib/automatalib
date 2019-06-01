@@ -33,8 +33,7 @@ public final class IncrementalMealyExample {
     private static final Word<Character> W_3 = Word.fromString("acb");
     private static final Word<Character> W_3_O = Word.fromString("xwu");
 
-    private IncrementalMealyExample() {
-    }
+    private IncrementalMealyExample() {}
 
     public static void main(String[] args) {
         System.out.println("Incremental construction using a tree");

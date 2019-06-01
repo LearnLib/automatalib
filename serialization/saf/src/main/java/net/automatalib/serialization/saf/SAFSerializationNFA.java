@@ -31,8 +31,7 @@ public final class SAFSerializationNFA
 
     private static final SAFSerializationNFA INSTANCE = new SAFSerializationNFA();
 
-    private SAFSerializationNFA() {
-    }
+    private SAFSerializationNFA() {}
 
     public static SAFSerializationNFA getInstance() {
         return INSTANCE;

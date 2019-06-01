@@ -39,8 +39,7 @@ import net.automatalib.words.Word;
  */
 public final class StateEquivalence {
 
-    private StateEquivalence() {
-    }
+    private StateEquivalence() {}
 
     /**
      * Computes a two-state ADS by using {@link Automata#findSeparatingWord(UniversalDeterministicAutomaton,

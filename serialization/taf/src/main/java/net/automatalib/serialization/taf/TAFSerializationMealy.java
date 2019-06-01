@@ -35,8 +35,7 @@ public final class TAFSerializationMealy
 
     private static final TAFSerializationMealy INSTANCE = new TAFSerializationMealy();
 
-    private TAFSerializationMealy() {
-    }
+    private TAFSerializationMealy() {}
 
     public static TAFSerializationMealy getInstance() {
         return INSTANCE;

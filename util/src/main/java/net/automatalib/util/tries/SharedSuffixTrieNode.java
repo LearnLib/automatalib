@@ -31,8 +31,7 @@ final class SharedSuffixTrieNode<I> extends SuffixTrieNode<I> {
     /**
      * Root constructor.
      */
-    SharedSuffixTrieNode() {
-    }
+    SharedSuffixTrieNode() {}
 
     /**
      * Constructor.

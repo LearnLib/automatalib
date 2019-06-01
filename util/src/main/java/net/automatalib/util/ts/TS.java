@@ -30,8 +30,7 @@ import net.automatalib.util.ts.traversal.BFSOrderIterator;
 
 public class TS {
 
-    protected TS() {
-    }
+    protected TS() {}
 
     public static <S, I> Iterable<S> bfsOrder(TransitionSystem<S, I, ?> ts, Collection<? extends I> inputs) {
         return () -> bfsOrderIterator(ts, inputs);

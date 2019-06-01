@@ -29,7 +29,7 @@ import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.TransitionSystem;
 
 public abstract class AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2, TS1 extends TransitionSystem<S1, ? super I1, T1>>
-        implements LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> {
+        implements LowLevelAutomatonCopier<S1, S2> {
 
     protected final TS1 in;
     protected final Collection<? extends I1> inputs;

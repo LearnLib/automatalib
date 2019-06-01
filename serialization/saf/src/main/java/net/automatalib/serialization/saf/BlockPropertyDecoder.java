@@ -25,11 +25,9 @@ public interface BlockPropertyDecoder<P> {
         return in -> null;
     }
 
-    default void start(DataInput in) throws IOException {
-    }
+    default void start(DataInput in) throws IOException {}
 
     P readProperty(DataInput in) throws IOException;
 
-    default void finish(DataInput in) throws IOException {
-    }
+    default void finish(DataInput in) throws IOException {}
 }

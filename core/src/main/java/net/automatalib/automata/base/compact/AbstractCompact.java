@@ -283,15 +283,17 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      *         default value for newly allocated array positions
      * @param payload
      *         the payload object
+     * @param <S>
+     *         the storage type
      *
      * @return a copy of the provided array with updated memory layout.
      *
      * @see #updateTransitionStorage(int[], int, Payload)
      * @see #updateTransitionStorage(Object[], Object, Payload)
      */
-    protected final <T> T[] updateTransitionStorage(T[] oldStorage,
-                                                    IntFunction<T[]> arrayConstructor,
-                                                    @Nullable T defaultValue,
+    protected final <S> S[] updateTransitionStorage(S[] oldStorage,
+                                                    IntFunction<S[]> arrayConstructor,
+                                                    @Nullable S defaultValue,
                                                     Payload payload) {
         return payload.type.updateStorage(oldStorage, payload, arrayConstructor, (arr, idx) -> arr[idx] = defaultValue);
     }

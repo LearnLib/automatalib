@@ -21,8 +21,7 @@ import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 
 public final class Acceptors {
 
-    private Acceptors() {
-    }
+    private Acceptors() {}
 
     public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> and(
             TS1 ts1,

@@ -24,6 +24,5 @@ final class DOTMisc {
 
     public static final FileFilter PNG_FILTER = new FileNameExtensionFilter("Portable Network Graphics (*.png)", "png");
 
-    private DOTMisc() {
-    }
+    private DOTMisc() {}
 }

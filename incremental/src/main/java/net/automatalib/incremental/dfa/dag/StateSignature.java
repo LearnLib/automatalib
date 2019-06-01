@@ -42,6 +42,7 @@ final class StateSignature implements Serializable {
     StateSignature(StateSignature other) {
         this.successors = new ResizingArrayStorage<>(other.successors);
         this.acceptance = other.acceptance;
+        updateHashCode();
     }
 
     public void updateHashCode() {

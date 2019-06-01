@@ -106,8 +106,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     }
 
     @Override
-    public void setTransitionProperty(Integer transition, Void property) {
-    }
+    public void setTransitionProperty(Integer transition, Void property) {}
 
     @Override
     public void removeTransition(Integer state, I input, Integer transition) {

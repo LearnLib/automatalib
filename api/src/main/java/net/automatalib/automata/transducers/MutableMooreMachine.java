@@ -27,7 +27,6 @@ public interface MutableMooreMachine<S, I, T, O>
     }
 
     @Override
-    default void setTransitionProperty(T transition, Void property) {
-    }
+    default void setTransitionProperty(T transition, Void property) {}
 
 }

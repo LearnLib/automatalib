@@ -28,8 +28,7 @@ import com.google.common.primitives.Primitives;
  */
 public final class ReflectUtil {
 
-    private ReflectUtil() {
-    }
+    private ReflectUtil() {}
 
     /**
      * Tries to find a constructor that is able to accept parameters of the given types. First tries to find the

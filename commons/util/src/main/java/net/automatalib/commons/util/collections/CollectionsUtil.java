@@ -30,8 +30,7 @@ import java.util.RandomAccess;
 public final class CollectionsUtil {
 
     // Prevent instantiation.
-    private CollectionsUtil() {
-    }
+    private CollectionsUtil() {}
 
     public static <E> E removeReplace(List<E> list, int index) {
         int lastIdx = list.size() - 1;

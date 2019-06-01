@@ -47,8 +47,7 @@ public final class IOUtil {
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
     // Prevent instantiation
-    private IOUtil() {
-    }
+    private IOUtil() {}
 
     /**
      * Skips the content of the stream as long as there is data available. Afterwards, the stream is closed.

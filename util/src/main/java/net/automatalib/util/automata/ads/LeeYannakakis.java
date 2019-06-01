@@ -52,8 +52,7 @@ import net.automatalib.words.Word;
  */
 public final class LeeYannakakis {
 
-    private LeeYannakakis() {
-    }
+    private LeeYannakakis() {}
 
     /**
      * Computes an ADS using the algorithm of Lee and Yannakakis.

@@ -31,7 +31,7 @@ public class FSAVisualizationHelper<S, I> extends AutomatonVisualizationHelper<S
             return false;
         }
         if (automaton.isAccepting(node)) {
-            String oldShape = properties.getOrDefault(NodeAttrs.SHAPE, "oval");
+            String oldShape = properties.getOrDefault(NodeAttrs.SHAPE, NodeShapes.OVAL);
             properties.put(NodeAttrs.SHAPE, "double" + oldShape);
             properties.put(NodeAttrs.ACCEPTING, "true");
         }

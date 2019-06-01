@@ -160,8 +160,7 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
     }
 
     @Override
-    public void setEdgeProperty(N edge, Void property) {
-    }
+    public void setEdgeProperty(N edge, Void property) {}
 
     @Override
     public void removeNode(N node) {

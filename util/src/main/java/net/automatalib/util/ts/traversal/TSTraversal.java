@@ -30,8 +30,7 @@ public final class TSTraversal {
 
     public static final int NO_LIMIT = -1;
 
-    private TSTraversal() {
-    }
+    private TSTraversal() {}
 
     public static <S, I, T, D> boolean depthFirst(TransitionSystem<S, I, T> ts,
                                                   Collection<? extends I> inputs,
