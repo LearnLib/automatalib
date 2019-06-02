@@ -15,6 +15,10 @@
  */
 package net.automatalib.commons.smartcollections;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -52,5 +56,16 @@ public class DefaultLinkedListTest {
         Assert.assertEquals(linkedList.get(fourthRef), fourth);
         Assert.assertEquals(linkedList.getFront(), fourth);
         Assert.assertEquals(linkedList.get(linkedList.succ(fourthRef)), first);
+
+        Object fifth = new Object();
+        linkedList.insertBefore(fifth, fourthRef);
+        linkedList.insertAfter(fifth, thirdRef);
+
+        Assert.assertEquals(linkedList.popBack(), fifth);
+        Assert.assertEquals(linkedList.popFront(), fifth);
+
+        final List<ElementReference> expected = Arrays.asList(fourthRef, firstRef, secondRef, thirdRef);
+        final List<ElementReference> refs = Lists.newArrayList(linkedList.referenceIterator());
+        Assert.assertEquals(expected, refs);
     }
 }

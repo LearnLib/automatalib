@@ -15,11 +15,11 @@
  */
 package net.automatalib.commons.smartcollections;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import com.google.common.collect.Iterators;
 
@@ -65,17 +65,8 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         this.backingQueue = BinaryHeap.create(entries);
     }
 
-    @SuppressWarnings("unchecked")
-    public BackedGeneralPriorityQueue(Class<? extends SmartDynamicPriorityQueue<?>> backingClazz) {
-        SmartDynamicPriorityQueue<?> backing;
-        try {
-            backing = backingClazz.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            throw new IllegalArgumentException(
-                    "Cannot instantiate backing priority queue of type " + backingClazz.getName() + ": " +
-                    e.getMessage(), e);
-        }
-        this.backingQueue = (SmartDynamicPriorityQueue<Entry<E, K>>) backing;
+    public BackedGeneralPriorityQueue(Supplier<? extends SmartDynamicPriorityQueue<Entry<E, K>>> supplier) {
+        this.backingQueue = supplier.get();
     }
 
     /**
@@ -85,12 +76,11 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
      * @param backingQueue
      *         the backing queue.
      */
-    @SuppressWarnings("unchecked")
-    public BackedGeneralPriorityQueue(SmartDynamicPriorityQueue<?> backingQueue) {
+    public BackedGeneralPriorityQueue(SmartDynamicPriorityQueue<Entry<E, K>> backingQueue) {
         if (!backingQueue.isEmpty()) {
             throw new IllegalArgumentException("Backing priority queue must be empty upon initialization!");
         }
-        this.backingQueue = (SmartDynamicPriorityQueue<Entry<E, K>>) backingQueue;
+        this.backingQueue = backingQueue;
     }
 
     @Override
@@ -220,7 +210,10 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
 
         @Override
         public int compareTo(Entry<E, K> o) {
-            return key.compareTo(o.key);
+            if (o.key == null) {
+                return key == null ? 0 : -1;
+            }
+            return key == null ? 1 : key.compareTo(o.key);
         }
     }
 

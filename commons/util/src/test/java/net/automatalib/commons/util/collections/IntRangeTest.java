@@ -23,7 +23,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
-public class IntRangeListTest {
+public class IntRangeTest {
 
     private IntRange ir0, ir1;
 

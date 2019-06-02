@@ -36,7 +36,7 @@ public interface SmartPriorityQueue<E> extends SmartCollection<E> {
     E peekMin();
 
     /**
-     * Retrieves and remove the element with the minimum key in the priority queue. If there are several elements with
+     * Retrieves and removes the element with the minimum key in the priority queue. If there are several elements with
      * minimal key values, one of them is chosen arbitrarily.
      *
      * @return the element with the previously minimal key.
