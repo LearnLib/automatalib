@@ -36,16 +36,15 @@ class SubwordList<I> extends AbstractList<Word<I>> {
     @Override
     @Nonnull
     public Word<I> get(int index) {
-        if (index < 0 || index > word.length()) {
+        final int length = word.length();
+
+        if (index < 0 || index > length) {
             throw new IndexOutOfBoundsException();
         }
-        if (prefix) {
-            return word.prefix(index);
-        }
-        if (reverse) {
-            return word.suffix(word.length() - index);
-        }
-        return word.suffix(index);
+
+        final int idx = reverse ? length - index : index;
+
+        return prefix ? word.prefix(idx) : word.suffix(idx);
     }
 
     @Override

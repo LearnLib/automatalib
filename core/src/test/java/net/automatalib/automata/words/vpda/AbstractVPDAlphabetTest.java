@@ -19,6 +19,7 @@ import java.util.List;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
+import net.automatalib.words.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -104,5 +105,43 @@ public abstract class AbstractVPDAlphabetTest<I, M extends VPDAlphabet<I>> {
         for (final I i : this.nonAlphabetSymbols) {
             Assert.assertThrows(() -> alphabet.getSymbolIndex(i));
         }
+    }
+
+    @Test
+    public void testWellMatchednessChecks() {
+        final M alphabet = getAlphabet();
+        final I c1 = callSymbols.get(0);
+        final I c2 = callSymbols.get(1);
+        final I i1 = internalSymbols.get(0);
+        final I i2 = internalSymbols.get(1);
+        final I r1 = returnSymbols.get(0);
+        final I r2 = returnSymbols.get(1);
+
+        final Word<I> w1 = Word.fromSymbols(c1, c2, i1, i1, i2, r1, i2, c2, r2, r2);
+
+        Assert.assertTrue(alphabet.isWellMatched(w1));
+        Assert.assertTrue(alphabet.isCallMatched(w1));
+        Assert.assertTrue(alphabet.isReturnMatched(w1));
+        Assert.assertEquals(alphabet.callReturnBalance(w1), 0);
+        Assert.assertEquals(alphabet.longestWellMatchedPrefix(w1), w1);
+        Assert.assertEquals(alphabet.longestWellMatchedSuffix(w1), w1);
+
+        final Word<I> w2 = Word.fromSymbols(i1, c2, c1, i1, i2, r2);
+
+        Assert.assertFalse(alphabet.isWellMatched(w2));
+        Assert.assertFalse(alphabet.isCallMatched(w2));
+        Assert.assertTrue(alphabet.isReturnMatched(w2));
+        Assert.assertEquals(alphabet.callReturnBalance(w2), 1);
+        Assert.assertEquals(alphabet.longestWellMatchedPrefix(w2), w2.prefix(1));
+        Assert.assertEquals(alphabet.longestWellMatchedSuffix(w2), w2.suffix(4));
+
+        final Word<I> w3 = Word.fromSymbols(i1, c1, i2, r2, i2, r1, i1, r1, c2);
+
+        Assert.assertFalse(alphabet.isWellMatched(w3));
+        Assert.assertFalse(alphabet.isCallMatched(w3));
+        Assert.assertFalse(alphabet.isReturnMatched(w3));
+        Assert.assertEquals(alphabet.callReturnBalance(w3), -1);
+        Assert.assertEquals(alphabet.longestWellMatchedPrefix(w3), w3.prefix(5));
+        Assert.assertEquals(alphabet.longestWellMatchedSuffix(w3), w3.suffix(0));
     }
 }

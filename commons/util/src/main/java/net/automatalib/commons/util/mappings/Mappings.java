@@ -223,4 +223,12 @@ public final class Mappings {
     public static <D, R> Mapping<D, R> fromMap(Map<D, R> map) {
         return new MapMapping<>(map);
     }
+
+    public static Mapping<String, Long> stringToIndex() {
+        return StringIndexMapping::stringToIndex;
+    }
+
+    public static Mapping<Long, String> indexToString() {
+        return StringIndexMapping::indexToString;
+    }
 }

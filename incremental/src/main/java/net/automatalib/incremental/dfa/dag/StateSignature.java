@@ -67,25 +67,14 @@ final class StateSignature implements Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (!(obj instanceof StateSignature)) {
             return false;
         }
-        if (obj.getClass() != StateSignature.class) {
-            return false;
-        }
-        StateSignature other = (StateSignature) obj;
-        if (hashCode != other.hashCode) {
-            return false;
-        }
-        if (acceptance != other.acceptance) {
-            return false;
-        }
-        for (int i = 0; i < successors.array.length; i++) {
-            if (successors.array[i] != other.successors.array[i]) {
-                return false;
-            }
-        }
-        return true;
+
+        final StateSignature other = (StateSignature) obj;
+
+        return (hashCode != other.hashCode) && (acceptance != other.acceptance) &&
+               Arrays.equals(successors.array, other.successors.array);
     }
 
 }

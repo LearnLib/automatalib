@@ -17,6 +17,7 @@ package net.automatalib.words;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import net.automatalib.AutomataLibSettingsTest;
 import org.testng.Assert;
@@ -113,6 +114,34 @@ public class WordTest {
         Assert.assertEquals(bc, abc.subWord(1));
         Assert.assertEquals(abc, abc.subWord(0));
         Assert.assertEquals(b, abc.subWord(1, 2));
+    }
+
+    @Test
+    public void prefixSuffixSetTest() {
+        final Word<Character> w = Word.fromCharSequence("abcdefg");
+        final int n = w.size();
+
+        List<Word<Character>> prefixes = w.prefixes(false);
+        List<Word<Character>> suffixes = w.suffixes(false);
+
+        Assert.assertEquals(prefixes.size(), n + 1);
+        Assert.assertEquals(suffixes.size(), n + 1);
+
+        for (int i = 0; i <= n; i++) {
+            Assert.assertEquals(prefixes.get(i), w.prefix(i));
+            Assert.assertEquals(suffixes.get(i), w.suffix(i));
+        }
+
+        prefixes = w.prefixes(true);
+        suffixes = w.suffixes(true);
+
+        Assert.assertEquals(prefixes.size(), n + 1);
+        Assert.assertEquals(suffixes.size(), n + 1);
+
+        for (int i = 0; i <= n; i++) {
+            Assert.assertEquals(prefixes.get(n - i), w.prefix(i));
+            Assert.assertEquals(suffixes.get(n - i), w.suffix(i));
+        }
     }
 
     @Test

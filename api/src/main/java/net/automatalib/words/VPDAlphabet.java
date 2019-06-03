@@ -193,8 +193,10 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
     }
 
     default Word<I> longestWellMatchedPrefix(Word<I> word) {
-        int idx = 0, len = word.length();
+        int idx = 0;
+        int len = word.length();
         int crb = 0;
+        int lastzero = 0;
         outer:
         while (idx < len) {
             final I sym = word.getSymbol(idx);
@@ -210,9 +212,12 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
                     break;
                 default:
             }
+            if (crb == 0) {
+                lastzero = idx + 1;
+            }
             idx++;
         }
-        return word.prefix(idx);
+        return word.prefix(lastzero);
     }
 
     default Word<I> longestWellMatchedSuffix(Word<I> word) {
