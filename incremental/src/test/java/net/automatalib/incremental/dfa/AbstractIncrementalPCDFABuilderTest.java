@@ -153,21 +153,6 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
         Assert.assertEquals(sepWord, Word.fromString("acba"));
     }
 
-    @Test
-    public void testCounterexampleOfLengthOne() {
-        final IncrementalDFABuilder<Character> incPcDfa = createIncrementalPCDFABuilder(TEST_ALPHABET);
-        incPcDfa.insert(Word.fromCharSequence("a"), true);
-
-        final CompactDFA<Character> dfa = new CompactDFA<>(TEST_ALPHABET);
-        final Integer q0 = dfa.addInitialState(true);
-        final Integer q1 = dfa.addState(false);
-
-        dfa.addTransition(q0, 'a', q1);
-
-        final Word<Character> ce = incPcDfa.findSeparatingWord(dfa, TEST_ALPHABET, false);
-        Assert.assertNotNull(ce);
-    }
-
     @Test(dependsOnMethods = "testLookup")
     public void testNewInputSymbol() {
         final GrowingAlphabet<Character> alphabet = new GrowingMapAlphabet<>(TEST_ALPHABET);
@@ -192,5 +177,74 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
         growableBuilder.insert(input2, false);
         Assert.assertEquals(growableBuilder.lookup(input2), Acceptance.FALSE);
         Assert.assertEquals(growableBuilder.lookup(input2.append('d')), Acceptance.FALSE);
+    }
+
+    @Test
+    public void testCounterexampleOfLengthOne() {
+        final IncrementalDFABuilder<Character> incPcDfa = createIncrementalPCDFABuilder(TEST_ALPHABET);
+        incPcDfa.insert(Word.fromCharSequence("a"), true);
+
+        final CompactDFA<Character> dfa = new CompactDFA<>(TEST_ALPHABET);
+        final Integer q0 = dfa.addInitialState(true);
+        final Integer q1 = dfa.addState(false);
+
+        dfa.addTransition(q0, 'a', q1);
+
+        final Word<Character> ce = incPcDfa.findSeparatingWord(dfa, TEST_ALPHABET, false);
+        Assert.assertNotNull(ce);
+    }
+
+    @Test
+    public void testRejectAll() {
+        final IncrementalDFABuilder<Character> incPcDfa = createIncrementalPCDFABuilder(TEST_ALPHABET);
+
+        incPcDfa.insert(Word.epsilon(), false);
+
+        Word<Character> w1 = Word.fromString("abc");
+        Word<Character> w2 = Word.fromString("acb");
+        Word<Character> w3 = Word.fromString("ac");
+
+        Assert.assertEquals(incPcDfa.lookup(w1), Acceptance.FALSE);
+        Assert.assertEquals(incPcDfa.lookup(w2), Acceptance.FALSE);
+        Assert.assertEquals(incPcDfa.lookup(w3), Acceptance.FALSE);
+
+        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(w1, true));
+        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(w2, true));
+        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(w3, true));
+    }
+
+    @Test
+    public void testLateSink() {
+        final IncrementalDFABuilder<Character> incPcDfa = createIncrementalPCDFABuilder(TEST_ALPHABET);
+
+        Word<Character> w1 = Word.fromString("abc");
+        Word<Character> w2 = Word.fromString("bca");
+        Word<Character> w3 = Word.fromString("cb");
+
+        incPcDfa.insert(w1, false);
+        incPcDfa.insert(w2, false);
+
+        Assert.assertEquals(incPcDfa.asGraph().size(), 6);
+
+        incPcDfa.insert(Word.epsilon(), false);
+
+        Assert.assertEquals(incPcDfa.asGraph().size(), 1);
+
+        Assert.assertEquals(incPcDfa.lookup(w1), Acceptance.FALSE);
+        Assert.assertEquals(incPcDfa.lookup(w2), Acceptance.FALSE);
+        Assert.assertEquals(incPcDfa.lookup(w3), Acceptance.FALSE);
+
+        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(w3, true));
+    }
+
+    @Test
+    public void testInvalidSink() {
+        final IncrementalDFABuilder<Character> incPcDfa = createIncrementalPCDFABuilder(TEST_ALPHABET);
+
+        incPcDfa.insert(Word.fromString("abc"), false);
+        incPcDfa.insert(Word.fromString("bca"), true);
+
+        Assert.assertEquals(incPcDfa.asGraph().size(), 7);
+        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(Word.epsilon(), false));
     }
 }

@@ -58,6 +58,10 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
     protected State getState(Word<? extends I> word) {
         State s = init;
 
+        if (init.getAcceptance() == Acceptance.FALSE) {
+            return sink;
+        }
+
         for (I sym : word) {
             int idx = inputAlphabet.getSymbolIndex(sym);
             s = s.getSuccessor(idx);
@@ -79,8 +83,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         for (I sym : word) {
             if (curr.getAcceptance() == Acceptance.FALSE) {
                 if (accepting) {
-
-                    throw new IllegalArgumentException("Conflict");
+                    throw new ConflictException("Conflict");
                 }
                 return;
             }
@@ -114,8 +117,16 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                 throw new ConflictException("Incompatible acceptances: " + currAcc + " vs " + acc);
             }
             if (!accepting) {
+                // once we insert a rejected word, we need a sink
+                if (sink == null) {
+                    sink = new State(null);
+                }
                 if (conf == null) {
                     purge(last);
+                }
+                if (last == init) {
+                    updateInitSignature(Acceptance.FALSE);
+                    return;
                 }
                 last = sink;
             } else {

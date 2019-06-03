@@ -51,7 +51,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         super(inputAlphabet);
         StateSignature sig = new StateSignature(alphabetSize, Acceptance.DONT_KNOW);
         this.init = new State(sig);
-        register.put(null, init);
+        register.put(sig, init);
     }
 
     @Override
