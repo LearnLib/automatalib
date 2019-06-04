@@ -329,13 +329,13 @@ public final class TSCopy {
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, SP1, TP1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                                   UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
-                                                                                   int limit,
-                                                                                   Collection<? extends I> inputs,
-                                                                                   MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
-                                                                                   Function<? super SP1, ? extends SP2> spTransform,
-                                                                                   Function<? super TP1, ? extends TP2> tpTransform) {
+    public static <S1, I, T1, SP1, TP1, S2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                               UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
+                                                                               int limit,
+                                                                               Collection<? extends I> inputs,
+                                                                               MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
+                                                                               Function<? super SP1, ? extends SP2> spTransform,
+                                                                               Function<? super TP1, ? extends TP2> tpTransform) {
         return copy(method,
                     in,
                     limit,
@@ -372,15 +372,15 @@ public final class TSCopy {
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, SP1, TP1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                                   UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
-                                                                                   int limit,
-                                                                                   Collection<? extends I> inputs,
-                                                                                   MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
-                                                                                   Function<? super SP1, ? extends SP2> spTransform,
-                                                                                   Function<? super TP1, ? extends TP2> tpTransform,
-                                                                                   Predicate<? super S1> stateFilter,
-                                                                                   TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
+    public static <S1, I, T1, SP1, TP1, S2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                               UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
+                                                                               int limit,
+                                                                               Collection<? extends I> inputs,
+                                                                               MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
+                                                                               Function<? super SP1, ? extends SP2> spTransform,
+                                                                               Function<? super TP1, ? extends TP2> tpTransform,
+                                                                               Predicate<? super S1> stateFilter,
+                                                                               TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
         return copy(method,
                     in,
                     limit,
