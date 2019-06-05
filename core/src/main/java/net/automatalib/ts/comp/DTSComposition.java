@@ -64,7 +64,7 @@ public class DTSComposition<S1, S2, I, T1, T2, TS1 extends DeterministicTransiti
             return null;
         }
 
-        return Pair.of(t1, t2);
+        return t1 == null && t2 == null ? null : Pair.of(t1, t2);
     }
 
     @Override
