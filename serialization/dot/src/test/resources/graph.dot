@@ -32,5 +32,4 @@ digraph g {
 	s7 -> s14 [color="red" label="14"];
 
 // this is a postamble
-
 }

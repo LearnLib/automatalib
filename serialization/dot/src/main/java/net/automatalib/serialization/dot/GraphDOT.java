@@ -293,11 +293,13 @@ public final class GraphDOT {
             }
         }
 
-        a.append(System.lineSeparator());
-        renderInitialArrowTip(initialNodes, a);
+        if (!initialNodes.isEmpty()) {
+            a.append(System.lineSeparator());
+            renderInitialArrowTip(initialNodes, a);
+        }
 
-        dotHelper.writePostamble(a);
         a.append(System.lineSeparator());
+        dotHelper.writePostamble(a);
 
         a.append('}').append(System.lineSeparator());
         if (a instanceof Flushable) {
