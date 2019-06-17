@@ -16,8 +16,6 @@
 package net.automatalib.modelcheckers.ltsmin.integration;
 
 import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
@@ -101,11 +99,9 @@ public abstract class AbstractAut2ETF2FSM2AutTest<
         final A automatonIn = fsm2Automaton(fsm);
 
         // find the inputs that are actually used
-        final List<String> inputs = automatonOut.getInputAlphabet().stream().filter(
+        final Alphabet<String> inputAlphabet = automatonOut.getInputAlphabet().stream().filter(
                 i -> automatonOut.getStates().stream().anyMatch(
-                        s -> automatonOut.getSuccessor(s, i) != null)).collect(Collectors.toList());
-
-        final Alphabet<String> inputAlphabet = Alphabets.fromCollection(inputs);
+                        s -> automatonOut.getSuccessor(s, i) != null)).collect(Alphabets.collector());
 
         // test we have the same alphabet ignoring order
         Assert.assertEquals(Sets.newHashSet(inputAlphabet), Sets.newHashSet(automatonIn.getInputAlphabet()));

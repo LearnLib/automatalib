@@ -29,6 +29,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collector;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -811,6 +812,18 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
             array[i++] = transformer.apply(symbol);
         }
         return new SharedWord<>(array);
+    }
+
+    /**
+     * Returns a {@link Collector} that collects individual symbols (in order) and aggregates them in a {@link Word}.
+     *
+     * @param <I>
+     *         input symbol type
+     *
+     * @return a {@link Collector} that collects individual symbols in order and aggregates them in a {@link Word}
+     */
+    public static <I> Collector<I, ?, Word<I>> collector() {
+        return new WordCollector<>();
     }
 
     /*

@@ -20,7 +20,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -414,10 +413,10 @@ public final class LeeYannakakis {
                                                                                           pendingPartition,
                                                                                           implicationGraph.size(),
                                                                                           successor);
-                    final List<I> word =
-                            path.edgeList().stream().map(CompactEdge::getProperty).collect(Collectors.toList());
+                    final Word<I> word =
+                            path.edgeList().stream().map(CompactEdge::getProperty).collect(Word.collector());
 
-                    result.get(Validity.C_VALID).add(Pair.of(Word.fromList(word), pendingC));
+                    result.get(Validity.C_VALID).add(Pair.of(word, pendingC));
                     continue pendingCLoop;
                 }
             }
