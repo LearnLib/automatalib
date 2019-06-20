@@ -122,7 +122,7 @@ public class DOTSerializationTest {
         }
     }
 
-    private static class PreambleHelper<N, E> implements DOTVisualizationHelper<N, E> {
+    private static class PreambleHelper<N, E> extends DefaultDOTVisualizationHelper<N, E> {
 
         @Override
         public void writePreamble(Appendable a) throws IOException {
@@ -132,16 +132,6 @@ public class DOTSerializationTest {
         @Override
         public void writePostamble(Appendable a) throws IOException {
             a.append("// this is a postamble").append(System.lineSeparator());
-        }
-
-        @Override
-        public boolean getNodeProperties(N node, Map<String, String> properties) {
-            return true;
-        }
-
-        @Override
-        public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
-            return true;
         }
     }
 

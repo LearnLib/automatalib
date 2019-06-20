@@ -15,6 +15,7 @@
  */
 package net.automatalib.serialization.dot;
 
+import java.io.IOException;
 import java.util.Map;
 
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -70,9 +71,9 @@ public class DefaultDOTVisualizationHelper<N, E> extends DefaultVisualizationHel
     }
 
     @Override
-    public void writePreamble(Appendable a) {}
+    public void writePreamble(Appendable a) throws IOException {}
 
     @Override
-    public void writePostamble(Appendable a) {}
+    public void writePostamble(Appendable a) throws IOException {}
 
 }
