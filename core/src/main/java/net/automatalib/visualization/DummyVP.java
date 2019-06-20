@@ -28,11 +28,16 @@ import org.slf4j.LoggerFactory;
 @MetaInfServices(VisualizationProvider.class)
 public class DummyVP implements VisualizationProvider {
 
+    /**
+     * the {@link #getId() id} of this {@link VisualizationProvider}.
+     */
+    public static final String ID = "dummy";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DummyVP.class);
 
     @Override
     public String getId() {
-        return "dummy";
+        return ID;
     }
 
     @Override

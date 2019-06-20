@@ -31,11 +31,16 @@ import org.kohsuke.MetaInfServices;
 @MetaInfServices(VisualizationProvider.class)
 public class GraphVizSwingVisualizationProvider implements VisualizationProvider {
 
+    /**
+     * the {@link #getId() id} of this {@link VisualizationProvider}.
+     */
+    public static final String ID = "graphviz-swing";
+
     private static final int PRIORITY = 11;
 
     @Override
     public String getId() {
-        return "graphviz-swing";
+        return ID;
     }
 
     @Override

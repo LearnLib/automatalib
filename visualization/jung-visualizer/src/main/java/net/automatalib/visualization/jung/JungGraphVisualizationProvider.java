@@ -64,6 +64,11 @@ import org.slf4j.LoggerFactory;
 @MetaInfServices(VisualizationProvider.class)
 public class JungGraphVisualizationProvider implements VisualizationProvider {
 
+    /**
+     * the {@link #getId() id} of this {@link VisualizationProvider}.
+     */
+    public static final String ID = "jung";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(JungGraphVisualizationProvider.class);
 
     private final PluggableGraphMouse mouse;
@@ -79,7 +84,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
     @Override
     public String getId() {
-        return "jung";
+        return ID;
     }
 
     @Override
