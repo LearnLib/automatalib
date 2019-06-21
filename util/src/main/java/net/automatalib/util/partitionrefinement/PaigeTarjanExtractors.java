@@ -193,6 +193,7 @@ public final class PaigeTarjanExtractors {
                         SP succSp = spExtractor.apply(succ);
                         resSucc = result.addState(succSp);
                         states.set(succBlockId, resSucc);
+                        queue.add(Pair.of(succ, resSucc));
                     }
                     result.setTransition(resState, sym, resSucc, tp);
                 }

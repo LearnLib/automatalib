@@ -27,9 +27,10 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.impl.FastMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers.AutomatonInitialPartitioning;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -111,8 +112,7 @@ public class PaigeTarjanTest {
                                                                                                    false);
 
         Assert.assertEquals(resultSep.size(), 2);
-        Assert.assertEquals(resultSep.computeOutput(Word.fromCharSequence("ab")), Word.fromLetter('x'));
-        Assert.assertEquals(resultSep.computeOutput(Word.fromCharSequence("ba")), Word.fromLetter('y'));
+        Assert.assertTrue(Automata.testEquivalence(mealy, resultSep, alphabet));
 
         final PaigeTarjan ptShared = new PaigeTarjan();
         final StateIDs<Integer> idsShared = PaigeTarjanInitializers.initDeterministic(ptShared,
@@ -134,8 +134,7 @@ public class PaigeTarjanTest {
                                                                                                       false);
 
         Assert.assertEquals(resultShared.size(), 2);
-        Assert.assertEquals(resultShared.computeOutput(Word.fromCharSequence("ab")), Word.fromLetter('x'));
-        Assert.assertEquals(resultShared.computeOutput(Word.fromCharSequence("ba")), Word.fromLetter('y'));
+        Assert.assertTrue(Automata.testEquivalence(mealy, resultShared, alphabet));
     }
 
     private <S> void testCompleteDFA(AutomatonCreator<? extends MutableDFA<S, Character>, Character> creator) {
@@ -203,7 +202,7 @@ public class PaigeTarjanTest {
                                                                                             dfa::getStateProperty,
                                                                                             null,
                                                                                             true);
-        checkDFA(prunedResult, expectedPrunedStates);
+        checkDFA(dfa, prunedResult, alphabet, expectedPrunedStates);
 
         final MutableDFA<S, Character> unprunedResult = PaigeTarjanExtractors.toDeterministic(pt,
                                                                                               creator,
@@ -213,15 +212,15 @@ public class PaigeTarjanTest {
                                                                                               dfa::getStateProperty,
                                                                                               null,
                                                                                               false);
-        checkDFA(unprunedResult, expectedUnprunedStates);
+        checkDFA(dfa, unprunedResult, alphabet, expectedUnprunedStates);
     }
 
-    private static <S> void checkDFA(DFA<S, Character> dfa, int expectedStates) {
-        Assert.assertEquals(dfa.size(), expectedStates);
-        Assert.assertEquals(dfa.getInitialState(), dfa.getState(Word.fromLetter('a')));
-        Assert.assertEquals(dfa.getInitialState(), dfa.getState(Word.fromCharSequence("acaaca")));
-        Assert.assertTrue(dfa.accepts(Word.fromCharSequence("aca")));
-        Assert.assertFalse(dfa.accepts(Word.fromCharSequence("ab")));
+    private static <I> void checkDFA(DFA<?, I> original,
+                                     DFA<?, I> minimized,
+                                     Alphabet<I> alphabet,
+                                     int expectedStates) {
+        Assert.assertEquals(minimized.size(), expectedStates);
+        Assert.assertTrue(Automata.testEquivalence(original, minimized, alphabet));
     }
 
     private <S, T> void testCompleteMealy(AutomatonCreator<? extends MutableMealyMachine<S, Character, T, Character>, Character> creator) {
@@ -247,34 +246,36 @@ public class PaigeTarjanTest {
         mealy.setTransition(q4, 'a', q4, 'z');
         mealy.setTransition(q4, 'b', q4, 'z');
 
+        // there is currently no support for unpruned, partial automata. Unreachable states are always thrown away
         testMealyInternal(mealy, alphabet, creator, 2, 2);
     }
 
     private <S, T> void testPartialMealy(AutomatonCreator<? extends MutableMealyMachine<S, Character, T, Character>, Character> creator) {
 
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'd');
-        final MutableMealyMachine<S, Character, T, Character> mealy = creator.createAutomaton(alphabet);
 
-        // states q1, q2 are equivalent, q4 is unreachable
-        final S q1 = mealy.addInitialState();
-        final S q2 = mealy.addState();
-        final S q3 = mealy.addState();
-        final S q4 = mealy.addState();
-
-        mealy.setTransition(q1, 'a', q1, 'x');
-        mealy.setTransition(q1, 'b', q3, 'y');
-        mealy.setTransition(q1, 'c', q2, 'x');
-        mealy.setTransition(q2, 'a', q2, 'x');
-        mealy.setTransition(q2, 'b', q3, 'y');
-        mealy.setTransition(q2, 'c', q1, 'x');
-        mealy.setTransition(q3, 'a', q3, 'z');
-        mealy.setTransition(q3, 'b', q3, 'z');
-        mealy.setTransition(q3, 'c', q3, 'z');
-        mealy.setTransition(q4, 'a', q4, 'z');
-        mealy.setTransition(q4, 'b', q4, 'z');
+        // build binary tree (partial due to 4 input symbols), whose leaves end in a sink and add an unreachable state.
+        // s3 and s5 are equivalent, s8 unreachable
+        // @formatter:off
+        final MutableMealyMachine<S, Character, T, Character> mealy =
+                AutomatonBuilders.forMealy(creator.createAutomaton(alphabet))
+                                 .withInitial(0)
+                                 .from(0).on('b').withOutput('4').to(1)
+                                 .from(0).on('a').withOutput('4').to(2)
+                                 .from(1).on('a').withOutput('3').to(3)
+                                 .from(1).on('d').withOutput('3').to(4)
+                                 .from(2).on('b').withOutput('3').to(5)
+                                 .from(2).on('d').withOutput('3').to(6)
+                                 .from(3).on('c', 'd').withOutput('0').to(7)
+                                 .from(4).on('a', 'c').withOutput('0').to(7)
+                                 .from(5).on('c', 'd').withOutput('0').to(7)
+                                 .from(6).on('b', 'c').withOutput('0').to(7)
+                                 .from(8).on('a', 'b', 'c', 'd').withOutput('8').loop()
+                                 .create();
+        // @formatter:on
 
         // there is currently no support for unpruned, partial automata. Unreachable states are always thrown away
-        testMealyInternal(mealy, alphabet, creator, 2, 2);
+        testMealyInternal(mealy, alphabet, creator, 7, 7);
     }
 
     private static <S, T> void testMealyInternal(MutableMealyMachine<S, Character, T, Character> mealy,
@@ -302,7 +303,7 @@ public class PaigeTarjanTest {
                                                                                                                    null,
                                                                                                                    mealy::getTransitionProperty,
                                                                                                                    true);
-        checkMealy(prunedResult, expectedPrunedStates);
+        checkMealy(mealy, prunedResult, alphabet, expectedPrunedStates);
 
         final MutableMealyMachine<S, Character, ?, Character> unprunedResult = PaigeTarjanExtractors.toDeterministic(pt,
                                                                                                                      creator,
@@ -312,13 +313,14 @@ public class PaigeTarjanTest {
                                                                                                                      null,
                                                                                                                      mealy::getTransitionProperty,
                                                                                                                      false);
-        checkMealy(unprunedResult, expectedUnprunedStates);
+        checkMealy(mealy, unprunedResult, alphabet, expectedUnprunedStates);
     }
 
-    private static <S> void checkMealy(MealyMachine<S, Character, ?, Character> mealy, int expectedStates) {
-        Assert.assertEquals(mealy.size(), expectedStates);
-        Assert.assertEquals(mealy.getInitialState(), mealy.getState(Word.fromLetter('a')));
-        Assert.assertEquals(mealy.getInitialState(), mealy.getState(Word.fromCharSequence("acaaca")));
-        Assert.assertEquals(mealy.computeOutput(Word.fromCharSequence("aca")), Word.fromCharSequence("xxx"));
+    private static <I> void checkMealy(MealyMachine<?, I, ?, ?> original,
+                                       MealyMachine<?, I, ?, ?> minimized,
+                                       Alphabet<I> alphabet,
+                                       int expectedStates) {
+        Assert.assertEquals(minimized.size(), expectedStates);
+        Assert.assertTrue(Automata.testEquivalence(original, minimized, alphabet));
     }
 }
