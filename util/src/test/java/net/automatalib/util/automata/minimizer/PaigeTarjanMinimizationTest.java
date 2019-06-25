@@ -19,20 +19,20 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MutableMealyMachine;
-import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.minimizer.paigetarjan.PaigeTarjanMinimization;
 import net.automatalib.words.Alphabet;
 
-public class InvasiveMinimizationTest extends AbstractMinimizationTest {
+public class PaigeTarjanMinimizationTest extends AbstractMinimizationTest {
 
     @Override
     protected <I> DFA<?, I> minimizeDFA(MutableDFA<?, I> dfa, Alphabet<I> alphabet) {
-        return Automata.invasiveMinimize(dfa, alphabet);
+        return PaigeTarjanMinimization.minimizeDFA(dfa, alphabet);
     }
 
     @Override
     protected <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
                                                             Alphabet<I> alphabet) {
-        return Automata.invasiveMinimize(mealy, alphabet);
+        return PaigeTarjanMinimization.minimizeMealy(mealy, alphabet);
     }
 
     @Override

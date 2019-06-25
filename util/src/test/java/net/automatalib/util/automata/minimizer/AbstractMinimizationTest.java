@@ -17,15 +17,17 @@ package net.automatalib.util.automata.minimizer;
 
 import java.util.Collection;
 
-import com.google.common.collect.Iterators;
-import net.automatalib.automata.Automaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MutableMealyMachine;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.util.partitionrefinement.PaigeTarjanTest;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
@@ -67,7 +69,7 @@ public abstract class AbstractMinimizationTest {
                 .create();
         // @formatter:on
 
-        testMinimizeDFA(new TestDFA<>(alphabet, dfa, 5, false));
+        testMinimizeDFA(new TestConfig<>(alphabet, dfa, 5, 5));
     }
 
     @Test
@@ -92,7 +94,7 @@ public abstract class AbstractMinimizationTest {
                 .create();
         // @formatter:on
 
-        testMinimizeDFA(new TestDFA<>(alphabet, dfa, 4, true));
+        testMinimizeDFA(new TestConfig<>(alphabet, dfa, 4, 4));
     }
 
     @Test
@@ -128,24 +130,56 @@ public abstract class AbstractMinimizationTest {
                 .create();
         // @formatter:on
 
-        testMinimizeDFA(new TestDFA<>(alphabet, dfa, 5, true));
+        testMinimizeDFA(new TestConfig<>(alphabet, dfa, 5, 5));
     }
 
-    private <I> void testMinimizeDFA(TestDFA<I> test) {
+    @Test
+    public void createTestMealy1() {
+        final CompactMealy<Integer, String> mealy = PaigeTarjanTest.getMealy();
+        TestConfig<Integer, CompactMealy<Integer, String>> config =
+                new TestConfig<>(mealy.getInputAlphabet(), mealy, 7, 8);
 
-        final DFA<?, I> result = minimize(test.dfa, test.alphabet);
-
-        if (test.initiallyConnected || isPruned()) {
-            Assert.assertEquals(result.size(), test.minimalSize);
-            assertMinimal(result, test.alphabet);
+        if (supportsPartial()) {
+            testMinimizeMealy(config);
         } else {
+            Assert.assertThrows(IllegalArgumentException.class, () -> testMinimizeMealy(config));
+        }
+    }
+
+    private <I, A extends MutableDFA<?, I>> void testMinimizeDFA(TestConfig<I, A> test) {
+
+        final DFA<?, I> result = minimizeDFA(test.automaton, test.alphabet);
+
+        if (isPruned()) {
+            Assert.assertEquals(result.size(), test.prunedSize);
+            Assert.assertTrue(Automata.testEquivalence(test.automaton, result, test.alphabet));
+        } else {
+            Assert.assertEquals(result.size(), test.unprunedSize);
             assertAllInequivalent(result, test.alphabet);
         }
     }
 
-    protected abstract <I> DFA<?, I> minimize(MutableDFA<?, I> dfa, Alphabet<I> alphabet);
+    private <I, O, A extends MutableMealyMachine<?, I, ?, O>> void testMinimizeMealy(TestConfig<I, A> test) {
+
+        final MealyMachine<?, I, ?, O> result = minimizeMealy(test.automaton, test.alphabet);
+
+        if (isPruned()) {
+            Assert.assertEquals(result.size(), test.prunedSize);
+            Assert.assertTrue(Automata.testEquivalence(test.automaton, result, test.alphabet));
+        } else {
+            Assert.assertEquals(result.size(), test.unprunedSize);
+            assertAllInequivalent(result, test.alphabet);
+        }
+    }
+
+    protected abstract <I> DFA<?, I> minimizeDFA(MutableDFA<?, I> dfa, Alphabet<I> alphabet);
+
+    protected abstract <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
+                                                                     Alphabet<I> alphabet);
 
     protected abstract boolean isPruned();
+
+    protected abstract boolean supportsPartial();
 
     private static <S, I> void assertAllInequivalent(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
                                                      Collection<? extends I> inputs) {
@@ -160,29 +194,18 @@ public abstract class AbstractMinimizationTest {
         }
     }
 
-    private static <I> void assertMinimal(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
-                                          Collection<? extends I> inputs) {
-        assertAllReachable(automaton, inputs);
-        assertAllInequivalent(automaton, inputs);
-    }
+    private static class TestConfig<I, A> {
 
-    private static <I> void assertAllReachable(Automaton<?, I, ?> automaton, Collection<? extends I> inputs) {
-        int numReachable = Iterators.size(Automata.bfsOrderIterator(automaton, inputs));
-        Assert.assertEquals(numReachable, automaton.size());
-    }
+        final Alphabet<I> alphabet;
+        final A automaton;
+        final int prunedSize;
+        final int unprunedSize;
 
-    private static class TestDFA<I> {
-
-        public final Alphabet<I> alphabet;
-        public final MutableDFA<?, I> dfa;
-        public final int minimalSize;
-        public final boolean initiallyConnected;
-
-        TestDFA(Alphabet<I> alphabet, MutableDFA<?, I> dfa, int minimalSize, boolean initiallyConnected) {
+        TestConfig(Alphabet<I> alphabet, A automaton, int prunedSize, int unprunedSize) {
             this.alphabet = alphabet;
-            this.dfa = dfa;
-            this.minimalSize = minimalSize;
-            this.initiallyConnected = initiallyConnected;
+            this.automaton = automaton;
+            this.prunedSize = prunedSize;
+            this.unprunedSize = unprunedSize;
         }
     }
 

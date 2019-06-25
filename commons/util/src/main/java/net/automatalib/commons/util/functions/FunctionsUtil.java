@@ -72,6 +72,25 @@ public final class FunctionsUtil {
         return func;
     }
 
+    /**
+     * Returns a default function if the argument is {@code null}. The default function's {@link
+     * BiIntFunction#apply(int, int) apply} method will always return {@code null}. If a non-{@code null} function is
+     * passed to this method, it is returned as-is.
+     *
+     * @param func
+     *         the function reference (may be {@code null})
+     *
+     * @return a non-{@code null} object identical to the passed function, if it is non-{@code null}, or a function
+     * object always returning {@code null} otherwise
+     */
+    @Nonnull
+    public static <R> BiIntFunction<R> safeDefault(@Nullable BiIntFunction<R> func) {
+        if (func == null) {
+            return (i1, i2) -> null;
+        }
+        return func;
+    }
+
     @Nonnull
     public static <T> Predicate<T> safeToTrue(@Nullable Predicate<T> func) {
         if (func == null) {

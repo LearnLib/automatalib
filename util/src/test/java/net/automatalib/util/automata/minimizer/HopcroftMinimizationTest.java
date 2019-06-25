@@ -17,6 +17,8 @@ package net.automatalib.util.automata.minimizer;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
+import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.util.automata.minimizer.hopcroft.HopcroftMinimization;
 import net.automatalib.util.automata.minimizer.hopcroft.HopcroftMinimization.PruningMode;
 import net.automatalib.words.Alphabet;
@@ -38,12 +40,23 @@ public class HopcroftMinimizationTest extends AbstractMinimizationTest {
     }
 
     @Override
-    protected <I> DFA<?, I> minimize(MutableDFA<?, I> dfa, Alphabet<I> alphabet) {
+    protected <I> DFA<?, I> minimizeDFA(MutableDFA<?, I> dfa, Alphabet<I> alphabet) {
         return HopcroftMinimization.minimizeDFA(dfa, alphabet, this.pruningMode);
+    }
+
+    @Override
+    protected <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
+                                                            Alphabet<I> alphabet) {
+        return HopcroftMinimization.minimizeMealy(mealy, alphabet, this.pruningMode);
     }
 
     @Override
     protected boolean isPruned() {
         return this.pruningMode != PruningMode.DONT_PRUNE;
+    }
+
+    @Override
+    protected boolean supportsPartial() {
+        return false;
     }
 }

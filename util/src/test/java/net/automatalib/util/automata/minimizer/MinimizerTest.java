@@ -18,20 +18,36 @@ package net.automatalib.util.automata.minimizer;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automata.transducers.MutableMealyMachine;
+import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 
 public class MinimizerTest extends AbstractMinimizationTest {
 
     @Override
-    protected <I> DFA<?, I> minimize(MutableDFA<?, I> dfa, Alphabet<I> alphabet) {
+    protected <I> DFA<?, I> minimizeDFA(MutableDFA<?, I> dfa, Alphabet<I> alphabet) {
         final CompactDFA<I> result = new CompactDFA<>(alphabet, dfa.size());
         Automata.minimize(dfa, alphabet, result);
         return result;
     }
 
     @Override
+    protected <I, O> MealyMachine<?, I, ?, O> minimizeMealy(MutableMealyMachine<?, I, ?, O> mealy,
+                                                            Alphabet<I> alphabet) {
+        final CompactMealy<I, O> result = new CompactMealy<>(alphabet, mealy.size());
+        Automata.minimize(mealy, alphabet, result);
+        return result;
+    }
+
+    @Override
     protected boolean isPruned() {
+        return true;
+    }
+
+    @Override
+    protected boolean supportsPartial() {
         return true;
     }
 }
