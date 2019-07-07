@@ -43,14 +43,17 @@ public final class LTSminUtil {
      */
     public static final String LTSMIN_CONVERT;
 
+    private static final String ETF2LTS_MC_BINARY = "etf2lts-mc";
+
+    private static final String LTSMIN_CONVERT_BINARY = "ltsmin-convert";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LTSminUtil.class);
 
-    private static final String CHECK = "An exception occurred while checking if LTSmin is installed. " +
-                                        "Could not run binary '%s', the following exception occurred: %s. " +
-                                        "LTSmin can be obtained at https://ltsmin.utwente.nl. If you installed LTSmin " +
-                                        "in a non standard location you can set the property: '" +
-                                        AutomataLibProperty.LTSMIN_PATH.getPropertyKey() +
-                                        "'. Setting the $PATH variable works too.";
+    private static final String CHECK = "Could not find binary '{}' of the LTSmin installation. " +
+                                        "LTSmin can be obtained at https://ltsmin.utwente.nl. " +
+                                        "If you installed LTSmin in a non standard location you can set the property: " +
+                                        "'" + AutomataLibProperty.LTSMIN_PATH.getPropertyKey() + "'. " +
+                                        "Setting the $PATH variable works too.";
 
     /**
      * The exit code for running an LTSmin binary with --version.
@@ -69,8 +72,8 @@ public final class LTSminUtil {
 
         final String ltsMinPath = settings.getProperty(AutomataLibProperty.LTSMIN_PATH, "");
 
-        ETF2LTS_MC = Paths.get(ltsMinPath, "etf2lts-mc").toString();
-        LTSMIN_CONVERT = Paths.get(ltsMinPath, "ltsmin-convert").toString();
+        ETF2LTS_MC = Paths.get(ltsMinPath, ETF2LTS_MC_BINARY).toString();
+        LTSMIN_CONVERT = Paths.get(ltsMinPath, LTSMIN_CONVERT_BINARY).toString();
 
         verbose = !settings.getProperty(AutomataLibProperty.LTSMIN_VERBOSE, Boolean.toString(LOGGER.isDebugEnabled()))
                            .equalsIgnoreCase("false");
@@ -140,10 +143,18 @@ public final class LTSminUtil {
         final LTSminVersion etf2ltsVersion = detectLTSmin(ETF2LTS_MC);
         final LTSminVersion ltsminConvertVersion = detectLTSmin(LTSMIN_CONVERT);
 
+        if (etf2ltsVersion == null) {
+            LOGGER.info(CHECK, ETF2LTS_MC_BINARY);
+        }
+        if (ltsminConvertVersion == null) {
+            LOGGER.info(CHECK, LTSMIN_CONVERT_BINARY);
+        }
         if (etf2ltsVersion != null && ltsminConvertVersion != null) {
             if (!etf2ltsVersion.equals(ltsminConvertVersion)) {
-                LOGGER.warn("Found differing etf2lts version '{}' and lstminConver version '{}'. Choosing the former",
+                LOGGER.warn("Found differing {} version '{}' and {} version '{}'. Choosing the former",
+                            ETF2LTS_MC_BINARY,
                             etf2ltsVersion,
+                            LTSMIN_CONVERT_BINARY,
                             ltsminConvertVersion);
             }
             detectedVersion = etf2ltsVersion;
@@ -164,15 +175,13 @@ public final class LTSminUtil {
             final int exitValue = ProcessUtil.invokeProcess(commandLine, stringWriter::append);
 
             if (exitValue != VERSION_EXIT) {
-                LOGGER.debug(String.format(CHECK,
-                                           bin,
-                                           String.format("Command '%s --version' did not exit with 255", bin)));
+                LOGGER.debug(String.format("Command '%s --version' did not exit with %d", bin, VERSION_EXIT));
                 return null;
             } else {
                 return LTSminVersion.parse(stringWriter.toString());
             }
         } catch (IOException | InterruptedException e) {
-            LOGGER.error(String.format(CHECK, bin, e.toString()), e);
+            LOGGER.debug(String.format("Could not execute command '%s'", bin), e);
             return null;
         }
     }
