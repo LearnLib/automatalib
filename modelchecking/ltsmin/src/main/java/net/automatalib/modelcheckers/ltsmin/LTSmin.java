@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
+import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.ModelChecker;
 
 /**
@@ -45,6 +46,8 @@ public interface LTSmin<I, A, R> extends ModelChecker<I, A, String, R> {
      *
      * @throws IOException
      *         when the given {@code automaton} can not be written to {@code etf}.
+     * @throws ModelCheckingException
+     *         when the given {@code automaton} cannot be transformed into a valid LTS.
      */
     void automaton2ETF(A automaton, Collection<? extends I> inputs, File etf) throws IOException;
 

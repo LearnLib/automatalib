@@ -77,6 +77,7 @@ public interface LTSminDFA<I, R> extends LTSmin<I, DFA<?, I>, R>, ModelChecker.D
      *         the state type
      *
      * @throws IOException if the dfa couldn't be written to the provided file.
+     * @throws ModelCheckingException if the dfa cannot be transformed into a valid LTS.
      */
     default <S> void dfa2ETF(DFA<S, I> dfa, Collection<? extends I> inputs, File etf) throws IOException {
         // check that the DFA rejects the empty language

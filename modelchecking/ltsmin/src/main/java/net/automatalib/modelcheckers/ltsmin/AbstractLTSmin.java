@@ -109,7 +109,6 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      */
     protected abstract List<String> getExtraCommandLineOptions();
 
-
     @Override
     public boolean isKeepFiles() {
         return keepFiles;
@@ -138,17 +137,31 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
     protected final File findCounterExampleFSM(A hypothesis, Collection<? extends I> inputs, String formula) {
 
         final File etf, gcf;
+
         try {
             // create the ETF that will contain the LTS of the hypothesis
             etf = File.createTempFile("automaton2etf", ".etf");
 
+            try {
+                // write to the ETF file
+                automaton2ETF(hypothesis, inputs, etf);
+            } catch (ModelCheckingException mce) {
+                if (!keepFiles && !etf.delete()) {
+                    LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+                }
+                throw mce;
+            }
+        } catch (IOException ioe) {
+            throw new ModelCheckingException(ioe);
+        }
+
+        try {
             // create the GCF that will possibly contain the counterexample
             gcf = File.createTempFile("etf2gcf", ".gcf");
-
-            // write to the ETF file
-            automaton2ETF(hypothesis, inputs, etf);
-
         } catch (IOException ioe) {
+            if (!keepFiles && !etf.delete()) {
+                LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+            }
             throw new ModelCheckingException(ioe);
         }
 
@@ -174,68 +187,59 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
 
         ltsminCommandLine.addAll(getExtraCommandLineOptions());
 
-        final int ltsminExitValue = runCommandLine(ltsminCommandLine);
+        try {
+            final int ltsminExitValue = runCommandLine(ltsminCommandLine);
 
-        // check if we need to delete the ETF
-        if (!keepFiles && !etf.delete()) {
-            throw new ModelCheckingException("Could not delete file: " + etf.getAbsolutePath());
-        }
+            if (ltsminExitValue == 0) {
+                // we have not found a counterexample
+                return null;
+            } else if (ltsminExitValue == 1) {
+                // we have found a counterexample
 
-        final File fsm;
-
-        if (ltsminExitValue == 1) {
-            // we have found a counterexample
-
-            try {
                 // create a file for the FSM
-                fsm = File.createTempFile("gcf2fsm", ".fsm");
-            } catch (IOException ioe) {
-                throw new ModelCheckingException(ioe);
-            }
-
-            final List<String> convertCommandLine = Lists.newArrayList(// add the ltsmin-convert binary
-                                                                       LTSminUtil.LTSMIN_CONVERT,
-                                                                       // use the GCF as input
-                                                                       gcf.getAbsolutePath(),
-                                                                       // use the FSM as output
-                                                                       fsm.getAbsolutePath(),
-                                                                       // required option
-                                                                       "--rdwr");
-
-            if (LTSminUtil.isVerbose()) {
-                convertCommandLine.add("-v");
-            }
-
-            final int convertExitValue = runCommandLine(convertCommandLine);
-
-            // check the conversion is successful
-            if (convertExitValue != 0) {
-                final String msg;
-                if (LOGGER.isDebugEnabled()) {
-                    msg = "Could not convert GCF to FSM, please check LTSmin's debug information to see why.";
-                } else {
-                    msg = "Could not convert GCF to FSM, to see why, enable debug logging.";
+                final File fsm;
+                try {
+                    fsm = File.createTempFile("gcf2fsm", ".fsm");
+                } catch (IOException ioe) {
+                    throw new ModelCheckingException(ioe);
                 }
-                throw new ModelCheckingException(msg);
-            }
-        } else if (ltsminExitValue != 0) {
-            final String msg;
-            if (LOGGER.isDebugEnabled()) {
-                msg = "Could not model check ETF, please check LTSmin's debug information to see why.";
+
+                final List<String> convertCommandLine = Lists.newArrayList(// add the ltsmin-convert binary
+                                                                           LTSminUtil.LTSMIN_CONVERT,
+                                                                           // use the GCF as input
+                                                                           gcf.getAbsolutePath(),
+                                                                           // use the FSM as output
+                                                                           fsm.getAbsolutePath(),
+                                                                           // required option
+                                                                           "--rdwr");
+
+                if (LTSminUtil.isVerbose()) {
+                    convertCommandLine.add("-v");
+                }
+
+                final int convertExitValue = runCommandLine(convertCommandLine);
+
+                // check the conversion is successful
+                if (convertExitValue != 0) {
+                    throw new ModelCheckingException(
+                            "Could not convert GCF to FSM. Enable debug logging to see LTSmin's debug information.");
+                }
+
+                return fsm;
             } else {
-                msg = "Could not model check ETF, to see why, enable debug logging.";
+                throw new ModelCheckingException(
+                        "Could not model check ETF. Enable debug logging to see LTSmin's debug information.");
             }
-            throw new ModelCheckingException(msg);
-        } else {
-            fsm = null;
+        } finally {
+            if (!keepFiles) {
+                if (!etf.delete()) {
+                    LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+                }
+                if (!gcf.delete()) {
+                    LOGGER.warn("Could not delete file: " + gcf.getAbsolutePath());
+                }
+            }
         }
-
-        // check if we must keep the GCF
-        if (!keepFiles && !gcf.delete()) {
-            throw new ModelCheckingException("Could not delete file: " + gcf.getAbsolutePath());
-        }
-
-        return fsm;
     }
 
     static int runCommandLine(List<String> commandLine) {
