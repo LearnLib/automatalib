@@ -38,8 +38,8 @@ import net.automatalib.words.Word;
 public class MealyLassoImpl<I, O> extends AbstractLasso<I, Word<O>> implements MealyLasso<I, O> {
 
     public MealyLassoImpl(DetOutputAutomaton<?, I, ?, Word<O>> automaton,
-                              Collection<? extends I> inputs,
-                              int unfoldTimes) {
+                          Collection<? extends I> inputs,
+                          int unfoldTimes) {
         super(automaton, inputs, unfoldTimes);
     }
 

@@ -32,6 +32,8 @@ import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An LTL model checker using LTSmin for DFAs.
@@ -43,6 +45,8 @@ import net.automatalib.serialization.fsm.parser.FSMFormatException;
  */
 public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>>
         implements DFAModelCheckerLasso<I, String>, LTSminDFA<I, DFALasso<I>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LTSminLTLDFA.class);
 
     /**
      * The index in the FSM state vector for accept/reject.
@@ -72,27 +76,22 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
     public DFALasso<I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
-        final DFALasso<I> result;
-
-        if (fsm != null) {
-            final CompactDFA<I> dfa;
-
-            try {
-                dfa = FSM2DFAParser.getParser(inputs, getString2Input(), LABEL_NAME, LABEL_VALUE).readModel(fsm);
-
-                // check if we must keep the FSM
-                if (!isKeepFiles() && !fsm.delete()) {
-                    throw new ModelCheckingException("Could not delete file: " + fsm.getAbsolutePath());
-                }
-            } catch (IOException | FSMFormatException e) {
-                throw new ModelCheckingException(e);
-            }
-
-            result = new DFALassoImpl<>(dfa, dfa.getInputAlphabet(), computeUnfolds(automaton.size()));
-        } else {
-            result = null;
+        if (fsm == null) {
+            return null;
         }
 
-        return result;
+        try {
+            final CompactDFA<I> dfa =
+                    FSM2DFAParser.getParser(inputs, getString2Input(), LABEL_NAME, LABEL_VALUE).readModel(fsm);
+
+            return new DFALassoImpl<>(dfa, inputs, computeUnfolds(automaton.size()));
+        } catch (IOException | FSMFormatException e) {
+            throw new ModelCheckingException(e);
+        } finally {
+            // check if we must keep the FSM
+            if (!isKeepFiles() && !fsm.delete()) {
+                LOGGER.warn("Could not delete file: " + fsm.getAbsolutePath());
+            }
+        }
     }
 }

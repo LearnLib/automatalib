@@ -33,6 +33,8 @@ import net.automatalib.modelcheckers.ltsmin.LTSminMealy;
 import net.automatalib.modelcheckers.ltsmin.ltl.AbstractLTSminLTL;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import net.automatalib.words.Word;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An monitor model checker using LTSmin for Mealy machines.
@@ -47,6 +49,8 @@ import net.automatalib.words.Word;
 public abstract class AbstractLTSminMonitorMealy<I, O>
         extends AbstractLTSminMonitor<I, MealyMachine<?, I, ?, O>, MealyMachine<?, I, ?, O>>
         implements LTSminMealy<I, O, MealyMachine<?, I, ?, O>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminMonitorMealy.class);
 
     /**
      * @see #getString2Output()
@@ -114,29 +118,30 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
     @Nullable
     @Override
     public MealyMachine<?, I, ?, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
-                                                       Collection<? extends I> inputs, String property) {
+                                                       Collection<? extends I> inputs,
+                                                       String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
+        if (fsm == null) {
+            return null;
+        }
+
         try {
-            final CompactMealy<I, O> result = fsm != null ? fsm2Mealy(fsm, automaton, inputs) : null;
+            final CompactMealy<I, O> result = fsm2Mealy(fsm, automaton, inputs);
+            final Integer deadlock = result.getStates()
+                                           .stream()
+                                           .filter(s -> inputs.stream()
+                                                              .allMatch(i -> result.getSuccessor(s, i) == null))
+                                           .findFirst()
+                                           .orElseThrow(() -> new ModelCheckingException("No deadlock found"));
 
-            // check if we must keep the FSM
-            if (!isKeepFiles() && fsm != null && !fsm.delete()) {
-                throw new ModelCheckingException("Could not delete file: " + fsm.getAbsolutePath());
-            }
-
-            return result == null ? null : new MealyMachine<Integer, I, CompactMealyTransition<O>, O>() {
-
-                private final Integer deadlock = result.getStates().stream().filter(
-                        s -> result.getInputAlphabet().stream().allMatch(
-                                i -> result.getSuccessor(s, i) == null)).findFirst().orElseThrow(
-                        () -> new ModelCheckingException("No deadlock found"));
+            return new MealyMachine<Integer, I, CompactMealyTransition<O>, O>() {
 
                 @Override
-                public Word<O> computeOutput(Iterable<? extends I> input) {
-                    final Integer state = getState(input);
+                public Word<O> computeStateOutput(Integer state, Iterable<? extends I> input) {
+                    final Integer succ = getSuccessor(state, input);
 
-                    return state != null && state.equals(deadlock) ? MealyMachine.super.computeOutput(input) : null;
+                    return deadlock.equals(succ) ? MealyMachine.super.computeStateOutput(state, input) : Word.epsilon();
                 }
 
                 @Nullable
@@ -171,6 +176,11 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
             };
         } catch (IOException | FSMFormatException e) {
             throw new ModelCheckingException(e);
+        } finally {
+            // check if we must keep the FSM
+            if (!isKeepFiles() && !fsm.delete()) {
+                LOGGER.warn("Could not delete file: " + fsm.getAbsolutePath());
+            }
         }
     }
 }

@@ -31,6 +31,8 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.modelchecking.lasso.MealyLassoImpl;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An LTL model checker using LTSmin for Mealy machines.
@@ -45,6 +47,8 @@ import net.automatalib.serialization.fsm.parser.FSMFormatException;
 public abstract class AbstractLTSminLTLMealy<I, O>
         extends AbstractLTSminLTL<I, MealyMachine<?, I, ?, O>, MealyLasso<I, O>>
         implements MealyModelCheckerLasso<I, O, String>, LTSminMealy<I, O, MealyLasso<I, O>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminLTLMealy.class);
 
     /**
      * @see #getString2Output()
@@ -108,30 +112,26 @@ public abstract class AbstractLTSminLTLMealy<I, O>
 
     @Nullable
     @Override
-    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, String property) {
+    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
+                                               Collection<? extends I> inputs,
+                                               String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
-        final MealyLasso<I, O> result;
-
-        if (fsm != null) {
-            final CompactMealy<I, O> mealy;
-
-            try {
-                mealy = fsm2Mealy(fsm, automaton, inputs);
-
-                // check if we must keep the FSM
-                if (!isKeepFiles() && !fsm.delete()) {
-                    throw new ModelCheckingException("Could not delete file: " + fsm.getAbsolutePath());
-                }
-            } catch (IOException | FSMFormatException e) {
-                throw new ModelCheckingException(e);
-            }
-
-            result = new MealyLassoImpl<>(mealy, mealy.getInputAlphabet(), computeUnfolds(automaton.size()));
-        } else {
-            result = null;
+        if (fsm == null) {
+            return null;
         }
 
-        return result;
+        try {
+            final CompactMealy<I, O> mealy = fsm2Mealy(fsm, automaton, inputs);
+
+            return new MealyLassoImpl<>(mealy, inputs, computeUnfolds(automaton.size()));
+        } catch (IOException | FSMFormatException e) {
+            throw new ModelCheckingException(e);
+        } finally {
+            // check if we must keep the FSM
+            if (!isKeepFiles() && !fsm.delete()) {
+                LOGGER.warn("Could not delete file: " + fsm.getAbsolutePath());
+            }
+        }
     }
 }
