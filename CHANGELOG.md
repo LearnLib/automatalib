@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.9-SNAPSHOT] - Unreleased
+## [0.9.0-SNAPSHOT] - Unreleased
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.8.0...HEAD)
 
@@ -40,7 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 
 * Fixed a bug, where the PaigeTarjan-based minimization would return a wrong automaton, when pruning was enabled and the initial automaton was partial.
-* Several bugs detected either by our ongoing efforts to write tests.
+* Several bugs detected by our ongoing efforts to write tests.
 
 
 ## [0.8.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.8.0) - 2019-02-07
@@ -109,7 +109,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Added algorithms for computing adaptive distinguishing sequences for Mealy machines.
 * Added support for adding alphabet symbols after initial automaton construction.
 * Added support for Visibly Push-Down Automata (VPDA) in form of 1-SEVPAs.
-* Added (de-)serializers for the AUT format (see #14).
+* Added (de-)serializers for the AUT format (see [#14](https://github.com/LearnLib/automatalib/issues/14)).
 * Added lazy (iterator based) methods for computing state- and transition covers, W-Method and Wp-Method tests.
 * Added a serializer for the SAF format.
 
