@@ -113,7 +113,6 @@ limitations under the License.
         <module>commons</module>
         <module>core</module>
         <module>distribution</module>
-        <module>examples</module>
         <module>incremental</module>
         <module>modelchecking</module>
         <module>util</module>
@@ -637,7 +636,7 @@ limitations under the License.
                         <!-- Automatically use the parent version for all submodules, do not prompt for each one -->
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <!-- Perform an install into the local repository, otherwise the javadoc plugin and archetype integration tests will fail -->
-                        <preparationGoals>clean install</preparationGoals>
+                        <preparationGoals>clean install site -Pcode-analysis</preparationGoals>
                         <tagNameFormat>automatalib-@{version}</tagNameFormat>
                     </configuration>
                 </plugin>
@@ -791,12 +790,6 @@ limitations under the License.
         <profile>
             <!-- enables additional plugins that perform static code analysis, also see the 'build-parent' pom -->
             <id>code-analysis</id>
-            <activation>
-                <property>
-                    <name>automatalib.release</name>
-                    <value>true</value>
-                </property>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -1082,6 +1075,19 @@ limitations under the License.
                     </plugins>
                 </pluginManagement>
             </build>
+        </profile>
+        <profile>
+            <id>examples</id>
+            <!-- don't include examples in a release -->
+            <activation>
+                <property>
+                    <name>automatalib.release</name>
+                    <value>!true</value>
+                </property>
+            </activation>
+            <modules>
+                <module>examples</module>
+            </modules>
         </profile>
     </profiles>
 </project>
