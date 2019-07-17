@@ -32,6 +32,7 @@ limitations under the License.
     <description>(De-)Serializers for the legacy LearnLibV2 format</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -53,11 +54,13 @@ limitations under the License.
             <artifactId>automata-serialization-core</artifactId>
         </dependency>
 
+        <!-- build -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
         </dependency>
 
+        <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

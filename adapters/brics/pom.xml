@@ -35,25 +35,26 @@ limitations under the License.
     </description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
+        <!-- external -->
         <dependency>
             <groupId>dk.brics.automaton</groupId>
             <artifactId>automaton</artifactId>
             <optional>true</optional>
         </dependency>
 
+        <!-- build -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
         </dependency>
+
+        <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
@@ -63,6 +64,10 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

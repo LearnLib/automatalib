@@ -32,6 +32,7 @@ limitations under the License.
     <description>(De-)Serializers for the AUT Format</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -49,14 +50,15 @@ limitations under the License.
             <artifactId>automata-serialization-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
+        <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

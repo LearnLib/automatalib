@@ -35,10 +35,13 @@ limitations under the License.
     </description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
+
+        <!-- external -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -47,11 +50,14 @@ limitations under the License.
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+
+        <!-- build -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
         </dependency>
 
+        <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

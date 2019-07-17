@@ -37,9 +37,14 @@ limitations under the License.
     </description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-brics</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -51,15 +56,11 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
+            <artifactId>automata-dot-visualizer</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-incremental</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-brics</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -71,28 +72,28 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-dot-visualizer</artifactId>
+            <artifactId>automata-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>dk.brics.automaton</groupId>
-            <artifactId>automaton</artifactId>
-        </dependency>
-
+        <!-- external -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- testing dependencies, can be ignored for running the examples -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>dk.brics.automaton</groupId>
+            <artifactId>automaton</artifactId>
         </dependency>
+
+        <!-- test -->
         <dependency>
             <groupId>net.java.openjdk.cacio</groupId>
             <artifactId>cacio-tta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 

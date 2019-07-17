@@ -32,6 +32,7 @@ limitations under the License.
     <description>Generic automata serialization core</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>

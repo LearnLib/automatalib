@@ -31,6 +31,7 @@ limitations under the License.
     <description>LTSmin Model Checker</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -38,10 +39,6 @@ limitations under the License.
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -56,29 +53,39 @@ limitations under the License.
             <artifactId>automata-serialization-fsm</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.misberner.buildergen</groupId>
-            <artifactId>buildergen</artifactId>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+        </dependency>
+
+        <!-- external -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+
+        <!-- build -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>com.github.misberner.buildergen</groupId>
+            <artifactId>buildergen</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
         </dependency>
+
+        <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-taf</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

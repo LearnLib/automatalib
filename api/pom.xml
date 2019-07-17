@@ -37,6 +37,7 @@ limitations under the License.
     </description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>automata-commons-smartcollections</artifactId>
@@ -46,19 +47,23 @@ limitations under the License.
             <artifactId>automata-commons-util</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
+        <!-- external -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+
+        <!-- build -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
         </dependency>
         <dependency>
             <groupId>org.kohsuke.metainf-services</groupId>
             <artifactId>metainf-services</artifactId>
         </dependency>
 
+        <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

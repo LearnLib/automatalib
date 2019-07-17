@@ -32,6 +32,7 @@ limitations under the License.
     <description>(De-)Serializers for the Simple Automaton Format</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
@@ -49,6 +50,7 @@ limitations under the License.
             <artifactId>automata-serialization-core</artifactId>
         </dependency>
 
+        <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>

@@ -37,16 +37,19 @@ limitations under the License.
     </description>
 
     <dependencies>
+        <!-- external -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
 
+        <!-- build -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
         </dependency>
 
+        <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
