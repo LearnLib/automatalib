@@ -15,8 +15,7 @@
  */
 package net.automatalib.graphs;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A graph that supports (desirably efficient) removal of nodes and edges.
@@ -28,7 +27,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface ShrinkableGraph<N, E> extends Graph<N, E> {
 
     /**

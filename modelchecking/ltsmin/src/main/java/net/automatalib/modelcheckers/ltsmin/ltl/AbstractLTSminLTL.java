@@ -19,14 +19,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
 import net.automatalib.modelchecking.modelchecker.AbstractUnfoldingModelChecker;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An LTSmin model checker for full LTL.

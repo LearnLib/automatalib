@@ -21,10 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.Maps;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A map-based alphabet implementation, that does not impose any restriction on the input symbol class. This
@@ -38,10 +37,10 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
  */
 public class MapAlphabet<I> extends AbstractAlphabet<I> {
 
-    @Nonnull
+    @NonNull
     protected final List<I> symbols;
 
-    @Nonnull
+    @NonNull
     //private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>(10, 0.75f, -1);
     protected final Map<I, Integer> indexMap; // TODO: replace by primitive specialization
 

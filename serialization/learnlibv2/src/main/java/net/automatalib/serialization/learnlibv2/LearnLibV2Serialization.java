@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.annotation.WillNotClose;
-
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -61,7 +59,7 @@ public class LearnLibV2Serialization
         return new InputModelData<>(automaton, automaton.getInputAlphabet());
     }
 
-    public CompactDFA<Integer> readGenericDFA(@WillNotClose InputStream is) throws IOException {
+    public CompactDFA<Integer> readGenericDFA(InputStream is) throws IOException {
         // we DO NOT want to close the input stream
         @SuppressWarnings("resource")
         Scanner sc = new Scanner(IOUtil.asUncompressedInputStream(is), StandardCharsets.UTF_8.toString());

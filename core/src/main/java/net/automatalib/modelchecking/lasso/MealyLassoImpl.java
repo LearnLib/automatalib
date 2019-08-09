@@ -17,13 +17,12 @@ package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A MealyLasso is a lasso for {@link MealyMachine}s.
@@ -49,7 +48,7 @@ public class MealyLassoImpl<I, O> extends AbstractLasso<I, Word<O>> implements M
         return getOutput().getSymbol(transition);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Integer getSuccessor(Integer transition) {
         return transition;

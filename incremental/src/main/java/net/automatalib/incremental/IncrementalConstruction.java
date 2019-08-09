@@ -17,13 +17,11 @@ package net.automatalib.incremental;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.graphs.Graph;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Basic interface for incremental automata constructions. An incremental automaton construction creates an (acyclic)
@@ -36,7 +34,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface IncrementalConstruction<A, I> {
 
     /**
@@ -73,7 +70,7 @@ public interface IncrementalConstruction<A, I> {
      *
      * @return a graph view on the current state of the construction
      */
-    @Nonnull
+    @NonNull
     Graph<?, ?> asGraph();
 
     /**
@@ -82,6 +79,6 @@ public interface IncrementalConstruction<A, I> {
      *
      * @return a transition system view on the current state of the construction
      */
-    @Nonnull
+    @NonNull
     DeterministicTransitionSystem<?, I, ?> asTransitionSystem();
 }

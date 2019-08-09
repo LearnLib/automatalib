@@ -20,13 +20,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Abstract base class for {@link IncrementalDFABuilder}s. This class takes care of holding the input alphabet and its
@@ -48,7 +47,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
      * @param inputAlphabet
      *         the input alphabet
      */
-    public AbstractIncrementalDFABuilder(@Nonnull Alphabet<I> inputAlphabet) {
+    public AbstractIncrementalDFABuilder(@NonNull Alphabet<I> inputAlphabet) {
         this.inputAlphabet = inputAlphabet;
         this.alphabetSize = inputAlphabet.size();
     }

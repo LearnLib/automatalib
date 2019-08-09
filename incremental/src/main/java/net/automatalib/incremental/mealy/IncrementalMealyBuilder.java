@@ -17,9 +17,6 @@ package net.automatalib.incremental.mealy;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.graphs.Graph;
@@ -27,6 +24,8 @@ import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface IncrementalMealyBuilder<I, O>
         extends IncrementalConstruction<MealyMachine<?, I, ?, O>, I>, SupportsGrowingAlphabet<I> {
@@ -69,12 +68,12 @@ public interface IncrementalMealyBuilder<I, O>
     interface GraphView<I, O, N, E> extends Graph<N, E> {
 
         @Nullable
-        I getInputSymbol(@Nonnull E edge);
+        I getInputSymbol(@NonNull E edge);
 
         @Nullable
-        O getOutputSymbol(@Nonnull E edge);
+        O getOutputSymbol(@NonNull E edge);
 
-        @Nonnull
+        @NonNull
         N getInitialNode();
     }
 }

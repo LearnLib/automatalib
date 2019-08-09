@@ -18,11 +18,10 @@ package net.automatalib.words.impl;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An alphabet-based, fixed size implementation of a {@link net.automatalib.words.VPDAlphabet}.

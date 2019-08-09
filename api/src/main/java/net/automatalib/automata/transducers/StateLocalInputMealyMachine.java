@@ -15,9 +15,6 @@
  */
 package net.automatalib.automata.transducers;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.concepts.StateLocalInput;
 
-@ParametersAreNonnullByDefault
 public interface StateLocalInputMealyMachine<S, I, T, O> extends MealyMachine<S, I, T, O>, StateLocalInput<S, I> {}

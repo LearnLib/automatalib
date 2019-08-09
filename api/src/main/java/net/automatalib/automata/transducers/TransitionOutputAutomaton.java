@@ -17,14 +17,11 @@ package net.automatalib.automata.transducers;
 
 import java.util.Collection;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
 import net.automatalib.ts.output.DeterministicTransitionOutputTS;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-@ParametersAreNonnullByDefault
 public interface TransitionOutputAutomaton<S, I, T, O>
         extends DetSuffixOutputAutomaton<S, I, T, Word<O>>, DeterministicTransitionOutputTS<S, I, T, O> {
 

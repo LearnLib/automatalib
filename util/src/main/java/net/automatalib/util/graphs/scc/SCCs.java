@@ -17,18 +17,15 @@ package net.automatalib.util.graphs.scc;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.graphs.Graph;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Algorithms for finding strongly-connected components (SCCs) in a graph.
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class SCCs {
 
     private SCCs() {}
@@ -45,7 +42,7 @@ public final class SCCs {
      *
      * @see TarjanSCCVisitor
      */
-    @Nonnull
+    @NonNull
     public static <N, E> List<List<N>> collectSCCs(Graph<N, E> graph) {
         SCCCollector<N> coll = new SCCCollector<>();
         findSCCs(graph, coll);

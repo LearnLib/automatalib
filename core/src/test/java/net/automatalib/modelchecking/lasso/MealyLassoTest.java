@@ -17,13 +17,12 @@ package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.MealyTransition;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -61,7 +60,7 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
             return OUTPUT;
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public Collection<Integer> getStates() {
             return CollectionsUtil.intRange(0, word.length());
@@ -84,7 +83,7 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
             return result;
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public Integer getSuccessor(MealyTransition<Integer, String> transition) {
             return transition.getSuccessor();

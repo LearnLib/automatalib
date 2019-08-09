@@ -33,15 +33,13 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.smartcollections.ArrayWritable;
 import net.automatalib.commons.util.array.AWUtil;
 import net.automatalib.commons.util.strings.AbstractPrintable;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A word is an ordered sequence of symbols. {@link Word}s are generally immutable, i.e., a single {@link Word} object
@@ -68,7 +66,6 @@ import net.automatalib.commons.util.strings.AbstractPrintable;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I>, Serializable {
 
     private static final String EMPTY_WORD_REP;
@@ -101,7 +98,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @return a word containing the symbols in the specified array
      */
     @SafeVarargs
-    @Nonnull
+    @NonNull
     public static <I> Word<I> fromSymbols(I... symbols) {
         if (symbols.length == 0) {
             return epsilon();
@@ -120,7 +117,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @see Collections#emptyList()
      */
     @SuppressWarnings("unchecked")
-    @Nonnull
+    @NonNull
     public static <I> Word<I> epsilon() {
         return (Word<I>) EmptyWord.INSTANCE;
     }
@@ -133,7 +130,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return a word consisting of only this letter
      */
-    @Nonnull
+    @NonNull
     public static <I> Word<I> fromLetter(@Nullable I letter) {
         return new LetterWord<>(letter);
     }
@@ -151,7 +148,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the word consisting of the symbols in the range
      */
-    @Nonnull
+    @NonNull
     public static <I> Word<I> fromArray(I[] symbols, int offset, int length) {
         if (length == 0) {
             return epsilon();
@@ -172,7 +169,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the resulting word
      */
-    @Nonnull
+    @NonNull
     public static <I> Word<I> fromList(List<? extends I> symbolList) {
         int siz = symbolList.size();
         if (siz == 0) {
@@ -184,12 +181,12 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         return new SharedWord<>(symbolList);
     }
 
-    @Nonnull
+    @NonNull
     public static Word<Character> fromString(String str) {
         return fromCharSequence(str);
     }
 
-    @Nonnull
+    @NonNull
     public static Word<Character> fromCharSequence(CharSequence cs) {
         int len = cs.length();
         Character[] chars = new Character[len];
@@ -285,7 +282,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     }
 
     @Override
-    @Nonnull
     public java.util.Iterator<I> iterator() {
         return new Iterator();
     }
@@ -347,7 +343,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the word representing the specified subrange
      */
-    @Nonnull
+    @NonNull
     public final Word<I> subWord(int fromIndex) {
         if (fromIndex <= 0) {
             if (fromIndex == 0) {
@@ -369,7 +365,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the word representing the specified subrange.
      */
-    @Nonnull
+    @NonNull
     public final Word<I> subWord(int fromIndex, int toIndex) {
         if (fromIndex < 0 || toIndex < fromIndex || toIndex > length()) {
             throw new IndexOutOfBoundsException("Invalid subword range [" + fromIndex + ", " + toIndex + ")");
@@ -390,7 +386,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the word representing the specified subrange
      */
-    @Nonnull
+    @NonNull
     protected Word<I> subWordInternal(int fromIndex, int toIndex) {
         int len = toIndex - fromIndex;
         Object[] array = new Object[len];
@@ -428,7 +424,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return an unmodifiable list of the contained symbols.
      */
-    @Nonnull
+    @NonNull
     public List<I> asList() {
         return new AsList();
     }
@@ -442,7 +438,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return a (non-materialized) list containing all prefixes
      */
-    @Nonnull
+    @NonNull
     public List<Word<I>> prefixes(boolean longestFirst) {
         return new SubwordList<>(this, true, longestFirst);
     }
@@ -456,7 +452,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return a (non-materialized) list containing all suffix
      */
-    @Nonnull
+    @NonNull
     public List<Word<I>> suffixes(boolean longestFirst) {
         return new SubwordList<>(this, false, longestFirst);
     }
@@ -472,7 +468,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the next word in canonical order
      */
-    @Nonnull
+    @NonNull
     public Word<I> canonicalNext(Alphabet<I> sigma) {
         int len = length();
         Object[] symbols = new Object[len];
@@ -534,7 +530,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the word plus the given symbol
      */
-    @Nonnull
+    @NonNull
     public Word<I> append(@Nullable I symbol) {
         int len = length();
         Object[] array = new Object[len + 1];
@@ -551,7 +547,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the given symbol plus to word.
      */
-    @Nonnull
+    @NonNull
     public Word<I> prepend(@Nullable I symbol) {
         int len = length();
         Object[] array = new Object[len + 1];
@@ -575,7 +571,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @see #concatInternal(Word...)
      */
     @SafeVarargs
-    @Nonnull
+    @NonNull
     public final Word<I> concat(Word<? extends I>... words) {
         return concatInternal(words);
     }
@@ -589,7 +585,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @return the results of the concatenation
      */
     @SuppressWarnings("unchecked")
-    @Nonnull
+    @NonNull
     protected Word<I> concatInternal(Word<? extends I>... words) {
         if (words.length == 0) {
             return this;
@@ -647,7 +643,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the longest common prefix of this word and the other word
      */
-    @Nonnull
+    @NonNull
     public Word<I> longestCommonPrefix(Word<?> other) {
         int len = length(), otherLen = other.length();
         int maxIdx = (len < otherLen) ? len : otherLen;
@@ -675,7 +671,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the prefix of the given length.
      */
-    @Nonnull
+    @NonNull
     public final Word<I> prefix(int prefixLen) {
         final int length = prefixLen < 0 ? length() + prefixLen : prefixLen;
         return subWord(0, length);
@@ -714,7 +710,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the longest common suffix
      */
-    @Nonnull
+    @NonNull
     public Word<I> longestCommonSuffix(Word<?> other) {
         int len = length(), otherLen = other.length();
         int minLen = (len < otherLen) ? len : otherLen;
@@ -744,7 +740,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the suffix of the given length.
      */
-    @Nonnull
+    @NonNull
     public final Word<I> suffix(int suffixLen) {
         int wordLen = length();
         int startIdx = (suffixLen < 0) ? -suffixLen : (wordLen - suffixLen);
@@ -759,7 +755,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return a flattened version of this word.
      */
-    @Nonnull
+    @NonNull
     public Word<I> flatten() {
         int len = length();
         Object[] array = new Object[len];
@@ -767,7 +763,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         return new SharedWord<>(array);
     }
 
-    @Nonnull
+    @NonNull
     public Word<I> trimmed() {
         int len = length();
         Object[] array = new Object[len];
@@ -803,7 +799,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @return the transformed word
      */
-    @Nonnull
+    @NonNull
     public <T> Word<T> transform(Function<? super I, ? extends T> transformer) {
         int len = length();
         Object[] array = new Object[len];
@@ -860,7 +856,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         }
 
         @Override
-        @Nonnull
         public java.util.Iterator<I> iterator() {
             return Word.this.iterator();
         }

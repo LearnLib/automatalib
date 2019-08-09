@@ -20,11 +20,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utilities for {@link net.automatalib.automata.transducers.StateLocalInputMealyMachine}s.
@@ -102,7 +101,7 @@ public final class StateLocalInputMealyUtil {
             this.listOfStates.add(sinkState);
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public Collection<S> getStates() {
             return listOfStates;
@@ -124,7 +123,7 @@ public final class StateLocalInputMealyUtil {
             return new WrapperTransition<>(reference, reference.getTransition(state, input));
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public S getSuccessor(WrapperTransition<S, I, T, O> transition) {
             final T trans = transition.getTransition();

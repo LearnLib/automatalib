@@ -17,12 +17,9 @@ package net.automatalib.ts.output;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.concepts.TransitionOutput;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public interface DeterministicTransitionOutputTS<S, I, T, O>
         extends DeterministicOutputTS<S, I, T, O>, TransitionOutput<T, O> {
 

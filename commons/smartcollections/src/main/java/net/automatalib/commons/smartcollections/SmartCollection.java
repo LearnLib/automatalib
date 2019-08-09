@@ -20,9 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An extended collection interface.
@@ -56,7 +55,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SmartCollection<E> extends Collection<E> {
 
     /**
@@ -81,7 +79,7 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return a reference to this element in the collection.
      */
-    @Nonnull
+    @NonNull
     ElementReference referencedAdd(@Nullable E elem);
 
     /**
@@ -121,7 +119,7 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the reference to an arbitrary element in the collection
      */
-    @Nonnull
+    @NonNull
     ElementReference chooseRef();
 
     /**
@@ -129,7 +127,7 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the reference iterator.
      */
-    @Nonnull
+    @NonNull
     Iterator<ElementReference> referenceIterator();
 
     /**
@@ -138,7 +136,7 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return an {@link Iterable} with the above {@link #referenceIterator()} as its iterator.
      */
-    @Nonnull
+    @NonNull
     Iterable<ElementReference> references();
 
     /**

@@ -15,8 +15,7 @@
  */
 package net.automatalib.ts;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A "universal" transition system, which captures the possibility to assign properties to states and transitions.
@@ -47,7 +46,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface UniversalTransitionSystem<S, I, T, SP, TP> extends TransitionSystem<S, I, T> {
 
     /**

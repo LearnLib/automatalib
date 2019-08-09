@@ -15,8 +15,7 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Feature for automata that compute an output.
@@ -28,7 +27,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface Output<I, D> {
 
     @Nullable

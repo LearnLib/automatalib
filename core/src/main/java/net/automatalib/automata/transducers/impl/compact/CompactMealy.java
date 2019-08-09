@@ -17,17 +17,14 @@ package net.automatalib.automata.transducers.impl.compact;
 
 import java.util.Arrays;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.AbstractCompact;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactMealyTransition<O>, Void, O> implements
                                                                                                             MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O>,
                                                                                                             StateLocalInputMealyMachine<Integer, I, CompactMealyTransition<O>, O> {

@@ -20,9 +20,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A mutable automaton. This interface adds support for non-destructive modifications, i.e., adding and modifying states
@@ -42,7 +41,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S, I, T, SP, TP> {
 
     /**
@@ -50,7 +48,7 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
      */
     void clear();
 
-    @Nonnull
+    @NonNull
     default S addState() {
         return addState(null);
     }
@@ -58,15 +56,15 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
     /**
      * Adds a state to the automaton.
      */
-    @Nonnull
+    @NonNull
     S addState(@Nullable SP property);
 
-    @Nonnull
+    @NonNull
     default S addInitialState() {
         return addInitialState(null);
     }
 
-    @Nonnull
+    @NonNull
     default S addInitialState(@Nullable SP property) {
         S state = addState(property);
         setInitial(state, true);
@@ -103,7 +101,7 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
 
     void removeAllTransitions(S state);
 
-    @Nonnull
+    @NonNull
     default T addTransition(S state, @Nullable I input, S successor, @Nullable TP properties) {
         T trans = createTransition(successor, properties);
         addTransition(state, input, trans);
@@ -118,10 +116,10 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
         setTransitions(state, input, transitions);
     }
 
-    @Nonnull
+    @NonNull
     T createTransition(S successor, @Nullable TP properties);
 
-    @Nonnull
+    @NonNull
     default T copyTransition(T trans, S succ) {
         TP property = getTransitionProperty(trans);
         return createTransition(succ, property);

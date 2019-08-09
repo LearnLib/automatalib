@@ -18,12 +18,11 @@ package net.automatalib.words.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link net.automatalib.words.VPDAlphabet} implementation that allows to add new symbols after its construction.

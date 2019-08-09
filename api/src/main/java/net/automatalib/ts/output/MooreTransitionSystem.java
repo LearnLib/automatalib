@@ -15,11 +15,8 @@
  */
 package net.automatalib.ts.output;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.ts.UniversalDTS;
 
-@ParametersAreNonnullByDefault
 public interface MooreTransitionSystem<S, I, T, O>
         extends DeterministicStateOutputTS<S, I, T, O>, UniversalDTS<S, I, T, O, Void> {
 

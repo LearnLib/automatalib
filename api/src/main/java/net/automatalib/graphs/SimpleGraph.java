@@ -19,13 +19,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.Iterators;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.graphs.helpers.SimpleNodeIDs;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The finite version of a {@link IndefiniteSimpleGraph}.
@@ -51,11 +50,11 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
      *
      * @return the nodes in this graph
      */
-    @Nonnull
+    @NonNull
     Collection<N> getNodes();
 
     @Override
-    @Nonnull
+    @NonNull
     default Iterator<N> iterator() {
         return Iterators.unmodifiableIterator(getNodes().iterator());
     }
@@ -64,7 +63,7 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
         return getNodes().stream();
     }
 
-    @Nonnull
+    @NonNull
     default NodeIDs<N> nodeIDs() {
         return new SimpleNodeIDs<>(this);
     }

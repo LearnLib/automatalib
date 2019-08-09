@@ -17,13 +17,10 @@ package net.automatalib.words.impl;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.abstractimpl.AbstractSymbol;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public class Symbol extends AbstractSymbol<Symbol> {
 
     @Nullable
@@ -34,7 +31,7 @@ public class Symbol extends AbstractSymbol<Symbol> {
     }
 
     @Override
-    public int compareTo(@Nonnull Symbol o) {
+    public int compareTo(@NonNull Symbol o) {
         return getId() - o.getId();
     }
 
@@ -44,7 +41,7 @@ public class Symbol extends AbstractSymbol<Symbol> {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public String toString() {
         return String.valueOf(userObject);
     }

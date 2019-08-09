@@ -18,10 +18,8 @@ package net.automatalib.automata;
 import java.util.Collection;
 import java.util.function.IntFunction;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Interface for a <i>mutable</i> deterministic automaton.
@@ -39,7 +37,6 @@ import net.automatalib.words.Alphabet;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface MutableDeterministic<S, I, T, SP, TP>
         extends UniversalDeterministicAutomaton<S, I, T, SP, TP>, MutableAutomaton<S, I, T, SP, TP> {
 

@@ -19,11 +19,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.ts.simple.SimpleDTS;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Deterministic transition system. Like a {@link TransitionSystem}, but in each state there may exist at most one
@@ -38,7 +36,6 @@ import net.automatalib.ts.simple.SimpleDTS;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface DeterministicTransitionSystem<S, I, T> extends TransitionSystem<S, I, T>, SimpleDTS<S, I> {
 
     @Override
@@ -64,21 +61,21 @@ public interface DeterministicTransitionSystem<S, I, T> extends TransitionSystem
      * @see TransitionSystem#getTransitions(Object, Object)
      */
     @Nullable
-    T getTransition(S state, @Nullable I input);
+    T getTransition(S state, I input);
 
     @Override
-    @Nonnull
+    @NonNull
     default Set<S> getSuccessors(S state, I input) {
         return SimpleDTS.super.getSuccessors(state, input);
     }
 
     @Override
-    @Nonnull
+    @NonNull
     default Collection<T> getTransitions(S state, I input) {
         return transToSet(getTransition(state, input));
     }
 
-    @Nonnull
+    @NonNull
     static <T> Set<T> transToSet(T trans) {
         if (trans == null) {
             return Collections.emptySet();

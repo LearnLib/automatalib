@@ -15,12 +15,11 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public interface InputAlphabetHolder<I> {
 
-    @Nonnull
+    @NonNull
     Alphabet<I> getInputAlphabet();
 }

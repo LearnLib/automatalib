@@ -21,13 +21,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.ts.powerset.DeterministicPowersetView;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class that refines {@link AbstractCompact} for deterministic automata. This class provides default
@@ -46,7 +44,6 @@ import net.automatalib.words.Alphabet;
  * @author frohme
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends AbstractCompact<I, T, SP, TP> implements
                                                                                                        MutableDeterministic<Integer, I, T, SP, TP>,
                                                                                                        MutableDeterministic.StateIntAbstraction<I, T, SP, TP>,
@@ -121,7 +118,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
         setStateProperty(state.intValue(), property);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public T createTransition(Integer successor, @Nullable TP properties) {
         return createTransition(successor.intValue(), properties);

@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.util.collections.AbstractThreeLevelIterator;
 import net.automatalib.commons.util.collections.CollectionsUtil;
@@ -42,7 +40,6 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<List<I>, Word<I>, Word<I>, Word<I>> {
 
     private final Iterable<Word<I>> prefixes;

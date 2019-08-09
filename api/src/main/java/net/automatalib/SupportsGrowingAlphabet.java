@@ -15,8 +15,6 @@
  */
 package net.automatalib;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.GrowingAlphabet;
 
@@ -28,7 +26,6 @@ import net.automatalib.words.GrowingAlphabet;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public interface SupportsGrowingAlphabet<I> {
 
     /**

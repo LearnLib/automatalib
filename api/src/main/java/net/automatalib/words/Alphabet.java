@@ -21,10 +21,9 @@ import java.util.Objects;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.commons.smartcollections.ArrayWritable;
 import net.automatalib.commons.util.mappings.Mapping;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Class implementing an (indexed) alphabet. An alphabet is a collection of symbols, where each symbol has a (unique)
@@ -71,7 +70,7 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
      * @throws IllegalArgumentException
      *         if the provided symbol does not belong to the alphabet.
      */
-    int getSymbolIndex(@Nullable I symbol);
+    int getSymbolIndex(I symbol);
 
     @Override
     default int compare(I o1, I o2) {

@@ -18,8 +18,6 @@ package net.automatalib.util.automata.cover;
 import java.util.Collections;
 import java.util.Set;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Word;
 
 /**
@@ -32,7 +30,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 final class Record<S, I> {
 
     final S state;

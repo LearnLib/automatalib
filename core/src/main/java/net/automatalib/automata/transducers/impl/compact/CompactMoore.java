@@ -15,12 +15,11 @@
  */
 package net.automatalib.automata.transducers.impl.compact;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.UniversalCompactSimpleDet;
 import net.automatalib.automata.transducers.MutableMooreMachine;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactMoore<I, O> extends UniversalCompactSimpleDet<I, O>
         implements MutableMooreMachine<Integer, I, Integer, O> {

@@ -15,12 +15,10 @@
  */
 package net.automatalib.brics;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
 import net.automatalib.automata.fsa.DFA;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Adapter class for wrapping a Brics automaton as a {@link DFA}.
@@ -31,7 +29,6 @@ import net.automatalib.automata.fsa.DFA;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class BricsDFA extends AbstractBricsAutomaton implements DFA<State, Character> {
 
     /**
@@ -79,12 +76,12 @@ public class BricsDFA extends AbstractBricsAutomaton implements DFA<State, Chara
     }
 
     @Override
-    public State getSuccessor(State state, @Nonnull Character input) {
+    public State getSuccessor(State state, @NonNull Character input) {
         return state.step(input.charValue());
     }
 
     @Override
-    public State getTransition(State state, @Nonnull Character input) {
+    public State getTransition(State state, @NonNull Character input) {
         return state.step(input.charValue());
     }
 

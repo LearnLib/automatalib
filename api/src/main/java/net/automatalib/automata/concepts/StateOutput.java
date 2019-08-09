@@ -15,8 +15,7 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * State output concept. Allows to associate with each state an output, like in a Moore machine.
@@ -28,7 +27,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface StateOutput<S, O> {
 
     @Nullable

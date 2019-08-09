@@ -15,11 +15,8 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.exception.UndefinedPropertyAccessException;
 
-@ParametersAreNonnullByDefault
 public interface DetSuffixOutputAutomaton<S, I, T, D> extends DetOutputAutomaton<S, I, T, D>, SuffixOutput<I, D> {
 
     @Override

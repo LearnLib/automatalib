@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -32,6 +30,7 @@ import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

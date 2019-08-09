@@ -17,9 +17,8 @@ package net.automatalib.util.automata.predicates;
 
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.automata.fsa.FiniteStateAcceptor;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 final class AcceptanceStatePredicate<S> implements Predicate<S> {
 
@@ -32,7 +31,7 @@ final class AcceptanceStatePredicate<S> implements Predicate<S> {
     }
 
     @Override
-    public boolean test(@Nonnull S state) {
+    public boolean test(@NonNull S state) {
         return fsa.isAccepting(state) == acceptance;
     }
 

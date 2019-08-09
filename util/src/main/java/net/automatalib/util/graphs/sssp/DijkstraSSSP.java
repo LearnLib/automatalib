@@ -19,10 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.commons.smartcollections.BinaryHeap;
 import net.automatalib.commons.smartcollections.ElementReference;
 import net.automatalib.commons.smartcollections.SmartDynamicPriorityQueue;
@@ -30,6 +26,8 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.EdgeWeights;
 import net.automatalib.util.graphs.Graphs;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of Dijkstras algorithm for the single-source shortest path problem.
@@ -41,7 +39,6 @@ import net.automatalib.util.graphs.Graphs;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
 
     private final Graph<N, E> graph;
@@ -78,7 +75,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
      *
      * @return the single-source shortest path results
      */
-    @Nonnull
+    @NonNull
     public static <N, E> SSSPResult<N, E> findSSSP(Graph<N, E> graph, N init, EdgeWeights<E> edgeWeights) {
         DijkstraSSSP<N, E> dijkstra = new DijkstraSSSP<>(graph, init, edgeWeights);
         dijkstra.findSSSP();
@@ -180,10 +177,9 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
      * Internal data record.
      * Note: this class has a natural ordering that is inconsistent with equals.
      */
-    @ParametersAreNonnullByDefault
     private static final class Record<N, E> implements Comparable<Record<N, E>> {
 
-        @Nonnull
+        @NonNull
         public final N node;
         public float dist;
         @Nullable

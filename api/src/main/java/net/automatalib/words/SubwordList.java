@@ -17,10 +17,8 @@ package net.automatalib.words;
 
 import java.util.AbstractList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-@ParametersAreNonnullByDefault
 class SubwordList<I> extends AbstractList<Word<I>> {
 
     private final Word<I> word;
@@ -34,7 +32,7 @@ class SubwordList<I> extends AbstractList<Word<I>> {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Word<I> get(int index) {
         final int length = word.length();
 

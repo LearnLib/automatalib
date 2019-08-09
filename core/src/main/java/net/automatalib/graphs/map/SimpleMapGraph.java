@@ -26,11 +26,10 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.Iterators;
 import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.ShrinkableGraph;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A very simple graph realization, where nodes can be arbitrary Java objects. This graph does not support edge
@@ -45,9 +44,9 @@ import net.automatalib.graphs.ShrinkableGraph;
  */
 public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, ShrinkableGraph<N, N> {
 
-    @Nonnull
+    @NonNull
     private final Map<N, Collection<N>> structureMap;
-    @Nonnull
+    @NonNull
     private final Supplier<? extends Collection<N>> adjCollSupplier;
 
     /**

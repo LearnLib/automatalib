@@ -15,9 +15,8 @@
  */
 package net.automatalib.graphs;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A graph that allows modification. Note that this interface only exposes methods for extending a graph. If also
@@ -34,7 +33,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP> {
 
     /**
@@ -43,7 +41,7 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the newly inserted node
      */
-    @Nonnull
+    @NonNull
     default N addNode() {
         return addNode(null);
     }
@@ -56,7 +54,7 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the newly inserted node
      */
-    @Nonnull
+    @NonNull
     N addNode(@Nullable NP property);
 
     /**
@@ -70,7 +68,7 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the edge connecting the given nodes
      */
-    @Nonnull
+    @NonNull
     default E connect(N source, N target) {
         return connect(source, target, null);
     }
@@ -87,7 +85,7 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the newly inserted edge
      */
-    @Nonnull
+    @NonNull
     E connect(N source, N target, @Nullable EP property);
 
     void setNodeProperty(N node, @Nullable NP property);

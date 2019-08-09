@@ -17,8 +17,6 @@ package net.automatalib.ts.acceptors;
 
 import java.util.Collection;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.ts.UniversalTransitionSystem;
 
 /**
@@ -31,7 +29,6 @@ import net.automatalib.ts.UniversalTransitionSystem;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boolean, Void> {
 
     /**

@@ -17,11 +17,8 @@ package net.automatalib.ts.output;
 
 import java.util.List;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.ts.DeterministicTransitionSystem;
 
-@ParametersAreNonnullByDefault
 public interface DeterministicOutputTS<S, I, T, O> extends DeterministicTransitionSystem<S, I, T> {
 
     default boolean trace(Iterable<? extends I> input, List<? super O> output) {

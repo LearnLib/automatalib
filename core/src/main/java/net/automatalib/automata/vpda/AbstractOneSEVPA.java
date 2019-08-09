@@ -21,12 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.graphs.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.VPDAlphabet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Abstract class for 1-SEVPAs that implements functionality shared across different subtypes.
@@ -102,13 +101,13 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
     @Override
     public abstract int size();
 
-    @Nonnull
+    @NonNull
     @Override
     public Collection<L> getNodes() {
         return Collections.unmodifiableCollection(getLocations());
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Collection<SevpaViewEdge<L, I>> getOutgoingEdges(final L location) {
 
@@ -131,7 +130,7 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
         return result;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public L getTarget(final SevpaViewEdge<L, I> edge) {
 

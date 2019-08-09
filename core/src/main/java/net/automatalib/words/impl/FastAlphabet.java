@@ -18,11 +18,10 @@ package net.automatalib.words.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.MutableNumericID;
 import net.automatalib.words.GrowingAlphabet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A fast alphabet implementation, that assumes identifiers are stored directly in the input symbols.
@@ -48,19 +47,19 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> imp
     }
 
     @Override
-    public int addSymbol(@Nonnull I a) {
+    public int addSymbol(I a) {
         add(a);
         return a.getId();
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public I getSymbol(int index) {
         return get(index);
     }
 
     @Override
-    public int getSymbolIndex(@Nonnull I symbol) {
+    public int getSymbolIndex(I symbol) {
         int id = symbol.getId();
         if (id < 0 || id >= size() || get(id) != symbol) {
             throw new IllegalArgumentException("Invalid symbol: " + symbol + " does not belong to this alphabet");
@@ -69,7 +68,7 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> imp
     }
 
     @Override
-    public int compare(@Nonnull I o1, @Nonnull I o2) {
+    public int compare(@NonNull I o1, @NonNull I o2) {
         return o1.getId() - o2.getId();
     }
 

@@ -18,10 +18,8 @@ package net.automatalib.automata.base.compact;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class that refines {@link AbstractCompactDeterministic} for transition-property-less automata. As a
@@ -37,7 +35,6 @@ import net.automatalib.words.Alphabet;
  * @author frohme
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractCompactSimpleDeterministic<I, SP>
         extends AbstractCompactDeterministic<I, Integer, SP, Void> {
 

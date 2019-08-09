@@ -19,17 +19,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.Iterators;
 import net.automatalib.commons.util.collections.UnmodifiableListIterator;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-@ParametersAreNonnullByDefault
 public class ListAlphabet<I> extends AbstractAlphabet<I> {
 
-    @Nonnull
+    @NonNull
     private final List<? extends I> list;
 
     public ListAlphabet(List<? extends I> list) {

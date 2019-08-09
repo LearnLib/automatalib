@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
@@ -32,6 +29,8 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -260,7 +259,7 @@ public class StateLocalInputIncrementalMealyTreeBuilderTest {
             return reference.getLocalInputs(state);
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public Collection<S> getStates() {
             return reference.getStates();
@@ -283,7 +282,7 @@ public class StateLocalInputIncrementalMealyTreeBuilderTest {
             return reference.getTransition(state, input);
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public S getSuccessor(T transition) {
             return reference.getSuccessor(transition);

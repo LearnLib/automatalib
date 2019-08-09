@@ -17,12 +17,9 @@ package net.automatalib.automata.fsa;
 
 import java.util.Collection;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Nondeterministic finite state acceptor.
  */
-@ParametersAreNonnullByDefault
 public interface NFA<S, I> extends FiniteStateAcceptor<S, I> {
 
     @Override

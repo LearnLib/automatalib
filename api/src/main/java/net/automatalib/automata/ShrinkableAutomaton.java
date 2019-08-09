@@ -20,8 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A mutable automaton that also supports destructive modifications, i.e., removal of states and transitions.
@@ -39,7 +38,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S, I, T, SP, TP> {
 
     static <S, I, T, SP, TP> void unlinkState(MutableAutomaton<S, I, T, SP, TP> automaton,

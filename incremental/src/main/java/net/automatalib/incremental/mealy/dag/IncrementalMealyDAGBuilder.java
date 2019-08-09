@@ -27,9 +27,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -44,6 +41,8 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Incrementally builds an (acyclic) Mealy machine, from a set of input and corresponding output words.
@@ -555,7 +554,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return ids.computeIfAbsent(state, k -> ids.size());
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Alphabet<I> getInputAlphabet() {
         return inputAlphabet;
@@ -622,7 +621,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public State<O> getInitialNode() {
             return init;
         }

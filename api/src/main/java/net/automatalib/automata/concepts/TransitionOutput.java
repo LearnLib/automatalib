@@ -15,8 +15,7 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Transition output concept. Associates a transition with an output, like in a Mealy machine.
@@ -28,7 +27,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface TransitionOutput<T, O> {
 
     @Nullable

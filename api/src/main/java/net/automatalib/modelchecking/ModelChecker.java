@@ -17,12 +17,10 @@ package net.automatalib.modelchecking;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.exception.ModelCheckingException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A model checker checks whether a given automaton satisfies a given property. If the property can not be satisfied it
@@ -40,7 +38,6 @@ import net.automatalib.exception.ModelCheckingException;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface ModelChecker<I, A, P, R> {
 
     /**

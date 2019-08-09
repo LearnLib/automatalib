@@ -15,7 +15,7 @@
  */
 package net.automatalib.graphs.concepts;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Initial node concept. Graphs implementing this interface expose a designated initial node.

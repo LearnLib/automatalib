@@ -17,8 +17,6 @@ package net.automatalib.modelchecking;
 
 import java.util.Collection;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 
@@ -36,7 +34,6 @@ import net.automatalib.automata.transducers.MealyMachine;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface ModelCheckerCache<I, A, P, R> extends ModelChecker<I, A, P, R> {
 
     /**

@@ -21,12 +21,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.simple.SimpleAutomaton;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.modelchecking.ModelCheckerCache;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An implementation of a cache for model checkers. Based on the size and input alphabet.

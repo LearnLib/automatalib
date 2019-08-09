@@ -21,10 +21,6 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.modelchecking.Lasso;
@@ -33,11 +29,12 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
 
     public static final String NO_LASSO = "Automaton is not lasso shaped";
@@ -218,7 +215,7 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
         return result;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Collection<Integer> getStates() {
         return CollectionsUtil.intRange(0, word.length());
@@ -229,7 +226,7 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
      *
      * @return the Alphabet.
      */
-    @Nonnull
+    @NonNull
     @Override
     public Alphabet<I> getInputAlphabet() {
         return inputAlphabet;

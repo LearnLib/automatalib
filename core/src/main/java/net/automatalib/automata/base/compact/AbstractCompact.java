@@ -22,9 +22,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.IntFunction;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.MutableDeterministic.FullIntAbstraction;
@@ -34,6 +31,7 @@ import net.automatalib.automata.concepts.StateLocalInput;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class for compact automata representations. Compactness is achieved by representing states as
@@ -55,7 +53,6 @@ import net.automatalib.words.impl.Alphabets;
  * @author frohme
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<Integer, I, T, SP, TP>,
                                                                StateIDs<Integer>,
                                                                UniversalFiniteAlphabetAutomaton<Integer, I, T, SP, TP>,

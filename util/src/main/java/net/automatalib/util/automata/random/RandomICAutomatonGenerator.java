@@ -24,14 +24,12 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.random.RandomUtil;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A random generator for initially connected (IC) deterministic automata.
@@ -50,12 +48,11 @@ import net.automatalib.words.Alphabet;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class RandomICAutomatonGenerator<SP, TP> {
 
-    @Nonnull
+    @NonNull
     private Function<? super Random, ? extends SP> spSupplier = (r) -> null;
-    @Nonnull
+    @NonNull
     private Function<? super Random, ? extends TP> tpSupplier = (r) -> null;
 
     /**

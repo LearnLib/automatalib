@@ -17,10 +17,8 @@ package net.automatalib.automata.transducers.probabilistic;
 
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public final class ProbabilisticOutput<O> {
 
     private final float probability;

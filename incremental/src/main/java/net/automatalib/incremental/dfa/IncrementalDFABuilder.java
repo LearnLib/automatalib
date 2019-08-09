@@ -15,10 +15,6 @@
  */
 package net.automatalib.incremental.dfa;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.graphs.Graph;
@@ -26,6 +22,8 @@ import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.UniversalDTS;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * General interface for incremental DFA builders.
@@ -35,7 +33,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?, I>, I>, SupportsGrowingAlphabet<I> {
 
     /**
@@ -46,7 +43,7 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
      *
      * @return the tri-state acceptance value for this word.
      */
-    @Nonnull
+    @NonNull
     Acceptance lookup(Word<? extends I> inputWord);
 
     /**
@@ -76,28 +73,28 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
     void insert(Word<? extends I> word);
 
     @Override
-    @Nonnull
+    @NonNull
     GraphView<I, ?, ?> asGraph();
 
     @Override
-    @Nonnull
+    @NonNull
     TransitionSystemView<?, I, ?> asTransitionSystem();
 
     interface GraphView<I, N, E> extends Graph<N, E> {
 
         @Nullable
-        I getInputSymbol(@Nonnull E edge);
+        I getInputSymbol(@NonNull E edge);
 
-        @Nonnull
-        Acceptance getAcceptance(@Nonnull N node);
+        @NonNull
+        Acceptance getAcceptance(@NonNull N node);
 
-        @Nonnull
+        @NonNull
         N getInitialNode();
     }
 
     interface TransitionSystemView<S, I, T> extends UniversalDTS<S, I, T, Acceptance, Void> {
 
-        @Nonnull
-        Acceptance getAcceptance(@Nonnull S state);
+        @NonNull
+        Acceptance getAcceptance(@NonNull S state);
     }
 }

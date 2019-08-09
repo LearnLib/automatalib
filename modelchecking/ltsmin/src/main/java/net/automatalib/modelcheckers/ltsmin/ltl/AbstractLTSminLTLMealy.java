@@ -21,8 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.exception.ModelCheckingException;
@@ -31,6 +29,7 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.modelchecking.lasso.MealyLassoImpl;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

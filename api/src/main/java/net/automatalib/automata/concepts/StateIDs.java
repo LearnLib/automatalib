@@ -15,15 +15,12 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * An interface for translating between automaton states and their primitive representations as integers.
  *
  * @param <S>
  *         state type of the automaton
  */
-@ParametersAreNonnullByDefault
 public interface StateIDs<S> {
 
     /**

@@ -17,11 +17,9 @@ package net.automatalib.incremental.dfa.tree;
 
 import java.io.Serializable;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A node in the tree internally used by {@link IncrementalDFATreeBuilder}.
@@ -31,7 +29,6 @@ import net.automatalib.incremental.dfa.Acceptance;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class Node<I> implements Serializable {
 
     private Acceptance acceptance;

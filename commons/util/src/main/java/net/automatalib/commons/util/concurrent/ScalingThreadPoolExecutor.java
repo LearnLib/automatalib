@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A {@link ThreadPoolExecutor} that internally uses a {@link ScalingLinkedBlockingQueue} to manage scheduled tasks.
@@ -85,7 +85,7 @@ public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
         }
 
         @Override
-        public boolean offer(@Nonnull Runnable r) {
+        public boolean offer(@NonNull Runnable r) {
             if (tpe != null && tpe.getActiveCount() + size() < tpe.getMaximumPoolSize()) {
                 return false;
             }

@@ -17,11 +17,9 @@ package net.automatalib.util.graphs.sssp;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.util.graphs.Graphs;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Result interface for the single-source shortest path (SSSP) problem.
@@ -33,7 +31,6 @@ import net.automatalib.util.graphs.Graphs;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SSSPResult<N, E> {
 
     /**
@@ -41,7 +38,7 @@ public interface SSSPResult<N, E> {
      *
      * @return the source node
      */
-    @Nonnull
+    @NonNull
     N getInitialNode();
 
     /**

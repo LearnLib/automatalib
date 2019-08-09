@@ -15,15 +15,12 @@
  */
 package net.automatalib.automata.fsa;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.MutableAutomaton;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * @author fh
  */
-@ParametersAreNonnullByDefault
 public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAutomaton<S, I, S, Boolean, Void> {
 
     default void flipAcceptance() {
@@ -34,7 +31,7 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
 
     void setAccepting(S state, boolean accepting);
 
-    @Nonnull
+    @NonNull
     S addState(boolean accepting);
 
     @Override

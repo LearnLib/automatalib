@@ -20,10 +20,9 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A simplified interface for indefinite graphs, exposing only adjacency information, but no further information about
@@ -36,34 +35,34 @@ import net.automatalib.commons.util.mappings.MutableMapping;
  */
 public interface IndefiniteSimpleGraph<N> {
 
-    @Nonnull
+    @NonNull
     default Iterable<N> adjacentTargets(N node) {
         return () -> adjacentTargetsIterator(node);
     }
 
-    @Nonnull
+    @NonNull
     default Iterator<N> adjacentTargetsIterator(N node) {
         return getAdjacentTargets(node).iterator();
     }
 
-    @Nonnull
+    @NonNull
     Collection<N> getAdjacentTargets(N node);
 
     default boolean isConnected(N source, N target) {
         return adjacentTargetsStream(source).anyMatch(n -> Objects.equals(n, target));
     }
 
-    @Nonnull
+    @NonNull
     default Stream<N> adjacentTargetsStream(N node) {
         return getAdjacentTargets(node).stream();
     }
 
-    @Nonnull
+    @NonNull
     default <V> MutableMapping<N, V> createStaticNodeMapping() {
         return new MapMapping<>();
     }
 
-    @Nonnull
+    @NonNull
     default <V> MutableMapping<N, V> createDynamicNodeMapping() {
         return new MapMapping<>();
     }

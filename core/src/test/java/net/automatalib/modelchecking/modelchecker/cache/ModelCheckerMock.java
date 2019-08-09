@@ -18,14 +18,13 @@ package net.automatalib.modelchecking.modelchecker.cache;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 
 /**

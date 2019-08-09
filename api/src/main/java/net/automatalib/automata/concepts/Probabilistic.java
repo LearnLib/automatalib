@@ -15,9 +15,6 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public interface Probabilistic<T> {
 
     float getTransitionProbability(T transition);

@@ -19,14 +19,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.EdgeWeights;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.util.graphs.Graphs;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Implementation of the Floyd-Warshall dynamic programming algorithm for the all pairs shortest paths problem.
@@ -38,13 +36,12 @@ import net.automatalib.util.graphs.Graphs;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
 
     private final int size;
-    @Nonnull
+    @NonNull
     private final NodeIDs<N> ids;
-    @Nonnull
+    @NonNull
     private final APSPRecord<E>[][] table;
 
     @SuppressWarnings("unchecked")
@@ -78,7 +75,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
         }
     }
 
-    @Nonnull
+    @NonNull
     public static <N, E> APSPResult<N, E> findAPSP(Graph<N, E> graph, EdgeWeights<E> edgeWeights) {
         FloydWarshallAPSP<N, E> fw = new FloydWarshallAPSP<>(graph, edgeWeights);
         fw.findAPSP();
@@ -163,7 +160,6 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
         buildPath(path, middle, tgtId, table[middle][tgtId]);
     }
 
-    @ParametersAreNonnullByDefault
     private static final class APSPRecord<E> {
 
         @Nullable

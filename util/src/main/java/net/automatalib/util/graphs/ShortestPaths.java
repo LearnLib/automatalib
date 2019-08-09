@@ -21,10 +21,8 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.graphs.IndefiniteGraph;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Unweighted shortest path search in graphs.
@@ -36,7 +34,6 @@ import net.automatalib.graphs.IndefiniteGraph;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class ShortestPaths {
 
     private ShortestPaths() {

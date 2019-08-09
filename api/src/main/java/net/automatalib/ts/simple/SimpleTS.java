@@ -20,12 +20,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simple transition system. A transition system is a (not necessarily finite) collection of states. For an arbitrary
@@ -38,7 +36,6 @@ import net.automatalib.commons.util.mappings.MutableMapping;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SimpleTS<S, I> {
 
     /**
@@ -52,7 +49,7 @@ public interface SimpleTS<S, I> {
      * @return the set of successors reachable by this input, or <code>null</code> if no successor states are reachable
      * by this input.
      */
-    @Nonnull
+    @NonNull
     default Set<S> getSuccessors(S state, Iterable<? extends I> input) {
         return getSuccessors(Collections.singleton(state), input);
     }
@@ -68,7 +65,7 @@ public interface SimpleTS<S, I> {
      *
      * @return the set of successors reachable by this input, or <code>null</code> if no successor states are reachable.
      */
-    @Nonnull
+    @NonNull
     default Set<S> getSuccessors(Collection<? extends S> states, Iterable<? extends I> input) {
         Set<S> current = new HashSet<>(states);
         Set<S> succs = new HashSet<>();
@@ -99,7 +96,7 @@ public interface SimpleTS<S, I> {
      * @return the set of successors reachable by this input, or <code>null</code> if no successor states are reachable
      * by this input.
      */
-    @Nonnull
+    @NonNull
     Set<S> getSuccessors(S state, @Nullable I input);
 
     /**
@@ -112,7 +109,7 @@ public interface SimpleTS<S, I> {
      * @return the set of states reachable by this input from an initial state, or <code>null</code> if no successor
      * state is reachable.
      */
-    @Nonnull
+    @NonNull
     default Set<S> getStates(Iterable<? extends I> input) {
         return getSuccessors(getInitialStates(), input);
     }
@@ -122,7 +119,7 @@ public interface SimpleTS<S, I> {
      *
      * @return the initial states.
      */
-    @Nonnull
+    @NonNull
     Set<S> getInitialStates();
 
     /**
@@ -131,7 +128,7 @@ public interface SimpleTS<S, I> {
      *
      * @return the mutable mapping
      */
-    @Nonnull
+    @NonNull
     default <V> MutableMapping<S, V> createStaticStateMapping() {
         return new MapMapping<>();
     }
@@ -142,7 +139,7 @@ public interface SimpleTS<S, I> {
      *
      * @return the mutable mapping
      */
-    @Nonnull
+    @NonNull
     default <V> MutableMapping<S, V> createDynamicStateMapping() {
         return new MapMapping<>();
     }

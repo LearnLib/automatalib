@@ -21,9 +21,8 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.commons.util.Pair;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Parse a Mealy machine from an FSM source, with straightforward edge semantics.

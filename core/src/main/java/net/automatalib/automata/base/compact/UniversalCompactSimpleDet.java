@@ -17,8 +17,6 @@ package net.automatalib.automata.base.compact;
 
 import java.util.Arrays;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Alphabet;
 
 /**
@@ -33,7 +31,6 @@ import net.automatalib.words.Alphabet;
  * @author frohme
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeterministic<I, SP> {
 
     private Object[] stateProperties;

@@ -21,8 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.ForwardingIterator;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
@@ -47,7 +45,6 @@ import net.automatalib.words.WordBuilder;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
 
     private final Iterator<Word<I>> wpIterator;

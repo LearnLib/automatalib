@@ -15,8 +15,6 @@
  */
 package net.automatalib.modelchecking;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelchecking.Lasso.DFALasso;
@@ -36,7 +34,6 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface ModelCheckerLasso<I, A, P, R extends Lasso<I, ?>> extends ModelChecker<I, A, P, R> {
 
     /**

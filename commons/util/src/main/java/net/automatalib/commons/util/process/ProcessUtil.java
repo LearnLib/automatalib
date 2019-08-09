@@ -21,19 +21,16 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.process.InputStreamConsumer.DelegatingConsumer;
 import net.automatalib.commons.util.process.InputStreamConsumer.NOPConsumer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class for invoking system processes.
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public final class ProcessUtil {
 
     private ProcessUtil() {

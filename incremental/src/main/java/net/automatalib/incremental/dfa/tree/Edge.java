@@ -15,13 +15,10 @@
  */
 package net.automatalib.incremental.dfa.tree;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.incremental.dfa.Acceptance;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public final class Edge<I> {
 
     private final Node<I> node;
@@ -32,7 +29,7 @@ public final class Edge<I> {
         this.input = input;
     }
 
-    @Nonnull
+    @NonNull
     public Node<I> getNode() {
         return node;
     }
@@ -42,7 +39,7 @@ public final class Edge<I> {
         return input;
     }
 
-    @Nonnull
+    @NonNull
     public Acceptance getAcceptance() {
         return node.getAcceptance();
     }

@@ -24,9 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -38,6 +35,8 @@ import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends AbstractIncrementalMealyBuilder<I, O> {
 
@@ -196,7 +195,7 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public N getInitialNode() {
             return root;
         }

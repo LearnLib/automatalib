@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.MutableDeterministic;
@@ -46,7 +44,6 @@ import net.automatalib.util.ts.TS;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 
-@ParametersAreNonnullByDefault
 public class Automata extends TS {
 
     public static <S, I, T> Graph<S, TransitionEdge<I, T>> asGraph(Automaton<S, I, T> automaton,

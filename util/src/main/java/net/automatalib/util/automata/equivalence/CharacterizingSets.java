@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.AbstractIterator;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.util.automata.Automata;
@@ -48,7 +46,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class CharacterizingSets {
 
     private CharacterizingSets() {}

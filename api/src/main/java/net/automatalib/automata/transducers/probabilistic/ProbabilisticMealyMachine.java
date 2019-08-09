@@ -15,21 +15,18 @@
  */
 package net.automatalib.automata.transducers.probabilistic;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.concepts.Probabilistic;
 import net.automatalib.automata.concepts.TransitionOutput;
 import net.automatalib.ts.UniversalTransitionSystem;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-@ParametersAreNonnullByDefault
 public interface ProbabilisticMealyMachine<S, I, T, O> extends Automaton<S, I, T>,
                                                                TransitionOutput<T, O>,
                                                                UniversalTransitionSystem<S, I, T, Void, ProbabilisticOutput<O>>,
                                                                Probabilistic<T> {
 
     @Override
-    @Nonnull
+    @NonNull
     ProbabilisticOutput<O> getTransitionProperty(T transition);
 }

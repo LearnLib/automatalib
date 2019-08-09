@@ -15,15 +15,12 @@
  */
 package net.automatalib.graphs.concepts;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * An interface for translating between graph nodes and their primitive representations as integers.
  *
  * @param <N>
  *         node type of the graph
  */
-@ParametersAreNonnullByDefault
 public interface NodeIDs<N> {
 
     /**

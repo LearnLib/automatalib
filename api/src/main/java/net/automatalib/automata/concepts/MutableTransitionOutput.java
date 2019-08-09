@@ -15,10 +15,8 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public interface MutableTransitionOutput<T, O> extends TransitionOutput<T, O> {
 
     void setTransitionOutput(T transition, @Nullable O output);

@@ -15,8 +15,7 @@
  */
 package net.automatalib.commons.util.mappings;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
  * Class for transforming integer index values into string values (using latin characters, therefore effectively
@@ -24,7 +23,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class StringIndexMapping {
 
     private static final int ALPHABET_SIZE = 26;
@@ -46,7 +44,7 @@ public final class StringIndexMapping {
         return idx;
     }
 
-    public static String indexToString(@Nonnegative long idx) {
+    public static String indexToString(@NonNegative long idx) {
         final StringBuilder sb = new StringBuilder();
 
         long idxIter = idx;

@@ -19,11 +19,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.ts.TransitionSystem;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simple deterministic transition system. In a deterministic transition system, there exists in each state at most
@@ -36,23 +34,22 @@ import net.automatalib.ts.TransitionSystem;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 
     @Override
-    @Nonnull
+    @NonNull
     default Set<S> getSuccessors(S state, Iterable<? extends I> input) {
         return stateToSet(getSuccessor(state, input));
     }
 
     @Override
-    @Nonnull
+    @NonNull
     default Set<S> getSuccessors(S state, @Nullable I input) {
         return stateToSet(getSuccessor(state, input));
     }
 
     @Override
-    @Nonnull
+    @NonNull
     default Set<S> getStates(Iterable<? extends I> input) {
         return stateToSet(getState(input));
     }
@@ -134,5 +131,5 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      * @see TransitionSystem#getSuccessors(Object, Object)
      */
     @Nullable
-    S getSuccessor(S state, @Nullable I input);
+    S getSuccessor(S state, I input);
 }

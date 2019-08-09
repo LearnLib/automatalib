@@ -17,10 +17,8 @@ package net.automatalib.ts;
 
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 @FunctionalInterface
 public interface TransitionPredicate<S, I, T> {
 

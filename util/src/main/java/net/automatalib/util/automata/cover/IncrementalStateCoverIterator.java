@@ -20,8 +20,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.AbstractIterator;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -42,7 +40,6 @@ import net.automatalib.words.Word;
  * @author frohme
  * @see Covers#stateCover(DeterministicAutomaton, Collection, Collection)
  */
-@ParametersAreNonnullByDefault
 class IncrementalStateCoverIterator<S, I> extends AbstractIterator<Word<I>> {
 
     private final DeterministicAutomaton<S, I, ?> automaton;

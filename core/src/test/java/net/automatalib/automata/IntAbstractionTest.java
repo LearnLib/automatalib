@@ -19,11 +19,10 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.annotations.Test;
 
 /**
@@ -104,25 +103,25 @@ public class IntAbstractionTest extends MutableAutomatonTest {
             delegate.clear();
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public S addState(@Nullable SP property) {
             return stateIDs.getState(abstraction.addIntState(property));
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public S addState() {
             return stateIDs.getState(abstraction.addIntState());
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public S addInitialState() {
             return stateIDs.getState(abstraction.addIntInitialState());
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public S addInitialState(@Nullable SP property) {
             return stateIDs.getState(abstraction.addIntInitialState(property));
@@ -145,13 +144,13 @@ public class IntAbstractionTest extends MutableAutomatonTest {
             }
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public T createTransition(S successor, @Nullable TP properties) {
             return abstraction.createTransition(stateIDs.getStateId(successor), properties);
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public Collection<S> getStates() {
             return IntStream.range(0, abstraction.size()).mapToObj(stateIDs::getState).collect(Collectors.toList());
@@ -175,7 +174,7 @@ public class IntAbstractionTest extends MutableAutomatonTest {
             return abstraction.getTransitionProperty(transition);
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public S getSuccessor(T transition) {
             return stateIDs.getState(abstraction.getIntSuccessor(transition));

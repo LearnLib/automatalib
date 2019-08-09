@@ -23,8 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class provides methods to parse automata in FSM format.
@@ -35,7 +34,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractFSMParser<I> {
 
     /**

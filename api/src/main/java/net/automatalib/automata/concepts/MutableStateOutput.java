@@ -15,10 +15,8 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public interface MutableStateOutput<S, O> extends StateOutput<S, O> {
 
     void setStateOutput(S state, @Nullable O output);

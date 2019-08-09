@@ -23,8 +23,6 @@ import java.util.Queue;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.Sets;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -34,7 +32,6 @@ import net.automatalib.words.Word;
  * @author Malte Isberner
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public final class Covers {
 
     private Covers() {}

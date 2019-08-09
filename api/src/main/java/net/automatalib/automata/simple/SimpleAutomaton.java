@@ -18,14 +18,13 @@ package net.automatalib.automata.simple;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.helpers.SimpleStateIDs;
 import net.automatalib.automata.helpers.StateIDGrowingMapping;
 import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.simple.SimpleTS;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A simple automaton, i.e., a {@link SimpleTS} with a finite number of states.
@@ -40,7 +39,7 @@ import net.automatalib.ts.simple.SimpleTS;
 public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
 
     @Override
-    @Nonnull
+    @NonNull
     default Iterator<S> iterator() {
         return getStates().iterator();
     }
@@ -50,11 +49,11 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
      *
      * @return all states in the transition system
      */
-    @Nonnull
+    @NonNull
     Collection<S> getStates();
 
     @Override
-    @Nonnull
+    @NonNull
     default <V> MutableMapping<S, V> createStaticStateMapping() {
         return new StateIDStaticMapping<>(stateIDs(), size());
     }
@@ -64,7 +63,7 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
         return new StateIDGrowingMapping<>(stateIDs(), size());
     }
 
-    @Nonnull
+    @NonNull
     default StateIDs<S> stateIDs() {
         return new SimpleStateIDs<>(this);
     }

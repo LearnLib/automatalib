@@ -15,10 +15,8 @@
  */
 package net.automatalib.graphs.concepts;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.graphs.Graph;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Edge label context, for {@link Graph}s with labeled edges.
@@ -30,7 +28,6 @@ import net.automatalib.graphs.Graph;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface EdgeLabels<E, L> {
 
     /**

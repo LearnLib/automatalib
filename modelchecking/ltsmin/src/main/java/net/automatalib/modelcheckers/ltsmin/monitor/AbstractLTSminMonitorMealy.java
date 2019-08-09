@@ -21,9 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
@@ -33,6 +30,8 @@ import net.automatalib.modelcheckers.ltsmin.LTSminMealy;
 import net.automatalib.modelcheckers.ltsmin.ltl.AbstractLTSminLTL;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -150,7 +149,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
                     return result.getInitialState();
                 }
 
-                @Nonnull
+                @NonNull
                 @Override
                 public Integer getSuccessor(CompactMealyTransition<O> transition) {
                     return result.getSuccessor(transition);
@@ -168,7 +167,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
                     return result.getTransitionOutput(transition);
                 }
 
-                @Nonnull
+                @NonNull
                 @Override
                 public Collection<Integer> getStates() {
                     return result.getStates();

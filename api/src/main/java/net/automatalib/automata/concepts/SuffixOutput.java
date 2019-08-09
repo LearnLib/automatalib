@@ -15,10 +15,8 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Feature for automata that compute a <i>suffix-observable</i> output function, i.e., they compute an output containing
@@ -34,7 +32,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SuffixOutput<I, D> extends Output<I, D> {
 
     @Override

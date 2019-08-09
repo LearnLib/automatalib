@@ -24,10 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.incremental.ConflictException;
@@ -40,6 +36,8 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Incrementally builds a tree, from a set of positive and negative words. Using {@link #insert(Word, boolean)}, either
@@ -55,7 +53,7 @@ import net.automatalib.words.impl.Alphabets;
  */
 public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<I> {
 
-    @Nonnull
+    @NonNull
     protected final Node<I> root;
 
     public IncrementalDFATreeBuilder(Alphabet<I> inputAlphabet) {
@@ -207,7 +205,6 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    @ParametersAreNonnullByDefault
     public class GraphView extends AbstractGraphView<I, Node<I>, Edge<I>> {
 
         @Override
@@ -230,7 +227,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public Node<I> getTarget(Edge<I> edge) {
             return edge.getNode();
         }
@@ -242,19 +239,19 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public Acceptance getAcceptance(Node<I> node) {
             return node.getAcceptance();
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public Node<I> getInitialNode() {
             return root;
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public VisualizationHelper<Node<I>, Edge<I>> getVisualizationHelper() {
             return new DelegateVisualizationHelper<Node<I>, Edge<I>>(super.getVisualizationHelper()) {
 
@@ -272,11 +269,10 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    @ParametersAreNonnullByDefault
     public class TransitionSystemView extends AbstractTransitionSystemView<Node<I>, I, Node<I>> {
 
         @Override
-        @Nonnull
+        @NonNull
         public Node<I> getSuccessor(Node<I> transition) {
             return transition;
         }
@@ -288,14 +284,14 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
             return state.getChild(inputIdx);
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public Node<I> getInitialState() {
             return root;
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public Acceptance getAcceptance(Node<I> state) {
             return state.getAcceptance();
         }

@@ -15,11 +15,10 @@
  */
 package net.automatalib.util.ts.transducers;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.comp.DTSComposition;
 import net.automatalib.ts.output.MealyTransitionSystem;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DetMealyComposition<S1, S2, I, T1, T2, O1, O2, A1 extends MealyTransitionSystem<S1, I, T1, O1>, A2 extends MealyTransitionSystem<S2, I, T2, O2>>
         extends DTSComposition<S1, S2, I, T1, T2, A1, A2>

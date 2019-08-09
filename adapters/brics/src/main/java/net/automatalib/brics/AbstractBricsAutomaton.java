@@ -21,9 +21,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
@@ -32,13 +29,13 @@ import net.automatalib.automata.graphs.AbstractAutomatonGraphView;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.visualization.VisualizationHelper;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Base class for Brics automata adapters.
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<State, Character>, GraphViewable {
 
     protected final Automaton automaton;
@@ -91,7 +88,7 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
     }
 
     @Override
-    public Collection<State> getTransitions(State state, @Nonnull Character input) {
+    public Collection<State> getTransitions(State state, @NonNull Character input) {
         Collection<Transition> transitions = state.getSortedTransitions(false);
 
         Set<State> result = new HashSet<>();

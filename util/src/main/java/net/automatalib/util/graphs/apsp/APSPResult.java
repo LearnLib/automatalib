@@ -17,10 +17,8 @@ package net.automatalib.util.graphs.apsp;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.util.graphs.Graphs;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Result interface for the all pairs shortest paths problem.
@@ -32,7 +30,6 @@ import net.automatalib.util.graphs.Graphs;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface APSPResult<N, E> {
 
     /**

@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
@@ -38,7 +36,6 @@ import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, TarjanSCCRecord> {
 
     private static final int SCC_FINISHED = -1;

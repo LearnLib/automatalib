@@ -17,9 +17,6 @@ package net.automatalib.util.graphs.scc;
 
 import java.util.Collection;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public interface SCCListener<N> {
 
     void foundSCC(Collection<? extends N> scc);

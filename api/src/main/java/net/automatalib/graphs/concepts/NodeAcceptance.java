@@ -15,8 +15,6 @@
  */
 package net.automatalib.graphs.concepts;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.graphs.Graph;
 
 /**
@@ -27,7 +25,6 @@ import net.automatalib.graphs.Graph;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface NodeAcceptance<N> {
 
     /**

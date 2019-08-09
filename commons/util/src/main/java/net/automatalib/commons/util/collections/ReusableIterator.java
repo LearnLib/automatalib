@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.AbstractIterator;
 
 /**
@@ -35,7 +33,6 @@ import com.google.common.collect.AbstractIterator;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class ReusableIterator<T> implements Iterable<T> {
 
     private final Iterator<T> iterator;

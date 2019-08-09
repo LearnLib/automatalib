@@ -15,10 +15,8 @@
  */
 package net.automatalib.graphs;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.ts.UniversalTransitionSystem;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A universal graph, i.e., with (possibly empty) node and edge properties. For a documentation on the concept of
@@ -35,7 +33,6 @@ import net.automatalib.ts.UniversalTransitionSystem;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<N, E> {
 
     /**

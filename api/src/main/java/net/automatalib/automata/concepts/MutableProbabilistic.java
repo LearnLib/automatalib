@@ -15,9 +15,6 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public interface MutableProbabilistic<T> extends Probabilistic<T> {
 
     void setTransitionProbability(T transition, float probability);

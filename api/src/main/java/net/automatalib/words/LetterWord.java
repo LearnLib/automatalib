@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A word consisting of a single letter only.
@@ -59,7 +59,7 @@ final class LetterWord<I> extends Word<I> implements Serializable {
     }
 
     @Override
-    @Nonnull
+    @NonNull
     public Spliterator<I> spliterator() {
         return Collections.singleton(letter).spliterator();
     }
@@ -145,7 +145,7 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         return this;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public <T> Word<T> transform(Function<? super I, ? extends T> transformer) {
         T transformed = transformer.apply(letter);

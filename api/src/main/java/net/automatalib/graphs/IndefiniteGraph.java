@@ -21,10 +21,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.Iterators;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Interface for an (indefinite) graph structure. A graph consists of nodes, each of which has outgoing edges connecting
@@ -37,7 +35,6 @@ import com.google.common.collect.Iterators;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
 
     @Override
@@ -60,12 +57,12 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
         return this;
     }
 
-    @Nonnull
+    @NonNull
     default Stream<E> outgoingEdgesStream(N node) {
         return getOutgoingEdges(node).stream();
     }
 
-    @Nonnull
+    @NonNull
     default Iterator<E> outgoingEdgesIterator(N node) {
         return getOutgoingEdges(node).iterator();
     }
@@ -78,15 +75,15 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
      *
      * @return a {@link Collection} of all outgoing edges, or <code>null</code> if the node has no outgoing edges.
      */
-    @Nonnull
+    @NonNull
     Collection<E> getOutgoingEdges(N node);
 
-    @Nonnull
+    @NonNull
     default Iterable<E> outgoingEdges(N node) {
         return () -> outgoingEdgesIterator(node);
     }
 
-    @Nonnull
+    @NonNull
     default Collection<E> getEdgesBetween(N from, N to) {
         return getOutgoingEdges(from).stream()
                                      .filter(e -> Objects.equals(getTarget(e), to))
@@ -101,7 +98,7 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
      *
      * @return the target node of the given edge.
      */
-    @Nonnull
+    @NonNull
     N getTarget(E edge);
 
 }

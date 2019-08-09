@@ -24,10 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.IntDisjointSets;
@@ -40,6 +36,8 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDFABuilder<I> {
 
@@ -501,7 +499,6 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         }
     }
 
-    @ParametersAreNonnullByDefault
     public class GraphView extends AbstractGraphView<I, State, EdgeRecord> {
 
         @Override
@@ -536,7 +533,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public State getTarget(EdgeRecord edge) {
             int idx = edge.transIdx;
             return edge.source.getSuccessor(idx);
@@ -549,19 +546,19 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public Acceptance getAcceptance(State node) {
             return node.getAcceptance();
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public State getInitialNode() {
             return init;
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public VisualizationHelper<State, EdgeRecord> getVisualizationHelper() {
             return new DelegateVisualizationHelper<State, EdgeRecord>(super.getVisualizationHelper()) {
 
@@ -607,7 +604,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         }
 
         @Override
-        @Nonnull
+        @NonNull
         public Acceptance getAcceptance(State state) {
             return state.getAcceptance();
         }
