@@ -16,6 +16,8 @@
 package net.automatalib.util.graphs.scc;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -87,19 +89,22 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
         currentSccRecordStack.add(data);
         currentSccNodeStack.add(node);
 
+        final TarjanSCCRecord res = records.get(node);
+
         // finished the initial node of this SCC
         if (data.sccId == data.number) {
-            final int currScc = data.sccId;
             int numOfNodes = 0;
+
+            Collections.sort(currentSccRecordStack, new TarjanSCCRecordComperator());
             final ListIterator<TarjanSCCRecord> iter = currentSccRecordStack.listIterator(currentSccRecordStack.size());
 
             while (iter.hasPrevious()) {
                 final TarjanSCCRecord prev = iter.previous();
-                if (prev.sccId == currScc) {
-                    numOfNodes++;
-                    prev.sccId = SCC_FINISHED;
-                    iter.remove();
-                } else {
+
+                numOfNodes++;
+                prev.sccId = SCC_FINISHED;
+                iter.remove();
+                if (prev == res) {
                     break;
                 }
             }
@@ -157,4 +162,10 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
         return (records.get(node) != null);
     }
 
+    private class TarjanSCCRecordComperator implements Comparator<TarjanSCCRecord> {
+        @Override
+        public int compare(TarjanSCCRecord o1, TarjanSCCRecord o2) {
+            return o1.number - o2.number;
+        }
+    }
 }
