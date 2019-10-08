@@ -38,7 +38,7 @@ public final class UndefinedInputsIterator<S, I> extends AbstractIterator<I> {
         while (inputsIt.hasNext()) {
             I input = inputsIt.next();
             Collection<?> transitions = ts.getTransitions(state, input);
-            if (transitions == null || !transitions.isEmpty()) {
+            if (transitions.isEmpty()) {
                 return input;
             }
         }

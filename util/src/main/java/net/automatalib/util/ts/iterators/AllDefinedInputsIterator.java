@@ -42,6 +42,6 @@ public final class AllDefinedInputsIterator<S, I> extends AbstractTwoLevelIterat
 
     @Override
     protected TransRef<S, I, ?> combine(S state, I input) {
-        return new TransRef<>(state, input);
+        return new TransRef<>(state, input, ts.getTransitions(state, input));
     }
 }
