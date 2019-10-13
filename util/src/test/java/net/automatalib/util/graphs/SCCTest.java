@@ -128,7 +128,7 @@ public class SCCTest {
     }
 
     /*
-     * This third example is taken from the following slide deck:
+     * This example is taken from the following slide deck:
      * http://www.cse.cuhk.edu.hk/~taoyf/course/comp3506/lec/scc.pdf
      */
     @Test
@@ -179,6 +179,61 @@ public class SCCTest {
 
         Assert.assertEquals(computedSCCs.size(), 4);
         Assert.assertEquals(computedSCCs, expectedSCCs);
+    }
+
+    @Test
+    public void testExample5() {
+        CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
+        Integer n0, n1, n2, n3, n4, n5, n6, n7, n8, n9;
+
+        n0 = graph.addNode();
+        n1 = graph.addNode();
+        n2 = graph.addNode();
+        n3 = graph.addNode();
+        n4 = graph.addNode();
+        n5 = graph.addNode();
+        n6 = graph.addNode();
+        n7 = graph.addNode();
+        n8 = graph.addNode();
+        n9 = graph.addNode();
+
+        graph.connect(n5, n7);
+        graph.connect(n0, n8);
+        graph.connect(n9, n4);
+        graph.connect(n9, n7);
+        graph.connect(n1, n5);
+        graph.connect(n8, n4);
+        graph.connect(n8, n2);
+        graph.connect(n5, n9);
+        graph.connect(n8, n7);
+        graph.connect(n5, n6);
+        graph.connect(n4, n7);
+        graph.connect(n0, n5);
+        graph.connect(n6, n8);
+        graph.connect(n1, n6);
+        graph.connect(n3, n9);
+        graph.connect(n4, n6);
+        graph.connect(n9, n5);
+        graph.connect(n2, n7);
+        graph.connect(n1, n0);
+        graph.connect(n2, n0);
+
+        @SuppressWarnings("unchecked")
+        Set<Set<Integer>> expectedSCCs =
+                Sets.newHashSet(Sets.newHashSet(n3), Sets.newHashSet(n7),
+                                Sets.newHashSet(n1), Sets.newHashSet(n0, n2, n4, n5, n6, n8, n9));
+
+        Set<Set<Integer>> computedSCCs = computeSCCs(graph);
+
+        /*
+         * An invariant of this algorithm is that every node in the input graph should be maintained in the result set.
+         */
+        Set<Integer> nodeSet = Sets.newHashSet(n0, n1, n2, n3, n4, n5, n6, n7, n8, n9);
+        computedSCCs.forEach(nodeSet::removeAll);
+        Assert.assertEquals(nodeSet.size(), 0);
+
+        Assert.assertEquals(computedSCCs, expectedSCCs);
+        Assert.assertEquals(computedSCCs.size(), 4);
     }
 
     /*
