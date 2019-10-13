@@ -218,6 +218,7 @@ public class SCCTest {
         graph.connect(n1, n0);
         graph.connect(n2, n0);
 
+        @SuppressWarnings("unchecked")
         Set<Set<Integer>> expectedSCCs =
                 Sets.newHashSet(Sets.newHashSet(n3), Sets.newHashSet(n7),
                                 Sets.newHashSet(n1), Sets.newHashSet(n0, n2, n4, n5, n6, n8, n9));
@@ -228,7 +229,7 @@ public class SCCTest {
          * An invariant of this algorithm is that every node in the input graph should be maintained in the result set.
          */
         Set<Integer> nodeSet = Sets.newHashSet(n0, n1, n2, n3, n4, n5, n6, n7, n8, n9);
-        computedSCCs.stream().forEach(set -> nodeSet.removeAll(set));
+        computedSCCs.forEach(nodeSet::removeAll);
         Assert.assertEquals(nodeSet.size(), 0);
 
         Assert.assertEquals(computedSCCs, expectedSCCs);
