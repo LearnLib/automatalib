@@ -15,8 +15,6 @@
  */
 package net.automatalib.automata.concepts;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * Feature for automata that compute an output.
  *
@@ -29,6 +27,5 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface Output<I, D> {
 
-    @Nullable
     D computeOutput(Iterable<? extends I> input);
 }

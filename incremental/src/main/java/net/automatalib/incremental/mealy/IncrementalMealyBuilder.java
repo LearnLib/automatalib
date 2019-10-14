@@ -24,8 +24,6 @@ import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface IncrementalMealyBuilder<I, O>
         extends IncrementalConstruction<MealyMachine<?, I, ?, O>, I>, SupportsGrowingAlphabet<I> {
@@ -67,13 +65,10 @@ public interface IncrementalMealyBuilder<I, O>
 
     interface GraphView<I, O, N, E> extends Graph<N, E> {
 
-        @Nullable
-        I getInputSymbol(@NonNull E edge);
+        I getInputSymbol(E edge);
 
-        @Nullable
-        O getOutputSymbol(@NonNull E edge);
+        O getOutputSymbol(E edge);
 
-        @NonNull
         N getInitialNode();
     }
 }

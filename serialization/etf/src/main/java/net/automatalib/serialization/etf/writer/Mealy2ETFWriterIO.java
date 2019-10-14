@@ -73,9 +73,12 @@ public final class Mealy2ETFWriterIO<I, O> extends AbstractETFWriter<I, MealyMac
         final StateIDs<S> stateIDs = mealy.stateIDs();
 
         // write the initial state
-        pw.println("begin init");
-        pw.printf("%d%n", stateIDs.getStateId(mealy.getInitialState()));
-        pw.println("end init");
+        final S init = mealy.getInitialState();
+        if (init != null) {
+            pw.println("begin init");
+            pw.printf("%d%n", stateIDs.getStateId(init));
+            pw.println("end init");
+        }
 
         // write the state ids
         pw.println("begin sort id");

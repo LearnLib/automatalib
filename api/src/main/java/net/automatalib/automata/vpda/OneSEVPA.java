@@ -20,6 +20,7 @@ import java.util.List;
 import com.google.common.collect.Iterables;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Interface for the 1-SEVPA (1-single entry visibly push-down automaton), a visibly push-down automaton of specific
@@ -40,7 +41,7 @@ public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>, Su
 
     int encodeStackSym(L srcLoc, I callSym);
 
-    L getInternalSuccessor(L loc, I intSym);
+    @Nullable L getInternalSuccessor(L loc, I intSym);
 
     L getLocation(int id);
 
@@ -50,7 +51,7 @@ public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>, Su
 
     int getNumStackSymbols();
 
-    L getReturnSuccessor(L loc, I retSym, int stackSym);
+    @Nullable L getReturnSuccessor(L loc, I retSym, int stackSym);
 
     int size();
 
@@ -62,7 +63,7 @@ public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>, Su
     @Override
     default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
         State<L> state = this.getState(Iterables.concat(prefix, suffix));
-        return isAccepting(state);
+        return state != null && isAccepting(state);
     }
 
     @Override

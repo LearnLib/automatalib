@@ -20,6 +20,7 @@ import java.util.AbstractList;
 import java.util.RandomAccess;
 
 import net.automatalib.commons.smartcollections.ArrayWritable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CharStringRange extends AbstractList<String> implements ArrayWritable<String>, RandomAccess, Serializable {
 
@@ -48,12 +49,12 @@ public class CharStringRange extends AbstractList<String> implements ArrayWritab
     }
 
     @Override
-    public boolean contains(Object o) {
+    public boolean contains(@Nullable Object o) {
         return indexOf(o) >= 0;
     }
 
     @Override
-    public int indexOf(Object o) {
+    public int indexOf(@Nullable Object o) {
         if (o == null || o.getClass() != String.class) {
             return -1;
         }
@@ -68,7 +69,7 @@ public class CharStringRange extends AbstractList<String> implements ArrayWritab
     }
 
     @Override
-    public int lastIndexOf(Object o) {
+    public int lastIndexOf(@Nullable Object o) {
         return indexOf(o);
     }
 
@@ -93,7 +94,7 @@ public class CharStringRange extends AbstractList<String> implements ArrayWritab
     }
 
     @Override
-    public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
+    public void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num) {
         int si = offset;
         int ti = tgtOfs;
         for (int i = 0; i < num; i++) {

@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public class VPManager {
 
     private final Map<String, VisualizationProvider> providers = new HashMap<>();
@@ -49,7 +51,7 @@ public class VPManager {
         return bestProvider;
     }
 
-    public VisualizationProvider getProviderById(String id) {
+    public @Nullable VisualizationProvider getProviderById(String id) {
         return providers.get(id);
     }
 

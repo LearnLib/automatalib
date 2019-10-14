@@ -19,10 +19,13 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
 import net.automatalib.graphs.MutableGraph;
+import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 abstract class AbstractGraphCopy<N1, E1, N2, E2, NP2, EP2, G1 extends IndefiniteGraph<N1, E1>> {
 
-    protected final MutableMapping<N1, N2> nodeMapping;
+    protected final MutableMapping<N1, @Nullable N2> nodeMapping;
     protected final G1 inGraph;
     protected final MutableGraph<N2, E2, NP2, EP2> outGraph;
 
@@ -40,11 +43,11 @@ abstract class AbstractGraphCopy<N1, E1, N2, E2, NP2, EP2, G1 extends Indefinite
         this.epMapping = epMapping;
     }
 
-    protected E2 copyEdge(N2 src2, E1 edge) {
+    protected E2 copyEdge(@KeyFor("nodeMapping") N2 src2, E1 edge) {
         return copyEdge(src2, edge, inGraph.getTarget(edge));
     }
 
-    protected E2 copyEdge(N2 src2, E1 edge, N1 tgt1) {
+    protected E2 copyEdge(@KeyFor("nodeMapping") N2 src2, E1 edge, N1 tgt1) {
         EP2 prop = epMapping.get(edge);
 
         N2 tgt2 = nodeMapping.get(tgt1);
@@ -52,7 +55,7 @@ abstract class AbstractGraphCopy<N1, E1, N2, E2, NP2, EP2, G1 extends Indefinite
         return outGraph.connect(src2, tgt2, prop);
     }
 
-    protected N2 copyEdgeChecked(N2 source, E1 edge, N1 tgt1) {
+    protected @Nullable N2 copyEdgeChecked(N2 source, E1 edge, N1 tgt1) {
         EP2 prop = epMapping.get(edge);
 
         N2 tgt2 = nodeMapping.get(tgt1);
@@ -68,6 +71,8 @@ abstract class AbstractGraphCopy<N1, E1, N2, E2, NP2, EP2, G1 extends Indefinite
         return freshTgt;
     }
 
+    @SuppressWarnings("contracts.postcondition.not.satisfied")
+    @EnsuresKeyFor(value = "#1", map = "nodeMapping")
     protected N2 copyNode(N1 node) {
         NP2 prop = npMapping.get(node);
         N2 n2 = outGraph.addNode(prop);

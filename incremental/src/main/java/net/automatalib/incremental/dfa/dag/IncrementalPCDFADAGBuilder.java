@@ -119,7 +119,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
             if (!accepting) {
                 // once we insert a rejected word, we need a sink
                 if (sink == null) {
-                    sink = new State(null);
+                    sink = State.SINK;
                 }
                 if (conf == null) {
                     purge(last);
@@ -146,11 +146,13 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                 }
                 last = hiddenClone(last);
                 if (conf == null) {
-                    State prev = path.peek().state;
+                    PathElem peek = path.peek();
+                    assert peek != null;
+                    State prev = peek.state;
                     if (prev != init) {
-                        updateSignature(prev, path.peek().transIdx, last);
+                        updateSignature(prev, peek.transIdx, last);
                     } else {
-                        updateInitSignature(path.peek().transIdx, last);
+                        updateInitSignature(peek.transIdx, last);
                     }
                 }
             } else if (last != init) {
@@ -264,7 +266,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         Acceptance intermediate;
         if (!accepting) {
             if (sink == null) {
-                sink = new State(null);
+                sink = State.SINK;
             }
             last = sink;
             intermediate = Acceptance.DONT_KNOW;

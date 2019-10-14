@@ -102,10 +102,6 @@ public class TS {
         public final I input;
         public final T transition;
 
-        public TransRef(S state, I input) {
-            this(state, input, null);
-        }
-
         public TransRef(S state, I input, T transition) {
             this.state = state;
             this.input = input;

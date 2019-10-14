@@ -22,6 +22,7 @@ import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Incrementally builds an (acyclic) DFA, from a set of positive and negative words. Using {@link #insert(Word,
@@ -136,11 +137,13 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                 // confluence always requires cloning, to separate this path from other paths
                 last = hiddenClone(last);
                 if (conf == null) {
-                    State prev = path.peek().state;
+                    PathElem peek = path.peek();
+                    assert peek != null;
+                    State prev = peek.state;
                     if (prev != init) {
-                        updateSignature(prev, path.peek().transIdx, last);
+                        updateSignature(prev, peek.transIdx, last);
                     } else {
-                        updateInitSignature(path.peek().transIdx, last);
+                        updateInitSignature(peek.transIdx, last);
                     }
                 }
             } else if (last != init) {
@@ -228,7 +231,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
      * @return the state reached by the given word, or {@code null} if no state is reachable by that word
      */
     @Override
-    protected State getState(Word<? extends I> word) {
+    protected @Nullable State getState(Word<? extends I> word) {
         State s = init;
 
         for (I sym : word) {

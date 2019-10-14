@@ -15,6 +15,8 @@
  */
 package net.automatalib.util.traversal;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Enum to use for indicating if a node/state has been visited.
  * <p>
@@ -32,5 +34,5 @@ public enum VisitedState {
     /**
      * Nodes that have not yet been visited.
      */
-    public static final VisitedState NOT_VISITED = null;
+    public static final @Nullable VisitedState NOT_VISITED = null;
 }

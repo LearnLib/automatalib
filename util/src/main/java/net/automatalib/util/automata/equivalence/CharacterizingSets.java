@@ -30,6 +30,8 @@ import com.google.common.collect.AbstractIterator;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Operations for calculating <i>characterizing sets</i>.
@@ -121,7 +123,7 @@ public final class CharacterizingSets {
 
             result.add(suffix);
 
-            List<Object> trace = buildTrace(automaton, state, suffix);
+            List<@Nullable Object> trace = buildTrace(automaton, state, suffix);
 
             List<S> nextBlock = new ArrayList<>();
             while (it.hasNext()) {
@@ -140,14 +142,14 @@ public final class CharacterizingSets {
         return new IncrementalCharacterizingSetIterator<>(automaton, inputs, Collections.emptyList());
     }
 
-    private static <S, I, T> List<Object> buildTrace(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                     S state,
-                                                     Word<I> suffix) {
+    private static <S, I, T> List<@Nullable Object> buildTrace(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+                                                               S state,
+                                                               Word<I> suffix) {
         if (suffix.isEmpty()) {
-            Object prop = automaton.getStateProperty(state);
+            @Nullable Object prop = automaton.getStateProperty(state);
             return Collections.singletonList(prop);
         }
-        List<Object> trace = new ArrayList<>(2 * suffix.length());
+        List<@Nullable Object> trace = new ArrayList<>(2 * suffix.length());
 
         S curr = state;
 
@@ -158,7 +160,7 @@ public final class CharacterizingSets {
                 break;
             }
 
-            Object prop = automaton.getTransitionProperty(trans);
+            @Nullable Object prop = automaton.getTransitionProperty(trans);
             trace.add(prop);
 
             curr = automaton.getSuccessor(trans);
@@ -174,7 +176,7 @@ public final class CharacterizingSets {
                                                 Word<I> suffix,
                                                 List<Object> trace) {
 
-        Iterator<Object> it = trace.iterator();
+        Iterator<@Nullable Object> it = trace.iterator();
         S curr = state;
 
         for (I sym : suffix) {
@@ -184,7 +186,7 @@ public final class CharacterizingSets {
                 return (trans == null);
             }
 
-            Object prop = automaton.getTransitionProperty(trans);
+            @Nullable Object prop = automaton.getTransitionProperty(trans);
 
             if (!Objects.equals(prop, it.next())) {
                 return false;
@@ -283,11 +285,12 @@ public final class CharacterizingSets {
         boolean refined = false;
 
         for (int i = 0; i < initialSize; i++) {
-            List<S> block = blockQueue.poll();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull List<S> block = blockQueue.poll();
             if (block.size() <= 1) {
                 continue;
             }
-            Map<Object, List<S>> propCluster = clusterByProperty(automaton, block);
+            Map<?, List<S>> propCluster = clusterByProperty(automaton, block);
             if (propCluster.size() > 1) {
                 refined = true;
             }
@@ -297,9 +300,9 @@ public final class CharacterizingSets {
         return refined;
     }
 
-    private static <S, I, T> Word<I> refine(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                            Collection<? extends I> inputs,
-                                            Queue<List<S>> blockQueue) {
+    private static <S, I, T> @Nullable Word<I> refine(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+                                                      Collection<? extends I> inputs,
+                                                      Queue<List<S>> blockQueue) {
 
         List<S> currBlock;
         while ((currBlock = blockQueue.poll()) != null) {
@@ -321,7 +324,7 @@ public final class CharacterizingSets {
             if (suffix != null) {
                 int otherBlocks = blockQueue.size();
 
-                Map<List<Object>, List<S>> buckets = new HashMap<>();
+                Map<List<@Nullable Object>, List<S>> buckets = new HashMap<>();
 
                 List<S> firstBucket = new ArrayList<>();
                 List<S> secondBucket = new ArrayList<>();
@@ -336,7 +339,8 @@ public final class CharacterizingSets {
 
                 // Split all other blocks that were in the queue
                 for (int i = 0; i < otherBlocks; i++) {
-                    List<S> otherBlock = blockQueue.poll();
+                    @SuppressWarnings("nullness") // we know that there are at least 'otherBlocks' items in the queue
+                    @NonNull List<S> otherBlock = blockQueue.poll();
                     if (otherBlock.size() > 2) {
                         buckets.clear();
                         cluster(automaton, suffix, otherBlock.iterator(), buckets);
@@ -350,9 +354,9 @@ public final class CharacterizingSets {
         return null;
     }
 
-    private static <S, I, T> Map<Object, List<S>> clusterByProperty(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                                    List<S> states) {
-        Map<Object, List<S>> result = new HashMap<>();
+    private static <S, I, T> Map<?, List<S>> clusterByProperty(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+                                                               List<S> states) {
+        Map<@Nullable Object, List<S>> result = new HashMap<>();
 
         for (S state : states) {
             Object prop = automaton.getStateProperty(state);
@@ -366,11 +370,11 @@ public final class CharacterizingSets {
     private static <S, I, T> void cluster(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
                                           Word<I> suffix,
                                           Iterator<S> stateIt,
-                                          Map<List<Object>, List<S>> bucketMap) {
+                                          Map<List<@Nullable Object>, List<S>> bucketMap) {
 
         while (stateIt.hasNext()) {
             S state = stateIt.next();
-            List<Object> trace = buildTrace(automaton, state, suffix);
+            List<@Nullable Object> trace = buildTrace(automaton, state, suffix);
             List<S> bucket = bucketMap.computeIfAbsent(trace, k -> new ArrayList<>());
             bucket.add(state);
         }

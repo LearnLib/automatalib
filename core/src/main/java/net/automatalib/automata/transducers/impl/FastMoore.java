@@ -18,6 +18,7 @@ package net.automatalib.automata.transducers.impl;
 import net.automatalib.automata.base.fast.AbstractFastMutableDet;
 import net.automatalib.automata.transducers.MutableMooreMachine;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A fast implementation of a Moore automaton.
@@ -29,7 +30,7 @@ import net.automatalib.words.Alphabet;
  *
  * @author Malte Isberner
  */
-public final class FastMoore<I, O> extends AbstractFastMutableDet<FastMooreState<O>, I, FastMooreState<O>, O, Void>
+public final class FastMoore<I, @Nullable O> extends AbstractFastMutableDet<FastMooreState<O>, I, FastMooreState<O>, O, Void>
         implements MutableMooreMachine<FastMooreState<O>, I, FastMooreState<O>, O> {
 
     public FastMoore(Alphabet<I> alphabet) {
@@ -57,7 +58,7 @@ public final class FastMoore<I, O> extends AbstractFastMutableDet<FastMooreState
     }
 
     @Override
-    protected FastMooreState<O> createState(O property) {
+    protected FastMooreState<O> createState(@Nullable O property) {
         return new FastMooreState<>(inputAlphabet.size(), property);
     }
 

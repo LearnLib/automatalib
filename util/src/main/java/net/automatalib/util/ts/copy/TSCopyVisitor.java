@@ -26,11 +26,12 @@ import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.ts.traversal.TSTraversalAction;
 import net.automatalib.util.ts.traversal.TSTraversalVisitor;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements TSTraversalVisitor<S1, I1, T1, S2> {
 
-    private final MutableMapping<S1, S2> stateMapping;
-    private final MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out;
+    private final MutableMapping<S1, @Nullable S2> stateMapping;
+    private final MutableAutomaton<S2, I2, T2, ? super SP2, @Nullable ? super TP2> out;
 
     private final Function<? super I1, ? extends I2> inputMapping;
     private final Function<? super S1, ? extends SP2> spMapping;
@@ -57,7 +58,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements TSTraver
 
     @Override
     public TSTraversalAction processInitial(S1 state, Holder<S2> outData) {
-        S2 s2 = stateMapping.get(state);
+        @Nullable S2 s2 = stateMapping.get(state);
         if (s2 != null) {
             out.setInitial(s2, true);
             return TSTraversalAction.IGNORE;
@@ -92,7 +93,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements TSTraver
 
         boolean ignore = false;
 
-        S2 succ2 = stateMapping.get(succ);
+        @Nullable S2 succ2 = stateMapping.get(succ);
         if (succ2 == null) {
             if (!stateFilter.test(succ)) {
                 return TSTraversalAction.IGNORE;
@@ -113,7 +114,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements TSTraver
         return (ignore) ? TSTraversalAction.IGNORE : TSTraversalAction.EXPLORE;
     }
 
-    public Mapping<S1, S2> getStateMapping() {
+    public Mapping<S1, @Nullable S2> getStateMapping() {
         return stateMapping;
     }
 }

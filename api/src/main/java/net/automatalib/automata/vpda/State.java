@@ -15,6 +15,10 @@
  */
 package net.automatalib.automata.vpda;
 
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
+
 /**
  * Utility class to combine an entity (e.g. a location) with stack information.
  *
@@ -23,31 +27,41 @@ package net.automatalib.automata.vpda;
  *
  * @author Malte Isberner
  */
-public class State<L> {
+public final class State<L> {
 
-    private static final State<?> SINK = new State<>(null, null);
-    private final L loc;
-    private final StackContents stack;
+    private static final State<?> SINK = new State<>();
+    private final @Nullable L loc;
+    private final @Nullable StackContents stack;
 
-    public State(final L loc, final StackContents stack) {
+    private State() {
+        this.loc = null;
+        this.stack = null;
+    }
+
+    public State(final L loc, final @Nullable StackContents stack) {
         this.loc = loc;
         this.stack = stack;
     }
 
     @SuppressWarnings("unchecked")
+    @Pure
     public static <L> State<L> getSink() {
         return (State<L>) SINK;
     }
 
-    public L getLocation() {
+    @Pure
+    public @Nullable L getLocation() {
         return loc;
     }
 
-    public StackContents getStackContents() {
+    @Pure
+    public @Nullable StackContents getStackContents() {
         return stack;
     }
 
+    @EnsuresNonNullIf(expression = {"getLocation()"}, result = false)
+    @Pure
     public boolean isSink() {
-        return loc == null;
+        return getLocation() == null;
     }
 }

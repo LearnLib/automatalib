@@ -18,11 +18,12 @@ package net.automatalib.util.graphs.traversal;
 import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class DFSTraversalVisitor<N, E, D> implements GraphTraversalVisitor<N, E, DFSData<D>> {
 
     private final DFSVisitor<? super N, ? super E, D> visitor;
-    private final MutableMapping<N, DFSData<D>> records;
+    private final MutableMapping<N, @Nullable DFSData<D>> records;
     private int dfsNum;
 
     DFSTraversalVisitor(IndefiniteGraph<N, E> graph, DFSVisitor<? super N, ? super E, D> visitor) {

@@ -47,6 +47,7 @@ import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.process.ProcessUtil;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -305,7 +306,7 @@ public final class DOT {
      *
      * @return the DOT component
      */
-    public static DOTComponent createDOTComponent(Reader r) {
+    public static @Nullable DOTComponent createDOTComponent(Reader r) {
         try {
             return new DOTComponent(r);
         } catch (IOException e) {

@@ -22,7 +22,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Function;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The empty word.
@@ -53,7 +53,7 @@ final class EmptyWord extends Word<Object> {
     }
 
     @Override
-    public void writeToArray(int offset, Object[] array, int tgtOffset, int length) {}
+    public void writeToArray(int offset, @Nullable Object[] array, int tgtOffset, int length) {}
 
     @Override
     public Object getSymbol(int index) {
@@ -115,7 +115,6 @@ final class EmptyWord extends Word<Object> {
         return this;
     }
 
-    @NonNull
     @Override
     @SuppressWarnings("unchecked")
     public <T> Word<T> transform(Function<? super Object, ? extends T> transformer) {

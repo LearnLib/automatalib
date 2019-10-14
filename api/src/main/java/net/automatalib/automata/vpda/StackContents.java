@@ -15,6 +15,8 @@
  */
 package net.automatalib.automata.vpda;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A simplified stack implementation that allows to store integer values.
  *
@@ -23,13 +25,13 @@ package net.automatalib.automata.vpda;
 public class StackContents {
 
     private final int topElem;
-    private final StackContents rest;
+    private final @Nullable StackContents rest;
 
     public StackContents(final int topElem) {
         this(topElem, null);
     }
 
-    public StackContents(final int topElem, final StackContents rest) {
+    public StackContents(final int topElem, final @Nullable StackContents rest) {
         this.topElem = topElem;
         this.rest = rest;
     }
@@ -38,7 +40,7 @@ public class StackContents {
         return topElem;
     }
 
-    public StackContents pop() {
+    public @Nullable StackContents pop() {
         return rest;
     }
 
@@ -46,7 +48,7 @@ public class StackContents {
         return new StackContents(elem, this);
     }
 
-    public static StackContents push(final int elem, final StackContents rest) {
+    public static StackContents push(final int elem, final @Nullable StackContents rest) {
         return new StackContents(elem, rest);
     }
 }

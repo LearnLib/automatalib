@@ -21,8 +21,6 @@ import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A MealyLasso is a lasso for {@link MealyMachine}s.
@@ -42,19 +40,18 @@ public class MealyLassoImpl<I, O> extends AbstractLasso<I, Word<O>> implements M
         super(automaton, inputs, unfoldTimes);
     }
 
-    @Nullable
     @Override
     public O getTransitionOutput(Integer transition) {
         return getOutput().getSymbol(transition);
     }
 
-    @NonNull
     @Override
     public Integer getSuccessor(Integer transition) {
         return transition;
     }
 
     @Override
+    @SuppressWarnings("nullness") // TODO XXX FIXME: Returning non-null values would currently break InclusionOracles in LearnLib. We should rethink a clean API here.
     public Word<O> computeOutput(Iterable<? extends I> input) {
         final Integer state = getState(input);
         return state != null && state.equals(getWord().length()) ? getOutput() : null;

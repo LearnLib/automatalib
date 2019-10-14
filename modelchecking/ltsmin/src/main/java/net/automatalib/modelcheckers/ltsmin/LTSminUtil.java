@@ -22,6 +22,8 @@ import java.nio.file.Paths;
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.process.ProcessUtil;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +67,7 @@ public final class LTSminUtil {
      */
     private static boolean verbose;
 
-    private static LTSminVersion detectedVersion;
+    private static @Nullable LTSminVersion detectedVersion;
 
     static {
         AutomataLibSettings settings = AutomataLibSettings.getInstance();
@@ -90,6 +92,7 @@ public final class LTSminUtil {
      *
      * @return {@code true} if an LTSmin installation was detected, {@code false} otherwise.
      */
+    @EnsuresNonNullIf(expression = "detectedVersion", result = true)
     public static boolean isInstalled() {
         return detectedVersion != null;
     }
@@ -101,7 +104,7 @@ public final class LTSminUtil {
      *
      * @see #isInstalled()
      */
-    public static LTSminVersion getVersion() {
+    public static @Nullable LTSminVersion getVersion() {
         return detectedVersion;
     }
 
@@ -161,7 +164,7 @@ public final class LTSminUtil {
         }
     }
 
-    private static LTSminVersion detectLTSmin(String bin) {
+    private static @Nullable LTSminVersion detectLTSmin(String bin) {
 
         // the command lines for the ProcessBuilder
         final String[] commandLine = new String[] {// add the binary

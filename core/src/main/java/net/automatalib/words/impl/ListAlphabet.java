@@ -22,11 +22,9 @@ import java.util.ListIterator;
 import com.google.common.collect.Iterators;
 import net.automatalib.commons.util.collections.UnmodifiableListIterator;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class ListAlphabet<I> extends AbstractAlphabet<I> {
 
-    @NonNull
     private final List<? extends I> list;
 
     public ListAlphabet(List<? extends I> list) {

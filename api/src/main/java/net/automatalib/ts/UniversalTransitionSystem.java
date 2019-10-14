@@ -15,8 +15,6 @@
  */
 package net.automatalib.ts;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * A "universal" transition system, which captures the possibility to assign properties to states and transitions.
  * <p>
@@ -56,7 +54,6 @@ public interface UniversalTransitionSystem<S, I, T, SP, TP> extends TransitionSy
      *
      * @return the corresponding property.
      */
-    @Nullable
     SP getStateProperty(S state);
 
     /**
@@ -67,6 +64,5 @@ public interface UniversalTransitionSystem<S, I, T, SP, TP> extends TransitionSy
      *
      * @return the corresponding property.
      */
-    @Nullable
     TP getTransitionProperty(T transition);
 }

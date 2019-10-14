@@ -22,6 +22,7 @@ import net.automatalib.util.partitionrefinement.Block;
 import net.automatalib.util.partitionrefinement.PaigeTarjan;
 import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;
 import net.automatalib.words.VPDAlphabet;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A Paige/Tarjan partition refinement based minimizer for {@link OneSEVPA}s.
@@ -74,7 +75,7 @@ public final class OneSEVPAMinimizer {
             for (I intSym : alphabet.getInternalAlphabet()) {
                 final L succ = sevpa.getInternalSuccessor(loc, intSym);
                 if (succ == null) {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
                 }
 
                 final int succId = sevpa.getLocationId(succ);
@@ -86,12 +87,18 @@ public final class OneSEVPAMinimizer {
                     for (L src : sevpa.getLocations()) {
                         int stackSym = sevpa.encodeStackSym(src, callSym);
                         L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
+                        if (succ == null) {
+                            throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
+                        }
                         int succId = sevpa.getLocationId(succ);
                         data[predCountBase + succId]++;
                         predCountBase += numStates;
 
                         stackSym = sevpa.encodeStackSym(loc, callSym);
                         succ = sevpa.getReturnSuccessor(src, retSym, stackSym);
+                        if (succ == null) {
+                            throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
+                        }
                         succId = sevpa.getLocationId(succ);
                         data[predCountBase + succId]++;
                         predCountBase += numStates;
@@ -121,7 +128,7 @@ public final class OneSEVPAMinimizer {
             for (I intSym : alphabet.getInternalAlphabet()) {
                 final L succ = sevpa.getInternalSuccessor(loc, intSym);
                 if (succ == null) {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
                 }
 
                 final int succId = sevpa.getLocationId(succ);
@@ -133,12 +140,18 @@ public final class OneSEVPAMinimizer {
                     for (L src : sevpa.getLocations()) {
                         int stackSym = sevpa.encodeStackSym(src, callSym);
                         L succ = sevpa.getReturnSuccessor(loc, retSym, stackSym);
+                        if (succ == null) {
+                            throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
+                        }
                         int succId = sevpa.getLocationId(succ);
                         data[--data[predOfsBase + succId]] = i;
                         predOfsBase += numStates;
 
                         stackSym = sevpa.encodeStackSym(loc, callSym);
                         succ = sevpa.getReturnSuccessor(src, retSym, stackSym);
+                        if (succ == null) {
+                            throw new IllegalArgumentException("Partial OneSEVPAs are not supported");
+                        }
                         succId = sevpa.getLocationId(succ);
                         data[--data[predOfsBase + succId]] = i;
                         predOfsBase += numStates;
@@ -176,7 +189,8 @@ public final class OneSEVPAMinimizer {
             resultLoc.setAccepting(original.isAcceptingLocation(repLoc));
 
             for (I intSym : alphabet.getInternalAlphabet()) {
-                final L origSucc = original.getInternalSuccessor(repLoc, intSym);
+                @SuppressWarnings("nullness") // partiality is handled during initialization
+                final @NonNull L origSucc = original.getInternalSuccessor(repLoc, intSym);
                 final int origSuccId = original.getLocationId(origSucc);
                 final int resSuccId = pt.getBlockForState(origSuccId).id;
                 final Location resSucc = resultLocs[resSuccId];
@@ -190,7 +204,8 @@ public final class OneSEVPAMinimizer {
                         final Location resultStackRep = resultLocs[b.id];
 
                         final int origStackSym = original.encodeStackSym(stackRep, callSym);
-                        final L origSucc = original.getReturnSuccessor(repLoc, retSym, origStackSym);
+                        @SuppressWarnings("nullness") // partiality is handled during initialization
+                        final @NonNull L origSucc = original.getReturnSuccessor(repLoc, retSym, origStackSym);
                         final int origSuccId = original.getLocationId(origSucc);
                         final int resSuccId = pt.getBlockForState(origSuccId).id;
                         final Location resSucc = resultLocs[resSuccId];

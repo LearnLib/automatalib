@@ -16,7 +16,6 @@
 package net.automatalib.graphs.concepts;
 
 import net.automatalib.graphs.Graph;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Edge label context, for {@link Graph}s with labeled edges.
@@ -38,6 +37,5 @@ public interface EdgeLabels<E, L> {
      *
      * @return the label for the given edge
      */
-    @Nullable
     L getEdgeLabel(E edge);
 }

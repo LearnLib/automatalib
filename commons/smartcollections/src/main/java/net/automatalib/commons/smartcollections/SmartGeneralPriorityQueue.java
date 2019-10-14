@@ -55,7 +55,7 @@ public interface SmartGeneralPriorityQueue<E, K extends Comparable<K>> extends S
      * Sets the default key, which is used for elements that are inserted with no explicit key specified.
      *
      * @param defaultKey
-     *         the new defualt key.
+     *         the new default key.
      */
     void setDefaultKey(K defaultKey);
 

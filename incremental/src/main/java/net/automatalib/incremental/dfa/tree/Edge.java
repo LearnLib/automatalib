@@ -16,30 +16,25 @@
 package net.automatalib.incremental.dfa.tree;
 
 import net.automatalib.incremental.dfa.Acceptance;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Edge<I> {
 
     private final Node<I> node;
     private final I input;
 
-    public Edge(Node<I> node, @Nullable I input) {
+    public Edge(Node<I> node, I input) {
         this.node = node;
         this.input = input;
     }
 
-    @NonNull
     public Node<I> getNode() {
         return node;
     }
 
-    @Nullable
     public I getInput() {
         return input;
     }
 
-    @NonNull
     public Acceptance getAcceptance() {
         return node.getAcceptance();
     }

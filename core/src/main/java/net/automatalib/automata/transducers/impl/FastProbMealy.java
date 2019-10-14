@@ -21,21 +21,21 @@ import net.automatalib.automata.transducers.probabilistic.ProbabilisticOutput;
 import net.automatalib.words.Alphabet;
 
 public class FastProbMealy<I, O>
-        extends AbstractFastMutableNondet<FastProbMealyState<O>, I, ProbMealyTransition<FastProbMealyState<O>, O>, Void, ProbabilisticOutput<O>>
-        implements MutableProbabilisticMealy<FastProbMealyState<O>, I, ProbMealyTransition<FastProbMealyState<O>, O>, O> {
+        extends AbstractFastMutableNondet<FastProbMealyState<O>, I, MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>>, Void, ProbabilisticOutput<O>>
+        implements MutableProbabilisticMealy<FastProbMealyState<O>, I, MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>>, O> {
 
     public FastProbMealy(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
     }
 
     @Override
-    public FastProbMealyState<O> getSuccessor(ProbMealyTransition<FastProbMealyState<O>, O> transition) {
+    public FastProbMealyState<O> getSuccessor(MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> transition) {
         return transition.getSuccessor();
     }
 
     @Override
-    public O getTransitionOutput(ProbMealyTransition<FastProbMealyState<O>, O> transition) {
-        return transition.getOutput();
+    public O getTransitionOutput(MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> transition) {
+        return transition.getOutput().getOutput();
     }
 
     @Override
@@ -44,70 +44,45 @@ public class FastProbMealy<I, O>
     }
 
     @Override
-    public ProbabilisticOutput<O> getTransitionProperty(ProbMealyTransition<FastProbMealyState<O>, O> transition) {
-        return new ProbabilisticOutput<>(transition.getProbability(), transition.getOutput());
+    public ProbabilisticOutput<O> getTransitionProperty(MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> transition) {
+        return transition.getOutput();
     }
 
     @Override
-    public void setTransitionOutput(ProbMealyTransition<FastProbMealyState<O>, O> transition, O output) {
-        transition.setOutput(output);
+    public void setTransitionOutput(MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> transition,
+                                    O output) {
+        transition.setOutput(new ProbabilisticOutput<>(transition.getOutput().getProbability(), output));
     }
 
     @Override
-    public void setTransitionProbability(ProbMealyTransition<FastProbMealyState<O>, O> transition, float probability) {
-        transition.setProbability(probability);
+    public void setTransitionProbability(MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> transition,
+                                         float probability) {
+        transition.setOutput(new ProbabilisticOutput<>(probability, transition.getOutput().getOutput()));
     }
 
     @Override
-    public float getTransitionProbability(ProbMealyTransition<FastProbMealyState<O>, O> transition) {
-        return transition.getProbability();
+    public float getTransitionProbability(MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> transition) {
+        return transition.getOutput().getProbability();
     }
 
     @Override
     public void setStateProperty(FastProbMealyState<O> state, Void property) {}
 
     @Override
-    public void setTransitionProperty(ProbMealyTransition<FastProbMealyState<O>, O> transition,
+    public void setTransitionProperty(MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> transition,
                                       ProbabilisticOutput<O> property) {
-        float prob;
-        O output;
-        if (property == null) {
-            prob = 0.0f;
-            output = null;
-        } else {
-            prob = property.getProbability();
-            output = property.getOutput();
-        }
-        transition.setProbability(prob);
-        transition.setOutput(output);
+        transition.setOutput(property);
     }
 
     @Override
-    public ProbMealyTransition<FastProbMealyState<O>, O> createTransition(FastProbMealyState<O> successor,
-                                                                          ProbabilisticOutput<O> properties) {
-        float prob;
-        O output;
-        if (properties == null) {
-            prob = 0.0f;
-            output = null;
-        } else {
-            prob = properties.getProbability();
-            output = properties.getOutput();
-        }
-        return new ProbMealyTransition<>(successor, output, prob);
+    public MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>> createTransition(FastProbMealyState<O> successor,
+                                                                                           ProbabilisticOutput<O> properties) {
+        return new MealyTransition<>(successor, properties);
     }
 
     @Override
     protected FastProbMealyState<O> createState(Void property) {
         return new FastProbMealyState<>(inputAlphabet.size());
-    }
-
-    public void addTransition(FastProbMealyState<O> src,
-                              I input,
-                              FastProbMealyState<O> successor,
-                              O output,
-                              float prob) {
-        addTransition(src, input, successor, new ProbabilisticOutput<>(prob, output));
     }
 
 }

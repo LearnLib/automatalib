@@ -21,9 +21,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+
 public class DefaultVisualizationHelper<N, E> implements VisualizationHelper<N, E> {
 
-    private Set<N> initialNodes;
+    private @MonotonicNonNull Set<N> initialNodes;
 
     protected Collection<N> initialNodes() {
         return Collections.emptySet();

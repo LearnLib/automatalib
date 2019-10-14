@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.automata.ads;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -95,12 +96,13 @@ public final class ADS {
         } else if (node.getPartition().size() == 1) {
 
             final S state = node.getPartition().iterator().next();
+            final Map<S, S> mapping = node.getMapping();
 
-            if (!node.getMapping().containsKey(state)) {
+            if (!mapping.containsKey(state)) {
                 throw new IllegalStateException();
             }
 
-            final ADSNode<S, I, O> result = new ADSLeafNode<>(null, node.getMapping().get(state));
+            final ADSNode<S, I, O> result = new ADSLeafNode<>(null, mapping.get(state));
             return Optional.of(result);
         } else if (node.getPartition().size() == 2) {
             return StateEquivalence.compute(automaton, input, node);

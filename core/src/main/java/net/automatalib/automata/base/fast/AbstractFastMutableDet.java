@@ -23,40 +23,41 @@ import java.util.List;
 import net.automatalib.automata.ShrinkableDeterministic;
 import net.automatalib.ts.powerset.DeterministicPowersetView;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastMutableDet<S extends AbstractFastState<T>, I, T, SP, TP>
         extends AbstractFastMutable<S, I, T, SP, TP> implements ShrinkableDeterministic<S, I, T, SP, TP>, Serializable {
 
-    private S initialState;
+    private @Nullable S initialState;
 
     public AbstractFastMutableDet(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
     }
 
     @Override
-    public void setTransition(S state, I input, T transition) {
+    public void setTransition(S state, I input, @Nullable T transition) {
         int inputIdx = inputAlphabet.getSymbolIndex(input);
         state.setTransitionObject(inputIdx, transition);
     }
 
     @Override
-    public S getInitialState() {
+    public @Nullable S getInitialState() {
         return initialState;
     }
 
     @Override
-    public void setInitialState(S state) {
+    public void setInitialState(@Nullable S state) {
         this.initialState = state;
     }
 
     @Override
-    public T getTransition(S state, I input) {
+    public @Nullable T getTransition(S state, I input) {
         int inputIdx = inputAlphabet.getSymbolIndex(input);
         return state.getTransitionObject(inputIdx);
     }
 
     @Override
-    public void removeState(S state, S replacement) {
+    public void removeState(S state, @Nullable S replacement) {
         super.removeState(state, replacement);
 
         if (state.equals(initialState)) {

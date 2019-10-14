@@ -67,8 +67,7 @@ public abstract class AbstractFSMParser<I> {
     /**
      * The set that contains all inputs that end up in the input alphabet (provided by the user, may be {@code null}).
      */
-    @Nullable
-    protected final Collection<? extends I> targetInputs;
+    protected final @Nullable Collection<? extends I> targetInputs;
 
     /**
      * Constructs a new AbstractFSMParser and defines all possible tokens.

@@ -24,7 +24,7 @@ import net.automatalib.automata.helpers.StateIDGrowingMapping;
 import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.simple.SimpleTS;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simple automaton, i.e., a {@link SimpleTS} with a finite number of states.
@@ -39,7 +39,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
 
     @Override
-    @NonNull
     default Iterator<S> iterator() {
         return getStates().iterator();
     }
@@ -49,21 +48,18 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
      *
      * @return all states in the transition system
      */
-    @NonNull
     Collection<S> getStates();
 
     @Override
-    @NonNull
-    default <V> MutableMapping<S, V> createStaticStateMapping() {
+    default <@Nullable V> MutableMapping<S, V> createStaticStateMapping() {
         return new StateIDStaticMapping<>(stateIDs(), size());
     }
 
     @Override
-    default <V> MutableMapping<S, V> createDynamicStateMapping() {
+    default <@Nullable V> MutableMapping<S, V> createDynamicStateMapping() {
         return new StateIDGrowingMapping<>(stateIDs(), size());
     }
 
-    @NonNull
     default StateIDs<S> stateIDs() {
         return new SimpleStateIDs<>(this);
     }

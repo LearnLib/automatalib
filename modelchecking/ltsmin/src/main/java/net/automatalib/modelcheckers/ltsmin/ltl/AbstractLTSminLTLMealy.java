@@ -109,9 +109,8 @@ public abstract class AbstractLTSminLTLMealy<I, O>
         this.skipOutputs = skipOutputs;
     }
 
-    @Nullable
     @Override
-    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
+    public @Nullable MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
                                                Collection<? extends I> inputs,
                                                String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);

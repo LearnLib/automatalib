@@ -19,7 +19,6 @@ import net.automatalib.automata.Automaton;
 import net.automatalib.automata.concepts.Probabilistic;
 import net.automatalib.automata.concepts.TransitionOutput;
 import net.automatalib.ts.UniversalTransitionSystem;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public interface ProbabilisticMealyMachine<S, I, T, O> extends Automaton<S, I, T>,
                                                                TransitionOutput<T, O>,
@@ -27,6 +26,5 @@ public interface ProbabilisticMealyMachine<S, I, T, O> extends Automaton<S, I, T
                                                                Probabilistic<T> {
 
     @Override
-    @NonNull
     ProbabilisticOutput<O> getTransitionProperty(T transition);
 }

@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import net.automatalib.commons.smartcollections.ArrayWritable;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DynamicList<T extends MutableNumericID> extends AbstractList<T> implements ArrayWritable<T>, Serializable {
 
@@ -39,11 +40,12 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
     }
 
     @Override
-    public boolean remove(Object elem) {
+    public boolean remove(@Nullable Object elem) {
         return remove(elem, null);
     }
 
-    public boolean remove(Object elem, IDChangeNotifier<T> tracker) {
+    @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
+    public boolean remove(@Nullable Object elem, @Nullable IDChangeNotifier<T> tracker) {
         if (!(elem instanceof MutableNumericID)) {
             return false;
         }
@@ -54,8 +56,7 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
             return false;
         }
 
-        T last = safeGet(size - 1);
-        size--;
+        T last = storage.array[--size];
 
         if (idx != size) {
             storage.array[idx] = last;
@@ -70,10 +71,11 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
         return true;
     }
 
+    @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     public T remove(int index, IDChangeNotifier<T> tracker) {
         T elem = get(index);
 
-        T last = safeGet(--size);
+        T last = storage.array[--size];
 
         if (index != size) {
             storage.array[index] = last;
@@ -88,7 +90,7 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
         return elem;
     }
 
-    public T safeGet(int index) {
+    public @Nullable T safeGet(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
@@ -112,6 +114,7 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
         return storage.array[index];
     }
 
+    @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     @Override
     public void clear() {
         for (int i = 0; i < size; i++) {
@@ -162,7 +165,7 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
     }
 
     @Override
-    public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
+    public void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num) {
         System.arraycopy(storage.array, offset, array, tgtOfs, num);
     }
 

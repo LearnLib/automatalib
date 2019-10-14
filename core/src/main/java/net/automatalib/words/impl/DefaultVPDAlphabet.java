@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPDAlphabet<I> {
 
-    private final Object[] globalSymbolCache;
+    private final @Nullable Object[] globalSymbolCache;
 
     public DefaultVPDAlphabet(final Collection<I> internalSymbols,
                               final Collection<I> callSymbols,
@@ -38,6 +38,7 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPD
         this(new MapAlphabet<>(internalSymbols), new MapAlphabet<>(callSymbols), new MapAlphabet<>(returnSymbols));
     }
 
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public DefaultVPDAlphabet(final Alphabet<I> internalAlphabet,
                               final Alphabet<I> callAlphabet,
                               final Alphabet<I> returnAlphabet) {
@@ -46,7 +47,6 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPD
         Arrays.setAll(this.globalSymbolCache, super::getSymbol);
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
     public I getSymbol(int index) {

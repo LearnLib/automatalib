@@ -50,6 +50,7 @@ public class DummyVP implements VisualizationProvider {
         return true;
     }
 
+    @SuppressWarnings("nullness") // false-positive on JOptionPane.showMessageDialog
     @Override
     public <N, E> void visualize(Graph<N, E> graph,
                                  List<VisualizationHelper<N, ? super E>> additionalHelpers,

@@ -21,7 +21,6 @@ import java.util.stream.IntStream;
 
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.words.Alphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.annotations.Test;
 
@@ -103,25 +102,21 @@ public class IntAbstractionTest extends MutableAutomatonTest {
             delegate.clear();
         }
 
-        @NonNull
         @Override
         public S addState(@Nullable SP property) {
             return stateIDs.getState(abstraction.addIntState(property));
         }
 
-        @NonNull
         @Override
         public S addState() {
             return stateIDs.getState(abstraction.addIntState());
         }
 
-        @NonNull
         @Override
         public S addInitialState() {
             return stateIDs.getState(abstraction.addIntInitialState());
         }
 
-        @NonNull
         @Override
         public S addInitialState(@Nullable SP property) {
             return stateIDs.getState(abstraction.addIntInitialState(property));
@@ -144,46 +139,40 @@ public class IntAbstractionTest extends MutableAutomatonTest {
             }
         }
 
-        @NonNull
         @Override
         public T createTransition(S successor, @Nullable TP properties) {
             return abstraction.createTransition(stateIDs.getStateId(successor), properties);
         }
 
-        @NonNull
         @Override
         public Collection<S> getStates() {
             return IntStream.range(0, abstraction.size()).mapToObj(stateIDs::getState).collect(Collectors.toList());
         }
 
-        @Nullable
         @Override
         public T getTransition(S state, @Nullable I input) {
             return abstraction.getTransition(stateIDs.getStateId(state), alphabet.getSymbolIndex(input));
         }
 
-        @Nullable
         @Override
         public SP getStateProperty(S state) {
             return abstraction.getStateProperty(stateIDs.getStateId(state));
         }
 
-        @Nullable
         @Override
         public TP getTransitionProperty(T transition) {
             return abstraction.getTransitionProperty(transition);
         }
 
-        @NonNull
         @Override
         public S getSuccessor(T transition) {
             return stateIDs.getState(abstraction.getIntSuccessor(transition));
         }
 
-        @Nullable
         @Override
-        public S getInitialState() {
-            return stateIDs.getState(abstraction.getIntInitialState());
+        public @Nullable S getInitialState() {
+            final int intInitial = abstraction.getIntInitialState();
+            return intInitial == FullIntAbstraction.INVALID_STATE ? null : stateIDs.getState(intInitial);
         }
     }
 }

@@ -15,8 +15,6 @@
  */
 package net.automatalib.automata.concepts;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * Transition output concept. Associates a transition with an output, like in a Mealy machine.
  *
@@ -29,6 +27,5 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface TransitionOutput<T, O> {
 
-    @Nullable
     O getTransitionOutput(T transition);
 }

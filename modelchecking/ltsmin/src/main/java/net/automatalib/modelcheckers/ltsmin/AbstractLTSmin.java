@@ -28,6 +28,7 @@ import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,6 +87,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @see AbstractLTSmin
      */
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     protected AbstractLTSmin(boolean keepFiles, Function<String, I> string2Input) {
         this.keepFiles = keepFiles;
         this.string2Input = string2Input;
@@ -134,7 +136,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @see AbstractLTSmin
      */
-    protected final File findCounterExampleFSM(A hypothesis, Collection<? extends I> inputs, String formula) {
+    protected final @Nullable File findCounterExampleFSM(A hypothesis, Collection<? extends I> inputs, String formula) {
 
         final File etf, gcf;
 

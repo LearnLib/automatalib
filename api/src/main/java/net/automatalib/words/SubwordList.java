@@ -17,8 +17,6 @@ package net.automatalib.words;
 
 import java.util.AbstractList;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 class SubwordList<I> extends AbstractList<Word<I>> {
 
     private final Word<I> word;
@@ -32,7 +30,6 @@ class SubwordList<I> extends AbstractList<Word<I>> {
     }
 
     @Override
-    @NonNull
     public Word<I> get(int index) {
         final int length = word.length();
 

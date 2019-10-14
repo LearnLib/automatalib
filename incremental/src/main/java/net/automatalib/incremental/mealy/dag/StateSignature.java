@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class StateSignature<O> implements Serializable {
 
@@ -56,7 +57,7 @@ final class StateSignature<O> implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }

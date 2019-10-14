@@ -22,7 +22,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link net.automatalib.words.VPDAlphabet} implementation that allows to add new symbols after its construction.
@@ -83,15 +82,14 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> implem
         return allSyms.size();
     }
 
-    @Nullable
     @Override
     public VPDSym<I> getSymbol(int index) {
         return allSyms.get(index);
     }
 
     @Override
-    public int getSymbolIndex(@Nullable VPDSym<I> symbol) {
-        if (symbol == null || !containsSymbol(symbol)) {
+    public int getSymbolIndex(VPDSym<I> symbol) {
+        if (!containsSymbol(symbol)) {
             throw new IllegalArgumentException();
         }
 
@@ -112,14 +110,13 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> implem
             this.list = list;
         }
 
-        @Nullable
         @Override
         public VPDSym<I> getSymbol(int index) {
             return list.get(index);
         }
 
         @Override
-        public int getSymbolIndex(@Nullable VPDSym<I> symbol) {
+        public int getSymbolIndex(VPDSym<I> symbol) {
             if (symbol == null || !containsSymbol(symbol)) {
                 throw new IllegalArgumentException();
             }

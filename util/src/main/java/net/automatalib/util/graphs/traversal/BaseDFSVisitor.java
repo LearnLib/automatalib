@@ -15,6 +15,8 @@
  */
 package net.automatalib.util.graphs.traversal;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A base implementation of a {@link DFSVisitor}.
  *
@@ -27,7 +29,7 @@ package net.automatalib.util.graphs.traversal;
  *
  * @author Malte Isberner
  */
-public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
+public class BaseDFSVisitor<N, E, @Nullable D> implements DFSVisitor<N, E, D> {
 
     @Override
     public D initialize(N node) {

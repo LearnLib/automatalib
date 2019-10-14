@@ -17,8 +17,6 @@ package net.automatalib.graphs.ads;
 
 import java.util.Collection;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * A (simplified) node in an adaptive distinguishing sequence. See {@link RecursiveADSNode}.
  *
@@ -33,7 +31,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public interface ADSNode<S, I, O> extends RecursiveADSNode<S, I, O, ADSNode<S, I, O>> {
 
-    @NonNull
     @Override
     default Collection<ADSNode<S, I, O>> getNodes() {
         return getNodesForRoot(this);

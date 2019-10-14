@@ -62,7 +62,7 @@ public abstract class AbstractFSM2ParserTest {
 
         // just trace the word and ignore the result -- checks to not throw an exception
         automaticAutomaton.getState(existingWord);
-        Assert.assertThrows(NullPointerException.class, () -> automaticAutomaton.getState(nonExistingInputs));
+        Assert.assertThrows(IllegalArgumentException.class, () -> automaticAutomaton.getState(nonExistingInputs));
 
         // check parsed automaton with existing inputs
         final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> existingAutomaton =
@@ -70,7 +70,7 @@ public abstract class AbstractFSM2ParserTest {
 
         // just trace the word and ignore the result -- checks to not throw an exception
         existingAutomaton.getState(existingWord);
-        Assert.assertThrows(NullPointerException.class, () -> existingAutomaton.getState(nonExistingInputs));
+        Assert.assertThrows(IllegalArgumentException.class, () -> existingAutomaton.getState(nonExistingInputs));
 
         // check parsed automaton with non-existing inputs
         final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> nonExistingAutomaton =

@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -48,7 +47,6 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
      */
     void clear();
 
-    @NonNull
     default S addState() {
         return addState(null);
     }
@@ -56,15 +54,12 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
     /**
      * Adds a state to the automaton.
      */
-    @NonNull
     S addState(@Nullable SP property);
 
-    @NonNull
     default S addInitialState() {
         return addInitialState(null);
     }
 
-    @NonNull
     default S addInitialState(@Nullable SP property) {
         S state = addState(property);
         setInitial(state, true);
@@ -73,11 +68,11 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
 
     void setInitial(S state, boolean initial);
 
-    void setStateProperty(S state, @Nullable SP property);
+    void setStateProperty(S state, SP property);
 
-    void setTransitionProperty(T transition, @Nullable TP property);
+    void setTransitionProperty(T transition, TP property);
 
-    default void addTransitions(S state, @Nullable I input, Collection<? extends T> transitions) {
+    default void addTransitions(S state, I input, Collection<? extends T> transitions) {
         Set<T> newTransitions = new HashSet<>(getTransitions(state, input));
         if (!newTransitions.addAll(transitions)) {
             return;
@@ -85,9 +80,9 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
         setTransitions(state, input, newTransitions);
     }
 
-    void setTransitions(S state, @Nullable I input, Collection<? extends T> transitions);
+    void setTransitions(S state, I input, Collection<? extends T> transitions);
 
-    default void removeTransition(S state, @Nullable I input, T transition) {
+    default void removeTransition(S state, I input, T transition) {
         Set<T> transitions = new HashSet<>(getTransitions(state, input));
         if (!transitions.remove(transition)) {
             return;
@@ -95,20 +90,19 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
         setTransitions(state, input, transitions);
     }
 
-    default void removeAllTransitions(S state, @Nullable I input) {
+    default void removeAllTransitions(S state, I input) {
         setTransitions(state, input, Collections.emptySet());
     }
 
     void removeAllTransitions(S state);
 
-    @NonNull
-    default T addTransition(S state, @Nullable I input, S successor, @Nullable TP properties) {
+    default T addTransition(S state, I input, S successor, TP properties) {
         T trans = createTransition(successor, properties);
         addTransition(state, input, trans);
         return trans;
     }
 
-    default void addTransition(S state, @Nullable I input, T transition) {
+    default void addTransition(S state, I input, T transition) {
         Set<T> transitions = new HashSet<>(getTransitions(state, input));
         if (!transitions.add(transition)) {
             return;
@@ -116,10 +110,8 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
         setTransitions(state, input, transitions);
     }
 
-    @NonNull
-    T createTransition(S successor, @Nullable TP properties);
+    T createTransition(S successor, TP properties);
 
-    @NonNull
     default T copyTransition(T trans, S succ) {
         TP property = getTransitionProperty(trans);
         return createTransition(succ, property);

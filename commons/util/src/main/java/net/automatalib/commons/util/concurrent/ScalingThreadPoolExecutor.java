@@ -22,8 +22,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * A {@link ThreadPoolExecutor} that internally uses a {@link ScalingLinkedBlockingQueue} to manage scheduled tasks.
  * This allows us to manage a dynamically sized thread pool that actually spawns new threads when the pool still allows
@@ -38,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author frohme
  */
-public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
+public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
 
     private final AtomicInteger activeCount = new AtomicInteger();
 
@@ -78,15 +76,15 @@ public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
     static class ScalingLinkedBlockingQueue extends LinkedBlockingQueue<Runnable> {
 
         private static final long serialVersionUID = 7063154517431823515L;
-        private transient ScalingThreadPoolExecutor tpe;
+        private transient ThreadPoolExecutor tpe;
 
-        void setTpe(ScalingThreadPoolExecutor tpe) {
+        void setTpe(ThreadPoolExecutor tpe) {
             this.tpe = tpe;
         }
 
         @Override
-        public boolean offer(@NonNull Runnable r) {
-            if (tpe != null && tpe.getActiveCount() + size() < tpe.getMaximumPoolSize()) {
+        public boolean offer(Runnable r) {
+            if (tpe.getActiveCount() + size() < tpe.getMaximumPoolSize()) {
                 return false;
             }
 

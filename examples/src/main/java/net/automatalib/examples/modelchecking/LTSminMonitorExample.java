@@ -104,6 +104,8 @@ public final class LTSminMonitorExample {
                 ltsminMonitor.findCounterExample(mealy, inputAlphabet, p4);
 
         System.out.println("Fourth property is satisfied: " + Objects.isNull(ce4m));
-        System.out.println("Counterexample length: " + (ce4m.size()));
+        if (ce4m != null) {
+            System.out.println("Counterexample length: " + ce4m.size());
+        }
     }
 }

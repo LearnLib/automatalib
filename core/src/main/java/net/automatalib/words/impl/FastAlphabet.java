@@ -21,7 +21,6 @@ import java.util.List;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.MutableNumericID;
 import net.automatalib.words.GrowingAlphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A fast alphabet implementation, that assumes identifiers are stored directly in the input symbols.
@@ -31,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author Malte Isberner
  */
-public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> implements GrowingAlphabet<I> {
+public final class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> implements GrowingAlphabet<I> {
 
     public FastAlphabet() {}
 
@@ -53,7 +52,6 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> imp
     }
 
     @Override
-    @NonNull
     public I getSymbol(int index) {
         return get(index);
     }
@@ -68,7 +66,7 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> imp
     }
 
     @Override
-    public int compare(@NonNull I o1, @NonNull I o2) {
+    public int compare(I o1, I o2) {
         return o1.getId() - o2.getId();
     }
 

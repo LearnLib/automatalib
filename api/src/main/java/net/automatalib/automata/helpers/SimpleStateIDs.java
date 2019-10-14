@@ -22,7 +22,6 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.simple.SimpleAutomaton;
-import net.automatalib.automata.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
 
 public class SimpleStateIDs<S> implements StateIDs<S> {
 
@@ -42,12 +41,18 @@ public class SimpleStateIDs<S> implements StateIDs<S> {
 
     @Override
     public int getStateId(S state) {
-        return stateIds.getOrDefault(state, FullIntAbstraction.INVALID_STATE);
+        final Integer id = stateIds.get(state);
+
+        if (id == null) {
+            throw new IllegalArgumentException();
+        }
+
+        return id.intValue();
     }
 
     @Override
     public S getState(int id) {
-        return (id < 0 || id >= states.size()) ? null : states.get(id);
+        return states.get(id);
     }
 
 }

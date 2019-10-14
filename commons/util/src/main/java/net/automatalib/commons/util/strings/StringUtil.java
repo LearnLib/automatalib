@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import com.google.common.collect.Iterators;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -226,7 +227,7 @@ public final class StringUtil {
         }
     }
 
-    public static void appendObject(Appendable a, Object obj) throws IOException {
+    public static void appendObject(Appendable a, @Nullable Object obj) throws IOException {
         if (obj instanceof Printable) {
             ((Printable) obj).print(a);
         } else {

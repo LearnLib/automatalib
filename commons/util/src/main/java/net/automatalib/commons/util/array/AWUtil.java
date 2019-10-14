@@ -93,6 +93,7 @@ public final class AWUtil {
         return elementsToCopy;
     }
 
+    @SuppressWarnings("nullness") // false positive?
     public static <T, U extends T> int safeWrite(ArrayWritable<U> aw, T[] array, int tgtOfs) {
         return safeWrite(aw.size(), aw, 0, array, tgtOfs);
     }

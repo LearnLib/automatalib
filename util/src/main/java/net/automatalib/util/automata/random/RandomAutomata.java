@@ -32,12 +32,9 @@ import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class RandomAutomata {
 
-    @NonNull
     private final Random random;
 
     public RandomAutomata() {
@@ -48,7 +45,6 @@ public class RandomAutomata {
         this.random = random;
     }
 
-    @NonNull
     public static RandomAutomata getInstance() {
         return InstanceHolder.INSTANCE;
     }
@@ -70,20 +66,18 @@ public class RandomAutomata {
      *
      * @return a randomly generated ICDFA
      */
-    @NonNull
+    @SuppressWarnings("nullness") // false positive?
     public static <I> CompactDFA<I> randomICDFA(Random rand,
                                                 @NonNegative int numStates,
                                                 Alphabet<I> inputs,
                                                 boolean minimize) {
-        CompactDFA<I> dfa = new RandomICAutomatonGenerator<Boolean, Void>().withStateProperties(Random::nextBoolean)
-                                                                           .generateICDeterministicAutomaton(numStates,
-                                                                                                             inputs,
-                                                                                                             new CompactDFA.Creator<>(),
-                                                                                                             rand);
-        if (minimize) {
-            dfa = DFAs.minimize(dfa);
-        }
-        return dfa;
+        final CompactDFA<I> dfa =
+                new RandomICAutomatonGenerator<Boolean, Void>().withStateProperties(Random::nextBoolean)
+                                                               .generateICDeterministicAutomaton(numStates,
+                                                                                                 inputs,
+                                                                                                 new CompactDFA.Creator<>(),
+                                                                                                 rand);
+        return minimize ? DFAs.minimize(dfa) : dfa;
     }
 
     public static <I> DefaultOneSEVPA<I> randomOneSEVPA(final Random r,
@@ -155,31 +149,28 @@ public class RandomAutomata {
         return result;
     }
 
-    @NonNull
     public <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(@NonNegative int numStates,
                                                                                                     Collection<? extends I> inputs,
-                                                                                                    @Nullable Collection<? extends SP> stateProps,
-                                                                                                    @Nullable Collection<? extends TP> transProps,
+                                                                                                    Collection<? extends SP> stateProps,
+                                                                                                    Collection<? extends TP> transProps,
                                                                                                     A out) {
         return randomDeterministic(this.random, numStates, inputs, stateProps, transProps, out);
     }
 
-    @NonNull
     public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(Random rand,
                                                                                                            @NonNegative int numStates,
                                                                                                            Collection<? extends I> inputs,
-                                                                                                           @Nullable Collection<? extends SP> stateProps,
-                                                                                                           @Nullable Collection<? extends TP> transProps,
+                                                                                                           Collection<? extends SP> stateProps,
+                                                                                                           Collection<? extends TP> transProps,
                                                                                                            A out) {
         return randomDeterministic(rand, numStates, inputs, stateProps, transProps, out, true);
     }
 
-    @NonNull
     public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(Random rand,
                                                                                                            @NonNegative int numStates,
                                                                                                            Collection<? extends I> inputs,
-                                                                                                           @Nullable Collection<? extends SP> stateProps,
-                                                                                                           @Nullable Collection<? extends TP> transProps,
+                                                                                                           Collection<? extends SP> stateProps,
+                                                                                                           Collection<? extends TP> transProps,
                                                                                                            A out,
                                                                                                            boolean minimize) {
 
@@ -197,22 +188,19 @@ public class RandomAutomata {
         return out;
     }
 
-    @NonNull
     public <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(@NonNegative int numStates,
                                                                                                     Collection<? extends I> inputs,
-                                                                                                    @Nullable Collection<? extends SP> stateProps,
-                                                                                                    @Nullable Collection<? extends TP> transProps,
+                                                                                                    Collection<? extends SP> stateProps,
+                                                                                                    Collection<? extends TP> transProps,
                                                                                                     A out,
                                                                                                     boolean minimize) {
         return randomDeterministic(this.random, numStates, inputs, stateProps, transProps, out, minimize);
     }
 
-    @NonNull
     public <I> CompactDFA<I> randomDFA(@NonNegative int numStates, Alphabet<I> inputs, boolean minimize) {
         return randomDFA(this.random, numStates, inputs, minimize);
     }
 
-    @NonNull
     public static <I> CompactDFA<I> randomDFA(Random rand,
                                               @NonNegative int numStates,
                                               Alphabet<I> inputs,
@@ -226,17 +214,14 @@ public class RandomAutomata {
                                    minimize);
     }
 
-    @NonNull
     public <I> CompactDFA<I> randomDFA(@NonNegative int numStates, Alphabet<I> inputs) {
         return randomDFA(this.random, numStates, inputs);
     }
 
-    @NonNull
     public static <I> CompactDFA<I> randomDFA(Random rand, @NonNegative int numStates, Alphabet<I> inputs) {
         return randomDFA(rand, numStates, inputs, true);
     }
 
-    @NonNull
     public <I, O> CompactMealy<I, O> randomMealy(@NonNegative int numStates,
                                                  Alphabet<I> inputs,
                                                  Collection<? extends O> outputs,
@@ -244,7 +229,6 @@ public class RandomAutomata {
         return randomMealy(this.random, numStates, inputs, outputs, minimize);
     }
 
-    @NonNull
     public static <I, O> CompactMealy<I, O> randomMealy(Random rand,
                                                         @NonNegative int numStates,
                                                         Alphabet<I> inputs,
@@ -259,14 +243,12 @@ public class RandomAutomata {
                                    minimize);
     }
 
-    @NonNull
     public <I, O> CompactMealy<I, O> randomMealy(@NonNegative int numStates,
                                                  Alphabet<I> inputs,
                                                  Collection<? extends O> outputs) {
         return randomMealy(this.random, numStates, inputs, outputs);
     }
 
-    @NonNull
     public static <I, O> CompactMealy<I, O> randomMealy(Random rand,
                                                         @NonNegative int numStates,
                                                         Alphabet<I> inputs,
@@ -276,7 +258,6 @@ public class RandomAutomata {
 
     private static final class InstanceHolder {
 
-        @NonNull
         public static final RandomAutomata INSTANCE = new RandomAutomata();
     }
 

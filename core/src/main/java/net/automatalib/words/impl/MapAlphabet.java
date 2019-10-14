@@ -23,7 +23,6 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A map-based alphabet implementation, that does not impose any restriction on the input symbol class. This
@@ -37,10 +36,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public class MapAlphabet<I> extends AbstractAlphabet<I> {
 
-    @NonNull
     protected final List<I> symbols;
 
-    @NonNull
     //private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>(10, 0.75f, -1);
     protected final Map<I, Integer> indexMap; // TODO: replace by primitive specialization
 
@@ -70,12 +67,11 @@ public class MapAlphabet<I> extends AbstractAlphabet<I> {
 
     @Override
     public int getSymbolIndex(I symbol) {
-        return indexMap.get(symbol);
-    }
-
-    @Override
-    public int compare(I o1, I o2) {
-        return indexMap.get(o1) - indexMap.get(o2);
+        final Integer result = indexMap.get(symbol);
+        if (result == null) {
+            throw new IllegalArgumentException("Symbol '" + symbol + "' is not contained in the alphabet");
+        }
+        return result.intValue();
     }
 
     @Override

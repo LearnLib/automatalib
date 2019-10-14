@@ -66,7 +66,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     /**
      * @see FSM2MealyParserAlternating
      */
-    private final Output<I, Word<O>> output;
+    private final @Nullable Output<I, Word<O>> output;
 
     private FSM2MealyParserAlternating(@Nullable Collection<? extends I> targetInputs,
                                        @Nullable Output<I, Word<O>> output,
@@ -156,7 +156,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      * @throws FSMFormatException
      *         when non-determinism is detected.
      */
-    private void makeTransitions(Integer currentState, Pair<Integer, I> inputTrans, Set<Integer> newStates,
+    private void makeTransitions(Integer currentState, @Nullable Pair<Integer, I> inputTrans, Set<Integer> newStates,
                                  int inputLength, @Nullable WordBuilder<I> wb, StreamTokenizer streamTokenizer) {
 
         // indicate we have seen currentState

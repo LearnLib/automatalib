@@ -15,7 +15,6 @@
  */
 package net.automatalib.graphs;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -41,7 +40,6 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the newly inserted node
      */
-    @NonNull
     default N addNode() {
         return addNode(null);
     }
@@ -54,7 +52,6 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the newly inserted node
      */
-    @NonNull
     N addNode(@Nullable NP property);
 
     /**
@@ -68,7 +65,6 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the edge connecting the given nodes
      */
-    @NonNull
     default E connect(N source, N target) {
         return connect(source, target, null);
     }
@@ -85,11 +81,10 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the newly inserted edge
      */
-    @NonNull
     E connect(N source, N target, @Nullable EP property);
 
-    void setNodeProperty(N node, @Nullable NP property);
+    void setNodeProperty(N node, NP property);
 
-    void setEdgeProperty(E edge, @Nullable EP property);
+    void setEdgeProperty(E edge, EP property);
 
 }

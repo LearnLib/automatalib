@@ -35,7 +35,9 @@ public interface ShrinkableGraph<N, E> extends Graph<N, E> {
      * @param node
      *         the node to remove.
      */
-    void removeNode(N node);
+    default void removeNode(N node) {
+        removeNode(node, null);
+    }
 
     /**
      * Removes a node from this graph, and redirects all incoming edges to the given replacement node (node that

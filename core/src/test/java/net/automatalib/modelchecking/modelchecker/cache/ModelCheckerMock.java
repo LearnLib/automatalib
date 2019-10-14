@@ -54,9 +54,8 @@ class ModelCheckerMock<I, A, P, R extends Lasso<I, ?>> implements ModelCheckerLa
         return checks;
     }
 
-    @Nullable
     @Override
-    public R findCounterExample(A automaton, Collection<? extends I> inputs, P property) {
+    public @Nullable R findCounterExample(A automaton, Collection<? extends I> inputs, P property) {
         Assert.assertSame(automaton, this.automaton);
         Assert.assertSame(property, this.property);
         checks++;

@@ -18,9 +18,10 @@ package net.automatalib.automata.transducers.impl;
 import java.util.Collection;
 
 import net.automatalib.automata.base.fast.AbstractFastState;
+import net.automatalib.automata.transducers.probabilistic.ProbabilisticOutput;
 
 public class FastProbMealyState<O>
-        extends AbstractFastState<Collection<ProbMealyTransition<FastProbMealyState<O>, O>>> {
+        extends AbstractFastState<Collection<MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>>>> {
 
     public FastProbMealyState(int numInputs) {
         super(numInputs);

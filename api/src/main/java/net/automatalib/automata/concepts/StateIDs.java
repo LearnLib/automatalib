@@ -24,13 +24,16 @@ package net.automatalib.automata.concepts;
 public interface StateIDs<S> {
 
     /**
-     * Returns for a given state of the automaton an integer uniquely identifying the state.
+     * Returns for a given state of the automaton an integer uniquely identifying the state. The returned ids should be
+     * within the range of the number of states of the automaton so that they can be used for array-based indexing.
      *
      * @param state
      *         the state whose id should be retrieved
      *
-     * @return the (positive) id of the given automaton state. May return a negative value, if {@code state} does not
-     * belong to the automaton.
+     * @return the (positive) id of the given automaton state
+     *
+     * @throws IllegalArgumentException
+     *         if {@code state} does not belong to the automaton.
      */
     int getStateId(S state);
 
@@ -40,8 +43,10 @@ public interface StateIDs<S> {
      * @param id
      *         the id of the state to be returned
      *
-     * @return the automaton state identified by the given {@code id}. May return {@code null} if the given {@code id}
-     * does not identify a state of the automaton.
+     * @return the automaton state identified by the given {@code id}.
+     *
+     * @throws IndexOutOfBoundsException
+     *         if the given {@code id} does not identify a state of the automaton.
      */
     S getState(int id);
 }

@@ -18,12 +18,12 @@ package net.automatalib.util.graphs.apsp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.EdgeWeights;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.util.graphs.Graphs;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -39,12 +39,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
 
     private final int size;
-    @NonNull
     private final NodeIDs<N> ids;
-    @NonNull
-    private final APSPRecord<E>[][] table;
+    private final @Nullable APSPRecord<E>[][] table;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "initialization"})
     public FloydWarshallAPSP(Graph<N, E> graph, EdgeWeights<E> ew) {
         this.size = graph.size();
         this.ids = graph.nodeIDs();
@@ -61,7 +59,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
 
             for (E edge : edges) {
                 N tgt = graph.getTarget(edge);
-                if (tgt.equals(src)) {
+                if (Objects.equals(tgt, src)) {
                     continue;
                 }
 
@@ -75,7 +73,6 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
         }
     }
 
-    @NonNull
     public static <N, E> APSPResult<N, E> findAPSP(Graph<N, E> graph, EdgeWeights<E> edgeWeights) {
         FloydWarshallAPSP<N, E> fw = new FloydWarshallAPSP<>(graph, edgeWeights);
         fw.findAPSP();
@@ -133,7 +130,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
     }
 
     @Override
-    public List<E> getShortestPath(N src, N tgt) {
+    public @Nullable List<E> getShortestPath(N src, N tgt) {
         int srcId = ids.getNodeId(src), tgtId = ids.getNodeId(tgt);
 
         APSPRecord<E> rec = table[srcId][tgtId];
@@ -149,6 +146,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
         return result;
     }
 
+    @SuppressWarnings("nullness") // our initialization ensures that we don't access undefined indices
     private void buildPath(List<E> path, int srcId, int tgtId, APSPRecord<E> rec) {
         if (rec.middle == -1) {
             path.add(rec.edge);
@@ -162,8 +160,7 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
 
     private static final class APSPRecord<E> {
 
-        @Nullable
-        public final E edge;
+        public final @Nullable E edge;
         public float distance;
         public int middle;
         public int numEdges;

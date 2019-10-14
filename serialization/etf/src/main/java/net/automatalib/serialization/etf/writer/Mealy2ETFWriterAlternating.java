@@ -148,7 +148,8 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
         final Map<Integer, Pair<O, S>> inverseTransitions = outputTransitions.inverse();
         for (int i = 0; i < outputTransitions.size(); i++) {
             final Pair<O, S> t = inverseTransitions.get(oldStates.size() + i);
-            pw.printf("\"(%s,%s)\"%n", t.getFirst(), t.getSecond());
+            assert t != null;
+            pw.printf("\"(%s,%s)\"%n", String.valueOf(t.getFirst()), String.valueOf(t.getSecond()));
         }
         pw.println("end sort");
 

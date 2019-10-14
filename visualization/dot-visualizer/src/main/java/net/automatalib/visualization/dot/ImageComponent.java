@@ -31,6 +31,9 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+
 /**
  * Component that displays a {@link BufferedImage}.
  *
@@ -42,11 +45,12 @@ public class ImageComponent extends JComponent {
 
     private static final int DEFAULT_WIDTH = 320, DEFAULT_HEIGHT = 240;
 
-    private BufferedImage img;
+    private @Nullable BufferedImage img;
     private final Action savePngAction = new AbstractAction("Save PNG") {
 
         private static final long serialVersionUID = 1L;
 
+        @RequiresNonNull("img")
         @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser chooser = new JFileChooser();
@@ -97,7 +101,7 @@ public class ImageComponent extends JComponent {
      *
      * @return the image to be displayed
      */
-    public BufferedImage getImage() {
+    public @Nullable BufferedImage getImage() {
         return img;
     }
 
@@ -107,7 +111,7 @@ public class ImageComponent extends JComponent {
      * @param img
      *         the image to be displayed
      */
-    public void setImage(BufferedImage img) {
+    public void setImage(@Nullable BufferedImage img) {
         this.img = img;
         Dimension dim;
         if (img != null) {

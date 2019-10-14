@@ -93,11 +93,15 @@ public final class LTSminExample {
         final MealyLasso<Character, Character> ce3b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p3);
 
         System.out.println("Third property is satisfied: " + Objects.isNull(ce3b));
-        System.out.println("Counterexample prefix+loop: " + ce3b.getPrefix() + ':' + ce3b.getLoop());
+        if (ce3b != null) {
+            System.out.println("Counterexample prefix+loop: " + ce3b.getPrefix() + ':' + ce3b.getLoop());
+        }
 
         final MealyLasso<Character, Character> ce4b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p4);
 
         System.out.println("Fourth property is satisfied: " + Objects.isNull(ce4b));
-        System.out.println("Counterexample prefix+loop: " + ce4b.getPrefix() + ':' + ce4b.getLoop());
+        if (ce4b != null) {
+            System.out.println("Counterexample prefix+loop: " + ce4b.getPrefix() + ':' + ce4b.getLoop());
+        }
     }
 }

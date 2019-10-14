@@ -22,8 +22,9 @@ import java.util.List;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.graphs.BidirectionalGraph;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<CompactBidiEdge<EP>, EP>
+public class CompactSimpleBidiGraph<@Nullable EP> extends AbstractCompactSimpleGraph<CompactBidiEdge<EP>, EP>
         implements BidirectionalGraph<Integer, CompactBidiEdge<EP>> {
 
     private final ResizingArrayStorage<List<CompactBidiEdge<EP>>> inEdges;
@@ -68,7 +69,7 @@ public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<Compa
     }
 
     @Override
-    public CompactBidiEdge<EP> connect(int source, int target, EP property) {
+    public CompactBidiEdge<EP> connect(int source, int target, @Nullable EP property) {
         CompactBidiEdge<EP> edge = super.connect(source, target, property);
         List<CompactBidiEdge<EP>> inEdges = getInEdgeList(target);
         edge.inIndex = inEdges.size();
@@ -77,7 +78,7 @@ public class CompactSimpleBidiGraph<EP> extends AbstractCompactSimpleGraph<Compa
     }
 
     @Override
-    protected CompactBidiEdge<EP> createEdge(int source, int target, EP property) {
+    protected CompactBidiEdge<EP> createEdge(int source, int target, @Nullable EP property) {
         return new CompactBidiEdge<>(source, target, property);
     }
 

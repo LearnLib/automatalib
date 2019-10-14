@@ -99,12 +99,12 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
     @Override
     public int getStateId(Integer state) {
-        return (state < 0 || state >= numStates) ? INVALID_STATE : state.intValue();
+        return state.intValue();
     }
 
     @Override
     public Integer getState(int id) {
-        return (id < 0 || id >= numStates) ? null : id;
+        return id;
     }
 
     @Override
@@ -211,7 +211,9 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      *
      * @return a copy of the provided array with updated memory layout.
      */
-    protected final Object[] updateStateStorage(Object[] oldStorage, @Nullable Object defaultValue, Payload payload) {
+    protected final Object[] updateStateStorage(@Nullable Object[] oldStorage,
+                                                @Nullable Object defaultValue,
+                                                Payload payload) {
         final Object[] result = Arrays.copyOf(oldStorage, payload.newSizeHint);
         Arrays.fill(result, oldStorage.length, result.length, defaultValue);
         return result;
@@ -265,10 +267,14 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      * @see #updateTransitionStorage(int[], int, Payload)
      * @see #updateTransitionStorage(Object[], IntFunction, Object, Payload)
      */
-    protected final Object[] updateTransitionStorage(Object[] oldStorage,
-                                                     @Nullable Object defaultValue,
-                                                     Payload payload) {
-        return payload.type.updateStorage(oldStorage, payload, Object[]::new, (arr, idx) -> arr[idx] = defaultValue);
+    protected final @Nullable Object[] updateTransitionStorage(@Nullable Object[] oldStorage,
+                                                               @Nullable Object defaultValue,
+                                                               Payload payload) {
+        // explicit generic declaration required for checkerframework
+        return payload.type.<@Nullable Object[]>updateStorage(oldStorage,
+                                                              payload,
+                                                              (IntFunction<@Nullable Object[]>) Object[]::new,
+                                                              (arr, idx) -> arr[idx] = defaultValue);
     }
 
     /**
@@ -288,14 +294,14 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      * @see #updateTransitionStorage(int[], int, Payload)
      * @see #updateTransitionStorage(Object[], Object, Payload)
      */
-    protected final <S> S[] updateTransitionStorage(S[] oldStorage,
-                                                    IntFunction<S[]> arrayConstructor,
-                                                    @Nullable S defaultValue,
-                                                    Payload payload) {
+    protected final <S> @Nullable S[] updateTransitionStorage(@Nullable S[] oldStorage,
+                                                              IntFunction<@Nullable S[]> arrayConstructor,
+                                                              @Nullable S defaultValue,
+                                                              Payload payload) {
         return payload.type.updateStorage(oldStorage, payload, arrayConstructor, (arr, idx) -> arr[idx] = defaultValue);
     }
 
-    protected static Integer toState(int id) {
+    protected static @Nullable Integer toState(int id) {
         return (id != INVALID_STATE) ? id : null;
     }
 
@@ -319,7 +325,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
         return stateId * alphabetSize + inputId;
     }
 
-    protected final int getSymbolIndex(@Nullable I input) {
+    protected final int getSymbolIndex(I input) {
         return alphabet.getSymbolIndex(input);
     }
 

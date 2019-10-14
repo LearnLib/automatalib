@@ -22,8 +22,6 @@ import java.util.Set;
 
 import net.automatalib.ts.powerset.DirectPowersetDTS;
 import net.automatalib.ts.simple.SimpleTS;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Transition system interface. This interface extends {@link SimpleTS} by introducing the concept of inspectable
@@ -41,8 +39,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
 
     @Override
-    @NonNull
-    default Set<S> getSuccessors(S state, @Nullable I input) {
+    default Set<S> getSuccessors(S state, I input) {
         Collection<T> transitions = getTransitions(state, input);
         if (transitions.isEmpty()) {
             return Collections.emptySet();
@@ -67,8 +64,7 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
      *
      * @return the transitions triggered by the given input
      */
-    @NonNull
-    Collection<T> getTransitions(S state, @Nullable I input);
+    Collection<T> getTransitions(S state, I input);
 
     /**
      * Retrieves the successor state of a given transition.
@@ -78,7 +74,6 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
      *
      * @return the successor state.
      */
-    @NonNull
     S getSuccessor(T transition);
 
     /**
@@ -86,7 +81,6 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
      *
      * @return a powerset view of this transition system.
      */
-    @NonNull
     default PowersetViewTS<?, I, ?, S, T> powersetView() {
         return new DirectPowersetDTS<>(this);
     }

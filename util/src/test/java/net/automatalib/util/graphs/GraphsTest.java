@@ -17,6 +17,7 @@ package net.automatalib.util.graphs;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class GraphsTest {
 
             for (final S src : dfa) {
                 for (final I i : alphabet) {
-                    if (tgt.equals(dfa.getSuccessor(src, i))) {
+                    if (Objects.equals(tgt, dfa.getSuccessor(src, i))) {
                         incomingStates.add(src);
                     }
                 }

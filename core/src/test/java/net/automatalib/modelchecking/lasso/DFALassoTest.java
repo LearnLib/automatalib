@@ -20,7 +20,6 @@ import java.util.Collection;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -41,7 +40,7 @@ public class DFALassoTest extends AbstractLassoTest<DFALassoImpl<String>> {
         Assert.assertTrue(lasso.getOutput());
     }
 
-    private class DFAMock implements DFA<Integer, String> {
+    private static class DFAMock implements DFA<Integer, String> {
 
         private final Word<String> prefix;
         private final Word<String> word;
@@ -51,15 +50,13 @@ public class DFALassoTest extends AbstractLassoTest<DFALassoImpl<String>> {
             word = prefix.concat(loop);
         }
 
-        @NonNull
         @Override
         public Collection<Integer> getStates() {
             return CollectionsUtil.intRange(0, word.length());
         }
 
-        @Nullable
         @Override
-        public Integer getTransition(Integer state, @Nullable String input) {
+        public @Nullable Integer getTransition(Integer state, String input) {
             final Integer result;
 
             if (word.getSymbol(state).equals(input)) {
@@ -81,7 +78,6 @@ public class DFALassoTest extends AbstractLassoTest<DFALassoImpl<String>> {
             return true;
         }
 
-        @Nullable
         @Override
         public Integer getInitialState() {
             return 0;

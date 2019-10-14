@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.RandomAccess;
 import java.util.function.Supplier;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A thin wrapper around a simple {@code Object[]} array. Mainly used (and useful) for heavily generic and array-based
  * data storage. Extends/Implements some convenient classes/interfaces.
@@ -33,7 +35,7 @@ import java.util.function.Supplier;
  */
 public final class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Serializable, Cloneable {
 
-    private final Object[] storage;
+    private final @Nullable Object[] storage;
 
     public ArrayStorage(int size) {
         this.storage = new Object[size];
@@ -50,7 +52,7 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
         storage = collection.toArray();
     }
 
-    private ArrayStorage(Object[] storage) {
+    private ArrayStorage(@Nullable Object[] storage) {
         this.storage = storage;
     }
 
@@ -78,7 +80,7 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

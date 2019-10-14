@@ -16,7 +16,6 @@
 package net.automatalib.automata.concepts;
 
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Feature for automata that compute a <i>suffix-observable</i> output function, i.e., they compute an output containing
@@ -35,11 +34,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface SuffixOutput<I, D> extends Output<I, D> {
 
     @Override
-    @Nullable
     default D computeOutput(Iterable<? extends I> input) {
         return computeSuffixOutput(Word.epsilon(), input);
     }
 
-    @Nullable
     D computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix);
 }

@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Various methods for operating on collections.
  *
@@ -32,7 +34,7 @@ public final class CollectionsUtil {
     // Prevent instantiation.
     private CollectionsUtil() {}
 
-    public static <E> E removeReplace(List<E> list, int index) {
+    public static <E> @Nullable E removeReplace(List<E> list, int index) {
         int lastIdx = list.size() - 1;
         E last = list.remove(lastIdx);
         if (lastIdx != index) {

@@ -19,7 +19,6 @@ import java.util.List;
 
 import net.automatalib.graphs.Graph;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Algorithms for finding strongly-connected components (SCCs) in a graph.
@@ -42,7 +41,6 @@ public final class SCCs {
      *
      * @see TarjanSCCVisitor
      */
-    @NonNull
     public static <N, E> List<List<N>> collectSCCs(Graph<N, E> graph) {
         SCCCollector<N> coll = new SCCCollector<>();
         findSCCs(graph, coll);

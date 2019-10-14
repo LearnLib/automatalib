@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automata.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
 import net.automatalib.graphs.SimpleGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
 
@@ -42,11 +41,17 @@ public class SimpleNodeIDs<N> implements NodeIDs<N> {
 
     @Override
     public int getNodeId(N node) {
-        return nodeIds.getOrDefault(node, FullIntAbstraction.INVALID_STATE);
+        final Integer id = nodeIds.get(node);
+
+        if (id == null) {
+            throw new IllegalArgumentException();
+        }
+
+        return id.intValue();
     }
 
     @Override
     public N getNode(int id) {
-        return (id < 0 || id >= nodes.size()) ? null : nodes.get(id);
+        return nodes.get(id);
     }
 }

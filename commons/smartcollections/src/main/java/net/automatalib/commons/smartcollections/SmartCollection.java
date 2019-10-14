@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -67,7 +66,6 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the element.
      */
-    @Nullable
     E get(ElementReference ref);
 
     /**
@@ -79,8 +77,7 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return a reference to this element in the collection.
      */
-    @NonNull
-    ElementReference referencedAdd(@Nullable E elem);
+    ElementReference referencedAdd(E elem);
 
     /**
      * Removes an element (by its reference) from the collection.
@@ -110,7 +107,6 @@ public interface SmartCollection<E> extends Collection<E> {
      * @throws NoSuchElementException
      *         if the collection is empty
      */
-    @Nullable
     E choose();
 
     /**
@@ -119,7 +115,6 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the reference to an arbitrary element in the collection
      */
-    @NonNull
     ElementReference chooseRef();
 
     /**
@@ -127,7 +122,6 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the reference iterator.
      */
-    @NonNull
     Iterator<ElementReference> referenceIterator();
 
     /**
@@ -136,7 +130,6 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return an {@link Iterable} with the above {@link #referenceIterator()} as its iterator.
      */
-    @NonNull
     Iterable<ElementReference> references();
 
     /**
@@ -166,7 +159,7 @@ public interface SmartCollection<E> extends Collection<E> {
      * @param newElement
      *         the replacement.
      */
-    void replace(ElementReference ref, @Nullable E newElement);
+    void replace(ElementReference ref, E newElement);
 
     /**
      * Retrieves the reference for a given element. If the element is not contained in the collection, <code>null</code>
@@ -177,7 +170,7 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the reference to this element, or <code>null</code>.
      */
-    ElementReference find(@Nullable Object element);
+    @Nullable ElementReference find(@Nullable Object element);
 
     /**
      * Quickly clears this collection. This method is supposed to perform the minimum amount of effort such that this

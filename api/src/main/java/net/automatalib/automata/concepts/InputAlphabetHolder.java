@@ -16,10 +16,8 @@
 package net.automatalib.automata.concepts;
 
 import net.automatalib.words.Alphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public interface InputAlphabetHolder<I> {
 
-    @NonNull
     Alphabet<I> getInputAlphabet();
 }

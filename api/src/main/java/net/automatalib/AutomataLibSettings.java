@@ -18,6 +18,7 @@ package net.automatalib;
 import java.util.Properties;
 
 import net.automatalib.commons.util.settings.SettingsSource;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author Malte Isberner
@@ -35,7 +36,7 @@ public final class AutomataLibSettings {
         return INSTANCE;
     }
 
-    public String getProperty(AutomataLibProperty property) {
+    public @Nullable String getProperty(AutomataLibProperty property) {
         return properties.getProperty(property.getPropertyKey());
     }
 

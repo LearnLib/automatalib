@@ -15,6 +15,8 @@
  */
 package net.automatalib.commons.smartcollections;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Basic interface for entries in a linked list.
  *
@@ -39,7 +41,7 @@ public interface LinkedListEntry<E, T extends LinkedListEntry<E, T>> extends Ele
      *
      * @return the previous entry or <code>null</code>.
      */
-    T getPrev();
+    @Nullable T getPrev();
 
     /**
      * Sets the predecessor of this entry.
@@ -47,14 +49,14 @@ public interface LinkedListEntry<E, T extends LinkedListEntry<E, T>> extends Ele
      * @param prev
      *         the new predecessor.
      */
-    void setPrev(T prev);
+    void setPrev(@Nullable T prev);
 
     /**
      * Retrieves the next entry in the list, or <code>null</code> if this is the last entry.
      *
      * @return the next entry or <code>null</code>.
      */
-    T getNext();
+    @Nullable T getNext();
 
     /**
      * Sets the successor of this entry.
@@ -62,5 +64,5 @@ public interface LinkedListEntry<E, T extends LinkedListEntry<E, T>> extends Ele
      * @param next
      *         the new successor.
      */
-    void setNext(T next);
+    void setNext(@Nullable T next);
 }

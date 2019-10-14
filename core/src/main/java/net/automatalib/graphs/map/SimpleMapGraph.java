@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 import com.google.common.collect.Iterators;
 import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.ShrinkableGraph;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A very simple graph realization, where nodes can be arbitrary Java objects. This graph does not support edge
@@ -42,11 +42,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author Malte Isberner
  */
-public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, ShrinkableGraph<N, N> {
+public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void>, ShrinkableGraph<N, N> {
 
-    @NonNull
     private final Map<N, Collection<N>> structureMap;
-    @NonNull
     private final Supplier<? extends Collection<N>> adjCollSupplier;
 
     /**
@@ -108,6 +106,7 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
         return outgoingEdgesStream(node);
     }
 
+    @SuppressWarnings("nullness") // the passed structureMap decides whether or not we support nulls
     @Override
     public Collection<N> getOutgoingEdges(N node) {
         return Collections.unmodifiableCollection(structureMap.getOrDefault(node, Collections.emptySet()));
@@ -139,11 +138,12 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
     }
 
     @Override
-    public N addNode(N property) {
+    public N addNode(@Nullable N property) {
         structureMap.putIfAbsent(property, adjCollSupplier.get());
         return property;
     }
 
+    @SuppressWarnings("nullness") // the passed structureMap decides whether or not we support nulls
     @Override
     public N connect(N source, N target, Void property) {
         structureMap.get(source).add(target);
@@ -162,21 +162,16 @@ public class SimpleMapGraph<N> implements MutableGraph<N, N, N, Void>, Shrinkabl
     public void setEdgeProperty(N edge, Void property) {}
 
     @Override
-    public void removeNode(N node) {
-        structureMap.remove(node);
-        structureMap.values().forEach(a -> a.remove(node));
-    }
-
-    @Override
-    public void removeNode(N node, N replacement) {
+    public void removeNode(N node, @Nullable N replacement) {
         structureMap.remove(node);
         structureMap.values().forEach(a -> {
-            if (a.remove(node)) {
+            if (a.remove(node) && replacement != null) {
                 a.add(replacement);
             }
         });
     }
 
+    @SuppressWarnings("nullness") // the passed structureMap decides whether or not we support nulls
     @Override
     public void removeEdge(N node, N edge) {
         structureMap.get(node).remove(edge);

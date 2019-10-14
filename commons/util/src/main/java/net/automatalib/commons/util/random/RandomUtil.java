@@ -33,8 +33,7 @@ public class RandomUtil {
         this.random = random;
     }
 
-    @Nullable
-    public static <T> T choose(T[] array, Random rand) {
+    public static <T> @Nullable T choose(T[] array, Random rand) {
         int len = array.length;
         if (len == 0) {
             return null;
@@ -43,12 +42,11 @@ public class RandomUtil {
         return array[idx];
     }
 
-    public <T> T choose(List<? extends T> list) {
+    public <T> @Nullable T choose(List<? extends T> list) {
         return choose(list, random);
     }
 
-    @Nullable
-    public static <T> T choose(List<? extends T> list, Random rand) {
+    public static <T> @Nullable T choose(List<? extends T> list, Random rand) {
         int size = list.size();
         if (size == 0) {
             return null;
@@ -68,7 +66,7 @@ public class RandomUtil {
     public static int[] distinctIntegers(int num, int min, int max, Random rand) {
         int range = max - min;
         if (range < num) {
-            return null;
+            return new int[0];
         }
 
         int[] result = new int[num];

@@ -19,6 +19,7 @@ import net.automatalib.automata.base.fast.AbstractFastMutableNondet;
 import net.automatalib.automata.fsa.MutableNFA;
 import net.automatalib.commons.util.WrapperUtil;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class FastNFA<I> extends AbstractFastMutableNondet<FastNFAState, I, FastNFAState, Boolean, Void>
         implements MutableNFA<FastNFAState, I> {
@@ -43,7 +44,7 @@ public class FastNFA<I> extends AbstractFastMutableNondet<FastNFAState, I, FastN
     }
 
     @Override
-    protected FastNFAState createState(Boolean property) {
+    protected FastNFAState createState(@Nullable Boolean property) {
         return new FastNFAState(inputAlphabet.size(), WrapperUtil.booleanValue(property));
     }
 

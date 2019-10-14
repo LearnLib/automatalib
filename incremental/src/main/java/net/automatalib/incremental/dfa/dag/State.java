@@ -28,6 +28,8 @@ import net.automatalib.incremental.dfa.Acceptance;
  */
 final class State implements Serializable {
 
+    public static final State SINK = new State(new StateSignature(0, Acceptance.FALSE));
+
     private final StateSignature signature;
     private int numIncoming;
 
@@ -107,7 +109,7 @@ final class State implements Serializable {
     }
 
     public boolean isSink() {
-        return (signature == null);
+        return this == SINK;
     }
 
     /**

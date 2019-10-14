@@ -25,7 +25,6 @@ import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Abstract base class for {@link IncrementalDFABuilder}s. This class takes care of holding the input alphabet and its
@@ -47,7 +46,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
      * @param inputAlphabet
      *         the input alphabet
      */
-    public AbstractIncrementalDFABuilder(@NonNull Alphabet<I> inputAlphabet) {
+    public AbstractIncrementalDFABuilder(Alphabet<I> inputAlphabet) {
         this.inputAlphabet = inputAlphabet;
         this.alphabetSize = inputAlphabet.size();
     }

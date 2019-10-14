@@ -24,7 +24,6 @@ import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.graphs.helpers.SimpleNodeIDs;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * The finite version of a {@link IndefiniteSimpleGraph}.
@@ -50,11 +49,9 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
      *
      * @return the nodes in this graph
      */
-    @NonNull
     Collection<N> getNodes();
 
     @Override
-    @NonNull
     default Iterator<N> iterator() {
         return Iterators.unmodifiableIterator(getNodes().iterator());
     }
@@ -63,7 +60,6 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
         return getNodes().stream();
     }
 
-    @NonNull
     default NodeIDs<N> nodeIDs() {
         return new SimpleNodeIDs<>(this);
     }

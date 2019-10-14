@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
@@ -164,7 +165,7 @@ public class CharacterizingSetsTest {
                                                          Set<Set<S>> distinguishedStates,
                                                          S state) {
         for (final S s : automaton.getStates()) {
-            if (s.equals(state)) {
+            if (Objects.equals(s, state)) {
                 continue;
             }
 

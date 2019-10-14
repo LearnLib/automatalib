@@ -36,8 +36,7 @@ public interface DeterministicTransitionOutputTS<S, I, T, O>
      *
      * @return the output symbol (or <code>null</code> if the transition is undefined)
      */
-    @Nullable
-    default O getOutput(S state, @Nullable I input) {
+    default @Nullable O getOutput(S state, I input) {
         T trans = getTransition(state, input);
         if (trans == null) {
             return null;

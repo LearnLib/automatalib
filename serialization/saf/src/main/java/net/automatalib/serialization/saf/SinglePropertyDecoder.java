@@ -17,10 +17,12 @@ package net.automatalib.serialization.saf;
 
 import java.io.DataInput;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 @FunctionalInterface
 public interface SinglePropertyDecoder<P> {
 
-    static <P> SinglePropertyDecoder<P> nullDecoder() {
+    static <P> SinglePropertyDecoder<@Nullable P> nullDecoder() {
         return in -> null;
     }
 

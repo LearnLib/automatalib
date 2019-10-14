@@ -41,7 +41,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -57,7 +56,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBuilder<I, O>
         implements InputAlphabetHolder<I> {
 
-    private final Map<StateSignature<O>, State<O>> register = new HashMap<>();
+    private final Map<@Nullable StateSignature<O>, State<O>> register = new HashMap<>();
     private final Alphabet<I> inputAlphabet;
     private int alphabetSize;
     private final State<O> init;
@@ -187,11 +186,13 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             }
             last = hiddenClone(last);
             if (conf == null) {
-                State<O> prev = path.peek().state;
+                PathElem<O> peek = path.peek();
+                assert peek != null;
+                State<O> prev = peek.state;
                 if (prev != init) {
-                    updateSignature(prev, path.peek().transIdx, last);
+                    updateSignature(prev, peek.transIdx, last);
                 } else {
-                    updateInitSignature(path.peek().transIdx, last);
+                    updateInitSignature(peek.transIdx, last);
                 }
             }
         } else if (last != init) {
@@ -446,15 +447,15 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
     }
 
     @Override
-    public Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
-                                      Collection<? extends I> inputs,
-                                      boolean omitUndefined) {
+    public @Nullable Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
+                                                Collection<? extends I> inputs,
+                                                boolean omitUndefined) {
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    private <S, T> Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> mealy,
-                                                Collection<? extends I> inputs,
-                                                boolean omitUndefined) {
+    private <S, T> @Nullable Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> mealy,
+                                                          Collection<? extends I> inputs,
+                                                          boolean omitUndefined) {
         S init2 = mealy.getInitialState();
 
         if (init2 == null) {
@@ -534,6 +535,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             ceLength++;
         }
 
+        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
         WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 
         int index = ceLength;
@@ -543,7 +545,8 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         }
 
         while (current.reachedFrom != null) {
-            wb.setSymbol(--index, current.reachedVia);
+            final I reachedVia = current.reachedVia;
+            wb.setSymbol(--index, reachedVia);
             current = current.reachedFrom;
         }
 
@@ -554,7 +557,6 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         return ids.computeIfAbsent(state, k -> ids.size());
     }
 
-    @NonNull
     @Override
     public Alphabet<I> getInputAlphabet() {
         return inputAlphabet;
@@ -569,11 +571,16 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         private final State<O> state1;
         private final S state2;
         private final I reachedVia;
-        private final Record<S, I, O> reachedFrom;
+        private final @Nullable Record<S, I, O> reachedFrom;
         private final int depth;
 
+        @SuppressWarnings("nullness") // we will only access reachedVia after checking reachedFrom for null
         Record(State<O> state1, S state2) {
-            this(state1, state2, null, null);
+            this.state1 = state1;
+            this.state2 = state2;
+            this.reachedFrom = null;
+            this.reachedVia = null;
+            this.depth = 0;
         }
 
         Record(State<O> state1, S state2, Record<S, I, O> reachedFrom, I reachedVia) {
@@ -581,7 +588,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             this.state2 = state2;
             this.reachedFrom = reachedFrom;
             this.reachedVia = reachedVia;
-            this.depth = (reachedFrom != null) ? reachedFrom.depth + 1 : 0;
+            this.depth = reachedFrom.depth + 1;
         }
     }
 
@@ -609,19 +616,16 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         }
 
         @Override
-        @Nullable
         public I getInputSymbol(TransitionRecord<O> edge) {
             return inputAlphabet.getSymbol(edge.transIdx);
         }
 
         @Override
-        @Nullable
         public O getOutputSymbol(TransitionRecord<O> edge) {
             return edge.source.getOutput(edge.transIdx);
         }
 
         @Override
-        @NonNull
         public State<O> getInitialNode() {
             return init;
         }
@@ -663,7 +667,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         }
 
         @Override
-        public TransitionRecord<O> getTransition(State<O> state, I input) {
+        public @Nullable TransitionRecord<O> getTransition(State<O> state, I input) {
             int inputIdx = inputAlphabet.getSymbolIndex(input);
             if (state.getSuccessor(inputIdx) == null) {
                 return null;

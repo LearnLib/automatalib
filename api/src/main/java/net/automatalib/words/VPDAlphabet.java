@@ -104,6 +104,17 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
 
     int getNumReturns();
 
+    /**
+     * Returns the {@link SymbolType symbol type} of the given alphabet symbol.
+     *
+     * @param symbol
+     *         the symbol whose type should be returned
+     *
+     * @return the {@link SymbolType symbol type} of the given alphabet symbol.
+     *
+     * @throws IllegalArgumentException
+     *         if the provided symbol does not belong to the alphabet.
+     */
     SymbolType getSymbolType(I symbol);
 
     default int callReturnBalance(Word<I> word) {

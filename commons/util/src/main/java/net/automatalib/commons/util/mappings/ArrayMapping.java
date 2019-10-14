@@ -18,8 +18,9 @@ package net.automatalib.commons.util.mappings;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.commons.util.nid.IDChangeListener;
 import net.automatalib.commons.util.nid.NumericID;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class ArrayMapping<K extends NumericID, V> implements MutableMapping<K, V>, IDChangeListener<K> {
+public final class ArrayMapping<K extends NumericID, @Nullable V> implements MutableMapping<K, V>, IDChangeListener<K> {
 
     private final ResizingArrayStorage<V> storage;
 

@@ -31,6 +31,7 @@ public class RandomDeterministicAutomatonGenerator<S, I, T, SP, TP, A extends Mu
         super(random, inputs, stateProps, transProps, automaton);
     }
 
+    @SuppressWarnings("nullness") // nullness depends on the emptiness of the passed lists
     public void addTransitions() {
         for (S s : states) {
             for (I in : inputs) {

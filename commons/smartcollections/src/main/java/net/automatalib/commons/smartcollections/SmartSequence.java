@@ -15,6 +15,8 @@
  */
 package net.automatalib.commons.smartcollections;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Sequence interface. A sequence is a collection where elements are stored in a specific order, and elements can be
  * inserted in between.
@@ -35,7 +37,7 @@ public interface SmartSequence<E> extends SmartCollection<E> {
      *
      * @return the reference to the preceding element
      */
-    ElementReference pred(ElementReference ref);
+    @Nullable ElementReference pred(ElementReference ref);
 
     /**
      * Retrieves the reference to the succeeding element, or <code>null</code> if the given reference references the
@@ -46,7 +48,7 @@ public interface SmartSequence<E> extends SmartCollection<E> {
      *
      * @return the reference to the succeeding element
      */
-    ElementReference succ(ElementReference ref);
+    @Nullable ElementReference succ(ElementReference ref);
 
     /**
      * Inserts the given element <i>before</i> the element referenced by the specified reference.

@@ -20,7 +20,6 @@ import java.util.Collection;
 import net.automatalib.graphs.Graph;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -51,8 +50,7 @@ public interface IncrementalConstruction<A, I> {
      *
      * @return a separating word, or {@code null} if no difference could be found.
      */
-    @Nullable
-    Word<I> findSeparatingWord(A target, Collection<? extends I> inputs, boolean omitUndefined);
+    @Nullable Word<I> findSeparatingWord(A target, Collection<? extends I> inputs, boolean omitUndefined);
 
     /**
      * Checks whether this class has definitive information about a given word.
@@ -70,7 +68,6 @@ public interface IncrementalConstruction<A, I> {
      *
      * @return a graph view on the current state of the construction
      */
-    @NonNull
     Graph<?, ?> asGraph();
 
     /**
@@ -79,6 +76,5 @@ public interface IncrementalConstruction<A, I> {
      *
      * @return a transition system view on the current state of the construction
      */
-    @NonNull
     DeterministicTransitionSystem<?, I, ?> asTransitionSystem();
 }

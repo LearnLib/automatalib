@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.commons.util.mappings.MutableMapping;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Class for associating arbitrary values with the blocks of a minimization result.
@@ -33,7 +34,7 @@ import net.automatalib.commons.util.mappings.MutableMapping;
  */
 public class BlockMap<V> implements MutableMapping<Block<?, ?>, V> {
 
-    private final Object[] storage;
+    private final @Nullable Object[] storage;
 
     /**
      * Constructor.

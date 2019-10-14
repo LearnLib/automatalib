@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 import com.google.common.collect.Iterators;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link SmartGeneralPriorityQueue} implementation that is backed by a {@link SmartDynamicPriorityQueue}.
@@ -41,7 +42,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
 
     private static final int DEFAULT_INITIAL_CAPACITY = 10;
     private final SmartDynamicPriorityQueue<Entry<E, K>> backingQueue;
-    private K defaultKey;
+    private @Nullable K defaultKey;
 
     public BackedGeneralPriorityQueue() {
         this(DEFAULT_INITIAL_CAPACITY);
@@ -85,11 +86,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
 
     @Override
     public E choose() {
-        Entry<E, K> entry = backingQueue.choose();
-        if (entry == null) {
-            return null;
-        }
-        return entry.element;
+        return backingQueue.choose().element;
     }
 
     @Override
@@ -98,7 +95,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
     }
 
     @Override
-    public ElementReference find(Object element) {
+    public @Nullable ElementReference find(@Nullable Object element) {
         for (ElementReference ref : backingQueue.references()) {
             Entry<E, K> entry = backingQueue.get(ref);
             if (Objects.equals(entry.element, element)) {
@@ -118,6 +115,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         backingQueue.deepClear();
     }
 
+    @SuppressWarnings("nullness") // function is only called on elements of the iterator for which we know non-nullness
     @Override
     public Iterator<E> iterator() {
         return Iterators.transform(backingQueue.iterator(), e -> e.element);
@@ -135,7 +133,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
     }
 
     @Override
-    public ElementReference add(E elem, K key) {
+    public ElementReference add(E elem, @Nullable K key) {
         Entry<E, K> entry = new Entry<>(elem, key);
         return backingQueue.referencedAdd(entry);
     }
@@ -201,9 +199,9 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
     private static class Entry<E, K extends Comparable<K>> implements Comparable<Entry<E, K>> {
 
         public E element;
-        public K key;
+        public @Nullable K key;
 
-        Entry(E element, K key) {
+        Entry(E element, @Nullable K key) {
             this.element = element;
             this.key = key;
         }

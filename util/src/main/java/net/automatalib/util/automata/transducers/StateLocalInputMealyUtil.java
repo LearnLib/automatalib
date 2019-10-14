@@ -19,10 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import net.automatalib.automata.transducers.OutputAndLocalInputs;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -101,29 +102,27 @@ public final class StateLocalInputMealyUtil {
             this.listOfStates.add(sinkState);
         }
 
-        @NonNull
         @Override
         public Collection<S> getStates() {
             return listOfStates;
         }
 
-        @Nullable
+
         @Override
         public OutputAndLocalInputs<I, O> getTransitionOutput(WrapperTransition<S, I, T, O> transition) {
             return transition.getOutput();
         }
 
-        @Nullable
+
         @Override
-        public WrapperTransition<S, I, T, O> getTransition(S state, @Nullable I input) {
-            if (state.equals(sinkState)) {
+        public @Nullable WrapperTransition<S, I, T, O> getTransition(S state, I input) {
+            if (Objects.equals(state, sinkState)) {
                 return new WrapperTransition<>(null, null);
             }
 
             return new WrapperTransition<>(reference, reference.getTransition(state, input));
         }
 
-        @NonNull
         @Override
         public S getSuccessor(WrapperTransition<S, I, T, O> transition) {
             final T trans = transition.getTransition();
@@ -131,15 +130,14 @@ public final class StateLocalInputMealyUtil {
             return trans == null ? sinkState : reference.getSuccessor(trans);
         }
 
-        @Nullable
         @Override
-        public S getInitialState() {
+        public @Nullable S getInitialState() {
             return reference.getInitialState();
         }
 
         @Override
         public Collection<I> getLocalInputs(S state) {
-            if (state.equals(sinkState)) {
+            if (Objects.equals(state, sinkState)) {
                 return Collections.emptySet();
             }
 
@@ -150,15 +148,15 @@ public final class StateLocalInputMealyUtil {
     private static class WrapperTransition<S, I, T, O> {
 
         private final StateLocalInputMealyMachine<S, I, T, O> reference;
-        private final T transition;
-        private OutputAndLocalInputs<I, O> output;
+        private final @Nullable T transition;
+        private @MonotonicNonNull OutputAndLocalInputs<I, O> output;
 
-        WrapperTransition(StateLocalInputMealyMachine<S, I, T, O> reference, T transition) {
+        WrapperTransition(StateLocalInputMealyMachine<S, I, T, O> reference, @Nullable T transition) {
             this.reference = reference;
             this.transition = transition;
         }
 
-        public T getTransition() {
+        public @Nullable T getTransition() {
             return transition;
         }
 

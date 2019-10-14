@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -46,7 +47,7 @@ public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S
                                               Collection<I> inputs) {
 
         for (S curr : automaton) {
-            if (state.equals(curr)) {
+            if (Objects.equals(state, curr)) {
                 continue;
             }
 

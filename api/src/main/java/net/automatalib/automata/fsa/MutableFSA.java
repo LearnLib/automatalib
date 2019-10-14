@@ -16,7 +16,8 @@
 package net.automatalib.automata.fsa;
 
 import net.automatalib.automata.MutableAutomaton;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import net.automatalib.commons.util.WrapperUtil;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fh
@@ -31,7 +32,6 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
 
     void setAccepting(S state, boolean accepting);
 
-    @NonNull
     S addState(boolean accepting);
 
     @Override
@@ -40,9 +40,8 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
     }
 
     @Override
-    default S addState(Boolean property) {
-        boolean acc = (property != null) && property;
-        return addState(acc);
+    default S addState(@Nullable Boolean property) {
+        return addState(WrapperUtil.booleanValue(property));
     }
 
     @Override
@@ -57,15 +56,13 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
     }
 
     @Override
-    default S addInitialState(Boolean property) {
-        boolean acc = (property != null) && property;
-        return addInitialState(acc);
+    default S addInitialState(@Nullable Boolean property) {
+        return addInitialState(WrapperUtil.booleanValue(property));
     }
 
     @Override
     default void setStateProperty(S state, Boolean property) {
-        boolean acc = (property != null) && property;
-        setAccepting(state, acc);
+        setAccepting(state, property.booleanValue());
     }
 
     @Override

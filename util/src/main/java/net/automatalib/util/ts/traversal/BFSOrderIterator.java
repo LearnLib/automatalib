@@ -18,18 +18,20 @@ package net.automatalib.util.ts.traversal;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.simple.SimpleTS;
 import net.automatalib.util.traversal.VisitedState;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class BFSOrderIterator<S, I> implements Iterator<S> {
 
     private final Collection<? extends I> inputs;
     private final SimpleTS<S, I> ts;
     private final Queue<S> bfsQueue = new ArrayDeque<>();
-    private final MutableMapping<S, VisitedState> seen;
+    private final MutableMapping<S, @Nullable VisitedState> seen;
 
     public BFSOrderIterator(SimpleTS<S, I> ts, Collection<? extends I> inputs) {
         this.ts = ts;
@@ -50,6 +52,10 @@ public class BFSOrderIterator<S, I> implements Iterator<S> {
     @Override
     public S next() {
         S state = bfsQueue.poll();
+
+        if (state == null) {
+            throw new NoSuchElementException();
+        }
 
         for (I input : inputs) {
             Collection<S> succs = ts.getSuccessors(state, input);

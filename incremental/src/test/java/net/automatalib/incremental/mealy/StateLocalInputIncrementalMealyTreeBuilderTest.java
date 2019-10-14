@@ -29,7 +29,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -259,15 +258,13 @@ public class StateLocalInputIncrementalMealyTreeBuilderTest {
             return reference.getLocalInputs(state);
         }
 
-        @NonNull
         @Override
         public Collection<S> getStates() {
             return reference.getStates();
         }
 
-        @Nullable
         @Override
-        public OutputAndLocalInputs<Character, O> getTransitionOutput(T transition) {
+        public @Nullable OutputAndLocalInputs<Character, O> getTransitionOutput(T transition) {
             O orig = reference.getTransitionOutput(transition).getOutput();
 
             if (orig == null) {
@@ -276,21 +273,18 @@ public class StateLocalInputIncrementalMealyTreeBuilderTest {
             return new OutputAndLocalInputs<>(orig, TEST_ALPHABET);
         }
 
-        @Nullable
         @Override
-        public T getTransition(S state, @Nullable Character input) {
+        public @Nullable T getTransition(S state, Character input) {
             return reference.getTransition(state, input);
         }
 
-        @NonNull
         @Override
         public S getSuccessor(T transition) {
             return reference.getSuccessor(transition);
         }
 
-        @Nullable
         @Override
-        public S getInitialState() {
+        public @Nullable S getInitialState() {
             return reference.getInitialState();
         }
 

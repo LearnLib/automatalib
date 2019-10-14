@@ -20,12 +20,15 @@ import java.util.Collections;
 import java.util.Set;
 
 import net.automatalib.ts.simple.SimpleDTS;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Deterministic transition system. Like a {@link TransitionSystem}, but in each state there may exist at most one
  * transition for each input symbol.
+ * <p>
+ * <i>Implementation note:</i> It is suggested to use a non-null type for the transition class, as {@code null} will be
+ * used to denote an undefined successor. Allowing {@code null} to identify a state won't allow you to differentiate
+ * between a defined and undefined successor.
  *
  * @param <S>
  *         state class
@@ -39,8 +42,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public interface DeterministicTransitionSystem<S, I, T> extends TransitionSystem<S, I, T>, SimpleDTS<S, I> {
 
     @Override
-    @Nullable
-    default S getSuccessor(S state, I input) {
+    default @Nullable S getSuccessor(S state, I input) {
         T trans = getTransition(state, input);
         if (trans == null) {
             return null;
@@ -60,23 +62,19 @@ public interface DeterministicTransitionSystem<S, I, T> extends TransitionSystem
      *
      * @see TransitionSystem#getTransitions(Object, Object)
      */
-    @Nullable
-    T getTransition(S state, I input);
+    @Nullable T getTransition(S state, I input);
 
     @Override
-    @NonNull
     default Set<S> getSuccessors(S state, I input) {
         return SimpleDTS.super.getSuccessors(state, input);
     }
 
     @Override
-    @NonNull
     default Collection<T> getTransitions(S state, I input) {
         return transToSet(getTransition(state, input));
     }
 
-    @NonNull
-    static <T> Set<T> transToSet(T trans) {
+    static <T> Set<T> transToSet(@Nullable T trans) {
         if (trans == null) {
             return Collections.emptySet();
         }

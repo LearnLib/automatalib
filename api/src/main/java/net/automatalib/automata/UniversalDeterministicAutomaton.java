@@ -19,6 +19,7 @@ import java.util.function.IntFunction;
 
 import net.automatalib.ts.UniversalDTS;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link DeterministicAutomaton} with state and transition properties.
@@ -109,7 +110,7 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
     interface StateIntAbstraction<I, T, SP, TP>
             extends IntAbstraction<T, SP, TP>, DeterministicAutomaton.StateIntAbstraction<I, T> {
 
-        default TP getTransitionProperty(int state, I input) {
+        default @Nullable TP getTransitionProperty(int state, I input) {
             T trans = getTransition(state, input);
             if (trans != null) {
                 return getTransitionProperty(trans);
@@ -153,7 +154,7 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
     interface FullIntAbstraction<T, SP, TP>
             extends IntAbstraction<T, SP, TP>, DeterministicAutomaton.FullIntAbstraction<T> {
 
-        default TP getTransitionProperty(int state, int input) {
+        default @Nullable TP getTransitionProperty(int state, int input) {
             T trans = getTransition(state, input);
             if (trans != null) {
                 return getTransitionProperty(trans);

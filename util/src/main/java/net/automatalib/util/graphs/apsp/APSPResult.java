@@ -40,8 +40,8 @@ public interface APSPResult<N, E> {
      * @param tgt
      *         the target node
      *
-     * @return the length of the shortest path from {@code src} to {@code tgt}, or {@link
-     * Graphs#INVALID_DISTANCE} if there exists no such path.
+     * @return the length of the shortest path from {@code src} to {@code tgt}, or {@link Graphs#INVALID_DISTANCE} if
+     * there exists no such path.
      */
     float getShortestPathDistance(N src, N tgt);
 
@@ -55,6 +55,5 @@ public interface APSPResult<N, E> {
      *
      * @return the shortest path from {@code src} to {@code tgt}, or {@code null} if there exists no such path.
      */
-    @Nullable
-    List<E> getShortestPath(N src, N tgt);
+    @Nullable List<E> getShortestPath(N src, N tgt);
 }

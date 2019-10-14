@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.Pair;
@@ -49,6 +50,7 @@ import net.automatalib.words.Word;
  *
  * @author frohme
  */
+@SuppressWarnings("nullness")
 public final class LeeYannakakis {
 
     private LeeYannakakis() {}
@@ -324,11 +326,10 @@ public final class LeeYannakakis {
         for (final SplitTree<S, I, O> B : R) {
 
             // general validity
-            final Map<I, Boolean> validInputMap = inputs.stream()
-                                                        .collect(Collectors.toMap(Function.identity(),
-                                                                                  input -> isValidInput(automaton,
-                                                                                                        input,
-                                                                                                        B.getPartition())));
+            final Map<I, Boolean> validInputMap = Maps.newHashMapWithExpectedSize(inputs.size());
+            for (final I i : inputs) {
+                validInputMap.put(i, isValidInput(automaton, i, B.getPartition()));
+            }
 
             // a valid
             for (final I i : inputs) {

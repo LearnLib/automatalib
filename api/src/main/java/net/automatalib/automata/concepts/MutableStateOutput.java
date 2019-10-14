@@ -15,9 +15,7 @@
  */
 package net.automatalib.automata.concepts;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 public interface MutableStateOutput<S, O> extends StateOutput<S, O> {
 
-    void setStateOutput(S state, @Nullable O output);
+    void setStateOutput(S state, O output);
 }

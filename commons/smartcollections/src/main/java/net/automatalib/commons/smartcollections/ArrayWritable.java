@@ -17,6 +17,8 @@ package net.automatalib.commons.smartcollections;
 
 import java.util.Collection;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Unified interface for (collection) classes that allow writing their contents to an array. The intended behavior
  * differs from the standard Java {@link Collection#toArray(Object[])} method in the following way: <ul> <li>It is
@@ -48,7 +50,7 @@ public interface ArrayWritable<T> {
      * @param num
      *         the maximum number of elements to copy.
      */
-    void writeToArray(int offset, Object[] array, int tgtOfs, int num);
+    void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num);
 
     /**
      * The size of this container.

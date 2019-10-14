@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Signature of a state. A signature consists of the list of all successor states for all alphabet symbols, and the
@@ -63,7 +64,7 @@ final class StateSignature implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }

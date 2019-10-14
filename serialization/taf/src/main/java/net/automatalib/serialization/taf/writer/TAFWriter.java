@@ -38,6 +38,7 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.strings.StringUtil;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class provides methods to write automata in the TAF format.
@@ -95,10 +96,10 @@ public final class TAFWriter {
         }
     }
 
-    private <S, I, T> void doWriteAutomaton(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                            Collection<? extends I> inputs,
-                                            String type,
-                                            Function<S, ? extends Collection<? extends String>> spExtractor)
+    private <S, I, T, TP> void doWriteAutomaton(UniversalDeterministicAutomaton<S, I, T, ?, TP> automaton,
+                                                Collection<? extends I> inputs,
+                                                String type,
+                                                Function<S, ? extends Collection<? extends String>> spExtractor)
             throws IOException {
 
         begin(type, inputs);
@@ -115,23 +116,24 @@ public final class TAFWriter {
 
             beginState(name, options);
 
-            Map<Pair<S, Object>, List<I>> groupedTransitions = inputs.stream()
-                                                                     .map(i -> Pair.of(i,
-                                                                                       automaton.getTransition(state,
-                                                                                                               i)))
-                                                                     .filter(p -> p.getSecond() != null)
-                                                                     .collect(Collectors.groupingBy(p -> Pair.of(
-                                                                             automaton.getSuccessor(p.getSecond()),
-                                                                             automaton.getTransitionProperty(p.getSecond())),
-                                                                                                    Collectors.mapping(
-                                                                                                            Pair::getFirst,
-                                                                                                            Collectors.toList())));
+            @SuppressWarnings("nullness")
+            Map<Pair<S, TP>, List<I>> groupedTransitions = inputs.stream()
+                                                                 .map(i -> Pair.of(i,
+                                                                                   automaton.getTransition(state,
+                                                                                                           i)))
+                                                                 .filter(p -> p.getSecond() != null)
+                                                                 .collect(Collectors.groupingBy(p -> Pair.of(
+                                                                         automaton.getSuccessor(p.getSecond()),
+                                                                         automaton.getTransitionProperty(p.getSecond())),
+                                                                                                Collectors.mapping(
+                                                                                                        Pair::getFirst,
+                                                                                                        Collectors.toList())));
 
-            for (Map.Entry<Pair<S, Object>, List<I>> group : groupedTransitions.entrySet()) {
+            for (Map.Entry<Pair<S, TP>, List<I>> group : groupedTransitions.entrySet()) {
                 S tgt = group.getKey().getFirst();
                 int tgtId = ids.getStateId(tgt);
                 String tgtName = "s" + tgtId;
-                Object transProp = group.getKey().getSecond();
+                TP transProp = group.getKey().getSecond();
                 writeTransition(group.getValue(), tgtName, transProp);
             }
 
@@ -159,7 +161,7 @@ public final class TAFWriter {
         indent++;
     }
 
-    private void writeTransition(Collection<?> symbols, String target, Object output) throws IOException {
+    private void writeTransition(Collection<?> symbols, String target, @Nullable Object output) throws IOException {
         writeIndent();
         writeStringCollection(symbols);
         if (output != null) {
@@ -190,7 +192,9 @@ public final class TAFWriter {
         if (symbols.isEmpty()) {
             out.append("{}");
         } else if (symbols.size() == 1) {
-            StringUtil.enquoteIfNecessary(symbols.iterator().next().toString(), out, ID_PATTERN);
+            @SuppressWarnings("nullness") // the above 'if' guarantees the existence of the element
+            Object sym = symbols.iterator().next();
+            StringUtil.enquoteIfNecessary(String.valueOf(sym), out, ID_PATTERN);
         } else {
             out.append('{');
             boolean first = true;
@@ -200,7 +204,7 @@ public final class TAFWriter {
                 } else {
                     out.append(',');
                 }
-                StringUtil.enquoteIfNecessary(sym.toString(), out, ID_PATTERN);
+                StringUtil.enquoteIfNecessary(String.valueOf(sym), out, ID_PATTERN);
             }
             out.append('}');
         }

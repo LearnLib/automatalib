@@ -24,6 +24,7 @@ import net.automatalib.incremental.mealy.tree.AbstractIncrementalMealyTreeBuilde
 import net.automatalib.incremental.mealy.tree.AnnotatedEdge;
 import net.automatalib.incremental.mealy.tree.Edge;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A variation of the normal {@link IncrementalMealyTreeBuilder}, which stores the successor information of each
@@ -56,7 +57,7 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractIncrementa
     }
 
     @Override
-    protected Edge<Node<I, O>, O> getEdge(Node<I, O> node, I symbol) {
+    protected @Nullable Edge<Node<I, O>, O> getEdge(Node<I, O> node, I symbol) {
         return node.getEdge(symbol);
     }
 
@@ -76,10 +77,10 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractIncrementa
     @Override
     protected Collection<AnnotatedEdge<Node<I, O>, I, O>> getOutgoingEdges(Node<I, O> node) {
 
-        final Map<I, Edge<Node<I, O>, O>> outEdges = node.getOutEdges();
+        final Map<I, @Nullable Edge<Node<I, O>, O>> outEdges = node.getOutEdges();
         final List<AnnotatedEdge<Node<I, O>, I, O>> result = new ArrayList<>(outEdges.size());
 
-        for (Map.Entry<I, Edge<Node<I, O>, O>> e : outEdges.entrySet()) {
+        for (Map.Entry<I, @Nullable Edge<Node<I, O>, O>> e : outEdges.entrySet()) {
             if (e.getValue() != null) {
                 result.add(new AnnotatedEdge<>(e.getValue(), e.getKey()));
             }

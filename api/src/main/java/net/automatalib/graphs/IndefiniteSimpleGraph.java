@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simplified interface for indefinite graphs, exposing only adjacency information, but no further information about
@@ -35,35 +35,29 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public interface IndefiniteSimpleGraph<N> {
 
-    @NonNull
     default Iterable<N> adjacentTargets(N node) {
         return () -> adjacentTargetsIterator(node);
     }
 
-    @NonNull
     default Iterator<N> adjacentTargetsIterator(N node) {
         return getAdjacentTargets(node).iterator();
     }
 
-    @NonNull
     Collection<N> getAdjacentTargets(N node);
 
     default boolean isConnected(N source, N target) {
         return adjacentTargetsStream(source).anyMatch(n -> Objects.equals(n, target));
     }
 
-    @NonNull
     default Stream<N> adjacentTargetsStream(N node) {
         return getAdjacentTargets(node).stream();
     }
 
-    @NonNull
-    default <V> MutableMapping<N, V> createStaticNodeMapping() {
+    default <@Nullable V> MutableMapping<N, V> createStaticNodeMapping() {
         return new MapMapping<>();
     }
 
-    @NonNull
-    default <V> MutableMapping<N, V> createDynamicNodeMapping() {
+    default <@Nullable V> MutableMapping<N, V> createDynamicNodeMapping() {
         return new MapMapping<>();
     }
 
@@ -115,12 +109,12 @@ public interface IndefiniteSimpleGraph<N> {
         }
 
         @Override
-        public <V> MutableMapping<N, V> createStaticNodeMapping() {
+        public <@Nullable V> MutableMapping<N, V> createStaticNodeMapping() {
             return simpleGraph.createStaticNodeMapping();
         }
 
         @Override
-        public <V> MutableMapping<N, V> createDynamicNodeMapping() {
+        public <@Nullable V> MutableMapping<N, V> createDynamicNodeMapping() {
             return simpleGraph.createDynamicNodeMapping();
         }
     }

@@ -59,9 +59,9 @@ public class BackedGeneralPriorityQueueTest {
     public void testDefaultInsert() {
         Assert.assertTrue(this.queue.isEmpty());
 
-        final ElementReference c = this.queue.add('c', 3);
-        final ElementReference a = this.queue.add('a', 1);
-        final ElementReference b = this.queue.add('b', 2);
+        this.queue.add('c', 3);
+        this.queue.add('a', 1);
+        this.queue.add('b', 2);
 
         // inserting without a key, should use the default key (null) which is the smallest element
         this.queue.add('z');

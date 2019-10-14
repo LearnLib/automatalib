@@ -24,13 +24,14 @@ import java.util.Map;
 import net.automatalib.graphs.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class SuffixTrie<I> implements Graph<SuffixTrieNode<I>, SuffixTrieNode<I>> {
 
     public static final boolean DEFAULT_GRAPH_REPRESENTABLE = true;
 
     protected final SuffixTrieNode<I> root;
-    protected final List<SuffixTrieNode<I>> nodes;
+    protected final @Nullable List<SuffixTrieNode<I>> nodes;
 
     /**
      * Constructor. Constructs a graph-representable suffix trie.

@@ -23,7 +23,6 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
 import net.automatalib.automata.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
 import net.automatalib.commons.util.functions.BiIntFunction;
-import net.automatalib.commons.util.functions.FunctionsUtil;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -85,14 +84,10 @@ public final class PaigeTarjanExtractors {
                                                                                                  IntFunction<? extends SP> spExtractor,
                                                                                                  BiIntFunction<? extends TP> tpExtractor,
                                                                                                  boolean pruneUnreachable) {
-
-        final IntFunction<? extends SP> safeSpExtractor = FunctionsUtil.safeDefault(spExtractor);
-        final BiIntFunction<? extends TP> safeTpExtractor = FunctionsUtil.safeDefault(tpExtractor);
-
         if (pruneUnreachable) {
-            return toDeterministicPruned(pt, creator, inputs, absOriginal, safeSpExtractor, safeTpExtractor);
+            return toDeterministicPruned(pt, creator, inputs, absOriginal, spExtractor, tpExtractor);
         }
-        return toDeterministicUnpruned(pt, creator, inputs, absOriginal, safeSpExtractor, safeTpExtractor);
+        return toDeterministicUnpruned(pt, creator, inputs, absOriginal, spExtractor, tpExtractor);
     }
 
     private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicPruned(PaigeTarjan pt,

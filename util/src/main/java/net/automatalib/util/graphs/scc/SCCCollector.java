@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 public class SCCCollector<N> implements SCCListener<N> {
 
     private final List<List<N>> sccList = new ArrayList<>();
@@ -30,7 +28,6 @@ public class SCCCollector<N> implements SCCListener<N> {
         sccList.add(new ArrayList<>(scc));
     }
 
-    @NonNull
     public List<List<N>> getSCCList() {
         return sccList;
     }

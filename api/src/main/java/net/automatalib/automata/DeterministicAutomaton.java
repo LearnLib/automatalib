@@ -20,6 +20,7 @@ import java.util.function.IntFunction;
 import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Basic interface for a deterministic automaton. A deterministic automaton is a {@link DeterministicTransitionSystem}
@@ -107,7 +108,7 @@ public interface DeterministicAutomaton<S, I, T>
          *
          * @return the outgoing transition, or {@code null}
          */
-        T getTransition(int state, I input);
+        @Nullable T getTransition(int state, I input);
 
         class DefaultAbstraction<S, I, T, A extends DeterministicAutomaton<S, I, T>>
                 extends SimpleDeterministicAutomaton.StateIntAbstraction.DefaultAbstraction<S, I, A>
@@ -123,7 +124,7 @@ public interface DeterministicAutomaton<S, I, T>
             }
 
             @Override
-            public T getTransition(int state, I input) {
+            public @Nullable T getTransition(int state, I input) {
                 return automaton.getTransition(intToState(state), input);
             }
         }
@@ -160,7 +161,7 @@ public interface DeterministicAutomaton<S, I, T>
          *
          * @return the outgoing transition, or {@code null}
          */
-        T getTransition(int state, int input);
+        @Nullable T getTransition(int state, int input);
 
         class DefaultAbstraction<I, T, A extends StateIntAbstraction<I, T>>
                 extends SimpleDeterministicAutomaton.FullIntAbstraction.DefaultAbstraction<I, A>
@@ -171,7 +172,7 @@ public interface DeterministicAutomaton<S, I, T>
             }
 
             @Override
-            public T getTransition(int state, int input) {
+            public @Nullable T getTransition(int state, int input) {
                 return stateAbstraction.getTransition(state, intToSym(input));
             }
 

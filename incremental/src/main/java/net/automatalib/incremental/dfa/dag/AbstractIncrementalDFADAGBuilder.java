@@ -36,7 +36,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDFABuilder<I> {
@@ -67,11 +66,15 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
     }
 
     @Override
-    public Word<I> findSeparatingWord(DFA<?, I> target, Collection<? extends I> inputs, boolean omitUndefined) {
+    public @Nullable Word<I> findSeparatingWord(DFA<?, I> target,
+                                                Collection<? extends I> inputs,
+                                                boolean omitUndefined) {
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    private <S> Word<I> doFindSeparatingWord(DFA<S, I> target, Collection<? extends I> inputs, boolean omitUndefined) {
+    private <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
+                                                       Collection<? extends I> inputs,
+                                                       boolean omitUndefined) {
         int thisStates = register.size();
         Map<State, Integer> stateIds = new HashMap<>();
         if (sink != null) {
@@ -103,21 +106,21 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
 
         uf.link(id1, id2);
 
-        Queue<Record<S, I>> queue = new ArrayDeque<>();
+        Queue<Record<@Nullable S, I>> queue = new ArrayDeque<>();
 
         queue.add(new Record<>(init1, init2));
 
         I lastSym = null;
 
-        Record<S, I> current;
+        Record<@Nullable S, I> current;
 
         explore:
         while ((current = queue.poll()) != null) {
             State state1 = current.state1;
-            S state2 = current.state2;
+            @Nullable S state2 = current.state2;
 
             for (I sym : inputs) {
-                S succ2 = (state2 != null) ? target.getSuccessor(state2, sym) : null;
+                @Nullable S succ2 = (state2 != null) ? target.getSuccessor(state2, sym) : null;
                 if (succ2 == null && omitUndefined) {
                     continue;
                 }
@@ -169,6 +172,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
             ceLength++;
         }
 
+        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
         WordBuilder<I> wb = new WordBuilder<>(null, ceLength);
 
         int index = ceLength;
@@ -178,7 +182,8 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         }
 
         while (current.reachedFrom != null) {
-            wb.setSymbol(--index, current.reachedVia);
+            final I reachedVia = current.reachedVia;
+            wb.setSymbol(--index, reachedVia);
             current = current.reachedFrom;
         }
 
@@ -195,7 +200,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         return id.intValue();
     }
 
-    protected abstract State getState(Word<? extends I> word);
+    protected abstract @Nullable State getState(Word<? extends I> word);
 
     protected void updateInitSignature(Acceptance acc) {
         StateSignature sig = init.getSignature();
@@ -479,9 +484,10 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         public final State state1;
         public final S state2;
         public final I reachedVia;
-        public final Record<S, I> reachedFrom;
+        public final @Nullable Record<S, I> reachedFrom;
         public final int depth;
 
+        @SuppressWarnings("nullness") // we will only access reachedVia after checking reachedFrom for null
         Record(State state1, S state2) {
             this.state1 = state1;
             this.state2 = state2;
@@ -533,32 +539,27 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         }
 
         @Override
-        @NonNull
         public State getTarget(EdgeRecord edge) {
             int idx = edge.transIdx;
             return edge.source.getSuccessor(idx);
         }
 
         @Override
-        @Nullable
         public I getInputSymbol(EdgeRecord edge) {
             return inputAlphabet.getSymbol(edge.transIdx);
         }
 
         @Override
-        @NonNull
         public Acceptance getAcceptance(State node) {
             return node.getAcceptance();
         }
 
         @Override
-        @NonNull
         public State getInitialNode() {
             return init;
         }
 
         @Override
-        @NonNull
         public VisualizationHelper<State, EdgeRecord> getVisualizationHelper() {
             return new DelegateVisualizationHelper<State, EdgeRecord>(super.getVisualizationHelper()) {
 
@@ -604,7 +605,6 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         }
 
         @Override
-        @NonNull
         public Acceptance getAcceptance(State state) {
             return state.getAcceptance();
         }

@@ -53,9 +53,9 @@ public final class ADSUtil {
         return 1 + node.getChildren().values().stream().mapToInt(ADSUtil::countSymbolNodes).sum();
     }
 
-    public static <S, I, O> Pair<ADSNode<S, I, O>, ADSNode<S, I, O>> buildFromTrace(final MealyMachine<S, I, ?, O> automaton,
-                                                                                    final Word<I> trace,
-                                                                                    final S state) {
+    public static <S, I, T, O> Pair<ADSNode<S, I, O>, ADSNode<S, I, O>> buildFromTrace(final MealyMachine<S, I, T, O> automaton,
+                                                                                       final Word<I> trace,
+                                                                                       final S state) {
         final Iterator<I> sequenceIter = trace.iterator();
         final I input = sequenceIter.next();
         final ADSNode<S, I, O> head = new ADSSymbolNode<>(null, input);
@@ -68,12 +68,14 @@ public final class ADSUtil {
             final I nextInput = sequenceIter.next();
             final ADSNode<S, I, O> nextNode = new ADSSymbolNode<>(tempADS, nextInput);
 
-            final O oldOutput = automaton.getOutput(tempState, tempInput);
+            final T trans = automaton.getTransition(tempState, tempInput);
+            assert trans != null;
+            final O oldOutput = automaton.getTransitionOutput(trans);
 
             tempADS.getChildren().put(oldOutput, nextNode);
 
             tempADS = nextNode;
-            tempState = automaton.getSuccessor(tempState, tempInput);
+            tempState = automaton.getSuccessor(trans);
             tempInput = nextInput;
         }
 
@@ -118,7 +120,7 @@ public final class ADSUtil {
 
     public static <S, I, O> O getOutputForSuccessor(final ADSNode<S, I, O> node, final ADSNode<S, I, O> successor) {
 
-        if (!successor.getParent().equals(node)) {
+        if (!node.equals(successor.getParent())) {
             throw new IllegalArgumentException("No parent relationship");
         }
 

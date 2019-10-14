@@ -18,18 +18,17 @@ package net.automatalib.commons.util.collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public abstract class AbstractTwoLevelIterator<L1, L2, O> implements Iterator<O> {
 
     private final Iterator<? extends L1> l1Iterator;
     private L1 l1Object;
-    private Iterator<L2> l2Iterator;
+    private @Nullable Iterator<L2> l2Iterator;
 
     public AbstractTwoLevelIterator(Iterator<? extends L1> l1Iterator) {
         this.l1Iterator = l1Iterator;
-        this.l2Iterator = null;
-    }
-
-    protected void nextL1() {
         this.l2Iterator = null;
     }
 
@@ -41,7 +40,8 @@ public abstract class AbstractTwoLevelIterator<L1, L2, O> implements Iterator<O>
         return advance();
     }
 
-    protected boolean advance() {
+    @EnsuresNonNullIf(expression = "l2Iterator", result = true)
+    private boolean advance() {
         while (l2Iterator == null || !l2Iterator.hasNext()) {
             if (!l1Iterator.hasNext()) {
                 return false;
@@ -68,6 +68,9 @@ public abstract class AbstractTwoLevelIterator<L1, L2, O> implements Iterator<O>
 
     @Override
     public void remove() {
+        if (l2Iterator == null) {
+            throw new IllegalStateException();
+        }
         l2Iterator.remove();
     }
 

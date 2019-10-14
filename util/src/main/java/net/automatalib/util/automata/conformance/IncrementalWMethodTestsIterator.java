@@ -25,6 +25,7 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An iterator that enumerates the test cases as obtained through the <i>W method</i> conformance test in an incremental
@@ -101,7 +102,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
         Item<I> nextItem = itemQueue.extractMin();
 
         Word<I> result = assembleWord(nextItem);
-        Item<I> inc = increment(nextItem);
+        @Nullable Item<I> inc = increment(nextItem);
         if (inc != null) {
             itemQueue.insert(inc);
         }
@@ -114,7 +115,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
         return prefix.concat(item.middle, suffix);
     }
 
-    private Item<I> increment(Item<I> item) {
+    private @Nullable Item<I> increment(Item<I> item) {
         item.suffixIdx++;
         if (item.suffixIdx >= suffixes.size()) {
             item.suffixIdx = item.minSuffix;

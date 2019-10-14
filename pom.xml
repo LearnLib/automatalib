@@ -166,6 +166,7 @@ limitations under the License.
 
         <!-- custom properties -->
         <javadoc-plugin.conf.release>8</javadoc-plugin.conf.release>
+        <automatalib.java9OrNewer>false</automatalib.java9OrNewer>
 
         <!-- plugin versions -->
         <antrun-plugin.version>1.8</antrun-plugin.version>
@@ -196,7 +197,7 @@ limitations under the License.
         <buildergen.version>0.1</buildergen.version>
         <brics-automaton.version>1.11-8</brics-automaton.version>
         <cacio.version>1.9</cacio.version>
-        <checker.version>2.10.0</checker.version>
+        <checkerframework.version>2.10.0</checkerframework.version>
         <checkstyle.version>8.19</checkstyle.version>
         <digraph-parser.version>1.0</digraph-parser.version>
         <duzzt.version>0.1.0</duzzt.version>
@@ -212,6 +213,7 @@ limitations under the License.
 
         <!-- Javadoc links -->
         <brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
+        <checkerframework.apidocs>https://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
         <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
         <java8.apidocs>http://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
         <jung.apidocs>http://jung.sourceforge.net/doc/api/</jung.apidocs>
@@ -432,7 +434,7 @@ limitations under the License.
             <dependency>
                   <groupId>org.checkerframework</groupId>
                   <artifactId>checker-qual</artifactId>
-                  <version>${checker.version}</version>
+                  <version>${checkerframework.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.paypal.digraph</groupId>
@@ -663,8 +665,9 @@ limitations under the License.
                         <linksource>false</linksource>
                         <links>
                             <link>${java8.apidocs}</link>
-                            <link>${guava.apidocs}</link>
                             <link>${brics-automaton.apidocs}</link>
+                            <link>${checkerframework.apidocs}</link>
+                            <link>${guava.apidocs}</link>
                             <link>${jung.apidocs}</link>
                         </links>
                     </configuration>
@@ -1073,6 +1076,9 @@ limitations under the License.
             <activation>
                 <jdk>[9,)</jdk>
             </activation>
+            <properties>
+                <automatalib.java9OrNewer>true</automatalib.java9OrNewer>
+            </properties>
             <build>
                 <pluginManagement>
                     <plugins>

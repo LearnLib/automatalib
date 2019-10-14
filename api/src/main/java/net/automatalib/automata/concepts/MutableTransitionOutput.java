@@ -15,9 +15,7 @@
  */
 package net.automatalib.automata.concepts;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 public interface MutableTransitionOutput<T, O> extends TransitionOutput<T, O> {
 
-    void setTransitionOutput(T transition, @Nullable O output);
+    void setTransitionOutput(T transition, O output);
 }

@@ -60,6 +60,7 @@ public class DOTComponent extends ImageComponent {
 
     };
 
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public DOTComponent(Reader dotReader) throws IOException {
         StringWriter w = new StringWriter();
 

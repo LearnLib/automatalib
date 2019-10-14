@@ -18,36 +18,32 @@ package net.automatalib.words.impl;
 import java.util.Objects;
 
 import net.automatalib.words.abstractimpl.AbstractSymbol;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Symbol extends AbstractSymbol<Symbol> {
 
-    @Nullable
-    private final Object userObject;
+    private final @Nullable Object userObject;
 
     public Symbol(@Nullable Object userObject) {
         this.userObject = userObject;
     }
 
     @Override
-    public int compareTo(@NonNull Symbol o) {
+    public int compareTo(Symbol o) {
         return getId() - o.getId();
     }
 
-    @Nullable
-    public Object getUserObject() {
+    public @Nullable Object getUserObject() {
         return userObject;
     }
 
     @Override
-    @NonNull
     public String toString() {
         return String.valueOf(userObject);
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

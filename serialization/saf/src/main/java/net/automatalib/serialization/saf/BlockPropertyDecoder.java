@@ -18,10 +18,12 @@ package net.automatalib.serialization.saf;
 import java.io.DataInput;
 import java.io.IOException;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 @FunctionalInterface
 public interface BlockPropertyDecoder<P> {
 
-    static <P> BlockPropertyDecoder<P> nullDecoder() {
+    static <P> BlockPropertyDecoder<@Nullable P> nullDecoder() {
         return in -> null;
     }
 

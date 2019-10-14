@@ -17,8 +17,6 @@ package net.automatalib.graphs;
 
 import java.util.Collection;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * Interface for bidirectional graph. A bidirectional graph is conceptually the same as a normal (directed) graph, but
  * provides direct access to not only the outgoing, but also the incoming edges of each state.
@@ -40,7 +38,6 @@ public interface BidirectionalGraph<N, E> extends Graph<N, E> {
      *
      * @return all incoming edges of the specified node.
      */
-    @NonNull
     Collection<E> getIncomingEdges(N node);
 
     /**
@@ -51,6 +48,5 @@ public interface BidirectionalGraph<N, E> extends Graph<N, E> {
      *
      * @return the source node of the given edge
      */
-    @NonNull
     N getSource(E edge);
 }

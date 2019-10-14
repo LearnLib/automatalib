@@ -24,6 +24,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Collection of various methods dealing with {@link Mapping}s.
@@ -32,7 +33,7 @@ import com.google.common.collect.Lists;
  */
 public final class Mappings {
 
-    private static final Mapping<?, ?> NULL_MAPPING = (Mapping<Object, Object>) elem -> null;
+    private static final Mapping<?, ?> NULL_MAPPING = (Mapping<Object, @Nullable Object>) elem -> null;
 
     private static final Mapping<?, ?> IDENTITY_MAPPING = (Mapping<Object, Object>) elem -> elem;
 
@@ -205,7 +206,7 @@ public final class Mappings {
      *
      * @return the value returned by the specified mapping, or the fallback value.
      */
-    public static <D, R> R safeGet(Mapping<? super D, R> mapping, D key, R fallback) {
+    public static <D, R> R safeGet(@Nullable Mapping<? super D, ? extends R> mapping, D key, R fallback) {
         if (mapping == null) {
             return fallback;
         }
@@ -216,7 +217,7 @@ public final class Mappings {
         return val;
     }
 
-    public static <D, R> R nullGet(Mapping<? super D, ? extends R> mapping, D key) {
+    public static <D, R> @Nullable R nullGet(@Nullable Mapping<? super D, ? extends R> mapping, D key) {
         return safeGet(mapping, key, null);
     }
 

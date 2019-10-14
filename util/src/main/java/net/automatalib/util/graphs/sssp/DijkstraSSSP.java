@@ -26,8 +26,8 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.EdgeWeights;
 import net.automatalib.util.graphs.Graphs;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Implementation of Dijkstras algorithm for the single-source shortest path problem.
@@ -44,7 +44,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
     private final Graph<N, E> graph;
     private final N init;
     private final EdgeWeights<E> edgeWeights;
-    private final MutableMapping<N, Record<N, E>> records;
+    private final MutableMapping<N, @Nullable Record<N, E>> records;
 
     /**
      * Constructor.
@@ -75,7 +75,6 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
      *
      * @return the single-source shortest path results
      */
-    @NonNull
     public static <N, E> SSSPResult<N, E> findSSSP(Graph<N, E> graph, N init, EdgeWeights<E> edgeWeights) {
         DijkstraSSSP<N, E> dijkstra = new DijkstraSSSP<>(graph, init, edgeWeights);
         dijkstra.findSSSP();
@@ -142,7 +141,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
     }
 
     @Override
-    public List<E> getShortestPath(N target) {
+    public @Nullable List<E> getShortestPath(N target) {
         Record<N, E> rec = records.get(target);
         if (rec == null) {
             return null;
@@ -158,6 +157,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
         while ((edge = rec.reach) != null) {
             result.add(edge);
             rec = rec.parent;
+            assert rec != null;
         }
 
         Collections.reverse(result);
@@ -165,7 +165,7 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
     }
 
     @Override
-    public E getShortestPathEdge(N target) {
+    public @Nullable E getShortestPathEdge(N target) {
         Record<N, E> rec = records.get(target);
         if (rec == null) {
             return null;
@@ -174,27 +174,22 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
     }
 
     /**
-     * Internal data record.
-     * Note: this class has a natural ordering that is inconsistent with equals.
+     * Internal data record. Note: this class has a natural ordering that is inconsistent with equals.
      */
     private static final class Record<N, E> implements Comparable<Record<N, E>> {
 
-        @NonNull
         public final N node;
         public float dist;
-        @Nullable
-        public ElementReference ref;
-        @Nullable
-        public E reach;
-        @Nullable
-        public Record<N, E> parent;
+        public @Nullable ElementReference ref;
+        public @PolyNull E reach;
+        public @PolyNull Record<N, E> parent;
         int depth;
 
         Record(N node, float dist) {
             this(node, dist, null, null);
         }
 
-        Record(N node, float dist, @Nullable E reach, @Nullable Record<N, E> parent) {
+        Record(N node, float dist, @PolyNull E reach, @PolyNull Record<N, E> parent) {
             this.node = node;
             this.dist = dist;
             this.reach = reach;

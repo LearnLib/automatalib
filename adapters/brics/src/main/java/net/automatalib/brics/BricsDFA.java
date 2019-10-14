@@ -18,7 +18,6 @@ package net.automatalib.brics;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
 import net.automatalib.automata.fsa.DFA;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Adapter class for wrapping a Brics automaton as a {@link DFA}.
@@ -76,12 +75,12 @@ public class BricsDFA extends AbstractBricsAutomaton implements DFA<State, Chara
     }
 
     @Override
-    public State getSuccessor(State state, @NonNull Character input) {
+    public State getSuccessor(State state, Character input) {
         return state.step(input.charValue());
     }
 
     @Override
-    public State getTransition(State state, @NonNull Character input) {
+    public State getTransition(State state, Character input) {
         return state.step(input.charValue());
     }
 

@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import net.automatalib.words.VPDAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class used to wrap input symbols of a {@link VPDAlphabet}. Stores additional index information to allow fast
@@ -59,7 +60,7 @@ public final class VPDSym<T> implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

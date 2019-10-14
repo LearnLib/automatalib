@@ -17,6 +17,11 @@ limitations under the License.
 -->
 <FindBugsFilter>
     <Match>
+        <!-- TODO: SpotBugs seem to incorrectly infer type annotations, https://github.com/spotbugs/spotbugs/issues/643
+                   We have CheckerFramework for this anyway -->
+        <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
+    </Match>
+    <Match>
         <!-- TODO: mostly due to performance. However, usage should be checked again -->
         <Bug pattern="EI_EXPOSE_REP2"/>
         <Class name="net.automatalib.util.partitionrefinement.PaigeTarjan"/>

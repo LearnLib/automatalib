@@ -17,13 +17,13 @@ package net.automatalib.util.automata.random;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.random.RandomUtil;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomaton<S, I, T, SP, TP>> {
 
@@ -41,17 +41,8 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
                                     A automaton) {
         this.random = new RandomUtil(random);
 
-        if (stateProps == null) {
-            spList = Collections.singletonList(null);
-        } else {
-            spList = CollectionsUtil.randomAccessList(stateProps);
-        }
-
-        if (transProps == null) {
-            tpList = Collections.singletonList(null);
-        } else {
-            tpList = CollectionsUtil.randomAccessList(transProps);
-        }
+        this.spList = CollectionsUtil.randomAccessList(stateProps);
+        this.tpList = CollectionsUtil.randomAccessList(transProps);
 
         this.inputs = CollectionsUtil.randomAccessList(inputs);
         this.states = new ArrayList<>();
@@ -62,15 +53,15 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
         return automaton;
     }
 
-    protected TP randomTransProperty() {
+    protected @Nullable TP randomTransProperty() {
         return random.choose(tpList);
     }
 
-    protected S randomState() {
+    protected @Nullable S randomState() {
         return random.choose(states);
     }
 
-    protected S randomDistinctState(int stateIdx) {
+    protected @Nullable S randomDistinctState(int stateIdx) {
         if (states.size() == 1) {
             return null;
         }
@@ -84,7 +75,7 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
         return states.get(idx);
     }
 
-    protected I randomInput() {
+    protected @Nullable I randomInput() {
         return random.choose(inputs);
     }
 
@@ -97,7 +88,7 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
         }
     }
 
-    protected SP randomStateProperty() {
+    protected @Nullable SP randomStateProperty() {
         return random.choose(spList);
     }
 
@@ -106,7 +97,7 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
         automaton.setInitial(init, true);
     }
 
-    public void chooseIntials(int num) {
+    public void chooseInitials(int num) {
         List<S> inits = random.sampleUnique(states, num);
 
         for (S init : inits) {

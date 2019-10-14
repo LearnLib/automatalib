@@ -25,6 +25,9 @@ import java.util.Queue;
 
 import net.automatalib.graphs.Graph;
 import net.automatalib.visualization.VisualizationHelper;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * An interface representing a node in an adaptive distinguishing sequence (which essentially forms a decision tree).
@@ -54,7 +57,8 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @return {@code null} if {@code this} is a leaf node (see {@link #isLeaf()}), the associated input symbol
      * otherwise.
      */
-    I getSymbol();
+    @Pure
+    @Nullable I getSymbol();
 
     /**
      * See {@link #getSymbol()}.
@@ -73,7 +77,8 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @return The parent node of {@code this} ADS node. May be {@code null}, if {@code this} is the root node of an
      * ADS.
      */
-    N getParent();
+    @Pure
+    @Nullable N getParent();
 
     void setParent(N parent);
 
@@ -94,7 +99,8 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
 
         // level-order iteration of the tree nodes
         while (!queue.isEmpty()) {
-            final N node = queue.poll();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull final N node = queue.poll();
             result.add(node);
             queue.addAll(node.getChildren().values());
         }
@@ -170,7 +176,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @return {@code null} if {@code this} is an inner node (see {@link #isLeaf()}), the associated hypothesis state
      * otherwise.
      */
-    S getHypothesisState();
+    @Nullable S getHypothesisState();
 
     /**
      * See {@link #getHypothesisState()}.

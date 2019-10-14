@@ -20,6 +20,7 @@ import java.util.Collections;
 
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.PowersetViewTS;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DeterministicPowersetView<S, I, T>
         implements DeterministicTransitionSystem<S, I, T>, PowersetViewTS<S, I, T, S, T> {
@@ -31,7 +32,7 @@ public class DeterministicPowersetView<S, I, T>
     }
 
     @Override
-    public T getTransition(S state, I input) {
+    public @Nullable T getTransition(S state, I input) {
         return delegate.getTransition(state, input);
     }
 
@@ -41,7 +42,7 @@ public class DeterministicPowersetView<S, I, T>
     }
 
     @Override
-    public S getInitialState() {
+    public @Nullable S getInitialState() {
         return delegate.getInitialState();
     }
 

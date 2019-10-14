@@ -60,9 +60,17 @@ public final class Visualization {
         provider = vp;
     }
 
+    public static <N, E> void visualize(Graph<N, E> graph) {
+        visualize(graph, true);
+    }
+
     @SafeVarargs
     public static <N, E> void visualize(Graph<N, E> graph, VisualizationHelper<N, ? super E>... additionalHelpers) {
         visualize(graph, true, additionalHelpers);
+    }
+
+    public static <N, E> void visualize(Graph<N, E> graph, boolean modal) {
+        visualize(graph, modal, Collections.emptyMap());
     }
 
     @SafeVarargs
@@ -70,6 +78,10 @@ public final class Visualization {
                                         boolean modal,
                                         VisualizationHelper<N, ? super E>... additionalHelpers) {
         visualize(graph, modal, Collections.emptyMap(), additionalHelpers);
+    }
+
+    public static <N, E> void visualize(Graph<N, E> graph, boolean modal, Map<String, String> options) {
+        INSTANCE.visualizeInternal(graph, modal, options);
     }
 
     @SafeVarargs
@@ -92,11 +104,19 @@ public final class Visualization {
         visualize(gv.graphView(), modal, options);
     }
 
+    public static <S, I, T> void visualize(Automaton<S, I, T> graph, Collection<? extends I> inputs) {
+        visualize(graph, inputs, true);
+    }
+
     @SafeVarargs
     public static <S, I, T> void visualize(Automaton<S, I, T> graph,
                                            Collection<? extends I> inputs,
                                            VisualizationHelper<S, ? super TransitionEdge<I, T>>... additionalHelpers) {
         visualize(graph, inputs, true, additionalHelpers);
+    }
+
+    public static <S, I, T> void visualize(Automaton<S, I, T> graph, Collection<? extends I> inputs, boolean modal) {
+        visualize(graph, inputs, modal, Collections.emptyMap());
     }
 
     @SafeVarargs
@@ -107,6 +127,13 @@ public final class Visualization {
         visualize(graph, inputs, modal, Collections.emptyMap(), additionalHelpers);
     }
 
+    public static <S, I, T> void visualize(Automaton<S, I, T> graph,
+                                           Collection<? extends I> inputs,
+                                           boolean modal,
+                                           Map<String, String> options) {
+        INSTANCE.visualizeInternal(graph.transitionGraphView(inputs), modal, options);
+    }
+
     @SafeVarargs
     public static <S, I, T> void visualize(Automaton<S, I, T> graph,
                                            Collection<? extends I> inputs,
@@ -114,6 +141,10 @@ public final class Visualization {
                                            Map<String, String> options,
                                            VisualizationHelper<S, ? super TransitionEdge<I, T>>... additionalHelpers) {
         INSTANCE.visualizeInternal(graph.transitionGraphView(inputs), modal, options, additionalHelpers);
+    }
+
+    private <N, E> void visualizeInternal(Graph<N, E> graph, boolean modal, Map<String, String> options) {
+        provider.visualize(graph, Collections.emptyList(), modal, options);
     }
 
     @SafeVarargs

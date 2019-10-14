@@ -20,6 +20,7 @@ import java.util.List;
 
 import net.automatalib.commons.smartcollections.AbstractBasicLinkedListEntry;
 import net.automatalib.commons.smartcollections.ElementReference;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * State record. Represents a state in the automaton model the minimizer operates on, and also keeps various other
@@ -200,7 +201,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      *
      * @return the respective letter of the signature, or <code>null</code>.
      */
-    public TransitionLabel<S, L> getSignatureLetter(int index) {
+    public @Nullable TransitionLabel<S, L> getSignatureLetter(int index) {
         if (index < signature.size()) {
             return signature.get(index);
         }
@@ -246,7 +247,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
 
     @Override
     public String toString() {
-        return originalState.toString();
+        return String.valueOf(originalState);
     }
 
     @Override

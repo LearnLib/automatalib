@@ -16,7 +16,6 @@
 package net.automatalib.graphs;
 
 import net.automatalib.ts.UniversalTransitionSystem;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A universal graph, i.e., with (possibly empty) node and edge properties. For a documentation on the concept of
@@ -43,7 +42,6 @@ public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<
      *
      * @return the property of the specified node
      */
-    @Nullable
     NP getNodeProperty(N node);
 
     /**
@@ -54,6 +52,5 @@ public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<
      *
      * @return the property of the specified edge
      */
-    @Nullable
     EP getEdgeProperty(E edge);
 }

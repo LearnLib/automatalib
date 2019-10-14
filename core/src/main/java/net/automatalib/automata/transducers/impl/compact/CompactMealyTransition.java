@@ -18,6 +18,8 @@ package net.automatalib.automata.transducers.impl.compact;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public final class CompactMealyTransition<O> implements Serializable {
 
     private int memoryIdx;
@@ -59,7 +61,7 @@ public final class CompactMealyTransition<O> implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public class FastPowersetState<S> extends AbstractSet<S> {
 
     private final BitSet bs = new BitSet();
@@ -46,12 +48,12 @@ public class FastPowersetState<S> extends AbstractSet<S> {
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(@Nullable Object o) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

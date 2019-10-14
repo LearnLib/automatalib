@@ -95,6 +95,11 @@ public class LearnLibV2Serialization
     }
 
     private <S, I> void doWriteDFA(DFA<S, I> dfa, Alphabet<I> alphabet, OutputStream os) {
+        S initState = dfa.getInitialState();
+        if (initState == null) {
+            throw new IllegalArgumentException("Serialization format does not support automata without initial state");
+        }
+
         boolean partial = Automata.hasUndefinedInput(dfa, alphabet);
         int numDfaStates = dfa.size();
         int numStates = numDfaStates;
@@ -113,7 +118,6 @@ public class LearnLibV2Serialization
 
         StateIDs<S> stateIds = dfa.stateIDs();
 
-        S initState = dfa.getInitialState();
         int initId = stateIds.getStateId(initState);
 
         List<S> orderedStates = new ArrayList<>(numDfaStates);

@@ -29,6 +29,7 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.commons.util.strings.StringUtil;
 import net.automatalib.words.Alphabet;
 
+@SuppressWarnings("nullness")
 abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministic<S, I, T, SP, TP>>
         implements TAFBuilder {
 

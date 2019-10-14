@@ -24,6 +24,7 @@ import java.util.Set;
 
 import net.automatalib.ts.powerset.FastPowersetDTS;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastMutableNondet<S extends AbstractFastState<Collection<T>>, I, T, SP, TP>
         extends AbstractFastMutable<S, I, T, SP, TP> {
@@ -68,7 +69,7 @@ public abstract class AbstractFastMutableNondet<S extends AbstractFastState<Coll
     }
 
     @Override
-    public void removeState(S state, S replacement) {
+    public void removeState(S state, @Nullable S replacement) {
         super.removeState(state, replacement);
 
         if (initialStates.remove(state) && replacement != null) {

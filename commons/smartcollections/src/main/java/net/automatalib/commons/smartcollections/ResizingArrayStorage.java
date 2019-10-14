@@ -121,9 +121,7 @@ public final class ResizingArrayStorage<T> implements CapacityManagement, Serial
      *         the value.
      */
     public void setAll(T value) {
-        for (int i = 0; i < array.length; i++) {
-            array[i] = value;
-        }
+        Arrays.fill(array, value);
     }
 
     public void swap(ResizingArrayStorage<T> other) {

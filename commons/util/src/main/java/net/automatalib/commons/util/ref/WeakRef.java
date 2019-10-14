@@ -17,6 +17,8 @@ package net.automatalib.commons.util.ref;
 
 import java.lang.ref.WeakReference;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A weak reference wrapper, complying to the {@link Ref} interface.
  *
@@ -40,7 +42,7 @@ public final class WeakRef<T> implements Ref<T> {
     }
 
     @Override
-    public T get() {
+    public @Nullable T get() {
         return reference.get();
     }
 

@@ -264,13 +264,16 @@ public final class HopcroftMinimization {
         pt.initWorklist(false);
         pt.computeCoarsestStablePartition();
 
-        return PaigeTarjanExtractors.toDeterministic(pt,
-                                                     creator,
-                                                     alphabet,
-                                                     abs,
-                                                     abs::getStateProperty,
-                                                     abs::getTransitionProperty,
-                                                     pruningMode == PruningMode.PRUNE_AFTER);
+        @SuppressWarnings("nullness") // getTransitionProperty will only be called for defined transitions
+        final A result = PaigeTarjanExtractors.toDeterministic(pt,
+                                                               creator,
+                                                               alphabet,
+                                                               abs,
+                                                               abs::getStateProperty,
+                                                               abs::getTransitionProperty,
+                                                               pruningMode == PruningMode.PRUNE_AFTER);
+
+        return result;
     }
 
     /**

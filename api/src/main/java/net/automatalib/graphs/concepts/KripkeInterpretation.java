@@ -17,8 +17,6 @@ package net.automatalib.graphs.concepts;
 
 import java.util.Set;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * A Kripke interpretation for a graph. A Kripke interpretation assigns to each node a set of so-called <i>atomic
  * propositions</i>.
@@ -40,6 +38,5 @@ public interface KripkeInterpretation<N, AP> {
      *
      * @return the set of atomic propositions that hold at the given node
      */
-    @NonNull
     Set<AP> getAtomicPropositions(N node);
 }

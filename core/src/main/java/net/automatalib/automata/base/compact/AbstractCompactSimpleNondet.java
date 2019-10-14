@@ -23,6 +23,7 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class that refines {@link AbstractCompact} for transition-property-less automata. As a result,
@@ -41,9 +42,9 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     //protected final TIntSet initial;
     protected final Set<Integer> initial; // TODO: replace by primitive specialization
     //protected TIntSet[] transitions;
-    protected Set<Integer>[] transitions; // TODO: replace by primitive specialization
+    protected @Nullable Set<Integer>[] transitions; // TODO: replace by primitive specialization
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "initialization"})
     public AbstractCompactSimpleNondet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
 

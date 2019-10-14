@@ -18,6 +18,7 @@ package net.automatalib.incremental.mealy.tree;
 import java.io.Serializable;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class Node<O> implements Serializable {
 
@@ -35,7 +36,7 @@ final class Node<O> implements Serializable {
         outEdges.array[idx] = edge;
     }
 
-    Node<O> getSuccessor(int idx) {
+    @Nullable Node<O> getSuccessor(int idx) {
         Edge<Node<O>, O> edge = outEdges.array[idx];
         if (edge != null) {
             return edge.getTarget();

@@ -17,10 +17,11 @@ package net.automatalib.automata.base.fast;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.commons.util.nid.AbstractMutableNumericID;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
 
-    private final ResizingArrayStorage<T> transitions;
+    private final ResizingArrayStorage<@Nullable T> transitions;
 
     public AbstractFastState(int initialNumOfInputs) {
         this.transitions = new ResizingArrayStorage<>(Object.class, initialNumOfInputs);
@@ -33,7 +34,7 @@ public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
         return this.transitions.ensureCapacity(capacity);
     }
 
-    public final void setTransitionObject(int inputIdx, T transition) {
+    public final void setTransitionObject(int inputIdx, @Nullable T transition) {
         transitions.array[inputIdx] = transition;
     }
 
@@ -44,11 +45,11 @@ public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
         }
     }
 
-    protected void clearTransitionObject(final T transition) {
+    protected void clearTransitionObject(final @Nullable T transition) {
         // do nothing in particular, but sub-classes may cleanup additional resources
     }
 
-    public final T getTransitionObject(int inputIdx) {
+    public final @Nullable T getTransitionObject(int inputIdx) {
         return transitions.array[inputIdx];
     }
 

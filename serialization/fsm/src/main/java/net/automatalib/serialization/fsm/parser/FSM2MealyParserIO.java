@@ -47,7 +47,9 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
      * @param outputParser
      *         the output parser (similar to {@code inputParser}.
      */
-    private FSM2MealyParserIO(Collection<? extends I> targetInputs, Function<String, I> inputParser, Function<String, O> outputParser) {
+    private FSM2MealyParserIO(@Nullable Collection<? extends I> targetInputs,
+                              Function<String, I> inputParser,
+                              Function<String, O> outputParser) {
         super(targetInputs, inputParser, outputParser);
     }
 

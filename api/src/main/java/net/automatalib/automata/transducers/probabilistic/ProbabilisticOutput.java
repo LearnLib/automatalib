@@ -22,10 +22,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class ProbabilisticOutput<O> {
 
     private final float probability;
-    @Nullable
     private final O output;
 
-    public ProbabilisticOutput(float probability, @Nullable O output) {
+    public ProbabilisticOutput(float probability, O output) {
         this.probability = probability;
         this.output = output;
     }
@@ -34,13 +33,12 @@ public final class ProbabilisticOutput<O> {
         return probability;
     }
 
-    @Nullable
     public O getOutput() {
         return output;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

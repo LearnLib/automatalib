@@ -16,6 +16,7 @@
 package net.automatalib.graphs.ads.impl;
 
 import net.automatalib.graphs.ads.ADSNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An ADS-specific implementation of a leaf node.
@@ -32,7 +33,7 @@ import net.automatalib.graphs.ads.ADSNode;
 public class ADSLeafNode<S, I, O> extends AbstractRecursiveADSLeafNode<S, I, O, ADSNode<S, I, O>>
         implements ADSNode<S, I, O> {
 
-    public ADSLeafNode(ADSNode<S, I, O> parent, S hypothesisState) {
+    public ADSLeafNode(@Nullable ADSNode<S, I, O> parent, S hypothesisState) {
         super(parent, hypothesisState);
     }
 }

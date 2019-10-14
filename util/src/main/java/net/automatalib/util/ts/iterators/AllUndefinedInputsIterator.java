@@ -41,7 +41,7 @@ public final class AllUndefinedInputsIterator<S, I> extends AbstractTwoLevelIter
     }
 
     @Override
-    protected TransRef<S, I, ?> combine(S l1Object, I l2Object) {
-        return new TransRef<>(l1Object, l2Object);
+    protected TransRef<S, I, Void> combine(S l1Object, I l2Object) {
+        return new TransRef<>(l1Object, l2Object, null);
     }
 }

@@ -30,7 +30,6 @@ import net.automatalib.modelcheckers.ltsmin.LTSminMealy;
 import net.automatalib.modelcheckers.ltsmin.ltl.AbstractLTSminLTL;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,9 +113,8 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
      *
      * @see AbstractLTSmin#findCounterExample(Object, Collection, Object)
      */
-    @Nullable
     @Override
-    public MealyMachine<?, I, ?, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
+    public @Nullable MealyMachine<?, I, ?, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
                                                        Collection<? extends I> inputs,
                                                        String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
@@ -143,31 +141,26 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
                     return deadlock.equals(succ) ? MealyMachine.super.computeStateOutput(state, input) : Word.epsilon();
                 }
 
-                @Nullable
                 @Override
-                public Integer getInitialState() {
+                public @Nullable Integer getInitialState() {
                     return result.getInitialState();
                 }
 
-                @NonNull
                 @Override
                 public Integer getSuccessor(CompactMealyTransition<O> transition) {
                     return result.getSuccessor(transition);
                 }
 
-                @Nullable
                 @Override
-                public CompactMealyTransition<O> getTransition(Integer state, @Nullable I input) {
+                public @Nullable CompactMealyTransition<O> getTransition(Integer state, I input) {
                     return result.getTransition(state, input);
                 }
 
-                @Nullable
                 @Override
                 public O getTransitionOutput(CompactMealyTransition<O> transition) {
                     return result.getTransitionOutput(transition);
                 }
 
-                @NonNull
                 @Override
                 public Collection<Integer> getStates() {
                     return result.getStates();

@@ -21,7 +21,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.MealyTransition;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -42,7 +41,8 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
         Assert.assertEquals(lasso.getOutput(), Word.fromSymbols(MealyMachineMock.OUTPUT));
     }
 
-    private class MealyMachineMock implements MealyMachine<Integer, String, MealyTransition<Integer, String>, String> {
+    private static class MealyMachineMock
+            implements MealyMachine<Integer, String, MealyTransition<Integer, String>, String> {
 
         public static final String OUTPUT = "test";
 
@@ -54,21 +54,18 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
             word = prefix.concat(loop);
         }
 
-        @Nullable
         @Override
         public String getTransitionOutput(MealyTransition<Integer, String> transition) {
             return OUTPUT;
         }
 
-        @NonNull
         @Override
         public Collection<Integer> getStates() {
             return CollectionsUtil.intRange(0, word.length());
         }
 
-        @Nullable
         @Override
-        public MealyTransition<Integer, String> getTransition(Integer state, @Nullable String input) {
+        public @Nullable MealyTransition<Integer, String> getTransition(Integer state, String input) {
             final MealyTransition<Integer, String> result;
             if (word.getSymbol(state).equals(input)) {
                 if (state < word.length() - 1) {
@@ -83,13 +80,11 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
             return result;
         }
 
-        @NonNull
         @Override
         public Integer getSuccessor(MealyTransition<Integer, String> transition) {
             return transition.getSuccessor();
         }
 
-        @Nullable
         @Override
         public Integer getInitialState() {
             return 0;

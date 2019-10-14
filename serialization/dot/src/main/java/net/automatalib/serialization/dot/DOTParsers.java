@@ -43,6 +43,7 @@ import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeShapes;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An aggregation of factory methods for obtaining DOT parsers for several types of automata / graphs.
@@ -55,7 +56,7 @@ public final class DOTParsers {
      * Node property parser that parses a node's "{@link NodeAttrs#LABEL label}" attribute and returns its {@link
      * Object#toString() string} representation. Returns {@code null} if the attribute is not specified.
      */
-    public static final Function<Map<String, Object>, String> DEFAULT_NODE_PARSER = attr -> {
+    public static final Function<Map<String, Object>, @Nullable String> DEFAULT_NODE_PARSER = attr -> {
         final Object label = attr.get(NodeAttrs.LABEL);
         return label == null ? null : label.toString();
     };
@@ -72,7 +73,7 @@ public final class DOTParsers {
      * <id>/<property>}. Returns the string representation of {@code <property>} as-is. Returns {@code null} if the
      * attribute does not exist or does not match the expected format.
      */
-    public static final Function<Map<String, Object>, String> DEFAULT_MOORE_NODE_PARSER = attr -> {
+    public static final Function<Map<String, Object>, @Nullable String> DEFAULT_MOORE_NODE_PARSER = attr -> {
         final Object label = attr.get(NodeAttrs.LABEL);
         if (label == null) {
             return null;
@@ -91,7 +92,7 @@ public final class DOTParsers {
      * Edge input parser that parses an edges's "{@link EdgeAttrs#LABEL label}" attribute and returns its {@link
      * Object#toString() string} representation. Returns {@code null} if the attribute is not specified.
      */
-    public static final Function<Map<String, Object>, String> DEFAULT_EDGE_PARSER = attr -> {
+    public static final Function<Map<String, Object>, @Nullable String> DEFAULT_EDGE_PARSER = attr -> {
         final Object label = attr.get(EdgeAttrs.LABEL);
         return label == null ? null : label.toString();
     };
@@ -101,16 +102,17 @@ public final class DOTParsers {
      * <input>/<property>}. Returns a {@link Pair} object containing the string representation of both components
      * as-is. Returns {@code null} if the attribute does not exist or does not match the expected format.
      */
-    public static final Function<Map<String, Object>, Pair<String, String>> DEFAULT_MEALY_EDGE_PARSER = attr -> {
+    public static final Function<Map<String, Object>, Pair<@Nullable String, @Nullable String>>
+            DEFAULT_MEALY_EDGE_PARSER = attr -> {
         final Object label = attr.get(EdgeAttrs.LABEL);
         if (label == null) {
-            return null;
+            return Pair.of(null, null);
         }
 
         final String[] tokens = label.toString().split("/");
 
         if (tokens.length != 2) {
-            return null;
+            return Pair.of(null, null);
         }
 
         return Pair.of(tokens[0].trim(), tokens[1].trim());
@@ -126,7 +128,7 @@ public final class DOTParsers {
      *
      * @return a DOT {@link InputModelDeserializer} for {@link CompactDFA}s.
      */
-    public static InputModelDeserializer<String, CompactDFA<String>> dfa() {
+    public static InputModelDeserializer<@Nullable String, CompactDFA<@Nullable String>> dfa() {
         return dfa(DEFAULT_FSA_NODE_PARSER, DEFAULT_EDGE_PARSER);
     }
 
@@ -157,7 +159,7 @@ public final class DOTParsers {
      *
      * @return a DOT {@link InputModelDeserializer} for {@link CompactNFA}s.
      */
-    public static InputModelDeserializer<String, CompactNFA<String>> nfa() {
+    public static InputModelDeserializer<@Nullable String, CompactNFA<@Nullable String>> nfa() {
         return nfa(DEFAULT_FSA_NODE_PARSER, DEFAULT_EDGE_PARSER);
     }
 
@@ -278,7 +280,7 @@ public final class DOTParsers {
      *
      * @return a DOT {@link InputModelDeserializer} for {@link CompactMealy}s.
      */
-    public static InputModelDeserializer<String, CompactMealy<String, String>> mealy() {
+    public static InputModelDeserializer<@Nullable String, CompactMealy<@Nullable String, @Nullable String>> mealy() {
         return mealy(DEFAULT_MEALY_EDGE_PARSER);
     }
 
@@ -396,7 +398,7 @@ public final class DOTParsers {
      *
      * @return a DOT {@link InputModelDeserializer} for {@link CompactMoore}s.
      */
-    public static InputModelDeserializer<String, CompactMoore<String, String>> moore() {
+    public static InputModelDeserializer<@Nullable String, CompactMoore<@Nullable String, @Nullable String>> moore() {
         return moore(DEFAULT_MOORE_NODE_PARSER, DEFAULT_EDGE_PARSER);
     }
 
@@ -528,7 +530,7 @@ public final class DOTParsers {
      *
      * @return a DOT {@link ModelDeserializer} for {@link CompactGraph}s.
      */
-    public static ModelDeserializer<CompactGraph<String, String>> graph() {
+    public static ModelDeserializer<CompactGraph<@Nullable String, @Nullable String>> graph() {
         return graph(DEFAULT_NODE_PARSER, DEFAULT_EDGE_PARSER);
     }
 

@@ -16,8 +16,9 @@
 package net.automatalib.graphs.base.compact;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class CompactGraph<NP, EP> extends AbstractCompactGraph<CompactEdge<EP>, NP, EP> {
+public class CompactGraph<@Nullable NP, @Nullable EP> extends AbstractCompactGraph<CompactEdge<EP>, NP, EP> {
 
     private final ResizingArrayStorage<NP> nodeProperties;
 
@@ -32,7 +33,7 @@ public class CompactGraph<NP, EP> extends AbstractCompactGraph<CompactEdge<EP>, 
     }
 
     @Override
-    public void setNodeProperty(int node, NP property) {
+    public void setNodeProperty(int node, @Nullable NP property) {
         if (node >= nodeProperties.array.length) {
             nodeProperties.ensureCapacity(size);
         }
@@ -40,7 +41,7 @@ public class CompactGraph<NP, EP> extends AbstractCompactGraph<CompactEdge<EP>, 
     }
 
     @Override
-    protected CompactEdge<EP> createEdge(int source, int target, EP property) {
+    protected CompactEdge<EP> createEdge(int source, int target, @Nullable EP property) {
         return new CompactEdge<>(target, property);
     }
 

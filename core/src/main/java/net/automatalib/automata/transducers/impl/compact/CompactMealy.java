@@ -30,8 +30,9 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
                                                                                                             StateLocalInputMealyMachine<Integer, I, CompactMealyTransition<O>, O> {
 
     private int[] transitions;
-    private Object[] outputs;
+    private @Nullable Object[] outputs;
 
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public CompactMealy(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
 
@@ -108,7 +109,7 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     }
 
     @Override
-    public void setTransition(int state, int input, CompactMealyTransition<O> transition) {
+    public void setTransition(int state, int input, @Nullable CompactMealyTransition<O> transition) {
         if (transition == null) {
             setTransition(state, input, AbstractCompact.INVALID_STATE, null);
         } else {
@@ -134,7 +135,7 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     }
 
     @Override
-    public CompactMealyTransition<O> getTransition(int state, int input) {
+    public @Nullable CompactMealyTransition<O> getTransition(int state, int input) {
         final int idx = toMemoryIndex(state, input);
         final int succ = transitions[idx];
 

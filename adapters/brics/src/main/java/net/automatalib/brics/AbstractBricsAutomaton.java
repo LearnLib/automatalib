@@ -18,7 +18,6 @@ package net.automatalib.brics;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import dk.brics.automaton.Automaton;
@@ -29,7 +28,6 @@ import net.automatalib.automata.graphs.AbstractAutomatonGraphView;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.visualization.VisualizationHelper;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Base class for Brics automata adapters.
@@ -51,12 +49,12 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
      * @see Automaton#totalize()
      */
     public AbstractBricsAutomaton(Automaton automaton, boolean totalize) {
-        this.automaton = Objects.requireNonNull(automaton);
+        this.automaton = automaton;
 
         if (totalize) {
             State s = new State();
             s.addTransition(new Transition(Character.MIN_VALUE, Character.MAX_VALUE, s));
-            for (State p : getStates()) {
+            for (State p : automaton.getStates()) {
                 int maxi = Character.MIN_VALUE;
                 for (Transition t : p.getSortedTransitions(false)) {
                     if (t.getMin() > maxi) {
@@ -88,7 +86,7 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
     }
 
     @Override
-    public Collection<State> getTransitions(State state, @NonNull Character input) {
+    public Collection<State> getTransitions(State state, Character input) {
         Collection<Transition> transitions = state.getSortedTransitions(false);
 
         Set<State> result = new HashSet<>();

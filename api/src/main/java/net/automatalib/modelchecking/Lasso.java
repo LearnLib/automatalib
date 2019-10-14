@@ -22,7 +22,6 @@ import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A lasso is an single infinite word.
@@ -87,7 +86,6 @@ public interface Lasso<I, D> extends DetOutputAutomaton<Integer, I, Integer, D>,
      *
      * @return the original automaton.
      */
-    @Nullable
     DetOutputAutomaton<?, I, ?, D> getAutomaton();
 
     /**

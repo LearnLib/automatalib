@@ -35,6 +35,7 @@ final class PlottedGraph {
     private String dotText;
     private BufferedImage image;
 
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     PlottedGraph(String name, Reader dotText) throws IOException {
         this.name = name;
 

@@ -17,6 +17,8 @@ package net.automatalib.commons.util.ref;
 
 import java.lang.ref.WeakReference;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * An abstraction for (weak or strong) references.
  * <p>
@@ -34,5 +36,5 @@ public interface Ref<T> {
      *
      * @return the referent.
      */
-    T get();
+    @Nullable T get();
 }

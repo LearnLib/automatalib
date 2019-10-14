@@ -22,7 +22,6 @@ import java.util.List;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyTreeBuilder<Node<O>, I, O>
         implements InputAlphabetHolder<I> {
@@ -90,7 +89,6 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyT
         return result;
     }
 
-    @NonNull
     @Override
     public Alphabet<I> getInputAlphabet() {
         return inputAlphabet;

@@ -17,8 +17,6 @@ package net.automatalib.ts;
 
 import java.util.function.Predicate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 @FunctionalInterface
 public interface TransitionPredicate<S, I, T> {
 
@@ -26,5 +24,5 @@ public interface TransitionPredicate<S, I, T> {
         return trans -> apply(source, input, trans);
     }
 
-    boolean apply(S source, @Nullable I input, T transition);
+    boolean apply(S source, I input, T transition);
 }

@@ -29,6 +29,7 @@ import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Shared functionality for (non-) deterministic mutable automata.
@@ -58,11 +59,11 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
 
     @Override
     public S getState(int id) {
-        return (id < 0 || id >= states.size()) ? null : states.get(id);
+        return states.get(id);
     }
 
     @Override
-    public S addState(SP property) {
+    public S addState(@Nullable SP property) {
         S newState = createState(property);
         states.add(newState);
         return newState;
@@ -73,10 +74,10 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
         state.clearTransitionObjects();
     }
 
-    protected abstract S createState(SP property);
+    protected abstract S createState(@Nullable SP property);
 
     @Override
-    public void removeState(S state, S replacement) {
+    public void removeState(S state, @Nullable S replacement) {
         ShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
         states.remove(state, tracker);
     }
@@ -92,8 +93,8 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
     }
 
     @Override
-    public <V> MutableMapping<S, V> createDynamicStateMapping() {
-        final ArrayMapping<S, V> mapping = new ArrayMapping<>(size());
+    public <@Nullable V> MutableMapping<S, V> createDynamicStateMapping() {
+        final ArrayMapping<S, @Nullable V> mapping = new ArrayMapping<>(size());
         tracker.addListener(mapping, true);
         return mapping;
     }

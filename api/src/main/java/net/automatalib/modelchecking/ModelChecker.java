@@ -55,8 +55,7 @@ public interface ModelChecker<I, A, P, R> {
      * @throws ModelCheckingException
      *         when this model checker can not check the property.
      */
-    @Nullable
-    R findCounterExample(A automaton, Collection<? extends I> inputs, P property);
+    @Nullable R findCounterExample(A automaton, Collection<? extends I> inputs, P property);
 
     interface DFAModelChecker<I, P, R> extends ModelChecker<I, DFA<?, I>, P, R> {}
 

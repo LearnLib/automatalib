@@ -18,17 +18,20 @@ package net.automatalib.util.ts.transducers;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.comp.DTSComposition;
 import net.automatalib.ts.output.MealyTransitionSystem;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
+@SuppressWarnings("nullness") //nullness of composed states and transitions depends on partiality
 public class DetMealyComposition<S1, S2, I, T1, T2, O1, O2, A1 extends MealyTransitionSystem<S1, I, T1, O1>, A2 extends MealyTransitionSystem<S2, I, T2, O2>>
         extends DTSComposition<S1, S2, I, T1, T2, A1, A2>
         implements MealyTransitionSystem<Pair<S1, S2>, I, Pair<T1, T2>, Pair<O1, O2>> {
 
     public DetMealyComposition(A1 ts1, A2 ts2) {
-        super(ts1, ts2, true);
+        this(ts1, ts2, true);
     }
 
-    @Nullable
+    public DetMealyComposition(A1 ts1, A2 ts2, boolean partial) {
+        super(ts1, ts2, partial);
+    }
+
     @Override
     public Pair<O1, O2> getTransitionOutput(Pair<T1, T2> transition) {
         final T1 t1 = transition.getFirst();

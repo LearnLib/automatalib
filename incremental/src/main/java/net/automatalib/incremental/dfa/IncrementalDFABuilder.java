@@ -22,8 +22,6 @@ import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.UniversalDTS;
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * General interface for incremental DFA builders.
@@ -43,7 +41,6 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
      *
      * @return the tri-state acceptance value for this word.
      */
-    @NonNull
     Acceptance lookup(Word<? extends I> inputWord);
 
     /**
@@ -73,28 +70,22 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
     void insert(Word<? extends I> word);
 
     @Override
-    @NonNull
     GraphView<I, ?, ?> asGraph();
 
     @Override
-    @NonNull
     TransitionSystemView<?, I, ?> asTransitionSystem();
 
     interface GraphView<I, N, E> extends Graph<N, E> {
 
-        @Nullable
-        I getInputSymbol(@NonNull E edge);
+        I getInputSymbol(E edge);
 
-        @NonNull
-        Acceptance getAcceptance(@NonNull N node);
+        Acceptance getAcceptance(N node);
 
-        @NonNull
         N getInitialNode();
     }
 
     interface TransitionSystemView<S, I, T> extends UniversalDTS<S, I, T, Acceptance, Void> {
 
-        @NonNull
-        Acceptance getAcceptance(@NonNull S state);
+        Acceptance getAcceptance(S state);
     }
 }

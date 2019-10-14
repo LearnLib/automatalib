@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.commons.util.strings.StringUtil;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Immutable pair class.
@@ -77,7 +78,7 @@ public final class Pair<T1, T2> extends AbstractPrintable implements Serializabl
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

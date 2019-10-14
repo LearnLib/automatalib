@@ -129,7 +129,7 @@ final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<Transiti
 
     @Override
     public String toString() {
-        return originalLabel.toString();
+        return String.valueOf(originalLabel);
     }
 
     @Override

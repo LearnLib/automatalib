@@ -18,7 +18,6 @@ package net.automatalib.util.graphs.sssp;
 import java.util.List;
 
 import net.automatalib.util.graphs.Graphs;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -38,7 +37,6 @@ public interface SSSPResult<N, E> {
      *
      * @return the source node
      */
-    @NonNull
     N getInitialNode();
 
     /**
@@ -63,8 +61,7 @@ public interface SSSPResult<N, E> {
      *
      * @return the path from the initial node to the given target node, or {@code null} if there exists no such path.
      */
-    @Nullable
-    List<E> getShortestPath(N target);
+    @Nullable List<E> getShortestPath(N target);
 
     /**
      * Retrieves the incoming edge via which the given node is reached on the shortest path. If the node is not
@@ -75,6 +72,5 @@ public interface SSSPResult<N, E> {
      *
      * @return the reaching edge on the shortest path, or {@code null}.
      */
-    @Nullable
-    E getShortestPathEdge(N target);
+    @Nullable E getShortestPathEdge(N target);
 }

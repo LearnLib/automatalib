@@ -66,6 +66,7 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, 
      * @throws IllegalArgumentException
      *         when {@code minimumUnfolds < 1 || multiplier < 0.0}.
      */
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     protected AbstractUnfoldingModelChecker(int minimumUnfolds, double multiplier) {
         setMinimumUnfolds(minimumUnfolds);
         setMultiplier(multiplier);

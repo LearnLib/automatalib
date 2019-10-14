@@ -18,6 +18,7 @@ package net.automatalib.automata.graphs;
 import java.util.Objects;
 
 import net.automatalib.ts.UniversalTransitionSystem;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class TransitionEdge<I, T> {
 
@@ -42,7 +43,7 @@ public final class TransitionEdge<I, T> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -81,7 +82,7 @@ public final class TransitionEdge<I, T> {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }

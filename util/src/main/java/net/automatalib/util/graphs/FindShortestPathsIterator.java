@@ -23,11 +23,12 @@ import java.util.List;
 import java.util.Queue;
 import java.util.function.Predicate;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.AbstractIterator;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
+import org.checkerframework.checker.index.qual.NonNegative;
 
+@SuppressWarnings("nullness") // dataflow dependent nullness is hard to describe
 final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>> {
 
     private final Queue<N> bfsQueue;
@@ -38,11 +39,8 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>>
 
     FindShortestPathsIterator(IndefiniteGraph<N, E> graph,
                               Collection<? extends N> start,
-                              int limit,
+                              @NonNegative int limit,
                               Predicate<? super N> targetPred) {
-        Preconditions.checkArgument(limit >= 0, "Limit must be non-negative");
-        Preconditions.checkNotNull(targetPred, "Predicate must be non-null");
-
         this.graph = graph;
         this.preds = graph.createStaticNodeMapping();
         this.limit = limit;

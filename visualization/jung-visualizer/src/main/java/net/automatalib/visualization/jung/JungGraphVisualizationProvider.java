@@ -57,6 +57,7 @@ import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationProvider;
 import net.automatalib.visualization.helper.AggregateVisualizationHelper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +127,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
         DirectedGraph<NodeVisualization, EdgeVisualization> jungGraph = new DirectedSparseMultigraph<>();
 
-        MutableMapping<N, NodeVisualization> mapping = graph.createStaticNodeMapping();
+        MutableMapping<N, @Nullable NodeVisualization> mapping = graph.createStaticNodeMapping();
 
         NodeIDs<N> nodeIds = graph.nodeIDs();
 
@@ -247,6 +248,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
         }
     }
 
+    @SuppressWarnings("nullness") // we don't pass null to the functions
     public static final class NodeVisualization {
 
         public static final Function<NodeVisualization, String> LABEL = input -> input.label;
@@ -270,6 +272,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
         }
     }
 
+    @SuppressWarnings("nullness") // we don't pass null to the functions
     public static final class EdgeVisualization {
 
         public static final Function<EdgeVisualization, String> LABEL = input -> input.label;

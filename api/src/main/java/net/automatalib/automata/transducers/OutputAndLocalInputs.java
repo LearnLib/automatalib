@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A utility class for bundling information about the output of a system and the local inputs of the reached state.
  * Useful when trying to transform a partial {@link MealyMachine} to a complete automaton, while wanting to preserve the
@@ -43,9 +45,9 @@ public final class OutputAndLocalInputs<I, O> implements Serializable {
             new OutputAndLocalInputs<>(null, Collections.emptySet());
 
     private final Set<I> localInputs;
-    private final O output;
+    private final @Nullable O output;
 
-    public OutputAndLocalInputs(O output, Collection<? extends I> localInputs) {
+    public OutputAndLocalInputs(@Nullable O output, Collection<? extends I> localInputs) {
         this.localInputs = new HashSet<>(localInputs);
         this.output = output;
     }
@@ -59,7 +61,7 @@ public final class OutputAndLocalInputs<I, O> implements Serializable {
         return localInputs;
     }
 
-    public O getOutput() {
+    public @Nullable O getOutput() {
         return output;
     }
 
@@ -69,7 +71,7 @@ public final class OutputAndLocalInputs<I, O> implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

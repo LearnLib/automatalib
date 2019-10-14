@@ -23,6 +23,7 @@ import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class revolving around 1-SEVPAs.
@@ -59,6 +60,9 @@ public final class OneSEVPAUtil {
 
             for (I intSym : alphabet.getInternalAlphabet()) {
                 final L succ = sevpa.getInternalSuccessor(curr, intSym);
+                if (succ == null) {
+                    continue;
+                }
                 final int succIdx = sevpa.getLocationId(succ);
                 if (result.get(succIdx) != null) {
                     continue;
@@ -77,6 +81,9 @@ public final class OneSEVPAUtil {
                         final L src = reachable.get(i);
                         int stackSym = sevpa.encodeStackSym(src, callSym);
                         L succ = sevpa.getReturnSuccessor(curr, returnSym, stackSym);
+                        if (succ == null) {
+                            continue;
+                        }
                         int succIdx = sevpa.getLocationId(succ);
                         if (result.get(succIdx) == null) {
                             Word<I> succAs = computeAs ?
@@ -94,6 +101,9 @@ public final class OneSEVPAUtil {
                         if (src != curr) {
                             stackSym = sevpa.encodeStackSym(curr, callSym);
                             succ = sevpa.getReturnSuccessor(src, returnSym, stackSym);
+                            if (succ == null) {
+                                continue;
+                            }
                             succIdx = sevpa.getLocationId(succ);
                             if (result.get(succIdx) == null) {
                                 final Word<I> succAs = computeAs ?
@@ -120,13 +130,13 @@ public final class OneSEVPAUtil {
         return computeAccessSequences(sevpa, alphabet, true, l -> false).accessSequences;
     }
 
-    public static <L, I> Word<I> findRejectedWord(final OneSEVPA<L, I> sevpa, final VPDAlphabet<I> alphabet) {
+    public static <L, I> @Nullable Word<I> findRejectedWord(final OneSEVPA<L, I> sevpa, final VPDAlphabet<I> alphabet) {
         return computeAccessSequence(sevpa, alphabet, l -> !sevpa.isAcceptingLocation(l));
     }
 
-    public static <L, I> Word<I> computeAccessSequence(final OneSEVPA<L, I> sevpa,
-                                                       final VPDAlphabet<I> alphabet,
-                                                       final Predicate<? super L> predicate) {
+    public static <L, I> @Nullable Word<I> computeAccessSequence(final OneSEVPA<L, I> sevpa,
+                                                                 final VPDAlphabet<I> alphabet,
+                                                                 final Predicate<? super L> predicate) {
         final ReachResult<L, I> result = computeAccessSequences(sevpa, alphabet, true, predicate);
         L resultLoc = result.terminateLoc;
         if (resultLoc != null) {
@@ -141,24 +151,24 @@ public final class OneSEVPAUtil {
         return findSeparatingWord(sevpa1, sevpa2, alphabet) == null;
     }
 
-    public static <I> Word<I> findSeparatingWord(final OneSEVPA<?, I> sevpa1,
-                                                 final OneSEVPA<?, I> sevpa2,
-                                                 final VPDAlphabet<I> alphabet) {
+    public static <I> @Nullable Word<I> findSeparatingWord(final OneSEVPA<?, I> sevpa1,
+                                                           final OneSEVPA<?, I> sevpa2,
+                                                           final VPDAlphabet<I> alphabet) {
         final OneSEVPA<?, I> prod = OneSEVPAs.xor(sevpa1, sevpa2, alphabet);
         return findAcceptedWord(prod, alphabet);
     }
 
-    public static <L, I> Word<I> findAcceptedWord(final OneSEVPA<L, I> sevpa, final VPDAlphabet<I> alphabet) {
+    public static <L, I> @Nullable Word<I> findAcceptedWord(final OneSEVPA<L, I> sevpa, final VPDAlphabet<I> alphabet) {
         return computeAccessSequence(sevpa, alphabet, sevpa::isAcceptingLocation);
     }
 
     public static class ReachResult<L, I> {
 
-        public final L terminateLoc;
+        public final @Nullable L terminateLoc;
         public final List<L> reachableLocs;
         public final ArrayStorage<Word<I>> accessSequences;
 
-        public ReachResult(final L terminateLoc,
+        public ReachResult(final @Nullable L terminateLoc,
                            final List<L> reachableLocs,
                            final ArrayStorage<Word<I>> accessSequences) {
             this.terminateLoc = terminateLoc;

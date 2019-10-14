@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.automatalib.words.VPDAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Default implementation for 1-SEVPA.
@@ -89,7 +90,7 @@ public class DefaultOneSEVPA<I> extends AbstractOneSEVPA<Location, I> {
     }
 
     @Override
-    public Location getReturnSuccessor(final Location loc, final I retSym, final int stackSym) {
+    public @Nullable Location getReturnSuccessor(final Location loc, final I retSym, final int stackSym) {
         return loc.getReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym);
     }
 

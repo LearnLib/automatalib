@@ -53,7 +53,7 @@ public class EnumAlphabet<E extends Enum<E>> extends ArrayAlphabet<E> {
         }
 
         int index = symbol.ordinal();
-        return index >= 0 && index < symbols.length && symbols[index] == symbol;
+        return index < symbols.length && symbols[index] == symbol;
     }
 
     @Override

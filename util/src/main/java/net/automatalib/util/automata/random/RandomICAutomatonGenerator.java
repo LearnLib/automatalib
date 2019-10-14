@@ -29,7 +29,7 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.random.RandomUtil;
 import net.automatalib.words.Alphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A random generator for initially connected (IC) deterministic automata.
@@ -38,8 +38,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  * can be set conveniently using the {@code with...} methods in a fluent interface-like manner.
  * <p>
  * For conveniently generating initially connected deterministic automata of certain types, consider using the static
- * methods defined in class {@link RandomAutomata}, such as {@link RandomAutomata#randomICDFA(Random, int,
- * Alphabet, boolean)}.
+ * methods defined in class {@link RandomAutomata}, such as {@link RandomAutomata#randomICDFA(Random, int, Alphabet,
+ * boolean)}.
  *
  * @param <SP>
  *         state property type
@@ -48,12 +48,11 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author Malte Isberner
  */
+@SuppressWarnings("nullness") // for now the nullness of SP/TP depends on the provided suppliers
 public class RandomICAutomatonGenerator<SP, TP> {
 
-    @NonNull
-    private Function<? super Random, ? extends SP> spSupplier = (r) -> null;
-    @NonNull
-    private Function<? super Random, ? extends TP> tpSupplier = (r) -> null;
+    private Function<? super Random, ? extends @Nullable SP> spSupplier = (r) -> null;
+    private Function<? super Random, ? extends @Nullable TP> tpSupplier = (r) -> null;
 
     /**
      * Creates a random IC automaton generator instance for generating DFAs. States in generated automata will be

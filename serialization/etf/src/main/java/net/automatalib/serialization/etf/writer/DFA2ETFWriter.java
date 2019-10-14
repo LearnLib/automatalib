@@ -69,9 +69,12 @@ public final class DFA2ETFWriter<I> extends AbstractETFWriter<I, DFA<?, I>> {
         final StateIDs<S> stateIDs = dfa.stateIDs();
 
         // write the initial state
-        pw.println("begin init");
-        pw.printf("%d%n", stateIDs.getStateId(dfa.getInitialState()));
-        pw.println("end init");
+        final S init = dfa.getInitialState();
+        if (init != null) {
+            pw.println("begin init");
+            pw.printf("%d%n", stateIDs.getStateId(init));
+            pw.println("end init");
+        }
 
         // write the valuations of the state ids
         pw.println("begin sort id");

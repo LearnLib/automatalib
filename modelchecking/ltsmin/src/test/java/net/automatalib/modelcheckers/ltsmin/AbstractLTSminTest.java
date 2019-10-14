@@ -86,6 +86,7 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
         Assert.assertNull(noCE);
 
         R ce = getModelChecker().findCounterExample(automaton, alphabet, falseProperty);
+        Assert.assertNotNull(ce);
         Assert.assertEquals(counterExample.computeOutput(input), ce.computeOutput(input));
     }
 }

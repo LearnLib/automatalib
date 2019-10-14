@@ -15,8 +15,6 @@
  */
 package net.automatalib.incremental.dfa;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-
 /**
  * Tri-state acceptance value.
  *
@@ -55,7 +53,6 @@ public enum Acceptance {
      *
      * @return the corresponding acceptance value
      */
-    @NonNull
     public static Acceptance fromBoolean(boolean val) {
         return val ? TRUE : FALSE;
     }

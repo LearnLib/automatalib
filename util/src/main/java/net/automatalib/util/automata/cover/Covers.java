@@ -27,6 +27,7 @@ import com.google.common.collect.Sets;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author Malte Isberner
@@ -177,20 +178,25 @@ public final class Covers {
                                      Consumer<? super Word<I>> states,
                                      Consumer<? super Word<I>> transitions) {
 
-        MutableMapping<S, Word<I>> reach = automaton.createStaticStateMapping();
-
-        Queue<S> bfsQueue = new ArrayDeque<>();
-
         S init = automaton.getInitialState();
 
+        if (init == null) {
+            return;
+        }
+
+        MutableMapping<S, @Nullable Word<I>> reach = automaton.createStaticStateMapping();
         reach.put(init, Word.epsilon());
+
+        Queue<S> bfsQueue = new ArrayDeque<>();
         bfsQueue.add(init);
+
         states.accept(Word.epsilon());
 
         S curr;
 
         while ((curr = bfsQueue.poll()) != null) {
             Word<I> as = reach.get(curr);
+            assert as != null;
 
             for (I in : inputs) {
                 S succ = automaton.getSuccessor(curr, in);
@@ -233,8 +239,13 @@ public final class Covers {
                                                        Collection<? extends I> inputs,
                                                        Collection<? extends Word<I>> oldStates,
                                                        Collection<? super Word<I>> newStates) {
+        S init = automaton.getInitialState();
 
-        MutableMapping<S, Record<S, I>> reach = automaton.createStaticStateMapping();
+        if (init == null) {
+            return false;
+        }
+
+        MutableMapping<S, @Nullable Record<S, I>> reach = automaton.createStaticStateMapping();
 
         boolean augmented = false;
 
@@ -242,7 +253,6 @@ public final class Covers {
 
         buildReachFromStateCover(reach, bfsQueue, automaton, oldStates, Record::new);
 
-        S init = automaton.getInitialState();
         if (reach.get(init) == null) {
             // apparently the initial state was not yet covered
             Record<S, I> rec = new Record<>(init, Word.epsilon());
@@ -427,14 +437,18 @@ public final class Covers {
                                                 Consumer<? super Word<I>> newStateCover,
                                                 Consumer<? super Word<I>> newTransCover) {
 
-        MutableMapping<S, Record<S, I>> reach = automaton.createStaticStateMapping();
+        S init = automaton.getInitialState();
+
+        if (init == null) {
+            return;
+        }
+
+        MutableMapping<S, @Nullable Record<S, I>> reach = automaton.createStaticStateMapping();
 
         Queue<Record<S, I>> bfsQueue = new ArrayDeque<>();
 
         // We enforce that the initial state *always* is covered by the empty word,
         // regardless of whether other sequence in oldCover cover it
-        S init = automaton.getInitialState();
-
         Record<S, I> initRec = new Record<>(init, Word.epsilon(), Sets.newHashSetWithExpectedSize(inputs.size()));
         bfsQueue.add(initRec);
         reach.put(init, initRec);
@@ -506,7 +520,7 @@ public final class Covers {
         }
     }
 
-    static <S, I> boolean buildReachFromStateCover(MutableMapping<S, Record<S, I>> reach,
+    static <S, I> boolean buildReachFromStateCover(MutableMapping<S, @Nullable Record<S, I>> reach,
                                                    Queue<Record<S, I>> bfsQueue,
                                                    DeterministicAutomaton<S, I, ?> automaton,
                                                    Collection<? extends Word<I>> oldStateCover,
@@ -531,7 +545,7 @@ public final class Covers {
         return hasEpsilon;
     }
 
-    static <S, I> void buildReachFromTransitionCover(MutableMapping<S, Record<S, I>> reach,
+    static <S, I> void buildReachFromTransitionCover(MutableMapping<S, @Nullable Record<S, I>> reach,
                                                      Queue<Record<S, I>> bfsQueue,
                                                      DeterministicAutomaton<S, I, ?> automaton,
                                                      Collection<? extends Word<I>> oldTransCover,

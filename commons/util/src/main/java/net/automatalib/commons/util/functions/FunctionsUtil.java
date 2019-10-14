@@ -19,7 +19,6 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -45,8 +44,7 @@ public final class FunctionsUtil {
      * @return a non-{@code null} object identical to the passed function, if it is non-{@code null}, or a function
      * object always returning {@code null} otherwise
      */
-    @NonNull
-    public static <T, R> Function<T, R> safeDefault(@Nullable Function<T, R> func) {
+    public static <T, R> Function<T, ? extends @Nullable R> safeDefault(@Nullable Function<T, R> func) {
         if (func == null) {
             return (x) -> null;
         }
@@ -64,8 +62,7 @@ public final class FunctionsUtil {
      * @return a non-{@code null} object identical to the passed function, if it is non-{@code null}, or a function
      * object always returning {@code null} otherwise
      */
-    @NonNull
-    public static <R> IntFunction<R> safeDefault(@Nullable IntFunction<R> func) {
+    public static <R> IntFunction<? extends @Nullable R> safeDefault(@Nullable IntFunction<R> func) {
         if (func == null) {
             return (i) -> null;
         }
@@ -83,15 +80,13 @@ public final class FunctionsUtil {
      * @return a non-{@code null} object identical to the passed function, if it is non-{@code null}, or a function
      * object always returning {@code null} otherwise
      */
-    @NonNull
-    public static <R> BiIntFunction<R> safeDefault(@Nullable BiIntFunction<R> func) {
+    public static <R> BiIntFunction<? extends @Nullable R> safeDefault(@Nullable BiIntFunction<R> func) {
         if (func == null) {
             return (i1, i2) -> null;
         }
         return func;
     }
 
-    @NonNull
     public static <T> Predicate<T> safeToTrue(@Nullable Predicate<T> func) {
         if (func == null) {
             return (x) -> true;
@@ -99,7 +94,6 @@ public final class FunctionsUtil {
         return func;
     }
 
-    @NonNull
     public static <T> Predicate<T> safeToFalse(@Nullable Predicate<T> func) {
         if (func == null) {
             return (x) -> false;

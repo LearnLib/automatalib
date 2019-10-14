@@ -26,6 +26,7 @@ import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DeterministicEquivalenceTest<I> {
 
@@ -36,14 +37,15 @@ public class DeterministicEquivalenceTest<I> {
         this.reference = reference;
     }
 
-    public Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
-                                      Collection<? extends I> inputs) {
+    public @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+                                                Collection<? extends I> inputs) {
         return findSeparatingWord(reference, other, inputs);
     }
 
-    public static <I, S, T, S2, T2> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> reference,
-                                                               UniversalDeterministicAutomaton<S2, I, T2, ?, ?> other,
-                                                               Collection<? extends I> inputs) {
+    public static <I, S, T, SP, TP, S2, T2, SP2, TP2> @Nullable Word<I> findSeparatingWord(
+            UniversalDeterministicAutomaton<S, I, T, SP, TP> reference,
+            UniversalDeterministicAutomaton<S2, I, T2, SP2, TP2> other,
+            Collection<? extends I> inputs) {
         int refSize = reference.size();
         int totalStates = refSize * other.size();
 
@@ -54,7 +56,12 @@ public class DeterministicEquivalenceTest<I> {
         S refInit = reference.getInitialState();
         S2 otherInit = other.getInitialState();
 
-        Object refStateProp = reference.getStateProperty(refInit), otherStateProp = other.getStateProperty(otherInit);
+        if (refInit == null || otherInit == null) {
+            return refInit == null && otherInit == null ? null : Word.epsilon();
+        }
+
+        SP refStateProp = reference.getStateProperty(refInit);
+        SP2 otherStateProp = other.getStateProperty(otherInit);
 
         if (!Objects.equals(refStateProp, otherStateProp)) {
             return Word.epsilon();
@@ -71,7 +78,7 @@ public class DeterministicEquivalenceTest<I> {
 
         @SuppressWarnings("unchecked")
         Pred<I>[] preds = new Pred[totalStates];
-        preds[lastId] = new Pred<>(-1, null);
+        preds[lastId] = new Pred<>();
 
         int currDepth = 0;
         int inCurrDepth = 1;
@@ -92,12 +99,16 @@ public class DeterministicEquivalenceTest<I> {
                 T refTrans = reference.getTransition(refState, in);
                 T2 otherTrans = other.getTransition(otherState, in);
 
-                if ((refTrans == null || otherTrans == null) && refTrans != otherTrans) {
-                    break bfs;
+                if (refTrans == null || otherTrans == null) {
+                    if (refTrans == null && otherTrans == null) {
+                        continue;
+                    } else {
+                        break bfs;
+                    }
                 }
 
-                Object refProp = reference.getTransitionProperty(refTrans);
-                Object otherProp = other.getTransitionProperty(otherTrans);
+                TP refProp = reference.getTransitionProperty(refTrans);
+                TP2 otherProp = other.getTransitionProperty(otherTrans);
                 if (!Objects.equals(refProp, otherProp)) {
                     break bfs;
                 }
@@ -135,28 +146,33 @@ public class DeterministicEquivalenceTest<I> {
             return null;
         }
 
+        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
         WordBuilder<I> sep = new WordBuilder<>(null, currDepth + 1);
         int index = currDepth;
         sep.setSymbol(index--, lastSym);
 
         Pred<I> pred = preds[lastId];
-        I sym = pred.symbol;
-        while (sym != null) {
-            sep.setSymbol(index--, sym);
+        while (pred.id >= 0) {
+            sep.setSymbol(index--, pred.symbol);
             pred = preds[pred.id];
-            sym = pred.symbol;
         }
 
         return sep.toWord();
     }
 
-    public static <I, S, T, S2, T2> Word<I> findSeparatingWordLarge(UniversalDeterministicAutomaton<S, I, T, ?, ?> reference,
-                                                                    UniversalDeterministicAutomaton<S2, I, T2, ?, ?> other,
-                                                                    Collection<? extends I> inputs) {
+    public static <I, S, T, SP, TP, S2, T2, SP2, TP2> @Nullable Word<I> findSeparatingWordLarge(
+            UniversalDeterministicAutomaton<S, I, T, SP, TP> reference,
+            UniversalDeterministicAutomaton<S2, I, T2, SP2, TP2> other,
+            Collection<? extends I> inputs) {
         S refInit = reference.getInitialState();
         S2 otherInit = other.getInitialState();
 
-        Object refStateProp = reference.getStateProperty(refInit), otherStateProp = other.getStateProperty(otherInit);
+        if (refInit == null || otherInit == null) {
+            return refInit == null && otherInit == null ? null : Word.epsilon();
+        }
+
+        SP refStateProp = reference.getStateProperty(refInit);
+        SP2 otherStateProp = other.getStateProperty(otherInit);
 
         if (!Objects.equals(refStateProp, otherStateProp)) {
             return Word.epsilon();
@@ -175,7 +191,7 @@ public class DeterministicEquivalenceTest<I> {
 
         //TIntObjectMap<Pred<I>> preds = new TIntObjectHashMap<>();
         Map<Integer, Pred<I>> preds = new HashMap<>(); // TODO: replace by primitive specialization
-        preds.put(lastId, new Pred<>(-1, null));
+        preds.put(lastId, new Pred<>());
 
         int currDepth = 0;
         int inCurrDepth = 1;
@@ -196,12 +212,16 @@ public class DeterministicEquivalenceTest<I> {
                 T refTrans = reference.getTransition(refState, in);
                 T2 otherTrans = other.getTransition(otherState, in);
 
-                if ((refTrans == null || otherTrans == null) && refTrans != otherTrans) {
-                    break bfs;
+                if (refTrans == null || otherTrans == null) {
+                    if (refTrans == null && otherTrans == null) {
+                        continue;
+                    } else {
+                        break bfs;
+                    }
                 }
 
-                Object refProp = reference.getTransitionProperty(refTrans);
-                Object otherProp = other.getTransitionProperty(otherTrans);
+                TP refProp = reference.getTransitionProperty(refTrans);
+                TP2 otherProp = other.getTransitionProperty(otherTrans);
                 if (!Objects.equals(refProp, otherProp)) {
                     break bfs;
                 }
@@ -239,16 +259,17 @@ public class DeterministicEquivalenceTest<I> {
             return null;
         }
 
+        @SuppressWarnings("nullness") // we make sure to set each index to a value of type I
         WordBuilder<I> sep = new WordBuilder<>(null, currDepth + 1);
         int index = currDepth;
         sep.setSymbol(index--, lastSym);
 
         Pred<I> pred = preds.get(lastId);
-        I sym = pred.symbol;
-        while (sym != null) {
-            sep.setSymbol(index--, sym);
+        assert pred != null;
+        while (pred.id >= 0) {
+            sep.setSymbol(index--, pred.symbol);
             pred = preds.get(pred.id);
-            sym = pred.symbol;
+            assert pred != null;
         }
 
         return sep.toWord();
@@ -269,6 +290,12 @@ public class DeterministicEquivalenceTest<I> {
 
         public final int id;
         public final I symbol;
+
+        @SuppressWarnings("nullness") // we check this special element using its id value
+        Pred() {
+            this.id = -1;
+            this.symbol = null;
+        }
 
         Pred(int id, I input) {
             this.id = id;

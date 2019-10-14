@@ -92,21 +92,26 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
     }
 
     @Override
-    public Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
-                                      Collection<? extends I> inputs,
-                                      boolean omitUndefined) {
+    public @Nullable Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
+                                                Collection<? extends I> inputs,
+                                                boolean omitUndefined) {
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    private <S, T> Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> target,
-                                                Collection<? extends I> inputs,
-                                                boolean omitUndefined) {
-        Deque<Record<S, N, I>> dfsStack = new ArrayDeque<>();
+    private <S, T> @Nullable Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> target,
+                                                          Collection<? extends I> inputs,
+                                                          boolean omitUndefined) {
+        Deque<Record<@Nullable S, N, I>> dfsStack = new ArrayDeque<>();
 
-        dfsStack.push(new Record<>(target.getInitialState(), root, null, inputs.iterator()));
+        // reachedFrom can be null here, because we will always skip the bottom stack element below
+        @SuppressWarnings("nullness")
+        final Record<@Nullable S, N, I> init = new Record<>(target.getInitialState(), root, null, inputs.iterator());
+
+        dfsStack.push(init);
 
         while (!dfsStack.isEmpty()) {
-            Record<S, N, I> rec = dfsStack.peek();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull Record<@Nullable S, N, I> rec = dfsStack.peek();
             if (!rec.inputIt.hasNext()) {
                 dfsStack.pop();
                 continue;
@@ -117,7 +122,8 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
                 continue;
             }
 
-            T trans = target.getTransition(rec.automatonState, input);
+            S state = rec.automatonState;
+            T trans = state == null ? null : target.getTransition(state, input);
             if (omitUndefined && trans == null) {
                 continue;
             }
@@ -134,13 +140,15 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
                 return wb.reverse().toWord();
             }
 
-            dfsStack.push(new Record<>(target.getSuccessor(trans), edge.getTarget(), input, inputs.iterator()));
+            final Record<@Nullable S, N, I> nextRecord =
+                    new Record<>(target.getSuccessor(trans), edge.getTarget(), input, inputs.iterator());
+            dfsStack.push(nextRecord);
         }
 
         return null;
     }
 
-    protected abstract Edge<N, O> getEdge(N node, I symbol);
+    protected abstract @Nullable Edge<N, O> getEdge(N node, I symbol);
 
     protected abstract N createNode();
 
@@ -183,19 +191,16 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
         }
 
         @Override
-        @Nullable
         public I getInputSymbol(AnnotatedEdge<N, I, O> edge) {
             return edge.getInput();
         }
 
         @Override
-        @Nullable
         public O getOutputSymbol(AnnotatedEdge<N, I, O> edge) {
             return edge.getOutput();
         }
 
         @Override
-        @NonNull
         public N getInitialNode() {
             return root;
         }
@@ -222,7 +227,7 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
     public class TransitionSystemView implements MealyTransitionSystem<N, I, Edge<N, O>, O> {
 
         @Override
-        public Edge<N, O> getTransition(N state, I input) {
+        public @Nullable Edge<N, O> getTransition(N state, I input) {
             return getEdge(state, input);
         }
 

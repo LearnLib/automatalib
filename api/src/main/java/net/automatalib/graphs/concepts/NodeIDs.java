@@ -24,13 +24,16 @@ package net.automatalib.graphs.concepts;
 public interface NodeIDs<N> {
 
     /**
-     * Returns for a given node of the graph an integer uniquely identifying the node.
+     * Returns for a given node of the graph an integer uniquely identifying the node. The returned ids should be within
+     * the range of the number of states of the graph so that they can be used for array-based indexing.
      *
      * @param node
      *         the node whose id should be retrieved
      *
-     * @return the (positive) id of the given graph node. May return a negative value, if {@code node} does not belong
-     * to the graph.
+     * @return the (positive) id of the given graph node.
+     *
+     * @throws IllegalArgumentException
+     *         if {@code node} does not belong to the graph.
      */
     int getNodeId(N node);
 
@@ -40,8 +43,10 @@ public interface NodeIDs<N> {
      * @param id
      *         the id of the node to be returned
      *
-     * @return the graph node identified by the given {@code id}. May return {@code null} if the given {@code id} does
-     * not identify a node of the graph.
+     * @return the graph node identified by the given {@code id}.
+     *
+     * @throws IllegalArgumentException
+     *         if the given {@code id} does not identify a node of the graph.
      */
     N getNode(int id);
 }

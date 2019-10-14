@@ -108,6 +108,7 @@ public final class GraphTraversal {
         }
 
         while (!dfsStack.isEmpty()) {
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
             DFRecord<N, E, D> current = dfsStack.peek();
 
             N currNode = current.node;
@@ -221,6 +222,7 @@ public final class GraphTraversal {
 
         bfs_loop:
         while (!bfsQueue.isEmpty()) {
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
             BFRecord<N, D> current = bfsQueue.poll();
 
             N currNode = current.node;

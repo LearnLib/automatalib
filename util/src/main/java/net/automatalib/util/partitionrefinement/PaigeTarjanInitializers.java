@@ -22,6 +22,7 @@ import java.util.function.IntFunction;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class provides several methods to initialize a {@link PaigeTarjan} partition refinement data structure from
@@ -102,7 +103,7 @@ public final class PaigeTarjanInitializers {
         int[] data = new int[dataSize];
         Block[] blockForState = new Block[numStates];
 
-        Map<Object, Block> blockMap = new HashMap<>();
+        Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
         int init = absAutomaton.getIntInitialState();
         Object initClass = initialClassification.apply(init);
@@ -197,7 +198,7 @@ public final class PaigeTarjanInitializers {
         int[] data = new int[dataSize];
         Block[] blockForState = new Block[numStates];
 
-        Map<Object, Block> blockMap = new HashMap<>();
+        Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
         for (int i = 0; i < numStates; i++) {
             Object classification = initialClassification.apply(i);
@@ -299,7 +300,7 @@ public final class PaigeTarjanInitializers {
         int[] data = new int[dataSize];
         Block[] blockForState = new Block[numStatesWithSink];
 
-        Map<Object, Block> blockMap = new HashMap<>();
+        Map<@Nullable Object, Block> blockMap = new HashMap<>();
 
         int initId = absAutomaton.getIntInitialState();
 

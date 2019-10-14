@@ -91,7 +91,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      * @param acceptingDataValue
      *         the string for acceptance (see {@link #acceptingDataValue})
      */
-    private FSM2DFAParser(Collection<? extends I> targetInputs,
+    private FSM2DFAParser(@Nullable Collection<? extends I> targetInputs,
                           Function<String, I> inputParser,
                           String acceptingDataVariableName,
                           String acceptingDataValue) {
@@ -121,7 +121,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
 
             final String dataVariableName = streamTokenizer.sval;
 
-            if (dataVariableName.equals(acceptingDataVariableName)) {
+            if (acceptingDataVariableName.equals(dataVariableName)) {
                 acceptIndex = getPartLineNumber();
 
                 // skip a (
@@ -149,7 +149,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
                 // find the string containing the acceptance information
                 while (streamTokenizer.nextToken() == '"' && acceptValue == -1) {
                     final String dataValue = streamTokenizer.sval;
-                    if (dataValue.equals(acceptingDataValue)) {
+                    if (acceptingDataValue.equals(dataValue)) {
                         acceptValue = dataValueIndex;
                     } else {
                         dataValueIndex++;

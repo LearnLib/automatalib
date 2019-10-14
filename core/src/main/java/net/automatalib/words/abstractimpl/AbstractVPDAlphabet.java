@@ -21,7 +21,6 @@ import java.util.Set;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract utility class that implements functionality shared across different subtypes.
@@ -112,7 +111,7 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
         } else if (returnAlphabet.containsSymbol(symbol)) {
             return SymbolType.RETURN;
         } else {
-            return null;
+            throw new IllegalArgumentException("Symbol is not contained in this alphabet");
         }
     }
 
@@ -121,7 +120,6 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
         return internalAlphabet.size() + callAlphabet.size() + returnAlphabet.size();
     }
 
-    @Nullable
     @Override
     public I getSymbol(int index) {
         int localIndex = index;
@@ -146,7 +144,7 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
-    public int getSymbolIndex(@Nullable I symbol) {
+    public int getSymbolIndex(I symbol) {
         int offset = 0;
 
         if (internalAlphabet.containsSymbol(symbol)) {
