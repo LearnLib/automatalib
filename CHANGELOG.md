@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `net.automatalib.automata.transducers.impl.map.SimpleMapGraph` -> `net.automatalib.graphs.map.SimpleMapGraph`
 * The `BackedGeneralPriorityQueue(Class<T> c)` constructor was replaced with a more idiomatic `BackedGeneralPriorityQueue(Supplier<T> s)` constructor.
 * The TAF serialization code now forwards (i.e. `throws`) `IOException`s that occurr when reading from the various data sources.
+* Replaced JSR305 annotations with checker-framework annotations. Thereby we also adapted checker-frameworks convention that (non-annotated) types are usually considered non-null unless explicitly annotated with `@Nullable`.
 
 ### Removed
 
@@ -35,12 +36,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `VPDAlphabet` interface no longer specifies the `get{Internal,Call,Return}Symbols()` methods, as the `get{Internal,Call,Return}Alphabet()` methods supersede their functionality.
 * `PaigeTarjan{Initializers,Extractors}` methods for non `IntAbstraction`s have been removed. You may use the new convenience methods provided by `PaigeTarjanMinimization`.
 * Further `@Deprecated` methods have been removed.
+* Removed `ProbMealyTransition` and replaced it with the generic `MealyTransition` directly carrying the `ProbabilisticOutput`. It is no longer allowed to pass `null` as transition property.
 
 
 ### Fixed
 
 * Fixed a bug, where the PaigeTarjan-based minimization would return a wrong automaton, when pruning was enabled and the initial automaton was partial.
-* Several bugs detected by our ongoing efforts to write tests.
+* Fixed a bug in our Tarjan SCC implementation ([#35](https://github.com/LearnLib/automatalib/pull/35), thanks to [Malte Mues](https://github.com/mmuesly))
+* Several (null-related) bugs detected by our ongoing efforts to write tests.
 
 
 ## [0.8.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.8.0) - 2019-02-07
