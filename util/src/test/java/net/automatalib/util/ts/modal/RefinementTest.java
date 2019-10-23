@@ -24,43 +24,18 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class RefinementTest {
 
-    @Test
-    public void refinementOfTest01() {
-        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'd');
+    @Test(description = "Change may to must in implementation")
+    void mayToMustTest() {
+        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'c');
         final CompactMTS<String> a = new CompactMTS<>(alphabet);
         final CompactMTS<String> b = new CompactMTS<>(alphabet);
 
         final Integer as0 = a.addInitialState();
         final Integer as1 = a.addState();
-        final Integer as2 = a.addState();
-
-        final Integer bs0 = b.addInitialState();
-        final Integer bs1 = b.addState();
-
-        a.addTransition(as0, "a", as1, null);
-        a.addTransition(as0, "c", as1, new ModalEdgePropertyImpl(ModalType.MAY));
-        a.addTransition(as1, "a", as2, null);
-        a.addTransition(as2, "a", as2, null);
-
-        b.addTransition(bs0, "a", bs0, null);
-        b.addTransition(bs0, "c", bs1, null);
-        b.addTransition(bs1, "a", bs1, null);
-        b.addTransition(bs0, "b", bs0, null);
-
-        Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
-    }
-
-    @Test
-    void refinementOfTest02() {
-        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'd');
-        final CompactMTS<String> a = new CompactMTS<>(alphabet);
-        final CompactMTS<String> b = new CompactMTS<>(alphabet);
-
-        final Integer as0 = a.addInitialState();
-        final Integer as1 = a.addState();
-        final Integer as2 = a.addState();
 
         final Integer bs0 = b.addInitialState();
         final Integer bs1 = b.addState();
@@ -77,47 +52,105 @@ public class RefinementTest {
     /*
     bisimulation implies refinement
      */
-    @Test
-    public void bisimTestLoop() {
-        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'd');
-        final CompactMTS<String> a = new CompactMTS<>(alphabet);
-        final CompactMTS<String> b = new CompactMTS<>(alphabet);
-
-        final Integer as0 = a.addInitialState();
-        final Integer as1 = a.addState();
-        final Integer as2 = a.addState();
-
-        final Integer bs0 = b.addInitialState();
-
-        a.addTransition(as0, "a", as1, null);
-        a.addTransition(as1, "a", as2, null);
-        a.addTransition(as2, "a", as2, null);
-
-        b.addTransition(bs0, "a", bs0, null);
-
-        Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
-    }
-
-    @Test
+    @Test(description = "unroll loop")
     public void bisimTestDiff() {
-        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'd');
+        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
         final CompactMTS<String> a = new CompactMTS<>(alphabet);
         final CompactMTS<String> b = new CompactMTS<>(alphabet);
 
         final Integer as0 = a.addInitialState();
         final Integer as1 = a.addState();
-        final Integer as2 = a.addState();
 
         final Integer bs0 = b.addInitialState();
 
         a.addTransition(as0, "a", as1, null);
-        a.addTransition(as1, "a", as2, null);
-        a.addTransition(as2, "a", as2, null);
+        a.addTransition(as1, "a", as1, null);
 
         b.addTransition(bs0, "a", bs0, null);
-        b.addTransition(bs0, "b", bs0, null);
 
-        Assert.assertTrue(MTSUtil.refinementRelation(a, b, alphabet).contains(Pair.of(as0, bs0)));
+        assertThat(ModalRefinement.refinementRelation(a, b, alphabet))
+                .containsExactlyInAnyOrder(Pair.of(as0, bs0), Pair.of(as1, bs0));
         Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
     }
+
+    @Test(description = "Example from Larsen in On Modal Refinement and Consistency")
+    public void larsenTest() {
+        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
+        final CompactMTS<String> s = new CompactMTS<>(alphabet);
+        final CompactMTS<String> t = new CompactMTS<>(alphabet);
+
+        final Integer as0 = s.addInitialState();
+        final Integer as1 = s.addState();
+        final Integer as2 = s.addState();
+
+        final Integer bs0 = t.addInitialState();
+        final Integer bs1 = t.addInitialState();
+        final Integer bs2 = t.addInitialState();
+
+        s.addTransition(as0, "a", as1, new ModalEdgePropertyImpl(ModalType.MAY));
+        s.addTransition(as1, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+
+        // TODO: consider writing a static factory method for properties and/or use an Enum type
+        t.addTransition(bs0, "a", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
+        t.addTransition(bs0, "a", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
+        t.addTransition(bs1, "b", bs2, new ModalEdgePropertyImpl(ModalType.MUST));
+
+        Assert.assertFalse(MTSUtil.isRefinementOf(s, t, alphabet));
+    }
+
+    @Test
+    public void larsenTestMod1() {
+        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
+        final CompactMTS<String> s = new CompactMTS<>(alphabet);
+        final CompactMTS<String> t = new CompactMTS<>(alphabet);
+
+        final Integer as0 = s.addInitialState();
+        final Integer as1 = s.addState();
+        final Integer as2 = s.addState();
+
+        final Integer bs0 = t.addInitialState();
+        final Integer bs1 = t.addInitialState();
+        final Integer bs2 = t.addInitialState();
+
+        s.addTransition(as0, "a", as1, new ModalEdgePropertyImpl(ModalType.MAY));
+        s.addTransition(as1, "b", as2, new ModalEdgePropertyImpl(ModalType.MUST));
+
+        t.addTransition(bs0, "a", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
+        t.addTransition(bs0, "a", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
+        t.addTransition(bs1, "b", bs2, new ModalEdgePropertyImpl(ModalType.MUST));
+
+        Assert.assertTrue(MTSUtil.isRefinementOf(s, t, alphabet));
+    }
+
+    @Test(description = "Example from Jasper")
+    public void jasperTest1() {
+        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
+        final CompactMTS<String> s = new CompactMTS<>(alphabet);
+        final CompactMTS<String> t = new CompactMTS<>(alphabet);
+
+        final Integer as0 = s.addInitialState();
+        final Integer as1 = s.addState();
+        final Integer as2 = s.addState();
+
+        final Integer bs0 = t.addInitialState();
+        final Integer bs1 = t.addInitialState();
+        final Integer bs2 = t.addInitialState();
+
+        s.addTransition(as0, "a", as0, new ModalEdgePropertyImpl(ModalType.MUST));
+        s.addTransition(as0, "b", as1, new ModalEdgePropertyImpl(ModalType.MUST));
+        s.addTransition(as1, "a", as1, new ModalEdgePropertyImpl(ModalType.MUST));
+        s.addTransition(as1, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+        s.addTransition(as2, "a", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+        s.addTransition(as2, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+
+        t.addTransition(bs0, "a", bs0, new ModalEdgePropertyImpl(ModalType.MUST));
+        t.addTransition(bs0, "b", bs1, new ModalEdgePropertyImpl(ModalType.MUST));
+        t.addTransition(bs1, "a", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
+        t.addTransition(bs1, "b", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
+        t.addTransition(bs2, "a", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
+        t.addTransition(bs2, "b", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
+
+        Assert.assertTrue(MTSUtil.isRefinementOf(s, t, alphabet));
+    }
+
 }

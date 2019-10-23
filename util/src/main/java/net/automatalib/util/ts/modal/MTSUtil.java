@@ -73,97 +73,15 @@ public final class MTSUtil {
         return Workset.map(new ModalParallelComposition<>(mc0, mc1, creator)).getSecond();
     }
 
-    public static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> Set<Pair<AS, BS>> refinementRelation(
-            ModalTransitionSystem<AS, I, AT, ATP> a,
-            ModalTransitionSystem<BS, I, BT, BTP> b,
-            Collection<I> inputs) {
-
-        Set<Pair<AS, BS>> refinement = Sets.newHashSetWithExpectedSize(a.size() * b.size());
-        Set<Pair<AS, BS>> change = Sets.newHashSetWithExpectedSize(a.size() * b.size());
-
-        for (AS p : a.getStates()) {
-            for (BS q : b.getStates()) {
-
-                for (I sym : inputs) {
-                    if (a.getTransitions(p, sym).isEmpty() || !b.getTransitions(q, sym).isEmpty()) {
-                        LOGGER.debug("Adding pair ({},{})", p, q);
-                        change.add(Pair.of(p, q));
-                        break;
-                    }
-                }
-            }
-        }
-
-        Set<Pair<AS, BS>> swap;
-        boolean forall, exists;
-        while (!refinement.equals(change)) {
-            swap = change;
-            change = refinement;
-            refinement = swap;
-            change.clear();
-
-            LOGGER.debug("Pairs {}", refinement);
-
-            for (Pair<AS, BS> p : refinement) {
-                LOGGER.debug("Checking {}", p);
-
-                forall = true;
-                for (I sym : inputs) {
-                    for (AT t : a.getTransitions(p.getFirst(), sym)) {
-                        LOGGER.debug("Searching corresponding transition for {}", t);
-
-                        exists = false;
-                        for (BT f : b.getTransitions(p.getSecond(), sym)) {
-                            if (a.getTransitionProperty(t).isMust() && b.getTransitionProperty(f).isMayOnly()) {
-                                continue;
-                            }
-                            assert (a.getTransitionProperty(t).isMayOnly() || a.getTransitionProperty(t).isMust()) &&
-                                   (b.getTransitionProperty(f).isMayOnly() || b.getTransitionProperty(f).isMust()) :
-                                    "Transitions have to be may-only or must. Null or other values are not allowed.";
-
-                            for (Pair<AS, BS> s : refinement) {
-                                if (a.getSuccessor(t).equals(s.getFirst()) && b.getSuccessor(f).equals(s.getSecond())) {
-                                    LOGGER.debug("Found transition {}", f);
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            if (exists) {
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            LOGGER.info("Found no corresponding transition for {}", t);
-                            forall = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (forall) {
-                    LOGGER.debug("Keeping {}", p);
-                    change.add(p);
-                } else {
-                    LOGGER.debug("Removing {}", p);
-                }
-            }
-
-        }
-        LOGGER.info("Refinement relation {}", change);
-
-        return change;
-
-    }
-
     public static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> boolean isRefinementOf(
             ModalTransitionSystem<AS, I, AT, ATP> a,
             ModalTransitionSystem<BS, I, BT, BTP> b,
             Collection<I> input) {
 
-        final Set<Pair<AS, BS>> refinement = refinementRelation(a, b, input);
+        final Set<Pair<AS, BS>> refinement = ModalRefinement.refinementRelation(a, b, input);
 
-        final Set<AS> statesA = new HashSet<>(a.getStates());
-        final Set<BS> statesB = new HashSet<>(b.getStates());
+        final Set<AS> statesA = new HashSet<>(a.getInitialStates());
+        final Set<BS> statesB = new HashSet<>(b.getInitialStates());
 
         for (Pair<AS, BS> p : refinement) {
             statesA.remove(p.getFirst());
