@@ -42,7 +42,7 @@ public class CompactMTSTest {
         final ModalEdgeProperty tprop1 = new ModalEdgePropertyImpl(null);
         final ModalEdgeProperty tprop2 = new ModalEdgePropertyImpl(ModalType.MAY);
 
-        return new Object[][] {{mts, s0, s1, 'a', tprop1}, {mts, s0, s2, 'd', tprop2}};
+        return new Object[][] {{mts, s0, s1, 'a', tprop1}, {mts, s0, s2, 'd', tprop2}, {mts, s2, s0, 'a', tprop2}};
     }
 
     @Test(dataProvider = "default", description = "Add Transition with non-null Property")

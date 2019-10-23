@@ -104,6 +104,7 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
         final Set<MTSTransition<I, TP>> trans = Sets.newHashSetWithExpectedSize(transitions.size());
 
         for (final MTSTransition<I, TP> t : transitions) {
+            t.setSource(state);
             t.setLabel(input);
             trans.add(t);
 
