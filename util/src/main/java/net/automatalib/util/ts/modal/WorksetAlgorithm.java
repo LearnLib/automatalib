@@ -21,13 +21,38 @@ import java.util.Deque;
 /**
  * @author msc
  */
-interface WorksetAlgorithm<T, E> {
+interface WorksetAlgorithm<T, R> {
 
+    /**
+     * Provides a hint to initialize containers appropriately.
+     *
+     * @return expected number of elements visited
+     */
     int expectedElementCount();
 
+    /**
+     * Fill the stack with the initial elements that should be processed by {@link #update(T) update} in
+     * the first iterations.
+     *
+     * @param stack container to fill with initial elements
+     */
     void initialize(Deque<T> stack);
 
+    /**
+     * Process the given element and perform its corresponding actions.
+     * If during this process the need arises to update other elements as well, return them.
+     *
+     * @param currentT the current element that should be processed by this method
+     * @return a collection of elements that need to be processed
+     */
     Collection<T> update(T currentT);
 
-    E result();
+    /**
+     * Provides the result of this algorithms internal action.
+     * More precise, this function returns the accumulated object E after the successful application of <it>all</it>
+     * {@link #update(T) update} calls.
+     *
+     * @return the resulting object
+     */
+    R result();
 }

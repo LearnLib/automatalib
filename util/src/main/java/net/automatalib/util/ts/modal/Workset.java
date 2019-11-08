@@ -34,12 +34,12 @@ public final class Workset {
         // prevent instantiation
     }
 
-    public static <T, E> E process(WorksetAlgorithm<T, E> algo) {
+    public static <T, R> R process(WorksetAlgorithm<T, R> algorithm) {
 
-        final Deque<T> stack = new ArrayDeque<>(algo.expectedElementCount());
-        final Set<T> tracking = Sets.newHashSetWithExpectedSize(algo.expectedElementCount());
+        final Deque<T> stack = new ArrayDeque<>(algorithm.expectedElementCount());
+        final Set<T> tracking = Sets.newHashSetWithExpectedSize(algorithm.expectedElementCount());
 
-        algo.initialize(stack);
+        algorithm.initialize(stack);
         tracking.addAll(stack);
 
         while (!stack.isEmpty()) {
@@ -47,7 +47,7 @@ public final class Workset {
             T current = stack.pop();
             tracking.remove(current);
 
-            Collection<T> discovered = algo.update(current);
+            Collection<T> discovered = algorithm.update(current);
 
             for (T element : discovered) {
                 if (!tracking.contains(element)) {
@@ -58,16 +58,16 @@ public final class Workset {
 
         }
 
-        return algo.result();
+        return algorithm.result();
     }
 
-    public static <T, E, D> Pair<Map<T, E>, D> map(WorksetMappingAlgorithm<T, E, D> algo) {
+    public static <T, E, R> Pair<Map<T, E>, R> map(WorksetMappingAlgorithm<T, E, R> algorithm) {
 
-        final Deque<T> stack = new ArrayDeque<>(algo.expectedElementCount());
-        final Set<T> tracking = Sets.newHashSetWithExpectedSize(algo.expectedElementCount());
-        final Map<T, E> mapping = Maps.newHashMapWithExpectedSize(algo.expectedElementCount());
+        final Deque<T> stack = new ArrayDeque<>(algorithm.expectedElementCount());
+        final Set<T> tracking = Sets.newHashSetWithExpectedSize(algorithm.expectedElementCount());
+        final Map<T, E> mapping = Maps.newHashMapWithExpectedSize(algorithm.expectedElementCount());
 
-        algo.initialize(stack, mapping);
+        algorithm.initialize(stack, mapping);
         tracking.addAll(stack);
 
         while (!stack.isEmpty()) {
@@ -76,7 +76,7 @@ public final class Workset {
             E currentE = mapping.get(currentT);
             tracking.remove(currentT);
 
-            final Collection<T> discovered = algo.update(mapping, currentT, currentE);
+            final Collection<T> discovered = algorithm.update(mapping, currentT, currentE);
 
             for (T element : discovered) {
                 if (!tracking.contains(element)) {
@@ -86,7 +86,7 @@ public final class Workset {
             }
         }
 
-        return Pair.of(mapping, algo.result());
+        return Pair.of(mapping, algorithm.result());
     }
 
 }
