@@ -62,7 +62,7 @@ final class AllCombinationsIterator<T> implements Iterator<List<T>> {
         }
 
         for (Iterator<? extends T> it : iterators) {
-            if (it == null || it.hasNext()) {
+            if (it.hasNext()) {
                 return true;
             }
         }

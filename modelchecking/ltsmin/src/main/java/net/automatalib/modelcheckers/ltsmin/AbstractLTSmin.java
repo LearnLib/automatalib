@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -263,6 +264,10 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
 
         public static boolean keepFiles() {
             return false;
+        }
+
+        public static <O> Collection<? super O> skipOutputs() {
+            return Collections.emptyList();
         }
     }
 }

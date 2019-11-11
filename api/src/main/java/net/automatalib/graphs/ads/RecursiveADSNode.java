@@ -153,7 +153,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
 
                 for (final Map.Entry<O, N> e : src.getChildren().entrySet()) {
                     if (e.getValue().equals(tgt)) {
-                        properties.put(EdgeAttrs.LABEL, e.getKey().toString());
+                        properties.put(EdgeAttrs.LABEL, String.valueOf(e.getKey()));
                         return true;
                     }
                 }

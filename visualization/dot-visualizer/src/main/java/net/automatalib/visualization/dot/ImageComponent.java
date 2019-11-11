@@ -32,7 +32,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
  * Component that displays a {@link BufferedImage}.
@@ -50,7 +49,6 @@ public class ImageComponent extends JComponent {
 
         private static final long serialVersionUID = 1L;
 
-        @RequiresNonNull("img")
         @Override
         public void actionPerformed(ActionEvent e) {
             JFileChooser chooser = new JFileChooser();
@@ -61,6 +59,9 @@ public class ImageComponent extends JComponent {
             }
             File f = chooser.getSelectedFile();
             try {
+                if (img == null) {
+                    throw new IllegalStateException("No image has been set");
+                }
                 ImageIO.write(img, "png", f);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(ImageComponent.this,

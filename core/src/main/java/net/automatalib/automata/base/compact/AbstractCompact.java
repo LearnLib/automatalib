@@ -344,10 +344,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
          */
         NEW_STATE {
             @Override
-            <T> T updateStorage(T oldStorage,
-                                Payload p,
-                                IntFunction<T> arrayConstructor,
-                                ArrayInitializer<T> initializer) {
+            <T extends Object> T updateStorage(T oldStorage,
+                                               Payload p,
+                                               IntFunction<T> arrayConstructor,
+                                               ArrayInitializer<T> initializer) {
 
                 final T newStorage = arrayConstructor.apply(p.newSizeHint * p.alphabetSize);
                 System.arraycopy(oldStorage, 0, newStorage, 0, p.oldSizeHint * p.alphabetSize);
@@ -364,10 +364,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
          */
         NEW_ALPHABET_SYMBOL {
             @Override
-            <T> T updateStorage(T oldStorage,
-                                Payload p,
-                                IntFunction<T> arrayConstructor,
-                                ArrayInitializer<T> initializer) {
+            <T extends Object> T updateStorage(T oldStorage,
+                                               Payload p,
+                                               IntFunction<T> arrayConstructor,
+                                               ArrayInitializer<T> initializer) {
 
                 final T newStorage = arrayConstructor.apply(p.newSizeHint * p.stateCapacity);
 
@@ -405,10 +405,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
          *
          * @return the new array
          */
-        abstract <T> T updateStorage(T oldStorage,
-                                     Payload payload,
-                                     IntFunction<T> arrayConstructor,
-                                     ArrayInitializer<T> initializer);
+        abstract <T extends Object> T updateStorage(T oldStorage,
+                                                    Payload payload,
+                                                    IntFunction<T> arrayConstructor,
+                                                    ArrayInitializer<T> initializer);
     }
 
     /**

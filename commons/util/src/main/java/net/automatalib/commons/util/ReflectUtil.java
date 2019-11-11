@@ -109,12 +109,12 @@ public final class ReflectUtil {
      * @param name
      *         the name of the method
      * @param args
-     *         the objects that should be passed to the method
+     *         the objects that should be passed to the method, may contain {@code null}s
      *
      * @return A method that is able to accept of the specified objects, {@code null} if such a method could not be
      * found.
      */
-    public static @Nullable Method findMatchingMethod(Class<?> clazz, String name, Object... args) {
+    public static @Nullable Method findMatchingMethod(Class<?> clazz, String name, @Nullable Object... args) {
         for (Method m : clazz.getMethods()) {
             if (!m.getName().equals(name)) {
                 continue;
@@ -137,14 +137,17 @@ public final class ReflectUtil {
      * @param name
      *         the name of the method
      * @param returnType
-     *         the type of the returned object
+     *         the type of the returned object, if {@code null}, the return type will be ignored
      * @param params
      *         the types of the method arguments
      *
      * @return A method that is able to accept of the specified objects, {@code null} if such a method could not be
      * found.
      */
-    public static @Nullable Method findMethodRT(Class<?> clazz, String name, Class<?> returnType, Class<?>... params) {
+    public static @Nullable Method findMethodRT(Class<?> clazz,
+                                                String name,
+                                                @Nullable Class<?> returnType,
+                                                Class<?>... params) {
         Method m = findMethod(clazz, name, params);
 
         if (m == null) {
@@ -182,7 +185,7 @@ public final class ReflectUtil {
         return wrappedA.equals(wrappedB);
     }
 
-    private static boolean isMatch(Class<?>[] paramTypes, Object... args) {
+    private static boolean isMatch(Class<?>[] paramTypes, @Nullable Object... args) {
         if (paramTypes.length != args.length) {
             return false;
         }

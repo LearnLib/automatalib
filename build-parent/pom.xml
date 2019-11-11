@@ -230,6 +230,17 @@ limitations under the License.
                     <version>${checkerframework.version}</version>
                     <scope>provided</scope>
                 </dependency>
+                <dependency>
+                    <groupId>com.google.errorprone</groupId>
+                    <artifactId>javac</artifactId>
+                    <version>${error-prone.version}</version>
+                </dependency>
+                <!--dependency>
+                    <groupId>org.checkerframework.annotatedlib</groupId>
+                    <artifactId>guava</artifactId>
+                    <version>${guava.version}</version>
+                    <scope>provided</scope>
+                </dependency-->
             </dependencies>
             <build>
                 <plugins>
@@ -261,14 +272,15 @@ limitations under the License.
                                     <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
                                     <annotationProcessors>
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
+                                        <!--<annotationProcessor>org.checkerframework.checker.signedness.SignednessChecker</annotationProcessor>-->
                                     </annotationProcessors>
                                     <compilerArgs>
+                                        <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
                                         <arg>-Xbootclasspath/p:${org.checkerframework:jdk8:jar}</arg>
-                                        <arg>-AonlyDefs=^net\.automatalib</arg>
-                                        <arg>-AskipDefs=net\.automatalib\.serialization\.taf\.parser\.(Internal.*|Token.*|SimpleCharStream)</arg>
-                                        <!-- generated classes -->
-                                        <arg>-AonlyUses=^net\.automatalib</arg>
-                                        <!--<arg>-AskipUses=^com\.google\..*\.Function|^java\.util\.Arrays</arg>-->
+                                        <!--<arg>-Xbootclasspath/a:${org.checkerframework.annotatedlib:guava:jar}</arg>-->
+                                        <arg>-AskipDefs=net\.automatalib\.serialization\.taf\.parser\.(Internal.*|Token.*|SimpleCharStream)</arg> <!-- generated classes -->
+                                        <!--<arg>-AonlyUses=^net\.automatalib</arg>-->
+                                        <arg>-AskipUses=^com\.google|^java\.(awt|util\.Arrays|io\.StreamTokenizer)|^javax\.swing</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
                                         <arg>-AassumeAssertionsAreEnabled</arg>
                                         <!--<arg>-Alint=redundantNullComparison</arg>-->
@@ -284,17 +296,20 @@ limitations under the License.
                                 <configuration>
                                     <skip>${automatalib.java9OrNewer}</skip>
                                     <failOnWarning>true</failOnWarning>
+                                    <proc>only</proc>
+                                    <fork>true</fork>
                                     <outputDirectory>${project.build.directory}/checkerframework</outputDirectory>
                                     <annotationProcessors>
                                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                                     </annotationProcessors>
                                     <compilerArgs>
+                                        <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
                                         <arg>-Xbootclasspath/p:${org.checkerframework:jdk8:jar}</arg>
                                         <arg>-AonlyDefs=^net\.automatalib</arg>
                                         <arg>-AskipUses=.*</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
                                         <arg>-AassumeAssertionsAreEnabled</arg>
-                                        <!--<arg>-Alint=redundantNullComparison</arg>-->
+                                        <arg>-Alint=redundantNullComparison</arg>
                                     </compilerArgs>
                                 </configuration>
                             </execution>

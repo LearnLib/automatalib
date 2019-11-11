@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.ltsmin.ltl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -55,9 +56,8 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
         super(keepFiles, string2Input);
         unfolder = new AbstractUnfoldingModelChecker<I, A, String, L>(minimumUnfolds, multiplier) {
 
-            @Nullable
             @Override
-            public L findCounterExample(A automaton, Collection<? extends I> inputs, String property) {
+            public @Nullable L findCounterExample(A automaton, Collection<? extends I> inputs, String property) {
                 return null;
             }
         };
@@ -112,6 +112,10 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
 
         public static double multiplier() {
             return 1.0; // quite arbitrary too
+        }
+
+        public static <O> Collection<? super O> skipOutputs() {
+            return Collections.emptyList();
         }
     }
 }

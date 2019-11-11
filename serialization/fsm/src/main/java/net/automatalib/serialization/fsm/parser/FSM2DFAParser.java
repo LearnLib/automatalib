@@ -199,10 +199,9 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
         for (int i = 0;
              i <= acceptIndex && streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && accepting == null;
              i++) {
-            final String value = streamTokenizer.sval;
             if (i == acceptIndex) {
                 try {
-                    accepting = acceptValue == Integer.parseInt(value);
+                    accepting = acceptValue == Integer.parseInt(streamTokenizer.sval);
                 } catch (NumberFormatException nfe) {
                     throw new FSMFormatException(nfe, streamTokenizer);
                 }

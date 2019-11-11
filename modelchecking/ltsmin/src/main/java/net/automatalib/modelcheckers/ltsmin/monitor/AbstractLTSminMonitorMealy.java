@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.ltsmin.monitor;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.function.Function;
 
 import net.automatalib.automata.transducers.MealyMachine;
@@ -77,7 +76,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
                                          Collection<? super O> skipOutputs) {
         super(keepFiles, string2Input);
         this.string2Output = string2Output;
-        this.skipOutputs = skipOutputs == null ? Collections.emptyList() : skipOutputs;
+        this.skipOutputs = skipOutputs;
     }
 
     /**

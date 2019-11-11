@@ -117,7 +117,7 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> implem
 
         @Override
         public int getSymbolIndex(VPDSym<I> symbol) {
-            if (symbol == null || !containsSymbol(symbol)) {
+            if (!containsSymbol(symbol)) {
                 throw new IllegalArgumentException();
             }
 

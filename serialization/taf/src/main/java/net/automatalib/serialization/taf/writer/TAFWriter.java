@@ -154,7 +154,7 @@ public final class TAFWriter {
     private void beginState(String name, Set<String> options) throws IOException {
         writeIndent();
         out.append(name).append(' ');
-        if (options != null && !options.isEmpty()) {
+        if (!options.isEmpty()) {
             out.append(options.toString()).append(' ');
         }
         out.append('{').append(System.lineSeparator());

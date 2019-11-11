@@ -47,14 +47,13 @@ public final class Visualization {
 
         if (providerId != null) {
             vp = manager.getProviderById(providerId);
+            if (vp == null) {
+                LOGGER.error("No provider found with id '{}'. Defaulting to dummy provider...", providerId);
+            }
         }
 
         if (vp == null) {
             vp = manager.getBestProvider();
-        }
-
-        if (vp == null) {
-            LOGGER.error("Error setting visualization provider, defaulting to dummy provider...");
         }
 
         provider = vp;

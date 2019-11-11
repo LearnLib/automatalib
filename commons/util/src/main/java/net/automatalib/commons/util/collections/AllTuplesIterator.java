@@ -20,11 +20,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 final class AllTuplesIterator<T> implements Iterator<List<T>> {
 
     private final Iterable<? extends T> iterable;
     private final List<T> current;
-    private final Iterator<? extends T>[] iterators;
+    private final @Nullable Iterator<? extends T>[] iterators;
     private boolean firstEmpty;
 
     @SuppressWarnings("unchecked")
@@ -76,7 +78,7 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
                 return current;
             }
 
-            if (iterators[i].hasNext()) {
+            if (it.hasNext()) {
                 current.set(i, it.next());
                 return current;
             }

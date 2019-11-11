@@ -150,6 +150,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                 hide(last);
             }
 
+            @SuppressWarnings("assignment.type.incompatible") // TODO maybe properly enforce @KeyFor(this)?
             Word<? extends I> suffix = word.subWord(prefixLen);
             I sym = suffix.firstSymbol();
             int suffTransIdx = inputAlphabet.getSymbolIndex(sym);

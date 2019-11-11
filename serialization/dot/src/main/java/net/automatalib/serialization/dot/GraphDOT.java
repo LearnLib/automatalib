@@ -187,23 +187,14 @@ public final class GraphDOT {
      *         the graph to render
      * @param a
      *         the appendable to write to
-     * @param dotHelperOrNull
-     *         the helper to use for rendering. Can be {@code null}
+     * @param dotHelper
+     *         the helper to use for rendering.
      *
      * @throws IOException
      *         if writing to {@code a} fails
      */
-    private static <N, E> void writeRaw(Graph<N, E> graph,
-                                        Appendable a,
-                                        DOTVisualizationHelper<N, ? super E> dotHelperOrNull) throws IOException {
-
-        final DOTVisualizationHelper<N, ? super E> dotHelper;
-
-        if (dotHelperOrNull == null) {
-            dotHelper = new DefaultDOTVisualizationHelper<>();
-        } else {
-            dotHelper = dotHelperOrNull;
-        }
+    private static <N, E> void writeRaw(Graph<N, E> graph, Appendable a, DOTVisualizationHelper<N, ? super E> dotHelper)
+            throws IOException {
 
         final boolean directed = !(graph instanceof UndirectedGraph);
 
@@ -309,7 +300,7 @@ public final class GraphDOT {
     }
 
     private static void appendParams(Map<String, String> params, Appendable a) throws IOException {
-        if (params == null || params.isEmpty()) {
+        if (params.isEmpty()) {
             return;
         }
         a.append(" [");

@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class Location {
 
     private final ArrayStorage<Location> intSuccessors;
-    private final ArrayStorage<List<@Nullable Location>> returnSuccessors;
+    private final ArrayStorage<@Nullable List<@Nullable Location>> returnSuccessors;
     private final int index;
     private boolean accepting;
 
@@ -55,7 +55,7 @@ public class Location {
     }
 
     public @Nullable Location getReturnSuccessor(final int retSymId, final int stackSym) {
-        final List<@Nullable Location> succList = returnSuccessors.get(retSymId);
+        final @Nullable List<@Nullable Location> succList = returnSuccessors.get(retSymId);
         if (succList != null && stackSym < succList.size()) {
             return succList.get(stackSym);
         }
@@ -63,7 +63,7 @@ public class Location {
     }
 
     public void setReturnSuccessor(final int retSymId, final int stackSym, final Location succ) {
-        List<@Nullable Location> succList = returnSuccessors.get(retSymId);
+        @Nullable List<@Nullable Location> succList = returnSuccessors.get(retSymId);
         if (succList == null) {
             succList = new ArrayList<>(stackSym + 1);
             returnSuccessors.set(retSymId, succList);

@@ -172,11 +172,10 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
                 final int stack = edge.stack;
 
                 if (alphabet.isInternalSymbol(input)) {
-                    properties.put(EdgeAttrs.LABEL, input.toString());
+                    properties.put(EdgeAttrs.LABEL, String.valueOf(input));
                 } else if (alphabet.isReturnSymbol(input)) {
                     properties.put(EdgeAttrs.LABEL,
-                                   input.toString() + "/(L" + getLocationId(getStackLoc(stack)) + ',' +
-                                   getCallSym(stack) + ')');
+                                   input + "/(L" + getLocationId(getStackLoc(stack)) + ',' + getCallSym(stack) + ')');
                 } else {
                     throw new IllegalArgumentException();
                 }

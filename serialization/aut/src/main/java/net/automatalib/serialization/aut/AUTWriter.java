@@ -56,7 +56,7 @@ public final class AUTWriter {
             for (final I i : alphabet) {
                 final Set<S> succs = automaton.getSuccessors(s, i);
 
-                if (succs != null && !succs.isEmpty()) {
+                if (!succs.isEmpty()) {
                     for (final S succ : succs) {
                         transitions.add(new TransitionTriple<>(s, i, succ));
                     }
@@ -77,7 +77,7 @@ public final class AUTWriter {
 
         final Set<S> inits = automaton.getInitialStates();
 
-        if (inits == null || inits.size() != 1) {
+        if (inits.size() != 1) {
             throw new IllegalArgumentException("Automaton needs to exactly specify a single initial state");
         }
 
