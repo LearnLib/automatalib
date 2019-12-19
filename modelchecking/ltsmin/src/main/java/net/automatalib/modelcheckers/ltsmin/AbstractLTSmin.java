@@ -112,6 +112,19 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      */
     protected abstract List<String> getExtraCommandLineOptions();
 
+    /**
+     * This method must verify that the given formula adheres to the expected syntax of the chosen serialization format
+     * for hypotheses of {@code this} model-checker.
+     * <p>
+     * If the formula does not adhere to the expected syntax, this method should throw a {@link
+     * IllegalArgumentException}, possibly containing nested causes that further elaborate on why the formula couldn't
+     * be verified.
+     *
+     * @param formula
+     *         the formula to verify
+     */
+    protected abstract void verifyFormula(String formula);
+
     @Override
     public boolean isKeepFiles() {
         return keepFiles;
@@ -138,6 +151,12 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      * @see AbstractLTSmin
      */
     protected final @Nullable File findCounterExampleFSM(A hypothesis, Collection<? extends I> inputs, String formula) {
+
+        try {
+            verifyFormula(formula);
+        } catch (IllegalArgumentException iae) {
+            throw new ModelCheckingException(iae);
+        }
 
         final File etf, gcf;
 

@@ -26,6 +26,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminDFA;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -48,6 +49,11 @@ public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public LTSminMonitorDFA(boolean keepFiles, Function<String, I> string2Input) {
         super(keepFiles, string2Input);
+    }
+
+    @Override
+    protected void verifyFormula(String formula) {
+        LTSminLTLParser.requireValidLetterFormula(formula);
     }
 
     /**

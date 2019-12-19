@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * A parser for `dot` files has been added and is available in the `automata-serialization-dot` module via the `DOTParsers` factory.
 * A new `PaigeTarjanMinimization` factory has been added, that offers convenience methods for PaigeTarjan-based automata minimization (with support for e.g. partial automata).
 * Performance improvements for some alphabet implementations (`DefaultVPDAlphabet`, `ListAlphabet`, `{Int,Char}Range`, ...).
+* An `LTSminLTLParser` to verify if LTL properties match the expected syntax of LTSmin.
 
 ### Changed
 

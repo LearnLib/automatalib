@@ -25,6 +25,7 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.LTSminDFA;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 import net.automatalib.modelchecking.lasso.DFALassoImpl;
@@ -60,6 +61,11 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
     @GenerateBuilder(defaults = AbstractLTSminLTL.BuilderDefaults.class)
     public LTSminLTLDFA(boolean keepFiles, Function<String, I> string2Input, int minimumUnfolds, double multiplier) {
         super(keepFiles, string2Input, minimumUnfolds, multiplier);
+    }
+
+    @Override
+    protected void verifyFormula(String formula) {
+        LTSminLTLParser.requireValidLetterFormula(formula);
     }
 
     /**

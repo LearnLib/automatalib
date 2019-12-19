@@ -88,4 +88,13 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>javacc-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -23,6 +23,7 @@ import java.util.function.Function;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.exception.ModelCheckingException;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
 import net.automatalib.modelcheckers.ltsmin.LTSminMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
@@ -106,6 +107,11 @@ public abstract class AbstractLTSminLTLMealy<I, O>
     @Override
     public void setSkipOutputs(Collection<? super O> skipOutputs) {
         this.skipOutputs = skipOutputs;
+    }
+
+    @Override
+    protected void verifyFormula(String formula) {
+        LTSminLTLParser.requireValidIOFormula(formula);
     }
 
     @Override

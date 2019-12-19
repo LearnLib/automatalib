@@ -21,6 +21,7 @@ import java.util.function.Function;
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelcheckers.ltsmin.LTSminAlternating;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
 
 /**
@@ -52,5 +53,10 @@ public class LTSminMonitorAlternating<I, O> extends AbstractLTSminMonitorMealy<I
     @Override
     public boolean requiresOriginalAutomaton() {
         return true;
+    }
+
+    @Override
+    protected void verifyFormula(String formula) {
+        LTSminLTLParser.requireValidLetterFormula(formula);
     }
 }

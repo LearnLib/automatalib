@@ -62,6 +62,13 @@ limitations under the License.
                             <exclude>net/automatalib/serialization/taf/parser/Token.class</exclude>
                             <exclude>net/automatalib/serialization/taf/parser/TokenMgrError.class</exclude>
 
+                            <!-- generated parser for LTSmin LTL parser -->
+                            <exclude>net/automatalib/modelcheckers/ltsmin/InternalLTSminLTLParser*.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/ltsmin/ParseException.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/ltsmin/SimpleCharStream.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/ltsmin/Token.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/ltsmin/TokenMgrError.class</exclude>
+
                             <!-- generated builders for model checkers -->
                             <exclude>net/automatalib/modelcheckers/ltsmin/ltl/LTSminLTLAlternatingBuilder.class</exclude>
                             <exclude>net/automatalib/modelcheckers/ltsmin/ltl/LTSminLTLDFABuilder.class</exclude>
@@ -278,7 +285,7 @@ limitations under the License.
                                         <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
                                         <arg>-Xbootclasspath/p:${org.checkerframework:jdk8:jar}</arg>
                                         <!--<arg>-Xbootclasspath/a:${org.checkerframework.annotatedlib:guava:jar}</arg>-->
-                                        <arg>-AskipDefs=net\.automatalib\.serialization\.taf\.parser\.(Internal.*|Token.*|SimpleCharStream)</arg> <!-- generated classes -->
+                                        <arg>-AskipDefs=net\.automatalib\.(serialization\.taf\.parser|modelcheckers\.ltsmin)\.(Internal.*|Token.*|SimpleCharStream)</arg> <!-- generated classes -->
                                         <!--<arg>-AonlyUses=^net\.automatalib</arg>-->
                                         <arg>-AskipUses=^com\.google|^java\.(awt|util\.Arrays|io\.StreamTokenizer)|^javax\.swing</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>

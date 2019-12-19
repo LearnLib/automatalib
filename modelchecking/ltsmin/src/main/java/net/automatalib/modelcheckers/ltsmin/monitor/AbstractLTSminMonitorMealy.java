@@ -25,6 +25,7 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
 import net.automatalib.modelcheckers.ltsmin.LTSminMealy;
 import net.automatalib.modelcheckers.ltsmin.ltl.AbstractLTSminLTL;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
@@ -105,6 +106,11 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
     @Override
     public void setSkipOutputs(Collection<? super O> skipOutputs) {
         this.skipOutputs = skipOutputs;
+    }
+
+    @Override
+    protected void verifyFormula(String formula) {
+        LTSminLTLParser.requireValidIOFormula(formula);
     }
 
     /**

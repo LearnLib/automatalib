@@ -20,6 +20,7 @@ import java.util.function.Function;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import net.automatalib.modelcheckers.ltsmin.LTSminAlternating;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 
 /**
@@ -51,5 +52,10 @@ public class LTSminLTLAlternating<I, O> extends AbstractLTSminLTLMealy<I, O>
     @Override
     public boolean requiresOriginalAutomaton() {
         return false;
+    }
+
+    @Override
+    protected void verifyFormula(String formula) {
+        LTSminLTLParser.requireValidLetterFormula(formula);
     }
 }
