@@ -25,7 +25,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `net.automatalib.automata.transducers.impl.map.SimpleMapGraph` -> `net.automatalib.graphs.map.SimpleMapGraph`
 * The `BackedGeneralPriorityQueue(Class<T> c)` constructor was replaced with a more idiomatic `BackedGeneralPriorityQueue(Supplier<T> s)` constructor.
 * The TAF serialization code now forwards (i.e. `throws`) `IOException`s that occurr when reading from the various data sources.
-* Replaced JSR305 annotations with checker-framework annotations. Thereby we also adapted checker-frameworks convention that (non-annotated) types are usually considered non-null unless explicitly annotated with `@Nullable`.
+* JSR305 annotations have been replaced with checker-framework annotations.
+  * AutomataLib now follows checker-framework's convention that (non-annotated) types are usually considered non-null unless explicitly annotated with `@Nullable`.
+  * AutomataLib no longer has a (runtime-) dependency on JSR305 (and other `javax.*`) annotations or includes them in the distribution artifact. This now makes AutomataLib compliant with [Oracle's binary code license](https://www.oracle.com/downloads/licenses/binary-code-license.html) and allows AutomataLib artifacts as-is to be bundled in binary distributions with Oracle's JDKs/JREs.
 
 ### Removed
 
