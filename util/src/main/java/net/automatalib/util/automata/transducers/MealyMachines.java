@@ -22,6 +22,8 @@ import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.output.MealyTransitionSystem;
+import net.automatalib.util.automata.copy.AutomatonCopyMethod;
+import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.ts.copy.TSCopy;
 import net.automatalib.util.ts.transducers.Transducers;
 import net.automatalib.util.ts.traversal.TSTraversal;
@@ -87,6 +89,66 @@ public final class MealyMachines {
                     TSTraversal.NO_LIMIT,
                     inputs,
                     (MutableMealyMachine<?, I, ?, Pair<O1, O2>>) out);
+        return out;
+    }
+
+    /**
+     * Constructs a copy of the given Mealy machine in which every transition (with regards to the specified alphabet)
+     * is guaranteed to be defined. This includes adding an additional sink state if the original Mealy machine has
+     * undefined transitions.
+     *
+     * @param mealy
+     *         the original Mealy machine
+     * @param inputs
+     *         the inputs to consider for completing the automaton
+     * @param undefinedOutput
+     *         the output symbol that should be used for new transitions
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a copy of the given Mealy machine in which every transition (with regards to the specified alphabet) is
+     * guaranteed to be defined
+     */
+    public static <I, O> CompactMealy<I, O> complete(MealyMachine<?, I, ?, O> mealy,
+                                                     Alphabet<I> inputs,
+                                                     O undefinedOutput) {
+        return complete(mealy, inputs, undefinedOutput, new CompactMealy<>(inputs));
+    }
+
+    /**
+     * Constructs a copy of the given Mealy machine in which every transition (with regards to the specified alphabet)
+     * is guaranteed to be defined. This includes adding an additional sink state if the original Mealy machine has
+     * undefined transitions.
+     *
+     * @param mealy
+     *         the original Mealy machine
+     * @param inputs
+     *         the inputs to consider for completing the automaton
+     * @param undefinedOutput
+     *         the output symbol that should be used for new transitions
+     * @param out
+     *         the instance to which the copy should be written
+     * @param <S>
+     *         automaton state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         automaton transition type
+     * @param <O>
+     *         output symbol type
+     * @param <A>
+     *         output automaton type
+     *
+     * @return {@code out}, for convenience.
+     */
+    public static <S, I, T, O, A extends MutableMealyMachine<S, I, T, O>> A complete(MealyMachine<?, I, ?, O> mealy,
+                                                                                     Collection<? extends I> inputs,
+                                                                                     O undefinedOutput,
+                                                                                     A out) {
+        AutomatonLowLevelCopy.copy(AutomatonCopyMethod.DFS, mealy, inputs, out);
+        MutableMealyMachines.complete(out, inputs, undefinedOutput);
         return out;
     }
 }

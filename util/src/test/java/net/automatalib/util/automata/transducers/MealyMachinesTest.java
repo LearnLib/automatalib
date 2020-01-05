@@ -73,4 +73,22 @@ public class MealyMachinesTest {
 
         Assert.assertEquals(undefinedOutput.size(), 2);
     }
+
+    @Test
+    public void testCompletion() {
+        final CompactMealy<Character, Integer> completed = MealyMachines.complete(mealy1, alphabet, -1);
+
+        final Word<Character> originalInput = Word.fromCharSequence("abcabcabc");
+        final Word<Character> partialInput = Word.fromCharSequence("abcbbb");
+        final Word<Character> undefinedInput = Word.fromCharSequence("bbbbbb");
+
+        final Word<Integer> originalOutput = completed.computeOutput(originalInput);
+        final Word<Integer> partialOutput = completed.computeOutput(partialInput);
+        final Word<Integer> undefinedOutput = completed.computeOutput(undefinedInput);
+
+        Assert.assertEquals(completed.size(), mealy1.size() + 1);
+        Assert.assertEquals(originalOutput, Word.fromSymbols(1, 2, 3, 1, 2, 3, 1, 2, 3));
+        Assert.assertEquals(partialOutput, Word.fromSymbols(1, 2, 3, -1, -1, -1));
+        Assert.assertEquals(undefinedOutput, Word.fromSymbols(-1, -1, -1, -1, -1, -1));
+    }
 }
