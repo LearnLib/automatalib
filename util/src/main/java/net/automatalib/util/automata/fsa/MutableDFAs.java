@@ -26,11 +26,11 @@ public final class MutableDFAs {
         throw new IllegalStateException("Constructor should never be invoked");
     }
 
-    public static <S, I> void complete(MutableDFA<S, I> dfa, Collection<? extends I> inputs) {
+    public static <I> void complete(MutableDFA<?, I> dfa, Collection<? extends I> inputs) {
         complete(dfa, inputs, false);
     }
 
-    public static <S, I> void complete(MutableDFA<S, I> dfa, Collection<? extends I> inputs, boolean minimize) {
+    public static <I> void complete(MutableDFA<?, I> dfa, Collection<? extends I> inputs, boolean minimize) {
         complete(dfa, inputs, minimize, false);
     }
 
@@ -60,7 +60,7 @@ public final class MutableDFAs {
         }
     }
 
-    public static <S, I> void complement(MutableDFA<S, I> dfa, Collection<? extends I> inputs) {
+    public static <I> void complement(MutableDFA<?, I> dfa, Collection<? extends I> inputs) {
         dfa.flipAcceptance();
         complete(dfa, inputs, false, true);
     }
