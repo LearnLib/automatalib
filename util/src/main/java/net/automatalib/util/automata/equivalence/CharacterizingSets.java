@@ -341,7 +341,7 @@ public final class CharacterizingSets {
                 for (int i = 0; i < otherBlocks; i++) {
                     @SuppressWarnings("nullness") // we know that there are at least 'otherBlocks' items in the queue
                     @NonNull List<S> otherBlock = blockQueue.poll();
-                    if (otherBlock.size() > 2) {
+                    if (otherBlock.size() > 1) {
                         buckets.clear();
                         cluster(automaton, suffix, otherBlock.iterator(), buckets);
                         blockQueue.addAll(buckets.values());

@@ -46,6 +46,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Fixed a bug, where the PaigeTarjan-based minimization would return a wrong automaton, when pruning was enabled and the initial automaton was partial.
 * Fixed a bug in our Tarjan SCC implementation ([#35](https://github.com/LearnLib/automatalib/pull/35), thanks to [Malte Mues](https://github.com/mmuesly))
+* Fixed a bug in the computation of characterizing sets ([#36](https://github.com/LearnLib/automatalib/issues/36).
 * Several (null-related) bugs detected by our ongoing efforts to write tests.
 
 
