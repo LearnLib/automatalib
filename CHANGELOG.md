@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `PaigeTarjan{Initializers,Extractors}` methods for non `IntAbstraction`s have been removed. You may use the new convenience methods provided by `PaigeTarjanMinimization`.
 * Further `@Deprecated` methods have been removed.
 * Removed `ProbMealyTransition` and replaced it with the generic `MealyTransition` directly carrying the `ProbabilisticOutput`. It is no longer allowed to pass `null` as transition property.
+* Removed `OutputAndLocalInputs`, `StateLocalInputIncrementalMealyTreeBuilder` and `StateLocalInputMealyUtil`. The (LearnLib) code related to inferring partial Mealy machines no longer requires these transformed automata. Whoever used this code for transforming a partial Mealy machine to a complete one, may use `MealyMachines#complete` instead.
 
 
 ### Fixed
