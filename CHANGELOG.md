@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * A new alphabet implementation `MapAlphabet` that is based on the old `SimpleAlphabet` but without implementing the `GrowingAlphabet` interface.
 * `IntRange` now implements `PrimitiveIterator.OfInt`.
 * A parser for `dot` files has been added and is available in the `automata-serialization-dot` module via the `DOTParsers` factory.
-* A new `PaigeTarjanMinimization` factory has been added, that offers convenience methods for PaigeTarjan-based automata minimization (with support for e.g. partial automata).
+* A new `PaigeTarjanMinimization` factory that offers convenience methods for PaigeTarjan-based automata minimization (with support for e.g. partial automata) has been added.
 * Performance improvements for some alphabet implementations (`DefaultVPDAlphabet`, `ListAlphabet`, `{Int,Char}Range`, ...).
 * An `LTSminLTLParser` to verify if LTL properties match the expected syntax of LTSmin.
 
@@ -24,7 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `net.automatalib.serialization.taf.parser.TAFParseException` -> `net.automatalib.serialization.taf.parser.TAFFormatException`
   * `net.automatalib.automata.transducers.impl.map.SimpleMapGraph` -> `net.automatalib.graphs.map.SimpleMapGraph`
 * The `BackedGeneralPriorityQueue(Class<T> c)` constructor was replaced with a more idiomatic `BackedGeneralPriorityQueue(Supplier<T> s)` constructor.
-* The TAF serialization code now forwards (i.e. `throws`) `IOException`s that occurr when reading from the various data sources.
+* The TAF serialization code now forwards (i.e. `throws`) `IOException`s that occur when reading from the various data sources.
 * JSR305 annotations have been replaced with checker-framework annotations.
   * AutomataLib now follows checker-framework's convention that (non-annotated) types are usually considered non-null unless explicitly annotated with `@Nullable`.
   * AutomataLib no longer has a (runtime-) dependency on JSR305 (and other `javax.*`) annotations or includes them in the distribution artifact. This now makes AutomataLib compliant with [Oracle's binary code license](https://www.oracle.com/downloads/licenses/binary-code-license.html) and allows AutomataLib artifacts as-is to be bundled in binary distributions with Oracle's JDKs/JREs.
@@ -45,9 +45,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
-* Fixed a bug, where the PaigeTarjan-based minimization would return a wrong automaton, when pruning was enabled and the initial automaton was partial.
+* Fixed a bug, where the PaigeTarjan-based minimization would return a wrong automaton when pruning was enabled and the initial automaton was partial.
 * Fixed a bug in our Tarjan SCC implementation ([#35](https://github.com/LearnLib/automatalib/pull/35), thanks to [Malte Mues](https://github.com/mmuesly))
-* Fixed a bug in the computation of characterizing sets ([#36](https://github.com/LearnLib/automatalib/issues/36).
+* Fixed a bug in the computation of characterizing sets ([#36](https://github.com/LearnLib/automatalib/issues/36)).
 * Several (null-related) bugs detected by our ongoing efforts to write tests.
 
 
