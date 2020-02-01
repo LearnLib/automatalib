@@ -21,7 +21,7 @@ import net.automatalib.words.Alphabet;
 /**
  * @author frohme
  */
-public class DynamicIncrementalTreeBuilder extends AbstractIncrementalMealyBuilderTest {
+public class DynamicIncrementalTreeBuilderTest extends AbstractIncrementalMealyBuilderTest {
 
     @Override
     protected <I, O> IncrementalMealyBuilder<I, O> createIncrementalMealyBuilder(Alphabet<I> alphabet) {

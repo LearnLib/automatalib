@@ -15,14 +15,22 @@
  */
 package net.automatalib.incremental.dfa;
 
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.SwingUtilities;
+
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.system.JVMUtil;
 import net.automatalib.incremental.ConflictException;
+import net.automatalib.incremental.dfa.IncrementalDFABuilder.TransitionSystemView;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -30,6 +38,10 @@ import org.testng.annotations.Test;
 public abstract class AbstractIncrementalPCDFABuilderTest {
 
     private static final Alphabet<Character> TEST_ALPHABET = Alphabets.characters('a', 'c');
+
+    private static final Word<Character> W_1 = Word.fromString("abc");
+    private static final Word<Character> W_2 = Word.fromString("acb");
+    private static final Word<Character> W_3 = Word.fromString("ac");
 
     private IncrementalDFABuilder<Character> incPcDfa;
 
@@ -56,54 +68,48 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
 
     @Test(dependsOnMethods = "testConfluenceBug")
     public void testLookup() {
-        Word<Character> w1 = Word.fromString("abc");
-        Word<Character> w2 = Word.fromString("acb");
-        Word<Character> w3 = Word.fromString("ac");
+        Assert.assertEquals(incPcDfa.lookup(W_1), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incPcDfa.lookup(W_2), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incPcDfa.lookup(W_3), Acceptance.DONT_KNOW);
 
-        Assert.assertEquals(incPcDfa.lookup(w1), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incPcDfa.lookup(w2), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incPcDfa.lookup(w3), Acceptance.DONT_KNOW);
+        incPcDfa.insert(W_1, true);
+        Assert.assertEquals(incPcDfa.lookup(W_1), Acceptance.TRUE);
+        Assert.assertEquals(incPcDfa.lookup(W_1.prefix(2)), Acceptance.TRUE);
+        Assert.assertEquals(incPcDfa.lookup(W_1.prefix(1)), Acceptance.TRUE);
+        Assert.assertEquals(incPcDfa.lookup(W_1.prefix(0)), Acceptance.TRUE);
 
-        incPcDfa.insert(w1, true);
-        Assert.assertEquals(incPcDfa.lookup(w1), Acceptance.TRUE);
-        Assert.assertEquals(incPcDfa.lookup(w1.prefix(2)), Acceptance.TRUE);
-        Assert.assertEquals(incPcDfa.lookup(w1.prefix(1)), Acceptance.TRUE);
-        Assert.assertEquals(incPcDfa.lookup(w1.prefix(0)), Acceptance.TRUE);
+        Assert.assertEquals(incPcDfa.lookup(W_2), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incPcDfa.lookup(W_3), Acceptance.DONT_KNOW);
 
-        Assert.assertEquals(incPcDfa.lookup(w2), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incPcDfa.lookup(w3), Acceptance.DONT_KNOW);
+        incPcDfa.insert(W_2, false);
+        Assert.assertEquals(incPcDfa.lookup(W_1), Acceptance.TRUE);
+        Assert.assertEquals(incPcDfa.lookup(W_2), Acceptance.FALSE);
+        Assert.assertEquals(incPcDfa.lookup(W_2.append('a')), Acceptance.FALSE);
+        Assert.assertEquals(incPcDfa.lookup(W_3), Acceptance.DONT_KNOW);
 
-        incPcDfa.insert(w2, false);
-        Assert.assertEquals(incPcDfa.lookup(w1), Acceptance.TRUE);
-        Assert.assertEquals(incPcDfa.lookup(w2), Acceptance.FALSE);
-        Assert.assertEquals(incPcDfa.lookup(w2.append('a')), Acceptance.FALSE);
-        Assert.assertEquals(incPcDfa.lookup(w3), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incPcDfa.lookup(W_1.prefix(1)), Acceptance.TRUE);
+        Assert.assertEquals(incPcDfa.lookup(W_2.prefix(1)), Acceptance.TRUE);
 
-        Assert.assertEquals(incPcDfa.lookup(w1.prefix(1)), Acceptance.TRUE);
-        Assert.assertEquals(incPcDfa.lookup(w2.prefix(1)), Acceptance.TRUE);
+        incPcDfa.insert(W_3, true);
+        Assert.assertEquals(incPcDfa.lookup(W_1), Acceptance.TRUE);
+        Assert.assertEquals(incPcDfa.lookup(W_2), Acceptance.FALSE);
+        Assert.assertEquals(incPcDfa.lookup(W_3), Acceptance.TRUE);
 
-        incPcDfa.insert(w3, true);
-        Assert.assertEquals(incPcDfa.lookup(w1), Acceptance.TRUE);
-        Assert.assertEquals(incPcDfa.lookup(w2), Acceptance.FALSE);
-        Assert.assertEquals(incPcDfa.lookup(w3), Acceptance.TRUE);
-
-        Assert.assertEquals(incPcDfa.lookup(w1.prefix(2)), Acceptance.TRUE);
-        Assert.assertEquals(incPcDfa.lookup(w2.prefix(1)), Acceptance.TRUE);
-        Assert.assertEquals(incPcDfa.lookup(w3.append('a')), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incPcDfa.lookup(W_1.prefix(2)), Acceptance.TRUE);
+        Assert.assertEquals(incPcDfa.lookup(W_2.prefix(1)), Acceptance.TRUE);
+        Assert.assertEquals(incPcDfa.lookup(W_3.append('a')), Acceptance.DONT_KNOW);
     }
 
     @Test(dependsOnMethods = "testLookup")
     public void testInsertSame() {
-        Word<Character> w1 = Word.fromString("abc");
         int oldSize = incPcDfa.asGraph().size();
-        incPcDfa.insert(w1, true);
+        incPcDfa.insert(W_1, true);
         Assert.assertEquals(incPcDfa.asGraph().size(), oldSize);
     }
 
     @Test(expectedExceptions = ConflictException.class, dependsOnMethods = "testLookup")
     public void testConflict() {
-        Word<Character> w1 = Word.fromString("abc");
-        incPcDfa.insert(w1, false);
+        incPcDfa.insert(W_1, false);
     }
 
     @Test(dependsOnMethods = "testLookup")
@@ -154,6 +160,31 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
     }
 
     @Test(dependsOnMethods = "testLookup")
+    public void testVisualization() throws InvocationTargetException, InterruptedException {
+        if (JVMUtil.getCanonicalSpecVersion() > 8) {
+            throw new SkipException("The headless AWT environment currently only works with Java 8 and below");
+        }
+
+        // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.
+        SwingUtilities.invokeAndWait(() -> Visualization.visualize(incPcDfa.asGraph(), false));
+    }
+
+    @Test(dependsOnMethods = "testLookup")
+    public void testTSView() {
+        testTSViewInternal(incPcDfa.asTransitionSystem());
+    }
+
+    private static <S> void testTSViewInternal(TransitionSystemView<S, Character, ?> view) {
+        final S s1 = view.getState(W_1);
+        final S s2 = view.getState(W_2);
+        final S s3 = view.getState(W_3);
+
+        Assert.assertTrue(view.getAcceptance(s1).toBoolean());
+        Assert.assertFalse(view.getAcceptance(s2).toBoolean());
+        Assert.assertTrue(view.getAcceptance(s3).toBoolean());
+    }
+
+    @Test(dependsOnMethods = "testLookup")
     public void testNewInputSymbol() {
         final GrowingAlphabet<Character> alphabet = new GrowingMapAlphabet<>(TEST_ALPHABET);
         final IncrementalDFABuilder<Character> growableBuilder = createIncrementalPCDFABuilder(alphabet);
@@ -200,17 +231,13 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
 
         incPcDfa.insert(Word.epsilon(), false);
 
-        Word<Character> w1 = Word.fromString("abc");
-        Word<Character> w2 = Word.fromString("acb");
-        Word<Character> w3 = Word.fromString("ac");
+        Assert.assertEquals(incPcDfa.lookup(W_1), Acceptance.FALSE);
+        Assert.assertEquals(incPcDfa.lookup(W_2), Acceptance.FALSE);
+        Assert.assertEquals(incPcDfa.lookup(W_3), Acceptance.FALSE);
 
-        Assert.assertEquals(incPcDfa.lookup(w1), Acceptance.FALSE);
-        Assert.assertEquals(incPcDfa.lookup(w2), Acceptance.FALSE);
-        Assert.assertEquals(incPcDfa.lookup(w3), Acceptance.FALSE);
-
-        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(w1, true));
-        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(w2, true));
-        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(w3, true));
+        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(W_1, true));
+        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(W_2, true));
+        Assert.assertThrows(ConflictException.class, () -> incPcDfa.insert(W_3, true));
     }
 
     @Test

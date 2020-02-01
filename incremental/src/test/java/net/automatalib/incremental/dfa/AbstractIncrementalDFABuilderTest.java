@@ -15,14 +15,22 @@
  */
 package net.automatalib.incremental.dfa;
 
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.SwingUtilities;
+
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.system.JVMUtil;
 import net.automatalib.incremental.ConflictException;
+import net.automatalib.incremental.dfa.IncrementalDFABuilder.TransitionSystemView;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -30,6 +38,11 @@ import org.testng.annotations.Test;
 public abstract class AbstractIncrementalDFABuilderTest {
 
     private static final Alphabet<Character> TEST_ALPHABET = Alphabets.characters('a', 'c');
+
+    private static final Word<Character> W_1 = Word.fromString("abc");
+    private static final Word<Character> W_2 = Word.fromString("ac");
+    private static final Word<Character> W_3 = Word.fromString("acb");
+    private static final Word<Character> W_4 = Word.epsilon();
 
     private IncrementalDFABuilder<Character> incDfa;
 
@@ -56,61 +69,54 @@ public abstract class AbstractIncrementalDFABuilderTest {
 
     @Test(dependsOnMethods = "testConfluenceBug")
     public void testLookup() {
-        Word<Character> w1 = Word.fromString("abc");
-        Word<Character> w2 = Word.fromString("ac");
-        Word<Character> w3 = Word.fromString("acb");
-        Word<Character> w4 = Word.epsilon();
+        Assert.assertEquals(Acceptance.DONT_KNOW, incDfa.lookup(W_1));
+        Assert.assertEquals(incDfa.lookup(W_2), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_3), Acceptance.DONT_KNOW);
 
-        Assert.assertEquals(Acceptance.DONT_KNOW, incDfa.lookup(w1));
-        Assert.assertEquals(incDfa.lookup(w2), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incDfa.lookup(w3), Acceptance.DONT_KNOW);
+        incDfa.insert(W_1, true);
+        Assert.assertEquals(incDfa.lookup(W_1), Acceptance.TRUE);
+        Assert.assertEquals(incDfa.lookup(W_2), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_3), Acceptance.DONT_KNOW);
 
-        incDfa.insert(w1, true);
-        Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
-        Assert.assertEquals(incDfa.lookup(w2), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incDfa.lookup(w3), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_1.prefix(2)), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_2.prefix(1)), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_3.prefix(2)), Acceptance.DONT_KNOW);
 
-        Assert.assertEquals(incDfa.lookup(w1.prefix(2)), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incDfa.lookup(w2.prefix(1)), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incDfa.lookup(w3.prefix(2)), Acceptance.DONT_KNOW);
+        incDfa.insert(W_2, false);
+        Assert.assertEquals(incDfa.lookup(W_1), Acceptance.TRUE);
+        Assert.assertEquals(incDfa.lookup(W_2), Acceptance.FALSE);
+        Assert.assertEquals(incDfa.lookup(W_3), Acceptance.DONT_KNOW);
 
-        incDfa.insert(w2, false);
-        Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
-        Assert.assertEquals(incDfa.lookup(w2), Acceptance.FALSE);
-        Assert.assertEquals(incDfa.lookup(w3), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_1.prefix(2)), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_2.prefix(1)), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_3.prefix(2)), Acceptance.FALSE);
 
-        Assert.assertEquals(incDfa.lookup(w1.prefix(2)), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incDfa.lookup(w2.prefix(1)), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incDfa.lookup(w3.prefix(2)), Acceptance.FALSE);
+        incDfa.insert(W_3, true);
+        Assert.assertEquals(incDfa.lookup(W_1), Acceptance.TRUE);
+        Assert.assertEquals(incDfa.lookup(W_2), Acceptance.FALSE);
+        Assert.assertEquals(incDfa.lookup(W_3), Acceptance.TRUE);
 
-        incDfa.insert(w3, true);
-        Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
-        Assert.assertEquals(incDfa.lookup(w2), Acceptance.FALSE);
-        Assert.assertEquals(incDfa.lookup(w3), Acceptance.TRUE);
+        Assert.assertEquals(incDfa.lookup(W_1.prefix(2)), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_2.prefix(1)), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incDfa.lookup(W_3.prefix(2)), Acceptance.FALSE);
 
-        Assert.assertEquals(incDfa.lookup(w1.prefix(2)), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incDfa.lookup(w2.prefix(1)), Acceptance.DONT_KNOW);
-        Assert.assertEquals(incDfa.lookup(w3.prefix(2)), Acceptance.FALSE);
-
-        incDfa.insert(w4, true);
-        Assert.assertEquals(incDfa.lookup(w1), Acceptance.TRUE);
-        Assert.assertEquals(incDfa.lookup(w2), Acceptance.FALSE);
-        Assert.assertEquals(incDfa.lookup(w3), Acceptance.TRUE);
-        Assert.assertEquals(incDfa.lookup(w4), Acceptance.TRUE);
+        incDfa.insert(W_4, true);
+        Assert.assertEquals(incDfa.lookup(W_1), Acceptance.TRUE);
+        Assert.assertEquals(incDfa.lookup(W_2), Acceptance.FALSE);
+        Assert.assertEquals(incDfa.lookup(W_3), Acceptance.TRUE);
+        Assert.assertEquals(incDfa.lookup(W_4), Acceptance.TRUE);
     }
 
     @Test(dependsOnMethods = "testLookup")
     public void testInsertSame() {
-        Word<Character> w1 = Word.fromString("abc");
         int oldSize = incDfa.asGraph().size();
-        incDfa.insert(w1, true);
+        incDfa.insert(W_1, true);
         Assert.assertEquals(incDfa.asGraph().size(), oldSize);
     }
 
     @Test(expectedExceptions = ConflictException.class, dependsOnMethods = "testLookup")
     public void testConflict() {
-        Word<Character> w1 = Word.fromString("abc");
-        incDfa.insert(w1, false);
+        incDfa.insert(W_1, false);
     }
 
     @Test(dependsOnMethods = "testLookup")
@@ -155,6 +161,33 @@ public abstract class AbstractIncrementalDFABuilderTest {
         Assert.assertNull(sepWord);
     }
 
+    @Test(dependsOnMethods = "testLookup")
+    public void testVisualization() throws InvocationTargetException, InterruptedException {
+        if (JVMUtil.getCanonicalSpecVersion() > 8) {
+            throw new SkipException("The headless AWT environment currently only works with Java 8 and below");
+        }
+
+        // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.
+        SwingUtilities.invokeAndWait(() -> Visualization.visualize(incDfa.asGraph(), false));
+    }
+
+    @Test(dependsOnMethods = "testLookup")
+    public void testTSView() {
+        testTSViewInternal(incDfa.asTransitionSystem());
+    }
+
+    private static <S> void testTSViewInternal(TransitionSystemView<S, Character, ?> view) {
+        final S s1 = view.getState(W_1);
+        final S s2 = view.getState(W_2);
+        final S s3 = view.getState(W_3);
+        final S s4 = view.getState(W_4);
+
+        Assert.assertTrue(view.getAcceptance(s1).toBoolean());
+        Assert.assertFalse(view.getAcceptance(s2).toBoolean());
+        Assert.assertTrue(view.getAcceptance(s3).toBoolean());
+        Assert.assertTrue(view.getAcceptance(s4).toBoolean());
+    }
+
     @Test
     public void testCounterexampleOfLengthOne() {
         final IncrementalDFABuilder<Character> incDfa = createIncrementalDFABuilder(TEST_ALPHABET);
@@ -169,7 +202,6 @@ public abstract class AbstractIncrementalDFABuilderTest {
         final Word<Character> ce = incDfa.findSeparatingWord(dfa, TEST_ALPHABET, false);
         Assert.assertNotNull(ce);
     }
-
 
     @Test(dependsOnMethods = "testLookup")
     public void testNewInputSymbol() {
