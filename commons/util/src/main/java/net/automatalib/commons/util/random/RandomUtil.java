@@ -16,6 +16,8 @@
 package net.automatalib.commons.util.random;
 
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -31,6 +33,10 @@ public class RandomUtil {
 
     public RandomUtil(Random random) {
         this.random = random;
+    }
+
+    public <T> @Nullable T choose(T[] array) {
+        return choose(array, random);
     }
 
     public static <T> @Nullable T choose(T[] array, Random rand) {
@@ -59,27 +65,58 @@ public class RandomUtil {
         return random;
     }
 
+    /**
+     * Sample a specified number of distinct integers from a specified range.
+     * <p>
+     * The implementation is based on Floyd's <a href="https://doi.org/10.1145/30401.315746">Algorithm F2</a>. Note that
+     * this algorithm ensures equal probability of each integer within in the specified range to appear in the returned
+     * array but no equal probability of their order.
+     *
+     * @param num
+     *         number of integers to sample
+     * @param min
+     *         lower bound (inclusive) of sampled values
+     * @param max
+     *         upper bound (exclusive) of samples values
+     *
+     * @return an array of distinct integers sampled from the specified range
+     */
     public int[] distinctIntegers(int num, int min, int max) {
         return distinctIntegers(num, min, max, random);
     }
 
+    /**
+     * Sample a specified number of distinct integers from a specified range.
+     * <p>
+     * The implementation is based on Floyd's <a href="https://doi.org/10.1145/30401.315746">Algorithm F2</a>. Note that
+     * this algorithm ensures equal probability of each integer within in the specified range to appear in the returned
+     * array but no equal probability of their order.
+     *
+     * @param num
+     *         number of integers to sample
+     * @param min
+     *         lower bound (inclusive) of sampled values
+     * @param max
+     *         upper bound (exclusive) of samples values
+     * @param rand
+     *         the random instance for generating numbers
+     *
+     * @return an array of distinct integers sampled from the specified range
+     */
     public static int[] distinctIntegers(int num, int min, int max, Random rand) {
         int range = max - min;
-        if (range < num) {
-            return new int[0];
-        }
+        int size = Math.min(num, range);
 
-        int[] result = new int[num];
-        for (int i = 0; i < num; i++) {
-            int next = rand.nextInt(range--) + min;
+        int[] result = new int[size];
+        BitSet cache = new BitSet(range);
+        int idx = 0;
 
-            for (int j = 0; j < i; j++) {
-                if (next >= result[j]) {
-                    next++;
-                }
-            }
+        for (int j = range - size; j < range; j++) {
+            int t = rand.nextInt(j + 1);
+            int elem = cache.get(t) ? j : t;
 
-            result[i] = next;
+            cache.set(elem);
+            result[idx++] = elem + min;
         }
 
         return result;
@@ -98,6 +135,10 @@ public class RandomUtil {
     }
 
     public static <T> List<T> sample(List<? extends T> list, int num, Random rand) {
+        if (list.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         List<T> result = new ArrayList<>(num);
         int size = list.size();
         for (int i = 0; i < num; i++) {
@@ -107,22 +148,52 @@ public class RandomUtil {
         return result;
     }
 
+    /**
+     * Sample a specified number of elements from specified list.
+     * <p>
+     * The implementation is based on Floyd's <a href="https://doi.org/10.1145/30401.315746">Algorithm F2</a>. Note that
+     * this algorithm ensures equal probability of each element within in the specified list to appear in the returned
+     * list but no equal probability of their order.
+     *
+     * @param list
+     *         the list to sample elements from
+     * @param num
+     *         number of integers to sample
+     *
+     * @return a list of distinct elements sampled from the specified list
+     */
     public <T> List<T> sampleUnique(List<? extends T> list, int num) {
         return sampleUnique(list, num, random);
     }
 
+    /**
+     * Sample a specified number of elements from specified list.
+     * <p>
+     * The implementation is based on Floyd's <a href="https://doi.org/10.1145/30401.315746">Algorithm F2</a>. Note that
+     * this algorithm ensures equal probability of each element within in the specified list to appear in the returned
+     * list but no equal probability of their order.
+     *
+     * @param list
+     *         the list to sample elements from
+     * @param num
+     *         number of integers to sample
+     * @param rand
+     *         the random instance for generating numbers
+     *
+     * @return a list of distinct elements sampled from the specified list
+     */
     public static <T> List<T> sampleUnique(List<? extends T> list, int num, Random rand) {
-        int size = list.size();
-        if (num <= size) {
-            return new ArrayList<>(list);
+        int elems = list.size();
+
+        if (elems == 0) {
+            return Collections.emptyList();
         }
 
-        int[] indices = distinctIntegers(num, size, rand);
+        int[] indices = distinctIntegers(num, elems, rand);
+        List<T> result = new ArrayList<>(indices.length);
 
-        List<T> result = new ArrayList<>(num);
-
-        for (int i = 0; i < num; i++) {
-            result.add(list.get(indices[i]));
+        for (int index : indices) {
+            result.add(list.get(index));
         }
 
         return result;
