@@ -9,11 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 * A new alphabet implementation `MapAlphabet` that is based on the old `SimpleAlphabet` but without implementing the `GrowingAlphabet` interface.
-* `IntRange` now implements `PrimitiveIterator.OfInt`.
+* `IntRangeIterator` now implements `PrimitiveIterator.OfInt`.
 * A parser for `dot` files has been added and is available in the `automata-serialization-dot` module via the `DOTParsers` factory.
 * A new `PaigeTarjanMinimization` factory that offers convenience methods for PaigeTarjan-based automata minimization (with support for e.g. partial automata) has been added.
 * Performance improvements for some alphabet implementations (`DefaultVPDAlphabet`, `ListAlphabet`, `{Int,Char}Range`, ...).
 * An `LTSminLTLParser` to verify if LTL properties match the expected syntax of LTSmin.
+* A `WordCollector` for collecting words from symbol `Stream`s.
 
 ### Changed
 
@@ -35,7 +36,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `DelegatingIterator`: If you used this class, switch to Guavas equivalent `ForwardingIterator`.
 * `ParameterMismatchException`: Was unused and never thrown.
 * `StateIDDynamicMapping`: Equivalent functionality is provided by `ArrayMapping`.
-* `ResizingIntArray`: Internal datastructure was unused.
+* `ResizingIntArray`: Internal data structure was unused.
 * The `VPDAlphabet` interface no longer specifies the `get{Internal,Call,Return}Symbols()` methods, as the `get{Internal,Call,Return}Alphabet()` methods supersede their functionality.
 * `PaigeTarjan{Initializers,Extractors}` methods for non `IntAbstraction`s have been removed. You may use the new convenience methods provided by `PaigeTarjanMinimization`.
 * Further `@Deprecated` methods have been removed.
