@@ -25,6 +25,7 @@ import net.automatalib.brics.BricsNFA;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Word;
 
+@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class SimpleBricsExample {
 
     private SimpleBricsExample() {}

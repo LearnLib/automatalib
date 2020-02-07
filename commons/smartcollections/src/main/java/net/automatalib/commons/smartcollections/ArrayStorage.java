@@ -74,6 +74,7 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
         return storage.length;
     }
 
+    @SuppressWarnings("PMD.ProperCloneImplementation") //we want to cut cloning hierarchy here
     @Override
     public ArrayStorage<T> clone() {
         return new ArrayStorage<>(storage.clone());

@@ -29,6 +29,7 @@ import net.automatalib.words.impl.DefaultVPDAlphabet;
  *
  * @author frohme
  */
+@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class OneSEVPAExample {
 
     private static final VPDAlphabet<Character> ALPHABET =

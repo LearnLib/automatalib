@@ -28,6 +28,7 @@ import net.automatalib.util.ts.iterators.DefinedInputsIterator;
 import net.automatalib.util.ts.iterators.UndefinedInputsIterator;
 import net.automatalib.util.ts.traversal.BFSOrderIterator;
 
+@SuppressWarnings("PMD.UseUtilityClass") // we want to allow extending for the 'Automata' class
 public class TS {
 
     protected TS() {}

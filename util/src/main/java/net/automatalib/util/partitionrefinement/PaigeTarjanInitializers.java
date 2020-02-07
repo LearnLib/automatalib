@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.partitionrefinement;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -259,11 +260,7 @@ public final class PaigeTarjanInitializers {
     }
 
     public static void prefixSum(int[] array, int startInclusive, int endExclusive) {
-        int curr = array[startInclusive];
-        for (int i = startInclusive + 1; i < endExclusive; i++) {
-            curr += array[i];
-            array[i] = curr;
-        }
+        Arrays.parallelPrefix(array, startInclusive, endExclusive, Integer::sum);
     }
 
     /**

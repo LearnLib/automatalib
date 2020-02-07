@@ -37,6 +37,7 @@ import net.automatalib.words.impl.Alphabets;
  * @see <a href="http://ltsmin.utwente.nl">http://ltsmin.utwente.nl</a>
  * @see net.automatalib.AutomataLibProperty#LTSMIN_PATH
  */
+@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class LTSminExample {
 
     private LTSminExample() {

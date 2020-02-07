@@ -23,6 +23,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
+@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class IncrementalMealyExample {
 
     private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'c');

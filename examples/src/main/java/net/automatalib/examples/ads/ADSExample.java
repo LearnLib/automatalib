@@ -31,6 +31,7 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author frohme
  */
+@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class ADSExample {
 
     private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'b');
