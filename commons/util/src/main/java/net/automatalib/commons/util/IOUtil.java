@@ -19,7 +19,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,9 +31,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Utility methods for operating with {@code java.io.*} classes.
  *
@@ -42,132 +38,8 @@ import org.slf4j.LoggerFactory;
  */
 public final class IOUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IOUtil.class);
-
-    private static final int DEFAULT_BUFFER_SIZE = 8192;
-
     // Prevent instantiation
     private IOUtil() {}
-
-    /**
-     * Skips the content of the stream as long as there is data available. Afterwards, the stream is closed.
-     *
-     * @param is
-     *         the input stream.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     */
-    public static void skip(InputStream is) throws IOException {
-        while (is.available() > 0) {
-            is.skip(Long.MAX_VALUE);
-        }
-        is.close();
-    }
-
-    /**
-     * Copies all data from the given input stream to the given output stream and closes the streams. Convenience
-     * method, same as <code>copy(is, os, true)</code>.
-     *
-     * @param is
-     *         the input stream.
-     * @param os
-     *         the output stream.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     * @see #copy(InputStream, OutputStream, boolean)
-     */
-    public static void copy(InputStream is, OutputStream os) throws IOException {
-        copy(is, os, true);
-    }
-
-    /**
-     * Copies all data from the given input stream to the given output stream.
-     *
-     * @param is
-     *         the input stream.
-     * @param os
-     *         the output stream.
-     * @param close
-     *         <code>true</code> if both streams are closed afterwards, <code>false</code> otherwise.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     */
-    public static void copy(InputStream is, OutputStream os, boolean close) throws IOException {
-        byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
-        int len;
-        try {
-            while ((len = is.read(buf)) != -1) {
-                os.write(buf, 0, len);
-            }
-        } finally {
-            if (close) {
-                closeQuietly(is);
-                closeQuietly(os);
-            }
-        }
-    }
-
-    /**
-     * Copies all text from the given reader to the given writer and closes both afterwards. Convenience method, same as
-     * <code>copy(r, w, true)</code>.
-     *
-     * @param r
-     *         the reader.
-     * @param w
-     *         the writer.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     * @see #copy(Reader, Writer, boolean)
-     */
-    public static void copy(Reader r, Writer w) throws IOException {
-        copy(r, w, true);
-    }
-
-    /**
-     * Copies all text from the given reader to the given writer.
-     *
-     * @param r
-     *         the reader.
-     * @param w
-     *         the writer.
-     * @param close
-     *         <code>true</code> if both reader and writer are closed afterwards, <code>false</code> otherwise.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     */
-    public static void copy(Reader r, Writer w, boolean close) throws IOException {
-        char[] buf = new char[DEFAULT_BUFFER_SIZE];
-        int len;
-        try {
-            while ((len = r.read(buf)) != -1) {
-                w.write(buf, 0, len);
-            }
-        } finally {
-            if (close) {
-                closeQuietly(r);
-                closeQuietly(w);
-            }
-        }
-    }
-
-    /**
-     * Quitely closes a closeable. Any exception while doing so will be ignored (but logged).
-     *
-     * @param closeable
-     *         the closeable to close
-     */
-    public static void closeQuietly(Closeable closeable) {
-        try {
-            closeable.close();
-        } catch (IOException e) {
-            LOGGER.error("Could not close closable", e);
-        }
-    }
 
     /**
      * Ensures that the returned stream is an uncompressed version of the supplied input stream.

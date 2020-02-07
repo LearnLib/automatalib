@@ -22,6 +22,7 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.google.common.io.CharStreams;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
@@ -93,7 +94,7 @@ public class DOTSerializationTest {
         final StringWriter expectedWriter = new StringWriter();
 
         final Reader mealyReader = IOUtil.asBufferedUTF8Reader(DOTSerializationUtil.getResource(resource).openStream());
-        IOUtil.copy(mealyReader, expectedWriter);
+        CharStreams.copy(mealyReader, expectedWriter);
 
         writer.write(dotWriter);
 

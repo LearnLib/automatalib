@@ -25,6 +25,7 @@ import java.io.Writer;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import com.google.common.io.CharStreams;
 import net.automatalib.commons.util.IOUtil;
 
 final class PlottedGraph {
@@ -39,15 +40,8 @@ final class PlottedGraph {
     PlottedGraph(String name, Reader dotText) throws IOException {
         this.name = name;
 
-        StringBuilder sb = new StringBuilder();
-
-        char[] buf = new char[DEFAULT_BUFFER_SIZE];
-        int len;
-        while ((len = dotText.read(buf)) != -1) {
-            sb.append(buf, 0, len);
-        }
-
-        IOUtil.closeQuietly(dotText);
+        final StringBuilder sb = new StringBuilder();
+        CharStreams.copy(dotText, sb);
 
         updateDOTText(sb.toString());
     }

@@ -28,6 +28,7 @@ import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import com.google.common.io.CharStreams;
 import net.automatalib.commons.util.IOUtil;
 
 public class DOTComponent extends ImageComponent {
@@ -62,10 +63,10 @@ public class DOTComponent extends ImageComponent {
 
     @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public DOTComponent(Reader dotReader) throws IOException {
-        StringWriter w = new StringWriter();
+        StringBuilder sb = new StringBuilder();
 
-        IOUtil.copy(dotReader, w);
-        String dot = w.getBuffer().toString();
+        CharStreams.copy(dotReader, sb);
+        String dot = sb.toString();
 
         BufferedImage img = DOT.renderDOTImage(dot);
 

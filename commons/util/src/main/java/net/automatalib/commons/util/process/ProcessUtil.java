@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.function.Consumer;
 
+import com.google.common.io.CharStreams;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.process.InputStreamConsumer.DelegatingConsumer;
 import net.automatalib.commons.util.process.InputStreamConsumer.NOPConsumer;
@@ -189,14 +190,12 @@ public final class ProcessUtil {
     }
 
     private static void writeProcessInput(Process process, @Nullable Reader input) throws IOException {
-
-        final OutputStream processInput = process.getOutputStream();
-
-        if (input == null) {
-            processInput.close();
-        } else {
-            Writer writer = IOUtil.asBufferedUTF8Writer(processInput);
-            IOUtil.copy(input, writer);
+        try (OutputStream processInput = process.getOutputStream()) {
+            if (input != null) {
+                try (Writer writer = IOUtil.asBufferedUTF8Writer(processInput)) {
+                    CharStreams.copy(input, writer);
+                }
+            }
         }
     }
 

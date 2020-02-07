@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.9.0...HEAD)
 
+### Removed
+
+* Removed `IOUtil#copy`, `IOUtil.skip`, `NullOutputStream`. Use the Guava equivalents from `ByteStreams` and `CharStreams`.
+
 
 ## [0.9.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.9.0) - 2020-02-05
 
