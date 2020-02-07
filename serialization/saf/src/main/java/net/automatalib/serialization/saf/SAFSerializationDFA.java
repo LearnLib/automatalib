@@ -39,6 +39,7 @@ public final class SAFSerializationDFA
 
     @Override
     public InputModelData<Integer, DFA<Integer, Integer>> readModel(InputStream is) throws IOException {
+        @SuppressWarnings("PMD.CloseResource") // we do not want to close the stream
         final InputStream uncompressedStream = IOUtil.asUncompressedInputStream(is);
         SAFInput in = new SAFInput(uncompressedStream);
         final CompactDFA<Integer> automaton = in.readNativeDFA();

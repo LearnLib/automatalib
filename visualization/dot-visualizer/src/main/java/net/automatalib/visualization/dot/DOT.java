@@ -118,6 +118,7 @@ public final class DOT {
      * Invokes the DOT utility on a string. Convenience method, see {@link #runDOT(Reader, String, String...)}
      */
     public static InputStream runDOT(String dotText, String format, String... additionalOpts) throws IOException {
+        @SuppressWarnings("PMD.CloseResource") // we do not want to close the stream
         StringReader sr = new StringReader(dotText);
         return runDOT(sr, format, additionalOpts);
     }
@@ -345,11 +346,9 @@ public final class DOT {
      *         if reading from the reader fails, or the pipe to the DOT process breaks.
      */
     public static BufferedImage renderDOTImage(Reader dotReader) throws IOException {
-        InputStream pngIs = runDOT(dotReader, "png");
-        BufferedImage img = ImageIO.read(pngIs);
-        pngIs.close();
-
-        return img;
+        try (InputStream pngIs = runDOT(dotReader, "png")) {
+            return ImageIO.read(pngIs);
+        }
     }
 
     /**

@@ -157,15 +157,13 @@ public final class LibLoader {
         }
 
         String libFileName = libPrefix + name + "." + libExtension;
+        Path libPath = tempLibDir.resolve(libFileName);
         String libResourcePath =
                 "/lib/" + PlatformProperties.OS_NAME + "/" + PlatformProperties.OS_ARCH + "/" + libFileName;
-        InputStream libStream = clazz.getResourceAsStream(libResourcePath);
-        if (libStream == null) {
-            throw new LoadLibraryException("Could not find shipped library resource '" + libFileName + "'");
-        }
-
-        Path libPath = tempLibDir.resolve(libFileName);
-        try {
+        try (InputStream libStream = clazz.getResourceAsStream(libResourcePath)) {
+            if (libStream == null) {
+                throw new LoadLibraryException("Could not find shipped library resource '" + libFileName + "'");
+            }
             Files.copy(libStream, libPath);
         } catch (IOException ex) {
             throw new LoadLibraryException(

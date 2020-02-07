@@ -30,8 +30,6 @@ import net.automatalib.commons.util.IOUtil;
 
 final class PlottedGraph {
 
-    private static final int DEFAULT_BUFFER_SIZE = 1024;
-
     private String name;
     private String dotText;
     private BufferedImage image;

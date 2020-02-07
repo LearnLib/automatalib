@@ -81,4 +81,10 @@ limitations under the License.
             <Class name="net.automatalib.visualization.dot.PlottedGraph"/>
         </Or>
     </Match>
+    <Match>
+        <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/259 -->
+        <Or>
+            <Class name="net.automatalib.commons.util.lib.LibLoader"/>
+        </Or>
+    </Match>
 </FindBugsFilter>

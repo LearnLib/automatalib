@@ -60,8 +60,7 @@ public class LearnLibV2Serialization
     }
 
     public CompactDFA<Integer> readGenericDFA(InputStream is) throws IOException {
-        // we DO NOT want to close the input stream
-        @SuppressWarnings("resource")
+        @SuppressWarnings("PMD.CloseResource") // we DO NOT want to close the input stream
         Scanner sc = new Scanner(IOUtil.asUncompressedInputStream(is), StandardCharsets.UTF_8.toString());
 
         int numStates = sc.nextInt();
@@ -106,6 +105,7 @@ public class LearnLibV2Serialization
         if (partial) {
             numStates++;
         }
+        @SuppressWarnings("PMD.CloseResource") // we DO NOT want to close the input stream
         PrintStream ps;
         try {
             ps = new PrintStream(os, false, StandardCharsets.UTF_8.toString());
