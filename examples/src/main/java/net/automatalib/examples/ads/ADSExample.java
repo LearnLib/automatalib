@@ -25,15 +25,17 @@ import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A small example for computing and displaying adaptive distinguishing sequences.
  *
  * @author frohme
  */
-@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class ADSExample {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ADSExample.class);
     private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'b');
 
     private ADSExample() {}
@@ -48,7 +50,7 @@ public final class ADSExample {
         if (adsOpt.isPresent()) {
             Visualization.visualize(adsOpt.get());
         } else {
-            System.out.println("ADS does not exist");
+            LOGGER.info("ADS does not exist");
         }
     }
 

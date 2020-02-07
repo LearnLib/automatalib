@@ -24,9 +24,12 @@ import net.automatalib.brics.AbstractBricsAutomaton;
 import net.automatalib.brics.BricsNFA;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Word;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class SimpleBricsExample {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleBricsExample.class);
 
     private SimpleBricsExample() {}
 
@@ -47,7 +50,7 @@ public final class SimpleBricsExample {
                                                         Word.fromString("ade"));
 
         for (Word<Character> tw : testWords) {
-            System.out.println("Output for " + tw + " is " + ba.computeOutput(tw));
+            LOGGER.info("Output for {} is {}", tw, ba.computeOutput(tw));
         }
     }
 

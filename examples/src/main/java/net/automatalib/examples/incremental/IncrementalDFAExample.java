@@ -22,22 +22,22 @@ import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class IncrementalDFAExample {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(IncrementalDFAExample.class);
     private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'c');
 
     private IncrementalDFAExample() {}
 
     public static void main(String[] args) {
-        System.out.println("Incremental construction using a Tree");
+        LOGGER.info("Incremental construction using a Tree");
         IncrementalDFABuilder<Character> incDfaTree = new IncrementalDFATreeBuilder<>(ALPHABET);
         build(incDfaTree);
 
-        System.out.println();
-
-        System.out.println("Incremental construction using a DAG");
+        LOGGER.info("Incremental construction using a DAG");
         IncrementalDFABuilder<Character> incDfaDag = new IncrementalDFADAGBuilder<>(ALPHABET);
         build(incDfaDag);
     }
@@ -48,19 +48,19 @@ public final class IncrementalDFAExample {
         Word<Character> w3 = Word.fromString("acb");
         Word<Character> w4 = Word.epsilon();
 
-        System.out.println("  Inserting " + w1 + " as accepted");
+        LOGGER.info("  Inserting {} as accepted", w1);
         incDfa.insert(w1, true);
         Visualization.visualize(incDfa.asGraph());
 
-        System.out.println("  Inserting " + w2 + " as rejected");
+        LOGGER.info("  Inserting {} as rejected", w2);
         incDfa.insert(w2, false);
         Visualization.visualize(incDfa.asGraph());
 
-        System.out.println("  Inserting " + w3 + " as accepted");
+        LOGGER.info("  Inserting {} as accepted", w3);
         incDfa.insert(w3, true);
         Visualization.visualize(incDfa.asGraph());
 
-        System.out.println("  Inserting " + w4 + " as accepted");
+        LOGGER.info("  Inserting {} as accepted", w4);
         incDfa.insert(w4, true);
         Visualization.visualize(incDfa.asGraph());
     }

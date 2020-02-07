@@ -22,22 +22,22 @@ import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class IncrementalPCDFAExample {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(IncrementalPCDFAExample.class);
     private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'c');
 
     private IncrementalPCDFAExample() {}
 
     public static void main(String[] args) {
-        System.out.println("Incremental construction using a tree");
+        LOGGER.info("Incremental construction using a tree");
         IncrementalDFABuilder<Character> incPcDfaTree = new IncrementalPCDFATreeBuilder<>(ALPHABET);
         build(incPcDfaTree);
 
-        System.out.println();
-
-        System.out.println("Incremental construction using a DAG");
+        LOGGER.info("Incremental construction using a DAG");
         IncrementalDFABuilder<Character> incPcDfaDag = new IncrementalPCDFADAGBuilder<>(ALPHABET);
         build(incPcDfaDag);
     }
@@ -47,15 +47,15 @@ public final class IncrementalPCDFAExample {
         Word<Character> w2 = Word.fromString("acb");
         Word<Character> w3 = Word.fromString("ac");
 
-        System.out.println("  Inserting " + w1 + " as accepted");
+        LOGGER.info("  Inserting {} as accepted", w1);
         incPcDfa.insert(w1, true);
         Visualization.visualize(incPcDfa.asGraph());
 
-        System.out.println("  Inserting " + w2 + " as rejected");
+        LOGGER.info("  Inserting {} as rejected", w2);
         incPcDfa.insert(w2, false);
         Visualization.visualize(incPcDfa.asGraph());
 
-        System.out.println("  Inserting " + w3 + " as accepted");
+        LOGGER.info("  Inserting {} as accepted", w3);
         incPcDfa.insert(w3, true);
         Visualization.visualize(incPcDfa.asGraph());
     }

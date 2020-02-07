@@ -22,6 +22,8 @@ import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultVPDAlphabet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A small example for constructing a {@link net.automatalib.automata.vpda.OneSEVPA visibly pushdown automaton} and
@@ -29,9 +31,9 @@ import net.automatalib.words.impl.DefaultVPDAlphabet;
  *
  * @author frohme
  */
-@SuppressWarnings("PMD.SystemPrintln") // for examples, this is fine
 public final class OneSEVPAExample {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OneSEVPAExample.class);
     private static final VPDAlphabet<Character> ALPHABET =
             new DefaultVPDAlphabet<>(Alphabets.singleton('i'), Alphabets.singleton('c'), Alphabets.singleton('r'));
 
@@ -55,7 +57,7 @@ public final class OneSEVPAExample {
     private static void traceVisiblePushdownWords(DefaultOneSEVPA<Character> vpa, String input) {
         final boolean accept = vpa.accepts(Word.fromCharSequence(input));
 
-        System.out.println("The VPA does " + (accept ? "" : "not ") + "accept the word '" + input + "'");
+        LOGGER.info("The VPA does {}accept the word '{}'", accept ? "" : "not ", input);
     }
 
     /**
