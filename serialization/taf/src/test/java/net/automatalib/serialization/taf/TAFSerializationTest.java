@@ -41,36 +41,39 @@ import org.testng.annotations.Test;
  */
 public class TAFSerializationTest {
 
-    private static final Alphabet<String> ALPHABET = Alphabets.closedCharStringRange('0', '3');
+    private static final Alphabet<String> INPUT_ALPHABET = Alphabets.closedCharStringRange('0', '3');
+
+    private static final Alphabet<String> OUTPUT_ALPHABET = Alphabets.fromArray("Hello", "World", "Hello World");
 
     private static final int AUTOMATON_SIZE = 20;
 
     @Test
     public void testDFASerialization() throws Exception {
 
-        final CompactDFA<String> automaton = RandomAutomata.randomDFA(new Random(0), AUTOMATON_SIZE, ALPHABET);
+        final CompactDFA<String> automaton = RandomAutomata.randomDFA(new Random(0), AUTOMATON_SIZE, INPUT_ALPHABET);
 
         weedOutTransitions(automaton);
 
         final TAFSerializationDFA serializer = TAFSerializationDFA.getInstance();
-        final DFA<Integer, String> deserializedModel = writeAndReadModel(automaton, ALPHABET, serializer, serializer);
+        final DFA<Integer, String> deserializedModel =
+                writeAndReadModel(automaton, INPUT_ALPHABET, serializer, serializer);
 
-        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, ALPHABET));
+        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, INPUT_ALPHABET));
     }
 
     @Test
     public void testMealySerialization() throws Exception {
         final CompactMealy<String, String> automaton =
-                RandomAutomata.randomMealy(new Random(0), AUTOMATON_SIZE, ALPHABET, ALPHABET);
+                RandomAutomata.randomMealy(new Random(0), AUTOMATON_SIZE, INPUT_ALPHABET, OUTPUT_ALPHABET);
 
         weedOutTransitions(automaton);
 
         final TAFSerializationMealy serializer = TAFSerializationMealy.getInstance();
 
         final MealyMachine<?, String, ?, String> deserializedModel =
-                writeAndReadModel(automaton, ALPHABET, serializer, serializer);
+                writeAndReadModel(automaton, INPUT_ALPHABET, serializer, serializer);
 
-        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, ALPHABET));
+        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, INPUT_ALPHABET));
     }
 
     private <T, A extends MutableDeterministic<Integer, String, T, ?, ?>> void weedOutTransitions(A automaton) {
@@ -80,7 +83,7 @@ public class TAFSerializationTest {
         // remove some transitions for partiality
         for (int i = 0; i < AUTOMATON_SIZE; i++) {
             final int rState = random.nextInt(AUTOMATON_SIZE);
-            final String rInput = ALPHABET.getSymbol(random.nextInt(ALPHABET.size()));
+            final String rInput = INPUT_ALPHABET.getSymbol(random.nextInt(INPUT_ALPHABET.size()));
 
             automaton.removeTransition(rState, rInput, automaton.getTransition(rState, rInput));
         }
