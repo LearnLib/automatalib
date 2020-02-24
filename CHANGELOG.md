@@ -11,6 +11,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed `IOUtil#copy`, `IOUtil.skip`, `NullOutputStream`. Use the Guava equivalents from `ByteStreams` and `CharStreams`.
 
 
+### Fixed
+
+* Correctly enquote outputs containing whitespaces in `TAFWriter` ([#37](https://github.com/LearnLib/automatalib/issues/37), thanks to [Alexander Schieweck](https://github.com/aschieweck)).
+
+
 ## [0.9.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.9.0) - 2020-02-05
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.8.0...automatalib-0.9.0)
