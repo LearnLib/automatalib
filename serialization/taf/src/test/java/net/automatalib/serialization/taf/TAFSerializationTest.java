@@ -19,8 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 import net.automatalib.automata.MutableDeterministic;
@@ -34,11 +32,8 @@ import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.MapAlphabet;
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**
@@ -46,49 +41,39 @@ import org.testng.annotations.Test;
  */
 public class TAFSerializationTest {
 
+    private static final Alphabet<String> INPUT_ALPHABET = Alphabets.closedCharStringRange('0', '3');
+
+    private static final Alphabet<String> OUTPUT_ALPHABET = Alphabets.fromArray("Hello", "World", "Hello World");
+
     private static final int AUTOMATON_SIZE = 20;
-
-    private static Alphabet<String> alphabet = Alphabets.closedCharStringRange('0', '3');
-
-    @BeforeTest
-    public void setUp() {
-        List<String> symbols = new LinkedList<>();
-        symbols.add("0");
-        symbols.add("a");
-        symbols.add(" ");
-        symbols.add("/");
-        symbols.add("\"");
-        //symbols.add("✓"); // unicode check mark, see #18
-
-        alphabet = new MapAlphabet<>(symbols);
-    }
 
     @Test
     public void testDFASerialization() throws Exception {
 
-        final CompactDFA<String> automaton = RandomAutomata.randomDFA(new Random(0), AUTOMATON_SIZE, alphabet);
+        final CompactDFA<String> automaton = RandomAutomata.randomDFA(new Random(0), AUTOMATON_SIZE, INPUT_ALPHABET);
 
         weedOutTransitions(automaton);
 
         final TAFSerializationDFA serializer = TAFSerializationDFA.getInstance();
-        final DFA<Integer, String> deserializedModel = writeAndReadModel(automaton, alphabet, serializer, serializer);
+        final DFA<Integer, String> deserializedModel =
+                writeAndReadModel(automaton, INPUT_ALPHABET, serializer, serializer);
 
-        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, alphabet));
+        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, INPUT_ALPHABET));
     }
 
     @Test
     public void testMealySerialization() throws Exception {
         final CompactMealy<String, String> automaton =
-                RandomAutomata.randomMealy(new Random(0), AUTOMATON_SIZE, alphabet, alphabet);
+                RandomAutomata.randomMealy(new Random(0), AUTOMATON_SIZE, INPUT_ALPHABET, OUTPUT_ALPHABET);
 
         weedOutTransitions(automaton);
 
         final TAFSerializationMealy serializer = TAFSerializationMealy.getInstance();
 
         final MealyMachine<?, String, ?, String> deserializedModel =
-                writeAndReadModel(automaton, alphabet, serializer, serializer);
+                writeAndReadModel(automaton, INPUT_ALPHABET, serializer, serializer);
 
-        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, alphabet));
+        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, INPUT_ALPHABET));
     }
 
     private <T, A extends MutableDeterministic<Integer, String, T, ?, ?>> void weedOutTransitions(A automaton) {
@@ -98,7 +83,7 @@ public class TAFSerializationTest {
         // remove some transitions for partiality
         for (int i = 0; i < AUTOMATON_SIZE; i++) {
             final int rState = random.nextInt(AUTOMATON_SIZE);
-            final String rInput = alphabet.getSymbol(random.nextInt(alphabet.size()));
+            final String rInput = INPUT_ALPHABET.getSymbol(random.nextInt(INPUT_ALPHABET.size()));
 
             automaton.removeTransition(rState, rInput, automaton.getTransition(rState, rInput));
         }

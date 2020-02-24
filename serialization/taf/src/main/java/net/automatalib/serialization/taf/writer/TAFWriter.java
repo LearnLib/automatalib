@@ -165,8 +165,7 @@ public final class TAFWriter {
         writeIndent();
         writeStringCollection(symbols);
         if (output != null) {
-            String escapedOutput = StringUtil.enquoteIfNecessary(output.toString());
-            out.append(" / ").append(escapedOutput);
+            out.append(" / ").append(StringUtil.enquoteIfNecessary(output.toString()));
         }
         out.append(" -> ").append(target).append(System.lineSeparator());
     }
