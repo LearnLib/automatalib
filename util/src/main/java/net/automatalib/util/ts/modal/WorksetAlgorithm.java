@@ -31,12 +31,11 @@ interface WorksetAlgorithm<T, R> {
     int expectedElementCount();
 
     /**
-     * Fill the stack with the initial elements that should be processed by {@link #update(T) update} in
-     * the first iterations.
+     * Provide the initial elements that should be processed by {@link #update(T) update}.
      *
-     * @param stack container to fill with initial elements
+     * @return initial elements
      */
-    void initialize(Deque<T> stack);
+    Collection<T> initialize();
 
     /**
      * Process the given element and perform its corresponding actions.

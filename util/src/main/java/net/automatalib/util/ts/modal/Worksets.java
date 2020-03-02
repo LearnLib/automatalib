@@ -24,35 +24,45 @@ import java.util.Set;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.automatalib.commons.util.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author msc
  */
-public final class Workset {
+public final class Worksets {
 
-    private Workset() {
+    private Worksets() {
         // prevent instantiation
     }
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Worksets.class);
+
     public static <T, R> R process(WorksetAlgorithm<T, R> algorithm) {
 
-        final Deque<T> stack = new ArrayDeque<>(algorithm.expectedElementCount());
-        final Set<T> tracking = Sets.newHashSetWithExpectedSize(algorithm.expectedElementCount());
+        final int expectedElementCount = algorithm.expectedElementCount();
+        final Deque<T> stack = new ArrayDeque<>(expectedElementCount);
+        final Set<T> tracking = Sets.newHashSetWithExpectedSize(expectedElementCount);
 
-        algorithm.initialize(stack);
-        tracking.addAll(stack);
+        final Collection<T> initialElements = algorithm.initialize();
+        LOGGER.debug("initializing stack with {}", initialElements);
+        stack.addAll(initialElements);
+        tracking.addAll(initialElements);
 
         while (!stack.isEmpty()) {
 
             T current = stack.pop();
             tracking.remove(current);
+            LOGGER.debug("processing {}", current);
 
-            Collection<T> discovered = algorithm.update(current);
+            final Collection<T> discovered = algorithm.update(current);
+            LOGGER.debug("discovered {}", discovered);
 
             for (T element : discovered) {
                 if (!tracking.contains(element)) {
                     tracking.add(element);
                     stack.addLast(element);
+                    LOGGER.debug("adding to stack {}", element);
                 }
             }
 
@@ -67,21 +77,25 @@ public final class Workset {
         final Set<T> tracking = Sets.newHashSetWithExpectedSize(algorithm.expectedElementCount());
         final Map<T, E> mapping = Maps.newHashMapWithExpectedSize(algorithm.expectedElementCount());
 
-        algorithm.initialize(stack, mapping);
-        tracking.addAll(stack);
+        final Collection<T> initialElements = algorithm.initialize(mapping);
+        LOGGER.debug("initializing stack with {}", initialElements);
+        stack.addAll(initialElements);
+        tracking.addAll(initialElements);
 
         while (!stack.isEmpty()) {
 
             T currentT = stack.pop();
-            E currentE = mapping.get(currentT);
             tracking.remove(currentT);
+            LOGGER.debug("processing {}", currentT);
 
-            final Collection<T> discovered = algorithm.update(mapping, currentT, currentE);
+            final Collection<T> discovered = algorithm.update(mapping, currentT);
+            LOGGER.debug("discovered {}", discovered);
 
             for (T element : discovered) {
                 if (!tracking.contains(element)) {
                     tracking.add(element);
                     stack.addLast(element);
+                    LOGGER.debug("adding to stack {}", element);
                 }
             }
         }

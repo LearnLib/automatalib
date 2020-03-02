@@ -76,23 +76,24 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
     }
 
     @Override
-    public void initialize(Deque<Pair<S0, S1>> stack, Map<Pair<S0, S1>, S> mapping) {
+    public Collection<Pair<S0,S1>> initialize(Map<Pair<S0, S1>, S> mapping) {
+        Collection<Pair<S0,S1>> initialElements = new ArrayList<>(mc0.getInitialStates().size() * mc1.getInitialStates().size());
         for (final S0 s0 : mc0.getInitialStates()) {
             for (final S1 s1 : mc1.getInitialStates()) {
                 final Pair<S0, S1> init = Pair.of(s0, s1);
                 final S newState = result.addInitialState();
 
                 mapping.put(init, newState);
-                stack.addLast(init);
+                initialElements.add(init);
             }
         }
+        return initialElements;
     }
 
     @Override
-    public Collection<Pair<S0, S1>> update(Map<Pair<S0, S1>, S> mapping, Pair<S0, S1> currentTuple, S currentState) {
-        assert currentState != null;
-
+    public Collection<Pair<S0, S1>> update(Map<Pair<S0, S1>, S> mapping, Pair<S0, S1> currentTuple) {
         ArrayList<Pair<S0, S1>> discovered = new ArrayList<>();
+        S currentState = mapping.get(currentTuple);
 
         LOGGER.debug("current tuple: {} (-> {})", currentTuple, currentState);
 

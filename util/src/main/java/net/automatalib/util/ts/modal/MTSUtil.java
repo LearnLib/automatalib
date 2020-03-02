@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.fsa.NFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
@@ -57,7 +56,7 @@ public final class MTSUtil {
             ModalTransitionSystem<S0, I, T0, TP0> mc0,
             ModalTransitionSystem<S1, I, T1, TP1> mc1,
             AutomatonCreator<A, I> creator) {
-        return Workset.map(new ModalConjunction<>(mc0, mc1, creator)).getSecond();
+        return Worksets.map(new ModalConjunction<>(mc0, mc1, creator)).getSecond();
     }
 
     public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> compose(
@@ -70,7 +69,7 @@ public final class MTSUtil {
             ModalTransitionSystem<S0, I, T0, TP0> mc0,
             ModalTransitionSystem<S1, I, T1, TP1> mc1,
             AutomatonCreator<A, I> creator) {
-        return Workset.map(new ModalParallelComposition<>(mc0, mc1, creator)).getSecond();
+        return Worksets.map(new ModalParallelComposition<>(mc0, mc1, creator)).getSecond();
     }
 
     public static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> boolean isRefinementOf(

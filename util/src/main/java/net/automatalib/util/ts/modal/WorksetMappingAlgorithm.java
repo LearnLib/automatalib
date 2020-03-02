@@ -16,19 +16,44 @@
 package net.automatalib.util.ts.modal;
 
 import java.util.Collection;
-import java.util.Deque;
 import java.util.Map;
 
 /**
  * @author msc
  */
-interface WorksetMappingAlgorithm<T, E, D> {
+interface WorksetMappingAlgorithm<T, E, R> {
 
+    /**
+     * Provides a hint to initialize containers appropriately.
+     *
+     * @return expected number of elements visited
+     */
     int expectedElementCount();
 
-    void initialize(Deque<T> stack, Map<T, E> mapping);
+    /**
+     * Provide the initial elements that should be processed by {@link #update(Map, T) update}.
+     * Also performs any required action on the initial elements (e.g. update mapping).
+     *
+     * @return initial elements
+     */
+    Collection<T> initialize(Map<T, E> mapping);
 
-    Collection<T> update(Map<T, E> mapping, T currentT, E currentE);
+    /**
+     * Process the given element and perform its corresponding actions.
+     * If during this process the need arises to update other elements as well, return them.
+     *
+     * @param mapping the calculated mapping (should be updated appropriately)
+     * @param currentT the current element that should be processed by this method
+     * @return a collection of elements that need to be processed
+     */
+    Collection<T> update(Map<T, E> mapping, T currentT);
 
-    D result();
+    /**
+     * Provides the result of this algorithms internal action.
+     * More precise, this function returns the accumulated object E after the successful application of <it>all</it>
+     * {@link #update(Map, T) update} calls.
+     *
+     * @return the resulting object
+     */
+    R result();
 }
