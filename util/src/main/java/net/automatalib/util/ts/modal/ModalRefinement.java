@@ -1,11 +1,9 @@
 package net.automatalib.util.ts.modal;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.function.Predicate;
 
 import com.google.common.collect.Sets;
 import net.automatalib.commons.util.Pair;
@@ -19,7 +17,7 @@ public class ModalRefinement {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModalRefinement.class);
 
 
-    private static <BS, I, BT, BTP extends ModalEdgeProperty> Set<BT> transitionPartner(
+    private static <BS, I, BT, BTP extends ModalEdgeProperty> Set<BT> partnerTransitions(
             ModalTransitionSystem<BS, I, BT, BTP> b,
             BS source,
             I input,
@@ -54,7 +52,7 @@ public class ModalRefinement {
                 }
                 LOGGER.debug("Searching corresponding transition for {}", transition);
 
-                Set<BT> partnerTransitions = transitionPartner(b, coSource, label, acceptableValues);
+                Set<BT> partnerTransitions = partnerTransitions(b, coSource, label, acceptableValues);
 
                 AS target = a.getTarget(transition);
                 final boolean eligablePartner =
@@ -86,7 +84,7 @@ public class ModalRefinement {
             }
         }
 
-        Set<ModalEdgeProperty.ModalType> may = Sets.newHashSetWithExpectedSize(1);
+        Set<ModalEdgeProperty.ModalType> may = Sets.newHashSetWithExpectedSize(2);
         may.add(ModalEdgeProperty.ModalType.MAY);
         may.add(ModalEdgeProperty.ModalType.MUST);
 

@@ -60,4 +60,10 @@ public class MTSTransition<I, TP extends MutableModalEdgeProperty> implements Se
     void setProperty(TP property) {
         this.property = property;
     }
+
+    @Override
+    public String toString() {
+        return "MTSTransition{" + "source=" + source + ", target=" + target + ", label=" + label + ", property=" +
+               property + '}';
+    }
 }

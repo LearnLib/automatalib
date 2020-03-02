@@ -1,0 +1,216 @@
+package net.automatalib.util.ts.modal;
+
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.automatalib.automata.AutomatonCreator;
+import net.automatalib.automata.UniversalAutomaton;
+import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.ts.TransitionPredicate;
+import net.automatalib.ts.modal.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.ModalEdgeProperty;
+import net.automatalib.ts.modal.ModalTransitionSystem;
+import net.automatalib.ts.modal.MutableModalContract;
+import net.automatalib.ts.modal.MutableModalContractEdgeProperty;
+import net.automatalib.ts.modal.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.MutableModalTransitionSystem;
+import net.automatalib.ts.modal.TauEdge;
+import net.automatalib.util.automata.copy.AutomatonCopyMethod;
+import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
+import net.automatalib.util.automata.fsa.DFAs;
+import net.automatalib.words.Alphabet;
+import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@ParametersAreNonnullByDefault
+public class MCUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemComponent.class);
+
+    private MCUtil() {
+        // prevent instantiation
+    }
+
+    @Nonnull
+    public static <A extends MutableModalContract<S1, I, T1, TP1>, S1, I, T1, TP1 extends MutableModalContractEdgeProperty, B extends MutableModalTransitionSystem<S2, I, T2, TP2>, S2, T2, TP2 extends MutableModalEdgeProperty> SystemComponent<B, S2, I, T2, TP2> systemComponent(
+            A modalContract,
+            AutomatonCreator<B, I> creator,
+            Function<? super T1, ? extends TP2> tpMapping,
+            Supplier<? extends TP2> mayOnlySupplier
+    ) {
+        B result = creator.createAutomaton(modalContract.getInputAlphabet());
+
+        Mapping<S1, S2> mapping = AutomatonLowLevelCopy.rawCopy(AutomatonCopyMethod.DFS,
+                                                  modalContract,
+                                                  modalContract.getInputAlphabet(),
+                                                  result,
+                                                  i -> i,
+                                                  sp -> null,
+                                                  tpMapping,
+                                                  s -> true,
+                                                  (s, i, t) -> modalContract.getTransitionProperty(t).getColor() != ModalContractEdgeProperty.EdgeColor.RED);
+
+        S2 uniqueState = result.addState();
+
+        for (S1 state : modalContract.getStates()) {
+            for (I input : modalContract.getInputAlphabet()) {
+                for (T1 transition : modalContract.getTransitions(state, input)) {
+                    if (modalContract.getTransitionProperty(transition).getColor() == ModalContractEdgeProperty.EdgeColor.RED) {
+                        S2 source = mapping.get(state);
+                        TP2 property = mayOnlySupplier.get();
+                        assert property.isMayOnly();
+                        result.addTransition(source, input, uniqueState, property);
+                    }
+                }
+            }
+        }
+
+        for (I input : modalContract.getInputAlphabet()) {
+            TP2 property = mayOnlySupplier.get();
+            assert property.isMayOnly();
+            result.addTransition(uniqueState, input, uniqueState, property);
+        }
+
+        return SystemComponent.of(result, uniqueState);
+    };
+
+    @Nonnull
+    public static <A extends MutableModalContract<S1, I, T1, TP1>, S1, I, T1, TP1 extends MutableModalContractEdgeProperty & TauEdge, B extends ModalTransitionSystem<S2, I, T2, TP2>, S2, T2, TP2 extends ModalEdgeProperty> DFA<?, I> redContextLanguage(
+            SystemComponent<B, S2, I, T2, TP2> system,
+            Collection<I> inputs
+    ) {
+        Pair<Map<Set<S2>,Integer>, CompactDFA<I>> res = Closures.simpleClosure(system.systemComponent, system.systemComponent.getInputAlphabet(), CompactDFA::new, (s, i, t) -> inputs.contains(i));
+
+        CompactDFA<I> dfa = res.getSecond();
+        Map<Set<S2>, Integer> mapping = res.getFirst();
+
+        for (Map.Entry<Set<S2>,Integer> entry : mapping.entrySet()) {
+            if (entry.getKey().contains(system.uniqueState)) {
+                dfa.setStateProperty(entry.getValue(), Boolean.TRUE);
+            }
+        }
+        //TODO: change to mutable versions
+
+        CompactDFA<I> complementDfa = DFAs.complement(dfa, Alphabets.fromCollection(inputs));
+        CompactDFA<I> minimalDfa = DFAs.minimize(complementDfa);
+
+        return minimalDfa;
+    }
+
+    @Nonnull
+    public static <B extends MutableModalTransitionSystem<S1, I, T, TP>, S1, I, T, TP extends MutableModalEdgeProperty, S2> B redContextComponent(
+            DFA<S2, I> dfa,
+            AutomatonCreator<B, I> creator,
+            Collection<I> inputs,
+            Supplier<? extends TP> mayOnlySupplier
+    ) {
+        B result = creator.createAutomaton(Alphabets.fromCollection(inputs));
+
+        AutomatonLowLevelCopy.rawCopy(AutomatonCopyMethod.STATE_BY_STATE,
+                                      dfa,
+                                      inputs,
+                                      result,
+                                      sp -> null,
+                                      s -> mayOnlySupplier.get(),
+                                      dfa::isAccepting,
+                                      (s,i,t) -> true);
+
+        return result;
+    }
+
+    @Nonnull
+    public static <A extends MutableModalContract<S, I, T, TP>, S, I, T, TP extends MutableModalContractEdgeProperty & TauEdge> DFA<Integer, I> greenContextLanguage(
+            A modalContract
+    ) {
+        Alphabet<I> alphabet = modalContract.getInputAlphabet();
+        Alphabet<I> gamma = modalContract.getCommunicationAlphabet();
+        assert alphabet.containsAll(gamma);
+
+        Pair<Map<Set<S>,Integer>, CompactDFA<I>> res = Closures.closure(modalContract,
+                                                                         alphabet,
+                                                                         CompactDFA::new,
+                                                                         Closures.toClosureOperator(modalContract, alphabet, (s, i, t) -> !gamma.contains(i)),
+                                                                         (s, i, t) -> gamma.contains(i) & !modalContract.getTransitionProperty(t).isRed());
+
+        CompactDFA<I> dfa = res.getSecond();
+        Map<Set<S>, Integer> mapping = res.getFirst();
+
+        Set<S> keepStates = new HashSet<>();
+        for (S src : modalContract.getStates()){
+            for (I input : gamma) {
+                for (T t : modalContract.getTransitions(src, input)) {
+                    TP property = modalContract.getTransitionProperty(t);
+                    if (!property.isRed() && property.isMust()) {
+                        keepStates.add(modalContract.getSuccessor(t));
+                    }
+                }
+            }
+        }
+
+        for (Map.Entry<Set<S>,Integer> entry : mapping.entrySet()) {
+            if (!Collections.disjoint(entry.getKey(), keepStates)) {
+                dfa.setStateProperty(entry.getValue(), Boolean.TRUE);
+            }
+        }
+        //TODO: change to mutable versions
+
+        CompactDFA<I> complementDfa = DFAs.complete(dfa, modalContract.getCommunicationAlphabet());
+        CompactDFA<I> minimalDfa = DFAs.minimize(complementDfa);
+
+        return minimalDfa;
+    }
+
+    @Nonnull
+    public static <B extends MutableModalTransitionSystem<S1, I, T, TP>, S1, I, T, TP extends MutableModalEdgeProperty, S2> B greenContextComponent(
+            DFA<S2, I> dfa,
+            AutomatonCreator<B, I> creator,
+            Collection<I> inputs,
+            Supplier<? extends TP> mayOnlySupplier
+    ) {
+        B result = creator.createAutomaton(Alphabets.fromCollection(inputs));
+
+        AutomatonLowLevelCopy.rawCopy(AutomatonCopyMethod.STATE_BY_STATE,
+                                      dfa,
+                                      inputs,
+                                      result,
+                                      sp -> null,
+                                      s -> mayOnlySupplier.get(),
+                                      dfa::isAccepting,
+                                      (s,i,t) -> true);
+
+        return result;
+    }
+
+    public static final class SystemComponent<A extends ModalTransitionSystem<S, I ,T, TP>, S, I, T, TP extends ModalEdgeProperty> {
+
+        public final A systemComponent;
+        public final S uniqueState;
+
+        public SystemComponent(A systemComponent, S uniqueState) {
+            this.systemComponent = systemComponent;
+            this.uniqueState = uniqueState;
+        }
+
+        @Nonnull
+        public static <A extends MutableModalTransitionSystem<S, I ,T, TP>, S, I, T, TP extends MutableModalEdgeProperty> SystemComponent<A, S, I, T, TP> of(
+                A graph,
+                S state
+        ) {
+            return new SystemComponent<>(graph, state);
+        }
+    }
+}

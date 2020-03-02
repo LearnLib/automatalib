@@ -33,4 +33,8 @@ public class ModalEdgePropertyImpl implements MutableModalEdgeProperty {
         this.type = type;
     }
 
+    @Override
+    public String toString() {
+        return "ModalEdge{" + "type=" + type + '}';
+    }
 }
