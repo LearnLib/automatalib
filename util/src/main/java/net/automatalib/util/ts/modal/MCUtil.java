@@ -1,9 +1,7 @@
 package net.automatalib.util.ts.modal;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -14,12 +12,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.modal.ModalContractEdgeProperty;
 import net.automatalib.ts.modal.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
@@ -31,6 +27,7 @@ import net.automatalib.ts.modal.TauEdge;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automata.fsa.DFAs;
+import net.automatalib.util.fixedpoint.Closures;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.slf4j.Logger;

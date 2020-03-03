@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.ts.modal;
+package net.automatalib.util.fixedpoint;
 
 import java.util.Collection;
 import java.util.Deque;
@@ -21,7 +21,7 @@ import java.util.Deque;
 /**
  * @author msc
  */
-interface WorksetAlgorithm<T, R> {
+public interface WorksetAlgorithm<T, R> {
 
     /**
      * Provides a hint to initialize containers appropriately.

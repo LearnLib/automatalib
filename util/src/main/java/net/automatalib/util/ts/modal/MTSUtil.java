@@ -30,6 +30,7 @@ import net.automatalib.ts.modal.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
+import net.automatalib.util.fixedpoint.Worksets;
 import net.automatalib.words.Alphabet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

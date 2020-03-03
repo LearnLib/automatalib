@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.ts.modal;
+package net.automatalib.util.fixedpoint;
 
 import java.util.Collection;
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * @author msc
  */
-interface WorksetMappingAlgorithm<T, E, R> {
+public interface WorksetMappingAlgorithm<T, E, R> {
 
     /**
      * Provides a hint to initialize containers appropriately.

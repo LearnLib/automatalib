@@ -18,7 +18,6 @@ package net.automatalib.util.ts.modal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.Map;
 
 import net.automatalib.automata.AutomatonCreator;
@@ -27,6 +26,7 @@ import net.automatalib.ts.modal.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
+import net.automatalib.util.fixedpoint.WorksetMappingAlgorithm;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;

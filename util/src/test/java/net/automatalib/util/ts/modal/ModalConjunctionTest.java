@@ -31,6 +31,7 @@ import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalEdgeProperty;
+import net.automatalib.util.fixedpoint.Worksets;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.slf4j.Logger;
