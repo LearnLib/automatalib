@@ -2,7 +2,6 @@ package net.automatalib.util.ts.modal;
 
 import com.google.common.collect.Lists;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
@@ -40,7 +39,7 @@ public class MCUtilTest {
         MCUtil.SystemComponent<CompactMTS<Character>, Integer, Character, MTSTransition<Character, MutableModalEdgeProperty>, MutableModalEdgeProperty> system = MCUtil.systemComponent(monitor, CompactMTS<Character>::new, t -> null, () -> new ModalEdgePropertyImpl(
                 ModalEdgeProperty.ModalType.MAY));
 
-        DFA<?, Character> dfa = MCUtil.redContextLanguage(monitor, system);
+        DFA<?, Character> dfa = MCUtil.redContextLanguage(system, monitor.getInputAlphabet());
 
         Assert.assertTrue(dfa.accepts(Lists.charactersOf("bb")));
         Assert.assertTrue(dfa.accepts(Lists.charactersOf("bdb")));
