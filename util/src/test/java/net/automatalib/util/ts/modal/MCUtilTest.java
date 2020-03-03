@@ -210,7 +210,8 @@ public class MCUtilTest {
         DFA<?, Character> dfa = MCUtil.greenContextLanguage(monitor);
 
         CompactMTS<Character> greenContext = MCUtil.greenContextComponent(dfa, CompactMTS::new, monitor.getCommunicationAlphabet(), () -> new ModalEdgePropertyImpl(
-                ModalEdgeProperty.ModalType.MAY));
+                ModalEdgeProperty.ModalType.MAY), () -> new ModalEdgePropertyImpl(
+                ModalEdgeProperty.ModalType.MUST));
 
         assertThat(greenContext.getInputAlphabet())
                 .containsExactlyInAnyOrderElementsOf(monitor.getCommunicationAlphabet());
@@ -235,6 +236,6 @@ public class MCUtilTest {
 
         assertThat(allIncomingTransitions(greenContext, monitor.getCommunicationAlphabet(), sink))
                 .allMatch(t -> t.getProperty().isMayOnly())
-                .hasSize(2);
+                .hasSize(4);
     }
 }

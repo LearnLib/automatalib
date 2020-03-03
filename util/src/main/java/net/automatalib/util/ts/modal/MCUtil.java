@@ -176,7 +176,8 @@ public class MCUtil {
             DFA<S2, I> dfa,
             AutomatonCreator<B, I> creator,
             Collection<I> inputs,
-            Supplier<? extends TP> mayOnlySupplier
+            Supplier<? extends TP> mayOnlySupplier,
+            Supplier<? extends TP> mustSupplier
     ) {
         B result = creator.createAutomaton(Alphabets.fromCollection(inputs));
 
@@ -185,8 +186,8 @@ public class MCUtil {
                                       inputs,
                                       result,
                                       sp -> null,
-                                      s -> mayOnlySupplier.get(),
-                                      dfa::isAccepting,
+                                      t -> dfa.isAccepting(dfa.getSuccessor(t)) ? mustSupplier.get() : mayOnlySupplier.get(),
+                                      s -> true,
                                       (s,i,t) -> true);
 
         return result;
