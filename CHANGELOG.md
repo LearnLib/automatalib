@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 
 * Correctly enquote outputs containing whitespaces in `TAFWriter` ([#37](https://github.com/LearnLib/automatalib/issues/37), thanks to [Alexander Schieweck](https://github.com/aschieweck)).
+* Fixed a bug in the `Graph` representation of `AbstractOneSEVPA`s ([#39](https://github.com/LearnLib/automatalib/pull/39), thanks to [DonatoClun](https://github.com/DonatoClun)).
 
 
 ## [0.9.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.9.0) - 2020-02-05
