@@ -125,7 +125,7 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
             for (final L loc : getLocations()) {
                 for (final I stackSymbol : alphabet.getCallAlphabet()) {
                     final int sym = encodeStackSym(loc, stackSymbol);
-                    final L succ = getReturnSuccessor(loc, i, sym);
+                    final L succ = getReturnSuccessor(location, i, sym);
 
                     if (succ != null) {
                         result.add(new SevpaViewEdge<>(i, sym, succ));
