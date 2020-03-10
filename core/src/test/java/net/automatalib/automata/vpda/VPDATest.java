@@ -38,9 +38,9 @@ public class VPDATest {
     public void testBracketLanguage() {
 
         final Alphabet<Character> callAlphabet = Alphabets.fromArray('(', '[');
-        final Alphabet<Character> creturnAlphabet = Alphabets.fromArray(')', ']');
+        final Alphabet<Character> returnAlphabet = Alphabets.fromArray(')', ']');
         final VPDAlphabet<Character> alphabet =
-                new DefaultVPDAlphabet<>(Collections.emptyList(), callAlphabet, creturnAlphabet);
+                new DefaultVPDAlphabet<>(Collections.emptyList(), callAlphabet, returnAlphabet);
 
         final DefaultOneSEVPA<Character> vpda = new DefaultOneSEVPA<>(alphabet);
 
