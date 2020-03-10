@@ -195,9 +195,9 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
 
     static class SevpaViewEdge<S, I> {
 
-        private final I input;
-        private final int stack;
-        private final S target;
+        final I input;
+        final int stack;
+        final S target;
 
         SevpaViewEdge(I input, int stack, S target) {
             this.target = target;
