@@ -123,7 +123,7 @@ public final class DFA2ETFWriter<I> extends AbstractETFWriter<I, DFA<?, I>> {
 
     @Override
     public void writeModel(OutputStream os, DFA<?, I> model, Alphabet<I> alphabet) {
-        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedUTF8Writer(os))) {
+        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedNonClosingUTF8Writer(os))) {
             write(pw, model, alphabet);
         }
     }

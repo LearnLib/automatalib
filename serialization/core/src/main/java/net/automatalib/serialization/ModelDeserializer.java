@@ -35,6 +35,8 @@ public interface ModelDeserializer<M> {
 
     /**
      * Reads the contents from the given input stream and de-serializes it into a model instance.
+     * <p>
+     * Note: the input stream will <b>not</b> be closed.
      *
      * @param is
      *         the input stream to read data from
@@ -49,7 +51,17 @@ public interface ModelDeserializer<M> {
     M readModel(InputStream is) throws IOException;
 
     /**
-     * Convenience method for {@link #readModel(InputStream)}, that reads from a given {@link URL}.
+     * Reads the contents from the given URL and de-serializes it into a model instance.
+     *
+     * @param url
+     *         the url to read data from
+     *
+     * @return the de-serialized model
+     *
+     * @throws IOException
+     *         if an error occurred while reading from the stream
+     * @throws FormatException
+     *         if the content of the stream was not in the expected format
      */
     default M readModel(URL url) throws IOException {
         try (InputStream is = IOUtil.asBufferedInputStream(url.openStream())) {
@@ -58,7 +70,17 @@ public interface ModelDeserializer<M> {
     }
 
     /**
-     * Convenience method for {@link #readModel(InputStream)}, that reads from a given {@link File}.
+     * Reads the contents from the given file and de-serializes it into a model instance.
+     *
+     * @param f
+     *         the file to read data from
+     *
+     * @return the de-serialized model
+     *
+     * @throws IOException
+     *         if an error occurred while reading from the stream
+     * @throws FormatException
+     *         if the content of the stream was not in the expected format
      */
     default M readModel(File f) throws IOException {
         try (InputStream is = IOUtil.asBufferedInputStream(f)) {
@@ -67,7 +89,17 @@ public interface ModelDeserializer<M> {
     }
 
     /**
-     * Convenience method for {@link #readModel(InputStream)}, that reads from a given byte array.
+     * Reads the contents from the given byte buffer and de-serializes it into a model instance.
+     *
+     * @param buf
+     *         the buffer to read data from
+     *
+     * @return the de-serialized model
+     *
+     * @throws IOException
+     *         if an error occurred while reading from the stream
+     * @throws FormatException
+     *         if the content of the stream was not in the expected format
      */
     default M readModel(byte[] buf) throws IOException {
         try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {

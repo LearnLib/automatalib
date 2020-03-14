@@ -38,7 +38,7 @@ public final class DOTSerializationProvider<N, E> implements ModelSerializer<Gra
 
     @Override
     public void writeModel(OutputStream os, Graph<N, E> model) throws IOException {
-        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+        try (Writer w = IOUtil.asBufferedNonClosingUTF8Writer(os)) {
             GraphDOT.write(model, w);
         }
     }

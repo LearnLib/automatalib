@@ -261,6 +261,5 @@ public abstract class AbstractFSMParser<I> {
             partLineNumber++;
         }
         checkTransitions(streamTokenizer);
-        reader.close();
     }
 }

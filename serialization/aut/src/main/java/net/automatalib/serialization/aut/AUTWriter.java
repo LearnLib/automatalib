@@ -42,7 +42,6 @@ public final class AUTWriter {
     public static <S, I> void writeAutomaton(SimpleAutomaton<S, I> automaton, Alphabet<I> alphabet, OutputStream os)
             throws IOException {
         writeAutomaton(automaton, alphabet, str -> "\"" + str + "\"", os);
-
     }
 
     public static <S, I> void writeAutomaton(SimpleAutomaton<S, I> automaton,
@@ -65,7 +64,7 @@ public final class AUTWriter {
             }
         }
 
-        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+        try (Writer w = IOUtil.asBufferedNonClosingUTF8Writer(os)) {
             writeHeader(automaton, transitions, w);
             writeTransitions(automaton, transitions, inputTransformer, w);
         }

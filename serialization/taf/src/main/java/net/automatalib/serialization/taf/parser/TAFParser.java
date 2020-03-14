@@ -38,18 +38,17 @@ public final class TAFParser {
 
     public static CompactDFA<String> parseDFA(InputStream stream, TAFParseDiagnosticListener listener)
             throws IOException {
-        try (Reader r = IOUtil.asBufferedUTF8Reader(stream)) {
+        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(stream)) {
             return parseDFA(r, listener);
         }
     }
 
-    public static CompactDFA<String> parseDFA(Reader reader, TAFParseDiagnosticListener listener) throws IOException {
+    public static CompactDFA<String> parseDFA(Reader reader, TAFParseDiagnosticListener listener) {
         InternalTAFParser parser = new InternalTAFParser(reader);
         parser.setDiagnosticListener(listener);
         DefaultTAFBuilderDFA builder = new DefaultTAFBuilderDFA(parser);
         try {
             parser.dfa(builder);
-            reader.close();
         } catch (ParseException ex) {
             throw new TAFFormatException(ex);
         }
@@ -57,18 +56,18 @@ public final class TAFParser {
     }
 
     public static CompactDFA<String> parseDFA(File file, TAFParseDiagnosticListener listener) throws IOException {
-        try (Reader r = IOUtil.asBufferedUTF8Reader(file)) {
-            return parseDFA(r, listener);
+        try (InputStream is = IOUtil.asBufferedInputStream(file)) {
+            return parseDFA(is, listener);
         }
     }
 
-    public static CompactDFA<String> parseDFA(String string, TAFParseDiagnosticListener listener) throws IOException {
+    public static CompactDFA<String> parseDFA(String string, TAFParseDiagnosticListener listener) {
         return parseDFA(new StringReader(string), listener);
     }
 
     public static CompactMealy<String, String> parseMealy(InputStream stream, TAFParseDiagnosticListener listener)
             throws IOException {
-        try (Reader r = IOUtil.asBufferedUTF8Reader(stream)) {
+        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(stream)) {
             return parseMealy(r, listener);
         }
     }
@@ -87,8 +86,8 @@ public final class TAFParser {
 
     public static CompactMealy<String, String> parseMealy(File file, TAFParseDiagnosticListener listener)
             throws IOException {
-        try (Reader r = IOUtil.asBufferedUTF8Reader(file)) {
-            return parseMealy(r, listener);
+        try (InputStream is = IOUtil.asBufferedInputStream(file)) {
+            return parseMealy(is, listener);
         }
     }
 
@@ -99,7 +98,7 @@ public final class TAFParser {
     public static FiniteAlphabetAutomaton<?, String, ?> parseAny(InputStream stream,
                                                                  TAFParseDiagnosticListener listener)
             throws IOException {
-        try (Reader r = IOUtil.asBufferedUTF8Reader(stream)) {
+        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(stream)) {
             return parseAny(r, listener);
         }
     }
@@ -130,8 +129,8 @@ public final class TAFParser {
 
     public static FiniteAlphabetAutomaton<?, String, ?> parseAny(File file, TAFParseDiagnosticListener listener)
             throws IOException {
-        try (Reader r = IOUtil.asBufferedUTF8Reader(file)) {
-            return parseAny(r, listener);
+        try (InputStream is = IOUtil.asBufferedInputStream(file)) {
+            return parseAny(is, listener);
         }
     }
 

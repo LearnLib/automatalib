@@ -178,6 +178,8 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
 
     @Override
     public CompactMealy<I, O> readModel(InputStream is) throws IOException {
-        return parseMealy(IOUtil.asBufferedUTF8Reader(is));
+        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+            return parseMealy(r);
+        }
     }
 }

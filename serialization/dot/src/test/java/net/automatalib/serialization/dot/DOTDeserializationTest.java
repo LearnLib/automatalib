@@ -16,6 +16,7 @@
 package net.automatalib.serialization.dot;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MooreMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.commons.util.io.UnclosableInputStream;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.serialization.FormatException;
 import net.automatalib.util.automata.Automata;
@@ -134,6 +136,21 @@ public class DOTDeserializationTest {
     @Test(expectedExceptions = FormatException.class)
     public void testFaultyGraphDeserialization() throws IOException {
         DOTParsers.graph().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.FAULTY_GRAPH_RESOURCE));
+    }
+
+    @Test
+    public void doNotCloseInputStreamTest() throws IOException {
+        try (InputStream dfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.DFA_RESOURCE);
+             InputStream nfa = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.NFA_RESOURCE);
+             InputStream graph = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.GRAPH_RESOURCE);
+             InputStream mealy = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MEALY_RESOURCE);
+             InputStream moore = DOTSerializationUtil.class.getResourceAsStream(DOTSerializationUtil.MOORE_RESOURCE)) {
+            DOTParsers.dfa().readModel(new UnclosableInputStream(dfa));
+            DOTParsers.nfa().readModel(new UnclosableInputStream(nfa));
+            DOTParsers.graph().readModel(new UnclosableInputStream(graph));
+            DOTParsers.mealy().readModel(new UnclosableInputStream(mealy));
+            DOTParsers.moore().readModel(new UnclosableInputStream(moore));
+        }
     }
 
     private static <N1, E1, NP extends Comparable<NP>, EP extends Comparable<EP>, N2, E2> void checkGraphEquivalence(

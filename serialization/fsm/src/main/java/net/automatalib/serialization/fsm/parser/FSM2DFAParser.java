@@ -337,7 +337,9 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
 
     @Override
     public CompactDFA<I> readModel(InputStream is) throws IOException {
-        return parseDFA(IOUtil.asBufferedUTF8Reader(is));
+        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+            return parseDFA(r);
+        }
     }
 
     public static <I> FSM2DFAParser<I> getParser(@Nullable Collection<? extends I> targetInputs,

@@ -15,6 +15,7 @@
  */
 package net.automatalib.serialization.dot;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,6 +30,7 @@ import com.paypal.digraph.parser.GraphParser;
 import com.paypal.digraph.parser.GraphParserException;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableAutomaton;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.serialization.FormatException;
 import net.automatalib.serialization.InputModelData;
@@ -91,12 +93,12 @@ public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, 
     }
 
     @Override
-    public InputModelData<I, A> readModel(InputStream is) {
+    public InputModelData<I, A> readModel(InputStream is) throws IOException {
 
         final GraphParser gp;
 
         try {
-            gp = new GraphParser(is);
+            gp = new GraphParser(IOUtil.asUncompressedBufferedNonClosingInputStream(is));
         } catch (GraphParserException gpe) {
             throw new FormatException(gpe);
         }

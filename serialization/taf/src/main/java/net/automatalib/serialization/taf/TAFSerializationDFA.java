@@ -43,7 +43,7 @@ public final class TAFSerializationDFA
 
     @Override
     public void writeModel(OutputStream os, DFA<?, String> model, Alphabet<String> alphabet) throws IOException {
-        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+        try (Writer w = IOUtil.asBufferedNonClosingUTF8Writer(os)) {
             TAFWriter.writeDFA(model, alphabet, w);
         }
     }

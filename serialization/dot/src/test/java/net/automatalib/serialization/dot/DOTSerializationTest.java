@@ -22,12 +22,15 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.commons.util.IOUtil;
+import net.automatalib.commons.util.io.UnclosableOutputStream;
+import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.visualization.VisualizationHelper;
 import org.testng.Assert;
@@ -88,17 +91,24 @@ public class DOTSerializationTest {
         checkDOTOutput(writer, DOTSerializationUtil.GRAPH_RESOURCE);
     }
 
+    @Test
+    public void doNotCloseOutputStreamTest() throws IOException {
+        DOTSerializationProvider.<Integer, CompactEdge<String>>getInstance().writeModel(new UnclosableOutputStream(
+                ByteStreams.nullOutputStream()), DOTSerializationUtil.GRAPH);
+    }
+
     private void checkDOTOutput(ThrowingWriter writer, String resource) throws IOException {
 
         final StringWriter dotWriter = new StringWriter();
         final StringWriter expectedWriter = new StringWriter();
 
-        final Reader mealyReader = IOUtil.asBufferedUTF8Reader(DOTSerializationUtil.getResource(resource).openStream());
-        CharStreams.copy(mealyReader, expectedWriter);
+        try (Reader mealyReader = IOUtil.asBufferedUTF8Reader(DOTSerializationUtil.class.getResourceAsStream(resource))) {
 
-        writer.write(dotWriter);
+            CharStreams.copy(mealyReader, expectedWriter);
+            writer.write(dotWriter);
 
-        Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
+            Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
+        }
     }
 
     private interface ThrowingWriter {

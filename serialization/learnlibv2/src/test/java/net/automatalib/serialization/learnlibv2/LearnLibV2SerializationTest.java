@@ -23,6 +23,8 @@ import java.util.Random;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.io.UnclosableInputStream;
+import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
@@ -66,18 +68,28 @@ public class LearnLibV2SerializationTest {
         }
 
         Assert.assertThrows(IllegalArgumentException.class, () -> writeAndRead(automaton, alphabet));
+    }
 
+    @Test
+    public void doNotCloseInputOutputStreamTest() throws IOException {
+        final Alphabet<Integer> alphabet = this.automaton.getInputAlphabet();
+        LearnLibV2Serialization serializer = LearnLibV2Serialization.getInstance();
+
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        serializer.writeModel(new UnclosableOutputStream(baos), automaton, alphabet);
+
+        final InputStream is = new ByteArrayInputStream(baos.toByteArray());
+        serializer.readModel(new UnclosableInputStream(is));
     }
 
     private InputModelData<Integer, DFA<Integer, Integer>> writeAndRead(DFA<Integer, Integer> automaton,
                                                                         Alphabet<Integer> alphabet) throws IOException {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+        LearnLibV2Serialization serializer = LearnLibV2Serialization.getInstance();
 
-            LearnLibV2Serialization.getInstance().writeModel(baos, automaton, alphabet);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        serializer.writeModel(baos, automaton, alphabet);
 
-            try (InputStream is = new ByteArrayInputStream(baos.toByteArray())) {
-                return LearnLibV2Serialization.getInstance().readModel(is);
-            }
-        }
+        final InputStream is = new ByteArrayInputStream(baos.toByteArray());
+        return serializer.readModel(is);
     }
 }

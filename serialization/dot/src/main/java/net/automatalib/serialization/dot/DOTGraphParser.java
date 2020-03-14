@@ -15,6 +15,7 @@
  */
 package net.automatalib.serialization.dot;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.function.Function;
@@ -25,6 +26,7 @@ import com.paypal.digraph.parser.GraphEdge;
 import com.paypal.digraph.parser.GraphNode;
 import com.paypal.digraph.parser.GraphParser;
 import com.paypal.digraph.parser.GraphParserException;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.MutableGraph;
 import net.automatalib.serialization.FormatException;
@@ -67,12 +69,12 @@ public class DOTGraphParser<NP, EP, G extends MutableGraph<?, ?, NP, EP>> implem
     }
 
     @Override
-    public G readModel(InputStream is) {
+    public G readModel(InputStream is) throws IOException {
 
         final GraphParser gp;
 
         try {
-            gp = new GraphParser(is);
+            gp = new GraphParser(IOUtil.asUncompressedBufferedNonClosingInputStream(is));
         } catch (GraphParserException gpe) {
             throw new FormatException(gpe);
         }

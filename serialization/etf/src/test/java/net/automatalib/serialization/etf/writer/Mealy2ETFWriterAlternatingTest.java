@@ -16,13 +16,15 @@
 package net.automatalib.serialization.etf.writer;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
+import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.IOUtil;
+import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -38,19 +40,32 @@ public class Mealy2ETFWriterAlternatingTest {
 
     @Test
     public void testWrite() throws Exception {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (Reader r = IOUtil.asBufferedUTF8Reader(DFA2ETFWriterTest.class.getResourceAsStream("/Alt-testWrite.etf"));
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
+            final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
+
+            final Random random = new Random(0);
+            final MealyMachine<?, Character, ?, Character> automaton =
+                    RandomAutomata.randomMealy(random, 20, alphabet, alphabet);
+
+            Mealy2ETFWriterAlternating.<Character, Character>getInstance().writeModel(baos, automaton, alphabet);
+
+            final String expected = CharStreams.toString(r);
+
+            Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
+        }
+    }
+
+    @Test
+    public void doNotCloseOutputStreamTest() {
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
-
-        final Random random = new Random(0);
         final MealyMachine<?, Character, ?, Character> automaton =
-                RandomAutomata.randomMealy(random, 20, alphabet, alphabet);
+                RandomAutomata.randomMealy(new Random(0), 10, alphabet, alphabet);
 
-        Mealy2ETFWriterAlternating.<Character, Character>getInstance().writeModel(baos, automaton, alphabet);
-
-        final InputStream is = DFA2ETFWriterTest.class.getResourceAsStream("/Alt-testWrite.etf");
-        final String expected = CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
-
-        Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
+        Mealy2ETFWriterAlternating.<Character, Character>getInstance().writeModel(new UnclosableOutputStream(ByteStreams
+                                                                                                                     .nullOutputStream()),
+                                                                                  automaton,
+                                                                                  alphabet);
     }
 }

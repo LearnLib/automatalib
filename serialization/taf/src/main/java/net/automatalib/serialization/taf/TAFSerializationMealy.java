@@ -44,10 +44,9 @@ public final class TAFSerializationMealy
     @Override
     public void writeModel(OutputStream os, MealyMachine<?, String, ?, ?> model, Alphabet<String> alphabet)
             throws IOException {
-        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+        try (Writer w = IOUtil.asBufferedNonClosingUTF8Writer(os)) {
             TAFWriter.writeMealy(model, alphabet, w);
         }
-
     }
 
     @Override

@@ -53,6 +53,7 @@ public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> impleme
     /**
      * Write parts of the ETF that are dependent on A.
      *
+     * @param printWriter the Writer.
      * @param a the automaton to write.
      * @param inputs the alphabet.
      */
@@ -69,7 +70,6 @@ public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> impleme
         writeState(printWriter);
         writeEdge(printWriter);
         writeETF(printWriter, a, inputs);
-        printWriter.close();
     }
 
 }

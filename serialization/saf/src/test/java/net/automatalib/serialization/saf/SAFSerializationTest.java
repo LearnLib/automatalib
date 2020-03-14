@@ -26,6 +26,8 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.NFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
+import net.automatalib.commons.util.io.UnclosableInputStream;
+import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.util.automata.Automata;
@@ -34,6 +36,7 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -42,52 +45,79 @@ import org.testng.annotations.Test;
 public class SAFSerializationTest {
 
     private static final Alphabet<Integer> ALPHABET = Alphabets.integers(0, 4);
-
     private static final int AUTOMATON_SIZE = 20;
 
-    @Test
-    public void testDFASerialization() throws Exception {
+    private CompactDFA<Integer> dfa;
+    private CompactNFA<Integer> nfa;
+
+    @BeforeMethod
+    public void setUp() {
         final Random random = new Random(0);
-        final CompactDFA<Integer> automaton = RandomAutomata.randomDFA(random, AUTOMATON_SIZE, ALPHABET);
+        this.dfa = RandomAutomata.randomDFA(random, AUTOMATON_SIZE, ALPHABET);
 
         // remove some transitions for partiality
         for (int i = 0; i < AUTOMATON_SIZE; i++) {
-            automaton.removeTransition(random.nextInt(AUTOMATON_SIZE),
-                                       random.nextInt(ALPHABET.size()),
-                                       random.nextInt(AUTOMATON_SIZE));
+            this.dfa.removeTransition(random.nextInt(AUTOMATON_SIZE),
+                                      random.nextInt(ALPHABET.size()),
+                                      random.nextInt(AUTOMATON_SIZE));
         }
 
+        this.nfa = new CompactNFA<>(ALPHABET, AUTOMATON_SIZE);
+
+        for (int i = 0; i < AUTOMATON_SIZE; i++) {
+            this.nfa.addState(random.nextBoolean());
+            this.nfa.setInitial(i, random.nextBoolean());
+        }
+
+        for (int i = 0; i < AUTOMATON_SIZE * AUTOMATON_SIZE; i++) {
+            this.nfa.addTransition(random.nextInt(AUTOMATON_SIZE),
+                                   random.nextInt(ALPHABET.size()),
+                                   random.nextInt(AUTOMATON_SIZE));
+        }
+    }
+
+    @Test
+    public void testDFASerialization() throws Exception {
         final SAFSerializationDFA serializer = SAFSerializationDFA.getInstance();
 
-        final DFA<Integer, Integer> deserializedModel = writeAndReadModel(automaton, ALPHABET, serializer, serializer);
+        final DFA<Integer, Integer> deserializedModel = writeAndReadModel(this.dfa, ALPHABET, serializer, serializer);
 
-        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, ALPHABET));
+        Assert.assertTrue(Automata.testEquivalence(this.dfa, deserializedModel, ALPHABET));
     }
 
     @Test
     public void testNFASerialization() throws Exception {
-        final Random random = new Random(0);
+        final SAFSerializationNFA serializer = SAFSerializationNFA.getInstance();
 
-        final CompactNFA<Integer> automaton = new CompactNFA<>(ALPHABET, AUTOMATON_SIZE);
+        final NFA<Integer, Integer> deserializedModel = writeAndReadModel(this.nfa, ALPHABET, serializer, serializer);
 
-        for (int i = 0; i < AUTOMATON_SIZE; i++) {
-            automaton.addState(random.nextBoolean());
-            automaton.setInitial(i, random.nextBoolean());
-        }
+        Assert.assertTrue(Automata.testEquivalence(NFAs.determinize(this.nfa, ALPHABET),
+                                                   NFAs.determinize(deserializedModel, ALPHABET),
+                                                   ALPHABET));
+    }
 
-        for (int i = 0; i < AUTOMATON_SIZE * AUTOMATON_SIZE; i++) {
-            automaton.addTransition(random.nextInt(AUTOMATON_SIZE),
-                                    random.nextInt(ALPHABET.size()),
-                                    random.nextInt(AUTOMATON_SIZE));
-        }
+    @Test
+    public void doNotCloseInputOutputStreamDFATest() throws IOException {
+
+        final SAFSerializationDFA serializer = SAFSerializationDFA.getInstance();
+
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        serializer.writeModel(new UnclosableOutputStream(baos), this.dfa, ALPHABET);
+
+        final InputStream is = new ByteArrayInputStream(baos.toByteArray());
+        serializer.readModel(new UnclosableInputStream(is));
+    }
+
+    @Test
+    public void doNotCloseInputOutputStreamNFATest() throws IOException {
 
         final SAFSerializationNFA serializer = SAFSerializationNFA.getInstance();
 
-        final NFA<Integer, Integer> deserializedModel = writeAndReadModel(automaton, ALPHABET, serializer, serializer);
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        serializer.writeModel(new UnclosableOutputStream(baos), this.nfa, ALPHABET);
 
-        Assert.assertTrue(Automata.testEquivalence(NFAs.determinize(automaton, ALPHABET),
-                                                   NFAs.determinize(deserializedModel, ALPHABET),
-                                                   ALPHABET));
+        final InputStream is = new ByteArrayInputStream(baos.toByteArray());
+        serializer.readModel(new UnclosableInputStream(is));
     }
 
     private <I, IN extends UniversalAutomaton<?, I, ?, ?, ?>, OUT extends UniversalAutomaton<?, I, ?, ?, ?>> OUT writeAndReadModel(

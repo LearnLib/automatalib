@@ -27,6 +27,8 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.commons.util.io.UnclosableInputStream;
+import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.util.automata.Automata;
@@ -34,6 +36,7 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -42,38 +45,52 @@ import org.testng.annotations.Test;
 public class TAFSerializationTest {
 
     private static final Alphabet<String> INPUT_ALPHABET = Alphabets.closedCharStringRange('0', '3');
-
     private static final Alphabet<String> OUTPUT_ALPHABET = Alphabets.fromArray("Hello", "World", "Hello World");
-
     private static final int AUTOMATON_SIZE = 20;
+
+    private CompactDFA<String> dfa;
+    private CompactMealy<String, String> mealy;
+
+    @BeforeMethod
+    public void setUp() {
+        final Random random = new Random(0);
+
+        this.dfa = RandomAutomata.randomDFA(random, AUTOMATON_SIZE, INPUT_ALPHABET);
+        weedOutTransitions(this.dfa);
+
+        this.mealy = RandomAutomata.randomMealy(new Random(0), AUTOMATON_SIZE, INPUT_ALPHABET, OUTPUT_ALPHABET);
+        weedOutTransitions(this.mealy);
+    }
 
     @Test
     public void testDFASerialization() throws Exception {
-
-        final CompactDFA<String> automaton = RandomAutomata.randomDFA(new Random(0), AUTOMATON_SIZE, INPUT_ALPHABET);
-
-        weedOutTransitions(automaton);
-
         final TAFSerializationDFA serializer = TAFSerializationDFA.getInstance();
         final DFA<Integer, String> deserializedModel =
-                writeAndReadModel(automaton, INPUT_ALPHABET, serializer, serializer);
+                writeAndReadModel(this.dfa, INPUT_ALPHABET, serializer, serializer);
 
-        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, INPUT_ALPHABET));
+        Assert.assertTrue(Automata.testEquivalence(this.dfa, deserializedModel, INPUT_ALPHABET));
     }
 
     @Test
     public void testMealySerialization() throws Exception {
-        final CompactMealy<String, String> automaton =
-                RandomAutomata.randomMealy(new Random(0), AUTOMATON_SIZE, INPUT_ALPHABET, OUTPUT_ALPHABET);
-
-        weedOutTransitions(automaton);
-
         final TAFSerializationMealy serializer = TAFSerializationMealy.getInstance();
 
         final MealyMachine<?, String, ?, String> deserializedModel =
-                writeAndReadModel(automaton, INPUT_ALPHABET, serializer, serializer);
+                writeAndReadModel(this.mealy, INPUT_ALPHABET, serializer, serializer);
 
-        Assert.assertTrue(Automata.testEquivalence(automaton, deserializedModel, INPUT_ALPHABET));
+        Assert.assertTrue(Automata.testEquivalence(this.mealy, deserializedModel, INPUT_ALPHABET));
+    }
+
+    @Test
+    public void doNotCloseInputOutputStreamDFATest() throws IOException {
+        final TAFSerializationDFA serializer = TAFSerializationDFA.getInstance();
+        writeAndReadUnclosableModel(this.dfa, INPUT_ALPHABET, serializer, serializer);
+    }
+
+    @Test
+    public void doNotCloseInputOutputStreamMealyTest() throws IOException {
+        final TAFSerializationMealy serializer = TAFSerializationMealy.getInstance();
+        writeAndReadUnclosableModel(this.mealy, INPUT_ALPHABET, serializer, serializer);
     }
 
     private <T, A extends MutableDeterministic<Integer, String, T, ?, ?>> void weedOutTransitions(A automaton) {
@@ -96,11 +113,23 @@ public class TAFSerializationTest {
             InputModelDeserializer<I, OUT> deserializer) throws IOException {
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
         serializer.writeModel(baos, source, alphabet);
 
         final InputStream is = new ByteArrayInputStream(baos.toByteArray());
         return deserializer.readModel(is).model;
+    }
+
+    private <I, IN extends UniversalAutomaton<?, I, ?, ?, ?>, OUT extends UniversalAutomaton<?, I, ?, ?, ?>> OUT writeAndReadUnclosableModel(
+            IN source,
+            Alphabet<I> alphabet,
+            InputModelSerializer<I, IN> serializer,
+            InputModelDeserializer<I, OUT> deserializer) throws IOException {
+
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        serializer.writeModel(new UnclosableOutputStream(baos), source, alphabet);
+
+        final InputStream is = new ByteArrayInputStream(baos.toByteArray());
+        return deserializer.readModel(new UnclosableInputStream(is)).model;
     }
 
 }

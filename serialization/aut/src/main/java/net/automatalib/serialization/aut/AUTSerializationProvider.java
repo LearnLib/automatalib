@@ -47,7 +47,7 @@ public final class AUTSerializationProvider implements SimpleAutomatonSerializat
 
     @Override
     public <I2> InputModelData<I2, SimpleAutomaton<Integer, I2>> readModel(InputStream is,
-                                                                     Function<String, I2> inputTransformer)
+                                                                           Function<String, I2> inputTransformer)
             throws IOException {
         return AUTParser.readAutomaton(is, inputTransformer);
     }

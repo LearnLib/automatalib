@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.9.0...HEAD)
 
+### Added
+
+* All de-serializers now can also parse GZIP'ed contents from either `InputStream`s, `File`s, `URL`s or `byte[]`s.
+
+
+### Changed
+
+* We overhauled the handling of input and output streams for all (de-)serializers. Input and output streams are no longer closed automatically. This is to prevent asymmetric code where we would close a stream that we haven't opened. This is problematic in cases where e.g. `System.out` is passed as an output stream to simply print a serialized automaton and the `System.out` stream would be closed afterwards. Since input and output streams are usually opened in client-code, they should be closed in client-code as well. We suggest to simply wrap calls to the serializers in a try-with-resource block.
+
+
 ### Removed
 
 * Removed `IOUtil#copy`, `IOUtil.skip`, `NullOutputStream`. Use the Guava equivalents from `ByteStreams` and `CharStreams`.
