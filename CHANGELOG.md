@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Removed
 
-* Removed `IOUtil#copy`, `IOUtil.skip`, `NullOutputStream`. Use the Guava equivalents from `ByteStreams` and `CharStreams`.
+* Removed `IOUtil#copy`, `IOUtil#skip`, `NullOutputStream`. Use the Guava equivalents from `ByteStreams` and `CharStreams`.
 
 
 ### Fixed
