@@ -19,4 +19,4 @@ import net.automatalib.commons.util.nid.AbstractMutableNumericID;
 
 // we want to aggregate functionality of an abstract class and an interface
 @SuppressWarnings("PMD.AbstractClassWithoutAnyMethod")
-public abstract class AbstractSymbol<S> extends AbstractMutableNumericID implements Comparable<S> {}
+public abstract class AbstractSymbol<S extends Object> extends AbstractMutableNumericID implements Comparable<S> {}
