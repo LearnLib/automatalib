@@ -48,7 +48,6 @@ public final class MTSUtil {
     }
 
     public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> conjunction(
-
             ModalTransitionSystem<S0, I, T0, TP0> mc0, ModalTransitionSystem<S1, I, T1, TP1> mc1) {
         return conjunction(mc0, mc1, CompactMTS::new);
     }
@@ -61,7 +60,6 @@ public final class MTSUtil {
     }
 
     public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> compose(
-
             ModalTransitionSystem<S0, I, T0, TP0> mc0, ModalTransitionSystem<S1, I, T1, TP1> mc1) {
         return compose(mc0, mc1, CompactMTS::new);
     }
