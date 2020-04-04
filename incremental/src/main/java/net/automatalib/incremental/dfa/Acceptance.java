@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package net.automatalib.incremental.dfa;
-
-import javax.annotation.Nonnull;
 
 /**
  * Tri-state acceptance value.
@@ -55,7 +53,6 @@ public enum Acceptance {
      *
      * @return the corresponding acceptance value
      */
-    @Nonnull
     public static Acceptance fromBoolean(boolean val) {
         return val ? TRUE : FALSE;
     }

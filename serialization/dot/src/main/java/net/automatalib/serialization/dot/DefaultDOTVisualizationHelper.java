@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,17 +20,18 @@ import java.util.Map;
 
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DefaultDOTVisualizationHelper<N, E> extends DefaultVisualizationHelper<N, E>
         implements DOTVisualizationHelper<N, E> {
 
-    private final VisualizationHelper<N, ? super E> delegate;
+    private final @Nullable VisualizationHelper<N, ? super E> delegate;
 
     public DefaultDOTVisualizationHelper() {
         this(null);
     }
 
-    public DefaultDOTVisualizationHelper(VisualizationHelper<N, ? super E> delegate) {
+    public DefaultDOTVisualizationHelper(@Nullable VisualizationHelper<N, ? super E> delegate) {
         this.delegate = delegate;
     }
 

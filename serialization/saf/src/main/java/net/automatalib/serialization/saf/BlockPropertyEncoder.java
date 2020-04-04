@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,11 +25,9 @@ public interface BlockPropertyEncoder<P> {
         return (out, p) -> {};
     }
 
-    default void start(DataOutput out) throws IOException {
-    }
+    default void start(DataOutput out) throws IOException {}
 
     void encodeProperty(DataOutput out, P property) throws IOException;
 
-    default void finish(DataOutput out) throws IOException {
-    }
+    default void finish(DataOutput out) throws IOException {}
 }

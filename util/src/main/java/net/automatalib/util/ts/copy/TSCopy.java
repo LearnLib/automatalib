@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,6 @@ import java.util.function.Predicate;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.UniversalAutomaton;
-import net.automatalib.commons.util.functions.FunctionsUtil;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.TransitionSystem;
@@ -117,20 +116,13 @@ public final class TSCopy {
                                                                              Function<? super T1, ? extends TP2> tpMapping,
                                                                              Predicate<? super S1> stateFilter,
                                                                              TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
-
-        final Function<? super S1, ? extends SP2> safeSpMapping = FunctionsUtil.safeDefault(spMapping);
-        final Function<? super T1, ? extends TP2> safeTpMapping = FunctionsUtil.safeDefault(tpMapping);
-        final Predicate<? super S1> safeStateFilter = FunctionsUtil.safeToTrue(stateFilter);
-        final TransitionPredicate<? super S1, ? super I1, ? super T1> safeTransFilter =
-                TransitionPredicates.safePred(transFilter, true);
-
         TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> vis = new TSCopyVisitor<>(in,
                                                                                   out,
                                                                                   inputsMapping,
-                                                                                  safeSpMapping,
-                                                                                  safeTpMapping,
-                                                                                  safeStateFilter,
-                                                                                  safeTransFilter);
+                                                                                  spMapping,
+                                                                                  tpMapping,
+                                                                                  stateFilter,
+                                                                                  transFilter);
 
         method.traverse(in, limit, inputs, vis);
         return vis.getStateMapping();
@@ -301,10 +293,8 @@ public final class TSCopy {
                                                                                     Function<? super TP1, ? extends TP2> tpTransform,
                                                                                     Predicate<? super S1> stateFilter,
                                                                                     TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
-        Function<? super S1, ? extends SP2> spMapping =
-                (spTransform == null) ? null : TS.stateProperties(in).andThen(spTransform);
-        Function<? super T1, ? extends TP2> tpMapping =
-                (tpTransform == null) ? null : TS.transitionProperties(in).andThen(tpTransform);
+        Function<? super S1, ? extends SP2> spMapping = TS.stateProperties(in).andThen(spTransform);
+        Function<? super T1, ? extends TP2> tpMapping = TS.transitionProperties(in).andThen(tpTransform);
         return rawCopy(method, in, limit, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transFilter);
     }
 
@@ -329,13 +319,13 @@ public final class TSCopy {
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, SP1, TP1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                                   UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
-                                                                                   int limit,
-                                                                                   Collection<? extends I> inputs,
-                                                                                   MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
-                                                                                   Function<? super SP1, ? extends SP2> spTransform,
-                                                                                   Function<? super TP1, ? extends TP2> tpTransform) {
+    public static <S1, I, T1, SP1, TP1, S2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                               UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
+                                                                               int limit,
+                                                                               Collection<? extends I> inputs,
+                                                                               MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
+                                                                               Function<? super SP1, ? extends SP2> spTransform,
+                                                                               Function<? super TP1, ? extends TP2> tpTransform) {
         return copy(method,
                     in,
                     limit,
@@ -372,15 +362,15 @@ public final class TSCopy {
      *
      * @return a mapping from old to new states
      */
-    public static <S1, I, T1, SP1, TP1, S2, I2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
-                                                                                   UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
-                                                                                   int limit,
-                                                                                   Collection<? extends I> inputs,
-                                                                                   MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
-                                                                                   Function<? super SP1, ? extends SP2> spTransform,
-                                                                                   Function<? super TP1, ? extends TP2> tpTransform,
-                                                                                   Predicate<? super S1> stateFilter,
-                                                                                   TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
+    public static <S1, I, T1, SP1, TP1, S2, T2, SP2, TP2> Mapping<S1, S2> copy(TSTraversalMethod method,
+                                                                               UniversalTransitionSystem<S1, ? super I, T1, ? extends SP1, ? extends TP1> in,
+                                                                               int limit,
+                                                                               Collection<? extends I> inputs,
+                                                                               MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
+                                                                               Function<? super SP1, ? extends SP2> spTransform,
+                                                                               Function<? super TP1, ? extends TP2> tpTransform,
+                                                                               Predicate<? super S1> stateFilter,
+                                                                               TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
         return copy(method,
                     in,
                     limit,

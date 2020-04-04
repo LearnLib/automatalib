@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,8 +31,7 @@ public final class SAFSerializationDFA
 
     private static final SAFSerializationDFA INSTANCE = new SAFSerializationDFA();
 
-    private SAFSerializationDFA() {
-    }
+    private SAFSerializationDFA() {}
 
     public static SAFSerializationDFA getInstance() {
         return INSTANCE;
@@ -40,10 +39,11 @@ public final class SAFSerializationDFA
 
     @Override
     public InputModelData<Integer, DFA<Integer, Integer>> readModel(InputStream is) throws IOException {
-        final InputStream uncompressedStream = IOUtil.asUncompressedInputStream(is);
-        SAFInput in = new SAFInput(uncompressedStream);
-        final CompactDFA<Integer> automaton = in.readNativeDFA();
-        return new InputModelData<>(automaton, automaton.getInputAlphabet());
+        try (InputStream stream = IOUtil.asUncompressedBufferedNonClosingInputStream(is)) {
+            SAFInput in = new SAFInput(stream);
+            final CompactDFA<Integer> automaton = in.readNativeDFA();
+            return new InputModelData<>(automaton, automaton.getInputAlphabet());
+        }
     }
 
     @Override

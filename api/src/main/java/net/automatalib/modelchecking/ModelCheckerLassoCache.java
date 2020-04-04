@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  */
 package net.automatalib.modelchecking;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelchecking.Lasso.DFALasso;
@@ -27,7 +25,6 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface ModelCheckerLassoCache<I, A, P, R extends Lasso<I, ?>>
         extends ModelCheckerCache<I, A, P, R>, ModelCheckerLasso<I, A, P, R> {
 

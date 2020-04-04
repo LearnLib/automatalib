@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -28,6 +29,7 @@ import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,9 +85,11 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @throws ModelCheckingException
      *         when the LTSmin binaries can not be run successfully.
+     *
+     * @see AbstractLTSmin
      */
-    protected AbstractLTSmin(boolean keepFiles,
-                             Function<String, I> string2Input) throws ModelCheckingException {
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
+    protected AbstractLTSmin(boolean keepFiles, Function<String, I> string2Input) {
         this.keepFiles = keepFiles;
         this.string2Input = string2Input;
 
@@ -108,6 +112,18 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      */
     protected abstract List<String> getExtraCommandLineOptions();
 
+    /**
+     * This method must verify that the given formula adheres to the expected syntax of the chosen serialization format
+     * for hypotheses of {@code this} model-checker.
+     * <p>
+     * If the formula does not adhere to the expected syntax, this method should throw a {@link
+     * IllegalArgumentException}, possibly containing nested causes that further elaborate on why the formula couldn't
+     * be verified.
+     *
+     * @param formula
+     *         the formula to verify
+     */
+    protected abstract void verifyFormula(String formula);
 
     @Override
     public boolean isKeepFiles() {
@@ -134,21 +150,40 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @see AbstractLTSmin
      */
-    protected final File findCounterExampleFSM(A hypothesis, Collection<? extends I> inputs, String formula)
-            throws ModelCheckingException {
+    protected final @Nullable File findCounterExampleFSM(A hypothesis, Collection<? extends I> inputs, String formula) {
+
+        try {
+            verifyFormula(formula);
+        } catch (IllegalArgumentException iae) {
+            throw new ModelCheckingException(iae);
+        }
 
         final File etf, gcf;
+
         try {
             // create the ETF that will contain the LTS of the hypothesis
             etf = File.createTempFile("automaton2etf", ".etf");
 
+            try {
+                // write to the ETF file
+                automaton2ETF(hypothesis, inputs, etf);
+            } catch (ModelCheckingException mce) {
+                if (!keepFiles && !etf.delete()) {
+                    LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+                }
+                throw mce;
+            }
+        } catch (IOException ioe) {
+            throw new ModelCheckingException(ioe);
+        }
+
+        try {
             // create the GCF that will possibly contain the counterexample
             gcf = File.createTempFile("etf2gcf", ".gcf");
-
-            // write to the ETF file
-            automaton2ETF(hypothesis, inputs, etf);
-
         } catch (IOException ioe) {
+            if (!keepFiles && !etf.delete()) {
+                LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+            }
             throw new ModelCheckingException(ioe);
         }
 
@@ -174,71 +209,62 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
 
         ltsminCommandLine.addAll(getExtraCommandLineOptions());
 
-        final int ltsminExitValue = runCommandLine(ltsminCommandLine);
+        try {
+            final int ltsminExitValue = runCommandLine(ltsminCommandLine);
 
-        // check if we need to delete the ETF
-        if (!keepFiles && !etf.delete()) {
-            throw new ModelCheckingException("Could not delete file: " + etf.getAbsolutePath());
-        }
+            if (ltsminExitValue == 0) {
+                // we have not found a counterexample
+                return null;
+            } else if (ltsminExitValue == 1) {
+                // we have found a counterexample
 
-        final File fsm;
-
-        if (ltsminExitValue == 1) {
-            // we have found a counterexample
-
-            try {
                 // create a file for the FSM
-                fsm = File.createTempFile("gcf2fsm", ".fsm");
-            } catch (IOException ioe) {
-                throw new ModelCheckingException(ioe);
-            }
-
-            final List<String> convertCommandLine = Lists.newArrayList(// add the ltsmin-convert binary
-                                                                       LTSminUtil.LTSMIN_CONVERT,
-                                                                       // use the GCF as input
-                                                                       gcf.getAbsolutePath(),
-                                                                       // use the FSM as output
-                                                                       fsm.getAbsolutePath(),
-                                                                       // required option
-                                                                       "--rdwr");
-
-            if (LTSminUtil.isVerbose()) {
-                convertCommandLine.add("-v");
-            }
-
-            final int convertExitValue = runCommandLine(convertCommandLine);
-
-            // check the conversion is successful
-            if (convertExitValue != 0) {
-                final String msg;
-                if (LOGGER.isDebugEnabled()) {
-                    msg = "Could not convert GCF to FSM, please check LTSmin's debug information to see why.";
-                } else {
-                    msg = "Could not convert GCF to FSM, to see why, enable debug logging.";
+                final File fsm;
+                try {
+                    fsm = File.createTempFile("gcf2fsm", ".fsm");
+                } catch (IOException ioe) {
+                    throw new ModelCheckingException(ioe);
                 }
-                throw new ModelCheckingException(msg);
-            }
-        } else if (ltsminExitValue != 0) {
-            final String msg;
-            if (LOGGER.isDebugEnabled()) {
-                msg = "Could not model check ETF, please check LTSmin's debug information to see why.";
+
+                final List<String> convertCommandLine = Lists.newArrayList(// add the ltsmin-convert binary
+                                                                           LTSminUtil.LTSMIN_CONVERT,
+                                                                           // use the GCF as input
+                                                                           gcf.getAbsolutePath(),
+                                                                           // use the FSM as output
+                                                                           fsm.getAbsolutePath(),
+                                                                           // required option
+                                                                           "--rdwr");
+
+                if (LTSminUtil.isVerbose()) {
+                    convertCommandLine.add("-v");
+                }
+
+                final int convertExitValue = runCommandLine(convertCommandLine);
+
+                // check the conversion is successful
+                if (convertExitValue != 0) {
+                    throw new ModelCheckingException(
+                            "Could not convert GCF to FSM. Enable debug logging to see LTSmin's debug information.");
+                }
+
+                return fsm;
             } else {
-                msg = "Could not model check ETF, to see why, enable debug logging.";
+                throw new ModelCheckingException(
+                        "Could not model check ETF. Enable debug logging to see LTSmin's debug information.");
             }
-            throw new ModelCheckingException(msg);
-        } else {
-            fsm = null;
+        } finally {
+            if (!keepFiles) {
+                if (!etf.delete()) {
+                    LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+                }
+                if (!gcf.delete()) {
+                    LOGGER.warn("Could not delete file: " + gcf.getAbsolutePath());
+                }
+            }
         }
-
-        // check if we must keep the GCF
-        if (!keepFiles && !gcf.delete()) {
-            throw new ModelCheckingException("Could not delete file: " + gcf.getAbsolutePath());
-        }
-
-        return fsm;
     }
 
-    static int runCommandLine(List<String> commandLine) throws ModelCheckingException {
+    static int runCommandLine(List<String> commandLine) {
         final String[] commands = new String[commandLine.size()];
         commandLine.toArray(commands);
         try {
@@ -257,6 +283,10 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
 
         public static boolean keepFiles() {
             return false;
+        }
+
+        public static <O> Collection<? super O> skipOutputs() {
+            return Collections.emptyList();
         }
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,9 @@ package net.automatalib.util.automata.predicates;
 
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.automata.fsa.FiniteStateAcceptor;
 
-final class AcceptanceStatePredicate<S> implements Predicate<S> {
+final class AcceptanceStatePredicate<S extends Object> implements Predicate<S> {
 
     private final FiniteStateAcceptor<? super S, ?> fsa;
     private final boolean acceptance;
@@ -32,7 +30,7 @@ final class AcceptanceStatePredicate<S> implements Predicate<S> {
     }
 
     @Override
-    public boolean test(@Nonnull S state) {
+    public boolean test(S state) {
         return fsa.isAccepting(state) == acceptance;
     }
 

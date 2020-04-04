@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.automata.ads;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,8 +32,7 @@ import net.automatalib.words.Alphabet;
  */
 public final class ADS {
 
-    private ADS() {
-    }
+    private ADS() {}
 
     /**
      * Compute an adaptive distinguishing sequence for the given automaton and the given set of states.
@@ -78,22 +78,31 @@ public final class ADS {
     /**
      * See {@link #compute(MealyMachine, Alphabet, Set)}. Internal version that uses a {@link SplitTree} for state
      * tracking.
+     *
+     * @throws IllegalArgumentException
+     *         if <ul>
+     *         <li>the partition of the provided node is empty</li>
+     *         <li>the partition of the provided node contains a single element, which is not mapped in the node's
+     *         mapping</li>
+     *         <li>the partition of the provided node contains as many states as the automaton</li>
+     *         </ul>
      */
     static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
                                                         final Alphabet<I> input,
-                                                        final SplitTree<S, I, O> node) throws IllegalArgumentException {
+                                                        final SplitTree<S, I, O> node) {
 
         if (node.getPartition().isEmpty()) {
             throw new IllegalArgumentException("Empty partitions should be handled by the specific algorithm");
         } else if (node.getPartition().size() == 1) {
 
             final S state = node.getPartition().iterator().next();
+            final Map<S, S> mapping = node.getMapping();
 
-            if (!node.getMapping().containsKey(state)) {
+            if (!mapping.containsKey(state)) {
                 throw new IllegalStateException();
             }
 
-            final ADSNode<S, I, O> result = new ADSLeafNode<>(null, node.getMapping().get(state));
+            final ADSNode<S, I, O> result = new ADSLeafNode<>(null, mapping.get(state));
             return Optional.of(result);
         } else if (node.getPartition().size() == 2) {
             return StateEquivalence.compute(automaton, input, node);

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,15 +19,16 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.ts.TransitionSystem;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simple deterministic transition system. In a deterministic transition system, there exists in each state at most
  * one successor state for each input symbol.
+ * <p>
+ * <i>Implementation note:</i> It is suggested to use a non-null type for the state class, as {@code null} will be used
+ * to denote an undefined successor. Allowing {@code null} to identify a state won't allow you to differentiate between
+ * a defined and undefined successor.
  *
  * @param <S>
  *         state class
@@ -36,23 +37,19 @@ import net.automatalib.ts.TransitionSystem;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 
     @Override
-    @Nonnull
     default Set<S> getSuccessors(S state, Iterable<? extends I> input) {
         return stateToSet(getSuccessor(state, input));
     }
 
     @Override
-    @Nonnull
-    default Set<S> getSuccessors(S state, @Nullable I input) {
+    default Set<S> getSuccessors(S state, I input) {
         return stateToSet(getSuccessor(state, input));
     }
 
     @Override
-    @Nonnull
     default Set<S> getStates(Iterable<? extends I> input) {
         return stateToSet(getState(input));
     }
@@ -72,9 +69,9 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      *
      * @see TransitionSystem#getStates(Iterable)
      */
-    @Nullable
-    default S getState(Iterable<? extends I> input) {
-        return getSuccessor(getInitialState(), input);
+    default @Nullable S getState(Iterable<? extends I> input) {
+        final S init = getInitialState();
+        return init == null ? null : getSuccessor(init, input);
     }
 
     /**
@@ -84,10 +81,9 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      *
      * @see TransitionSystem#getInitialStates()
      */
-    @Nullable
-    S getInitialState();
+    @Nullable S getInitialState();
 
-    static <S> Set<S> stateToSet(S state) {
+    static <S> Set<S> stateToSet(@Nullable S state) {
         if (state == null) {
             return Collections.emptySet();
         }
@@ -107,8 +103,7 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      *
      * @see TransitionSystem#getSuccessors(Object, Iterable)
      */
-    @Nullable
-    default S getSuccessor(S state, Iterable<? extends I> input) {
+    default @Nullable S getSuccessor(S state, Iterable<? extends I> input) {
         S curr = state;
         Iterator<? extends I> it = input.iterator();
 
@@ -133,6 +128,5 @@ public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
      *
      * @see TransitionSystem#getSuccessors(Object, Object)
      */
-    @Nullable
-    S getSuccessor(S state, @Nullable I input);
+    @Nullable S getSuccessor(S state, I input);
 }

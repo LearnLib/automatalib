@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,40 +17,33 @@ package net.automatalib.words.impl;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.abstractimpl.AbstractSymbol;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public class Symbol extends AbstractSymbol<Symbol> {
 
-    @Nullable
-    private final Object userObject;
+    private final @Nullable Object userObject;
 
     public Symbol(@Nullable Object userObject) {
         this.userObject = userObject;
     }
 
     @Override
-    public int compareTo(@Nonnull Symbol o) {
+    public int compareTo(Symbol o) {
         return getId() - o.getId();
     }
 
-    @Nullable
-    public Object getUserObject() {
+    public @Nullable Object getUserObject() {
         return userObject;
     }
 
     @Override
-    @Nonnull
     public String toString() {
         return String.valueOf(userObject);
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -121,9 +121,7 @@ public final class ResizingArrayStorage<T> implements CapacityManagement, Serial
      *         the value.
      */
     public void setAll(T value) {
-        for (int i = 0; i < array.length; i++) {
-            array[i] = value;
-        }
+        Arrays.fill(array, value);
     }
 
     public void swap(ResizingArrayStorage<T> other) {

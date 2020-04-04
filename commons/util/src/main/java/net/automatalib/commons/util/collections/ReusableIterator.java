@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.AbstractIterator;
 
 /**
@@ -35,7 +33,6 @@ import com.google.common.collect.AbstractIterator;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public class ReusableIterator<T> implements Iterable<T> {
 
     private final Iterator<T> iterator;

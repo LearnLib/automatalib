@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,9 +69,12 @@ public final class DFA2ETFWriter<I> extends AbstractETFWriter<I, DFA<?, I>> {
         final StateIDs<S> stateIDs = dfa.stateIDs();
 
         // write the initial state
-        pw.println("begin init");
-        pw.printf("%d%n", stateIDs.getStateId(dfa.getInitialState()));
-        pw.println("end init");
+        final S init = dfa.getInitialState();
+        if (init != null) {
+            pw.println("begin init");
+            pw.printf("%d%n", stateIDs.getStateId(init));
+            pw.println("end init");
+        }
 
         // write the valuations of the state ids
         pw.println("begin sort id");
@@ -120,7 +123,7 @@ public final class DFA2ETFWriter<I> extends AbstractETFWriter<I, DFA<?, I>> {
 
     @Override
     public void writeModel(OutputStream os, DFA<?, I> model, Alphabet<I> alphabet) {
-        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedUTF8Writer(os))) {
+        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedNonClosingUTF8Writer(os))) {
             write(pw, model, alphabet);
         }
     }

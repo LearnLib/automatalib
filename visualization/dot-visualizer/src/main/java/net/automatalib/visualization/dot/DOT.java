@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,6 +47,7 @@ import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.process.ProcessUtil;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,8 +82,7 @@ public final class DOT {
         DOT.dotExe = dotExe;
     }
 
-    private DOT() {
-    }
+    private DOT() {}
 
     public static void setDotExe(String dotExe) {
         DOT.dotExe = dotExe;
@@ -118,6 +118,7 @@ public final class DOT {
      * Invokes the DOT utility on a string. Convenience method, see {@link #runDOT(Reader, String, String...)}
      */
     public static InputStream runDOT(String dotText, String format, String... additionalOpts) throws IOException {
+        @SuppressWarnings("PMD.CloseResource") // we do not want to close the stream
         StringReader sr = new StringReader(dotText);
         return runDOT(sr, format, additionalOpts);
     }
@@ -306,7 +307,7 @@ public final class DOT {
      *
      * @return the DOT component
      */
-    public static DOTComponent createDOTComponent(Reader r) {
+    public static @Nullable DOTComponent createDOTComponent(Reader r) {
         try {
             return new DOTComponent(r);
         } catch (IOException e) {
@@ -345,11 +346,9 @@ public final class DOT {
      *         if reading from the reader fails, or the pipe to the DOT process breaks.
      */
     public static BufferedImage renderDOTImage(Reader dotReader) throws IOException {
-        InputStream pngIs = runDOT(dotReader, "png");
-        BufferedImage img = ImageIO.read(pngIs);
-        pngIs.close();
-
-        return img;
+        try (InputStream pngIs = runDOT(dotReader, "png")) {
+            return ImageIO.read(pngIs);
+        }
     }
 
     /**

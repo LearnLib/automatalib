@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +21,11 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import net.automatalib.incremental.mealy.tree.Edge;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class Node<I, O> implements Serializable {
 
-    private final Map<I, Edge<Node<I, O>, O>> outEdges;
+    private final Map<I, @Nullable Edge<Node<I, O>, O>> outEdges;
 
     Node(int expectedSize) {
         this.outEdges = Maps.newHashMapWithExpectedSize(expectedSize);
@@ -34,15 +35,15 @@ final class Node<I, O> implements Serializable {
         this.outEdges = new HashMap<>();
     }
 
-    Edge<Node<I, O>, O> getEdge(I input) {
+    @Nullable Edge<Node<I, O>, O> getEdge(I input) {
         return outEdges.get(input);
     }
 
-    void setEdge(I symbol, Edge<Node<I, O>, O> edge) {
+    void setEdge(I symbol, @Nullable Edge<Node<I, O>, O> edge) {
         outEdges.put(symbol, edge);
     }
 
-    Map<I, Edge<Node<I, O>, O>> getOutEdges() {
+    Map<I, @Nullable Edge<Node<I, O>, O>> getOutEdges() {
         return outEdges;
     }
 }

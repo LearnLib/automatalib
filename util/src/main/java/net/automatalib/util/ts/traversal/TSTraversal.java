@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import java.util.Deque;
 import net.automatalib.commons.util.Holder;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.traversal.TraversalOrder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * @author Malte Isberner
@@ -30,8 +31,7 @@ public final class TSTraversal {
 
     public static final int NO_LIMIT = -1;
 
-    private TSTraversal() {
-    }
+    private TSTraversal() {}
 
     public static <S, I, T, D> boolean depthFirst(TransitionSystem<S, I, T> ts,
                                                   Collection<? extends I> inputs,
@@ -76,7 +76,8 @@ public final class TSTraversal {
         }
 
         while (!dfsStack.isEmpty()) {
-            DFRecord<S, I, T, D> current = dfsStack.peek();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull DFRecord<S, I, T, D> current = dfsStack.peek();
 
             S source = current.state;
             D data = current.data;
@@ -177,7 +178,8 @@ public final class TSTraversal {
         }
 
         while (!bfsQueue.isEmpty()) {
-            BFSRecord<S, D> current = bfsQueue.poll();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull BFSRecord<S, D> current = bfsQueue.poll();
 
             S state = current.state;
             D data = current.data;

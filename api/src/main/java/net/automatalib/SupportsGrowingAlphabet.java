@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  */
 package net.automatalib;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.GrowingAlphabet;
 
@@ -28,7 +26,6 @@ import net.automatalib.words.GrowingAlphabet;
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public interface SupportsGrowingAlphabet<I> {
 
     /**
@@ -49,6 +46,6 @@ public interface SupportsGrowingAlphabet<I> {
      * @throws GrowingAlphabetNotSupportedException
      *         if the data structure was not properly initialized (e.g. with a {@link GrowingAlphabet}).
      */
-    void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException;
+    void addAlphabetSymbol(I symbol);
 
 }

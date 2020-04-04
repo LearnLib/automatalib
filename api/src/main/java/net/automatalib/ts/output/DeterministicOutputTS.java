@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,8 @@ package net.automatalib.ts.output;
 
 import java.util.List;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.ts.DeterministicTransitionSystem;
 
-@ParametersAreNonnullByDefault
 public interface DeterministicOutputTS<S, I, T, O> extends DeterministicTransitionSystem<S, I, T> {
 
     default boolean trace(Iterable<? extends I> input, List<? super O> output) {

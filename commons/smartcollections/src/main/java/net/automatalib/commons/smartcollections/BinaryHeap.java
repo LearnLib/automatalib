@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,8 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A {@link PriorityQueue} implementation using a binary heap.
  *
@@ -40,25 +42,22 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     // Number of entries in the queue.
     private int size;
 
+    @SuppressWarnings("initialization") // downHeap only accesses initialized data structures
     protected BinaryHeap(int initCapacity, Collection<? extends E> initValues, Comparator<? super E> comparator) {
-        this(initCapacity < initValues.size() ? initValues.size() : initCapacity, comparator);
+        this(Math.max(initCapacity, initValues.size()), comparator);
         int i = 0;
         for (E e : initValues) {
             entries.array[i++] = new Reference<>(0, e);
         }
-        buildHeap(initValues.size());
+        size = initValues.size();
+        for (int j = size / 2; j >= 0; j--) {
+            downHeap(j);
+        }
     }
 
     protected BinaryHeap(int initialCapacity, Comparator<? super E> comparator) {
         this.entries = new ResizingArrayStorage<>(Reference.class, initialCapacity);
         this.comparator = comparator;
-    }
-
-    private void buildHeap(int numElements) {
-        size = numElements;
-        for (int i = numElements / 2; i >= 0; i--) {
-            downHeap(i);
-        }
     }
 
     /**
@@ -308,6 +307,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         size = 0;
     }
 
+    @SuppressWarnings("nullness") // setting 'null' is fine, when (according to JavaDoc) calling quickClear() first
     @Override
     public void deepClear() {
         entries.setAll(null);
@@ -320,7 +320,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     @Override
-    public E poll() {
+    public @Nullable E poll() {
         if (size > 0) {
             return extractMin();
         }
@@ -340,6 +340,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
         return entries.array[0].element;
     }
 
+    @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     @Override
     public E extractMin() {
         if (size <= 0) {
@@ -357,7 +358,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     @Override
-    public E peek() {
+    public @Nullable E peek() {
         if (size > 0) {
             return peekMin();
         }

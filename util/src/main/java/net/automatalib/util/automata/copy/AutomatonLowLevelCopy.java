@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +22,8 @@ import java.util.function.Predicate;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.UniversalAutomaton;
-import net.automatalib.commons.util.functions.FunctionsUtil;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.ts.TransitionPredicate;
-import net.automatalib.util.automata.predicates.TransitionPredicates;
 
 public final class AutomatonLowLevelCopy {
 
@@ -130,21 +128,14 @@ public final class AutomatonLowLevelCopy {
                                                                              Function<? super T1, ? extends TP2> tpMapping,
                                                                              Predicate<? super S1> stateFilter,
                                                                              TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
-
-        final Function<? super S1, ? extends SP2> safeSpMapping = FunctionsUtil.safeDefault(spMapping);
-        final Function<? super T1, ? extends TP2> safeTpMapping = FunctionsUtil.safeDefault(tpMapping);
-        final Predicate<? super S1> safeStateFilter = FunctionsUtil.safeToTrue(stateFilter);
-        final TransitionPredicate<? super S1, ? super I1, ? super T1> safeTransFilter =
-                TransitionPredicates.safePred(transFilter, true);
-
-        LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> copier = method.createLowLevelCopier(in,
-                                                                                                       inputs,
-                                                                                                       out,
-                                                                                                       inputsMapping,
-                                                                                                       safeSpMapping,
-                                                                                                       safeTpMapping,
-                                                                                                       safeStateFilter,
-                                                                                                       safeTransFilter);
+        LowLevelAutomatonCopier<S1, S2> copier = method.createLowLevelCopier(in,
+                                                                             inputs,
+                                                                             out,
+                                                                             inputsMapping,
+                                                                             spMapping,
+                                                                             tpMapping,
+                                                                             stateFilter,
+                                                                             transFilter);
         copier.doCopy();
         return copier.getStateMapping();
     }
@@ -344,10 +335,8 @@ public final class AutomatonLowLevelCopy {
                                                                                     Function<? super TP1, ? extends TP2> tpTransform,
                                                                                     Predicate<? super S1> stateFilter,
                                                                                     TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
-        Function<? super S1, ? extends SP2> spMapping =
-                (spTransform == null) ? null : s -> spTransform.apply(in.getStateProperty(s));
-        Function<? super T1, ? extends TP2> tpMapping =
-                (tpTransform == null) ? null : t -> tpTransform.apply(in.getTransitionProperty(t));
+        Function<? super S1, ? extends SP2> spMapping = s -> spTransform.apply(in.getStateProperty(s));
+        Function<? super T1, ? extends TP2> tpMapping = t -> tpTransform.apply(in.getTransitionProperty(t));
         return rawCopy(method, in, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transFilter);
     }
 

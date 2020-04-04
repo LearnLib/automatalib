@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,9 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -38,6 +35,8 @@ import net.automatalib.visualization.DelegateVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends AbstractIncrementalMealyBuilder<I, O> {
 
@@ -64,7 +63,7 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
     }
 
     @Override
-    public void insert(Word<? extends I> input, Word<? extends O> outputWord) throws ConflictException {
+    public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
         N curr = root;
 
         Iterator<? extends O> outputIt = outputWord.iterator();
@@ -93,21 +92,26 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
     }
 
     @Override
-    public Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
-                                      Collection<? extends I> inputs,
-                                      boolean omitUndefined) {
+    public @Nullable Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
+                                                Collection<? extends I> inputs,
+                                                boolean omitUndefined) {
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    private <S, T> Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> target,
-                                                Collection<? extends I> inputs,
-                                                boolean omitUndefined) {
-        Deque<Record<S, N, I>> dfsStack = new ArrayDeque<>();
+    private <S, T> @Nullable Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> target,
+                                                          Collection<? extends I> inputs,
+                                                          boolean omitUndefined) {
+        Deque<Record<@Nullable S, N, I>> dfsStack = new ArrayDeque<>();
 
-        dfsStack.push(new Record<>(target.getInitialState(), root, null, inputs.iterator()));
+        // reachedFrom can be null here, because we will always skip the bottom stack element below
+        @SuppressWarnings("nullness")
+        final Record<@Nullable S, N, I> init = new Record<>(target.getInitialState(), root, null, inputs.iterator());
+
+        dfsStack.push(init);
 
         while (!dfsStack.isEmpty()) {
-            Record<S, N, I> rec = dfsStack.peek();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull Record<@Nullable S, N, I> rec = dfsStack.peek();
             if (!rec.inputIt.hasNext()) {
                 dfsStack.pop();
                 continue;
@@ -118,7 +122,8 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
                 continue;
             }
 
-            T trans = target.getTransition(rec.automatonState, input);
+            S state = rec.automatonState;
+            T trans = state == null ? null : target.getTransition(state, input);
             if (omitUndefined && trans == null) {
                 continue;
             }
@@ -135,13 +140,15 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
                 return wb.reverse().toWord();
             }
 
-            dfsStack.push(new Record<>(target.getSuccessor(trans), edge.getTarget(), input, inputs.iterator()));
+            final Record<@Nullable S, N, I> nextRecord =
+                    new Record<>(target.getSuccessor(trans), edge.getTarget(), input, inputs.iterator());
+            dfsStack.push(nextRecord);
         }
 
         return null;
     }
 
-    protected abstract Edge<N, O> getEdge(N node, I symbol);
+    protected abstract @Nullable Edge<N, O> getEdge(N node, I symbol);
 
     protected abstract N createNode();
 
@@ -184,19 +191,16 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
         }
 
         @Override
-        @Nullable
         public I getInputSymbol(AnnotatedEdge<N, I, O> edge) {
             return edge.getInput();
         }
 
         @Override
-        @Nullable
         public O getOutputSymbol(AnnotatedEdge<N, I, O> edge) {
             return edge.getOutput();
         }
 
         @Override
-        @Nonnull
         public N getInitialNode() {
             return root;
         }
@@ -223,7 +227,7 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
     public class TransitionSystemView implements MealyTransitionSystem<N, I, Edge<N, O>, O> {
 
         @Override
-        public Edge<N, O> getTransition(N state, I input) {
+        public @Nullable Edge<N, O> getTransition(N state, I input) {
             return getEdge(state, input);
         }
 

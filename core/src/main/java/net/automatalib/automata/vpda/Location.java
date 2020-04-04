@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ import java.util.List;
 
 import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.words.VPDAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Location type used for the default 1-SEVPA.
@@ -30,8 +31,8 @@ import net.automatalib.words.VPDAlphabet;
 public class Location {
 
     private final ArrayStorage<Location> intSuccessors;
-    private final ArrayStorage<List<Location>> returnSuccessors;
-    final int index;
+    private final ArrayStorage<@Nullable List<@Nullable Location>> returnSuccessors;
+    private final int index;
     private boolean accepting;
 
     public Location(final VPDAlphabet<?> alphabet, final int index, final boolean accepting) {
@@ -53,8 +54,8 @@ public class Location {
         this.accepting = accepting;
     }
 
-    public Location getReturnSuccessor(final int retSymId, final int stackSym) {
-        final List<Location> succList = returnSuccessors.get(retSymId);
+    public @Nullable Location getReturnSuccessor(final int retSymId, final int stackSym) {
+        final @Nullable List<@Nullable Location> succList = returnSuccessors.get(retSymId);
         if (succList != null && stackSym < succList.size()) {
             return succList.get(stackSym);
         }
@@ -62,7 +63,7 @@ public class Location {
     }
 
     public void setReturnSuccessor(final int retSymId, final int stackSym, final Location succ) {
-        List<Location> succList = returnSuccessors.get(retSymId);
+        @Nullable List<@Nullable Location> succList = returnSuccessors.get(retSymId);
         if (succList == null) {
             succList = new ArrayList<>(stackSym + 1);
             returnSuccessors.set(retSymId, succList);

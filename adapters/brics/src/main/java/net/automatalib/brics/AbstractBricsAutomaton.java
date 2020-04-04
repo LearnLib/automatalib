@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +18,7 @@ package net.automatalib.brics;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
@@ -38,7 +34,6 @@ import net.automatalib.visualization.VisualizationHelper;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<State, Character>, GraphViewable {
 
     protected final Automaton automaton;
@@ -54,12 +49,12 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
      * @see Automaton#totalize()
      */
     public AbstractBricsAutomaton(Automaton automaton, boolean totalize) {
-        this.automaton = Objects.requireNonNull(automaton);
+        this.automaton = automaton;
 
         if (totalize) {
             State s = new State();
             s.addTransition(new Transition(Character.MIN_VALUE, Character.MAX_VALUE, s));
-            for (State p : getStates()) {
+            for (State p : automaton.getStates()) {
                 int maxi = Character.MIN_VALUE;
                 for (Transition t : p.getSortedTransitions(false)) {
                     if (t.getMin() > maxi) {
@@ -91,7 +86,7 @@ public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<Stat
     }
 
     @Override
-    public Collection<State> getTransitions(State state, @Nonnull Character input) {
+    public Collection<State> getTransitions(State state, Character input) {
         Collection<Transition> transitions = state.getSortedTransitions(false);
 
         Set<State> result = new HashSet<>();

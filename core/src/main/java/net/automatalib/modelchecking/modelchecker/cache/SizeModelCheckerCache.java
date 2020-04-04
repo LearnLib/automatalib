@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +21,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.simple.SimpleAutomaton;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.modelchecking.ModelCheckerCache;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An implementation of a cache for model checkers. Based on the size and input alphabet.
@@ -74,9 +73,8 @@ class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> implements
      *
      * @see ModelChecker#findCounterExample(Object, Collection, Object)
      */
-    @Nullable
     @Override
-    public R findCounterExample(A automaton, Collection<? extends I> inputs, P property) {
+    public @Nullable R findCounterExample(A automaton, Collection<? extends I> inputs, P property) {
         if (automaton.size() > size) {
             counterExamples.clear();
         }

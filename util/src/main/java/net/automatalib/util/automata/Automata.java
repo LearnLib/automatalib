@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,8 @@ package net.automatalib.util.automata;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.DeterministicAutomaton;
@@ -30,6 +27,7 @@ import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.automata.cover.Covers;
@@ -44,8 +42,8 @@ import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.util.ts.TS;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public class Automata extends TS {
 
     public static <S, I, T> Graph<S, TransitionEdge<I, T>> asGraph(Automaton<S, I, T> automaton,
@@ -62,11 +60,11 @@ public class Automata extends TS {
                 asUniversalGraph(automaton, inputs);
 
         MinimizationResult<S, TransitionEdge.Property<I, TP>> mr =
-                Minimizer.minimize(aag, Collections.singleton(automaton.getInitialState()));
+                Minimizer.minimize(aag, automaton.getInitialStates());
         output.clear();
 
         S init = automaton.getInitialState();
-        Block<S, TransitionEdge.Property<I, TP>> initBlock = mr.getBlockForState(init);
+        Block<S, TransitionEdge.Property<I, TP>> initBlock = init == null ? null : mr.getBlockForState(init);
         BlockMap<SO> bm = new BlockMap<>(mr);
 
         for (Block<S, TransitionEdge.Property<I, TP>> block : mr.getBlocks()) {
@@ -108,12 +106,7 @@ public class Automata extends TS {
     public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A invasiveMinimize(A automaton,
                                                                                                         Collection<? extends I> inputs) {
 
-        List<? extends I> inputList;
-        if (inputs instanceof List) {
-            inputList = (List<? extends I>) inputs;
-        } else {
-            inputList = new ArrayList<I>(inputs);
-        }
+        final List<? extends I> inputList = CollectionsUtil.randomAccessList(inputs);
 
         int numInputs = inputs.size();
 
@@ -124,7 +117,7 @@ public class Automata extends TS {
                 Minimizer.minimize(aag, automaton.getInitialStates());
 
         S init = automaton.getInitialState();
-        int initId = mr.getBlockForState(init).getId();
+        int initId = init == null ? -1 : mr.getBlockForState(init).getId();
 
         ResultStateRecord<SP, TP>[] records = new ResultStateRecord[mr.getNumBlocks()];
 
@@ -150,7 +143,7 @@ public class Automata extends TS {
 
         automaton.clear();
 
-        Object[] states = new Object[records.length];
+        @Nullable Object[] states = new Object[records.length];
         for (int i = 0; i < records.length; i++) {
             ResultStateRecord<SP, TP> rec = records[i];
             SP prop = rec.property;
@@ -180,9 +173,9 @@ public class Automata extends TS {
         return automaton;
     }
 
-    public static <I> Word<I> findShortestSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
-                                                         UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
-                                                         Collection<? extends I> inputs) {
+    public static <I> @Nullable Word<I> findShortestSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
+                                                                   UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+                                                                   Collection<? extends I> inputs) {
         return DeterministicEquivalenceTest.findSeparatingWordLarge(reference, other, inputs);
     }
 
@@ -213,9 +206,9 @@ public class Automata extends TS {
      *
      * @return a separating word, or {@code null} if no such word could be found.
      */
-    public static <I> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
-                                                 UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
-                                                 Collection<? extends I> inputs) {
+    public static <I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
+                                                           UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+                                                           Collection<? extends I> inputs) {
         return NearLinearEquivalenceTest.findSeparatingWord(reference, other, inputs);
     }
 
@@ -239,16 +232,16 @@ public class Automata extends TS {
      *
      * @return a separating word, or {@code null} if no such word could be found
      */
-    public static <S, I> Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
-                                                    S state1,
-                                                    S state2,
-                                                    Collection<? extends I> inputs) {
+    public static <S, I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                                              S state1,
+                                                              S state2,
+                                                              Collection<? extends I> inputs) {
         return NearLinearEquivalenceTest.findSeparatingWord(automaton, state1, state2, inputs);
     }
 
-    public static <I> Word<I> findSeparatingWord(final OneSEVPA<?, I> sevpa1,
-                                                 final OneSEVPA<?, I> sevpa2,
-                                                 final VPDAlphabet<I> inputs) {
+    public static <I> @Nullable Word<I> findSeparatingWord(final OneSEVPA<?, I> sevpa1,
+                                                           final OneSEVPA<?, I> sevpa2,
+                                                           final VPDAlphabet<I> inputs) {
         return OneSEVPAUtil.findSeparatingWord(sevpa1, sevpa2, inputs);
     }
 
@@ -439,8 +432,8 @@ public class Automata extends TS {
         return findUndefinedInput(automaton, inputs) != null;
     }
 
-    public static <S, I> TransRef<S, I, ?> findUndefinedInput(Automaton<S, I, ?> automaton,
-                                                              Iterable<? extends I> inputs) {
+    public static <S, I> @Nullable TransRef<S, I, ?> findUndefinedInput(Automaton<S, I, ?> automaton,
+                                                                        Iterable<? extends I> inputs) {
         Iterator<TransRef<S, I, ?>> it = allUndefinedInputsIterator(automaton, inputs);
         if (!it.hasNext()) {
             return null;

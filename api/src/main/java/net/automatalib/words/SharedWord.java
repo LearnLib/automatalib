@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * An immutable word implementation that is based on the idea of a common array storage. This allows a very efficient
  * creation of subwords (e.g., prefixes and suffixes).
@@ -38,12 +40,12 @@ final class SharedWord<I> extends Word<I> {
     /**
      * Constructor.
      */
-    SharedWord(Object[] storage) {
+    SharedWord(@Nullable Object[] storage) {
         this(storage, 0, storage.length);
     }
 
     @SuppressWarnings("unchecked")
-    SharedWord(Object[] storage, int offset, int length) {
+    SharedWord(@Nullable Object[] storage, int offset, int length) {
         this.storage = (I[]) storage;
         this.offset = offset;
         this.length = length;
@@ -55,7 +57,7 @@ final class SharedWord<I> extends Word<I> {
      * @param other
      *         the list of input symbols.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "nullness"})
     SharedWord(List<? extends I> other) {
         this.storage = other.toArray((I[]) new Object[other.size()]);
         this.offset = 0;
@@ -91,7 +93,7 @@ final class SharedWord<I> extends Word<I> {
     }
 
     @Override
-    public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
+    public void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num) {
         System.arraycopy(storage, this.offset + offset, array, tgtOfs, num);
     }
 

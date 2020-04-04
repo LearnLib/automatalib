@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ import java.util.List;
 
 import net.automatalib.commons.smartcollections.ArrayUtil;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A class for dynamically building {@link Word}s.
@@ -44,7 +45,7 @@ import net.automatalib.commons.smartcollections.ResizingArrayStorage;
  */
 public final class WordBuilder<I> extends AbstractList<I> {
 
-    private Object[] array;
+    private @Nullable Object[] array;
     private int length;
     private boolean lock;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,7 +59,7 @@ interface InternalModelCheckerDelegator<MC extends ModelChecker<I, A, P, R>, I, 
         }
 
         @Override
-        default void setMultiplier(double multiplier) throws IllegalArgumentException {
+        default void setMultiplier(double multiplier) {
             getModelChecker().setMultiplier(multiplier);
         }
 
@@ -69,7 +69,7 @@ interface InternalModelCheckerDelegator<MC extends ModelChecker<I, A, P, R>, I, 
         }
 
         @Override
-        default void setMinimumUnfolds(int minimumUnfolds) throws IllegalArgumentException {
+        default void setMinimumUnfolds(int minimumUnfolds) {
             getModelChecker().setMinimumUnfolds(minimumUnfolds);
         }
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
  */
 package net.automatalib.automata;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,8 +51,8 @@ import org.testng.annotations.Test;
 public class MutableAutomatonTest {
 
     static final Random RANDOM = new Random(42);
-    private static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 6);
-    private static final int SIZE = 10;
+    protected static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 6);
+    protected static final int SIZE = 10;
     static final List<Boolean> STATE_PROPS = Arrays.asList(false, true);
     static final List<Character> TRANS_PROPS = Arrays.asList('a', 'b', 'c');
     static final List<ProbabilisticOutput<Character>> PROB_TRANS_PROPS =
@@ -101,7 +102,7 @@ public class MutableAutomatonTest {
 
     @Test
     public void testCompactMoore() {
-        this.checkAutomaton(CompactMoore::new, ALPHABET, STATE_PROPS, EMPTY_PROPS);
+        this.checkAutomaton(new CompactMoore.Creator<>(), ALPHABET, STATE_PROPS, EMPTY_PROPS);
     }
 
     @Test
@@ -118,26 +119,25 @@ public class MutableAutomatonTest {
                                                                                                Alphabet<I> alphabet,
                                                                                                List<SP> stateProps,
                                                                                                List<? extends TP> transProps) {
-        final M automaton = createAndCheckInitialAutomaton(creator, alphabet);
+        final M automaton = createInitialAutomaton(creator, alphabet);
 
+        checkEmptyProperties(automaton, alphabet);
         fillRandomly(automaton, alphabet, stateProps, transProps);
+        addInitialAndCheck(automaton, stateProps);
 
         removeSingleTransitionAndCheck(automaton, alphabet);
         removeAllTransitionAndCheck(automaton, alphabet);
         clearAndCheck(automaton, alphabet);
     }
 
-    private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> M createAndCheckInitialAutomaton(
-            AutomatonCreator<M, I> creator,
-            Alphabet<I> alphabet) {
+    protected <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> M createInitialAutomaton(AutomatonCreator<M, I> creator,
+                                                                                                      Alphabet<I> alphabet) {
 
         final M automaton = creator.createAutomaton(alphabet, SIZE);
 
         for (int i = 0; i < SIZE; i++) {
             automaton.addState();
         }
-
-        checkEmptyProperties(automaton, alphabet);
 
         return automaton;
     }
@@ -161,6 +161,32 @@ public class MutableAutomatonTest {
             final SP sProp = RandomUtil.choose(stateProps, RANDOM);
             automaton.setStateProperty(s, sProp);
         }
+    }
+
+    private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void addInitialAndCheck(M automaton,
+                                                                                                   List<SP> stateProps) {
+        final S tmp = RandomUtil.choose(new ArrayList<>(automaton.getStates()), RANDOM);
+        final SP tmpSp = automaton.getStateProperty(tmp);
+        final SP sp = RandomUtil.choose(stateProps, RANDOM);
+
+        final S init = automaton.addInitialState(sp);
+
+        Assert.assertEquals(automaton.getInitialStates().size(), 1);
+        Assert.assertEquals(automaton.getStateProperty(automaton.getInitialStates().iterator().next()), sp);
+
+        final boolean expectException = automaton instanceof UniversalDeterministicAutomaton;
+
+        try {
+            final S init2 = automaton.addInitialState();
+            Assert.assertEquals(automaton.getInitialStates().size(), 2);
+            automaton.setInitial(init2, false);
+        } catch (IllegalStateException ise) {
+            Assert.assertTrue(expectException);
+        }
+
+        automaton.setInitial(init, false);
+        automaton.setInitial(tmp, true);
+        Assert.assertEquals(automaton.getStateProperty(automaton.getInitialStates().iterator().next()), tmpSp);
     }
 
     private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void removeSingleTransitionAndCheck(M automaton,
@@ -229,7 +255,6 @@ public class MutableAutomatonTest {
         }
 
         checkEmptyProperties(automaton, alphabet);
-
     }
 
     private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void checkEmptyProperties(M automaton,

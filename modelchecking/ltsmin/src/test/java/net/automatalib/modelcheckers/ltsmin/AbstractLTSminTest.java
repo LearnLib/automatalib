@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +69,7 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
     }
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         newModelChecker();
         counterExample = createCounterExample();
         automaton = createAutomaton();
@@ -86,6 +86,7 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
         Assert.assertNull(noCE);
 
         R ce = getModelChecker().findCounterExample(automaton, alphabet, falseProperty);
+        Assert.assertNotNull(ce);
         Assert.assertEquals(counterExample.computeOutput(input), ce.computeOutput(input));
     }
 }

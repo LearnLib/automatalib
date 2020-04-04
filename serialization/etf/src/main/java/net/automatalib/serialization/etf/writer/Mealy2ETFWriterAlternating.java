@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -148,7 +148,8 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
         final Map<Integer, Pair<O, S>> inverseTransitions = outputTransitions.inverse();
         for (int i = 0; i < outputTransitions.size(); i++) {
             final Pair<O, S> t = inverseTransitions.get(oldStates.size() + i);
-            pw.printf("\"(%s,%s)\"%n", t.getFirst(), t.getSecond());
+            assert t != null;
+            pw.printf("\"(%s,%s)\"%n", String.valueOf(t.getFirst()), String.valueOf(t.getSecond()));
         }
         pw.println("end sort");
 
@@ -163,7 +164,7 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
 
     @Override
     public void writeModel(OutputStream os, MealyMachine<?, I, ?, O> model, Alphabet<I> alphabet) {
-        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedUTF8Writer(os))) {
+        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedNonClosingUTF8Writer(os))) {
             write(pw, model, alphabet);
         }
     }

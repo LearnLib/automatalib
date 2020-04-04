@@ -18,8 +18,6 @@ package net.automatalib.ts.modal;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.graphs.FiniteLTS;
@@ -29,7 +27,6 @@ import net.automatalib.visualization.VisualizationHelper;
 public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
         extends UniversalAutomaton<S, I, T, Void, TP>, FiniteLTS<S, T, I>, InputAlphabetHolder<I> {
 
-    @Nonnull
     @Override
     default Iterator<S> iterator() {
         return UniversalAutomaton.super.iterator();

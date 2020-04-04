@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,55 +46,28 @@ public class DOTPanel extends JPanel {
     private final ImageComponent imgComponent;
     private final JList<PlottedGraph> listBox;
     private final DefaultListModel<PlottedGraph> graphs;
-    private final Action saveDotAction = new AbstractAction() {
-
-        private static final long serialVersionUID = -1L;
-
-        {
-            putValue(NAME, "Save DOT");
-            setEnabled(false);
-        }
+    private final Action saveDotAction = new AbstractDisabledAction("Save DOT") {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             saveDOT();
         }
     };
-    private final Action savePngAction = new AbstractAction() {
-
-        private static final long serialVersionUID = -1L;
-
-        {
-            putValue(NAME, "Save PNG");
-            setEnabled(false);
-        }
+    private final Action savePngAction = new AbstractDisabledAction("Save PNG") {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             savePNG();
         }
     };
-    private final Action renameAction = new AbstractAction() {
-
-        private static final long serialVersionUID = -1L;
-
-        {
-            putValue(NAME, "Rename");
-            setEnabled(false);
-        }
+    private final Action renameAction = new AbstractDisabledAction("Rename") {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             rename();
         }
     };
-    private final Action clearAction = new AbstractAction() {
-
-        private static final long serialVersionUID = -1L;
-
-        {
-            putValue(NAME, "Clear");
-        }
+    private final Action clearAction = new AbstractAction("Clear") {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -267,6 +240,14 @@ public class DOTPanel extends JPanel {
         public void close() throws IOException {
             addGraph(name, getBuffer().toString());
             super.close();
+        }
+    }
+
+    private abstract static class AbstractDisabledAction extends AbstractAction {
+
+        AbstractDisabledAction(String name) {
+            super(name);
+            setEnabled(false);
         }
     }
 }

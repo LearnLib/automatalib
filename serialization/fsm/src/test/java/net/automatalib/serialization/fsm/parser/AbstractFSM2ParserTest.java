@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
 public abstract class AbstractFSM2ParserTest {
 
     protected abstract UniversalDeterministicAutomaton<?, Character, ?, ?, ?> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
-            throws IOException, FSMParseException;
+            throws IOException;
 
     /**
      * Asserts that no NullPointerException is thrown by implementations of
@@ -43,10 +43,10 @@ public abstract class AbstractFSM2ParserTest {
      * {@link AbstractCompactDeterministic#getInputAlphabet()}.
      *
      * @throws IOException if a test .fsm file could not be read
-     * @throws FSMParseException if a test .fsm was malformed
+     * @throws FSMFormatException if a test .fsm was malformed
      */
     @Test
-    public void testInputAlphabet() throws IOException, FSMParseException {
+    public void testInputAlphabet() throws IOException {
 
         final Collection<Character> existingInputs = Collections.singleton('a');
         final Collection<Character> nonExistingInputs = Collections.singleton('[');
@@ -62,7 +62,7 @@ public abstract class AbstractFSM2ParserTest {
 
         // just trace the word and ignore the result -- checks to not throw an exception
         automaticAutomaton.getState(existingWord);
-        Assert.assertThrows(NullPointerException.class, () -> automaticAutomaton.getState(nonExistingInputs));
+        Assert.assertThrows(IllegalArgumentException.class, () -> automaticAutomaton.getState(nonExistingInputs));
 
         // check parsed automaton with existing inputs
         final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> existingAutomaton =
@@ -70,7 +70,7 @@ public abstract class AbstractFSM2ParserTest {
 
         // just trace the word and ignore the result -- checks to not throw an exception
         existingAutomaton.getState(existingWord);
-        Assert.assertThrows(NullPointerException.class, () -> existingAutomaton.getState(nonExistingInputs));
+        Assert.assertThrows(IllegalArgumentException.class, () -> existingAutomaton.getState(nonExistingInputs));
 
         // check parsed automaton with non-existing inputs
         final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> nonExistingAutomaton =

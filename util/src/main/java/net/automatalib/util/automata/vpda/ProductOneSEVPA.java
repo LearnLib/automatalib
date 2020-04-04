@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.util.ts.acceptors.AcceptanceCombiner;
 import net.automatalib.words.VPDAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Production automaton that allows to join two given 1-SEVPAs. Acceptance semantics of the product automaton depends on
@@ -55,7 +56,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractOneSEVPA<Pair<L1, L2>, I
     }
 
     @Override
-    public Pair<L1, L2> getInternalSuccessor(final Pair<L1, L2> loc, final I intSym) {
+    public @Nullable Pair<L1, L2> getInternalSuccessor(final Pair<L1, L2> loc, final I intSym) {
         final L1 succ1 = sevpa1.getInternalSuccessor(loc.getFirst(), intSym);
         if (succ1 == null) {
             return null;
@@ -93,7 +94,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractOneSEVPA<Pair<L1, L2>, I
     }
 
     @Override
-    public Pair<L1, L2> getReturnSuccessor(final Pair<L1, L2> loc, final I retSym, final int stackSym) {
+    public @Nullable Pair<L1, L2> getReturnSuccessor(final Pair<L1, L2> loc, final I retSym, final int stackSym) {
         final int stackSym1 = stackSym / sevpa2.getNumStackSymbols();
         final L1 succ1 = sevpa1.getReturnSuccessor(loc.getFirst(), retSym, stackSym1);
         if (succ1 == null) {

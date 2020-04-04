@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +18,6 @@ package net.automatalib.words.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.MutableNumericID;
 import net.automatalib.words.GrowingAlphabet;
@@ -32,7 +30,7 @@ import net.automatalib.words.GrowingAlphabet;
  *
  * @author Malte Isberner
  */
-public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> implements GrowingAlphabet<I> {
+public final class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> implements GrowingAlphabet<I> {
 
     public FastAlphabet() {}
 
@@ -48,19 +46,18 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> imp
     }
 
     @Override
-    public int addSymbol(@Nonnull I a) {
+    public int addSymbol(I a) {
         add(a);
         return a.getId();
     }
 
     @Override
-    @Nonnull
     public I getSymbol(int index) {
         return get(index);
     }
 
     @Override
-    public int getSymbolIndex(@Nonnull I symbol) {
+    public int getSymbolIndex(I symbol) {
         int id = symbol.getId();
         if (id < 0 || id >= size() || get(id) != symbol) {
             throw new IllegalArgumentException("Invalid symbol: " + symbol + " does not belong to this alphabet");
@@ -69,7 +66,7 @@ public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> imp
     }
 
     @Override
-    public int compare(@Nonnull I o1, @Nonnull I o2) {
+    public int compare(I o1, I o2) {
         return o1.getId() - o2.getId();
     }
 

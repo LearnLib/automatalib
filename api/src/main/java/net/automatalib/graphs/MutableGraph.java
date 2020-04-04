@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,7 @@
  */
 package net.automatalib.graphs;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A graph that allows modification. Note that this interface only exposes methods for extending a graph. If also
@@ -34,7 +32,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP> {
 
     /**
@@ -43,7 +40,6 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the newly inserted node
      */
-    @Nonnull
     default N addNode() {
         return addNode(null);
     }
@@ -56,7 +52,6 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the newly inserted node
      */
-    @Nonnull
     N addNode(@Nullable NP property);
 
     /**
@@ -70,7 +65,6 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the edge connecting the given nodes
      */
-    @Nonnull
     default E connect(N source, N target) {
         return connect(source, target, null);
     }
@@ -87,11 +81,10 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
      *
      * @return the newly inserted edge
      */
-    @Nonnull
     E connect(N source, N target, @Nullable EP property);
 
-    void setNodeProperty(N node, @Nullable NP property);
+    void setNodeProperty(N node, NP property);
 
-    void setEdgeProperty(E edge, @Nullable EP property);
+    void setEdgeProperty(E edge, EP property);
 
 }

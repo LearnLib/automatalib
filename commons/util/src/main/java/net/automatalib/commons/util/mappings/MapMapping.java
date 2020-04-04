@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.checkerframework.checker.nullness.qual.KeyFor;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Class that wraps a {@link Mapping} around a {@link java.util.Map}.
  *
@@ -29,7 +32,7 @@ import java.util.Set;
  *
  * @author Malte Isberner
  */
-public class MapMapping<D, R> implements MutableMapping<D, R> {
+public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
 
     private final Map<D, R> map;
 
@@ -79,7 +82,7 @@ public class MapMapping<D, R> implements MutableMapping<D, R> {
      *
      * @see java.util.Map#entrySet()
      */
-    public Set<Map.Entry<D, R>> entrySet() {
+    public Set<Map.Entry<@KeyFor("this.map") D, R>> entrySet() {
         return map.entrySet();
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,7 @@ public class FSAVisualizationHelper<S, I> extends AutomatonVisualizationHelper<S
             return false;
         }
         if (automaton.isAccepting(node)) {
-            String oldShape = properties.getOrDefault(NodeAttrs.SHAPE, "oval");
+            String oldShape = properties.getOrDefault(NodeAttrs.SHAPE, NodeShapes.OVAL);
             properties.put(NodeAttrs.SHAPE, "double" + oldShape);
             properties.put(NodeAttrs.ACCEPTING, "true");
         }

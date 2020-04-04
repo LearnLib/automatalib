@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
@@ -28,6 +27,7 @@ import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import com.google.common.io.CharStreams;
 import net.automatalib.commons.util.IOUtil;
 
 public class DOTComponent extends ImageComponent {
@@ -60,11 +60,12 @@ public class DOTComponent extends ImageComponent {
 
     };
 
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public DOTComponent(Reader dotReader) throws IOException {
-        StringWriter w = new StringWriter();
+        StringBuilder sb = new StringBuilder();
 
-        IOUtil.copy(dotReader, w);
-        String dot = w.getBuffer().toString();
+        CharStreams.copy(dotReader, sb);
+        String dot = sb.toString();
 
         BufferedImage img = DOT.renderDOTImage(dot);
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,9 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.commons.util.mappings.MapMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simplified interface for indefinite graphs, exposing only adjacency information, but no further information about
@@ -36,35 +35,29 @@ import net.automatalib.commons.util.mappings.MutableMapping;
  */
 public interface IndefiniteSimpleGraph<N> {
 
-    @Nonnull
     default Iterable<N> adjacentTargets(N node) {
         return () -> adjacentTargetsIterator(node);
     }
 
-    @Nonnull
     default Iterator<N> adjacentTargetsIterator(N node) {
         return getAdjacentTargets(node).iterator();
     }
 
-    @Nonnull
     Collection<N> getAdjacentTargets(N node);
 
     default boolean isConnected(N source, N target) {
         return adjacentTargetsStream(source).anyMatch(n -> Objects.equals(n, target));
     }
 
-    @Nonnull
     default Stream<N> adjacentTargetsStream(N node) {
         return getAdjacentTargets(node).stream();
     }
 
-    @Nonnull
-    default <V> MutableMapping<N, V> createStaticNodeMapping() {
+    default <@Nullable V> MutableMapping<N, V> createStaticNodeMapping() {
         return new MapMapping<>();
     }
 
-    @Nonnull
-    default <V> MutableMapping<N, V> createDynamicNodeMapping() {
+    default <@Nullable V> MutableMapping<N, V> createDynamicNodeMapping() {
         return new MapMapping<>();
     }
 
@@ -116,12 +109,12 @@ public interface IndefiniteSimpleGraph<N> {
         }
 
         @Override
-        public <V> MutableMapping<N, V> createStaticNodeMapping() {
+        public <@Nullable V> MutableMapping<N, V> createStaticNodeMapping() {
             return simpleGraph.createStaticNodeMapping();
         }
 
         @Override
-        public <V> MutableMapping<N, V> createDynamicNodeMapping() {
+        public <@Nullable V> MutableMapping<N, V> createDynamicNodeMapping() {
             return simpleGraph.createDynamicNodeMapping();
         }
     }

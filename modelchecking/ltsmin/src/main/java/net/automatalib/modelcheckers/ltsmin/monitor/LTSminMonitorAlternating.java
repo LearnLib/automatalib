@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ import java.util.function.Function;
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.modelcheckers.ltsmin.LTSminAlternating;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
 
 /**
@@ -52,5 +53,10 @@ public class LTSminMonitorAlternating<I, O> extends AbstractLTSminMonitorMealy<I
     @Override
     public boolean requiresOriginalAutomaton() {
         return true;
+    }
+
+    @Override
+    protected void verifyFormula(String formula) {
+        LTSminLTLParser.requireValidLetterFormula(formula);
     }
 }

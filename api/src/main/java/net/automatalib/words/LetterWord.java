@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A word consisting of a single letter only.
@@ -59,7 +59,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
     }
 
     @Override
-    @Nonnull
     public Spliterator<I> spliterator() {
         return Collections.singleton(letter).spliterator();
     }
@@ -73,7 +72,7 @@ final class LetterWord<I> extends Word<I> implements Serializable {
     }
 
     @Override
-    public void writeToArray(int offset, Object[] array, int tgtOffset, int length) {
+    public void writeToArray(int offset, @Nullable Object[] array, int tgtOffset, int length) {
         if (offset == 0 && length > 0) {
             array[tgtOffset] = letter;
         }
@@ -99,13 +98,13 @@ final class LetterWord<I> extends Word<I> implements Serializable {
 
     @Override
     public Word<I> append(I symbol) {
-        Object[] array = new Object[] {letter, symbol};
+        @Nullable Object[] array = new Object[] {letter, symbol};
         return new SharedWord<>(array);
     }
 
     @Override
     public Word<I> prepend(I symbol) {
-        Object[] array = new Object[] {symbol, letter};
+        @Nullable Object[] array = new Object[] {symbol, letter};
         return new SharedWord<>(array);
     }
 
@@ -145,7 +144,6 @@ final class LetterWord<I> extends Word<I> implements Serializable {
         return this;
     }
 
-    @Nonnull
     @Override
     public <T> Word<T> transform(Function<? super I, ? extends T> transformer) {
         T transformed = transformer.apply(letter);

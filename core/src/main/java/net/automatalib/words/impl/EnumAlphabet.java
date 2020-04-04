@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +35,7 @@ public class EnumAlphabet<E extends Enum<E>> extends ArrayAlphabet<E> {
     }
 
     @Override
-    public int getSymbolIndex(E symbol) throws IllegalArgumentException {
+    public int getSymbolIndex(E symbol) {
         if (symbol == null) {
             int lastIdx = symbols.length - 1;
             if (symbols[lastIdx] == null) {
@@ -53,7 +53,7 @@ public class EnumAlphabet<E extends Enum<E>> extends ArrayAlphabet<E> {
         }
 
         int index = symbol.ordinal();
-        return index >= 0 && index < symbols.length && symbols[index] == symbol;
+        return index < symbols.length && symbols[index] == symbol;
     }
 
     @Override

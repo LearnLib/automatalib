@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,10 @@ package net.automatalib.commons.smartcollections;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.framework.qual.EnsuresQualifierIf;
 
 /**
  * Abstract base class for linked lists.
@@ -39,9 +43,9 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
         implements SmartSequence<E> {
 
     // head element (may be null if list is empty)
-    private T head;
+    private @Nullable T head;
     // last element (may be null if list is empty)
-    private T last;
+    private @Nullable T last;
     // number of elements in the list
     private int size;
 
@@ -50,7 +54,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      *
      * @return the first entry or <code>null</code>.
      */
-    protected T getFrontEntry() {
+    protected @Nullable T getFrontEntry() {
         return head;
     }
 
@@ -59,16 +63,8 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      *
      * @return the first entry or <code>null</code>.
      */
-    protected T getBackEntry() {
+    protected @Nullable T getBackEntry() {
         return last;
-    }
-
-    /**
-     * Deprecated. Use {@link #concat(AbstractLinkedList)}.
-     */
-    @Deprecated
-    public void addCompletely(AbstractLinkedList<? extends E, ? extends T> other) {
-        concat(other);
     }
 
     /**
@@ -106,6 +102,9 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
 
     @Override
     public ElementReference chooseRef() {
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
         return head;
     }
 
@@ -226,8 +225,9 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     }
 
     @Override
+    @EnsuresQualifierIf(qualifier = NonNull.class, expression = {"this.head", "this.last"}, result = false)
     public boolean isEmpty() {
-        return (head == null);
+        return head == null || last == null;
     }
 
     @Override
@@ -254,7 +254,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      *
      * @return a reference to the last element, or <code>null</code>.
      */
-    public ElementReference getBackReference() {
+    public @Nullable ElementReference getBackReference() {
         return last;
     }
 
@@ -275,7 +275,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      *
      * @return a reference to the first element, or <code>null</code>.
      */
-    public ElementReference getFrontReference() {
+    public @Nullable ElementReference getFrontReference() {
         return head;
     }
 
@@ -285,6 +285,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      *
      * @return the formerly last element in the list.
      */
+    @SuppressWarnings("nullness") // fine according to JavaDoc
     public E popBack() {
         return popBackEntry().getElement();
     }
@@ -295,7 +296,8 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      *
      * @return the previously first entry in the list, or <code>null</code>.
      */
-    protected T popBackEntry() {
+    @SuppressWarnings("nullness") // since intermediate method calls must not change the head reference, e is non-null
+    protected @Nullable T popBackEntry() {
         if (last == null) {
             return null;
         }
@@ -318,6 +320,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      *
      * @return the formerly first element in the list.
      */
+    @SuppressWarnings("nullness") // fine according to JavaDoc
     public E popFront() {
         return popFrontEntry().getElement();
     }
@@ -328,7 +331,8 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      *
      * @return the previously first entry in the list, or <code>null</code>.
      */
-    protected T popFrontEntry() {
+    @SuppressWarnings("nullness") // since intermediate method calls must not change the head reference, e is non-null
+    protected @Nullable T popFrontEntry() {
         if (head == null) {
             return null;
         }
@@ -392,7 +396,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     }
 
     @Override
-    public ElementReference pred(ElementReference ref) {
+    public @Nullable ElementReference pred(ElementReference ref) {
         return castRef(ref).getPrev();
     }
 
@@ -410,7 +414,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     }
 
     @Override
-    public ElementReference succ(ElementReference ref) {
+    public @Nullable ElementReference succ(ElementReference ref) {
         return castRef(ref).getNext();
     }
 
@@ -497,13 +501,15 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
      */
     private class LinkedListEntryIterator implements Iterator<T> {
 
+        // previous entry
+        private @Nullable T prev;
         // current entry
-        private T current;
+        private @Nullable T current;
 
         /*
          * Constructor.
          */
-        LinkedListEntryIterator(T head) {
+        LinkedListEntryIterator(@Nullable T head) {
             this.current = head;
         }
 
@@ -514,28 +520,36 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
 
         @Override
         public T next() {
+            if (current == null) {
+                throw new NoSuchElementException();
+            }
             T e = current;
             current = current.getNext();
+            prev = e;
             return e;
         }
 
         @Override
         public void remove() {
-            T next = current.getNext();
-            removeEntry(current);
-            current = next;
+            if (prev == null) {
+                throw new IllegalStateException();
+            }
+            removeEntry(prev);
+            prev = null;
         }
     }
 
     private class ElementIterator implements Iterator<E> {
 
+        // previous entry
+        private @Nullable T prev;
         // current entry
-        private T current;
+        private @Nullable T current;
 
         /*
          * Constructor.
          */
-        ElementIterator(T head) {
+        ElementIterator(@Nullable T head) {
             this.current = head;
         }
 
@@ -546,16 +560,22 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
 
         @Override
         public E next() {
-            E e = current.getElement();
+            if (current == null) {
+                throw new NoSuchElementException();
+            }
+            T e = current;
             current = current.getNext();
-            return e;
+            prev = e;
+            return e.getElement();
         }
 
         @Override
         public void remove() {
-            T next = current.getNext();
-            removeEntry(current);
-            current = next;
+            if (prev == null) {
+                throw new IllegalStateException();
+            }
+            removeEntry(prev);
+            prev = null;
         }
     }
 

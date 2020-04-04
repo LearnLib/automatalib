@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,9 @@ import java.util.NoSuchElementException;
 
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * A node in a {@link SuffixTrie}.
@@ -31,18 +34,17 @@ import net.automatalib.words.WordBuilder;
  */
 public class SuffixTrieNode<I> extends Word<I> {
 
-    private final I symbol;
-    private final SuffixTrieNode<I> parent;
+    private final @PolyNull I symbol;
+    private final @PolyNull SuffixTrieNode<I> parent;
 
     /**
      * Root constructor.
      */
     public SuffixTrieNode() {
-        this.symbol = null;
-        this.parent = null;
+        this(null, null);
     }
 
-    public SuffixTrieNode(I symbol, SuffixTrieNode<I> parent) {
+    public SuffixTrieNode(@PolyNull I symbol, @PolyNull SuffixTrieNode<I> parent) {
         this.symbol = symbol;
         this.parent = parent;
     }
@@ -82,7 +84,7 @@ public class SuffixTrieNode<I> extends Word<I> {
         appendSuffix(this, symList);
     }
 
-    public I getSymbol() {
+    public @Nullable I getSymbol() {
         return symbol;
     }
 
@@ -91,6 +93,7 @@ public class SuffixTrieNode<I> extends Word<I> {
         return getSymbol(this, index);
     }
 
+    @SuppressWarnings("nullness") // TODO: write test and check method. Looks broken
     public static <I> I getSymbol(SuffixTrieNode<I> node, int index) {
         SuffixTrieNode<I> iter = node;
         for (int i = index; i > 0; i--) {
@@ -99,10 +102,11 @@ public class SuffixTrieNode<I> extends Word<I> {
         return iter.symbol;
     }
 
-    public SuffixTrieNode<I> getParent() {
+    public @Nullable SuffixTrieNode<I> getParent() {
         return parent;
     }
 
+    @EnsuresNonNullIf(expression = "parent", result = false)
     public boolean isRoot() {
         return (parent == null);
     }

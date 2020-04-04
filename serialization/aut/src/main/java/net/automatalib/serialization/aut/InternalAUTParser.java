@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,6 @@ package net.automatalib.serialization.aut;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -54,12 +53,11 @@ class InternalAUTParser {
 
     public <I> InputModelData<I, SimpleAutomaton<Integer, I>> parse(Function<String, I> inputTransformer)
             throws IOException {
-        try (Reader isr = IOUtil.asUTF8Reader(inputStream);
-             BufferedReader bisr = new BufferedReader(isr)) {
+        try (BufferedReader br = new BufferedReader(IOUtil.asUncompressedBufferedNonClosingUTF8Reader(inputStream))) {
 
             // parsing
-            parseHeader(bisr);
-            while (parseTransition(bisr)) {}
+            parseHeader(br);
+            while (parseTransition(br)) {}
 
             // automaton construction
             final Map<String, I> inputMap =

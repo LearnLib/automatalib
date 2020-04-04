@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Signature of a state. A signature consists of the list of all successor states for all alphabet symbols, and the
@@ -42,6 +43,7 @@ final class StateSignature implements Serializable {
     StateSignature(StateSignature other) {
         this.successors = new ResizingArrayStorage<>(other.successors);
         this.acceptance = other.acceptance;
+        updateHashCode();
     }
 
     public void updateHashCode() {
@@ -62,29 +64,18 @@ final class StateSignature implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (!(obj instanceof StateSignature)) {
             return false;
         }
-        if (obj.getClass() != StateSignature.class) {
-            return false;
-        }
-        StateSignature other = (StateSignature) obj;
-        if (hashCode != other.hashCode) {
-            return false;
-        }
-        if (acceptance != other.acceptance) {
-            return false;
-        }
-        for (int i = 0; i < successors.array.length; i++) {
-            if (successors.array[i] != other.successors.array[i]) {
-                return false;
-            }
-        }
-        return true;
+
+        final StateSignature other = (StateSignature) obj;
+
+        return (hashCode == other.hashCode) && (acceptance == other.acceptance) &&
+               Arrays.equals(successors.array, other.successors.array);
     }
 
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,7 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An iterator that enumerates the test cases as obtained through the <i>W method</i> conformance test in an incremental
@@ -101,7 +102,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
         Item<I> nextItem = itemQueue.extractMin();
 
         Word<I> result = assembleWord(nextItem);
-        Item<I> inc = increment(nextItem);
+        @Nullable Item<I> inc = increment(nextItem);
         if (inc != null) {
             itemQueue.insert(inc);
         }
@@ -114,7 +115,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
         return prefix.concat(item.middle, suffix);
     }
 
-    private Item<I> increment(Item<I> item) {
+    private @Nullable Item<I> increment(Item<I> item) {
         item.suffixIdx++;
         if (item.suffixIdx >= suffixes.size()) {
             item.suffixIdx = item.minSuffix;
@@ -145,7 +146,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 
         @Override
         public String toString() {
-            return Integer.toString(prefixIdx) + " | " + middle + " | " + Integer.toString(suffixIdx);
+            return prefixIdx + " | " + middle + " | " + suffixIdx;
         }
     }
 

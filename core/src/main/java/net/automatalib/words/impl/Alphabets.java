@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package net.automatalib.words.impl;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collector;
 
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
@@ -88,13 +89,26 @@ public final class Alphabets {
      * @throws GrowingAlphabetNotSupportedException
      *         if the given alphabet is not an instance of {@link GrowingAlphabet}.
      */
-    public static <I> GrowingAlphabet<I> toGrowingAlphabetOrThrowException(final Alphabet<I> alphabet)
-            throws GrowingAlphabetNotSupportedException {
+    public static <I> GrowingAlphabet<I> toGrowingAlphabetOrThrowException(final Alphabet<I> alphabet) {
         if (alphabet instanceof GrowingAlphabet) {
             return (GrowingAlphabet<I>) alphabet;
         } else {
             throw new GrowingAlphabetNotSupportedException(alphabet);
         }
+    }
+
+    /**
+     * Returns a {@link Collector} that collects individual symbols (in order and without duplicates) and aggregates
+     * them in a {@link GrowingAlphabet}.
+     *
+     * @param <I>
+     *         input symbol type
+     *
+     * @return a {@link Collector} that collects individual symbols (in order and without duplicates) and aggregates
+     * them in a {@link GrowingAlphabet}
+     */
+    public static <I> Collector<I, ?, GrowingAlphabet<I>> collector() {
+        return new AlphabetCollector<>();
     }
 
 }

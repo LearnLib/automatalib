@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,11 +24,14 @@ import net.automatalib.brics.AbstractBricsAutomaton;
 import net.automatalib.brics.BricsNFA;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Word;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class SimpleBricsExample {
 
-    private SimpleBricsExample() {
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleBricsExample.class);
+
+    private SimpleBricsExample() {}
 
     public static void main(String[] args) {
         // Create a BRICS automaton from a regular expression ...
@@ -47,7 +50,7 @@ public final class SimpleBricsExample {
                                                         Word.fromString("ade"));
 
         for (Word<Character> tw : testWords) {
-            System.out.println("Output for " + tw + " is " + ba.computeOutput(tw));
+            LOGGER.info("Output for {} is {}", tw, ba.computeOutput(tw));
         }
     }
 

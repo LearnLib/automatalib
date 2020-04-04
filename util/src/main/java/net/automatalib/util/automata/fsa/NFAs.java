@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,8 +34,7 @@ import net.automatalib.words.Alphabet;
 
 public final class NFAs {
 
-    private NFAs() {
-    }
+    private NFAs() {}
 
     public static <I> CompactDFA<I> determinize(NFA<?, I> nfa, Alphabet<I> inputAlphabet) {
         return determinize(nfa, inputAlphabet, false, true);

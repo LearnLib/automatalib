@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,13 +18,13 @@ package net.automatalib.automata.simple;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.helpers.SimpleStateIDs;
+import net.automatalib.automata.helpers.StateIDGrowingMapping;
 import net.automatalib.automata.helpers.StateIDStaticMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.ts.simple.SimpleTS;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simple automaton, i.e., a {@link SimpleTS} with a finite number of states.
@@ -39,7 +39,6 @@ import net.automatalib.ts.simple.SimpleTS;
 public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
 
     @Override
-    @Nonnull
     default Iterator<S> iterator() {
         return getStates().iterator();
     }
@@ -49,16 +48,18 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
      *
      * @return all states in the transition system
      */
-    @Nonnull
     Collection<S> getStates();
 
     @Override
-    @Nonnull
-    default <V> MutableMapping<S, V> createStaticStateMapping() {
+    default <@Nullable V> MutableMapping<S, V> createStaticStateMapping() {
         return new StateIDStaticMapping<>(stateIDs(), size());
     }
 
-    @Nonnull
+    @Override
+    default <@Nullable V> MutableMapping<S, V> createDynamicStateMapping() {
+        return new StateIDGrowingMapping<>(stateIDs(), size());
+    }
+
     default StateIDs<S> stateIDs() {
         return new SimpleStateIDs<>(this);
     }

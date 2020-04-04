@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,7 +47,7 @@ public final class AUTSerializationProvider implements SimpleAutomatonSerializat
 
     @Override
     public <I2> InputModelData<I2, SimpleAutomaton<Integer, I2>> readModel(InputStream is,
-                                                                     Function<String, I2> inputTransformer)
+                                                                           Function<String, I2> inputTransformer)
             throws IOException {
         return AUTParser.readAutomaton(is, inputTransformer);
     }

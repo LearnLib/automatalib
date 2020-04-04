@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +17,6 @@ package net.automatalib.words;
 
 import java.util.AbstractList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 class SubwordList<I> extends AbstractList<Word<I>> {
 
     private final Word<I> word;
@@ -34,18 +30,16 @@ class SubwordList<I> extends AbstractList<Word<I>> {
     }
 
     @Override
-    @Nonnull
     public Word<I> get(int index) {
-        if (index < 0 || index > word.length()) {
+        final int length = word.length();
+
+        if (index < 0 || index > length) {
             throw new IndexOutOfBoundsException();
         }
-        if (prefix) {
-            return word.prefix(index);
-        }
-        if (reverse) {
-            return word.suffix(word.length() - index);
-        }
-        return word.suffix(index);
+
+        final int idx = reverse ? length - index : index;
+
+        return prefix ? word.prefix(idx) : word.suffix(idx);
     }
 
     @Override

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.incremental.ConflictException;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
@@ -49,7 +46,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
      * @param inputAlphabet
      *         the input alphabet
      */
-    public AbstractIncrementalDFABuilder(@Nonnull Alphabet<I> inputAlphabet) {
+    public AbstractIncrementalDFABuilder(Alphabet<I> inputAlphabet) {
         this.inputAlphabet = inputAlphabet;
         this.alphabetSize = inputAlphabet.size();
     }
@@ -65,7 +62,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
     }
 
     @Override
-    public void insert(Word<? extends I> word) throws ConflictException {
+    public void insert(Word<? extends I> word) {
         insert(word, true);
     }
 

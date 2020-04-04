@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,7 +41,13 @@ public class SimpleNodeIDs<N> implements NodeIDs<N> {
 
     @Override
     public int getNodeId(N node) {
-        return nodeIds.get(node);
+        final Integer id = nodeIds.get(node);
+
+        if (id == null) {
+            throw new IllegalArgumentException();
+        }
+
+        return id.intValue();
     }
 
     @Override

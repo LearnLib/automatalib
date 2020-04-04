@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +21,9 @@ import java.util.Objects;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.commons.smartcollections.ArrayWritable;
 import net.automatalib.commons.util.mappings.Mapping;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Class implementing an (indexed) alphabet. An alphabet is a collection of symbols, where each symbol has a (unique)
@@ -54,8 +53,7 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
      * @throws IllegalArgumentException
      *         if there is no symbol with this index.
      */
-    @Nullable
-    I getSymbol(int index) throws IllegalArgumentException;
+    I getSymbol(int index);
 
     @Override
     default int applyAsInt(I symbol) {
@@ -65,10 +63,13 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
     /**
      * Returns the index of the given symbol in the alphabet.
      *
+     * @param symbol
+     *         the symbol whose index should be determined
+     *
      * @throws IllegalArgumentException
      *         if the provided symbol does not belong to the alphabet.
      */
-    int getSymbolIndex(@Nullable I symbol) throws IllegalArgumentException;
+    int getSymbolIndex(I symbol);
 
     @Override
     default int compare(I o1, I o2) {
@@ -76,9 +77,9 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
     }
 
     @Override
-    default void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
-        for (int i = offset, j = tgtOfs, k = 0; k < num; i++, j++, k++) {
-            array[j] = getSymbol(i);
+    default void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num) {
+        for (int i = 0; i < num; i++) {
+            array[tgtOfs + i] = getSymbol(offset + i);
         }
     }
 

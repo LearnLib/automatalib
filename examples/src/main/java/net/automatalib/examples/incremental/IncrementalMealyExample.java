@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +22,12 @@ import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class IncrementalMealyExample {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IncrementalMealyExample.class);
 
     private static final Alphabet<Character> ALPHABET = Alphabets.characters('a', 'c');
     private static final Word<Character> W_1 = Word.fromString("abc");
@@ -33,31 +37,28 @@ public final class IncrementalMealyExample {
     private static final Word<Character> W_3 = Word.fromString("acb");
     private static final Word<Character> W_3_O = Word.fromString("xwu");
 
-    private IncrementalMealyExample() {
-    }
+    private IncrementalMealyExample() {}
 
     public static void main(String[] args) {
-        System.out.println("Incremental construction using a tree");
+        LOGGER.info("Incremental construction using a tree");
         IncrementalMealyBuilder<Character, Character> incMealyTree = new IncrementalMealyTreeBuilder<>(ALPHABET);
         build(incMealyTree);
 
-        System.out.println();
-
-        System.out.println("Incremental construction using a DAG");
+        LOGGER.info("Incremental construction using a DAG");
         IncrementalMealyBuilder<Character, Character> incMealyDag = new IncrementalMealyDAGBuilder<>(ALPHABET);
         build(incMealyDag);
     }
 
     public static void build(IncrementalMealyBuilder<Character, Character> incMealy) {
-        System.out.println("  Inserting " + W_1 + " / " + W_1_O);
+        LOGGER.info("  Inserting {} / {}", W_1, W_1_O);
         incMealy.insert(W_1, W_1_O);
         Visualization.visualize(incMealy.asGraph());
 
-        System.out.println("  Inserting " + W_2 + " / " + W_2_O);
+        LOGGER.info("  Inserting {} / {}", W_2, W_2_O);
         incMealy.insert(W_2, W_2_O);
         Visualization.visualize(incMealy.asGraph());
 
-        System.out.println("  Inserting " + W_3 + " / " + W_3_O);
+        LOGGER.info("  Inserting {} / {}", W_3, W_3_O);
         incMealy.insert(W_3, W_3_O);
         Visualization.visualize(incMealy.asGraph());
     }

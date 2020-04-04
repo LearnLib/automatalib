@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +21,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+
 public class DefaultVisualizationHelper<N, E> implements VisualizationHelper<N, E> {
 
-    private Set<N> initialNodes;
+    private @MonotonicNonNull Set<N> initialNodes;
 
     protected Collection<N> initialNodes() {
         return Collections.emptySet();

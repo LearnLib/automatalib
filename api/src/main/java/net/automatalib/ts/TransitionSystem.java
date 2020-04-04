@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,10 +20,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.ts.powerset.DirectPowersetDTS;
 import net.automatalib.ts.simple.SimpleTS;
 
@@ -40,12 +36,10 @@ import net.automatalib.ts.simple.SimpleTS;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
 
     @Override
-    @Nonnull
-    default Set<S> getSuccessors(S state, @Nullable I input) {
+    default Set<S> getSuccessors(S state, I input) {
         Collection<T> transitions = getTransitions(state, input);
         if (transitions.isEmpty()) {
             return Collections.emptySet();
@@ -70,8 +64,7 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
      *
      * @return the transitions triggered by the given input
      */
-    @Nonnull
-    Collection<T> getTransitions(S state, @Nullable I input);
+    Collection<T> getTransitions(S state, I input);
 
     /**
      * Retrieves the successor state of a given transition.
@@ -81,7 +74,6 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
      *
      * @return the successor state.
      */
-    @Nonnull
     S getSuccessor(T transition);
 
     /**
@@ -89,7 +81,6 @@ public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
      *
      * @return a powerset view of this transition system.
      */
-    @Nonnull
     default PowersetViewTS<?, I, ?, S, T> powersetView() {
         return new DirectPowersetDTS<>(this);
     }

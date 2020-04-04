@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,8 @@ package net.automatalib.visualization;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class VPManager {
 
@@ -49,7 +51,7 @@ public class VPManager {
         return bestProvider;
     }
 
-    public VisualizationProvider getProviderById(String id) {
+    public @Nullable VisualizationProvider getProviderById(String id) {
         return providers.get(id);
     }
 

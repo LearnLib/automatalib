@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,16 +20,18 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminDFA;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
+import net.automatalib.serialization.fsm.parser.FSMFormatException;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A monitor model checker using LTSmin for DFAs.
@@ -42,9 +44,16 @@ import net.automatalib.serialization.fsm.parser.FSMParseException;
 public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA<?, I>>
         implements LTSminDFA<I, DFA<?, I>> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LTSminMonitorDFA.class);
+
     @GenerateBuilder(defaults = BuilderDefaults.class)
     public LTSminMonitorDFA(boolean keepFiles, Function<String, I> string2Input) {
         super(keepFiles, string2Input);
+    }
+
+    @Override
+    protected void verifyFormula(String formula) {
+        LTSminLTLParser.requireValidLetterFormula(formula);
     }
 
     /**
@@ -52,34 +61,31 @@ public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA
      *
      * @see AbstractLTSmin#findCounterExample(Object, Collection, Object)
      */
-    @Nullable
     @Override
-    public DFA<?, I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, String property)
-            throws ModelCheckingException {
+    public @Nullable DFA<?, I> findCounterExample(DFA<?, I> automaton, Collection<? extends I> inputs, String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
+        if (fsm == null) {
+            return null;
+        }
+
         try {
-            final CompactDFA<I> result;
-            if (fsm != null) {
-                result = FSM2DFAParser.getParser(inputs, getString2Input(), LABEL_NAME, LABEL_VALUE).readModel(fsm);
+            final CompactDFA<I> result =
+                    FSM2DFAParser.getParser(inputs, getString2Input(), LABEL_NAME, LABEL_VALUE).readModel(fsm);
 
-                // check if we must keep the FSM
-                if (!isKeepFiles() && !fsm.delete()) {
-                    throw new ModelCheckingException("Could not delete file: " + fsm.getAbsolutePath());
-                }
-
-                for (Integer state : result.getStates()) {
-                    final boolean deadlocks = result.getInputAlphabet().stream().noneMatch(
-                            i -> result.getSuccessor(state, i) != null);
-                    result.setAccepting(state, deadlocks);
-                }
-            } else {
-                result = null;
+            for (Integer state : result) {
+                final boolean deadlocks = inputs.stream().noneMatch(i -> result.getSuccessor(state, i) != null);
+                result.setAccepting(state, deadlocks);
             }
 
             return result;
-        } catch (IOException | FSMParseException e) {
+        } catch (IOException | FSMFormatException e) {
             throw new ModelCheckingException(e);
+        } finally {
+            // check if we must keep the FSM
+            if (!isKeepFiles() && !fsm.delete()) {
+                LOGGER.warn("Could not delete file: " + fsm.getAbsolutePath());
+            }
         }
     }
 }

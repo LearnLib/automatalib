@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +18,9 @@ package net.automatalib.commons.util.mappings;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.commons.util.nid.IDChangeListener;
 import net.automatalib.commons.util.nid.NumericID;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class ArrayMapping<K extends NumericID, V> implements MutableMapping<K, V>, IDChangeListener<K> {
+public final class ArrayMapping<K extends NumericID, @Nullable V> implements MutableMapping<K, V>, IDChangeListener<K> {
 
     private final ResizingArrayStorage<V> storage;
 
@@ -34,7 +35,7 @@ public final class ArrayMapping<K extends NumericID, V> implements MutableMappin
     @Override
     public V get(K elem) {
         int id = elem.getId();
-        if (id >= storage.array.length) {
+        if (id < 0 || id >= storage.array.length) {
             return null;
         }
         return storage.array[id];

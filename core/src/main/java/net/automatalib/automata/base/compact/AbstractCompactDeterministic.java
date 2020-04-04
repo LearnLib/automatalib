@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +21,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.ts.powerset.DeterministicPowersetView;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class that refines {@link AbstractCompact} for deterministic automata. This class provides default
@@ -46,7 +43,6 @@ import net.automatalib.words.Alphabet;
  * @author frohme
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends AbstractCompact<I, T, SP, TP> implements
                                                                                                        MutableDeterministic<Integer, I, T, SP, TP>,
                                                                                                        MutableDeterministic.StateIntAbstraction<I, T, SP, TP>,
@@ -74,7 +70,6 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
         initial = stateId;
     }
 
-    @Nullable
     @Override
     public SP getStateProperty(Integer state) {
         return getStateProperty(state.intValue());
@@ -86,28 +81,27 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
     }
 
     @Override
-    public Integer getInitialState() {
+    public @Nullable Integer getInitialState() {
         return toState(initial);
     }
 
     @Override
-    public T getTransition(int state, @Nullable I input) {
+    public @Nullable T getTransition(int state, I input) {
         return getTransition(state, getSymbolIndex(input));
     }
 
-    @Nullable
     @Override
-    public T getTransition(Integer state, @Nullable I input) {
+    public @Nullable T getTransition(Integer state, I input) {
         return getTransition(state.intValue(), input);
     }
 
     @Override
-    public void setTransition(Integer state, @Nullable I input, @Nullable T transition) {
+    public void setTransition(Integer state, I input, @Nullable T transition) {
         setTransition(state.intValue(), getSymbolIndex(input), transition);
     }
 
     @Override
-    public void setTransition(int state, I input, T transition) {
+    public void setTransition(int state, I input, @Nullable T transition) {
         setTransition(state, getSymbolIndex(input), transition);
     }
 
@@ -117,25 +111,24 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
     }
 
     @Override
-    public void setStateProperty(Integer state, @Nullable SP property) {
+    public void setStateProperty(Integer state, SP property) {
         setStateProperty(state.intValue(), property);
     }
 
-    @Nonnull
     @Override
-    public T createTransition(Integer successor, @Nullable TP properties) {
+    public T createTransition(Integer successor, TP properties) {
         return createTransition(successor.intValue(), properties);
     }
 
     @Override
     public int addIntInitialState(@Nullable SP property) {
-        this.initial = addIntState(property);
+        setInitial(addIntState(property), true);
         return this.initial;
     }
 
     @Override
     public Integer getSuccessor(T transition) {
-        return toState(getIntSuccessor(transition));
+        return getIntSuccessor(transition);
     }
 
     @Override

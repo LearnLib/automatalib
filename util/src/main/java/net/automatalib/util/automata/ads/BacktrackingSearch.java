@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,6 +37,7 @@ import net.automatalib.graphs.ads.impl.ADSLeafNode;
 import net.automatalib.graphs.ads.impl.ADSSymbolNode;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A class containing methods for computing adaptive distinguishing sequences (for arbitrary sets of states) by means of
@@ -46,8 +47,7 @@ import net.automatalib.words.Word;
  */
 public final class BacktrackingSearch {
 
-    private BacktrackingSearch() {
-    }
+    private BacktrackingSearch() {}
 
     /**
      * Computes an ADS by constructing (growing) splitting words for the current set of states and recursively computing
@@ -93,10 +93,10 @@ public final class BacktrackingSearch {
         return compute(automaton, input, node, node.getPartition().size());
     }
 
-    private static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
-                                                                final Alphabet<I> input,
-                                                                final SplitTree<S, I, O> node,
-                                                                final int originalPartitionSize) {
+    private static <S, I, T, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, T, O> automaton,
+                                                                   final Alphabet<I> input,
+                                                                   final SplitTree<S, I, O> node,
+                                                                   final int originalPartitionSize) {
 
         final long maximumSplittingWordLength = ADSUtil.computeMaximumSplittingWordLength(automaton.size(),
                                                                                           node.getPartition().size(),
@@ -110,7 +110,9 @@ public final class BacktrackingSearch {
         candidateLoop:
         while (!splittingWordCandidates.isEmpty()) {
 
-            final Word<I> prefix = splittingWordCandidates.poll();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            final @NonNull Word<I> prefix = splittingWordCandidates.poll();
+            @SuppressWarnings("nullness") // the initial prefix (epsilon) guarantees non-nullness.
             final Map<S, S> currentToInitialMapping = node.getPartition()
                                                           .stream()
                                                           .collect(Collectors.toMap(x -> automaton.getSuccessor(x,
@@ -132,8 +134,14 @@ public final class BacktrackingSearch {
 
                 for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
                     final S current = entry.getKey();
-                    final S nextState = automaton.getSuccessor(current, i);
-                    final O nextOutput = automaton.getOutput(current, i);
+                    final T trans = automaton.getTransition(current, i);
+
+                    if (trans == null) {
+                        throw new IllegalArgumentException("Partial automata are not supported");
+                    }
+
+                    final S nextState = automaton.getSuccessor(trans);
+                    final O nextOutput = automaton.getTransitionOutput(trans);
 
                     final SplitTree<S, I, O> child;
                     if (!successors.containsKey(nextOutput)) {
@@ -257,13 +265,13 @@ public final class BacktrackingSearch {
         return Optional.of(constructADS(automaton, initialMapping, searchState.get()));
     }
 
-    private static <S, I, O> Optional<SearchState<S, I, O>> exploreSearchSpace(final MealyMachine<S, I, ?, O> automaton,
-                                                                               final Alphabet<I> alphabet,
-                                                                               final Set<S> targets,
-                                                                               final CostAggregator costAggregator,
-                                                                               final Map<Set<S>, Optional<SearchState<S, I, O>>> stateCache,
-                                                                               final Set<Set<S>> currentTraceCache,
-                                                                               final int costsBound) {
+    private static <S, I, T, O> Optional<SearchState<S, I, O>> exploreSearchSpace(final MealyMachine<S, I, T, O> automaton,
+                                                                                  final Alphabet<I> alphabet,
+                                                                                  final Set<S> targets,
+                                                                                  final CostAggregator costAggregator,
+                                                                                  final Map<Set<S>, Optional<SearchState<S, I, O>>> stateCache,
+                                                                                  final Set<Set<S>> currentTraceCache,
+                                                                                  final int costsBound) {
 
         final Optional<SearchState<S, I, O>> cachedValue = stateCache.get(targets);
 
@@ -277,10 +285,6 @@ public final class BacktrackingSearch {
 
         if (targets.size() == 1) {
             final SearchState<S, I, O> resultSS = new SearchState<>();
-            resultSS.costs = 0;
-            resultSS.successors = null;
-            resultSS.symbol = null;
-
             final Optional<SearchState<S, I, O>> result = Optional.of(resultSS);
             stateCache.put(targets, result);
             return result;
@@ -300,7 +304,6 @@ public final class BacktrackingSearch {
         alphabetLoop:
         for (final I i : alphabet) {
 
-            final boolean foundValidSuccessorForInputSymbol;
             final int costsForInputSymbol;
             final Map<O, SearchState<S, I, O>> successorsForInputSymbol;
 
@@ -308,8 +311,14 @@ public final class BacktrackingSearch {
             final Map<O, Set<S>> successors = new HashMap<>();
 
             for (final S s : targets) {
-                final S nextState = automaton.getSuccessor(s, i);
-                final O nextOutput = automaton.getOutput(s, i);
+                final T trans = automaton.getTransition(s, i);
+
+                if (trans == null) {
+                    throw new IllegalArgumentException("Partial automata are not supported");
+                }
+
+                final S nextState = automaton.getSuccessor(trans);
+                final O nextOutput = automaton.getTransitionOutput(trans);
 
                 final Set<S> child;
                 if (!successors.containsKey(nextOutput)) {
@@ -356,7 +365,6 @@ public final class BacktrackingSearch {
                     }
                 }
 
-                foundValidSuccessorForInputSymbol = true;
                 costsForInputSymbol = partitionCosts;
             } else {
                 final Map.Entry<O, Set<S>> entry = successors.entrySet().iterator().next();
@@ -379,13 +387,12 @@ public final class BacktrackingSearch {
 
                 final SearchState<S, I, O> subResult = potentialResult.get();
 
-                foundValidSuccessorForInputSymbol = true;
                 costsForInputSymbol = subResult.costs;
                 successorsForInputSymbol = Collections.singletonMap(entry.getKey(), subResult);
             }
 
             // update result
-            if (foundValidSuccessorForInputSymbol && costsForInputSymbol < bestCosts) {
+            if (costsForInputSymbol < bestCosts) {
                 foundValidSuccessor = true;
                 bestCosts = costsForInputSymbol;
                 bestSuccessor = successorsForInputSymbol;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Objects;
 
 import com.google.common.collect.Iterators;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class eases the implementation of the {@link SmartCollection} interface. It is comparable to {@link
@@ -68,7 +69,7 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
     }
 
     @Override
-    public ElementReference find(Object element) {
+    public @Nullable ElementReference find(@Nullable Object element) {
         for (ElementReference ref : references()) {
             E current = get(ref);
             if (Objects.equals(current, element)) {
@@ -101,7 +102,7 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
     }
 
     @Override
-    public boolean remove(Object element) {
+    public boolean remove(@Nullable Object element) {
         ElementReference ref = find(element);
         if (ref == null) {
             return false;

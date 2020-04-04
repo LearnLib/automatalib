@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,8 +25,7 @@ public interface MutableMealyMachine<S, I, T, O>
         extends MealyMachine<S, I, T, O>, MutableDeterministic<S, I, T, Void, O>, MutableTransitionOutput<T, O> {
 
     @Override
-    default void setStateProperty(S state, Void property) {
-    }
+    default void setStateProperty(S state, Void property) {}
 
     @Override
     default void setTransitionProperty(T transition, O property) {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
+import com.google.common.io.ByteStreams;
 import net.automatalib.commons.util.IOUtil;
-import net.automatalib.commons.util.io.NullOutputStream;
 
 /**
  * A utility interface for an input stream consumer that is allowed to throw {@link IOException}s.
@@ -39,7 +39,7 @@ interface InputStreamConsumer {
 
         @Override
         public void consume(InputStream inputStream) throws IOException {
-            IOUtil.copy(inputStream, new NullOutputStream());
+            ByteStreams.exhaust(inputStream);
         }
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,34 +15,26 @@
  */
 package net.automatalib.incremental.dfa.tree;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.incremental.dfa.Acceptance;
 
-@ParametersAreNonnullByDefault
 public final class Edge<I> {
 
     private final Node<I> node;
     private final I input;
 
-    public Edge(Node<I> node, @Nullable I input) {
+    public Edge(Node<I> node, I input) {
         this.node = node;
         this.input = input;
     }
 
-    @Nonnull
     public Node<I> getNode() {
         return node;
     }
 
-    @Nullable
     public I getInput() {
         return input;
     }
 
-    @Nonnull
     public Acceptance getAcceptance() {
         return node.getAcceptance();
     }

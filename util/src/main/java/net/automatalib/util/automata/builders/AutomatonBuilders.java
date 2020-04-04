@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@ package net.automatalib.util.automata.builders;
 
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.MutableMooreMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
@@ -31,8 +32,7 @@ import net.automatalib.words.Alphabet;
  */
 public final class AutomatonBuilders {
 
-    private AutomatonBuilders() {
-    }
+    private AutomatonBuilders() {}
 
     public static <I> DFABuilder<Integer, I, CompactDFA<I>> newDFA(Alphabet<I> alphabet) {
         return forDFA(new CompactDFA<>(alphabet));
@@ -40,6 +40,10 @@ public final class AutomatonBuilders {
 
     public static <S, I, A extends MutableDFA<S, ? super I>> DFABuilder<S, I, A> forDFA(A dfa) {
         return new DFABuilder<>(dfa);
+    }
+
+    public static <I> FSABuilder<Integer, I, CompactNFA<I>> newNFA(Alphabet<I> alphabet) {
+        return new FSABuilder<>(new CompactNFA<>(alphabet));
     }
 
     public static <I, O> MealyBuilder<Integer, I, CompactMealyTransition<O>, O, CompactMealy<I, O>> newMealy(Alphabet<I> alphabet) {

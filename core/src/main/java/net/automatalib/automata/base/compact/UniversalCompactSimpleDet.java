@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,8 @@ package net.automatalib.automata.base.compact;
 
 import java.util.Arrays;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A {@link AbstractCompactSimpleDeterministic}-based implementation for automata that need to store generic state
@@ -33,10 +32,9 @@ import net.automatalib.words.Alphabet;
  * @author frohme
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
-public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeterministic<I, SP> {
+public class UniversalCompactSimpleDet<I, @Nullable SP> extends AbstractCompactSimpleDeterministic<I, SP> {
 
-    private Object[] stateProperties;
+    private @Nullable Object[] stateProperties;
 
     public UniversalCompactSimpleDet(Alphabet<I> alphabet) {
         this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
@@ -54,7 +52,7 @@ public class UniversalCompactSimpleDet<I, SP> extends AbstractCompactSimpleDeter
     }
 
     @Override
-    public void setStateProperty(int stateId, SP property) {
+    public void setStateProperty(int stateId, @Nullable SP property) {
         stateProperties[stateId] = property;
     }
 

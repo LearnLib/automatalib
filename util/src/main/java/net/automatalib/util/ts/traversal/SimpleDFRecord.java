@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.automatalib.ts.TransitionSystem;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.dataflow.qual.Pure;
 
 class SimpleDFRecord<S, I, T> {
 
@@ -26,7 +30,7 @@ class SimpleDFRecord<S, I, T> {
 
     private final Iterator<? extends I> inputsIterator;
     private I input;
-    private Iterator<? extends T> transitionIterator;
+    private @Nullable Iterator<? extends T> transitionIterator;
 
     SimpleDFRecord(S state, Collection<? extends I> inputs) {
         this.state = state;
@@ -56,6 +60,7 @@ class SimpleDFRecord<S, I, T> {
         }
     }
 
+    @EnsuresNonNullIf(expression = "transitionIterator", result = true)
     public boolean hasNextTransition(TransitionSystem<S, ? super I, T> ts) {
         if (transitionIterator == null) {
             return false;
@@ -63,9 +68,11 @@ class SimpleDFRecord<S, I, T> {
         if (!transitionIterator.hasNext()) {
             findNext(ts);
         }
+        assert transitionIterator != null;
         return transitionIterator.hasNext();
     }
 
+    @RequiresNonNull("transitionIterator")
     public void advance(TransitionSystem<S, ? super I, T> ts) {
         if (transitionIterator.hasNext()) {
             return;
@@ -78,10 +85,13 @@ class SimpleDFRecord<S, I, T> {
         findNext(ts);
     }
 
+    @Pure
     public I input() {
         return input;
     }
 
+    @Pure
+    @RequiresNonNull("transitionIterator")
     public T transition() {
         return transitionIterator.next();
     }

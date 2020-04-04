@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,16 +21,9 @@ import net.automatalib.modelchecking.Lasso;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public abstract class AbstractLTSminLTLTest<A, L extends Lasso<String, ?>> extends AbstractLTSminTest<A, L> {
-
-    @BeforeMethod
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
 
     @Override
     protected Word<String> getInput() {

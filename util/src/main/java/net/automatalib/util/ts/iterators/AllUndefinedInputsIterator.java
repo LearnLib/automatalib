@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,7 +41,7 @@ public final class AllUndefinedInputsIterator<S, I> extends AbstractTwoLevelIter
     }
 
     @Override
-    protected TransRef<S, I, ?> combine(S l1Object, I l2Object) {
-        return new TransRef<>(l1Object, l2Object);
+    protected TransRef<S, I, Void> combine(S l1Object, I l2Object) {
+        return new TransRef<>(l1Object, l2Object, null);
     }
 }

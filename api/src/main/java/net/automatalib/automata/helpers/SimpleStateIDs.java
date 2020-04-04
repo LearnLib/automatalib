@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,7 +41,13 @@ public class SimpleStateIDs<S> implements StateIDs<S> {
 
     @Override
     public int getStateId(S state) {
-        return stateIds.get(state);
+        final Integer id = stateIds.get(state);
+
+        if (id == null) {
+            throw new IllegalArgumentException();
+        }
+
+        return id.intValue();
     }
 
     @Override

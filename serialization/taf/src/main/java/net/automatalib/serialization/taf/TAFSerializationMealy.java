@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,6 @@ import net.automatalib.commons.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
-import net.automatalib.serialization.taf.parser.TAFParseException;
 import net.automatalib.serialization.taf.parser.TAFParser;
 import net.automatalib.serialization.taf.writer.TAFWriter;
 import net.automatalib.words.Alphabet;
@@ -36,8 +35,7 @@ public final class TAFSerializationMealy
 
     private static final TAFSerializationMealy INSTANCE = new TAFSerializationMealy();
 
-    private TAFSerializationMealy() {
-    }
+    private TAFSerializationMealy() {}
 
     public static TAFSerializationMealy getInstance() {
         return INSTANCE;
@@ -46,15 +44,13 @@ public final class TAFSerializationMealy
     @Override
     public void writeModel(OutputStream os, MealyMachine<?, String, ?, ?> model, Alphabet<String> alphabet)
             throws IOException {
-        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+        try (Writer w = IOUtil.asBufferedNonClosingUTF8Writer(os)) {
             TAFWriter.writeMealy(model, alphabet, w);
         }
-
     }
 
     @Override
-    public InputModelData<String, MealyMachine<?, String, ?, String>> readModel(InputStream is)
-            throws TAFParseException {
+    public InputModelData<String, MealyMachine<?, String, ?, String>> readModel(InputStream is) throws IOException {
         final CompactMealy<String, String> automaton =
                 TAFParser.parseMealy(is, PrintStreamDiagnosticListener.getStderrDiagnosticListener());
         return new InputModelData<>(automaton, automaton.getInputAlphabet());

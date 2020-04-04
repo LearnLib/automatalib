@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import net.automatalib.automata.Automaton;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.NodeIDs;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractAutomatonGraphView<S, A extends Automaton<S, ?, ?>, E> implements Graph<S, E> {
 
@@ -32,12 +33,12 @@ public abstract class AbstractAutomatonGraphView<S, A extends Automaton<S, ?, ?>
     }
 
     @Override
-    public <V> MutableMapping<S, V> createStaticNodeMapping() {
+    public <@Nullable V> MutableMapping<S, V> createStaticNodeMapping() {
         return automaton.createStaticStateMapping();
     }
 
     @Override
-    public <V> MutableMapping<S, V> createDynamicNodeMapping() {
+    public <@Nullable V> MutableMapping<S, V> createDynamicNodeMapping() {
         return automaton.createDynamicStateMapping();
     }
 

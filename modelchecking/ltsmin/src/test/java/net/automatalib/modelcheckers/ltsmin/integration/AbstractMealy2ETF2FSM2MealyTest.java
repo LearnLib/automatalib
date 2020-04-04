@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ import net.automatalib.serialization.taf.parser.TAFParser;
 public abstract class AbstractMealy2ETF2FSM2MealyTest extends AbstractAut2ETF2FSM2AutTest<CompactMealy<String, String>> {
 
     @Override
-    protected CompactMealy<String, String> taf2Automaton() {
+    protected CompactMealy<String, String> taf2Automaton() throws Exception {
         final InputStream is = AbstractMealy2ETF2FSM2MealyTest.class.getResourceAsStream("/Mealy.taf");
         return TAFParser.parseMealy(is, null);
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,6 @@
 package net.automatalib.incremental.mealy;
 
 import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -58,7 +55,7 @@ public interface IncrementalMealyBuilder<I, O>
      * @throws ConflictException
      *         if this information conflicts with information already stored
      */
-    void insert(Word<? extends I> inputWord, Word<? extends O> outputWord) throws ConflictException;
+    void insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
 
     @Override
     GraphView<I, O, ?, ?> asGraph();
@@ -68,13 +65,10 @@ public interface IncrementalMealyBuilder<I, O>
 
     interface GraphView<I, O, N, E> extends Graph<N, E> {
 
-        @Nullable
-        I getInputSymbol(@Nonnull E edge);
+        I getInputSymbol(E edge);
 
-        @Nullable
-        O getOutputSymbol(@Nonnull E edge);
+        O getOutputSymbol(E edge);
 
-        @Nonnull
         N getInitialNode();
     }
 }

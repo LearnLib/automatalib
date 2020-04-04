@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +36,7 @@ import net.automatalib.graphs.UndirectedGraph;
 import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Methods for rendering a {@link Graph} or {@link Automaton} in the GraphVIZ DOT format.
@@ -43,8 +45,9 @@ import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
  */
 public final class GraphDOT {
 
-    private GraphDOT() {
-    }
+    private static final String INITIAL_LABEL = "__start";
+
+    private GraphDOT() {}
 
     public static void write(GraphViewable gv, Appendable a) throws IOException {
         Graph<?, ?> graph = gv.graphView();
@@ -184,23 +187,14 @@ public final class GraphDOT {
      *         the graph to render
      * @param a
      *         the appendable to write to
-     * @param dotHelperOrNull
-     *         the helper to use for rendering. Can be {@code null}
+     * @param dotHelper
+     *         the helper to use for rendering.
      *
      * @throws IOException
      *         if writing to {@code a} fails
      */
-    private static <N, E> void writeRaw(Graph<N, E> graph,
-                                        Appendable a,
-                                        DOTVisualizationHelper<N, ? super E> dotHelperOrNull) throws IOException {
-
-        final DOTVisualizationHelper<N, ? super E> dotHelper;
-
-        if (dotHelperOrNull == null) {
-            dotHelper = new DefaultDOTVisualizationHelper<>();
-        } else {
-            dotHelper = dotHelperOrNull;
-        }
+    private static <N, E> void writeRaw(Graph<N, E> graph, Appendable a, DOTVisualizationHelper<N, ? super E> dotHelper)
+            throws IOException {
 
         final boolean directed = !(graph instanceof UndirectedGraph);
 
@@ -230,7 +224,7 @@ public final class GraphDOT {
         dotHelper.writePreamble(a);
         a.append(System.lineSeparator());
 
-        MutableMapping<N, String> nodeNames = graph.createStaticNodeMapping();
+        MutableMapping<N, @Nullable String> nodeNames = graph.createStaticNodeMapping();
         Set<String> initialNodes = new HashSet<>();
 
         int i = 0;
@@ -291,11 +285,13 @@ public final class GraphDOT {
             }
         }
 
-        a.append(System.lineSeparator());
-        renderInitialArrowTip(initialNodes, a);
+        if (!initialNodes.isEmpty()) {
+            a.append(System.lineSeparator());
+            renderInitialArrowTip(initialNodes, a);
+        }
 
-        dotHelper.writePostamble(a);
         a.append(System.lineSeparator());
+        dotHelper.writePostamble(a);
 
         a.append('}').append(System.lineSeparator());
         if (a instanceof Flushable) {
@@ -304,7 +300,7 @@ public final class GraphDOT {
     }
 
     private static void appendParams(Map<String, String> params, Appendable a) throws IOException {
-        if (params == null || params.isEmpty()) {
+        if (params.isEmpty()) {
             return;
         }
         a.append(" [");
@@ -320,7 +316,8 @@ public final class GraphDOT {
             a.append(e.getKey()).append("=");
             // HTML labels have to be enclosed in <> instead of ""
             final String htmlTag = "<HTML>";
-            if (key.equals(VisualizationHelper.CommonAttrs.LABEL) && value.toUpperCase().startsWith(htmlTag)) {
+            if (key.equals(VisualizationHelper.CommonAttrs.LABEL) &&
+                value.toUpperCase(Locale.ROOT).startsWith(htmlTag)) {
                 a.append('<').append(value.substring(htmlTag.length())).append('>');
             } else {
                 StringUtil.enquote(e.getValue(), a);
@@ -331,21 +328,21 @@ public final class GraphDOT {
 
     private static void renderInitialArrowTip(Set<String> initialNodes, Appendable a) throws IOException {
 
-        final String startPrefix = "__start";
-
         int i = 0;
         for (String init : initialNodes) {
-            a.append(startPrefix)
-             .append(Integer.toString(i))
+            a.append(initialLabel(i))
              .append(" [label=\"\" shape=\"none\" width=\"0\" height=\"0\"];")
              .append(System.lineSeparator())
-             .append(startPrefix)
-             .append(Integer.toString(i++))
+             .append(initialLabel(i++))
              .append(" -> ")
              .append(init)
              .append(';')
              .append(System.lineSeparator());
         }
+    }
+
+    static String initialLabel(int n) {
+        return INITIAL_LABEL + n;
     }
 
     public static <N, E> DOTVisualizationHelper<N, E> toDOTVisualizationHelper(VisualizationHelper<N, E> helper) {

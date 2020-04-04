@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package net.automatalib.ts;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Universal deterministic transition system.
@@ -39,7 +41,7 @@ public interface UniversalDTS<S, I, T, SP, TP>
      *
      * @return the property of the outgoing transition, or {@code null}
      */
-    default TP getTransitionProperty(S state, I input) {
+    default @Nullable TP getTransitionProperty(S state, I input) {
         T trans = getTransition(state, input);
         if (trans != null) {
             return getTransitionProperty(trans);

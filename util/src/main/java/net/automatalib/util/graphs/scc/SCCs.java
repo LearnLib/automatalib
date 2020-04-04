@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,6 @@ package net.automatalib.util.graphs.scc;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.graphs.Graph;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 
@@ -28,11 +25,9 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class SCCs {
 
-    private SCCs() {
-    }
+    private SCCs() {}
 
     /**
      * Collects all strongly-connected components in a graph. The SCCs are returned as a list of lists.
@@ -46,7 +41,6 @@ public final class SCCs {
      *
      * @see TarjanSCCVisitor
      */
-    @Nonnull
     public static <N, E> List<List<N>> collectSCCs(Graph<N, E> graph) {
         SCCCollector<N> coll = new SCCCollector<>();
         findSCCs(graph, coll);

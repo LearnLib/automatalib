@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +15,13 @@
  */
 package net.automatalib.util.partitionrefinement;
 
-import java.util.function.Function;
-
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers.AutomatonInitialPartitioning;
+import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.util.automata.minimizer.paigetarjan.PaigeTarjanMinimization;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -31,174 +31,136 @@ import org.testng.annotations.Test;
  */
 public class PaigeTarjanTest {
 
-    @Test
-    public void testCompleteDFA() {
+    private static final String SINK_OUTPUT = "sink";
 
+    /**
+     * Builds binary tree (partial due to 4 input symbols), whose leaves end in a sink and add two unreachable states.
+     * s3 and s5 are equivalent, s8, s9 equivalent and unreachable.
+     */
+    public static CompactMealy<Integer, String> getMealy() {
+        final Alphabet<Integer> alphabet = Alphabets.integers(1, 4);
+
+        // @formatter:off
+        return AutomatonBuilders.<Integer, String>newMealy(alphabet)
+                                .withInitial(0)
+                                .from(0)
+                                    .on(2).withOutput("2,4").to(1)
+                                    .on(1).withOutput("1,4").to(2)
+                                .from(1)
+                                    .on(1).withOutput("1,3").to(3)
+                                    .on(4).withOutput("2,3").to(4)
+                                .from(2)
+                                    .on(2).withOutput("2,3").to(5)
+                                    .on(4).withOutput("1,3").to(6)
+                                .from(3).on(3, 4).withOutput("").to(7)
+                                .from(4).on(1, 3).withOutput("").to(7)
+                                .from(5).on(3, 4).withOutput("").to(7)
+                                .from(6).on(2, 3).withOutput("").to(7)
+                                .from(8)
+                                    .on(1).withOutput(SINK_OUTPUT).loop()
+                                    .on(2).withOutput(SINK_OUTPUT).to(9)
+                                .from(9).on(1, 2).withOutput(SINK_OUTPUT).loop()
+                                .create();
+        // @formatter:on
+    }
+
+    public static CompactDFA<Character> getDFA() {
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
-        final CompactDFA<Character> dfa = new CompactDFA<>(alphabet);
 
-        // states q1, q2 are equivalent
-        final Integer q1 = dfa.addInitialState(true);
-        final Integer q2 = dfa.addState(true);
-        final Integer q3 = dfa.addState(false);
-
-        dfa.setTransition(q1, (Character) 'a', q2);
-        dfa.setTransition(q1, (Character) 'b', q3);
-        dfa.setTransition(q1, (Character) 'c', q1);
-        dfa.setTransition(q2, (Character) 'a', q1);
-        dfa.setTransition(q2, (Character) 'b', q3);
-        dfa.setTransition(q2, (Character) 'c', q2);
-        dfa.setTransition(q3, (Character) 'a', q3);
-        dfa.setTransition(q3, (Character) 'b', q3);
-        dfa.setTransition(q3, (Character) 'c', q3);
-
-        testDFAInternal(dfa, 2, 2);
-    }
-
-    @Test
-    public void testPartialDFA() {
-
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
-        final CompactDFA<Character> dfa = new CompactDFA<>(alphabet);
-
-        // states q1, q2 are equivalent, q3 is unreachable
-        final Integer q1 = dfa.addInitialState(true);
-        final Integer q2 = dfa.addState(true);
-        final Integer q3 = dfa.addState(true);
-
-        dfa.setTransition(q1, (Character) 'a', q1);
-        dfa.setTransition(q1, (Character) 'c', q2);
-        dfa.setTransition(q2, (Character) 'a', q2);
-        dfa.setTransition(q2, (Character) 'c', q1);
-        dfa.setTransition(q3, (Character) 'b', q3);
-
-        testDFAInternal(dfa, 1, 2);
-    }
-
-    private static void testDFAInternal(CompactDFA<Character> dfa,
-                                        int expectedPrunedStates,
-                                        int expectedUnprunedStates) {
-
-        final Alphabet<Character> alphabet = dfa.getInputAlphabet();
-        final PaigeTarjan pt = new PaigeTarjan();
-
-        PaigeTarjanInitializers.initDeterministic(pt, dfa, alphabet, dfa::isAccepting, false);
-
-        pt.initWorklist(false);
-        pt.computeCoarsestStablePartition();
-
-        final CompactDFA<Character> prunedResult = PaigeTarjanExtractors.toDeterministic(pt,
-                                                                                         new CompactDFA.Creator<>(),
-                                                                                         alphabet,
-                                                                                         dfa,
-                                                                                         dfa.stateIDs(),
-                                                                                         dfa::getStateProperty,
-                                                                                         null,
-                                                                                         true);
-        checkDFA(prunedResult, expectedPrunedStates);
-
-        final CompactDFA<Character> unprunedResult = PaigeTarjanExtractors.toDeterministic(pt,
-                                                                                           new CompactDFA.Creator<>(),
-                                                                                           alphabet,
-                                                                                           dfa,
-                                                                                           dfa.stateIDs(),
-                                                                                           dfa::getStateProperty,
-                                                                                           null,
-                                                                                           false);
-        checkDFA(unprunedResult, expectedUnprunedStates);
-    }
-
-    private static void checkDFA(CompactDFA<Character> dfa, int expectedStates) {
-        Assert.assertEquals(dfa.size(), expectedStates);
-        Assert.assertEquals(dfa.getInitialState(), dfa.getState(Word.fromLetter('a')));
-        Assert.assertEquals(dfa.getInitialState(), dfa.getState(Word.fromCharSequence("acaaca")));
-        Assert.assertTrue(dfa.accepts(Word.fromCharSequence("aca")));
-        Assert.assertFalse(dfa.accepts(Word.fromCharSequence("ab")));
+        // @formatter:off
+        return AutomatonBuilders.newDFA(alphabet)
+                                .withInitial(0)
+                                .from(0)
+                                    .on('a').to(1)
+                                    .on('b').to(2)
+                                    .on('c').to(3)
+                                .from(3).on('a', 'b', 'c').loop()
+                                .withAccepting(0)
+                                .create();
+        // @formatter:on
     }
 
     @Test
-    public void testCompleteMealy() {
+    public void testDFAMinimization() {
+        final CompactDFA<Character> dfa = getDFA();
+        final CompactDFA<Character> stateMinimized = PaigeTarjanMinimization.minimizeDFA(dfa);
 
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
-        final CompactMealy<Character, Character> dfa = new CompactMealy<>(alphabet);
+        // here, states 1, 2, 3 should fall together because they are all rejecting
+        Assert.assertEquals(stateMinimized.size(), 2);
+        // equivalence checks full state signature
+        Assert.assertFalse(Automata.testEquivalence(dfa, stateMinimized, dfa.getInputAlphabet()));
+        // when ignoring undefined transitions, they should be equivalent
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(dfa,
+                                                                       stateMinimized,
+                                                                       dfa.getInputAlphabet(),
+                                                                       true));
 
-        // states q1, q2 are equivalent
-        final Integer q1 = dfa.addInitialState();
-        final Integer q2 = dfa.addState();
-        final Integer q3 = dfa.addState();
+        final CompactDFA<Character> fullMinimized = PaigeTarjanMinimization.minimizeUniversal(dfa,
+                                                                                              dfa.getInputAlphabet(),
+                                                                                              new CompactDFA.Creator<>(),
+                                                                                              AutomatonInitialPartitioning.BY_FULL_SIGNATURE,
+                                                                                              null);
 
-        dfa.setTransition(q1, (Character) 'a', q2, (Character) 'x');
-        dfa.setTransition(q1, (Character) 'b', q3, (Character) 'y');
-        dfa.setTransition(q1, (Character) 'c', q1, (Character) 'x');
-        dfa.setTransition(q2, (Character) 'a', q1, (Character) 'x');
-        dfa.setTransition(q2, (Character) 'b', q3, (Character) 'y');
-        dfa.setTransition(q2, (Character) 'c', q2, (Character) 'x');
-        dfa.setTransition(q3, (Character) 'a', q3, (Character) 'x');
-        dfa.setTransition(q3, (Character) 'b', q3, (Character) 'x');
-        dfa.setTransition(q3, (Character) 'c', q3, (Character) 'x');
-
-        testMealyInternal(dfa, 2, 2);
+        Assert.assertEquals(fullMinimized.size(), 3);
+        // BY_FULL_SIGNATURE should yield full-signature-equivalent model
+        Assert.assertTrue(Automata.testEquivalence(dfa, fullMinimized, dfa.getInputAlphabet()));
     }
 
     @Test
-    public void testPartialMealy() {
+    public void testMealyMinimizationByStateProperties() {
+        testMealyConfiguration(AutomatonInitialPartitioning.BY_STATE_PROPERTY, null, 1, false);
 
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
-        final CompactMealy<Character, Character> mealy = new CompactMealy<>(alphabet);
-
-        // states q1, q2 are equivalent, q3 is unreachable
-        final Integer q1 = mealy.addInitialState();
-        final Integer q2 = mealy.addState();
-        final Integer q3 = mealy.addState();
-
-        mealy.setTransition(q1, (Character) 'a', q1, (Character) 'x');
-        mealy.setTransition(q1, (Character) 'c', q2, (Character) 'x');
-        mealy.setTransition(q2, (Character) 'a', q2, (Character) 'x');
-        mealy.setTransition(q2, (Character) 'c', q1, (Character) 'x');
-        mealy.setTransition(q3, (Character) 'b', q3, (Character) 'x');
-
-        testMealyInternal(mealy, 1, 2);
+        // when using false (a non-used state property) we want essentially no collapsing of states, because all states
+        // reach an undefined transition at a different point in time
+        testMealyConfiguration(AutomatonInitialPartitioning.BY_STATE_PROPERTY, false, 7, true);
     }
 
-    private static void testMealyInternal(CompactMealy<Character, Character> mealy,
-                                          int expectedPrunedStates,
-                                          int expectedUnprunedStates) {
+    @Test
+    public void testMealyMinimizationByTransitionProperties() {
+        final CompactMealy<Integer, String> mealy = getMealy();
 
-        final Alphabet<Character> alphabet = mealy.getInputAlphabet();
-        final Function<? super Integer, ?> initialClassification =
-                (s) -> AutomatonInitialPartitioning.BY_TRANSITION_PROPERTIES.initialClassifier(mealy).apply(s);
-
-        final PaigeTarjan pt = new PaigeTarjan();
-        PaigeTarjanInitializers.initDeterministic(pt, mealy, alphabet, initialClassification, 'z');
-
-        pt.initWorklist(false);
-        pt.computeCoarsestStablePartition();
-
-        final CompactMealy<Character, Character> prunedResult = PaigeTarjanExtractors.toDeterministic(pt,
-                                                                                                      new CompactMealy.Creator<>(),
-                                                                                                      alphabet,
-                                                                                                      mealy,
-                                                                                                      mealy.stateIDs(),
-                                                                                                      null,
-                                                                                                      mealy::getTransitionProperty,
-                                                                                                      true);
-        checkMealy(prunedResult, expectedPrunedStates);
-
-        final CompactMealy<Character, Character> unprunedResult = PaigeTarjanExtractors.toDeterministic(pt,
-                                                                                                        new CompactMealy.Creator<>(),
-                                                                                                        alphabet,
-                                                                                                        mealy,
-                                                                                                        mealy.stateIDs(),
-                                                                                                        null,
-                                                                                                        mealy::getTransitionProperty,
-                                                                                                        false);
-        checkMealy(unprunedResult, expectedUnprunedStates);
+        testMealyConfiguration(AutomatonInitialPartitioning.BY_TRANSITION_PROPERTIES,
+                               StateSignature.byTransitionProperties(mealy, mealy.getInputAlphabet(), 6),
+                               7,
+                               true);
+        testMealyConfiguration(AutomatonInitialPartitioning.BY_TRANSITION_PROPERTIES,
+                               StateSignature.byTransitionProperties(SINK_OUTPUT,
+                                                                     SINK_OUTPUT,
+                                                                     SINK_OUTPUT,
+                                                                     SINK_OUTPUT),
+                               7,
+                               true);
+        testMealyConfiguration(AutomatonInitialPartitioning.BY_TRANSITION_PROPERTIES, null, 7, true);
     }
 
-    private static void checkMealy(CompactMealy<Character, Character> mealy, int expectedStates) {
-        Assert.assertEquals(mealy.size(), expectedStates);
-        Assert.assertEquals(mealy.getInitialState(), mealy.getState(Word.fromLetter('a')));
-        Assert.assertEquals(mealy.getInitialState(), mealy.getState(Word.fromCharSequence("acaaca")));
-        Assert.assertEquals(mealy.computeOutput(Word.fromCharSequence("aca")), Word.fromCharSequence("xxx"));
+    @Test
+    public void testMealyMinimizationByFullProperties() {
+        final CompactMealy<Integer, String> mealy = getMealy();
+
+        testMealyConfiguration(AutomatonInitialPartitioning.BY_FULL_SIGNATURE,
+                               StateSignature.byFullSignature(mealy, mealy.getInputAlphabet(), 6),
+                               7,
+                               true);
+        testMealyConfiguration(AutomatonInitialPartitioning.BY_FULL_SIGNATURE,
+                               StateSignature.byFullSignature(null, SINK_OUTPUT, SINK_OUTPUT, SINK_OUTPUT, SINK_OUTPUT),
+                               7,
+                               true);
+        testMealyConfiguration(AutomatonInitialPartitioning.BY_FULL_SIGNATURE, null, 7, true);
+    }
+
+    private void testMealyConfiguration(AutomatonInitialPartitioning ap,
+                                        Object sinkClassification,
+                                        int expectedSize,
+                                        boolean equivalent) {
+        final CompactMealy<Integer, String> mealy = getMealy();
+
+        final CompactMealy<Integer, String> minimized = PaigeTarjanMinimization.minimizeUniversal(mealy,
+                                                                                                  mealy.getInputAlphabet(),
+                                                                                                  new CompactMealy.Creator<>(),
+                                                                                                  ap,
+                                                                                                  sinkClassification);
+
+        Assert.assertEquals(minimized.size(), expectedSize);
+        Assert.assertEquals(Automata.testEquivalence(mealy, minimized, mealy.getInputAlphabet()), equivalent);
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import net.automatalib.graphs.ads.RecursiveADSNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An abstract implementation of a leaf node, that may be used by other ADS-extending classes.
@@ -38,16 +39,16 @@ import net.automatalib.graphs.ads.RecursiveADSNode;
 public abstract class AbstractRecursiveADSLeafNode<S, I, O, N extends RecursiveADSNode<S, I, O, N>>
         implements RecursiveADSNode<S, I, O, N>, Serializable {
 
-    private N parent;
+    private @Nullable N parent;
     private S hypothesisState;
 
-    public AbstractRecursiveADSLeafNode(N parent, S hypothesisState) {
+    public AbstractRecursiveADSLeafNode(@Nullable N parent, S hypothesisState) {
         this.parent = parent;
         this.hypothesisState = hypothesisState;
     }
 
     @Override
-    public I getSymbol() {
+    public @Nullable I getSymbol() {
         return null;
     }
 
@@ -57,12 +58,12 @@ public abstract class AbstractRecursiveADSLeafNode<S, I, O, N extends RecursiveA
     }
 
     @Override
-    public N getParent() {
+    public @Nullable N getParent() {
         return this.parent;
     }
 
     @Override
-    public void setParent(N parent) {
+    public void setParent(@Nullable N parent) {
         this.parent = parent;
     }
 
@@ -88,6 +89,7 @@ public abstract class AbstractRecursiveADSLeafNode<S, I, O, N extends RecursiveA
 
     @Override
     public String toString() {
-        return this.getHypothesisState() == null ? "<null>" : this.getHypothesisState().toString();
+        final S state = this.getHypothesisState();
+        return state == null ? "<null>" : state.toString();
     }
 }

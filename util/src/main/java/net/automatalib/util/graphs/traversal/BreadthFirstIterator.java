@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,11 +24,12 @@ import java.util.Queue;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.IndefiniteGraph;
 import net.automatalib.util.traversal.VisitedState;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class BreadthFirstIterator<N, E> implements Iterator<N> {
 
     private final Queue<N> bfsQueue = new ArrayDeque<>();
-    private final MutableMapping<N, VisitedState> visited;
+    private final MutableMapping<N, @Nullable VisitedState> visited;
     private final IndefiniteGraph<N, E> graph;
 
     BreadthFirstIterator(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {

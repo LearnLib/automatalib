@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.google.common.collect.Lists;
-import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 
@@ -39,9 +38,9 @@ public abstract class AbstractLTSminMonitor<I, A, R> extends AbstractLTSmin<I, A
     /**
      * Constructs a new AbstractLTSminMonitor.
      *
-     * @see AbstractLTSmin
+     * @see AbstractLTSmin#AbstractLTSmin(boolean, Function)
      */
-    protected AbstractLTSminMonitor(boolean keepFiles, Function<String, I> string2Input) throws ModelCheckingException {
+    protected AbstractLTSminMonitor(boolean keepFiles, Function<String, I> string2Input) {
         super(keepFiles, string2Input);
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.KeyFor;
 
 /**
  * Utility class originally used by the algorithm of {@link LeeYannakakis} but utilized by other ADS computations as
@@ -59,7 +60,7 @@ class SplitTree<S, I, O> {
         return mapping;
     }
 
-    public Set<S> getPartition() {
+    public Set<@KeyFor("partition") S> getPartition() {
         return partition;
     }
 

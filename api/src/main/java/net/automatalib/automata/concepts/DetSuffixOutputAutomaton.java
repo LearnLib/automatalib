@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,8 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.exception.UndefinedPropertyAccessException;
 
-@ParametersAreNonnullByDefault
 public interface DetSuffixOutputAutomaton<S, I, T, D> extends DetOutputAutomaton<S, I, T, D>, SuffixOutput<I, D> {
 
     @Override

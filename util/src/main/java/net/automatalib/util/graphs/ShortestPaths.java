@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +21,8 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.graphs.IndefiniteGraph;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Unweighted shortest path search in graphs.
@@ -36,22 +34,18 @@ import net.automatalib.graphs.IndefiniteGraph;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class ShortestPaths {
 
     private ShortestPaths() {
         throw new AssertionError("Constructor should not be invoked");
     }
 
-    public static <N, E> Iterable<Path<N, E>> shortestPaths(IndefiniteGraph<N, E> graph,
-                                                            @Nullable N start,
-                                                            int limit,
-                                                            N target) {
+    public static <N, E> Iterable<Path<N, E>> shortestPaths(IndefiniteGraph<N, E> graph, N start, int limit, N target) {
         return shortestPaths(graph, start, limit, (Predicate<? super N>) n -> Objects.equals(n, target));
     }
 
     public static <N, E> Iterable<Path<N, E>> shortestPaths(IndefiniteGraph<N, E> graph,
-                                                            @Nullable N start,
+                                                            N start,
                                                             int limit,
                                                             Predicate<? super N> targetPred) {
         return shortestPaths(graph, Collections.singleton(start), limit, targetPred);
@@ -68,7 +62,7 @@ public final class ShortestPaths {
     }
 
     public static <N, E> Iterable<Path<N, E>> shortestPaths(IndefiniteGraph<N, E> graph,
-                                                            @Nullable N start,
+                                                            N start,
                                                             int limit,
                                                             Collection<?> targets) {
         return shortestPaths(graph, start, limit, (Predicate<? super N>) targets::contains);
@@ -77,7 +71,7 @@ public final class ShortestPaths {
     public static <N, E> Iterable<Path<N, E>> shortestPaths(IndefiniteGraph<N, E> graph,
                                                             Collection<? extends N> start,
                                                             int limit,
-                                                            @Nullable N target) {
+                                                            N target) {
         return shortestPaths(graph, start, limit, (Predicate<? super N>) n -> Objects.equals(n, target));
     }
 
@@ -88,46 +82,43 @@ public final class ShortestPaths {
         return shortestPaths(graph, start, limit, (Predicate<? super N>) targets::contains);
     }
 
-    public static <N, E> Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
-                                                 @Nullable N start,
-                                                 int limit,
-                                                 Collection<?> targets) {
+    public static <N, E> @Nullable Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
+                                                           N start,
+                                                           int limit,
+                                                           Collection<?> targets) {
         return shortestPath(graph, start, limit, (Predicate<? super N>) targets::contains);
     }
 
-    public static <N, E> Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
-                                                 @Nullable N start,
-                                                 int limit,
-                                                 Predicate<? super N> targetPred) {
+    public static <N, E> @Nullable Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
+                                                           N start,
+                                                           int limit,
+                                                           Predicate<? super N> targetPred) {
         return shortestPath(graph, Collections.singleton(start), limit, targetPred);
     }
 
-    public static <N, E> Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
-                                                 Collection<? extends N> start,
-                                                 int limit,
-                                                 Predicate<? super N> targetPred) {
+    public static <N, E> @Nullable Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
+                                                           Collection<? extends N> start,
+                                                           int limit,
+                                                           Predicate<? super N> targetPred) {
         Iterator<Path<N, E>> spIt = shortestPathsIterator(graph, start, limit, targetPred);
         return spIt.hasNext() ? spIt.next() : null;
     }
 
-    public static <N, E> Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
-                                                 @Nullable N start,
-                                                 int limit,
-                                                 @Nullable N target) {
+    public static <N, E> @Nullable Path<N, E> shortestPath(IndefiniteGraph<N, E> graph, N start, int limit, N target) {
         return shortestPath(graph, start, limit, (Predicate<? super N>) n -> Objects.equals(n, target));
     }
 
-    public static <N, E> Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
-                                                 Collection<? extends N> start,
-                                                 int limit,
-                                                 Collection<?> targets) {
+    public static <N, E> @Nullable Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
+                                                           Collection<? extends N> start,
+                                                           int limit,
+                                                           Collection<?> targets) {
         return shortestPath(graph, start, limit, (Predicate<? super N>) targets::contains);
     }
 
-    public static <N, E> Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
-                                                 Collection<? extends N> start,
-                                                 int limit,
-                                                 @Nullable N target) {
+    public static <N, E> @Nullable Path<N, E> shortestPath(IndefiniteGraph<N, E> graph,
+                                                           Collection<? extends N> start,
+                                                           int limit,
+                                                           N target) {
         return shortestPath(graph, start, limit, (Predicate<? super N>) n -> Objects.equals(n, target));
     }
 

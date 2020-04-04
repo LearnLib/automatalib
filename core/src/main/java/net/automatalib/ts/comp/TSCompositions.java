@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,7 @@ import net.automatalib.ts.TransitionSystem;
 
 public final class TSCompositions {
 
-    private TSCompositions() {
-    }
+    private TSCompositions() {}
 
     public static <S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I, T1>, TS2 extends TransitionSystem<S2, I, T2>> TSComposition<S1, S2, I, T1, T2, TS1, TS2> compose(
             TS1 ts1,

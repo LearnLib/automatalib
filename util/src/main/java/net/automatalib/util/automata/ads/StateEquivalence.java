@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,8 +39,7 @@ import net.automatalib.words.Word;
  */
 public final class StateEquivalence {
 
-    private StateEquivalence() {
-    }
+    private StateEquivalence() {}
 
     /**
      * Computes a two-state ADS by using {@link Automata#findSeparatingWord(UniversalDeterministicAutomaton,
@@ -67,7 +66,7 @@ public final class StateEquivalence {
      */
     public static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
                                                                final Alphabet<I> input,
-                                                               final Set<S> states) throws IllegalArgumentException {
+                                                               final Set<S> states) {
 
         if (states.size() != 2) {
             throw new IllegalArgumentException("StateEquivalence can only distinguish 2 states");

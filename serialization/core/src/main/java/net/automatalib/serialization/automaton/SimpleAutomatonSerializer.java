@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,13 @@
  */
 package net.automatalib.serialization.automaton;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.function.Function;
 
 import net.automatalib.automata.simple.SimpleAutomaton;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.words.Alphabet;
 
@@ -38,10 +40,55 @@ import net.automatalib.words.Alphabet;
  */
 public interface SimpleAutomatonSerializer<I> extends InputModelSerializer<I, SimpleAutomaton<?, I>> {
 
+    /**
+     * Writes the model to the given output stream.
+     * <p>
+     * Note: the output stream will <b>not</b> be closed.
+     *
+     * @param os
+     *         the output stream to write to
+     * @param model
+     *         the model to write
+     * @param alphabet
+     *         the inputs of the model to which serialization should be limit
+     * @param inputTransformer
+     *         a function to transform the inputs of the model to the inputs of {@code this} serializer.
+     * @param <I2>
+     *         the input symbol type of the model
+     *
+     * @throws IOException
+     *         when writing to the output stream fails.
+     */
     <I2> void writeModel(OutputStream os,
                          SimpleAutomaton<?, I2> model,
                          Alphabet<I2> alphabet,
                          Function<I2, I> inputTransformer) throws IOException;
+
+    /**
+     * Writes the model to the given file.
+     *
+     * @param f
+     *         the file to write to
+     * @param model
+     *         the model to write
+     * @param alphabet
+     *         the inputs of the model to which serialization should be limit
+     * @param inputTransformer
+     *         a function to transform the inputs of the model to the inputs of {@code this} serializer.
+     * @param <I2>
+     *         the input symbol type of the model
+     *
+     * @throws IOException
+     *         when writing to the output stream fails.
+     */
+    default <I2> void writeModel(File f,
+                                 SimpleAutomaton<?, I2> model,
+                                 Alphabet<I2> alphabet,
+                                 Function<I2, I> inputTransformer) throws IOException {
+        try (OutputStream os = IOUtil.asBufferedOutputStream(f)) {
+            writeModel(os, model, alphabet, inputTransformer);
+        }
+    }
 
     @Override
     default void writeModel(OutputStream os, SimpleAutomaton<?, I> model, Alphabet<I> alphabet) throws IOException {

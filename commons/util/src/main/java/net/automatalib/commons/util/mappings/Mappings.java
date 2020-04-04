@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,16 @@
  */
 package net.automatalib.commons.util.mappings;
 
-import java.util.AbstractCollection;
-import java.util.AbstractList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Collection of various methods dealing with {@link Mapping}s.
@@ -31,15 +33,14 @@ import com.google.common.collect.Iterators;
  */
 public final class Mappings {
 
-    private static final Mapping<?, ?> NULL_MAPPING = (Mapping<Object, Object>) elem -> null;
+    private static final Mapping<?, ?> NULL_MAPPING = (Mapping<Object, @Nullable Object>) elem -> null;
 
     private static final Mapping<?, ?> IDENTITY_MAPPING = (Mapping<Object, Object>) elem -> elem;
 
     private static final Mapping<?, String> TOSTRING_MAPPING = (Mapping<Object, String>) String::valueOf;
 
     // Prevent instantiation
-    private Mappings() {
-    }
+    private Mappings() {}
 
     /**
      * Retrieves the <code>null</code> mapping, which maps each domain value to <code>null</code>.
@@ -131,18 +132,7 @@ public final class Mappings {
      * @return the mapped collection.
      */
     public static <D, R> Collection<R> apply(final Mapping<? super D, R> mapping, final Collection<? extends D> coll) {
-        return new AbstractCollection<R>() {
-
-            @Override
-            public Iterator<R> iterator() {
-                return apply(mapping, coll.iterator());
-            }
-
-            @Override
-            public int size() {
-                return coll.size();
-            }
-        };
+        return Collections2.transform(coll, mapping::get);
     }
 
     /**
@@ -176,18 +166,7 @@ public final class Mappings {
      * @return the mapped list.
      */
     public static <D, R> List<R> apply(final Mapping<? super D, R> mapping, final List<? extends D> list) {
-        return new AbstractList<R>() {
-
-            @Override
-            public R get(int index) {
-                return mapping.get(list.get(index));
-            }
-
-            @Override
-            public int size() {
-                return list.size();
-            }
-        };
+        return Lists.transform(list, mapping::get);
     }
 
     /**
@@ -206,7 +185,7 @@ public final class Mappings {
      * @return the mapped iterable.
      */
     public static <D, R> Iterable<R> apply(final Mapping<? super D, R> mapping, final Iterable<? extends D> it) {
-        return () -> apply(mapping, it.iterator());
+        return Iterables.transform(it, mapping::get);
     }
 
     public static <D> D idGet(Mapping<D, D> mapping, D key) {
@@ -227,7 +206,7 @@ public final class Mappings {
      *
      * @return the value returned by the specified mapping, or the fallback value.
      */
-    public static <D, R> R safeGet(Mapping<? super D, R> mapping, D key, R fallback) {
+    public static <D, R> R safeGet(@Nullable Mapping<? super D, ? extends R> mapping, D key, R fallback) {
         if (mapping == null) {
             return fallback;
         }
@@ -238,11 +217,19 @@ public final class Mappings {
         return val;
     }
 
-    public static <D, R> R nullGet(Mapping<? super D, ? extends R> mapping, D key) {
+    public static <D, R> @Nullable R nullGet(@Nullable Mapping<? super D, ? extends R> mapping, D key) {
         return safeGet(mapping, key, null);
     }
 
     public static <D, R> Mapping<D, R> fromMap(Map<D, R> map) {
         return new MapMapping<>(map);
+    }
+
+    public static Mapping<String, Long> stringToIndex() {
+        return StringIndexMapping::stringToIndex;
+    }
+
+    public static Mapping<Long, String> indexToString() {
+        return StringIndexMapping::indexToString;
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,14 +24,12 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.random.RandomUtil;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A random generator for initially connected (IC) deterministic automata.
@@ -40,8 +38,8 @@ import net.automatalib.words.Alphabet;
  * can be set conveniently using the {@code with...} methods in a fluent interface-like manner.
  * <p>
  * For conveniently generating initially connected deterministic automata of certain types, consider using the static
- * methods defined in class {@link RandomAutomata}, such as {@link RandomAutomata#randomICDFA(Random, int,
- * Alphabet, boolean)}.
+ * methods defined in class {@link RandomAutomata}, such as {@link RandomAutomata#randomICDFA(Random, int, Alphabet,
+ * boolean)}.
  *
  * @param <SP>
  *         state property type
@@ -50,13 +48,11 @@ import net.automatalib.words.Alphabet;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
+@SuppressWarnings("nullness") // for now the nullness of SP/TP depends on the provided suppliers
 public class RandomICAutomatonGenerator<SP, TP> {
 
-    @Nonnull
-    private Function<? super Random, ? extends SP> spSupplier = (r) -> null;
-    @Nonnull
-    private Function<? super Random, ? extends TP> tpSupplier = (r) -> null;
+    private Function<? super Random, ? extends @Nullable SP> spSupplier = (r) -> null;
+    private Function<? super Random, ? extends @Nullable TP> tpSupplier = (r) -> null;
 
     /**
      * Creates a random IC automaton generator instance for generating DFAs. States in generated automata will be

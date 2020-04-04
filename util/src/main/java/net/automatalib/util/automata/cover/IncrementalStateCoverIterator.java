@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +20,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.AbstractIterator;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An iterator for the state cover of an automaton. Words are computed lazily (i.e. only when request by {@link
@@ -42,14 +41,13 @@ import net.automatalib.words.Word;
  * @author frohme
  * @see Covers#stateCover(DeterministicAutomaton, Collection, Collection)
  */
-@ParametersAreNonnullByDefault
 class IncrementalStateCoverIterator<S, I> extends AbstractIterator<Word<I>> {
 
     private final DeterministicAutomaton<S, I, ?> automaton;
     private final Collection<? extends I> inputs;
     private final Collection<? extends Word<I>> oldCover;
 
-    private final MutableMapping<S, Record<S, I>> reach;
+    private final MutableMapping<S, @Nullable Record<S, I>> reach;
     private final Queue<Record<S, I>> bfsQueue;
 
     private Iterator<? extends I> inputIterator;
@@ -109,9 +107,16 @@ class IncrementalStateCoverIterator<S, I> extends AbstractIterator<Word<I>> {
 
     private boolean initialize() {
 
+        final S init = automaton.getInitialState();
+
+        if (init == null) {
+            // abuse the fact that endOfData() mutates our state, so we effectively construct the empty iterator here.
+            endOfData();
+            return false;
+        }
+
         Covers.buildReachFromStateCover(reach, bfsQueue, automaton, oldCover, Record::new);
 
-        final S init = automaton.getInitialState();
         if (reach.get(init) == null) {
             // apparently the initial state was not yet covered
             Record<S, I> rec = new Record<>(init, Word.epsilon());

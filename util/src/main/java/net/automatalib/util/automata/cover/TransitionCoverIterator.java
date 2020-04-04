@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.commons.util.collections.AbstractTwoLevelIterator;
 import net.automatalib.words.Word;
@@ -35,7 +33,6 @@ import net.automatalib.words.Word;
  * @author frohme
  * @see Covers#transitionCover(DeterministicAutomaton, Collection, Collection)
  */
-@ParametersAreNonnullByDefault
 class TransitionCoverIterator<I> extends AbstractTwoLevelIterator<Word<I>, I, Word<I>> {
 
     private final Collection<I> inputs;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,6 +58,10 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
     protected State getState(Word<? extends I> word) {
         State s = init;
 
+        if (init.getAcceptance() == Acceptance.FALSE) {
+            return sink;
+        }
+
         for (I sym : word) {
             int idx = inputAlphabet.getSymbolIndex(sym);
             s = s.getSuccessor(idx);
@@ -79,8 +83,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         for (I sym : word) {
             if (curr.getAcceptance() == Acceptance.FALSE) {
                 if (accepting) {
-
-                    throw new IllegalArgumentException("Conflict");
+                    throw new ConflictException("Conflict");
                 }
                 return;
             }
@@ -114,8 +117,16 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                 throw new ConflictException("Incompatible acceptances: " + currAcc + " vs " + acc);
             }
             if (!accepting) {
+                // once we insert a rejected word, we need a sink
+                if (sink == null) {
+                    sink = State.SINK;
+                }
                 if (conf == null) {
                     purge(last);
+                }
+                if (last == init) {
+                    updateInitSignature(Acceptance.FALSE);
+                    return;
                 }
                 last = sink;
             } else {
@@ -135,11 +146,13 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                 }
                 last = hiddenClone(last);
                 if (conf == null) {
-                    State prev = path.peek().state;
+                    PathElem peek = path.peek();
+                    assert peek != null;
+                    State prev = peek.state;
                     if (prev != init) {
-                        updateSignature(prev, path.peek().transIdx, last);
+                        updateSignature(prev, peek.transIdx, last);
                     } else {
-                        updateInitSignature(path.peek().transIdx, last);
+                        updateInitSignature(peek.transIdx, last);
                     }
                 }
             } else if (last != init) {
@@ -253,7 +266,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         Acceptance intermediate;
         if (!accepting) {
             if (sink == null) {
-                sink = new State(null);
+                sink = State.SINK;
             }
             last = sink;
             intermediate = Acceptance.DONT_KNOW;

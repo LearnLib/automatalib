@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,7 +43,7 @@ public class AllTuplesTest {
         Assert.assertEquals(count, 1);
     }
 
-    private int count(Iterable<? extends List<?>> iterable, Set<Object> distinct) {
+    private int count(Iterable<? extends List<?>> iterable, @Nullable Set<Object> distinct) {
         if (distinct != null) {
             distinct.clear();
         }

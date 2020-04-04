@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import com.google.common.primitives.Primitives;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility methods for using Java reflection.
@@ -28,8 +29,7 @@ import com.google.common.primitives.Primitives;
  */
 public final class ReflectUtil {
 
-    private ReflectUtil() {
-    }
+    private ReflectUtil() {}
 
     /**
      * Tries to find a constructor that is able to accept parameters of the given types. First tries to find the
@@ -49,7 +49,7 @@ public final class ReflectUtil {
      * @return A constructor that is able of accepting parameters of the specified types, {@code null} if such a
      * constructor could not be found.
      */
-    public static <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>... params) {
+    public static <T> @Nullable Constructor<T> findConstructor(Class<T> clazz, Class<?>... params) {
         try {
             return clazz.getConstructor(params);
         } catch (NoSuchMethodException e) {
@@ -84,7 +84,7 @@ public final class ReflectUtil {
      * @return A method that is able to accept parameters of the specified types, {@code null} if such a method could
      * not be found.
      */
-    public static Method findMethod(Class<?> clazz, String name, Class<?>... params) {
+    public static @Nullable Method findMethod(Class<?> clazz, String name, Class<?>... params) {
         try {
             return clazz.getMethod(name, params);
         } catch (NoSuchMethodException e) {
@@ -109,12 +109,12 @@ public final class ReflectUtil {
      * @param name
      *         the name of the method
      * @param args
-     *         the objects that should be passed to the method
+     *         the objects that should be passed to the method, may contain {@code null}s
      *
      * @return A method that is able to accept of the specified objects, {@code null} if such a method could not be
      * found.
      */
-    public static Method findMatchingMethod(Class<?> clazz, String name, Object... args) {
+    public static @Nullable Method findMatchingMethod(Class<?> clazz, String name, @Nullable Object... args) {
         for (Method m : clazz.getMethods()) {
             if (!m.getName().equals(name)) {
                 continue;
@@ -137,14 +137,17 @@ public final class ReflectUtil {
      * @param name
      *         the name of the method
      * @param returnType
-     *         the type of the returned object
+     *         the type of the returned object, if {@code null}, the return type will be ignored
      * @param params
      *         the types of the method arguments
      *
      * @return A method that is able to accept of the specified objects, {@code null} if such a method could not be
      * found.
      */
-    public static Method findMethodRT(Class<?> clazz, String name, Class<?> returnType, Class<?>... params) {
+    public static @Nullable Method findMethodRT(Class<?> clazz,
+                                                String name,
+                                                @Nullable Class<?> returnType,
+                                                Class<?>... params) {
         Method m = findMethod(clazz, name, params);
 
         if (m == null) {
@@ -182,7 +185,7 @@ public final class ReflectUtil {
         return wrappedA.equals(wrappedB);
     }
 
-    private static boolean isMatch(Class<?>[] paramTypes, Object... args) {
+    private static boolean isMatch(Class<?>[] paramTypes, @Nullable Object... args) {
         if (paramTypes.length != args.length) {
             return false;
         }

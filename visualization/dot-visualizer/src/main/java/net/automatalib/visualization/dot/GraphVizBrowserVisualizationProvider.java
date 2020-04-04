@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,11 +35,16 @@ import org.kohsuke.MetaInfServices;
 @MetaInfServices(VisualizationProvider.class)
 public class GraphVizBrowserVisualizationProvider implements VisualizationProvider {
 
+    /**
+     * the {@link #getId() id} of this {@link VisualizationProvider}.
+     */
+    public static final String ID = "graphviz-browser";
+
     private static final int PRIORITY = 10;
 
     @Override
     public String getId() {
-        return "graphviz-browser";
+        return ID;
     }
 
     @Override
@@ -59,9 +64,9 @@ public class GraphVizBrowserVisualizationProvider implements VisualizationProvid
                                  Map<String, String> visOptions) {
         try (StringWriter sw = new StringWriter()) {
             GraphDOT.write(graph, sw, additionalHelpers);
-            File imgTmp = File.createTempFile("graphviz-browser", ".png");
+            File imgTmp = File.createTempFile(ID, ".png");
             DOT.runDOT(sw.getBuffer().toString(), "png", imgTmp);
-            File htmlTmp = File.createTempFile("graphviz-browser", ".html");
+            File htmlTmp = File.createTempFile(ID, ".html");
             try (Writer w = IOUtil.asBufferedUTF8Writer(htmlTmp)) {
                 w.write("<html><body><img src=\"");
                 w.write(imgTmp.toURI().toString());

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 
 import net.automatalib.commons.util.system.JVMUtil;
+import net.automatalib.examples.ads.ADSExample;
 import net.automatalib.examples.brics.SimpleBricsExample;
 import net.automatalib.examples.dot.DOTExample;
 import net.automatalib.examples.graph.DFSExample;
@@ -33,6 +34,7 @@ import net.automatalib.examples.incremental.IncrementalMealyExample;
 import net.automatalib.examples.incremental.IncrementalPCDFAExample;
 import net.automatalib.examples.modelchecking.LTSminExample;
 import net.automatalib.examples.modelchecking.LTSminMonitorExample;
+import net.automatalib.examples.vpda.OneSEVPAExample;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import org.testng.SkipException;
@@ -54,6 +56,12 @@ public class ExamplesTest {
             final Window w = windowEvent.getWindow();
             w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));
         }, AWTEvent.WINDOW_FOCUS_EVENT_MASK);
+    }
+
+    @Test
+    public void testADSExample() throws InvocationTargetException, InterruptedException {
+        checkJVMCompatibility();
+        SwingUtilities.invokeAndWait(() -> ADSExample.main(new String[0]));
     }
 
     @Test
@@ -114,6 +122,12 @@ public class ExamplesTest {
         }
 
         LTSminMonitorExample.main(new String[0]);
+    }
+
+    @Test
+    public void testOneSEVPAExample() throws InvocationTargetException, InterruptedException {
+        checkJVMCompatibility();
+        SwingUtilities.invokeAndWait(() -> OneSEVPAExample.main(new String[0]));
     }
 
     private static void checkJVMCompatibility() {

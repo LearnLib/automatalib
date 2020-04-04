@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,8 +30,7 @@ public class DefaultGraphTraversalVisitor<N, E, D> implements GraphTraversalVisi
     }
 
     @Override
-    public void finishExploration(N node, D data) {
-    }
+    public void finishExploration(N node, D data) {}
 
     @Override
     public GraphTraversalAction processEdge(N srcNode, D srcData, E edge, N tgtNode, Holder<D> outData) {
@@ -39,7 +38,6 @@ public class DefaultGraphTraversalVisitor<N, E, D> implements GraphTraversalVisi
     }
 
     @Override
-    public void backtrackEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData) {
-    }
+    public void backtrackEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData) {}
 
 }

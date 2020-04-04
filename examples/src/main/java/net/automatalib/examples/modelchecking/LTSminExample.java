@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,8 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Example for using LTSmin to perform modelchecking. Make sure to correctly setup your LTSmin installation.
@@ -38,6 +40,8 @@ import net.automatalib.words.impl.Alphabets;
  * @see net.automatalib.AutomataLibProperty#LTSMIN_PATH
  */
 public final class LTSminExample {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LTSminExample.class);
 
     private LTSminExample() {
         // prevent instantiation
@@ -79,25 +83,28 @@ public final class LTSminExample {
         // In the first step we don't see output '1'.
         final String p4 = "! output == \"1\"";
 
-        System.out.println("performing LTL model checking with Buchi automata");
-        System.out.println();
+        LOGGER.info("performing LTL model checking with Buchi automata");
 
         final MealyLasso<Character, Character> ce1b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p1);
 
-        System.out.println("First property is satisfied: " + Objects.isNull(ce1b));
+        LOGGER.info("First property is satisfied: {}", Objects.isNull(ce1b));
 
         final MealyLasso<Character, Character> ce2b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p2);
 
-        System.out.println("Second property is satisfied: " + Objects.isNull(ce2b));
+        LOGGER.info("Second property is satisfied: {}", Objects.isNull(ce2b));
 
         final MealyLasso<Character, Character> ce3b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p3);
 
-        System.out.println("Third property is satisfied: " + Objects.isNull(ce3b));
-        System.out.println("Counterexample prefix+loop: " + ce3b.getPrefix() + ':' + ce3b.getLoop());
+        LOGGER.info("Third property is satisfied: {}", Objects.isNull(ce3b));
+        if (ce3b != null) {
+            LOGGER.info("Counterexample prefix+loop: {}:{}", ce3b.getPrefix(), ce3b.getLoop());
+        }
 
         final MealyLasso<Character, Character> ce4b = ltsminBuchi.findCounterExample(mealy, inputAlphabet, p4);
 
-        System.out.println("Fourth property is satisfied: " + Objects.isNull(ce4b));
-        System.out.println("Counterexample prefix+loop: " + ce4b.getPrefix() + ':' + ce4b.getLoop());
+        LOGGER.info("Fourth property is satisfied: {}", Objects.isNull(ce4b));
+        if (ce4b != null) {
+            LOGGER.info("Counterexample prefix+loop: {}:{}", ce4b.getPrefix(), ce4b.getLoop());
+        }
     }
 }

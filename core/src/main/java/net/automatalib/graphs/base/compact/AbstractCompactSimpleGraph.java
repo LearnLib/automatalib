@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,8 +27,7 @@ public abstract class AbstractCompactSimpleGraph<E extends CompactEdge<EP>, EP>
     }
 
     @Override
-    public void setNodeProperty(int node, Void property) {
-    }
+    public void setNodeProperty(int node, Void property) {}
 
     @Override
     public Void getNodeProperties(int node) {

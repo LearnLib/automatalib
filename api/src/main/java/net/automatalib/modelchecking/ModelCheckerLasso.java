@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 package net.automatalib.modelchecking;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -36,7 +34,6 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface ModelCheckerLasso<I, A, P, R extends Lasso<I, ?>> extends ModelChecker<I, A, P, R> {
 
     /**
@@ -57,7 +54,7 @@ public interface ModelCheckerLasso<I, A, P, R extends Lasso<I, ?>> extends Model
      * @throws IllegalArgumentException
      *         when {@code multiplier < 0.0}.
      */
-    void setMultiplier(double multiplier) throws IllegalArgumentException;
+    void setMultiplier(double multiplier);
 
     /**
      * Returns the minimum number of times a loop must be unrolled.
@@ -75,7 +72,7 @@ public interface ModelCheckerLasso<I, A, P, R extends Lasso<I, ?>> extends Model
      * @throws IllegalArgumentException
      *         when {@code minimumUnfolds < 1}.
      */
-    void setMinimumUnfolds(int minimumUnfolds) throws IllegalArgumentException;
+    void setMinimumUnfolds(int minimumUnfolds);
 
     /**
      * Compute the number of unfolds according to {@code size}.

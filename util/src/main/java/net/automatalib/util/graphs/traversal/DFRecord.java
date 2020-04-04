@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,12 @@
  */
 package net.automatalib.util.graphs.traversal;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
 
     public final D data;
-    private LastEdge<E, N, D> lastEdge;
+    private @Nullable LastEdge<E, N, D> lastEdge;
 
     DFRecord(N node, D data) {
         super(node);
@@ -29,7 +31,7 @@ class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
         return data;
     }
 
-    public LastEdge<E, N, D> getLastEdge() {
+    public @Nullable LastEdge<E, N, D> getLastEdge() {
         LastEdge<E, N, D> result = lastEdge;
         lastEdge = null;
         return result;

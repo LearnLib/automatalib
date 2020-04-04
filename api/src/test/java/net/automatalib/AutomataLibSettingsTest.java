@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 package net.automatalib;
 
 import java.io.File;
+import java.net.URL;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
@@ -28,8 +29,9 @@ public class AutomataLibSettingsTest {
 
     @BeforeSuite
     public static void setUp() {
-        final File properties =
-                new File(AutomataLibSettingsTest.class.getResource("/automatalib.properties").getFile());
+        final URL resource = AutomataLibSettingsTest.class.getResource("/automatalib.properties");
+        assert resource != null;
+        final File properties = new File(resource.getFile());
         System.setProperty("automatalib.properties", properties.getAbsolutePath());
         System.setProperty(AutomataLibProperty.WORD_EMPTY_REP.getPropertyKey(), "OVERRIDDEN");
     }

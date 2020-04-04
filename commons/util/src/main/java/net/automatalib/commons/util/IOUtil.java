@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +31,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.base.Preconditions;
+import net.automatalib.commons.util.io.NonClosingInputStream;
+import net.automatalib.commons.util.io.NonClosingOutputStream;
 
 /**
  * Utility methods for operating with {@code java.io.*} classes.
@@ -42,141 +42,17 @@ import org.slf4j.LoggerFactory;
  */
 public final class IOUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IOUtil.class);
-
-    private static final int DEFAULT_BUFFER_SIZE = 8192;
-
     // Prevent instantiation
-    private IOUtil() {
-    }
-
-    /**
-     * Skips the content of the stream as long as there is data available. Afterwards, the stream is closed.
-     *
-     * @param is
-     *         the input stream.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     */
-    public static void skip(InputStream is) throws IOException {
-        while (is.available() > 0) {
-            is.skip(Long.MAX_VALUE);
-        }
-        is.close();
-    }
-
-    /**
-     * Copies all data from the given input stream to the given output stream and closes the streams. Convenience
-     * method, same as <code>copy(is, os, true)</code>.
-     *
-     * @param is
-     *         the input stream.
-     * @param os
-     *         the output stream.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     * @see #copy(InputStream, OutputStream, boolean)
-     */
-    public static void copy(InputStream is, OutputStream os) throws IOException {
-        copy(is, os, true);
-    }
-
-    /**
-     * Copies all data from the given input stream to the given output stream.
-     *
-     * @param is
-     *         the input stream.
-     * @param os
-     *         the output stream.
-     * @param close
-     *         <code>true</code> if both streams are closed afterwards, <code>false</code> otherwise.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     */
-    public static void copy(InputStream is, OutputStream os, boolean close) throws IOException {
-        byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
-        int len;
-        try {
-            while ((len = is.read(buf)) != -1) {
-                os.write(buf, 0, len);
-            }
-        } finally {
-            if (close) {
-                closeQuietly(is);
-                closeQuietly(os);
-            }
-        }
-    }
-
-    /**
-     * Copies all text from the given reader to the given writer and closes both afterwards. Convenience method, same as
-     * <code>copy(r, w, true)</code>.
-     *
-     * @param r
-     *         the reader.
-     * @param w
-     *         the writer.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     * @see #copy(Reader, Writer, boolean)
-     */
-    public static void copy(Reader r, Writer w) throws IOException {
-        copy(r, w, true);
-    }
-
-    /**
-     * Copies all text from the given reader to the given writer.
-     *
-     * @param r
-     *         the reader.
-     * @param w
-     *         the writer.
-     * @param close
-     *         <code>true</code> if both reader and writer are closed afterwards, <code>false</code> otherwise.
-     *
-     * @throws IOException
-     *         if an I/O error occurs.
-     */
-    public static void copy(Reader r, Writer w, boolean close) throws IOException {
-        char[] buf = new char[DEFAULT_BUFFER_SIZE];
-        int len;
-        try {
-            while ((len = r.read(buf)) != -1) {
-                w.write(buf, 0, len);
-            }
-        } finally {
-            if (close) {
-                closeQuietly(r);
-                closeQuietly(w);
-            }
-        }
-    }
-
-    /**
-     * Quitely closes a closeable. Any exception while doing so will be ignored (but logged).
-     *
-     * @param closeable
-     *         the closeable to close
-     */
-    public static void closeQuietly(Closeable closeable) {
-        try {
-            closeable.close();
-        } catch (IOException e) {
-            LOGGER.error("Could not close closable", e);
-        }
-    }
+    private IOUtil() {}
 
     /**
      * Ensures that the returned stream is an uncompressed version of the supplied input stream.
      * <p>
      * This method first tries to read the first two bytes from the stream, then resets the stream. If the first two
      * bytes equal the GZip magic number (see {@link GZIPInputStream#GZIP_MAGIC}), the supplied stream is wrapped in a
-     * {@link GZIPInputStream}. Otherwise, the stream is returned as-is, but possibly in a buffered version (see {@link
-     * #asBufferedInputStream(InputStream)}).
+     * {@link GZIPInputStream}. Otherwise, the stream is returned as-is.
+     * <p>
+     * Note: this requires the input stream to {@link InputStream#markSupported() support marking}.
      *
      * @param is
      *         the input stream
@@ -185,28 +61,29 @@ public final class IOUtil {
      *
      * @throws IOException
      *         if reading the magic number fails
+     * @throws IllegalArgumentException
+     *         if the stream does not support {@link InputStream#markSupported() marking}
      */
     public static InputStream asUncompressedInputStream(InputStream is) throws IOException {
-        final InputStream bufferedInputStream = asBufferedInputStream(is);
-        assert bufferedInputStream.markSupported();
+        Preconditions.checkArgument(is.markSupported(), "input stream must support marking");
 
-        bufferedInputStream.mark(2);
+        is.mark(2);
         byte[] buf = new byte[2];
         int bytesRead;
         try {
-            bytesRead = bufferedInputStream.read(buf);
+            bytesRead = is.read(buf);
         } finally {
-            bufferedInputStream.reset();
+            is.reset();
         }
         if (bytesRead == 2) {
             final int byteMask = 0xff;
             final int byteWidth = 8;
             int magic = (buf[1] & byteMask) << byteWidth | (buf[0] & byteMask);
             if (magic == GZIPInputStream.GZIP_MAGIC) {
-                return new GZIPInputStream(bufferedInputStream);
+                return new GZIPInputStream(is);
             }
         }
-        return bufferedInputStream;
+        return is;
     }
 
     /**
@@ -220,7 +97,7 @@ public final class IOUtil {
      * @return a buffered version of {@code is}
      */
     public static InputStream asBufferedInputStream(InputStream is) {
-        if (is instanceof BufferedInputStream || is instanceof ByteArrayInputStream) {
+        if (isBufferedInputStream(is)) {
             return is;
         }
         return new BufferedInputStream(is);
@@ -233,10 +110,10 @@ public final class IOUtil {
      * @param file
      *         the file to read
      *
-     * @return a (buffered) input stream for the file contents.
+     * @return a buffered input stream for the file contents
      *
      * @throws IOException
-     *         if accessing the file results in an I/O error.
+     *         if accessing the file results in an I/O error
      */
     public static InputStream asBufferedInputStream(File file) throws IOException {
         return asBufferedInputStream(Files.newInputStream(file.toPath()));
@@ -253,7 +130,7 @@ public final class IOUtil {
      * @return a buffered version of {@code os}
      */
     public static OutputStream asBufferedOutputStream(OutputStream os) {
-        if (os instanceof BufferedOutputStream || os instanceof ByteArrayOutputStream) {
+        if (isBufferedOutputStream(os)) {
             return os;
         }
         return new BufferedOutputStream(os);
@@ -266,10 +143,10 @@ public final class IOUtil {
      * @param file
      *         the file to write to
      *
-     * @return a (buffered) output stream for the file contents.
+     * @return a buffered output stream for the file contents
      *
      * @throws IOException
-     *         if accessing the file results in an I/O error.
+     *         if accessing the file results in an I/O error
      */
     public static OutputStream asBufferedOutputStream(File file) throws IOException {
         return asBufferedOutputStream(Files.newOutputStream(file.toPath()));
@@ -282,10 +159,10 @@ public final class IOUtil {
      * @param file
      *         the file to read
      *
-     * @return a (buffered) reader for the file contents.
+     * @return a buffered, UTF-8-decoding reader for the file contents
      *
      * @throws IOException
-     *         if accessing the file results in an I/O error.
+     *         if accessing the file results in an I/O error
      */
     public static Reader asBufferedUTF8Reader(final File file) throws IOException {
         return Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8);
@@ -302,7 +179,7 @@ public final class IOUtil {
      * @param is
      *         the input stream to read
      *
-     * @return a (buffered) reader for the file contents.
+     * @return a buffered, UTF-8-decoding reader for the input stream.
      */
     public static Reader asBufferedUTF8Reader(final InputStream is) {
         return asUTF8Reader(asBufferedInputStream(is));
@@ -314,7 +191,7 @@ public final class IOUtil {
      * @param is
      *         the input stream to read
      *
-     * @return a reader for the file contents.
+     * @return a UTF-8-decoding reader for the input stream
      */
     public static Reader asUTF8Reader(final InputStream is) {
         return new InputStreamReader(is, StandardCharsets.UTF_8);
@@ -327,10 +204,10 @@ public final class IOUtil {
      * @param file
      *         the file to write to
      *
-     * @return a (buffered) writer for the file contents.
+     * @return a buffered, UTF-8-encoding writer for the file contents
      *
      * @throws IOException
-     *         if writing to the file results in I/O errors.
+     *         if writing to the file results in I/O errors
      */
     public static Writer asBufferedUTF8Writer(final File file) throws IOException {
         return Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8);
@@ -347,7 +224,7 @@ public final class IOUtil {
      * @param os
      *         the output stream to write to
      *
-     * @return a (buffered) writer for the file contents.
+     * @return a buffered, UTF-8 encoding writer for the output stream
      */
     public static Writer asBufferedUTF8Writer(final OutputStream os) {
         return asUTF8Writer(asBufferedOutputStream(os));
@@ -359,9 +236,103 @@ public final class IOUtil {
      * @param os
      *         the output stream to write to
      *
-     * @return a (buffered) writer for the file contents.
+     * @return a UTF-8-encoding writer for the output stream.
      */
     public static Writer asUTF8Writer(final OutputStream os) {
         return new OutputStreamWriter(os, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Returns a buffered input stream that de-compresses the contents of {@code is} (in case the given input stream
+     * contains gzip'ed content) and does not propagate calls to {@link InputStream#close()} to the passed {@code is}.
+     *
+     * @param is
+     *         the input stream to read
+     *
+     * @return a (potentially) de-compressing, buffered, non-closing version of {@code is}
+     *
+     * @throws IOException
+     *         if reading the stream (for detecting whether or not it contains compressed contents) fails
+     * @see NonClosingInputStream
+     * @see #asBufferedInputStream(InputStream)
+     * @see #asUncompressedInputStream(InputStream)
+     */
+    public static InputStream asUncompressedBufferedNonClosingInputStream(InputStream is) throws IOException {
+        if (isBufferedInputStream(is)) {
+            return asUncompressedInputStream(new NonClosingInputStream(is));
+        }
+
+        // inverse chaining so that calls to #close can clear the buffers
+        return asUncompressedInputStream(asBufferedInputStream(new NonClosingInputStream(is)));
+    }
+
+    /**
+     * Returns a buffered reader that un-compresses the contents of {@code is} (in case the given input stream contains
+     * gzip'ed content), does not propagate calls to {@link Reader#close()} to the passed {@code is} and parses the
+     * contents of the given input stream with {@link StandardCharsets#UTF_8} encoding.
+     * <p>
+     * Implementation note: the input stream (byte-wise representation) will be buffered, not the reader (character-wise
+     * representation).
+     *
+     * @param is
+     *         the input stream to read
+     *
+     * @return a (potentially) de-compressing, buffered, non-closing, UTF-8-decoding version of {@code is}
+     *
+     * @throws IOException
+     *         if reading the stream (for detecting whether or not it contains compressed contents) fails
+     * @see #asUTF8Reader(InputStream)
+     * @see #asUncompressedBufferedNonClosingInputStream(InputStream)
+     */
+    public static Reader asUncompressedBufferedNonClosingUTF8Reader(final InputStream is) throws IOException {
+        return asUTF8Reader(asUncompressedBufferedNonClosingInputStream(is));
+    }
+
+    /**
+     * Returns a buffered output stream that does not propagate calls to {@link OutputStream#close()} to the passed
+     * {@code os}.
+     *
+     * @param os
+     *         the output stream to write to
+     *
+     * @return a buffered, non-closing version of {@code os}
+     *
+     * @see #asBufferedOutputStream(OutputStream)
+     * @see NonClosingOutputStream
+     */
+    public static OutputStream asBufferedNonClosingOutputStream(OutputStream os) {
+        if (isBufferedOutputStream(os)) {
+            return new NonClosingOutputStream(os);
+        }
+
+        // inverse chaining so that calls to #close can clear the buffers
+        return asBufferedOutputStream(new NonClosingOutputStream(os));
+    }
+
+    /**
+     * Returns a writer that writes contents to the given output stream with {@link StandardCharsets#UTF_8} encoding and
+     * does not propagate calls to {@link Writer#close()} to the passed {@code os}.
+     * <p>
+     * Implementation note: the output stream (byte-wise representation) will be buffered, not the writer (character-
+     * wise representation).
+     *
+     * @param os
+     *         the output stream to write to
+     *
+     * @return a buffered, non-closing, UTF-8-encoding writer for the output stream
+     *
+     * @see #asBufferedNonClosingOutputStream(OutputStream)
+     * @see #asUTF8Writer(OutputStream)
+     */
+    public static Writer asBufferedNonClosingUTF8Writer(final OutputStream os) {
+        return asUTF8Writer(asBufferedNonClosingOutputStream(os));
+    }
+
+    private static boolean isBufferedInputStream(InputStream is) {
+        return (is instanceof BufferedInputStream) || (is instanceof ByteArrayInputStream);
+    }
+
+    private static boolean isBufferedOutputStream(OutputStream os) {
+        return (os instanceof BufferedOutputStream) || (os instanceof ByteArrayOutputStream);
     }
 }

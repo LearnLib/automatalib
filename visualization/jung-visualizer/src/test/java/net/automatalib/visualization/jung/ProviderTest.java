@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,7 +44,7 @@ public class ProviderTest {
 
         vpManager.load();
 
-        final VisualizationProvider provider = vpManager.getProviderById("jung");
+        final VisualizationProvider provider = vpManager.getProviderById(JungGraphVisualizationProvider.ID);
 
         Assert.assertTrue(provider instanceof JungGraphVisualizationProvider);
     }

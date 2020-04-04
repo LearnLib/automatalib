@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,8 @@ package net.automatalib.util.partitionrefinement;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A block (i.e., partition class) that is maintained during the Paige/Tarjan partition refinement algorithm (see {@link
@@ -46,10 +48,10 @@ public class Block {
      * The index of the last element in this block in the {@link PaigeTarjan#blockData} array, plus one.
      */
     public int high;
-    public Block nextBlock;
+    public @Nullable Block nextBlock;
     public int id;
-    protected Block nextInWorklist;
-    protected Block nextTouched;
+    protected @Nullable Block nextInWorklist;
+    protected @Nullable Block nextTouched;
 
     /**
      * Constructor. Creates a new block with the specified parameters.
@@ -63,14 +65,14 @@ public class Block {
      * @param next
      *         the next block in the block list
      */
-    public Block(int low, int high, int id, Block next) {
+    public Block(int low, int high, int id, @Nullable Block next) {
         this.low = low;
         this.high = high;
         this.id = id;
         this.nextBlock = next;
     }
 
-    static Iterator<Block> blockListIterator(Block start) {
+    static Iterator<Block> blockListIterator(@Nullable Block start) {
         return new BlockListIterator(start);
     }
 
@@ -108,7 +110,7 @@ public class Block {
      *
      * @return a block
      */
-    public Block split(int newId) {
+    public @Nullable Block split(int newId) {
         int ptr = this.ptr;
         this.ptr = -1;
         int high = this.high;
@@ -131,9 +133,9 @@ public class Block {
 
     private static final class BlockListIterator implements Iterator<Block> {
 
-        private Block curr;
+        private @Nullable Block curr;
 
-        BlockListIterator(Block start) {
+        BlockListIterator(@Nullable Block start) {
             this.curr = start;
         }
 

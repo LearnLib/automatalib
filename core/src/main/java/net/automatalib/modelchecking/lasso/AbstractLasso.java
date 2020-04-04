@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +18,9 @@ package net.automatalib.modelchecking.lasso;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.commons.util.collections.CollectionsUtil;
@@ -33,11 +30,11 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
 
     public static final String NO_LASSO = "Automaton is not lasso shaped";
@@ -114,6 +111,7 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
 
         // start visiting the initial state
         S current = automaton.getInitialState();
+        assert current != null : NO_LASSO;
 
         // index for the current state
         int i = 0;
@@ -131,6 +129,7 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
 
             // continue with the next state.
             current = automaton.getSuccessor(current, input);
+            assert current != null;
         } while (!states.containsKey(current));
 
         // save the state index at which the loop begins
@@ -194,7 +193,6 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
         return loopBeginIndices;
     }
 
-    @Nullable
     @Override
     public Integer getInitialState() {
         return 0;
@@ -205,11 +203,10 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
      *
      * @see SimpleDTS#getSuccessor(Object, Object)
      */
-    @Nullable
     @Override
-    public Integer getSuccessor(Integer state, @Nullable I input) {
+    public @Nullable Integer getSuccessor(Integer state, I input) {
         final Integer result;
-        if (state < word.length() && input.equals(word.getSymbol(state))) {
+        if (state < word.length() && Objects.equals(input, word.getSymbol(state))) {
             result = state + 1;
         } else {
             result = null;
@@ -218,7 +215,6 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
         return result;
     }
 
-    @Nonnull
     @Override
     public Collection<Integer> getStates() {
         return CollectionsUtil.intRange(0, word.length());
@@ -229,15 +225,13 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
      *
      * @return the Alphabet.
      */
-    @Nonnull
     @Override
     public Alphabet<I> getInputAlphabet() {
         return inputAlphabet;
     }
 
-    @Nullable
     @Override
-    public Integer getTransition(Integer state, @Nullable I input) {
+    public @Nullable Integer getTransition(Integer state, I input) {
         return getSuccessor(state, input);
     }
 }

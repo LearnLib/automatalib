@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 package net.automatalib.incremental.dfa;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.fsa.DFA;
@@ -35,7 +31,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?, I>, I>, SupportsGrowingAlphabet<I> {
 
     /**
@@ -46,7 +41,6 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
      *
      * @return the tri-state acceptance value for this word.
      */
-    @Nonnull
     Acceptance lookup(Word<? extends I> inputWord);
 
     /**
@@ -60,7 +54,7 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
      * @throws ConflictException
      *         if the newly provided information conflicts with existing information
      */
-    void insert(Word<? extends I> word, boolean accepting) throws ConflictException;
+    void insert(Word<? extends I> word, boolean accepting);
 
     /**
      * Inserts a new word into the automaton. This is a convenience method equivalent to invoking {@code insert(word,
@@ -73,31 +67,25 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
      *         if the newly provided information conflicts with existing information
      * @see #insert(Word, boolean)
      */
-    void insert(Word<? extends I> word) throws ConflictException;
+    void insert(Word<? extends I> word);
 
     @Override
-    @Nonnull
     GraphView<I, ?, ?> asGraph();
 
     @Override
-    @Nonnull
     TransitionSystemView<?, I, ?> asTransitionSystem();
 
     interface GraphView<I, N, E> extends Graph<N, E> {
 
-        @Nullable
-        I getInputSymbol(@Nonnull E edge);
+        I getInputSymbol(E edge);
 
-        @Nonnull
-        Acceptance getAcceptance(@Nonnull N node);
+        Acceptance getAcceptance(N node);
 
-        @Nonnull
         N getInitialNode();
     }
 
     interface TransitionSystemView<S, I, T> extends UniversalDTS<S, I, T, Acceptance, Void> {
 
-        @Nonnull
-        Acceptance getAcceptance(@Nonnull S state);
+        Acceptance getAcceptance(S state);
     }
 }

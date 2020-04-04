@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,15 +17,15 @@ package net.automatalib.util.automata.equivalence;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
-import java.util.Set;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -51,8 +51,7 @@ public class CharacterizingSetsTest {
     public void characterizingDFATest() {
         final List<Word<Integer>> characterizingSet = Automata.characterizingSet(DFA, INPUT_ALPHABET);
 
-        final Set<Set<Integer>> distinguishedStates = checkCharacterizingSet(DFA, characterizingSet);
-        isPairwiseDistinguished(DFA, distinguishedStates);
+        checkCharacterizingSet(DFA, characterizingSet);
     }
 
     @Test
@@ -61,16 +60,14 @@ public class CharacterizingSetsTest {
         final List<Word<Integer>> characterizingSet = new ArrayList<>();
         CharacterizingSets.findCharacterizingSet(DFA, INPUT_ALPHABET, state, characterizingSet);
 
-        final Set<Set<Integer>> distinguishedStates = checkCharacterizingSet(DFA, characterizingSet);
-        isSingleDistinguished(DFA, distinguishedStates, state);
+        checkCharacterizingSet(DFA, state, characterizingSet);
     }
 
     @Test
     public void characterizingMealyTest() {
         final List<Word<Integer>> characterizingSet = Automata.characterizingSet(MEALY, INPUT_ALPHABET);
 
-        final Set<Set<Integer>> distinguishedStates = checkCharacterizingSet(MEALY, characterizingSet);
-        isPairwiseDistinguished(MEALY, distinguishedStates);
+        checkCharacterizingSet(MEALY, characterizingSet);
     }
 
     @Test
@@ -79,105 +76,87 @@ public class CharacterizingSetsTest {
         final List<Word<Integer>> characterizingSet = new ArrayList<>();
         CharacterizingSets.findCharacterizingSet(MEALY, INPUT_ALPHABET, state, characterizingSet);
 
-        final Set<Set<Integer>> distinguishedStates = checkCharacterizingSet(MEALY, characterizingSet);
-        isSingleDistinguished(MEALY, distinguishedStates, state);
+        checkCharacterizingSet(MEALY, state, characterizingSet);
     }
 
-    private <S, I, T, SP, TP> Set<Set<S>> checkCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
-                                                                 Collection<Word<I>> characterizingSet) {
+    /*
+     * See https://github.com/LearnLib/automatalib/issues/36
+     */
+    @Test
+    public void issue36Test() {
+        final Alphabet<String> inputs = Alphabets.fromArray("a", "b");
 
-        final Set<Set<S>> distinguishedStates = new HashSet<>();
+        // @formatter:off
+        final CompactMealy<String, Object> machine = AutomatonBuilders.newMealy(inputs)
+                .withInitial("0")
+                .from("0")
+                    .on("a").withOutput("a").to("1")
+                    .on("b").withOutput("b").to("0")
+                .from("1")
+                    .on("a").withOutput("b").to("2")
+                    .on("b").withOutput("b").to("3")
+                .from("2")
+                    .on("a").withOutput("b").to("1")
+                    .on("b").withOutput("b").to("0")
+                .from("3")
+                    .on("a").withOutput("a").to("0")
+                    .on("b").withOutput("b").to("0")
+                .create();
+        // @formatter:on
 
-        for (final Word<I> w : characterizingSet) {
-            final Set<S> currentlyDistinguishedStates = new HashSet<>();
-
-            for (final S s : automaton.getStates()) {
-                if (isDistinguished(automaton, w, currentlyDistinguishedStates, s)) {
-                    currentlyDistinguishedStates.add(s);
-                }
-            }
-
-            distinguishedStates.add(currentlyDistinguishedStates);
-        }
-
-        return distinguishedStates;
+        final List<Word<String>> characterizingSet = Automata.characterizingSet(machine, inputs);
+        checkCharacterizingSet(machine, characterizingSet);
     }
 
-    private <S, I, T, SP, TP> boolean isDistinguished(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
-                                                      Word<I> trace,
-                                                      Set<S> distinguishedStates,
-                                                      S stateToCheck) {
-        if (distinguishedStates.isEmpty()) {
-            return true;
+    private <S, I> void checkCharacterizingSet(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                               Collection<Word<I>> characterizingSet) {
+        for (final S s : automaton) {
+            checkCharacterizingSet(automaton, s, characterizingSet);
         }
-
-        for (final S s : distinguishedStates) {
-
-            S baseIter = stateToCheck;
-            S checkIter = s;
-
-            for (final I i : trace) {
-                T baseTrans = automaton.getTransition(baseIter, i);
-                T checkTrans = automaton.getTransition(checkIter, i);
-
-                // update values for next iteration
-                baseIter = automaton.getSuccessor(baseTrans);
-                checkIter = automaton.getSuccessor(checkTrans);
-
-                final TP baseTP = automaton.getTransitionProperty(baseTrans);
-                final TP checkTP = automaton.getTransitionProperty(checkTrans);
-
-                final SP baseSP = automaton.getStateProperty(baseIter);
-                final SP checkSP = automaton.getStateProperty(checkIter);
-
-                if ((baseTP != checkTP) || (baseTP != null && !baseTP.equals(checkTP)) || (baseSP != checkSP) ||
-                    (baseSP != null && !baseSP.equals(checkSP))) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
-    private <S, I, T, SP, TP> void isPairwiseDistinguished(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
-                                                           Set<Set<S>> distinguishedStates) {
+    private <S, I, T, SP, TP> void checkCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
+                                                          S state,
+                                                          Collection<Word<I>> characterizingSet) {
 
-        for (final S s : automaton.getStates()) {
-            for (final S t : automaton.getStates()) {
+        outer:
+        for (final S s : automaton) {
+            if (!Objects.equals(s, state)) {
+                for (final Word<I> trace : characterizingSet) {
 
-                boolean distinguishedByOneWord = false;
+                    S baseIter = state;
+                    S checkIter = s;
 
-                for (final Set<S> d : distinguishedStates) {
-                    if (d.contains(s) && d.contains(t)) {
-                        distinguishedByOneWord = true;
-                        break;
+                    final List<Object> baseSignature = new ArrayList<>(trace.size() + 1);
+                    final List<Object> checkSignature = new ArrayList<>(trace.size() + 1);
+
+                    baseSignature.add(automaton.getStateProperty(baseIter));
+                    checkSignature.add(automaton.getStateProperty(checkIter));
+
+                    for (final I i : trace) {
+                        final T baseTrans = automaton.getTransition(baseIter, i);
+                        final T checkTrans = automaton.getTransition(checkIter, i);
+
+                        baseSignature.add(automaton.getTransitionProperty(baseTrans));
+                        checkSignature.add(automaton.getTransitionProperty(checkTrans));
+
+                        // update values for next iteration
+                        baseIter = automaton.getSuccessor(baseTrans);
+                        checkIter = automaton.getSuccessor(checkTrans);
+
+                        baseSignature.add(automaton.getStateProperty(baseIter));
+                        checkSignature.add(automaton.getStateProperty(checkIter));
+                    }
+
+                    Assert.assertEquals(baseSignature.size(), checkSignature.size());
+
+                    if (!baseSignature.equals(checkSignature)) {
+                        continue outer;
                     }
                 }
 
-                Assert.assertTrue(distinguishedByOneWord, "States " + s + ',' + t + " are not distinguished");
+                Assert.fail("State '" + state + "' cannot be distinguished from state '" + s + '\'');
             }
-        }
-    }
-
-    private <S, I, T, SP, TP> void isSingleDistinguished(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
-                                                         Set<Set<S>> distinguishedStates,
-                                                         S state) {
-        for (final S s : automaton.getStates()) {
-            if (s.equals(state)) {
-                continue;
-            }
-
-            boolean distinguishedByOneWord = false;
-
-            for (final Set<S> d : distinguishedStates) {
-                if (d.contains(state)) {
-                    distinguishedByOneWord = true;
-                    break;
-                }
-            }
-
-            Assert.assertTrue(distinguishedByOneWord, "States " + s + ',' + state + " are not distinguished");
         }
     }
 }

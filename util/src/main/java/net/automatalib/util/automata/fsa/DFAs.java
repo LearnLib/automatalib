@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,7 @@ import net.automatalib.util.automata.minimizer.hopcroft.HopcroftMinimization;
 import net.automatalib.util.ts.acceptors.AcceptanceCombiner;
 import net.automatalib.util.ts.acceptors.Acceptors;
 import net.automatalib.util.ts.copy.TSCopy;
+import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.util.ts.traversal.TSTraversalMethod;
 import net.automatalib.words.Alphabet;
 
@@ -92,7 +93,7 @@ public final class DFAs {
                                                                AcceptanceCombiner combiner) {
         DeterministicAcceptorTS<?, I> acc = Acceptors.combine(dfa1, dfa2, combiner);
 
-        TSCopy.copy(TSTraversalMethod.DEPTH_FIRST, acc, -1, inputs, out);
+        TSCopy.copy(TSTraversalMethod.DEPTH_FIRST, acc, TSTraversal.NO_LIMIT, inputs, out);
         return out;
     }
 

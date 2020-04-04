@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,28 +25,21 @@ import java.io.Writer;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import com.google.common.io.CharStreams;
 import net.automatalib.commons.util.IOUtil;
 
 final class PlottedGraph {
-
-    private static final int DEFAULT_BUFFER_SIZE = 1024;
 
     private String name;
     private String dotText;
     private BufferedImage image;
 
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     PlottedGraph(String name, Reader dotText) throws IOException {
         this.name = name;
 
-        StringBuilder sb = new StringBuilder();
-
-        char[] buf = new char[DEFAULT_BUFFER_SIZE];
-        int len;
-        while ((len = dotText.read(buf)) != -1) {
-            sb.append(buf, 0, len);
-        }
-
-        IOUtil.closeQuietly(dotText);
+        final StringBuilder sb = new StringBuilder();
+        CharStreams.copy(dotText, sb);
 
         updateDOTText(sb.toString());
     }

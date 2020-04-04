@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,19 +21,17 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
+import com.google.common.io.CharStreams;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.process.InputStreamConsumer.DelegatingConsumer;
 import net.automatalib.commons.util.process.InputStreamConsumer.NOPConsumer;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class for invoking system processes.
  *
  * @author frohme
  */
-@ParametersAreNonnullByDefault
 public final class ProcessUtil {
 
     private ProcessUtil() {
@@ -192,14 +190,12 @@ public final class ProcessUtil {
     }
 
     private static void writeProcessInput(Process process, @Nullable Reader input) throws IOException {
-
-        final OutputStream processInput = process.getOutputStream();
-
-        if (input == null) {
-            processInput.close();
-        } else {
-            Writer writer = IOUtil.asBufferedUTF8Writer(processInput);
-            IOUtil.copy(input, writer);
+        try (OutputStream processInput = process.getOutputStream()) {
+            if (input != null) {
+                try (Writer writer = IOUtil.asBufferedUTF8Writer(processInput)) {
+                    CharStreams.copy(input, writer);
+                }
+            }
         }
     }
 

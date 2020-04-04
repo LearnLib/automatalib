@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +15,19 @@
  */
 package net.automatalib.graphs.ads;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
 import net.automatalib.graphs.Graph;
 import net.automatalib.visualization.VisualizationHelper;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * An interface representing a node in an adaptive distinguishing sequence (which essentially forms a decision tree).
@@ -53,7 +57,8 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @return {@code null} if {@code this} is a leaf node (see {@link #isLeaf()}), the associated input symbol
      * otherwise.
      */
-    I getSymbol();
+    @Pure
+    @Nullable I getSymbol();
 
     /**
      * See {@link #getSymbol()}.
@@ -64,7 +69,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @throws UnsupportedOperationException
      *         if trying to set an input symbol on a leaf node (see {@link #isLeaf()}).
      */
-    void setSymbol(I symbol) throws UnsupportedOperationException;
+    void setSymbol(I symbol);
 
     /**
      * Returns the parent node of {@code this} node.
@@ -72,7 +77,8 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @return The parent node of {@code this} ADS node. May be {@code null}, if {@code this} is the root node of an
      * ADS.
      */
-    N getParent();
+    @Pure
+    @Nullable N getParent();
 
     void setParent(N parent);
 
@@ -86,14 +92,15 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @return all nodes in the specified subtree, including the root node itself
      */
     default Collection<N> getNodesForRoot(final N root) {
-        final List<N> result = new LinkedList<>();
-        final Queue<N> queue = new LinkedList<>();
+        final List<N> result = new ArrayList<>();
+        final Queue<N> queue = new ArrayDeque<>();
 
         queue.add(root);
 
         // level-order iteration of the tree nodes
         while (!queue.isEmpty()) {
-            final N node = queue.poll();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull final N node = queue.poll();
             result.add(node);
             queue.addAll(node.getChildren().values());
         }
@@ -146,7 +153,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
 
                 for (final Map.Entry<O, N> e : src.getChildren().entrySet()) {
                     if (e.getValue().equals(tgt)) {
-                        properties.put(EdgeAttrs.LABEL, e.getKey().toString());
+                        properties.put(EdgeAttrs.LABEL, String.valueOf(e.getKey()));
                         return true;
                     }
                 }
@@ -169,7 +176,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @return {@code null} if {@code this} is an inner node (see {@link #isLeaf()}), the associated hypothesis state
      * otherwise.
      */
-    S getHypothesisState();
+    @Nullable S getHypothesisState();
 
     /**
      * See {@link #getHypothesisState()}.
@@ -180,5 +187,5 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      * @throws UnsupportedOperationException
      *         if trying to set a hypothesis state on an inner node (see {@link #isLeaf()}).
      */
-    void setHypothesisState(S state) throws UnsupportedOperationException;
+    void setHypothesisState(S state);
 }

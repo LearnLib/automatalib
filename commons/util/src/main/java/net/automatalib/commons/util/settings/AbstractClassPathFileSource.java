@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,7 +38,19 @@ public abstract class AbstractClassPathFileSource implements SettingsSource {
         Logger log = LoggerFactory.getLogger(getClass());
 
         try {
-            Enumeration<URL> resourceUrls = Thread.currentThread().getContextClassLoader().getResources(fileName);
+            final Enumeration<URL> resourceUrls;
+            final ClassLoader ccl = Thread.currentThread().getContextClassLoader();
+            if (ccl == null) {
+                final ClassLoader scl = ClassLoader.getSystemClassLoader();
+                if (scl == null) {
+                    log.error("Couldn't find classloader, aborting reading '{}'", fileName);
+                    return;
+                }
+                resourceUrls = scl.getResources(fileName);
+            } else {
+                resourceUrls = ccl.getResources(fileName);
+            }
+
             while (resourceUrls.hasMoreElements()) {
                 URL url = resourceUrls.nextElement();
                 try (Reader r = IOUtil.asBufferedUTF8Reader(url.openStream())) {

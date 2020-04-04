@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,8 +28,7 @@ import net.automatalib.util.traversal.TraversalOrder;
 
 public final class GraphCopy {
 
-    private GraphCopy() {
-    }
+    private GraphCopy() {}
 
     public static <N1, E1, N2, E2, NP2, EP2> Mapping<N1, N2> copyPlain(UniversalGraph<N1, E1, ? extends NP2, ? extends EP2> in,
                                                                        MutableGraph<N2, E2, NP2, EP2> out) {

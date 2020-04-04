@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.commons.util.io.UnclosableInputStream;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
@@ -31,46 +32,53 @@ import org.testng.annotations.Test;
 
 /**
  * Tests forFSM2MealyParserIO.
- *
+ * <p>
  * This tests will involve parsing Mealy machines where transitions in the FSM are alternating (opposed to regular
  * transitions that can be directly mapped).
  *
- * @see FSM2MealyParserIOTest
- *
  * @author Jeroen Meijer
+ * @see FSM2MealyParserIOTest
  */
 public class FSM2MealyParserAlternatingTest extends AbstractFSM2ParserTest {
 
     @Test
     public void testParse() throws Exception {
-        final InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm");
+        try (InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm")) {
 
-        final Function<String, Character> ep = s -> s.charAt(0);
+            final Function<String, Character> ep = s -> s.charAt(0);
+            final CompactMealy<Character, Character> actualMealy =
+                    FSM2MealyParserAlternating.getParser(ep).readModel(is);
 
-        final CompactMealy<Character, Character> actualMealy = FSM2MealyParserAlternating.getParser(ep).readModel(is);
-        is.close();
+            final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
 
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
+            CompactMealy<Character, ?> expectedMealy = AutomatonBuilders.newMealy(alphabet)
+                                                                        .from("q0").on('a').withOutput('1').to("q1")
+                                                                        .from("q1").on('a').withOutput('2').to("q0")
+                                                                        .withInitial("q0")
+                                                                        .create();
 
-        CompactMealy<Character, ?> expectedMealy = AutomatonBuilders.newMealy(alphabet).
-                from("q0").on('a').withOutput('1').to("q1").
-                from("q1").on('a').withOutput('2').to("q0").
-                withInitial("q0").create();
-
-        Assert.assertTrue(Automata.testEquivalence(actualMealy, expectedMealy, alphabet));
+            Assert.assertTrue(Automata.testEquivalence(actualMealy, expectedMealy, alphabet));
+        }
     }
 
     @Override
     protected CompactMealy<Character, Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
-            throws IOException, FSMParseException {
-        final InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm");
+            throws IOException {
+        try (InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm")) {
 
-        final Function<String, Character> ep = s -> s.charAt(0);
+            final Function<String, Character> ep = s -> s.charAt(0);
 
-        final CompactMealy<Character, Character> mealy = FSM2MealyParserAlternating.getParser(requiredInputs.orElse(
-                null), null, ep).readModel(is);
-        is.close();
+            final CompactMealy<Character, Character> mealy =
+                    FSM2MealyParserAlternating.getParser(requiredInputs.orElse(null), null, ep).readModel(is);
 
-        return mealy;
+            return mealy;
+        }
+    }
+
+    @Test
+    public void doNotCloseInputStreamTest() throws IOException {
+        try (InputStream is = FSM2MealyParserAlternatingTest.class.getResourceAsStream("/MealyAlternating.fsm")) {
+            FSM2MealyParserAlternating.getParser(s -> s.charAt(0)).readModel(new UnclosableInputStream(is));
+        }
     }
 }

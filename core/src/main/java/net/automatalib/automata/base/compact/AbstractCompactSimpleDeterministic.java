@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,8 @@ package net.automatalib.automata.base.compact;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class that refines {@link AbstractCompactDeterministic} for transition-property-less automata. As a
@@ -37,12 +35,12 @@ import net.automatalib.words.Alphabet;
  * @author frohme
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractCompactSimpleDeterministic<I, SP>
         extends AbstractCompactDeterministic<I, Integer, SP, Void> {
 
     protected int[] transitions;
 
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public AbstractCompactSimpleDeterministic(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
         this.transitions = new int[stateCapacity * numInputs()];
@@ -61,18 +59,18 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
 
     @Override
     // Overridden for performance reasons (to prevent autoboxing of default implementation)
-    public Integer getState(Iterable<? extends I> input) {
+    public @Nullable Integer getState(Iterable<? extends I> input) {
         return toState(getIntSuccessor(getIntInitialState(), input));
     }
 
     @Override
     // Overridden for performance reasons (to prevent autoboxing of default implementation)
-    public Integer getSuccessor(Integer state, Iterable<? extends I> input) {
+    public @Nullable Integer getSuccessor(Integer state, Iterable<? extends I> input) {
         return toState(getIntSuccessor(state.intValue(), input));
     }
 
     @Override
-    public Integer getTransition(int state, int input) {
+    public @Nullable Integer getTransition(int state, int input) {
         return toState(transitions[toMemoryIndex(state, input)]);
     }
 
@@ -82,7 +80,7 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     }
 
     @Override
-    public void setTransitionProperty(Integer transition, @Nullable Void property) {}
+    public void setTransitionProperty(Integer transition, Void property) {}
 
     @Override
     public void removeAllTransitions(Integer state) {
@@ -92,7 +90,7 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     }
 
     @Override
-    public void setTransition(int state, int input, Integer transition) {
+    public void setTransition(int state, int input, @Nullable Integer transition) {
         setTransition(state, input, toId(transition));
     }
 
@@ -105,7 +103,6 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
         transitions[toMemoryIndex(state, inputIdx)] = succ;
     }
 
-    @Nullable
     @Override
     public Void getTransitionProperty(Integer transition) {
         return null;

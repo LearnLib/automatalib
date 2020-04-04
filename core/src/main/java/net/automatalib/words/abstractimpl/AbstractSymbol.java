@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,6 @@ package net.automatalib.words.abstractimpl;
 
 import net.automatalib.commons.util.nid.AbstractMutableNumericID;
 
-public abstract class AbstractSymbol<S> extends AbstractMutableNumericID implements Comparable<S> {
-
-}
+// we want to aggregate functionality of an abstract class and an interface
+@SuppressWarnings("PMD.AbstractClassWithoutAnyMethod")
+public abstract class AbstractSymbol<S extends Object> extends AbstractMutableNumericID implements Comparable<S> {}

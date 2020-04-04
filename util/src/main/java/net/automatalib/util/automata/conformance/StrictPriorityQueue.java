@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import java.util.NoSuchElementException;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A priority queue which enforces that no two elements that it contains are equal wrt. the specified comparator (i.e.,
@@ -139,7 +140,7 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
     }
 
     @Override
-    public E poll() {
+    public @Nullable E poll() {
         if (size == 0) {
             return null;
         }
@@ -154,6 +155,7 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
      *
      * @return the minimum element in the queue
      */
+    @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     public E extractMin() {
         if (size == 0) {
             throw new NoSuchElementException();
@@ -200,7 +202,7 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
     }
 
     @Override
-    public E peek() {
+    public @Nullable E peek() {
         if (size == 0) {
             return null;
         }

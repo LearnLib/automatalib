@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,7 +38,7 @@ public final class DOTSerializationProvider<N, E> implements ModelSerializer<Gra
 
     @Override
     public void writeModel(OutputStream os, Graph<N, E> model) throws IOException {
-        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+        try (Writer w = IOUtil.asBufferedNonClosingUTF8Writer(os)) {
             GraphDOT.write(model, w);
         }
     }
