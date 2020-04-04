@@ -17,6 +17,7 @@ package net.automatalib.serialization.dot;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,15 +25,10 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.google.common.collect.Maps;
-import com.paypal.digraph.parser.GraphEdge;
-import com.paypal.digraph.parser.GraphNode;
-import com.paypal.digraph.parser.GraphParser;
-import com.paypal.digraph.parser.GraphParserException;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.serialization.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.words.Alphabet;
@@ -56,8 +52,8 @@ public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, 
         implements InputModelDeserializer<I, A> {
 
     private final AutomatonCreator<A, I> creator;
-    private final Function<Map<String, Object>, SP> nodeParser;
-    private final Function<Map<String, Object>, Pair<I, TP>> edgeParser;
+    private final Function<Map<String, String>, SP> nodeParser;
+    private final Function<Map<String, String>, Pair<I, TP>> edgeParser;
     private final Collection<String> initialNodeIds;
     private final boolean fakeInitialNodeIds;
 
@@ -81,8 +77,8 @@ public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, 
      *         matching the {@code initialNodeIds} will be used as initial nodes.
      */
     public DOTMutableAutomatonParser(AutomatonCreator<A, I> creator,
-                                     Function<Map<String, Object>, SP> nodeParser,
-                                     Function<Map<String, Object>, Pair<I, TP>> edgeParser,
+                                     Function<Map<String, String>, SP> nodeParser,
+                                     Function<Map<String, String>, Pair<I, TP>> edgeParser,
                                      Collection<String> initialNodeIds,
                                      boolean fakeInitialNodeIds) {
         this.creator = creator;
@@ -95,55 +91,54 @@ public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, 
     @Override
     public InputModelData<I, A> readModel(InputStream is) throws IOException {
 
-        final GraphParser gp;
+        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+            InternalDOTParser parser = new InternalDOTParser(r);
+            parser.parse();
 
-        try {
-            gp = new GraphParser(IOUtil.asUncompressedBufferedNonClosingInputStream(is));
-        } catch (GraphParserException gpe) {
-            throw new FormatException(gpe);
-        }
+            assert parser.isDirected();
 
-        final Set<I> inputs = new HashSet<>();
+            final Set<I> inputs = new HashSet<>();
 
-        for (GraphEdge edge : gp.getEdges().values()) {
-            if (!fakeInitialNodeIds || !initialNodeIds.contains(edge.getNode1().getId())) {
-                inputs.add(edgeParser.apply(edge.getAttributes()).getFirst());
+            for (Edge edge : parser.getEdges()) {
+                if (!fakeInitialNodeIds || !initialNodeIds.contains(edge.src)) {
+                    inputs.add(edgeParser.apply(edge.attributes).getFirst());
+                }
             }
+
+            final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
+            final A automaton = creator.createAutomaton(alphabet, parser.getNodes().size());
+
+            parseNodesAndEdges(parser, (MutableAutomaton<?, I, ?, SP, TP>) automaton);
+
+            return new InputModelData<>(automaton, alphabet);
         }
-
-        final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
-        final A automaton = creator.createAutomaton(alphabet, gp.getNodes().size());
-
-        parseNodesAndEdges(gp, (MutableAutomaton<?, I, ?, SP, TP>) automaton);
-
-        return new InputModelData<>(automaton, alphabet);
     }
 
-    private <S> void parseNodesAndEdges(GraphParser gp, MutableAutomaton<S, I, ?, SP, TP> automaton) {
-        final Map<String, S> stateMap = Maps.newHashMapWithExpectedSize(gp.getNodes().size());
+    private <S> void parseNodesAndEdges(InternalDOTParser parser, MutableAutomaton<S, I, ?, SP, TP> automaton) {
+        final Map<String, S> stateMap = Maps.newHashMapWithExpectedSize(parser.getNodes().size());
 
-        for (GraphNode node : gp.getNodes().values()) {
+        for (Node node : parser.getNodes()) {
             final S state;
 
-            if (fakeInitialNodeIds && initialNodeIds.contains(node.getId())) {
+            if (fakeInitialNodeIds && initialNodeIds.contains(node.id)) {
                 continue;
-            } else if (!fakeInitialNodeIds && initialNodeIds.contains(node.getId())) {
-                state = automaton.addInitialState(nodeParser.apply(node.getAttributes()));
+            } else if (!fakeInitialNodeIds && initialNodeIds.contains(node.id)) {
+                state = automaton.addInitialState(nodeParser.apply(node.attributes));
             } else {
-                state = automaton.addState(nodeParser.apply(node.getAttributes()));
+                state = automaton.addState(nodeParser.apply(node.attributes));
             }
 
-            stateMap.put(node.getId(), state);
+            stateMap.put(node.id, state);
         }
 
-        for (GraphEdge edge : gp.getEdges().values()) {
-            if (fakeInitialNodeIds && initialNodeIds.contains(edge.getNode1().getId())) {
-                automaton.setInitial(stateMap.get(edge.getNode2().getId()), true);
+        for (Edge edge : parser.getEdges()) {
+            if (fakeInitialNodeIds && initialNodeIds.contains(edge.src)) {
+                automaton.setInitial(stateMap.get(edge.tgt), true);
             } else {
-                final Pair<I, TP> property = edgeParser.apply(edge.getAttributes());
-                automaton.addTransition(stateMap.get(edge.getNode1().getId()),
+                final Pair<I, TP> property = edgeParser.apply(edge.attributes);
+                automaton.addTransition(stateMap.get(edge.src),
                                         property.getFirst(),
-                                        stateMap.get(edge.getNode2().getId()),
+                                        stateMap.get(edge.tgt),
                                         property.getSecond());
             }
         }

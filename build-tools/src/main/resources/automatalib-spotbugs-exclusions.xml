@@ -52,6 +52,14 @@ limitations under the License.
         <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT"/>
         <!-- TODO: these modules/packages currently contains generated javaCC code that we cannot easily change -->
         <Or>
+            <Class name="net.automatalib.serialization.dot.InternalDOTParser"/>
+            <Class name="net.automatalib.serialization.dot.InternalDOTParserConstants"/>
+            <Class name="net.automatalib.serialization.dot.InternalDOTParserTokenManager"/>
+            <Class name="net.automatalib.serialization.dot.ParseException"/>
+            <Class name="net.automatalib.serialization.dot.SimpleCharStream"/>
+            <Class name="net.automatalib.serialization.dot.Token"/>
+            <Class name="net.automatalib.serialization.dot.TokenMgrError"/>
+
             <Class name="net.automatalib.serialization.taf.parser.InternalTAFParser"/>
             <Class name="net.automatalib.serialization.taf.parser.InternalTAFParserConstants"/>
             <Class name="net.automatalib.serialization.taf.parser.InternalTAFParserTokenManager"/>

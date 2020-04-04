@@ -56,16 +56,14 @@ public final class DOTParsers {
      * Node property parser that parses a node's "{@link NodeAttrs#LABEL label}" attribute and returns its {@link
      * Object#toString() string} representation. Returns {@code null} if the attribute is not specified.
      */
-    public static final Function<Map<String, Object>, @Nullable String> DEFAULT_NODE_PARSER = attr -> {
-        final Object label = attr.get(NodeAttrs.LABEL);
-        return label == null ? null : label.toString();
-    };
+    public static final Function<Map<String, String>, @Nullable String> DEFAULT_NODE_PARSER =
+            attr -> attr.get(NodeAttrs.LABEL);
 
     /**
      * Node property parser that returns {@code true} if a node's "{@link NodeAttrs#SHAPE shape}" attribute is specified
      * and equals "{@link NodeShapes#DOUBLECIRCLE doublecircle}". Returns {@code false} otherwise.
      */
-    public static final Function<Map<String, Object>, Boolean> DEFAULT_FSA_NODE_PARSER =
+    public static final Function<Map<String, String>, Boolean> DEFAULT_FSA_NODE_PARSER =
             attr -> NodeShapes.DOUBLECIRCLE.equals(attr.get(NodeAttrs.SHAPE));
 
     /**
@@ -73,13 +71,13 @@ public final class DOTParsers {
      * <id>/<property>}. Returns the string representation of {@code <property>} as-is. Returns {@code null} if the
      * attribute does not exist or does not match the expected format.
      */
-    public static final Function<Map<String, Object>, @Nullable String> DEFAULT_MOORE_NODE_PARSER = attr -> {
-        final Object label = attr.get(NodeAttrs.LABEL);
+    public static final Function<Map<String, String>, @Nullable String> DEFAULT_MOORE_NODE_PARSER = attr -> {
+        final String label = attr.get(NodeAttrs.LABEL);
         if (label == null) {
             return null;
         }
 
-        final String[] tokens = label.toString().split("/");
+        final String[] tokens = label.split("/");
 
         if (tokens.length != 2) {
             return null;
@@ -92,24 +90,22 @@ public final class DOTParsers {
      * Edge input parser that parses an edges's "{@link EdgeAttrs#LABEL label}" attribute and returns its {@link
      * Object#toString() string} representation. Returns {@code null} if the attribute is not specified.
      */
-    public static final Function<Map<String, Object>, @Nullable String> DEFAULT_EDGE_PARSER = attr -> {
-        final Object label = attr.get(EdgeAttrs.LABEL);
-        return label == null ? null : label.toString();
-    };
+    public static final Function<Map<String, String>, @Nullable String> DEFAULT_EDGE_PARSER =
+            attr -> attr.get(EdgeAttrs.LABEL);
 
     /**
      * Edge input parser that expects an edge's "{@link EdgeAttrs#LABEL label}" attribute to be of the form {@code
      * <input>/<property>}. Returns a {@link Pair} object containing the string representation of both components
      * as-is. Returns {@code null} if the attribute does not exist or does not match the expected format.
      */
-    public static final Function<Map<String, Object>, Pair<@Nullable String, @Nullable String>>
+    public static final Function<Map<String, String>, Pair<@Nullable String, @Nullable String>>
             DEFAULT_MEALY_EDGE_PARSER = attr -> {
-        final Object label = attr.get(EdgeAttrs.LABEL);
+        final String label = attr.get(EdgeAttrs.LABEL);
         if (label == null) {
             return Pair.of(null, null);
         }
 
-        final String[] tokens = label.toString().split("/");
+        final String[] tokens = label.split("/");
 
         if (tokens.length != 2) {
             return Pair.of(null, null);
@@ -146,8 +142,8 @@ public final class DOTParsers {
      *
      * @return a DOT {@link InputModelDeserializer} for {@link CompactDFA}s.
      */
-    public static <I> InputModelDeserializer<I, CompactDFA<I>> dfa(Function<Map<String, Object>, Boolean> nodeParser,
-                                                                   Function<Map<String, Object>, I> edgeParser) {
+    public static <I> InputModelDeserializer<I, CompactDFA<I>> dfa(Function<Map<String, String>, Boolean> nodeParser,
+                                                                   Function<Map<String, String>, I> edgeParser) {
         return fsa(new CompactDFA.Creator<>(), nodeParser, edgeParser);
     }
 
@@ -177,8 +173,8 @@ public final class DOTParsers {
      *
      * @return a DOT {@link InputModelDeserializer} for {@link CompactNFA}s.
      */
-    public static <I> InputModelDeserializer<I, CompactNFA<I>> nfa(Function<Map<String, Object>, Boolean> nodeParser,
-                                                                   Function<Map<String, Object>, I> edgeParser) {
+    public static <I> InputModelDeserializer<I, CompactNFA<I>> nfa(Function<Map<String, String>, Boolean> nodeParser,
+                                                                   Function<Map<String, String>, I> edgeParser) {
         return fsa(new CompactNFA.Creator<>(), nodeParser, edgeParser);
     }
 
@@ -202,8 +198,8 @@ public final class DOTParsers {
      * @return a DOT {@link InputModelDeserializer} for {@code A}s.
      */
     public static <I, A extends MutableFSA<?, I>> InputModelDeserializer<I, A> fsa(AutomatonCreator<A, I> creator,
-                                                                                   Function<Map<String, Object>, Boolean> nodeParser,
-                                                                                   Function<Map<String, Object>, I> edgeParser) {
+                                                                                   Function<Map<String, String>, Boolean> nodeParser,
+                                                                                   Function<Map<String, String>, I> edgeParser) {
         return fsa(creator, nodeParser, edgeParser, Collections.singleton(GraphDOT.initialLabel(0)));
     }
 
@@ -230,8 +226,8 @@ public final class DOTParsers {
      * @return a DOT {@link InputModelDeserializer} for {@code A}s.
      */
     public static <I, A extends MutableFSA<?, I>> InputModelDeserializer<I, A> fsa(AutomatonCreator<A, I> creator,
-                                                                                   Function<Map<String, Object>, Boolean> nodeParser,
-                                                                                   Function<Map<String, Object>, I> edgeParser,
+                                                                                   Function<Map<String, String>, Boolean> nodeParser,
+                                                                                   Function<Map<String, String>, I> edgeParser,
                                                                                    Collection<String> initialNodeIds) {
         return fsa(creator, nodeParser, edgeParser, initialNodeIds, true);
     }
@@ -262,8 +258,8 @@ public final class DOTParsers {
      * @return a DOT {@link InputModelDeserializer} for {@code A}s.
      */
     public static <I, A extends MutableFSA<?, I>> InputModelDeserializer<I, A> fsa(AutomatonCreator<A, I> creator,
-                                                                                   Function<Map<String, Object>, Boolean> nodeParser,
-                                                                                   Function<Map<String, Object>, I> edgeParser,
+                                                                                   Function<Map<String, String>, Boolean> nodeParser,
+                                                                                   Function<Map<String, String>, I> edgeParser,
                                                                                    Collection<String> initialNodeIds,
                                                                                    boolean fakeInitialNodeIds) {
         return new DOTMutableAutomatonParser<>(creator,
@@ -298,7 +294,7 @@ public final class DOTParsers {
      *
      * @return a DOT {@link InputModelDeserializer} for {@link CompactMealy}s.
      */
-    public static <I, O> InputModelDeserializer<I, CompactMealy<I, O>> mealy(Function<Map<String, Object>, Pair<I, O>> edgeParser) {
+    public static <I, O> InputModelDeserializer<I, CompactMealy<I, O>> mealy(Function<Map<String, String>, Pair<I, O>> edgeParser) {
         return mealy(new CompactMealy.Creator<>(), edgeParser);
     }
 
@@ -322,7 +318,7 @@ public final class DOTParsers {
      * @return a DOT {@link InputModelDeserializer} for {@code A}s.
      */
     public static <I, O, A extends MutableMealyMachine<?, I, ?, O>> InputModelDeserializer<I, A> mealy(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, Object>, Pair<I, O>> edgeParser) {
+                                                                                                       Function<Map<String, String>, Pair<I, O>> edgeParser) {
         return mealy(creator, edgeParser, GraphDOT.initialLabel(0));
     }
 
@@ -349,7 +345,7 @@ public final class DOTParsers {
      * @return a DOT {@link InputModelDeserializer} for {@code A}s.
      */
     public static <I, O, A extends MutableMealyMachine<?, I, ?, O>> InputModelDeserializer<I, A> mealy(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, Object>, Pair<I, O>> edgeParser,
+                                                                                                       Function<Map<String, String>, Pair<I, O>> edgeParser,
                                                                                                        String initialNodeId) {
         return mealy(creator, edgeParser, initialNodeId, true);
     }
@@ -380,7 +376,7 @@ public final class DOTParsers {
      * @return a DOT {@link InputModelDeserializer} for {@code A}s.
      */
     public static <I, O, A extends MutableMealyMachine<?, I, ?, O>> InputModelDeserializer<I, A> mealy(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, Object>, Pair<I, O>> edgeParser,
+                                                                                                       Function<Map<String, String>, Pair<I, O>> edgeParser,
                                                                                                        String initialNodeId,
                                                                                                        boolean fakeInitialNodeId) {
         return new DOTMutableAutomatonParser<>(creator,
@@ -419,8 +415,8 @@ public final class DOTParsers {
      *
      * @return a DOT {@link InputModelDeserializer} for {@link CompactMoore}s.
      */
-    public static <I, O> InputModelDeserializer<I, CompactMoore<I, O>> moore(Function<Map<String, Object>, O> nodeParser,
-                                                                             Function<Map<String, Object>, I> edgeParser) {
+    public static <I, O> InputModelDeserializer<I, CompactMoore<I, O>> moore(Function<Map<String, String>, O> nodeParser,
+                                                                             Function<Map<String, String>, I> edgeParser) {
         return moore(new CompactMoore.Creator<>(), nodeParser, edgeParser);
 
     }
@@ -447,8 +443,8 @@ public final class DOTParsers {
      * @return a DOT {@link InputModelDeserializer} for {@code A}s.
      */
     public static <I, O, A extends MutableMooreMachine<?, I, ?, O>> InputModelDeserializer<I, A> moore(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, Object>, O> nodeParser,
-                                                                                                       Function<Map<String, Object>, I> edgeParser) {
+                                                                                                       Function<Map<String, String>, O> nodeParser,
+                                                                                                       Function<Map<String, String>, I> edgeParser) {
         return moore(creator, nodeParser, edgeParser, GraphDOT.initialLabel(0));
     }
 
@@ -477,8 +473,8 @@ public final class DOTParsers {
      * @return a DOT {@link InputModelDeserializer} for {@code A}s.
      */
     public static <I, O, A extends MutableMooreMachine<?, I, ?, O>> InputModelDeserializer<I, A> moore(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, Object>, O> nodeParser,
-                                                                                                       Function<Map<String, Object>, I> edgeParser,
+                                                                                                       Function<Map<String, String>, O> nodeParser,
+                                                                                                       Function<Map<String, String>, I> edgeParser,
                                                                                                        String initialNodeId) {
         return moore(creator, nodeParser, edgeParser, initialNodeId, true);
     }
@@ -511,8 +507,8 @@ public final class DOTParsers {
      * @return a DOT {@link InputModelDeserializer} for {@code A}s.
      */
     public static <I, O, A extends MutableMooreMachine<?, I, ?, O>> InputModelDeserializer<I, A> moore(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, Object>, O> nodeParser,
-                                                                                                       Function<Map<String, Object>, I> edgeParser,
+                                                                                                       Function<Map<String, String>, O> nodeParser,
+                                                                                                       Function<Map<String, String>, I> edgeParser,
                                                                                                        String initialNodeId,
                                                                                                        boolean fakeInitialNodeId) {
         return new DOTMutableAutomatonParser<>(creator,
@@ -551,8 +547,8 @@ public final class DOTParsers {
      *
      * @return a DOT {@link ModelDeserializer} for {@link CompactGraph}s.
      */
-    public static <NP, EP> ModelDeserializer<CompactGraph<NP, EP>> graph(Function<Map<String, Object>, NP> nodeParser,
-                                                                         Function<Map<String, Object>, EP> edgeParser) {
+    public static <NP, EP> ModelDeserializer<CompactGraph<NP, EP>> graph(Function<Map<String, String>, NP> nodeParser,
+                                                                         Function<Map<String, String>, EP> edgeParser) {
         return graph(CompactGraph::new, nodeParser, edgeParser);
     }
 
@@ -575,8 +571,8 @@ public final class DOTParsers {
      * @return a DOT {@link ModelDeserializer} for {@code G}s.
      */
     public static <NP, EP, G extends MutableGraph<?, ?, NP, EP>> ModelDeserializer<G> graph(Supplier<G> creator,
-                                                                                            Function<Map<String, Object>, NP> nodeParser,
-                                                                                            Function<Map<String, Object>, EP> edgeParser) {
+                                                                                            Function<Map<String, String>, NP> nodeParser,
+                                                                                            Function<Map<String, String>, EP> edgeParser) {
         return new DOTGraphParser<>(creator, nodeParser, edgeParser);
     }
 

@@ -40,6 +40,8 @@ final class DOTSerializationUtil {
     static final String FAULTY_AUTOMATON_RESOURCE = "/faulty_automaton.dot";
     static final String FAULTY_GRAPH_RESOURCE = "/faulty_graph.dot";
 
+    static final String PARSER_RESOURCE = "/parser.dot";
+
     static final CompactDFA<String> DFA;
     static final CompactNFA<String> NFA;
     static final CompactMealy<String, String> MEALY;

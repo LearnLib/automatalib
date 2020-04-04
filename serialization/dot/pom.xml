@@ -29,7 +29,7 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Serialization :: DOT</name>
-    <description>Serializers for the DOT Format</description>
+    <description>(De-)Serializers for the DOT Format</description>
 
     <dependencies>
         <!-- internal -->
@@ -55,10 +55,6 @@ limitations under the License.
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.paypal.digraph</groupId>
-            <artifactId>digraph-parser</artifactId>
-        </dependency>
 
         <!-- build -->
         <dependency>
@@ -77,4 +73,13 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>javacc-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

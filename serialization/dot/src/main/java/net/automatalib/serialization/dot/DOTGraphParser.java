@@ -17,19 +17,16 @@ package net.automatalib.serialization.dot;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.google.common.collect.Maps;
-import com.paypal.digraph.parser.GraphEdge;
-import com.paypal.digraph.parser.GraphNode;
-import com.paypal.digraph.parser.GraphParser;
-import com.paypal.digraph.parser.GraphParserException;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.MutableGraph;
-import net.automatalib.serialization.FormatException;
 import net.automatalib.serialization.ModelDeserializer;
 
 /**
@@ -47,8 +44,8 @@ import net.automatalib.serialization.ModelDeserializer;
 public class DOTGraphParser<NP, EP, G extends MutableGraph<?, ?, NP, EP>> implements ModelDeserializer<G> {
 
     private final Supplier<G> creator;
-    private final Function<Map<String, Object>, NP> nodeParser;
-    private final Function<Map<String, Object>, EP> edgeParser;
+    private final Function<Map<String, String>, NP> nodeParser;
+    private final Function<Map<String, String>, EP> edgeParser;
 
     /**
      * Parser for (directed) {@link Graph}s with a custom graph instance and custom node and edge attributes.
@@ -61,8 +58,8 @@ public class DOTGraphParser<NP, EP, G extends MutableGraph<?, ?, NP, EP>> implem
      *         an edge parser that extracts from a property map of an edge the edge property
      */
     public DOTGraphParser(Supplier<G> creator,
-                          Function<Map<String, Object>, NP> nodeParser,
-                          Function<Map<String, Object>, EP> edgeParser) {
+                          Function<Map<String, String>, NP> nodeParser,
+                          Function<Map<String, String>, EP> edgeParser) {
         this.creator = creator;
         this.nodeParser = nodeParser;
         this.edgeParser = edgeParser;
@@ -71,33 +68,31 @@ public class DOTGraphParser<NP, EP, G extends MutableGraph<?, ?, NP, EP>> implem
     @Override
     public G readModel(InputStream is) throws IOException {
 
-        final GraphParser gp;
+        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+            InternalDOTParser parser = new InternalDOTParser(r);
+            parser.parse();
 
-        try {
-            gp = new GraphParser(IOUtil.asUncompressedBufferedNonClosingInputStream(is));
-        } catch (GraphParserException gpe) {
-            throw new FormatException(gpe);
+            final G graph = creator.get();
+
+            parseNodesAndEdges(parser, (MutableGraph<?, ?, NP, EP>) graph);
+
+            return graph;
         }
-
-        final G graph = creator.get();
-
-        parseNodesAndEdges(gp, (MutableGraph<?, ?, NP, EP>) graph);
-
-        return graph;
     }
 
-    private <N> void parseNodesAndEdges(GraphParser gp, MutableGraph<N, ?, NP, EP> graph) {
-        final Map<String, N> stateMap = Maps.newHashMapWithExpectedSize(gp.getNodes().size());
+    private <N> void parseNodesAndEdges(InternalDOTParser parser, MutableGraph<N, ?, NP, EP> graph) {
+        final Collection<Node> nodes = parser.getNodes();
+        final Collection<Edge> edges = parser.getEdges();
 
-        for (GraphNode node : gp.getNodes().values()) {
-            final N n = graph.addNode(nodeParser.apply(node.getAttributes()));
-            stateMap.put(node.getId(), n);
+        final Map<String, N> stateMap = Maps.newHashMapWithExpectedSize(nodes.size());
+
+        for (Node node : nodes) {
+            final N n = graph.addNode(nodeParser.apply(node.attributes));
+            stateMap.put(node.id, n);
         }
 
-        for (GraphEdge edge : gp.getEdges().values()) {
-            graph.connect(stateMap.get(edge.getNode1().getId()),
-                          stateMap.get(edge.getNode2().getId()),
-                          edgeParser.apply(edge.getAttributes()));
+        for (Edge edge : edges) {
+            graph.connect(stateMap.get(edge.src), stateMap.get(edge.tgt), edgeParser.apply(edge.attributes));
         }
     }
 }

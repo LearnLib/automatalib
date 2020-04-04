@@ -15,8 +15,10 @@
  */
 package net.automatalib.serialization.dot;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +37,10 @@ import net.automatalib.commons.util.io.UnclosableInputStream;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.serialization.FormatException;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.util.automata.fsa.NFAs;
 import net.automatalib.words.Word;
+import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -151,6 +155,27 @@ public class DOTDeserializationTest {
             DOTParsers.mealy().readModel(new UnclosableInputStream(mealy));
             DOTParsers.moore().readModel(new UnclosableInputStream(moore));
         }
+    }
+
+    @Test
+    public void testDuplicateTransitions() throws IOException {
+
+        // @formatter:off
+        final CompactDFA<String> dfa = AutomatonBuilders.newDFA(Alphabets.closedCharStringRange('a', 'b'))
+                                                        .withInitial("s0")
+                                                        .from("s0").on("a", "b").to("s1")
+                                                        .from("s1").on("a", "b").to("s0")
+                                                        .withAccepting("s1")
+                                                        .create();
+        // @formatter:on
+
+        final StringWriter w = new StringWriter();
+        GraphDOT.write(dfa, dfa.getInputAlphabet(), w);
+
+        final ByteArrayInputStream bais = new ByteArrayInputStream(w.toString().getBytes());
+        final DFA<?, String> parsed = DOTParsers.dfa().readModel(bais).model;
+
+        Assert.assertTrue(Automata.testEquivalence(dfa, parsed, dfa.getInputAlphabet()));
     }
 
     private static <N1, E1, NP extends Comparable<NP>, EP extends Comparable<EP>, N2, E2> void checkGraphEquivalence(

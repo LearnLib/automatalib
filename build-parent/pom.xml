@@ -55,6 +55,13 @@ limitations under the License.
                             <exclude>net/automatalib/util/automata/builders/MooreBuilder.class</exclude>
                             <exclude>net/automatalib/util/automata/builders/MooreBuilder$*.class</exclude>
 
+                            <!-- generated parser for DOT serialization -->
+                            <exclude>net/automatalib/serialization/dot/InternalDOTParser*.class</exclude>
+                            <exclude>net/automatalib/serialization/dot/ParseException.class</exclude>
+                            <exclude>net/automatalib/serialization/dot/SimpleCharStream.class</exclude>
+                            <exclude>net/automatalib/serialization/dot/Token.class</exclude>
+                            <exclude>net/automatalib/serialization/dot/TokenMgrError.class</exclude>
+
                             <!-- generated parser for TAF serialization -->
                             <exclude>net/automatalib/serialization/taf/parser/InternalTAFParser*.class</exclude>
                             <exclude>net/automatalib/serialization/taf/parser/ParseException.class</exclude>
