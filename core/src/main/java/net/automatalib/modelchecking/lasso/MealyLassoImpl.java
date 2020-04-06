@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,6 @@
 package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.transducers.MealyMachine;
@@ -38,24 +35,23 @@ import net.automatalib.words.Word;
 public class MealyLassoImpl<I, O> extends AbstractLasso<I, Word<O>> implements MealyLasso<I, O> {
 
     public MealyLassoImpl(DetOutputAutomaton<?, I, ?, Word<O>> automaton,
-                              Collection<? extends I> inputs,
-                              int unfoldTimes) {
+                          Collection<? extends I> inputs,
+                          int unfoldTimes) {
         super(automaton, inputs, unfoldTimes);
     }
 
-    @Nullable
     @Override
     public O getTransitionOutput(Integer transition) {
         return getOutput().getSymbol(transition);
     }
 
-    @Nonnull
     @Override
     public Integer getSuccessor(Integer transition) {
         return transition;
     }
 
     @Override
+    @SuppressWarnings("nullness") // TODO XXX FIXME: Returning non-null values would currently break InclusionOracles in LearnLib. We should rethink a clean API here.
     public Word<O> computeOutput(Iterable<? extends I> input) {
         final Integer state = getState(input);
         return state != null && state.equals(getWord().length()) ? getOutput() : null;

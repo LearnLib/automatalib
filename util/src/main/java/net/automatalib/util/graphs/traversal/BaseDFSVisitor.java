@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,8 @@
  */
 package net.automatalib.util.graphs.traversal;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A base implementation of a {@link DFSVisitor}.
  *
@@ -27,7 +29,7 @@ package net.automatalib.util.graphs.traversal;
  *
  * @author Malte Isberner
  */
-public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
+public class BaseDFSVisitor<N, E, @Nullable D> implements DFSVisitor<N, E, D> {
 
     @Override
     public D initialize(N node) {
@@ -35,12 +37,10 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
     }
 
     @Override
-    public void explore(N node, D data) {
-    }
+    public void explore(N node, D data) {}
 
     @Override
-    public void finish(N node, D data) {
-    }
+    public void finish(N node, D data) {}
 
     @Override
     public D treeEdge(N srcNode, D srcData, E edge, N tgtNode) {
@@ -64,8 +64,7 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
      * @param tgtNode
      *         the target node of this edge
      */
-    public void edge(N srcNode, D srcData, E edge, N tgtNode) {
-    }
+    public void edge(N srcNode, D srcData, E edge, N tgtNode) {}
 
     @Override
     public void backEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData) {
@@ -95,6 +94,5 @@ public class BaseDFSVisitor<N, E, D> implements DFSVisitor<N, E, D> {
     }
 
     @Override
-    public void backtrackEdge(N srcNode, D srcDate, E edge, N tgtNode, D tgtData) {
-    }
+    public void backtrackEdge(N srcNode, D srcDate, E edge, N tgtNode, D tgtData) {}
 }

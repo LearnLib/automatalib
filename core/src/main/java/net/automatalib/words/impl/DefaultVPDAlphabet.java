@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +18,10 @@ package net.automatalib.words.impl;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An alphabet-based, fixed size implementation of a {@link net.automatalib.words.VPDAlphabet}.
@@ -31,7 +30,7 @@ import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
  */
 public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPDAlphabet<I> {
 
-    private final Object[] globalSymbolCache;
+    private final @Nullable Object[] globalSymbolCache;
 
     public DefaultVPDAlphabet(final Collection<I> internalSymbols,
                               final Collection<I> callSymbols,
@@ -39,6 +38,7 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPD
         this(new MapAlphabet<>(internalSymbols), new MapAlphabet<>(callSymbols), new MapAlphabet<>(returnSymbols));
     }
 
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public DefaultVPDAlphabet(final Alphabet<I> internalAlphabet,
                               final Alphabet<I> callAlphabet,
                               final Alphabet<I> returnAlphabet) {
@@ -47,10 +47,9 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPD
         Arrays.setAll(this.globalSymbolCache, super::getSymbol);
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public I getSymbol(int index) throws IllegalArgumentException {
+    public I getSymbol(int index) {
         if (index < globalSymbolCache.length) {
             return (I) globalSymbolCache[index];
         }

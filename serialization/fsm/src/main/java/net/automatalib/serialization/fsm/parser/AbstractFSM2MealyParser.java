@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,14 +26,13 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An FSM parser for Mealy machines. It provides general functionality for both Mealy machines with straightforward edge
@@ -134,11 +133,10 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      *
      * @return the Mealy machine defined in the FSM source.
      *
-     * @throws FSMParseException (see {@link #parse(Reader)}).
+     * @throws FSMFormatException (see {@link #parse(Reader)}).
      * @throws IOException (see {@link #parse(Reader)}).
      */
-    protected CompactMealy<I, O> parseMealy(Reader reader)
-            throws FSMParseException, IOException {
+    protected CompactMealy<I, O> parseMealy(Reader reader) throws IOException {
 
         parse(reader);
 
@@ -180,6 +178,8 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
 
     @Override
     public CompactMealy<I, O> readModel(InputStream is) throws IOException {
-        return parseMealy(IOUtil.asBufferedUTF8Reader(is));
+        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+            return parseMealy(r);
+        }
     }
 }

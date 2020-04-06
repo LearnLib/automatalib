@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (C) 2013-2019 TU Dortmund
+Copyright (C) 2013-2020 TU Dortmund
 This file is part of AutomataLib, http://www.automatalib.net/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <FindBugsFilter>
+    <Match>
+        <!-- TODO: SpotBugs seem to incorrectly infer type annotations, https://github.com/spotbugs/spotbugs/issues/643
+                   We have CheckerFramework for this anyway -->
+        <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
+    </Match>
     <Match>
         <!-- TODO: mostly due to performance. However, usage should be checked again -->
         <Bug pattern="EI_EXPOSE_REP2"/>
@@ -45,8 +50,16 @@ limitations under the License.
     </Match>
     <Match>
         <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT"/>
-        <!-- TODO: this module/package currently contains generated javaCC code, we cannot easily change -->
+        <!-- TODO: these modules/packages currently contains generated javaCC code that we cannot easily change -->
         <Or>
+            <Class name="net.automatalib.serialization.dot.InternalDOTParser"/>
+            <Class name="net.automatalib.serialization.dot.InternalDOTParserConstants"/>
+            <Class name="net.automatalib.serialization.dot.InternalDOTParserTokenManager"/>
+            <Class name="net.automatalib.serialization.dot.ParseException"/>
+            <Class name="net.automatalib.serialization.dot.SimpleCharStream"/>
+            <Class name="net.automatalib.serialization.dot.Token"/>
+            <Class name="net.automatalib.serialization.dot.TokenMgrError"/>
+
             <Class name="net.automatalib.serialization.taf.parser.InternalTAFParser"/>
             <Class name="net.automatalib.serialization.taf.parser.InternalTAFParserConstants"/>
             <Class name="net.automatalib.serialization.taf.parser.InternalTAFParserTokenManager"/>
@@ -54,18 +67,39 @@ limitations under the License.
             <Class name="net.automatalib.serialization.taf.parser.SimpleCharStream"/>
             <Class name="net.automatalib.serialization.taf.parser.Token"/>
             <Class name="net.automatalib.serialization.taf.parser.TokenMgrError"/>
+
+            <Class name="net.automatalib.modelcheckers.ltsmin.InternalLTSminLTLParser"/>
+            <Class name="net.automatalib.modelcheckers.ltsmin.InternalLTSminLTLParserConstants"/>
+            <Class name="net.automatalib.modelcheckers.ltsmin.InternalLTSminLTLParserTokenManager"/>
+            <Class name="net.automatalib.modelcheckers.ltsmin.ParseException"/>
+            <Class name="net.automatalib.modelcheckers.ltsmin.SimpleCharStream"/>
+            <Class name="net.automatalib.modelcheckers.ltsmin.Token"/>
+            <Class name="net.automatalib.modelcheckers.ltsmin.TokenMgrError"/>
         </Or>
     </Match>
     <Match>
         <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/756 -->
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
         <Or>
-            <Class name="net.automatalib.serialization.taf.parser.TAFParser"/>
             <Class name="net.automatalib.serialization.aut.InternalAUTParser"/>
             <Class name="net.automatalib.serialization.dot.DOTSerializationProvider"/>
+            <And>
+                <Class name="net.automatalib.serialization.fsm.parser.AbstractFSM2MealyParser"/>
+                <Method name="readModel" returns="net.automatalib.automata.transducers.impl.compact.CompactMealy" params="java.io.InputStream"/>
+            </And>
+            <And>
+                <Class name="net.automatalib.serialization.fsm.parser.FSM2DFAParser"/>
+                <Method name="readModel" returns="net.automatalib.automata.fsa.impl.compact.CompactDFA" params="java.io.InputStream"/>
+            </And>
             <Class name="net.automatalib.visualization.dot.DOTComponent$1"/>
             <Class name="net.automatalib.visualization.dot.GraphVizBrowserVisualizationProvider"/>
             <Class name="net.automatalib.visualization.dot.PlottedGraph"/>
+        </Or>
+    </Match>
+    <Match>
+        <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/259 -->
+        <Or>
+            <Class name="net.automatalib.commons.util.lib.LibLoader"/>
         </Or>
     </Match>
 </FindBugsFilter>

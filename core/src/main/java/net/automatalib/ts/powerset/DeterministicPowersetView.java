@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@ import java.util.Collections;
 
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.PowersetViewTS;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DeterministicPowersetView<S, I, T>
         implements DeterministicTransitionSystem<S, I, T>, PowersetViewTS<S, I, T, S, T> {
@@ -31,7 +32,7 @@ public class DeterministicPowersetView<S, I, T>
     }
 
     @Override
-    public T getTransition(S state, I input) {
+    public @Nullable T getTransition(S state, I input) {
         return delegate.getTransition(state, input);
     }
 
@@ -41,7 +42,7 @@ public class DeterministicPowersetView<S, I, T>
     }
 
     @Override
-    public S getInitialState() {
+    public @Nullable S getInitialState() {
         return delegate.getInitialState();
     }
 

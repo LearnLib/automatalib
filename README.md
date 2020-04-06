@@ -24,37 +24,38 @@ Furthermore, a plethora of graph-/automata-based algorithms is implemented, cove
 * automata theory (equivalence, minimization)
 * model checking (adaptive distinguishing sequences, W(p)Method, characterizing sets, state/transition covers, LTL checking (via [LTSMin][ltsmin]))
 
-While we strive to deliver code at a high quality, please note, that there exist parts of the library that still need thorough testing.
+While we strive to deliver code at a high quality, please note that there exist parts of the library that still need thorough testing.
 Contributions -- whether it is in the form of new features, better documentation or tests -- are welcome.
 
 ## Build Instructions
 
-For simply using AutomataLib, you may use the Maven artifacts which are available in the [Maven Central repository][maven-central].
-It is also possible to download a bundled [distribution artifact][maven-central-distr], if you want to use AutomataLib without Maven support.
-Note, that AutomataLib requires Java 8.
+For simply using AutomataLib you may use the Maven artifacts which are available in the [Maven Central repository][maven-central].
+It is also possible to download a bundled [distribution artifact][maven-central-distr] if you want to use AutomataLib without Maven support.
+Note that AutomataLib requires Java 8 or newer.
 
 #### Building development versions
 
-If you intend to use development versions of AutomataLib, you can either use the deployed SNAPSHOT artifacts from the continuous integration server (see [Using Development Versions](https://github.com/LearnLib/automatalib/wiki/Using-Development-Versions)), or build them yourself. Simply clone the development branch of the repository
+If you intend to use development versions of AutomataLib, you can either use the deployed SNAPSHOT artifacts from the continuous integration server (see [Using Development Versions](https://github.com/LearnLib/automatalib/wiki/Using-Development-Versions)) or build them yourself.
+Simply clone the development branch of the repository
 
 ```
 git clone -b develop --single-branch https://github.com/LearnLib/automatalib.git
 ```
 
 and run a single `mvn clean install`.
-This will build all the required maven artifacts and will install them in your local Maven repository, so that you can reference them in other projects.
+This will build all the required maven artifacts and will install them in your local Maven repository so that you can reference them in other projects.
 
 If you plan to use a development version of AutomataLib in an environment where no Maven support is available, simply run `mvn clean package -Pbundles`.
 The respective JARs are then available under `distribution/target/bundles`.
 
 #### Developing AutomataLib
 
-For developing the code base of AutomataLib, it is suggested to use one of the major Java IDEs, which come with out-of-the-box Maven support.
+For developing the code base of AutomataLib it is suggested to use one of the major Java IDEs which come with out-of-the-box Maven support.
 
 * For [IntelliJ IDEA][intellij]:
   1. Select `File` -> `New` -> `Project from existing sources` and select the folder containing the development checkout.
   1. Choose "Import Project from external model", select "Maven" and click `Next`.
-  1. Configure the project to your liking, but make sure to check "Import Maven projects automatically" and have "Generated sources folders" set to "Detect automatically".
+  1. Configure the project to your liking but make sure to check "Import Maven projects automatically" and have "Generated sources folders" set to "Detect automatically".
   1. Click `Next` until the project is imported (no Maven profile needs to be selected).
 
 * For [Eclipse][eclipse]:

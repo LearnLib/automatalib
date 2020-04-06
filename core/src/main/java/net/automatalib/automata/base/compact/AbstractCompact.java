@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,9 +22,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.IntFunction;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.MutableDeterministic.FullIntAbstraction;
@@ -32,9 +29,9 @@ import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.concepts.StateLocalInput;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class for compact automata representations. Compactness is achieved by representing states as
@@ -56,7 +53,6 @@ import net.automatalib.words.impl.Alphabets;
  * @author frohme
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<Integer, I, T, SP, TP>,
                                                                StateIDs<Integer>,
                                                                UniversalFiniteAlphabetAutomaton<Integer, I, T, SP, TP>,
@@ -103,12 +99,12 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
     @Override
     public int getStateId(Integer state) {
-        return toId(state);
+        return state.intValue();
     }
 
     @Override
     public Integer getState(int id) {
-        return toState(id);
+        return id;
     }
 
     @Override
@@ -154,7 +150,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     }
 
     @Override
-    public final void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public final void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
@@ -215,8 +211,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      *
      * @return a copy of the provided array with updated memory layout.
      */
-    protected final <T> T[] updateStateStorage(T[] oldStorage, @Nullable T defaultValue, Payload payload) {
-        final T[] result = Arrays.copyOf(oldStorage, payload.newSizeHint);
+    protected final Object[] updateStateStorage(@Nullable Object[] oldStorage,
+                                                @Nullable Object defaultValue,
+                                                Payload payload) {
+        final Object[] result = Arrays.copyOf(oldStorage, payload.newSizeHint);
         Arrays.fill(result, oldStorage.length, result.length, defaultValue);
         return result;
     }
@@ -269,10 +267,14 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      * @see #updateTransitionStorage(int[], int, Payload)
      * @see #updateTransitionStorage(Object[], IntFunction, Object, Payload)
      */
-    protected final Object[] updateTransitionStorage(Object[] oldStorage,
-                                                     @Nullable Object defaultValue,
-                                                     Payload payload) {
-        return payload.type.updateStorage(oldStorage, payload, Object[]::new, (arr, idx) -> arr[idx] = defaultValue);
+    protected final @Nullable Object[] updateTransitionStorage(@Nullable Object[] oldStorage,
+                                                               @Nullable Object defaultValue,
+                                                               Payload payload) {
+        // explicit generic declaration required for checkerframework
+        return payload.type.<@Nullable Object[]>updateStorage(oldStorage,
+                                                              payload,
+                                                              (IntFunction<@Nullable Object[]>) Object[]::new,
+                                                              (arr, idx) -> arr[idx] = defaultValue);
     }
 
     /**
@@ -284,20 +286,22 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
      *         default value for newly allocated array positions
      * @param payload
      *         the payload object
+     * @param <S>
+     *         the storage type
      *
      * @return a copy of the provided array with updated memory layout.
      *
      * @see #updateTransitionStorage(int[], int, Payload)
      * @see #updateTransitionStorage(Object[], Object, Payload)
      */
-    protected final <T> T[] updateTransitionStorage(T[] oldStorage,
-                                                    IntFunction<T[]> arrayConstructor,
-                                                    @Nullable T defaultValue,
-                                                    Payload payload) {
+    protected final <S> @Nullable S[] updateTransitionStorage(@Nullable S[] oldStorage,
+                                                              IntFunction<@Nullable S[]> arrayConstructor,
+                                                              @Nullable S defaultValue,
+                                                              Payload payload) {
         return payload.type.updateStorage(oldStorage, payload, arrayConstructor, (arr, idx) -> arr[idx] = defaultValue);
     }
 
-    protected static Integer toState(int id) {
+    protected static @Nullable Integer toState(int id) {
         return (id != INVALID_STATE) ? id : null;
     }
 
@@ -321,7 +325,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
         return stateId * alphabetSize + inputId;
     }
 
-    protected final int getSymbolIndex(@Nullable I input) {
+    protected final int getSymbolIndex(I input) {
         return alphabet.getSymbolIndex(input);
     }
 
@@ -340,10 +344,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
          */
         NEW_STATE {
             @Override
-            <T> T updateStorage(T oldStorage,
-                                Payload p,
-                                IntFunction<T> arrayConstructor,
-                                ArrayInitializer<T> initializer) {
+            <T extends Object> T updateStorage(T oldStorage,
+                                               Payload p,
+                                               IntFunction<T> arrayConstructor,
+                                               ArrayInitializer<T> initializer) {
 
                 final T newStorage = arrayConstructor.apply(p.newSizeHint * p.alphabetSize);
                 System.arraycopy(oldStorage, 0, newStorage, 0, p.oldSizeHint * p.alphabetSize);
@@ -360,10 +364,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
          */
         NEW_ALPHABET_SYMBOL {
             @Override
-            <T> T updateStorage(T oldStorage,
-                                Payload p,
-                                IntFunction<T> arrayConstructor,
-                                ArrayInitializer<T> initializer) {
+            <T extends Object> T updateStorage(T oldStorage,
+                                               Payload p,
+                                               IntFunction<T> arrayConstructor,
+                                               ArrayInitializer<T> initializer) {
 
                 final T newStorage = arrayConstructor.apply(p.newSizeHint * p.stateCapacity);
 
@@ -401,10 +405,10 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
          *
          * @return the new array
          */
-        abstract <T> T updateStorage(T oldStorage,
-                                     Payload payload,
-                                     IntFunction<T> arrayConstructor,
-                                     ArrayInitializer<T> initializer);
+        abstract <T extends Object> T updateStorage(T oldStorage,
+                                                    Payload payload,
+                                                    IntFunction<T> arrayConstructor,
+                                                    ArrayInitializer<T> initializer);
     }
 
     /**

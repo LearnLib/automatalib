@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,18 +18,18 @@ package net.automatalib.serialization.saf;
 import java.io.DataInput;
 import java.io.IOException;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 @FunctionalInterface
 public interface BlockPropertyDecoder<P> {
 
-    static <P> BlockPropertyDecoder<P> nullDecoder() {
+    static <P> BlockPropertyDecoder<@Nullable P> nullDecoder() {
         return in -> null;
     }
 
-    default void start(DataInput in) throws IOException {
-    }
+    default void start(DataInput in) throws IOException {}
 
     P readProperty(DataInput in) throws IOException;
 
-    default void finish(DataInput in) throws IOException {
-    }
+    default void finish(DataInput in) throws IOException {}
 }

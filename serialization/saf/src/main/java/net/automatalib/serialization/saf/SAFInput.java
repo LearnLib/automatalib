@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +29,7 @@ import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.IOUtil;
-import net.automatalib.serialization.AutomatonSerializationException;
+import net.automatalib.serialization.FormatException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -76,11 +76,11 @@ class SAFInput {
             throws IOException {
         AutomatonType type = readHeader();
         if (type != expectedType) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         int alphabetSize = in.readInt();
         if (alphabetSize != alphabet.size()) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         return readAutomatonBody(alphabet, type.isDeterministic(), creator, spDecoder, tpDecoder);
     }
@@ -90,11 +90,11 @@ class SAFInput {
         byte[] header = new byte[headerSize];
         in.readFully(header);
         if (header[0] != 'S' || header[1] != 'A' || header[2] != 'F') {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         byte type = header[3];
         if (type < 0 || type >= TYPES.length) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         return TYPES[type];
     }
@@ -108,12 +108,10 @@ class SAFInput {
         int numStates = in.readInt();
         A result = creator.createAutomaton(alphabet, numStates);
 
-        // this cast is required ..
-        final MutableAutomaton<?, I, ?, SP, TP> resultWithCorrectType = result;
         if (deterministic) {
-            decodeBodyDet(resultWithCorrectType, alphabet, numStates, spDecoder, tpDecoder);
+            decodeBodyDet((MutableAutomaton<?, I, ?, SP, TP>) result, alphabet, numStates, spDecoder, tpDecoder);
         } else {
-            decodeBodyNondet(resultWithCorrectType, alphabet, numStates, spDecoder, tpDecoder);
+            decodeBodyNondet((MutableAutomaton<?, I, ?, SP, TP>) result, alphabet, numStates, spDecoder, tpDecoder);
         }
 
         return result;
@@ -255,11 +253,11 @@ class SAFInput {
             throws IOException {
         AutomatonType type = readHeader();
         if (type != expectedType) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         int alphabetSize = in.readInt();
         if (alphabetSize <= 0) {
-            throw new AutomatonSerializationException();
+            throw new FormatException();
         }
         Alphabet<Integer> alphabet = Alphabets.integers(0, alphabetSize - 1);
         return readAutomatonBody(alphabet, type.isDeterministic(), creator, spDecoder, tpDecoder);

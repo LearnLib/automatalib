@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 package net.automatalib.graphs.ads.impl;
 
 import net.automatalib.graphs.ads.ADSNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An ADS-specific implementation of a symbol node.
@@ -32,7 +33,7 @@ import net.automatalib.graphs.ads.ADSNode;
 public class ADSSymbolNode<S, I, O> extends AbstractRecursiveADSSymbolNode<S, I, O, ADSNode<S, I, O>>
         implements ADSNode<S, I, O> {
 
-    public ADSSymbolNode(ADSNode<S, I, O> parent, I symbol) {
+    public ADSSymbolNode(@Nullable ADSNode<S, I, O> parent, I symbol) {
         super(parent, symbol);
     }
 }

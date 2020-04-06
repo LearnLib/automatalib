@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,8 @@ package net.automatalib.util.graphs.sssp;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.util.graphs.Graphs;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Result interface for the single-source shortest path (SSSP) problem.
@@ -33,7 +30,6 @@ import net.automatalib.util.graphs.Graphs;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SSSPResult<N, E> {
 
     /**
@@ -41,7 +37,6 @@ public interface SSSPResult<N, E> {
      *
      * @return the source node
      */
-    @Nonnull
     N getInitialNode();
 
     /**
@@ -66,8 +61,7 @@ public interface SSSPResult<N, E> {
      *
      * @return the path from the initial node to the given target node, or {@code null} if there exists no such path.
      */
-    @Nullable
-    List<E> getShortestPath(N target);
+    @Nullable List<E> getShortestPath(N target);
 
     /**
      * Retrieves the incoming edge via which the given node is reached on the shortest path. If the node is not
@@ -78,6 +72,5 @@ public interface SSSPResult<N, E> {
      *
      * @return the reaching edge on the shortest path, or {@code null}.
      */
-    @Nullable
-    E getShortestPathEdge(N target);
+    @Nullable E getShortestPathEdge(N target);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,6 @@ package net.automatalib.graphs.ads;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-
 /**
  * A (simplified) node in an adaptive distinguishing sequence. See {@link RecursiveADSNode}.
  *
@@ -33,7 +31,6 @@ import javax.annotation.Nonnull;
  */
 public interface ADSNode<S, I, O> extends RecursiveADSNode<S, I, O, ADSNode<S, I, O>> {
 
-    @Nonnull
     @Override
     default Collection<ADSNode<S, I, O>> getNodes() {
         return getNodesForRoot(this);

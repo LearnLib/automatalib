@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 package net.automatalib.graphs;
-
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.ts.UniversalTransitionSystem;
 
@@ -35,7 +32,6 @@ import net.automatalib.ts.UniversalTransitionSystem;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<N, E> {
 
     /**
@@ -46,7 +42,6 @@ public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<
      *
      * @return the property of the specified node
      */
-    @Nullable
     NP getNodeProperty(N node);
 
     /**
@@ -57,6 +52,5 @@ public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<
      *
      * @return the property of the specified edge
      */
-    @Nullable
     EP getEdgeProperty(E edge);
 }

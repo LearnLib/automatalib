@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@ package net.automatalib.commons.util.lib;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 public final class PlatformProperties {
 
     private static final Logger LOG = LoggerFactory.getLogger(PlatformProperties.class);
+    private static final String PLATFORM_ALIASES = "platform-aliases.properties";
 
     public static final String OS_NAME;
     public static final String OS_ARCH;
@@ -32,17 +34,21 @@ public final class PlatformProperties {
 
     static {
         Properties aliases = new Properties();
-        try (InputStream is = PlatformProperties.class.getResourceAsStream("/platform-aliases.properties")) {
-            aliases.load(is);
+        try (InputStream is = PlatformProperties.class.getResourceAsStream('/' + PLATFORM_ALIASES)) {
+            if (is == null) {
+                LOG.warn("Could not find '{}'.", PLATFORM_ALIASES);
+            } else {
+                aliases.load(is);
+            }
         } catch (IOException ex) {
             LOG.warn("Could not load platform aliases file.", ex);
             LOG.warn("You may experience issues with the resolution of native libraries.");
         }
 
-        String osName = System.getProperty("os.name").toLowerCase().replace(' ', '_').replace('/', '_');
+        String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT).replace(' ', '_').replace('/', '_');
         OS_NAME = aliases.getProperty("os." + osName, osName);
 
-        String osArch = System.getProperty("os.arch").toLowerCase().replace(' ', '_').replace('/', '_');
+        String osArch = System.getProperty("os.arch").toLowerCase(Locale.ROOT).replace(' ', '_').replace('/', '_');
         OS_ARCH = aliases.getProperty("arch." + osArch, osArch);
 
         OS_VERSION = System.getProperty("os.version");

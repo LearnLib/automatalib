@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +17,10 @@ package net.automatalib.modelchecking;
 
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.exception.ModelCheckingException;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A model checker checks whether a given automaton satisfies a given property. If the property can not be satisfied it
@@ -40,7 +38,6 @@ import net.automatalib.exception.ModelCheckingException;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface ModelChecker<I, A, P, R> {
 
     /**
@@ -58,8 +55,7 @@ public interface ModelChecker<I, A, P, R> {
      * @throws ModelCheckingException
      *         when this model checker can not check the property.
      */
-    @Nullable
-    R findCounterExample(A automaton, Collection<? extends I> inputs, P property) throws ModelCheckingException;
+    @Nullable R findCounterExample(A automaton, Collection<? extends I> inputs, P property);
 
     interface DFAModelChecker<I, P, R> extends ModelChecker<I, DFA<?, I>, P, R> {}
 

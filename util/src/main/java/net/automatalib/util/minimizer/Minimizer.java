@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 package net.automatalib.util.minimizer;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,8 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
  * Automaton minimizer. The automata are accessed via the {@link UniversalGraph} interface, and may be partially
@@ -46,8 +49,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
  */
 public final class Minimizer<S, L> {
 
-    private static final ThreadLocal<Minimizer<Object, Object>> LOCAL_INSTANCE =
-            ThreadLocal.withInitial(Minimizer::new);
+    private static final ThreadLocal<Minimizer<?, ?>> LOCAL_INSTANCE = ThreadLocal.withInitial(Minimizer::new);
     // The following attributes may be reused. Most of them are used
     // as local variables in the split() method, but storing them
     // as attributes helps to avoid costly re-allocations.
@@ -58,15 +60,14 @@ public final class Minimizer<S, L> {
     private final IntrusiveLinkedList<Block<S, L>> newBlocks = new IntrusiveLinkedList<>();
     private final IntrusiveLinkedList<State<S, L>> finalList = new IntrusiveLinkedList<>();
     // These attributes belong to a specific minimization process.
-    private MutableMapping<S, State<S, L>> stateStorage;
-    private UnorderedCollection<Block<S, L>> partition;
+    private @Nullable MutableMapping<S, @Nullable State<S, L>> stateStorage;
+    private @Nullable UnorderedCollection<Block<S, L>> partition;
     private int numBlocks;
 
     /**
      * Default constructor.
      */
-    private Minimizer() {
-    }
+    private Minimizer() {}
 
     /**
      * Minimizes an automaton. The automaton is not minimized directly, instead, a {@link MinimizationResult} structure
@@ -82,7 +83,7 @@ public final class Minimizer<S, L> {
      * @return the result structure.
      */
     public static <S, L> MinimizationResult<S, L> minimize(UniversalGraph<S, ?, ?, L> graph) {
-        return minimize(graph, null);
+        return minimize(graph, Collections.emptyList());
     }
 
     public static <S, L> MinimizationResult<S, L> minimize(UniversalGraph<S, ?, ?, L> graph,
@@ -136,7 +137,7 @@ public final class Minimizer<S, L> {
         ///splitters.hintNextCapacity(initialBlocks.size());
 
         for (Block<S, L> block : initialBlocks) {
-            if (block == null || block.isEmpty()) {
+            if (block.isEmpty()) {
                 continue;
             }
             addToPartition(block);
@@ -166,7 +167,7 @@ public final class Minimizer<S, L> {
     }
 
     public <E> MinimizationResult<S, L> performMinimization(UniversalGraph<S, E, ?, L> graph) {
-        return performMinimization(graph, null);
+        return performMinimization(graph, Collections.emptyList());
     }
 
     /**
@@ -174,21 +175,20 @@ public final class Minimizer<S, L> {
      */
     private <E> Collection<Block<S, L>> initialize(UniversalGraph<S, E, ?, L> graph,
                                                    Collection<? extends S> initialNodes) {
-        Iterable<? extends S> origStates;
-        if (initialNodes == null || initialNodes.isEmpty()) {
-            origStates = graph.getNodes();
-        } else {
-            origStates = GraphTraversal.depthFirstOrder(graph, initialNodes);
+        if (initialNodes.isEmpty()) {
+            return Collections.emptyList();
         }
+
+        Iterable<? extends S> origStates = GraphTraversal.depthFirstOrder(graph, initialNodes);
 
         Map<L, TransitionLabel<S, L>> transitionMap = new HashMap<>();
 
-        stateStorage = graph.createStaticNodeMapping();
+        final MutableMapping<S, @Nullable State<S, L>> mapping = graph.createStaticNodeMapping();
 
         int numStates = 0;
         for (S origState : origStates) {
             State<S, L> state = new State<>(numStates++, origState);
-            stateStorage.put(origState, state);
+            mapping.put(origState, state);
             stateList.add(state);
         }
 
@@ -202,7 +202,7 @@ public final class Minimizer<S, L> {
 
             for (E edge : graph.getOutgoingEdges(origState)) {
                 S origTarget = graph.getTarget(edge);
-                State<S, L> target = stateStorage.get(origTarget);
+                State<S, L> target = mapping.get(origTarget);
                 L label = graph.getEdgeProperty(edge);
                 TransitionLabel<S, L> transition = transitionMap.computeIfAbsent(label, TransitionLabel::new);
                 Edge<S, L> edgeObj = new Edge<>(state, target, transition);
@@ -211,6 +211,7 @@ public final class Minimizer<S, L> {
             }
         }
         stateList.quickClear();
+        stateStorage = mapping;
 
         return initPartitioning.getInitialBlocks();
     }
@@ -218,6 +219,7 @@ public final class Minimizer<S, L> {
     /**
      * Adds a block to the partition.
      */
+    @RequiresNonNull("partition")
     private void addToPartition(Block<S, L> block) {
         ElementReference ref = partition.referencedAdd(block);
         block.setPartitionReference(ref);
@@ -329,9 +331,10 @@ public final class Minimizer<S, L> {
                 // If this state was the first to be added to the respective
                 // bucket, or it differs from the previous entry in the previous
                 // letter, it is a split point.
-                if (state.getPrev() == null) {
+                final State<S, L> prev = state.getPrev();
+                if (prev == null) {
                     state.setSplitPoint(true);
-                } else if (i > 0 && state.getPrev().getSignatureLetter(i - 1) != state.getSignatureLetter(i - 1)) {
+                } else if (i > 0 && prev.getSignatureLetter(i - 1) != state.getSignatureLetter(i - 1)) {
                     state.setSplitPoint(true);
                 }
             }
@@ -375,6 +378,7 @@ public final class Minimizer<S, L> {
      * This method performs the actual splitting of blocks, using the sub block information stored in each block
      * object.
      */
+    @RequiresNonNull("partition")
     private void updateBlocks() {
         for (Block<S, L> block : splitBlocks) {
             // Ignore blocks that have no elements in their sub blocks.

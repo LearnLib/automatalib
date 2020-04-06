@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,8 @@
 package net.automatalib.commons.smartcollections;
 
 import java.util.Collection;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Unified interface for (collection) classes that allow writing their contents to an array. The intended behavior
@@ -48,7 +50,7 @@ public interface ArrayWritable<T> {
      * @param num
      *         the maximum number of elements to copy.
      */
-    void writeToArray(int offset, Object[] array, int tgtOfs, int num);
+    void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num);
 
     /**
      * The size of this container.

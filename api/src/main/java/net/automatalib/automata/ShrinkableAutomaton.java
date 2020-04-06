@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A mutable automaton that also supports destructive modifications, i.e., removal of states and transitions.
@@ -39,7 +39,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S, I, T, SP, TP> {
 
     static <S, I, T, SP, TP> void unlinkState(MutableAutomaton<S, I, T, SP, TP> automaton,
@@ -48,7 +47,7 @@ public interface ShrinkableAutomaton<S, I, T, SP, TP> extends MutableAutomaton<S
                                               Collection<I> inputs) {
 
         for (S curr : automaton) {
-            if (state.equals(curr)) {
+            if (Objects.equals(state, curr)) {
                 continue;
             }
 

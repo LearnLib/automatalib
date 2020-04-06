@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +21,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.Iterators;
 
 /**
@@ -37,7 +34,6 @@ import com.google.common.collect.Iterators;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
 
     @Override
@@ -60,12 +56,10 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
         return this;
     }
 
-    @Nonnull
     default Stream<E> outgoingEdgesStream(N node) {
         return getOutgoingEdges(node).stream();
     }
 
-    @Nonnull
     default Iterator<E> outgoingEdgesIterator(N node) {
         return getOutgoingEdges(node).iterator();
     }
@@ -78,15 +72,12 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
      *
      * @return a {@link Collection} of all outgoing edges, or <code>null</code> if the node has no outgoing edges.
      */
-    @Nonnull
     Collection<E> getOutgoingEdges(N node);
 
-    @Nonnull
     default Iterable<E> outgoingEdges(N node) {
         return () -> outgoingEdgesIterator(node);
     }
 
-    @Nonnull
     default Collection<E> getEdgesBetween(N from, N to) {
         return getOutgoingEdges(from).stream()
                                      .filter(e -> Objects.equals(getTarget(e), to))
@@ -101,7 +92,6 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
      *
      * @return the target node of the given edge.
      */
-    @Nonnull
     N getTarget(E edge);
 
 }

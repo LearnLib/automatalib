@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,19 +15,14 @@
  */
 package net.automatalib.util.partitionrefinement;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Deque;
-import java.util.function.Function;
 import java.util.function.IntFunction;
 
 import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.commons.smartcollections.ArrayStorage;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.functions.FunctionsUtil;
+import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
+import net.automatalib.automata.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.commons.util.functions.BiIntFunction;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -42,76 +37,23 @@ import net.automatalib.words.Alphabet;
  */
 public final class PaigeTarjanExtractors {
 
-    private PaigeTarjanExtractors() {
-    }
+    private PaigeTarjanExtractors() {}
 
     /**
      * Translates the results of a coarsest stable partition computation into a deterministic automaton.
      * <p>
-     * This method is designed to match the following methods from {@link PaigeTarjanInitializers}: <ul>
-     *     <li> {@link PaigeTarjanInitializers#initDeterministic(PaigeTarjan,
-     *     net.automatalib.automata.simple.SimpleDeterministicAutomaton,Alphabet, Function, Object)}
-     *     </li>
-     *     <li> {@link PaigeTarjanInitializers#initDeterministic(PaigeTarjan,DeterministicAutomaton, Alphabet,
-     *     java.util.function.Predicate, boolean)}
-     *     </li>
-     * </ul>
-     * <p>
-     * Both the {@code spExtractor} and the {@code tpExtractor} can be {@code null}, in which case they are replaced by
-     * a function always returning {@code null}.
-     *
-     * @param pt
-     *         the partition refinement data structure, after computing the coarsest stable partition
-     * @param creator
-     *         an {@link AutomatonCreator} for creating the resulting automaton
-     * @param inputs
-     *         the input alphabet to use
-     * @param original
-     *         the original automaton on which the partition was computed
-     * @param origIds
-     *         the {@link StateIDs} that translate the {@code int}s from the {@link PaigeTarjan} to states of {@code
-     *         original} (e.g., obtained as the result from {@link PaigeTarjanInitializers#initDeterministic(PaigeTarjan,
-     *         DeterministicAutomaton, Alphabet, java.util.function.Predicate, boolean)}
-     * @param spExtractor
-     *         the state property extractor, or {@code null}
-     * @param tpExtractor
-     *         the transition property extractor, or {@code null}
-     * @param pruneUnreachable
-     *         {@code true} if unreachable states should be pruned during construction, {@code false} otherwise
-     *
-     * @return an automaton created using the specified creator, over the specified input alphabet, and reflecting the
-     * partition data of the specified {@link PaigeTarjan} object
-     */
-    public static <S1, S2, I, T1, T2, SP, TP, A extends MutableDeterministic<S2, I, T2, SP, TP>> A toDeterministic(
-            PaigeTarjan pt,
-            AutomatonCreator<A, I> creator,
-            Alphabet<I> inputs,
-            DeterministicAutomaton<S1, I, T1> original,
-            StateIDs<S1> origIds,
-            Function<? super S1, ? extends SP> spExtractor,
-            Function<? super T1, ? extends TP> tpExtractor,
-            boolean pruneUnreachable) {
-
-        final Function<? super S1, ? extends SP> safeSpExtractor = FunctionsUtil.safeDefault(spExtractor);
-        final Function<? super T1, ? extends TP> safeTpExtractor = FunctionsUtil.safeDefault(tpExtractor);
-
-        if (pruneUnreachable) {
-            return toDeterministicPruned(pt, creator, inputs, original, origIds, safeSpExtractor, safeTpExtractor);
-        }
-        return toDeterministicUnpruned(pt, creator, inputs, original, origIds, safeSpExtractor, safeTpExtractor);
-    }
-
-    /**
-     * Translates the results of a coarsest stable partition computation into a deterministic automaton.
-     * <p>
-     * This method is designed to match the following methods from {@link PaigeTarjanInitializers}: <ul>
-     *     <li> {@link PaigeTarjanInitializers#initCompleteDeterministic(PaigeTarjan,
-     *     net.automatalib.automata.simple.SimpleDeterministicAutomaton.FullIntAbstraction, IntFunction, boolean)}
-     *     </li>
-     *     <li> {@link PaigeTarjanInitializers#initCompleteDeterministic(PaigeTarjan,
-     *     net.automatalib.automata.UniversalDeterministicAutomaton.FullIntAbstraction,
-     *     PaigeTarjanInitializers.AutomatonInitialPartitioning, boolean)}
-     *     </li>
+     * This method is designed to match the following methods from {@link PaigeTarjanInitializers}:
+     * <ul>
+     * <li> {@link PaigeTarjanInitializers#initCompleteDeterministic(PaigeTarjan, FullIntAbstraction, IntFunction,
+     * boolean)}
+     * </li>
+     * <li> {@link PaigeTarjanInitializers#initCompleteDeterministic(PaigeTarjan,
+     * net.automatalib.automata.UniversalDeterministicAutomaton.FullIntAbstraction, AutomatonInitialPartitioning,
+     * boolean)}
+     * </li>
+     * <li> and {@link PaigeTarjanInitializers#initDeterministic(PaigeTarjan, FullIntAbstraction, IntFunction, Object)}
+     * if called with {@code pruneUnreachable = true}.
+     * </li>
      * </ul>
      * <p>
      * Both the {@code spExtractor} and the {@code tpExtractor} can be {@code null}, in which case they are replaced by
@@ -135,79 +77,25 @@ public final class PaigeTarjanExtractors {
      * @return an automaton created using the specified creator, over the specified input alphabet, and reflecting the
      * partition data of the specified {@link PaigeTarjan} object
      */
-    public static <I, T, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministic(PaigeTarjan pt,
-                                                                                                    AutomatonCreator<A, I> creator,
-                                                                                                    Alphabet<I> inputs,
-                                                                                                    DeterministicAutomaton.FullIntAbstraction<T> absOriginal,
-                                                                                                    IntFunction<? extends SP> spExtractor,
-                                                                                                    Function<? super T, ? extends TP> tpExtractor,
-                                                                                                    boolean pruneUnreachable) {
-
-        final IntFunction<? extends SP> safeSpExtractor = FunctionsUtil.safeDefault(spExtractor);
-        final Function<? super T, ? extends TP> safeTpExtractor = FunctionsUtil.safeDefault(tpExtractor);
-
+    public static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministic(PaigeTarjan pt,
+                                                                                                 AutomatonCreator<A, I> creator,
+                                                                                                 Alphabet<I> inputs,
+                                                                                                 SimpleDeterministicAutomaton.FullIntAbstraction absOriginal,
+                                                                                                 IntFunction<? extends SP> spExtractor,
+                                                                                                 BiIntFunction<? extends TP> tpExtractor,
+                                                                                                 boolean pruneUnreachable) {
         if (pruneUnreachable) {
-            return toDeterministicPruned(pt, creator, inputs, absOriginal, safeSpExtractor, safeTpExtractor);
+            return toDeterministicPruned(pt, creator, inputs, absOriginal, spExtractor, tpExtractor);
         }
-        return toDeterministicUnpruned(pt, creator, inputs, absOriginal, safeSpExtractor, safeTpExtractor);
+        return toDeterministicUnpruned(pt, creator, inputs, absOriginal, spExtractor, tpExtractor);
     }
 
-    private static <S1, S2, I, T1, T2, SP, TP, A extends MutableDeterministic<S2, I, T2, SP, TP>> A toDeterministicPruned(
-            PaigeTarjan pt,
-            AutomatonCreator<A, I> creator,
-            Alphabet<I> inputs,
-            DeterministicAutomaton<S1, I, T1> original,
-            StateIDs<S1> origIds,
-            Function<? super S1, ? extends SP> spExtractor,
-            Function<? super T1, ? extends TP> tpExtractor) {
-        int numBlocks = pt.getNumBlocks();
-
-        A result = creator.createAutomaton(inputs, numBlocks);
-
-        S1 init = original.getInitialState();
-        int initId = origIds.getStateId(init);
-        SP initSp = spExtractor.apply(init);
-        S2 resInit = result.addInitialState(initSp);
-        ArrayStorage<S2> states = new ArrayStorage<>(numBlocks);
-        Block initBlock = pt.getBlockForState(initId);
-        states.set(initBlock.id, resInit);
-
-        Deque<Pair<S1, S2>> queue = new ArrayDeque<>();
-        queue.add(Pair.of(init, resInit));
-
-        Pair<S1, S2> curr;
-        while ((curr = queue.poll()) != null) {
-            S1 state = curr.getFirst();
-            S2 resState = curr.getSecond();
-
-            for (I sym : inputs) {
-                T1 trans = original.getTransition(state, sym);
-                if (trans != null) {
-                    TP tp = tpExtractor.apply(trans);
-                    S1 succ = original.getSuccessor(trans);
-                    int succId = origIds.getStateId(succ);
-                    Block succBlock = pt.getBlockForState(succId);
-                    int succBlockId = succBlock.id;
-                    S2 resSucc = states.get(succBlockId);
-                    if (resSucc == null) {
-                        SP succSp = spExtractor.apply(succ);
-                        resSucc = result.addState(succSp);
-                        states.set(succBlockId, resSucc);
-                    }
-                    result.setTransition(resState, sym, resSucc, tp);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    private static <I, T, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicPruned(PaigeTarjan pt,
-                                                                                                           AutomatonCreator<A, I> creator,
-                                                                                                           Alphabet<I> inputs,
-                                                                                                           DeterministicAutomaton.FullIntAbstraction<T> absOriginal,
-                                                                                                           IntFunction<? extends SP> spExtractor,
-                                                                                                           Function<? super T, ? extends TP> tpExtractor) {
+    private static <I, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicPruned(PaigeTarjan pt,
+                                                                                                        AutomatonCreator<A, I> creator,
+                                                                                                        Alphabet<I> inputs,
+                                                                                                        SimpleDeterministicAutomaton.FullIntAbstraction absOriginal,
+                                                                                                        IntFunction<? extends SP> spExtractor,
+                                                                                                        BiIntFunction<? extends TP> tpExtractor) {
 
         int numBlocks = pt.getNumBlocks();
         int numInputs = inputs.size();
@@ -232,10 +120,9 @@ public final class PaigeTarjanExtractors {
             int resState = statesPtr++;
             int rep = repMap[resState];
             for (int i = 0; i < numInputs; i++) {
-                T trans = absOriginal.getTransition(rep, i);
-                if (trans != null) {
-                    TP tp = tpExtractor.apply(trans);
-                    int succ = absOriginal.getIntSuccessor(trans);
+                int succ = absOriginal.getSuccessor(rep, i);
+                if (succ >= 0) {
+                    TP tp = tpExtractor.apply(rep, i);
                     Block succBlock = pt.getBlockForState(succ);
                     int succBlockId = succBlock.id;
                     int resSucc = stateMap[succBlockId];
@@ -254,62 +141,12 @@ public final class PaigeTarjanExtractors {
         return result;
     }
 
-    private static <S1, S2, I, T1, T2, SP, TP, A extends MutableDeterministic<S2, I, T2, SP, TP>> A toDeterministicUnpruned(
-            PaigeTarjan pt,
-            AutomatonCreator<A, I> creator,
-            Alphabet<I> inputs,
-            DeterministicAutomaton<S1, I, T1> original,
-            StateIDs<S1> origIds,
-            Function<? super S1, ? extends SP> spExtractor,
-            Function<? super T1, ? extends TP> tpExtractor) {
-        int numBlocks = pt.getNumBlocks();
-
-        A result = creator.createAutomaton(inputs, numBlocks);
-        ArrayStorage<S2> states = new ArrayStorage<>(numBlocks);
-
-        for (Block curr : pt.blockList()) {
-            int blockId = curr.id;
-            S1 rep = origIds.getState(pt.getRepresentative(curr));
-            SP sp = spExtractor.apply(rep);
-            S2 resState = result.addState(sp);
-            states.set(blockId, resState);
-        }
-        for (Block curr : pt.blockList()) {
-            int blockId = curr.id;
-            S1 rep = origIds.getState(pt.getRepresentative(curr));
-            S2 resultState = states.get(blockId);
-
-            for (I sym : inputs) {
-                T1 origTrans = original.getTransition(rep, sym);
-                TP tp;
-                S2 resultSucc;
-                if (origTrans != null) {
-                    tp = tpExtractor.apply(origTrans);
-                    S1 origSucc = original.getSuccessor(origTrans);
-                    int origSuccId = origIds.getStateId(origSucc);
-                    resultSucc = states.get(pt.getBlockForState(origSuccId).id);
-                } else {
-                    resultSucc = null;
-                    tp = null;
-                }
-                result.setTransition(resultState, sym, resultSucc, tp);
-            }
-        }
-
-        S1 origInit = original.getInitialState();
-        int origInitId = origIds.getStateId(origInit);
-        S2 resInit = states.get(pt.getBlockForState(origInitId).id);
-        result.setInitialState(resInit);
-
-        return result;
-    }
-
     private static <I, T, SP, TP, A extends MutableDeterministic<?, I, ?, SP, TP>> A toDeterministicUnpruned(PaigeTarjan pt,
                                                                                                              AutomatonCreator<A, I> creator,
                                                                                                              Alphabet<I> inputs,
-                                                                                                             DeterministicAutomaton.FullIntAbstraction<T> absOriginal,
+                                                                                                             SimpleDeterministicAutomaton.FullIntAbstraction absOriginal,
                                                                                                              IntFunction<? extends SP> spExtractor,
-                                                                                                             Function<? super T, ? extends TP> tpExtractor) {
+                                                                                                             BiIntFunction<? extends TP> tpExtractor) {
 
         int numBlocks = pt.getNumBlocks();
         int numInputs = inputs.size();
@@ -328,11 +165,10 @@ public final class PaigeTarjanExtractors {
             resultAbs.setStateProperty(blockId, sp);
 
             for (int i = 0; i < numInputs; i++) {
-                T trans = absOriginal.getTransition(rep, i);
-                if (trans != null) {
-                    int succ = absOriginal.getIntSuccessor(trans);
+                int succ = absOriginal.getSuccessor(rep, i);
+                if (succ >= 0) {
                     int resSucc = pt.getBlockForState(succ).id;
-                    TP tp = tpExtractor.apply(trans);
+                    TP tp = tpExtractor.apply(rep, i);
                     resultAbs.setTransition(blockId, i, resSucc, tp);
                 }
             }

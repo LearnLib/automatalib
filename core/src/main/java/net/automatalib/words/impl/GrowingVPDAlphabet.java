@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,6 @@ package net.automatalib.words.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
@@ -84,15 +82,14 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> implem
         return allSyms.size();
     }
 
-    @Nullable
     @Override
-    public VPDSym<I> getSymbol(int index) throws IllegalArgumentException {
+    public VPDSym<I> getSymbol(int index) {
         return allSyms.get(index);
     }
 
     @Override
-    public int getSymbolIndex(@Nullable VPDSym<I> symbol) throws IllegalArgumentException {
-        if (symbol == null || !containsSymbol(symbol)) {
+    public int getSymbolIndex(VPDSym<I> symbol) {
+        if (!containsSymbol(symbol)) {
             throw new IllegalArgumentException();
         }
 
@@ -113,15 +110,14 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> implem
             this.list = list;
         }
 
-        @Nullable
         @Override
-        public VPDSym<I> getSymbol(int index) throws IllegalArgumentException {
+        public VPDSym<I> getSymbol(int index) {
             return list.get(index);
         }
 
         @Override
-        public int getSymbolIndex(@Nullable VPDSym<I> symbol) throws IllegalArgumentException {
-            if (symbol == null || !containsSymbol(symbol)) {
+        public int getSymbolIndex(VPDSym<I> symbol) {
+            if (!containsSymbol(symbol)) {
                 throw new IllegalArgumentException();
             }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Copyright (C) 2013-2019 TU Dortmund
+Copyright (C) 2013-2020 TU Dortmund
 This file is part of AutomataLib, http://www.automatalib.net/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@ limitations under the License.
     <parent>
         <groupId>net.automatalib</groupId>
         <artifactId>automata-visualization-parent</artifactId>
-        <version>0.9.0-SNAPSHOT</version>
+        <version>0.10.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,30 +32,36 @@ limitations under the License.
     <description>Visualizer using the Java Utility for Networks and Graphs</description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
+            <artifactId>automata-commons-util</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-util</artifactId>
+            <artifactId>automata-core</artifactId>
         </dependency>
 
+        <!-- external -->
+        <dependency>
+            <groupId>com.github.misberner.graphviz-awt-shapes</groupId>
+            <artifactId>graphviz-awt-shapes</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sf.jung</groupId>
-            <artifactId>jung-api</artifactId>
+            <artifactId>jung-algorithms</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sf.jung</groupId>
-            <artifactId>jung-algorithms</artifactId>
+            <artifactId>jung-api</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sf.jung</groupId>
@@ -65,35 +71,30 @@ limitations under the License.
             <groupId>net.sf.jung</groupId>
             <artifactId>jung-visualization</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.kohsuke.metainf-services</groupId>
-            <artifactId>metainf-services</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
+        <!-- build -->
         <dependency>
-            <groupId>com.github.misberner.graphviz-awt-shapes</groupId>
-            <artifactId>graphviz-awt-shapes</artifactId>
-            <version>0.0.1</version>
+            <groupId>org.kohsuke.metainf-services</groupId>
+            <artifactId>metainf-services</artifactId>
         </dependency>
 
+        <!-- test -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.java.openjdk.cacio</groupId>
             <artifactId>cacio-tta</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
-            <scope>test</scope>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 

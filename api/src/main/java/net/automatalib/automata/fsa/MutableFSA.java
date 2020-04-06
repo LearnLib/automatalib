@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +15,13 @@
  */
 package net.automatalib.automata.fsa;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.MutableAutomaton;
+import net.automatalib.commons.util.WrapperUtil;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author fh
  */
-@ParametersAreNonnullByDefault
 public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAutomaton<S, I, S, Boolean, Void> {
 
     default void flipAcceptance() {
@@ -34,7 +32,6 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
 
     void setAccepting(S state, boolean accepting);
 
-    @Nonnull
     S addState(boolean accepting);
 
     @Override
@@ -43,9 +40,8 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
     }
 
     @Override
-    default S addState(Boolean property) {
-        boolean acc = (property != null) && property;
-        return addState(acc);
+    default S addState(@Nullable Boolean property) {
+        return addState(WrapperUtil.booleanValue(property));
     }
 
     @Override
@@ -60,20 +56,17 @@ public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAuto
     }
 
     @Override
-    default S addInitialState(Boolean property) {
-        boolean acc = (property != null) && property;
-        return addInitialState(acc);
+    default S addInitialState(@Nullable Boolean property) {
+        return addInitialState(WrapperUtil.booleanValue(property));
     }
 
     @Override
     default void setStateProperty(S state, Boolean property) {
-        boolean acc = (property != null) && property;
-        setAccepting(state, acc);
+        setAccepting(state, property.booleanValue());
     }
 
     @Override
-    default void setTransitionProperty(S transition, Void property) {
-    }
+    default void setTransitionProperty(S transition, Void property) {}
 
     @Override
     default S createTransition(S successor, Void properties) {

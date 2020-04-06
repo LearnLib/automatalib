@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +21,7 @@ import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 
 public final class Acceptors {
 
-    private Acceptors() {
-    }
+    private Acceptors() {}
 
     public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> and(
             TS1 ts1,
@@ -30,7 +29,7 @@ public final class Acceptors {
         return combine(ts1, ts2, AcceptanceCombiner.AND);
     }
 
-    public static <S1, S2, I, T1, T2, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> combine(
+    public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> combine(
             TS1 ts1,
             TS2 ts2,
             AcceptanceCombiner combiner) {

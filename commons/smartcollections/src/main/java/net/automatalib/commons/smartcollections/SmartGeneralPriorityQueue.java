@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,7 +55,7 @@ public interface SmartGeneralPriorityQueue<E, K extends Comparable<K>> extends S
      * Sets the default key, which is used for elements that are inserted with no explicit key specified.
      *
      * @param defaultKey
-     *         the new defualt key.
+     *         the new default key.
      */
     void setDefaultKey(K defaultKey);
 

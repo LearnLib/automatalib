@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class provides methods to parse automata in FSM format.
@@ -35,7 +34,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractFSMParser<I> {
 
     /**
@@ -69,8 +67,7 @@ public abstract class AbstractFSMParser<I> {
     /**
      * The set that contains all inputs that end up in the input alphabet (provided by the user, may be {@code null}).
      */
-    @Nullable
-    protected final Collection<? extends I> targetInputs;
+    protected final @Nullable Collection<? extends I> targetInputs;
 
     /**
      * Constructs a new AbstractFSMParser and defines all possible tokens.
@@ -143,10 +140,10 @@ public abstract class AbstractFSMParser<I> {
      * @param streamTokenizer
      *         tokenizer containing the input
      *
-     * @throws FSMParseException when the FSM source is invalid.
+     * @throws FSMFormatException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void parseDataDefinition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
+    protected abstract void parseDataDefinition(StreamTokenizer streamTokenizer) throws IOException;
 
     /**
      * Perform some actions after all data definitions have been parsed.
@@ -154,10 +151,10 @@ public abstract class AbstractFSMParser<I> {
      * @param streamTokenizer
      *         tokenizer containing the input
      *
-     * @throws FSMParseException when the FSM source is invalid.
+     * @throws FSMFormatException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void checkDataDefinitions(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
+    protected abstract void checkDataDefinitions(StreamTokenizer streamTokenizer) throws IOException;
 
     /**
      * Parse a state vector.
@@ -165,10 +162,10 @@ public abstract class AbstractFSMParser<I> {
      * @param streamTokenizer
      *         tokenizer containing the input
      *
-     * @throws FSMParseException when the FSM source is invalid.
+     * @throws FSMFormatException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void parseStateVector(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
+    protected abstract void parseStateVector(StreamTokenizer streamTokenizer) throws IOException;
 
     /**
      * Perform some actions after all state vectors have been parsed.
@@ -176,10 +173,10 @@ public abstract class AbstractFSMParser<I> {
      * @param streamTokenizer
      *         tokenizer containing the input
      *
-     * @throws FSMParseException when the FSM source is invalid.
+     * @throws FSMFormatException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void checkStateVectors(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
+    protected abstract void checkStateVectors(StreamTokenizer streamTokenizer) throws IOException;
 
     /**
      * Parse a transition.
@@ -187,10 +184,10 @@ public abstract class AbstractFSMParser<I> {
      * @param streamTokenizer
      *         tokenizer containing the input
      *
-     * @throws FSMParseException when the FSM source is invalid.
+     * @throws FSMFormatException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void parseTransition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
+    protected abstract void parseTransition(StreamTokenizer streamTokenizer) throws IOException;
 
     /**
      * Perform some actions after all transitions have been parsed.
@@ -198,10 +195,10 @@ public abstract class AbstractFSMParser<I> {
      * @param streamTokenizer
      *         tokenizer containing the input
      *
-     * @throws FSMParseException when the FSM source is invalid.
+     * @throws FSMFormatException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected abstract void checkTransitions(StreamTokenizer streamTokenizer) throws FSMParseException, IOException;
+    protected abstract void checkTransitions(StreamTokenizer streamTokenizer) throws IOException;
 
     /**
      * Parsed the FSM file line-by-line.
@@ -217,10 +214,10 @@ public abstract class AbstractFSMParser<I> {
      * @param reader
      *         the source of the FSM file
      *
-     * @throws FSMParseException when the FSM source is invalid.
+     * @throws FSMFormatException when the FSM source is invalid.
      * @throws IOException when FSM source could not be read.
      */
-    protected void parse(Reader reader) throws FSMParseException, IOException {
+    protected void parse(Reader reader) throws IOException {
         Part part = Part.DataDefinition;
         partLineNumber = 0;
 
@@ -264,6 +261,5 @@ public abstract class AbstractFSMParser<I> {
             partLineNumber++;
         }
         checkTransitions(streamTokenizer);
-        reader.close();
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-Copyright (C) 2013-2019 TU Dortmund
+Copyright (C) 2013-2020 TU Dortmund
 This file is part of AutomataLib, http://www.automatalib.net/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@ limitations under the License.
     <parent>
         <groupId>net.automatalib</groupId>
         <artifactId>automata-adapters-parent</artifactId>
-        <version>0.9.0-SNAPSHOT</version>
+        <version>0.10.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -35,25 +35,26 @@ limitations under the License.
     </description>
 
     <dependencies>
+        <!-- internal -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-api</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
+        <!-- external -->
         <dependency>
             <groupId>dk.brics.automaton</groupId>
             <artifactId>automaton</artifactId>
             <optional>true</optional>
         </dependency>
 
+        <!-- build -->
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
+
+        <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>
@@ -63,6 +64,10 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,6 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -30,12 +29,6 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractLTSminLTLMealyTest
         extends AbstractLTSminLTLTest<MealyMachine<?, String, ?, String>, MealyLasso<String, String>> {
-
-    @BeforeMethod
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-    }
 
     @Override
     public abstract AbstractLTSminLTLMealy<String, String> getModelChecker();

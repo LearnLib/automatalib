@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,7 +56,7 @@ class InternalTAFParser {
 	}
 	
 	public void fatal(String fmtString, Object... args) {
-		throw new TAFParseException("At line " + getLine() + ", column " + getCol() + ": "
+		throw new TAFFormatException("At line " + getLine() + ", column " + getCol() + ": "
 			+ MessageFormat.format(fmtString, args));
 	}
 	

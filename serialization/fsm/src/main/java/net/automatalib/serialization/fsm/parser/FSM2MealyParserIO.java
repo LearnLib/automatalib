@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +21,8 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.commons.util.Pair;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Parse a Mealy machine from an FSM source, with straightforward edge semantics.
@@ -48,25 +47,27 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
      * @param outputParser
      *         the output parser (similar to {@code inputParser}.
      */
-    private FSM2MealyParserIO(Collection<? extends I> targetInputs, Function<String, I> inputParser, Function<String, O> outputParser) {
+    private FSM2MealyParserIO(@Nullable Collection<? extends I> targetInputs,
+                              Function<String, I> inputParser,
+                              Function<String, O> outputParser) {
         super(targetInputs, inputParser, outputParser);
     }
 
     /**
      * Parse a transition.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when the transition is illegal.
      * @throws IOException
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException {
         try {
 
             // check we will read a state index
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
+                throw new FSMFormatException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the source state index
@@ -74,12 +75,12 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
 
             // check if such a state exists
             if (!getStates().isEmpty() && !getStates().contains(from)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, from), streamTokenizer);
+                throw new FSMFormatException(String.format(NO_SUCH_STATE, from), streamTokenizer);
             }
 
             // check we will read a state index
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
+                throw new FSMFormatException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the target state index
@@ -87,12 +88,12 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
 
             // check if such a state exists
             if (!getStates().isEmpty() && !getStates().contains(to)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, to), streamTokenizer);
+                throw new FSMFormatException(String.format(NO_SUCH_STATE, to), streamTokenizer);
             }
 
             // check we will read an input edge label
             if (streamTokenizer.nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
+                throw new FSMFormatException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the input, and convert the input string to actual input
@@ -103,7 +104,7 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
 
             // check we will read an output edge label
             if (streamTokenizer.nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
+                throw new FSMFormatException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the output, and convert the output string to actual output
@@ -114,10 +115,10 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
 
             // check for non-determinism
             if (prev != null) {
-                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
+                throw new FSMFormatException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
             }
         } catch (NumberFormatException nfe) {
-            throw new FSMParseException(nfe, streamTokenizer);
+            throw new FSMFormatException(nfe, streamTokenizer);
         }
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@ import java.util.function.IntFunction;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simple deterministic automaton.
@@ -134,16 +135,24 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
             }
 
             protected final S intToState(int stateId) {
-                return (stateId >= 0) ? stateIds.getState(stateId) : null;
+                return stateIds.getState(stateId);
+            }
+
+            protected final @Nullable S safeIntToState(int stateId) {
+                return (stateId == INVALID_STATE) ? null : intToState(stateId);
             }
 
             @Override
             public int getIntInitialState() {
-                return stateToInt(automaton.getInitialState());
+                return safeStateToInt(automaton.getInitialState());
             }
 
             protected final int stateToInt(S state) {
-                return (state != null) ? stateIds.getStateId(state) : INVALID_STATE;
+                return stateIds.getStateId(state);
+            }
+
+            protected final int safeStateToInt(@Nullable S state) {
+                return (state == null) ? INVALID_STATE : stateToInt(state);
             }
 
         }
@@ -195,10 +204,7 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
 
             @Override
             public int getSuccessor(int state, I input) {
-                if (state == INVALID_STATE) {
-                    return INVALID_STATE;
-                }
-                return stateToInt(automaton.getSuccessor(intToState(state), input));
+                return safeStateToInt(automaton.getSuccessor(intToState(state), input));
             }
         }
     }

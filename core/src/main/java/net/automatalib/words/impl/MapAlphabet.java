@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,15 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.Maps;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
 /**
  * A map-based alphabet implementation, that does not impose any restriction on the input symbol class. This
- * implementation stores the alphabet symbols in a {@link List} for fast idx to symbol looks up as well as a {@link Map}
- * for fast symbol to idx look ups.
+ * implementation stores the alphabet symbols in a {@link List} for fast idx to symbol look-ups as well as a {@link Map}
+ * for fast symbol to idx look-ups.
  *
  * @param <I>
  *         input symbol type
@@ -38,10 +36,8 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
  */
 public class MapAlphabet<I> extends AbstractAlphabet<I> {
 
-    @Nonnull
     protected final List<I> symbols;
 
-    @Nonnull
     //private final TObjectIntMap<I> indexMap = new TObjectIntHashMap<I>(10, 0.75f, -1);
     protected final Map<I, Integer> indexMap; // TODO: replace by primitive specialization
 
@@ -71,12 +67,11 @@ public class MapAlphabet<I> extends AbstractAlphabet<I> {
 
     @Override
     public int getSymbolIndex(I symbol) {
-        return indexMap.get(symbol);
-    }
-
-    @Override
-    public int compare(I o1, I o2) {
-        return indexMap.get(o1) - indexMap.get(o2);
+        final Integer result = indexMap.get(symbol);
+        if (result == null) {
+            throw new IllegalArgumentException("Symbol '" + symbol + "' is not contained in the alphabet");
+        }
+        return result.intValue();
     }
 
     @Override

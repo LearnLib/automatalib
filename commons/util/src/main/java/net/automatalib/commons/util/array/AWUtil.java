@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,8 +30,7 @@ import net.automatalib.commons.smartcollections.ArrayWritable;
 public final class AWUtil {
 
     //Prevent instantiation.
-    private AWUtil() {
-    }
+    private AWUtil() {}
 
     /**
      * Writes the complete container data to an array. This method ensures that the array's capacity is not exceeded.
@@ -94,6 +93,7 @@ public final class AWUtil {
         return elementsToCopy;
     }
 
+    @SuppressWarnings("nullness") // false positive?
     public static <T, U extends T> int safeWrite(ArrayWritable<U> aw, T[] array, int tgtOfs) {
         return safeWrite(aw.size(), aw, 0, array, tgtOfs);
     }

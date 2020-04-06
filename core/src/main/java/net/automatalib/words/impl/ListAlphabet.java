@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,17 +19,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.Iterators;
 import net.automatalib.commons.util.collections.UnmodifiableListIterator;
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
 
-@ParametersAreNonnullByDefault
 public class ListAlphabet<I> extends AbstractAlphabet<I> {
 
-    @Nonnull
     private final List<? extends I> list;
 
     public ListAlphabet(List<? extends I> list) {
@@ -37,12 +32,16 @@ public class ListAlphabet<I> extends AbstractAlphabet<I> {
     }
 
     @Override
-    public I getSymbol(int index) throws IllegalArgumentException {
-        return list.get(index);
+    public I getSymbol(int index) {
+        try {
+            return list.get(index);
+        } catch (IndexOutOfBoundsException ioobe) {
+            throw new IllegalArgumentException(ioobe);
+        }
     }
 
     @Override
-    public int getSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getSymbolIndex(I symbol) {
         int idx = list.indexOf(symbol);
         if (idx == -1) {
             throw new IllegalArgumentException("Symbol " + symbol + " is not contained in the alphabet");

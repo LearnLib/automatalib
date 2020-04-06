@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +22,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The empty word.
@@ -34,7 +33,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  * @author Malte Isberner
  * @see Collections#emptyList()
  */
-@ParametersAreNonnullByDefault
 final class EmptyWord extends Word<Object> {
 
     public static final EmptyWord INSTANCE = new EmptyWord();
@@ -55,8 +53,7 @@ final class EmptyWord extends Word<Object> {
     }
 
     @Override
-    public void writeToArray(int offset, Object[] array, int tgtOffset, int length) {
-    }
+    public void writeToArray(int offset, @Nullable Object[] array, int tgtOffset, int length) {}
 
     @Override
     public Object getSymbol(int index) {
@@ -118,7 +115,6 @@ final class EmptyWord extends Word<Object> {
         return this;
     }
 
-    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public <T> Word<T> transform(Function<? super Object, ? extends T> transformer) {

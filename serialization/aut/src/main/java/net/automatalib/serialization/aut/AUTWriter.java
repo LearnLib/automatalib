@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,7 +42,6 @@ public final class AUTWriter {
     public static <S, I> void writeAutomaton(SimpleAutomaton<S, I> automaton, Alphabet<I> alphabet, OutputStream os)
             throws IOException {
         writeAutomaton(automaton, alphabet, str -> "\"" + str + "\"", os);
-
     }
 
     public static <S, I> void writeAutomaton(SimpleAutomaton<S, I> automaton,
@@ -56,7 +55,7 @@ public final class AUTWriter {
             for (final I i : alphabet) {
                 final Set<S> succs = automaton.getSuccessors(s, i);
 
-                if (succs != null && !succs.isEmpty()) {
+                if (!succs.isEmpty()) {
                     for (final S succ : succs) {
                         transitions.add(new TransitionTriple<>(s, i, succ));
                     }
@@ -65,7 +64,7 @@ public final class AUTWriter {
             }
         }
 
-        try (Writer w = IOUtil.asBufferedUTF8Writer(os)) {
+        try (Writer w = IOUtil.asBufferedNonClosingUTF8Writer(os)) {
             writeHeader(automaton, transitions, w);
             writeTransitions(automaton, transitions, inputTransformer, w);
         }
@@ -77,7 +76,7 @@ public final class AUTWriter {
 
         final Set<S> inits = automaton.getInitialStates();
 
-        if (inits == null || inits.size() != 1) {
+        if (inits.size() != 1) {
             throw new IllegalArgumentException("Automaton needs to exactly specify a single initial state");
         }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public final class LibLoader {
     private static final LibLoader INSTANCE = new LibLoader();
     private final String libPrefix;
     private final String libExtension;
-    private final Path tempLibDir;
+    private final @Nullable Path tempLibDir;
     private final Set<String> loaded = new HashSet<>();
 
     private LibLoader() {
@@ -65,13 +66,14 @@ public final class LibLoader {
             Field field = ClassLoader.class.getDeclaredField("usr_paths");
             field.setAccessible(true);
             String[] paths = (String[]) field.get(null);
+            assert paths != null;
             String[] newPaths = new String[paths.length + 1];
             System.arraycopy(paths, 0, newPaths, 0, paths.length);
             newPaths[paths.length] = tmpDir.toString();
             field.set(null, newPaths);
         } catch (IOException | IllegalAccessException | NoSuchFieldException ex) {
             LOG.error("Error setting up classloader for custom library loading.", ex);
-            LOG.error("Loading of shipped libraries may fail");
+            LOG.error("Loading of shipped libraries will fail");
         }
         this.tempLibDir = tmpDir;
     }
@@ -87,6 +89,9 @@ public final class LibLoader {
      *         The class whose classloader should be used to resolve shipped libraries
      * @param name
      *         The name of the class.
+     *
+     * @throws LoadLibraryException
+     *         if the library could not be loaded correctly
      */
     public void loadLibrary(Class<?> clazz, String name) {
         loadLibrary(clazz, name, LoadPolicy.PREFER_SHIPPED);
@@ -101,6 +106,9 @@ public final class LibLoader {
      *         The name of the class.
      * @param policy
      *         The load policy.
+     *
+     * @throws LoadLibraryException
+     *         if the library could not be loaded correctly
      */
     public void loadLibrary(Class<?> clazz, String name, LoadPolicy policy) {
         if (loaded.contains(name)) {
@@ -143,17 +151,19 @@ public final class LibLoader {
         loaded.add(name);
     }
 
-    private void loadShippedLibrary(Class<?> clazz, String name) throws LoadLibraryException {
-        String libFileName = libPrefix + name + "." + libExtension;
-        String libResourcePath =
-                "/lib/" + PlatformProperties.OS_NAME + "/" + PlatformProperties.OS_ARCH + "/" + libFileName;
-        InputStream libStream = clazz.getResourceAsStream(libResourcePath);
-        if (libStream == null) {
-            throw new LoadLibraryException("Could not find shipped library resource '" + libFileName + "'");
+    private void loadShippedLibrary(Class<?> clazz, String name) {
+        if (tempLibDir == null) {
+            throw new LoadLibraryException("Loading of shipped libraries not supported");
         }
 
+        String libFileName = libPrefix + name + "." + libExtension;
         Path libPath = tempLibDir.resolve(libFileName);
-        try {
+        String libResourcePath =
+                "/lib/" + PlatformProperties.OS_NAME + "/" + PlatformProperties.OS_ARCH + "/" + libFileName;
+        try (InputStream libStream = clazz.getResourceAsStream(libResourcePath)) {
+            if (libStream == null) {
+                throw new LoadLibraryException("Could not find shipped library resource '" + libFileName + "'");
+            }
             Files.copy(libStream, libPath);
         } catch (IOException ex) {
             throw new LoadLibraryException(
@@ -167,7 +177,7 @@ public final class LibLoader {
         }
     }
 
-    private void loadSystemLibrary(String name) throws LoadLibraryException {
+    private void loadSystemLibrary(String name) {
         try {
             System.loadLibrary(name);
         } catch (SecurityException | UnsatisfiedLinkError ex) {

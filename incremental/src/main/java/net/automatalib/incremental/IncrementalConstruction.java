@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,10 @@ package net.automatalib.incremental;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.graphs.Graph;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Basic interface for incremental automata constructions. An incremental automaton construction creates an (acyclic)
@@ -36,7 +33,6 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface IncrementalConstruction<A, I> {
 
     /**
@@ -54,8 +50,7 @@ public interface IncrementalConstruction<A, I> {
      *
      * @return a separating word, or {@code null} if no difference could be found.
      */
-    @Nullable
-    Word<I> findSeparatingWord(A target, Collection<? extends I> inputs, boolean omitUndefined);
+    @Nullable Word<I> findSeparatingWord(A target, Collection<? extends I> inputs, boolean omitUndefined);
 
     /**
      * Checks whether this class has definitive information about a given word.
@@ -73,7 +68,6 @@ public interface IncrementalConstruction<A, I> {
      *
      * @return a graph view on the current state of the construction
      */
-    @Nonnull
     Graph<?, ?> asGraph();
 
     /**
@@ -82,6 +76,5 @@ public interface IncrementalConstruction<A, I> {
      *
      * @return a transition system view on the current state of the construction
      */
-    @Nonnull
     DeterministicTransitionSystem<?, I, ?> asTransitionSystem();
 }

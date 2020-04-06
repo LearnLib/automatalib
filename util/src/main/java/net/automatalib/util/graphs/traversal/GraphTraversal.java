@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,8 +29,7 @@ import net.automatalib.util.traversal.TraversalOrder;
 
 public final class GraphTraversal {
 
-    private GraphTraversal() {
-    } // prevent inheritance
+    private GraphTraversal() {} // prevent inheritance
 
     public static <N, E, D> boolean traverse(TraversalOrder order,
                                              IndefiniteGraph<N, E> graph,
@@ -109,6 +108,7 @@ public final class GraphTraversal {
         }
 
         while (!dfsStack.isEmpty()) {
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
             DFRecord<N, E, D> current = dfsStack.peek();
 
             N currNode = current.node;
@@ -222,6 +222,7 @@ public final class GraphTraversal {
 
         bfs_loop:
         while (!bfsQueue.isEmpty()) {
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
             BFRecord<N, D> current = bfsQueue.poll();
 
             N currNode = current.node;

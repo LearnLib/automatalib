@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +17,12 @@ package net.automatalib.serialization.saf;
 
 import java.io.DataInput;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 @FunctionalInterface
 public interface SinglePropertyDecoder<P> {
 
-    static <P> SinglePropertyDecoder<P> nullDecoder() {
+    static <P> SinglePropertyDecoder<@Nullable P> nullDecoder() {
         return in -> null;
     }
 

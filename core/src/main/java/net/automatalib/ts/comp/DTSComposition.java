@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,9 @@ package net.automatalib.ts.comp;
 
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.DeterministicTransitionSystem;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
+@SuppressWarnings("nullness") // nullness of composed states and transitions depends on partiality
 public class DTSComposition<S1, S2, I, T1, T2, TS1 extends DeterministicTransitionSystem<S1, I, T1>, TS2 extends DeterministicTransitionSystem<S2, I, T2>>
         implements DeterministicTransitionSystem<Pair<S1, S2>, I, Pair<T1, T2>> {
 
@@ -49,7 +51,7 @@ public class DTSComposition<S1, S2, I, T1, T2, TS1 extends DeterministicTransiti
     }
 
     @Override
-    public Pair<T1, T2> getTransition(Pair<S1, S2> state, I input) {
+    public @Nullable Pair<T1, T2> getTransition(Pair<@Nullable S1, @Nullable S2> state, I input) {
         S1 s1 = state.getFirst();
 
         T1 t1 = (s1 == null) ? null : ts1.getTransition(s1, input);
@@ -64,11 +66,11 @@ public class DTSComposition<S1, S2, I, T1, T2, TS1 extends DeterministicTransiti
             return null;
         }
 
-        return Pair.of(t1, t2);
+        return t1 == null && t2 == null ? null : Pair.of(t1, t2);
     }
 
     @Override
-    public Pair<S1, S2> getSuccessor(Pair<T1, T2> transition) {
+    public Pair<S1, S2> getSuccessor(Pair<@Nullable T1, @Nullable T2> transition) {
         T1 t1 = transition.getFirst();
         T2 t2 = transition.getSecond();
         return Pair.of((t1 == null) ? null : ts1.getSuccessor(t1), (t2 == null) ? null : ts2.getSuccessor(t2));

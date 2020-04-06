@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,6 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.BidirectionalGraph;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.IndefiniteGraph;
-import net.automatalib.graphs.UniversalIndefiniteGraph;
 import net.automatalib.graphs.concepts.EdgeWeights;
 import net.automatalib.util.graphs.apsp.APSPResult;
 import net.automatalib.util.graphs.apsp.FloydWarshallAPSP;
@@ -34,6 +33,7 @@ import net.automatalib.util.graphs.scc.SCCs;
 import net.automatalib.util.graphs.scc.TarjanSCCVisitor;
 import net.automatalib.util.graphs.sssp.DijkstraSSSP;
 import net.automatalib.util.graphs.sssp.SSSPResult;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Graphs {
 
@@ -43,16 +43,15 @@ public final class Graphs {
      */
     public static final float INVALID_DISTANCE = Float.NEGATIVE_INFINITY;
 
-    private Graphs() {
-    }
+    private Graphs() {}
 
-    public static <N, E> Mapping<N, Collection<E>> incomingEdges(final Graph<N, E> graph) {
+    public static <N, E> Mapping<N, @Nullable Collection<E>> incomingEdges(final Graph<N, E> graph) {
         if (graph instanceof BidirectionalGraph) {
             final BidirectionalGraph<N, E> bdGraph = (BidirectionalGraph<N, E>) graph;
             return bdGraph::getIncomingEdges;
         }
 
-        MutableMapping<N, Collection<E>> inEdgesMapping = graph.createStaticNodeMapping();
+        MutableMapping<N, @Nullable Collection<E>> inEdgesMapping = graph.createStaticNodeMapping();
 
         for (N node : graph) {
             Collection<E> outEdges = graph.getOutgoingEdges(node);
@@ -70,28 +69,18 @@ public final class Graphs {
         return inEdgesMapping;
     }
 
-    public static <N, E> Path<N, E> findShortestPath(final IndefiniteGraph<N, E> graph,
-                                                     int limit,
-                                                     N start,
-                                                     Collection<? extends N> targets) {
+    public static <N, E> @Nullable Path<N, E> findShortestPath(final IndefiniteGraph<N, E> graph,
+                                                               int limit,
+                                                               N start,
+                                                               Collection<? extends N> targets) {
         return ShortestPaths.shortestPath(graph, start, limit, targets);
     }
 
-    public static <N, E> Path<N, E> findShortestPath(IndefiniteGraph<N, E> graph,
-                                                     int limit,
-                                                     N start,
-                                                     Predicate<? super N> targetPred) {
+    public static <N, E> @Nullable Path<N, E> findShortestPath(IndefiniteGraph<N, E> graph,
+                                                               int limit,
+                                                               N start,
+                                                               Predicate<? super N> targetPred) {
         return ShortestPaths.shortestPath(graph, start, limit, targetPred);
-    }
-
-    @Deprecated
-    public static <N, NP> Mapping<N, NP> nodeProperties(final UniversalIndefiniteGraph<N, ?, NP, ?> graph) {
-        return graph::getNodeProperty;
-    }
-
-    @Deprecated
-    public static <E, EP> Mapping<E, EP> edgeProperties(final UniversalIndefiniteGraph<?, E, ?, EP> graph) {
-        return graph::getEdgeProperty;
     }
 
     /**

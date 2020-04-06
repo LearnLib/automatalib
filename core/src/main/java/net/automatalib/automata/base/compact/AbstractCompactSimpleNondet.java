@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +21,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.Sets;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class that refines {@link AbstractCompact} for transition-property-less automata. As a result,
@@ -38,15 +37,14 @@ import net.automatalib.words.Alphabet;
  * @author frohme
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact<I, Integer, SP, Void> {
 
     //protected final TIntSet initial;
     protected final Set<Integer> initial; // TODO: replace by primitive specialization
     //protected TIntSet[] transitions;
-    protected Set<Integer>[] transitions; // TODO: replace by primitive specialization
+    protected @Nullable Set<Integer>[] transitions; // TODO: replace by primitive specialization
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "initialization"})
     public AbstractCompactSimpleNondet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
 
@@ -106,8 +104,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     }
 
     @Override
-    public void setTransitionProperty(Integer transition, Void property) {
-    }
+    public void setTransitionProperty(Integer transition, Void property) {}
 
     @Override
     public void removeTransition(Integer state, I input, Integer transition) {

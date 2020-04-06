@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +16,17 @@
 package net.automatalib.modelcheckers.ltsmin.ltl;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
-import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
 import net.automatalib.modelchecking.modelchecker.AbstractUnfoldingModelChecker;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An LTSmin model checker for full LTL.
@@ -50,17 +49,15 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
      * @param multiplier the multiplier.
      * @param minimumUnfolds the minimum number of unfolds.
      *
-     * @see AbstractLTSmin
+     * @see AbstractLTSmin#AbstractLTSmin(boolean, Function)
      */
     protected AbstractLTSminLTL(boolean keepFiles, Function<String, I> string2Input,
-                                int minimumUnfolds, double multiplier) throws ModelCheckingException {
+                                int minimumUnfolds, double multiplier) {
         super(keepFiles, string2Input);
         unfolder = new AbstractUnfoldingModelChecker<I, A, String, L>(minimumUnfolds, multiplier) {
 
-            @Nullable
             @Override
-            public L findCounterExample(A automaton, Collection<? extends I> inputs, String property)
-                    throws ModelCheckingException {
+            public @Nullable L findCounterExample(A automaton, Collection<? extends I> inputs, String property) {
                 return null;
             }
         };
@@ -85,7 +82,7 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
     }
 
     @Override
-    public void setMultiplier(double multiplier) throws IllegalArgumentException {
+    public void setMultiplier(double multiplier) {
         unfolder.setMultiplier(multiplier);
     }
 
@@ -95,7 +92,7 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
     }
 
     @Override
-    public void setMinimumUnfolds(int minimumUnfolds) throws IllegalArgumentException {
+    public void setMinimumUnfolds(int minimumUnfolds) {
         unfolder.setMinimumUnfolds(minimumUnfolds);
     }
 
@@ -115,6 +112,10 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
 
         public static double multiplier() {
             return 1.0; // quite arbitrary too
+        }
+
+        public static <O> Collection<? super O> skipOutputs() {
+            return Collections.emptyList();
         }
     }
 }

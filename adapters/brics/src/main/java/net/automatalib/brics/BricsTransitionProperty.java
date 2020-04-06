@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +16,7 @@
 package net.automatalib.brics;
 
 import dk.brics.automaton.Transition;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The properties of an edge in a Brics automaton.
@@ -87,7 +88,7 @@ public class BricsTransitionProperty {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

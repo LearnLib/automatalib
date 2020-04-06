@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@ import java.util.PrimitiveIterator;
 import java.util.Spliterator;
 import java.util.Spliterators;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An implementation of the Paige/Tarjan partition refinement algorithm.
@@ -100,15 +100,15 @@ public class PaigeTarjan {
      */
     public Block[] blockForState;
     // the head of the block linked list
-    private Block blocklistHead;
+    private @Nullable Block blocklistHead;
     // the block count
     private int numBlocks;
     // the head of the worklist linked list
-    private Block worklistHead;
+    private @Nullable Block worklistHead;
     // the tail of the worklist linked list
-    private Block worklistTail;
+    private @Nullable Block worklistTail;
     // the head of the 'touched' list
-    private Block touchedHead;
+    private @Nullable Block touchedHead;
 
     public void setSize(int numStates, int numInputs) {
         this.numStates = numStates;
@@ -237,6 +237,7 @@ public class PaigeTarjan {
             worklistHead = b;
             worklistTail = b;
         } else {
+            assert worklistTail != null;
             worklistTail.nextInWorklist = b;
             worklistTail = b;
         }
@@ -270,8 +271,7 @@ public class PaigeTarjan {
         }
     }
 
-    @Nullable
-    private Block poll() {
+    private @Nullable Block poll() {
         if (worklistHead == null) {
             return null;
         }
@@ -328,7 +328,7 @@ public class PaigeTarjan {
         touchedHead = null;
     }
 
-    private Block split(Block b) {
+    private @Nullable Block split(Block b) {
         Block splt = b.split(numBlocks);
         if (splt == null) {
             return null;

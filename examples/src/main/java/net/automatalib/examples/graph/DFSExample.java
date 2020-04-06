@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,8 +28,7 @@ import net.automatalib.visualization.VisualizationHelper.EdgeStyles;
 
 public final class DFSExample {
 
-    private DFSExample() {
-    }
+    private DFSExample() {}
 
     public static void main(String[] args) {
         CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
@@ -139,6 +138,7 @@ public final class DFSExample {
             EdgeType et = edgeTypes.get(edge);
             assert et != null;
             properties.put(EdgeAttrs.STYLE, et.getStyle());
+            properties.remove(EdgeAttrs.LABEL);
             return true;
         }
     }

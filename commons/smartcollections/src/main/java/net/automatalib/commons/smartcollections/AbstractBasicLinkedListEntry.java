@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,8 @@
  */
 package net.automatalib.commons.smartcollections;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Abstract base class for entries in a linked list. Takes care for handling predecessor and successor, but not storage
  * of the element itself.
@@ -26,28 +28,29 @@ package net.automatalib.commons.smartcollections;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractBasicLinkedListEntry<E, T extends AbstractBasicLinkedListEntry<E, T>> implements LinkedListEntry<E, T> {
+public abstract class AbstractBasicLinkedListEntry<E, T extends AbstractBasicLinkedListEntry<E, T>>
+        implements LinkedListEntry<E, T> {
 
     // predecessor and successor
-    private T prev, next;
+    private @Nullable T prev, next;
 
     @Override
-    public T getPrev() {
+    public @Nullable T getPrev() {
         return prev;
     }
 
     @Override
-    public void setPrev(T prev) {
+    public void setPrev(@Nullable T prev) {
         this.prev = prev;
     }
 
     @Override
-    public T getNext() {
+    public @Nullable T getNext() {
         return next;
     }
 
     @Override
-    public void setNext(T next) {
+    public void setNext(@Nullable T next) {
         this.next = next;
     }
 }

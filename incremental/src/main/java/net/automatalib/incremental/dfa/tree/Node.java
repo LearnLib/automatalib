@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,9 @@ package net.automatalib.incremental.dfa.tree;
 
 import java.io.Serializable;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A node in the tree internally used by {@link IncrementalDFATreeBuilder}.
@@ -31,11 +29,10 @@ import net.automatalib.incremental.dfa.Acceptance;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public final class Node<I> implements Serializable {
 
     private Acceptance acceptance;
-    private ResizingArrayStorage<Node<I>> children;
+    private @Nullable ResizingArrayStorage<Node<I>> children;
 
     /**
      * Constructor. Constructs a new node with no children and an acceptance value of {@link Acceptance#DONT_KNOW}
@@ -81,8 +78,7 @@ public final class Node<I> implements Serializable {
      *
      * @return the child for the given index, or {@code null} if there is no such child
      */
-    @Nullable
-    public Node<I> getChild(int idx) {
+    public @Nullable Node<I> getChild(int idx) {
         if (children == null) {
             return null;
         }

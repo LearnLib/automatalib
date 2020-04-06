@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,53 +15,56 @@
  */
 package net.automatalib.commons.util;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public final class WrapperUtil {
 
     private WrapperUtil() {
         // prevent instantiation
     }
 
-    public static boolean booleanValue(Boolean b) {
+    public static boolean booleanValue(@Nullable Boolean b) {
         return booleanValue(b, false);
     }
 
-    public static boolean booleanValue(Boolean b, boolean def) {
+    public static boolean booleanValue(@Nullable Boolean b, boolean def) {
         return (b != null) ? b.booleanValue() : def;
     }
 
-    public static short shortValue(Short s, short def) {
+    @SuppressWarnings("PMD.AvoidUsingShortType") // we don't perform arithmetic operations on Shorts, so usage is fine
+    public static short shortValue(@Nullable Short s, short def) {
         return (s != null) ? s.shortValue() : def;
     }
 
-    public static int intValue(Integer i) {
+    public static int intValue(@Nullable Integer i) {
         return intValue(i, 0);
     }
 
-    public static int intValue(Integer i, int def) {
+    public static int intValue(@Nullable Integer i, int def) {
         return (i != null) ? i.intValue() : def;
     }
 
-    public static long longValue(Long l) {
+    public static long longValue(@Nullable Long l) {
         return longValue(l, 0L);
     }
 
-    public static long longValue(Long l, long def) {
+    public static long longValue(@Nullable Long l, long def) {
         return (l != null) ? l.longValue() : def;
     }
 
-    public static float floatValue(Float f) {
+    public static float floatValue(@Nullable Float f) {
         return floatValue(f, 0.0f);
     }
 
-    public static float floatValue(Float f, float def) {
+    public static float floatValue(@Nullable Float f, float def) {
         return (f != null) ? f.floatValue() : def;
     }
 
-    public static double doubleValue(Double d) {
+    public static double doubleValue(@Nullable Double d) {
         return doubleValue(d, 0.0);
     }
 
-    public static double doubleValue(Double d, double def) {
+    public static double doubleValue(@Nullable Double d, double def) {
         return (d != null) ? d.doubleValue() : def;
     }
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.RandomAccess;
 import java.util.function.Supplier;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * A thin wrapper around a simple {@code Object[]} array. Mainly used (and useful) for heavily generic and array-based
  * data storage. Extends/Implements some convenient classes/interfaces.
@@ -33,7 +35,7 @@ import java.util.function.Supplier;
  */
 public final class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Serializable, Cloneable {
 
-    private final Object[] storage;
+    private final @Nullable Object[] storage;
 
     public ArrayStorage(int size) {
         this.storage = new Object[size];
@@ -50,7 +52,7 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
         storage = collection.toArray();
     }
 
-    private ArrayStorage(Object[] storage) {
+    private ArrayStorage(@Nullable Object[] storage) {
         this.storage = storage;
     }
 
@@ -72,13 +74,14 @@ public final class ArrayStorage<T> extends AbstractList<T> implements RandomAcce
         return storage.length;
     }
 
+    @SuppressWarnings("PMD.ProperCloneImplementation") //we want to cut cloning hierarchy here
     @Override
     public ArrayStorage<T> clone() {
         return new ArrayStorage<>(storage.clone());
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

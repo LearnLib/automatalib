@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +20,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.mealy.tree.AbstractIncrementalMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.AnnotatedEdge;
 import net.automatalib.incremental.mealy.tree.Edge;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A variation of the normal {@link IncrementalMealyTreeBuilder}, which stores the successor information of each
@@ -52,12 +52,12 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractIncrementa
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         // we do not need to do anything, because this implementation can handle arbitrarily seized alphabets
     }
 
     @Override
-    protected Edge<Node<I, O>, O> getEdge(Node<I, O> node, I symbol) {
+    protected @Nullable Edge<Node<I, O>, O> getEdge(Node<I, O> node, I symbol) {
         return node.getEdge(symbol);
     }
 
@@ -77,10 +77,10 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractIncrementa
     @Override
     protected Collection<AnnotatedEdge<Node<I, O>, I, O>> getOutgoingEdges(Node<I, O> node) {
 
-        final Map<I, Edge<Node<I, O>, O>> outEdges = node.getOutEdges();
+        final Map<I, @Nullable Edge<Node<I, O>, O>> outEdges = node.getOutEdges();
         final List<AnnotatedEdge<Node<I, O>, I, O>> result = new ArrayList<>(outEdges.size());
 
-        for (Map.Entry<I, Edge<Node<I, O>, O>> e : outEdges.entrySet()) {
+        for (Map.Entry<I, @Nullable Edge<Node<I, O>, O>> e : outEdges.entrySet()) {
             if (e.getValue() != null) {
                 result.add(new AnnotatedEdge<>(e.getValue(), e.getKey()));
             }

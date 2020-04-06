@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +22,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nonnull;
-
 /**
  * A {@link ThreadPoolExecutor} that internally uses a {@link ScalingLinkedBlockingQueue} to manage scheduled tasks.
  * This allows us to manage a dynamically sized thread pool that actually spawns new threads when the pool still allows
@@ -38,7 +36,7 @@ import javax.annotation.Nonnull;
  *
  * @author frohme
  */
-public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
+public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
 
     private final AtomicInteger activeCount = new AtomicInteger();
 
@@ -78,15 +76,15 @@ public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
     static class ScalingLinkedBlockingQueue extends LinkedBlockingQueue<Runnable> {
 
         private static final long serialVersionUID = 7063154517431823515L;
-        private transient ScalingThreadPoolExecutor tpe;
+        private transient ThreadPoolExecutor tpe;
 
-        void setTpe(ScalingThreadPoolExecutor tpe) {
+        void setTpe(ThreadPoolExecutor tpe) {
             this.tpe = tpe;
         }
 
         @Override
-        public boolean offer(@Nonnull Runnable r) {
-            if (tpe != null && tpe.getActiveCount() + size() < tpe.getMaximumPoolSize()) {
+        public boolean offer(Runnable r) {
+            if (tpe.getActiveCount() + size() < tpe.getMaximumPoolSize()) {
                 return false;
             }
 

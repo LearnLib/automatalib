@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,8 +49,9 @@ public class ProviderTest {
 
         vpManager.load();
 
-        final VisualizationProvider swingProvider = vpManager.getProviderById("graphviz-swing");
-        final VisualizationProvider browserProvider = vpManager.getProviderById("graphviz-browser");
+        final VisualizationProvider swingProvider = vpManager.getProviderById(GraphVizSwingVisualizationProvider.ID);
+        final VisualizationProvider browserProvider =
+                vpManager.getProviderById(GraphVizBrowserVisualizationProvider.ID);
 
         Assert.assertTrue(swingProvider instanceof GraphVizSwingVisualizationProvider);
         Assert.assertTrue(browserProvider instanceof GraphVizBrowserVisualizationProvider);

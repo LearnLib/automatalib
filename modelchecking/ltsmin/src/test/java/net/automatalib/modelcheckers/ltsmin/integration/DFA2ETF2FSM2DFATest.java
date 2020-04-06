@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,7 @@ import net.automatalib.serialization.taf.parser.TAFParser;
 public class DFA2ETF2FSM2DFATest extends AbstractAut2ETF2FSM2AutTest<CompactDFA<String>> {
 
     @Override
-    protected CompactDFA<String> taf2Automaton() {
+    protected CompactDFA<String> taf2Automaton() throws Exception {
         final InputStream is = DFA2ETF2FSM2DFATest.class.getResourceAsStream("/DFA.taf");
         return TAFParser.parseDFA(is, null);
     }

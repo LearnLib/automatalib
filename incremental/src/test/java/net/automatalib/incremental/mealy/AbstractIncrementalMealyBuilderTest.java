@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,16 @@
  */
 package net.automatalib.incremental.mealy;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import javax.swing.SwingUtilities;
+
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.commons.util.system.JVMUtil;
 import net.automatalib.incremental.ConflictException;
+import net.automatalib.ts.output.MealyTransitionSystem;
+import net.automatalib.visualization.Visualization;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.Word;
@@ -26,6 +32,7 @@ import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -169,6 +176,33 @@ public abstract class AbstractIncrementalMealyBuilderTest {
         Assert.assertEquals(sepWord, Word.fromString("acb"));
         sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, false);
         Assert.assertEquals(sepWord, Word.fromString("acb"));
+    }
+
+    @Test(dependsOnMethods = "testLookup")
+    public void testVisualization() throws InvocationTargetException, InterruptedException {
+        if (JVMUtil.getCanonicalSpecVersion() > 8) {
+            throw new SkipException("The headless AWT environment currently only works with Java 8 and below");
+        }
+
+        // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.
+        SwingUtilities.invokeAndWait(() -> Visualization.visualize(incMealy.asGraph(), false));
+    }
+
+    @Test(dependsOnMethods = "testLookup")
+    public void testTSView() {
+        final MealyTransitionSystem<?, Character, ?, Character> tsView = incMealy.asTransitionSystem();
+        final WordBuilder<Character> wb = new WordBuilder<>();
+
+        tsView.trace(W_1, wb);
+        Assert.assertEquals(wb.toWord(), W_1_O);
+        wb.clear();
+
+        tsView.trace(W_2, wb);
+        Assert.assertEquals(wb.toWord(), W_2_O);
+        wb.clear();
+
+        tsView.trace(W_3, wb);
+        Assert.assertEquals(wb.toWord(), W_3_O);
     }
 
     @Test

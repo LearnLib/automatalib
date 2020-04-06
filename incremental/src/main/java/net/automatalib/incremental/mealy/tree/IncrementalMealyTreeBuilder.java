@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,10 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -39,7 +36,7 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyT
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         if (!inputAlphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(inputAlphabet).addSymbol(symbol);
         }
@@ -92,7 +89,6 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyT
         return result;
     }
 
-    @Nonnull
     @Override
     public Alphabet<I> getInputAlphabet() {
         return inputAlphabet;

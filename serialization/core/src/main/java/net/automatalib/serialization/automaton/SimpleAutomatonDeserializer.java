@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,16 @@
  */
 package net.automatalib.serialization.automaton;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.function.Function;
 
 import net.automatalib.automata.simple.SimpleAutomaton;
+import net.automatalib.commons.util.IOUtil;
+import net.automatalib.serialization.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;
 
@@ -40,8 +45,103 @@ import net.automatalib.serialization.InputModelDeserializer;
  */
 public interface SimpleAutomatonDeserializer<S, I> extends InputModelDeserializer<I, SimpleAutomaton<S, I>> {
 
+    /**
+     * Reads the contents from the given input stream and de-serializes it into a {@link InputModelData} that contains
+     * the model and its alphabet definition.
+     * <p>
+     * Note: the input stream will <b>not</b> be closed.
+     *
+     * @param is
+     *         the input stream to read data from
+     * @param inputTransformer
+     *         a function to transform the inputs of {@code this} serializer to inputs of the returned model
+     * @param <I2>
+     *         the input symbol type of the model
+     *
+     * @return {@link InputModelData} that contains the model and its alphabet definition
+     *
+     * @throws IOException
+     *         if an error occurred while reading from the stream
+     * @throws FormatException
+     *         if the content of the stream was not in the expected format
+     */
     <I2> InputModelData<I2, SimpleAutomaton<S, I2>> readModel(InputStream is, Function<I, I2> inputTransformer)
             throws IOException;
+
+    /**
+     * Reads the contents from the given URL and de-serializes it into a {@link InputModelData} that contains the model
+     * and its alphabet definition.
+     *
+     * @param url
+     *         the url to read data from
+     * @param inputTransformer
+     *         a function to transform the inputs of {@code this} serializer to inputs of the returned model
+     * @param <I2>
+     *         the input symbol type of the model
+     *
+     * @return {@link InputModelData} that contains the model and its alphabet definition
+     *
+     * @throws IOException
+     *         if an error occurred while reading from the stream
+     * @throws FormatException
+     *         if the content of the stream was not in the expected format
+     */
+    default <I2> InputModelData<I2, SimpleAutomaton<S, I2>> readModel(URL url, Function<I, I2> inputTransformer)
+            throws IOException {
+        try (InputStream is = IOUtil.asBufferedInputStream(url.openStream())) {
+            return readModel(is, inputTransformer);
+        }
+    }
+
+    /**
+     * Reads the contents from the given file and de-serializes it into a {@link InputModelData} that contains the model
+     * and its alphabet definition.
+     *
+     * @param f
+     *         the file to read data from
+     * @param inputTransformer
+     *         a function to transform the inputs of {@code this} serializer to inputs of the returned model
+     * @param <I2>
+     *         the input symbol type of the model
+     *
+     * @return {@link InputModelData} that contains the model and its alphabet definition
+     *
+     * @throws IOException
+     *         if an error occurred while reading from the stream
+     * @throws FormatException
+     *         if the content of the stream was not in the expected format
+     */
+    default <I2> InputModelData<I2, SimpleAutomaton<S, I2>> readModel(File f, Function<I, I2> inputTransformer)
+            throws IOException {
+        try (InputStream is = IOUtil.asBufferedInputStream(f)) {
+            return readModel(is, inputTransformer);
+        }
+    }
+
+    /**
+     * Reads the contents from the given byte buffer and de-serializes it into a {@link InputModelData} that contains
+     * the model and its alphabet definition.
+     *
+     * @param buf
+     *         the buffer to read data from
+     * @param inputTransformer
+     *         a function to transform the inputs of {@code this} serializer to inputs of the returned model
+     * @param <I2>
+     *         the input symbol type of the model
+     *
+     * @return {@link InputModelData} that contains the model and its alphabet definition
+     *
+     * @throws IOException
+     *         if an error occurred while reading from the stream
+     * @throws FormatException
+     *         if the content of the stream was not in the expected format
+     */
+    default <I2> InputModelData<I2, SimpleAutomaton<S, I2>> readModel(byte[] buf, Function<I, I2> inputTransformer)
+            throws IOException {
+        try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
+            return readModel(is, inputTransformer);
+        }
+    }
 
     @Override
     default InputModelData<I, SimpleAutomaton<S, I>> readModel(InputStream is) throws IOException {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.ltsmin;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,21 +74,30 @@ public final class LTSminVersion {
         final Matcher matcher = VERSION_PATTERN.matcher(version);
 
         if (matcher.find()) {
-            final int major = Integer.parseInt(matcher.group(1));
-            final int minor = Integer.parseInt(matcher.group(2));
-            final int patch = Integer.parseInt(matcher.group(3));
-            final LTSminVersion result = of(major, minor, patch);
+            final String major = matcher.group(1);
+            final String minor = matcher.group(2);
+            final String patch = matcher.group(3);
+
+            if (major == null || minor == null || patch == null) {
+                return fallback(version);
+            }
+
+            final LTSminVersion result = of(Integer.parseInt(major), Integer.parseInt(minor), Integer.parseInt(patch));
 
             LOGGER.debug("Found version '{}'", version);
             LOGGER.debug("Parsed as '{}'", result);
 
             return result;
         } else {
-            final LTSminVersion fallback = of(0, 0, 0);
-            LOGGER.warn("Couldn't parse LTSmin version '{}'", version);
-            LOGGER.warn("Falling back to version '{}'", fallback);
-            return fallback;
+            return fallback(version);
         }
+    }
+
+    private static LTSminVersion fallback(String version) {
+        final LTSminVersion fallback = of(0, 0, 0);
+        LOGGER.warn("Couldn't parse LTSmin version '{}'", version);
+        LOGGER.warn("Falling back to version '{}'", fallback);
+        return fallback;
     }
 
     /**
@@ -118,7 +128,7 @@ public final class LTSminVersion {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

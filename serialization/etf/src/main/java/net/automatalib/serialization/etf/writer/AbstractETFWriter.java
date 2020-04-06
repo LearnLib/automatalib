@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +17,6 @@ package net.automatalib.serialization.etf.writer;
 
 import java.io.PrintWriter;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.Automaton;
 import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.words.Alphabet;
@@ -30,7 +28,6 @@ import net.automatalib.words.Alphabet;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> implements InputModelSerializer<I, A> {
 
     /**
@@ -56,6 +53,7 @@ public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> impleme
     /**
      * Write parts of the ETF that are dependent on A.
      *
+     * @param printWriter the Writer.
      * @param a the automaton to write.
      * @param inputs the alphabet.
      */
@@ -72,7 +70,6 @@ public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> impleme
         writeState(printWriter);
         writeEdge(printWriter);
         writeETF(printWriter, a, inputs);
-        printWriter.close();
     }
 
 }

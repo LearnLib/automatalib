@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.DeterministicAutomaton;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An iterator for the transition cover of an automaton. Words are computed lazily (i.e. only when request by {@link
@@ -43,14 +42,13 @@ import net.automatalib.words.Word;
  * @author frohme
  * @see Covers#transitionCover(DeterministicAutomaton, Collection, Collection)
  */
-@ParametersAreNonnullByDefault
 class IncrementalTransitionCoverIterator<S, I> extends AbstractIterator<Word<I>> {
 
     private final DeterministicAutomaton<S, I, ?> automaton;
     private final Collection<? extends I> inputs;
     private final Collection<? extends Word<I>> oldCover;
 
-    private final MutableMapping<S, Record<S, I>> reach;
+    private final MutableMapping<S, @Nullable Record<S, I>> reach;
     private final Queue<Record<S, I>> bfsQueue;
 
     private Iterator<? extends I> inputIterator;
@@ -70,7 +68,13 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractIterator<Word<I>>
     protected Word<I> computeNext() {
         // first invocation
         if (inputIterator == null) {
-            initialize();
+            final S init = automaton.getInitialState();
+
+            if (init == null) {
+                return endOfData();
+            }
+
+            initialize(init);
 
             curr = bfsQueue.poll();
             inputIterator = inputs.iterator();
@@ -105,9 +109,7 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractIterator<Word<I>>
         return endOfData();
     }
 
-    private void initialize() {
-
-        final S init = automaton.getInitialState();
+    private void initialize(S init) {
         final Record<S, I> initRec = new Record<>(init, Word.epsilon(), Sets.newHashSetWithExpectedSize(inputs.size()));
         reach.put(init, initRec);
         bfsQueue.add(initRec);

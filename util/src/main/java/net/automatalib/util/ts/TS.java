@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,10 +28,10 @@ import net.automatalib.util.ts.iterators.DefinedInputsIterator;
 import net.automatalib.util.ts.iterators.UndefinedInputsIterator;
 import net.automatalib.util.ts.traversal.BFSOrderIterator;
 
+@SuppressWarnings("PMD.UseUtilityClass") // we want to allow extending for the 'Automata' class
 public class TS {
 
-    protected TS() {
-    }
+    protected TS() {}
 
     public static <S, I> Iterable<S> bfsOrder(TransitionSystem<S, I, ?> ts, Collection<? extends I> inputs) {
         return () -> bfsOrderIterator(ts, inputs);
@@ -102,10 +102,6 @@ public class TS {
         public final S state;
         public final I input;
         public final T transition;
-
-        public TransRef(S state, I input) {
-            this(state, input, null);
-        }
 
         public TransRef(S state, I input, T transition) {
             this.state = state;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package net.automatalib.util.traversal;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Enum to use for coloring nodes/states during traversal.
@@ -36,5 +38,5 @@ public enum Color {
     /**
      * Color for nodes/states that have not yet been discovered.
      */
-    public static final Color WHITE = null;
+    public static final @Nullable Color WHITE = null;
 }

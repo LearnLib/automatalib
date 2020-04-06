@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,8 @@ import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class FastPowersetState<S> extends AbstractSet<S> {
 
@@ -46,12 +48,12 @@ public class FastPowersetState<S> extends AbstractSet<S> {
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(@Nullable Object o) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public final boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

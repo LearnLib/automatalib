@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,12 +17,10 @@ package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -42,7 +40,7 @@ public class DFALassoTest extends AbstractLassoTest<DFALassoImpl<String>> {
         Assert.assertTrue(lasso.getOutput());
     }
 
-    private class DFAMock implements DFA<Integer, String> {
+    private static class DFAMock implements DFA<Integer, String> {
 
         private final Word<String> prefix;
         private final Word<String> word;
@@ -52,15 +50,13 @@ public class DFALassoTest extends AbstractLassoTest<DFALassoImpl<String>> {
             word = prefix.concat(loop);
         }
 
-        @Nonnull
         @Override
         public Collection<Integer> getStates() {
             return CollectionsUtil.intRange(0, word.length());
         }
 
-        @Nullable
         @Override
-        public Integer getTransition(Integer state, @Nullable String input) {
+        public @Nullable Integer getTransition(Integer state, String input) {
             final Integer result;
 
             if (word.getSymbol(state).equals(input)) {
@@ -82,7 +78,6 @@ public class DFALassoTest extends AbstractLassoTest<DFALassoImpl<String>> {
             return true;
         }
 
-        @Nullable
         @Override
         public Integer getInitialState() {
             return 0;

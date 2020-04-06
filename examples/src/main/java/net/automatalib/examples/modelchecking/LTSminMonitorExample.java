@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,6 +25,8 @@ import net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorIOBuilder;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Example for using LTSmin to perform modelchecking using monitors. Make sure to correctly setup your LTSmin
@@ -38,6 +40,8 @@ import net.automatalib.words.impl.Alphabets;
  * @see net.automatalib.AutomataLibProperty#LTSMIN_PATH
  */
 public final class LTSminMonitorExample {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LTSminMonitorExample.class);
 
     private LTSminMonitorExample() {
         // prevent instantiation
@@ -72,8 +76,7 @@ public final class LTSminMonitorExample {
         // In the first step we don't see output '1'.
         final String p4 = "! output == \"1\"";
 
-        System.out.println("performing LTL model checking with Buchi automata");
-        System.out.println();
+        LOGGER.info("performing LTL model checking with Buchi automata");
 
         // do LTL model checking with monitors
         final LTSminMonitorIO<Character, Character> ltsminMonitor =
@@ -81,29 +84,29 @@ public final class LTSminMonitorExample {
                                                                   .withString2Output(s -> s.charAt(0))
                                                                   .create();
 
-        System.out.println();
-        System.out.println("performing LTL model checking with monitors");
-        System.out.println();
+        LOGGER.info("performing LTL model checking with monitors");
 
         final MealyMachine<?, Character, ?, Character> ce1m =
                 ltsminMonitor.findCounterExample(mealy, inputAlphabet, p1);
 
-        System.out.println("First property is satisfied: " + Objects.isNull(ce1m));
+        LOGGER.info("First property is satisfied: {}", Objects.isNull(ce1m));
 
         final MealyMachine<?, Character, ?, Character> ce2m =
                 ltsminMonitor.findCounterExample(mealy, inputAlphabet, p2);
 
-        System.out.println("Second property is satisfied: " + Objects.isNull(ce2m));
+        LOGGER.info("Second property is satisfied: {}", Objects.isNull(ce2m));
 
         final MealyMachine<?, Character, ?, Character> ce3m =
                 ltsminMonitor.findCounterExample(mealy, inputAlphabet, p3);
 
-        System.out.println("Third property is satisfied: " + Objects.isNull(ce3m));
+        LOGGER.info("Third property is satisfied: {}", Objects.isNull(ce3m));
 
         final MealyMachine<?, Character, ?, Character> ce4m =
                 ltsminMonitor.findCounterExample(mealy, inputAlphabet, p4);
 
-        System.out.println("Fourth property is satisfied: " + Objects.isNull(ce4m));
-        System.out.println("Counterexample length: " + (ce4m.size()));
+        LOGGER.info("Fourth property is satisfied: {}", Objects.isNull(ce4m));
+        if (ce4m != null) {
+            LOGGER.info("Counterexample length: {}", ce4m.size());
+        }
     }
 }

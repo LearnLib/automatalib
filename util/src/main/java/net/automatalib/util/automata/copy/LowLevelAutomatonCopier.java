@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,8 @@ package net.automatalib.util.automata.copy;
 
 import net.automatalib.commons.util.mappings.Mapping;
 
-public interface LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> {
+public interface LowLevelAutomatonCopier<S1, S2> {
 
-    /**
-     *
-     */
     void doCopy();
 
     Mapping<S1, S2> getStateMapping();

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +24,7 @@ import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
         implements MutableGraph<Integer, E, NP, EP>, NodeIDs<Integer> {
@@ -32,7 +33,6 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     protected int size;
 
     public AbstractCompactGraph() {
-        this.size = 0;
         this.edges = new ResizingArrayStorage<>(List.class);
     }
 
@@ -56,8 +56,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     }
 
     public Collection<E> getOutgoingEdges(int node) {
-        List<E> edgeList = getOutEdgeList(node);
-        return Collections.unmodifiableCollection(edgeList);
+        return Collections.unmodifiableCollection(getOutEdgeList(node));
     }
 
     protected List<E> getOutEdgeList(int node) {
@@ -70,11 +69,11 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     }
 
     @Override
-    public Integer addNode(NP properties) {
+    public Integer addNode(@Nullable NP properties) {
         return Integer.valueOf(addIntNode(properties));
     }
 
-    public int addIntNode(NP properties) {
+    public int addIntNode(@Nullable NP properties) {
         edges.ensureCapacity(size + 1);
         edges.array[size] = new ArrayList<>();
         int n = size++;
@@ -91,14 +90,14 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
         setNodeProperty(node.intValue(), property);
     }
 
-    public abstract void setNodeProperty(int node, NP property);
+    public abstract void setNodeProperty(int node, @Nullable NP property);
 
     @Override
-    public E connect(Integer source, Integer target, EP properties) {
+    public E connect(Integer source, Integer target, @Nullable EP properties) {
         return connect(source.intValue(), target.intValue(), properties);
     }
 
-    public E connect(int source, int target, EP property) {
+    public E connect(int source, int target, @Nullable EP property) {
         E edge = createEdge(source, target, property);
         List<E> edges = getOutEdgeList(source);
         edge.outIndex = edges.size();
@@ -110,7 +109,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
         return connect(source, target, null);
     }
 
-    protected abstract E createEdge(int source, int target, EP property);
+    protected abstract E createEdge(int source, int target, @Nullable EP property);
 
     @Override
     public void setEdgeProperty(E edge, EP property) {

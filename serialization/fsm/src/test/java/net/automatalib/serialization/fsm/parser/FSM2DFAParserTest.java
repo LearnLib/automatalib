@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.io.UnclosableInputStream;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
@@ -46,48 +47,54 @@ public class FSM2DFAParserTest extends AbstractFSM2ParserTest {
 
     @Test
     public void testParse1() throws Exception {
-        final InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA1.fsm");
+        try (InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA1.fsm")) {
+            final CompactDFA<Character> actualDFA = parser.readModel(is);
 
-        final CompactDFA<Character> actualDFA = parser.readModel(is);
-        is.close();
+            final Alphabet<Character> alphabet = Alphabets.characters('a', 'b');
 
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'b');
+            CompactDFA<Character> expectedDFA = AutomatonBuilders.newDFA(alphabet)
+                                                                 .from("q0").on('a').to("q1")
+                                                                 .from("q1").on('b').to("q0")
+                                                                 .withAccepting("q1").withInitial("q0")
+                                                                 .create();
 
-        CompactDFA<Character> expectedDFA = AutomatonBuilders.newDFA(alphabet).
-                from("q0").on('a').to("q1").
-                from("q1").on('b').to("q0").
-                withAccepting("q1").withInitial("q0").create();
-
-        Assert.assertTrue(Automata.testEquivalence(actualDFA, expectedDFA, alphabet));
+            Assert.assertTrue(Automata.testEquivalence(actualDFA, expectedDFA, alphabet));
+        }
     }
 
     @Test
     public void testParse2() throws Exception {
-        final InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm");
+        try (InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm")) {
+            final CompactDFA<Character> actualDFA = parser.readModel(is);
 
-        final CompactDFA<Character> actualDFA = parser.readModel(is);
-        is.close();
+            final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
 
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
+            CompactDFA<Character> expectedDFA = AutomatonBuilders.newDFA(alphabet)
+                                                                 .from("q0").on('a').loop()
+                                                                 .withAccepting("q0").withInitial("q0")
+                                                                 .create();
 
-        CompactDFA<Character> expectedDFA = AutomatonBuilders.newDFA(alphabet).
-                from("q0").on('a').loop().
-                withAccepting("q0").withInitial("q0").create();
-
-        Assert.assertTrue(Automata.testEquivalence(actualDFA, expectedDFA, alphabet));
+            Assert.assertTrue(Automata.testEquivalence(actualDFA, expectedDFA, alphabet));
+        }
     }
 
     @Override
     protected CompactDFA<Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
-            throws IOException, FSMParseException {
-        final InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm");
+            throws IOException {
+        try (InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm")) {
+            final Function<String, Character> ip = s -> s.charAt(0);
 
-        final Function<String, Character> ip = s -> s.charAt(0);
+            final CompactDFA<Character> dfa =
+                    FSM2DFAParser.getParser(requiredInputs.orElse(null), ip, "label", "accept").readModel(is);
 
-        final CompactDFA<Character> dfa =
-                FSM2DFAParser.getParser(requiredInputs.orElse(null), ip, "label", "accept").readModel(is);
-        is.close();
+            return dfa;
+        }
+    }
 
-        return dfa;
+    @Test
+    public void doNotCloseInputStreamTest() throws IOException {
+        try (InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA1.fsm")) {
+            parser.readModel(new UnclosableInputStream(is));
+        }
     }
 }

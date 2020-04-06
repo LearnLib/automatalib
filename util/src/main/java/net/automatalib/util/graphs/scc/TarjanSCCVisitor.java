@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.commons.util.Holder;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.Graph;
@@ -38,7 +36,6 @@ import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, TarjanSCCRecord> {
 
     private static final int SCC_FINISHED = -1;
@@ -82,30 +79,27 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
     @Override
     public boolean startExploration(N node, TarjanSCCRecord data) {
         records.put(node, data);
+        currentSccRecordStack.add(data);
+        currentSccNodeStack.add(node);
         return true;
     }
 
     @Override
     public void finishExploration(N node, TarjanSCCRecord data) {
-        currentSccRecordStack.add(data);
-        currentSccNodeStack.add(node);
-
         // finished the initial node of this SCC
         if (data.sccId == data.number) {
-            final int currScc = data.sccId;
             int numOfNodes = 0;
             final ListIterator<TarjanSCCRecord> iter = currentSccRecordStack.listIterator(currentSccRecordStack.size());
 
-            while (iter.hasPrevious()) {
+            final int nodeId = data.number;
+            int prevId;
+            do {
                 final TarjanSCCRecord prev = iter.previous();
-                if (prev.sccId == currScc) {
-                    numOfNodes++;
-                    prev.sccId = SCC_FINISHED;
-                    iter.remove();
-                } else {
-                    break;
-                }
-            }
+                prevId = prev.number;
+                numOfNodes++;
+                prev.sccId = SCC_FINISHED;
+                iter.remove();
+            } while (prevId != nodeId);
 
             final int nodeStackSize = currentSccNodeStack.size();
             final List<N> sccNodes = currentSccNodeStack.subList(nodeStackSize - numOfNodes, nodeStackSize);
@@ -128,7 +122,7 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
         }
 
         if (rec.sccId != SCC_FINISHED) {
-            int tgtId = rec.sccId;
+            int tgtId = rec.number;
             /*
              * if our successor has a lower scc id than we do, it belongs to an SCC of one of our ascendants,
              * Thus we have detected a cycle and belong to the same SCC.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,17 +17,14 @@ package net.automatalib.automata.transducers.probabilistic;
 
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public final class ProbabilisticOutput<O> {
 
     private final float probability;
-    @Nullable
     private final O output;
 
-    public ProbabilisticOutput(float probability, @Nullable O output) {
+    public ProbabilisticOutput(float probability, O output) {
         this.probability = probability;
         this.output = output;
     }
@@ -36,13 +33,12 @@ public final class ProbabilisticOutput<O> {
         return probability;
     }
 
-    @Nullable
     public O getOutput() {
         return output;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

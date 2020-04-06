@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,7 @@ import net.automatalib.commons.smartcollections.AbstractBasicLinkedListEntry;
 import net.automatalib.commons.smartcollections.ElementReference;
 import net.automatalib.commons.smartcollections.IntrusiveLinkedList;
 import net.automatalib.commons.smartcollections.UnorderedCollection;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A block in the partition calculated during minimization.
@@ -41,7 +42,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
     private final UnorderedCollection<State<S, L>> states;
     private final int id;
     // The references for both the partition and splitter collection.
-    private ElementReference partitionReference, splitterQueueReference;
+    private @Nullable ElementReference partitionReference, splitterQueueReference;
     // The bucket of this block, used for initially arranging the
     // states ordered by their respective blocks during the weak sort.
     private final IntrusiveLinkedList<State<S, L>> bucket = new IntrusiveLinkedList<>();
@@ -68,6 +69,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
      * @param states
      *         creates a block for the given collection of states. Ownership of this collection is assumed.
      */
+    @SuppressWarnings("initialization") // all immutable fields are initialized when passing 'this'
     Block(int id, UnorderedCollection<State<S, L>> states) {
         this.id = id;
         this.states = states;
@@ -166,7 +168,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
      *
      * @return the reference.
      */
-    ElementReference getPartitionReference() {
+    @Nullable ElementReference getPartitionReference() {
         return partitionReference;
     }
 
@@ -176,7 +178,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
      * @param partitionReference
      *         the reference.
      */
-    void setPartitionReference(ElementReference partitionReference) {
+    void setPartitionReference(@Nullable ElementReference partitionReference) {
         this.partitionReference = partitionReference;
     }
 
@@ -186,7 +188,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
      *
      * @return the reference or <code>null</code>.
      */
-    ElementReference getSplitterQueueReference() {
+    @Nullable ElementReference getSplitterQueueReference() {
         return splitterQueueReference;
     }
 
@@ -196,7 +198,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
      * @param splitterQueueReference
      *         the reference
      */
-    void setSplitterQueueReference(ElementReference splitterQueueReference) {
+    void setSplitterQueueReference(@Nullable ElementReference splitterQueueReference) {
         this.splitterQueueReference = splitterQueueReference;
     }
 

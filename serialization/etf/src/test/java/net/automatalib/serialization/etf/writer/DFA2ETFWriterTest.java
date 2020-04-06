@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,15 @@
 package net.automatalib.serialization.etf.writer;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
+import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.IOUtil;
+import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
@@ -39,34 +41,46 @@ public class DFA2ETFWriterTest {
 
     @Test
     public void testWrite() throws Exception {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (Reader r = IOUtil.asBufferedUTF8Reader(DFA2ETFWriterTest.class.getResourceAsStream("/DFA-testWrite.etf"));
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
+            final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
 
-        final Random random = new Random(0);
-        final DFA<?, Character> automaton = RandomAutomata.randomDFA(random, 20, alphabet);
+            final Random random = new Random(0);
+            final DFA<?, Character> automaton = RandomAutomata.randomDFA(random, 20, alphabet);
 
-        DFA2ETFWriter.<Character>getInstance().writeModel(baos, automaton, alphabet);
+            DFA2ETFWriter.<Character>getInstance().writeModel(baos, automaton, alphabet);
 
-        final InputStream is = DFA2ETFWriterTest.class.getResourceAsStream("/DFA-testWrite.etf");
-        final String expected = CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
+            final String expected = CharStreams.toString(r);
 
-        Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
+            Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
+        }
     }
 
     @Test
     public void testEmptyLanguage() throws Exception {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (Reader r = IOUtil.asBufferedUTF8Reader(DFA2ETFWriterTest.class.getResourceAsStream("/DFA-testEmptyLanguage.etf"));
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
-        final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
-        final DFA<?, Character> emptyLanguage =
-                AutomatonBuilders.newDFA(alphabet).withInitial("q0").from("q0").on('a').loop().create();
+            final Alphabet<Character> alphabet = Alphabets.characters('a', 'a');
+            final DFA<?, Character> emptyLanguage =
+                    AutomatonBuilders.newDFA(alphabet).withInitial("q0").from("q0").on('a').loop().create();
 
-        DFA2ETFWriter.<Character>getInstance().writeModel(baos, emptyLanguage, alphabet);
+            DFA2ETFWriter.<Character>getInstance().writeModel(baos, emptyLanguage, alphabet);
 
-        final InputStream is = DFA2ETFWriterTest.class.getResourceAsStream("/DFA-testEmptyLanguage.etf");
-        final String expected = CharStreams.toString(IOUtil.asBufferedUTF8Reader(is));
+            final String expected = CharStreams.toString(r);
 
-        Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
+            Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
+        }
+    }
+
+    @Test
+    public void doNotCloseOutputStreamTest() {
+        final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
+        final DFA<?, Character> automaton = RandomAutomata.randomDFA(new Random(0), 10, alphabet);
+
+        DFA2ETFWriter.<Character>getInstance().writeModel(new UnclosableOutputStream(ByteStreams.nullOutputStream()),
+                                                          automaton,
+                                                          alphabet);
     }
 }

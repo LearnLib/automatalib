@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +18,10 @@ package net.automatalib.automata.transducers.impl;
 import java.util.Collection;
 
 import net.automatalib.automata.base.fast.AbstractFastState;
+import net.automatalib.automata.transducers.probabilistic.ProbabilisticOutput;
 
 public class FastProbMealyState<O>
-        extends AbstractFastState<Collection<ProbMealyTransition<FastProbMealyState<O>, O>>> {
+        extends AbstractFastState<Collection<MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>>>> {
 
     public FastProbMealyState(int numInputs) {
         super(numInputs);

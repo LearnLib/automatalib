@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,6 @@
 package net.automatalib.modelchecking;
 
 import java.util.SortedSet;
-
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.automata.concepts.DetOutputAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
@@ -40,7 +37,6 @@ import net.automatalib.words.Word;
  *
  * @author Jeroen Meijer
  */
-@ParametersAreNonnullByDefault
 public interface Lasso<I, D> extends DetOutputAutomaton<Integer, I, Integer, D>, InputAlphabetHolder<I> {
 
     /**
@@ -90,7 +86,6 @@ public interface Lasso<I, D> extends DetOutputAutomaton<Integer, I, Integer, D>,
      *
      * @return the original automaton.
      */
-    @Nullable
     DetOutputAutomaton<?, I, ?, D> getAutomaton();
 
     /**

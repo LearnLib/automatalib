@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +31,8 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 /**
  * Component that displays a {@link BufferedImage}.
  *
@@ -42,7 +44,7 @@ public class ImageComponent extends JComponent {
 
     private static final int DEFAULT_WIDTH = 320, DEFAULT_HEIGHT = 240;
 
-    private BufferedImage img;
+    private @Nullable BufferedImage img;
     private final Action savePngAction = new AbstractAction("Save PNG") {
 
         private static final long serialVersionUID = 1L;
@@ -57,6 +59,9 @@ public class ImageComponent extends JComponent {
             }
             File f = chooser.getSelectedFile();
             try {
+                if (img == null) {
+                    throw new IllegalStateException("No image has been set");
+                }
                 ImageIO.write(img, "png", f);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(ImageComponent.this,
@@ -97,7 +102,7 @@ public class ImageComponent extends JComponent {
      *
      * @return the image to be displayed
      */
-    public BufferedImage getImage() {
+    public @Nullable BufferedImage getImage() {
         return img;
     }
 
@@ -107,7 +112,7 @@ public class ImageComponent extends JComponent {
      * @param img
      *         the image to be displayed
      */
-    public void setImage(BufferedImage img) {
+    public void setImage(@Nullable BufferedImage img) {
         this.img = img;
         Dimension dim;
         if (img != null) {

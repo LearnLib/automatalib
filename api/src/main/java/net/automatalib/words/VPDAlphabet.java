@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,13 +30,25 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
 
     /**
      * The {@link Alphabet#getSymbol(int)} variant for the call alphabet.
+     *
+     * @param index
+     *         the index of the symbol
+     *
+     * @throws IllegalArgumentException
+     *         if there is no symbol with this index
      */
-    I getCallSymbol(int index) throws IllegalArgumentException;
+    I getCallSymbol(int index);
 
     /**
      * The {@link Alphabet#getSymbolIndex(Object)} variant for the call alphabet.
+     *
+     * @param symbol
+     *         the symbol whose index should be determined
+     *
+     * @throws IllegalArgumentException
+     *         if the provided symbol does not belong to the call alphabet.
      */
-    int getCallSymbolIndex(I symbol) throws IllegalArgumentException;
+    int getCallSymbolIndex(I symbol);
 
     int getNumCalls();
 
@@ -44,13 +56,25 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
 
     /**
      * The {@link Alphabet#getSymbol(int)} variant for the internal alphabet.
+     *
+     * @param index
+     *         the index of the symbol
+     *
+     * @throws IllegalArgumentException
+     *         if there is no symbol with this index
      */
-    I getInternalSymbol(int index) throws IllegalArgumentException;
+    I getInternalSymbol(int index);
 
     /**
      * The {@link Alphabet#getSymbolIndex(Object)} variant for the internal alphabet.
+     *
+     * @param symbol
+     *         the symbol whose index should be determined
+     *
+     * @throws IllegalArgumentException
+     *         if the provided symbol does not belong to the internal alphabet.
      */
-    int getInternalSymbolIndex(I symbol) throws IllegalArgumentException;
+    int getInternalSymbolIndex(I symbol);
 
     int getNumInternals();
 
@@ -58,16 +82,39 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
 
     /**
      * The {@link Alphabet#getSymbol(int)} variant for the return alphabet.
+     *
+     * @param index
+     *         the index of the symbol
+     *
+     * @throws IllegalArgumentException
+     *         if there is no symbol with this index
      */
-    I getReturnSymbol(int index) throws IllegalArgumentException;
+    I getReturnSymbol(int index);
 
     /**
      * The {@link Alphabet#getSymbolIndex(Object)} variant for the return alphabet.
+     *
+     * @param symbol
+     *         the symbol whose index should be determined
+     *
+     * @throws IllegalArgumentException
+     *         if the provided symbol does not belong to the return alphabet.
      */
-    int getReturnSymbolIndex(I symbol) throws IllegalArgumentException;
+    int getReturnSymbolIndex(I symbol);
 
     int getNumReturns();
 
+    /**
+     * Returns the {@link SymbolType symbol type} of the given alphabet symbol.
+     *
+     * @param symbol
+     *         the symbol whose type should be returned
+     *
+     * @return the {@link SymbolType symbol type} of the given alphabet symbol.
+     *
+     * @throws IllegalArgumentException
+     *         if the provided symbol does not belong to the alphabet.
+     */
     SymbolType getSymbolType(I symbol);
 
     default int callReturnBalance(Word<I> word) {
@@ -157,8 +204,10 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
     }
 
     default Word<I> longestWellMatchedPrefix(Word<I> word) {
-        int idx = 0, len = word.length();
+        int idx = 0;
+        int len = word.length();
         int crb = 0;
+        int lastzero = 0;
         outer:
         while (idx < len) {
             final I sym = word.getSymbol(idx);
@@ -174,9 +223,12 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
                     break;
                 default:
             }
+            if (crb == 0) {
+                lastzero = idx + 1;
+            }
             idx++;
         }
-        return word.prefix(idx);
+        return word.prefix(lastzero);
     }
 
     default Word<I> longestWellMatchedSuffix(Word<I> word) {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nonnull;
 
 import net.automatalib.graphs.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -56,31 +54,33 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
             return State.getSink();
         }
 
+        final L loc = state.getLocation();
         final VPDAlphabet.SymbolType type = alphabet.getSymbolType(input);
         switch (type) {
             case CALL:
-                final int newStackElem = encodeStackSym(state.getLocation(), input);
+                final int newStackElem = encodeStackSym(loc, input);
                 return new State<>(getInitialLocation(), StackContents.push(newStackElem, state.getStackContents()));
             case RETURN: {
-                if (state.getStackContents() == null) {
+                final StackContents contents = state.getStackContents();
+                if (contents == null) {
                     return State.getSink();
                 }
-                final int stackElem = state.getStackContents().peek();
-                final L succ = getReturnSuccessor(state.getLocation(), input, stackElem);
+                final int stackElem = contents.peek();
+                final L succ = getReturnSuccessor(loc, input, stackElem);
                 if (succ == null) {
                     return State.getSink();
                 }
-                return new State<>(succ, state.getStackContents().pop());
+                return new State<>(succ, contents.pop());
             }
             case INTERNAL: {
-                final L succ = getInternalSuccessor(state.getLocation(), input);
+                final L succ = getInternalSuccessor(loc, input);
                 if (succ == null) {
                     return State.getSink();
                 }
                 return new State<>(succ, state.getStackContents());
             }
             default:
-                throw new IllegalStateException("Unkown symbol type " + type);
+                throw new IllegalStateException("Unknown symbol type " + type);
         }
     }
 
@@ -102,28 +102,34 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
     @Override
     public abstract int size();
 
-    @Nonnull
     @Override
     public Collection<L> getNodes() {
         return Collections.unmodifiableCollection(getLocations());
     }
 
-    @Nonnull
     @Override
     public Collection<SevpaViewEdge<L, I>> getOutgoingEdges(final L location) {
 
-        final List<SevpaViewEdge<L, I>> result = new ArrayList<>(alphabet.size());
+        final List<SevpaViewEdge<L, I>> result = new ArrayList<>();
 
         // all internal transitions
         for (final I i : alphabet.getInternalAlphabet()) {
-            result.add(new SevpaViewEdge<>(location, i, -1));
+            final L succ = getInternalSuccessor(location, i);
+            if (succ != null) {
+                result.add(new SevpaViewEdge<>(i, -1, succ));
+            }
         }
 
         // all return transitions for every possible stack contents
         for (final I i : alphabet.getReturnAlphabet()) {
-            for (final L stackLocation : getLocations()) {
+            for (final L loc : getLocations()) {
                 for (final I stackSymbol : alphabet.getCallAlphabet()) {
-                    result.add(new SevpaViewEdge<>(location, i, encodeStackSym(stackLocation, stackSymbol)));
+                    final int sym = encodeStackSym(loc, stackSymbol);
+                    final L succ = getReturnSuccessor(location, i, sym);
+
+                    if (succ != null) {
+                        result.add(new SevpaViewEdge<>(i, sym, succ));
+                    }
                 }
             }
         }
@@ -131,22 +137,9 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
         return result;
     }
 
-    @Nonnull
     @Override
     public L getTarget(final SevpaViewEdge<L, I> edge) {
-
-        final L from = edge.from;
-        final I by = edge.by;
-        final int stack = edge.stack;
-
-        switch (alphabet.getSymbolType(by)) {
-            case INTERNAL:
-                return getInternalSuccessor(from, by);
-            case RETURN:
-                return getReturnSuccessor(from, by, stack);
-            default:
-                throw new IllegalArgumentException();
-        }
+        return edge.target;
     }
 
     @Override
@@ -164,7 +157,7 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
 
                 properties.put(NodeAttrs.SHAPE,
                                isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);
-                properties.put(NodeAttrs.LABEL, Integer.toString(getLocationId(node)));
+                properties.put(NodeAttrs.LABEL, "L" + getLocationId(node));
 
                 return true;
             }
@@ -175,14 +168,14 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
                                              final L tgt,
                                              final Map<String, String> properties) {
 
-                final I by = edge.by;
+                final I input = edge.input;
                 final int stack = edge.stack;
 
-                if (alphabet.isInternalSymbol(by)) {
-                    properties.put(EdgeAttrs.LABEL, by.toString());
-                } else if (alphabet.isReturnSymbol(by)) {
+                if (alphabet.isInternalSymbol(input)) {
+                    properties.put(EdgeAttrs.LABEL, String.valueOf(input));
+                } else if (alphabet.isReturnSymbol(input)) {
                     properties.put(EdgeAttrs.LABEL,
-                                   by.toString() + "/(" + getStackLoc(stack) + ',' + getCallSym(stack) + ')');
+                                   input + "/(L" + getLocationId(getStackLoc(stack)) + ',' + getCallSym(stack) + ')');
                 } else {
                     throw new IllegalArgumentException();
                 }
@@ -202,13 +195,13 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
 
     static class SevpaViewEdge<S, I> {
 
-        private final S from;
-        private final I by;
-        private final int stack;
+        final I input;
+        final int stack;
+        final S target;
 
-        SevpaViewEdge(S from, I by, int stack) {
-            this.from = from;
-            this.by = by;
+        SevpaViewEdge(I input, int stack, S target) {
+            this.target = target;
+            this.input = input;
             this.stack = stack;
         }
     }

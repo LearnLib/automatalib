@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,8 +26,7 @@ import net.automatalib.ts.TransitionPredicate;
 
 public final class TransitionPredicates {
 
-    private TransitionPredicates() {
-    }
+    private TransitionPredicates() {}
 
     public static <S, I, T> TransitionPredicate<S, I, T> safePred(TransitionPredicate<S, I, T> pred,
                                                                   boolean nullValue) {

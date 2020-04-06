@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,19 +18,20 @@ package net.automatalib.modelcheckers.ltsmin.ltl;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.function.Function;
-
-import javax.annotation.Nullable;
 
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.exception.ModelCheckingException;
+import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
 import net.automatalib.modelcheckers.ltsmin.LTSminMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 import net.automatalib.modelchecking.lasso.MealyLassoImpl;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
+import net.automatalib.serialization.fsm.parser.FSMFormatException;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An LTL model checker using LTSmin for Mealy machines.
@@ -45,6 +46,8 @@ import net.automatalib.serialization.fsm.parser.FSMParseException;
 public abstract class AbstractLTSminLTLMealy<I, O>
         extends AbstractLTSminLTL<I, MealyMachine<?, I, ?, O>, MealyLasso<I, O>>
         implements MealyModelCheckerLasso<I, O, String>, LTSminMealy<I, O, MealyLasso<I, O>> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractLTSminLTLMealy.class);
 
     /**
      * @see #getString2Output()
@@ -75,7 +78,7 @@ public abstract class AbstractLTSminLTLMealy<I, O>
                                      Collection<? super O> skipOutputs) {
         super(keepFiles, string2Input, minimumUnfolds, multiplier);
         this.string2Output = string2Output;
-        this.skipOutputs = skipOutputs == null ? Collections.emptyList() : skipOutputs;
+        this.skipOutputs = skipOutputs;
     }
 
     /**
@@ -106,33 +109,32 @@ public abstract class AbstractLTSminLTLMealy<I, O>
         this.skipOutputs = skipOutputs;
     }
 
-    @Nullable
     @Override
-    public MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, String property)
-            throws ModelCheckingException {
+    protected void verifyFormula(String formula) {
+        LTSminLTLParser.requireValidIOFormula(formula);
+    }
+
+    @Override
+    public @Nullable MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
+                                               Collection<? extends I> inputs,
+                                               String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
-        final MealyLasso<I, O> result;
-
-        if (fsm != null) {
-            final CompactMealy<I, O> mealy;
-
-            try {
-                mealy = fsm2Mealy(fsm, automaton, inputs);
-
-                // check if we must keep the FSM
-                if (!isKeepFiles() && !fsm.delete()) {
-                    throw new ModelCheckingException("Could not delete file: " + fsm.getAbsolutePath());
-                }
-            } catch (IOException | FSMParseException e) {
-                throw new ModelCheckingException(e);
-            }
-
-            result = new MealyLassoImpl<>(mealy, mealy.getInputAlphabet(), computeUnfolds(automaton.size()));
-        } else {
-            result = null;
+        if (fsm == null) {
+            return null;
         }
 
-        return result;
+        try {
+            final CompactMealy<I, O> mealy = fsm2Mealy(fsm, automaton, inputs);
+
+            return new MealyLassoImpl<>(mealy, inputs, computeUnfolds(automaton.size()));
+        } catch (IOException | FSMFormatException e) {
+            throw new ModelCheckingException(e);
+        } finally {
+            // check if we must keep the FSM
+            if (!isKeepFiles() && !fsm.delete()) {
+                LOGGER.warn("Could not delete file: " + fsm.getAbsolutePath());
+            }
+        }
     }
 }

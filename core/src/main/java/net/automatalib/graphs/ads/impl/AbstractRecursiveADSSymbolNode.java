@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.automatalib.graphs.ads.RecursiveADSNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An abstract implementation of a symbol node, that may be used by other ADS-extending classes.
@@ -38,13 +39,13 @@ import net.automatalib.graphs.ads.RecursiveADSNode;
 public abstract class AbstractRecursiveADSSymbolNode<S, I, O, N extends RecursiveADSNode<S, I, O, N>>
         implements RecursiveADSNode<S, I, O, N>, Serializable {
 
-    private N parent;
+    private @Nullable N parent;
 
     private I symbol;
 
     private final Map<O, N> successors;
 
-    public AbstractRecursiveADSSymbolNode(N parent, I symbol) {
+    public AbstractRecursiveADSSymbolNode(@Nullable N parent, I symbol) {
         this.successors = new HashMap<>();
         this.parent = parent;
         this.symbol = symbol;
@@ -61,7 +62,7 @@ public abstract class AbstractRecursiveADSSymbolNode<S, I, O, N extends Recursiv
     }
 
     @Override
-    public N getParent() {
+    public @Nullable N getParent() {
         return this.parent;
     }
 
@@ -81,7 +82,7 @@ public abstract class AbstractRecursiveADSSymbolNode<S, I, O, N extends Recursiv
     }
 
     @Override
-    public S getHypothesisState() {
+    public @Nullable S getHypothesisState() {
         return null;
     }
 
@@ -92,6 +93,6 @@ public abstract class AbstractRecursiveADSSymbolNode<S, I, O, N extends Recursiv
 
     @Override
     public String toString() {
-        return this.symbol.toString();
+        return String.valueOf(this.symbol);
     }
 }

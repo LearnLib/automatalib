@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,8 +64,7 @@ final class TraversalGraphCopy<N1, E1, N2, E2, NP2, EP2>
     }
 
     @Override
-    public void finishExploration(N1 node, N2 data) {
-    }
+    public void finishExploration(N1 node, N2 data) {}
 
     @Override
     public GraphTraversalAction processEdge(N1 srcNode, N2 srcData, E1 edge, N1 tgtNode, Holder<N2> outData) {
@@ -78,7 +77,6 @@ final class TraversalGraphCopy<N1, E1, N2, E2, NP2, EP2>
     }
 
     @Override
-    public void backtrackEdge(N1 srcNode, N2 srcData, E1 edge, N1 tgtNode, N2 tgtData) {
-    }
+    public void backtrackEdge(N1 srcNode, N2 srcData, E1 edge, N1 tgtNode, N2 tgtData) {}
 
 }

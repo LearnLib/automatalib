@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2019 TU Dortmund
+Copyright (C) 2013-2020 TU Dortmund
 This file is part of AutomataLib, http://www.automatalib.net/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,18 +63,13 @@ limitations under the License.
         <exclude name="BeanMembersShouldSerialize"/>
         <exclude name="CompareObjectsWithEquals"/>
         <exclude name="ConstructorCallsOverridableMethod"/>
+        <exclude name="DataflowAnomalyAnalysis"/>
         <exclude name="EmptyWhileStmt"/>
         <exclude name="MissingSerialVersionUID"/>
-        <exclude name="NonStaticInitializer"/>
         <exclude name="NullAssignment"/>
-        <exclude name="UseLocaleWithCaseConversions"/>
-
-        <exclude name="DataflowAnomalyAnalysis"/>
     </rule>
 
     <rule ref="category/java/multithreading.xml">
-        <exclude name="AvoidSynchronizedAtMethodLevel"/>
-        <exclude name="AvoidUsingVolatile"/>
         <exclude name="DoNotUseThreads"/>
         <exclude name="UseConcurrentHashMap"/>
     </rule>

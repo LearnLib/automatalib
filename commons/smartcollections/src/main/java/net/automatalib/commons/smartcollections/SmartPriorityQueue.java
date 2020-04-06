@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,7 @@ public interface SmartPriorityQueue<E> extends SmartCollection<E> {
     E peekMin();
 
     /**
-     * Retrieves and remove the element with the minimum key in the priority queue. If there are several elements with
+     * Retrieves and removes the element with the minimum key in the priority queue. If there are several elements with
      * minimal key values, one of them is chosen arbitrarily.
      *
      * @return the element with the previously minimal key.

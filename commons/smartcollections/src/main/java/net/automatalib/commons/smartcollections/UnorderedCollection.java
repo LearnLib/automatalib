@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,6 +61,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
      * @param coll
      *         the collection.
      */
+    @SuppressWarnings("initialization") // addAll only access initialized data structures
     public UnorderedCollection(Collection<? extends E> coll) {
         this(coll.size());
         addAll(coll);
@@ -117,6 +118,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
     /**
      * Removes an element by its index.
      */
+    @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     private void remove(int index) {
         int lastIndex = --size;
         Reference<E> removed = storage.array[index];
@@ -155,7 +157,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
     @Override
     public E choose() {
         if (size == 0) {
-            return null;
+            throw new NoSuchElementException();
         }
         return storage.array[0].element;
     }
@@ -175,24 +177,24 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
     @Override
     public <T extends E> void addAll(T[] array) {
-        int sizeInc = array.length;
-        ensureCapacity(size + sizeInc);
-        for (int index = size, i = 0; i < array.length; index++, i++) {
-            storage.array[index] = new Reference<>(array[i], index);
+        ensureCapacity(size + array.length);
+        for (T t : array) {
+            storage.array[size] = new Reference<>(t, size);
+            size++;
         }
-        size += sizeInc;
     }
 
     @Override
     public boolean addAll(Collection<? extends E> coll) {
-        int sizeInc = coll.size();
-        ensureCapacity(size + sizeInc);
-        int idx = size;
-        for (E elem : coll) {
-            storage.array[idx] = new Reference<>(elem, idx);
-            idx++;
+        if (coll.isEmpty()) {
+            return false;
         }
-        size += sizeInc;
+
+        ensureCapacity(size + coll.size());
+        for (E elem : coll) {
+            storage.array[size] = new Reference<>(elem, size);
+            size++;
+        }
 
         return true;
     }
@@ -202,6 +204,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         size = 0;
     }
 
+    @SuppressWarnings("nullness") // setting 'null' is fine, when (according to JavaDoc) calling quickClear() first
     @Override
     public void deepClear() {
         storage.setAll(null);
@@ -222,6 +225,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
         return (size == 0);
     }
 
+    @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     @Override
     public void clear() {
         for (int i = 0; i < size; i++) {
@@ -315,6 +319,9 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
         @Override
         public void remove() {
+            if (index <= 0) {
+                throw new IllegalStateException();
+            }
             UnorderedCollection.this.remove(--index);
         }
     }

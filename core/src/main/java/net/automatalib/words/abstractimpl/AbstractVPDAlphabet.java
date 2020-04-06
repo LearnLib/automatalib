@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +18,6 @@ package net.automatalib.words.abstractimpl;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.annotation.Nullable;
 
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
@@ -50,12 +48,12 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
-    public I getCallSymbol(int index) throws IllegalArgumentException {
+    public I getCallSymbol(int index) {
         return callAlphabet.getSymbol(index);
     }
 
     @Override
-    public int getCallSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getCallSymbolIndex(I symbol) {
         return callAlphabet.getSymbolIndex(symbol);
     }
 
@@ -70,12 +68,12 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
-    public I getInternalSymbol(int index) throws IllegalArgumentException {
+    public I getInternalSymbol(int index) {
         return internalAlphabet.getSymbol(index);
     }
 
     @Override
-    public int getInternalSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getInternalSymbolIndex(I symbol) {
         return internalAlphabet.getSymbolIndex(symbol);
     }
 
@@ -90,12 +88,12 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
-    public I getReturnSymbol(int index) throws IllegalArgumentException {
+    public I getReturnSymbol(int index) {
         return returnAlphabet.getSymbol(index);
     }
 
     @Override
-    public int getReturnSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getReturnSymbolIndex(I symbol) {
         return returnAlphabet.getSymbolIndex(symbol);
     }
 
@@ -113,7 +111,7 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
         } else if (returnAlphabet.containsSymbol(symbol)) {
             return SymbolType.RETURN;
         } else {
-            return null;
+            throw new IllegalArgumentException("Symbol is not contained in this alphabet");
         }
     }
 
@@ -122,9 +120,8 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
         return internalAlphabet.size() + callAlphabet.size() + returnAlphabet.size();
     }
 
-    @Nullable
     @Override
-    public I getSymbol(int index) throws IllegalArgumentException {
+    public I getSymbol(int index) {
         int localIndex = index;
 
         if (localIndex < internalAlphabet.size()) {
@@ -147,7 +144,7 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
-    public int getSymbolIndex(@Nullable I symbol) throws IllegalArgumentException {
+    public int getSymbolIndex(I symbol) {
         int offset = 0;
 
         if (internalAlphabet.containsSymbol(symbol)) {

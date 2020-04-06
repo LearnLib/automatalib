@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package net.automatalib;
 import java.util.Properties;
 
 import net.automatalib.commons.util.settings.SettingsSource;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author Malte Isberner
@@ -35,7 +36,7 @@ public final class AutomataLibSettings {
         return INSTANCE;
     }
 
-    public String getProperty(AutomataLibProperty property) {
+    public @Nullable String getProperty(AutomataLibProperty property) {
         return properties.getProperty(property.getPropertyKey());
     }
 

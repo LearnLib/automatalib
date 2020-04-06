@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,15 +21,15 @@ import java.util.Collection;
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
-import net.automatalib.automata.base.StateIDDynamicMapping;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.concepts.StateLocalInput;
+import net.automatalib.commons.util.mappings.ArrayMapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.commons.util.nid.DynamicList;
 import net.automatalib.commons.util.nid.IDChangeNotifier;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Shared functionality for (non-) deterministic mutable automata.
@@ -63,7 +63,7 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
     }
 
     @Override
-    public S addState(SP property) {
+    public S addState(@Nullable SP property) {
         S newState = createState(property);
         states.add(newState);
         return newState;
@@ -74,10 +74,10 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
         state.clearTransitionObjects();
     }
 
-    protected abstract S createState(SP property);
+    protected abstract S createState(@Nullable SP property);
 
     @Override
-    public void removeState(S state, S replacement) {
+    public void removeState(S state, @Nullable S replacement) {
         ShrinkableAutomaton.unlinkState(this, state, replacement, inputAlphabet);
         states.remove(state, tracker);
     }
@@ -93,14 +93,14 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
     }
 
     @Override
-    public <V> MutableMapping<S, V> createDynamicStateMapping() {
-        final StateIDDynamicMapping<S, V> mapping = new StateIDDynamicMapping<>(this);
+    public <@Nullable V> MutableMapping<S, V> createDynamicStateMapping() {
+        final ArrayMapping<S, @Nullable V> mapping = new ArrayMapping<>(size());
         tracker.addListener(mapping, true);
         return mapping;
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
 
         if (!this.inputAlphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);

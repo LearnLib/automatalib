@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,6 @@
  */
 package net.automatalib.automata.concepts;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Feature for automata that compute an output.
  *
@@ -28,9 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface Output<I, D> {
 
-    @Nullable
     D computeOutput(Iterable<? extends I> input);
 }

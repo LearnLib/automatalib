@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,14 +26,13 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Parses an FSM to a DFA.
@@ -92,7 +91,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      * @param acceptingDataValue
      *         the string for acceptance (see {@link #acceptingDataValue})
      */
-    private FSM2DFAParser(Collection<? extends I> targetInputs,
+    private FSM2DFAParser(@Nullable Collection<? extends I> targetInputs,
                           Function<String, I> inputParser,
                           String acceptingDataVariableName,
                           String acceptingDataValue) {
@@ -106,43 +105,43 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      * <p>
      * This line is only parsed when we still have to find {@link #acceptIndex}, and {@link #acceptValue}.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when the data definition is illegal.
      * @throws IOException
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseDataDefinition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
+    protected void parseDataDefinition(StreamTokenizer streamTokenizer) throws IOException {
         if (acceptIndex == -1 && acceptValue == -1) {
 
             // check we will read an identifier.
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_IDENTIFIER, streamTokenizer);
+                throw new FSMFormatException(EXPECT_IDENTIFIER, streamTokenizer);
             }
 
             final String dataVariableName = streamTokenizer.sval;
 
-            if (dataVariableName.equals(acceptingDataVariableName)) {
+            if (acceptingDataVariableName.equals(dataVariableName)) {
                 acceptIndex = getPartLineNumber();
 
                 // skip a (
                 if (streamTokenizer.nextToken() != '(') {
-                    throw new FSMParseException(String.format(EXPECT_CHAR, '('), streamTokenizer);
+                    throw new FSMFormatException(String.format(EXPECT_CHAR, '('), streamTokenizer);
                 }
 
                 // skip a number
                 if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                    throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
+                    throw new FSMFormatException(EXPECT_NUMBER, streamTokenizer);
                 }
 
                 // skip a )
                 if (streamTokenizer.nextToken() != ')') {
-                    throw new FSMParseException(String.format(EXPECT_CHAR, ')'), streamTokenizer);
+                    throw new FSMFormatException(String.format(EXPECT_CHAR, ')'), streamTokenizer);
                 }
 
                 // skip an identifier
                 if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                    throw new FSMParseException(EXPECT_IDENTIFIER, streamTokenizer);
+                    throw new FSMFormatException(EXPECT_IDENTIFIER, streamTokenizer);
                 }
 
                 int dataValueIndex = 0;
@@ -150,7 +149,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
                 // find the string containing the acceptance information
                 while (streamTokenizer.nextToken() == '"' && acceptValue == -1) {
                     final String dataValue = streamTokenizer.sval;
-                    if (dataValue.equals(acceptingDataValue)) {
+                    if (acceptingDataValue.equals(dataValue)) {
                         acceptValue = dataValueIndex;
                     } else {
                         dataValueIndex++;
@@ -161,8 +160,8 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
 
                 // throw an Exception when the string containing acceptance information is not found in the current line
                 if (acceptValue == -1) {
-                    throw new FSMParseException(String.format(ACCEPT_VALUE_NOT_FOUND, acceptingDataValue),
-                                                streamTokenizer);
+                    throw new FSMFormatException(String.format(ACCEPT_VALUE_NOT_FOUND, acceptingDataValue),
+                                                 streamTokenizer);
                 }
             }
         }
@@ -172,14 +171,14 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      * Checks the data definition by ensuring the index in the state vector containing acceptance information is
      * defined.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when the acceptance information could not be found.
      */
     @Override
-    protected void checkDataDefinitions(StreamTokenizer streamTokenizer) throws FSMParseException {
+    protected void checkDataDefinitions(StreamTokenizer streamTokenizer) {
         if (acceptIndex == -1) {
-            throw new FSMParseException(String.format(ACCEPT_NOT_FOUND, acceptingDataVariableName),
-                                        streamTokenizer);
+            throw new FSMFormatException(String.format(ACCEPT_NOT_FOUND, acceptingDataVariableName),
+                                         streamTokenizer);
         }
     }
 
@@ -189,28 +188,27 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      * This method will only search for whether the state is accepting or not. The state index will be equal to the
      * current {@link #getPartLineNumber()}.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when the current line is an illegal state vector.
      * @throws IOException
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseStateVector(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
+    protected void parseStateVector(StreamTokenizer streamTokenizer) throws IOException {
         Boolean accepting = null;
         for (int i = 0;
              i <= acceptIndex && streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && accepting == null;
              i++) {
-            final String value = streamTokenizer.sval;
             if (i == acceptIndex) {
                 try {
-                    accepting = acceptValue == Integer.parseInt(value);
+                    accepting = acceptValue == Integer.parseInt(streamTokenizer.sval);
                 } catch (NumberFormatException nfe) {
-                    throw new FSMParseException(nfe, streamTokenizer);
+                    throw new FSMFormatException(nfe, streamTokenizer);
                 }
             }
         }
         if (accepting == null) {
-            throw new FSMParseException(String.format(ACCEPT_INDEX_NOT_FOUND, acceptIndex), streamTokenizer);
+            throw new FSMFormatException(String.format(ACCEPT_INDEX_NOT_FOUND, acceptIndex), streamTokenizer);
         } else {
             states.put(getPartLineNumber(), accepting);
         }
@@ -225,17 +223,17 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
     /**
      * Parse a transition by searching the current line for the source state, target state and the input.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         when the current line is an illegal transition.
      * @throws IOException
      *         see {@link StreamTokenizer#nextToken()}.
      */
     @Override
-    protected void parseTransition(StreamTokenizer streamTokenizer) throws FSMParseException, IOException {
+    protected void parseTransition(StreamTokenizer streamTokenizer) throws IOException {
         try {
             // check whether we will read a number
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
+                throw new FSMFormatException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the source state index
@@ -243,12 +241,12 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
 
             // check if such a state exists
             if (!states.isEmpty() && !states.containsKey(from)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, from), streamTokenizer);
+                throw new FSMFormatException(String.format(NO_SUCH_STATE, from), streamTokenizer);
             }
 
             // check whether we will read a number
             if (streamTokenizer.nextToken() != StreamTokenizer.TT_WORD) {
-                throw new FSMParseException(EXPECT_NUMBER, streamTokenizer);
+                throw new FSMFormatException(EXPECT_NUMBER, streamTokenizer);
             }
 
             // read the target state
@@ -256,12 +254,12 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
 
             // check if such a state exists
             if (!states.isEmpty() && !states.containsKey(to)) {
-                throw new FSMParseException(String.format(NO_SUCH_STATE, to), streamTokenizer);
+                throw new FSMFormatException(String.format(NO_SUCH_STATE, to), streamTokenizer);
             }
 
             // check we will read a string
             if (streamTokenizer.nextToken() != '"') {
-                throw new FSMParseException(EXPECT_STRING, streamTokenizer);
+                throw new FSMFormatException(EXPECT_STRING, streamTokenizer);
             }
 
             // read the input on the transition
@@ -273,10 +271,10 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
             // add the new transition
             final Integer prev = transitions.put(Pair.of(from, input), to);
             if (prev != null) {
-                throw new FSMParseException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
+                throw new FSMFormatException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
             }
         } catch (NumberFormatException nfe) {
-            throw new FSMParseException(nfe, streamTokenizer);
+            throw new FSMFormatException(nfe, streamTokenizer);
         }
     }
 
@@ -297,13 +295,12 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      *
      * @return the DFA represented by the FSM file.
      *
-     * @throws FSMParseException
+     * @throws FSMFormatException
      *         see {@link #parse(Reader)}.
      * @throws IOException
      *         see {@link #parse(Reader)}.
      */
-    private CompactDFA<I> parseDFA(Reader reader)
-            throws FSMParseException, IOException {
+    private CompactDFA<I> parseDFA(Reader reader) throws IOException {
 
         parse(reader);
 
@@ -340,7 +337,9 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
 
     @Override
     public CompactDFA<I> readModel(InputStream is) throws IOException {
-        return parseDFA(IOUtil.asBufferedUTF8Reader(is));
+        try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
+            return parseDFA(r);
+        }
     }
 
     public static <I> FSM2DFAParser<I> getParser(@Nullable Collection<? extends I> targetInputs,

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,9 @@ package net.automatalib.incremental.mealy.dag;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Objects;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class StateSignature<O> implements Serializable {
 
@@ -30,11 +30,13 @@ final class StateSignature<O> implements Serializable {
     StateSignature(int numSuccs) {
         this.successors = new ResizingArrayStorage<>(State.class, numSuccs);
         this.outputs = new ResizingArrayStorage<>(Object.class, numSuccs);
+        updateHashCode();
     }
 
     StateSignature(StateSignature<O> other) {
         this.successors = new ResizingArrayStorage<>(other.successors);
         this.outputs = new ResizingArrayStorage<>(other.outputs);
+        updateHashCode();
     }
 
     public StateSignature<O> duplicate() {
@@ -55,31 +57,18 @@ final class StateSignature<O> implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
+        if (!(obj instanceof StateSignature)) {
             return false;
         }
-        if (obj.getClass() != StateSignature.class) {
-            return false;
-        }
-        StateSignature other = (StateSignature) obj;
-        if (hashCode != other.hashCode) {
-            return false;
-        }
-        for (int i = 0; i < successors.array.length; i++) {
-            if (successors.array[i] != other.successors.array[i]) {
-                return false;
-            }
-        }
-        for (int i = 0; i < outputs.array.length; i++) {
-            if (!Objects.equals(outputs.array[i], other.outputs.array[i])) {
-                return false;
-            }
-        }
-        return true;
+
+        final StateSignature other = (StateSignature) obj;
+
+        return (hashCode == other.hashCode) && Arrays.equals(outputs.array, other.outputs.array) &&
+               Arrays.equals(successors.array, other.successors.array);
     }
 
 }

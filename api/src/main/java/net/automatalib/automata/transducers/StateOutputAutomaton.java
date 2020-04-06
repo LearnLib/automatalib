@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +17,11 @@ package net.automatalib.automata.transducers;
 
 import java.util.Collection;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
 import net.automatalib.ts.output.DeterministicStateOutputTS;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-@ParametersAreNonnullByDefault
 public interface StateOutputAutomaton<S, I, T, O>
         extends DetSuffixOutputAutomaton<S, I, T, Word<O>>, DeterministicStateOutputTS<S, I, T, O> {
 

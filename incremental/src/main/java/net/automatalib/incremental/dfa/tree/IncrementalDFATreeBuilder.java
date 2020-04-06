@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,13 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.Acceptance;
@@ -41,6 +36,8 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Incrementally builds a tree, from a set of positive and negative words. Using {@link #insert(Word, boolean)}, either
@@ -56,7 +53,6 @@ import net.automatalib.words.impl.Alphabets;
  */
 public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<I> {
 
-    @Nonnull
     protected final Node<I> root;
 
     public IncrementalDFATreeBuilder(Alphabet<I> inputAlphabet) {
@@ -65,7 +61,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) throws GrowingAlphabetNotSupportedException {
+    public void addAlphabetSymbol(I symbol) {
         if (!this.inputAlphabet.containsSymbol(symbol)) {
             Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
         }
@@ -89,24 +85,30 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
     }
 
     @Override
-    @Nullable
-    public Word<I> findSeparatingWord(DFA<?, I> target, Collection<? extends I> inputs, boolean omitUndefined) {
+    public @Nullable Word<I> findSeparatingWord(DFA<?, I> target,
+                                                Collection<? extends I> inputs,
+                                                boolean omitUndefined) {
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    protected <S> Word<I> doFindSeparatingWord(final DFA<S, I> target,
-                                               Collection<? extends I> inputs,
-                                               boolean omitUndefined) {
+    protected <S> @Nullable Word<I> doFindSeparatingWord(final DFA<S, I> target,
+                                                         Collection<? extends I> inputs,
+                                                         boolean omitUndefined) {
         S automatonInit = target.getInitialState();
-        if (root.getAcceptance().conflicts(target.isAccepting(automatonInit))) {
+        if (root.getAcceptance().conflicts(automatonInit != null && target.isAccepting(automatonInit))) {
             return Word.epsilon();
         }
 
-        Deque<Record<S, I>> dfsStack = new ArrayDeque<>();
-        dfsStack.push(new Record<>(automatonInit, root, null, inputs.iterator()));
+        // incomingInput can be null here, because we will always skip the bottom stack element below
+        @SuppressWarnings("nullness")
+        Record<@Nullable S, I> init = new Record<>(automatonInit, root, null, inputs.iterator());
+
+        Deque<Record<@Nullable S, I>> dfsStack = new ArrayDeque<>();
+        dfsStack.push(init);
 
         while (!dfsStack.isEmpty()) {
-            Record<S, I> rec = dfsStack.peek();
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull Record<@Nullable S, I> rec = dfsStack.peek();
             if (!rec.inputIt.hasNext()) {
                 dfsStack.pop();
                 continue;
@@ -119,7 +121,8 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
                 continue;
             }
 
-            S automatonSucc = (rec.automatonState == null) ? null : target.getTransition(rec.automatonState, input);
+            @Nullable S state = rec.automatonState;
+            @Nullable S automatonSucc = state == null ? null : target.getTransition(state, input);
             if (automatonSucc == null && omitUndefined) {
                 continue;
             }
@@ -208,7 +211,6 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    @ParametersAreNonnullByDefault
     public class GraphView extends AbstractGraphView<I, Node<I>, Edge<I>> {
 
         @Override
@@ -231,31 +233,26 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
 
         @Override
-        @Nonnull
         public Node<I> getTarget(Edge<I> edge) {
             return edge.getNode();
         }
 
         @Override
-        @Nullable
         public I getInputSymbol(Edge<I> edge) {
             return edge.getInput();
         }
 
         @Override
-        @Nonnull
         public Acceptance getAcceptance(Node<I> node) {
             return node.getAcceptance();
         }
 
         @Override
-        @Nonnull
         public Node<I> getInitialNode() {
             return root;
         }
 
         @Override
-        @Nonnull
         public VisualizationHelper<Node<I>, Edge<I>> getVisualizationHelper() {
             return new DelegateVisualizationHelper<Node<I>, Edge<I>>(super.getVisualizationHelper()) {
 
@@ -273,30 +270,25 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    @ParametersAreNonnullByDefault
     public class TransitionSystemView extends AbstractTransitionSystemView<Node<I>, I, Node<I>> {
 
         @Override
-        @Nonnull
         public Node<I> getSuccessor(Node<I> transition) {
             return transition;
         }
 
         @Override
-        @Nullable
-        public Node<I> getTransition(Node<I> state, I input) {
+        public @Nullable Node<I> getTransition(Node<I> state, I input) {
             int inputIdx = inputAlphabet.getSymbolIndex(input);
             return state.getChild(inputIdx);
         }
 
-        @Nonnull
         @Override
         public Node<I> getInitialState() {
             return root;
         }
 
         @Override
-        @Nonnull
         public Acceptance getAcceptance(Node<I> state) {
             return state.getAcceptance();
         }

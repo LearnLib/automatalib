@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An extended collection interface.
@@ -56,7 +54,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SmartCollection<E> extends Collection<E> {
 
     /**
@@ -69,7 +66,6 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the element.
      */
-    @Nullable
     E get(ElementReference ref);
 
     /**
@@ -81,8 +77,7 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return a reference to this element in the collection.
      */
-    @Nonnull
-    ElementReference referencedAdd(@Nullable E elem);
+    ElementReference referencedAdd(E elem);
 
     /**
      * Removes an element (by its reference) from the collection.
@@ -105,13 +100,14 @@ public interface SmartCollection<E> extends Collection<E> {
     boolean remove(@Nullable Object element);
 
     /**
-     * Retrieves an arbitrary element from the collection. If the collection is empty, a {@link NoSuchElementException}
-     * is thrown
+     * Retrieves an arbitrary element from the collection.
      *
      * @return an arbitrary element from the collection
+     *
+     * @throws NoSuchElementException
+     *         if the collection is empty
      */
-    @Nullable
-    E choose() throws NoSuchElementException;
+    E choose();
 
     /**
      * Retrieves the reference to an arbitrary element from the collection. If the collection is empty, a {@link
@@ -119,7 +115,6 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the reference to an arbitrary element in the collection
      */
-    @Nonnull
     ElementReference chooseRef();
 
     /**
@@ -127,7 +122,6 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the reference iterator.
      */
-    @Nonnull
     Iterator<ElementReference> referenceIterator();
 
     /**
@@ -136,7 +130,6 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return an {@link Iterable} with the above {@link #referenceIterator()} as its iterator.
      */
-    @Nonnull
     Iterable<ElementReference> references();
 
     /**
@@ -166,7 +159,7 @@ public interface SmartCollection<E> extends Collection<E> {
      * @param newElement
      *         the replacement.
      */
-    void replace(ElementReference ref, @Nullable E newElement);
+    void replace(ElementReference ref, E newElement);
 
     /**
      * Retrieves the reference for a given element. If the element is not contained in the collection, <code>null</code>
@@ -177,7 +170,7 @@ public interface SmartCollection<E> extends Collection<E> {
      *
      * @return the reference to this element, or <code>null</code>.
      */
-    ElementReference find(@Nullable Object element);
+    @Nullable ElementReference find(@Nullable Object element);
 
     /**
      * Quickly clears this collection. This method is supposed to perform the minimum amount of effort such that this

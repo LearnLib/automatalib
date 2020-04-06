@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -97,7 +97,7 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
         }
 
         @Override
-        public <S1, I1, T1, S2, I2, T2, SP2, TP2> LowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2> createLowLevelCopier(
+        public <S1, I1, T1, S2, I2, T2, SP2, TP2> LowLevelAutomatonCopier<S1, S2> createLowLevelCopier(
                 Automaton<S1, ? super I1, T1> in,
                 Collection<? extends I1> inputs,
                 MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +17,8 @@ package net.automatalib.util.graphs.apsp;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.util.graphs.Graphs;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Result interface for the all pairs shortest paths problem.
@@ -32,7 +30,6 @@ import net.automatalib.util.graphs.Graphs;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface APSPResult<N, E> {
 
     /**
@@ -43,8 +40,8 @@ public interface APSPResult<N, E> {
      * @param tgt
      *         the target node
      *
-     * @return the length of the shortest path from {@code src} to {@code tgt}, or {@link
-     * Graphs#INVALID_DISTANCE} if there exists no such path.
+     * @return the length of the shortest path from {@code src} to {@code tgt}, or {@link Graphs#INVALID_DISTANCE} if
+     * there exists no such path.
      */
     float getShortestPathDistance(N src, N tgt);
 
@@ -58,6 +55,5 @@ public interface APSPResult<N, E> {
      *
      * @return the shortest path from {@code src} to {@code tgt}, or {@code null} if there exists no such path.
      */
-    @Nullable
-    List<E> getShortestPath(N src, N tgt);
+    @Nullable List<E> getShortestPath(N src, N tgt);
 }

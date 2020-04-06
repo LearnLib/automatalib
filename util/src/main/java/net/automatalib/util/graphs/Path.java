@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.automatalib.graphs.IndefiniteGraph;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class Path<N, E> extends AbstractList<E> {
 
@@ -54,7 +55,7 @@ public class Path<N, E> extends AbstractList<E> {
         return start;
     }
 
-    public E firstEdge() {
+    public @Nullable E firstEdge() {
         if (edgeList.isEmpty()) {
             return null;
         }
@@ -75,7 +76,7 @@ public class Path<N, E> extends AbstractList<E> {
         return (Iterator<E>) edgeList.iterator();
     }
 
-    public E lastEdge() {
+    public @Nullable E lastEdge() {
         int idx = edgeList.size() - 1;
         if (idx < 0) {
             return null;

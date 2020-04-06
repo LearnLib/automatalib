@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,24 +17,22 @@ package net.automatalib.automata.transducers.impl.compact;
 
 import java.util.Arrays;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.base.compact.AbstractCompact;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.StateLocalInputMealyMachine;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-@ParametersAreNonnullByDefault
 public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactMealyTransition<O>, Void, O> implements
                                                                                                             MutableMealyMachine<Integer, I, CompactMealyTransition<O>, O>,
                                                                                                             StateLocalInputMealyMachine<Integer, I, CompactMealyTransition<O>, O> {
 
     private int[] transitions;
-    private Object[] outputs;
+    private @Nullable Object[] outputs;
 
+    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public CompactMealy(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
 
@@ -111,7 +109,7 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     }
 
     @Override
-    public void setTransition(int state, int input, CompactMealyTransition<O> transition) {
+    public void setTransition(int state, int input, @Nullable CompactMealyTransition<O> transition) {
         if (transition == null) {
             setTransition(state, input, AbstractCompact.INVALID_STATE, null);
         } else {
@@ -137,7 +135,7 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     }
 
     @Override
-    public CompactMealyTransition<O> getTransition(int state, int input) {
+    public @Nullable CompactMealyTransition<O> getTransition(int state, int input) {
         final int idx = toMemoryIndex(state, input);
         final int succ = transitions[idx];
 

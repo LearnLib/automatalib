@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package net.automatalib.automata.graphs;
 import java.util.Objects;
 
 import net.automatalib.ts.UniversalTransitionSystem;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class TransitionEdge<I, T> {
 
@@ -42,7 +43,7 @@ public final class TransitionEdge<I, T> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -81,7 +82,7 @@ public final class TransitionEdge<I, T> {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }

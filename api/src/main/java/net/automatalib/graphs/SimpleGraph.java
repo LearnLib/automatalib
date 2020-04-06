@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +18,6 @@ package net.automatalib.graphs;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.graphs.concepts.NodeIDs;
@@ -51,11 +49,9 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
      *
      * @return the nodes in this graph
      */
-    @Nonnull
     Collection<N> getNodes();
 
     @Override
-    @Nonnull
     default Iterator<N> iterator() {
         return Iterators.unmodifiableIterator(getNodes().iterator());
     }
@@ -64,7 +60,6 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
         return getNodes().stream();
     }
 
-    @Nonnull
     default NodeIDs<N> nodeIDs() {
         return new SimpleNodeIDs<>(this);
     }

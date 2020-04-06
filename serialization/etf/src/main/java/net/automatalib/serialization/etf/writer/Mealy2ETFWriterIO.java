@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -73,9 +73,12 @@ public final class Mealy2ETFWriterIO<I, O> extends AbstractETFWriter<I, MealyMac
         final StateIDs<S> stateIDs = mealy.stateIDs();
 
         // write the initial state
-        pw.println("begin init");
-        pw.printf("%d%n", stateIDs.getStateId(mealy.getInitialState()));
-        pw.println("end init");
+        final S init = mealy.getInitialState();
+        if (init != null) {
+            pw.println("begin init");
+            pw.printf("%d%n", stateIDs.getStateId(init));
+            pw.println("end init");
+        }
 
         // write the state ids
         pw.println("begin sort id");
@@ -119,7 +122,7 @@ public final class Mealy2ETFWriterIO<I, O> extends AbstractETFWriter<I, MealyMac
 
     @Override
     public void writeModel(OutputStream os, MealyMachine<?, I, ?, O> model, Alphabet<I> alphabet) {
-        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedUTF8Writer(os))) {
+        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedNonClosingUTF8Writer(os))) {
             write(pw, model, alphabet);
         }
     }

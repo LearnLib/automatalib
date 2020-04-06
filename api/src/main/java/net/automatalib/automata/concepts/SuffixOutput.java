@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 package net.automatalib.automata.concepts;
-
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.automatalib.words.Word;
 
@@ -34,15 +31,12 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-@ParametersAreNonnullByDefault
 public interface SuffixOutput<I, D> extends Output<I, D> {
 
     @Override
-    @Nullable
     default D computeOutput(Iterable<? extends I> input) {
         return computeSuffixOutput(Word.epsilon(), input);
     }
 
-    @Nullable
     D computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,11 @@ package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.MealyTransition;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -43,7 +41,8 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
         Assert.assertEquals(lasso.getOutput(), Word.fromSymbols(MealyMachineMock.OUTPUT));
     }
 
-    private class MealyMachineMock implements MealyMachine<Integer, String, MealyTransition<Integer, String>, String> {
+    private static class MealyMachineMock
+            implements MealyMachine<Integer, String, MealyTransition<Integer, String>, String> {
 
         public static final String OUTPUT = "test";
 
@@ -55,21 +54,18 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
             word = prefix.concat(loop);
         }
 
-        @Nullable
         @Override
         public String getTransitionOutput(MealyTransition<Integer, String> transition) {
             return OUTPUT;
         }
 
-        @Nonnull
         @Override
         public Collection<Integer> getStates() {
             return CollectionsUtil.intRange(0, word.length());
         }
 
-        @Nullable
         @Override
-        public MealyTransition<Integer, String> getTransition(Integer state, @Nullable String input) {
+        public @Nullable MealyTransition<Integer, String> getTransition(Integer state, String input) {
             final MealyTransition<Integer, String> result;
             if (word.getSymbol(state).equals(input)) {
                 if (state < word.length() - 1) {
@@ -84,13 +80,11 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
             return result;
         }
 
-        @Nonnull
         @Override
         public Integer getSuccessor(MealyTransition<Integer, String> transition) {
             return transition.getSuccessor();
         }
 
-        @Nullable
         @Override
         public Integer getInitialState() {
             return 0;

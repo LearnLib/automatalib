@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,11 +28,16 @@ import org.slf4j.LoggerFactory;
 @MetaInfServices(VisualizationProvider.class)
 public class DummyVP implements VisualizationProvider {
 
+    /**
+     * the {@link #getId() id} of this {@link VisualizationProvider}.
+     */
+    public static final String ID = "dummy";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DummyVP.class);
 
     @Override
     public String getId() {
-        return "dummy";
+        return ID;
     }
 
     @Override
@@ -45,6 +50,7 @@ public class DummyVP implements VisualizationProvider {
         return true;
     }
 
+    @SuppressWarnings("nullness") // false-positive on JOptionPane.showMessageDialog
     @Override
     public <N, E> void visualize(Graph<N, E> graph,
                                  List<VisualizationHelper<N, ? super E>> additionalHelpers,

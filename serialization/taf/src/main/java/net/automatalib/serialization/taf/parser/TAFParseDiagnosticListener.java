@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@ import java.text.MessageFormat;
 /**
  * Diagnostic listener for non-fatal errors and warnings during parsing of a TAF file. The parser will usually recover
  * from these errors and produce a valid automaton anyway. Fatal errors are not reported to a diagnostic listener, but
- * instead a {@link TAFParseException} is thrown.
+ * instead a {@link TAFFormatException} is thrown.
  *
  * @author Malte Isberner
  */

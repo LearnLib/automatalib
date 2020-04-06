@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserIO;
-import net.automatalib.serialization.fsm.parser.FSMParseException;
 import net.automatalib.words.impl.Alphabets;
 
 /**
@@ -43,7 +42,7 @@ public interface LTSminIO<I, O, R> extends LTSminMealy<I, O, R> {
     @Override
     default CompactMealy<I, O> fsm2Mealy(File fsm,
                                          MealyMachine<?, I, ?, O> originalAutomaton,
-                                         Collection<? extends I> inputs) throws IOException, FSMParseException {
+                                         Collection<? extends I> inputs) throws IOException {
         return FSM2MealyParserIO.getParser(inputs, getString2Input(), getString2Output()).readModel(fsm);
     }
 

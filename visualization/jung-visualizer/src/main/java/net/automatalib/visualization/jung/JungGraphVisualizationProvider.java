@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.JDialog;
@@ -56,12 +57,18 @@ import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationProvider;
 import net.automatalib.visualization.helper.AggregateVisualizationHelper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @MetaInfServices(VisualizationProvider.class)
 public class JungGraphVisualizationProvider implements VisualizationProvider {
+
+    /**
+     * the {@link #getId() id} of this {@link VisualizationProvider}.
+     */
+    public static final String ID = "jung";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JungGraphVisualizationProvider.class);
 
@@ -78,7 +85,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
     @Override
     public String getId() {
-        return "jung";
+        return ID;
     }
 
     @Override
@@ -120,7 +127,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
 
         DirectedGraph<NodeVisualization, EdgeVisualization> jungGraph = new DirectedSparseMultigraph<>();
 
-        MutableMapping<N, NodeVisualization> mapping = graph.createStaticNodeMapping();
+        MutableMapping<N, @Nullable NodeVisualization> mapping = graph.createStaticNodeMapping();
 
         NodeIDs<N> nodeIds = graph.nodeIDs();
 
@@ -219,7 +226,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
         final List<String> styleList;
         String styleAttr = properties.get(NodeAttrs.STYLE);
         if (styleAttr != null) {
-            styleList = Arrays.asList(styleAttr.toLowerCase().split(","));
+            styleList = Arrays.asList(styleAttr.toLowerCase(Locale.ROOT).split(","));
         } else {
             styleList = Collections.emptyList();
         }
@@ -241,6 +248,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
         }
     }
 
+    @SuppressWarnings("nullness") // we don't pass null to the functions
     public static final class NodeVisualization {
 
         public static final Function<NodeVisualization, String> LABEL = input -> input.label;
@@ -264,6 +272,7 @@ public class JungGraphVisualizationProvider implements VisualizationProvider {
         }
     }
 
+    @SuppressWarnings("nullness") // we don't pass null to the functions
     public static final class EdgeVisualization {
 
         public static final Function<EdgeVisualization, String> LABEL = input -> input.label;

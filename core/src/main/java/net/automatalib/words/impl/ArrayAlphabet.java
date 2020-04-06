@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package net.automatalib.words.impl;
 import java.util.Objects;
 
 import net.automatalib.words.abstractimpl.AbstractAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
 
@@ -29,7 +30,7 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
     }
 
     @Override
-    public I getSymbol(int index) throws IllegalArgumentException {
+    public I getSymbol(int index) {
         if (index < 0 || index >= symbols.length) {
             throw new IllegalArgumentException("Index not within its expected bounds");
         }
@@ -37,7 +38,7 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
     }
 
     @Override
-    public int getSymbolIndex(I symbol) throws IllegalArgumentException {
+    public int getSymbolIndex(I symbol) {
         final int idx = getSymbolIndexInternal(symbol);
 
         if (idx >= 0) {
@@ -58,7 +59,7 @@ public class ArrayAlphabet<I> extends AbstractAlphabet<I> {
     }
 
     @Override
-    public void writeToArray(int offset, Object[] array, int tgtOfs, int num) {
+    public void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num) {
         System.arraycopy(symbols, offset, array, tgtOfs, num);
     }
 

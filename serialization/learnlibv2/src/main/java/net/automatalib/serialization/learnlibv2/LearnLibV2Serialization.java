@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,14 +18,11 @@ package net.automatalib.serialization.learnlibv2;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import javax.annotation.WillNotClose;
 
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.DFA;
@@ -61,101 +58,101 @@ public class LearnLibV2Serialization
         return new InputModelData<>(automaton, automaton.getInputAlphabet());
     }
 
-    public CompactDFA<Integer> readGenericDFA(@WillNotClose InputStream is) throws IOException {
-        // we DO NOT want to close the input stream
-        @SuppressWarnings("resource")
-        Scanner sc = new Scanner(IOUtil.asUncompressedInputStream(is), StandardCharsets.UTF_8.toString());
+    public CompactDFA<Integer> readGenericDFA(InputStream is) throws IOException {
+        try (Scanner sc = new Scanner(IOUtil.asUncompressedBufferedNonClosingInputStream(is),
+                                      StandardCharsets.UTF_8.toString())) {
 
-        int numStates = sc.nextInt();
-        int numSymbols = sc.nextInt();
+            int numStates = sc.nextInt();
+            int numSymbols = sc.nextInt();
 
-        Alphabet<Integer> alphabet = Alphabets.integers(0, numSymbols - 1);
+            Alphabet<Integer> alphabet = Alphabets.integers(0, numSymbols - 1);
 
-        CompactDFA<Integer> result = new CompactDFA<>(alphabet, numStates);
+            CompactDFA<Integer> result = new CompactDFA<>(alphabet, numStates);
 
-        // This is redundant in practice, but it is in fact not specified by CompactDFA
-        // how state IDs are assigned
-        int[] states = new int[numStates];
+            // This is redundant in practice, but it is in fact not specified by CompactDFA
+            // how state IDs are assigned
+            int[] states = new int[numStates];
 
-        // Parse states
-        states[0] = result.addIntInitialState(sc.nextInt() != 0);
+            // Parse states
+            states[0] = result.addIntInitialState(sc.nextInt() != 0);
 
-        for (int i = 1; i < numStates; i++) {
-            states[i] = result.addIntState(sc.nextInt() != 0);
-        }
-
-        // Parse transitions
-        for (int i = 0; i < numStates; i++) {
-            int state = states[i];
-            for (int j = 0; j < numSymbols; j++) {
-                int succ = states[sc.nextInt()];
-                result.setTransition(state, j, succ);
+            for (int i = 1; i < numStates; i++) {
+                states[i] = result.addIntState(sc.nextInt() != 0);
             }
-        }
 
-        return result;
+            // Parse transitions
+            for (int i = 0; i < numStates; i++) {
+                int state = states[i];
+                for (int j = 0; j < numSymbols; j++) {
+                    int succ = states[sc.nextInt()];
+                    result.setTransition(state, j, succ);
+                }
+            }
+
+            return result;
+        }
     }
 
     private <S, I> void doWriteDFA(DFA<S, I> dfa, Alphabet<I> alphabet, OutputStream os) {
+        S initState = dfa.getInitialState();
+        if (initState == null) {
+            throw new IllegalArgumentException("Serialization format does not support automata without initial state");
+        }
+
         boolean partial = Automata.hasUndefinedInput(dfa, alphabet);
         int numDfaStates = dfa.size();
         int numStates = numDfaStates;
         if (partial) {
             numStates++;
         }
-        PrintStream ps;
-        try {
-            ps = new PrintStream(os, false, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            // this should in theory never happen
-            throw new IllegalStateException(e);
-        }
-        int numInputs = alphabet.size();
-        ps.printf("%d %d%n", numStates, numInputs);
 
-        StateIDs<S> stateIds = dfa.stateIDs();
+        try (PrintWriter pw = new PrintWriter(IOUtil.asBufferedNonClosingUTF8Writer(os))) {
+            int numInputs = alphabet.size();
+            pw.printf("%d %d%n", numStates, numInputs);
 
-        S initState = dfa.getInitialState();
-        int initId = stateIds.getStateId(initState);
+            StateIDs<S> stateIds = dfa.stateIDs();
 
-        List<S> orderedStates = new ArrayList<>(numDfaStates);
-        orderedStates.add(initState);
+            int initId = stateIds.getStateId(initState);
 
-        ps.printf("%d ", dfa.isAccepting(initState) ? 1 : 0);
+            List<S> orderedStates = new ArrayList<>(numDfaStates);
+            orderedStates.add(initState);
 
-        for (int i = 1; i < numDfaStates; i++) {
-            S state = stateIds.getState(i);
-            if (i == initId) {
-                state = stateIds.getState(0);
-            }
-            ps.printf("%d ", dfa.isAccepting(state) ? 1 : 0);
-            orderedStates.add(state);
-        }
-        if (partial) {
-            ps.print("0");
-        }
-        ps.println();
-        for (S state : orderedStates) {
-            for (I sym : alphabet) {
-                S target = dfa.getSuccessor(state, sym);
-                int targetId = numDfaStates;
-                if (target != null) {
-                    targetId = stateIds.getStateId(target);
-                    if (targetId == initId) {
-                        targetId = 0;
-                    } else if (targetId == 0) {
-                        targetId = initId;
-                    }
+            pw.printf("%d ", dfa.isAccepting(initState) ? 1 : 0);
+
+            for (int i = 1; i < numDfaStates; i++) {
+                S state = stateIds.getState(i);
+                if (i == initId) {
+                    state = stateIds.getState(0);
                 }
-                ps.printf("%d ", targetId);
+                pw.printf("%d ", dfa.isAccepting(state) ? 1 : 0);
+                orderedStates.add(state);
             }
-            ps.println();
-        }
-        if (partial) {
-            for (int i = 0; i < numInputs; i++) {
-                ps.printf("%d ", numDfaStates);
+            if (partial) {
+                pw.print("0");
             }
-            ps.println();
+            pw.println();
+            for (S state : orderedStates) {
+                for (I sym : alphabet) {
+                    S target = dfa.getSuccessor(state, sym);
+                    int targetId = numDfaStates;
+                    if (target != null) {
+                        targetId = stateIds.getStateId(target);
+                        if (targetId == initId) {
+                            targetId = 0;
+                        } else if (targetId == 0) {
+                            targetId = initId;
+                        }
+                    }
+                    pw.printf("%d ", targetId);
+                }
+                pw.println();
+            }
+            if (partial) {
+                for (int i = 0; i < numInputs; i++) {
+                    pw.printf("%d ", numDfaStates);
+                }
+                pw.println();
+            }
         }
     }
 }
