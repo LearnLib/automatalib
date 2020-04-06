@@ -8,9 +8,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -33,7 +30,7 @@ import net.automatalib.words.impl.Alphabets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ParametersAreNonnullByDefault
+
 public class MCUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemComponent.class);
@@ -42,7 +39,6 @@ public class MCUtil {
         // prevent instantiation
     }
 
-    @Nonnull
     public static <A extends MutableModalContract<S1, I, T1, TP1>, S1, I, T1, TP1 extends MutableModalContractEdgeProperty, B extends MutableModalTransitionSystem<S2, I, T2, TP2>, S2, T2, TP2 extends MutableModalEdgeProperty> SystemComponent<B, S2, I, T2, TP2> systemComponent(
             A modalContract,
             AutomatonCreator<B, I> creator,
@@ -85,7 +81,6 @@ public class MCUtil {
         return SystemComponent.of(result, uniqueState);
     };
 
-    @Nonnull
     public static <A extends MutableModalContract<S1, I, T1, TP1>, S1, I, T1, TP1 extends MutableModalContractEdgeProperty & TauEdge, B extends ModalTransitionSystem<S2, I, T2, TP2>, S2, T2, TP2 extends ModalEdgeProperty> DFA<?, I> redContextLanguage(
             SystemComponent<B, S2, I, T2, TP2> system,
             Collection<I> inputs
@@ -108,7 +103,6 @@ public class MCUtil {
         return minimalDfa;
     }
 
-    @Nonnull
     public static <B extends MutableModalTransitionSystem<S1, I, T, TP>, S1, I, T, TP extends MutableModalEdgeProperty, S2> B redContextComponent(
             DFA<S2, I> dfa,
             AutomatonCreator<B, I> creator,
@@ -129,7 +123,6 @@ public class MCUtil {
         return result;
     }
 
-    @Nonnull
     public static <A extends MutableModalContract<S, I, T, TP>, S, I, T, TP extends MutableModalContractEdgeProperty & TauEdge> DFA<Integer, I> greenContextLanguage(
             A modalContract
     ) {
@@ -171,7 +164,6 @@ public class MCUtil {
         return minimalDfa;
     }
 
-    @Nonnull
     public static <B extends MutableModalTransitionSystem<S1, I, T, TP>, S1, I, T, TP extends MutableModalEdgeProperty, S2> B greenContextComponent(
             DFA<S2, I> dfa,
             AutomatonCreator<B, I> creator,
@@ -203,7 +195,6 @@ public class MCUtil {
             this.uniqueState = uniqueState;
         }
 
-        @Nonnull
         public static <A extends MutableModalTransitionSystem<S, I ,T, TP>, S, I, T, TP extends MutableModalEdgeProperty> SystemComponent<A, S, I, T, TP> of(
                 A graph,
                 S state
