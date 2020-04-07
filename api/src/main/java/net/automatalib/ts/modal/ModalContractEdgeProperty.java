@@ -19,7 +19,8 @@ public interface ModalContractEdgeProperty extends ModalEdgeProperty, TauEdge {
 
     enum EdgeColor {
         RED,
-        GREEN
+        GREEN,
+        NONE
     }
 
     EdgeColor getColor();

@@ -29,6 +29,7 @@ import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.automata.base.compact.AbstractCompact;
 import net.automatalib.graphs.BidirectionalGraph;
+import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
 import net.automatalib.words.Alphabet;
 
 /**
@@ -144,6 +145,10 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
         return new MTSTransition<>(successor, properties == null ? getDefaultTransitionProperty() : properties);
     }
 
+    public MTSTransition<I, TP> addModalTransition(Integer src, I input, Integer tgt, ModalType modalType) {
+        return this.addTransition(src, input, tgt, buildModalProperty(modalType));
+    }
+
     @Override
     public Collection<MTSTransition<I, TP>> getOutgoingEdges(Integer node) {
         final List<MTSTransition<I, TP>> result = new ArrayList<>();
@@ -231,5 +236,7 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     }
 
     protected abstract TP getDefaultTransitionProperty();
+
+    protected abstract TP buildModalProperty(ModalType type);
 
 }

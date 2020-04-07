@@ -15,6 +15,7 @@
  */
 package net.automatalib.ts.modal;
 
+import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
 import net.automatalib.words.Alphabet;
 
@@ -30,6 +31,24 @@ public class CompactMTS<I> extends AbstractCompactMTS<I, MutableModalEdgePropert
 
     @Override
     protected MutableModalEdgeProperty getDefaultTransitionProperty() {
-        return new ModalEdgePropertyImpl(ModalType.MUST);
+        return buildModalProperty(ModalType.MUST);
+    }
+
+    @Override
+    protected MutableModalEdgeProperty buildModalProperty(ModalType type) {
+        return new ModalEdgePropertyImpl(type);
+    }
+
+    public static final class Creator<I> implements AutomatonCreator<CompactMTS<I>, I> {
+
+        @Override
+        public CompactMTS<I> createAutomaton(Alphabet<I> alphabet, int sizeHint) {
+            return new CompactMTS<>(alphabet, sizeHint, DEFAULT_RESIZE_FACTOR);
+        }
+
+        @Override
+        public CompactMTS<I> createAutomaton(Alphabet<I> alphabet) {
+            return new CompactMTS<>(alphabet);
+        }
     }
 }

@@ -15,6 +15,8 @@
  */
 package net.automatalib.ts.modal;
 
+import java.util.Objects;
+
 public class ModalEdgePropertyImpl implements MutableModalEdgeProperty {
 
     private ModalType type;
@@ -35,6 +37,24 @@ public class ModalEdgePropertyImpl implements MutableModalEdgeProperty {
 
     @Override
     public String toString() {
-        return "ModalEdge{" + "type=" + type + '}';
+        return "[type=" + type + ']';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final ModalEdgePropertyImpl that = (ModalEdgePropertyImpl) o;
+        return type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(type);
     }
 }

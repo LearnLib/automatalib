@@ -96,7 +96,7 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    final class EdgeAttrs extends CommonAttrs {
+    class EdgeAttrs extends CommonAttrs {
 
         public static final String PENWIDTH = "penwidth";
         public static final String ARROWHEAD = "arrowhead";
@@ -153,6 +153,24 @@ public interface VisualizationHelper<N, E> {
     final class EdgeStyles extends CommonStyles {
 
         private EdgeStyles() {
+            // prevent instantiation
+        }
+    }
+
+    class MTSAttrs extends EdgeAttrs {
+
+        public static final String MODALITY = "modality";
+
+        private MTSAttrs() {
+            // prevent instantiation
+        }
+    }
+
+    final class MCAttrs extends MTSAttrs {
+
+        public static final String CONTRACT = "contract";
+
+        private MCAttrs() {
             // prevent instantiation
         }
     }

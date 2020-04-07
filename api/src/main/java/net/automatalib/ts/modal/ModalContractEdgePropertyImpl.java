@@ -15,6 +15,8 @@
  */
 package net.automatalib.ts.modal;
 
+import java.util.Objects;
+
 public class ModalContractEdgePropertyImpl extends ModalEdgePropertyImpl implements MutableModalContractEdgeProperty {
 
     private boolean tau;
@@ -44,5 +46,27 @@ public class ModalContractEdgePropertyImpl extends ModalEdgePropertyImpl impleme
     @Override
     public void setColor(EdgeColor color) {
         this.color = color;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final ModalContractEdgePropertyImpl that = (ModalContractEdgePropertyImpl) o;
+
+        return this.getType() == that.getType() && this.tau == that.tau && this.color == that.color;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + Objects.hashCode(tau);
+        result = 31 * result + Objects.hashCode(color);
+        return result;
     }
 }

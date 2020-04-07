@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.automatalib.automata.AutomatonCreator;
+import net.automatalib.ts.modal.ModalContractEdgeProperty.EdgeColor;
 import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
 import net.automatalib.words.Alphabet;
 
@@ -38,7 +40,16 @@ public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdge
 
     @Override
     protected MutableModalContractEdgeProperty getDefaultTransitionProperty() {
-        return new ModalContractEdgePropertyImpl(ModalType.MUST, false, null);
+        return buildModalProperty(ModalType.MUST);
+    }
+
+    @Override
+    protected MutableModalContractEdgeProperty buildModalProperty(ModalType type) {
+        return buildContractProperty(type, false, EdgeColor.NONE);
+    }
+
+    public MutableModalContractEdgeProperty buildContractProperty(ModalType type, boolean tau, EdgeColor color) {
+        return new ModalContractEdgePropertyImpl(type, tau, color);
     }
 
     @Override
@@ -120,6 +131,29 @@ public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdge
     @Override
     public Alphabet<I> getCommunicationAlphabet() {
         return communicationAlphabet;
+    }
+
+    @Override
+    public MTSTransition<I, MutableModalContractEdgeProperty> addContractTransition(Integer src,
+                                                                                    I input,
+                                                                                    Integer tgt,
+                                                                                    ModalType modalType,
+                                                                                    boolean tau,
+                                                                                    EdgeColor color) {
+        return super.addTransition(src, input, tgt, buildContractProperty(modalType, tau, color));
+    }
+
+    public static final class Creator<I> implements AutomatonCreator<CompactMC<I>, I> {
+
+        @Override
+        public CompactMC<I> createAutomaton(Alphabet<I> alphabet, int sizeHint) {
+            return createAutomaton(alphabet);
+        }
+
+        @Override
+        public CompactMC<I> createAutomaton(Alphabet<I> alphabet) {
+            return new CompactMC<>(alphabet, alphabet);
+        }
     }
 
 }

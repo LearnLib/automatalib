@@ -15,13 +15,17 @@
  */
 package net.automatalib.ts.modal;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
+import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.graphs.TransitionEdge.Property;
+import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
+import net.automatalib.automata.visualization.MTSVisualizationHelper;
 import net.automatalib.graphs.FiniteLTS;
-import net.automatalib.visualization.DelegateVisualizationHelper;
+import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.visualization.VisualizationHelper;
 
 public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
@@ -38,23 +42,20 @@ public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
     }
 
     @Override
-    default VisualizationHelper<S, T> getVisualizationHelper() {
-        final VisualizationHelper<S, T> superHelper = FiniteLTS.super.getVisualizationHelper();
-        return new DelegateVisualizationHelper<S, T>(superHelper) {
-
-            @Override
-            public boolean getEdgeProperties(S src, T edge, S tgt, Map<String, String> properties) {
-                if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                    return false;
-                }
-
-                if (getTransitionProperty(edge).isMayOnly()) {
-                    properties.put(EdgeAttrs.STYLE, EdgeStyles.DASHED);
-                }
-
-                return false;
-            }
-        };
+    default UniversalGraph<S, TransitionEdge<I, T>, Void, Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
+        return new MTSGraphView<>(this, inputs);
     }
 
+    class MTSGraphView<S, I, T, TP extends ModalEdgeProperty, M extends ModalTransitionSystem<S, I, T, TP>>
+            extends UniversalAutomatonGraphView<S, I, T, Void, TP, M> {
+
+        public MTSGraphView(M mts, Collection<? extends I> inputs) {
+            super(mts, inputs);
+        }
+
+        @Override
+        public VisualizationHelper<S, TransitionEdge<I, T>> getVisualizationHelper() {
+            return new MTSVisualizationHelper<>(automaton);
+        }
+    }
 }

@@ -30,8 +30,11 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.io.UnclosableOutputStream;
+import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.graphs.base.compact.CompactGraph;
+import net.automatalib.ts.modal.CompactMC;
+import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.visualization.VisualizationHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -75,6 +78,24 @@ public class DOTSerializationTest {
 
         ThrowingWriter writer = w -> GraphDOT.write(moore, moore.getInputAlphabet(), w);
         checkDOTOutput(writer, DOTSerializationUtil.MOORE_RESOURCE);
+    }
+
+    @Test
+    public void testRegularMTSExport() throws IOException {
+
+        final CompactMTS<String> mts = DOTSerializationUtil.MTS;
+
+        ThrowingWriter writer = w -> GraphDOT.write(mts.graphView(), w);
+        checkDOTOutput(writer, DOTSerializationUtil.MTS_RESOURCE);
+    }
+
+    @Test
+    public void testRegularMCExport() throws IOException {
+
+        final CompactMC<String> mc = DOTSerializationUtil.MC;
+
+        ThrowingWriter writer = w -> GraphDOT.write(mc.graphView(), w);
+        checkDOTOutput(writer, DOTSerializationUtil.MC_RESOURCE);
     }
 
     @Test
