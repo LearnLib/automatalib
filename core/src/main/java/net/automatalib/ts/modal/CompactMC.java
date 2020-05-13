@@ -23,16 +23,22 @@ import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.ts.modal.ModalContractEdgeProperty.EdgeColor;
 import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.ArrayAlphabet;
+import net.automatalib.words.impl.FastAlphabet;
+import net.automatalib.words.impl.GrowingMapAlphabet;
+import net.automatalib.words.impl.MapAlphabet;
 
 public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdgeProperty>
         implements MutableModalContract<Integer, I, MTSTransition<I, MutableModalContractEdgeProperty>, MutableModalContractEdgeProperty> {
 
-    protected final Alphabet<I> communicationAlphabet;
+    protected final GrowingAlphabet<I> communicationAlphabet;
     protected Set<MTSTransition<I, MutableModalContractEdgeProperty>> redTransitions;
 
     public CompactMC(Alphabet<I> alphabet, Alphabet<I> gamma) {
         super(alphabet);
-        this.communicationAlphabet = gamma;
+        this.communicationAlphabet = new GrowingMapAlphabet<I>(gamma);
         this.redTransitions = new HashSet<>();
 
         assert new HashSet<>(alphabet).containsAll(gamma) : "Communication alphabet needs to be a subset of alphabet";
@@ -129,7 +135,7 @@ public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdge
     }
 
     @Override
-    public Alphabet<I> getCommunicationAlphabet() {
+    public GrowingAlphabet<I> getCommunicationAlphabet() {
         return communicationAlphabet;
     }
 
@@ -152,7 +158,7 @@ public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdge
 
         @Override
         public CompactMC<I> createAutomaton(Alphabet<I> alphabet) {
-            return new CompactMC<>(alphabet, alphabet);
+            return new CompactMC<>(alphabet, new ArrayAlphabet<>());
         }
     }
 
