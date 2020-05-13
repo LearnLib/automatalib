@@ -29,10 +29,11 @@ public class Closures {
     public static <A extends UniversalAutomaton<S1, I, T1, SP1, TP1>, B extends MutableAutomaton<S2, I, T2, SP2, TP2>, S1, S2, I, T1, T2, SP1, SP2, TP1, TP2> Pair<Map<Set<S1>, S2>, B> simpleClosure(
             A ts,
             Collection<I> inputs,
+            Collection<I> allInputs,
             AutomatonCreator<B, I> creator,
             TransitionPredicate<S1, I, T1> transitionFilter
     ) {
-        return Worksets.map(new StateClosureAlgorithm<>(ts, inputs, creator, toClosureOperator(ts, inputs, (s, i, t) -> ! transitionFilter.apply(s, i, t)), transitionFilter));
+        return Worksets.map(new StateClosureAlgorithm<>(ts, inputs, creator, toClosureOperator(ts, allInputs, (s, i, t) -> ! transitionFilter.apply(s, i, t)), transitionFilter));
     }
 
     public static <A extends UniversalAutomaton<S1, I, T1, SP1, TP1>, B extends MutableAutomaton<S2, I, T2, SP2, TP2>, S1, S2, I, T1, T2, SP1, SP2, TP1, TP2> Pair<Map<Set<S1>, S2>, B> closure(

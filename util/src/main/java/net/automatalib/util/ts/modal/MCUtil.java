@@ -1,12 +1,18 @@
 package net.automatalib.util.ts.modal;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.fsa.DFA;
@@ -30,6 +36,7 @@ import net.automatalib.words.impl.Alphabets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.automatalib.serialization.dot.GraphDOT;
 
 public class MCUtil {
 
@@ -81,17 +88,18 @@ public class MCUtil {
         return SystemComponent.of(result, uniqueState);
     };
 
-    public static <A extends MutableModalContract<S1, I, T1, TP1>, S1, I, T1, TP1 extends MutableModalContractEdgeProperty & TauEdge, B extends ModalTransitionSystem<S2, I, T2, TP2>, S2, T2, TP2 extends ModalEdgeProperty> DFA<?, I> redContextLanguage(
+    public static <A extends MutableModalContract<S1, I, T1, TP1>, S1, I, T1, TP1 extends MutableModalContractEdgeProperty & TauEdge, B extends ModalTransitionSystem<S2, I, T2, TP2>, S2, T2, TP2 extends ModalEdgeProperty> DFA<Integer, I> redContextLanguage(
             SystemComponent<B, S2, I, T2, TP2> system,
             Collection<I> inputs
     ) {
-        Pair<Map<Set<S2>,Integer>, CompactDFA<I>> res = Closures.simpleClosure(system.systemComponent, system.systemComponent.getInputAlphabet(), CompactDFA::new, (s, i, t) -> inputs.contains(i));
+        Pair<Map<Set<S2>,Integer>, CompactDFA<I>> res = Closures.simpleClosure(system.systemComponent, inputs, system.systemComponent.getInputAlphabet(), CompactDFA::new, (s, i, t) -> inputs.contains(i));
 
         CompactDFA<I> dfa = res.getSecond();
         Map<Set<S2>, Integer> mapping = res.getFirst();
 
         for (Map.Entry<Set<S2>,Integer> entry : mapping.entrySet()) {
-            if (entry.getKey().contains(system.uniqueState)) {
+            if (entry.getKey().contains(system.uniqueState)
+                || entry.getKey().isEmpty()) {
                 dfa.setStateProperty(entry.getValue(), Boolean.TRUE);
             }
         }
@@ -131,7 +139,7 @@ public class MCUtil {
         assert alphabet.containsAll(gamma);
 
         Pair<Map<Set<S>,Integer>, CompactDFA<I>> res = Closures.closure(modalContract,
-                                                                         alphabet,
+                                                                         gamma,
                                                                          CompactDFA::new,
                                                                          Closures.toClosureOperator(modalContract, alphabet, (s, i, t) -> !gamma.contains(i)),
                                                                          (s, i, t) -> gamma.contains(i) & !modalContract.getTransitionProperty(t).isRed());
@@ -139,6 +147,7 @@ public class MCUtil {
         CompactDFA<I> dfa = res.getSecond();
         Map<Set<S>, Integer> mapping = res.getFirst();
 
+        // Use acceptance to remove unnecessary may transitions
         Set<S> keepStates = new HashSet<>();
         for (S src : modalContract.getStates()){
             for (I input : gamma) {
@@ -156,10 +165,22 @@ public class MCUtil {
                 dfa.setStateProperty(entry.getValue(), Boolean.TRUE);
             }
         }
-        //TODO: change to mutable versions
 
+        //TODO: change to mutable versions
         CompactDFA<I> complementDfa = DFAs.complete(dfa, modalContract.getCommunicationAlphabet());
         CompactDFA<I> minimalDfa = DFAs.minimize(complementDfa);
+
+        // Reset acceptance to default semantics of MTS
+        Set<Integer> nonAcceptingStates = minimalDfa.getStates().parallelStream()
+                  .filter(s -> minimalDfa.getInputAlphabet().parallelStream()
+                                         .allMatch(i -> Objects.equals(minimalDfa.getSuccessor(s, i), s)))
+                  .collect(Collectors.toSet());
+
+        assert nonAcceptingStates.size() == 1;
+
+        for (Integer state : minimalDfa.getStates()) {
+            minimalDfa.setAccepting(state, !nonAcceptingStates.contains(state));
+        }
 
         return minimalDfa;
     }

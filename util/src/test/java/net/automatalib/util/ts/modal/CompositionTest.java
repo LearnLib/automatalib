@@ -6,4 +6,8 @@ public class CompositionTest {
     public String input1;
     public String merge;
 
+    @Override
+    public String toString() {
+        return "Test{" + merge + '}';
+    }
 }
