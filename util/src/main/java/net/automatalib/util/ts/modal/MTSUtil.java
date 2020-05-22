@@ -17,6 +17,7 @@ package net.automatalib.util.ts.modal;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.automata.AutomatonCreator;
@@ -48,27 +49,41 @@ public final class MTSUtil {
     }
 
     public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> conjunction(
-            ModalTransitionSystem<S0, I, T0, TP0> mc0, ModalTransitionSystem<S1, I, T1, TP1> mc1) {
-        return conjunction(mc0, mc1, CompactMTS::new);
+            ModalTransitionSystem<S0, I, T0, TP0> mts0, ModalTransitionSystem<S1, I, T1, TP1> mts1) {
+        return conjunction(mts0, mts1, CompactMTS::new);
     }
 
     public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> A conjunction(
-            ModalTransitionSystem<S0, I, T0, TP0> mc0,
-            ModalTransitionSystem<S1, I, T1, TP1> mc1,
+            ModalTransitionSystem<S0, I, T0, TP0> mts0,
+            ModalTransitionSystem<S1, I, T1, TP1> mts1,
             AutomatonCreator<A, I> creator) {
-        return Worksets.map(new ModalConjunction<>(mc0, mc1, creator)).getSecond();
+        return conjunctionWithMapping(mts0, mts1, creator).getSecond();
+    }
+
+    public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> Pair<Map<Pair<S0, S1>, S>, A> conjunctionWithMapping(
+            ModalTransitionSystem<S0, I, T0, TP0> mts0,
+            ModalTransitionSystem<S1, I, T1, TP1> mts1,
+            AutomatonCreator<A, I> creator) {
+        return Worksets.map(new ModalConjunction<>(mts0, mts1, creator));
     }
 
     public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> compose(
-            ModalTransitionSystem<S0, I, T0, TP0> mc0, ModalTransitionSystem<S1, I, T1, TP1> mc1) {
-        return compose(mc0, mc1, CompactMTS::new);
+            ModalTransitionSystem<S0, I, T0, TP0> mts0, ModalTransitionSystem<S1, I, T1, TP1> mts1) {
+        return compose(mts0, mts1, CompactMTS::new);
     }
 
     public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> A compose(
-            ModalTransitionSystem<S0, I, T0, TP0> mc0,
-            ModalTransitionSystem<S1, I, T1, TP1> mc1,
+            ModalTransitionSystem<S0, I, T0, TP0> mts0,
+            ModalTransitionSystem<S1, I, T1, TP1> mts1,
             AutomatonCreator<A, I> creator) {
-        return Worksets.map(new ModalParallelComposition<>(mc0, mc1, creator)).getSecond();
+        return composeWithMapping(mts0, mts1, creator).getSecond();
+    }
+
+    public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> Pair<Map<Pair<S0, S1>, S>, A> composeWithMapping(
+            ModalTransitionSystem<S0, I, T0, TP0> mts0,
+            ModalTransitionSystem<S1, I, T1, TP1> mts1,
+            AutomatonCreator<A, I> creator) {
+        return Worksets.map(new ModalParallelComposition<>(mts0, mts1, creator));
     }
 
     public static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> boolean isRefinementOf(
