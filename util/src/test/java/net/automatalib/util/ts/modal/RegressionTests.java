@@ -86,8 +86,8 @@ public class RegressionTests {
         LOGGER.debug("Components: "+testCase.input0 + ", " +testCase.input1);
         LOGGER.debug("Input alphabets: ["+instance.input0.getInputAlphabet()+"] ["+instance.input1.getInputAlphabet()+"]");
 
-        CompactMTS<String> currentMerge = MTSUtil.conjunction(instance.input0,
-                                                              instance.input1);
+        CompactMTS<String> currentMerge = MTSUtil.compose(instance.input0,
+                                                          instance.input1);
 
         Assert.assertEquals(currentMerge.getInputAlphabet(), instance.merge.getInputAlphabet());
         Assert.assertTrue(MTSUtil.isRefinementOf(currentMerge, instance.merge, currentMerge.getInputAlphabet()));
@@ -129,8 +129,47 @@ public class RegressionTests {
                                                     () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST));
 
         CompactMTS<String> context = MTSUtil.conjunction(greenContext, redContext);
-
+        
         Assert.assertTrue(MTSUtil.isRefinementOf(context, instance.context, context.getInputAlphabet()));
+    }
+
+    @Test(dataProvider = "Decomp")
+    public void testDecompContextReverse(DecompositionTest testCase) throws IOException {
+        if (testCase.modal_contract == null) {
+            return;
+        }
+        testCase.context = "src/test/resources/phil3/" + testCase.context;
+        testCase.modal_contract = "src/test/resources/phil3/" + testCase.modal_contract;
+        testCase.system = "src/test/resources/phil3/" + testCase.system;
+        testCase.orig_sys = "src/test/resources/phil3/" + testCase.orig_sys;
+        DecompositionInstance instance = new DecompositionInstance(testCase);
+
+        LOGGER.debug("Testing decomp for "+testCase.orig_sys);
+        LOGGER.debug("Modal contract "+testCase.modal_contract);
+        LOGGER.debug("Components: "+testCase.context + ", " +testCase.system);
+        LOGGER.debug("Com. alphabet: {}", instance.modal_contract.getCommunicationAlphabet());
+
+        MCUtil.SystemComponent<CompactMTS<String>, Integer, String, MTSTransition<String, MutableModalEdgeProperty>, MutableModalEdgeProperty> systemComponent = MCUtil.systemComponent(instance.modal_contract,
+                new CompactMTS.Creator<String>(),
+                (x) -> new ModalEdgePropertyImpl(x.getProperty().getType()),
+                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+
+        CompactDFA<String> redLanguage = (CompactDFA<String>) MCUtil.redContextLanguage(systemComponent, instance.modal_contract.getCommunicationAlphabet());
+        CompactMTS<String> redContext = MCUtil.redContextComponent(redLanguage,
+                new CompactMTS.Creator<String>(),
+                instance.modal_contract.getCommunicationAlphabet(),
+                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+
+        CompactDFA<String> greenLanguage = (CompactDFA<String>) MCUtil.greenContextLanguage(instance.modal_contract);
+        CompactMTS<String> greenContext = MCUtil.greenContextComponent(greenLanguage,
+                new CompactMTS.Creator<String>(),
+                instance.modal_contract.getCommunicationAlphabet(),
+                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY),
+                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST));
+
+        CompactMTS<String> context = MTSUtil.conjunction(greenContext, redContext);
+
+        Assert.assertTrue(MTSUtil.isRefinementOf(instance.context, context, context.getInputAlphabet()));
     }
 
     @Test(dataProvider = "Decomp")

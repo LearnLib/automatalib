@@ -98,8 +98,7 @@ public class MCUtil {
         Map<Set<S2>, Integer> mapping = res.getFirst();
 
         for (Map.Entry<Set<S2>,Integer> entry : mapping.entrySet()) {
-            if (entry.getKey().contains(system.uniqueState)
-                || entry.getKey().isEmpty()) {
+            if (entry.getKey().contains(system.uniqueState)) {
                 dfa.setStateProperty(entry.getValue(), Boolean.TRUE);
             }
         }
