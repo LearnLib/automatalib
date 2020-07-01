@@ -1,8 +1,10 @@
 package net.automatalib.util.ts.modal;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +21,9 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.serialization.dot.DOTParsers;
+import net.automatalib.ts.modal.CompactMC;
+import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.ModalContractEdgeProperty;
 import net.automatalib.ts.modal.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
@@ -44,6 +49,30 @@ public class MCUtil {
 
     private MCUtil() {
         // prevent instantiation
+    }
+
+    public static CompactMC<String> loadMCFromPath(String path) throws IOException {
+        Path file = Paths.get(path);
+        if (!Files.exists(file) || !file.toString().endsWith(".dot")) {
+            throw new FileNotFoundException("Expected " + path + " to be an existing .dot file!");
+        }
+
+        CompactMC<String> parsed = DOTParsers.mc().readModel(file.toFile()).model;
+
+        for (Integer s : parsed.getStates()) {
+            for (String label : parsed.getInputAlphabet()) {
+                for (MTSTransition<String, MutableModalContractEdgeProperty> transition : parsed.getTransitions(s, label)) {
+
+                    if (transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.RED ||
+                            transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.GREEN) {
+                        parsed.getCommunicationAlphabet().add(label);
+                    }
+
+                }
+            }
+        }
+
+        return parsed;
     }
 
     public static <A extends MutableModalContract<S1, I, T1, TP1>, S1, I, T1, TP1 extends MutableModalContractEdgeProperty, B extends MutableModalTransitionSystem<S2, I, T2, TP2>, S2, T2, TP2 extends MutableModalEdgeProperty> SystemComponent<B, S2, I, T2, TP2> systemComponent(

@@ -15,6 +15,11 @@
  */
 package net.automatalib.util.ts.modal;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,6 +29,7 @@ import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.fsa.NFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
@@ -46,6 +52,15 @@ public final class MTSUtil {
 
     private MTSUtil() {
         // prevent instantiation
+    }
+
+    public static CompactMTS<String> loadMTSFromPath(String path) throws IOException {
+        Path file = Paths.get(path);
+        if (!Files.exists(file) || !file.toString().endsWith(".dot")) {
+            throw new FileNotFoundException("Expected "+path+" to be an existing .dot file!");
+        }
+
+        return DOTParsers.mts().readModel(file.toFile()).model;
     }
 
     public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> conjunction(
