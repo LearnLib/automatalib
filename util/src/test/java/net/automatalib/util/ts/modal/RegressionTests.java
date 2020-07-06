@@ -25,6 +25,9 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 public class RegressionTests {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RegressionTests.class);
@@ -89,7 +92,7 @@ public class RegressionTests {
         CompactMTS<String> currentMerge = MTSUtil.compose(instance.input0,
                                                           instance.input1);
 
-        Assert.assertEquals(currentMerge.getInputAlphabet(), instance.merge.getInputAlphabet());
+        assertThat(currentMerge.getInputAlphabet(), containsInAnyOrder(instance.merge.getInputAlphabet().toArray()));
         Assert.assertTrue(MTSUtil.isRefinementOf(currentMerge, instance.merge, currentMerge.getInputAlphabet()));
         Assert.assertTrue(MTSUtil.isRefinementOf(instance.merge, currentMerge, currentMerge.getInputAlphabet()));
     }
@@ -129,7 +132,7 @@ public class RegressionTests {
                                                     () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST));
 
         CompactMTS<String> context = MTSUtil.conjunction(greenContext, redContext);
-        
+
         Assert.assertTrue(MTSUtil.isRefinementOf(context, instance.context, context.getInputAlphabet()));
     }
 
