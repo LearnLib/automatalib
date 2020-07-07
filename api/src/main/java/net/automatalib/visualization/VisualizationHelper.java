@@ -166,11 +166,20 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    final class MCAttrs extends MTSAttrs {
+    class MCAttrs extends MTSAttrs {
 
         public static final String CONTRACT = "contract";
 
         private MCAttrs() {
+            // prevent instantiation
+        }
+    }
+
+    final class MMCAttrs extends MCAttrs {
+
+        public static final String MEMBERSHIP = "group";
+
+        private MMCAttrs() {
             // prevent instantiation
         }
     }
