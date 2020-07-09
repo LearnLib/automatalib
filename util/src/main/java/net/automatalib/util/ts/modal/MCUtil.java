@@ -24,7 +24,9 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.MTSTransition;
+import net.automatalib.ts.modal.MembershipMC;
 import net.automatalib.ts.modal.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.ModalContractMembershipEdgePropertyImpl;
 import net.automatalib.ts.modal.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalContract;
@@ -65,6 +67,30 @@ public class MCUtil {
 
                     if (transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.RED ||
                             transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.GREEN) {
+                        parsed.getCommunicationAlphabet().add(label);
+                    }
+
+                }
+            }
+        }
+
+        return parsed;
+    }
+
+    public static MembershipMC<String> loadMMCFromPath(String path) throws IOException {
+        Path file = Paths.get(path);
+        if (!Files.exists(file) || !file.toString().endsWith(".dot")) {
+            throw new FileNotFoundException("Expected " + path + " to be an existing .dot file!");
+        }
+
+        MembershipMC<String> parsed = DOTParsers.mmc().readModel(file.toFile()).model;
+
+        for (Integer s : parsed.getStates()) {
+            for (String label : parsed.getInputAlphabet()) {
+                for (MTSTransition<String, ModalContractMembershipEdgePropertyImpl> transition : parsed.getTransitions(s, label)) {
+
+                    if (transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.RED ||
+                        transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.GREEN) {
                         parsed.getCommunicationAlphabet().add(label);
                     }
 

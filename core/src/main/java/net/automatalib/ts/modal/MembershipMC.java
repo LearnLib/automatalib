@@ -15,13 +15,20 @@
  */
 package net.automatalib.ts.modal;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.automatalib.automata.AutomatonCreator;
+import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
+import net.automatalib.automata.visualization.MCVisualizationHelper;
+import net.automatalib.automata.visualization.MMCVisualizationHelper;
+import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.ts.modal.ModalContractEdgeProperty.EdgeColor;
 import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.ArrayAlphabet;
@@ -156,6 +163,24 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
         @Override
         public MembershipMC<I> createAutomaton(Alphabet<I> alphabet) {
             return new MembershipMC<>(alphabet, new ArrayAlphabet<>());
+        }
+    }
+
+    @Override
+    public UniversalGraph<Integer, TransitionEdge<I, MTSTransition<I, ModalContractMembershipEdgePropertyImpl>>, Void, TransitionEdge.Property<I, ModalContractMembershipEdgePropertyImpl>> transitionGraphView(Collection<? extends I> inputs) {
+        return new MMCGraphView<>(this, inputs);
+    }
+
+    class MMCGraphView<S, I, T, TP extends ModalContractMembershipEdgePropertyImpl, M extends ModalContract<S, I, T, TP>>
+            extends UniversalAutomatonGraphView<S, I, T, Void, TP, M> {
+
+        public MMCGraphView(M mc, Collection<? extends I> inputs) {
+            super(mc, inputs);
+        }
+
+        @Override
+        public VisualizationHelper<S, TransitionEdge<I, T>> getVisualizationHelper() {
+            return new MMCVisualizationHelper<>(automaton);
         }
     }
 

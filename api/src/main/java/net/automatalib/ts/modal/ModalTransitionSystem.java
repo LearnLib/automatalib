@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.automatalib.automata.UniversalAutomaton;
+import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.graphs.TransitionEdge.Property;
@@ -29,16 +30,16 @@ import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.visualization.VisualizationHelper;
 
 public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
-        extends UniversalAutomaton<S, I, T, Void, TP>, FiniteLTS<S, T, I>, InputAlphabetHolder<I> {
+        extends UniversalFiniteAlphabetAutomaton<S, I, T, Void, TP>, FiniteLTS<S, T, I>, InputAlphabetHolder<I> {
 
     @Override
     default Iterator<S> iterator() {
-        return UniversalAutomaton.super.iterator();
+        return UniversalFiniteAlphabetAutomaton.super.iterator();
     }
 
     @Override
     default int size() {
-        return UniversalAutomaton.super.size();
+        return UniversalFiniteAlphabetAutomaton.super.size();
     }
 
     @Override

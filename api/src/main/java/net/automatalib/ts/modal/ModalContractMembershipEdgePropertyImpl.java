@@ -16,6 +16,11 @@ public class ModalContractMembershipEdgePropertyImpl extends ModalContractEdgePr
     }
 
     @Override
+    public String toString() {
+        return "color={"+getColor()+"}, memberId={" + memberId + '}';
+    }
+
+    @Override
     public void setMemberId(int id) {
         memberId = id;
     }
