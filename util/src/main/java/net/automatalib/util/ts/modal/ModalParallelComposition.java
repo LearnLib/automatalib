@@ -18,14 +18,19 @@ package net.automatalib.util.ts.modal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.ts.modal.ModalContractEdgeProperty;
 import net.automatalib.ts.modal.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
+import net.automatalib.ts.modal.Transition;
 import net.automatalib.util.fixedpoint.WorksetMappingAlgorithm;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
@@ -90,8 +95,82 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
         return initialElements;
     }
 
+
     @Override
     public Collection<Pair<S0, S1>> update(Map<Pair<S0, S1>, S> mapping, Pair<S0, S1> currentTuple) {
+        ArrayList<Pair<S0, S1>> discovered = new ArrayList<>();
+        List<Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType>> transitions = generateNewTransitions(currentTuple);
+
+        for (Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType> transition : transitions) {
+            LOGGER.debug("discovered new transition: " + transition);
+
+            S mappedTarget;
+            if (mapping.containsKey(transition.getTarget())) {
+                mappedTarget = mapping.get(transition.getTarget());
+            }
+            else {
+                mappedTarget = result.addState();
+                mapping.put(transition.getTarget(), mappedTarget);
+                discovered.add(transition.getTarget());
+            }
+            result.addModalTransition(mapping.get(currentTuple), transition.getLabel(), mappedTarget, transition.getProperty());
+        }
+        return discovered;
+    }
+
+    protected List<Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType>> generateNewTransitions(Pair<S0, S1> productState) {
+        List<Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType>> newTransitions = new ArrayList<>();
+
+        for (I symbol : mc0.getInputAlphabet()) {
+            for (T0 transition : mc0.getTransitions(productState.getFirst(), symbol)) {
+
+                if (!mc1.getInputAlphabet().contains(symbol)) {
+                    newTransitions.add(new Transition<>(productState,
+                                                        symbol,
+                                                        Pair.of(mc0.getTarget(transition),
+                                                                productState.getSecond()),
+                                                        mc0.getTransitionProperty(transition).getType()));
+                }
+                else {
+                    for (T1 partnerTransition : mc1.getTransitions(productState.getSecond(), symbol)) {
+                        newTransitions.add(new Transition<>(productState,
+                                                            symbol,
+                                                            Pair.of(mc0.getTarget(transition),
+                                                                    mc1.getTarget(partnerTransition)),
+                                                            minimalCompatibleType(mc0.getTransitionProperty(transition).getType(),
+                                                                                  mc1.getTransitionProperty(partnerTransition).getType())));
+                    }
+                }
+            }
+        }
+
+        Set<I> alphabetDifference = new HashSet<>(mc1.getInputAlphabet());
+        alphabetDifference.removeAll(mc0.getInputAlphabet());
+
+        for (I symbol : alphabetDifference) {
+            for (T1 transition : mc1.getTransitions(productState.getSecond(), symbol)) {
+                newTransitions.add(new Transition<>(productState,
+                                                    symbol,
+                                                    Pair.of(productState.getFirst(),
+                                                            mc1.getTarget(transition)),
+                                                    mc1.getTransitionProperty(transition).getType()));
+            }
+        }
+
+        return newTransitions;
+    }
+
+    private static ModalEdgeProperty.ModalType minimalCompatibleType(ModalContractEdgeProperty.ModalType arg0, ModalContractEdgeProperty.ModalType arg1) {
+        if (arg0 == ModalEdgeProperty.ModalType.MUST && arg1 == ModalEdgeProperty.ModalType.MUST) {
+            return ModalEdgeProperty.ModalType.MUST;
+        }
+        else {
+            return ModalEdgeProperty.ModalType.MAY;
+        }
+    }
+
+
+    public Collection<Pair<S0, S1>> update2(Map<Pair<S0, S1>, S> mapping, Pair<S0, S1> currentTuple) {
         ArrayList<Pair<S0, S1>> discovered = new ArrayList<>();
         S currentState = mapping.get(currentTuple);
 

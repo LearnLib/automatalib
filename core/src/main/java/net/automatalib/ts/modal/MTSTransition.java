@@ -17,48 +17,10 @@ package net.automatalib.ts.modal;
 
 import java.io.Serializable;
 
-public class MTSTransition<I, TP extends MutableModalEdgeProperty> implements Serializable {
-
-    private int source;
-    private int target;
-    private I label;
-    private TP property;
+public class MTSTransition<I, TP extends MutableModalEdgeProperty> extends Transition<Integer, I, TP> {
 
     MTSTransition(int target, TP property) {
-        this.target = target;
-        this.property = property;
-    }
-
-    public int getSource() {
-        return source;
-    }
-
-    void setSource(int source) {
-        this.source = source;
-    }
-
-    public int getTarget() {
-        return target;
-    }
-
-    void setTarget(int target) {
-        this.target = target;
-    }
-
-    public I getLabel() {
-        return label;
-    }
-
-    void setLabel(I label) {
-        this.label = label;
-    }
-
-    public TP getProperty() {
-        return property;
-    }
-
-    void setProperty(TP property) {
-        this.property = property;
+        super(target, property);
     }
 
     @Override
