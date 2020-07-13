@@ -93,6 +93,7 @@ public class RegressionTests {
                                                           instance.input1);
 
         assertThat(currentMerge.getInputAlphabet(), containsInAnyOrder(instance.merge.getInputAlphabet().toArray()));
+        assertThat(instance.merge.getInputAlphabet(), containsInAnyOrder(currentMerge.getInputAlphabet().toArray()));
         Assert.assertTrue(MTSUtil.isRefinementOf(currentMerge, instance.merge, currentMerge.getInputAlphabet()));
         Assert.assertTrue(MTSUtil.isRefinementOf(instance.merge, currentMerge, currentMerge.getInputAlphabet()));
     }
