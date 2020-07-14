@@ -23,22 +23,28 @@ public class MMCVisualizationHelper<S, I, T, TP extends ModalContractEdgePropert
         TP transitionProperty = super.automaton.getTransitionProperty(edge.getTransition());
 
         int memberId = transitionProperty.getMemberId();
-        if (0 <= memberId && memberId <= 4) {
-            //properties.compute(EdgeAttrs.LABEL,
-            //                   (key, value) -> value != null ? value + " #" + memberId : "#" + memberId );
-            properties.put("colorscheme", "ylorrd9");
-            properties.put(EdgeAttrs.COLOR, String.valueOf(memberId+1));
+        ModalContractEdgeProperty.EdgeColor color = transitionProperty.getColor();
+
+        if (color == ModalContractEdgeProperty.EdgeColor.GREEN) {
+            // use colors from 3 to 7 of colorscheme greens9
+            properties.put("colorscheme", "greens9");
+            properties.put(EdgeAttrs.COLOR, String.valueOf(7 - (memberId % 5)));
+
         }
-        else if (5 <= memberId && memberId <= 11) {
-            //properties.compute(EdgeAttrs.LABEL,
-            //                   (key, value) -> value != null ? value + " #" + memberId : "#" + memberId );
-            properties.put("colorscheme", "reds9");
-            properties.put(EdgeAttrs.COLOR, String.valueOf(memberId-3));
-        } else if (12 <= memberId) {
-            //properties.compute(EdgeAttrs.LABEL,
-            //                   (key, value) -> value != null ? value + " #" + memberId : "#" + memberId );
-            properties.put("colorscheme", "rdpu9");
-            properties.put(EdgeAttrs.COLOR, String.valueOf(memberId-9));
+        else if (color == ModalContractEdgeProperty.EdgeColor.RED) {
+            if (0 <= memberId && memberId <= 6) {
+                // use colors from 3 to 9 of colorscheme reds9
+                properties.put("colorscheme", "reds9");
+                properties.put(EdgeAttrs.COLOR, String.valueOf(9 - memberId));
+            }
+            else if (7 <= memberId && memberId <= 13) {
+                properties.put("colorscheme", "ylorrd9");
+                properties.put(EdgeAttrs.COLOR, String.valueOf(16 - memberId));
+            }
+            else if (14 <= memberId) {
+                properties.put("colorscheme", "rdpu9");
+                properties.put(EdgeAttrs.COLOR, String.valueOf(9 - (memberId % 7)));
+            }
         }
 
         properties.put(MMCAttrs.MEMBERSHIP, String.valueOf(memberId));
