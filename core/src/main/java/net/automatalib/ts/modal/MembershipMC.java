@@ -150,7 +150,17 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
                                                                                     ModalType modalType,
                                                                                     boolean tau,
                                                                                     EdgeColor color) {
-        return super.addTransition(src, input, tgt, buildContractProperty(modalType, tau, color, -1));
+        return addContractTransition(src, input, tgt, modalType, tau, color, -1);
+    }
+
+    public MTSTransition<I, ModalContractMembershipEdgePropertyImpl> addContractTransition(Integer src,
+                                                                                           I input,
+                                                                                           Integer tgt,
+                                                                                           ModalType modalType,
+                                                                                           boolean tau,
+                                                                                           EdgeColor color,
+                                                                                           int memberId) {
+        return super.addTransition(src, input, tgt, buildContractProperty(modalType, tau, color, memberId));
     }
 
     public static final class Creator<I> implements AutomatonCreator<MembershipMC<I>, I> {
