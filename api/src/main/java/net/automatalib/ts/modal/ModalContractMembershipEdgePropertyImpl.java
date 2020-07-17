@@ -10,6 +10,11 @@ public class ModalContractMembershipEdgePropertyImpl extends ModalContractEdgePr
         this.memberId = memberId;
     }
 
+    public ModalContractMembershipEdgePropertyImpl(ModalContractMembershipEdgePropertyImpl other) {
+        super(other.getType(), other.isTau(), other.getColor());
+        this.memberId = other.memberId;
+    }
+
     @Override
     public void setGroup(EdgeColor group) {
         setColor(group);
