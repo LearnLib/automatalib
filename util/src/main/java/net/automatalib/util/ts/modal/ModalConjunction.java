@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.ts.modal;
 
+import java.security.PrivilegedActionException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -164,8 +165,9 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
                 LOGGER.debug("current transition 1: {}", transition1);
 
                 if (mc1.getTransitionProperty(transition1).isMust() && transitions0.isEmpty()) {
-                    LOGGER.warn(traceError(transition1));
-                    throw new IllegalArgumentException("error in conjunction");
+                    String message = traceError(transition1);
+                    LOGGER.warn(message);
+                    throw new IllegalConjunctionException("Error in conjunction: " + message);
                 }
             }
         }
