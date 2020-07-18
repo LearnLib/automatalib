@@ -148,6 +148,9 @@ public class Closures {
                 }
 
                 Set<S1> closure = closureOperator.apply(reachable);
+                if (closure.isEmpty()) {
+                    continue;
+                }
                 S2 mappedStated = mapping.get(closure);
                 if (mappedStated == null) {
                     mappedStated = result.addState();
