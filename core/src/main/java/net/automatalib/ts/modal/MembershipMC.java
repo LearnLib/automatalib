@@ -51,7 +51,7 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
         this.communicationAlphabet = new GrowingMapAlphabet<>();
     }
 
-    public void addToCommunicationAlphabet(I symbol) {
+    public void addCommunicationSymbol(I symbol) {
         communicationAlphabet.addSymbol(symbol);
 
         assert getInputAlphabet().contains(symbol) : "Communication alphabet needs to be a subset of alphabet";
