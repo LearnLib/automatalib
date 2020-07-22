@@ -1,8 +1,7 @@
-package net.automatalib.util.ts.modal;
+package net.automatalib.util.ts.modal.regression;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,15 +9,14 @@ import java.nio.file.Paths;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.MutableModalEdgeProperty;
+import net.automatalib.util.ts.modal.MCUtil;
+import net.automatalib.util.ts.modal.MTSUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -114,10 +112,11 @@ public class RegressionTests {
         LOGGER.debug("Components: "+testCase.context + ", " +testCase.system);
         LOGGER.debug("Com. alphabet: {}", instance.modal_contract.getCommunicationAlphabet());
 
-        MCUtil.SystemComponent<CompactMTS<String>, Integer, String, MTSTransition<String, MutableModalEdgeProperty>, MutableModalEdgeProperty> systemComponent = MCUtil.systemComponent(instance.modal_contract,
-                                                                                                                                                                                     new CompactMTS.Creator<String>(),
-                                                                                                                                                                                     (x) -> new ModalEdgePropertyImpl(x.getProperty().getType()),
-                                                                                                                                                                                     () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+        MCUtil.SystemComponent<CompactMTS<String>, Integer, String, MTSTransition<String, MutableModalEdgeProperty>, MutableModalEdgeProperty>
+                systemComponent = MCUtil.systemComponent(instance.modal_contract,
+                                                         new CompactMTS.Creator<String>(),
+                                                         (x) -> new ModalEdgePropertyImpl(x.getProperty().getType()),
+                                                         () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
 
         CompactDFA<String> redLanguage = (CompactDFA<String>) MCUtil.redContextLanguage(systemComponent, instance.modal_contract.getCommunicationAlphabet());
         CompactMTS<String> redContext = MCUtil.redContextComponent(redLanguage,

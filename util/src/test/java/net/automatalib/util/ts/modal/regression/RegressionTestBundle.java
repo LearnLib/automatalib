@@ -1,4 +1,4 @@
-package net.automatalib.util.ts.modal;
+package net.automatalib.util.ts.modal.regression;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package net.automatalib.util.ts.modal;
+package net.automatalib.util.ts.modal.regression;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,9 +11,7 @@ import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.ModalContractEdgeProperty;
-import net.automatalib.ts.modal.ModalContractEdgePropertyImpl;
 import net.automatalib.ts.modal.MutableModalContractEdgeProperty;
-import net.automatalib.ts.modal.MutableModalEdgeProperty;
 
 public class DecompositionInstance {
 

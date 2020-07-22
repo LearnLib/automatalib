@@ -216,14 +216,14 @@ public class ModalConjunctionTest {
         Worksets.map(new ModalConjunction<>(block1, block2, CompactMTS::new));
     }
 
-    //    @Test
-    //    void errorNoSuitableTransitionsInPartner() {
-    //        CompactMTS<Character> block2 = new CompactMTS<>(Alphabets.characters('a', 'd'));
-    //        block2.addInitialState();
-    //
-    //        Assert.assertThrows(IllegalArgumentException.class,
-    //                            () -> Workset.map(new ModalConjunction<>(block1, block2, CompactMTS::new)));
-    //    }
+    @Test
+    void errorNoSuitableTransitionsInPartner() {
+        CompactMTS<Character> block2 = new CompactMTS<>(Alphabets.characters('a', 'd'));
+        block2.addInitialState();
+
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> Worksets.map(new ModalConjunction<>(block1, block2, CompactMTS::new)));
+    }
 
     @Test(dataProvider = "randomSource")
     void random(CompactMTS<Character> a, CompactMTS<Character> b, int K) {
