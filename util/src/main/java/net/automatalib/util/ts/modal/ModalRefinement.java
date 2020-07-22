@@ -71,15 +71,15 @@ public class ModalRefinement {
 
 
     public static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> Set<Pair<AS, BS>> refinementRelation(
-            ModalTransitionSystem<AS, I, AT, ATP> a,
-            ModalTransitionSystem<BS, I, BT, BTP> b,
+            ModalTransitionSystem<AS, I, AT, ATP> implementation,
+            ModalTransitionSystem<BS, I, BT, BTP> specification,
             Collection<I> inputs) {
 
-        Set<Pair<AS, BS>> refinement = Sets.newHashSetWithExpectedSize(a.size() * b.size());
+        Set<Pair<AS, BS>> refinement = Sets.newHashSetWithExpectedSize(implementation.size() * specification.size());
 
         // untere approximation nur korrekt wenn automat endlich (image-finite)
-        for (AS p : a.getStates()) {
-            for (BS q : b.getStates()) {
+        for (AS p : implementation.getStates()) {
+            for (BS q : specification.getStates()) {
                 refinement.add(Pair.of(p, q));
             }
         }
@@ -102,19 +102,20 @@ public class ModalRefinement {
                 Pair<AS, BS> pair = iterator.next();
                 LOGGER.debug("Checking {}", pair);
 
-                boolean eligiblePartner = eligiblePartner(a, b, inputs,
+                boolean eligiblePartner = eligiblePartner(implementation, specification, inputs,
                                                           (s, t) -> refinement.contains(Pair.of(s, t)),
                                                           pair.getFirst(), pair.getSecond(),
                                                           // replace with Set.of(...) in Java9
                                                           may);
 
-                eligiblePartner &= eligiblePartner(b, a, inputs,
-                                                         (s, t) -> refinement.contains(Pair.of(t, s)),
-                                                         pair.getSecond(), pair.getFirst(),
-                                                         must);
+                eligiblePartner &= eligiblePartner(specification, implementation, inputs,
+                                                   (s, t) -> refinement.contains(Pair.of(t, s)),
+                                                   pair.getSecond(), pair.getFirst(),
+                                                   must);
 
                 if (!eligiblePartner) {
                     LOGGER.debug("Pair {} has no partner transitions", pair);
+                    update = true;
                     iterator.remove();
                 }
             }
