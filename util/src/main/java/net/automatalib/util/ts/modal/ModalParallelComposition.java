@@ -17,7 +17,6 @@ package net.automatalib.util.ts.modal;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -47,25 +46,25 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
     private static final Logger LOGGER = LoggerFactory.getLogger(ModalParallelComposition.class);
     private static final float LOAD_FACTOR = 0.5f;
 
-    private final ModalTransitionSystem<S0, I, T0, TP0> mc0;
-    private final ModalTransitionSystem<S1, I, T1, TP1> mc1;
+    private final ModalTransitionSystem<S0, I, T0, TP0> mts0;
+    private final ModalTransitionSystem<S1, I, T1, TP1> mts1;
 
     private final A result;
 
-    ModalParallelComposition(ModalTransitionSystem<S0, I, T0, TP0> mc0,
-                             ModalTransitionSystem<S1, I, T1, TP1> mc1,
+    ModalParallelComposition(ModalTransitionSystem<S0, I, T0, TP0> mts0,
+                             ModalTransitionSystem<S1, I, T1, TP1> mts1,
                              AutomatonCreator<A, I> output) {
 
-        this.mc0 = mc0;
-        this.mc1 = mc1;
+        this.mts0 = mts0;
+        this.mts1 = mts1;
 
         final Alphabet<I> alphabet;
 
-        if (mc0.getInputAlphabet().equals(mc1.getInputAlphabet())) {
-            alphabet = mc0.getInputAlphabet();
+        if (mts0.getInputAlphabet().equals(mts1.getInputAlphabet())) {
+            alphabet = mts0.getInputAlphabet();
         } else {
-            final GrowingAlphabet<I> growingAlphabet = new GrowingMapAlphabet<>(mc0.getInputAlphabet());
-            growingAlphabet.addAll(mc1.getInputAlphabet());
+            final GrowingAlphabet<I> growingAlphabet = new GrowingMapAlphabet<>(mts0.getInputAlphabet());
+            growingAlphabet.addAll(mts1.getInputAlphabet());
             alphabet = growingAlphabet;
         }
 
@@ -77,14 +76,15 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
 
     @Override
     public int expectedElementCount() {
-        return (int) (LOAD_FACTOR * mc0.size() * mc1.size());
+        return (int) (LOAD_FACTOR * mts0.size() * mts1.size());
     }
 
     @Override
     public Collection<Pair<S0,S1>> initialize(Map<Pair<S0, S1>, S> mapping) {
-        Collection<Pair<S0,S1>> initialElements = new ArrayList<>(mc0.getInitialStates().size() * mc1.getInitialStates().size());
-        for (final S0 s0 : mc0.getInitialStates()) {
-            for (final S1 s1 : mc1.getInitialStates()) {
+        Collection<Pair<S0,S1>> initialElements = new ArrayList<>(
+                mts0.getInitialStates().size() * mts1.getInitialStates().size());
+        for (final S0 s0 : mts0.getInitialStates()) {
+            for (final S1 s1 : mts1.getInitialStates()) {
                 final Pair<S0, S1> init = Pair.of(s0, s1);
                 final S newState = result.addInitialState();
 
@@ -121,39 +121,39 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
     protected List<Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType>> generateNewTransitions(Pair<S0, S1> productState) {
         List<Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType>> newTransitions = new ArrayList<>();
 
-        for (I symbol : mc0.getInputAlphabet()) {
-            for (T0 transition : mc0.getTransitions(productState.getFirst(), symbol)) {
+        for (I symbol : mts0.getInputAlphabet()) {
+            for (T0 transition : mts0.getTransitions(productState.getFirst(), symbol)) {
 
-                if (!mc1.getInputAlphabet().contains(symbol)) {
+                if (!mts1.getInputAlphabet().contains(symbol)) {
                     newTransitions.add(new Transition<>(productState,
                                                         symbol,
-                                                        Pair.of(mc0.getTarget(transition),
+                                                        Pair.of(mts0.getTarget(transition),
                                                                 productState.getSecond()),
-                                                        mc0.getTransitionProperty(transition).getType()));
+                                                        mts0.getTransitionProperty(transition).getType()));
                 }
                 else {
-                    for (T1 partnerTransition : mc1.getTransitions(productState.getSecond(), symbol)) {
+                    for (T1 partnerTransition : mts1.getTransitions(productState.getSecond(), symbol)) {
                         newTransitions.add(new Transition<>(productState,
                                                             symbol,
-                                                            Pair.of(mc0.getTarget(transition),
-                                                                    mc1.getTarget(partnerTransition)),
-                                                            minimalCompatibleType(mc0.getTransitionProperty(transition).getType(),
-                                                                                  mc1.getTransitionProperty(partnerTransition).getType())));
+                                                            Pair.of(mts0.getTarget(transition),
+                                                                    mts1.getTarget(partnerTransition)),
+                                                            minimalCompatibleType(mts0.getTransitionProperty(transition).getType(),
+                                                                                  mts1.getTransitionProperty(partnerTransition).getType())));
                     }
                 }
             }
         }
 
-        Set<I> alphabetDifference = new HashSet<>(mc1.getInputAlphabet());
-        alphabetDifference.removeAll(mc0.getInputAlphabet());
+        Set<I> alphabetDifference = new HashSet<>(mts1.getInputAlphabet());
+        alphabetDifference.removeAll(mts0.getInputAlphabet());
 
         for (I symbol : alphabetDifference) {
-            for (T1 transition : mc1.getTransitions(productState.getSecond(), symbol)) {
+            for (T1 transition : mts1.getTransitions(productState.getSecond(), symbol)) {
                 newTransitions.add(new Transition<>(productState,
                                                     symbol,
                                                     Pair.of(productState.getFirst(),
-                                                            mc1.getTarget(transition)),
-                                                    mc1.getTransitionProperty(transition).getType()));
+                                                            mts1.getTarget(transition)),
+                                                    mts1.getTransitionProperty(transition).getType()));
             }
         }
 

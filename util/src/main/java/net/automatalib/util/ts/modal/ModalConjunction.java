@@ -45,36 +45,37 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
     private static final Logger LOGGER = LoggerFactory.getLogger(ModalConjunction.class);
     private static final float LOAD_FACTOR = 0.5f;
 
-    private final ModalTransitionSystem<S0, I, T0, TP0> mc0;
-    private final ModalTransitionSystem<S1, I, T1, TP1> mc1;
+    private final ModalTransitionSystem<S0, I, T0, TP0> mts0;
+    private final ModalTransitionSystem<S1, I, T1, TP1> mts1;
 
     private final A result;
 
-    ModalConjunction(ModalTransitionSystem<S0, I, T0, TP0> mc0,
-                     ModalTransitionSystem<S1, I, T1, TP1> mc1,
+    ModalConjunction(ModalTransitionSystem<S0, I, T0, TP0> mts0,
+                     ModalTransitionSystem<S1, I, T1, TP1> mts1,
                      AutomatonCreator<A, I> creator) {
 
-        if (!mc0.getInputAlphabet().equals(mc1.getInputAlphabet())) {
+        if (!mts0.getInputAlphabet().equals(mts1.getInputAlphabet())) {
             throw new IllegalArgumentException("conjunction input mts have to have the same input alphabet");
         }
 
-        this.mc0 = mc0;
-        this.mc1 = mc1;
+        this.mts0 = mts0;
+        this.mts1 = mts1;
 
-        this.result = creator.createAutomaton(mc0.getInputAlphabet());
+        this.result = creator.createAutomaton(mts0.getInputAlphabet());
     }
 
     @Override
     public int expectedElementCount() {
-        return (int) (LOAD_FACTOR * mc0.size() * mc1.size());
+        return (int) (LOAD_FACTOR * mts0.size() * mts1.size());
     }
 
     @Override
     public Collection<Pair<S0,S1>> initialize(Map<Pair<S0, S1>, S> mapping) {
-        Collection<Pair<S0,S1>> initialElements = new ArrayList<>(mc0.getInitialStates().size() * mc1.getInitialStates().size());
+        Collection<Pair<S0,S1>> initialElements = new ArrayList<>(
+                mts0.getInitialStates().size() * mts1.getInitialStates().size());
 
-        for (final S0 s0 : mc0.getInitialStates()) {
-            for (final S1 s1 : mc1.getInitialStates()) {
+        for (final S0 s0 : mts0.getInitialStates()) {
+            for (final S1 s1 : mts1.getInitialStates()) {
                 final Pair<S0, S1> init = Pair.of(s0, s1);
                 final S newState = result.addInitialState();
 
@@ -95,13 +96,13 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
 
         ArrayList<Pair<S0, S1>> discovered = new ArrayList<>();
 
-        for (I sym : mc0.getInputAlphabet()) {
+        for (I sym : mts0.getInputAlphabet()) {
 
             LOGGER.debug("current symbol: {}", sym);
 
-            Collection<T0> transitions0 = mc0.getTransitions(currentStatePair.getFirst(), sym);
-            Collection<T1> transitions1 = (mc1.getInputAlphabet().containsSymbol(sym) ?
-                    mc1.getTransitions(currentStatePair.getSecond(), sym) :
+            Collection<T0> transitions0 = mts0.getTransitions(currentStatePair.getFirst(), sym);
+            Collection<T1> transitions1 = (mts1.getInputAlphabet().containsSymbol(sym) ?
+                    mts1.getTransitions(currentStatePair.getSecond(), sym) :
                     Collections.emptySet());
 
             if (transitions0.isEmpty()) {
@@ -112,14 +113,14 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
 
                 LOGGER.debug("current transition 0: {}", transition0);
 
-                if (mc0.getTransitionProperty(transition0).isMust() && transitions1.isEmpty()) {
+                if (mts0.getTransitionProperty(transition0).isMust() && transitions1.isEmpty()) {
                     throw new IllegalArgumentException("error in conjunction");
                 }
                 for (T1 transition1 : transitions1) {
 
                     LOGGER.debug("current transition 1: {}", transition1);
 
-                    Pair<S0, S1> newTuple = Pair.of(mc0.getSuccessor(transition0), mc1.getSuccessor(transition1));
+                    Pair<S0, S1> newTuple = Pair.of(mts0.getSuccessor(transition0), mts1.getSuccessor(transition1));
 
                     S newState = mapping.get(newTuple);
                     if (newState == null) {
@@ -134,8 +135,8 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
 
                     LOGGER.debug("new transition: {}", newT);
 
-                    if (mc0.getTransitionProperty(transition0).isMust() ||
-                        mc1.getTransitionProperty(transition1).isMust()) {
+                    if (mts0.getTransitionProperty(transition0).isMust() ||
+                        mts1.getTransitionProperty(transition1).isMust()) {
                         result.getTransitionProperty(newT).setMust();
                     } else {
                         result.getTransitionProperty(newT).setMayOnly();
@@ -144,14 +145,14 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
             }
         }
 
-        for (I sym : mc1.getInputAlphabet()) {
+        for (I sym : mts1.getInputAlphabet()) {
 
             LOGGER.debug("current symbol: {}", sym);
 
-            Collection<T0> transitions0 = (mc0.getInputAlphabet().containsSymbol(sym) ?
-                    mc0.getTransitions(currentStatePair.getFirst(), sym) :
+            Collection<T0> transitions0 = (mts0.getInputAlphabet().containsSymbol(sym) ?
+                    mts0.getTransitions(currentStatePair.getFirst(), sym) :
                     Collections.emptySet());
-            Collection<T1> transitions1 = mc1.getTransitions(currentStatePair.getSecond(), sym);
+            Collection<T1> transitions1 = mts1.getTransitions(currentStatePair.getSecond(), sym);
 
             if (transitions1.isEmpty()) {
                 LOGGER.debug("\tno transition 1 -> continue with next symbol");
@@ -161,7 +162,7 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
 
                 LOGGER.debug("current transition 1: {}", transition1);
 
-                if (mc1.getTransitionProperty(transition1).isMust() && transitions0.isEmpty()) {
+                if (mts1.getTransitionProperty(transition1).isMust() && transitions0.isEmpty()) {
                     String message = traceError(transition1);
                     LOGGER.warn(message);
                     throw new IllegalConjunctionException("Error in conjunction: " + message);
@@ -179,8 +180,8 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
     protected String traceError(T1 transition1) {
         EdgeTracer<S1, I, T1> finder = new EdgeTracer<>(transition1);
 
-        GraphTraversal.dfs(mc1.transitionGraphView(mc1.getInputAlphabet()),
-                           mc1.getInitialStates(),
+        GraphTraversal.dfs(mts1.transitionGraphView(mts1.getInputAlphabet()),
+                           mts1.getInitialStates(),
                            finder);
 
         StringBuilder sb = new StringBuilder();
