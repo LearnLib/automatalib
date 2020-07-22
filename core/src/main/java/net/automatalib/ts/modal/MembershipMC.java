@@ -72,22 +72,6 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
     }
 
     @Override
-    public boolean isSymbolInCommunicationAlphabet(I symbol) {
-        return communicationAlphabet.containsSymbol(symbol);
-    }
-
-    @Override
-    public Set<MTSTransition<I, ModalContractMembershipEdgePropertyImpl>> getRedTransitions() {
-        return Collections.emptySet();
-    }
-
-    //TODO export as static
-    @Override
-    public boolean checkRedTransitions() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public GrowingAlphabet<I> getCommunicationAlphabet() {
         return communicationAlphabet;
     }

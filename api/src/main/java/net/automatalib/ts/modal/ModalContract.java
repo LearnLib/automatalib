@@ -30,19 +30,15 @@ import net.automatalib.words.Alphabet;
 public interface ModalContract<S, I, T, TP extends ModalContractEdgeProperty>
         extends ModalTransitionSystem<S, I, T, TP> {
 
-    Set<T> getRedTransitions();
-
+    /**
+     * Get communication alphabet.
+     *
+     * Returns the communication alphabet of this contract. It is a subset of {@link #getInputAlphabet()}
+     * and contains all symbols, which are shared between parallel components and thus require synchronization.
+     *
+     * @return A possibly unmodifiable view of the communication alphabet.
+     */
     Alphabet<I> getCommunicationAlphabet();
-
-    default boolean isSymbolInCommunicationAlphabet(I symbol) {
-        if (getCommunicationAlphabet() == null) {
-            // TODO: maybe throw?
-            return false;
-        }
-        return getCommunicationAlphabet().containsSymbol(symbol);
-    }
-
-    boolean checkRedTransitions();
 
     @Override
     default UniversalGraph<S, TransitionEdge<I, T>, Void, Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
