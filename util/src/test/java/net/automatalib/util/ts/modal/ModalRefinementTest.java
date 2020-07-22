@@ -17,8 +17,8 @@ package net.automatalib.util.ts.modal;
 
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;

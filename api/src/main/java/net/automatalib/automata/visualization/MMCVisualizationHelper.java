@@ -3,9 +3,9 @@ package net.automatalib.automata.visualization;
 import java.util.Map;
 
 import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.ts.modal.GroupMemberEdge;
+import net.automatalib.ts.modal.transitions.GroupMemberEdge;
 import net.automatalib.ts.modal.ModalContract;
-import net.automatalib.ts.modal.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
 
 public class MMCVisualizationHelper<S, I, T, TP extends ModalContractEdgeProperty & GroupMemberEdge, M extends ModalContract<S, I, T, TP>>
         extends MCVisualizationHelper<S, I, T, TP, M> {

@@ -7,7 +7,7 @@ import java.util.function.BiFunction;
 
 import com.google.common.collect.Sets;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.ts.modal.ModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -25,10 +25,10 @@ import java.util.Set;
 
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.ts.modal.ModalContractEdgeProperty;
-import net.automatalib.ts.modal.ModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
-import net.automatalib.ts.modal.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.Transition;
 import net.automatalib.util.fixedpoint.WorksetMappingAlgorithm;

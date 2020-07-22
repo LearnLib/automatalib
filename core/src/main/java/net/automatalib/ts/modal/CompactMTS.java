@@ -16,7 +16,9 @@
 package net.automatalib.ts.modal;
 
 import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
 
 public class CompactMTS<I> extends AbstractCompactMTS<I, MutableModalEdgeProperty> {

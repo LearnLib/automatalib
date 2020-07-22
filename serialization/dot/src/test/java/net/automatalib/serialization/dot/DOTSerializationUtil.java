@@ -24,8 +24,8 @@ import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.ModalContractEdgeProperty.EdgeColor;
-import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty.EdgeColor;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 

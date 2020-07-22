@@ -2,7 +2,6 @@ package net.automatalib.util.ts.modal;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -11,11 +10,11 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
-import net.automatalib.ts.modal.ModalContractEdgeProperty;
-import net.automatalib.ts.modal.ModalContractEdgePropertyImpl;
-import net.automatalib.ts.modal.ModalEdgeProperty;
-import net.automatalib.ts.modal.ModalEdgePropertyImpl;
-import net.automatalib.ts.modal.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalContractEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

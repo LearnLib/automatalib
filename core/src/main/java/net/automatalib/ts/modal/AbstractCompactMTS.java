@@ -29,7 +29,8 @@ import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.automata.base.compact.AbstractCompact;
 import net.automatalib.graphs.BidirectionalGraph;
-import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
 
 /**

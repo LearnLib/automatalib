@@ -15,10 +15,8 @@
  */
 package net.automatalib.util.ts.modal;
 
-import java.security.PrivilegedActionException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
@@ -28,10 +26,9 @@ import java.util.Map;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.graphs.Graph;
-import net.automatalib.ts.modal.ModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
-import net.automatalib.ts.modal.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.util.fixedpoint.WorksetMappingAlgorithm;
 import net.automatalib.util.graphs.traversal.DFSVisitor;

@@ -20,15 +20,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.ts.modal.ModalContractEdgeProperty.EdgeColor;
-import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty.EdgeColor;
+import net.automatalib.ts.modal.transitions.ModalContractEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.MutableModalContractEdgeProperty;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.ArrayAlphabet;
-import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
-import net.automatalib.words.impl.MapAlphabet;
 
 public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdgeProperty>
         implements MutableModalContract<Integer, I, MTSTransition<I, MutableModalContractEdgeProperty>, MutableModalContractEdgeProperty> {

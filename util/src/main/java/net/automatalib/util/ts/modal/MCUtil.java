@@ -2,7 +2,6 @@ package net.automatalib.util.ts.modal;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,16 +26,16 @@ import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.MembershipMC;
 import net.automatalib.ts.modal.ModalContract;
-import net.automatalib.ts.modal.ModalContractEdgeProperty;
-import net.automatalib.ts.modal.ModalContractMembershipEdgePropertyImpl;
-import net.automatalib.ts.modal.ModalEdgeProperty;
-import net.automatalib.ts.modal.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalContractMembershipEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalContract;
-import net.automatalib.ts.modal.MutableModalContractEdgeProperty;
-import net.automatalib.ts.modal.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.MutableModalContractEdgeProperty;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
-import net.automatalib.ts.modal.TauEdge;
+import net.automatalib.ts.modal.transitions.TauEdge;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automata.fsa.DFAs;
@@ -45,8 +44,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.automatalib.serialization.dot.GraphDOT;
 
 public class MCUtil {
 

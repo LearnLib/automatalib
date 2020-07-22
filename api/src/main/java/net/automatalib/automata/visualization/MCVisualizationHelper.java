@@ -19,7 +19,7 @@ import java.util.Map;
 
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.ts.modal.ModalContract;
-import net.automatalib.ts.modal.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
 
 public class MCVisualizationHelper<S, I, T, TP extends ModalContractEdgeProperty, M extends ModalContract<S, I, T, TP>>
         extends MTSVisualizationHelper<S, I, T, TP, M> {

@@ -13,23 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.ts.modal;
+package net.automatalib.ts.modal.transitions;
 
-public interface ModalEdgeProperty {
+public interface MutableModalEdgeProperty extends ModalEdgeProperty {
 
-    enum ModalType {
-        MAY,
-        MUST
+    void setType(ModalType type);
+
+    default void setMayOnly() {
+        setType(ModalType.MAY);
     }
 
-    ModalType getType();
-
-    default boolean isMayOnly() {
-        return getType() == ModalType.MAY;
-    }
-
-    default boolean isMust() {
-        return getType() == ModalType.MUST;
+    default void setMust() {
+        setType(ModalType.MUST);
     }
 
 }

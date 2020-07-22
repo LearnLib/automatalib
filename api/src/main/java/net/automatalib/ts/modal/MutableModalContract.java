@@ -15,8 +15,9 @@
  */
 package net.automatalib.ts.modal;
 
-import net.automatalib.ts.modal.ModalContractEdgeProperty.EdgeColor;
-import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty.EdgeColor;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.MutableModalContractEdgeProperty;
 
 public interface MutableModalContract<S, I, T, TP extends MutableModalContractEdgeProperty>
         extends MutableModalTransitionSystem<S, I, T, TP>, ModalContract<S, I, T, TP> {

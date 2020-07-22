@@ -10,8 +10,8 @@ import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
-import net.automatalib.ts.modal.ModalContractEdgeProperty;
-import net.automatalib.ts.modal.MutableModalContractEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.transitions.MutableModalContractEdgeProperty;
 
 public class DecompositionInstance {
 

@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.ts.modal;
+package net.automatalib.ts.modal.transitions;
 
-public interface MutableModalEdgeProperty extends ModalEdgeProperty {
+public interface MutableTauEdge extends TauEdge {
 
-    void setType(ModalType type);
-
-    default void setMayOnly() {
-        setType(ModalType.MAY);
-    }
-
-    default void setMust() {
-        setType(ModalType.MUST);
-    }
-
+    void setTau(boolean isTau);
 }

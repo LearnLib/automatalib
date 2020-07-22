@@ -18,7 +18,6 @@ package net.automatalib.ts.modal;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.graphs.TransitionEdge;
@@ -27,6 +26,7 @@ import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
 import net.automatalib.automata.visualization.MTSVisualizationHelper;
 import net.automatalib.graphs.FiniteLTS;
 import net.automatalib.graphs.UniversalGraph;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
 
 public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>

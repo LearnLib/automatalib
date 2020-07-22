@@ -23,6 +23,7 @@ import net.automatalib.automata.graphs.TransitionEdge.Property;
 import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
 import net.automatalib.automata.visualization.MCVisualizationHelper;
 import net.automatalib.graphs.UniversalGraph;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 

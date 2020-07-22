@@ -19,7 +19,10 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import net.automatalib.graphs.BidirectionalGraph;
-import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;

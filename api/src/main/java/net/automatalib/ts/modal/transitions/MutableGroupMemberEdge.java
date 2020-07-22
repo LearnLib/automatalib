@@ -1,4 +1,4 @@
-package net.automatalib.ts.modal;
+package net.automatalib.ts.modal.transitions;
 
 public interface MutableGroupMemberEdge<G> extends GroupMemberEdge<G> {
 

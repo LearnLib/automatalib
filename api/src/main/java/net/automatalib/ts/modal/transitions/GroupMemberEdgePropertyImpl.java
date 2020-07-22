@@ -1,4 +1,4 @@
-package net.automatalib.ts.modal;
+package net.automatalib.ts.modal.transitions;
 
 public class GroupMemberEdgePropertyImpl<G> implements MutableGroupMemberEdge<G> {
 
@@ -24,4 +24,6 @@ public class GroupMemberEdgePropertyImpl<G> implements MutableGroupMemberEdge<G>
     public int getMemberId() {
         return memberId;
     }
+
+
 }

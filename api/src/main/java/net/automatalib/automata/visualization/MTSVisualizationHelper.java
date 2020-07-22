@@ -18,7 +18,7 @@ package net.automatalib.automata.visualization;
 import java.util.Map;
 
 import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.ts.modal.ModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 
 public class MTSVisualizationHelper<S, I, T, TP extends ModalEdgeProperty, M extends ModalTransitionSystem<S, I, T, TP>>

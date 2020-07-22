@@ -15,7 +15,7 @@
  */
 package net.automatalib.ts.modal;
 
-import java.io.Serializable;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 
 public class MTSTransition<I, TP extends MutableModalEdgeProperty> extends Transition<Integer, I, TP> {
 
