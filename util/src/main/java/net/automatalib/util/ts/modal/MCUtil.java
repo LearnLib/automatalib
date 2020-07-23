@@ -26,15 +26,15 @@ import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.MembershipMC;
 import net.automatalib.ts.modal.ModalContract;
+import net.automatalib.ts.modal.ModalTransitionSystem;
+import net.automatalib.ts.modal.MutableModalContract;
+import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
 import net.automatalib.ts.modal.transitions.ModalContractMembershipEdgePropertyImpl;
 import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
-import net.automatalib.ts.modal.ModalTransitionSystem;
-import net.automatalib.ts.modal.MutableModalContract;
 import net.automatalib.ts.modal.transitions.MutableModalContractEdgeProperty;
 import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
-import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.transitions.TauEdge;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
@@ -221,22 +221,25 @@ public class MCUtil {
         }
 
         //TODO: change to mutable versions
-        CompactDFA<I> complementDfa = DFAs.complete(dfa, modalContract.getCommunicationAlphabet());
-        CompactDFA<I> minimalDfa = DFAs.minimize(complementDfa);
+        CompactDFA<I> completeDfa = DFAs.complete(dfa, modalContract.getCommunicationAlphabet());
+        CompactDFA<I> minimalDfa = DFAs.minimize(completeDfa);
 
         // Reset acceptance to default semantics of MTS
         Set<Integer> nonAcceptingStates = minimalDfa.getStates().parallelStream()
+                  .filter(s -> !minimalDfa.isAccepting(s))
                   .filter(s -> minimalDfa.getInputAlphabet().parallelStream()
                                          .allMatch(i -> Objects.equals(minimalDfa.getSuccessor(s, i), s)))
                   .collect(Collectors.toSet());
 
-        assert nonAcceptingStates.size() == 1;
+        if (nonAcceptingStates.size() > 1) {
+            throw new IllegalStateException("Error in minimization: Found identical suffixes with same acceptance");
+        }
 
         for (Integer state : minimalDfa.getStates()) {
             minimalDfa.setAccepting(state, !nonAcceptingStates.contains(state));
         }
 
-        return minimalDfa;
+        return DFAs.complete(DFAs.minimize(minimalDfa), modalContract.getCommunicationAlphabet());
     }
 
     public static <B extends MutableModalTransitionSystem<S1, I, T, TP>, S1, I, T, TP extends MutableModalEdgeProperty, S2> B greenContextComponent(
