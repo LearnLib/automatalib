@@ -10,6 +10,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
@@ -20,6 +21,7 @@ import static org.hamcrest.Matchers.*;
 public class ClosuresTest {
 
     @Test
+    @Ignore
     void hideSymbols() {
 
         CompactDFA<String> dfa = new CompactDFA<String>(Alphabets.fromArray("a", "b", "c"));
@@ -47,6 +49,7 @@ public class ClosuresTest {
     }
 
     @Test
+    @Ignore
     void hideChain() {
 
         CompactDFA<String> dfa = new CompactDFA<String>(Alphabets.fromArray("a", "b", "c"));
