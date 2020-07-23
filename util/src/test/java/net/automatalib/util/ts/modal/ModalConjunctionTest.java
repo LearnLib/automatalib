@@ -98,7 +98,7 @@ public class ModalConjunctionTest {
 
         block1.addTransition(b1s0, 'a', b1s1, new ModalEdgePropertyImpl(ModalType.MAY));
         block1.addTransition(b1s0, 'c', b1s0, new ModalEdgePropertyImpl(ModalType.MAY));
-        block1.addTransition(b1s1, 'b', b1s0, null);
+        block1.addTransition(b1s1, 'b', b1s0, new ModalEdgePropertyImpl(ModalType.MUST));
 
         algo = new ModalConjunction<>(block0, block1, CompactMTS::new);
     }
@@ -219,7 +219,9 @@ public class ModalConjunctionTest {
     @Test
     void errorNoSuitableTransitionsInPartner() {
         CompactMTS<Character> block2 = new CompactMTS<>(Alphabets.characters('a', 'd'));
-        block2.addInitialState();
+        int s0 = block2.addInitialState();
+        int s1 = block2.addState();
+        block2.addModalTransition(s0, 'a', s1, ModalType.MAY);
 
         Assert.assertThrows(IllegalArgumentException.class,
                             () -> Worksets.map(new ModalConjunction<>(block1, block2, CompactMTS::new)));

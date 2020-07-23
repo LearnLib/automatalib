@@ -114,7 +114,7 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
                 LOGGER.debug("current transition 0: {}", transition0);
 
                 if (mts0.getTransitionProperty(transition0).isMust() && transitions1.isEmpty()) {
-                    throw new IllegalArgumentException("error in conjunction");
+                    throw new IllegalConjunctionException("error in conjunction");
                 }
                 for (T1 transition1 : transitions1) {
 
