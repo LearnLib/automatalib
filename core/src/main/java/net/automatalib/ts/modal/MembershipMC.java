@@ -33,28 +33,37 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.ArrayAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembershipEdgePropertyImpl>
         implements MutableModalContract<Integer, I, MTSTransition<I, ModalContractMembershipEdgePropertyImpl>, ModalContractMembershipEdgePropertyImpl> {
 
-    protected final GrowingAlphabet<I> communicationAlphabet;
+    protected HashSet<I> communicationAlphabet;
 
     public MembershipMC(Alphabet<I> alphabet, Alphabet<I> gamma) {
         super(alphabet);
-        this.communicationAlphabet = new GrowingMapAlphabet<>(gamma);
+        this.communicationAlphabet = new HashSet<>(gamma);
 
         assert new HashSet<>(alphabet).containsAll(gamma) : "Communication alphabet needs to be a subset of alphabet";
     }
 
     public MembershipMC(Alphabet<I> alphabet) {
         super(alphabet);
-        this.communicationAlphabet = new GrowingMapAlphabet<>();
+        this.communicationAlphabet = new HashSet<>();
     }
 
     public void addCommunicationSymbol(I symbol) {
-        communicationAlphabet.addSymbol(symbol);
+        communicationAlphabet.add(symbol);
 
         assert getInputAlphabet().contains(symbol) : "Communication alphabet needs to be a subset of alphabet";
+    }
+
+    public void removeCommunicationSymbol(I symbol) {
+        communicationAlphabet.remove(symbol);
+    }
+
+    public void setCommunicationAlphabet(Collection<I> alphabet) {
+        communicationAlphabet = new HashSet<>(alphabet);
     }
 
     @Override
@@ -72,8 +81,25 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
     }
 
     @Override
-    public GrowingAlphabet<I> getCommunicationAlphabet() {
-        return communicationAlphabet;
+    public Alphabet<I> getCommunicationAlphabet() {
+        return new ImmutableAlphabet<>(communicationAlphabet);
+    }
+
+    private static class ImmutableAlphabet<I> extends HashSet<I> implements Alphabet<I> {
+
+        public ImmutableAlphabet(Collection<? extends I> c) {
+            super(c);
+        }
+
+        @Override
+        public I getSymbol(int index) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int getSymbolIndex(I symbol) {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @Override
