@@ -118,7 +118,6 @@ limitations under the License.
         <module>util</module>
         <module>serialization</module>
         <module>visualization</module>
-        <module>mts-cli</module>
     </modules>
 
     <!--
