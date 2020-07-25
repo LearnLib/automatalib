@@ -91,7 +91,7 @@ public class MCUtil {
 
                     if (transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.RED ||
                         transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.GREEN) {
-                        parsed.getCommunicationAlphabet().add(label);
+                        parsed.addCommunicationSymbol(label);
                     }
 
                 }

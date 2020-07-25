@@ -15,6 +15,8 @@
  */
 package net.automatalib.ts.modal;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.UnmodifiableIterator;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,6 +33,7 @@ import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.ArrayAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -82,24 +85,7 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
 
     @Override
     public Alphabet<I> getCommunicationAlphabet() {
-        return new ImmutableAlphabet<>(communicationAlphabet);
-    }
-
-    private static class ImmutableAlphabet<I> extends HashSet<I> implements Alphabet<I> {
-
-        public ImmutableAlphabet(Collection<? extends I> c) {
-            super(c);
-        }
-
-        @Override
-        public I getSymbol(int index) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int getSymbolIndex(I symbol) {
-            throw new UnsupportedOperationException();
-        }
+        return Alphabets.fromCollection(communicationAlphabet);
     }
 
     @Override
