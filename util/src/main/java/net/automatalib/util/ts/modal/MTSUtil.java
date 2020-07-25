@@ -15,6 +15,9 @@
  */
 package net.automatalib.util.ts.modal;
 
+import static net.automatalib.util.ts.modal.Subgraphs.SubgraphType.DISREGARD_UNKNOWN_LABELS;
+
+import com.google.common.collect.Sets;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,11 +29,17 @@ import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.automata.AutomatonCreator;
+import net.automatalib.automata.UniversalAutomaton;
+import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.fsa.NFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.ts.modal.ModalContract;
+import net.automatalib.ts.modal.transitions.GroupMemberEdge;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
 import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
@@ -38,6 +47,8 @@ import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.fixedpoint.Worksets;
+import net.automatalib.util.graphs.Graphs;
+import net.automatalib.util.graphs.sssp.SSSPResult;
 import net.automatalib.words.Alphabet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,6 +130,27 @@ public final class MTSUtil {
         LOGGER.info("Counterexamples: {}, {}", statesA, statesB);
 
         return statesA.isEmpty() && statesB.isEmpty();
+    }
+
+    public static <S, I, T, SP, TP> Set<S> reachableSubset(UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP> ts,
+                                                           Collection<I> inputs,
+                                                           Set<S> states) {
+        Pair<Map<Set<S>, Integer>, CompactDFA<I>>
+                graphView = Subgraphs.subgraphView(new CompactDFA.Creator<>(), DISREGARD_UNKNOWN_LABELS, ts, inputs);
+
+        SSSPResult<Integer, ?> ssspResult = Graphs.findSSSP(graphView.getSecond().transitionGraphView(), graphView.getSecond().getInitialState(), e -> 1);
+
+        HashSet<S> reachableStates = new HashSet<>();
+        for (Map.Entry<Set<S>, Integer> entry : graphView.getFirst().entrySet()) {
+            Set<S> reachableSubset = Sets.intersection(states, entry.getKey());
+            if (!reachableSubset.isEmpty()) {
+                if (ssspResult.getShortestPathDistance(entry.getValue()) != Graphs.INVALID_DISTANCE) {
+                    reachableStates.addAll(reachableSubset);
+                }
+            }
+        }
+
+        return reachableStates;
     }
 
     public static <S, I, T, TP extends ModalEdgeProperty> NFA<?, I> asNFA(ModalTransitionSystem<S, I, T, TP> mts,
