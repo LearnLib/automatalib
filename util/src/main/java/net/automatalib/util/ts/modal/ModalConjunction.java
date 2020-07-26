@@ -114,7 +114,7 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
                 LOGGER.debug("current transition 0: {}", transition0);
 
                 if (mts0.getTransitionProperty(transition0).isMust() && transitions1.isEmpty()) {
-                    throw new IllegalConjunctionException("error in conjunction");
+                    throw new IllegalConjunctionException("error in conjunction: " + traceError0(transition0));
                 }
                 for (T1 transition1 : transitions1) {
 
@@ -189,6 +189,25 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
         sb.append(transition1);
         sb.append("\" has no partner. Sequence leading to transition: ");
         for (S1 state : finder.getStateSequence()) {
+            sb.append(state);
+            sb.append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+
+    protected String traceError0(T0 transition0) {
+        EdgeTracer<S0, I, T0> finder = new EdgeTracer<>(transition0);
+
+        GraphTraversal.dfs(mts0.transitionGraphView(mts0.getInputAlphabet()),
+                mts0.getInitialStates(),
+                finder);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Error in conjunction. Transition \"");
+        sb.append(transition0);
+        sb.append("\" has no partner. Sequence leading to transition: ");
+        for (S0 state : finder.getStateSequence()) {
             sb.append(state);
             sb.append(",");
         }
