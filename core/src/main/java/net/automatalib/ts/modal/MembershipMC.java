@@ -67,6 +67,8 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
 
     public void setCommunicationAlphabet(Collection<I> alphabet) {
         communicationAlphabet = new HashSet<>(alphabet);
+
+        assert new HashSet<>(alphabet).containsAll(communicationAlphabet) : "Communication alphabet needs to be a subset of alphabet";
     }
 
     @Override
