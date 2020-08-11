@@ -20,6 +20,7 @@ import static net.automatalib.util.ts.modal.Subgraphs.SubgraphType.DISREGARD_UNK
 import com.google.common.collect.Sets;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,6 +37,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.serialization.dot.DOTParsers;
+import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.ModalContract;
 import net.automatalib.ts.modal.transitions.GroupMemberEdge;
@@ -72,6 +74,12 @@ public final class MTSUtil {
         }
 
         return DOTParsers.mts().readModel(file.toFile()).model;
+    }
+
+    public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(ModalTransitionSystem<S, I, T, TP> mts, String path) throws IOException {
+        try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
+            GraphDOT.write(mts.graphView(), writer);
+        }
     }
 
     public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> conjunction(

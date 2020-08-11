@@ -2,6 +2,7 @@ package net.automatalib.util.ts.modal;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,6 +22,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.serialization.dot.DOTParsers;
+import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
@@ -99,6 +101,12 @@ public class MCUtil {
         }
 
         return parsed;
+    }
+
+    public static <S, I, T, TP extends ModalContractEdgeProperty> void saveMCToPath(ModalContract<S, I, T, TP> contract, String path) throws IOException {
+        try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
+            GraphDOT.write(contract.graphView(), writer);
+        }
     }
 
     public static <S1, I, T1, TP1 extends ModalContractEdgeProperty, B extends MutableModalTransitionSystem<S2, I, T2, TP2>, S2, T2, TP2 extends MutableModalEdgeProperty> SystemComponent<B, S2, I, T2, TP2> systemComponent(
