@@ -114,7 +114,17 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
                 LOGGER.debug("current transition 0: {}", transition0);
 
                 if (mts0.getTransitionProperty(transition0).isMust() && transitions1.isEmpty()) {
-                    throw new IllegalConjunctionException("error in conjunction: " + traceError0(transition0));
+                    throw new IllegalConjunctionException(
+                            String.format("Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
+                                    "Error for transition %s (t0), leading trace: %s",
+                                    currentStatePair.getFirst(),
+                                    currentStatePair.getSecond(),
+                                    sym,
+                                    transitions0,
+                                    transitions1,
+                                    transition0,
+                                    traceError(mts0, transition0))
+                    );
                 }
                 for (T1 transition1 : transitions1) {
 
@@ -163,9 +173,17 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
                 LOGGER.debug("current transition 1: {}", transition1);
 
                 if (mts1.getTransitionProperty(transition1).isMust() && transitions0.isEmpty()) {
-                    String message = traceError(transition1);
-                    LOGGER.warn(message);
-                    throw new IllegalConjunctionException("Error in conjunction: " + message);
+                    throw new IllegalConjunctionException(
+                        String.format("Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
+                                        "Error for transition %s (t1), leading trace: %s",
+                                currentStatePair.getFirst(),
+                                currentStatePair.getSecond(),
+                                sym,
+                                transitions0,
+                                transitions1,
+                                transition1,
+                                traceError(mts1, transition1))
+                    );
                 }
             }
         }
@@ -177,37 +195,15 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
         return result;
     }
 
-    protected String traceError(T1 transition1) {
-        EdgeTracer<S1, I, T1> finder = new EdgeTracer<>(transition1);
+    protected <S, I, T, TP extends ModalEdgeProperty> String traceError( ModalTransitionSystem<S, I, T, TP> mts, T transition) {
+        EdgeTracer<S, I, T> finder = new EdgeTracer<>(transition);
 
-        GraphTraversal.dfs(mts1.transitionGraphView(mts1.getInputAlphabet()),
-                           mts1.getInitialStates(),
-                           finder);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Error in conjunction. Transition \"");
-        sb.append(transition1);
-        sb.append("\" has no partner. Sequence leading to transition: ");
-        for (S1 state : finder.getStateSequence()) {
-            sb.append(state);
-            sb.append(",");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
-    }
-
-    protected String traceError0(T0 transition0) {
-        EdgeTracer<S0, I, T0> finder = new EdgeTracer<>(transition0);
-
-        GraphTraversal.dfs(mts0.transitionGraphView(mts0.getInputAlphabet()),
-                mts0.getInitialStates(),
+        GraphTraversal.dfs(mts.transitionGraphView(mts.getInputAlphabet()),
+                mts.getInitialStates(),
                 finder);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Error in conjunction. Transition \"");
-        sb.append(transition0);
-        sb.append("\" has no partner. Sequence leading to transition: ");
-        for (S0 state : finder.getStateSequence()) {
+        for (S state : finder.getStateSequence()) {
             sb.append(state);
             sb.append(",");
         }
