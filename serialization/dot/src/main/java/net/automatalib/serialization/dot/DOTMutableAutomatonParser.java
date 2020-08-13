@@ -18,12 +18,10 @@ package net.automatalib.serialization.dot;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableAutomaton;
@@ -51,6 +49,8 @@ import net.automatalib.words.impl.Alphabets;
 public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, I, ?, SP, TP>>
         implements InputModelDeserializer<I, A> {
 
+    private static final boolean SORT_NODES_AS_LONG = true;
+    private static final String[] COMMON_STATE_PREFIX = {"s", "state", "idx"};
     private final AutomatonCreator<A, I> creator;
     private final Function<Map<String, String>, SP> nodeParser;
     private final Function<Map<String, String>, Pair<I, TP>> edgeParser;
@@ -117,7 +117,28 @@ public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, 
     private <S> void parseNodesAndEdges(InternalDOTParser parser, MutableAutomaton<S, I, ?, SP, TP> automaton) {
         final Map<String, S> stateMap = Maps.newHashMapWithExpectedSize(parser.getNodes().size());
 
-        for (Node node : parser.getNodes()) {
+        List<Node> nodesSorted = Lists.newArrayList(parser.getNodes());
+
+        if (SORT_NODES_AS_LONG) {
+            nodesSorted.sort(Comparator.comparingLong(o -> {
+                if (fakeInitialNodeIds && initialNodeIds.contains(o.id)) {
+                    return -1;
+                }
+                else if (!o.attributes.containsKey("label") || o.attributes.get("label") == null || Objects.equals(o.attributes.get("label"), "")) {
+                    return Long.MAX_VALUE;
+                }
+                String label = o.attributes.get("label").toLowerCase();
+                for (String prefix : COMMON_STATE_PREFIX) {
+                    if (label.startsWith(prefix)) {
+                        label = label.substring(prefix.length());
+                        break;
+                    }
+                }
+                return Long.parseLong(label);
+            }));
+        }
+
+        for (Node node : nodesSorted) {
             final S state;
 
             if (fakeInitialNodeIds && initialNodeIds.contains(node.id)) {

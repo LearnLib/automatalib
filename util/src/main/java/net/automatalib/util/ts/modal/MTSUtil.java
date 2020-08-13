@@ -76,6 +76,17 @@ public final class MTSUtil {
         return DOTParsers.mts().readModel(file.toFile()).model;
     }
 
+    public static CompactMTS<String> loadMTSFromPath(String path, Alphabet<String> inputAlphabet) throws IOException {
+        Path file = Paths.get(path);
+        if (!Files.exists(file) || !file.toString().endsWith(".dot")) {
+            throw new FileNotFoundException("Expected "+path+" to be an existing .dot file!");
+        }
+
+        CompactMTS.Creator<String> creator = new CompactMTS.Creator<>(inputAlphabet);
+
+        return DOTParsers.mts(creator, DOTParsers.DEFAULT_EDGE_PARSER, DOTParsers.DEFAULT_MTS_EDGE_PARSER).readModel(file.toFile()).model;
+    }
+
     public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(ModalTransitionSystem<S, I, T, TP> mts, String path) throws IOException {
         try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
             GraphDOT.write(mts.graphView(), writer);

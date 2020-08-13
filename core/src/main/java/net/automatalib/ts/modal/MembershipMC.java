@@ -112,6 +112,22 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
 
     public static final class Creator<I> implements AutomatonCreator<MembershipMC<I>, I> {
 
+        private final Alphabet<I> defaultInputAlphabet;
+        private final Alphabet<I> defaultCommunicationAlphabet;
+
+        public Creator() {
+            this(null, null);
+        }
+
+        public Creator(Alphabet<I> defaultCommunicationAlphabet) {
+            this(null, defaultCommunicationAlphabet);
+        }
+
+        public Creator(Alphabet<I> defaultInputAlphabet, Alphabet<I> defaultCommunicationAlphabet) {
+            this.defaultInputAlphabet = defaultInputAlphabet;
+            this.defaultCommunicationAlphabet = defaultCommunicationAlphabet;
+        }
+
         @Override
         public MembershipMC<I> createAutomaton(Alphabet<I> alphabet, int sizeHint) {
             return createAutomaton(alphabet);
@@ -119,7 +135,9 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
 
         @Override
         public MembershipMC<I> createAutomaton(Alphabet<I> alphabet) {
-            return new MembershipMC<>(alphabet, new ArrayAlphabet<>());
+            return new MembershipMC<>(
+                    defaultInputAlphabet != null ? defaultInputAlphabet : alphabet,
+                    defaultCommunicationAlphabet != null ? defaultCommunicationAlphabet : new ArrayAlphabet<>());
         }
     }
 
