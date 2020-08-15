@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import net.automatalib.automata.Automaton;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -101,6 +102,18 @@ public class MCUtil {
         }
 
         return parsed;
+    }
+
+    public static MembershipMC<String> loadMMCFromPath(String path, Alphabet<String> inputAlphabet, Alphabet<String> communicationAlphabet) throws IOException {
+        MembershipMC.Creator<String> creator = new MembershipMC.Creator<>(inputAlphabet, communicationAlphabet);
+
+        Path file = Paths.get(path);
+        if (!Files.exists(file) || !file.toString().endsWith(".dot")) {
+            throw new FileNotFoundException("Expected " + path + " to be an existing .dot file!");
+        }
+
+        return DOTParsers.mc(creator, DOTParsers.DEFAULT_EDGE_PARSER, DOTParsers.DEFAULT_MMC_EDGE_PARSER)
+                .readModel(file.toFile()).model;
     }
 
     public static <S, I, T, TP extends ModalContractEdgeProperty> void saveMCToPath(ModalContract<S, I, T, TP> contract, String path) throws IOException {

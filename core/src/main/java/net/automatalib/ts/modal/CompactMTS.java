@@ -43,9 +43,22 @@ public class CompactMTS<I> extends AbstractCompactMTS<I, MutableModalEdgePropert
 
     public static final class Creator<I> implements AutomatonCreator<CompactMTS<I>, I> {
 
+        private final Alphabet<I> defaultInputAlphabet;
+
+        public Creator() {
+            this(null);
+        }
+
+        public Creator(Alphabet<I> defaultInputAlphabet) {
+            this.defaultInputAlphabet = defaultInputAlphabet;
+        }
+
         @Override
         public CompactMTS<I> createAutomaton(Alphabet<I> alphabet, int sizeHint) {
-            return new CompactMTS<>(alphabet, sizeHint, DEFAULT_RESIZE_FACTOR);
+            return new CompactMTS<>(
+                    defaultInputAlphabet != null ? defaultInputAlphabet : alphabet,
+                    sizeHint,
+                    DEFAULT_RESIZE_FACTOR);
         }
 
         @Override
