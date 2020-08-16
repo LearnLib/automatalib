@@ -306,11 +306,17 @@ public class MCUtil {
     public static class DecompositionResult<S, I, T, TP extends MutableModalEdgeProperty> {
         public MutableModalTransitionSystem<S, I, T, TP> contextComponent;
         public MutableModalTransitionSystem<S, I, T, TP> systemComponent;
+        public MutableModalTransitionSystem<S, I, T, TP> redContext;
+        public MutableModalTransitionSystem<S, I, T, TP> greenContext;
 
         public DecompositionResult(MutableModalTransitionSystem<S, I, T, TP> contextComponent,
-                                   MutableModalTransitionSystem<S, I, T, TP> systemComponent) {
+                                   MutableModalTransitionSystem<S, I, T, TP> systemComponent,
+                                   MutableModalTransitionSystem<S, I, T, TP> redContext,
+                                   MutableModalTransitionSystem<S, I, T, TP> greenContext) {
             this.contextComponent = contextComponent;
             this.systemComponent = systemComponent;
+            this.redContext = redContext;
+            this.greenContext = greenContext;
         }
     }
 
@@ -321,21 +327,42 @@ public class MCUtil {
                                                                                                                                                                         x -> new ModalEdgePropertyImpl(contract.getTransitionProperty(x).getType()),
                                                                                                                                                                         () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
 
-        CompactDFA<I> redLanguage = (CompactDFA<I>) MCUtil.redContextLanguage(systemComponent, contract.getCommunicationAlphabet());
-        CompactMTS<I> redContext = MCUtil.redContextComponent(redLanguage,
-                                                               new CompactMTS.Creator<>(),
-                                                               contract.getCommunicationAlphabet(),
-                                                               () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
-
-        CompactDFA<I> greenLanguage = (CompactDFA<I>) MCUtil.greenContextLanguage(contract);
-        CompactMTS<I> greenContext = MCUtil.greenContextComponent(greenLanguage,
-                                                                   new CompactMTS.Creator<>(),
-                                                                   contract.getCommunicationAlphabet(),
-                                                                   () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY),
-                                                                   () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST));
+        MutableModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> redContext = generateRedContext(contract, systemComponent);
+        MutableModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> greenContext = generateGreenContext(contract);
 
         CompactMTS<I> context = MTSUtil.conjunction(greenContext, redContext);
 
-        return new DecompositionResult<>(context, systemComponent.systemComponent);
+        return new DecompositionResult<>(context, systemComponent.systemComponent, redContext, greenContext);
+    }
+
+    public static <S, I, T, TP extends ModalContractEdgeProperty> MutableModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> generateRedContext(ModalContract<S, I, T, TP> contract) {
+
+        MCUtil.SystemComponent<CompactMTS<I>, Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> systemComponent = MCUtil.systemComponent(contract,
+                new CompactMTS.Creator<>(),
+                x -> new ModalEdgePropertyImpl(contract.getTransitionProperty(x).getType()),
+                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+
+        return generateRedContext(contract, systemComponent);
+    }
+
+    public static <S, I, T, TP extends ModalContractEdgeProperty> MutableModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> generateRedContext(ModalContract<S, I, T, TP> contract, MCUtil.SystemComponent<CompactMTS<I>, Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> systemComponent) {
+
+        CompactDFA<I> redLanguage = (CompactDFA<I>) MCUtil.redContextLanguage(systemComponent, contract.getCommunicationAlphabet());
+
+        return MCUtil.redContextComponent(redLanguage,
+                new CompactMTS.Creator<>(),
+                contract.getCommunicationAlphabet(),
+                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+    }
+
+    public static <S, I, T, TP extends ModalContractEdgeProperty> MutableModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> generateGreenContext(ModalContract<S, I, T, TP> contract) {
+
+        CompactDFA<I> greenLanguage = (CompactDFA<I>) MCUtil.greenContextLanguage(contract);
+
+        return MCUtil.greenContextComponent(greenLanguage,
+                new CompactMTS.Creator<>(),
+                contract.getCommunicationAlphabet(),
+                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY),
+                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST));
     }
 }
