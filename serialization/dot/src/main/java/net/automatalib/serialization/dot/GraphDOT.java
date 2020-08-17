@@ -326,7 +326,7 @@ public final class GraphDOT {
 
         if (!initialNodes.isEmpty()) {
             a.append(System.lineSeparator());
-            renderInitialArrowTip(initialNodes, a);
+            renderInitialArrowTip(initialNodes, a, startID);
         }
 
         return i;
