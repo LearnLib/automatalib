@@ -24,10 +24,8 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.UniversalAutomaton;
@@ -90,6 +88,12 @@ public final class MTSUtil {
     public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(ModalTransitionSystem<S, I, T, TP> mts, String path) throws IOException {
         try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
             GraphDOT.write(mts.graphView(), writer);
+        }
+    }
+
+    public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(List<ModalTransitionSystem<S, I, T, TP>> mtss, String path) throws IOException {
+        try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
+            GraphDOT.write(mtss.stream().map(g->g.graphView()).collect(Collectors.toList()), writer);
         }
     }
 
