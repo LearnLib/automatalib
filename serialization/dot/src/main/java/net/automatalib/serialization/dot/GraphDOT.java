@@ -45,7 +45,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public final class GraphDOT {
 
-    private static final String INITIAL_LABEL = "__start";
+    private static final String INITIAL_LABEL = "";//""__start";
 
     private GraphDOT() {}
 
@@ -326,7 +326,7 @@ public final class GraphDOT {
 
         if (!initialNodes.isEmpty()) {
             a.append(System.lineSeparator());
-            renderInitialArrowTip(initialNodes, a, startID);
+            renderInitialArrowTip(initialNodes, a, i++);//startID);
         }
 
         return i;
