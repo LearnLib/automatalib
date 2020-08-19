@@ -36,12 +36,16 @@ import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.serialization.dot.GraphDOT;
+import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.ModalContract;
+import net.automatalib.ts.modal.Transition;
 import net.automatalib.ts.modal.transitions.GroupMemberEdge;
 import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
 import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
+import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
@@ -189,6 +193,23 @@ public final class MTSUtil {
                                       tp -> null,
                                       sf -> true,
                                       (s, i, t) -> maximal || mts.getTransitionProperty(t).isMust());
+
+        return result;
+    }
+
+    public static <S, I, T, TP extends ModalEdgeProperty> ModalTransitionSystem<?, I, ?, ? extends ModalEdgeProperty> toLTS(ModalTransitionSystem<S, I, T, TP> mts,
+                                                                                                                            TransitionPredicate<S, I, T> transFilter){
+
+        CompactMTS<I> result = new CompactMTS<>(mts.getInputAlphabet());
+
+        AutomatonLowLevelCopy.copy(AutomatonCopyMethod.DFS,
+                                   mts,
+                                   mts.getInputAlphabet(),
+                                   result,
+                                   sp -> null,
+                                   tp -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST),
+                                   sf -> true,
+                                   (s, i, t) -> true);
 
         return result;
     }
