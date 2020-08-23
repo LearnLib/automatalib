@@ -45,7 +45,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public final class GraphDOT {
 
-    private static final String INITIAL_LABEL = "";//""__start";
+    private static final String INITIAL_LABEL = "__start";
 
     private GraphDOT() {}
 
