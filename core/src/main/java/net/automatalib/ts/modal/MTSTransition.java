@@ -25,7 +25,7 @@ public class MTSTransition<I, TP extends MutableModalEdgeProperty> extends Trans
 
     @Override
     public String toString() {
-        return "MTSTransition{" + "source=" + source + ", target=" + target + ", label=" + label + ", property=" +
-               property + '}';
+        return "MTSTransition{" + "source=" + source + ", target=" + target + ", label=" + label + ", property={" +
+               property + "} }";
     }
 }
