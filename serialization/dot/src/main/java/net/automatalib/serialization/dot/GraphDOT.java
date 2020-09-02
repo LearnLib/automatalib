@@ -273,7 +273,7 @@ public final class GraphDOT {
             if (!dotHelper.getNodeProperties(node, props)) {
                 continue;
             }
-            String id = ""+i++;//"s" + i++;
+            String id = "s"+i++;//"s" + i++;
 
             // remove potential attributes that are no valid DOT attributes
             if (Boolean.parseBoolean(props.remove(NodeAttrs.INITIAL))) {
@@ -326,7 +326,7 @@ public final class GraphDOT {
 
         if (!initialNodes.isEmpty()) {
             a.append(System.lineSeparator());
-            renderInitialArrowTip(initialNodes, a, i++);//startID);
+            renderInitialArrowTip(initialNodes, a, startID);//i++);
         }
 
         return i;
