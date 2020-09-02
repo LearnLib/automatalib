@@ -120,6 +120,10 @@ public final class GraphDOT {
         write(automaton.transitionGraphView(inputAlphabet), a, additionalHelpers);
     }
 
+    public static <N, E> void write(Graph<N, E> graph, Appendable a) throws IOException {
+        write(graph, a, false);
+    }
+
     /**
      * Renders a {@link Graph} in the GraphVIZ DOT format.
      *
@@ -131,12 +135,16 @@ public final class GraphDOT {
      * @throws IOException
      *         if writing to {@code a} fails.
      */
-    public static <N, E> void write(Graph<N, E> graph, Appendable a) throws IOException {
-        writeRaw(graph, a, toDOTVisualizationHelper(graph.getVisualizationHelper()));
+    public static <N, E> void write(Graph<N, E> graph, Appendable a, boolean startHasNewID) throws IOException {
+        writeRaw(graph, a, toDOTVisualizationHelper(graph.getVisualizationHelper()), startHasNewID);
     }
 
     public static <N, E> void write(List<Graph<N, E>> graphs, Appendable a) throws IOException {
         writeRaw(graphs, a);
+    }
+
+    public static <N, E> void write(List<Graph<N, E>> graphs, Appendable a, boolean startHasNewID) throws IOException {
+        writeRaw(graphs, a, startHasNewID);
     }
 
     /**
@@ -159,6 +167,13 @@ public final class GraphDOT {
         write(graph, a, Arrays.asList(additionalHelpers));
     }
 
+    public static <N, E> void write(Graph<N, E> graph,
+                                    Appendable a,
+                                    List<VisualizationHelper<N, ? super E>> additionalHelpers) throws IOException {
+
+        write(graph, a, additionalHelpers, false);
+    }
+
     /**
      * Renders a {@link Graph} in the GraphVIZ DOT format.
      *
@@ -174,14 +189,20 @@ public final class GraphDOT {
      */
     public static <N, E> void write(Graph<N, E> graph,
                                     Appendable a,
-                                    List<VisualizationHelper<N, ? super E>> additionalHelpers) throws IOException {
+                                    List<VisualizationHelper<N, ? super E>> additionalHelpers,
+                                    boolean startHasNewID) throws IOException {
 
         final List<VisualizationHelper<N, ? super E>> helpers = new ArrayList<>(additionalHelpers.size() + 1);
 
         helpers.add(graph.getVisualizationHelper());
         helpers.addAll(additionalHelpers);
 
-        writeRaw(graph, a, toDOTVisualizationHelper(helpers));
+        writeRaw(graph, a, toDOTVisualizationHelper(helpers), startHasNewID);
+    }
+
+    private static <N, E> void writeRaw(Graph<N, E> graph, Appendable a, DOTVisualizationHelper<N, ? super E> dotHelper)
+            throws IOException {
+        writeRaw(graph, a, dotHelper, false);
     }
 
     /**
@@ -197,19 +218,24 @@ public final class GraphDOT {
      * @throws IOException
      *         if writing to {@code a} fails
      */
-    private static <N, E> void writeRaw(Graph<N, E> graph, Appendable a, DOTVisualizationHelper<N, ? super E> dotHelper)
+    private static <N, E> void writeRaw(Graph<N, E> graph, Appendable a, DOTVisualizationHelper<N, ? super E> dotHelper, boolean startHasNewID)
             throws IOException {
 
         final boolean directed = !(graph instanceof UndirectedGraph);
 
         writeGraphHeader(directed, a, dotHelper);
 
-        writeGraphContent(graph, a, dotHelper, 0);
+        writeGraphContent(graph, a, dotHelper, 0, startHasNewID);
 
         writeGraphFooter(a, dotHelper);
     }
 
     private static <N, E> void writeRaw(List<Graph<N, E>> graphs, Appendable a)
+            throws IOException {
+        writeRaw(graphs, a, false);
+    }
+
+    private static <N, E> void writeRaw(List<Graph<N, E>> graphs, Appendable a, boolean startHasNewID)
             throws IOException {
 
         if(graphs.size()<=0)
@@ -224,7 +250,7 @@ public final class GraphDOT {
         for(int i = 0; i<graphs.size(); ++i){
             String id = ""+i;
             a.append("subgraph component").append(id).append('{').append(System.lineSeparator());
-            nextID = writeGraphContent(graphs.get(i), a, toDOTVisualizationHelper(graphs.get(i).getVisualizationHelper()), nextID);
+            nextID = writeGraphContent(graphs.get(i), a, toDOTVisualizationHelper(graphs.get(i).getVisualizationHelper()), nextID, startHasNewID);
             a.append('}');
         }
 
@@ -259,7 +285,7 @@ public final class GraphDOT {
         a.append(System.lineSeparator());
     }
 
-    private static <N, E> int writeGraphContent(Graph<N, E> graph, Appendable a, DOTVisualizationHelper<N, ? super E> dotHelper, int startID) throws IOException {
+    private static <N, E> int writeGraphContent(Graph<N, E> graph, Appendable a, DOTVisualizationHelper<N, ? super E> dotHelper, int startID, boolean startHasNewID) throws IOException {
         MutableMapping<N, @Nullable String> nodeNames = graph.createStaticNodeMapping();
         Set<String> initialNodes = new HashSet<>();
 
@@ -326,7 +352,10 @@ public final class GraphDOT {
 
         if (!initialNodes.isEmpty()) {
             a.append(System.lineSeparator());
-            renderInitialArrowTip(initialNodes, a, startID);//i++);
+            if(startHasNewID)
+                renderInitialArrowTip(initialNodes, a, i++);
+            else
+                renderInitialArrowTip(initialNodes, a, startID);//i++);
         }
 
         return i;
