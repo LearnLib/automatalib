@@ -16,10 +16,12 @@
 package net.automatalib.ts.modal;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.common.collect.UnmodifiableIterator;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import net.automatalib.automata.AutomatonCreator;
@@ -41,24 +43,26 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembershipEdgePropertyImpl>
         implements MutableModalContract<Integer, I, MTSTransition<I, ModalContractMembershipEdgePropertyImpl>, ModalContractMembershipEdgePropertyImpl> {
 
-    protected HashSet<I> communicationAlphabet;
+    protected LinkedHashSet<I> communicationAlphabet;
 
     public MembershipMC(Alphabet<I> alphabet, Alphabet<I> gamma) {
         super(alphabet);
-        this.communicationAlphabet = new HashSet<>(gamma);
+        this.communicationAlphabet = Sets.newLinkedHashSet(gamma);
 
         assert new HashSet<>(alphabet).containsAll(gamma) : "Communication alphabet needs to be a subset of alphabet";
     }
 
     public MembershipMC(Alphabet<I> alphabet) {
         super(alphabet);
-        this.communicationAlphabet = new HashSet<>();
+        this.communicationAlphabet = Sets.newLinkedHashSetWithExpectedSize(alphabet.size() / 2);
     }
 
-    public void addCommunicationSymbol(I symbol) {
-        communicationAlphabet.add(symbol);
+    public boolean addCommunicationSymbol(I symbol) {
+        boolean wasNotPresent = communicationAlphabet.add(symbol);
 
         assert getInputAlphabet().contains(symbol) : "Communication alphabet needs to be a subset of alphabet";
+
+        return wasNotPresent;
     }
 
     public void removeCommunicationSymbol(I symbol) {
@@ -66,9 +70,13 @@ public class MembershipMC<I> extends AbstractCompactMTS<I, ModalContractMembersh
     }
 
     public void setCommunicationAlphabet(Collection<I> alphabet) {
-        communicationAlphabet = new HashSet<>(alphabet);
+        communicationAlphabet = Sets.newLinkedHashSet(alphabet);
 
         assert new HashSet<>(alphabet).containsAll(communicationAlphabet) : "Communication alphabet needs to be a subset of alphabet";
+    }
+
+    public void clearCommunicationAlphabet() {
+        communicationAlphabet.clear();
     }
 
     @Override
