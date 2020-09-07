@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import net.automatalib.automata.AutomatonCreator;
@@ -204,27 +205,29 @@ public final class MTSUtil {
         return result;
     }
 
-    public static <S, I, T, TP extends ModalEdgeProperty> ModalTransitionSystem<?, I, ?, ? extends ModalEdgeProperty> toLTS(ModalTransitionSystem<S, I, T, TP> mts,
+    public static <S, I, T, TP extends ModalEdgeProperty> ModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> toLTS(ModalTransitionSystem<S, I, T, TP> mts,
                                                                                                                             TransitionPredicate<S, I, T> transFilter){
         return toLTS(mts,
                 transFilter,
-                mts.getInputAlphabet().stream().collect(Collectors.toMap(i -> i, i -> i)));
+                Function.identity());
     }
 
-    public static <S, I, T, TP extends ModalEdgeProperty> ModalTransitionSystem<?, I, ?, ? extends ModalEdgeProperty> toLTS(ModalTransitionSystem<S, I, T, TP> mts,
+    public static <S, I, T, TP extends ModalEdgeProperty> ModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> toLTS(ModalTransitionSystem<S, I, T, TP> mts,
                                                                                                                             TransitionPredicate<S, I, T> transFilter,
-                                                                                                                            Map<I,I> inputMapping){
-        CompactMTS<I> result = new CompactMTS<>(Alphabets.fromCollection(inputMapping.values()));//(mts.getInputAlphabet());
+                                                                                                                            Function<I, I> inputMapping){
+
+
+        CompactMTS<I> result = new CompactMTS<>(Alphabets.fromList(mts.getInputAlphabet().stream().map(inputMapping).collect(Collectors.toList())));
 
         AutomatonLowLevelCopy.copy(AutomatonCopyMethod.DFS,
                                    mts,
                                    mts.getInputAlphabet(),
                                    result,
-                                   inputMapping::get,
+                                   inputMapping,
                                    sp -> null,
                                    tp -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST),
                                    sf -> true,
-                                   (s, i, t) -> true);
+                                   transFilter);
 
         return result;
     }
