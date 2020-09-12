@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Correctly enquote outputs containing whitespaces in `TAFWriter` ([#37](https://github.com/LearnLib/automatalib/issues/37), thanks to [Alexander Schieweck](https://github.com/aschieweck)).
 * Fixed a bug in the `Graph` representation of `AbstractOneSEVPA`s ([#39](https://github.com/LearnLib/automatalib/pull/39), thanks to [DonatoClun](https://github.com/DonatoClun)).
+* Fixed wrong default values in the overloaded methods of the `Minimizer` class ([#41](https://github.com/LearnLib/automatalib/issues/41)).
 * Replaced the 3rd-party DOT parser with our own implementation to fix the issue that multi-edges between nodes were not properly handled.
 
 
