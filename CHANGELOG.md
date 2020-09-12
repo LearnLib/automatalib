@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 * We overhauled the handling of input and output streams for all (de-)serializers. Input and output streams are no longer closed automatically. This is to prevent asymmetric code where we would close a stream that we haven't opened. This is problematic in cases where e.g. `System.out` is passed as an output stream to simply print a serialized automaton and the `System.out` stream would be closed afterwards. Since input and output streams are usually opened in client-code, they should be closed in client-code as well. We suggest to simply wrap calls to the serializers in a try-with-resource block.
-* Due to the DOT parsers rewrite (see **Fixed**), the attribute parser now receive a `Map<String, String>` instead of a `Map<String, Object>`.
+* Due to the DOT parsers rewrite (see **Fixed**), the attribute parsers now receive a `Map<String, String>` instead of a `Map<String, Object>`.
 
 
 ### Removed
