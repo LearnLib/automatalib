@@ -217,7 +217,7 @@ public class MCUtil {
                                                                          gamma,
                                                                          CompactDFA::new,
                                                                          Closures.toClosureOperator(modalContract, alphabet, (s, i, t) -> !gamma.contains(i)),
-                                                                         (s, i, t) -> gamma.contains(i));
+                                                                         (s, i, t) -> gamma.contains(i) & !modalContract.getTransitionProperty(t).isRed());
 
         CompactDFA<I> dfa = res.getSecond();
         Map<Set<S>, Integer> mapping = res.getFirst();
