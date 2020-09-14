@@ -172,6 +172,8 @@ public class RegressionTests {
 
         CompactMTS<String> context = MTSUtil.conjunction(greenContext, redContext);
 
+        MTSUtil.saveMTSToPath(context, "src/test/resource/phil3-actual"+ testCase.context);
+
         Assert.assertTrue(MTSUtil.isRefinementOf(instance.context, context, context.getInputAlphabet()));
     }
 
