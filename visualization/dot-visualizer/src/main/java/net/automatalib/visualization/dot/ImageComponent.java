@@ -31,6 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -112,7 +113,8 @@ public class ImageComponent extends JComponent {
      * @param img
      *         the image to be displayed
      */
-    public void setImage(@Nullable BufferedImage img) {
+    public void setImage(@UnknownInitialization(ImageComponent.class) ImageComponent this,
+                         @Nullable BufferedImage img) {
         this.img = img;
         Dimension dim;
         if (img != null) {

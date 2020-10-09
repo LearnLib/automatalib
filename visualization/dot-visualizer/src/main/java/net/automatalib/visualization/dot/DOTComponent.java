@@ -36,31 +36,8 @@ public class DOTComponent extends ImageComponent {
 
     private final String dot;
 
-    private final Action saveDotAction = new AbstractAction("Save DOT") {
+    private final Action saveDotAction;
 
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser saveDlg = new JFileChooser();
-            saveDlg.setFileFilter(DOTMisc.DOT_FILTER);
-            int result = saveDlg.showSaveDialog(DOTComponent.this);
-            if (result != JFileChooser.APPROVE_OPTION) {
-                return;
-            }
-            try (Writer w = IOUtil.asBufferedUTF8Writer(saveDlg.getSelectedFile())) {
-                w.write(dot);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(DOTComponent.this,
-                                              "Could not save DOT file: " + ex.getMessage(),
-                                              "Cannot save DOT",
-                                              JOptionPane.ERROR_MESSAGE);
-            }
-        }
-
-    };
-
-    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public DOTComponent(Reader dotReader) throws IOException {
         StringBuilder sb = new StringBuilder();
 
@@ -71,6 +48,26 @@ public class DOTComponent extends ImageComponent {
 
         super.setImage(img);
         this.dot = dot;
+        this.saveDotAction = new AbstractAction("Save DOT") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser saveDlg = new JFileChooser();
+                saveDlg.setFileFilter(DOTMisc.DOT_FILTER);
+                int result = saveDlg.showSaveDialog(DOTComponent.this);
+                if (result != JFileChooser.APPROVE_OPTION) {
+                    return;
+                }
+                try (Writer w = IOUtil.asBufferedUTF8Writer(saveDlg.getSelectedFile())) {
+                    w.write(dot);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(DOTComponent.this,
+                                                  "Could not save DOT file: " + ex.getMessage(),
+                                                  "Cannot save DOT",
+                                                  JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        };
     }
 
     @Override

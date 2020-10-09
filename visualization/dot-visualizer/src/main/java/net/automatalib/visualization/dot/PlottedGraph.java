@@ -27,6 +27,7 @@ import javax.swing.JOptionPane;
 
 import com.google.common.io.CharStreams;
 import net.automatalib.commons.util.IOUtil;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 final class PlottedGraph {
 
@@ -34,7 +35,6 @@ final class PlottedGraph {
     private String dotText;
     private BufferedImage image;
 
-    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     PlottedGraph(String name, Reader dotText) throws IOException {
         this.name = name;
 
@@ -44,7 +44,7 @@ final class PlottedGraph {
         updateDOTText(sb.toString());
     }
 
-    public boolean updateDOTText(String dotText) {
+    public boolean updateDOTText(@UnknownInitialization PlottedGraph this, String dotText) {
         try {
             try (InputStream pngIs = DOT.runDOT(dotText, "png")) {
                 this.image = ImageIO.read(pngIs);

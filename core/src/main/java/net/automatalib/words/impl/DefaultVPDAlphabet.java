@@ -38,7 +38,6 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPD
         this(new MapAlphabet<>(internalSymbols), new MapAlphabet<>(callSymbols), new MapAlphabet<>(returnSymbols));
     }
 
-    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public DefaultVPDAlphabet(final Alphabet<I> internalAlphabet,
                               final Alphabet<I> callAlphabet,
                               final Alphabet<I> returnAlphabet) {

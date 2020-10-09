@@ -40,7 +40,6 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
 
     protected int[] transitions;
 
-    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public AbstractCompactSimpleDeterministic(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
         this.transitions = new int[stateCapacity * numInputs()];

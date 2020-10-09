@@ -77,10 +77,10 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractIncrementa
     @Override
     protected Collection<AnnotatedEdge<Node<I, O>, I, O>> getOutgoingEdges(Node<I, O> node) {
 
-        final Map<I, @Nullable Edge<Node<I, O>, O>> outEdges = node.getOutEdges();
+        final Map<I, Edge<Node<I, O>, O>> outEdges = node.getOutEdges();
         final List<AnnotatedEdge<Node<I, O>, I, O>> result = new ArrayList<>(outEdges.size());
 
-        for (Map.Entry<I, @Nullable Edge<Node<I, O>, O>> e : outEdges.entrySet()) {
+        for (Map.Entry<I, Edge<Node<I, O>, O>> e : outEdges.entrySet()) {
             if (e.getValue() != null) {
                 result.add(new AnnotatedEdge<>(e.getValue(), e.getKey()));
             }

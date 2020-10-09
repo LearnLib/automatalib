@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.google.common.io.CharStreams;
@@ -58,6 +59,24 @@ public final class ProcessUtil {
 
     /**
      * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
+     * process. Discards any output of the process.
+     *
+     * @param commandLine
+     *         the list of command line arguments to run
+     *
+     * @return the exit code of the process
+     *
+     * @throws IOException
+     *         if an exception occurred while reading the process' outputs
+     * @throws InterruptedException
+     *         if an exception occurred during process exception
+     */
+    public static int invokeProcess(List<String> commandLine) throws IOException, InterruptedException {
+        return invokeProcess(commandLine, null, new NOPConsumer());
+    }
+
+    /**
+     * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
      * process. Additionally allows to supply an input stream to the invoked program. Discards any output of the
      * process.
      *
@@ -79,6 +98,27 @@ public final class ProcessUtil {
 
     /**
      * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
+     * process. Additionally allows to supply an input stream to the invoked program. Discards any output of the
+     * process.
+     *
+     * @param commandLine
+     *         the list of command line arguments to run
+     * @param input
+     *         the input passed to the program
+     *
+     * @return the exit code of the process
+     *
+     * @throws IOException
+     *         if an exception occurred while reading the process' outputs, or writing the process' inputs
+     * @throws InterruptedException
+     *         if an exception occurred during process exception
+     */
+    public static int invokeProcess(List<String> commandLine, Reader input) throws IOException, InterruptedException {
+        return invokeProcess(commandLine, input, new NOPConsumer());
+    }
+
+    /**
+     * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
      * process. Outputs of the process (both normal and error) are passed to the {@code consumer}.
      *
      * @param commandLine
@@ -94,6 +134,27 @@ public final class ProcessUtil {
      *         if an exception occurred during process exception
      */
     public static int invokeProcess(String[] commandLine, Consumer<String> consumer)
+            throws IOException, InterruptedException {
+        return invokeProcess(commandLine, null, new DelegatingConsumer(consumer));
+    }
+
+    /**
+     * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
+     * process. Outputs of the process (both normal and error) are passed to the {@code consumer}.
+     *
+     * @param commandLine
+     *         the list of command line arguments to run
+     * @param consumer
+     *         the consumer for the program's output
+     *
+     * @return the exit code of the process
+     *
+     * @throws IOException
+     *         if an exception occurred while reading the process' outputs
+     * @throws InterruptedException
+     *         if an exception occurred during process exception
+     */
+    public static int invokeProcess(List<String> commandLine, Consumer<String> consumer)
             throws IOException, InterruptedException {
         return invokeProcess(commandLine, null, new DelegatingConsumer(consumer));
     }
@@ -122,10 +183,44 @@ public final class ProcessUtil {
         return invokeProcess(commandLine, input, new DelegatingConsumer(consumer));
     }
 
+    /**
+     * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
+     * process. Additionally allows to supply an input stream to the invoked program. Outputs of the process (both
+     * normal and error) are passed to the {@code consumer}.
+     *
+     * @param commandLine
+     *         the list of command line arguments to run
+     * @param input
+     *         the input passed to the program
+     * @param consumer
+     *         the consumer for the program's output
+     *
+     * @return the exit code of the process
+     *
+     * @throws IOException
+     *         if an exception occurred while reading the process' outputs, or writing the process' inputs
+     * @throws InterruptedException
+     *         if an exception occurred during process exception
+     */
+    public static int invokeProcess(List<String> commandLine, Reader input, Consumer<String> consumer)
+            throws IOException, InterruptedException {
+        return invokeProcess(commandLine, input, new DelegatingConsumer(consumer));
+    }
+
     private static int invokeProcess(String[] commandLine, @Nullable Reader input, InputStreamConsumer consumer)
             throws IOException, InterruptedException {
+        return invokeProcess(new ProcessBuilder(commandLine), input, consumer);
+    }
 
-        final ProcessBuilder processBuilder = new ProcessBuilder(commandLine);
+    private static int invokeProcess(List<String> commandLine, @Nullable Reader input, InputStreamConsumer consumer)
+            throws IOException, InterruptedException {
+        return invokeProcess(new ProcessBuilder(commandLine), input, consumer);
+    }
+
+    private static int invokeProcess(ProcessBuilder processBuilder,
+                                     @Nullable Reader input,
+                                     InputStreamConsumer consumer) throws IOException, InterruptedException {
+
         processBuilder.redirectErrorStream(true);
         final Process process = processBuilder.start();
 

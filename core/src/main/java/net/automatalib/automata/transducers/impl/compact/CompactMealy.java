@@ -32,7 +32,6 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
     private int[] transitions;
     private @Nullable Object[] outputs;
 
-    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     public CompactMealy(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
 

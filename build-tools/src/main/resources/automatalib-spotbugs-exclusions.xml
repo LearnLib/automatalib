@@ -22,6 +22,19 @@ limitations under the License.
         <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
     </Match>
     <Match>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+        <Or>
+            <And>
+                <!-- Fine according to JavaDoc -->
+                <Class name="net.automatalib.commons.smartcollections.AbstractLinkedList"/>
+                <Or>
+                    <Method name="popBack" returns="java.lang.Object"/>
+                    <Method name="popFront" returns="java.lang.Object"/>
+                </Or>
+            </And>
+        </Or>
+    </Match>
+    <Match>
         <!-- TODO: mostly due to performance. However, usage should be checked again -->
         <Bug pattern="EI_EXPOSE_REP2"/>
         <Class name="net.automatalib.util.partitionrefinement.PaigeTarjan"/>
@@ -75,31 +88,6 @@ limitations under the License.
             <Class name="net.automatalib.modelcheckers.ltsmin.SimpleCharStream"/>
             <Class name="net.automatalib.modelcheckers.ltsmin.Token"/>
             <Class name="net.automatalib.modelcheckers.ltsmin.TokenMgrError"/>
-        </Or>
-    </Match>
-    <Match>
-        <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/756 -->
-        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
-        <Or>
-            <Class name="net.automatalib.serialization.aut.InternalAUTParser"/>
-            <Class name="net.automatalib.serialization.dot.DOTSerializationProvider"/>
-            <And>
-                <Class name="net.automatalib.serialization.fsm.parser.AbstractFSM2MealyParser"/>
-                <Method name="readModel" returns="net.automatalib.automata.transducers.impl.compact.CompactMealy" params="java.io.InputStream"/>
-            </And>
-            <And>
-                <Class name="net.automatalib.serialization.fsm.parser.FSM2DFAParser"/>
-                <Method name="readModel" returns="net.automatalib.automata.fsa.impl.compact.CompactDFA" params="java.io.InputStream"/>
-            </And>
-            <Class name="net.automatalib.visualization.dot.DOTComponent$1"/>
-            <Class name="net.automatalib.visualization.dot.GraphVizBrowserVisualizationProvider"/>
-            <Class name="net.automatalib.visualization.dot.PlottedGraph"/>
-        </Or>
-    </Match>
-    <Match>
-        <!-- False-positive on Java 11. See https://github.com/spotbugs/spotbugs/issues/259 -->
-        <Or>
-            <Class name="net.automatalib.commons.util.lib.LibLoader"/>
         </Or>
     </Match>
 </FindBugsFilter>

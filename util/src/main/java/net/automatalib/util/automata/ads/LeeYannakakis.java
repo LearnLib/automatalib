@@ -414,6 +414,7 @@ public final class LeeYannakakis {
                                                                                           pendingPartition,
                                                                                           implicationGraph.size(),
                                                                                           successor);
+                    assert path != null; // by construction should never be null
                     final Word<I> word =
                             path.edgeList().stream().map(CompactEdge::getProperty).collect(Word.collector());
 
