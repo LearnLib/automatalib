@@ -197,6 +197,12 @@ limitations under the License.
         <profile>
             <id>cf</id>
             <dependencies>
+                <!-- utility dependency so that the classloader can correctly resolve annotations -->
+                <dependency>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                    <version>${jsr305.version}</version>
+                </dependency>
                 <dependency>
                     <groupId>com.google.errorprone</groupId>
                     <artifactId>javac</artifactId>
