@@ -17,7 +17,6 @@ package net.automatalib.commons.util.lib;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -63,15 +62,7 @@ public final class LibLoader {
         try {
             tmpDir = Files.createTempDirectory(getClass().getName());
             tmpDir.toFile().deleteOnExit();
-            Field field = ClassLoader.class.getDeclaredField("usr_paths");
-            field.setAccessible(true);
-            String[] paths = (String[]) field.get(null);
-            assert paths != null;
-            String[] newPaths = new String[paths.length + 1];
-            System.arraycopy(paths, 0, newPaths, 0, paths.length);
-            newPaths[paths.length] = tmpDir.toString();
-            field.set(null, newPaths);
-        } catch (IOException | IllegalAccessException | NoSuchFieldException ex) {
+        } catch (IOException ex) {
             LOG.error("Error setting up classloader for custom library loading.", ex);
             LOG.error("Loading of shipped libraries will fail");
         }
