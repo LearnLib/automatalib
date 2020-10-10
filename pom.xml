@@ -210,7 +210,7 @@ limitations under the License.
         <metainf-services.version>1.8</metainf-services.version>
         <mockito.version>3.5.13</mockito.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <testng.version>7.3.0</testng.version>
+        <testng.version>7.1.0</testng.version>
 
         <!-- Javadoc links -->
         <brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
