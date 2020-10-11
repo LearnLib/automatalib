@@ -59,10 +59,13 @@ public class ImageComponent extends JComponent {
                 return;
             }
             File f = chooser.getSelectedFile();
+            if (img == null) {
+                throw new IllegalStateException("No image has been set");
+            }
+            if (f == null) {
+                throw new IllegalStateException("No file has been selected");
+            }
             try {
-                if (img == null) {
-                    throw new IllegalStateException("No image has been set");
-                }
                 ImageIO.write(img, "png", f);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(ImageComponent.this,

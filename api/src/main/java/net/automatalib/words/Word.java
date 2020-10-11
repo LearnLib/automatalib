@@ -84,7 +84,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         WORD_SYMBOL_DELIM_RIGHT = settings.getProperty(AutomataLibProperty.WORD_SYMBOL_DELIM_RIGHT, "");
     }
 
-    public static <I> Comparator<Word<? extends I>> canonicalComparator(Comparator<? super I> symComparator) {
+    public static <I> Comparator<Word<I>> canonicalComparator(Comparator<? super I> symComparator) {
         return new CanonicalWordComparator<>(symComparator);
     }
 

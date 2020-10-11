@@ -249,8 +249,14 @@ limitations under the License.
                                     </annotationProcessors>
                                     <compilerArgs>
                                         <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
-                                        <arg>-AskipDefs=net\.automatalib\.(serialization\.taf\.parser|serialization\.dot|modelcheckers\.ltsmin)\.(Internal.*|Token.*|SimpleCharStream)</arg> <!-- generated classes -->
-                                        <arg>-AskipUses=^com\.google|^java\.(awt|util\.Arrays|io\.StreamTokenizer)|^javax\.swing</arg>
+                                        <arg>-AskipDefs=^net.automatalib.serialization.taf.parser.(Internal.*|Token.*|SimpleCharStream)|\
+                                                        ^net.automatalib.serialization.dot.(Internal.*|Token.*|SimpleCharStream)|\
+                                                        ^net.automatalib.modelcheckers.ltsmin.(Internal.*|Token.*|SimpleCharStream)|\
+                                        </arg>
+                                        <arg>-AskipUses=^com.google.*|\
+                                                        ^java.(awt.*|util.Arrays|io.StreamTokenizer)|\
+                                                        ^javax.swing.*|\
+                                        </arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
                                         <arg>-AassumeAssertionsAreEnabled</arg>
                                         <arg>-Astubs=jdk8.astub:collection-object-parameters-may-be-null.astub</arg>

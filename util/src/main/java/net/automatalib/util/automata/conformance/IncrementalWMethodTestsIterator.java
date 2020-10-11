@@ -162,16 +162,16 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 
     }
 
-    private static final class ItemComparator<I> implements Comparator<Item<? extends I>> {
+    private static final class ItemComparator<I> implements Comparator<Item<I>> {
 
-        private final Comparator<? super Word<? extends I>> canonicalCmp;
+        private final Comparator<Word<I>> canonicalCmp;
 
         ItemComparator(Comparator<? super I> symComparator) {
             this.canonicalCmp = Word.canonicalComparator(symComparator);
         }
 
         @Override
-        public int compare(Item<? extends I> o1, Item<? extends I> o2) {
+        public int compare(Item<I> o1, Item<I> o2) {
             int cmp = canonicalCmp.compare(o1.middle, o2.middle);
             if (cmp != 0) {
                 return cmp;

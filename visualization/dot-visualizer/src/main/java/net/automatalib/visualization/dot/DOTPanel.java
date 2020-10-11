@@ -35,6 +35,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,34 +48,11 @@ public class DOTPanel extends JPanel {
     private final ImageComponent imgComponent;
     private final JList<PlottedGraph> listBox;
     private final DefaultListModel<PlottedGraph> graphs;
-    private final Action saveDotAction = new AbstractDisabledAction("Save DOT") {
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            saveDOT();
-        }
-    };
-    private final Action savePngAction = new AbstractDisabledAction("Save PNG") {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            savePNG();
-        }
-    };
-    private final Action renameAction = new AbstractDisabledAction("Rename") {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            rename();
-        }
-    };
-    private final Action clearAction = new AbstractAction("Clear") {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            clear();
-        }
-    };
+    private final Action saveDotAction;
+    private final Action savePngAction;
+    private final Action renameAction;
+    private final Action clearAction;
 
     public DOTPanel() {
         setLayout(new GridBagLayout());
@@ -95,6 +74,36 @@ public class DOTPanel extends JPanel {
         c.gridheight = 1;
         this.graphs = new DefaultListModel<>();
         listBox = new JList<>(graphs);
+
+        saveDotAction = new AbstractDisabledAction("Save DOT") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveDOT();
+            }
+        };
+        savePngAction = new AbstractDisabledAction("Save PNG") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                savePNG();
+            }
+        };
+        renameAction = new AbstractDisabledAction("Rename") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rename();
+            }
+        };
+        clearAction = new AbstractAction("Clear") {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clear();
+            }
+        };
+
         listBox.addListSelectionListener(e -> {
             int idx = listBox.getSelectedIndex();
             boolean activeSelection = (idx != -1);
@@ -137,7 +146,8 @@ public class DOTPanel extends JPanel {
         return clearAction;
     }
 
-    public void saveDOT() {
+    @RequiresNonNull("listBox")
+    public void saveDOT(@UnknownInitialization(JPanel.class) DOTPanel this) {
         PlottedGraph pg = listBox.getSelectedValue();
         if (pg == null) {
             JOptionPane.showMessageDialog(this,
@@ -162,7 +172,8 @@ public class DOTPanel extends JPanel {
         }
     }
 
-    public void savePNG() {
+    @RequiresNonNull("listBox")
+    public void savePNG(@UnknownInitialization(JPanel.class) DOTPanel this) {
         PlottedGraph pg = listBox.getSelectedValue();
         if (pg == null) {
             JOptionPane.showMessageDialog(this,
@@ -203,11 +214,13 @@ public class DOTPanel extends JPanel {
         graphs.addElement(pg);
     }
 
-    public void clear() {
+    @RequiresNonNull("graphs")
+    public void clear(@UnknownInitialization(JPanel.class) DOTPanel this) {
         graphs.clear();
     }
 
-    public void rename() {
+    @RequiresNonNull("listBox")
+    public void rename(@UnknownInitialization(JPanel.class) DOTPanel this) {
         PlottedGraph pg = listBox.getSelectedValue();
         if (pg == null) {
             JOptionPane.showMessageDialog(this,

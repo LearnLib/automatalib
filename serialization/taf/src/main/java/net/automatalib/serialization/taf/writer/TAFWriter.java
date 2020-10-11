@@ -192,7 +192,6 @@ public final class TAFWriter {
         if (symbols.isEmpty()) {
             out.append("{}");
         } else if (symbols.size() == 1) {
-            @SuppressWarnings("nullness") // the above 'if' guarantees the existence of the element
             Object sym = symbols.iterator().next();
             StringUtil.enquoteIfNecessary(String.valueOf(sym), out, ID_PATTERN);
         } else {
