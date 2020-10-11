@@ -2,9 +2,14 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.10.0-SNAPSHOT] - Unreleased
+## [0.11.0-SNAPSHOT] - Unreleased
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.9.0...HEAD)
+
+
+## [0.10.0-SNAPSHOT](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11
+
+[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.9.0...automatalib-0.10.0)
 
 ### Added
 
