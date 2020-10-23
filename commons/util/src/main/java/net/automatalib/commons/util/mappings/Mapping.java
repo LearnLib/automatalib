@@ -36,6 +36,11 @@ import java.util.function.Function;
 @FunctionalInterface
 public interface Mapping<D, R> extends Function<D, R> {
 
+    @Override
+    default R apply(D elem) {
+        return get(elem);
+    }
+
     /**
      * Get the range object <code>elem</code> maps to.
      *
@@ -44,10 +49,5 @@ public interface Mapping<D, R> extends Function<D, R> {
      *
      * @return the object from the range corresponding to <code>elem</code>.
      */
-    @Override
-    default R apply(D elem) {
-        return get(elem);
-    }
-
     R get(D elem);
 }
