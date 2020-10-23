@@ -72,9 +72,11 @@ public final class Pair<T1, T2> extends AbstractPrintable implements Serializabl
 
     @Override
     public void print(Appendable a) throws IOException {
+        a.append('(');
         StringUtil.appendObject(a, first);
         a.append(", ");
         StringUtil.appendObject(a, second);
+        a.append(')');
     }
 
     @Override
