@@ -85,7 +85,7 @@ limitations under the License.
             </roles>
             <properties>
                 <picUrl>
-                    https://davidschmidt.dev/img/profile.jpg
+                    http://gravatar.com/avatar/e88eaff66c6e05c0e97cf336b9adba66.png
                 </picUrl>
             </properties>
         </contributor>
