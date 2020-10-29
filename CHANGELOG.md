@@ -4,12 +4,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.11.0-SNAPSHOT] - Unreleased
 
-[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.9.0...HEAD)
+[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.10.0...HEAD)
 
 
 ### Fixed
 
-* Fixed as cache consistency bug in various DAG-based incremental builders.
+* Fixed a cache consistency bug in various DAG-based incremental builders.
 
 
 ## [0.10.0-SNAPSHOT](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11
