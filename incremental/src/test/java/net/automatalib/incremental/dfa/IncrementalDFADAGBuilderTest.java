@@ -15,8 +15,16 @@
  */
 package net.automatalib.incremental.dfa;
 
+import java.io.IOException;
+import java.util.List;
+
+import net.automatalib.commons.util.Pair;
+import net.automatalib.incremental.IntegrationUtil;
+import net.automatalib.incremental.IntegrationUtil.ParsedTraces;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
@@ -27,4 +35,26 @@ public class IncrementalDFADAGBuilderTest extends AbstractIncrementalDFABuilderT
         return new IncrementalDFADAGBuilder<>(alphabet);
     }
 
+    /**
+     * This tests case validates a set of traces from an external system which exposed an issue in confluence
+     * propagation.
+     */
+    @Test
+    public void testIntegration() throws IOException {
+        final ParsedTraces<Integer, Boolean> parsedData = IntegrationUtil.parseDFATraces();
+        final Alphabet<Integer> alphabet = parsedData.alphabet;
+        final List<Pair<Word<Integer>, Boolean>> traces = parsedData.traces;
+
+        final IncrementalDFABuilder<Integer> cache = createIncrementalDFABuilder(alphabet);
+
+        // test insertion without errors
+        for (Pair<Word<Integer>, Boolean> trace : traces) {
+            cache.insert(trace.getFirst(), trace.getSecond());
+        }
+
+        // test caching properties
+        for (Pair<Word<Integer>, Boolean> trace : traces) {
+            Assert.assertEquals(trace.getSecond().booleanValue(), cache.lookup(trace.getFirst()).toBoolean());
+        }
+    }
 }

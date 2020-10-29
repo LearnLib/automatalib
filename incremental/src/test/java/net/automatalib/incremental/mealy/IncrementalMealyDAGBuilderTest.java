@@ -15,8 +15,16 @@
  */
 package net.automatalib.incremental.mealy;
 
+import java.io.IOException;
+import java.util.List;
+
+import net.automatalib.commons.util.Pair;
+import net.automatalib.incremental.IntegrationUtil;
+import net.automatalib.incremental.IntegrationUtil.ParsedTraces;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
@@ -27,4 +35,26 @@ public class IncrementalMealyDAGBuilderTest extends AbstractIncrementalMealyBuil
         return new IncrementalMealyDAGBuilder<>(alphabet);
     }
 
+    /**
+     * This tests case validates a set of traces from an external system which exposed an issue in confluence
+     * propagation.
+     */
+    @Test
+    public void testIntegration() throws IOException {
+        final ParsedTraces<Integer, Word<Integer>> parsedData = IntegrationUtil.parseMealyTraces();
+        final Alphabet<Integer> alphabet = parsedData.alphabet;
+        final List<Pair<Word<Integer>, Word<Integer>>> traces = parsedData.traces;
+
+        final IncrementalMealyBuilder<Integer, Integer> cache = createIncrementalMealyBuilder(alphabet);
+
+        // test insertion without errors
+        for (Pair<Word<Integer>, Word<Integer>> trace : traces) {
+            cache.insert(trace.getFirst(), trace.getSecond());
+        }
+
+        // test caching properties
+        for (Pair<Word<Integer>, Word<Integer>> trace : traces) {
+            Assert.assertEquals(trace.getSecond(), cache.lookup(trace.getFirst()));
+        }
+    }
 }

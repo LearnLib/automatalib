@@ -297,6 +297,8 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         register.remove(sig);
         sig.successors.array[idx] = succ;
         sig.acceptance = acc;
+        succ.increaseIncoming();
+        sig.updateHashCode();
         return replaceOrRegister(state);
     }
 

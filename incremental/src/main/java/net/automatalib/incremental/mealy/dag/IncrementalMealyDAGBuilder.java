@@ -217,6 +217,19 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
 
         if (last != init) {
             last = unhide(last, suffTransIdx, suffixState, suffTransOut);
+
+            // the suffixState be part of our current path and become confluent due to un-hiding
+            if (suffixState.isConfluence()) {
+                // update the reference with whatever state comes first
+                final Iterator<PathElem<O>> iter = path.descendingIterator();
+                while (iter.hasNext()) {
+                    final State<O> s = iter.next().state;
+                    if (s == conf || s == suffixState) {
+                        conf = s;
+                        break;
+                    }
+                }
+            }
         } else {
             updateInitSignature(suffTransIdx, suffixState, suffTransOut);
         }
