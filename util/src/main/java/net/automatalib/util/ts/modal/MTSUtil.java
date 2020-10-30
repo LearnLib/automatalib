@@ -92,18 +92,21 @@ public final class MTSUtil {
     }
 
     public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(ModalTransitionSystem<S, I, T, TP> mts, String path) throws IOException {
+        Files.createDirectories(Paths.get(path).getParent());
         try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
             GraphDOT.write(mts.graphView(), writer);
         }
     }
 
     public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(List<ModalTransitionSystem<S, I, T, TP>> mtss, String path) throws IOException {
+        Files.createDirectories(Paths.get(path).getParent());
         try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
             GraphDOT.write(mtss.stream().map(g->g.graphView()).collect(Collectors.toList()), writer);
         }
     }
 
     public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(List<ModalTransitionSystem<S, I, T, TP>> mtss, String path, boolean startHasNewID) throws IOException {
+        Files.createDirectories(Paths.get(path).getParent());
         try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
             GraphDOT.write(mtss.stream().map(g->g.graphView()).collect(Collectors.toList()), writer, startHasNewID);
         }
