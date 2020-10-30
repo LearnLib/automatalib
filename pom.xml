@@ -76,6 +76,14 @@ limitations under the License.
             </roles>
         </contributor>
         <contributor>
+            <name>Maximilian Schlüter</name>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
             <name>David Schmidt</name>
             <email>david3.schmidt@tu-dortmund.de</email>
             <organization>TU Dortmund, Chair for Programming Systems</organization>
