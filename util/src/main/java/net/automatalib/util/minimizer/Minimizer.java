@@ -83,7 +83,7 @@ public final class Minimizer<S, L> {
      * @return the result structure.
      */
     public static <S, L> MinimizationResult<S, L> minimize(UniversalGraph<S, ?, ?, L> graph) {
-        return minimize(graph, Collections.emptyList());
+        return minimize(graph, graph.getNodes());
     }
 
     public static <S, L> MinimizationResult<S, L> minimize(UniversalGraph<S, ?, ?, L> graph,
@@ -166,8 +166,8 @@ public final class Minimizer<S, L> {
         return result;
     }
 
-    public <E> MinimizationResult<S, L> performMinimization(UniversalGraph<S, E, ?, L> graph) {
-        return performMinimization(graph, Collections.emptyList());
+    public MinimizationResult<S, L> performMinimization(UniversalGraph<S, ?, ?, L> graph) {
+        return performMinimization(graph, graph.getNodes());
     }
 
     /**

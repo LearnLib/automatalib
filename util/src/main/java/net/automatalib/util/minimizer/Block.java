@@ -69,7 +69,6 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
      * @param states
      *         creates a block for the given collection of states. Ownership of this collection is assumed.
      */
-    @SuppressWarnings("initialization") // all immutable fields are initialized when passing 'this'
     Block(int id, UnorderedCollection<State<S, L>> states) {
         this.id = id;
         this.states = states;

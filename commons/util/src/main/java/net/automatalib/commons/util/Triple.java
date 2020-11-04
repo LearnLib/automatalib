@@ -80,11 +80,13 @@ public final class Triple<T1, T2, T3> extends AbstractPrintable implements Seria
 
     @Override
     public void print(Appendable a) throws IOException {
+        a.append('(');
         StringUtil.appendObject(a, first);
         a.append(", ");
         StringUtil.appendObject(a, second);
         a.append(", ");
         StringUtil.appendObject(a, third);
+        a.append(')');
     }
 
     @Override

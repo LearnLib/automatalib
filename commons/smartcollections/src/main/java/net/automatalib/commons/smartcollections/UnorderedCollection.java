@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+
 /**
  * This class implements a collection for storing objects in no particular order.
  * <p>
@@ -61,14 +63,14 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
      * @param coll
      *         the collection.
      */
-    @SuppressWarnings("initialization") // addAll only access initialized data structures
     public UnorderedCollection(Collection<? extends E> coll) {
         this(coll.size());
         addAll(coll);
     }
 
     @Override
-    public boolean ensureCapacity(int minCapacity) {
+    public boolean ensureCapacity(@UnknownInitialization(UnorderedCollection.class) UnorderedCollection<E> this,
+                                  int minCapacity) {
         return storage.ensureCapacity(minCapacity);
     }
 
@@ -185,7 +187,8 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
     }
 
     @Override
-    public boolean addAll(Collection<? extends E> coll) {
+    public boolean addAll(@UnknownInitialization(UnorderedCollection.class) UnorderedCollection<E> this,
+                          Collection<? extends E> coll) {
         if (coll.isEmpty()) {
             return false;
         }

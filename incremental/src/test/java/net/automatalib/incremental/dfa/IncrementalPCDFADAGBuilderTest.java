@@ -15,8 +15,16 @@
  */
 package net.automatalib.incremental.dfa;
 
+import java.io.IOException;
+import java.util.List;
+
+import net.automatalib.commons.util.Pair;
+import net.automatalib.incremental.IntegrationUtil;
+import net.automatalib.incremental.IntegrationUtil.ParsedTraces;
 import net.automatalib.incremental.dfa.dag.IncrementalPCDFADAGBuilder;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Test
@@ -27,4 +35,38 @@ public class IncrementalPCDFADAGBuilderTest extends AbstractIncrementalPCDFABuil
         return new IncrementalPCDFADAGBuilder<>(alphabet);
     }
 
+    /**
+     * This tests case validates a set of traces from an external system which exposed an issue in confluence
+     * propagation.
+     */
+    @Test
+    public void testIntegration() throws IOException {
+        final ParsedTraces<Integer, Boolean> parsedData = IntegrationUtil.parseDFATraces();
+        final Alphabet<Integer> alphabet = parsedData.alphabet;
+        final List<Pair<Word<Integer>, Boolean>> traces = parsedData.traces;
+
+        Assert.assertTrue(IntegrationUtil.isPrefixClosed(traces));
+
+        final IncrementalDFABuilder<Integer> cache = createIncrementalPCDFABuilder(alphabet);
+
+        // test insertion without errors
+        for (Pair<Word<Integer>, Boolean> trace : traces) {
+            cache.insert(trace.getFirst(), trace.getSecond());
+        }
+
+        // test caching properties
+        for (Pair<Word<Integer>, Boolean> trace : traces) {
+            final Word<Integer> word = trace.getFirst();
+            final boolean accepted = trace.getSecond();
+
+            Assert.assertEquals(accepted, cache.lookup(word).toBoolean());
+
+            // test prefix-closedness
+            if (accepted) {
+                for (Word<Integer> prefix : word.prefixes(false)) {
+                    Assert.assertTrue(cache.lookup(prefix).toBoolean());
+                }
+            }
+        }
+    }
 }

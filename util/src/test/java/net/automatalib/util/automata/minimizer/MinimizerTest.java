@@ -15,14 +15,23 @@
  */
 package net.automatalib.util.automata.minimizer;
 
+import java.util.function.Function;
+
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.graphs.TransitionEdge.Property;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.util.minimizer.Block;
+import net.automatalib.util.minimizer.MinimizationResult;
+import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.impl.Alphabets;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class MinimizerTest extends AbstractMinimizationTest {
 
@@ -49,5 +58,36 @@ public class MinimizerTest extends AbstractMinimizationTest {
     @Override
     protected boolean supportsPartial() {
         return true;
+    }
+
+    /**
+     * Test-case issue <a href="https://github.com/LearnLib/automatalib/issues/41">#41</a>.
+     */
+    @Test
+    public void testIssue41() {
+        testIssue41Internal(dfa -> Minimizer.minimize(dfa.transitionGraphView()));
+        testIssue41Internal(dfa -> Minimizer.<Integer, Property<Character, Void>>getLocalInstance().performMinimization(
+                dfa.transitionGraphView()));
+    }
+
+    private void testIssue41Internal(Function<CompactDFA<Character>, MinimizationResult<Integer, ?>> minimizer) {
+        final Alphabet<Character> alphabet = Alphabets.characters('a', 'b');
+        final CompactDFA<Character> dfa = new CompactDFA<>(alphabet);
+
+        final Integer initialState = dfa.addInitialState(false);
+        final Integer stateAfterA = dfa.addState(true);
+        final Integer stateAfterB = dfa.addState(true);
+        dfa.setTransition(initialState, (Character) 'a', stateAfterA);
+        dfa.setTransition(initialState, (Character) 'b', stateAfterB);
+
+        final MinimizationResult<Integer, ?> result = minimizer.apply(dfa);
+        Assert.assertEquals(result.getNumBlocks(), 2);
+
+        final Block<Integer, ?> initBlock = result.getBlockForState(initialState);
+        final Block<Integer, ?> afterABlock = result.getBlockForState(stateAfterA);
+        final Block<Integer, ?> afterBBlock = result.getBlockForState(stateAfterB);
+
+        Assert.assertEquals(afterABlock, afterBBlock);
+        Assert.assertNotEquals(initBlock, afterABlock);
     }
 }

@@ -31,6 +31,7 @@ import net.automatalib.automata.concepts.StateLocalInput;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -329,7 +330,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
         return alphabet.getSymbolIndex(input);
     }
 
-    public final int numInputs() {
+    public final int numInputs(@UnknownInitialization(AbstractCompact.class) AbstractCompact<I, T, SP, TP> this) {
         return alphabetSize;
     }
 

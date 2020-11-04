@@ -29,6 +29,7 @@ import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +89,6 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @see AbstractLTSmin
      */
-    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     protected AbstractLTSmin(boolean keepFiles, Function<String, I> string2Input) {
         this.keepFiles = keepFiles;
         this.string2Input = string2Input;
@@ -103,7 +103,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      *
      * @return the major version.
      */
-    protected abstract LTSminVersion getMinimumRequiredVersion();
+    protected abstract LTSminVersion getMinimumRequiredVersion(@UnknownInitialization(AbstractLTSmin.class) AbstractLTSmin<I, A, R> this);
 
     /**
      * Returns the extra command line options that should be given to the etf2lts-mc binary.
@@ -265,11 +265,9 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
     }
 
     static int runCommandLine(List<String> commandLine) {
-        final String[] commands = new String[commandLine.size()];
-        commandLine.toArray(commands);
         try {
-            LOGGER.debug("Invoking LTSmin binary as: {}", String.join(" ", commands));
-            return ProcessUtil.invokeProcess(commands, LOGGER::debug);
+            LOGGER.debug("Invoking LTSmin binary as: {}", String.join(" ", commandLine));
+            return ProcessUtil.invokeProcess(commandLine, LOGGER::debug);
         } catch (IOException | InterruptedException e) {
             throw new ModelCheckingException(e);
         }

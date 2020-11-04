@@ -25,6 +25,7 @@ import net.automatalib.graphs.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.VPDAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract class for 1-SEVPAs that implements functionality shared across different subtypes.
@@ -49,11 +50,7 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
     }
 
     @Override
-    public State<L> getTransition(final State<L> state, final I input) {
-        if (state.isSink()) {
-            return State.getSink();
-        }
-
+    public @Nullable State<L> getTransition(final State<L> state, final I input) {
         final L loc = state.getLocation();
         final VPDAlphabet.SymbolType type = alphabet.getSymbolType(input);
         switch (type) {
@@ -63,19 +60,19 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
             case RETURN: {
                 final StackContents contents = state.getStackContents();
                 if (contents == null) {
-                    return State.getSink();
+                    return null;
                 }
                 final int stackElem = contents.peek();
                 final L succ = getReturnSuccessor(loc, input, stackElem);
                 if (succ == null) {
-                    return State.getSink();
+                    return null;
                 }
                 return new State<>(succ, contents.pop());
             }
             case INTERNAL: {
                 final L succ = getInternalSuccessor(loc, input);
                 if (succ == null) {
-                    return State.getSink();
+                    return null;
                 }
                 return new State<>(succ, state.getStackContents());
             }

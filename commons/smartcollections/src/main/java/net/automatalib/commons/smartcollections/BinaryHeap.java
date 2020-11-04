@@ -22,6 +22,7 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -42,7 +43,6 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     // Number of entries in the queue.
     private int size;
 
-    @SuppressWarnings("initialization") // downHeap only accesses initialized data structures
     protected BinaryHeap(int initCapacity, Collection<? extends E> initValues, Comparator<? super E> comparator) {
         this(Math.max(initCapacity, initValues.size()), comparator);
         int i = 0;
@@ -63,7 +63,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     /**
      * Move an element downwards inside the heap, until all of its children have a key greater or equal to its own.
      */
-    private void downHeap(int idx) {
+    private void downHeap(@UnknownInitialization(BinaryHeap.class) BinaryHeap<E> this, int idx) {
         Reference<E> e = entries.array[idx];
 
         int iter = idx;
@@ -96,7 +96,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     /**
      * Checks whether the entry at the specified index has at least one child.
      */
-    private boolean hasChildren(int idx) {
+    private boolean hasChildren(@UnknownInitialization(BinaryHeap.class) BinaryHeap<E> this, int idx) {
         return idx * 2 < size;
     }
 
@@ -110,7 +110,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     /**
      * Checks whether the entry at the specified index has two children.
      */
-    private boolean hasRightChild(int idx) {
+    private boolean hasRightChild(@UnknownInitialization(BinaryHeap.class) BinaryHeap<E> this, int idx) {
         return idx * 2 + 1 < size;
     }
 
@@ -124,7 +124,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     /**
      * Compares the referenced elements.
      */
-    private int compare(Reference<E> e1, Reference<E> e2) {
+    private int compare(@UnknownInitialization(BinaryHeap.class) BinaryHeap<E> this, Reference<E> e1, Reference<E> e2) {
         return comparator.compare(e1.element, e2.element);
     }
 

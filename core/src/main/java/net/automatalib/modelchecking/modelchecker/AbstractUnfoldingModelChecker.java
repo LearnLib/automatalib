@@ -17,6 +17,7 @@ package net.automatalib.modelchecking.modelchecker;
 
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 /**
  * An {@link ModelCheckerLasso} that can unfold loops of lassos.
@@ -66,7 +67,6 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, 
      * @throws IllegalArgumentException
      *         when {@code minimumUnfolds < 1 || multiplier < 0.0}.
      */
-    @SuppressWarnings("initialization") // replace with https://github.com/typetools/checker-framework/issues/1590
     protected AbstractUnfoldingModelChecker(int minimumUnfolds, double multiplier) {
         setMinimumUnfolds(minimumUnfolds);
         setMultiplier(multiplier);
@@ -79,7 +79,8 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, 
     }
 
     @Override
-    public void setMinimumUnfolds(int minimumUnfolds) {
+    public void setMinimumUnfolds(@UnknownInitialization AbstractUnfoldingModelChecker<I, A, P, L> this,
+                                  int minimumUnfolds) {
         if (minimumUnfolds < 1) {
             throw new IllegalArgumentException("must unfold at least once");
         }
@@ -87,7 +88,8 @@ public abstract class AbstractUnfoldingModelChecker<I, A, P, L extends Lasso<I, 
     }
 
     @Override
-    public void setMultiplier(double multiplier) {
+    public void setMultiplier(@UnknownInitialization AbstractUnfoldingModelChecker<I, A, P, L> this,
+                              double multiplier) {
         if (multiplier < 0.0) {
             throw new IllegalArgumentException("multiplier must be >= 0.0");
         }

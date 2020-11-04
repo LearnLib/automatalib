@@ -26,6 +26,7 @@ import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
 import net.automatalib.modelchecking.modelchecker.AbstractUnfoldingModelChecker;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -64,7 +65,7 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
     }
 
     @Override
-    protected LTSminVersion getMinimumRequiredVersion() {
+    protected LTSminVersion getMinimumRequiredVersion(@UnknownInitialization(AbstractLTSmin.class) AbstractLTSminLTL<I, A, L> this) {
         return REQUIRED_VERSION;
     }
 

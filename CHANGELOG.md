@@ -2,9 +2,19 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.10.0-SNAPSHOT] - Unreleased
+## [0.11.0-SNAPSHOT] - Unreleased
 
-[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.9.0...HEAD)
+[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.10.0...HEAD)
+
+
+### Fixed
+
+* Fixed a cache consistency bug in various DAG-based incremental builders.
+
+
+## [0.10.0-SNAPSHOT](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11
+
+[Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.9.0...automatalib-0.10.0)
 
 ### Added
 
@@ -14,7 +24,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 
 * We overhauled the handling of input and output streams for all (de-)serializers. Input and output streams are no longer closed automatically. This is to prevent asymmetric code where we would close a stream that we haven't opened. This is problematic in cases where e.g. `System.out` is passed as an output stream to simply print a serialized automaton and the `System.out` stream would be closed afterwards. Since input and output streams are usually opened in client-code, they should be closed in client-code as well. We suggest to simply wrap calls to the serializers in a try-with-resource block.
-* Due to the DOT parsers rewrite (see **Fixed**), the attribute parser now receive a `Map<String, String>` instead of a `Map<String, Object>`.
+* Due to the DOT parsers rewrite (see **Fixed**), the attribute parsers now receive a `Map<String, String>` instead of a `Map<String, Object>`.
+* The `State` class (used by the `OneSEVPA` automaton) not longer supports the notion of a sink state. The `AbstractOneSEVPA` class now conforms with the default semantics of a `DeterministicTransitionSystem` that undefined transitions simply return `null`.
 
 
 ### Removed
@@ -26,6 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Correctly enquote outputs containing whitespaces in `TAFWriter` ([#37](https://github.com/LearnLib/automatalib/issues/37), thanks to [Alexander Schieweck](https://github.com/aschieweck)).
 * Fixed a bug in the `Graph` representation of `AbstractOneSEVPA`s ([#39](https://github.com/LearnLib/automatalib/pull/39), thanks to [DonatoClun](https://github.com/DonatoClun)).
+* Fixed wrong default values in the overloaded methods of the `Minimizer` class ([#41](https://github.com/LearnLib/automatalib/issues/41)).
 * Replaced the 3rd-party DOT parser with our own implementation to fix the issue that multi-edges between nodes were not properly handled.
 
 

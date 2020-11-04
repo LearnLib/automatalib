@@ -116,6 +116,21 @@ public abstract class AbstractVPDAlphabet<I> extends AbstractAlphabet<I> impleme
     }
 
     @Override
+    public boolean isCallSymbol(I symbol) {
+        return this.callAlphabet.containsSymbol(symbol);
+    }
+
+    @Override
+    public boolean isInternalSymbol(I symbol) {
+        return this.internalAlphabet.containsSymbol(symbol);
+    }
+
+    @Override
+    public boolean isReturnSymbol(I symbol) {
+        return this.returnAlphabet.containsSymbol(symbol);
+    }
+
+    @Override
     public int size() {
         return internalAlphabet.size() + callAlphabet.size() + returnAlphabet.size();
     }

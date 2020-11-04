@@ -52,8 +52,9 @@ public class DOTFrame extends JFrame {
                 DOTFrame.this.dispatchEvent(new WindowEvent(DOTFrame.this, WindowEvent.WINDOW_CLOSING));
             }
         });
-        setJMenuBar(new JMenuBar());
-        getJMenuBar().add(menu);
+        JMenuBar jMenuBar = new JMenuBar();
+        jMenuBar.add(menu);
+        setJMenuBar(jMenuBar);
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();

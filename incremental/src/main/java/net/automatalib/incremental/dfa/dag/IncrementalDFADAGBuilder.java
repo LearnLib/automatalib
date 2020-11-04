@@ -17,6 +17,7 @@ package net.automatalib.incremental.dfa.dag;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
 
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.Acceptance;
@@ -158,6 +159,19 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
 
             if (last != init) {
                 last = unhide(last, suffTransIdx, suffixState);
+
+                // the suffixState be part of our current path and become confluent due to un-hiding
+                if (suffixState.isConfluence()) {
+                    // update the reference with whatever state comes first
+                    final Iterator<PathElem> iter = path.descendingIterator();
+                    while (iter.hasNext()) {
+                        final State s = iter.next().state;
+                        if (s == conf || s == suffixState) {
+                            conf = s;
+                            break;
+                        }
+                    }
+                }
             } else {
                 updateInitSignature(suffTransIdx, suffixState);
             }

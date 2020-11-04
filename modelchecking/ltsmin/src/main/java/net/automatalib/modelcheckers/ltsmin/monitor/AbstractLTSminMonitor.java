@@ -21,6 +21,7 @@ import java.util.function.Function;
 import com.google.common.collect.Lists;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 /**
  * An LTSmin model checker for monitors.
@@ -45,7 +46,7 @@ public abstract class AbstractLTSminMonitor<I, A, R> extends AbstractLTSmin<I, A
     }
 
     @Override
-    protected LTSminVersion getMinimumRequiredVersion() {
+    protected LTSminVersion getMinimumRequiredVersion(@UnknownInitialization(AbstractLTSmin.class) AbstractLTSminMonitor<I, A, R> this) {
         return REQUIRED_VERSION;
     }
 

@@ -44,7 +44,7 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     //protected TIntSet[] transitions;
     protected @Nullable Set<Integer>[] transitions; // TODO: replace by primitive specialization
 
-    @SuppressWarnings({"unchecked", "initialization"})
+    @SuppressWarnings("unchecked")
     public AbstractCompactSimpleNondet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
 

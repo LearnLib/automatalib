@@ -19,7 +19,7 @@ import java.util.Comparator;
 
 import net.automatalib.commons.util.comparison.CmpUtil;
 
-class CanonicalWordComparator<I> implements Comparator<Word<? extends I>> {
+class CanonicalWordComparator<I> implements Comparator<Word<I>> {
 
     private final Comparator<? super I> symComparator;
 
@@ -28,7 +28,7 @@ class CanonicalWordComparator<I> implements Comparator<Word<? extends I>> {
     }
 
     @Override
-    public int compare(Word<? extends I> o1, Word<? extends I> o2) {
+    public int compare(Word<I> o1, Word<I> o2) {
         int ldiff = o1.length() - o2.length();
         if (ldiff != 0) {
             return ldiff;

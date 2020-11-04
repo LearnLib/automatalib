@@ -31,6 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -58,10 +59,13 @@ public class ImageComponent extends JComponent {
                 return;
             }
             File f = chooser.getSelectedFile();
+            if (img == null) {
+                throw new IllegalStateException("No image has been set");
+            }
+            if (f == null) {
+                throw new IllegalStateException("No file has been selected");
+            }
             try {
-                if (img == null) {
-                    throw new IllegalStateException("No image has been set");
-                }
                 ImageIO.write(img, "png", f);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(ImageComponent.this,
@@ -112,7 +116,8 @@ public class ImageComponent extends JComponent {
      * @param img
      *         the image to be displayed
      */
-    public void setImage(@Nullable BufferedImage img) {
+    public void setImage(@UnknownInitialization(ImageComponent.class) ImageComponent this,
+                         @Nullable BufferedImage img) {
         this.img = img;
         Dimension dim;
         if (img != null) {
