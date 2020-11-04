@@ -19,12 +19,17 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import net.automatalib.graphs.BidirectionalGraph;
-import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author msc
@@ -42,7 +47,7 @@ public class CompactMTSTest {
         final ModalEdgeProperty tprop1 = new ModalEdgePropertyImpl(null);
         final ModalEdgeProperty tprop2 = new ModalEdgePropertyImpl(ModalType.MAY);
 
-        return new Object[][] {{mts, s0, s1, 'a', tprop1}, {mts, s0, s2, 'd', tprop2}};
+        return new Object[][] {{mts, s0, s1, 'a', tprop1}, {mts, s0, s2, 'd', tprop2}, {mts, s2, s0, 'a', tprop2}};
     }
 
     @Test(dataProvider = "default", description = "Add Transition with non-null Property")
@@ -144,4 +149,80 @@ public class CompactMTSTest {
         Assert.assertTrue(mts.getIncomingEdges(dest).contains(t));
     }
 
+
+    @Test(description = "Example graph from Japser")
+    void testJasper() {
+        final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
+        final CompactMTS<String> s = new CompactMTS<>(alphabet);
+
+        final Integer as0 = s.addInitialState();
+        final Integer as1 = s.addState();
+        final Integer as2 = s.addState();
+
+        final MTSTransition<String, MutableModalEdgeProperty> t1 = s.addTransition(as0, "a", as0, new ModalEdgePropertyImpl(ModalType.MUST));
+        final MTSTransition<String, MutableModalEdgeProperty> t2 = s.addTransition(as0, "b", as1, new ModalEdgePropertyImpl(ModalType.MUST));
+        final MTSTransition<String, MutableModalEdgeProperty> t3 = s.addTransition(as1, "a", as1, new ModalEdgePropertyImpl(ModalType.MUST));
+        final MTSTransition<String, MutableModalEdgeProperty> t4 = s.addTransition(as1, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+        final MTSTransition<String, MutableModalEdgeProperty> t5 = s.addTransition(as2, "a", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+        final MTSTransition<String, MutableModalEdgeProperty> t6 = s.addTransition(as2, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+
+        assertThat(s.getTransitions(as0, "a"))
+                .hasSize(1)
+                .extracting("target")
+                .containsExactly(as0);
+
+        assertThat(s.getSource(t1))
+                .as("Source of 0 -a-> 0 is 0")
+                .isEqualTo(as0);
+        assertThat(s.getSource(t2))
+                .as("Source of 0 -b-> 1 is 0")
+                .isEqualTo(as0);
+        assertThat(s.getSource(t3))
+                .as("Source of 1 -a-> 1 is 1")
+                .isEqualTo(as1);
+        assertThat(s.getSource(t4))
+                .as("Source of 1 -b-> 2 is 1")
+                .isEqualTo(as1);
+        assertThat(s.getSource(t5))
+                .as("Source of 2 -a-> 2 is 2")
+                .isEqualTo(as2);
+        assertThat(s.getSource(t6))
+                .as("Source of 2 -b-> 2 is 2")
+                .isEqualTo(as2);
+
+        assertThat(s.getTransitions(as0, "b"))
+                .hasSize(1)
+                .allMatch(t -> t.getTarget() == as1)
+                .allMatch(t -> t.getProperty().getType() == ModalType.MUST)
+                .allMatch(t -> "b".equals(t.getLabel()))
+                .allMatch(t -> t.getSource() == as0);
+
+        assertThat(s.getTransitions(as1, "a"))
+                .hasSize(1)
+                .allMatch(t -> t.getTarget() == as1)
+                .allMatch(t -> t.getProperty().getType() == ModalType.MUST)
+                .allMatch(t -> "a".equals(t.getLabel()))
+                .allMatch(t -> t.getSource() == as1);
+
+        assertThat(s.getTransitions(as1, "b"))
+                .hasSize(1)
+                .allMatch(t -> t.getTarget() == as2)
+                .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
+                .allMatch(t -> "b".equals(t.getLabel()))
+                .allMatch(t -> t.getSource() == as1);
+
+        assertThat(s.getTransitions(as2, "a"))
+                .hasSize(1)
+                .allMatch(t -> t.getTarget() == as2)
+                .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
+                .allMatch(t -> "a".equals(t.getLabel()))
+                .allMatch(t -> t.getSource() == as2);
+
+        assertThat(s.getTransitions(as2, "b"))
+                .hasSize(1)
+                .allMatch(t -> t.getTarget() == as2)
+                .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
+                .allMatch(t -> "b".equals(t.getLabel()))
+                .allMatch(t -> t.getSource() == as2);
+    }
 }

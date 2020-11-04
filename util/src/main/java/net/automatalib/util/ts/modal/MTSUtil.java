@@ -15,23 +15,47 @@
  */
 package net.automatalib.util.ts.modal;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import static net.automatalib.util.ts.modal.Subgraphs.SubgraphType.DISREGARD_UNKNOWN_LABELS;
 
 import com.google.common.collect.Sets;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import net.automatalib.automata.AutomatonCreator;
+import net.automatalib.automata.UniversalAutomaton;
+import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.fsa.NFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.serialization.dot.DOTParsers;
+import net.automatalib.serialization.dot.GraphDOT;
+import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.ModalEdgeProperty;
+import net.automatalib.ts.modal.MTSTransition;
+import net.automatalib.ts.modal.ModalContract;
+import net.automatalib.ts.modal.Transition;
+import net.automatalib.ts.modal.transitions.GroupMemberEdge;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
-import net.automatalib.ts.modal.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
+import net.automatalib.util.fixedpoint.Worksets;
+import net.automatalib.util.graphs.Graphs;
+import net.automatalib.util.graphs.sssp.SSSPResult;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.impl.Alphabets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,112 +71,83 @@ public final class MTSUtil {
         // prevent instantiation
     }
 
-    public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> conjunction(
+    public static CompactMTS<String> loadMTSFromPath(String path) throws IOException {
+        Path file = Paths.get(path);
+        if (!Files.exists(file) || !file.toString().endsWith(".dot")) {
+            throw new FileNotFoundException("Expected "+path+" to be an existing .dot file!");
+        }
 
-            ModalTransitionSystem<S0, I, T0, TP0> mc0, ModalTransitionSystem<S1, I, T1, TP1> mc1) {
-        return conjunction(mc0, mc1, CompactMTS::new);
+        return DOTParsers.mts().readModel(file.toFile()).model;
+    }
+
+    public static CompactMTS<String> loadMTSFromPath(String path, Alphabet<String> inputAlphabet) throws IOException {
+        Path file = Paths.get(path);
+        if (!Files.exists(file) || !file.toString().endsWith(".dot")) {
+            throw new FileNotFoundException("Expected "+path+" to be an existing .dot file!");
+        }
+
+        CompactMTS.Creator<String> creator = new CompactMTS.Creator<>(inputAlphabet);
+
+        return DOTParsers.mts(creator, DOTParsers.DEFAULT_EDGE_PARSER, DOTParsers.DEFAULT_MTS_EDGE_PARSER).readModel(file.toFile()).model;
+    }
+
+    public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(ModalTransitionSystem<S, I, T, TP> mts, String path) throws IOException {
+        Files.createDirectories(Paths.get(path).getParent());
+        try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
+            GraphDOT.write(mts.graphView(), writer);
+        }
+    }
+
+    public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(List<ModalTransitionSystem<S, I, T, TP>> mtss, String path) throws IOException {
+        Files.createDirectories(Paths.get(path).getParent());
+        try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
+            GraphDOT.write(mtss.stream().map(g->g.graphView()).collect(Collectors.toList()), writer);
+        }
+    }
+
+    public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(List<ModalTransitionSystem<S, I, T, TP>> mtss, String path, boolean startHasNewID) throws IOException {
+        Files.createDirectories(Paths.get(path).getParent());
+        try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
+            GraphDOT.write(mtss.stream().map(g->g.graphView()).collect(Collectors.toList()), writer, startHasNewID);
+        }
+    }
+
+    public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> conjunction(
+            ModalTransitionSystem<S0, I, T0, TP0> mts0, ModalTransitionSystem<S1, I, T1, TP1> mts1) {
+        return conjunction(mts0, mts1, CompactMTS::new);
     }
 
     public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> A conjunction(
-            ModalTransitionSystem<S0, I, T0, TP0> mc0,
-            ModalTransitionSystem<S1, I, T1, TP1> mc1,
+            ModalTransitionSystem<S0, I, T0, TP0> mts0,
+            ModalTransitionSystem<S1, I, T1, TP1> mts1,
             AutomatonCreator<A, I> creator) {
-        return Workset.map(new ModalConjunction<>(mc0, mc1, creator)).getSecond();
+        return conjunctionWithMapping(mts0, mts1, creator).getSecond();
+    }
+
+    public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> Pair<Map<Pair<S0, S1>, S>, A> conjunctionWithMapping(
+            ModalTransitionSystem<S0, I, T0, TP0> mts0,
+            ModalTransitionSystem<S1, I, T1, TP1> mts1,
+            AutomatonCreator<A, I> creator) {
+        return Worksets.map(new ModalConjunction<>(mts0, mts1, creator));
     }
 
     public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> compose(
-
-            ModalTransitionSystem<S0, I, T0, TP0> mc0, ModalTransitionSystem<S1, I, T1, TP1> mc1) {
-        return compose(mc0, mc1, CompactMTS::new);
+            ModalTransitionSystem<S0, I, T0, TP0> mts0, ModalTransitionSystem<S1, I, T1, TP1> mts1) {
+        return compose(mts0, mts1, CompactMTS::new);
     }
 
     public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> A compose(
-            ModalTransitionSystem<S0, I, T0, TP0> mc0,
-            ModalTransitionSystem<S1, I, T1, TP1> mc1,
+            ModalTransitionSystem<S0, I, T0, TP0> mts0,
+            ModalTransitionSystem<S1, I, T1, TP1> mts1,
             AutomatonCreator<A, I> creator) {
-        return Workset.map(new ModalParallelComposition<>(mc0, mc1, creator)).getSecond();
+        return composeWithMapping(mts0, mts1, creator).getSecond();
     }
 
-    public static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> Set<Pair<AS, BS>> refinementRelation(
-            ModalTransitionSystem<AS, I, AT, ATP> a,
-            ModalTransitionSystem<BS, I, BT, BTP> b,
-            Collection<I> inputs) {
-
-        Set<Pair<AS, BS>> refinement = Sets.newHashSetWithExpectedSize(a.size() * b.size());
-        Set<Pair<AS, BS>> change = Sets.newHashSetWithExpectedSize(a.size() * b.size());
-
-        for (AS p : a.getStates()) {
-            for (BS q : b.getStates()) {
-
-                for (I sym : inputs) {
-                    if (a.getTransitions(p, sym).isEmpty() || !b.getTransitions(q, sym).isEmpty()) {
-                        LOGGER.debug("Adding pair ({},{})", p, q);
-                        change.add(Pair.of(p, q));
-                        break;
-                    }
-                }
-            }
-        }
-
-        Set<Pair<AS, BS>> swap;
-        boolean forall, exists;
-        while (!refinement.equals(change)) {
-            swap = change;
-            change = refinement;
-            refinement = swap;
-            change.clear();
-
-            LOGGER.debug("Pairs {}", refinement);
-
-            for (Pair<AS, BS> p : refinement) {
-                LOGGER.debug("Checking {}", p);
-
-                forall = true;
-                for (I sym : inputs) {
-                    for (AT t : a.getTransitions(p.getFirst(), sym)) {
-                        LOGGER.debug("Searching corresponding transition for {}", t);
-
-                        exists = false;
-                        for (BT f : b.getTransitions(p.getSecond(), sym)) {
-                            if (a.getTransitionProperty(t).isMust() && b.getTransitionProperty(f).isMayOnly()) {
-                                continue;
-                            }
-                            assert (a.getTransitionProperty(t).isMayOnly() || a.getTransitionProperty(t).isMust()) &&
-                                   (b.getTransitionProperty(f).isMayOnly() || b.getTransitionProperty(f).isMust()) :
-                                    "Transitions have to be may-only or must. Null or other values are not allowed.";
-
-                            for (Pair<AS, BS> s : refinement) {
-                                if (a.getSuccessor(t).equals(s.getFirst()) && b.getSuccessor(f).equals(s.getSecond())) {
-                                    LOGGER.debug("Found transition {}", f);
-                                    exists = true;
-                                    break;
-                                }
-                            }
-                            if (exists) {
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            LOGGER.info("Found no corresponding transition for {}", t);
-                            forall = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (forall) {
-                    LOGGER.debug("Keeping {}", p);
-                    change.add(p);
-                } else {
-                    LOGGER.debug("Removing {}", p);
-                }
-            }
-
-        }
-        LOGGER.info("Refinement relation {}", change);
-
-        return change;
-
+    public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> Pair<Map<Pair<S0, S1>, S>, A> composeWithMapping(
+            ModalTransitionSystem<S0, I, T0, TP0> mts0,
+            ModalTransitionSystem<S1, I, T1, TP1> mts1,
+            AutomatonCreator<A, I> creator) {
+        return Worksets.map(new ModalParallelComposition<>(mts0, mts1, creator));
     }
 
     public static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> boolean isRefinementOf(
@@ -160,10 +155,10 @@ public final class MTSUtil {
             ModalTransitionSystem<BS, I, BT, BTP> b,
             Collection<I> input) {
 
-        final Set<Pair<AS, BS>> refinement = refinementRelation(a, b, input);
+        final Set<Pair<AS, BS>> refinement = ModalRefinement.refinementRelation(a, b, input);
 
-        final Set<AS> statesA = new HashSet<>(a.getStates());
-        final Set<BS> statesB = new HashSet<>(b.getStates());
+        final Set<AS> statesA = new HashSet<>(a.getInitialStates());
+        final Set<BS> statesB = new HashSet<>(b.getInitialStates());
 
         for (Pair<AS, BS> p : refinement) {
             statesA.remove(p.getFirst());
@@ -173,6 +168,27 @@ public final class MTSUtil {
         LOGGER.info("Counterexamples: {}, {}", statesA, statesB);
 
         return statesA.isEmpty() && statesB.isEmpty();
+    }
+
+    public static <S, I, T, SP, TP> Set<S> reachableSubset(UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP> ts,
+                                                           Collection<I> inputs,
+                                                           Set<S> states) {
+        Pair<Map<Set<S>, Integer>, CompactDFA<I>>
+                graphView = Subgraphs.subgraphView(new CompactDFA.Creator<>(), DISREGARD_UNKNOWN_LABELS, ts, inputs);
+
+        SSSPResult<Integer, ?> ssspResult = Graphs.findSSSP(graphView.getSecond().transitionGraphView(), graphView.getSecond().getInitialState(), e -> 1);
+
+        HashSet<S> reachableStates = new HashSet<>();
+        for (Map.Entry<Set<S>, Integer> entry : graphView.getFirst().entrySet()) {
+            Set<S> reachableSubset = Sets.intersection(states, entry.getKey());
+            if (!reachableSubset.isEmpty()) {
+                if (ssspResult.getShortestPathDistance(entry.getValue()) != Graphs.INVALID_DISTANCE) {
+                    reachableStates.addAll(reachableSubset);
+                }
+            }
+        }
+
+        return reachableStates;
     }
 
     public static <S, I, T, TP extends ModalEdgeProperty> NFA<?, I> asNFA(ModalTransitionSystem<S, I, T, TP> mts,
@@ -188,6 +204,33 @@ public final class MTSUtil {
                                       tp -> null,
                                       sf -> true,
                                       (s, i, t) -> maximal || mts.getTransitionProperty(t).isMust());
+
+        return result;
+    }
+
+    public static <S, I, T, TP extends ModalEdgeProperty> ModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> toLTS(ModalTransitionSystem<S, I, T, TP> mts,
+                                                                                                                            TransitionPredicate<S, I, T> transFilter){
+        return toLTS(mts,
+                transFilter,
+                Function.identity());
+    }
+
+    public static <S, I, T, TP extends ModalEdgeProperty> ModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> toLTS(ModalTransitionSystem<S, I, T, TP> mts,
+                                                                                                                            TransitionPredicate<S, I, T> transFilter,
+                                                                                                                            Function<I, I> inputMapping){
+
+
+        CompactMTS<I> result = new CompactMTS<>(Alphabets.fromList(mts.getInputAlphabet().stream().map(inputMapping).collect(Collectors.toList())));
+
+        AutomatonLowLevelCopy.copy(AutomatonCopyMethod.DFS,
+                                   mts,
+                                   mts.getInputAlphabet(),
+                                   result,
+                                   inputMapping,
+                                   sp -> null,
+                                   tp -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST),
+                                   sf -> true,
+                                   transFilter);
 
         return result;
     }

@@ -15,57 +15,46 @@
  */
 package net.automatalib.ts.modal;
 
-import java.util.Map;
+import java.util.Collection;
 import java.util.Set;
 
-import net.automatalib.visualization.DelegateVisualizationHelper;
+import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.graphs.TransitionEdge.Property;
+import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
+import net.automatalib.automata.visualization.MCVisualizationHelper;
+import net.automatalib.graphs.UniversalGraph;
+import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 
 public interface ModalContract<S, I, T, TP extends ModalContractEdgeProperty>
         extends ModalTransitionSystem<S, I, T, TP> {
 
-    Set<T> getRedTransitions();
-
+    /**
+     * Get communication alphabet.
+     *
+     * Returns the communication alphabet of this contract. It is a subset of {@link #getInputAlphabet()}
+     * and contains all symbols, which are shared between parallel components and thus require synchronization.
+     *
+     * @return A possibly unmodifiable view of the communication alphabet.
+     */
     Alphabet<I> getCommunicationAlphabet();
 
-    default boolean isSymbolInCommunicationAlphabet(I symbol) {
-        if (getCommunicationAlphabet() == null) {
-            // TODO: maybe throw?
-            return false;
-        }
-        return getCommunicationAlphabet().containsSymbol(symbol);
-    }
-
-    boolean checkRedTransitions();
-
     @Override
-    default VisualizationHelper<S, T> getVisualizationHelper() {
-        final VisualizationHelper<S, T> superHelper = ModalTransitionSystem.super.getVisualizationHelper();
-        return new DelegateVisualizationHelper<S, T>(superHelper) {
-
-            @Override
-            public boolean getEdgeProperties(S src, T edge, S tgt, Map<String, String> properties) {
-                if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                    return false;
-                }
-
-                final TP transitionProperty = getTransitionProperty(edge);
-
-                if (transitionProperty.isTau()) {
-                    properties.put(EdgeAttrs.LABEL, "τ");
-                }
-
-                if (transitionProperty.isGreen()) {
-                    properties.put(EdgeAttrs.COLOR, "green");
-                } else if (transitionProperty.isRed()) {
-                    properties.put(EdgeAttrs.COLOR, "red");
-
-                }
-
-                return true;
-            }
-        };
+    default UniversalGraph<S, TransitionEdge<I, T>, Void, Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
+        return new MCGraphView<>(this, inputs);
     }
 
+    class MCGraphView<S, I, T, TP extends ModalContractEdgeProperty, M extends ModalContract<S, I, T, TP>>
+            extends UniversalAutomatonGraphView<S, I, T, Void, TP, M> {
+
+        public MCGraphView(M mc, Collection<? extends I> inputs) {
+            super(mc, inputs);
+        }
+
+        @Override
+        public VisualizationHelper<S, TransitionEdge<I, T>> getVisualizationHelper() {
+            return new MCVisualizationHelper<>(automaton);
+        }
+    }
 }

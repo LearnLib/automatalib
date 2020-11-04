@@ -75,6 +75,28 @@ limitations under the License.
                 <role>Developer</role>
             </roles>
         </contributor>
+        <contributor>
+            <name>Maximilian Schlüter</name>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>David Schmidt</name>
+            <email>david3.schmidt@tu-dortmund.de</email>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <properties>
+                <picUrl>
+                    http://gravatar.com/avatar/e88eaff66c6e05c0e97cf336b9adba66.png
+                </picUrl>
+            </properties>
+        </contributor>
     </contributors>
 
     <mailingLists>
@@ -210,6 +232,7 @@ limitations under the License.
         <mockito.version>3.2.4</mockito.version>
         <slf4j.version>1.7.30</slf4j.version>
         <testng.version>7.1.0</testng.version>
+        <assertj.version>3.15.0</assertj.version>
 
         <!-- Javadoc links -->
         <brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
@@ -525,6 +548,20 @@ limitations under the License.
                 <groupId>net.java.openjdk.cacio</groupId>
                 <artifactId>cacio-tta</artifactId>
                 <version>${cacio.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.6</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>

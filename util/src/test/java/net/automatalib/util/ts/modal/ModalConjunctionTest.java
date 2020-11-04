@@ -26,11 +26,12 @@ import java.util.Random;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
-import net.automatalib.ts.modal.ModalEdgeProperty;
-import net.automatalib.ts.modal.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.ModalTransitionSystem;
-import net.automatalib.ts.modal.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
+import net.automatalib.util.fixedpoint.Worksets;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.slf4j.Logger;
@@ -97,7 +98,7 @@ public class ModalConjunctionTest {
 
         block1.addTransition(b1s0, 'a', b1s1, new ModalEdgePropertyImpl(ModalType.MAY));
         block1.addTransition(b1s0, 'c', b1s0, new ModalEdgePropertyImpl(ModalType.MAY));
-        block1.addTransition(b1s1, 'b', b1s0, null);
+        block1.addTransition(b1s1, 'b', b1s0, new ModalEdgePropertyImpl(ModalType.MUST));
 
         algo = new ModalConjunction<>(block0, block1, CompactMTS::new);
     }
@@ -113,19 +114,19 @@ public class ModalConjunctionTest {
         Deque<Pair<Integer, Integer>> stack = new ArrayDeque<>();
         Collection<Pair<Integer, Integer>> discovered;
 
-        algo.initialize(stack, map);
-        discovered = algo.update(map, Pair.of(b0s0, b1s0), map.get(Pair.of(b0s0, b1s0)));
+        algo.initialize(map);
+        discovered = algo.update(map, Pair.of(b0s0, b1s0));
 
         Assert.assertEquals(discovered, Collections.singleton(Pair.of(b0s1, b1s1)));
 
-        discovered = algo.update(map, Pair.of(b0s1, b1s1), map.get(Pair.of(b0s1, b1s1)));
+        discovered = algo.update(map, Pair.of(b0s1, b1s1));
 
         Assert.assertEquals(discovered, Collections.singleton(Pair.of(b0s2, b1s0)));
     }
 
     @Test
     void result() {
-        final Pair<Map<Pair<Integer, Integer>, Integer>, CompactMTS<Character>> result = Workset.map(algo);
+        final Pair<Map<Pair<Integer, Integer>, Integer>, CompactMTS<Character>> result = Worksets.map(algo);
         final Map<Pair<Integer, Integer>, Integer> stateMapping = result.getFirst();
         final CompactMTS<Character> mts = result.getSecond();
 
@@ -153,20 +154,20 @@ public class ModalConjunctionTest {
     @Test
     void errorMustWithoutPartner() {
         block1.getTransitionProperty(getSingleTransition(block1, b1s0, 'c', b1s0)).setMust();
-        Assert.assertThrows(IllegalArgumentException.class, () -> Workset.map(algo));
+        Assert.assertThrows(IllegalArgumentException.class, () -> Worksets.map(algo));
     }
 
     @Test
     void errorMustWithoutPartner2() {
         block1.getTransitionProperty(getSingleTransition(block1, b1s0, 'a', b1s1)).setMust();
-        Assert.assertThrows(IllegalArgumentException.class, () -> Workset.map(algo));
+        Assert.assertThrows(IllegalArgumentException.class, () -> Worksets.map(algo));
     }
 
     @Test
     void reverseRefinement() {
         block1.getTransitionProperty(getSingleTransition(block1, b1s1, 'b', b1s0)).setMayOnly();
         // simple execute to check that no exception is thrown
-        Workset.map(algo);
+        Worksets.map(algo);
     }
 
     @Test
@@ -181,7 +182,7 @@ public class ModalConjunctionTest {
     void sameTarget() {
         block1.addTransition(b1s1, 'b', b1s0, new ModalEdgePropertyImpl(ModalType.MAY));
 
-        final Pair<Map<Pair<Integer, Integer>, Integer>, CompactMTS<Character>> result = Workset.map(algo);
+        final Pair<Map<Pair<Integer, Integer>, Integer>, CompactMTS<Character>> result = Worksets.map(algo);
         final Map<Pair<Integer, Integer>, Integer> stateMapping = result.getFirst();
         final CompactMTS<Character> mts = result.getSecond();
 
@@ -203,7 +204,7 @@ public class ModalConjunctionTest {
     @Test
     void errorSameTarget() {
         block1.addTransition(b1s0, 'a', b1s1, new ModalEdgePropertyImpl(ModalType.MUST));
-        Assert.assertThrows(IllegalArgumentException.class, () -> Workset.map(algo));
+        Assert.assertThrows(IllegalArgumentException.class, () -> Worksets.map(algo));
     }
 
     @Test
@@ -212,17 +213,19 @@ public class ModalConjunctionTest {
         block2.addInitialState();
 
         // simple execute to check that no exception is thrown
-        Workset.map(new ModalConjunction<>(block1, block2, CompactMTS::new));
+        Worksets.map(new ModalConjunction<>(block1, block2, CompactMTS::new));
     }
 
-    //    @Test
-    //    void errorNoSuitableTransitionsInPartner() {
-    //        CompactMTS<Character> block2 = new CompactMTS<>(Alphabets.characters('a', 'd'));
-    //        block2.addInitialState();
-    //
-    //        Assert.assertThrows(IllegalArgumentException.class,
-    //                            () -> Workset.map(new ModalConjunction<>(block1, block2, CompactMTS::new)));
-    //    }
+    @Test
+    void errorNoSuitableTransitionsInPartner() {
+        CompactMTS<Character> block2 = new CompactMTS<>(Alphabets.characters('a', 'd'));
+        int s0 = block2.addInitialState();
+        int s1 = block2.addState();
+        block2.addModalTransition(s0, 'a', s1, ModalType.MAY);
+
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> Worksets.map(new ModalConjunction<>(block1, block2, CompactMTS::new)));
+    }
 
     @Test(dataProvider = "randomSource")
     void random(CompactMTS<Character> a, CompactMTS<Character> b, int K) {
@@ -230,7 +233,7 @@ public class ModalConjunctionTest {
         try {
             algo = new ModalConjunction<>(a, b, CompactMTS::new);
 
-            final Pair<Map<Pair<Integer, Integer>, Integer>, CompactMTS<Character>> result = Workset.map(algo);
+            final Pair<Map<Pair<Integer, Integer>, Integer>, CompactMTS<Character>> result = Worksets.map(algo);
             final CompactMTS<Character> mts = result.getSecond();
 
             Assert.assertTrue(mts.size() >= 1);
