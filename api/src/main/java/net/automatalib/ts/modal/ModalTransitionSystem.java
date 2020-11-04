@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,7 @@ package net.automatalib.ts.modal;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.graphs.TransitionEdge;
@@ -26,11 +27,31 @@ import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
 import net.automatalib.automata.visualization.MTSVisualizationHelper;
 import net.automatalib.graphs.FiniteLTS;
 import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
 
+/**
+ * A (finite) version of an {@link IndefiniteModalTransitionSystem}. Since most MTS-based algorithms require a finite
+ * transition domain, this includes a finite set of states and a finite set input symbols. This is achieved by
+ * sub-typing the {@link UniversalAutomaton} and {@link InputAlphabetHolder} interfaces, which additionally inherit
+ * several convenience methods for working with MTSs.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <TP>
+ *         (specific) transition property type
+ *
+ * @author msc
+ */
 public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
-        extends UniversalFiniteAlphabetAutomaton<S, I, T, Void, TP>, FiniteLTS<S, T, I>, InputAlphabetHolder<I> {
+        extends IndefiniteModalTransitionSystem<S, I, T, TP>,
+                UniversalFiniteAlphabetAutomaton<S, I, T, Void, TP>,
+                FiniteLTS<S, T, I>,
+                InputAlphabetHolder<I> {
 
     @Override
     default Iterator<S> iterator() {

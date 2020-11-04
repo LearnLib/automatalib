@@ -157,29 +157,29 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    class MTSAttrs extends EdgeAttrs {
+    class MTSEdgeAttrs extends EdgeAttrs {
 
         public static final String MODALITY = "modality";
 
-        private MTSAttrs() {
+        private MTSEdgeAttrs() {
             // prevent instantiation
         }
     }
 
-    class MCAttrs extends MTSAttrs {
+    class MCEdgeAttrs extends MTSEdgeAttrs {
 
         public static final String CONTRACT = "contract";
 
-        private MCAttrs() {
+        private MCEdgeAttrs() {
             // prevent instantiation
         }
     }
 
-    final class MMCAttrs extends MCAttrs {
+    final class MMCEdgeAttrs extends MCEdgeAttrs {
 
         public static final String MEMBERSHIP = "group";
 
-        private MMCAttrs() {
+        private MMCEdgeAttrs() {
             // prevent instantiation
         }
     }

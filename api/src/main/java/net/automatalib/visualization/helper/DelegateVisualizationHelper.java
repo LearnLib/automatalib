@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.visualization;
+package net.automatalib.visualization.helper;
 
 import java.util.Map;
+
+import net.automatalib.visualization.VisualizationHelper;
 
 public class DelegateVisualizationHelper<N, E> implements VisualizationHelper<N, E> {
 

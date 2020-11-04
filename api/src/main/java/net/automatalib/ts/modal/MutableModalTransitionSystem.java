@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,9 +16,23 @@
 package net.automatalib.ts.modal;
 
 import net.automatalib.automata.MutableAutomaton;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 
+/**
+ * A mutable version of {@link ModalTransitionSystem} that allows to add states and transitions.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <TP>
+ *         (specific) transition property type
+ *
+ * @author msc
+ */
 public interface MutableModalTransitionSystem<S, I, T, TP extends MutableModalEdgeProperty>
         extends ModalTransitionSystem<S, I, T, TP>, MutableAutomaton<S, I, T, Void, TP> {
 

@@ -7,6 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.10.0...HEAD)
 
 
+### Added
+
+* Added modal transition systems (MTSs), modal contracts (MCs) and Membership-MCs.
+
+
 ### Fixed
 
 * Fixed a cache consistency bug in various DAG-based incremental builders.

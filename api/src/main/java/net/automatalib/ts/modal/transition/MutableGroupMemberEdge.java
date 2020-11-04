@@ -13,24 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.ts.modal.regression;
+package net.automatalib.ts.modal.transition;
 
-public class DecompositionTest {
+public interface MutableGroupMemberEdge extends GroupMemberEdge {
 
-    public final String context;
-    public final String modalContract;
-    public final String origSys;
-    public final String system;
+    void setMemberId(int id);
 
-    public DecompositionTest(String context, String modalContract, String origSys, String system) {
-        this.context = context;
-        this.modalContract = modalContract;
-        this.origSys = origSys;
-        this.system = system;
-    }
-
-    @Override
-    public String toString() {
-        return "Test{" + modalContract + '}';
-    }
 }

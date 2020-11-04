@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,11 +26,11 @@ import java.util.Map;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
-import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
-import net.automatalib.util.fixedpoint.WorksetMappingAlgorithm;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
+import net.automatalib.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.util.graphs.traversal.DFSVisitor;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import org.slf4j.Logger;
@@ -70,9 +70,9 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
     }
 
     @Override
-    public Collection<Pair<S0,S1>> initialize(Map<Pair<S0, S1>, S> mapping) {
-        Collection<Pair<S0,S1>> initialElements = new ArrayList<>(
-                mts0.getInitialStates().size() * mts1.getInitialStates().size());
+    public Collection<Pair<S0, S1>> initialize(Map<Pair<S0, S1>, S> mapping) {
+        Collection<Pair<S0, S1>> initialElements =
+                new ArrayList<>(mts0.getInitialStates().size() * mts1.getInitialStates().size());
 
         for (final S0 s0 : mts0.getInitialStates()) {
             for (final S1 s1 : mts1.getInitialStates()) {
@@ -114,17 +114,16 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
                 LOGGER.debug("current transition 0: {}", transition0);
 
                 if (mts0.getTransitionProperty(transition0).isMust() && transitions1.isEmpty()) {
-                    throw new IllegalConjunctionException(
-                            String.format("Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
-                                    "Error for transition %s (t0), leading trace: %s",
-                                    currentStatePair.getFirst(),
-                                    currentStatePair.getSecond(),
-                                    sym,
-                                    transitions0,
-                                    transitions1,
-                                    transition0,
-                                    traceError(mts0, transition0))
-                    );
+                    throw new IllegalConjunctionException(String.format(
+                            "Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
+                            "Error for transition %s (t0), leading trace: %s",
+                            currentStatePair.getFirst(),
+                            currentStatePair.getSecond(),
+                            sym,
+                            transitions0,
+                            transitions1,
+                            transition0,
+                            traceError(mts0, transition0)));
                 }
                 for (T1 transition1 : transitions1) {
 
@@ -173,17 +172,16 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
                 LOGGER.debug("current transition 1: {}", transition1);
 
                 if (mts1.getTransitionProperty(transition1).isMust() && transitions0.isEmpty()) {
-                    throw new IllegalConjunctionException(
-                        String.format("Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
-                                        "Error for transition %s (t1), leading trace: %s",
-                                currentStatePair.getFirst(),
-                                currentStatePair.getSecond(),
-                                sym,
-                                transitions0,
-                                transitions1,
-                                transition1,
-                                traceError(mts1, transition1))
-                    );
+                    throw new IllegalConjunctionException(String.format(
+                            "Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
+                            "Error for transition %s (t1), leading trace: %s",
+                            currentStatePair.getFirst(),
+                            currentStatePair.getSecond(),
+                            sym,
+                            transitions0,
+                            transitions1,
+                            transition1,
+                            traceError(mts1, transition1)));
                 }
             }
         }
@@ -195,17 +193,16 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
         return result;
     }
 
-    protected <S, I, T, TP extends ModalEdgeProperty> String traceError( ModalTransitionSystem<S, I, T, TP> mts, T transition) {
+    protected static <S, I, T, TP extends ModalEdgeProperty> String traceError(ModalTransitionSystem<S, I, T, TP> mts,
+                                                                               T transition) {
         EdgeTracer<S, I, T> finder = new EdgeTracer<>(transition);
 
-        GraphTraversal.dfs(mts.transitionGraphView(mts.getInputAlphabet()),
-                mts.getInitialStates(),
-                finder);
+        GraphTraversal.dfs(mts.transitionGraphView(mts.getInputAlphabet()), mts.getInitialStates(), finder);
 
         StringBuilder sb = new StringBuilder();
         for (S state : finder.getStateSequence()) {
             sb.append(state);
-            sb.append(",");
+            sb.append(',');
         }
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
@@ -213,14 +210,14 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
 
     private static class EdgeTracer<S, I, T> implements DFSVisitor<S, TransitionEdge<I, T>, Void> {
 
-        Deque<S> stateStack;
+        final Deque<S> stateStack;
+        final T targetTransition;
         boolean freeze;
-        T targetTransition;
 
-        public EdgeTracer(T transition) {
+        EdgeTracer(T transition) {
+            targetTransition = transition;
             stateStack = new ArrayDeque<>();
             freeze = false;
-            targetTransition = transition;
         }
 
         @Override

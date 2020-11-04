@@ -32,8 +32,6 @@ import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.serialization.InputModelData;
-import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -41,7 +39,7 @@ import net.automatalib.words.impl.Alphabets;
 /**
  * General-purpose DOT parser for {@link MutableAutomaton}s.
  *
- * @param <I>
+ * @param <S>
  *         automaton state type
  * @param <I>
  *         input symbol type

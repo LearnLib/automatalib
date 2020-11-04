@@ -15,12 +15,14 @@
  */
 package net.automatalib.ts.modal;
 
-import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
+import net.automatalib.graphs.IndefiniteLTS;
+import net.automatalib.ts.UniversalTransitionSystem;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
 /**
- * A mutable version of {@link ModalContract} that allows to add states and transitions.
+ * An modal transition system is a {@link UniversalTransitionSystem} in which transitions can be marked as {@link
+ * net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType#MAY may} or {@link
+ * net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType#MUST must} edges.
  *
  * @param <S>
  *         state type
@@ -30,12 +32,6 @@ import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
  *         transition type
  * @param <TP>
  *         (specific) transition property type
- *
- * @author msc
  */
-public interface MutableModalContract<S, I, T, TP extends MutableModalContractEdgeProperty>
-        extends MutableModalTransitionSystem<S, I, T, TP>, ModalContract<S, I, T, TP> {
-
-    T addContractTransition(S src, I input, S tgt, ModalType modalType, boolean tau, EdgeColor color);
-
-}
+public interface IndefiniteModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
+        extends UniversalTransitionSystem<S, I, T, Void, TP>, IndefiniteLTS<S, T, I> {}

@@ -13,24 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.ts.modal.regression;
+package net.automatalib.ts.modal.transition;
 
-public class DecompositionTest {
+public interface ModalContractEdgeProperty extends ModalEdgeProperty, TauEdge {
 
-    public final String context;
-    public final String modalContract;
-    public final String origSys;
-    public final String system;
-
-    public DecompositionTest(String context, String modalContract, String origSys, String system) {
-        this.context = context;
-        this.modalContract = modalContract;
-        this.origSys = origSys;
-        this.system = system;
+    enum EdgeColor {
+        RED,
+        GREEN,
+        NONE
     }
 
-    @Override
-    public String toString() {
-        return "Test{" + modalContract + '}';
+    EdgeColor getColor();
+
+    default boolean isRed() {
+        return getColor() == EdgeColor.RED;
+    }
+
+    default boolean isGreen() {
+        return getColor() == EdgeColor.GREEN;
     }
 }

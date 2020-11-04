@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ import java.util.Map;
 
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.ts.modal.ModalContract;
-import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalContractEdgeProperty;
 
 public class MCVisualizationHelper<S, I, T, TP extends ModalContractEdgeProperty, M extends ModalContract<S, I, T, TP>>
         extends MTSVisualizationHelper<S, I, T, TP, M> {
@@ -48,7 +48,7 @@ public class MCVisualizationHelper<S, I, T, TP extends ModalContractEdgeProperty
             properties.put(EdgeAttrs.COLOR, "red");
         }
 
-        properties.put(MCAttrs.CONTRACT, transitionProperty.getColor().toString());
+        properties.put(MCEdgeAttrs.CONTRACT, transitionProperty.getColor().toString());
 
         return true;
     }

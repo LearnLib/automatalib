@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,28 +15,29 @@
  */
 package net.automatalib.ts.modal;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty.EdgeColor;
-import net.automatalib.ts.modal.transitions.ModalContractEdgePropertyImpl;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transitions.MutableModalContractEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
+import net.automatalib.ts.modal.transition.ModalContractEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
-import net.automatalib.words.impl.ArrayAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
 public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdgeProperty>
         implements MutableModalContract<Integer, I, MTSTransition<I, MutableModalContractEdgeProperty>, MutableModalContractEdgeProperty> {
 
     protected final GrowingAlphabet<I> communicationAlphabet;
-    protected Set<MTSTransition<I, MutableModalContractEdgeProperty>> redTransitions;
+    protected final Set<MTSTransition<I, MutableModalContractEdgeProperty>> redTransitions;
 
-    public CompactMC(Alphabet<I> alphabet, Alphabet<I> gamma) {
+    public CompactMC(Alphabet<I> alphabet, Collection<I> gamma) {
         super(alphabet);
-        this.communicationAlphabet = new GrowingMapAlphabet<I>(gamma);
+        this.communicationAlphabet = new GrowingMapAlphabet<>(gamma);
         this.redTransitions = new HashSet<>();
 
         assert new HashSet<>(alphabet).containsAll(gamma) : "Communication alphabet needs to be a subset of alphabet";
@@ -80,7 +81,7 @@ public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdge
 
         @Override
         public CompactMC<I> createAutomaton(Alphabet<I> alphabet) {
-            return new CompactMC<>(alphabet, new ArrayAlphabet<>());
+            return new CompactMC<>(alphabet, Collections.emptyList());
         }
     }
 

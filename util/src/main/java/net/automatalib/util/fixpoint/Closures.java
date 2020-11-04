@@ -1,4 +1,19 @@
-package net.automatalib.util.fixedpoint;
+/* Copyright (C) 2013-2020 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package net.automatalib.util.fixpoint;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -17,10 +32,8 @@ import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.words.impl.Alphabets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class Closures {
+public final class Closures {
 
     private Closures() {
         // prevent instantiation
@@ -31,9 +44,16 @@ public class Closures {
             Collection<I> inputs,
             Collection<I> allInputs,
             AutomatonCreator<B, I> creator,
-            TransitionPredicate<S1, I, T1> transitionFilter
-    ) {
-        return Worksets.map(new StateClosureAlgorithm<>(ts, inputs, creator, toClosureOperator(ts, allInputs, (s, i, t) -> ! transitionFilter.apply(s, i, t)), transitionFilter));
+            TransitionPredicate<S1, I, T1> transitionFilter) {
+        return Worksets.map(new StateClosureAlgorithm<>(ts,
+                                                        inputs,
+                                                        creator,
+                                                        toClosureOperator(ts,
+                                                                          allInputs,
+                                                                          (s, i, t) -> !transitionFilter.apply(s,
+                                                                                                               i,
+                                                                                                               t)),
+                                                        transitionFilter));
     }
 
     public static <A extends UniversalAutomaton<S1, I, T1, SP1, TP1>, B extends MutableAutomaton<S2, I, T2, SP2, TP2>, S1, S2, I, T1, T2, SP1, SP2, TP1, TP2> Pair<Map<Set<S1>, S2>, B> closure(
@@ -41,60 +61,46 @@ public class Closures {
             Collection<I> inputs,
             AutomatonCreator<B, I> creator,
             Function<Set<S1>, Set<S1>> closureOperator,
-            TransitionPredicate<S1, I, T1> transitionFilter
-    ) {
+            TransitionPredicate<S1, I, T1> transitionFilter) {
         return Worksets.map(new StateClosureAlgorithm<>(ts, inputs, creator, closureOperator, transitionFilter));
     }
 
-
     /**
      * Creates a closure operator op: Set[S] -> Set[S] from an TransitionPredicate over the given transition system.
-     *
-     * The returned operator calculates the closure of a given set S by adding all states s'
-     * to S which can be reached by at least one state of S trough a transition for which the predicate is true.
-     * This step is repeated until stabilisation (closure semantics).
-     *
-     * @param ts
-     * @param inputs
-     * @param transitionFilter
-     * @param <S>
-     * @param <I>
-     * @param <T>
-     * @param <SP>
-     * @param <TP>
-     * @return
+     * <p>
+     * The returned operator calculates the closure of a given set S by adding all states s' to S which can be reached
+     * by at least one state of S trough a transition for which the predicate is true. This step is repeated until
+     * stabilisation (closure semantics).
      */
-    public static <S, I, T, SP, TP> Function<Set<S>, Set<S>> toClosureOperator(UniversalAutomaton<S, I, T, SP, TP> ts, Collection<I> inputs, TransitionPredicate<S, I, T> transitionFilter) {
-        return new Function<Set<S>, Set<S>>() {
-            @Override
-            public Set<S> apply(Set<S> states) {
-                Set<S> result = new HashSet<>(states);
-                Deque<S> stack = new ArrayDeque<>(states);
+    public static <S, I, T, SP, TP> Function<Set<S>, Set<S>> toClosureOperator(UniversalAutomaton<S, I, T, SP, TP> ts,
+                                                                               Collection<I> inputs,
+                                                                               TransitionPredicate<S, I, T> transitionFilter) {
+        return states -> {
+            Set<S> result = new HashSet<>(states);
+            Deque<S> stack = new ArrayDeque<>(states);
 
-                while (!stack.isEmpty())  {
-                    S state = stack.pop();
+            while (!stack.isEmpty()) {
+                S state = stack.pop();
 
-                    for (I symbol : inputs) {
-                        for (T transition : ts.getTransitions(state, symbol)) {
-                            if (transitionFilter.apply(state, symbol, transition)) {
-                                S successor = ts.getSuccessor(transition);
-                                if (!result.contains(successor)) {
-                                    result.add(successor);
-                                    stack.push(successor);
-                                }
+                for (I symbol : inputs) {
+                    for (T transition : ts.getTransitions(state, symbol)) {
+                        if (transitionFilter.apply(state, symbol, transition)) {
+                            S successor = ts.getSuccessor(transition);
+                            if (!result.contains(successor)) {
+                                result.add(successor);
+                                stack.push(successor);
                             }
                         }
                     }
-
                 }
-                return result;
+
             }
+            return result;
         };
     }
 
-    private static final class StateClosureAlgorithm<A extends UniversalAutomaton<S1, I, T1, SP1, TP1>, B extends MutableAutomaton<S2, I, T2, SP2, TP2>, S1, S2, I, T1, T2, SP1, SP2, TP1, TP2> implements WorksetMappingAlgorithm<Set<S1>, S2, B> {
-
-        private static final Logger LOGGER = LoggerFactory.getLogger(StateClosureAlgorithm.class);
+    private static final class StateClosureAlgorithm<A extends UniversalAutomaton<S1, I, T1, SP1, TP1>, B extends MutableAutomaton<S2, I, T2, SP2, TP2>, S1, S2, I, T1, T2, SP1, SP2, TP1, TP2>
+            implements WorksetMappingAlgorithm<Set<S1>, S2, B> {
 
         private final A inputTS;
         private final B result;
@@ -102,11 +108,11 @@ public class Closures {
         private final Function<Set<S1>, Set<S1>> closureOperator;
         private final TransitionPredicate<S1, I, T1> transitionFilter;
 
-        public StateClosureAlgorithm(A ts,
-                                     Collection<I> inputs,
-                                     AutomatonCreator<B, I> creator,
-                                     Function<Set<S1>, Set<S1>> closureOperator,
-                                     TransitionPredicate<S1, I, T1> transitionFilter) {
+        StateClosureAlgorithm(A ts,
+                              Collection<I> inputs,
+                              AutomatonCreator<B, I> creator,
+                              Function<Set<S1>, Set<S1>> closureOperator,
+                              TransitionPredicate<S1, I, T1> transitionFilter) {
 
             this.inputTS = ts;
             this.inputs = inputs;

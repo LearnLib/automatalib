@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +17,12 @@ package net.automatalib.util.ts.modal;
 
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.assertj.core.api.Assertions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ModalRefinementTest {
 
@@ -40,11 +38,11 @@ public class ModalRefinementTest {
         final Integer bs0 = b.addInitialState();
         final Integer bs1 = b.addState();
 
-        a.addTransition(as0, "a", as0, new ModalEdgePropertyImpl(ModalType.MUST));
-        a.addTransition(as0, "c", as1, new ModalEdgePropertyImpl(ModalType.MUST));
+        a.addModalTransition(as0, "a", as0, ModalType.MUST);
+        a.addModalTransition(as0, "c", as1, ModalType.MUST);
 
-        b.addTransition(bs0, "a", bs0, new ModalEdgePropertyImpl(ModalType.MUST));
-        b.addTransition(bs0, "c", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
+        b.addModalTransition(bs0, "a", bs0, ModalType.MUST);
+        b.addModalTransition(bs0, "c", bs1, ModalType.MAY);
 
         Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
     }
@@ -61,11 +59,11 @@ public class ModalRefinementTest {
         final Integer bs0 = b.addInitialState();
         final Integer bs1 = b.addState();
 
-        a.addTransition(as0, "a", as0, new ModalEdgePropertyImpl(ModalType.MUST));
-        a.addTransition(as0, "c", as1, new ModalEdgePropertyImpl(ModalType.MUST));
+        a.addModalTransition(as0, "a", as0, ModalType.MUST);
+        a.addModalTransition(as0, "c", as1, ModalType.MUST);
 
-        b.addTransition(bs0, "a", bs0, new ModalEdgePropertyImpl(ModalType.MUST));
-        b.addTransition(bs0, "c", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
+        b.addModalTransition(bs0, "a", bs0, ModalType.MUST);
+        b.addModalTransition(bs0, "c", bs1, ModalType.MAY);
 
         Assert.assertFalse(MTSUtil.isRefinementOf(b, a, alphabet));
     }
@@ -77,15 +75,15 @@ public class ModalRefinementTest {
         final CompactMTS<String> b = new CompactMTS<>(alphabet);
 
         final Integer as0 = a.addInitialState();
-        final Integer as1 = a.addState();
+        a.addState();
 
         final Integer bs0 = b.addInitialState();
         final Integer bs1 = b.addState();
 
-        a.addTransition(as0, "a", as0, new ModalEdgePropertyImpl(ModalType.MUST));
+        a.addModalTransition(as0, "a", as0, ModalType.MUST);
 
-        b.addTransition(bs0, "a", bs0, new ModalEdgePropertyImpl(ModalType.MUST));
-        b.addTransition(bs0, "c", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
+        b.addModalTransition(bs0, "a", bs0, ModalType.MUST);
+        b.addModalTransition(bs0, "c", bs1, ModalType.MAY);
 
         Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
     }
@@ -97,15 +95,15 @@ public class ModalRefinementTest {
         final CompactMTS<String> b = new CompactMTS<>(alphabet);
 
         final Integer as0 = a.addInitialState();
-        final Integer as1 = a.addState();
+        a.addState();
 
         final Integer bs0 = b.addInitialState();
         final Integer bs1 = b.addState();
 
-        a.addTransition(as0, "a", as0, new ModalEdgePropertyImpl(ModalType.MUST));
+        a.addModalTransition(as0, "a", as0, ModalType.MUST);
 
-        b.addTransition(bs0, "a", bs0, new ModalEdgePropertyImpl(ModalType.MUST));
-        b.addTransition(bs0, "c", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
+        b.addModalTransition(bs0, "a", bs0, ModalType.MUST);
+        b.addModalTransition(bs0, "c", bs1, ModalType.MAY);
 
         Assert.assertFalse(MTSUtil.isRefinementOf(b, a, alphabet));
     }
@@ -126,8 +124,8 @@ public class ModalRefinementTest {
 
         b.addTransition(bs0, "a", bs0, null);
 
-        assertThat(ModalRefinement.refinementRelation(a, b, alphabet))
-                .containsExactlyInAnyOrder(Pair.of(as0, bs0), Pair.of(as1, bs0));
+        Assertions.assertThat(ModalRefinement.refinementRelation(a, b, alphabet))
+                  .containsExactlyInAnyOrder(Pair.of(as0, bs0), Pair.of(as1, bs0));
         Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
         Assert.assertTrue(MTSUtil.isRefinementOf(b, a, alphabet));
     }
@@ -149,14 +147,14 @@ public class ModalRefinementTest {
         final Integer bs2 = b.addState();
         final Integer bs3 = b.addState();
 
-        a.addTransition(as0, "a", as1, new ModalEdgePropertyImpl(ModalType.MAY));
-        a.addTransition(as0, "a", as2, new ModalEdgePropertyImpl(ModalType.MAY));
-        a.addTransition(as1, "b", as3, new ModalEdgePropertyImpl(ModalType.MAY));
-        a.addTransition(as2, "c", as4, new ModalEdgePropertyImpl(ModalType.MAY));
+        a.addModalTransition(as0, "a", as1, ModalType.MAY);
+        a.addModalTransition(as0, "a", as2, ModalType.MAY);
+        a.addModalTransition(as1, "b", as3, ModalType.MAY);
+        a.addModalTransition(as2, "c", as4, ModalType.MAY);
 
-        b.addTransition(bs0, "a", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
-        b.addTransition(bs1, "b", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
-        b.addTransition(bs1, "c", bs3, new ModalEdgePropertyImpl(ModalType.MAY));
+        b.addModalTransition(bs0, "a", bs1, ModalType.MAY);
+        b.addModalTransition(bs1, "b", bs2, ModalType.MAY);
+        b.addModalTransition(bs1, "c", bs3, ModalType.MAY);
 
         Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
     }
@@ -178,19 +176,18 @@ public class ModalRefinementTest {
         final Integer bs2 = b.addState();
         final Integer bs3 = b.addState();
 
-        a.addTransition(as0, "a", as1, new ModalEdgePropertyImpl(ModalType.MUST));
-        a.addTransition(as0, "a", as2, new ModalEdgePropertyImpl(ModalType.MUST));
-        a.addTransition(as1, "b", as3, new ModalEdgePropertyImpl(ModalType.MUST));
-        a.addTransition(as2, "c", as4, new ModalEdgePropertyImpl(ModalType.MUST));
+        a.addModalTransition(as0, "a", as1, ModalType.MUST);
+        a.addModalTransition(as0, "a", as2, ModalType.MUST);
+        a.addModalTransition(as1, "b", as3, ModalType.MUST);
+        a.addModalTransition(as2, "c", as4, ModalType.MUST);
 
-        b.addTransition(bs0, "a", bs1, new ModalEdgePropertyImpl(ModalType.MUST));
-        b.addTransition(bs1, "b", bs2, new ModalEdgePropertyImpl(ModalType.MUST));
-        b.addTransition(bs1, "c", bs3, new ModalEdgePropertyImpl(ModalType.MUST));
+        b.addModalTransition(bs0, "a", bs1, ModalType.MUST);
+        b.addModalTransition(bs1, "b", bs2, ModalType.MUST);
+        b.addModalTransition(bs1, "c", bs3, ModalType.MUST);
 
         Assert.assertFalse(MTSUtil.isRefinementOf(a, b, alphabet));
         Assert.assertFalse(MTSUtil.isRefinementOf(b, a, alphabet));
     }
-
 
     @Test(description = "Example for non-thoroughness (from Larsen \"On Modal Refinement and Consistency\")")
     public void larsenTest() {
@@ -206,13 +203,12 @@ public class ModalRefinementTest {
         final Integer bs1 = t.addState();
         final Integer bs2 = t.addState();
 
-        s.addTransition(as0, "a", as1, new ModalEdgePropertyImpl(ModalType.MAY));
-        s.addTransition(as1, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+        s.addModalTransition(as0, "a", as1, ModalType.MAY);
+        s.addModalTransition(as1, "b", as2, ModalType.MAY);
 
-        // TODO: consider writing a static factory method for properties and/or use an Enum type
-        t.addTransition(bs0, "a", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
-        t.addTransition(bs0, "a", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
-        t.addTransition(bs1, "b", bs2, new ModalEdgePropertyImpl(ModalType.MUST));
+        t.addModalTransition(bs0, "a", bs1, ModalType.MAY);
+        t.addModalTransition(bs0, "a", bs2, ModalType.MAY);
+        t.addModalTransition(bs1, "b", bs2, ModalType.MUST);
 
         Assert.assertFalse(MTSUtil.isRefinementOf(s, t, alphabet));
     }
@@ -231,12 +227,12 @@ public class ModalRefinementTest {
         final Integer bs1 = t.addState();
         final Integer bs2 = t.addState();
 
-        s.addTransition(as0, "a", as1, new ModalEdgePropertyImpl(ModalType.MAY));
-        s.addTransition(as1, "b", as2, new ModalEdgePropertyImpl(ModalType.MUST));
+        s.addModalTransition(as0, "a", as1, ModalType.MAY);
+        s.addModalTransition(as1, "b", as2, ModalType.MUST);
 
-        t.addTransition(bs0, "a", bs1, new ModalEdgePropertyImpl(ModalType.MAY));
-        t.addTransition(bs0, "a", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
-        t.addTransition(bs1, "b", bs2, new ModalEdgePropertyImpl(ModalType.MUST));
+        t.addModalTransition(bs0, "a", bs1, ModalType.MAY);
+        t.addModalTransition(bs0, "a", bs2, ModalType.MAY);
+        t.addModalTransition(bs1, "b", bs2, ModalType.MUST);
 
         Assert.assertTrue(MTSUtil.isRefinementOf(s, t, alphabet));
     }
@@ -255,19 +251,19 @@ public class ModalRefinementTest {
         final Integer bs1 = t.addState();
         final Integer bs2 = t.addState();
 
-        s.addTransition(as0, "a", as0, new ModalEdgePropertyImpl(ModalType.MUST));
-        s.addTransition(as0, "b", as1, new ModalEdgePropertyImpl(ModalType.MUST));
-        s.addTransition(as1, "a", as1, new ModalEdgePropertyImpl(ModalType.MUST));
-        s.addTransition(as1, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
-        s.addTransition(as2, "a", as2, new ModalEdgePropertyImpl(ModalType.MAY));
-        s.addTransition(as2, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+        s.addModalTransition(as0, "a", as0, ModalType.MUST);
+        s.addModalTransition(as0, "b", as1, ModalType.MUST);
+        s.addModalTransition(as1, "a", as1, ModalType.MUST);
+        s.addModalTransition(as1, "b", as2, ModalType.MAY);
+        s.addModalTransition(as2, "a", as2, ModalType.MAY);
+        s.addModalTransition(as2, "b", as2, ModalType.MAY);
 
-        t.addTransition(bs0, "a", bs0, new ModalEdgePropertyImpl(ModalType.MUST));
-        t.addTransition(bs0, "b", bs1, new ModalEdgePropertyImpl(ModalType.MUST));
-        t.addTransition(bs1, "a", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
-        t.addTransition(bs1, "b", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
-        t.addTransition(bs2, "a", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
-        t.addTransition(bs2, "b", bs2, new ModalEdgePropertyImpl(ModalType.MAY));
+        t.addModalTransition(bs0, "a", bs0, ModalType.MUST);
+        t.addModalTransition(bs0, "b", bs1, ModalType.MUST);
+        t.addModalTransition(bs1, "a", bs2, ModalType.MAY);
+        t.addModalTransition(bs1, "b", bs2, ModalType.MAY);
+        t.addModalTransition(bs2, "a", bs2, ModalType.MAY);
+        t.addModalTransition(bs2, "b", bs2, ModalType.MAY);
 
         Assert.assertTrue(MTSUtil.isRefinementOf(s, t, alphabet));
     }

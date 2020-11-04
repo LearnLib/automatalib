@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +18,8 @@ package net.automatalib.automata.visualization;
 import java.util.Map;
 
 import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
 import net.automatalib.ts.modal.ModalTransitionSystem;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
 public class MTSVisualizationHelper<S, I, T, TP extends ModalEdgeProperty, M extends ModalTransitionSystem<S, I, T, TP>>
         extends AutomatonVisualizationHelper<S, I, T, M> {
@@ -40,7 +40,7 @@ public class MTSVisualizationHelper<S, I, T, TP extends ModalEdgeProperty, M ext
             properties.put(EdgeAttrs.STYLE, EdgeStyles.DASHED);
         }
 
-        properties.put(MTSAttrs.MODALITY, transitionProperty.getType().toString());
+        properties.put(MTSEdgeAttrs.MODALITY, transitionProperty.getType().toString());
 
         return true;
     }

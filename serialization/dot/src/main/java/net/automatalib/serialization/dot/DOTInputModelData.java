@@ -23,7 +23,7 @@ import net.automatalib.words.Alphabet;
 /**
  * A utility data class, that extends {@link InputModelData} by labeling information of the model's states.
  *
- * @param <I>
+ * @param <S>
  *         the state type of the model
  * @param <I>
  *         the input symbol type

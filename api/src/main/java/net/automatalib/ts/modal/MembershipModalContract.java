@@ -20,17 +20,15 @@ import java.util.Collection;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.graphs.TransitionEdge.Property;
 import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
-import net.automatalib.automata.visualization.MCVisualizationHelper;
+import net.automatalib.automata.visualization.MMCVisualizationHelper;
 import net.automatalib.graphs.UniversalGraph;
+import net.automatalib.ts.modal.transition.GroupMemberEdge;
 import net.automatalib.ts.modal.transition.ModalContractEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Alphabet;
 
 /**
- * A modal contract is a {@link ModalTransitionSystem} that additionally allows to partition transitions in {@link
- * net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor#GREEN green}, {@link
- * net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor#RED red} or {@link
- * net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor#NONE uncolored} edges.
+ * A membership modal contract is a {@link ModalContract} that additionally allows assign group membership to certain
+ * edges.
  *
  * @param <S>
  *         state type
@@ -43,34 +41,24 @@ import net.automatalib.words.Alphabet;
  *
  * @author msc
  */
-public interface ModalContract<S, I, T, TP extends ModalContractEdgeProperty>
-        extends ModalTransitionSystem<S, I, T, TP> {
-
-    /**
-     * Get communication alphabet.
-     * <p>
-     * Returns the communication alphabet of this contract. It is a subset of {@link #getInputAlphabet()} and contains
-     * all symbols, which are shared between parallel components and thus require synchronization.
-     *
-     * @return A possibly unmodifiable view of the communication alphabet.
-     */
-    Alphabet<I> getCommunicationAlphabet();
+public interface MembershipModalContract<S, I, T, TP extends ModalContractEdgeProperty & GroupMemberEdge>
+        extends ModalContract<S, I, T, TP> {
 
     @Override
     default UniversalGraph<S, TransitionEdge<I, T>, Void, Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
-        return new MCGraphView<>(this, inputs);
+        return new MMCGraphView<>(this, inputs);
     }
 
-    class MCGraphView<S, I, T, TP extends ModalContractEdgeProperty, M extends ModalContract<S, I, T, TP>>
+    class MMCGraphView<S, I, T, TP extends ModalContractEdgeProperty & GroupMemberEdge, M extends ModalContract<S, I, T, TP>>
             extends UniversalAutomatonGraphView<S, I, T, Void, TP, M> {
 
-        public MCGraphView(M mc, Collection<? extends I> inputs) {
+        public MMCGraphView(M mc, Collection<? extends I> inputs) {
             super(mc, inputs);
         }
 
         @Override
         public VisualizationHelper<S, TransitionEdge<I, T>> getVisualizationHelper() {
-            return new MCVisualizationHelper<>(automaton);
+            return new MMCVisualizationHelper<>(automaton);
         }
     }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +16,11 @@
 package net.automatalib.ts.modal;
 
 import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
-import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactMTS<I> extends AbstractCompactMTS<I, MutableModalEdgeProperty> {
 
@@ -43,14 +44,19 @@ public class CompactMTS<I> extends AbstractCompactMTS<I, MutableModalEdgePropert
 
     public static final class Creator<I> implements AutomatonCreator<CompactMTS<I>, I> {
 
-        private final Alphabet<I> defaultInputAlphabet;
+        private final @Nullable Alphabet<I> defaultInputAlphabet;
 
         public Creator() {
             this(null);
         }
 
-        public Creator(Alphabet<I> defaultInputAlphabet) {
+        public Creator(@Nullable Alphabet<I> defaultInputAlphabet) {
             this.defaultInputAlphabet = defaultInputAlphabet;
+        }
+
+        @Override
+        public CompactMTS<I> createAutomaton(Alphabet<I> alphabet) {
+            return this.createAutomaton(alphabet, DEFAULT_INIT_CAPACITY);
         }
 
         @Override
@@ -59,11 +65,6 @@ public class CompactMTS<I> extends AbstractCompactMTS<I, MutableModalEdgePropert
                     defaultInputAlphabet != null ? defaultInputAlphabet : alphabet,
                     sizeHint,
                     DEFAULT_RESIZE_FACTOR);
-        }
-
-        @Override
-        public CompactMTS<I> createAutomaton(Alphabet<I> alphabet) {
-            return new CompactMTS<>(alphabet);
         }
     }
 }

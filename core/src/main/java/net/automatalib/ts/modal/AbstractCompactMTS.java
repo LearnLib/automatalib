@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,39 +24,28 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
-import net.automatalib.automata.Automaton;
-import net.automatalib.automata.MutableAutomaton;
-import net.automatalib.automata.ShrinkableAutomaton;
 import net.automatalib.automata.base.compact.AbstractCompact;
-import net.automatalib.graphs.BidirectionalGraph;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A Kripke Transition System with a finite number of states (in this library usually denoted to as {@link Automaton}),
- * transitions and a input symbols.
- *
- * <p>This interface adds support for various transition and state properties while having a large number of supported
- * operations on the transition system (see {@link MutableAutomaton}, {@link ShrinkableAutomaton}).
- *
- * <p> This model enables e.g. modal transitions or final states (different from accepting states).
+ * An abstract base-implementation for {@link MutableModalTransitionSystem}s.
  *
  * @param <I>
- *         input symbol class.
+ *         input symbol type
  * @param <TP>
- *         transition property.
+ *         (specific) transition property type
  *
  * @author msc
  */
 public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
         extends AbstractCompact<I, MTSTransition<I, TP>, Void, TP>
-        implements MutableModalTransitionSystem<Integer, I, MTSTransition<I, TP>, TP>,
-                   BidirectionalGraph<Integer, MTSTransition<I, TP>> {
+        implements MutableModalTransitionSystem<Integer, I, MTSTransition<I, TP>, TP> {
 
     private final Set<Integer> initialStates; // TODO: replace by primitive specialization
-    private Set<MTSTransition<I, TP>>[] transitions;
-    private Set<MTSTransition<I, TP>>[] backwardTransitions;
+    private @Nullable Set<MTSTransition<I, TP>>[] transitions;
 
     public AbstractCompactMTS(Alphabet<I> alphabet) {
         this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
@@ -68,7 +57,6 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
 
         this.initialStates = new HashSet<>(); // TODO: replace by primitive specialization
         this.transitions = new Set[stateCapacity * numInputs()];
-        this.backwardTransitions = new Set[stateCapacity];
     }
 
     @Override
@@ -102,17 +90,6 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
             t.setSource(state);
             t.setLabel(input);
             trans.add(t);
-
-            final Set<MTSTransition<I, TP>> incoming;
-
-            if (this.backwardTransitions[t.getTarget()] != null) {
-                incoming = this.backwardTransitions[t.getTarget()];
-            } else {
-                incoming = new HashSet<>();
-                this.backwardTransitions[t.getTarget()] = incoming;
-            }
-
-            incoming.add(t);
         }
 
         this.transitions[toMemoryIndex(state, getSymbolIndex(input))] = trans;
@@ -120,18 +97,7 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
 
     @Override
     public void removeAllTransitions(Integer state, I input) {
-        final Collection<MTSTransition<I, TP>> trans = transitions[toMemoryIndex(state, getSymbolIndex(input))];
-
-        if (trans != null) {
-            for (MTSTransition<I, TP> t : trans) {
-                if (backwardTransitions[t.getTarget()] != null) {
-                    backwardTransitions[t.getTarget()].remove(t);
-                }
-            }
-        }
-
         transitions[toMemoryIndex(state, getSymbolIndex(input))] = null;
-        backwardTransitions[state] = null;
     }
 
     @Override
@@ -146,6 +112,7 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
         return new MTSTransition<>(successor, properties == null ? getDefaultTransitionProperty() : properties);
     }
 
+    @Override
     public MTSTransition<I, TP> addModalTransition(Integer src, I input, Integer tgt, ModalType modalType) {
         return this.addTransition(src, input, tgt, buildModalProperty(modalType));
     }
@@ -203,19 +170,8 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     }
 
     @Override
-    public Collection<MTSTransition<I, TP>> getIncomingEdges(Integer node) {
-        return Collections.unmodifiableCollection(backwardTransitions[node]);
-    }
-
-    @Override
-    public Integer getSource(MTSTransition<I, TP> edge) {
-        return edge.getSource();
-    }
-
-    @Override
     public void clear() {
         Arrays.fill(transitions, 0, size() * numInputs(), null);
-        Arrays.fill(backwardTransitions, 0, size(), null);
         initialStates.clear();
 
         super.clear();
@@ -227,13 +183,6 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
         this.transitions =
                 (Set<MTSTransition<I, TP>>[]) updateTransitionStorage(this.transitions, Set[]::new, null, payload);
         super.updateTransitionStorage(payload);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void updateStateStorage(Payload payload) {
-        this.backwardTransitions =
-                (Set<MTSTransition<I, TP>>[]) updateStateStorage(this.backwardTransitions, null, payload);
     }
 
     protected abstract TP getDefaultTransitionProperty();

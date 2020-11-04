@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.fixedpoint;
+package net.automatalib.util.fixpoint;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -32,11 +32,11 @@ import org.slf4j.LoggerFactory;
  */
 public final class Worksets {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Worksets.class);
+
     private Worksets() {
         // prevent instantiation
     }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Worksets.class);
 
     public static <T, R> R process(WorksetAlgorithm<T, R> algorithm) {
 

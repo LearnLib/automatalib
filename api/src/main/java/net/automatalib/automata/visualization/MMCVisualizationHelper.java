@@ -1,11 +1,26 @@
+/* Copyright (C) 2013-2020 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.automata.visualization;
 
 import java.util.Map;
 
 import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.ts.modal.transitions.GroupMemberEdge;
 import net.automatalib.ts.modal.ModalContract;
-import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty;
+import net.automatalib.ts.modal.transition.GroupMemberEdge;
+import net.automatalib.ts.modal.transition.ModalContractEdgeProperty;
 
 public class MMCVisualizationHelper<S, I, T, TP extends ModalContractEdgeProperty & GroupMemberEdge, M extends ModalContract<S, I, T, TP>>
         extends MCVisualizationHelper<S, I, T, TP, M> {
@@ -20,34 +35,10 @@ public class MMCVisualizationHelper<S, I, T, TP extends ModalContractEdgePropert
             return false;
         }
 
-        TP transitionProperty = super.automaton.getTransitionProperty(edge.getTransition());
+        final TP transitionProperty = super.automaton.getTransitionProperty(edge.getTransition());
+        final int memberId = transitionProperty.getMemberId();
 
-        int memberId = transitionProperty.getMemberId();
-        ModalContractEdgeProperty.EdgeColor color = transitionProperty.getColor();
-
-        if (color == ModalContractEdgeProperty.EdgeColor.GREEN) {
-            // use colors from 3 to 7 of colorscheme greens9
-            properties.put("colorscheme", "greens9");
-            properties.put(EdgeAttrs.COLOR, String.valueOf(7 - (memberId % 5)));
-
-        }
-        else if (color == ModalContractEdgeProperty.EdgeColor.RED) {
-            if (0 <= memberId && memberId <= 6) {
-                // use colors from 3 to 9 of colorscheme reds9
-                properties.put("colorscheme", "reds9");
-                properties.put(EdgeAttrs.COLOR, String.valueOf(9 - memberId));
-            }
-            else if (7 <= memberId && memberId <= 13) {
-                properties.put("colorscheme", "ylorrd9");
-                properties.put(EdgeAttrs.COLOR, String.valueOf(16 - memberId));
-            }
-            else if (14 <= memberId) {
-                properties.put("colorscheme", "rdpu9");
-                properties.put(EdgeAttrs.COLOR, String.valueOf(9 - (memberId % 7)));
-            }
-        }
-
-        properties.put(MMCAttrs.MEMBERSHIP, String.valueOf(memberId));
+        properties.put(MMCEdgeAttrs.MEMBERSHIP, String.valueOf(memberId));
 
         return true;
     }

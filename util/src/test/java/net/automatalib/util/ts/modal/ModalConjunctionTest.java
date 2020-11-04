@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,8 @@
  */
 package net.automatalib.util.ts.modal;
 
-import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -26,12 +24,12 @@ import java.util.Random;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.ModalTransitionSystem;
-import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
-import net.automatalib.util.fixedpoint.Worksets;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
+import net.automatalib.util.fixpoint.Worksets;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.slf4j.Logger;
@@ -80,25 +78,25 @@ public class ModalConjunctionTest {
         b0s7 = block0.addState();
         b0s8 = block0.addState();
         b0s9 = block0.addState();
-        block0.addTransition(b0s0, (Character) 'a', b0s1, null);
-        block0.addTransition(b0s1, (Character) 'b', b0s2, new ModalEdgePropertyImpl(ModalType.MAY));
-        block0.addTransition(b0s2, (Character) 'c', b0s0, null);
-        block0.addTransition(b0s2, (Character) 'b', b0s1, new ModalEdgePropertyImpl(ModalType.MAY));
-        block0.addTransition(b0s2, (Character) 'c', b0s2, new ModalEdgePropertyImpl(ModalType.MAY));
-        block0.addTransition(b0s3, (Character) 'b', b0s0, new ModalEdgePropertyImpl(ModalType.MUST));
-        block0.addTransition(b0s3, (Character) 'a', b0s4, null);
-        block0.addTransition(b0s4, (Character) 'c', b0s3, null);
-        block0.addTransition(b0s1, (Character) 'c', b0s6, new ModalEdgePropertyImpl(ModalType.MAY));
-        block0.addTransition(b0s8, (Character) 'c', b0s7, null);
-        block0.addTransition(b0s8, (Character) 'c', b0s9, null);
+        block0.addTransition(b0s0, 'a', b0s1, null);
+        block0.addModalTransition(b0s1, 'b', b0s2, ModalType.MAY);
+        block0.addTransition(b0s2, 'c', b0s0, null);
+        block0.addModalTransition(b0s2, 'b', b0s1, ModalType.MAY);
+        block0.addModalTransition(b0s2, 'c', b0s2, ModalType.MAY);
+        block0.addModalTransition(b0s3, 'b', b0s0, ModalType.MUST);
+        block0.addTransition(b0s3, 'a', b0s4, null);
+        block0.addTransition(b0s4, 'c', b0s3, null);
+        block0.addModalTransition(b0s1, 'c', b0s6, ModalType.MAY);
+        block0.addTransition(b0s8, 'c', b0s7, null);
+        block0.addTransition(b0s8, 'c', b0s9, null);
 
         block1 = new CompactMTS<>(Alphabets.characters('a', 'd'));
         b1s0 = block1.addInitialState();
         b1s1 = block1.addState();
 
-        block1.addTransition(b1s0, 'a', b1s1, new ModalEdgePropertyImpl(ModalType.MAY));
-        block1.addTransition(b1s0, 'c', b1s0, new ModalEdgePropertyImpl(ModalType.MAY));
-        block1.addTransition(b1s1, 'b', b1s0, new ModalEdgePropertyImpl(ModalType.MUST));
+        block1.addModalTransition(b1s0, 'a', b1s1, ModalType.MAY);
+        block1.addModalTransition(b1s0, 'c', b1s0, ModalType.MAY);
+        block1.addModalTransition(b1s1, 'b', b1s0, ModalType.MUST);
 
         algo = new ModalConjunction<>(block0, block1, CompactMTS::new);
     }
@@ -111,7 +109,6 @@ public class ModalConjunctionTest {
     @Test
     void updateMay() {
         HashMap<Pair<Integer, Integer>, Integer> map = new HashMap<>();
-        Deque<Pair<Integer, Integer>> stack = new ArrayDeque<>();
         Collection<Pair<Integer, Integer>> discovered;
 
         algo.initialize(map);
@@ -315,16 +312,16 @@ public class ModalConjunctionTest {
             final I symbol = alphabet.getSymbol(rnd.nextInt(alphabet.size()));
             final ModalType m = (rnd.nextBoolean() ? ModalType.MUST : ModalType.MAY);
 
-            res.addTransition(src, symbol, dest, new ModalEdgePropertyImpl(m));
+            res.addModalTransition(src, symbol, dest, m);
         }
 
         return res;
     }
 
     private static <S, I, T, TP extends ModalEdgeProperty> T getSingleTransition(ModalTransitionSystem<S, I, T, TP> mts,
-                                                                                 S source,
-                                                                                 I input,
-                                                                                 S target) {
+                                                                                           S source,
+                                                                                           I input,
+                                                                                           S target) {
 
         final Collection<T> transitions = mts.getTransitions(source, input);
 

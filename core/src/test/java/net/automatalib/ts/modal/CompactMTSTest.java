@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,19 +17,18 @@ package net.automatalib.ts.modal;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
-import net.automatalib.graphs.BidirectionalGraph;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
-import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.assertj.core.api.Assertions;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author msc
@@ -51,7 +50,7 @@ public class CompactMTSTest {
     }
 
     @Test(dataProvider = "default", description = "Add Transition with non-null Property")
-    <A extends MutableModalTransitionSystem<S, I, T, TP> & BidirectionalGraph<S, T>, S, I, T, TP extends MutableModalEdgeProperty> void addTransitionWithTP(
+    <A extends MutableModalTransitionSystem<S, I, T, TP>, S, I, T, TP extends MutableModalEdgeProperty> void addTransitionWithTP(
             A mts,
             S src,
             S dest,
@@ -69,12 +68,10 @@ public class CompactMTSTest {
 
         T t = mts.addTransition(src, label, dest, tprop);
         Assert.assertNotNull(t);
-        Assert.assertEquals(mts.getSource(t), src);
         Assert.assertEquals(mts.getSuccessor(t), dest);
         Assert.assertEquals(mts.getEdgeLabel(t), label);
         Assert.assertEquals(mts.getTransitionProperty(t), tprop);
         Assert.assertEquals(mts.getTransitions(src, label), Collections.singleton(t));
-        Assert.assertTrue(mts.getIncomingEdges(dest).contains(t));
 
         int tsizeL = 0;
         for (S s : mts.getStates()) {
@@ -84,7 +81,7 @@ public class CompactMTSTest {
     }
 
     @Test(dataProvider = "default", description = "Add Transition with null as Property")
-    <A extends MutableModalTransitionSystem<S, I, T, TP> & BidirectionalGraph<S, T>, S, I, T, TP extends MutableModalEdgeProperty> void addTransitionWithoutTP(
+    <A extends MutableModalTransitionSystem<S, I, T, TP>, S, I, T, TP extends MutableModalEdgeProperty> void addTransitionWithoutTP(
             A mts,
             S src,
             S dest,
@@ -97,16 +94,14 @@ public class CompactMTSTest {
 
         T t = mts.addTransition(src, label, dest, null);
         Assert.assertNotNull(t);
-        Assert.assertEquals(mts.getSource(t), src);
         Assert.assertEquals(mts.getSuccessor(t), dest);
         Assert.assertEquals(mts.getEdgeLabel(t), label);
         Assert.assertNotNull(mts.getTransitionProperty(t));
         Assert.assertEquals(mts.getTransitions(src, label), Collections.singleton(t));
-        Assert.assertTrue(mts.getIncomingEdges(dest).contains(t));
     }
 
     @Test(dataProvider = "default", description = "Create Transition with null as Property and then add it")
-    <A extends MutableModalTransitionSystem<S, I, T, TP> & BidirectionalGraph<S, T>, S, I, T, TP extends MutableModalEdgeProperty> void addTransitionWithExternT(
+    <A extends MutableModalTransitionSystem<S, I, T, TP>, S, I, T, TP extends MutableModalEdgeProperty> void addTransitionWithExternT(
             A mts,
             S src,
             S dest,
@@ -119,16 +114,14 @@ public class CompactMTSTest {
         T t = mts.createTransition(dest, null);
         mts.addTransition(src, label, t);
         Assert.assertNotNull(t);
-        Assert.assertEquals(mts.getSource(t), src);
         Assert.assertEquals(mts.getSuccessor(t), dest);
         Assert.assertEquals(mts.getEdgeLabel(t), label);
         Assert.assertNotNull(mts.getTransitionProperty(t));
         Assert.assertEquals(mts.getTransitions(src, label), Collections.singleton(t));
-        Assert.assertTrue(mts.getIncomingEdges(dest).contains(t));
     }
 
     @Test(dataProvider = "default", description = "Create Transition with non-null Property and then add it")
-    <A extends MutableModalTransitionSystem<S, I, T, TP> & BidirectionalGraph<S, T>, S, I, T, TP extends MutableModalEdgeProperty> void addTransitionWithExternT2(
+    <A extends MutableModalTransitionSystem<S, I, T, TP>, S, I, T, TP extends MutableModalEdgeProperty> void addTransitionWithExternT2(
             A mts,
             S src,
             S dest,
@@ -141,16 +134,13 @@ public class CompactMTSTest {
         T t = mts.createTransition(dest, tprop);
         mts.addTransition(src, label, t);
         Assert.assertNotNull(t);
-        Assert.assertEquals(mts.getSource(t), src);
         Assert.assertEquals(mts.getSuccessor(t), dest);
         Assert.assertEquals(mts.getEdgeLabel(t), label);
         Assert.assertNotNull(mts.getTransitionProperty(t));
         Assert.assertEquals(mts.getTransitions(src, label), Collections.singleton(t));
-        Assert.assertTrue(mts.getIncomingEdges(dest).contains(t));
     }
 
-
-    @Test(description = "Example graph from Japser")
+    @Test(description = "Example graph from Jasper")
     void testJasper() {
         final Alphabet<String> alphabet = Alphabets.closedCharStringRange('a', 'b');
         final CompactMTS<String> s = new CompactMTS<>(alphabet);
@@ -159,70 +149,48 @@ public class CompactMTSTest {
         final Integer as1 = s.addState();
         final Integer as2 = s.addState();
 
-        final MTSTransition<String, MutableModalEdgeProperty> t1 = s.addTransition(as0, "a", as0, new ModalEdgePropertyImpl(ModalType.MUST));
-        final MTSTransition<String, MutableModalEdgeProperty> t2 = s.addTransition(as0, "b", as1, new ModalEdgePropertyImpl(ModalType.MUST));
-        final MTSTransition<String, MutableModalEdgeProperty> t3 = s.addTransition(as1, "a", as1, new ModalEdgePropertyImpl(ModalType.MUST));
-        final MTSTransition<String, MutableModalEdgeProperty> t4 = s.addTransition(as1, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
-        final MTSTransition<String, MutableModalEdgeProperty> t5 = s.addTransition(as2, "a", as2, new ModalEdgePropertyImpl(ModalType.MAY));
-        final MTSTransition<String, MutableModalEdgeProperty> t6 = s.addTransition(as2, "b", as2, new ModalEdgePropertyImpl(ModalType.MAY));
+        final MTSTransition<String, MutableModalEdgeProperty> t1 = s.addModalTransition(as0, "a", as0, ModalType.MUST);
+        final MTSTransition<String, MutableModalEdgeProperty> t2 = s.addModalTransition(as0, "b", as1, ModalType.MUST);
+        final MTSTransition<String, MutableModalEdgeProperty> t3 = s.addModalTransition(as1, "a", as1, ModalType.MUST);
+        final MTSTransition<String, MutableModalEdgeProperty> t4 = s.addModalTransition(as1, "b", as2, ModalType.MAY);
+        final MTSTransition<String, MutableModalEdgeProperty> t5 = s.addModalTransition(as2, "a", as2, ModalType.MAY);
+        final MTSTransition<String, MutableModalEdgeProperty> t6 = s.addModalTransition(as2, "b", as2, ModalType.MAY);
 
-        assertThat(s.getTransitions(as0, "a"))
-                .hasSize(1)
-                .extracting("target")
-                .containsExactly(as0);
+        Assertions.assertThat(s.getTransitions(as0, "a")).hasSize(1).extracting("target").containsExactly(as0);
 
-        assertThat(s.getSource(t1))
-                .as("Source of 0 -a-> 0 is 0")
-                .isEqualTo(as0);
-        assertThat(s.getSource(t2))
-                .as("Source of 0 -b-> 1 is 0")
-                .isEqualTo(as0);
-        assertThat(s.getSource(t3))
-                .as("Source of 1 -a-> 1 is 1")
-                .isEqualTo(as1);
-        assertThat(s.getSource(t4))
-                .as("Source of 1 -b-> 2 is 1")
-                .isEqualTo(as1);
-        assertThat(s.getSource(t5))
-                .as("Source of 2 -a-> 2 is 2")
-                .isEqualTo(as2);
-        assertThat(s.getSource(t6))
-                .as("Source of 2 -b-> 2 is 2")
-                .isEqualTo(as2);
+        Assertions.assertThat(s.getTransitions(as0, "b"))
+                  .hasSize(1)
+                  .allMatch(t -> Objects.equals(t.getSource(), as0))
+                  .allMatch(t -> Objects.equals(t.getTarget(), as1))
+                  .allMatch(t -> t.getProperty().getType() == ModalType.MUST)
+                  .allMatch(t -> "b".equals(t.getLabel()));
 
-        assertThat(s.getTransitions(as0, "b"))
-                .hasSize(1)
-                .allMatch(t -> t.getTarget() == as1)
-                .allMatch(t -> t.getProperty().getType() == ModalType.MUST)
-                .allMatch(t -> "b".equals(t.getLabel()))
-                .allMatch(t -> t.getSource() == as0);
+        Assertions.assertThat(s.getTransitions(as1, "a"))
+                  .hasSize(1)
+                  .allMatch(t -> Objects.equals(t.getSource(), as1))
+                  .allMatch(t -> Objects.equals(t.getTarget(), as1))
+                  .allMatch(t -> t.getProperty().getType() == ModalType.MUST)
+                  .allMatch(t -> "a".equals(t.getLabel()));
 
-        assertThat(s.getTransitions(as1, "a"))
-                .hasSize(1)
-                .allMatch(t -> t.getTarget() == as1)
-                .allMatch(t -> t.getProperty().getType() == ModalType.MUST)
-                .allMatch(t -> "a".equals(t.getLabel()))
-                .allMatch(t -> t.getSource() == as1);
+        Assertions.assertThat(s.getTransitions(as1, "b"))
+                  .hasSize(1)
+                  .allMatch(t -> Objects.equals(t.getSource(), as1))
+                  .allMatch(t -> Objects.equals(t.getTarget(), as2))
+                  .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
+                  .allMatch(t -> "b".equals(t.getLabel()));
 
-        assertThat(s.getTransitions(as1, "b"))
-                .hasSize(1)
-                .allMatch(t -> t.getTarget() == as2)
-                .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
-                .allMatch(t -> "b".equals(t.getLabel()))
-                .allMatch(t -> t.getSource() == as1);
+        Assertions.assertThat(s.getTransitions(as2, "a"))
+                  .hasSize(1)
+                  .allMatch(t -> Objects.equals(t.getSource(), as2))
+                  .allMatch(t -> Objects.equals(t.getTarget(), as2))
+                  .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
+                  .allMatch(t -> "a".equals(t.getLabel()));
 
-        assertThat(s.getTransitions(as2, "a"))
-                .hasSize(1)
-                .allMatch(t -> t.getTarget() == as2)
-                .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
-                .allMatch(t -> "a".equals(t.getLabel()))
-                .allMatch(t -> t.getSource() == as2);
-
-        assertThat(s.getTransitions(as2, "b"))
-                .hasSize(1)
-                .allMatch(t -> t.getTarget() == as2)
-                .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
-                .allMatch(t -> "b".equals(t.getLabel()))
-                .allMatch(t -> t.getSource() == as2);
+        Assertions.assertThat(s.getTransitions(as2, "b"))
+                  .hasSize(1)
+                  .allMatch(t -> Objects.equals(t.getSource(), as2))
+                  .allMatch(t -> Objects.equals(t.getTarget(), as2))
+                  .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
+                  .allMatch(t -> "b".equals(t.getLabel()));
     }
 }

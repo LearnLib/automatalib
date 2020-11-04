@@ -15,12 +15,14 @@
  */
 package net.automatalib.ts.modal;
 
-import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import java.util.Collection;
+
+import net.automatalib.ts.modal.transition.MutableGroupMemberEdge;
 import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
 
 /**
- * A mutable version of {@link ModalContract} that allows to add states and transitions.
+ * A mutable version of the {@link MembershipModalContract} that allows various modifications on the current
+ * modification alphabet.
  *
  * @param <S>
  *         state type
@@ -33,9 +35,14 @@ import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
  *
  * @author msc
  */
-public interface MutableModalContract<S, I, T, TP extends MutableModalContractEdgeProperty>
-        extends MutableModalTransitionSystem<S, I, T, TP>, ModalContract<S, I, T, TP> {
+public interface MutableMembershipModalContract<S, I, T, TP extends MutableModalContractEdgeProperty & MutableGroupMemberEdge>
+        extends MembershipModalContract<S, I, T, TP>, MutableModalContract<S, I, T, TP> {
 
-    T addContractTransition(S src, I input, S tgt, ModalType modalType, boolean tau, EdgeColor color);
+    boolean addCommunicationSymbol(I symbol);
 
+    void removeCommunicationSymbol(I symbol);
+
+    void setCommunicationAlphabet(Collection<I> alphabet);
+
+    void clearCommunicationAlphabet();
 }

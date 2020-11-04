@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2019 TU Dortmund
+/* Copyright (C) 2013-2020 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,23 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.ts.modal.transitions;
+package net.automatalib.ts.modal.transition;
 
-public interface ModalEdgeProperty {
+public interface TauEdge {
 
-    enum ModalType {
-        MAY,
-        MUST
-    }
-
-    ModalType getType();
-
-    default boolean isMayOnly() {
-        return getType() == ModalType.MAY;
-    }
-
-    default boolean isMust() {
-        return getType() == ModalType.MUST;
-    }
+    boolean isTau();
 
 }

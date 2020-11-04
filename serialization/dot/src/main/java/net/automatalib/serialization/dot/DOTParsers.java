@@ -42,21 +42,23 @@ import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.serialization.ModelDeserializer;
 import net.automatalib.ts.modal.CompactMC;
+import net.automatalib.ts.modal.CompactMMC;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.MembershipMC;
+import net.automatalib.ts.modal.ModalContract;
+import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalContract;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
-import net.automatalib.ts.modal.transitions.ModalContractEdgeProperty.EdgeColor;
-import net.automatalib.ts.modal.transitions.ModalContractEdgePropertyImpl;
-import net.automatalib.ts.modal.transitions.ModalContractMembershipEdgePropertyImpl;
-import net.automatalib.ts.modal.transitions.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transitions.ModalEdgePropertyImpl;
-import net.automatalib.ts.modal.transitions.MutableModalContractEdgeProperty;
-import net.automatalib.ts.modal.transitions.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
+import net.automatalib.ts.modal.transition.ModalContractEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.ModalContractMembershipEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
+import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
-import net.automatalib.visualization.VisualizationHelper.MCAttrs;
-import net.automatalib.visualization.VisualizationHelper.MMCAttrs;
-import net.automatalib.visualization.VisualizationHelper.MTSAttrs;
+import net.automatalib.visualization.VisualizationHelper.MCEdgeAttrs;
+import net.automatalib.visualization.VisualizationHelper.MMCEdgeAttrs;
+import net.automatalib.visualization.VisualizationHelper.MTSEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeShapes;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -131,64 +133,64 @@ public final class DOTParsers {
     };
 
     /**
-     * Edge input parser that parses an edges's "{@link MTSAttrs#MODALITY modality}" attribute and constructs a
+     * Edge input parser that parses an edges's {@link MTSEdgeAttrs#MODALITY modality} attribute and constructs a
      * corresponding {@link MutableModalEdgeProperty}. Throws an {@link IllegalArgumentException} if the attribute is
      * missing or doesn't match its expected {@link ModalType format}.
      */
     public static final Function<Map<String, String>, MutableModalEdgeProperty> DEFAULT_MTS_EDGE_PARSER = attr -> {
-        final String type = attr.get(MTSAttrs.MODALITY);
+        final String type = attr.get(MTSEdgeAttrs.MODALITY);
 
         if (type == null) {
-            throw new IllegalArgumentException('\'' + MTSAttrs.MODALITY + "' attribute undefined");
+            throw new IllegalArgumentException('\'' + MTSEdgeAttrs.MODALITY + "' attribute undefined");
         }
 
         return new ModalEdgePropertyImpl(ModalType.valueOf(type.toUpperCase(Locale.ROOT)));
     };
 
     /**
-     * Edge input parser that parses an edges's "{@link MTSAttrs#MODALITY modality}" and {@link EdgeAttrs#COLOR color}
+     * Edge input parser that parses an edges's {@link MTSEdgeAttrs#MODALITY modality} and {@link EdgeAttrs#COLOR color}
      * attribute and constructs a corresponding {@link MutableModalContractEdgeProperty}. Throws an {@link
      * IllegalArgumentException} if any of the two attributes are missing or doesn't match its expected format.
      */
     public static final Function<Map<String, String>, MutableModalContractEdgeProperty> DEFAULT_MC_EDGE_PARSER =
             attr -> {
-                final String type = attr.get(MTSAttrs.MODALITY);
-                final String contract = attr.get(MCAttrs.CONTRACT);
+                final String type = attr.get(MTSEdgeAttrs.MODALITY);
+                final String contract = attr.get(MCEdgeAttrs.CONTRACT);
 
                 if (type == null) {
-                    throw new IllegalArgumentException("attribute '" + MTSAttrs.MODALITY + "' undefined");
+                    throw new IllegalArgumentException("attribute '" + MTSEdgeAttrs.MODALITY + "' undefined");
                 }
                 if (contract == null) {
-                    throw new IllegalArgumentException("attribute '" + MCAttrs.CONTRACT + "' undefined");
+                    throw new IllegalArgumentException("attribute '" + MCEdgeAttrs.CONTRACT + "' undefined");
                 }
 
-                return new ModalContractEdgePropertyImpl(ModalType.valueOf(type),
+                return new ModalContractEdgePropertyImpl(ModalType.valueOf(type.toUpperCase(Locale.ROOT)),
                                                          MCVisualizationHelper.TAU.equals(attr.get(EdgeAttrs.LABEL)),
                                                          EdgeColor.valueOf(contract.toUpperCase(Locale.ROOT)));
             };
 
     /**
-     * Edge input parser that parses an edges's "{@link MTSAttrs#MODALITY modality}" and {@link EdgeAttrs#COLOR color}
+     * Edge input parser that parses an edges's {@link MTSEdgeAttrs#MODALITY modality} and {@link EdgeAttrs#COLOR color}
      * attribute and constructs a corresponding {@link MutableModalContractEdgeProperty}. Throws an {@link
      * IllegalArgumentException} if any of the two attributes are missing or doesn't match its expected format.
      */
     public static final Function<Map<String, String>, ModalContractMembershipEdgePropertyImpl> DEFAULT_MMC_EDGE_PARSER =
             attr -> {
-                final String type = attr.get(MTSAttrs.MODALITY);
-                final String contract = attr.get(MCAttrs.CONTRACT);
-                final String membership = attr.get(MMCAttrs.MEMBERSHIP);
+                final String type = attr.get(MTSEdgeAttrs.MODALITY);
+                final String contract = attr.get(MCEdgeAttrs.CONTRACT);
+                final String membership = attr.get(MMCEdgeAttrs.MEMBERSHIP);
 
                 if (type == null) {
-                    throw new IllegalArgumentException("attribute '" + MTSAttrs.MODALITY + "' undefined");
+                    throw new IllegalArgumentException("attribute '" + MTSEdgeAttrs.MODALITY + "' undefined");
                 }
                 if (contract == null) {
-                    throw new IllegalArgumentException("attribute '" + MCAttrs.CONTRACT + "' undefined");
+                    throw new IllegalArgumentException("attribute '" + MCEdgeAttrs.CONTRACT + "' undefined");
                 }
                 if (membership == null) {
-                    throw new IllegalArgumentException("attribute '" + MMCAttrs.MEMBERSHIP + "' undefined");
+                    throw new IllegalArgumentException("attribute '" + MMCEdgeAttrs.MEMBERSHIP + "' undefined");
                 }
 
-                return new ModalContractMembershipEdgePropertyImpl(ModalType.valueOf(type),
+                return new ModalContractMembershipEdgePropertyImpl(ModalType.valueOf(type.toUpperCase(Locale.ROOT)),
                                                                    MCVisualizationHelper.TAU.equals(attr.get(EdgeAttrs.LABEL)),
                                                                    EdgeColor.valueOf(contract.toUpperCase(Locale.ROOT)),
                                                                    Integer.parseInt(membership));
@@ -680,10 +682,42 @@ public final class DOTParsers {
         return new DOTGraphParser<>(creator, nodeParser, edgeParser);
     }
 
-    public static DOTInputModelDeserializer<Integer, String, CompactMTS<String>> mts() {
+    /**
+     * Default parser for {@link ModalTransitionSystem}s serialized by AutomataLib.
+     * <p>
+     * Invokes {@link #mts(AutomatonCreator, Function, Function)} with {@link CompactMTS.Creator} as {@code creator},
+     * {@link #DEFAULT_EDGE_PARSER} as {@code inputParser} and {@link #DEFAULT_EDGE_PARSER} as {@code propertyParser}.
+     *
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMTS}s.
+     */
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMTS<@Nullable String>> mts() {
         return mts(new CompactMTS.Creator<>(), DEFAULT_EDGE_PARSER, DEFAULT_MTS_EDGE_PARSER);
     }
 
+    /**
+     * Parser for {@link ModalTransitionSystem}s with a custom MTS instance, custom input type and edge attributes
+     * parsers.
+     * <p>
+     * Invokes {@link #mts(AutomatonCreator, Function, Function, Collection)} with AutomataLib's default initial state
+     * label "{@code __start0}" as {@code initialNodeLabel}.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned graph
+     * @param inputParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param propertyParser
+     *         an edge parser that extracts from a property map of an edge the modal transition property
+     * @param <S>
+     *         the state type of the returned MTS
+     * @param <I>
+     *         the input symbol type
+     * @param <TP>
+     *         the modal transition property
+     * @param <M>
+     *         the type of the returned MTS
+     *
+     * @return a DOT {@link ModelDeserializer} for {@code M}s.
+     */
     public static <S, I, TP extends MutableModalEdgeProperty, M extends MutableModalTransitionSystem<S, I, ?, TP>> DOTInputModelDeserializer<S, I, M> mts(
             AutomatonCreator<M, I> creator,
             Function<Map<String, String>, I> inputParser,
@@ -691,6 +725,29 @@ public final class DOTParsers {
         return mts(creator, inputParser, propertyParser, Collections.singletonList(GraphDOT.initialLabel(0)));
     }
 
+    /**
+     * Parser for {@link ModalTransitionSystem}s with a custom MTS instance, custom input type and edge attributes
+     * parsers and custom initial state labels.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned graph
+     * @param inputParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param propertyParser
+     *         an edge parser that extracts from a property map of an edge the modal transition property
+     * @param initialNodeIds
+     *         the ids of the initial nodes
+     * @param <S>
+     *         the state type of the returned MTS
+     * @param <I>
+     *         the input symbol type
+     * @param <TP>
+     *         the modal transition property
+     * @param <M>
+     *         the type of the returned MTS
+     *
+     * @return a DOT {@link ModelDeserializer} for {@code M}s.
+     */
     public static <S, I, TP extends MutableModalEdgeProperty, M extends MutableModalTransitionSystem<S, I, ?, TP>> DOTInputModelDeserializer<S, I, M> mts(
             AutomatonCreator<M, I> creator,
             Function<Map<String, String>, I> inputParser,
@@ -703,10 +760,42 @@ public final class DOTParsers {
                                                true);
     }
 
-    public static DOTInputModelDeserializer<Integer, String, CompactMC<String>> mc() {
+    /**
+     * Default parser for {@link ModalContract}s serialized by AutomataLib.
+     * <p>
+     * Invokes {@link #mc(AutomatonCreator, Function, Function)} with {@link CompactMC.Creator} as {@code creator},
+     * {@link #DEFAULT_EDGE_PARSER} as {@code inputParser} and {@link #DEFAULT_MC_EDGE_PARSER} as {@code
+     * propertyParser}.
+     *
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMC}s.
+     */
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMC<@Nullable String>> mc() {
         return mc(new CompactMC.Creator<>(), DEFAULT_EDGE_PARSER, DEFAULT_MC_EDGE_PARSER);
     }
 
+    /**
+     * Parser for {@link ModalContract}s with a custom MC instance, custom input type and edge attributes parsers.
+     * <p>
+     * Invokes {@link #mc(AutomatonCreator, Function, Function, Collection)} with AutomataLib's default initial state
+     * label "{@code __start0}" as {@code initialNodeLabel}.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned graph
+     * @param inputParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param propertyParser
+     *         an edge parser that extracts from a property map of an edge the modal transition property
+     * @param <S>
+     *         the state type of the returned MTS
+     * @param <I>
+     *         the input symbol type
+     * @param <TP>
+     *         the modal transition property
+     * @param <M>
+     *         the type of the returned MC
+     *
+     * @return a DOT {@link ModelDeserializer} for {@code M}s.
+     */
     public static <S, I, TP extends MutableModalContractEdgeProperty, M extends MutableModalContract<S, I, ?, TP>> DOTInputModelDeserializer<S, I, M> mc(
             AutomatonCreator<M, I> creator,
             Function<Map<String, String>, I> inputParser,
@@ -714,6 +803,29 @@ public final class DOTParsers {
         return mc(creator, inputParser, propertyParser, Collections.singletonList(GraphDOT.initialLabel(0)));
     }
 
+    /**
+     * Parser for {@link ModalContract}s with a custom MC instance, custom input type and edge attributes parsers and
+     * custom initial state labels.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned graph
+     * @param inputParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param propertyParser
+     *         an edge parser that extracts from a property map of an edge the modal transition property
+     * @param initialNodeIds
+     *         the ids of the initial nodes
+     * @param <S>
+     *         the state type of the returned MTS
+     * @param <I>
+     *         the input symbol type
+     * @param <TP>
+     *         the modal transition property
+     * @param <M>
+     *         the type of the returned MC
+     *
+     * @return a DOT {@link ModelDeserializer} for {@code M}s.
+     */
     public static <S, I, TP extends MutableModalContractEdgeProperty, M extends MutableModalContract<S, I, ?, TP>> DOTInputModelDeserializer<S, I, M> mc(
             AutomatonCreator<M, I> creator,
             Function<Map<String, String>, I> inputParser,
@@ -726,8 +838,17 @@ public final class DOTParsers {
                                                true);
     }
 
-    public static DOTInputModelDeserializer<Integer, String, MembershipMC<String>> mmc() {
-        return mc(new MembershipMC.Creator<>(), DEFAULT_EDGE_PARSER, DEFAULT_MMC_EDGE_PARSER);
+    /**
+     * Default parser for {@link CompactMMC}s serialized by AutomataLib.
+     * <p>
+     * Invokes {@link #mc(AutomatonCreator, Function, Function)} with {@link CompactMMC.Creator} as {@code creator},
+     * {@link #DEFAULT_EDGE_PARSER} as {@code inputParser} and {@link #DEFAULT_MMC_EDGE_PARSER} as {@code
+     * propertyParser}.
+     *
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMMC}s.
+     */
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMMC<@Nullable String>> mmc() {
+        return mc(new CompactMMC.Creator<>(), DEFAULT_EDGE_PARSER, DEFAULT_MMC_EDGE_PARSER);
     }
 
 }
