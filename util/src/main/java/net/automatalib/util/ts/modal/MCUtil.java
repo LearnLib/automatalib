@@ -222,13 +222,6 @@ public class MCUtil {
         CompactDFA<I> dfa = res.getSecond();
         Map<Set<S>, Integer> mapping = res.getFirst();
 
-        try (Writer writer = Files.newBufferedWriter(Paths.get("ZZZ-closure.dot"))) {
-            GraphDOT.write(res.getSecond().graphView(), writer);
-        }
-        catch (IOException ignore) {
-
-        }
-
         // Use acceptance to remove unnecessary may transitions
         Set<S> keepStates = new HashSet<>();
         for (S src : modalContract.getStates()){
@@ -291,13 +284,6 @@ public class MCUtil {
     ) {
         B result = creator.createAutomaton(Alphabets.fromCollection(inputs));
 
-        try (Writer writer = Files.newBufferedWriter(Paths.get("ZZZ-dfa.dot"))) {
-            GraphDOT.write(dfa.transitionGraphView(inputs), writer);
-        }
-        catch (IOException ignore) {
-
-        }
-
         AutomatonLowLevelCopy.rawCopy(AutomatonCopyMethod.STATE_BY_STATE,
                                       dfa,
                                       inputs,
@@ -306,13 +292,6 @@ public class MCUtil {
                                       t -> dfa.isAccepting(dfa.getSuccessor(t)) ? mustSupplier.get() : mayOnlySupplier.get(),
                                       s -> true,
                                       (s,i,t) -> true);
-
-        try (Writer writer = Files.newBufferedWriter(Paths.get("ZZZ-result.dot"))) {
-            GraphDOT.write(result.graphView(), writer);
-        }
-        catch (IOException ignore) {
-
-        }
 
         return result;
     }

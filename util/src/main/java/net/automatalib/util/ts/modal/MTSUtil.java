@@ -105,13 +105,6 @@ public final class MTSUtil {
         }
     }
 
-    public static <S, I, T, TP extends ModalEdgeProperty> void saveMTSToPath(List<ModalTransitionSystem<S, I, T, TP>> mtss, String path, boolean startHasNewID) throws IOException {
-        Files.createDirectories(Paths.get(path).getParent());
-        try (Writer writer = Files.newBufferedWriter(Paths.get(path))) {
-            GraphDOT.write(mtss.stream().map(g->g.graphView()).collect(Collectors.toList()), writer, startHasNewID);
-        }
-    }
-
     public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> conjunction(
             ModalTransitionSystem<S0, I, T0, TP0> mts0, ModalTransitionSystem<S1, I, T1, TP1> mts1) {
         return conjunction(mts0, mts1, CompactMTS::new);

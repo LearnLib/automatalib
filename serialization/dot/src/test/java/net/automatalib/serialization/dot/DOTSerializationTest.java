@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -26,7 +28,10 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
+import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.transducers.MealyMachine.MealyGraphView;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.io.UnclosableOutputStream;
@@ -96,6 +101,38 @@ public class DOTSerializationTest {
 
         ThrowingWriter writer = w -> GraphDOT.write(mc.graphView(), w);
         checkDOTOutput(writer, DOTSerializationUtil.MC_RESOURCE);
+    }
+
+    @Test
+    public void testRegularClusterExport() throws IOException {
+
+        final Graph<?, ?> dfa = DOTSerializationUtil.DFA.graphView();
+        final Graph<?, ?> mealy =
+                new MealyGraphView<Integer, String, CompactMealyTransition<String>, String, CompactMealy<String, String>>(
+                        DOTSerializationUtil.MEALY,
+                        DOTSerializationUtil.MEALY.getInputAlphabet()) {
+
+                    @Override
+                    public VisualizationHelper<Integer, TransitionEdge<String, CompactMealyTransition<String>>> getVisualizationHelper() {
+                        return new DefaultDOTVisualizationHelper<Integer, TransitionEdge<String, CompactMealyTransition<String>>>(
+                                super.getVisualizationHelper()) {
+
+                            @Override
+                            public void writePreamble(Appendable a) throws IOException {
+                                a.append("color=blue;")
+                                 .append(System.lineSeparator())
+                                 .append("label=\"Mealy\";")
+                                 .append(System.lineSeparator());
+                            }
+                        };
+                    }
+                };
+        final Graph<?, ?> mc = DOTSerializationUtil.MC.graphView();
+
+        final List<Graph<?, ?>> clusters = Arrays.asList(dfa, mealy, mc);
+
+        ThrowingWriter writer = w -> GraphDOT.write(clusters, w);
+        checkDOTOutput(writer, DOTSerializationUtil.CLUSTER_RESOURCE);
     }
 
     @Test

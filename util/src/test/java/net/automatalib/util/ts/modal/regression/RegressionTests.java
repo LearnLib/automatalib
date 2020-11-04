@@ -2,6 +2,7 @@ package net.automatalib.util.ts.modal.regression;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,6 +11,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.serialization.dot.DOTSerializationProvider;
+import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.transitions.ModalEdgeProperty;
@@ -172,9 +175,11 @@ public class RegressionTests {
 
         CompactMTS<String> context = MTSUtil.conjunction(greenContext, redContext);
 
-        MTSUtil.saveMTSToPath(context, "src/test/resources/phil3-actual/"+ testCase.context);
-
-        Assert.assertTrue(MTSUtil.isRefinementOf(instance.context, context, context.getInputAlphabet()));
+        if (!MTSUtil.isRefinementOf(instance.context, context, context.getInputAlphabet())) {
+            final StringWriter sw = new StringWriter();
+            GraphDOT.write(context.graphView(), sw);
+            Assert.fail("Conjunction is not a refinement of model: " + sw.toString());
+        }
     }
 
     @Test(dataProvider = "Decomp")

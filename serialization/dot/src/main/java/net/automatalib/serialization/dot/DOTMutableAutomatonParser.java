@@ -18,23 +18,31 @@ package net.automatalib.serialization.dot;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;
+import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
 /**
  * General-purpose DOT parser for {@link MutableAutomaton}s.
  *
+ * @param <I>
+ *         automaton state type
  * @param <I>
  *         input symbol type
  * @param <SP>
@@ -46,11 +54,9 @@ import net.automatalib.words.impl.Alphabets;
  *
  * @author frohme
  */
-public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, I, ?, SP, TP>>
-        implements InputModelDeserializer<I, A> {
+public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<S, I, ?, SP, TP>>
+        implements DOTInputModelDeserializer<S, I, A> {
 
-    private static final boolean SORT_NODES_AS_LONG = true;
-    private static final String[] COMMON_STATE_PREFIX = {"s", "state", "idx"};
     private final AutomatonCreator<A, I> creator;
     private final Function<Map<String, String>, SP> nodeParser;
     private final Function<Map<String, String>, Pair<I, TP>> edgeParser;
@@ -89,7 +95,7 @@ public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, 
     }
 
     @Override
-    public InputModelData<I, A> readModel(InputStream is) throws IOException {
+    public DOTInputModelData<S, I, A> readModel(InputStream is) throws IOException {
 
         try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
             InternalDOTParser parser = new InternalDOTParser(r);
@@ -108,37 +114,18 @@ public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, 
             final Alphabet<I> alphabet = Alphabets.fromCollection(inputs);
             final A automaton = creator.createAutomaton(alphabet, parser.getNodes().size());
 
-            parseNodesAndEdges(parser, (MutableAutomaton<?, I, ?, SP, TP>) automaton);
+            final Mapping<S, String> labels = parseNodesAndEdges(parser, automaton);
 
-            return new InputModelData<>(automaton, alphabet);
+            return new DOTInputModelData<>(automaton, alphabet, labels);
         }
     }
 
-    private <S> void parseNodesAndEdges(InternalDOTParser parser, MutableAutomaton<S, I, ?, SP, TP> automaton) {
-        final Map<String, S> stateMap = Maps.newHashMapWithExpectedSize(parser.getNodes().size());
+    private Mapping<S, String> parseNodesAndEdges(InternalDOTParser parser, MutableAutomaton<S, I, ?, SP, TP> automaton) {
+        final List<Node> nodes = parser.getNodes();
+        final Map<String, S> stateMap = Maps.newHashMapWithExpectedSize(nodes.size());
+        final MutableMapping<S, String> mapping = automaton.createDynamicStateMapping();
 
-        List<Node> nodesSorted = Lists.newArrayList(parser.getNodes());
-
-        if (SORT_NODES_AS_LONG) {
-            nodesSorted.sort(Comparator.comparingLong(o -> {
-                if (fakeInitialNodeIds && initialNodeIds.contains(o.id)) {
-                    return -1;
-                }
-                else if (!o.attributes.containsKey("label") || o.attributes.get("label") == null || Objects.equals(o.attributes.get("label"), "")) {
-                    return Long.MAX_VALUE;
-                }
-                String label = o.attributes.get("label").toLowerCase();
-                for (String prefix : COMMON_STATE_PREFIX) {
-                    if (label.startsWith(prefix)) {
-                        label = label.substring(prefix.length());
-                        break;
-                    }
-                }
-                return Long.parseLong(label);
-            }));
-        }
-
-        for (Node node : nodesSorted) {
+        for (Node node : nodes) {
             final S state;
 
             if (fakeInitialNodeIds && initialNodeIds.contains(node.id)) {
@@ -150,6 +137,9 @@ public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, 
             }
 
             stateMap.put(node.id, state);
+
+            final String label = node.attributes.getOrDefault(NodeAttrs.LABEL, node.id);
+            mapping.put(state, label);
         }
 
         for (Edge edge : parser.getEdges()) {
@@ -163,5 +153,7 @@ public class DOTMutableAutomatonParser<I, SP, TP, A extends MutableAutomaton<?, 
                                         property.getSecond());
             }
         }
+
+        return mapping;
     }
 }

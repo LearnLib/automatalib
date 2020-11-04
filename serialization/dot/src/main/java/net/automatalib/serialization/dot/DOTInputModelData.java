@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.serialization;
+package net.automatalib.serialization.dot;
 
+import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.serialization.InputModelData;
 import net.automatalib.ts.simple.SimpleTS;
 import net.automatalib.words.Alphabet;
 
 /**
- * A utility data class, that allows to pair a model that can react to input symbols with a corresponding alphabet.
+ * A utility data class, that extends {@link InputModelData} by labeling information of the model's states.
  *
+ * @param <I>
+ *         the state type of the model
  * @param <I>
  *         the input symbol type
  * @param <M>
@@ -28,13 +32,12 @@ import net.automatalib.words.Alphabet;
  *
  * @author frohme
  */
-public class InputModelData<I, M extends SimpleTS<?, I>> {
+public class DOTInputModelData<S, I, M extends SimpleTS<S, I>> extends InputModelData<I, M> {
 
-    public final M model;
-    public final Alphabet<I> alphabet;
+    public final Mapping<S, String> stateLabels;
 
-    public InputModelData(M model, Alphabet<I> alphabet) {
-        this.model = model;
-        this.alphabet = alphabet;
+    public DOTInputModelData(M model, Alphabet<I> alphabet, Mapping<S, String> stateLabels) {
+        super(model, alphabet);
+        this.stateLabels = stateLabels;
     }
 }
