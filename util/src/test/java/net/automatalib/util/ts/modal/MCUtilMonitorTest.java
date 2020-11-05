@@ -24,12 +24,11 @@ import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
-import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
+import net.automatalib.util.ts.modal.MCUtil.SystemComponent;
 import net.automatalib.words.impl.Alphabets;
 import org.assertj.core.api.Assertions;
 import org.testng.Assert;
@@ -52,16 +51,16 @@ public class MCUtilMonitorTest {
         monitor.addContractTransition(s0, 'a', s1, ModalType.MUST, false, EdgeColor.NONE);
         monitor.addContractTransition(s1, 'b', s2, ModalType.MUST, false, EdgeColor.GREEN);
         monitor.addContractTransition(s2, 'c', s3, ModalType.MUST, false, EdgeColor.NONE);
-        monitor.addContractTransition(s3, 'd', s0, ModalEdgeProperty.ModalType.MUST, false, EdgeColor.GREEN);
+        monitor.addContractTransition(s3, 'd', s0, ModalType.MUST, false, EdgeColor.GREEN);
     }
 
     @Test
     public void testSystemComponent() {
-        MCUtil.SystemComponent<CompactMTS<Character>, Integer, Character, MTSTransition<Character, MutableModalEdgeProperty>, MutableModalEdgeProperty>
-                system = MCUtil.systemComponent(monitor,
-                                                CompactMTS::new,
-                                                t -> null,
-                                                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+        SystemComponent<CompactMTS<Character>, Integer> system = MCUtil.systemComponent(monitor,
+                                                                                        CompactMTS::new,
+                                                                                        t -> null,
+                                                                                        () -> new ModalEdgePropertyImpl(
+                                                                                                ModalType.MAY));
 
         Assertions.assertThat(system.systemComponent.getInitialStates()).hasSize(1);
 
@@ -78,11 +77,11 @@ public class MCUtilMonitorTest {
 
     @Test
     public void testRedContextLanguage() {
-        MCUtil.SystemComponent<CompactMTS<Character>, Integer, Character, MTSTransition<Character, MutableModalEdgeProperty>, MutableModalEdgeProperty>
-                system = MCUtil.systemComponent(monitor,
-                                                CompactMTS::new,
-                                                t -> null,
-                                                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+        SystemComponent<CompactMTS<Character>, Integer> system = MCUtil.systemComponent(monitor,
+                                                                                        CompactMTS::new,
+                                                                                        t -> null,
+                                                                                        () -> new ModalEdgePropertyImpl(
+                                                                                                ModalType.MAY));
 
         DFA<?, Character> dfa = MCUtil.redContextLanguage(system, monitor.getCommunicationAlphabet());
 
@@ -99,18 +98,18 @@ public class MCUtilMonitorTest {
 
     @Test
     public void testRedContextComponent() {
-        MCUtil.SystemComponent<CompactMTS<Character>, Integer, Character, MTSTransition<Character, MutableModalEdgeProperty>, MutableModalEdgeProperty>
-                system = MCUtil.systemComponent(monitor,
-                                                CompactMTS::new,
-                                                t -> null,
-                                                () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+        SystemComponent<CompactMTS<Character>, Integer> system = MCUtil.systemComponent(monitor,
+                                                                                        CompactMTS::new,
+                                                                                        t -> null,
+                                                                                        () -> new ModalEdgePropertyImpl(
+                                                                                                ModalType.MAY));
 
         DFA<?, Character> dfa = MCUtil.redContextLanguage(system, monitor.getCommunicationAlphabet());
 
         CompactMTS<Character> redContext = MCUtil.redContextComponent(dfa,
                                                                       CompactMTS::new,
                                                                       monitor.getCommunicationAlphabet(),
-                                                                      () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+                                                                      () -> new ModalEdgePropertyImpl(ModalType.MAY));
 
         Assertions.assertThat(allTransitions(redContext, monitor.getCommunicationAlphabet()))
                   .hasSize(5)
@@ -158,9 +157,9 @@ public class MCUtilMonitorTest {
                                                                           CompactMTS::new,
                                                                           monitor.getCommunicationAlphabet(),
                                                                           () -> new ModalEdgePropertyImpl(
-                                                                                  ModalEdgeProperty.ModalType.MAY),
+                                                                                  ModalType.MAY),
                                                                           () -> new ModalEdgePropertyImpl(
-                                                                                  ModalEdgeProperty.ModalType.MUST));
+                                                                                  ModalType.MUST));
 
         Assertions.assertThat(greenContext.getInputAlphabet())
                   .containsExactlyInAnyOrderElementsOf(monitor.getCommunicationAlphabet());

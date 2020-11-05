@@ -18,14 +18,13 @@ package net.automatalib.util.ts.modal.regression;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.fsa.DFA;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.MTSTransition;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
-import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.util.ts.modal.MCUtil;
+import net.automatalib.util.ts.modal.MCUtil.SystemComponent;
 import net.automatalib.util.ts.modal.MTSUtil;
 import org.assertj.core.api.Assertions;
 import org.testng.Assert;
@@ -75,25 +74,27 @@ public class RegressionTests {
         }
         final DecompositionInstance instance = new DecompositionInstance(testCase);
 
-        MCUtil.SystemComponent<CompactMTS<String>, Integer, String, MTSTransition<String, MutableModalEdgeProperty>, MutableModalEdgeProperty>
-                systemComponent = MCUtil.systemComponent(instance.modalContract,
-                                                         new CompactMTS.Creator<>(),
-                                                         (x) -> new ModalEdgePropertyImpl(x.getProperty().getType()),
-                                                         () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+        SystemComponent<CompactMTS<String>, Integer> systemComponent = MCUtil.systemComponent(instance.modalContract,
+                                                                                              new CompactMTS.Creator<>(),
+                                                                                              (x) -> new ModalEdgePropertyImpl(
+                                                                                                      x.getProperty()
+                                                                                                       .getType()),
+                                                                                              () -> new ModalEdgePropertyImpl(
+                                                                                                      ModalType.MAY));
 
-        CompactDFA<String> redLanguage = (CompactDFA<String>) MCUtil.redContextLanguage(systemComponent,
-                                                                                        instance.modalContract.getCommunicationAlphabet());
+        DFA<?, String> redLanguage =
+                MCUtil.redContextLanguage(systemComponent, instance.modalContract.getCommunicationAlphabet());
         CompactMTS<String> redContext = MCUtil.redContextComponent(redLanguage,
                                                                    new CompactMTS.Creator<>(),
                                                                    instance.modalContract.getCommunicationAlphabet(),
-                                                                   () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+                                                                   () -> new ModalEdgePropertyImpl(ModalType.MAY));
 
-        CompactDFA<String> greenLanguage = (CompactDFA<String>) MCUtil.greenContextLanguage(instance.modalContract);
+        DFA<?, String> greenLanguage = MCUtil.greenContextLanguage(instance.modalContract);
         CompactMTS<String> greenContext = MCUtil.greenContextComponent(greenLanguage,
                                                                        new CompactMTS.Creator<>(),
                                                                        instance.modalContract.getCommunicationAlphabet(),
-                                                                       () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY),
-                                                                       () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST));
+                                                                       () -> new ModalEdgePropertyImpl(ModalType.MAY),
+                                                                       () -> new ModalEdgePropertyImpl(ModalType.MUST));
 
         CompactMTS<String> context = MTSUtil.conjunction(greenContext, redContext);
 
@@ -107,25 +108,27 @@ public class RegressionTests {
         }
         final DecompositionInstance instance = new DecompositionInstance(testCase);
 
-        MCUtil.SystemComponent<CompactMTS<String>, Integer, String, MTSTransition<String, MutableModalEdgeProperty>, MutableModalEdgeProperty>
-                systemComponent = MCUtil.systemComponent(instance.modalContract,
-                                                         new CompactMTS.Creator<>(),
-                                                         (x) -> new ModalEdgePropertyImpl(x.getProperty().getType()),
-                                                         () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+        SystemComponent<CompactMTS<String>, Integer> systemComponent = MCUtil.systemComponent(instance.modalContract,
+                                                                                              new CompactMTS.Creator<>(),
+                                                                                              (x) -> new ModalEdgePropertyImpl(
+                                                                                                      x.getProperty()
+                                                                                                       .getType()),
+                                                                                              () -> new ModalEdgePropertyImpl(
+                                                                                                      ModalType.MAY));
 
-        CompactDFA<String> redLanguage = (CompactDFA<String>) MCUtil.redContextLanguage(systemComponent,
-                                                                                        instance.modalContract.getCommunicationAlphabet());
+        DFA<?, String> redLanguage =
+                MCUtil.redContextLanguage(systemComponent, instance.modalContract.getCommunicationAlphabet());
         CompactMTS<String> redContext = MCUtil.redContextComponent(redLanguage,
                                                                    new CompactMTS.Creator<>(),
                                                                    instance.modalContract.getCommunicationAlphabet(),
-                                                                   () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+                                                                   () -> new ModalEdgePropertyImpl(ModalType.MAY));
 
-        CompactDFA<String> greenLanguage = (CompactDFA<String>) MCUtil.greenContextLanguage(instance.modalContract);
+        DFA<?, String> greenLanguage = MCUtil.greenContextLanguage(instance.modalContract);
         CompactMTS<String> greenContext = MCUtil.greenContextComponent(greenLanguage,
                                                                        new CompactMTS.Creator<>(),
                                                                        instance.modalContract.getCommunicationAlphabet(),
-                                                                       () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY),
-                                                                       () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST));
+                                                                       () -> new ModalEdgePropertyImpl(ModalType.MAY),
+                                                                       () -> new ModalEdgePropertyImpl(ModalType.MUST));
 
         CompactMTS<String> context = MTSUtil.conjunction(greenContext, redContext);
 
@@ -143,11 +146,13 @@ public class RegressionTests {
         }
         final DecompositionInstance instance = new DecompositionInstance(testCase);
 
-        MCUtil.SystemComponent<CompactMTS<String>, Integer, String, MTSTransition<String, MutableModalEdgeProperty>, MutableModalEdgeProperty>
-                systemComponent = MCUtil.systemComponent(instance.modalContract,
-                                                         new CompactMTS.Creator<>(),
-                                                         (x) -> new ModalEdgePropertyImpl(x.getProperty().getType()),
-                                                         () -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY));
+        SystemComponent<CompactMTS<String>, Integer> systemComponent = MCUtil.systemComponent(instance.modalContract,
+                                                                                              new CompactMTS.Creator<>(),
+                                                                                              (x) -> new ModalEdgePropertyImpl(
+                                                                                                      x.getProperty()
+                                                                                                       .getType()),
+                                                                                              () -> new ModalEdgePropertyImpl(
+                                                                                                      ModalType.MAY));
 
         Assert.assertTrue(MTSUtil.isRefinementOf(instance.system,
                                                  systemComponent.systemComponent,

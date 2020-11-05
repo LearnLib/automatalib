@@ -44,7 +44,7 @@ public class ModalConjunctionTest {
 
     private CompactMTS<Character> block0;
     private CompactMTS<Character> block1;
-    private ModalConjunction<CompactMTS<Character>, Integer, Integer, Integer, Character, MTSTransition<Character, MutableModalEdgeProperty>, MTSTransition<Character, MutableModalEdgeProperty>, MTSTransition<Character, MutableModalEdgeProperty>, MutableModalEdgeProperty, MutableModalEdgeProperty, MutableModalEdgeProperty>
+    private ModalConjunction<CompactMTS<Character>, Integer, Integer, Integer, Character, MTSTransition<Character, MutableModalEdgeProperty>, MTSTransition<Character, MutableModalEdgeProperty>, MTSTransition<Character, MutableModalEdgeProperty>, MutableModalEdgeProperty, MutableModalEdgeProperty>
             algo;
 
     private Integer b0s0;

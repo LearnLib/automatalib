@@ -31,12 +31,11 @@ import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
-import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.fixpoint.Worksets;
@@ -56,50 +55,46 @@ public final class MTSUtil {
         // prevent instantiation
     }
 
-    public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> conjunction(
-            ModalTransitionSystem<S0, I, T0, TP0> mts0,
-            ModalTransitionSystem<S1, I, T1, TP1> mts1) {
+    public static <S0, S1, I> CompactMTS<I> conjunction(ModalTransitionSystem<S0, I, ?, ?> mts0,
+                                                        ModalTransitionSystem<S1, I, ?, ?> mts1) {
         return conjunction(mts0, mts1, CompactMTS::new);
     }
 
-    public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> A conjunction(
-            ModalTransitionSystem<S0, I, T0, TP0> mts0,
-            ModalTransitionSystem<S1, I, T1, TP1> mts1,
+    public static <A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0, S1, I, T> A conjunction(
+            ModalTransitionSystem<S0, I, ?, ?> mts0,
+            ModalTransitionSystem<S1, I, ?, ?> mts1,
             AutomatonCreator<A, I> creator) {
         return conjunctionWithMapping(mts0, mts1, creator).getSecond();
     }
 
-    public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> Pair<Map<Pair<S0, S1>, S>, A> conjunctionWithMapping(
-            ModalTransitionSystem<S0, I, T0, TP0> mts0,
-            ModalTransitionSystem<S1, I, T1, TP1> mts1,
+    public static <A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0, S1, I, T> Pair<Map<Pair<S0, S1>, S>, A> conjunctionWithMapping(
+            ModalTransitionSystem<S0, I, ?, ?> mts0,
+            ModalTransitionSystem<S1, I, ?, ?> mts1,
             AutomatonCreator<A, I> creator) {
         return Worksets.map(new ModalConjunction<>(mts0, mts1, creator));
     }
 
-    public static <S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> CompactMTS<I> compose(
-            ModalTransitionSystem<S0, I, T0, TP0> mts0,
-            ModalTransitionSystem<S1, I, T1, TP1> mts1) {
+    public static <S0, S1, I> CompactMTS<I> compose(ModalTransitionSystem<S0, I, ?, ?> mts0,
+                                                    ModalTransitionSystem<S1, I, ?, ?> mts1) {
         return compose(mts0, mts1, CompactMTS::new);
     }
 
-    public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> A compose(
-            ModalTransitionSystem<S0, I, T0, TP0> mts0,
-            ModalTransitionSystem<S1, I, T1, TP1> mts1,
-            AutomatonCreator<A, I> creator) {
+    public static <A extends MutableModalTransitionSystem<S, I, ?, ?>, S, S0, S1, I> A compose(ModalTransitionSystem<S0, I, ?, ?> mts0,
+                                                                                               ModalTransitionSystem<S1, I, ?, ?> mts1,
+                                                                                               AutomatonCreator<A, I> creator) {
         return composeWithMapping(mts0, mts1, creator).getSecond();
     }
 
-    public static <A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty> Pair<Map<Pair<S0, S1>, S>, A> composeWithMapping(
-            ModalTransitionSystem<S0, I, T0, TP0> mts0,
-            ModalTransitionSystem<S1, I, T1, TP1> mts1,
+    public static <A extends MutableModalTransitionSystem<S, I, ?, ?>, S, S0, S1, I> Pair<Map<Pair<S0, S1>, S>, A> composeWithMapping(
+            ModalTransitionSystem<S0, I, ?, ?> mts0,
+            ModalTransitionSystem<S1, I, ?, ?> mts1,
             AutomatonCreator<A, I> creator) {
         return Worksets.map(new ModalParallelComposition<>(mts0, mts1, creator));
     }
 
-    public static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> boolean isRefinementOf(
-            ModalTransitionSystem<AS, I, AT, ATP> a,
-            ModalTransitionSystem<BS, I, BT, BTP> b,
-            Collection<I> input) {
+    public static <AS, BS, I> boolean isRefinementOf(ModalTransitionSystem<AS, I, ?, ?> a,
+                                                     ModalTransitionSystem<BS, I, ?, ?> b,
+                                                     Collection<I> input) {
 
         final Set<Pair<AS, BS>> refinement = ModalRefinement.refinementRelation(a, b, input);
 
@@ -114,9 +109,9 @@ public final class MTSUtil {
         return statesA.isEmpty() && statesB.isEmpty();
     }
 
-    public static <S, I, T, SP, TP> Set<S> reachableSubset(UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP> ts,
-                                                           Collection<I> inputs,
-                                                           Set<S> states) {
+    public static <S, I> Set<S> reachableSubset(UniversalFiniteAlphabetAutomaton<S, I, ?, ?, ?> ts,
+                                                Collection<I> inputs,
+                                                Set<S> states) {
         Pair<Map<Set<S>, Integer>, CompactDFA<I>> graphView =
                 Subgraphs.subgraphView(new CompactDFA.Creator<>(), SubgraphType.DISREGARD_UNKNOWN_LABELS, ts, inputs);
 
@@ -137,8 +132,7 @@ public final class MTSUtil {
         return reachableStates;
     }
 
-    public static <S, I, T, TP extends ModalEdgeProperty> NFA<?, I> asNFA(ModalTransitionSystem<S, I, T, TP> mts,
-                                                                          boolean maximal) {
+    public static <S, I, T> NFA<?, I> asNFA(ModalTransitionSystem<S, I, T, ?> mts, boolean maximal) {
 
         final Alphabet<I> alphabet = mts.getInputAlphabet();
         final CompactNFA<I> result = new CompactNFA<>(alphabet);
@@ -154,16 +148,14 @@ public final class MTSUtil {
         return result;
     }
 
-    public static <S, I, T, TP extends ModalEdgeProperty> ModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> toLTS(
-            ModalTransitionSystem<S, I, T, TP> mts,
-            TransitionPredicate<S, I, T> transFilter) {
+    public static <S, I, T> ModalTransitionSystem<?, I, ?, ? extends ModalEdgeProperty> toLTS(ModalTransitionSystem<S, I, T, ?> mts,
+                                                                                              TransitionPredicate<S, I, T> transFilter) {
         return toLTS(mts, transFilter, Function.identity());
     }
 
-    public static <S, I, T, TP extends ModalEdgeProperty> ModalTransitionSystem<Integer, I, MTSTransition<I, MutableModalEdgeProperty>, MutableModalEdgeProperty> toLTS(
-            ModalTransitionSystem<S, I, T, TP> mts,
-            TransitionPredicate<S, I, T> transFilter,
-            Function<I, I> inputMapping) {
+    public static <S, I, T> ModalTransitionSystem<?, I, ?, ?> toLTS(ModalTransitionSystem<S, I, T, ?> mts,
+                                                                    TransitionPredicate<S, I, T> transFilter,
+                                                                    Function<I, I> inputMapping) {
 
         CompactMTS<I> result = new CompactMTS<>(Alphabets.fromList(mts.getInputAlphabet()
                                                                       .stream()
@@ -176,7 +168,7 @@ public final class MTSUtil {
                                    result,
                                    inputMapping,
                                    sp -> null,
-                                   tp -> new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST),
+                                   tp -> new ModalEdgePropertyImpl(ModalType.MUST),
                                    sf -> true,
                                    transFilter);
 

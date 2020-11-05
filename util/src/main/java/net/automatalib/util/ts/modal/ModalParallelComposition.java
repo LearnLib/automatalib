@@ -29,7 +29,7 @@ import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.Transition;
 import net.automatalib.ts.modal.transition.ModalContractEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
-import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
@@ -38,7 +38,7 @@ import net.automatalib.words.impl.GrowingMapAlphabet;
 /**
  * @author msc
  */
-class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
+class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?>, S, S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {
 
     private static final float LOAD_FACTOR = 0.5f;
@@ -158,10 +158,10 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
 
     private static ModalEdgeProperty.ModalType minimalCompatibleType(ModalContractEdgeProperty.ModalType arg0,
                                                                      ModalContractEdgeProperty.ModalType arg1) {
-        if (arg0 == ModalEdgeProperty.ModalType.MUST && arg1 == ModalEdgeProperty.ModalType.MUST) {
-            return ModalEdgeProperty.ModalType.MUST;
+        if (arg0 == ModalType.MUST && arg1 == ModalType.MUST) {
+            return ModalType.MUST;
         } else {
-            return ModalEdgeProperty.ModalType.MAY;
+            return ModalType.MAY;
         }
     }
 

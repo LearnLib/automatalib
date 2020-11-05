@@ -18,12 +18,13 @@ package net.automatalib.util.ts.modal;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 
 import com.google.common.collect.Sets;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 
 public final class ModalRefinement {
 
@@ -34,7 +35,7 @@ public final class ModalRefinement {
     private static <BS, I, BT, BTP extends ModalEdgeProperty> Set<BT> partnerTransitions(ModalTransitionSystem<BS, I, BT, BTP> b,
                                                                                          BS source,
                                                                                          I input,
-                                                                                         Set<ModalEdgeProperty.ModalType> acceptableValues) {
+                                                                                         Set<ModalType> acceptableValues) {
 
         Set<BT> coTransitions = Sets.newHashSetWithExpectedSize(b.getInputAlphabet().size());
 
@@ -49,14 +50,13 @@ public final class ModalRefinement {
         return coTransitions;
     }
 
-    private static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> boolean eligiblePartner(
-            ModalTransitionSystem<AS, I, AT, ATP> a,
-            ModalTransitionSystem<BS, I, BT, BTP> b,
-            Collection<I> inputs,
-            BiFunction<AS, BS, Boolean> inRefinementRelation,
-            AS source,
-            BS coSource,
-            Set<ModalEdgeProperty.ModalType> acceptableValues) {
+    private static <AS, I, AT, BS, BT> boolean eligiblePartner(ModalTransitionSystem<AS, I, AT, ?> a,
+                                                               ModalTransitionSystem<BS, I, BT, ?> b,
+                                                               Collection<I> inputs,
+                                                               BiPredicate<AS, BS> inRefinementRelation,
+                                                               AS source,
+                                                               BS coSource,
+                                                               Set<ModalEdgeProperty.ModalType> acceptableValues) {
 
         for (I label : inputs) {
             for (AT transition : a.getTransitions(source, label)) {
@@ -69,7 +69,7 @@ public final class ModalRefinement {
                 AS target = a.getTarget(transition);
                 final boolean eligablePartner = partnerTransitions.stream()
                                                                   .map(b::getSuccessor)
-                                                                  .anyMatch(s -> inRefinementRelation.apply(target, s));
+                                                                  .anyMatch(s -> inRefinementRelation.test(target, s));
 
                 if (!eligablePartner) {
                     return false;
@@ -80,10 +80,9 @@ public final class ModalRefinement {
         return true;
     }
 
-    public static <AS, I, AT, ATP extends ModalEdgeProperty, BS, BT, BTP extends ModalEdgeProperty> Set<Pair<AS, BS>> refinementRelation(
-            ModalTransitionSystem<AS, I, AT, ATP> implementation,
-            ModalTransitionSystem<BS, I, BT, BTP> specification,
-            Collection<I> inputs) {
+    public static <AS, BS, I> Set<Pair<AS, BS>> refinementRelation(ModalTransitionSystem<AS, I, ?, ?> implementation,
+                                                                   ModalTransitionSystem<BS, I, ?, ?> specification,
+                                                                   Collection<I> inputs) {
 
         Set<Pair<AS, BS>> refinement = Sets.newHashSetWithExpectedSize(implementation.size() * specification.size());
 
@@ -95,11 +94,11 @@ public final class ModalRefinement {
         }
 
         Set<ModalEdgeProperty.ModalType> may = Sets.newHashSetWithExpectedSize(2);
-        may.add(ModalEdgeProperty.ModalType.MAY);
-        may.add(ModalEdgeProperty.ModalType.MUST);
+        may.add(ModalType.MAY);
+        may.add(ModalType.MUST);
 
-        Set<ModalEdgeProperty.ModalType> must = Sets.newHashSetWithExpectedSize(1);
-        must.add(ModalEdgeProperty.ModalType.MUST);
+        Set<ModalType> must = Sets.newHashSetWithExpectedSize(1);
+        must.add(ModalType.MUST);
 
         boolean update = true;
         while (update) {

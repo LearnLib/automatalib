@@ -29,7 +29,6 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
-import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.util.graphs.traversal.DFSVisitor;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
@@ -37,7 +36,7 @@ import net.automatalib.util.graphs.traversal.GraphTraversal;
 /**
  * @author msc
  */
-class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
+class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0, S1, I, T, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {
 
     private static final float LOAD_FACTOR = 0.5f;

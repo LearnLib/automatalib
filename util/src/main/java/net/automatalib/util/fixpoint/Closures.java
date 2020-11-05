@@ -39,7 +39,7 @@ public final class Closures {
         // prevent instantiation
     }
 
-    public static <A extends UniversalAutomaton<S1, I, T1, SP1, TP1>, B extends MutableAutomaton<S2, I, T2, SP2, TP2>, S1, S2, I, T1, T2, SP1, SP2, TP1, TP2> Pair<Map<Set<S1>, S2>, B> simpleClosure(
+    public static <A extends UniversalAutomaton<S1, I, T1, ?, ?>, B extends MutableAutomaton<S2, I, ?, ?, ?>, S1, S2, I, T1> Pair<Map<Set<S1>, S2>, B> simpleClosure(
             A ts,
             Collection<I> inputs,
             Collection<I> allInputs,
@@ -56,7 +56,7 @@ public final class Closures {
                                                         transitionFilter));
     }
 
-    public static <A extends UniversalAutomaton<S1, I, T1, SP1, TP1>, B extends MutableAutomaton<S2, I, T2, SP2, TP2>, S1, S2, I, T1, T2, SP1, SP2, TP1, TP2> Pair<Map<Set<S1>, S2>, B> closure(
+    public static <A extends UniversalAutomaton<S1, I, T1, ?, ?>, B extends MutableAutomaton<S2, I, ?, ?, ?>, S1, S2, I, T1> Pair<Map<Set<S1>, S2>, B> closure(
             A ts,
             Collection<I> inputs,
             AutomatonCreator<B, I> creator,
@@ -73,9 +73,9 @@ public final class Closures {
      * by at least one state of S trough a transition for which the predicate is true. This step is repeated until
      * stabilisation (closure semantics).
      */
-    public static <S, I, T, SP, TP> Function<Set<S>, Set<S>> toClosureOperator(UniversalAutomaton<S, I, T, SP, TP> ts,
-                                                                               Collection<I> inputs,
-                                                                               TransitionPredicate<S, I, T> transitionFilter) {
+    public static <S, I, T> Function<Set<S>, Set<S>> toClosureOperator(UniversalAutomaton<S, I, T, ?, ?> ts,
+                                                                       Collection<I> inputs,
+                                                                       TransitionPredicate<S, I, T> transitionFilter) {
         return states -> {
             Set<S> result = new HashSet<>(states);
             Deque<S> stack = new ArrayDeque<>(states);
@@ -100,7 +100,7 @@ public final class Closures {
         };
     }
 
-    private static final class StateClosureAlgorithm<A extends UniversalAutomaton<S1, I, T1, SP1, TP1>, B extends MutableAutomaton<S2, I, T2, SP2, TP2>, S1, S2, I, T1, T2, SP1, SP2, TP1, TP2>
+    private static final class StateClosureAlgorithm<A extends UniversalAutomaton<S1, I, T1, ?, ?>, B extends MutableAutomaton<S2, I, ?, ?, ?>, S1, S2, I, T1>
             implements WorksetMappingAlgorithm<Set<S1>, S2, B> {
 
         private final A inputTS;
