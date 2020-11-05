@@ -24,9 +24,6 @@ import java.util.Map;
 import net.automatalib.graphs.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
-import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
-import net.automatalib.visualization.VisualizationHelper.NodeShapes;
 import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
