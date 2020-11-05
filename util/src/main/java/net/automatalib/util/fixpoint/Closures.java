@@ -66,7 +66,8 @@ public final class Closures {
     }
 
     /**
-     * Creates a closure operator op: Set[S] -> Set[S] from an TransitionPredicate over the given transition system.
+     * Creates a closure operator op: Set[S] -&gt; Set[S] from an {@link TransitionPredicate} over the given transition
+     * system.
      * <p>
      * The returned operator calculates the closure of a given set S by adding all states s' to S which can be reached
      * by at least one state of S trough a transition for which the predicate is true. This step is repeated until

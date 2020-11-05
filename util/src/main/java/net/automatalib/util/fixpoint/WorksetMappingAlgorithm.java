@@ -31,7 +31,7 @@ public interface WorksetMappingAlgorithm<T, E, R> {
     int expectedElementCount();
 
     /**
-     * Provide the initial elements that should be processed by {@link #update(Map, T) update}. Also performs any
+     * Provide the initial elements that should be processed by {@link #update(Map, Object) update}. Also performs any
      * required action on the initial elements (e.g. update mapping).
      *
      * @return initial elements
@@ -53,7 +53,7 @@ public interface WorksetMappingAlgorithm<T, E, R> {
 
     /**
      * Provides the result of this algorithms internal action. More precise, this function returns the accumulated
-     * object E after the successful application of <i>all</i> {@link #update(Map, T) update} calls.
+     * object E after the successful application of <i>all</i> {@link #update(Map, Object) update} calls.
      *
      * @return the resulting object
      */

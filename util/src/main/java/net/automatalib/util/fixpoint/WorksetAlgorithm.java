@@ -30,7 +30,7 @@ public interface WorksetAlgorithm<T, R> {
     int expectedElementCount();
 
     /**
-     * Provide the initial elements that should be processed by {@link #update(T) update}.
+     * Provide the initial elements that should be processed by {@link #update(Object) update}.
      *
      * @return initial elements
      */
@@ -49,7 +49,7 @@ public interface WorksetAlgorithm<T, R> {
 
     /**
      * Provides the result of this algorithms internal action. More precise, this function returns the accumulated
-     * object E after the successful application of <i>all</i> {@link #update(T) update} calls.
+     * object E after the successful application of <i>all</i> {@link #update(Object) update} calls.
      *
      * @return the resulting object
      */
