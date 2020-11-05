@@ -45,16 +45,12 @@ import net.automatalib.util.graphs.sssp.SSSPResult;
 import net.automatalib.util.ts.modal.Subgraphs.SubgraphType;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author msc
  * @author frohme
  */
 public final class MTSUtil {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MTSUtil.class);
 
     private MTSUtil() {
         // prevent instantiation
@@ -114,8 +110,6 @@ public final class MTSUtil {
             statesA.remove(p.getFirst());
             statesB.remove(p.getSecond());
         }
-
-        LOGGER.info("Counterexamples: {}, {}", statesA, statesB);
 
         return statesA.isEmpty() && statesB.isEmpty();
     }

@@ -21,15 +21,11 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.Automaton;
 import net.automatalib.commons.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author msc
  */
 public final class Bisimulation {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Bisimulation.class);
 
     private Bisimulation() {
         // prevent instantiation
@@ -52,14 +48,12 @@ public final class Bisimulation {
                 for (I sym : inputs) {
                     empty &= a.getTransitions(p, sym).isEmpty() && b.getTransitions(q, sym).isEmpty();
                     if (!a.getTransitions(p, sym).isEmpty() && !b.getTransitions(q, sym).isEmpty()) {
-                        LOGGER.debug("Adding pair ({},{})", p, q);
                         change.add(Pair.of(p, q));
                         break;
                     }
                 }
 
                 if (empty) {
-                    LOGGER.debug("Adding pair ({},{})", p, q);
                     change.add(Pair.of(p, q));
                 }
             }
@@ -73,21 +67,16 @@ public final class Bisimulation {
             bisim = swap;
             change.clear();
 
-            LOGGER.debug("Pairs {}", bisim);
-
             for (Pair<AS, BS> p : bisim) {
-                LOGGER.debug("Checking {}", p);
 
                 forall = true;
                 for (I sym : inputs) {
                     for (AT t : a.getTransitions(p.getFirst(), sym)) {
-                        LOGGER.debug("Searching corresponding transition for {}", t);
 
                         exists = false;
                         for (BT f : b.getTransitions(p.getSecond(), sym)) {
                             for (Pair<AS, BS> s : bisim) {
                                 if (a.getSuccessor(t).equals(s.getFirst()) && b.getSuccessor(f).equals(s.getSecond())) {
-                                    LOGGER.debug("Found transition {}", f);
                                     exists = true;
                                     break;
                                 }
@@ -97,7 +86,6 @@ public final class Bisimulation {
                             }
                         }
                         if (!exists) {
-                            LOGGER.info("Found no corresponding transition for {}", t);
                             forall = false;
                             break;
                         }
@@ -105,20 +93,17 @@ public final class Bisimulation {
                 }
 
                 if (!forall) {
-                    LOGGER.debug("Removing {}", p);
                     continue;
                 }
 
                 forall = true;
                 for (I sym : inputs) {
                     for (BT f : b.getTransitions(p.getSecond(), sym)) {
-                        LOGGER.debug("Searching corresponding transition for {}", f);
 
                         exists = false;
                         for (AT t : a.getTransitions(p.getFirst(), sym)) {
                             for (Pair<AS, BS> s : bisim) {
                                 if (b.getSuccessor(f).equals(s.getSecond()) && a.getSuccessor(t).equals(s.getFirst())) {
-                                    LOGGER.debug("Found transition {}", t);
                                     exists = true;
                                     break;
                                 }
@@ -128,7 +113,6 @@ public final class Bisimulation {
                             }
                         }
                         if (!exists) {
-                            LOGGER.info("Found no corresponding transition for {}", f);
                             forall = false;
                             break;
                         }
@@ -136,17 +120,11 @@ public final class Bisimulation {
                 }
 
                 if (forall) {
-                    LOGGER.debug("Keeping {}", p);
                     change.add(p);
-                } else {
-                    LOGGER.debug("Removing {}", p);
                 }
             }
-
         }
-        LOGGER.info("Equivalence relation {}", change);
 
         return change;
     }
-
 }

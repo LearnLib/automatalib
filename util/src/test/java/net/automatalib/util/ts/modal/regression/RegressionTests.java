@@ -28,19 +28,14 @@ import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.util.ts.modal.MCUtil;
 import net.automatalib.util.ts.modal.MTSUtil;
 import org.assertj.core.api.Assertions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class RegressionTests {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegressionTests.class);
-
     @DataProvider(name = "Decomp")
     public Object[][] loadDecompositionTests() {
-        LOGGER.info("Found {} decomposition tests", RegressionTestBundles.DECOMPOSITION_TESTS.size());
         Object[][] params = new Object[RegressionTestBundles.DECOMPOSITION_TESTS.size()][1];
         int i = 0;
         for (DecompositionTest testCase : RegressionTestBundles.DECOMPOSITION_TESTS) {
@@ -51,7 +46,6 @@ public class RegressionTests {
 
     @DataProvider(name = "Comp")
     public Object[][] loadCompositionTests() {
-        LOGGER.info("Found {} composition tests", RegressionTestBundles.COMPOSITION_TESTS.size());
         Object[][] params = new Object[RegressionTestBundles.COMPOSITION_TESTS.size()][1];
         int i = 0;
         for (CompositionTest testCase : RegressionTestBundles.COMPOSITION_TESTS) {
@@ -63,12 +57,6 @@ public class RegressionTests {
     @Test(dataProvider = "Comp")
     public void testMerge(CompositionTest testCase) throws IOException {
         final CompositionInstance instance = new CompositionInstance(testCase);
-
-        LOGGER.debug("Testing merge for " + testCase.merge);
-        LOGGER.debug("Components: {}, {}", testCase.input0, testCase.input1);
-        LOGGER.debug("Input alphabets: [{}] [{}]",
-                     instance.input0.getInputAlphabet(),
-                     instance.input1.getInputAlphabet());
 
         CompactMTS<String> currentMerge = MTSUtil.compose(instance.input0, instance.input1);
 
@@ -86,11 +74,6 @@ public class RegressionTests {
             return;
         }
         final DecompositionInstance instance = new DecompositionInstance(testCase);
-
-        LOGGER.debug("Testing decomp for " + testCase.origSys);
-        LOGGER.debug("Modal contract " + testCase.modalContract);
-        LOGGER.debug("Components: {}, {}", testCase.context, testCase.system);
-        LOGGER.debug("Com. alphabet: {}", instance.modalContract.getCommunicationAlphabet());
 
         MCUtil.SystemComponent<CompactMTS<String>, Integer, String, MTSTransition<String, MutableModalEdgeProperty>, MutableModalEdgeProperty>
                 systemComponent = MCUtil.systemComponent(instance.modalContract,
@@ -123,11 +106,6 @@ public class RegressionTests {
             return;
         }
         final DecompositionInstance instance = new DecompositionInstance(testCase);
-
-        LOGGER.debug("Testing decomp for " + testCase.origSys);
-        LOGGER.debug("Modal contract " + testCase.modalContract);
-        LOGGER.debug("Components: {}, {}", testCase.context, testCase.system);
-        LOGGER.debug("Com. alphabet: {}", instance.modalContract.getCommunicationAlphabet());
 
         MCUtil.SystemComponent<CompactMTS<String>, Integer, String, MTSTransition<String, MutableModalEdgeProperty>, MutableModalEdgeProperty>
                 systemComponent = MCUtil.systemComponent(instance.modalContract,
@@ -164,11 +142,6 @@ public class RegressionTests {
             return;
         }
         final DecompositionInstance instance = new DecompositionInstance(testCase);
-
-        LOGGER.debug("Testing decomp for " + testCase.origSys);
-        LOGGER.debug("Modal contract " + testCase.modalContract);
-        LOGGER.debug("Components: {}, {}", testCase.context, testCase.system);
-        LOGGER.debug("Com. alphabet: {}", instance.modalContract.getCommunicationAlphabet());
 
         MCUtil.SystemComponent<CompactMTS<String>, Integer, String, MTSTransition<String, MutableModalEdgeProperty>, MutableModalEdgeProperty>
                 systemComponent = MCUtil.systemComponent(instance.modalContract,

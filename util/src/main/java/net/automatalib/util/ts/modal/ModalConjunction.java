@@ -33,8 +33,6 @@ import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.util.graphs.traversal.DFSVisitor;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author msc
@@ -42,7 +40,6 @@ import org.slf4j.LoggerFactory;
 class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModalConjunction.class);
     private static final float LOAD_FACTOR = 0.5f;
 
     private final ModalTransitionSystem<S0, I, T0, TP0> mts0;
@@ -92,26 +89,16 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
         S mappedState = mapping.get(currentStatePair);
         assert mappedState != null;
 
-        LOGGER.debug("current tuple: {} (-> {})", currentStatePair, mappedState);
-
         ArrayList<Pair<S0, S1>> discovered = new ArrayList<>();
 
         for (I sym : mts0.getInputAlphabet()) {
-
-            LOGGER.debug("current symbol: {}", sym);
 
             Collection<T0> transitions0 = mts0.getTransitions(currentStatePair.getFirst(), sym);
             Collection<T1> transitions1 = (mts1.getInputAlphabet().containsSymbol(sym) ?
                     mts1.getTransitions(currentStatePair.getSecond(), sym) :
                     Collections.emptySet());
 
-            if (transitions0.isEmpty()) {
-                LOGGER.debug("\tno transition 0 -> continue with next symbol");
-            }
-
             for (T0 transition0 : transitions0) {
-
-                LOGGER.debug("current transition 0: {}", transition0);
 
                 if (mts0.getTransitionProperty(transition0).isMust() && transitions1.isEmpty()) {
                     throw new IllegalConjunctionException(String.format(
@@ -127,22 +114,17 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
                 }
                 for (T1 transition1 : transitions1) {
 
-                    LOGGER.debug("current transition 1: {}", transition1);
-
                     Pair<S0, S1> newTuple = Pair.of(mts0.getSuccessor(transition0), mts1.getSuccessor(transition1));
 
                     S newState = mapping.get(newTuple);
                     if (newState == null) {
                         newState = result.addState();
                         mapping.put(newTuple, newState);
-                        LOGGER.debug("new mapping: {} -> {}", newTuple, newState);
                         discovered.add(newTuple);
                     }
 
                     T newT = result.createTransition(newState, null);
                     result.addTransition(mappedState, sym, newT);
-
-                    LOGGER.debug("new transition: {}", newT);
 
                     if (mts0.getTransitionProperty(transition0).isMust() ||
                         mts1.getTransitionProperty(transition1).isMust()) {
@@ -156,20 +138,12 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S
 
         for (I sym : mts1.getInputAlphabet()) {
 
-            LOGGER.debug("current symbol: {}", sym);
-
             Collection<T0> transitions0 = (mts0.getInputAlphabet().containsSymbol(sym) ?
                     mts0.getTransitions(currentStatePair.getFirst(), sym) :
                     Collections.emptySet());
             Collection<T1> transitions1 = mts1.getTransitions(currentStatePair.getSecond(), sym);
 
-            if (transitions1.isEmpty()) {
-                LOGGER.debug("\tno transition 1 -> continue with next symbol");
-            }
-
             for (T1 transition1 : transitions1) {
-
-                LOGGER.debug("current transition 1: {}", transition1);
 
                 if (mts1.getTransitionProperty(transition1).isMust() && transitions0.isEmpty()) {
                     throw new IllegalConjunctionException(String.format(

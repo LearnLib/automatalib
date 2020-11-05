@@ -32,8 +32,6 @@ import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.util.fixpoint.Worksets;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -43,8 +41,6 @@ import org.testng.annotations.Test;
  * @author msc
  */
 public class ModalConjunctionTest {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModalConjunctionTest.class);
 
     private CompactMTS<Character> block0;
     private CompactMTS<Character> block1;
@@ -227,48 +223,41 @@ public class ModalConjunctionTest {
     @Test(dataProvider = "randomSource")
     void random(CompactMTS<Character> a, CompactMTS<Character> b, int K) {
 
-        try {
-            algo = new ModalConjunction<>(a, b, CompactMTS::new);
+        algo = new ModalConjunction<>(a, b, CompactMTS::new);
 
-            final Pair<Map<Pair<Integer, Integer>, Integer>, CompactMTS<Character>> result = Worksets.map(algo);
-            final CompactMTS<Character> mts = result.getSecond();
+        final Pair<Map<Pair<Integer, Integer>, Integer>, CompactMTS<Character>> result = Worksets.map(algo);
+        final CompactMTS<Character> mts = result.getSecond();
 
-            Assert.assertTrue(mts.size() >= 1);
-            Assert.assertTrue(mts.size() <= a.size() * b.size());
+        Assert.assertTrue(mts.size() >= 1);
+        Assert.assertTrue(mts.size() <= a.size() * b.size());
 
-            boolean onlyMayA = true, onlyMayB = true;
-            for (MTSTransition<Character, MutableModalEdgeProperty> t : a.getOutgoingEdges(a.getInitialStates()
-                                                                                            .iterator()
-                                                                                            .next())) {
-                if (t.getProperty().isMust()) {
-                    onlyMayA = false;
-                }
+        boolean onlyMayA = true, onlyMayB = true;
+        for (MTSTransition<Character, MutableModalEdgeProperty> t : a.getOutgoingEdges(a.getInitialStates()
+                                                                                        .iterator()
+                                                                                        .next())) {
+            if (t.getProperty().isMust()) {
+                onlyMayA = false;
             }
+        }
 
-            for (MTSTransition<Character, MutableModalEdgeProperty> t : b.getOutgoingEdges(b.getInitialStates()
-                                                                                            .iterator()
-                                                                                            .next())) {
-                if (t.getProperty().isMust()) {
-                    onlyMayB = false;
-                }
+        for (MTSTransition<Character, MutableModalEdgeProperty> t : b.getOutgoingEdges(b.getInitialStates()
+                                                                                        .iterator()
+                                                                                        .next())) {
+            if (t.getProperty().isMust()) {
+                onlyMayB = false;
             }
+        }
 
-            if (onlyMayA && onlyMayB) {
-                LOGGER.info("empty conjunction");
-                // wrong, since may transitions are allowed:
-                //softly.assertThat(result.second.size()).isEqualTo(1);
+        if (onlyMayA && onlyMayB) {
+            // wrong, since may transitions are allowed:
+            //softly.assertThat(result.second.size()).isEqualTo(1);
 
-                // works, but is hard to read:
-                Assert.assertTrue(mts.getStates()
-                                     .stream()
-                                     .map(mts::getOutgoingEdges)
-                                     .flatMap(Collection::stream)
-                                     .noneMatch(t -> mts.getTransitionProperty(t).isMust()));
-            }
-
-        } catch (IllegalArgumentException e) {
-            // conjunction can fail, e.g. when a must transition has no "partner"
-            LOGGER.info("conjunction failed", e);
+            // works, but is hard to read:
+            Assert.assertTrue(mts.getStates()
+                                 .stream()
+                                 .map(mts::getOutgoingEdges)
+                                 .flatMap(Collection::stream)
+                                 .noneMatch(t -> mts.getTransitionProperty(t).isMust()));
         }
 
     }
@@ -291,8 +280,6 @@ public class ModalConjunctionTest {
         final Random rnd = new Random(42);
         final int stateCount = rnd.nextInt(64) + 1;
 
-        LOGGER.info("states: {}", stateCount);
-
         final int[] states = new int[stateCount];
         final CompactMTS<I> res = new CompactMTS<>(alphabet);
 
@@ -303,8 +290,6 @@ public class ModalConjunctionTest {
         }
 
         final int transitionCount = rnd.nextInt(Math.min(64, stateCount * stateCount));
-
-        LOGGER.info("transitions: {}", transitionCount);
 
         for (int i = 0; i < transitionCount; i++) {
             final int src = states[rnd.nextInt(stateCount)];
@@ -319,9 +304,9 @@ public class ModalConjunctionTest {
     }
 
     private static <S, I, T, TP extends ModalEdgeProperty> T getSingleTransition(ModalTransitionSystem<S, I, T, TP> mts,
-                                                                                           S source,
-                                                                                           I input,
-                                                                                           S target) {
+                                                                                 S source,
+                                                                                 I input,
+                                                                                 S target) {
 
         final Collection<T> transitions = mts.getTransitions(source, input);
 

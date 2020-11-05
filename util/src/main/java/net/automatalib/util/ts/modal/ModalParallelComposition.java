@@ -34,8 +34,6 @@ import net.automatalib.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author msc
@@ -43,7 +41,6 @@ import org.slf4j.LoggerFactory;
 class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, TP>, S, S0, S1, I, T, T0, T1, TP extends MutableModalEdgeProperty, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModalParallelComposition.class);
     private static final float LOAD_FACTOR = 0.5f;
 
     private final ModalTransitionSystem<S0, I, T0, TP0> mts0;
@@ -67,8 +64,6 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
             growingAlphabet.addAll(mts1.getInputAlphabet());
             alphabet = growingAlphabet;
         }
-
-        LOGGER.debug("New alphabet for composition: {}", alphabet);
 
         result = output.createAutomaton(alphabet);
 
@@ -102,7 +97,6 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, T, T
                 generateNewTransitions(currentTuple);
 
         for (Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType> transition : transitions) {
-            LOGGER.debug("discovered new transition: " + transition);
 
             S mappedTarget;
             if (mapping.containsKey(transition.getTarget())) {

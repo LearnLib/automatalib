@@ -24,15 +24,11 @@ import java.util.Set;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.automatalib.commons.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author msc
  */
 public final class Worksets {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Worksets.class);
 
     private Worksets() {
         // prevent instantiation
@@ -45,7 +41,6 @@ public final class Worksets {
         final Set<T> tracking = Sets.newHashSetWithExpectedSize(expectedElementCount);
 
         final Collection<T> initialElements = algorithm.initialize();
-        LOGGER.debug("initializing stack with {}", initialElements);
         stack.addAll(initialElements);
         tracking.addAll(initialElements);
 
@@ -53,16 +48,13 @@ public final class Worksets {
 
             T current = stack.pop();
             tracking.remove(current);
-            LOGGER.debug("processing {}", current);
 
             final Collection<T> discovered = algorithm.update(current);
-            LOGGER.debug("discovered {}", discovered);
 
             for (T element : discovered) {
                 if (!tracking.contains(element)) {
                     tracking.add(element);
                     stack.addLast(element);
-                    LOGGER.debug("adding to stack {}", element);
                 }
             }
 
@@ -78,7 +70,6 @@ public final class Worksets {
         final Map<T, E> mapping = Maps.newHashMapWithExpectedSize(algorithm.expectedElementCount());
 
         final Collection<T> initialElements = algorithm.initialize(mapping);
-        LOGGER.debug("initializing stack with {}", initialElements);
         stack.addAll(initialElements);
         tracking.addAll(initialElements);
 
@@ -86,16 +77,13 @@ public final class Worksets {
 
             T currentT = stack.pop();
             tracking.remove(currentT);
-            LOGGER.debug("processing {}", currentT);
 
             final Collection<T> discovered = algorithm.update(mapping, currentT);
-            LOGGER.debug("discovered {}", discovered);
 
             for (T element : discovered) {
                 if (!tracking.contains(element)) {
                     tracking.add(element);
                     stack.addLast(element);
-                    LOGGER.debug("adding to stack {}", element);
                 }
             }
         }

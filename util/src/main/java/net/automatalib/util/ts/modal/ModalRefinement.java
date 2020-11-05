@@ -24,12 +24,8 @@ import com.google.common.collect.Sets;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class ModalRefinement {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModalRefinement.class);
 
     private ModalRefinement() {
         // do not instantiate
@@ -67,7 +63,6 @@ public final class ModalRefinement {
                 if (!acceptableValues.contains(a.getTransitionProperty(transition).getType())) {
                     continue;
                 }
-                LOGGER.debug("Searching corresponding transition for {}", transition);
 
                 Set<BT> partnerTransitions = partnerTransitions(b, coSource, label, acceptableValues);
 
@@ -78,8 +73,6 @@ public final class ModalRefinement {
 
                 if (!eligablePartner) {
                     return false;
-                } else {
-                    LOGGER.debug("Found transitions {}", partnerTransitions);
                 }
             }
         }
@@ -111,12 +104,10 @@ public final class ModalRefinement {
         boolean update = true;
         while (update) {
             update = false;
-            LOGGER.debug("Pairs {}", refinement);
 
             Iterator<Pair<AS, BS>> iterator = refinement.iterator();
             while (iterator.hasNext()) {
                 Pair<AS, BS> pair = iterator.next();
-                LOGGER.debug("Checking {}", pair);
 
                 boolean eligiblePartner = eligiblePartner(implementation,
                                                           specification,
@@ -135,17 +126,12 @@ public final class ModalRefinement {
                                                    must);
 
                 if (!eligiblePartner) {
-                    LOGGER.debug("Pair {} has no partner transitions", pair);
                     update = true;
                     iterator.remove();
                 }
             }
-
         }
-        LOGGER.info("Refinement relation {}", refinement);
 
         return refinement;
-
     }
-
 }
