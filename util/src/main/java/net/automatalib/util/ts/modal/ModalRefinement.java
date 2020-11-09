@@ -56,7 +56,7 @@ public final class ModalRefinement {
                                                                BiPredicate<AS, BS> inRefinementRelation,
                                                                AS source,
                                                                BS coSource,
-                                                               Set<ModalEdgeProperty.ModalType> acceptableValues) {
+                                                               Set<ModalType> acceptableValues) {
 
         for (I label : inputs) {
             for (AT transition : a.getTransitions(source, label)) {

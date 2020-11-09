@@ -33,7 +33,6 @@ import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
@@ -148,8 +147,8 @@ public final class MTSUtil {
         return result;
     }
 
-    public static <S, I, T> ModalTransitionSystem<?, I, ?, ? extends ModalEdgeProperty> toLTS(ModalTransitionSystem<S, I, T, ?> mts,
-                                                                                              TransitionPredicate<S, I, T> transFilter) {
+    public static <S, I, T> ModalTransitionSystem<?, I, ?, ?> toLTS(ModalTransitionSystem<S, I, T, ?> mts,
+                                                                    TransitionPredicate<S, I, T> transFilter) {
         return toLTS(mts, transFilter, Function.identity());
     }
 

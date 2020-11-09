@@ -27,7 +27,6 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.Transition;
-import net.automatalib.ts.modal.transition.ModalContractEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.util.fixpoint.WorksetMappingAlgorithm;
@@ -93,10 +92,9 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
     @Override
     public Collection<Pair<S0, S1>> update(Map<Pair<S0, S1>, S> mapping, Pair<S0, S1> currentTuple) {
         ArrayList<Pair<S0, S1>> discovered = new ArrayList<>();
-        List<Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType>> transitions =
-                generateNewTransitions(currentTuple);
+        List<Transition<Pair<S0, S1>, I, ModalType>> transitions = generateNewTransitions(currentTuple);
 
-        for (Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType> transition : transitions) {
+        for (Transition<Pair<S0, S1>, I, ModalType> transition : transitions) {
 
             S mappedTarget;
             if (mapping.containsKey(transition.getTarget())) {
@@ -114,8 +112,8 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
         return discovered;
     }
 
-    protected List<Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType>> generateNewTransitions(Pair<S0, S1> productState) {
-        List<Transition<Pair<S0, S1>, I, ModalEdgeProperty.ModalType>> newTransitions = new ArrayList<>();
+    protected List<Transition<Pair<S0, S1>, I, ModalType>> generateNewTransitions(Pair<S0, S1> productState) {
+        List<Transition<Pair<S0, S1>, I, ModalType>> newTransitions = new ArrayList<>();
 
         for (I symbol : mts0.getInputAlphabet()) {
             for (T0 transition : mts0.getTransitions(productState.getFirst(), symbol)) {
@@ -156,8 +154,7 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
         return newTransitions;
     }
 
-    private static ModalEdgeProperty.ModalType minimalCompatibleType(ModalContractEdgeProperty.ModalType arg0,
-                                                                     ModalContractEdgeProperty.ModalType arg1) {
+    private static ModalEdgeProperty.ModalType minimalCompatibleType(ModalType arg0, ModalType arg1) {
         if (arg0 == ModalType.MUST && arg1 == ModalType.MUST) {
             return ModalType.MUST;
         } else {

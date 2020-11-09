@@ -25,7 +25,6 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.util.ts.modal.MCUtil.SystemComponent;
