@@ -384,9 +384,9 @@ public final class DFAs {
      */
     public static <S, I> boolean isPrefixClosed(DFA<S, I> dfa, Alphabet<I> alphabet) {
         return dfa.getStates()
-                  .parallelStream()
+                  .stream()
                   .allMatch(s -> dfa.isAccepting(s) ||
-                                 alphabet.parallelStream().noneMatch(i -> dfa.isAccepting(dfa.getSuccessors(s, i))));
+                                 alphabet.stream().noneMatch(i -> dfa.isAccepting(dfa.getSuccessors(s, i))));
     }
 
     /**

@@ -55,10 +55,10 @@ public final class IntegrationUtil {
      *     <li>traces, encoded as
      *     <ol>
      *         <li>length of trace</li>
-     *         <li>symbol 1</li>
-     *         <li>symbol 2</li>
+     *         <li>index of symbol 1</li>
+     *         <li>index of symbol 2</li>
      *         <li>...</li>
-     *         <li>symbol n</li>
+     *         <li>index of symbol n</li>
      *         <li>boolean, indicating acceptance/rejection</li>
      *     </ol>
      *     </li>
@@ -100,17 +100,18 @@ public final class IntegrationUtil {
      * To reduce the size of the data, the traces have been encoded as shorts and follow the following structure:
      * <ol>
      *     <li>number of input symbols</li>
+     *     <li>number of output symbols</li>
      *     <li>number of traces</li>
      *     <li>traces, encoded as
      *     <ul>
      *         <li>length of trace</li>
-     *         <li>input symbol 1</li>
-     *         <li>output symbol 1</li>
-     *         <li>input symbol 2</li>
-     *         <li>output symbol 2</li>
+     *         <li>index of input symbol 1</li>
+     *         <li>index of output symbol 1</li>
+     *         <li>index of input symbol 2</li>
+     *         <li>index of output symbol 2</li>
      *         <li>...</li>
-     *         <li>input symbol n</li>
-     *         <li>output symbol n</li>
+     *         <li>index of input symbol n</li>
+     *         <li>index of output symbol n</li>
      *     </ul>
      *     </li>
      * </ol>

@@ -321,10 +321,6 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         return StreamSupport.stream(spliterator(), false);
     }
 
-    public Stream<I> parallelStream() {
-        return StreamSupport.stream(spliterator(), true);
-    }
-
     /**
      * Retrieves the subword of this word starting at the given index and extending until the end of this word. Calling
      * this method is equivalent to calling
