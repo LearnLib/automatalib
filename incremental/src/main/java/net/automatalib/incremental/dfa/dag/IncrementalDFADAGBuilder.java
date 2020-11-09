@@ -160,7 +160,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
             if (last != init) {
                 last = unhide(last, suffTransIdx, suffixState);
 
-                // the suffixState be part of our current path and become confluent due to un-hiding
+                // the suffixState may be part of our current path and become confluent due to un-hiding
                 if (suffixState.isConfluence()) {
                     // update the reference with whatever state comes first
                     final Iterator<PathElem> iter = path.descendingIterator();
