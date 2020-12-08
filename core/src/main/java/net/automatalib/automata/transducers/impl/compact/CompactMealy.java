@@ -40,7 +40,7 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactM
         this.transitions = new int[size];
         this.outputs = new Object[size];
 
-        Arrays.fill(transitions, 0, size, AbstractCompact.INVALID_STATE);
+        Arrays.fill(transitions, AbstractCompact.INVALID_STATE);
     }
 
     public CompactMealy(Alphabet<I> alphabet, int stateCapacity) {
