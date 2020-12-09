@@ -56,10 +56,10 @@ public class DummyVP implements VisualizationProvider {
                                  List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> options) {
-        LOGGER.error("Attempted to visualize graph with {} nodes, but no usable visualization provider configured",
-                     graph.size());
+        final String errorMsg = "Attempted to visualize graph, but no usable visualization provider was configured.";
+        LOGGER.error(errorMsg);
         if (modal) {
-            JOptionPane.showMessageDialog(null, "Press OK to continue ...");
+            JOptionPane.showMessageDialog(null, errorMsg + "\nPress OK to continue ...");
         }
     }
 }
