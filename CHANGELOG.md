@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.10.0...HEAD)
 
+### Added
+
+* Added `SubsequentialTransducer` interface and implementations/utilities.
+
+
+### Changed
+
+* Refactored `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automata.base.compact.CompactTransition`
+
 
 ### Fixed
 

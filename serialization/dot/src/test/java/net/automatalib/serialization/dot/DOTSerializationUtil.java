@@ -21,8 +21,10 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
 /**
@@ -35,6 +37,7 @@ final class DOTSerializationUtil {
     static final String NFA2_RESOURCE = "/nfa2.dot";
     static final String MEALY_RESOURCE = "/mealy.dot";
     static final String MOORE_RESOURCE = "/moore.dot";
+    static final String SST_RESOURCE = "/sst.dot";
     static final String GRAPH_RESOURCE = "/graph.dot";
 
     static final String FAULTY_AUTOMATON_RESOURCE = "/faulty_automaton.dot";
@@ -46,6 +49,7 @@ final class DOTSerializationUtil {
     static final CompactNFA<String> NFA;
     static final CompactMealy<String, String> MEALY;
     static final CompactMoore<String, String> MOORE;
+    static final CompactSST<Character, Character> SST;
     static final CompactGraph<String, String> GRAPH;
 
     static {
@@ -84,6 +88,20 @@ final class DOTSerializationUtil {
                                  .from("s1").on("2").to("s0")
                                  .from("s2").on("2").to("s1")
                                  .create();
+
+        SST = AutomatonBuilders.<Character, Character>newSST(Alphabets.characters('a', 'c'))
+                               .withInitial("s0")
+                               .withStateProperty(Word.fromCharSequence("x"), "s0")
+                               .withStateProperty(Word.epsilon(), "s1", "s2", "s3")
+                               .from("s0").on('a', 'b', 'c').withProperty(Word.fromCharSequence("x")).to("s1")
+                               .from("s1").on('a').withProperty(Word.fromCharSequence("xx")).to("s2")
+                               .from("s1").on('b').withProperty(Word.fromCharSequence("yx")).to("s2")
+                               .from("s1").on('c').withProperty(Word.fromCharSequence("zx")).to("s2")
+                               .from("s2").on('a').withProperty(Word.fromCharSequence("xx")).to("s3")
+                               .from("s2").on('b').withProperty(Word.fromCharSequence("yx")).to("s3")
+                               .from("s2").on('c').withProperty(Word.fromCharSequence("zx")).to("s3")
+                               .from("s3").on('a', 'b', 'c').withProperty(Word.epsilon()).to("s1")
+                               .create();
         // @formatter:on
 
         // create of full binary tree of depth 4

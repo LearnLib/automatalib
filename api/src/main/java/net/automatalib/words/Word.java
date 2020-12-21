@@ -36,6 +36,7 @@ import java.util.stream.StreamSupport;
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.smartcollections.ArrayWritable;
+import net.automatalib.commons.smartcollections.IntSeq;
 import net.automatalib.commons.util.array.AWUtil;
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -413,6 +414,15 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      */
     public List<I> asList() {
         return new AsList();
+    }
+
+    /**
+     * Retrieves a {@link IntSeq} view on the contents of this word for a given indexing function (e.g. an {@link Alphabet}).
+     *
+     * @return an {@link IntSeq} view of the contained symbols.
+     */
+    public IntSeq asIntSeq(ToIntFunction<I> indexFunction) {
+        return new AsIntSeq(indexFunction);
     }
 
     /**
@@ -830,6 +840,33 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
         @Override
         public int size() {
             return Word.this.length();
+        }
+    }
+
+    /*
+     * Representing a word as an IntSeq.
+     */
+    private class AsIntSeq implements IntSeq {
+
+        private final ToIntFunction<I> indexFunction;
+
+        AsIntSeq(ToIntFunction<I> indexFunction) {
+            this.indexFunction = indexFunction;
+        }
+
+        @Override
+        public int size() {
+            return Word.this.size();
+        }
+
+        @Override
+        public int get(int index) {
+            return indexFunction.applyAsInt(Word.this.getSymbol(index));
+        }
+
+        @Override
+        public String toString() {
+            return Word.this.toString();
         }
     }
 }

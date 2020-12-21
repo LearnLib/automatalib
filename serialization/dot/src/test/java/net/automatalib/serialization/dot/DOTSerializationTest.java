@@ -28,6 +28,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.graphs.base.compact.CompactEdge;
@@ -75,6 +76,15 @@ public class DOTSerializationTest {
 
         ThrowingWriter writer = w -> GraphDOT.write(moore, moore.getInputAlphabet(), w);
         checkDOTOutput(writer, DOTSerializationUtil.MOORE_RESOURCE);
+    }
+
+    @Test
+    public void testRegularSSTExport() throws IOException {
+
+        final CompactSST<Character, Character> sst = DOTSerializationUtil.SST;
+
+        ThrowingWriter writer = w -> GraphDOT.write(sst, sst.getInputAlphabet(), w);
+        checkDOTOutput(writer, DOTSerializationUtil.SST_RESOURCE);
     }
 
     @Test

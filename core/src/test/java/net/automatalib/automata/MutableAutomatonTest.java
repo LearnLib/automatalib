@@ -33,9 +33,11 @@ import net.automatalib.automata.transducers.impl.FastMoore;
 import net.automatalib.automata.transducers.impl.FastProbMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.automata.transducers.probabilistic.ProbabilisticOutput;
 import net.automatalib.commons.util.random.RandomUtil;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -52,6 +54,8 @@ public class MutableAutomatonTest {
     static final List<ProbabilisticOutput<Character>> PROB_TRANS_PROPS =
             TRANS_PROPS.stream().map(p -> new ProbabilisticOutput<>(0.5f, p)).collect(Collectors.toList());
     static final List<Void> EMPTY_PROPS = Collections.emptyList();
+    static final List<Word<Character>> SST_TRANS_PROPS = Arrays.asList(Word.fromCharSequence("xy"), Word.fromCharSequence("yz"));
+    static final List<Word<Character>> SST_STATE_PROPS = Arrays.asList(Word.fromCharSequence("ab"), Word.fromCharSequence("bc"));
     static final Random RANDOM = new Random(42);
 
     @Test
@@ -97,6 +101,11 @@ public class MutableAutomatonTest {
     @Test
     public void testFastMoore() {
         this.checkAutomaton(FastMoore::new, ALPHABET, STATE_PROPS, EMPTY_PROPS);
+    }
+
+    @Test
+    public void testCompactSST() {
+        this.checkAutomaton(CompactSST::new, ALPHABET, SST_STATE_PROPS, SST_TRANS_PROPS);
     }
 
     protected <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void checkAutomaton(AutomatonCreator<M, I> creator,

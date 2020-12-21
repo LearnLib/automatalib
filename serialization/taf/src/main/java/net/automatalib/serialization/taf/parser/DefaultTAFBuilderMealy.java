@@ -18,12 +18,12 @@ package net.automatalib.serialization.taf.parser;
 import java.util.Collection;
 import java.util.Set;
 
+import net.automatalib.automata.base.compact.CompactTransition;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.words.Alphabet;
 
 final class DefaultTAFBuilderMealy
-        extends AbstractTAFBuilder<Integer, String, CompactMealyTransition<String>, Void, String, CompactMealy<String, String>>
+        extends AbstractTAFBuilder<Integer, String, CompactTransition<String>, Void, String, CompactMealy<String, String>>
         implements TAFBuilderMealy {
 
     DefaultTAFBuilderMealy(InternalTAFParser parser) {

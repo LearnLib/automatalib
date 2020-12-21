@@ -31,6 +31,7 @@ import net.automatalib.automata.transducers.impl.FastMoore;
 import net.automatalib.automata.transducers.impl.FastProbMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -232,5 +233,10 @@ public class GrowingAlphabetAutomatonTest {
     @Test
     public void testFastMoore() {
         this.testGrowableOutputAutomaton(FastMoore::new);
+    }
+
+    @Test
+    public void testCompactSST() {
+        this.testGrowableOutputAutomaton(CompactSST::new);
     }
 }

@@ -15,7 +15,7 @@ Its original purpose is to serve as the automaton framework for the [LearnLib][3
 However, it is completely independent of LearnLib and can be used for other projects as well.
 
 AutomataLib supports modeling a variety of graph-based structures.
-Currently, it covers generic transition systems, Deterministic Finite Automata (DFA) and Mealy machines as well as more advanced structures such as Visibly Pushdown Automata (VPDA).
+Currently, it covers generic transition systems, Deterministic Finite Automata (DFA) and Mealy machines as well as more advanced structures such as Visibly Pushdown Automata (VPDA) or Subsequential Transducers (SSTs).
 
 Models of AutomataLib can be (de-)serialized (from) to one of the various supported serialization formats and may be visualized using either the GraphViz or JUNG library.
 Furthermore, a plethora of graph-/automata-based algorithms is implemented, covering the following topics:
