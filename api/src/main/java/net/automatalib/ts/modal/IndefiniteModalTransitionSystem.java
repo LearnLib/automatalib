@@ -20,8 +20,8 @@ import net.automatalib.ts.UniversalTransitionSystem;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
 /**
- * An modal transition system is a {@link UniversalTransitionSystem} in which transitions can be marked as {@link
- * net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType#MAY may} or {@link
+ * An (indefinite) modal transition system is a {@link UniversalTransitionSystem} in which transitions can be marked as
+ * {@link net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType#MAY may} or {@link
  * net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType#MUST must} edges.
  *
  * @param <S>

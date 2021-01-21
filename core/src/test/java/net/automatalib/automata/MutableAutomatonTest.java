@@ -53,8 +53,8 @@ import org.testng.annotations.Test;
 public class MutableAutomatonTest {
 
     static final Random RANDOM = new Random(42);
-    protected static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 6);
-    protected static final int SIZE = 10;
+    static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 6);
+    static final int SIZE = 10;
     static final List<Boolean> STATE_PROPS = Arrays.asList(false, true);
     static final List<Character> TRANS_PROPS = Arrays.asList('a', 'b', 'c');
     static final List<ProbabilisticOutput<Character>> PROB_TRANS_PROPS =
@@ -119,6 +119,7 @@ public class MutableAutomatonTest {
         this.checkAutomaton(CompactMTS::new, ALPHABET, EMPTY_PROPS, MC_TRANS_PROPS);
     }
 
+    @Test
     public void testCompactSST() {
         this.checkAutomaton(CompactSST::new, ALPHABET, SST_STATE_PROPS, SST_TRANS_PROPS);
     }

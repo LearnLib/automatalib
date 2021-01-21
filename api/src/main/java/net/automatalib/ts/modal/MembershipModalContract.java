@@ -27,8 +27,8 @@ import net.automatalib.ts.modal.transition.ModalContractEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
 
 /**
- * A membership modal contract is a {@link ModalContract} that additionally allows assign group membership to certain
- * edges.
+ * A membership modal contract is a {@link ModalContract} that additionally allows one to assign group membership to
+ * certain edges.
  *
  * @param <S>
  *         state type
