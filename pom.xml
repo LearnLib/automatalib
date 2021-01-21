@@ -374,6 +374,12 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-modelchecking-m3c</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- serialization -->
             <dependency>
                 <groupId>net.automatalib</groupId>

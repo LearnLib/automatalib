@@ -87,6 +87,11 @@ limitations under the License.
             <artifactId>automata-modelchecking-ltsmin</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-modelchecking-m3c</artifactId>
+        </dependency>
+
         <!-- serialization -->
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -242,6 +247,13 @@ limitations under the License.
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-modelchecking-ltsmin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                </dependency>
+
+                <dependency>
+                    <groupId>net.automatalib</groupId>
+                    <artifactId>automata-modelchecking-m3c</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>
