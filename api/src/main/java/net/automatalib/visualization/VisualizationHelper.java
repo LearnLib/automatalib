@@ -96,7 +96,7 @@ public interface VisualizationHelper<N, E> {
         }
     }
 
-    final class EdgeAttrs extends CommonAttrs {
+    class EdgeAttrs extends CommonAttrs {
 
         public static final String PENWIDTH = "penwidth";
         public static final String ARROWHEAD = "arrowhead";
@@ -153,6 +153,33 @@ public interface VisualizationHelper<N, E> {
     final class EdgeStyles extends CommonStyles {
 
         private EdgeStyles() {
+            // prevent instantiation
+        }
+    }
+
+    class MTSEdgeAttrs extends EdgeAttrs {
+
+        public static final String MODALITY = "modality";
+
+        private MTSEdgeAttrs() {
+            // prevent instantiation
+        }
+    }
+
+    class MCEdgeAttrs extends MTSEdgeAttrs {
+
+        public static final String CONTRACT = "contract";
+
+        private MCEdgeAttrs() {
+            // prevent instantiation
+        }
+    }
+
+    final class MMCEdgeAttrs extends MCEdgeAttrs {
+
+        public static final String MEMBERSHIP = "group";
+
+        private MMCEdgeAttrs() {
             // prevent instantiation
         }
     }

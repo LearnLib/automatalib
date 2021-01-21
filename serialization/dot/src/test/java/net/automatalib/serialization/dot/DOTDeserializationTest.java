@@ -23,9 +23,12 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
+import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
@@ -36,9 +39,10 @@ import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.commons.util.io.UnclosableInputStream;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.serialization.FormatException;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.util.automata.fsa.NFAs;
+import net.automatalib.serialization.InputModelData;
+import net.automatalib.ts.modal.CompactMC;
+import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
@@ -58,7 +62,7 @@ public class DOTDeserializationTest {
                 DOTParsers.dfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.DFA_RESOURCE)).
                         model;
 
-        Assert.assertTrue(Automata.testEquivalence(dfa, parsed, dfa.getInputAlphabet()));
+        checkIsomorphism(dfa, parsed, dfa.getInputAlphabet());
     }
 
     @Test
@@ -70,9 +74,7 @@ public class DOTDeserializationTest {
                 DOTParsers.nfa().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.NFA_RESOURCE)).
                         model;
 
-        Assert.assertTrue(Automata.testEquivalence(NFAs.determinize(nfa),
-                                                   NFAs.determinize(parsed),
-                                                   nfa.getInputAlphabet()));
+        checkIsomorphism(nfa, parsed, nfa.getInputAlphabet());
     }
 
     @Test
@@ -108,7 +110,7 @@ public class DOTDeserializationTest {
                 DOTParsers.mealy().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MEALY_RESOURCE)).
                         model;
 
-        Assert.assertTrue(Automata.testEquivalence(mealy, parsed, mealy.getInputAlphabet()));
+        checkIsomorphism(mealy, parsed, mealy.getInputAlphabet());
     }
 
     @Test
@@ -119,7 +121,7 @@ public class DOTDeserializationTest {
                 DOTParsers.moore().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MOORE_RESOURCE)).
                         model;
 
-        Assert.assertTrue(Automata.testEquivalence(moore, parsed, moore.getInputAlphabet()));
+        checkIsomorphism(moore, parsed, moore.getInputAlphabet());
     }
 
     @Test
@@ -130,6 +132,32 @@ public class DOTDeserializationTest {
                 DOTParsers.graph().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.GRAPH_RESOURCE));
 
         checkGraphEquivalence(graph, parsed);
+    }
+
+    @Test
+    public void testRegularMTSDeserialization() throws IOException {
+        final CompactMTS<String> mts = DOTSerializationUtil.MTS;
+
+        InputModelData<String, CompactMTS<String>> model =
+                DOTParsers.mts().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MTS_RESOURCE));
+
+        final Alphabet<String> alphabet = model.alphabet;
+        final CompactMTS<String> parsed = model.model;
+
+        checkIsomorphism(mts, parsed, alphabet);
+    }
+
+    @Test
+    public void testRegularMCDeserialization() throws IOException {
+        final CompactMC<String> mc = DOTSerializationUtil.MC;
+
+        InputModelData<String, CompactMC<String>> model =
+                DOTParsers.mc().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MC_RESOURCE));
+
+        final Alphabet<String> alphabet = model.alphabet;
+        final CompactMC<String> parsed = model.model;
+
+        checkIsomorphism(mc, parsed, alphabet);
     }
 
     @Test(expectedExceptions = FormatException.class)
@@ -160,14 +188,14 @@ public class DOTDeserializationTest {
     @Test
     public void testDuplicateTransitions() throws IOException {
 
-        // @formatter:off
-        final CompactDFA<String> dfa = AutomatonBuilders.newDFA(Alphabets.closedCharStringRange('a', 'b'))
-                                                        .withInitial("s0")
-                                                        .from("s0").on("a", "b").to("s1")
-                                                        .from("s1").on("a", "b").to("s0")
-                                                        .withAccepting("s1")
-                                                        .create();
-        // @formatter:on
+        final CompactDFA<String> dfa = new CompactDFA<>(Alphabets.closedCharStringRange('a', 'b'));
+        final Integer s0 = dfa.addInitialState();
+        final Integer s1 = dfa.addState(true);
+
+        dfa.addTransition(s0, "a", s1);
+        dfa.addTransition(s0, "b", s1);
+        dfa.addTransition(s1, "a", s0);
+        dfa.addTransition(s1, "b", s0);
 
         final StringWriter w = new StringWriter();
         GraphDOT.write(dfa, dfa.getInputAlphabet(), w);
@@ -175,7 +203,62 @@ public class DOTDeserializationTest {
         final ByteArrayInputStream bais = new ByteArrayInputStream(w.toString().getBytes());
         final DFA<?, String> parsed = DOTParsers.dfa().readModel(bais).model;
 
-        Assert.assertTrue(Automata.testEquivalence(dfa, parsed, dfa.getInputAlphabet()));
+        checkIsomorphism(dfa, parsed, dfa.getInputAlphabet());
+    }
+
+    private static <S1, S2, I, T1, T2, SP, TP> void checkIsomorphism(UniversalAutomaton<S1, I, T1, SP, TP> source,
+                                                                     UniversalAutomaton<S2, I, T2, SP, TP> target,
+                                                                     Alphabet<I> alphabet) {
+
+        Assert.assertEquals(source.size(), target.size());
+
+        final Queue<S1> sourceQueue = new ArrayDeque<>(source.getInitialStates());
+        final Queue<S2> targetQueue = new ArrayDeque<>(target.getInitialStates());
+
+        Assert.assertEquals(sourceQueue.size(), 1, "This check currently only works for single initial states");
+        Assert.assertEquals(targetQueue.size(), 1, "This check currently only works for single initial states");
+
+        final Set<S1> sourceCache = new HashSet<>();
+        final Set<S2> targetCache = new HashSet<>();
+
+        while (!sourceQueue.isEmpty() && !targetQueue.isEmpty()) {
+            S1 sourceState = sourceQueue.remove();
+            S2 targetState = targetQueue.remove();
+
+            Assert.assertEquals(source.getStateProperty(sourceState), target.getStateProperty(targetState));
+
+            sourceCache.add(sourceState);
+            targetCache.add(targetState);
+
+            for (I i : alphabet) {
+                final List<T1> sourceTransitions = new ArrayList<>(source.getTransitions(sourceState, i));
+                final List<T2> targetTransistions = new ArrayList<>(target.getTransitions(targetState, i));
+
+                Assert.assertEquals(sourceTransitions.size(), targetTransistions.size());
+
+                for (int j = 0; j < sourceTransitions.size(); j++) {
+                    final T1 sourceTrans = sourceTransitions.get(j);
+                    final T2 targetTrans = targetTransistions.get(j);
+
+                    Assert.assertEquals(source.getTransitionProperty(sourceTrans),
+                                        target.getTransitionProperty(targetTrans));
+
+                    final S1 sourceSucc = source.getSuccessor(sourceTrans);
+                    final S2 targetSucc = target.getSuccessor(targetTrans);
+
+                    Assert.assertEquals(sourceCache.contains(sourceSucc), targetCache.contains(targetSucc));
+
+                    if (!sourceCache.contains(sourceSucc)) {
+                        sourceQueue.add(sourceSucc);
+                        sourceCache.add(sourceSucc);
+                        targetQueue.add(targetSucc);
+                        targetCache.add(targetSucc);
+                    }
+                }
+            }
+        }
+
+        Assert.assertEquals(sourceQueue.isEmpty(), targetQueue.isEmpty());
     }
 
     private static <N1, E1, NP extends Comparable<NP>, EP extends Comparable<EP>, N2, E2> void checkGraphEquivalence(

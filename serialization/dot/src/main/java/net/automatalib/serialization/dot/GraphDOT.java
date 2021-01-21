@@ -181,6 +181,59 @@ public final class GraphDOT {
     }
 
     /**
+     * Renders a list of {@link Graph}s as clusters (subgraphs) in the GraphVIZ DOT format. Note that any markup
+     * information for each cluster must be provided by the respective graph's {@link Graph#getVisualizationHelper()
+     * visualization helper}.
+     *
+     * @param graphs
+     *         the graphs to render
+     * @param a
+     *         the appendable to write to.
+     *
+     * @throws IOException
+     *         if writing to {@code a} fails.
+     */
+    public static void write(List<Graph<?, ?>> graphs, Appendable a) throws IOException {
+
+        boolean directed = false;
+
+        for (Graph<?, ?> g : graphs) {
+            // one directed graph is enough to require arrow tips
+            if (!(g instanceof UndirectedGraph)) {
+                directed = true;
+                break;
+            }
+        }
+
+        writeRawHeader(a, directed);
+
+        int clusterId = 0;
+        for (Graph<?, ?> g : graphs) {
+            final String idPrefix = "c" + clusterId + '_';
+
+            a.append(System.lineSeparator())
+             .append("subgraph cluster")
+             .append(Integer.toString(clusterId))
+             .append(" {")
+             .append(System.lineSeparator());
+
+            @SuppressWarnings("unchecked")
+            final Graph<Object, Object> graph = (Graph<Object, Object>) g;
+
+            writeRawBody(graph,
+                         a,
+                         toDOTVisualizationHelper(graph.getVisualizationHelper()),
+                         !(graph instanceof UndirectedGraph),
+                         idPrefix);
+            a.append('}').append(System.lineSeparator());
+
+            clusterId++;
+        }
+
+        writeRawFooter(a);
+    }
+
+    /**
      * Renders a {@link Graph} in the GraphVIZ DOT format.
      *
      * @param graph
@@ -198,11 +251,28 @@ public final class GraphDOT {
 
         final boolean directed = !(graph instanceof UndirectedGraph);
 
+        writeRawHeader(a, directed);
+        writeRawBody(graph, a, dotHelper, directed, "");
+        writeRawFooter(a);
+
+        if (a instanceof Flushable) {
+            ((Flushable) a).flush();
+        }
+    }
+
+    private static void writeRawHeader(Appendable a, boolean directed) throws IOException {
         if (directed) {
             a.append("di");
         }
 
         a.append("graph g {").append(System.lineSeparator());
+    }
+
+    private static <N, E> void writeRawBody(Graph<N, E> graph,
+                                            Appendable a,
+                                            DOTVisualizationHelper<N, ? super E> dotHelper,
+                                            boolean directed,
+                                            String idPrefix) throws IOException {
 
         Map<String, String> props = new HashMap<>();
 
@@ -234,7 +304,7 @@ public final class GraphDOT {
             if (!dotHelper.getNodeProperties(node, props)) {
                 continue;
             }
-            String id = "s" + i++;
+            String id = idPrefix + "s" + i++;
 
             // remove potential attributes that are no valid DOT attributes
             if (Boolean.parseBoolean(props.remove(NodeAttrs.INITIAL))) {
@@ -287,16 +357,15 @@ public final class GraphDOT {
 
         if (!initialNodes.isEmpty()) {
             a.append(System.lineSeparator());
-            renderInitialArrowTip(initialNodes, a);
+            renderInitialArrowTip(initialNodes, idPrefix, a);
         }
 
         a.append(System.lineSeparator());
         dotHelper.writePostamble(a);
+    }
 
+    private static void writeRawFooter(Appendable a) throws IOException {
         a.append('}').append(System.lineSeparator());
-        if (a instanceof Flushable) {
-            ((Flushable) a).flush();
-        }
     }
 
     private static void appendParams(Map<String, String> params, Appendable a) throws IOException {
@@ -326,14 +395,15 @@ public final class GraphDOT {
         a.append(']');
     }
 
-    private static void renderInitialArrowTip(Set<String> initialNodes, Appendable a) throws IOException {
+    private static void renderInitialArrowTip(Set<String> initialNodes, String idPrefix, Appendable a)
+            throws IOException {
 
         int i = 0;
         for (String init : initialNodes) {
-            a.append(initialLabel(i))
+            a.append(initialLabel(idPrefix, i))
              .append(" [label=\"\" shape=\"none\" width=\"0\" height=\"0\"];")
              .append(System.lineSeparator())
-             .append(initialLabel(i++))
+             .append(initialLabel(idPrefix, i++))
              .append(" -> ")
              .append(init)
              .append(';')
@@ -342,7 +412,11 @@ public final class GraphDOT {
     }
 
     static String initialLabel(int n) {
-        return INITIAL_LABEL + n;
+        return initialLabel("", n);
+    }
+
+    static String initialLabel(String idPrefix, int n) {
+        return idPrefix + INITIAL_LABEL + n;
     }
 
     public static <N, E> DOTVisualizationHelper<N, E> toDOTVisualizationHelper(VisualizationHelper<N, E> helper) {

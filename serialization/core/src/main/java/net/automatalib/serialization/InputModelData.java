@@ -28,7 +28,7 @@ import net.automatalib.words.Alphabet;
  *
  * @author frohme
  */
-public final class InputModelData<I, M extends SimpleTS<?, I>> {
+public class InputModelData<I, M extends SimpleTS<?, I>> {
 
     public final M model;
     public final Alphabet<I> alphabet;

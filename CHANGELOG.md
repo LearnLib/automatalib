@@ -16,6 +16,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Refactored `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automata.base.compact.CompactTransition`
 
 
+### Added
+
+* Added modal transition systems (MTSs), modal contracts (MCs) and Membership-MCs.
+
+
 ### Fixed
 
 * Fixed a cache consistency bug in various DAG-based incremental builders.

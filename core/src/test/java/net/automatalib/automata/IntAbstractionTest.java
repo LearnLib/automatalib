@@ -44,6 +44,11 @@ public class IntAbstractionTest extends MutableAutomatonTest {
     @Override
     public void testFastProbMealy() {}
 
+    // disable tests for non-deterministic automata
+    @Test(enabled = false)
+    @Override
+    public void testCompactMTS() {}
+
     @Override
     protected <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> M createInitialAutomaton(AutomatonCreator<M, I> creator,
                                                                                                       Alphabet<I> alphabet) {

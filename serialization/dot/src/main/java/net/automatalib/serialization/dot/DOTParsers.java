@@ -17,6 +17,7 @@ package net.automatalib.serialization.dot;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -34,13 +35,30 @@ import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.MutableMooreMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.visualization.MCVisualizationHelper;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.MutableGraph;
 import net.automatalib.graphs.base.compact.CompactGraph;
-import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.ModelDeserializer;
+import net.automatalib.ts.modal.CompactMC;
+import net.automatalib.ts.modal.CompactMMC;
+import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.ts.modal.ModalContract;
+import net.automatalib.ts.modal.ModalTransitionSystem;
+import net.automatalib.ts.modal.MutableModalContract;
+import net.automatalib.ts.modal.MutableModalTransitionSystem;
+import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
+import net.automatalib.ts.modal.transition.ModalContractEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.ModalContractMembershipEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
+import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
+import net.automatalib.visualization.VisualizationHelper.MCEdgeAttrs;
+import net.automatalib.visualization.VisualizationHelper.MMCEdgeAttrs;
+import net.automatalib.visualization.VisualizationHelper.MTSEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeShapes;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -114,6 +132,70 @@ public final class DOTParsers {
         return Pair.of(tokens[0].trim(), tokens[1].trim());
     };
 
+    /**
+     * Edge input parser that parses an edges's {@link MTSEdgeAttrs#MODALITY modality} attribute and constructs a
+     * corresponding {@link MutableModalEdgeProperty}. Throws an {@link IllegalArgumentException} if the attribute is
+     * missing or doesn't match its expected {@link ModalType format}.
+     */
+    public static final Function<Map<String, String>, MutableModalEdgeProperty> DEFAULT_MTS_EDGE_PARSER = attr -> {
+        final String type = attr.get(MTSEdgeAttrs.MODALITY);
+
+        if (type == null) {
+            throw new IllegalArgumentException('\'' + MTSEdgeAttrs.MODALITY + "' attribute undefined");
+        }
+
+        return new ModalEdgePropertyImpl(ModalType.valueOf(type.toUpperCase(Locale.ROOT)));
+    };
+
+    /**
+     * Edge input parser that parses an edges's {@link MTSEdgeAttrs#MODALITY modality} and {@link EdgeAttrs#COLOR color}
+     * attribute and constructs a corresponding {@link MutableModalContractEdgeProperty}. Throws an {@link
+     * IllegalArgumentException} if any of the two attributes are missing or doesn't match its expected format.
+     */
+    public static final Function<Map<String, String>, MutableModalContractEdgeProperty> DEFAULT_MC_EDGE_PARSER =
+            attr -> {
+                final String type = attr.get(MTSEdgeAttrs.MODALITY);
+                final String contract = attr.get(MCEdgeAttrs.CONTRACT);
+
+                if (type == null) {
+                    throw new IllegalArgumentException("attribute '" + MTSEdgeAttrs.MODALITY + "' undefined");
+                }
+                if (contract == null) {
+                    throw new IllegalArgumentException("attribute '" + MCEdgeAttrs.CONTRACT + "' undefined");
+                }
+
+                return new ModalContractEdgePropertyImpl(ModalType.valueOf(type.toUpperCase(Locale.ROOT)),
+                                                         MCVisualizationHelper.TAU.equals(attr.get(EdgeAttrs.LABEL)),
+                                                         EdgeColor.valueOf(contract.toUpperCase(Locale.ROOT)));
+            };
+
+    /**
+     * Edge input parser that parses an edges's {@link MTSEdgeAttrs#MODALITY modality} and {@link EdgeAttrs#COLOR color}
+     * attribute and constructs a corresponding {@link MutableModalContractEdgeProperty}. Throws an {@link
+     * IllegalArgumentException} if any of the two attributes are missing or doesn't match its expected format.
+     */
+    public static final Function<Map<String, String>, ModalContractMembershipEdgePropertyImpl> DEFAULT_MMC_EDGE_PARSER =
+            attr -> {
+                final String type = attr.get(MTSEdgeAttrs.MODALITY);
+                final String contract = attr.get(MCEdgeAttrs.CONTRACT);
+                final String membership = attr.get(MMCEdgeAttrs.MEMBERSHIP);
+
+                if (type == null) {
+                    throw new IllegalArgumentException("attribute '" + MTSEdgeAttrs.MODALITY + "' undefined");
+                }
+                if (contract == null) {
+                    throw new IllegalArgumentException("attribute '" + MCEdgeAttrs.CONTRACT + "' undefined");
+                }
+                if (membership == null) {
+                    throw new IllegalArgumentException("attribute '" + MMCEdgeAttrs.MEMBERSHIP + "' undefined");
+                }
+
+                return new ModalContractMembershipEdgePropertyImpl(ModalType.valueOf(type.toUpperCase(Locale.ROOT)),
+                                                                   MCVisualizationHelper.TAU.equals(attr.get(EdgeAttrs.LABEL)),
+                                                                   EdgeColor.valueOf(contract.toUpperCase(Locale.ROOT)),
+                                                                   Integer.parseInt(membership));
+            };
+
     private DOTParsers() {}
 
     /**
@@ -122,9 +204,9 @@ public final class DOTParsers {
      * Invokes {@link #dfa(Function, Function)} with {@link #DEFAULT_FSA_NODE_PARSER} as {@code nodeParser} and {@link
      * #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
      *
-     * @return a DOT {@link InputModelDeserializer} for {@link CompactDFA}s.
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactDFA}s.
      */
-    public static InputModelDeserializer<@Nullable String, CompactDFA<@Nullable String>> dfa() {
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactDFA<@Nullable String>> dfa() {
         return dfa(DEFAULT_FSA_NODE_PARSER, DEFAULT_EDGE_PARSER);
     }
 
@@ -140,10 +222,10 @@ public final class DOTParsers {
      * @param <I>
      *         the input symbol type
      *
-     * @return a DOT {@link InputModelDeserializer} for {@link CompactDFA}s.
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactDFA}s.
      */
-    public static <I> InputModelDeserializer<I, CompactDFA<I>> dfa(Function<Map<String, String>, Boolean> nodeParser,
-                                                                   Function<Map<String, String>, I> edgeParser) {
+    public static <I> DOTInputModelDeserializer<Integer, I, CompactDFA<I>> dfa(Function<Map<String, String>, Boolean> nodeParser,
+                                                                               Function<Map<String, String>, I> edgeParser) {
         return fsa(new CompactDFA.Creator<>(), nodeParser, edgeParser);
     }
 
@@ -153,9 +235,9 @@ public final class DOTParsers {
      * Invokes {@link #nfa(Function, Function)} with {@link #DEFAULT_FSA_NODE_PARSER} as {@code nodeParser} and {@link
      * #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
      *
-     * @return a DOT {@link InputModelDeserializer} for {@link CompactNFA}s.
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactNFA}s.
      */
-    public static InputModelDeserializer<@Nullable String, CompactNFA<@Nullable String>> nfa() {
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactNFA<@Nullable String>> nfa() {
         return nfa(DEFAULT_FSA_NODE_PARSER, DEFAULT_EDGE_PARSER);
     }
 
@@ -171,10 +253,10 @@ public final class DOTParsers {
      * @param <I>
      *         the input symbol type
      *
-     * @return a DOT {@link InputModelDeserializer} for {@link CompactNFA}s.
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactNFA}s.
      */
-    public static <I> InputModelDeserializer<I, CompactNFA<I>> nfa(Function<Map<String, String>, Boolean> nodeParser,
-                                                                   Function<Map<String, String>, I> edgeParser) {
+    public static <I> DOTInputModelDeserializer<Integer, I, CompactNFA<I>> nfa(Function<Map<String, String>, Boolean> nodeParser,
+                                                                               Function<Map<String, String>, I> edgeParser) {
         return fsa(new CompactNFA.Creator<>(), nodeParser, edgeParser);
     }
 
@@ -190,16 +272,18 @@ public final class DOTParsers {
      *         a node parser that decides for a property map of a node whether it is accepting or not
      * @param edgeParser
      *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param <S>
+     *         the state type of the returned automaton
      * @param <I>
      *         the input symbol type
      * @param <A>
      *         the type of the returned automaton
      *
-     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
      */
-    public static <I, A extends MutableFSA<?, I>> InputModelDeserializer<I, A> fsa(AutomatonCreator<A, I> creator,
-                                                                                   Function<Map<String, String>, Boolean> nodeParser,
-                                                                                   Function<Map<String, String>, I> edgeParser) {
+    public static <S, I, A extends MutableFSA<S, I>> DOTInputModelDeserializer<S, I, A> fsa(AutomatonCreator<A, I> creator,
+                                                                                            Function<Map<String, String>, Boolean> nodeParser,
+                                                                                            Function<Map<String, String>, I> edgeParser) {
         return fsa(creator, nodeParser, edgeParser, Collections.singleton(GraphDOT.initialLabel(0)));
     }
 
@@ -218,17 +302,19 @@ public final class DOTParsers {
      *         an edge parser that extracts from a property map of an edge the input symbol
      * @param initialNodeIds
      *         the ids of the initial nodes
+     * @param <S>
+     *         the state type of the returned automaton
      * @param <I>
      *         the input symbol type
      * @param <A>
      *         the type of the returned automaton
      *
-     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
      */
-    public static <I, A extends MutableFSA<?, I>> InputModelDeserializer<I, A> fsa(AutomatonCreator<A, I> creator,
-                                                                                   Function<Map<String, String>, Boolean> nodeParser,
-                                                                                   Function<Map<String, String>, I> edgeParser,
-                                                                                   Collection<String> initialNodeIds) {
+    public static <S, I, A extends MutableFSA<S, I>> DOTInputModelDeserializer<S, I, A> fsa(AutomatonCreator<A, I> creator,
+                                                                                            Function<Map<String, String>, Boolean> nodeParser,
+                                                                                            Function<Map<String, String>, I> edgeParser,
+                                                                                            Collection<String> initialNodeIds) {
         return fsa(creator, nodeParser, edgeParser, initialNodeIds, true);
     }
 
@@ -250,18 +336,20 @@ public final class DOTParsers {
      *         successors will be initial states instead. This may be useful for instances where there are artificial
      *         nodes used to display in incoming arrow for the actual initial states. If {@code false}, the nodes
      *         matching the {@code initialNodeIds} will be used as initial nodes.
+     * @param <S>
+     *         the state type of the returned automaton
      * @param <I>
      *         the input symbol type
      * @param <A>
      *         the type of the returned automaton
      *
-     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
      */
-    public static <I, A extends MutableFSA<?, I>> InputModelDeserializer<I, A> fsa(AutomatonCreator<A, I> creator,
-                                                                                   Function<Map<String, String>, Boolean> nodeParser,
-                                                                                   Function<Map<String, String>, I> edgeParser,
-                                                                                   Collection<String> initialNodeIds,
-                                                                                   boolean fakeInitialNodeIds) {
+    public static <S, I, A extends MutableFSA<S, I>> DOTInputModelDeserializer<S, I, A> fsa(AutomatonCreator<A, I> creator,
+                                                                                            Function<Map<String, String>, Boolean> nodeParser,
+                                                                                            Function<Map<String, String>, I> edgeParser,
+                                                                                            Collection<String> initialNodeIds,
+                                                                                            boolean fakeInitialNodeIds) {
         return new DOTMutableAutomatonParser<>(creator,
                                                nodeParser,
                                                edge -> Pair.of(edgeParser.apply(edge), null),
@@ -274,9 +362,9 @@ public final class DOTParsers {
      * <p>
      * Invokes {@link #mealy(Function)} with {@link #DEFAULT_MEALY_EDGE_PARSER} as {@code edgeParser}.
      *
-     * @return a DOT {@link InputModelDeserializer} for {@link CompactMealy}s.
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMealy}s.
      */
-    public static InputModelDeserializer<@Nullable String, CompactMealy<@Nullable String, @Nullable String>> mealy() {
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMealy<@Nullable String, @Nullable String>> mealy() {
         return mealy(DEFAULT_MEALY_EDGE_PARSER);
     }
 
@@ -292,9 +380,9 @@ public final class DOTParsers {
      * @param <O>
      *         the output symbol type
      *
-     * @return a DOT {@link InputModelDeserializer} for {@link CompactMealy}s.
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMealy}s.
      */
-    public static <I, O> InputModelDeserializer<I, CompactMealy<I, O>> mealy(Function<Map<String, String>, Pair<I, O>> edgeParser) {
+    public static <I, O> DOTInputModelDeserializer<Integer, I, CompactMealy<I, O>> mealy(Function<Map<String, String>, Pair<I, O>> edgeParser) {
         return mealy(new CompactMealy.Creator<>(), edgeParser);
     }
 
@@ -308,6 +396,8 @@ public final class DOTParsers {
      *         a creator that is used to instantiate the returned automaton
      * @param edgeParser
      *         an edge parser that extracts from a property map of an edge the input symbol and transition property
+     * @param <S>
+     *         the state type of the returned automaton
      * @param <I>
      *         the input symbol type
      * @param <O>
@@ -315,10 +405,11 @@ public final class DOTParsers {
      * @param <A>
      *         the type of the returned automaton
      *
-     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
      */
-    public static <I, O, A extends MutableMealyMachine<?, I, ?, O>> InputModelDeserializer<I, A> mealy(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, String>, Pair<I, O>> edgeParser) {
+    public static <S, I, O, A extends MutableMealyMachine<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> mealy(
+            AutomatonCreator<A, I> creator,
+            Function<Map<String, String>, Pair<I, O>> edgeParser) {
         return mealy(creator, edgeParser, GraphDOT.initialLabel(0));
     }
 
@@ -335,6 +426,8 @@ public final class DOTParsers {
      *         an edge parser that extracts from a property map of an edge the input symbol and transition property
      * @param initialNodeId
      *         the id of the initial node
+     * @param <S>
+     *         the state type of the returned automaton
      * @param <I>
      *         the input symbol type
      * @param <O>
@@ -342,11 +435,12 @@ public final class DOTParsers {
      * @param <A>
      *         the type of the returned automaton
      *
-     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
      */
-    public static <I, O, A extends MutableMealyMachine<?, I, ?, O>> InputModelDeserializer<I, A> mealy(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, String>, Pair<I, O>> edgeParser,
-                                                                                                       String initialNodeId) {
+    public static <S, I, O, A extends MutableMealyMachine<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> mealy(
+            AutomatonCreator<A, I> creator,
+            Function<Map<String, String>, Pair<I, O>> edgeParser,
+            String initialNodeId) {
         return mealy(creator, edgeParser, initialNodeId, true);
     }
 
@@ -366,6 +460,8 @@ public final class DOTParsers {
      *         successors will be initial states instead. This may be useful for instances where there are artificial
      *         nodes used to display in incoming arrow for the actual initial states. If {@code false}, the nodes
      *         matching the {@code initialNodeId} will be used as initial nodes.
+     * @param <S>
+     *         the state type of the returned automaton
      * @param <I>
      *         the input symbol type
      * @param <O>
@@ -373,12 +469,13 @@ public final class DOTParsers {
      * @param <A>
      *         the type of the returned automaton
      *
-     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
      */
-    public static <I, O, A extends MutableMealyMachine<?, I, ?, O>> InputModelDeserializer<I, A> mealy(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, String>, Pair<I, O>> edgeParser,
-                                                                                                       String initialNodeId,
-                                                                                                       boolean fakeInitialNodeId) {
+    public static <S, I, O, A extends MutableMealyMachine<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> mealy(
+            AutomatonCreator<A, I> creator,
+            Function<Map<String, String>, Pair<I, O>> edgeParser,
+            String initialNodeId,
+            boolean fakeInitialNodeId) {
         return new DOTMutableAutomatonParser<>(creator,
                                                node -> null,
                                                edgeParser,
@@ -392,9 +489,9 @@ public final class DOTParsers {
      * Invokes {@link #moore(Function, Function)} with {@link #DEFAULT_MOORE_NODE_PARSER} as {@code nodeParser} and
      * {@link #DEFAULT_EDGE_PARSER} as {@code edgeParser}.
      *
-     * @return a DOT {@link InputModelDeserializer} for {@link CompactMoore}s.
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMoore}s.
      */
-    public static InputModelDeserializer<@Nullable String, CompactMoore<@Nullable String, @Nullable String>> moore() {
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMoore<@Nullable String, @Nullable String>> moore() {
         return moore(DEFAULT_MOORE_NODE_PARSER, DEFAULT_EDGE_PARSER);
     }
 
@@ -413,10 +510,10 @@ public final class DOTParsers {
      * @param <O>
      *         the output symbol type
      *
-     * @return a DOT {@link InputModelDeserializer} for {@link CompactMoore}s.
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMoore}s.
      */
-    public static <I, O> InputModelDeserializer<I, CompactMoore<I, O>> moore(Function<Map<String, String>, O> nodeParser,
-                                                                             Function<Map<String, String>, I> edgeParser) {
+    public static <I, O> DOTInputModelDeserializer<Integer, I, CompactMoore<I, O>> moore(Function<Map<String, String>, O> nodeParser,
+                                                                                         Function<Map<String, String>, I> edgeParser) {
         return moore(new CompactMoore.Creator<>(), nodeParser, edgeParser);
 
     }
@@ -433,6 +530,8 @@ public final class DOTParsers {
      *         a node parser that extracts from a property map of a node the state property
      * @param edgeParser
      *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param <S>
+     *         the state type of the returned automaton
      * @param <I>
      *         the input symbol type
      * @param <O>
@@ -440,11 +539,12 @@ public final class DOTParsers {
      * @param <A>
      *         the type of the returned automaton
      *
-     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
      */
-    public static <I, O, A extends MutableMooreMachine<?, I, ?, O>> InputModelDeserializer<I, A> moore(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, String>, O> nodeParser,
-                                                                                                       Function<Map<String, String>, I> edgeParser) {
+    public static <S, I, O, A extends MutableMooreMachine<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> moore(
+            AutomatonCreator<A, I> creator,
+            Function<Map<String, String>, O> nodeParser,
+            Function<Map<String, String>, I> edgeParser) {
         return moore(creator, nodeParser, edgeParser, GraphDOT.initialLabel(0));
     }
 
@@ -463,6 +563,8 @@ public final class DOTParsers {
      *         an edge parser that extracts from a property map of an edge the input symbol
      * @param initialNodeId
      *         the id of the initial node
+     * @param <S>
+     *         the state type of the returned automaton
      * @param <I>
      *         the input symbol type
      * @param <O>
@@ -470,12 +572,13 @@ public final class DOTParsers {
      * @param <A>
      *         the type of the returned automaton
      *
-     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
      */
-    public static <I, O, A extends MutableMooreMachine<?, I, ?, O>> InputModelDeserializer<I, A> moore(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, String>, O> nodeParser,
-                                                                                                       Function<Map<String, String>, I> edgeParser,
-                                                                                                       String initialNodeId) {
+    public static <S, I, O, A extends MutableMooreMachine<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> moore(
+            AutomatonCreator<A, I> creator,
+            Function<Map<String, String>, O> nodeParser,
+            Function<Map<String, String>, I> edgeParser,
+            String initialNodeId) {
         return moore(creator, nodeParser, edgeParser, initialNodeId, true);
     }
 
@@ -497,6 +600,8 @@ public final class DOTParsers {
      *         successors will be initial states instead. This may be useful for instances where there are artificial
      *         nodes used to display in incoming arrow for the actual initial states. If {@code false}, the nodes
      *         matching the {@code initialNodeId} will be used as initial nodes.
+     * @param <S>
+     *         the state type of the returned automaton
      * @param <I>
      *         the input symbol type
      * @param <O>
@@ -504,13 +609,14 @@ public final class DOTParsers {
      * @param <A>
      *         the type of the returned automaton
      *
-     * @return a DOT {@link InputModelDeserializer} for {@code A}s.
+     * @return a {@link DOTInputModelDeserializer} for {@code A}s.
      */
-    public static <I, O, A extends MutableMooreMachine<?, I, ?, O>> InputModelDeserializer<I, A> moore(AutomatonCreator<A, I> creator,
-                                                                                                       Function<Map<String, String>, O> nodeParser,
-                                                                                                       Function<Map<String, String>, I> edgeParser,
-                                                                                                       String initialNodeId,
-                                                                                                       boolean fakeInitialNodeId) {
+    public static <S, I, O, A extends MutableMooreMachine<S, I, ?, O>> DOTInputModelDeserializer<S, I, A> moore(
+            AutomatonCreator<A, I> creator,
+            Function<Map<String, String>, O> nodeParser,
+            Function<Map<String, String>, I> edgeParser,
+            String initialNodeId,
+            boolean fakeInitialNodeId) {
         return new DOTMutableAutomatonParser<>(creator,
                                                nodeParser,
                                                edge -> Pair.of(edgeParser.apply(edge), null),
@@ -574,6 +680,175 @@ public final class DOTParsers {
                                                                                             Function<Map<String, String>, NP> nodeParser,
                                                                                             Function<Map<String, String>, EP> edgeParser) {
         return new DOTGraphParser<>(creator, nodeParser, edgeParser);
+    }
+
+    /**
+     * Default parser for {@link ModalTransitionSystem}s serialized by AutomataLib.
+     * <p>
+     * Invokes {@link #mts(AutomatonCreator, Function, Function)} with {@link CompactMTS.Creator} as {@code creator},
+     * {@link #DEFAULT_EDGE_PARSER} as {@code inputParser} and {@link #DEFAULT_EDGE_PARSER} as {@code propertyParser}.
+     *
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMTS}s.
+     */
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMTS<@Nullable String>> mts() {
+        return mts(new CompactMTS.Creator<@Nullable String>(), DEFAULT_EDGE_PARSER, DEFAULT_MTS_EDGE_PARSER);
+    }
+
+    /**
+     * Parser for {@link ModalTransitionSystem}s with a custom MTS instance, custom input type and edge attributes
+     * parsers.
+     * <p>
+     * Invokes {@link #mts(AutomatonCreator, Function, Function, Collection)} with AutomataLib's default initial state
+     * label "{@code __start0}" as {@code initialNodeLabel}.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned graph
+     * @param inputParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param propertyParser
+     *         an edge parser that extracts from a property map of an edge the modal transition property
+     * @param <S>
+     *         the state type of the returned MTS
+     * @param <I>
+     *         the input symbol type
+     * @param <TP>
+     *         the modal transition property
+     * @param <M>
+     *         the type of the returned MTS
+     *
+     * @return a DOT {@link ModelDeserializer} for {@code M}s.
+     */
+    public static <S, I, TP extends MutableModalEdgeProperty, M extends MutableModalTransitionSystem<S, I, ?, TP>> DOTInputModelDeserializer<S, I, M> mts(
+            AutomatonCreator<M, I> creator,
+            Function<Map<String, String>, I> inputParser,
+            Function<Map<String, String>, TP> propertyParser) {
+        return mts(creator, inputParser, propertyParser, Collections.singletonList(GraphDOT.initialLabel(0)));
+    }
+
+    /**
+     * Parser for {@link ModalTransitionSystem}s with a custom MTS instance, custom input type and edge attributes
+     * parsers and custom initial state labels.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned graph
+     * @param inputParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param propertyParser
+     *         an edge parser that extracts from a property map of an edge the modal transition property
+     * @param initialNodeIds
+     *         the ids of the initial nodes
+     * @param <S>
+     *         the state type of the returned MTS
+     * @param <I>
+     *         the input symbol type
+     * @param <TP>
+     *         the modal transition property
+     * @param <M>
+     *         the type of the returned MTS
+     *
+     * @return a DOT {@link ModelDeserializer} for {@code M}s.
+     */
+    public static <S, I, TP extends MutableModalEdgeProperty, M extends MutableModalTransitionSystem<S, I, ?, TP>> DOTInputModelDeserializer<S, I, M> mts(
+            AutomatonCreator<M, I> creator,
+            Function<Map<String, String>, I> inputParser,
+            Function<Map<String, String>, TP> propertyParser,
+            Collection<String> initialNodeIds) {
+        return new DOTMutableAutomatonParser<>(creator,
+                                               node -> null,
+                                               edge -> Pair.of(inputParser.apply(edge), propertyParser.apply(edge)),
+                                               initialNodeIds,
+                                               true);
+    }
+
+    /**
+     * Default parser for {@link ModalContract}s serialized by AutomataLib.
+     * <p>
+     * Invokes {@link #mc(AutomatonCreator, Function, Function)} with {@link CompactMC.Creator} as {@code creator},
+     * {@link #DEFAULT_EDGE_PARSER} as {@code inputParser} and {@link #DEFAULT_MC_EDGE_PARSER} as {@code
+     * propertyParser}.
+     *
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMC}s.
+     */
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMC<@Nullable String>> mc() {
+        return mc(new CompactMC.Creator<@Nullable String>(), DEFAULT_EDGE_PARSER, DEFAULT_MC_EDGE_PARSER);
+    }
+
+    /**
+     * Parser for {@link ModalContract}s with a custom MC instance, custom input type and edge attributes parsers.
+     * <p>
+     * Invokes {@link #mc(AutomatonCreator, Function, Function, Collection)} with AutomataLib's default initial state
+     * label "{@code __start0}" as {@code initialNodeLabel}.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned graph
+     * @param inputParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param propertyParser
+     *         an edge parser that extracts from a property map of an edge the modal transition property
+     * @param <S>
+     *         the state type of the returned MTS
+     * @param <I>
+     *         the input symbol type
+     * @param <TP>
+     *         the modal transition property
+     * @param <M>
+     *         the type of the returned MC
+     *
+     * @return a DOT {@link ModelDeserializer} for {@code M}s.
+     */
+    public static <S, I, TP extends MutableModalContractEdgeProperty, M extends MutableModalContract<S, I, ?, TP>> DOTInputModelDeserializer<S, I, M> mc(
+            AutomatonCreator<M, I> creator,
+            Function<Map<String, String>, I> inputParser,
+            Function<Map<String, String>, TP> propertyParser) {
+        return mc(creator, inputParser, propertyParser, Collections.singletonList(GraphDOT.initialLabel(0)));
+    }
+
+    /**
+     * Parser for {@link ModalContract}s with a custom MC instance, custom input type and edge attributes parsers and
+     * custom initial state labels.
+     *
+     * @param creator
+     *         a creator that is used to instantiate the returned graph
+     * @param inputParser
+     *         an edge parser that extracts from a property map of an edge the input symbol
+     * @param propertyParser
+     *         an edge parser that extracts from a property map of an edge the modal transition property
+     * @param initialNodeIds
+     *         the ids of the initial nodes
+     * @param <S>
+     *         the state type of the returned MTS
+     * @param <I>
+     *         the input symbol type
+     * @param <TP>
+     *         the modal transition property
+     * @param <M>
+     *         the type of the returned MC
+     *
+     * @return a DOT {@link ModelDeserializer} for {@code M}s.
+     */
+    public static <S, I, TP extends MutableModalContractEdgeProperty, M extends MutableModalContract<S, I, ?, TP>> DOTInputModelDeserializer<S, I, M> mc(
+            AutomatonCreator<M, I> creator,
+            Function<Map<String, String>, I> inputParser,
+            Function<Map<String, String>, TP> propertyParser,
+            Collection<String> initialNodeIds) {
+        return new DOTMutableAutomatonParser<>(creator,
+                                               node -> null,
+                                               edge -> Pair.of(inputParser.apply(edge), propertyParser.apply(edge)),
+                                               initialNodeIds,
+                                               true);
+    }
+
+    /**
+     * Default parser for {@link CompactMMC}s serialized by AutomataLib.
+     * <p>
+     * Invokes {@link #mc(AutomatonCreator, Function, Function)} with {@link CompactMMC.Creator} as {@code creator},
+     * {@link #DEFAULT_EDGE_PARSER} as {@code inputParser} and {@link #DEFAULT_MMC_EDGE_PARSER} as {@code
+     * propertyParser}.
+     *
+     * @return a {@link DOTInputModelDeserializer} for {@link CompactMMC}s.
+     */
+    public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMMC<@Nullable String>> mmc() {
+        return mc(new CompactMMC.Creator<@Nullable String>(), DEFAULT_EDGE_PARSER, DEFAULT_MMC_EDGE_PARSER);
     }
 
 }

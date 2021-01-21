@@ -23,7 +23,11 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.graphs.base.compact.CompactGraph;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.ts.modal.CompactMC;
+import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
@@ -39,11 +43,17 @@ final class DOTSerializationUtil {
     static final String MOORE_RESOURCE = "/moore.dot";
     static final String SST_RESOURCE = "/sst.dot";
     static final String GRAPH_RESOURCE = "/graph.dot";
+    static final String MTS_RESOURCE = "/mts.dot";
+    static final String MC_RESOURCE = "/mc.dot";
+    static final String CLUSTER_RESOURCE = "/cluster.dot";
 
     static final String FAULTY_AUTOMATON_RESOURCE = "/faulty_automaton.dot";
     static final String FAULTY_GRAPH_RESOURCE = "/faulty_graph.dot";
 
     static final String PARSER_RESOURCE = "/parser.dot";
+
+    static final Alphabet<String> STRING_ALPHABET;
+    static final Alphabet<String> INTEGER_ALPHABET;
 
     static final CompactDFA<String> DFA;
     static final CompactNFA<String> NFA;
@@ -51,77 +61,174 @@ final class DOTSerializationUtil {
     static final CompactMoore<String, String> MOORE;
     static final CompactSST<Character, Character> SST;
     static final CompactGraph<String, String> GRAPH;
+    static final CompactMTS<String> MTS;
+    static final CompactMC<String> MC;
 
     static {
-        // @formatter:off
-        DFA = AutomatonBuilders.newDFA(Alphabets.closedCharStringRange('a', 'c'))
-                               .withInitial("s0")
-                               .from("s0").on("a").to("s1")
-                               .from("s1").on("b").to("s2")
-                               .from("s2").on("c").to("s0")
-                               .withAccepting("s2")
-                               .create();
+        STRING_ALPHABET = Alphabets.closedCharStringRange('a', 'c');
+        INTEGER_ALPHABET = Alphabets.closedCharStringRange('1', '2');
 
-        NFA = AutomatonBuilders.newNFA(Alphabets.closedCharStringRange('a', 'c'))
-                               .withInitial("s0")
-                               .from("s0").on("a").to("s1", "s2")
-                               .from("s1").on("b").to("s2", "s0")
-                               .from("s2").on("c").to("s0", "s1")
-                               .withAccepting("s0")
-                               .create();
-
-        MEALY = AutomatonBuilders.<String, String>newMealy(Alphabets.closedCharStringRange('a', 'c'))
-                                 .withInitial("s0")
-                                 .from("s0").on("a").withOutput("1").to("s1")
-                                 .from("s1").on("b").withOutput("2").to("s2")
-                                 .from("s2").on("c").withOutput("3").to("s0")
-                                 .create();
-
-        MOORE = AutomatonBuilders.<String, String>newMoore(Alphabets.closedCharStringRange('1', '2'))
-                                 .withInitial("s0", "a")
-                                 .withOutput("s1", "b")
-                                 .withOutput("s2", "c")
-                                 .from("s0").on("1").to("s1")
-                                 .from("s1").on("1").to("s2")
-                                 .from("s2").on("1").to("s0")
-                                 .from("s0").on("2").to("s2")
-                                 .from("s1").on("2").to("s0")
-                                 .from("s2").on("2").to("s1")
-                                 .create();
-
-        SST = AutomatonBuilders.<Character, Character>newSST(Alphabets.characters('a', 'c'))
-                               .withInitial("s0")
-                               .withStateProperty(Word.fromCharSequence("x"), "s0")
-                               .withStateProperty(Word.epsilon(), "s1", "s2", "s3")
-                               .from("s0").on('a', 'b', 'c').withProperty(Word.fromCharSequence("x")).to("s1")
-                               .from("s1").on('a').withProperty(Word.fromCharSequence("xx")).to("s2")
-                               .from("s1").on('b').withProperty(Word.fromCharSequence("yx")).to("s2")
-                               .from("s1").on('c').withProperty(Word.fromCharSequence("zx")).to("s2")
-                               .from("s2").on('a').withProperty(Word.fromCharSequence("xx")).to("s3")
-                               .from("s2").on('b').withProperty(Word.fromCharSequence("yx")).to("s3")
-                               .from("s2").on('c').withProperty(Word.fromCharSequence("zx")).to("s3")
-                               .from("s3").on('a', 'b', 'c').withProperty(Word.epsilon()).to("s1")
-                               .create();
-        // @formatter:on
-
-        // create of full binary tree of depth 4
-        GRAPH = new CompactGraph<>();
-        GRAPH.addIntNode();
-
-        for (int i = 2; i < 2 << 3; i++) {
-            GRAPH.addIntNode();
-            GRAPH.connect((i / 2 + i % 2) - 1, i - 1, Integer.toString(i - 1));
-        }
-
-        // update to unique labels "<id>_<level>"
-        for (Integer n : GRAPH) {
-            GRAPH.setNodeProperty(n, n.toString() + '_' + (Integer.SIZE - Integer.numberOfLeadingZeros(n + 1)));
-        }
+        DFA = buildDFA();
+        NFA = buildNFA();
+        MEALY = buildMealy();
+        MOORE = buildMoore();
+        SST = buildSST();
+        GRAPH = buildGraph();
+        MTS = buildMTS();
+        MC = buildMC();
     }
 
     private DOTSerializationUtil() {}
 
     static URL getResource(String resource) {
         return DOTSerializationUtil.class.getResource(resource);
+    }
+
+    private static CompactDFA<String> buildDFA() {
+        final CompactDFA<String> result = new CompactDFA<>(STRING_ALPHABET);
+
+        final Integer s0 = result.addInitialState();
+        final Integer s1 = result.addState();
+        final Integer s2 = result.addState(true);
+
+        result.addTransition(s0, "a", s1);
+        result.addTransition(s1, "b", s2);
+        result.addTransition(s2, "c", s0);
+
+        return result;
+    }
+
+    private static CompactNFA<String> buildNFA() {
+        final CompactNFA<String> result = new CompactNFA<>(STRING_ALPHABET);
+
+        final Integer s0 = result.addInitialState(true);
+        final Integer s1 = result.addState();
+        final Integer s2 = result.addState();
+
+        result.addTransition(s0, "a", s1);
+        result.addTransition(s0, "a", s2);
+        result.addTransition(s1, "b", s0);
+        result.addTransition(s1, "b", s2);
+        result.addTransition(s2, "c", s0);
+        result.addTransition(s2, "c", s1);
+
+        return result;
+    }
+
+    private static CompactMealy<String, String> buildMealy() {
+        final CompactMealy<String, String> result = new CompactMealy<>(STRING_ALPHABET);
+
+        final Integer s0 = result.addInitialState();
+        final Integer s1 = result.addState();
+        final Integer s2 = result.addState();
+
+        result.addTransition(s0, "a", s1, "1");
+        result.addTransition(s1, "b", s2, "2");
+        result.addTransition(s2, "c", s0, "3");
+
+        return result;
+    }
+
+    private static CompactMoore<String, String> buildMoore() {
+        final CompactMoore<String, String> result = new CompactMoore<>(INTEGER_ALPHABET);
+
+        final Integer s0 = result.addInitialState("a");
+        final Integer s1 = result.addState("b");
+        final Integer s2 = result.addState("c");
+
+        result.addTransition(s0, "1", s1);
+        result.addTransition(s0, "2", s2);
+        result.addTransition(s1, "2", s0);
+        result.addTransition(s1, "1", s2);
+        result.addTransition(s2, "1", s0);
+        result.addTransition(s2, "2", s1);
+
+        return result;
+    }
+
+    private static CompactSST<Character, Character> buildSST() {
+        final CompactSST<Character, Character> result = new CompactSST<>(Alphabets.characters('a', 'c'));
+
+        final Integer s0 = result.addInitialState(Word.fromCharSequence("x"));
+        final Integer s1 = result.addState(Word.epsilon());
+        final Integer s2 = result.addState(Word.epsilon());
+        final Integer s3 = result.addState(Word.epsilon());
+
+        result.addTransition(s0, 'a', s1, Word.fromCharSequence("x"));
+        result.addTransition(s0, 'b', s1, Word.fromCharSequence("x"));
+        result.addTransition(s0, 'c', s1, Word.fromCharSequence("x"));
+
+        result.addTransition(s1, 'a', s2, Word.fromCharSequence("xx"));
+        result.addTransition(s1, 'b', s2, Word.fromCharSequence("yx"));
+        result.addTransition(s1, 'c', s2, Word.fromCharSequence("zx"));
+
+        result.addTransition(s2, 'a', s3, Word.fromCharSequence("xx"));
+        result.addTransition(s2, 'b', s3, Word.fromCharSequence("yx"));
+        result.addTransition(s2, 'c', s3, Word.fromCharSequence("zx"));
+
+        result.addTransition(s3, 'a', s1, Word.epsilon());
+        result.addTransition(s3, 'b', s1, Word.epsilon());
+        result.addTransition(s3, 'c', s1, Word.epsilon());
+
+        return result;
+    }
+
+    private static CompactGraph<String, String> buildGraph() {
+        final CompactGraph<String, String> result = new CompactGraph<>();
+        result.addIntNode();
+
+        for (int i = 2; i < 2 << 3; i++) {
+            result.addIntNode();
+            result.connect((i / 2 + i % 2) - 1, i - 1, Integer.toString(i - 1));
+        }
+
+        // update to unique labels "<id>_<level>"
+        for (Integer n : result) {
+            result.setNodeProperty(n, n.toString() + '_' + (Integer.SIZE - Integer.numberOfLeadingZeros(n + 1)));
+        }
+
+        return result;
+    }
+
+    private static CompactMTS<String> buildMTS() {
+        final CompactMTS<String> result = new CompactMTS<>(STRING_ALPHABET);
+        final Integer s0 = result.addInitialState();
+        final Integer s1 = result.addState();
+        final Integer s2 = result.addState();
+
+        result.addModalTransition(s0, "a", s0, ModalType.MAY);
+        result.addModalTransition(s0, "b", s1, ModalType.MUST);
+        result.addModalTransition(s0, "c", s2, ModalType.MAY);
+
+        result.addModalTransition(s1, "a", s0, ModalType.MUST);
+        result.addModalTransition(s1, "b", s1, ModalType.MAY);
+        result.addModalTransition(s1, "c", s2, ModalType.MUST);
+
+        result.addModalTransition(s2, "a", s0, ModalType.MAY);
+        result.addModalTransition(s2, "b", s1, ModalType.MUST);
+        result.addModalTransition(s2, "c", s2, ModalType.MAY);
+
+        return result;
+    }
+
+    private static CompactMC<String> buildMC() {
+        final CompactMC<String> result = new CompactMC<>(STRING_ALPHABET, STRING_ALPHABET);
+        final Integer s0 = result.addInitialState();
+        final Integer s1 = result.addState();
+        final Integer s2 = result.addState();
+
+        result.addContractTransition(s0, "a", s0, ModalType.MAY, false, EdgeColor.NONE);
+        result.addContractTransition(s0, "b", s1, ModalType.MUST, false, EdgeColor.RED);
+        result.addContractTransition(s0, "c", s2, ModalType.MAY, false, EdgeColor.GREEN);
+
+        result.addContractTransition(s1, "a", s0, ModalType.MUST, false, EdgeColor.RED);
+        result.addContractTransition(s1, "b", s1, ModalType.MAY, false, EdgeColor.NONE);
+        result.addContractTransition(s1, "c", s2, ModalType.MUST, false, EdgeColor.GREEN);
+
+        result.addContractTransition(s2, "a", s0, ModalType.MAY, false, EdgeColor.GREEN);
+        result.addContractTransition(s2, "b", s1, ModalType.MUST, false, EdgeColor.RED);
+        result.addContractTransition(s2, "c", s2, ModalType.MAY, false, EdgeColor.NONE);
+
+        return result;
     }
 }
