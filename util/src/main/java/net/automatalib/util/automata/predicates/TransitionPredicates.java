@@ -102,7 +102,7 @@ public final class TransitionPredicates {
 
     public static <S, I, T, O> TransitionPredicate<S, I, T> outputSatisfies(TransitionOutput<? super T, ? extends O> transOut,
                                                                             Predicate<? super O> outputPred) {
-        return new OutputSatisfies<>(transOut, outputPred);
+        return (s, i, t) -> outputPred.test(transOut.getTransitionOutput(t));
     }
 
     public static <S, I, T> TransitionPredicate<S, I, T> outputIsNot(TransitionOutput<? super T, ?> transOut,
@@ -112,7 +112,7 @@ public final class TransitionPredicates {
 
     public static <S, I, T, O> TransitionPredicate<S, I, T> outputViolates(TransitionOutput<? super T, ? extends O> transOut,
                                                                            Predicate<? super O> outputPred) {
-        return new OutputSatisfies<>(transOut, outputPred, true);
+        return (s, i, t) -> !outputPred.test(transOut.getTransitionOutput(t));
     }
 
     public static <S, I, T> TransitionPredicate<S, I, T> outputIn(TransitionOutput<? super T, ?> transOut,

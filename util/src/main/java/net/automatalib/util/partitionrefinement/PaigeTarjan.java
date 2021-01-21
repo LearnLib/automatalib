@@ -235,12 +235,11 @@ public class PaigeTarjan {
     private void addToWorklist(Block b) {
         if (worklistHead == null) {
             worklistHead = b;
-            worklistTail = b;
         } else {
             assert worklistTail != null;
             worklistTail.nextInWorklist = b;
-            worklistTail = b;
         }
+        worklistTail = b;
     }
 
     /**

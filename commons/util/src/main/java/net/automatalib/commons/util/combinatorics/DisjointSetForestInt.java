@@ -15,6 +15,8 @@
  */
 package net.automatalib.commons.util.combinatorics;
 
+import java.util.Arrays;
+
 public class DisjointSetForestInt {
 
     private final int[] parent;
@@ -22,9 +24,7 @@ public class DisjointSetForestInt {
 
     public DisjointSetForestInt(int initSize) {
         this.parent = new int[initSize];
-        for (int i = 0; i < this.parent.length; i++) {
-            this.parent[i] = -1;
-        }
+        Arrays.fill(this.parent, -1);
         this.rank = new int[initSize];
     }
 

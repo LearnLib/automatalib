@@ -81,13 +81,12 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
 
         if (isEmpty()) {
             head = other.head;
-            last = other.last;
         } else {
             T otherHead = other.head;
             last.setNext(otherHead);
             otherHead.setPrev(last);
-            last = other.last;
         }
+        last = other.last;
         size += other.size;
         other.clear();
     }

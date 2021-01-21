@@ -25,6 +25,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Fixed a cache consistency bug in various DAG-based incremental builders.
 
+### Removed
+
+* Removed the (package-private) classes `net.automatalib.util.automata.predicates.{AcceptanceStatePredicate,OutputSatisfies,TransitionPropertySatisfies}`.
+
 
 ## [0.10.0-SNAPSHOT](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11
 
@@ -126,7 +130,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `net.automatalib.automata.GrowableAlphabetAutomaton` -> `net.automatalib.SupportsGrowingAlphabet`
 * Some runtime properties for dynamically configuring AutomataLib have been renamed. There now exists the `AutomataLibProperty` enum as a single reference point for all available properties.
 * Several of the `AbstractCompact*` automata classes have been refactored to share common functionality. While this shouldn't affect its implementations (such as `CompactDFA` or `CompactMealy`) user-land code using the abstract classes may break.
-* The `BricsDFA` wrapper previously allowed (via a boolean flag) to trigger determinization of the BRICS automaton. This determinization is now performed automatically if necessary. Instead the boolean flag now triggers a totalization of the transition function, which allows to properly use `BricsDFA`s in structural equivalence tests (as BRICS automata do not allow to limit their input alphabet to certain characters).
+* The `BricsDFA` wrapper previously allowed (via a boolean flag) to trigger determinization of the BRICS automaton. This determinization is now performed automatically if necessary. Instead, the boolean flag now triggers a totalization of the transition function, which allows to properly use `BricsDFA`s in structural equivalence tests (as BRICS automata do not allow to limit their input alphabet to certain characters).
 * Adding new symbols to automata (via the `SupportsGrowingAlphabet` interface) now requires the automaton to be initialized with a `GrowingAlphabet` instance. This is to make sure that the user has full control over which alphabet instance should be used instead of AutomataLib making decisions on behalf of the user.
 
 

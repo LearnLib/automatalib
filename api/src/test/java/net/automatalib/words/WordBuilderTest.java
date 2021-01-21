@@ -126,8 +126,7 @@ public class WordBuilderTest {
         final Word<Character> abc = Word.fromCharSequence("abc");
         final Word<Character> cba = Word.fromCharSequence("cba");
 
-        wb.append(abc);
-        wb = wb.reverse();
+        wb.append(abc).reverse();
         Assert.assertEquals(cba, wb.toWord());
     }
 
@@ -136,7 +135,6 @@ public class WordBuilderTest {
         WordBuilder<Character> wb = new WordBuilder<>();
         final Word<Character> abc = Word.fromCharSequence("abc");
 
-        wb.clear();
         wb.repeatAppend(3, abc);
         Assert.assertEquals(abc, wb.toWord(3, 6));
 
@@ -151,14 +149,11 @@ public class WordBuilderTest {
         final Word<Character> abcabc = abc.concat(abc);
         final Word<Character> abcabcabc = abcabc.concat(abc);
 
-        wb.clear();
-        wb.repeatAppend(3, abc);
-        wb = wb.truncate(12);
+        wb.repeatAppend(3, abc).truncate(12);
         Assert.assertEquals(abcabcabc, wb.toWord());
 
         wb.clear();
-        wb.repeatAppend(3, abc);
-        wb = wb.truncate(6);
+        wb.repeatAppend(3, abc).truncate(6);
         Assert.assertEquals(abcabc, wb.toWord());
     }
 

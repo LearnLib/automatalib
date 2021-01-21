@@ -34,10 +34,10 @@ public class MealyVisualizationHelper<S, I, T, O>
         }
 
         final StringBuilder labelBuilder = new StringBuilder();
-        labelBuilder.append(String.valueOf(edge.getInput())).append(" / ");
+        labelBuilder.append(edge.getInput()).append(" / ");
         O output = automaton.getTransitionOutput(edge.getTransition());
         if (output != null) {
-            labelBuilder.append(String.valueOf(output));
+            labelBuilder.append(output);
         }
         properties.put(EdgeAttrs.LABEL, labelBuilder.toString());
         return true;
