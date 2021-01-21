@@ -30,8 +30,11 @@ import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.fixpoint.WorksetMappingAlgorithm;
+import net.automatalib.commons.util.fixpoint.Worksets;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Closures {
 
@@ -39,7 +42,7 @@ public final class Closures {
         // prevent instantiation
     }
 
-    public static <A extends UniversalAutomaton<S1, I, T1, ?, ?>, B extends MutableAutomaton<S2, I, ?, ?, ?>, S1, S2, I, T1> Pair<Map<Set<S1>, S2>, B> simpleClosure(
+    public static <A extends UniversalAutomaton<S1, I, T1, ?, ?>, B extends MutableAutomaton<S2, I, ?, ?, @Nullable ?>, S1, S2, I, T1> Pair<Map<Set<S1>, S2>, B> simpleClosure(
             A ts,
             Collection<I> inputs,
             Collection<I> allInputs,
@@ -56,7 +59,7 @@ public final class Closures {
                                                         transitionFilter));
     }
 
-    public static <A extends UniversalAutomaton<S1, I, T1, ?, ?>, B extends MutableAutomaton<S2, I, ?, ?, ?>, S1, S2, I, T1> Pair<Map<Set<S1>, S2>, B> closure(
+    public static <A extends UniversalAutomaton<S1, I, T1, ?, ?>, B extends MutableAutomaton<S2, I, ?, ?, @Nullable ?>, S1, S2, I, T1> Pair<Map<Set<S1>, S2>, B> closure(
             A ts,
             Collection<I> inputs,
             AutomatonCreator<B, I> creator,
@@ -100,7 +103,7 @@ public final class Closures {
         };
     }
 
-    private static final class StateClosureAlgorithm<A extends UniversalAutomaton<S1, I, T1, ?, ?>, B extends MutableAutomaton<S2, I, ?, ?, ?>, S1, S2, I, T1>
+    private static final class StateClosureAlgorithm<A extends UniversalAutomaton<S1, I, T1, ?, ?>, B extends MutableAutomaton<S2, I, ?, ?, @Nullable ?>, S1, S2, I, T1>
             implements WorksetMappingAlgorithm<Set<S1>, S2, B> {
 
         private final A inputTS;

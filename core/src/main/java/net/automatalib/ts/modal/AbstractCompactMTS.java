@@ -81,7 +81,6 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
 
     @Override
     public void setTransitions(Integer state, I input, Collection<? extends MTSTransition<I, TP>> transitions) {
-        // remove first to update back-references
         this.removeAllTransitions(state, input);
 
         final Set<MTSTransition<I, TP>> trans = Sets.newHashSetWithExpectedSize(transitions.size());
@@ -108,7 +107,12 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     }
 
     @Override
-    public MTSTransition<I, TP> createTransition(Integer successor, TP properties) {
+    public MTSTransition<I, TP> createTransition(Integer successor) {
+        return createTransition(successor, null);
+    }
+
+    @Override
+    public MTSTransition<I, TP> createTransition(Integer successor, @Nullable TP properties) {
         return new MTSTransition<>(successor, properties == null ? getDefaultTransitionProperty() : properties);
     }
 

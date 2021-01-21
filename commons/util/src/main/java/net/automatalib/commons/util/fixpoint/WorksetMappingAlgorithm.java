@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util.fixpoint;
+package net.automatalib.commons.util.fixpoint;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author msc
  */
-public interface WorksetAlgorithm<T, R> {
+public interface WorksetMappingAlgorithm<T, E, R> {
 
     /**
      * Provides a hint to initialize containers appropriately.
@@ -30,26 +31,29 @@ public interface WorksetAlgorithm<T, R> {
     int expectedElementCount();
 
     /**
-     * Provide the initial elements that should be processed by {@link #update(Object) update}.
+     * Provide the initial elements that should be processed by {@link #update(Map, Object) update}. Also performs any
+     * required action on the initial elements (e.g. update mapping).
      *
      * @return initial elements
      */
-    Collection<T> initialize();
+    Collection<T> initialize(Map<T, E> mapping);
 
     /**
      * Process the given element and perform its corresponding actions. If during this process the need arises to update
      * other elements as well, return them.
      *
+     * @param mapping
+     *         the calculated mapping (should be updated appropriately)
      * @param currentT
      *         the current element that should be processed by this method
      *
      * @return a collection of elements that need to be processed
      */
-    Collection<T> update(T currentT);
+    Collection<T> update(Map<T, E> mapping, T currentT);
 
     /**
      * Provides the result of this algorithms internal action. More precise, this function returns the accumulated
-     * object E after the successful application of <i>all</i> {@link #update(Object) update} calls.
+     * object E after the successful application of <i>all</i> {@link #update(Map, Object) update} calls.
      *
      * @return the resulting object
      */

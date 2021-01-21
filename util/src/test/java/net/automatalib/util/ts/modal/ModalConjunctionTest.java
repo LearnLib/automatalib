@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Random;
 
 import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.fixpoint.Worksets;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.MTSTransition;
 import net.automatalib.ts.modal.ModalTransitionSystem;
@@ -29,7 +30,6 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
-import net.automatalib.util.fixpoint.Worksets;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
@@ -104,7 +104,7 @@ public class ModalConjunctionTest {
 
     @Test
     void updateMay() {
-        HashMap<Pair<Integer, Integer>, Integer> map = new HashMap<>();
+        Map<Pair<Integer, Integer>, Integer> map = new HashMap<>();
         Collection<Pair<Integer, Integer>> discovered;
 
         algo.initialize(map);

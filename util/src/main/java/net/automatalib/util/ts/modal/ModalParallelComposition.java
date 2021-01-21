@@ -24,12 +24,12 @@ import java.util.Set;
 
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.Transition;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
@@ -91,7 +91,7 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
 
     @Override
     public Collection<Pair<S0, S1>> update(Map<Pair<S0, S1>, S> mapping, Pair<S0, S1> currentTuple) {
-        ArrayList<Pair<S0, S1>> discovered = new ArrayList<>();
+        List<Pair<S0, S1>> discovered = new ArrayList<>();
         List<Transition<Pair<S0, S1>, I, ModalType>> transitions = generateNewTransitions(currentTuple);
 
         for (Transition<Pair<S0, S1>, I, ModalType> transition : transitions) {

@@ -691,7 +691,7 @@ public final class DOTParsers {
      * @return a {@link DOTInputModelDeserializer} for {@link CompactMTS}s.
      */
     public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMTS<@Nullable String>> mts() {
-        return mts(new CompactMTS.Creator<>(), DEFAULT_EDGE_PARSER, DEFAULT_MTS_EDGE_PARSER);
+        return mts(new CompactMTS.Creator<@Nullable String>(), DEFAULT_EDGE_PARSER, DEFAULT_MTS_EDGE_PARSER);
     }
 
     /**
@@ -770,7 +770,7 @@ public final class DOTParsers {
      * @return a {@link DOTInputModelDeserializer} for {@link CompactMC}s.
      */
     public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMC<@Nullable String>> mc() {
-        return mc(new CompactMC.Creator<>(), DEFAULT_EDGE_PARSER, DEFAULT_MC_EDGE_PARSER);
+        return mc(new CompactMC.Creator<@Nullable String>(), DEFAULT_EDGE_PARSER, DEFAULT_MC_EDGE_PARSER);
     }
 
     /**
@@ -848,7 +848,7 @@ public final class DOTParsers {
      * @return a {@link DOTInputModelDeserializer} for {@link CompactMMC}s.
      */
     public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMMC<@Nullable String>> mmc() {
-        return mc(new CompactMMC.Creator<>(), DEFAULT_EDGE_PARSER, DEFAULT_MMC_EDGE_PARSER);
+        return mc(new CompactMMC.Creator<@Nullable String>(), DEFAULT_EDGE_PARSER, DEFAULT_MMC_EDGE_PARSER);
     }
 
 }

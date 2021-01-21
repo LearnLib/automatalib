@@ -26,10 +26,10 @@ import java.util.Map;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
-import net.automatalib.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.util.graphs.traversal.DFSVisitor;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 
@@ -122,7 +122,7 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0
                         discovered.add(newTuple);
                     }
 
-                    T newT = result.createTransition(newState, null);
+                    T newT = result.createTransition(newState);
                     result.addTransition(mappedState, sym, newT);
 
                     if (mts0.getTransitionProperty(transition0).isMust() ||

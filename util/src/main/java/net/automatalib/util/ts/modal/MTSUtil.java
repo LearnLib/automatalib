@@ -29,6 +29,7 @@ import net.automatalib.automata.fsa.NFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.fixpoint.Worksets;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.ModalTransitionSystem;
@@ -37,7 +38,6 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
-import net.automatalib.util.fixpoint.Worksets;
 import net.automatalib.util.graphs.Graphs;
 import net.automatalib.util.graphs.sssp.SSSPResult;
 import net.automatalib.util.ts.modal.Subgraphs.SubgraphType;
@@ -114,9 +114,11 @@ public final class MTSUtil {
         Pair<Map<Set<S>, Integer>, CompactDFA<I>> graphView =
                 Subgraphs.subgraphView(new CompactDFA.Creator<>(), SubgraphType.DISREGARD_UNKNOWN_LABELS, ts, inputs);
 
-        SSSPResult<Integer, ?> ssspResult = Graphs.findSSSP(graphView.getSecond().transitionGraphView(),
-                                                            graphView.getSecond().getInitialState(),
-                                                            e -> 1);
+        CompactDFA<I> dfa = graphView.getSecond();
+        Integer init = dfa.getInitialState();
+        assert init != null;
+
+        SSSPResult<Integer, ?> ssspResult = Graphs.findSSSP(dfa.transitionGraphView(), init, e -> 1);
 
         HashSet<S> reachableStates = new HashSet<>();
         for (Map.Entry<Set<S>, Integer> entry : graphView.getFirst().entrySet()) {

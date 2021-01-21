@@ -32,9 +32,20 @@ import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
  *         (specific) transition property type
  *
  * @author msc
+ * @author frohme
  */
 public interface MutableModalTransitionSystem<S, I, T, TP extends MutableModalEdgeProperty>
         extends ModalTransitionSystem<S, I, T, TP>, MutableAutomaton<S, I, T, Void, TP> {
 
     T addModalTransition(S src, I input, S tgt, ModalType modalType);
+
+    /**
+     * Create a new transition with a default (non-null) {@link MutableModalEdgeProperty}.
+     *
+     * @param successor
+     *         the successor of the transition
+     *
+     * @return a new transition with a default (non-null) {@link MutableModalEdgeProperty}
+     */
+    T createTransition(S successor);
 }

@@ -50,7 +50,7 @@ public class ClosuresTest {
                 Closures.toClosureOperator(dfa, dfa.getInputAlphabet(), TransitionPredicates.inputIs("b"));
 
         Pair<Map<Set<Integer>, Integer>, CompactDFA<String>> rv =
-                Closures.closure(dfa, Alphabets.fromArray("a", "c"), CompactDFA<String>::new, op, (s, i, t) -> true);
+                Closures.closure(dfa, Alphabets.fromArray("a", "c"), CompactDFA::new, op, (s, i, t) -> true);
         CompactDFA<String> dfa2 = rv.getSecond();
         Assertions.assertThat(dfa2.getStates()).hasSize(4);
     }
@@ -80,7 +80,7 @@ public class ClosuresTest {
                 Closures.toClosureOperator(dfa, dfa.getInputAlphabet(), (s, i, t) -> "b".equals(i));
 
         Pair<Map<Set<Integer>, Integer>, CompactDFA<String>> rv =
-                Closures.closure(dfa, Alphabets.fromArray("a", "c"), CompactDFA<String>::new, op, (s, i, t) -> true);
+                Closures.closure(dfa, Alphabets.fromArray("a", "c"), CompactDFA::new, op, (s, i, t) -> true);
         CompactDFA<String> dfa2 = rv.getSecond();
         Assertions.assertThat(dfa2.getStates()).hasSize(4);
 

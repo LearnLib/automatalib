@@ -28,6 +28,7 @@ import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.util.ts.modal.MCUtil.SystemComponent;
+import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.assertj.core.api.Assertions;
 import org.testng.Assert;
@@ -114,22 +115,35 @@ public class MCUtilMonitorTest {
                   .hasSize(5)
                   .allMatch(t -> t.getProperty().isMayOnly());
 
+        Set<Integer> inits = redContext.getInitialStates();
+        Set<Integer> bSuccs = redContext.getSuccessors(inits, Word.fromSymbols('b'));
+        Set<Integer> bbSuccs = redContext.getSuccessors(inits, Word.fromCharSequence("bb"));
+        Set<Integer> bdSuccs = redContext.getSuccessors(inits, Word.fromCharSequence("bd"));
+
+        Assertions.assertThat(inits).hasSize(1);
+        Assertions.assertThat(bSuccs).hasSize(1);
+        Assertions.assertThat(bbSuccs).hasSize(1);
+        Assertions.assertThat(bdSuccs).hasSize(1);
+
+        int init = inits.iterator().next(); // s0 (without invasive minimization)
+        int b = bSuccs.iterator().next(); // s1 (without invasive minimization)
+        int bb = bbSuccs.iterator().next(); // s2 (without invasive minimization)
+        int bd = bdSuccs.iterator().next(); // s0 (without invasive minimization)
+
         // the following tests require fixed state-labels
-        Assertions.assertThat(allOutgoingTransitions(redContext, monitor.getCommunicationAlphabet(), 0))
+        Assertions.assertThat(allOutgoingTransitions(redContext, monitor.getCommunicationAlphabet(), init))
                   .hasSize(1)
-                  .allMatch(t -> t.getTarget() == 1)
-                  .allMatch(t -> t.getLabel() == 'b');
+                  .allMatch(t -> t.getLabel() == 'b')
+                  .allMatch(t -> t.getTarget() == b);
 
-        Assertions.assertThat(allOutgoingTransitions(redContext, monitor.getCommunicationAlphabet(), 1))
+        Assertions.assertThat(allOutgoingTransitions(redContext, monitor.getCommunicationAlphabet(), b))
                   .hasSize(2)
-                  .anyMatch(t -> t.getTarget() == 2)
-                  .anyMatch(t -> t.getLabel() == 'b')
-                  .anyMatch(t -> t.getTarget() == 0)
-                  .anyMatch(t -> t.getLabel() == 'd');
+                  .anyMatch(t -> t.getLabel() == 'b' && t.getTarget() == bb)
+                  .anyMatch(t -> t.getLabel() == 'd' && t.getTarget() == bd);
 
-        Assertions.assertThat(allOutgoingTransitions(redContext, monitor.getCommunicationAlphabet(), 2))
+        Assertions.assertThat(allOutgoingTransitions(redContext, monitor.getCommunicationAlphabet(), bb))
                   .hasSize(2)
-                  .allMatch(t -> t.getTarget() == 2);
+                  .allMatch(t -> t.getTarget() == bb);
     }
 
     @Test

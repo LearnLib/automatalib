@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
@@ -39,9 +40,10 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
+import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
-import net.automatalib.util.automata.fsa.DFAs;
+import net.automatalib.util.automata.fsa.MutableDFAs;
 import net.automatalib.util.automata.predicates.TransitionPredicates;
 import net.automatalib.util.fixpoint.Closures;
 import net.automatalib.words.Alphabet;
@@ -115,11 +117,9 @@ public final class MCUtil {
                 dfa.setStateProperty(entry.getValue(), Boolean.TRUE);
             }
         }
-        //TODO: change to mutable versions
 
-        CompactDFA<I> complementDfa = DFAs.complement(dfa, Alphabets.fromCollection(inputs));
-
-        return DFAs.minimize(complementDfa);
+        MutableDFAs.complement(dfa, inputs);
+        return Automata.invasiveMinimize(dfa, dfa.getInputAlphabet());
     }
 
     public static <B extends MutableModalTransitionSystem<S1, I, T, TP>, S1, I, T, TP extends MutableModalEdgeProperty, S2> B redContextComponent(
@@ -174,36 +174,34 @@ public final class MCUtil {
             }
         }
 
-        for (Map.Entry<Set<S>, Integer> entry : mapping.entrySet()) {
+        for (Entry<Set<S>, Integer> entry : mapping.entrySet()) {
             if (!Collections.disjoint(entry.getKey(), keepStates)) {
                 dfa.setStateProperty(entry.getValue(), Boolean.TRUE);
             }
         }
 
-        //TODO: change to mutable versions
-        CompactDFA<I> completeDfa = DFAs.complete(dfa, modalContract.getCommunicationAlphabet());
-        CompactDFA<I> minimalDfa = DFAs.minimize(completeDfa);
+        MutableDFAs.complete(dfa, modalContract.getCommunicationAlphabet());
+        Automata.invasiveMinimize(dfa, dfa.getInputAlphabet());
 
         // Reset acceptance to default semantics of MTS
-        Set<Integer> nonAcceptingStates = minimalDfa.getStates()
-                                                    .stream()
-                                                    .filter(s -> !minimalDfa.isAccepting(s))
-                                                    .filter(s -> minimalDfa.getInputAlphabet()
-                                                                           .stream()
-                                                                           .allMatch(i -> Objects.equals(minimalDfa.getSuccessor(
-                                                                                   s,
-                                                                                   i), s)))
-                                                    .collect(Collectors.toSet());
+        Set<Integer> nonAcceptingStates = dfa.getStates()
+                                             .stream()
+                                             .filter(s -> !dfa.isAccepting(s))
+                                             .filter(s -> dfa.getInputAlphabet()
+                                                             .stream()
+                                                             .allMatch(i -> Objects.equals(dfa.getSuccessor(s, i), s)))
+                                             .collect(Collectors.toSet());
 
         if (nonAcceptingStates.size() > 1) {
             throw new IllegalStateException("Error in minimization: Found identical suffixes with same acceptance");
         }
 
-        for (Integer state : minimalDfa.getStates()) {
-            minimalDfa.setAccepting(state, !nonAcceptingStates.contains(state));
+        for (Integer state : dfa.getStates()) {
+            dfa.setAccepting(state, !nonAcceptingStates.contains(state));
         }
 
-        return DFAs.complete(DFAs.minimize(minimalDfa), modalContract.getCommunicationAlphabet());
+        MutableDFAs.complete(dfa, modalContract.getCommunicationAlphabet());
+        return Automata.invasiveMinimize(dfa, dfa.getInputAlphabet());
     }
 
     public static <B extends MutableModalTransitionSystem<S1, I, T, TP>, S1, I, T, TP extends MutableModalEdgeProperty, S2> B greenContextComponent(

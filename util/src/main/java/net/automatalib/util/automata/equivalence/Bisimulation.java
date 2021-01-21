@@ -16,6 +16,7 @@
 package net.automatalib.util.automata.equivalence;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -76,7 +77,8 @@ public final class Bisimulation {
                         exists = false;
                         for (BT f : b.getTransitions(p.getSecond(), sym)) {
                             for (Pair<AS, BS> s : bisim) {
-                                if (a.getSuccessor(t).equals(s.getFirst()) && b.getSuccessor(f).equals(s.getSecond())) {
+                                if (Objects.equals(a.getSuccessor(t), s.getFirst()) &&
+                                    Objects.equals(b.getSuccessor(f), s.getSecond())) {
                                     exists = true;
                                     break;
                                 }
@@ -103,7 +105,8 @@ public final class Bisimulation {
                         exists = false;
                         for (AT t : a.getTransitions(p.getFirst(), sym)) {
                             for (Pair<AS, BS> s : bisim) {
-                                if (b.getSuccessor(f).equals(s.getSecond()) && a.getSuccessor(t).equals(s.getFirst())) {
+                                if (Objects.equals(b.getSuccessor(f), s.getSecond()) &&
+                                    Objects.equals(a.getSuccessor(t), s.getFirst())) {
                                     exists = true;
                                     break;
                                 }
