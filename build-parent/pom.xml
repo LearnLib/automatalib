@@ -77,7 +77,7 @@ limitations under the License.
                             <exclude>net/automatalib/modelcheckers/ltsmin/TokenMgrError.class</exclude>
 
                             <!-- generated parser for M3C formula parser -->
-                            <exclude>net/automatalib/modelcheckers/m3c/InternalM3cParser*.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/m3c/InternalM3CParser*.class</exclude>
                             <exclude>net/automatalib/modelcheckers/m3c/ParseException.class</exclude>
                             <exclude>net/automatalib/modelcheckers/m3c/SimpleCharStream.class</exclude>
                             <exclude>net/automatalib/modelcheckers/m3c/Token.class</exclude>
