@@ -44,7 +44,6 @@ public class DOTPanel extends JPanel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DOTPanel.class);
 
-    private static final long serialVersionUID = 1L;
     private final ImageComponent imgComponent;
     private final JList<PlottedGraph> listBox;
     private final DefaultListModel<PlottedGraph> graphs;

@@ -22,8 +22,6 @@ package net.automatalib.commons.util.lib;
  */
 public class LoadLibraryException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
-
     public LoadLibraryException(String msg) {
         super(msg);
     }

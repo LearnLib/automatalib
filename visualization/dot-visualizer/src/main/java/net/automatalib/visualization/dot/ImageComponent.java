@@ -41,14 +41,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class ImageComponent extends JComponent {
 
-    private static final long serialVersionUID = -1L;
-
     private static final int DEFAULT_WIDTH = 320, DEFAULT_HEIGHT = 240;
 
     private @Nullable BufferedImage img;
     private final Action savePngAction = new AbstractAction("Save PNG") {
-
-        private static final long serialVersionUID = 1L;
 
         @Override
         public void actionPerformed(ActionEvent e) {

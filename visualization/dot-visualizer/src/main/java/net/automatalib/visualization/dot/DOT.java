@@ -267,8 +267,6 @@ public final class DOT {
         menu.addSeparator();
         menu.add(new AbstractAction("Close") {
 
-            private static final long serialVersionUID = -1L;
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));

@@ -24,8 +24,6 @@ import net.automatalib.serialization.FormatException;
  */
 public class TAFFormatException extends FormatException {
 
-    private static final long serialVersionUID = 1L;
-
     public TAFFormatException(String message) {
         super(message);
     }
