@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-Copyright (C) 2013-2020 TU Dortmund
+Copyright (C) 2013-2021 TU Dortmund
 This file is part of AutomataLib, http://www.automatalib.net/.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -202,11 +202,13 @@ limitations under the License.
                     <groupId>com.google.code.findbugs</groupId>
                     <artifactId>jsr305</artifactId>
                     <version>${jsr305.version}</version>
+                    <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>com.google.errorprone</groupId>
                     <artifactId>javac</artifactId>
                     <version>${error-prone.version}</version>
+                    <scope>provided</scope>
                 </dependency>
             </dependencies>
             <build>

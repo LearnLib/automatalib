@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +21,14 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
 /**
@@ -39,6 +41,7 @@ final class DOTSerializationUtil {
     static final String NFA2_RESOURCE = "/nfa2.dot";
     static final String MEALY_RESOURCE = "/mealy.dot";
     static final String MOORE_RESOURCE = "/moore.dot";
+    static final String SST_RESOURCE = "/sst.dot";
     static final String GRAPH_RESOURCE = "/graph.dot";
     static final String MTS_RESOURCE = "/mts.dot";
     static final String MC_RESOURCE = "/mc.dot";
@@ -56,6 +59,7 @@ final class DOTSerializationUtil {
     static final CompactNFA<String> NFA;
     static final CompactMealy<String, String> MEALY;
     static final CompactMoore<String, String> MOORE;
+    static final CompactSST<Character, Character> SST;
     static final CompactGraph<String, String> GRAPH;
     static final CompactMTS<String> MTS;
     static final CompactMC<String> MC;
@@ -68,6 +72,7 @@ final class DOTSerializationUtil {
         NFA = buildNFA();
         MEALY = buildMealy();
         MOORE = buildMoore();
+        SST = buildSST();
         GRAPH = buildGraph();
         MTS = buildMTS();
         MC = buildMC();
@@ -137,6 +142,33 @@ final class DOTSerializationUtil {
         result.addTransition(s1, "1", s2);
         result.addTransition(s2, "1", s0);
         result.addTransition(s2, "2", s1);
+
+        return result;
+    }
+
+    private static CompactSST<Character, Character> buildSST() {
+        final CompactSST<Character, Character> result = new CompactSST<>(Alphabets.characters('a', 'c'));
+
+        final Integer s0 = result.addInitialState(Word.fromCharSequence("x"));
+        final Integer s1 = result.addState(Word.epsilon());
+        final Integer s2 = result.addState(Word.epsilon());
+        final Integer s3 = result.addState(Word.epsilon());
+
+        result.addTransition(s0, 'a', s1, Word.fromCharSequence("x"));
+        result.addTransition(s0, 'b', s1, Word.fromCharSequence("x"));
+        result.addTransition(s0, 'c', s1, Word.fromCharSequence("x"));
+
+        result.addTransition(s1, 'a', s2, Word.fromCharSequence("xx"));
+        result.addTransition(s1, 'b', s2, Word.fromCharSequence("yx"));
+        result.addTransition(s1, 'c', s2, Word.fromCharSequence("zx"));
+
+        result.addTransition(s2, 'a', s3, Word.fromCharSequence("xx"));
+        result.addTransition(s2, 'b', s3, Word.fromCharSequence("yx"));
+        result.addTransition(s2, 'c', s3, Word.fromCharSequence("zx"));
+
+        result.addTransition(s3, 'a', s1, Word.epsilon());
+        result.addTransition(s3, 'b', s1, Word.epsilon());
+        result.addTransition(s3, 'c', s1, Word.epsilon());
 
         return result;
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,15 +15,19 @@
  */
 package net.automatalib.util.automata.builders;
 
+import net.automatalib.automata.MutableAutomaton;
+import net.automatalib.automata.base.compact.CompactTransition;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.MutableMooreMachine;
+import net.automatalib.automata.transducers.MutableSubsequentialTransducer;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 
 /**
  * Fluent interface automaton builders.
@@ -33,6 +37,11 @@ import net.automatalib.words.Alphabet;
 public final class AutomatonBuilders {
 
     private AutomatonBuilders() {}
+
+    public static <S, I, T, SP, TP, A extends MutableAutomaton<S, ? super I, T, ? super SP, ? super TP>> AutomatonBuilder<S, I, T, SP, TP, A> forAutomaton(
+            A automaton) {
+        return new AutomatonBuilder<>(automaton);
+    }
 
     public static <I> DFABuilder<Integer, I, CompactDFA<I>> newDFA(Alphabet<I> alphabet) {
         return forDFA(new CompactDFA<>(alphabet));
@@ -46,7 +55,7 @@ public final class AutomatonBuilders {
         return new FSABuilder<>(new CompactNFA<>(alphabet));
     }
 
-    public static <I, O> MealyBuilder<Integer, I, CompactMealyTransition<O>, O, CompactMealy<I, O>> newMealy(Alphabet<I> alphabet) {
+    public static <I, O> MealyBuilder<Integer, I, CompactTransition<O>, O, CompactMealy<I, O>> newMealy(Alphabet<I> alphabet) {
         return forMealy(new CompactMealy<>(alphabet));
     }
 
@@ -62,5 +71,15 @@ public final class AutomatonBuilders {
     public static <S, I, T, O, A extends MutableMooreMachine<S, ? super I, T, ? super O>> MooreBuilder<S, I, T, O, A> forMoore(
             A moore) {
         return new MooreBuilder<>(moore);
+    }
+
+    public static <I, O> AutomatonBuilder<Integer, I, CompactTransition<Word<O>>, Word<O>, Word<O>, CompactSST<I, O>> newSST(
+            Alphabet<I> alphabet) {
+        return forSST(new CompactSST<>(alphabet));
+    }
+
+    public static <S, I, T, O, A extends MutableSubsequentialTransducer<S, ? super I, T, ? super O>> AutomatonBuilder<S, I, T, Word<O>, Word<O>, A> forSST(
+            A sst) {
+        return new AutomatonBuilder<>(sst);
     }
 }

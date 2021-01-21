@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,10 +56,10 @@ public class DummyVP implements VisualizationProvider {
                                  List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> options) {
-        LOGGER.error("Attempted to visualize graph with {} nodes, but no usable visualization provider configured",
-                     graph.size());
+        final String errorMsg = "Attempted to visualize graph, but no usable visualization provider was configured.";
+        LOGGER.error(errorMsg);
         if (modal) {
-            JOptionPane.showMessageDialog(null, "Press OK to continue ...");
+            JOptionPane.showMessageDialog(null, errorMsg + "\nPress OK to continue ...");
         }
     }
 }

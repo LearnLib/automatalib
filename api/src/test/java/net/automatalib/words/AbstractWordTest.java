@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.automatalib.commons.smartcollections.IntSeq;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -140,6 +141,17 @@ public abstract class AbstractWordTest {
 
         for (int i = 0; i < testWord.length(); i++) {
             Assert.assertEquals(testWord.getSymbol(i), list.get(i));
+        }
+    }
+
+    @Test
+    public void testAsIntSeq() {
+        IntSeq intSeq = testWord.asIntSeq(Object::hashCode);
+
+        Assert.assertEquals(testWord.length(), intSeq.size());
+
+        for (int i = 0; i < testWord.length(); i++) {
+            Assert.assertEquals(intSeq.get(i), testWord.getSymbol(i).hashCode());
         }
     }
 

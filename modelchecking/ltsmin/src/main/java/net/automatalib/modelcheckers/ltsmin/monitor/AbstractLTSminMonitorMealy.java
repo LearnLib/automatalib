@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
+import net.automatalib.automata.base.compact.CompactTransition;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminLTLParser;
@@ -137,7 +137,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
                                            .findFirst()
                                            .orElseThrow(() -> new ModelCheckingException("No deadlock found"));
 
-            return new MealyMachine<Integer, I, CompactMealyTransition<O>, O>() {
+            return new MealyMachine<Integer, I, CompactTransition<O>, O>() {
 
                 @Override
                 public Word<O> computeStateOutput(Integer state, Iterable<? extends I> input) {
@@ -152,17 +152,17 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
                 }
 
                 @Override
-                public Integer getSuccessor(CompactMealyTransition<O> transition) {
+                public Integer getSuccessor(CompactTransition<O> transition) {
                     return result.getSuccessor(transition);
                 }
 
                 @Override
-                public @Nullable CompactMealyTransition<O> getTransition(Integer state, I input) {
+                public @Nullable CompactTransition<O> getTransition(Integer state, I input) {
                     return result.getTransition(state, input);
                 }
 
                 @Override
-                public O getTransitionOutput(CompactMealyTransition<O> transition) {
+                public O getTransitionOutput(CompactTransition<O> transition) {
                     return result.getTransitionOutput(transition);
                 }
 

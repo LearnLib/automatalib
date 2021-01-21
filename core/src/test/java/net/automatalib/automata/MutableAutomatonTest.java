@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,6 +33,7 @@ import net.automatalib.automata.transducers.impl.FastMoore;
 import net.automatalib.automata.transducers.impl.FastProbMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.automata.transducers.probabilistic.ProbabilisticOutput;
 import net.automatalib.commons.util.random.RandomUtil;
 import net.automatalib.ts.modal.CompactMTS;
@@ -41,6 +42,7 @@ import net.automatalib.ts.modal.transition.ModalContractEdgePropertyImpl;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -64,6 +66,8 @@ public class MutableAutomatonTest {
                                                                                             EdgeColor.GREEN))
                                                                                     .collect(Collectors.toList());
     static final List<Void> EMPTY_PROPS = Collections.emptyList();
+    static final List<Word<Character>> SST_TRANS_PROPS = Arrays.asList(Word.fromCharSequence("xy"), Word.fromCharSequence("yz"));
+    static final List<Word<Character>> SST_STATE_PROPS = Arrays.asList(Word.fromCharSequence("ab"), Word.fromCharSequence("bc"));
 
     @Test
     public void testCompactDFA() {
@@ -115,10 +119,14 @@ public class MutableAutomatonTest {
         this.checkAutomaton(CompactMTS::new, ALPHABET, EMPTY_PROPS, MC_TRANS_PROPS);
     }
 
-    private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void checkAutomaton(AutomatonCreator<M, I> creator,
-                                                                                               Alphabet<I> alphabet,
-                                                                                               List<SP> stateProps,
-                                                                                               List<? extends TP> transProps) {
+    public void testCompactSST() {
+        this.checkAutomaton(CompactSST::new, ALPHABET, SST_STATE_PROPS, SST_TRANS_PROPS);
+    }
+
+    protected <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void checkAutomaton(AutomatonCreator<M, I> creator,
+                                                                                                 Alphabet<I> alphabet,
+                                                                                                 List<SP> stateProps,
+                                                                                                 List<? extends TP> transProps) {
         final M automaton = createInitialAutomaton(creator, alphabet);
 
         checkEmptyProperties(automaton, alphabet);

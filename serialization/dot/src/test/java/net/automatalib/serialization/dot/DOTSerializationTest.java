@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,13 +26,14 @@ import java.util.function.Function;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
+import net.automatalib.automata.base.compact.CompactTransition;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.transducers.MealyMachine.MealyGraphView;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.automata.transducers.impl.compact.CompactMealyTransition;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.graphs.Graph;
@@ -86,6 +87,15 @@ public class DOTSerializationTest {
     }
 
     @Test
+    public void testRegularSSTExport() throws IOException {
+
+        final CompactSST<Character, Character> sst = DOTSerializationUtil.SST;
+
+        ThrowingWriter writer = w -> GraphDOT.write(sst, sst.getInputAlphabet(), w);
+        checkDOTOutput(writer, DOTSerializationUtil.SST_RESOURCE);
+    }
+
+    @Test
     public void testRegularMTSExport() throws IOException {
 
         final CompactMTS<String> mts = DOTSerializationUtil.MTS;
@@ -108,13 +118,13 @@ public class DOTSerializationTest {
 
         final Graph<?, ?> dfa = DOTSerializationUtil.DFA.graphView();
         final Graph<?, ?> mealy =
-                new MealyGraphView<Integer, String, CompactMealyTransition<String>, String, CompactMealy<String, String>>(
+                new MealyGraphView<Integer, String, CompactTransition<String>, String, CompactMealy<String, String>>(
                         DOTSerializationUtil.MEALY,
                         DOTSerializationUtil.MEALY.getInputAlphabet()) {
 
                     @Override
-                    public VisualizationHelper<Integer, TransitionEdge<String, CompactMealyTransition<String>>> getVisualizationHelper() {
-                        return new DefaultDOTVisualizationHelper<Integer, TransitionEdge<String, CompactMealyTransition<String>>>(
+                    public VisualizationHelper<Integer, TransitionEdge<String, CompactTransition<String>>> getVisualizationHelper() {
+                        return new DefaultDOTVisualizationHelper<Integer, TransitionEdge<String, CompactTransition<String>>>(
                                 super.getVisualizationHelper()) {
 
                             @Override

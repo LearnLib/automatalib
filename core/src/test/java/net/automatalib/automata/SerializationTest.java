@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,6 +31,7 @@ import net.automatalib.automata.transducers.impl.FastMoore;
 import net.automatalib.automata.transducers.impl.FastProbMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.automata.util.TestUtil;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -154,6 +155,16 @@ public class SerializationTest {
                                           alphabet,
                                           MutableAutomatonTest.STATE_PROPS,
                                           MutableAutomatonTest.EMPTY_PROPS);
+        testSerialization(automaton, alphabet);
+    }
+
+    @Test(dataProvider = "alphabets")
+    public <I> void testCompactSST(Alphabet<I> alphabet) {
+        final CompactSST<I, Character> automaton = new CompactSST<>(alphabet);
+        MutableAutomatonTest.fillRandomly(automaton,
+                                          alphabet,
+                                          MutableAutomatonTest.SST_STATE_PROPS,
+                                          MutableAutomatonTest.SST_TRANS_PROPS);
         testSerialization(automaton, alphabet);
     }
 

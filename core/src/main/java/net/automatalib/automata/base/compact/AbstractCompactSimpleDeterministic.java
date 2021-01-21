@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +43,7 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
     public AbstractCompactSimpleDeterministic(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
         this.transitions = new int[stateCapacity * numInputs()];
-        Arrays.fill(this.transitions, 0, this.transitions.length, AbstractCompact.INVALID_STATE);
+        Arrays.fill(this.transitions, AbstractCompact.INVALID_STATE);
     }
 
     public AbstractCompactSimpleDeterministic(Alphabet<I> alphabet, AbstractCompactSimpleDeterministic<?, ?> other) {

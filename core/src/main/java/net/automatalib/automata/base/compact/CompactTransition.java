@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,50 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.transducers.impl.compact;
+package net.automatalib.automata.base.compact;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class CompactMealyTransition<O> implements Serializable {
+public final class CompactTransition<TP> implements Serializable {
 
     private int memoryIdx;
     private final int succId;
-    private O output;
+    private TP property;
 
-    CompactMealyTransition(int succId, O output) {
-        this(-1, succId, output);
+    public CompactTransition(int succId, TP property) {
+        this(-1, succId, property);
     }
 
-    CompactMealyTransition(int memoryIdx, int succId, O output) {
+    public CompactTransition(int memoryIdx, int succId, TP property) {
         this.memoryIdx = memoryIdx;
         this.succId = succId;
-        this.output = output;
+        this.property = property;
     }
 
     public int getSuccId() {
         return succId;
     }
 
-    public O getOutput() {
-        return output;
+    public TP getProperty() {
+        return property;
     }
 
-    void setOutput(O output) {
-        this.output = output;
+    public void setProperty(TP property) {
+        this.property = property;
     }
 
-    int getMemoryIdx() {
+    public int getMemoryIdx() {
         return memoryIdx;
     }
 
-    void setMemoryIdx(int memoryIdx) {
+    public void setMemoryIdx(int memoryIdx) {
         this.memoryIdx = memoryIdx;
     }
 
-    boolean isAutomatonTransition() {
+    public boolean isAutomatonTransition() {
         return memoryIdx >= 0;
     }
 
@@ -65,12 +65,12 @@ public final class CompactMealyTransition<O> implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CompactMealyTransition)) {
+        if (!(o instanceof CompactTransition)) {
             return false;
         }
 
-        final CompactMealyTransition<?> that = (CompactMealyTransition<?>) o;
-        return memoryIdx == that.memoryIdx && succId == that.succId && Objects.equals(output, that.output);
+        final CompactTransition<?> that = (CompactTransition<?>) o;
+        return memoryIdx == that.memoryIdx && succId == that.succId && Objects.equals(property, that.property);
     }
 
     @Override
@@ -78,7 +78,7 @@ public final class CompactMealyTransition<O> implements Serializable {
         int result = 1;
         result = 31 * result + Integer.hashCode(memoryIdx);
         result = 31 * result + Integer.hashCode(succId);
-        result = 31 * result + Objects.hashCode(output);
+        result = 31 * result + Objects.hashCode(property);
         return result;
     }
 }

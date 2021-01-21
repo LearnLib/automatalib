@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2020 TU Dortmund
+/* Copyright (C) 2013-2021 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,7 @@ import net.automatalib.automata.transducers.impl.FastMoore;
 import net.automatalib.automata.transducers.impl.FastProbMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
+import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
@@ -83,6 +84,11 @@ public class StateLocalInputTest {
     @Test
     public void testFastMoore() {
         this.testAutomaton(new FastMoore<>(ALPHABET));
+    }
+
+    @Test
+    public void testCompactSST() {
+        this.testAutomaton(new CompactSST<>(ALPHABET));
     }
 
     private <M extends MutableAutomaton<S, Integer, T, SP, TP> & StateLocalInput<S, Integer>, S, T, SP, TP> void testAutomaton(
