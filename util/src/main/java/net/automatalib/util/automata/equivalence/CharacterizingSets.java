@@ -183,7 +183,7 @@ public final class CharacterizingSets {
             T trans = automaton.getTransition(curr, sym);
 
             if (!it.hasNext()) {
-                return (trans == null);
+                return trans == null;
             }
 
             @Nullable Object prop = automaton.getTransitionProperty(trans);
@@ -215,11 +215,9 @@ public final class CharacterizingSets {
 
         Queue<List<S>> blocks = buildInitialBlocks(automaton, oldSuffixList);
 
-        if (!oldSuffixes.contains(Word.epsilon())) {
-            if (epsilonRefine(automaton, blocks)) {
-                newSuffixes.add(Word.epsilon());
-                refined = true;
-            }
+        if (!oldSuffixes.contains(Word.epsilon()) && epsilonRefine(automaton, blocks)) {
+            newSuffixes.add(Word.epsilon());
+            refined = true;
         }
 
         Word<I> suffix;
@@ -401,10 +399,8 @@ public final class CharacterizingSets {
             // first call
             if (blocks == null) {
                 blocks = buildInitialBlocks(automaton, oldSuffixes);
-                if (!oldSuffixes.contains(Word.epsilon())) {
-                    if (epsilonRefine(automaton, blocks)) {
-                        return Word.epsilon();
-                    }
+                if (!oldSuffixes.contains(Word.epsilon()) && epsilonRefine(automaton, blocks)) {
+                    return Word.epsilon();
                 }
             }
 

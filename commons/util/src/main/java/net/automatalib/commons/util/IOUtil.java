@@ -329,10 +329,10 @@ public final class IOUtil {
     }
 
     private static boolean isBufferedInputStream(InputStream is) {
-        return (is instanceof BufferedInputStream) || (is instanceof ByteArrayInputStream);
+        return is instanceof BufferedInputStream || is instanceof ByteArrayInputStream;
     }
 
     private static boolean isBufferedOutputStream(OutputStream os) {
-        return (os instanceof BufferedOutputStream) || (os instanceof ByteArrayOutputStream);
+        return os instanceof BufferedOutputStream || os instanceof ByteArrayOutputStream;
     }
 }

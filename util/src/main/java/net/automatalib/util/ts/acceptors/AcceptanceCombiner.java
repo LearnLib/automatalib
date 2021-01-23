@@ -20,7 +20,7 @@ public interface AcceptanceCombiner {
     AcceptanceCombiner AND = (a1, a2) -> a1 && a2;
     AcceptanceCombiner OR = (a1, a2) -> a1 || a2;
     AcceptanceCombiner XOR = (a1, a2) -> a1 ^ a2;
-    AcceptanceCombiner EQUIV = (a1, a2) -> (a1 == a2);
+    AcceptanceCombiner EQUIV = (a1, a2) -> a1 == a2;
     AcceptanceCombiner IMPL = (a1, a2) -> !a1 || a2;
 
     /**

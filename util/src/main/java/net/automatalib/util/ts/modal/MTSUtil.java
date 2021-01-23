@@ -123,10 +123,9 @@ public final class MTSUtil {
         HashSet<S> reachableStates = new HashSet<>();
         for (Map.Entry<Set<S>, Integer> entry : graphView.getFirst().entrySet()) {
             Set<S> reachableSubset = Sets.intersection(states, entry.getKey());
-            if (!reachableSubset.isEmpty()) {
-                if (ssspResult.getShortestPathDistance(entry.getValue()) != Graphs.INVALID_DISTANCE) {
-                    reachableStates.addAll(reachableSubset);
-                }
+            if (!reachableSubset.isEmpty() &&
+                ssspResult.getShortestPathDistance(entry.getValue()) != Graphs.INVALID_DISTANCE) {
+                reachableStates.addAll(reachableSubset);
             }
         }
 

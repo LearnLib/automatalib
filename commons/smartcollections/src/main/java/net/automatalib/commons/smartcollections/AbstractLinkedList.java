@@ -514,7 +514,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
 
         @Override
         public boolean hasNext() {
-            return (current != null);
+            return current != null;
         }
 
         @Override
@@ -554,7 +554,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
 
         @Override
         public boolean hasNext() {
-            return (current != null);
+            return current != null;
         }
 
         @Override

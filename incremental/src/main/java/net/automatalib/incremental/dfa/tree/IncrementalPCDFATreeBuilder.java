@@ -99,7 +99,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
                 continue;
             }
 
-            boolean succAcc = (automatonSucc != null) && target.isAccepting(automatonSucc);
+            boolean succAcc = automatonSucc != null && target.isAccepting(automatonSucc);
 
             Word<I> liveSuffix = null;
             if (automatonSucc != null && acc == Acceptance.FALSE) {
@@ -109,7 +109,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
                 liveSuffix = findLive(target, automatonSucc, inputs, deadStates);
             }
 
-            if (acc.conflicts(succAcc) || (liveSuffix != null)) {
+            if (acc.conflicts(succAcc) || liveSuffix != null) {
                 WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());
                 wb.append(input);
 
@@ -286,7 +286,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
                 dfsStack.push(new FindLiveRecord<>(succ, input, inputs.iterator()));
                 deadStates.put(succ, true);
             } else {
-                assert (dead);
+                assert dead;
             }
         }
 

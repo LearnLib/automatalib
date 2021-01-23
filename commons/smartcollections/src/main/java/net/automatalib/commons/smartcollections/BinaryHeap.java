@@ -401,7 +401,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
 
         @Override
         public boolean hasNext() {
-            return (current < size);
+            return current < size;
         }
 
         @Override

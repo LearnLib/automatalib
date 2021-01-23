@@ -98,13 +98,13 @@ final class LetterWord<I> extends Word<I> implements Serializable {
 
     @Override
     public Word<I> append(I symbol) {
-        @Nullable Object[] array = new Object[] {letter, symbol};
+        @Nullable Object[] array = {letter, symbol};
         return new SharedWord<>(array);
     }
 
     @Override
     public Word<I> prepend(I symbol) {
-        @Nullable Object[] array = new Object[] {symbol, letter};
+        @Nullable Object[] array = {symbol, letter};
         return new SharedWord<>(array);
     }
 

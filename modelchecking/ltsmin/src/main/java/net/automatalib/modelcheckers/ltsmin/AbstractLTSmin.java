@@ -158,7 +158,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
             throw new ModelCheckingException(iae);
         }
 
-        final File etf, gcf;
+        final File etf;
 
         try {
             // create the ETF that will contain the LTS of the hypothesis
@@ -176,6 +176,8 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
         } catch (IOException ioe) {
             throw new ModelCheckingException(ioe);
         }
+
+        final File gcf;
 
         try {
             // create the GCF that will possibly contain the counterexample

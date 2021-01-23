@@ -138,11 +138,7 @@ public final class DOTParsers {
      * missing or doesn't match its expected {@link ModalType format}.
      */
     public static final Function<Map<String, String>, MutableModalEdgeProperty> DEFAULT_MTS_EDGE_PARSER = attr -> {
-        final String type = attr.get(MTSEdgeAttrs.MODALITY);
-
-        if (type == null) {
-            throw new IllegalArgumentException('\'' + MTSEdgeAttrs.MODALITY + "' attribute undefined");
-        }
+        final String type = getAndRequireNotNull(attr, MTSEdgeAttrs.MODALITY);
 
         return new ModalEdgePropertyImpl(ModalType.valueOf(type.toUpperCase(Locale.ROOT)));
     };
@@ -154,15 +150,8 @@ public final class DOTParsers {
      */
     public static final Function<Map<String, String>, MutableModalContractEdgeProperty> DEFAULT_MC_EDGE_PARSER =
             attr -> {
-                final String type = attr.get(MTSEdgeAttrs.MODALITY);
-                final String contract = attr.get(MCEdgeAttrs.CONTRACT);
-
-                if (type == null) {
-                    throw new IllegalArgumentException("attribute '" + MTSEdgeAttrs.MODALITY + "' undefined");
-                }
-                if (contract == null) {
-                    throw new IllegalArgumentException("attribute '" + MCEdgeAttrs.CONTRACT + "' undefined");
-                }
+                final String type = getAndRequireNotNull(attr, MTSEdgeAttrs.MODALITY);
+                final String contract = getAndRequireNotNull(attr, MCEdgeAttrs.CONTRACT);
 
                 return new ModalContractEdgePropertyImpl(ModalType.valueOf(type.toUpperCase(Locale.ROOT)),
                                                          MCVisualizationHelper.TAU.equals(attr.get(EdgeAttrs.LABEL)),
@@ -176,19 +165,9 @@ public final class DOTParsers {
      */
     public static final Function<Map<String, String>, ModalContractMembershipEdgePropertyImpl> DEFAULT_MMC_EDGE_PARSER =
             attr -> {
-                final String type = attr.get(MTSEdgeAttrs.MODALITY);
-                final String contract = attr.get(MCEdgeAttrs.CONTRACT);
-                final String membership = attr.get(MMCEdgeAttrs.MEMBERSHIP);
-
-                if (type == null) {
-                    throw new IllegalArgumentException("attribute '" + MTSEdgeAttrs.MODALITY + "' undefined");
-                }
-                if (contract == null) {
-                    throw new IllegalArgumentException("attribute '" + MCEdgeAttrs.CONTRACT + "' undefined");
-                }
-                if (membership == null) {
-                    throw new IllegalArgumentException("attribute '" + MMCEdgeAttrs.MEMBERSHIP + "' undefined");
-                }
+                final String type = getAndRequireNotNull(attr, MTSEdgeAttrs.MODALITY);
+                final String contract = getAndRequireNotNull(attr, MCEdgeAttrs.CONTRACT);
+                final String membership = getAndRequireNotNull(attr, MMCEdgeAttrs.MEMBERSHIP);
 
                 return new ModalContractMembershipEdgePropertyImpl(ModalType.valueOf(type.toUpperCase(Locale.ROOT)),
                                                                    MCVisualizationHelper.TAU.equals(attr.get(EdgeAttrs.LABEL)),
@@ -849,6 +828,14 @@ public final class DOTParsers {
      */
     public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMMC<@Nullable String>> mmc() {
         return mc(new CompactMMC.Creator<@Nullable String>(), DEFAULT_EDGE_PARSER, DEFAULT_MMC_EDGE_PARSER);
+    }
+
+    private static String getAndRequireNotNull(Map<String, String> map, String attribute) {
+        final String value = map.get(attribute);
+        if (value == null) {
+            throw new IllegalArgumentException("attribute '" + attribute + "' is undefined");
+        }
+        return value;
     }
 
 }

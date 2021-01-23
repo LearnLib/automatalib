@@ -168,6 +168,7 @@ public final class LibLoader {
         }
     }
 
+    @SuppressWarnings("PMD.AvoidUsingNativeCode") // we explicitly want to support native code here
     private void loadSystemLibrary(String name) {
         try {
             System.loadLibrary(name);

@@ -387,7 +387,7 @@ public final class Minimizer<S, L> {
                 continue;
             }
 
-            boolean blockRemains = (inSubBlocks < block.size());
+            boolean blockRemains = inSubBlocks < block.size();
 
             boolean reuseBlock = !blockRemains;
 

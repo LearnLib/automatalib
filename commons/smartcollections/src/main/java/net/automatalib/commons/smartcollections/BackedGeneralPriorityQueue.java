@@ -59,7 +59,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
         Iterator<K> keyIt = keys.iterator();
 
         while (elemIt.hasNext()) {
-            K key = (keyIt.hasNext()) ? keyIt.next() : null;
+            K key = keyIt.hasNext() ? keyIt.next() : null;
             entries.add(new Entry<>(elemIt.next(), key));
         }
 
@@ -123,8 +123,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
 
     @Override
     public E get(ElementReference ref) {
-        Entry<E, K> entry = backingQueue.get(ref);
-        return entry.element;
+        return backingQueue.get(ref).element;
     }
 
     @Override
@@ -183,14 +182,12 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
 
     @Override
     public E peekMin() {
-        Entry<E, K> min = backingQueue.peekMin();
-        return min.element;
+        return backingQueue.peekMin().element;
     }
 
     @Override
     public E extractMin() {
-        Entry<E, K> min = backingQueue.extractMin();
-        return min.element;
+        return backingQueue.extractMin().element;
     }
 
     /**

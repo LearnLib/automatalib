@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DeterministicEquivalenceTest<I> {
 
-    private static final int MAP_THRESHOLD = 10000;
+    private static final int MAP_THRESHOLD = 10_000;
     private final UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference;
 
     public DeterministicEquivalenceTest(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference) {

@@ -36,7 +36,7 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
 
     @Override
     public boolean isEmpty() {
-        return (size == 0);
+        return size == 0;
     }
 
     @Override
@@ -131,7 +131,7 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
 
             @Override
             public boolean hasNext() {
-                return (index < size);
+                return index < size;
             }
 
             @Override

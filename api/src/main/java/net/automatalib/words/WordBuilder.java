@@ -314,9 +314,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
         }
 
         ensureUnlocked();
-        for (int i = truncLen; i < length; i++) {
-            array[i] = null;
-        }
+        Arrays.fill(array, truncLen, length, null);
 
         length = truncLen;
 
@@ -417,9 +415,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
     @Override
     public void clear() {
         ensureUnlocked();
-        for (int i = 0; i < length; i++) {
-            array[i] = null;
-        }
+        Arrays.fill(array, null);
         length = 0;
     }
 

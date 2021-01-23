@@ -56,11 +56,10 @@ public abstract class AbstractTwoLevelIterator<L1, L2, O> implements Iterator<O>
 
     @Override
     public O next() {
-        if (l2Iterator == null || !l2Iterator.hasNext()) {
-            if (!advance()) {
-                throw new NoSuchElementException();
-            }
+        if ((l2Iterator == null || !l2Iterator.hasNext()) && !advance()) {
+            throw new NoSuchElementException();
         }
+
         return combine(l1Object, l2Iterator.next());
     }
 

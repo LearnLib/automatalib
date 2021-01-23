@@ -45,7 +45,7 @@ public class BitSetIterator implements Iterator<Integer>, PrimitiveIterator.OfIn
 
     @Override
     public boolean hasNext() {
-        return (currBitIdx != -1);
+        return currBitIdx != -1;
     }
 
     @Override

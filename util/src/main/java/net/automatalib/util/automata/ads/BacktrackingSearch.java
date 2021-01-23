@@ -304,9 +304,6 @@ public final class BacktrackingSearch {
         alphabetLoop:
         for (final I i : alphabet) {
 
-            final int costsForInputSymbol;
-            final Map<O, SearchState<S, I, O>> successorsForInputSymbol;
-
             // compute successors
             final Map<O, Set<S>> successors = new HashMap<>();
 
@@ -335,6 +332,9 @@ public final class BacktrackingSearch {
             }
 
             convergingStates = false;
+
+            final int costsForInputSymbol;
+            final Map<O, SearchState<S, I, O>> successorsForInputSymbol;
 
             if (successors.size() > 1) {
 

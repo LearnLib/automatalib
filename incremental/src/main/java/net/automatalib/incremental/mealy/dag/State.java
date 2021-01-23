@@ -41,7 +41,7 @@ public final class State<O> implements Serializable {
     }
 
     public boolean isConfluence() {
-        return (numIncoming > 1);
+        return numIncoming > 1;
     }
 
     public State<O> getSuccessor(int idx) {

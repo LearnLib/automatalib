@@ -105,7 +105,7 @@ public class DOTPanel extends JPanel {
 
         listBox.addListSelectionListener(e -> {
             int idx = listBox.getSelectedIndex();
-            boolean activeSelection = (idx != -1);
+            boolean activeSelection = idx != -1;
             if (!activeSelection) {
                 imgComponent.setImage(null);
             } else {

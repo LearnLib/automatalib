@@ -64,7 +64,7 @@ final class State implements Serializable {
      * @return {@code true} if this node is a confluence node, {@code false} otherwise.
      */
     public boolean isConfluence() {
-        return (numIncoming > 1);
+        return numIncoming > 1;
     }
 
     /**
