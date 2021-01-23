@@ -15,9 +15,7 @@
  */
 package net.automatalib.incremental.mealy.dag;
 
-import java.io.Serializable;
-
-final class PathElem<O> implements Serializable {
+final class PathElem<O> {
 
     public final State<O> state;
     public final int transIdx;

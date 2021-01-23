@@ -16,7 +16,6 @@
 package net.automatalib.words;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -66,7 +65,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I>, Serializable {
+public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I> {
 
     private static final String EMPTY_WORD_REP;
     private static final String WORD_DELIM_LEFT;

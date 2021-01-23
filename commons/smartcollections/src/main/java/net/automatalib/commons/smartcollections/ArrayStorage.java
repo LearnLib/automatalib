@@ -15,7 +15,6 @@
  */
 package net.automatalib.commons.smartcollections;
 
-import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,7 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author frohme
  */
-public final class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Serializable, Cloneable {
+public final class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Cloneable {
 
     private final @Nullable Object[] storage;
 

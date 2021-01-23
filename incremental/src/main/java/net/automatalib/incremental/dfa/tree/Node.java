@@ -15,8 +15,6 @@
  */
 package net.automatalib.incremental.dfa.tree;
 
-import java.io.Serializable;
-
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -29,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public final class Node<I> implements Serializable {
+public final class Node<I> {
 
     private Acceptance acceptance;
     private @Nullable ResizingArrayStorage<Node<I>> children;

@@ -15,12 +15,11 @@
  */
 package net.automatalib.words.abstractimpl;
 
-import java.io.Serializable;
 import java.util.AbstractList;
 
 import net.automatalib.words.Alphabet;
 
-public abstract class AbstractAlphabet<I> extends AbstractList<I> implements Alphabet<I>, Serializable {
+public abstract class AbstractAlphabet<I> extends AbstractList<I> implements Alphabet<I> {
 
     @Override
     public I get(int index) {

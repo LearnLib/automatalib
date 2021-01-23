@@ -15,8 +15,6 @@
  */
 package net.automatalib.incremental.dfa.dag;
 
-import java.io.Serializable;
-
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
 
@@ -26,7 +24,7 @@ import net.automatalib.incremental.dfa.Acceptance;
  *
  * @author Malte Isberner
  */
-final class State implements Serializable {
+final class State {
 
     public static final State SINK = new State(new StateSignature(0, Acceptance.FALSE));
 

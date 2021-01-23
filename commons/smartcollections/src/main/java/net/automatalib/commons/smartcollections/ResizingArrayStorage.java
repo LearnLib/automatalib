@@ -15,7 +15,6 @@
  */
 package net.automatalib.commons.smartcollections;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
@@ -27,7 +26,7 @@ import java.util.Arrays;
  *
  * @author Malte Isberner
  */
-public final class ResizingArrayStorage<T> implements CapacityManagement, Serializable {
+public final class ResizingArrayStorage<T> implements CapacityManagement {
 
     /**
      * The default initial capacity of the array storage.

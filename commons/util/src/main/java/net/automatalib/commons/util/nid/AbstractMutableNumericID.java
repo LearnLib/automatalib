@@ -15,9 +15,7 @@
  */
 package net.automatalib.commons.util.nid;
 
-import java.io.Serializable;
-
-public abstract class AbstractMutableNumericID implements MutableNumericID, Serializable {
+public abstract class AbstractMutableNumericID implements MutableNumericID {
 
     protected int id;
 

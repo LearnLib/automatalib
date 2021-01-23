@@ -15,13 +15,12 @@
  */
 package net.automatalib.incremental.mealy.dag;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class StateSignature<O> implements Serializable {
+final class StateSignature<O> {
 
     public final ResizingArrayStorage<State<O>> successors;
     public final ResizingArrayStorage<O> outputs;

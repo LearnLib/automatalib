@@ -15,9 +15,7 @@
  */
 package net.automatalib.ts.modal;
 
-import java.io.Serializable;
-
-public class Transition<S, I, TP> implements Serializable {
+public class Transition<S, I, TP> {
 
     protected S source;
     protected S target;

@@ -15,7 +15,6 @@
  */
 package net.automatalib.incremental.dfa.dag;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
@@ -28,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-final class StateSignature implements Serializable {
+final class StateSignature {
 
     public final ResizingArrayStorage<State> successors;
     public Acceptance acceptance;

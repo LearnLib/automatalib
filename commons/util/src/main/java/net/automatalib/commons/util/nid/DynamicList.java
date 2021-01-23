@@ -15,7 +15,6 @@
  */
 package net.automatalib.commons.util.nid;
 
-import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Iterator;
 
@@ -23,7 +22,7 @@ import net.automatalib.commons.smartcollections.ArrayWritable;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class DynamicList<T extends MutableNumericID> extends AbstractList<T> implements ArrayWritable<T>, Serializable {
+public class DynamicList<T extends MutableNumericID> extends AbstractList<T> implements ArrayWritable<T> {
 
     private final ResizingArrayStorage<T> storage = new ResizingArrayStorage<>(MutableNumericID.class);
 

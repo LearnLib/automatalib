@@ -22,9 +22,12 @@ limitations under the License.
         <Bug pattern="NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE"/>
     </Match>
     <Match>
-        <!-- We do not (want to) properly support serialization across different class versions. Therefore use the automated serial IDs to fail-fast on any unintended usage of this feature.
-        -->
-        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+        <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
+    </Match>
+    <Match>
+        <Bug pattern="SE_NO_SERIALVERSIONID,SE_BAD_FIELD"/>
+        <!-- internal class, not exposed to public -->
+        <Class name="net.automatalib.commons.util.concurrent.ScalingThreadPoolExecutor$ScalingLinkedBlockingQueue"/>
     </Match>
     <Match>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>

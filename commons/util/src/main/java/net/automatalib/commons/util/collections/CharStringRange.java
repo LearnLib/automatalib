@@ -15,14 +15,13 @@
  */
 package net.automatalib.commons.util.collections;
 
-import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.RandomAccess;
 
 import net.automatalib.commons.smartcollections.ArrayWritable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class CharStringRange extends AbstractList<String> implements ArrayWritable<String>, RandomAccess, Serializable {
+public class CharStringRange extends AbstractList<String> implements ArrayWritable<String>, RandomAccess {
 
     private final IntRange delegate;
 
