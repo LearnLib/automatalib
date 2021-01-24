@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import net.automatalib.words.Word;
-import org.checkerframework.checker.nullness.qual.KeyFor;
 
 /**
  * Utility class originally used by the algorithm of {@link LeeYannakakis} but utilized by other ADS computations as
@@ -45,10 +44,14 @@ class SplitTree<S, I, O> {
     private Word<I> sequence;
 
     SplitTree(final Set<S> partition) {
+        this(partition, new HashMap<>());
+    }
+
+    SplitTree(final Set<S> partition, final Map<S, S> mapping) {
         this.partition = partition;
+        this.mapping = mapping;
 
         this.successors = new HashMap<>();
-        this.mapping = new HashMap<>();
         this.sequence = Word.epsilon();
     }
 
@@ -60,7 +63,7 @@ class SplitTree<S, I, O> {
         return mapping;
     }
 
-    public Set<@KeyFor("partition") S> getPartition() {
+    public Set<S> getPartition() {
         return partition;
     }
 

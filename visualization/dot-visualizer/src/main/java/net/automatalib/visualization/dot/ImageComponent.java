@@ -54,12 +54,12 @@ public class ImageComponent extends JComponent {
             if (res != JFileChooser.APPROVE_OPTION) {
                 return;
             }
-            if (img == null) {
-                throw new IllegalStateException("No image has been set");
-            }
             File f = chooser.getSelectedFile();
             if (f == null) {
                 throw new IllegalStateException("No file has been selected");
+            }
+            if (img == null) {
+                throw new IllegalStateException("No image has been set");
             }
             try {
                 ImageIO.write(img, "png", f);

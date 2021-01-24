@@ -50,16 +50,16 @@ limitations under the License.
             <artifactId>automata-serialization-core</artifactId>
         </dependency>
 
+        <!-- external -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
         <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
             <scope>test</scope>
         </dependency>
 

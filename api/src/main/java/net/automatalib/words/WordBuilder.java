@@ -415,7 +415,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
     @Override
     public void clear() {
         ensureUnlocked();
-        Arrays.fill(array, null);
+        Arrays.fill(array, 0, length, null);
         length = 0;
     }
 

@@ -8,18 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+* Added modal transition systems (MTSs), modal contracts (MCs) and Membership-MCs (MMCs).
 * Added `SubsequentialTransducer` interface and implementations/utilities.
-
 
 ### Changed
 
 * Refactored `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automata.base.compact.CompactTransition`
-
-
-### Added
-
-* Added modal transition systems (MTSs), modal contracts (MCs) and Membership-MCs.
-
+* All `SuffixTrie` related are marked deprecated and will be removed in the future. Switch to one of the incremental constructions for prefix-trees
 
 ### Fixed
 
@@ -30,7 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed the (package-private) classes `net.automatalib.util.automata.predicates.{AcceptanceStatePredicate,OutputSatisfies,TransitionPropertySatisfies}`.
 
 
-## [0.10.0-SNAPSHOT](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11
+## [0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.9.0...automatalib-0.10.0)
 
@@ -38,18 +33,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * All de-serializers now can also parse GZIP'ed contents from either `InputStream`s, `File`s, `URL`s or `byte[]`s.
 
-
 ### Changed
 
 * We overhauled the handling of input and output streams for all (de-)serializers. Input and output streams are no longer closed automatically. This is to prevent asymmetric code where we would close a stream that we haven't opened. This is problematic in cases where e.g. `System.out` is passed as an output stream to simply print a serialized automaton and the `System.out` stream would be closed afterwards. Since input and output streams are usually opened in client-code, they should be closed in client-code as well. We suggest to simply wrap calls to the serializers in a try-with-resource block.
 * Due to the DOT parsers rewrite (see **Fixed**), the attribute parsers now receive a `Map<String, String>` instead of a `Map<String, Object>`.
 * The `State` class (used by the `OneSEVPA` automaton) not longer supports the notion of a sink state. The `AbstractOneSEVPA` class now conforms with the default semantics of a `DeterministicTransitionSystem` that undefined transitions simply return `null`.
 
-
 ### Removed
 
 * Removed `IOUtil#copy`, `IOUtil#skip`, `NullOutputStream`. Use the Guava equivalents from `ByteStreams` and `CharStreams`.
-
 
 ### Fixed
 
@@ -100,7 +92,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed `ProbMealyTransition` and replaced it with the generic `MealyTransition` directly carrying the `ProbabilisticOutput`. It is no longer allowed to pass `null` as transition property.
 * Removed `OutputAndLocalInputs`, `StateLocalInputIncrementalMealyTreeBuilder` and `StateLocalInputMealyUtil`. The (LearnLib) code related to inferring partial Mealy machines no longer requires these transformed automata. Whoever used this code for transforming a partial Mealy machine to a complete one, may use `MealyMachines#complete` instead.
 
-
 ### Fixed
 
 * Fixed a bug, where the PaigeTarjan-based minimization would return a wrong automaton when pruning was enabled and the initial automaton was partial.
@@ -132,7 +123,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Several of the `AbstractCompact*` automata classes have been refactored to share common functionality. While this shouldn't affect its implementations (such as `CompactDFA` or `CompactMealy`) user-land code using the abstract classes may break.
 * The `BricsDFA` wrapper previously allowed (via a boolean flag) to trigger determinization of the BRICS automaton. This determinization is now performed automatically if necessary. Instead, the boolean flag now triggers a totalization of the transition function, which allows to properly use `BricsDFA`s in structural equivalence tests (as BRICS automata do not allow to limit their input alphabet to certain characters).
 * Adding new symbols to automata (via the `SupportsGrowingAlphabet` interface) now requires the automaton to be initialized with a `GrowingAlphabet` instance. This is to make sure that the user has full control over which alphabet instance should be used instead of AutomataLib making decisions on behalf of the user.
-
 
 ### Removed
 
