@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.commons.util;
+package net.automatalib.commons.util.collections;
 
 import java.util.BitSet;
 import java.util.Iterator;
@@ -22,23 +22,39 @@ import java.util.PrimitiveIterator;
 
 /**
  * Iterator for iterating over a BitSet like over a normal collection. The type returned by next() is {@link Integer}.
+ * Supports mutable and immutable modes.
  *
  * @author Malte Isberner
+ * @author frohme
  */
 public class BitSetIterator implements Iterator<Integer>, PrimitiveIterator.OfInt {
 
     private final BitSet bitSet;
+    private final boolean immutable;
     private int currBitIdx;
     private int lastBitIdx;
 
     /**
-     * Constructor.
+     * Default constructor for an immutable iterator.
      *
      * @param bitSet
      *         the bitset over which to iterate.
      */
     public BitSetIterator(BitSet bitSet) {
+        this(bitSet, true);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param bitSet
+     *         the bitset over which to iterate
+     * @param immutable
+     *         a flag indicating whether the {@link Iterator#remove()} method should be supported
+     */
+    public BitSetIterator(BitSet bitSet, boolean immutable) {
         this.bitSet = bitSet;
+        this.immutable = immutable;
         this.currBitIdx = bitSet.nextSetBit(0);
         this.lastBitIdx = -1;
     }
@@ -50,6 +66,10 @@ public class BitSetIterator implements Iterator<Integer>, PrimitiveIterator.OfIn
 
     @Override
     public void remove() {
+        if (immutable) {
+            throw new UnsupportedOperationException("This is a read-only iterator");
+        }
+
         if (lastBitIdx == -1) {
             throw new NoSuchElementException();
         }

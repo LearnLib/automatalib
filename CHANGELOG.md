@@ -13,8 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-* Refactored `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automata.base.compact.CompactTransition`
 * All `SuffixTrie` related are marked deprecated and will be removed in the future. Switch to one of the incremental constructions for prefix-trees
+* Refactored
+  * `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automata.base.compact.CompactTransition`
+  * `net.automatalib.commons.util.BitSetIterator` -> `net.automatalib.commons.util.collections.BitSetIterator`
 
 ### Fixed
 
