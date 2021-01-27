@@ -1,0 +1,198 @@
+/* Copyright (C) 2013-2021 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+options {
+	LOOKAHEAD = 1;
+	STATIC = false;
+	SUPPORT_CLASS_VISIBILITY_PUBLIC = false;
+	UNICODE_INPUT = true;
+}
+
+PARSER_BEGIN(InternalM3CParserCTL)
+
+package net.automatalib.modelcheckers.m3c.formula.parser;
+
+import net.automatalib.modelcheckers.m3c.formula.*;
+import net.automatalib.modelcheckers.m3c.formula.ctl.*;
+
+class InternalM3CParserCTL {}
+
+PARSER_END(InternalM3CParserCTL)
+
+SKIP :
+{
+	" "
+|	"\r"
+|	"\t"
+|	"\n"
+}
+
+TOKEN [IGNORE_CASE]:
+{
+	< TRUE: "true" >
+|	< FALSE: "false" >
+}
+
+TOKEN:
+{
+// atoms
+    < LPAREN: "(" >
+|	< RPAREN: ")" >
+|   < LBRACKET: "[" >
+|   < RBRACKET: "]" >
+|   < LABRACKET: "<" >
+|   < RABRACKET: ">" >
+// junctors
+|	< NEGATION: "!" >
+|	< ALL: "A" >
+|	< EXISTS: "E" >
+|	< AF: "AF" >
+|	< AG: "AG" >
+|   < EF: "EF" >
+|   < EG: "EG" >
+|	< UNTIL: "U" >
+|	< WUNTIL: "W" >
+|	< AND: "&&" >
+|	< OR: "||" >
+|	< EQUIVALENCE: "<->" >
+|	< IMPLICATION: "->" >
+//|   < LETTER: ["a"-"z","A"-"Z"] >
+//|   < DIGIT: ["0"-"9"] >
+|   < ID: ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z"] | ["0"-"9"] | "_")* >
+|   < QUOTED_ID: ("\"" <ID> "\"") |  ("'" <ID> "'") >
+}
+
+FormulaNode formula():
+{
+ FormulaNode node;
+}
+{
+	(node=untilFormula()
+|   node=andFormula()) {return node;}
+}
+
+FormulaNode untilFormula():
+{
+ FormulaNode l, r;
+ boolean isAll = false, isStrongUntil = false;
+}
+{
+	(<ALL> {isAll=true;} | <EXISTS>) <LPAREN> l=formula() (<UNTIL> {isStrongUntil=true;} | <WUNTIL>) r=formula() <RPAREN>
+	{
+		if(isAll) {
+		    if(isStrongUntil) {
+		        return new AUNode(l, r);
+			}
+		    return new AWUNode(l, r);
+		}
+		if(isStrongUntil) {
+		    return new EUNode(l, r);
+		}
+		return new EWUNode(l, r);
+	}
+}
+
+FormulaNode andFormula():
+{
+ 	FormulaNode l;
+	FormulaNode r = null;}
+{
+    l=orFormula() (<AND> r=andFormula())?
+    {
+		if(r == null) {
+		    return l;
+		}
+		return new AndNode(l, r);
+	}
+}
+
+FormulaNode orFormula():
+{
+	FormulaNode l;
+	FormulaNode r = null;
+}
+{
+    l=implFormula() (<OR> r=orFormula())?
+    {
+		if(r == null) {
+		    return l;
+		}
+		return new OrNode(l, r);
+	}
+}
+
+FormulaNode implFormula():
+{
+ 	FormulaNode l;
+  	FormulaNode r = null;
+}
+{
+    l=equivFormula() (<IMPLICATION> r=implFormula())?
+    {
+		if(r == null) {
+		    return l;
+		}
+		return new OrNode(new NotNode(l), r);
+	}
+}
+
+FormulaNode equivFormula():
+{
+ 	FormulaNode l;
+ 	FormulaNode r = null;
+}
+{
+    l=unary() (<EQUIVALENCE> r=equivFormula())?
+    {
+		if(r == null) {
+		    return l;
+		}
+		return new AndNode(new OrNode(new NotNode(l), r), new OrNode(new NotNode(r), l));
+	}
+}
+
+FormulaNode unary():
+{
+ 	FormulaNode child;
+ 	Token action = null;
+}
+{
+    <NEGATION> child=unary() {return new NotNode(child);}
+|	<AF> child=unary() {return new AFNode(child);}
+|	<AG> child=unary() {return new AGNode(child);}
+|	<EF> child=unary() {return new EFNode(child);}
+|   <EG> child=unary() {return new EGNode(child);}
+|   <LABRACKET> (action=<ID>)? <RABRACKET> child=unary() {return new DiamondNode(action==null ? "" : action.toString(), child);}
+|   <LBRACKET> (action=<ID>)? <RBRACKET> child=unary() {return new BoxNode(action==null ? "" : action.toString(), child);}
+|	child=element() {return child;}
+}
+
+FormulaNode element():
+{
+ 	FormulaNode node;
+ 	Token ap;
+}
+{
+    ap=<QUOTED_ID>
+    {
+		String apString = ap.toString();
+		String apWithoutQuotMarks = apString.substring(1, apString.length()-1);
+		return new AtomicNode(apWithoutQuotMarks);
+	}
+|	<TRUE> {return new TrueNode();}
+|	<FALSE> {return new FalseNode();}
+|	<LPAREN> node=formula() <RPAREN> {return node;}
+}
