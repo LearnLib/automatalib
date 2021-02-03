@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.scce.addlib.dd.bdd.BDDManager;
+import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.cfps.CFPS;
 import net.automatalib.modelcheckers.m3c.cfps.Edge;
 import net.automatalib.modelcheckers.m3c.cfps.State;
@@ -16,12 +17,12 @@ public class SolveBDD extends SolveDD<BDDTransformer> {
 
     private BDDManager bddManager;
 
-    public SolveBDD(CFPS cfps, String formula, boolean formulaIsCtl) {
-        super(cfps, formula, formulaIsCtl);
+    public <L, AP> SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) {
+        super(mcfps, formula, formulaIsCtl);
     }
 
-    public SolveBDD(CFPS cfps, FormulaNode formula, boolean formulaIsCtl) {
-        super(cfps, formula, formulaIsCtl);
+    public <L, AP> SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
+        super(mcfps, formula, formulaIsCtl);
     }
 
     public void updateState(State state) {

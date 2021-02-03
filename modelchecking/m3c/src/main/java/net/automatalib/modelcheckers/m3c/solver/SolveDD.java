@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.cfps.CFPS;
 import net.automatalib.modelcheckers.m3c.cfps.Edge;
 import net.automatalib.modelcheckers.m3c.cfps.ProceduralProcessGraph;
@@ -26,6 +27,7 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParserCTL;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import net.automatalib.modelcheckers.m3c.formula.visitor.CTLToMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.PropertyTransformer;
+import net.automatalib.modelcheckers.m3c.util.Converter;
 
 public abstract class SolveDD<T extends PropertyTransformer> {
 
@@ -42,8 +44,8 @@ public abstract class SolveDD<T extends PropertyTransformer> {
     // Keeps track of which state's property transformers have to be updated
     private Set<State> workSet;
 
-    public SolveDD(CFPS cfps, String formula, boolean formulaIsCtl) {
-        this.cfps = cfps;
+    public <L, AP> SolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) {
+        this.cfps = Converter.toCFPS(mcfps);
         if (formulaIsCtl) {
             FormulaNode ctlFormula = null;
             try {
@@ -69,8 +71,8 @@ public abstract class SolveDD<T extends PropertyTransformer> {
         return transformation.toMuCalc(ctlFormula);
     }
 
-    public SolveDD(CFPS cfps, FormulaNode formula, boolean formulaIsCtl) {
-        this.cfps = cfps;
+    public <L, AP> SolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
+        this.cfps = Converter.toCFPS(mcfps);
         if (formulaIsCtl) {
             this.ast = ctlToMuCalc(formula);
         } else {
