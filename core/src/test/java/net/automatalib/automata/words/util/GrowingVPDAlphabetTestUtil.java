@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.VPDAlphabet.SymbolType;
 import net.automatalib.words.impl.GrowingVPDAlphabet;
 import net.automatalib.words.impl.VPDSym;
@@ -45,7 +44,7 @@ public final class GrowingVPDAlphabetTestUtil {
 
         INTERNAL_SYMBOLS = DefaultVPDAlphabetTestUtil.INTERNAL_SYMBOLS.stream()
                                                                       .map(s -> ALPHABET.addNewSymbol(s,
-                                                                                                      VPDAlphabet.SymbolType.INTERNAL))
+                                                                                                      SymbolType.INTERNAL))
                                                                       .collect(Collectors.toList());
 
         CALL_SYMBOLS = DefaultVPDAlphabetTestUtil.CALL_SYMBOLS.stream()

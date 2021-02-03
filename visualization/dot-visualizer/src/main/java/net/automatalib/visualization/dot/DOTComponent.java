@@ -32,8 +32,6 @@ import net.automatalib.commons.util.IOUtil;
 
 public class DOTComponent extends ImageComponent {
 
-    private static final long serialVersionUID = 1L;
-
     private final String dot;
 
     private final Action saveDotAction;

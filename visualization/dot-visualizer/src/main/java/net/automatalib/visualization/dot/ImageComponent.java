@@ -41,14 +41,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class ImageComponent extends JComponent {
 
-    private static final long serialVersionUID = -1L;
-
     private static final int DEFAULT_WIDTH = 320, DEFAULT_HEIGHT = 240;
 
     private @Nullable BufferedImage img;
     private final Action savePngAction = new AbstractAction("Save PNG") {
-
-        private static final long serialVersionUID = 1L;
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -59,11 +55,11 @@ public class ImageComponent extends JComponent {
                 return;
             }
             File f = chooser.getSelectedFile();
-            if (img == null) {
-                throw new IllegalStateException("No image has been set");
-            }
             if (f == null) {
                 throw new IllegalStateException("No file has been selected");
+            }
+            if (img == null) {
+                throw new IllegalStateException("No image has been set");
             }
             try {
                 ImageIO.write(img, "png", f);

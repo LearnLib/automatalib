@@ -45,7 +45,7 @@ final class AllTuplesIterator<T> implements Iterator<List<T>> {
             current.add(it.next());
         }
 
-        firstEmpty = (minLength == 0);
+        firstEmpty = minLength == 0;
     }
 
     @Override

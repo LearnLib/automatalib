@@ -118,9 +118,9 @@ public final class DOT {
      * Invokes the DOT utility on a string. Convenience method, see {@link #runDOT(Reader, String, String...)}
      */
     public static InputStream runDOT(String dotText, String format, String... additionalOpts) throws IOException {
-        @SuppressWarnings("PMD.CloseResource") // we do not want to close the stream
-        StringReader sr = new StringReader(dotText);
-        return runDOT(sr, format, additionalOpts);
+        try (StringReader sr = new StringReader(dotText)) {
+            return runDOT(sr, format, additionalOpts);
+        }
     }
 
     /**
@@ -267,8 +267,6 @@ public final class DOT {
         menu.addSeparator();
         menu.add(new AbstractAction("Close") {
 
-            private static final long serialVersionUID = -1L;
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
@@ -371,8 +369,7 @@ public final class DOT {
      * rendering result appears.
      *
      * @param modal
-     *         whether or not this window is modal (if set to {@code true}, calls to {@link Writer#close()} will
-     *         block.
+     *         whether or not this window is modal (if set to {@code true}, calls to {@link Writer#close()} will block.
      *
      * @return the writer
      */

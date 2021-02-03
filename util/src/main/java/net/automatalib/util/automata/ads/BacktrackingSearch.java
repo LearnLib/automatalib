@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Maps;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.commons.smartcollections.ReflexiveMapView;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.graphs.ads.impl.ADSLeafNode;
@@ -77,8 +78,7 @@ public final class BacktrackingSearch {
             return ADS.compute(automaton, input, states);
         }
 
-        final SplitTree<S, I, O> node = new SplitTree<>(states);
-        node.getMapping().putAll(states.stream().collect(Collectors.toMap(Function.identity(), Function.identity())));
+        final SplitTree<S, I, O> node = new SplitTree<>(states, new ReflexiveMapView<>(states));
 
         return compute(automaton, input, node);
     }
@@ -244,25 +244,15 @@ public final class BacktrackingSearch {
             return ADS.compute(automaton, input, states);
         }
 
-        final Map<Set<S>, Optional<SearchState<S, I, O>>> searchStateCache = new HashMap<>();
-        final Set<Set<S>> traceCache = new HashSet<>();
-
         final Optional<SearchState<S, I, O>> searchState = exploreSearchSpace(automaton,
                                                                               input,
                                                                               states,
                                                                               costAggregator,
-                                                                              searchStateCache,
-                                                                              traceCache,
+                                                                              new HashMap<>(),
+                                                                              new HashSet<>(),
                                                                               Integer.MAX_VALUE);
 
-        if (!searchState.isPresent()) {
-            return Optional.empty();
-        }
-
-        final Map<S, S> initialMapping =
-                states.stream().collect(Collectors.toMap(Function.identity(), Function.identity()));
-
-        return Optional.of(constructADS(automaton, initialMapping, searchState.get()));
+        return searchState.map(s -> constructADS(automaton, new ReflexiveMapView<>(states), s));
     }
 
     private static <S, I, T, O> Optional<SearchState<S, I, O>> exploreSearchSpace(final MealyMachine<S, I, T, O> automaton,
@@ -304,9 +294,6 @@ public final class BacktrackingSearch {
         alphabetLoop:
         for (final I i : alphabet) {
 
-            final int costsForInputSymbol;
-            final Map<O, SearchState<S, I, O>> successorsForInputSymbol;
-
             // compute successors
             final Map<O, Set<S>> successors = new HashMap<>();
 
@@ -335,6 +322,9 @@ public final class BacktrackingSearch {
             }
 
             convergingStates = false;
+
+            final int costsForInputSymbol;
+            final Map<O, SearchState<S, I, O>> successorsForInputSymbol;
 
             if (successors.size() > 1) {
 

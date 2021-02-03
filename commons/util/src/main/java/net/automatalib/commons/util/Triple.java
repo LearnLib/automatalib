@@ -16,7 +16,6 @@
 package net.automatalib.commons.util;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Objects;
 
 import net.automatalib.commons.util.strings.AbstractPrintable;
@@ -42,9 +41,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Malte Isberner
  * @author frohme
  */
-public final class Triple<T1, T2, T3> extends AbstractPrintable implements Serializable {
-
-    private static final long serialVersionUID = -1L;
+public final class Triple<T1, T2, T3> extends AbstractPrintable {
 
     /*
      * Components

@@ -22,8 +22,6 @@ package net.automatalib.incremental;
  */
 public class ConflictException extends IllegalArgumentException {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * Default constructor.
      *

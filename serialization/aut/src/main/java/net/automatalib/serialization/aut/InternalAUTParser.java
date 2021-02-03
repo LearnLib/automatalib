@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import com.google.common.collect.Maps;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.simple.SimpleAutomaton;
 import net.automatalib.commons.util.IOUtil;
@@ -60,8 +60,7 @@ class InternalAUTParser {
             while (parseTransition(br)) {}
 
             // automaton construction
-            final Map<String, I> inputMap =
-                    alphabetSymbols.stream().collect(Collectors.toMap(Function.identity(), inputTransformer));
+            final Map<String, I> inputMap = Maps.asMap(alphabetSymbols, inputTransformer::apply);
             final Alphabet<I> alphabet = Alphabets.fromCollection(inputMap.values());
 
             final CompactNFA<I> result = new CompactNFA<>(alphabet, transitionMap.size());

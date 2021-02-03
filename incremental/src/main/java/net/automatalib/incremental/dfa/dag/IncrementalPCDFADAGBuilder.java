@@ -52,17 +52,17 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         if (s == null) {
             return Acceptance.DONT_KNOW;
         }
-        return (s != sink) ? s.getAcceptance() : Acceptance.FALSE;
+        return s != sink ? s.getAcceptance() : Acceptance.FALSE;
     }
 
     @Override
     protected State getState(Word<? extends I> word) {
-        State s = init;
 
         if (init.getAcceptance() == Acceptance.FALSE) {
             return sink;
         }
 
+        State s = init;
         for (I sym : word) {
             int idx = inputAlphabet.getSymbolIndex(sym);
             s = s.getSuccessor(idx);

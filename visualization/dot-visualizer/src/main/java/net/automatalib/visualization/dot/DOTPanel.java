@@ -44,7 +44,6 @@ public class DOTPanel extends JPanel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DOTPanel.class);
 
-    private static final long serialVersionUID = 1L;
     private final ImageComponent imgComponent;
     private final JList<PlottedGraph> listBox;
     private final DefaultListModel<PlottedGraph> graphs;
@@ -106,7 +105,7 @@ public class DOTPanel extends JPanel {
 
         listBox.addListSelectionListener(e -> {
             int idx = listBox.getSelectedIndex();
-            boolean activeSelection = (idx != -1);
+            boolean activeSelection = idx != -1;
             if (!activeSelection) {
                 imgComponent.setImage(null);
             } else {

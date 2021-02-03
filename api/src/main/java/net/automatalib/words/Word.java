@@ -309,7 +309,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      * @return {@code true} if this word is empty, {@code false} otherwise.
      */
     public boolean isEmpty() {
-        return (length() == 0);
+        return length() == 0;
     }
 
     private static void appendSymbol(Appendable a, @Nullable Object symbol) throws IOException {
@@ -725,7 +725,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      */
     public final Word<I> suffix(int suffixLen) {
         int wordLen = length();
-        int startIdx = (suffixLen < 0) ? -suffixLen : (wordLen - suffixLen);
+        int startIdx = suffixLen < 0 ? -suffixLen : wordLen - suffixLen;
 
         return subWord(startIdx, wordLen);
     }
@@ -810,7 +810,7 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
 
         @Override
         public boolean hasNext() {
-            return (index < Word.this.length());
+            return index < Word.this.length();
         }
 
         @Override

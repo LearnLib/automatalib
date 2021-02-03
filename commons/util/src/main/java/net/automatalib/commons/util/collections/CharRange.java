@@ -44,8 +44,7 @@ public class CharRange extends AbstractList<Character> implements ArrayWritable<
     }
 
     public char charGet(int index) {
-        int i = delegate.intGet(index);
-        return (char) i;
+        return (char) delegate.intGet(index);
     }
 
     @Override

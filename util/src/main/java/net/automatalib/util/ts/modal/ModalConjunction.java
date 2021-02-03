@@ -93,9 +93,9 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0
         for (I sym : mts0.getInputAlphabet()) {
 
             Collection<T0> transitions0 = mts0.getTransitions(currentStatePair.getFirst(), sym);
-            Collection<T1> transitions1 = (mts1.getInputAlphabet().containsSymbol(sym) ?
+            Collection<T1> transitions1 = mts1.getInputAlphabet().containsSymbol(sym) ?
                     mts1.getTransitions(currentStatePair.getSecond(), sym) :
-                    Collections.emptySet());
+                    Collections.emptySet();
 
             for (T0 transition0 : transitions0) {
 
@@ -137,9 +137,9 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0
 
         for (I sym : mts1.getInputAlphabet()) {
 
-            Collection<T0> transitions0 = (mts0.getInputAlphabet().containsSymbol(sym) ?
+            Collection<T0> transitions0 = mts0.getInputAlphabet().containsSymbol(sym) ?
                     mts0.getTransitions(currentStatePair.getFirst(), sym) :
-                    Collections.emptySet());
+                    Collections.emptySet();
             Collection<T1> transitions1 = mts1.getTransitions(currentStatePair.getSecond(), sym);
 
             for (T1 transition1 : transitions1) {

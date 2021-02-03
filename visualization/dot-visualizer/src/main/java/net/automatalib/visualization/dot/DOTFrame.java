@@ -27,8 +27,6 @@ import javax.swing.JMenuBar;
 
 public class DOTFrame extends JFrame {
 
-    private static final long serialVersionUID = 1L;
-
     private final DOTPanel dotPanel = new DOTPanel();
 
     public DOTFrame() {

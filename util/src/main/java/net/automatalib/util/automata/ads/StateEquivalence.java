@@ -19,11 +19,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.commons.smartcollections.ReflexiveMapView;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.graphs.ads.impl.ADSLeafNode;
@@ -72,8 +71,7 @@ public final class StateEquivalence {
             throw new IllegalArgumentException("StateEquivalence can only distinguish 2 states");
         }
 
-        final SplitTree<S, I, O> node = new SplitTree<>(states);
-        node.getMapping().putAll(states.stream().collect(Collectors.toMap(Function.identity(), Function.identity())));
+        final SplitTree<S, I, O> node = new SplitTree<>(states, new ReflexiveMapView<>(states));
 
         return compute(automaton, input, node);
     }

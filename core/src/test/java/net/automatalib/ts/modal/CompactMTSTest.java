@@ -63,19 +63,18 @@ public class CompactMTSTest {
 
         int tsize = 0;
         for (S s : mts.getStates()) {
-            tsize += mts.getOutgoingEdges(s).size();
+            tsize += mts.getTransitions(s).size();
         }
 
         T t = mts.addTransition(src, label, dest, tprop);
         Assert.assertNotNull(t);
         Assert.assertEquals(mts.getSuccessor(t), dest);
-        Assert.assertEquals(mts.getEdgeLabel(t), label);
         Assert.assertEquals(mts.getTransitionProperty(t), tprop);
         Assert.assertEquals(mts.getTransitions(src, label), Collections.singleton(t));
 
         int tsizeL = 0;
         for (S s : mts.getStates()) {
-            tsizeL += mts.getOutgoingEdges(s).size();
+            tsizeL += mts.getTransitions(s).size();
         }
         Assert.assertEquals(tsizeL, tsize + 1);
     }
@@ -95,7 +94,6 @@ public class CompactMTSTest {
         T t = mts.addTransition(src, label, dest, null);
         Assert.assertNotNull(t);
         Assert.assertEquals(mts.getSuccessor(t), dest);
-        Assert.assertEquals(mts.getEdgeLabel(t), label);
         Assert.assertNotNull(mts.getTransitionProperty(t));
         Assert.assertEquals(mts.getTransitions(src, label), Collections.singleton(t));
     }
@@ -115,7 +113,6 @@ public class CompactMTSTest {
         mts.addTransition(src, label, t);
         Assert.assertNotNull(t);
         Assert.assertEquals(mts.getSuccessor(t), dest);
-        Assert.assertEquals(mts.getEdgeLabel(t), label);
         Assert.assertNotNull(mts.getTransitionProperty(t));
         Assert.assertEquals(mts.getTransitions(src, label), Collections.singleton(t));
     }
@@ -135,7 +132,6 @@ public class CompactMTSTest {
         mts.addTransition(src, label, t);
         Assert.assertNotNull(t);
         Assert.assertEquals(mts.getSuccessor(t), dest);
-        Assert.assertEquals(mts.getEdgeLabel(t), label);
         Assert.assertNotNull(mts.getTransitionProperty(t));
         Assert.assertEquals(mts.getTransitions(src, label), Collections.singleton(t));
     }
@@ -156,38 +152,41 @@ public class CompactMTSTest {
         final MTSTransition<String, MutableModalEdgeProperty> t5 = s.addModalTransition(as2, "a", as2, ModalType.MAY);
         final MTSTransition<String, MutableModalEdgeProperty> t6 = s.addModalTransition(as2, "b", as2, ModalType.MAY);
 
-        Assertions.assertThat(s.getTransitions(as0, "a")).hasSize(1).extracting("target").containsExactly(as0);
+        Assertions.assertThat(s.getTransitions(as0, "a"))
+                  .containsExactly(t1)
+                  .extracting(MTSTransition::getTarget)
+                  .containsExactly(as0);
 
         Assertions.assertThat(s.getTransitions(as0, "b"))
-                  .hasSize(1)
+                  .containsExactly(t2)
                   .allMatch(t -> Objects.equals(t.getSource(), as0))
                   .allMatch(t -> Objects.equals(t.getTarget(), as1))
                   .allMatch(t -> t.getProperty().getType() == ModalType.MUST)
                   .allMatch(t -> "b".equals(t.getLabel()));
 
         Assertions.assertThat(s.getTransitions(as1, "a"))
-                  .hasSize(1)
+                  .containsExactly(t3)
                   .allMatch(t -> Objects.equals(t.getSource(), as1))
                   .allMatch(t -> Objects.equals(t.getTarget(), as1))
                   .allMatch(t -> t.getProperty().getType() == ModalType.MUST)
                   .allMatch(t -> "a".equals(t.getLabel()));
 
         Assertions.assertThat(s.getTransitions(as1, "b"))
-                  .hasSize(1)
+                  .containsExactly(t4)
                   .allMatch(t -> Objects.equals(t.getSource(), as1))
                   .allMatch(t -> Objects.equals(t.getTarget(), as2))
                   .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
                   .allMatch(t -> "b".equals(t.getLabel()));
 
         Assertions.assertThat(s.getTransitions(as2, "a"))
-                  .hasSize(1)
+                  .containsExactly(t5)
                   .allMatch(t -> Objects.equals(t.getSource(), as2))
                   .allMatch(t -> Objects.equals(t.getTarget(), as2))
                   .allMatch(t -> t.getProperty().getType() == ModalType.MAY)
                   .allMatch(t -> "a".equals(t.getLabel()));
 
         Assertions.assertThat(s.getTransitions(as2, "b"))
-                  .hasSize(1)
+                  .containsExactly(t6)
                   .allMatch(t -> Objects.equals(t.getSource(), as2))
                   .allMatch(t -> Objects.equals(t.getTarget(), as2))
                   .allMatch(t -> t.getProperty().getType() == ModalType.MAY)

@@ -453,6 +453,8 @@ public final class Covers {
         bfsQueue.add(initRec);
         reach.put(init, initRec);
 
+        // the call to 'buildReachFromStateCover' not only caches 'hasEpsilon' but also fills its passed collections
+        @SuppressWarnings("PMD.PrematureDeclaration")
         boolean hasEpsilon = buildReachFromStateCover(reach,
                                                       bfsQueue,
                                                       automaton,

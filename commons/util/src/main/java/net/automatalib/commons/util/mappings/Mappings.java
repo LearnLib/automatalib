@@ -24,6 +24,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -229,7 +230,7 @@ public final class Mappings {
         return StringIndexMapping::stringToIndex;
     }
 
-    public static Mapping<Long, String> indexToString() {
+    public static Mapping<@NonNegative Long, String> indexToString() {
         return StringIndexMapping::indexToString;
     }
 }

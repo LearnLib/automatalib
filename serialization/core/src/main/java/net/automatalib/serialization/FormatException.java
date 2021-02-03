@@ -17,8 +17,6 @@ package net.automatalib.serialization;
 
 public class FormatException extends IllegalArgumentException {
 
-    private static final long serialVersionUID = 1L;
-
     public FormatException() {}
 
     public FormatException(String message, Throwable cause) {

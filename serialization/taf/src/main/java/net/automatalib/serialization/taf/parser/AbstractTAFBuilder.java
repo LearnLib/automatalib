@@ -71,7 +71,7 @@ abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministi
         S state = stateMap.get(identifier);
         SP property = getStateProperty(options);
         if (state == null) {
-            state = (init) ? automaton.addInitialState(property) : automaton.addState(property);
+            state = init ? automaton.addInitialState(property) : automaton.addState(property);
             stateMap.put(identifier, state);
         } else {
             automaton.setStateProperty(state, property);

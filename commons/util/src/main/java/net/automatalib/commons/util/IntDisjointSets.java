@@ -43,7 +43,7 @@ public interface IntDisjointSets {
     default boolean equivalent(int x, int y) {
         int rx = find(x);
         int ry = find(y);
-        return (rx == ry);
+        return rx == ry;
     }
 
     /**

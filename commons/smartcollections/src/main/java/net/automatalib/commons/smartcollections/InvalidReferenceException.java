@@ -25,8 +25,6 @@ package net.automatalib.commons.smartcollections;
  */
 public class InvalidReferenceException extends IllegalArgumentException {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * Default constructor.
      */

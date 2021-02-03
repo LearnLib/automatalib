@@ -91,8 +91,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
 
     @Override
     public boolean hasDefinitiveInformation(Word<? extends I> word) {
-        State<O> s = getState(word);
-        return (s != null);
+        return getState(word) != null;
     }
 
     /**

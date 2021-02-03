@@ -75,7 +75,6 @@ public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
      */
     static class ScalingLinkedBlockingQueue extends LinkedBlockingQueue<Runnable> {
 
-        private static final long serialVersionUID = 7063154517431823515L;
         private transient ThreadPoolExecutor tpe;
 
         void setTpe(ThreadPoolExecutor tpe) {

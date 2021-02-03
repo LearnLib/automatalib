@@ -102,7 +102,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         IntDisjointSets uf = new UnionFind(thisStates + targetStates);
         StateIDs<S> tgtIds = target.stateIDs();
         int id1 = getStateId(init1, stateIds);
-        int id2 = ((init2 != null) ? tgtIds.getStateId(init2) : (targetStates - 1)) + thisStates;
+        int id2 = (init2 != null ? tgtIds.getStateId(init2) : targetStates - 1) + thisStates;
 
         uf.link(id1, id2);
 
@@ -126,14 +126,14 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
                 }
 
                 int idx = inputAlphabet.getSymbolIndex(sym);
-                State succ1 = (state1 != sink) ? state1.getSuccessor(idx) : sink;
+                State succ1 = state1 != sink ? state1.getSuccessor(idx) : sink;
 
                 if (succ1 == null) {
                     continue;
                 }
 
                 id1 = getStateId(succ1, stateIds);
-                id2 = ((succ2 != null) ? tgtIds.getStateId(succ2) : (targetStates - 1)) + thisStates;
+                id2 = (succ2 != null ? tgtIds.getStateId(succ2) : targetStates - 1) + thisStates;
 
                 int r1 = uf.find(id1), r2 = uf.find(id2);
 
@@ -150,7 +150,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
                         break explore;
                     }
                 } else {
-                    boolean succ2acc = (succ2 != null) && target.isAccepting(succ2);
+                    boolean succ2acc = succ2 != null && target.isAccepting(succ2);
                     if (succ1.getAcceptance().conflicts(succ2acc)) {
                         lastSym = sym;
                         break explore;
@@ -246,7 +246,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      * @return the canonical state for the updated signature
      */
     protected State updateSignature(State state, Acceptance acc) {
-        assert (state != init);
+        assert state != init;
         StateSignature sig = state.getSignature();
         if (sig.acceptance == acc) {
             return state;
@@ -270,7 +270,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      * @return the canonical state for the updated signature
      */
     protected State updateSignature(State state, int idx, State succ) {
-        assert (state != init);
+        assert state != init;
 
         StateSignature sig = state.getSignature();
         if (sig.successors.array[idx] == succ) {
@@ -288,7 +288,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
     }
 
     protected State updateSignature(State state, Acceptance acc, int idx, State succ) {
-        assert (state != init);
+        assert state != init;
 
         StateSignature sig = state.getSignature();
         if (sig.successors.array[idx] == succ && sig.acceptance == acc) {
@@ -356,7 +356,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
     }
 
     protected State hiddenClone(State other) {
-        assert (other != init);
+        assert other != init;
 
         StateSignature sig = other.getSignature().duplicate();
         for (int i = 0; i < alphabetSize; i++) {
@@ -369,14 +369,14 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
     }
 
     protected void hide(State state) {
-        assert (state != init);
+        assert state != init;
 
         StateSignature sig = state.getSignature();
         register.remove(sig);
     }
 
     protected State unhide(State state, Acceptance acc, int idx, State succ) {
-        assert (state != init);
+        assert state != init;
 
         StateSignature sig = state.getSignature();
         sig.acceptance = acc;
@@ -394,7 +394,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
     }
 
     protected State unhide(State state, int idx, State succ) {
-        assert (state != init);
+        assert state != init;
 
         StateSignature sig = state.getSignature();
         State prevSucc = sig.successors.array[idx];
@@ -421,7 +421,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      * @return the canonical state for the derived signature
      */
     protected State clone(State other, Acceptance acc) {
-        assert (other != init);
+        assert other != init;
 
         StateSignature sig = other.getSignature();
         if (sig.acceptance == acc) {
@@ -446,7 +446,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      * @return the canonical state for the derived signature
      */
     protected State clone(State other, int idx, State succ) {
-        assert (other != init);
+        assert other != init;
 
         StateSignature sig = other.getSignature();
         if (sig.successors.array[idx] == succ) {
@@ -459,7 +459,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
     }
 
     protected State clone(State other, Acceptance acc, int idx, State succ) {
-        assert (other != init);
+        assert other != init;
 
         StateSignature sig = other.getSignature();
         if (sig.successors.array[idx] == succ && sig.acceptance == acc) {

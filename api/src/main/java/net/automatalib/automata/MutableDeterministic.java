@@ -70,7 +70,7 @@ public interface MutableDeterministic<S, I, T, SP, TP>
                     "Deterministic automaton can not " + "have multiple transitions for the same input symbol.");
         }
 
-        T trans = (num > 0) ? transitions.iterator().next() : null;
+        T trans = num > 0 ? transitions.iterator().next() : null;
 
         setTransition(state, input, trans);
     }

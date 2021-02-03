@@ -17,6 +17,7 @@ package net.automatalib.words;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
 
@@ -135,7 +136,7 @@ final class SharedWord<I> extends Word<I> {
      *
      * @author Malte Isberner
      */
-    private static final class Iterator<I> implements java.util.ListIterator<I> {
+    private static final class Iterator<I> implements ListIterator<I> {
 
         private final I[] storage;
         private final int startIdx, endIdx;
@@ -154,7 +155,7 @@ final class SharedWord<I> extends Word<I> {
 
         @Override
         public boolean hasNext() {
-            return (currIdx < endIdx);
+            return currIdx < endIdx;
         }
 
         @Override
@@ -167,7 +168,7 @@ final class SharedWord<I> extends Word<I> {
 
         @Override
         public boolean hasPrevious() {
-            return (currIdx > startIdx);
+            return currIdx > startIdx;
         }
 
         @Override

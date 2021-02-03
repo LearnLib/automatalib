@@ -15,12 +15,35 @@
  */
 package net.automatalib.automata;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.concepts.GraphViewable;
 
 public interface FiniteAlphabetAutomaton<S, I, T> extends Automaton<S, I, T>, InputAlphabetHolder<I>, GraphViewable {
+
+    /**
+     * Convenience method for accessing all (outgoing) transitions of a given state. Uses the {@link
+     * #getInputAlphabet() input alphabet} of {@code this} {@link FiniteAlphabetAutomaton}.
+     *
+     * @param state
+     *         the state for which the outgoing transitions should be fetched.
+     *
+     * @return all outgoing transitions of {@code state}.
+     */
+    default Collection<T> getTransitions(S state) {
+        final List<T> result = new ArrayList<>();
+
+        for (I i : getInputAlphabet()) {
+            result.addAll(getTransitions(state, i));
+        }
+
+        return result;
+    }
 
     @Override
     default Graph<?, ?> graphView() {

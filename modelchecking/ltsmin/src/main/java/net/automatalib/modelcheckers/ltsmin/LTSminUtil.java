@@ -77,8 +77,8 @@ public final class LTSminUtil {
         ETF2LTS_MC = Paths.get(ltsMinPath, ETF2LTS_MC_BINARY).toString();
         LTSMIN_CONVERT = Paths.get(ltsMinPath, LTSMIN_CONVERT_BINARY).toString();
 
-        verbose = !settings.getProperty(AutomataLibProperty.LTSMIN_VERBOSE, Boolean.toString(LOGGER.isDebugEnabled()))
-                           .equalsIgnoreCase("false");
+        verbose = !"false".equalsIgnoreCase(settings.getProperty(AutomataLibProperty.LTSMIN_VERBOSE,
+                                                                 Boolean.toString(LOGGER.isDebugEnabled())));
 
         detectLTSmin();
     }
@@ -167,10 +167,9 @@ public final class LTSminUtil {
     private static @Nullable LTSminVersion detectLTSmin(String bin) {
 
         // the command lines for the ProcessBuilder
-        final String[] commandLine = new String[] {// add the binary
-                                                   bin,
-                                                   // just run a version check
-                                                   "--version"};
+        final String[] commandLine = {bin, // add the binary
+                                      "--version" // just run a version check
+        };
 
         final StringWriter stringWriter = new StringWriter();
 

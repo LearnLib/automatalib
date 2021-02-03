@@ -32,7 +32,7 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  *
  * @author Malte Isberner
  */
-public class UnorderedCollection<E> extends AbstractSmartCollection<E> implements CapacityManagement {
+public final class UnorderedCollection<E> extends AbstractSmartCollection<E> implements CapacityManagement {
 
     private static final int DEFAULT_INITIAL_CAPACITY = 10;
     // The collection's storage
@@ -86,8 +86,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
     @Override
     public E get(ElementReference ref) {
-        Reference<E> r = asIndexedRef(ref);
-        return r.element;
+        return UnorderedCollection.<E>asIndexedRef(ref).element;
     }
 
     /**
@@ -225,7 +224,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
     @Override
     public boolean isEmpty() {
-        return (size == 0);
+        return size == 0;
     }
 
     @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
@@ -283,7 +282,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
         @Override
         public boolean hasNext() {
-            return (index < size);
+            return index < size;
         }
 
         @Override
@@ -309,7 +308,7 @@ public class UnorderedCollection<E> extends AbstractSmartCollection<E> implement
 
         @Override
         public boolean hasNext() {
-            return (index < size);
+            return index < size;
         }
 
         @Override

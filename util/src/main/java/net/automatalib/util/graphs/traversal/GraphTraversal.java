@@ -26,6 +26,7 @@ import net.automatalib.commons.util.Holder;
 import net.automatalib.graphs.IndefiniteGraph;
 import net.automatalib.util.graphs.traversal.DFRecord.LastEdge;
 import net.automatalib.util.traversal.TraversalOrder;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class GraphTraversal {
 
@@ -109,16 +110,14 @@ public final class GraphTraversal {
 
         while (!dfsStack.isEmpty()) {
             @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            DFRecord<N, E, D> current = dfsStack.peek();
+            @NonNull DFRecord<N, E, D> current = dfsStack.peek();
 
             N currNode = current.node;
             D currData = current.data;
 
-            if (current.start(graph)) {
-                if (!vis.startExploration(currNode, currData)) {
-                    dfsStack.pop();
-                    continue;
-                }
+            if (current.start(graph) && !vis.startExploration(currNode, currData)) {
+                dfsStack.pop();
+                continue;
             }
 
             LastEdge<E, N, D> lastEdge = current.getLastEdge();
@@ -223,7 +222,7 @@ public final class GraphTraversal {
         bfs_loop:
         while (!bfsQueue.isEmpty()) {
             @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            BFRecord<N, D> current = bfsQueue.poll();
+            @NonNull BFRecord<N, D> current = bfsQueue.poll();
 
             N currNode = current.node;
             D currData = current.data;

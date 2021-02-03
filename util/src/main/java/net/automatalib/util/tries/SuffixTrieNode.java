@@ -108,7 +108,7 @@ public class SuffixTrieNode<I> extends Word<I> {
 
     @EnsuresNonNullIf(expression = "parent", result = false)
     public boolean isRoot() {
-        return (parent == null);
+        return parent == null;
     }
 
     public Word<I> getSuffix() {

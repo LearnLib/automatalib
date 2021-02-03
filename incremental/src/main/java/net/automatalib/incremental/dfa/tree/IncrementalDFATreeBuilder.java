@@ -127,7 +127,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
                 continue;
             }
 
-            boolean succAcc = (automatonSucc != null) && target.isAccepting(automatonSucc);
+            boolean succAcc = automatonSucc != null && target.isAccepting(automatonSucc);
 
             if (succ.getAcceptance().conflicts(succAcc)) {
                 WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());

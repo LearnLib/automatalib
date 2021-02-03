@@ -121,14 +121,15 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
                 if (!mts1.getInputAlphabet().contains(symbol)) {
                     newTransitions.add(new Transition<>(productState,
                                                         symbol,
-                                                        Pair.of(mts0.getTarget(transition), productState.getSecond()),
+                                                        Pair.of(mts0.getSuccessor(transition),
+                                                                productState.getSecond()),
                                                         mts0.getTransitionProperty(transition).getType()));
                 } else {
                     for (T1 partnerTransition : mts1.getTransitions(productState.getSecond(), symbol)) {
                         newTransitions.add(new Transition<>(productState,
                                                             symbol,
-                                                            Pair.of(mts0.getTarget(transition),
-                                                                    mts1.getTarget(partnerTransition)),
+                                                            Pair.of(mts0.getSuccessor(transition),
+                                                                    mts1.getSuccessor(partnerTransition)),
                                                             minimalCompatibleType(mts0.getTransitionProperty(transition)
                                                                                       .getType(),
                                                                                   mts1.getTransitionProperty(
@@ -146,7 +147,7 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
             for (T1 transition : mts1.getTransitions(productState.getSecond(), symbol)) {
                 newTransitions.add(new Transition<>(productState,
                                                     symbol,
-                                                    Pair.of(productState.getFirst(), mts1.getTarget(transition)),
+                                                    Pair.of(productState.getFirst(), mts1.getSuccessor(transition)),
                                                     mts1.getTransitionProperty(transition).getType()));
             }
         }

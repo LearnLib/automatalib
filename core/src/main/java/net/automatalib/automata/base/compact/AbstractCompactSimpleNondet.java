@@ -16,18 +16,27 @@
 package net.automatalib.automata.base.compact;
 
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
+import net.automatalib.automata.base.fast.AbstractFastMutableNondet;
+import net.automatalib.automata.fsa.NFA;
+import net.automatalib.commons.util.collections.IntSet;
 import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Abstract super class that refines {@link AbstractCompact} for transition-property-less automata. As a result,
  * transitions may be represented as integers (where a transition object effectively <i>is</i> the successor).
+ * <p>
+ * <b>Implementation note:</b> This class uses {@link BitSet}s to store the successors of each state. This makes the
+ * memory consumption of this class depend on the number of states rather than the density of its adjacency matrix
+ * (since the maximum bit/index determines the size of each {@link BitSet}). For the majority of cases (tests showed if
+ * the average number of outgoing transitions per state is more than 0.2% of the number of states) this still requires
+ * less memory than using e.g. a {@link Set} of {@link Integer}s. However, for very large but very sparse {@link NFA}s
+ * one may consider using the {@link AbstractFastMutableNondet} class instead.
  *
  * @param <I>
  *         input symbol type
@@ -39,42 +48,32 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact<I, Integer, SP, Void> {
 
-    //protected final TIntSet initial;
-    protected final Set<Integer> initial; // TODO: replace by primitive specialization
-    //protected TIntSet[] transitions;
-    protected @Nullable Set<Integer>[] transitions; // TODO: replace by primitive specialization
+    private final BitSet initial;
+    private @Nullable BitSet[] transitions;
 
-    @SuppressWarnings("unchecked")
     public AbstractCompactSimpleNondet(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
 
-        //this.transitions = new TIntSet[stateCapacity * alphabetSize];
-        this.transitions = new Set[stateCapacity * numInputs()]; // TODO: replace by primitive specialization
-
-        //this.initial = new TIntHashSet();
-        this.initial = new HashSet<>(); // TODO: replace by primitive specialization
+        this.transitions = new BitSet[stateCapacity * numInputs()];
+        this.initial = new BitSet();
     }
 
     protected AbstractCompactSimpleNondet(Alphabet<I> alphabet, AbstractCompactSimpleNondet<?, ?> other) {
         super(alphabet, other);
         this.transitions = other.transitions.clone();
         for (int i = 0; i < transitions.length; i++) {
-            //TIntSet tgts = transitions[i];
-            Set<Integer> tgts = transitions[i]; // TODO: replace by primitive specialization
+            final BitSet tgts = transitions[i];
             if (tgts != null) {
-                //transitions[i] = new TIntHashSet(tgts);
-                transitions[i] = new HashSet<>(tgts); // TODO: replace by primitive specialization
+                transitions[i] = (BitSet) tgts.clone();
             }
         }
 
-        //this.initial = new TIntHashSet(other.initial);
-        this.initial = new HashSet<>(other.initial); // TODO: replace by primitive specialization
+        this.initial = (BitSet) other.initial.clone();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void updateTransitionStorage(Payload payload) {
-        this.transitions = (Set<Integer>[]) updateTransitionStorage(this.transitions, Set[]::new, null, payload);
+        this.transitions = updateTransitionStorage(this.transitions, BitSet[]::new, null, payload);
     }
 
     @Override
@@ -89,9 +88,9 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
 
     public void setInitial(int state, boolean initial) {
         if (initial) {
-            this.initial.add(state);
+            this.initial.set(state);
         } else {
-            this.initial.remove(state);
+            this.initial.clear(state);
         }
     }
 
@@ -116,11 +115,9 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     }
 
     public void removeTransition(int stateId, int inputIdx, int successorId) {
-        //TIntCollection successors = transitions[transIdx];
-        Collection<Integer> successors =
-                transitions[toMemoryIndex(stateId, inputIdx)]; // TODO: replace by primitive specialization
+        final BitSet successors = transitions[toMemoryIndex(stateId, inputIdx)];
         if (successors != null) {
-            successors.remove(successorId);
+            successors.clear(successorId);
         }
     }
 
@@ -159,15 +156,13 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
     }
 
     public void addTransition(int stateId, int inputIdx, int succId) {
-        int transIdx = toMemoryIndex(stateId, inputIdx);
-        //TIntSet successors = transitions[transIdx];
-        Set<Integer> successors = transitions[transIdx]; // TODO: replace by primitive specialization
+        final int transIdx = toMemoryIndex(stateId, inputIdx);
+        BitSet successors = transitions[transIdx];
         if (successors == null) {
-            //successors = new TIntHashSet();
-            successors = new HashSet<>(); // TODO: replace by primitive specialization
+            successors = new BitSet();
             transitions[transIdx] = successors;
         }
-        successors.add(succId);
+        successors.set(succId);
     }
 
     @Override
@@ -185,28 +180,20 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
         setTransitions(state.intValue(), input, transitions);
     }
 
-    //public void setTransitions(int state, I input, TIntCollection successors) {
-    public void setTransitions(int state,
-                               I input,
-                               Collection<? extends Integer> successors) { // TODO: replace by primitive specialization
+    public void setTransitions(int state, I input, Collection<? extends Integer> successors) {
         setTransitions(state, getSymbolIndex(input), successors);
     }
 
-    //public void setTransitions(int state, int inputIdx, TIntCollection successors) {
-    public void setTransitions(int state,
-                               int inputIdx,
-                               Collection<? extends Integer> successors) { // TODO: replace by primitive specialization
-        int transIdx = toMemoryIndex(state, inputIdx);
-        //TIntSet succs = transitions[transIdx];
-        Set<Integer> succs = transitions[transIdx]; // TODO: replace by primitive specialization
+    public void setTransitions(int state, int inputIdx, Collection<? extends Integer> successors) {
+        final int transIdx = toMemoryIndex(state, inputIdx);
+        BitSet succs = transitions[transIdx];
         if (succs == null) {
-            //succs = new TIntHashSet(successors);
-            succs = Sets.newHashSetWithExpectedSize(successors.size()); // TODO: replace by primitive specialization
+            succs = new BitSet();
             transitions[transIdx] = succs;
         } else {
             succs.clear();
         }
-        succs.addAll(successors);
+        successors.forEach(succs::set);
     }
 
     @Override
@@ -216,25 +203,20 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
 
     @Override
     public Collection<Integer> getTransitions(Integer state, I input) {
-        //return new TIntSetDecorator(getTransitions(state.intValue(), input));
-        return getTransitions(state.intValue(), input); // TODO: replace by primitive specialization
+        return getTransitions(state.intValue(), input);
     }
 
-    //public TIntSet getTransitions(int state, I input) {
-    public Set<Integer> getTransitions(int state, I input) { // TODO: replace by primitive specialization
+    public Set<Integer> getTransitions(int state, I input) {
         return getTransitions(state, getSymbolIndex(input));
     }
 
-    //public TIntSet getTransitions(int state, int inputIdx) {
-    public Set<Integer> getTransitions(int state, int inputIdx) { // TODO: replace by primitive specialization
-        Set<Integer> transition = transitions[toMemoryIndex(state, inputIdx)];
-
-        return transition == null ? Collections.emptySet() : transition;
+    public Set<Integer> getTransitions(int state, int inputIdx) {
+        final BitSet transition = transitions[toMemoryIndex(state, inputIdx)];
+        return transition == null ? Collections.emptySet() : new IntSet(transition);
     }
 
     @Override
     public Set<Integer> getInitialStates() {
-        //return new TIntSetDecorator(initial);
-        return initial; // TODO: replace by primitive specialization
+        return new IntSet(initial);
     }
 }

@@ -18,6 +18,7 @@ package net.automatalib.serialization.taf.writer;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,8 +28,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
+import com.google.common.collect.Maps;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.FiniteAlphabetAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
@@ -116,18 +117,18 @@ public final class TAFWriter {
 
             beginState(name, options);
 
-            @SuppressWarnings("nullness")
-            Map<Pair<S, TP>, List<I>> groupedTransitions = inputs.stream()
-                                                                 .map(i -> Pair.of(i,
-                                                                                   automaton.getTransition(state,
-                                                                                                           i)))
-                                                                 .filter(p -> p.getSecond() != null)
-                                                                 .collect(Collectors.groupingBy(p -> Pair.of(
-                                                                         automaton.getSuccessor(p.getSecond()),
-                                                                         automaton.getTransitionProperty(p.getSecond())),
-                                                                                                Collectors.mapping(
-                                                                                                        Pair::getFirst,
-                                                                                                        Collectors.toList())));
+            final Map<Pair<S, TP>, List<I>> groupedTransitions = Maps.newHashMapWithExpectedSize(inputs.size());
+            for (I i : inputs) {
+                final T t = automaton.getTransition(state, i);
+
+                if (t != null) {
+                    final S succ = automaton.getSuccessor(t);
+                    final TP tp = automaton.getTransitionProperty(t);
+                    final Pair<S, TP> key = Pair.of(succ, tp);
+
+                    groupedTransitions.computeIfAbsent(key, k -> new ArrayList<>()).add(i);
+                }
+            }
 
             for (Map.Entry<Pair<S, TP>, List<I>> group : groupedTransitions.entrySet()) {
                 S tgt = group.getKey().getFirst();

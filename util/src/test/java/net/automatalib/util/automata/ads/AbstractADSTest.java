@@ -20,9 +20,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Maps;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.ads.ADSNode;
@@ -91,8 +91,7 @@ public abstract class AbstractADSTest {
 
         Assert.assertEquals(targets, leaves.stream().map(ADSNode::getHypothesisState).collect(Collectors.toSet()));
 
-        final Map<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> traces =
-                leaves.stream().collect(Collectors.toMap(Function.identity(), ADSUtil::buildTraceForNode));
+        final Map<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> traces = Maps.asMap(leaves, ADSUtil::buildTraceForNode);
 
         // check matching outputs
         for (Map.Entry<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> entry : traces.entrySet()) {

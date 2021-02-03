@@ -20,21 +20,21 @@ import java.util.Iterator;
 
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
-import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.graphs.TransitionEdge.Property;
 import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
 import net.automatalib.automata.visualization.MTSVisualizationHelper;
-import net.automatalib.graphs.FiniteLTS;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
 
 /**
- * A (finite) version of an {@link IndefiniteModalTransitionSystem}. Since most MTS-based algorithms require a finite
- * transition domain, this includes a finite set of states and a finite set input symbols. This is achieved by
- * sub-typing the {@link UniversalAutomaton} and {@link InputAlphabetHolder} interfaces, which additionally inherit
- * several convenience methods for working with MTSs.
+ * A modal transition system is a {@link UniversalAutomaton} in which transitions can be marked as {@link
+ * net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType#MAY may} or {@link
+ * net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType#MUST must} edges. Since most MTS-based algorithms
+ * require a finite transition domain, this includes a finite set input symbols. This is achieved by sub-typing the
+ * {@link UniversalFiniteAlphabetAutomaton} interface, which additionally inherits several convenience methods for
+ * working with MTSs.
  *
  * @param <S>
  *         state type
@@ -48,10 +48,7 @@ import net.automatalib.visualization.VisualizationHelper;
  * @author msc
  */
 public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
-        extends IndefiniteModalTransitionSystem<S, I, T, TP>,
-                UniversalFiniteAlphabetAutomaton<S, I, T, Void, TP>,
-                FiniteLTS<S, T, I>,
-                InputAlphabetHolder<I> {
+        extends UniversalFiniteAlphabetAutomaton<S, I, T, Void, TP> {
 
     @Override
     default Iterator<S> iterator() {

@@ -27,26 +27,29 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class provides methods to parse automata in FSM format.
- *
+ * <p>
  * The FSM is parsed by means of a tokenizer (a grammar is not used).
  *
- * @see <a href="http://www.win.tue.nl/vis1/home/apretori/data/fsm.html">the FSM format</a>
- *
  * @author Jeroen Meijer
+ * @see <a href="http://www.win.tue.nl/vis1/home/apretori/data/fsm.html">the FSM format</a>
  */
 public abstract class AbstractFSMParser<I> {
 
     /**
      * An enumeration for the three parts in the FSM file.
      */
-    protected enum Part {DataDefinition, StateVectors, Transitions}
+    protected enum Part {
+        DATA_DEFINITION,
+        STATE_VECTORS,
+        TRANSITIONS
+    }
 
     // some messages for FSMParseExceptions.
     public static final String NO_SUCH_STATE = "state with number %d is undefined";
     public static final String NON_DETERMINISM_DETECTED = "non-determinism detected (previous value: %s)";
     public static final String EXPECT_CHAR = "expected char '%c' not found";
     public static final String EXPECT_NUMBER = "number expected";
-    public static final String EXPECT_IDENTIFIER= "expecting identifier";
+    public static final String EXPECT_IDENTIFIER = "expecting identifier";
     public static final String EXPECT_STRING = "expecting string";
 
     /**
@@ -218,7 +221,7 @@ public abstract class AbstractFSMParser<I> {
      * @throws IOException when FSM source could not be read.
      */
     protected void parse(Reader reader) throws IOException {
-        Part part = Part.DataDefinition;
+        Part part = Part.DATA_DEFINITION;
         partLineNumber = 0;
 
         final StreamTokenizer streamTokenizer = getStreamTokenizer(reader);
@@ -226,10 +229,10 @@ public abstract class AbstractFSMParser<I> {
         while (streamTokenizer.nextToken() != StreamTokenizer.TT_EOF) {
             streamTokenizer.pushBack();
             switch (part) {
-                case DataDefinition: {
+                case DATA_DEFINITION: {
                     if (streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && "---".equals(streamTokenizer.sval)) {
                         // we entered the part with the state vectors
-                        part = Part.StateVectors;
+                        part = Part.STATE_VECTORS;
                         partLineNumber = 0;
                         checkDataDefinitions(streamTokenizer);
                     } else {
@@ -238,10 +241,10 @@ public abstract class AbstractFSMParser<I> {
                     }
                     break;
                 }
-                case StateVectors: {
+                case STATE_VECTORS: {
                     if (streamTokenizer.nextToken() == StreamTokenizer.TT_WORD && "---".equals(streamTokenizer.sval)) {
                         // we entered the part with the transitions.
-                        part = Part.Transitions;
+                        part = Part.TRANSITIONS;
                         partLineNumber = 0;
                         checkStateVectors(streamTokenizer);
                     } else {
@@ -250,7 +253,7 @@ public abstract class AbstractFSMParser<I> {
                     }
                     break;
                 }
-                case Transitions: {
+                case TRANSITIONS: {
                     parseTransition(streamTokenizer);
                     break;
                 }

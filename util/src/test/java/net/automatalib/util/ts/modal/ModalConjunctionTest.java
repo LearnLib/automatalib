@@ -232,17 +232,17 @@ public class ModalConjunctionTest {
         Assert.assertTrue(mts.size() <= a.size() * b.size());
 
         boolean onlyMayA = true, onlyMayB = true;
-        for (MTSTransition<Character, MutableModalEdgeProperty> t : a.getOutgoingEdges(a.getInitialStates()
-                                                                                        .iterator()
-                                                                                        .next())) {
+        for (MTSTransition<Character, MutableModalEdgeProperty> t : a.getTransitions(a.getInitialStates()
+                                                                                      .iterator()
+                                                                                      .next())) {
             if (t.getProperty().isMust()) {
                 onlyMayA = false;
             }
         }
 
-        for (MTSTransition<Character, MutableModalEdgeProperty> t : b.getOutgoingEdges(b.getInitialStates()
-                                                                                        .iterator()
-                                                                                        .next())) {
+        for (MTSTransition<Character, MutableModalEdgeProperty> t : b.getTransitions(b.getInitialStates()
+                                                                                      .iterator()
+                                                                                      .next())) {
             if (t.getProperty().isMust()) {
                 onlyMayB = false;
             }
@@ -255,7 +255,7 @@ public class ModalConjunctionTest {
             // works, but is hard to read:
             Assert.assertTrue(mts.getStates()
                                  .stream()
-                                 .map(mts::getOutgoingEdges)
+                                 .map(mts::getTransitions)
                                  .flatMap(Collection::stream)
                                  .noneMatch(t -> mts.getTransitionProperty(t).isMust()));
         }

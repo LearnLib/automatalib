@@ -60,6 +60,12 @@ limitations under the License.
             <artifactId>checker-qual</artifactId>
         </dependency>
 
+        <!-- external -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
         <!-- test -->
         <dependency>
             <groupId>org.testng</groupId>

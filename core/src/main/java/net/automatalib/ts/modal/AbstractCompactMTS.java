@@ -15,16 +15,15 @@
  */
 package net.automatalib.ts.modal;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
 import net.automatalib.automata.base.compact.AbstractCompact;
+import net.automatalib.commons.util.collections.IntSet;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
@@ -44,7 +43,7 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
         extends AbstractCompact<I, MTSTransition<I, TP>, Void, TP>
         implements MutableModalTransitionSystem<Integer, I, MTSTransition<I, TP>, TP> {
 
-    private final Set<Integer> initialStates; // TODO: replace by primitive specialization
+    private final BitSet initialStates;
     private @Nullable Set<MTSTransition<I, TP>>[] transitions;
 
     public AbstractCompactMTS(Alphabet<I> alphabet) {
@@ -55,16 +54,16 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     public AbstractCompactMTS(Alphabet<I> alphabet, int stateCapacity, float resizeFactor) {
         super(alphabet, stateCapacity, resizeFactor);
 
-        this.initialStates = new HashSet<>(); // TODO: replace by primitive specialization
+        this.initialStates = new BitSet();
         this.transitions = new Set[stateCapacity * numInputs()];
     }
 
     @Override
     public void setInitial(Integer state, boolean initial) {
         if (initial) {
-            this.initialStates.add(state);
+            this.initialStates.set(state);
         } else {
-            this.initialStates.remove(state);
+            this.initialStates.clear(state);
         }
     }
 
@@ -122,32 +121,6 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     }
 
     @Override
-    public Collection<MTSTransition<I, TP>> getOutgoingEdges(Integer node) {
-        final List<MTSTransition<I, TP>> result = new ArrayList<>();
-
-        for (final I i : getInputAlphabet()) {
-            result.addAll(getTransitions(node, i));
-        }
-
-        return result;
-    }
-
-    @Override
-    public Integer getTarget(MTSTransition<I, TP> edge) {
-        return edge.getTarget();
-    }
-
-    @Override
-    public Collection<Integer> getNodes() {
-        return getStates();
-    }
-
-    @Override
-    public I getEdgeLabel(MTSTransition<I, TP> edge) {
-        return edge.getLabel();
-    }
-
-    @Override
     public Void getStateProperty(Integer state) {
         return null;
     }
@@ -170,7 +143,7 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
 
     @Override
     public Set<Integer> getInitialStates() {
-        return this.initialStates;
+        return new IntSet(this.initialStates);
     }
 
     @Override

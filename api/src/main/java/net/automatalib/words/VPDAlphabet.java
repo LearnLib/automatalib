@@ -148,7 +148,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
                 default:
             }
         }
-        return (crb == 0);
+        return crb == 0;
     }
 
     default boolean isCallSymbol(I symbol) {
@@ -200,7 +200,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
             }
         }
 
-        return (crb == 0);
+        return crb == 0;
     }
 
     default Word<I> longestWellMatchedPrefix(Word<I> word) {

@@ -33,10 +33,10 @@ public class MooreVisualizationHelper<S, I, T, O>
         }
 
         final StringBuilder labelBuilder = new StringBuilder();
-        labelBuilder.append(String.valueOf(node)).append(" / ");
+        labelBuilder.append(node).append(" / ");
         O output = automaton.getStateOutput(node);
         if (output != null) {
-            labelBuilder.append(String.valueOf(output));
+            labelBuilder.append(output);
         }
         properties.put(NodeAttrs.LABEL, labelBuilder.toString());
         return true;

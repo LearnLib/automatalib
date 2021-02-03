@@ -30,6 +30,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.commons.smartcollections.ReflexiveMapView;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.graphs.ads.impl.ADSLeafNode;
@@ -82,8 +83,7 @@ public final class LeeYannakakis {
             return new LYResult<>(extractADS(automaton,
                                              str.get(),
                                              states,
-                                             states.stream()
-                                                   .collect(Collectors.toMap(Function.identity(), Function.identity())),
+                                             new ReflexiveMapView<>(states),
                                              null));
         }
 

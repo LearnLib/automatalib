@@ -58,7 +58,7 @@ public enum Acceptance {
     }
 
     public boolean conflicts(boolean val) {
-        return (val != toBoolean());
+        return val != toBoolean();
     }
 
     public abstract boolean toBoolean();
