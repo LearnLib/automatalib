@@ -15,12 +15,10 @@
  */
 package net.automatalib.ts.modal;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -120,32 +118,6 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     @Override
     public MTSTransition<I, TP> addModalTransition(Integer src, I input, Integer tgt, ModalType modalType) {
         return this.addTransition(src, input, tgt, buildModalProperty(modalType));
-    }
-
-    @Override
-    public Collection<MTSTransition<I, TP>> getOutgoingEdges(Integer node) {
-        final List<MTSTransition<I, TP>> result = new ArrayList<>();
-
-        for (final I i : getInputAlphabet()) {
-            result.addAll(getTransitions(node, i));
-        }
-
-        return result;
-    }
-
-    @Override
-    public Integer getTarget(MTSTransition<I, TP> edge) {
-        return edge.getTarget();
-    }
-
-    @Override
-    public Collection<Integer> getNodes() {
-        return getStates();
-    }
-
-    @Override
-    public I getEdgeLabel(MTSTransition<I, TP> edge) {
-        return edge.getLabel();
     }
 
     @Override

@@ -17,6 +17,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Refactored
   * `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automata.base.compact.CompactTransition`
   * `net.automatalib.commons.util.BitSetIterator` -> `net.automatalib.commons.util.collections.BitSetIterator`
+  * `net.automatalib.graphs.FiniteKTS` -> `net.automatalib.ts.FiniteKTS` and `FiniteKTS` no longer extends the `Graph` interface but the `Automaton` interface and has its type variables re-ordered.
+  * `net.automatalib.graphs.FiniteLTS` -> `net.automatalib.graphs.FiniteLabeledGraph`
 
 ### Fixed
 
@@ -25,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Removed
 
 * Removed the (package-private) classes `net.automatalib.util.automata.predicates.{AcceptanceStatePredicate,OutputSatisfies,TransitionPropertySatisfies}`.
+* Removed `net.automatalib.graphs.IndefiniteLTS.java`. By naming, this class should denote a `TransitionSystem` and not a `Graph` structure. However, since `TransitionSystem`s are inherently labeled, this class serves no more real purpose. To re-establish the previous functionality, simply implement `Graph` and `EdgeLabels`.
 
 
 ## [0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11

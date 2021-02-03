@@ -66,7 +66,7 @@ public final class ModalRefinement {
 
                 Set<BT> partnerTransitions = partnerTransitions(b, coSource, label, acceptableValues);
 
-                AS target = a.getTarget(transition);
+                AS target = a.getSuccessor(transition);
                 final boolean eligiblePartner = partnerTransitions.stream()
                                                                   .map(b::getSuccessor)
                                                                   .anyMatch(s -> inRefinementRelation.test(target, s));

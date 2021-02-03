@@ -13,20 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.graphs;
+package net.automatalib.ts;
+
+import net.automatalib.automata.Automaton;
+import net.automatalib.graphs.FiniteKripkeStructure;
+import net.automatalib.graphs.concepts.KripkeInterpretation;
 
 /**
- * A finite LTS is an {@link IndefiniteLTS} with a finite number of nodes.
+ * A finite Kripke Transition System combines the properties of a {@link Automaton finite transition system} and a
+ * {@link KripkeInterpretation}.
  *
- * @param <N>
- *         node class
- * @param <E>
- *         edge class
- * @param <L>
- *         label class
+ * @param <S>
+ *         state class
+ * @param <T>
+ *         transition class
+ * @param <AP>
+ *         atomic proposition class
+ * @param <I>
+ *         input symbol class
  *
  * @author Malte Isberner
+ * @see KripkeInterpretation
+ * @see FiniteKripkeStructure
  */
-public interface FiniteLTS<N, E, L> extends Graph<N, E>, IndefiniteLTS<N, E, L> {
-
-}
+public interface FiniteKTS<S, I, T, AP> extends Automaton<S, I, T>, KripkeInterpretation<S, AP> {}
