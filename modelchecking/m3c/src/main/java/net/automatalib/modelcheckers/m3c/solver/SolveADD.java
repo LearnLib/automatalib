@@ -1,55 +1,36 @@
+/* Copyright (C) 2013-2021 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.modelcheckers.m3c.solver;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.modelcheckers.m3c.cfps.CFPS;
-import net.automatalib.modelcheckers.m3c.cfps.Edge;
-import net.automatalib.modelcheckers.m3c.cfps.State;
-import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
-import net.automatalib.modelcheckers.m3c.transformer.PropertyTransformer;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class SolveADD extends SolveDD<ADDTransformer> {
+public class SolveADD<L, AP> extends SolveDD<ADDTransformer, L, AP> {
 
     private BooleanVectorLogicDDManager ddManager;
 
-    public <L, AP> SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) {
+    public SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) {
         super(mcfps, formula, formulaIsCtl);
     }
 
-    public <L, AP> SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
+    public SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
         super(mcfps, formula, formulaIsCtl);
-    }
-
-    public void updateState(State state) {
-        initUpdate(state);
-        int stateNumber = state.getStateNumber();
-        ADDTransformer stateTransformer = (ADDTransformer) propTransformers[stateNumber];
-        PropertyTransformer updatedTransformer = getUpdatedPropertyTransformer(state, stateTransformer);
-        updateTransformerAndWorkSet(state, stateNumber, stateTransformer, updatedTransformer);
-    }
-
-    private PropertyTransformer getUpdatedPropertyTransformer(State state, ADDTransformer stateTransformer) {
-        List<ADDTransformer> compositions = createCompositions(state);
-        EquationalBlock currentBlock = dependGraph.getBlock(currentBlockIndex);
-        return stateTransformer.createUpdate(state, compositions, currentBlock);
-    }
-
-    public List<ADDTransformer> createCompositions(State state) {
-        List<ADDTransformer> compositions = new ArrayList<>();
-        for (Edge edge : state.getOutgoingEdges()) {
-            State targetState = cfps.getState(edge.getTarget().getStateNumber());
-            PropertyTransformer edgeTransformer = getEdgeTransformer(edge);
-            PropertyTransformer succTransformer = propTransformers[targetState.getStateNumber()];
-            ADDTransformer composition = (ADDTransformer) edgeTransformer.compose(succTransformer);
-            composition.setIsMust(edge.isMust());
-            compositions.add(composition);
-        }
-        return compositions;
     }
 
     @Override
@@ -58,18 +39,18 @@ public class SolveADD extends SolveDD<ADDTransformer> {
     }
 
     @Override
-    protected PropertyTransformer createInitTransformerEdge(Edge edge) {
-        return new ADDTransformer(ddManager, edge, dependGraph);
-    }
-
-    @Override
-    protected PropertyTransformer createInitTransformerEnd() {
+    protected ADDTransformer createInitTransformerEnd() {
         return new ADDTransformer(ddManager, dependGraph.getNumVariables());
     }
 
     @Override
-    protected PropertyTransformer createInitState() {
+    protected ADDTransformer createInitState() {
         return new ADDTransformer(ddManager, dependGraph);
+    }
+
+    @Override
+    protected <TP extends ModalEdgeProperty> ADDTransformer createInitTransformerEdge(L edgeLabel, TP edgeProperty) {
+        return new ADDTransformer(ddManager, edgeLabel, edgeProperty, dependGraph);
     }
 
 }

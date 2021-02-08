@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2021 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.Collections;
@@ -14,7 +29,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-abstract class SolverTest<T extends PropertyTransformer> {
+abstract class SolverTest<T extends PropertyTransformer<T>> {
 
     protected static ModalContextFreeProcessSystem<Character, String> mcfps;
 
@@ -79,7 +94,7 @@ abstract class SolverTest<T extends PropertyTransformer> {
     @Test
     void testSolve() {
         String formula = "mu X.(<b><b>true || <>X)";
-        SolveDD<T> solver = getSolver(mcfps, formula, false);
+        SolveDD<T, Character, String> solver = getSolver(mcfps, formula, false);
         assertSolve(solver, true);
 
         String negatedFormula = "!(" + formula + ")";
@@ -87,11 +102,11 @@ abstract class SolverTest<T extends PropertyTransformer> {
         assertSolve(solver, false);
     }
 
-    public abstract <L, AP> SolveDD<T> getSolver(ModalContextFreeProcessSystem<L, AP> mcfps,
-                                                 String formula,
-                                                 boolean formulaIsCtl);
+    public abstract SolveDD<T, Character, String> getSolver(ModalContextFreeProcessSystem<Character, String> mcfps,
+                                                            String formula,
+                                                            boolean formulaIsCtl);
 
-    protected void assertSolve(SolveDD<T> solver, boolean expectedIsSat) {
+    protected void assertSolve(SolveDD<T, Character, String> solver, boolean expectedIsSat) {
         solver.solve();
         Assert.assertEquals(expectedIsSat, solver.isSat());
     }

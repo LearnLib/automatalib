@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2021 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.modelcheckers.m3c.transformer;
 
 import java.util.ArrayList;
@@ -16,6 +31,8 @@ import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -70,8 +87,7 @@ class BDDTransformerTest {
 
     @Test
     void testEdgeTransformerMust() {
-        Edge edge = new Edge(null, null, "b", EdgeType.MUST);
-        BDDTransformer transformer = new BDDTransformer(bddManager, edge, dg);
+        BDDTransformer transformer = new BDDTransformer(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);
 
         BDD bddOrNode = transformer.getBdds()[orNode.getVarNumber()];
         BDD expectedBDDOrNode = bddManager.readLogicZero();
@@ -96,8 +112,7 @@ class BDDTransformerTest {
 
     @Test
     void testEdgeTransformerNoMatch() {
-        Edge edge = new Edge(null, null, "a", EdgeType.MUST);
-        BDDTransformer transformer = new BDDTransformer(bddManager, edge, dg);
+        BDDTransformer transformer = new BDDTransformer(bddManager, "a", new ModalEdgePropertyImpl(ModalType.MUST), dg);
 
         BDD bddOrNode = transformer.getBdds()[orNode.getVarNumber()];
         BDD expectedBDDOrNode = bddManager.readLogicZero();
@@ -123,7 +138,7 @@ class BDDTransformerTest {
     @Test
     void testEdgeTransformerMay() {
         Edge edge = new Edge(null, null, "b", EdgeType.MAY);
-        BDDTransformer transformer = new BDDTransformer(bddManager, edge, dg);
+        BDDTransformer transformer = new BDDTransformer(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MAY), dg);
 
         BDD bddOrNode = transformer.getBdds()[orNode.getVarNumber()];
         BDD expectedBDDOrNode = bddManager.readLogicZero();
@@ -160,8 +175,7 @@ class BDDTransformerTest {
 
     @Test
     void testOrBDDListOnes() {
-        Edge edge = new Edge(null, null, "b", EdgeType.MUST);
-        BDDTransformer edgeTransformer = new BDDTransformer(bddManager, edge, dg);
+        BDDTransformer edgeTransformer = new BDDTransformer(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);
 
         BDDTransformer oneTransformer = new BDDTransformer(bddManager);
         oneTransformer.setIsMust(true);
@@ -181,8 +195,7 @@ class BDDTransformerTest {
     @Test
     void testOrBDDListZeros() {
         Edge edge = new Edge(null, null, "b", EdgeType.MUST);
-        BDDTransformer edgeTransformer = new BDDTransformer(bddManager, edge, dg);
-
+        BDDTransformer edgeTransformer = new BDDTransformer(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);
         BDDTransformer oneTransformer = new BDDTransformer(bddManager);
         oneTransformer.setIsMust(true);
         BDD[] oneBDDs = new BDD[dg.getNumVariables()];
@@ -197,4 +210,5 @@ class BDDTransformerTest {
         BDD disjunction = edgeTransformer.orBddList(comps, diaNode1.getVarNumber());
         Assert.assertEquals(bddManager.ithVar(diaNode1.getVarNumberLeft()), disjunction);
     }
+
 }

@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2021 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.modelcheckers.m3c.formula;
 
 import java.util.ArrayList;
@@ -60,13 +75,14 @@ public class DependencyGraph {
         boolean isMax = currentBlock.isMaxBlock();
 
         /* Check if new equational block has to be created */
+        int newBlockNumber = blockNumber;
         if (node instanceof GfpNode && !isMax) {
-            blockNumber = blocks.size();
-            currentBlock = new EquationalBlock(true, blockNumber);
+            newBlockNumber = blocks.size();
+            currentBlock = new EquationalBlock(true, newBlockNumber);
             blocks.add(currentBlock);
         } else if (node instanceof LfpNode && isMax) {
-            blockNumber = blocks.size();
-            currentBlock = new EquationalBlock(false, blockNumber);
+            newBlockNumber = blocks.size();
+            currentBlock = new EquationalBlock(false, newBlockNumber);
             blocks.add(currentBlock);
         }
 
@@ -77,10 +93,10 @@ public class DependencyGraph {
 
         /* Recurse into subtrees */
         if (node.getLeftChild() != null) {
-            createEquationalBlocks(node.getLeftChild(), blockNumber);
+            createEquationalBlocks(node.getLeftChild(), newBlockNumber);
         }
         if (node.getRightChild() != null) {
-            createEquationalBlocks(node.getRightChild(), blockNumber);
+            createEquationalBlocks(node.getRightChild(), newBlockNumber);
         }
     }
 
@@ -118,23 +134,6 @@ public class DependencyGraph {
         }
         if (node.getRightChild() != null) {
             setVarNumbers(node.getRightChild(), numVars);
-        }
-    }
-
-    public void printEquationalBlocks() {
-        for (int blockIdx = 0; blockIdx < blocks.size(); blockIdx++) {
-            EquationalBlock block = blocks.get(blockIdx);
-            System.out.println("Block " + blockIdx + " / isMax: " + block.isMaxBlock());
-            for (FormulaNode node : block.getNodes()) {
-                System.out.println("x" + node.getVarNumber());
-                if (node.getLeftChild() != null) {
-                    System.out.println("lc: x" + node.getVarNumberLeft());
-                }
-                if (node.getRightChild() != null) {
-                    System.out.println("rc: x" + node.getVarNumberRight());
-                }
-                System.out.println();
-            }
         }
     }
 

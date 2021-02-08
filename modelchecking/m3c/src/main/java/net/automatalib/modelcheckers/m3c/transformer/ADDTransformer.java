@@ -1,3 +1,18 @@
+/* Copyright (C) 2013-2021 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.modelcheckers.m3c.transformer;
 
 import java.util.ArrayList;
@@ -9,16 +24,15 @@ import java.util.Set;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
-import net.automatalib.modelcheckers.m3c.cfps.Edge;
-import net.automatalib.modelcheckers.m3c.cfps.State;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.formula.DiamondNode;
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.ModalFormulaNode;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class ADDTransformer extends PropertyTransformer {
+public class ADDTransformer extends PropertyTransformer<ADDTransformer> {
 
     private final BooleanVectorLogicDDManager xddManager;
     private XDD<BooleanVector> add;
@@ -68,7 +82,10 @@ public class ADDTransformer extends PropertyTransformer {
     }
 
     /* Create the property transformer for an edge */
-    public ADDTransformer(BooleanVectorLogicDDManager xddManager, Edge edge, DependencyGraph dependGraph) {
+    public <L, TP extends ModalEdgeProperty> ADDTransformer(BooleanVectorLogicDDManager xddManager,
+                                                            L edgeLabel,
+                                                            TP edgeProperty,
+                                                            DependencyGraph dependGraph) {
         this.xddManager = xddManager;
         List<XDD<BooleanVector>> list = new ArrayList<>();
         for (FormulaNode node : dependGraph.getFormulaNodes()) {
@@ -76,7 +93,8 @@ public class ADDTransformer extends PropertyTransformer {
             XDD<BooleanVector> falseDD = xddManager.constant(new BooleanVector(terminal));
             if (node instanceof ModalFormulaNode) {
                 String action = ((ModalFormulaNode) node).getAction();
-                if (edge.labelMatches(action) && (!(node instanceof DiamondNode) || edge.isMust())) {
+                if (("".equals(action) || action.equals(edgeLabel.toString())) &&
+                    (!(node instanceof DiamondNode) || edgeProperty.isMust())) {
                     int xj = node.getVarNumberLeft();
                     terminal[node.getVarNumber()] = true;
                     XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(terminal));
@@ -98,10 +116,39 @@ public class ADDTransformer extends PropertyTransformer {
         }
     }
 
-    public ADDTransformer createUpdate(State state, List<ADDTransformer> compositions, EquationalBlock currentBlock) {
+    @Override
+    public Set<Integer> evaluate(boolean[] input) {
+        XDD<BooleanVector> resultLeaf = add.eval(input);
+        BooleanVector leafValue = resultLeaf.v();
+        boolean[] leafData = leafValue.data();
+        Set<Integer> satisfiedVars = new HashSet<>();
+        for (int i = 0; i < leafData.length; i++) {
+            if (leafValue.data()[i]) {
+                satisfiedVars.add(i);
+            }
+        }
+        return satisfiedVars;
+    }
+
+    @Override
+    public ADDTransformer compose(ADDTransformer other) {
+        ADDTransformer composition = new ADDTransformer(xddManager);
+        XDD<BooleanVector> otherAdd = other.getAdd();
+        XDD<BooleanVector> compAdd = otherAdd.monadicApply(arg -> {
+            boolean[] terminal = arg.data().clone();
+            return this.getAdd().eval(terminal).v();
+        });
+        composition.setAdd(compAdd);
+        return composition;
+    }
+
+    @Override
+    public <AP> ADDTransformer createUpdate(Set<AP> atomicPropositions,
+                                            List<ADDTransformer> compositions,
+                                            EquationalBlock currentBlock) {
         ADDTransformer updatedTransformer = new ADDTransformer(xddManager);
         XDD<BooleanVector> updatedADD = null;
-        DiamondOperation diamondOp = new DiamondOperation(state, currentBlock);
+        DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
         if (compositions.size() == 1) {
             ADDTransformer succ = compositions.get(0);
             updatedADD = succ.getAdd().apply(diamondOp, succ.getAdd());
@@ -121,34 +168,6 @@ public class ADDTransformer extends PropertyTransformer {
 
     public void setAdd(XDD<BooleanVector> add) {
         this.add = add;
-    }
-
-    @Override
-    public Set<Integer> evaluate(boolean[] input) {
-        XDD<BooleanVector> resultLeaf = add.eval(input);
-        BooleanVector leafValue = resultLeaf.v();
-        boolean[] leafData = leafValue.data();
-        Set<Integer> satisfiedVars = new HashSet<>();
-        for (int i = 0; i < leafData.length; i++) {
-            if (leafValue.data()[i]) {
-                satisfiedVars.add(i);
-            }
-        }
-        return satisfiedVars;
-    }
-
-    public ADDTransformer compose(PropertyTransformer other) {
-        if (!(other instanceof ADDTransformer)) {
-            throw new IllegalArgumentException("An ADDTransformer can only be composed with another ADDTransformer");
-        }
-        ADDTransformer composition = new ADDTransformer(xddManager);
-        XDD<BooleanVector> otherAdd = ((ADDTransformer) other).getAdd();
-        XDD<BooleanVector> compAdd = otherAdd.monadicApply(arg -> {
-            boolean[] terminal = arg.data().clone();
-            return this.getAdd().eval(terminal).v();
-        });
-        composition.setAdd(compAdd);
-        return composition;
     }
 
     @Override

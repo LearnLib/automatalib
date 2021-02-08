@@ -1,55 +1,36 @@
+/* Copyright (C) 2013-2021 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.automatalib.modelcheckers.m3c.solver;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.modelcheckers.m3c.cfps.CFPS;
-import net.automatalib.modelcheckers.m3c.cfps.Edge;
-import net.automatalib.modelcheckers.m3c.cfps.State;
-import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
-import net.automatalib.modelcheckers.m3c.transformer.PropertyTransformer;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class SolveBDD extends SolveDD<BDDTransformer> {
+public class SolveBDD<L, AP> extends SolveDD<BDDTransformer, L, AP> {
 
     private BDDManager bddManager;
 
-    public <L, AP> SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) {
+    public SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) {
         super(mcfps, formula, formulaIsCtl);
     }
 
-    public <L, AP> SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
+    public SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
         super(mcfps, formula, formulaIsCtl);
-    }
-
-    public void updateState(State state) {
-        initUpdate(state);
-        int stateNumber = state.getStateNumber();
-        BDDTransformer stateTransformer = (BDDTransformer) propTransformers[stateNumber];
-        PropertyTransformer updatedTransformer = getUpdatedPropertyTransformer(state, stateTransformer);
-        updateTransformerAndWorkSet(state, stateNumber, stateTransformer, updatedTransformer);
-    }
-
-    private PropertyTransformer getUpdatedPropertyTransformer(State state, BDDTransformer stateTransformer) {
-        List<BDDTransformer> compositions = createCompositions(state);
-        EquationalBlock currentBlock = dependGraph.getBlock(currentBlockIndex);
-        return stateTransformer.createUpdate(state, compositions, currentBlock);
-    }
-
-    public List<BDDTransformer> createCompositions(State state) {
-        List<BDDTransformer> compositions = new ArrayList<>();
-        for (Edge edge : state.getOutgoingEdges()) {
-            State targetState = cfps.getState(edge.getTarget().getStateNumber());
-            PropertyTransformer edgeTransformer = getEdgeTransformer(edge);
-            PropertyTransformer succTransformer = propTransformers[targetState.getStateNumber()];
-            BDDTransformer composition = (BDDTransformer) edgeTransformer.compose(succTransformer);
-            composition.setIsMust(edge.isMust());
-            compositions.add(composition);
-        }
-        return compositions;
     }
 
     @Override
@@ -58,19 +39,18 @@ public class SolveBDD extends SolveDD<BDDTransformer> {
     }
 
     @Override
-    protected PropertyTransformer createInitTransformerEnd() {
-        int numVariables = dependGraph.getNumVariables();
-        return new BDDTransformer(bddManager, numVariables);
+    protected BDDTransformer createInitTransformerEnd() {
+        return new BDDTransformer(bddManager, dependGraph.getNumVariables());
     }
 
     @Override
-    protected PropertyTransformer createInitState() {
+    protected BDDTransformer createInitState() {
         return new BDDTransformer(bddManager, dependGraph);
     }
 
     @Override
-    protected PropertyTransformer createInitTransformerEdge(Edge edge) {
-        return new BDDTransformer(bddManager, edge, dependGraph);
+    protected <TP extends ModalEdgeProperty> BDDTransformer createInitTransformerEdge(L edgeLabel, TP edgeProperty) {
+        return new BDDTransformer(bddManager, edgeLabel, edgeProperty, dependGraph);
     }
 
 }
