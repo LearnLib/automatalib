@@ -52,6 +52,20 @@ public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
     private final Iterator<Word<I>> wpIterator;
 
     /**
+     * Convenience-constructor for {@link #WpMethodTestsIterator(UniversalDeterministicAutomaton, Collection, int)} that
+     * selects {@code 0} as {@code maxDepth}.
+     *
+     * @param automaton
+     *         the automaton for which the testing sequences should be generated
+     * @param inputs
+     *         the input symbols that should be considered for test sequence generation
+     */
+    public WpMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+                                 Collection<? extends I> inputs) {
+        this(automaton, inputs, 0);
+    }
+
+    /**
      * Constructor.
      *
      * @param automaton

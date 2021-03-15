@@ -110,12 +110,12 @@ public abstract class AbstractVPDAlphabetTest<I, M extends VPDAlphabet<I>> {
     @Test
     public void testWellMatchednessChecks() {
         final M alphabet = getAlphabet();
-        final I c1 = callSymbols.get(0);
-        final I c2 = callSymbols.get(1);
-        final I i1 = internalSymbols.get(0);
-        final I i2 = internalSymbols.get(1);
-        final I r1 = returnSymbols.get(0);
-        final I r2 = returnSymbols.get(1);
+        final I c1 = getNthElementIfPossible(callSymbols, 0);
+        final I c2 = getNthElementIfPossible(callSymbols, 1);
+        final I i1 = getNthElementIfPossible(internalSymbols, 0);
+        final I i2 = getNthElementIfPossible(internalSymbols, 1);
+        final I r1 = getNthElementIfPossible(returnSymbols, 0);
+        final I r2 = getNthElementIfPossible(returnSymbols, 1);
 
         final Word<I> w1 = Word.fromSymbols(c1, c2, i1, i1, i2, r1, i2, c2, r2, r2);
 
@@ -143,5 +143,10 @@ public abstract class AbstractVPDAlphabetTest<I, M extends VPDAlphabet<I>> {
         Assert.assertEquals(alphabet.callReturnBalance(w3), -1);
         Assert.assertEquals(alphabet.longestWellMatchedPrefix(w3), w3.prefix(5));
         Assert.assertEquals(alphabet.longestWellMatchedSuffix(w3), w3.suffix(0));
+    }
+
+    private I getNthElementIfPossible(List<I> alphabet, int idx) {
+        Assert.assertFalse(alphabet.isEmpty());
+        return alphabet.get(Math.min(alphabet.size() - 1, idx));
     }
 }

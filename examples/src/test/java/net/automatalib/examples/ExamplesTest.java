@@ -34,6 +34,7 @@ import net.automatalib.examples.incremental.IncrementalMealyExample;
 import net.automatalib.examples.incremental.IncrementalPCDFAExample;
 import net.automatalib.examples.modelchecking.LTSminExample;
 import net.automatalib.examples.modelchecking.LTSminMonitorExample;
+import net.automatalib.examples.spa.PalindromeExample;
 import net.automatalib.examples.vpda.OneSEVPAExample;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
@@ -122,6 +123,12 @@ public class ExamplesTest {
         }
 
         LTSminMonitorExample.main(new String[0]);
+    }
+
+    @Test
+    public void testSPAPalindromeExample() throws InvocationTargetException, InterruptedException {
+        checkJVMCompatibility();
+        SwingUtilities.invokeAndWait(() -> PalindromeExample.main(new String[0]));
     }
 
     @Test

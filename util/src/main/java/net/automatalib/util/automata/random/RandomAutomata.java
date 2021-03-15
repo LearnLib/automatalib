@@ -17,19 +17,25 @@ package net.automatalib.util.automata.random;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Random;
 
+import com.google.common.collect.Maps;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.spa.StackSPA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.vpda.DefaultOneSEVPA;
 import net.automatalib.automata.vpda.Location;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.fsa.DFAs;
+import net.automatalib.util.automata.spa.SPAUtil;
 import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.SPAAlphabet;
 import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -145,6 +151,40 @@ public class RandomAutomata {
         if (minimize) {
             return OneSEVPAMinimizer.minimize(result, alphabet);
         }
+
+        return result;
+    }
+
+    public static <I> SPA<?, I> randomSPA(Random random, SPAAlphabet<I> alphabet, int procedureSize) {
+        return randomSPA(random, alphabet, procedureSize, true);
+    }
+
+    public static <I> SPA<?, I> randomSPA(Random random, SPAAlphabet<I> alphabet, int procedureSize, boolean minimize) {
+
+        final Map<I, DFA<?, I>> dfas = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+        final Alphabet<I> proceduralAlphabet = alphabet.getProceduralAlphabet();
+
+        for (final I procedure : alphabet.getCallAlphabet()) {
+            final DFA<?, I> dfa = RandomAutomata.randomDFA(random, procedureSize, proceduralAlphabet, minimize);
+            dfas.put(procedure, dfa);
+        }
+
+        return new StackSPA<>(alphabet, alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())), dfas);
+    }
+
+    public static <I> SPA<?, I> randomRedundancyFreeSPA(Random random, SPAAlphabet<I> alphabet, int procedureSize) {
+        return randomRedundancyFreeSPA(random, alphabet, procedureSize, true);
+    }
+
+    public static <I> SPA<?, I> randomRedundancyFreeSPA(Random random,
+                                                        SPAAlphabet<I> alphabet,
+                                                        int procedureSize,
+                                                        boolean minimize) {
+        SPA<?, I> result;
+
+        do {
+            result = randomSPA(random, alphabet, procedureSize, minimize);
+        } while (!SPAUtil.isRedundancyFree(result));
 
         return result;
     }

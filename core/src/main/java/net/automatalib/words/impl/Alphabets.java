@@ -15,6 +15,7 @@
  */
 package net.automatalib.words.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -73,6 +74,17 @@ public final class Alphabets {
             return (Alphabet<I>) coll;
         }
         return new MapAlphabet<>(coll);
+    }
+
+    @SafeVarargs
+    public static <I> Alphabet<I> fromCollections(Collection<? extends I>... colls) {
+        final List<I> symbols = new ArrayList<>();
+
+        for (Collection<? extends I> coll : colls) {
+            symbols.addAll(coll);
+        }
+
+        return new MapAlphabet<>(symbols);
     }
 
     /**
