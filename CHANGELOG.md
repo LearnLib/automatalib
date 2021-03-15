@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Added modal transition systems (MTSs), modal contracts (MCs) and Membership-MCs (MMCs).
 * Added `SubsequentialTransducer` interface and implementations/utilities.
+* Added support for systems of procedural automata (SPAs) as well as related concepts (equivalence, etc.).
 
 ### Changed
 

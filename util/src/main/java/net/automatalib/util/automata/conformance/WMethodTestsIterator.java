@@ -48,6 +48,20 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<List<I>,
     private final WordBuilder<I> wordBuilder = new WordBuilder<>();
 
     /**
+     * Convenience-constructor for {@link #WMethodTestsIterator(UniversalDeterministicAutomaton, Collection, int)} that
+     * selects {@code 0} as {@code maxDepth}.
+     *
+     * @param automaton
+     *         the automaton for which the testing sequences should be generated
+     * @param inputs
+     *         the input symbols that should be considered for test sequence generation
+     */
+    public WMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+                                Collection<? extends I> inputs) {
+        this(automaton, inputs, 0);
+    }
+
+    /**
      * Constructor.
      *
      * @param automaton
