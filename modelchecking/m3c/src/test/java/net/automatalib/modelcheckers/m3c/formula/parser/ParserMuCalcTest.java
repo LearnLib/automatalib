@@ -55,6 +55,29 @@ public class ParserMuCalcTest {
                      new GfpNode<>("ZY", new OrNode<>(new VariableNode<>("ZY"), new FalseNode<>())));
     }
 
+    @Test
+    public void testNestedFixPoints() {
+        assertEquals("nu X. ([]X && mu Y. (<>Y || (\"AP\" && [] false)))",
+                     new GfpNode<>("X",
+                                   new AndNode<>(new BoxNode<>(null, new VariableNode<>("X")),
+                                                 new LfpNode<>("Y",
+                                                               new OrNode<>(new DiamondNode<>(null,
+                                                                                              new VariableNode<>("Y")),
+                                                                            new AndNode<>(new AtomicNode<>("AP"),
+                                                                                          new BoxNode<>(null,
+                                                                                                        new FalseNode<>())))))));
+        assertEquals("nu X. ([]X && (<S>true -> mu Y. (<S>Y || <R>true)))",
+                     new GfpNode<>("X",
+                                   new AndNode<>(new BoxNode<>(null, new VariableNode<>("X")),
+                                                 new OrNode<>(new NotNode<>(new DiamondNode<>("S", new TrueNode<>())),
+                                                              new LfpNode<>("Y",
+                                                                            new OrNode<>(new DiamondNode<>("S",
+                                                                                                           new VariableNode<>(
+                                                                                                                   "Y")),
+                                                                                         new DiamondNode<>("R",
+                                                                                                           new TrueNode<>())))))));
+    }
+
     private void assertEquals(String muCalcFormula, FormulaNode<String, String> expectedAST) {
         try {
             FormulaNode<String, String> actualAST = ParserMuCalc.parse(muCalcFormula);
