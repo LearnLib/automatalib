@@ -23,8 +23,8 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.incremental.ConflictException;
@@ -73,7 +73,7 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
             if (edge == null) {
                 curr = insertNode(curr, sym, out);
             } else {
-                if (!Objects.equal(out, edge.getOutput())) {
+                if (!Objects.equals(out, edge.getOutput())) {
                     throw new ConflictException();
                 }
                 curr = edge.getTarget();
@@ -127,7 +127,7 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
             if (omitUndefined && trans == null) {
                 continue;
             }
-            if (trans == null || !Objects.equal(target.getTransitionOutput(trans), edge.getOutput())) {
+            if (trans == null || !Objects.equals(target.getTransitionOutput(trans), edge.getOutput())) {
 
                 WordBuilder<I> wb = new WordBuilder<>(dfsStack.size());
                 wb.append(input);
