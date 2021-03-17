@@ -23,8 +23,8 @@ import net.automatalib.modelcheckers.m3c.formula.visitor.NNFVisitor;
 
 public abstract class FormulaNode<L, AP> {
 
-    protected FormulaNode<L, AP> leftChild;
-    protected FormulaNode<L, AP> rightChild;
+    private final FormulaNode<L, AP> leftChild;
+    private final FormulaNode<L, AP> rightChild;
     private Boolean belongsToMaxBlock;
     private int blockNumber;
     private int varNumber;
@@ -46,16 +46,8 @@ public abstract class FormulaNode<L, AP> {
         return leftChild;
     }
 
-    public void setLeftChild(FormulaNode<L, AP> leftChild) {
-        this.leftChild = leftChild;
-    }
-
     public FormulaNode<L, AP> getRightChild() {
         return rightChild;
-    }
-
-    public void setRightChild(FormulaNode<L, AP> rightChild) {
-        this.rightChild = rightChild;
     }
 
     public abstract <T> T accept(FormulaNodeVisitor<T, L, AP> visitor);
