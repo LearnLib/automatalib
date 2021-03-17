@@ -27,62 +27,62 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
-public class DependencyGraph {
+public class DependencyGraph<L, AP> {
 
     /* All formulaNodes except FixedPoint- and VariableNode */
-    private final List<FormulaNode> formulaNodes;
+    private final List<FormulaNode<L, AP>> formulaNodes;
 
     /* FormulaNodes divided into equational blocks */
-    private final List<EquationalBlock> blocks;
+    private final List<EquationalBlock<L, AP>> blocks;
 
     /* nu X1 -> fixedPointVarMap.get("X1") returns the node associated to nu X1 */
-    private final Map<String, FormulaNode> fixedPointVarMap;
+    private final Map<String, FormulaNode<L, AP>> fixedPointVarMap;
 
     private int numVars;
 
-    public DependencyGraph(FormulaNode root) {
+    public DependencyGraph(FormulaNode<L, AP> root) {
         this.formulaNodes = new ArrayList<>();
         this.blocks = new ArrayList<>();
         this.fixedPointVarMap = new HashMap<>();
-        FormulaNode rootNNF = root.toNNF();
+        FormulaNode<L, AP> rootNNF = root.toNNF();
         setVarNumbers(rootNNF);
         createEquationalBlocks(rootNNF);
     }
 
     private void sortBlocks() {
-        for (EquationalBlock block : blocks) {
+        for (EquationalBlock<L, AP> block : blocks) {
             //TODO: Test if this is always enough
             Collections.reverse(block.getNodes());
         }
     }
 
-    private void createEquationalBlocks(FormulaNode root) {
+    private void createEquationalBlocks(FormulaNode<L, AP> root) {
         int blockNumber = 0;
         boolean isMax = true;
         //TODO: What do we do when root is not a FixedPointNode? -> Atm. use maxBlock?
         if (root instanceof LfpNode) {
             isMax = false;
         }
-        EquationalBlock block = new EquationalBlock(isMax, 0);
+        EquationalBlock<L, AP> block = new EquationalBlock<>(isMax, 0);
         blocks.add(block);
         createEquationalBlocks(root, blockNumber);
         sortBlocks();
     }
 
-    private void createEquationalBlocks(FormulaNode node, int blockNumber) {
+    private void createEquationalBlocks(FormulaNode<L, AP> node, int blockNumber) {
         //TODO: Test this
-        EquationalBlock currentBlock = blocks.get(blockNumber);
+        EquationalBlock<L, AP> currentBlock = blocks.get(blockNumber);
         boolean isMax = currentBlock.isMaxBlock();
 
         /* Check if new equational block has to be created */
         int newBlockNumber = blockNumber;
         if (node instanceof GfpNode && !isMax) {
             newBlockNumber = blocks.size();
-            currentBlock = new EquationalBlock(true, newBlockNumber);
+            currentBlock = new EquationalBlock<>(true, newBlockNumber);
             blocks.add(currentBlock);
         } else if (node instanceof LfpNode && isMax) {
             newBlockNumber = blocks.size();
-            currentBlock = new EquationalBlock(false, newBlockNumber);
+            currentBlock = new EquationalBlock<>(false, newBlockNumber);
             blocks.add(currentBlock);
         }
 
@@ -100,23 +100,23 @@ public class DependencyGraph {
         }
     }
 
-    private void setVarNumbers(FormulaNode root) {
+    private void setVarNumbers(FormulaNode<L, AP> root) {
         AtomicInteger numVarsAtomic = new AtomicInteger(0);
         setVarNumbers(root, numVarsAtomic);
         this.numVars = numVarsAtomic.get();
     }
 
-    private void setVarNumbers(FormulaNode node, AtomicInteger numVars) {
+    private void setVarNumbers(FormulaNode<L, AP> node, AtomicInteger numVars) {
         /* Fill fixedPointVarMap */
         if (node instanceof FixedPointFormulaNode) {
-            fixedPointVarMap.put(((FixedPointFormulaNode) node).getVariable(), node);
+            fixedPointVarMap.put(((FixedPointFormulaNode<L, AP>) node).getVariable(), node);
         }
 
         /* Set node's variableNumber */
         if (node instanceof VariableNode) {
             /* VariableNode has same variableNumber as the fixed point it references */
-            String refVariable = ((VariableNode) node).getVariable();
-            FormulaNode refNode = fixedPointVarMap.get(refVariable);
+            String refVariable = ((VariableNode<L, AP>) node).getVariable();
+            FormulaNode<L, AP> refNode = fixedPointVarMap.get(refVariable);
             node.setVarNumber(refNode.getVarNumber());
         } else {
             node.setVarNumber(numVars.get());
@@ -137,7 +137,7 @@ public class DependencyGraph {
         }
     }
 
-    public EquationalBlock getBlock(int index) {
+    public EquationalBlock<L, AP> getBlock(int index) {
         return blocks.get(index);
     }
 
@@ -145,15 +145,15 @@ public class DependencyGraph {
         return numVars;
     }
 
-    public List<FormulaNode> getFormulaNodes() {
+    public List<FormulaNode<L, AP>> getFormulaNodes() {
         return formulaNodes;
     }
 
-    public List<EquationalBlock> getBlocks() {
+    public List<EquationalBlock<L, AP>> getBlocks() {
         return blocks;
     }
 
-    public Map<String, FormulaNode> getFixedPointVarMap() {
+    public Map<String, FormulaNode<L, AP>> getFixedPointVarMap() {
         return fixedPointVarMap;
     }
 }

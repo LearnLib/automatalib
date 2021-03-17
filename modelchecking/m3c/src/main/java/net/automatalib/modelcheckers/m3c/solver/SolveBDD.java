@@ -19,19 +19,16 @@ import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParserCTL;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class SolveBDD<L, AP> extends SolveDD<BDDTransformer, L, AP> {
+public class SolveBDD<L, AP> extends SolveDD<BDDTransformer<L, AP>, L, AP> {
 
     private BDDManager bddManager;
 
-    public SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl)
-            throws ParseException {
-        super(mcfps, formula, formulaIsCtl);
-    }
-
-    public SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
+    SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode<L, AP> formula, boolean formulaIsCtl) {
         super(mcfps, formula, formulaIsCtl);
     }
 
@@ -41,18 +38,31 @@ public class SolveBDD<L, AP> extends SolveDD<BDDTransformer, L, AP> {
     }
 
     @Override
-    protected BDDTransformer createInitTransformerEnd() {
-        return new BDDTransformer(bddManager, dependGraph.getNumVariables());
+    protected BDDTransformer<L, AP> createInitTransformerEnd() {
+        return new BDDTransformer<>(bddManager, dependGraph.getNumVariables());
     }
 
     @Override
-    protected BDDTransformer createInitState() {
-        return new BDDTransformer(bddManager, dependGraph);
+    protected BDDTransformer<L, AP> createInitState() {
+        return new BDDTransformer<>(bddManager, dependGraph);
     }
 
     @Override
-    protected <TP extends ModalEdgeProperty> BDDTransformer createInitTransformerEdge(L edgeLabel, TP edgeProperty) {
-        return new BDDTransformer(bddManager, edgeLabel, edgeProperty, dependGraph);
+    protected <TP extends ModalEdgeProperty> BDDTransformer<L, AP> createInitTransformerEdge(L edgeLabel, TP edgeProperty) {
+        return new BDDTransformer<>(bddManager, edgeLabel, edgeProperty, dependGraph);
     }
 
+    public static <L, AP> SolveBDD<L, AP> solver(ModalContextFreeProcessSystem<L, AP> mcfps,
+                                                 FormulaNode<L, AP> formula,
+                                                 boolean formulaIsCtl) throws ParseException {
+        return new SolveBDD<>(mcfps, formula, formulaIsCtl);
+    }
+
+    public static SolveBDD<String, String> solver(ModalContextFreeProcessSystem<String, String> mcfps,
+                                                  String formula,
+                                                  boolean formulaIsCtl) throws ParseException {
+        return new SolveBDD<>(mcfps,
+                              formulaIsCtl ? ParserCTL.parse(formula) : ParserMuCalc.parse(formula),
+                              formulaIsCtl);
+    }
 }

@@ -17,20 +17,20 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import java.util.Objects;
 
-public abstract class ModalFormulaNode extends UnaryFormulaNode {
+public abstract class ModalFormulaNode<L, AP> extends UnaryFormulaNode<L, AP> {
 
-    private final String action;
+    private final L action;
 
-    public ModalFormulaNode(String action) {
+    public ModalFormulaNode(L action) {
         this.action = action;
     }
 
-    public ModalFormulaNode(String action, FormulaNode node) {
+    public ModalFormulaNode(L action, FormulaNode<L, AP> node) {
         super(node);
         this.action = action;
     }
 
-    public String getAction() {
+    public L getAction() {
         return action;
     }
 
@@ -53,7 +53,7 @@ public abstract class ModalFormulaNode extends UnaryFormulaNode {
             return false;
         }
 
-        ModalFormulaNode that = (ModalFormulaNode) o;
+        ModalFormulaNode<?, ?> that = (ModalFormulaNode<?, ?>) o;
 
         return Objects.equals(action, that.action);
     }

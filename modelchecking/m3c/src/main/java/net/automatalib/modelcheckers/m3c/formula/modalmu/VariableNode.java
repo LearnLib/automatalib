@@ -20,7 +20,7 @@ import java.util.Objects;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class VariableNode extends FormulaNode {
+public class VariableNode<L, AP> extends FormulaNode<L, AP> {
 
     private final String variable;
 
@@ -33,7 +33,7 @@ public class VariableNode extends FormulaNode {
     }
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 
@@ -56,7 +56,7 @@ public class VariableNode extends FormulaNode {
             return false;
         }
 
-        VariableNode that = (VariableNode) o;
+        VariableNode<?, ?> that = (VariableNode<?, ?>) o;
 
         return Objects.equals(variable, that.variable);
     }

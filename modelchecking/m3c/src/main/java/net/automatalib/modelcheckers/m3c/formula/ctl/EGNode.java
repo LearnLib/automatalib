@@ -19,14 +19,14 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.UnaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class EGNode extends UnaryFormulaNode {
+public class EGNode<L, AP> extends UnaryFormulaNode<L, AP> {
 
-    public EGNode(FormulaNode node) {
+    public EGNode(FormulaNode<L, AP> node) {
         super(node);
     }
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 

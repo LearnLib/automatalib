@@ -15,11 +15,11 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
-public abstract class UnaryFormulaNode extends FormulaNode {
+public abstract class UnaryFormulaNode<L, AP> extends FormulaNode<L, AP> {
 
     public UnaryFormulaNode() {}
 
-    public UnaryFormulaNode(FormulaNode childNode) {
+    public UnaryFormulaNode(FormulaNode<L, AP> childNode) {
         super(childNode);
     }
 

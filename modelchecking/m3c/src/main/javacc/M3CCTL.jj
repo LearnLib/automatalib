@@ -28,7 +28,15 @@ package net.automatalib.modelcheckers.m3c.formula.parser;
 import net.automatalib.modelcheckers.m3c.formula.*;
 import net.automatalib.modelcheckers.m3c.formula.ctl.*;
 
-class InternalM3CParserCTL {}
+import java.util.Set;
+import java.util.function.Function;
+
+class InternalM3CParserCTL<L, AP> {
+
+	private Function<String, L> labelParser;
+	private Function<String, Set<AP>> apParser;
+
+}
 
 PARSER_END(InternalM3CParserCTL)
 
@@ -49,7 +57,7 @@ TOKEN [IGNORE_CASE]:
 TOKEN:
 {
 // atoms
-    < LPAREN: "(" >
+	< LPAREN: "(" >
 |	< RPAREN: ")" >
 |   < LBRACKET: "[" >
 |   < RBRACKET: "]" >
@@ -75,124 +83,134 @@ TOKEN:
 |   < QUOTED_ID: ("\"" <ID> "\"") |  ("'" <ID> "'") >
 }
 
-FormulaNode formula():
+FormulaNode<L, AP> parse(Function<String, L> labelParser, Function<String, Set<AP>> apParser):
 {
- FormulaNode node;
+	this.labelParser = labelParser;
+	this.apParser = apParser;
+	FormulaNode<L, AP> node;
+}
+{
+	node=formula() {return node;}
+}
+
+private FormulaNode<L, AP> formula():
+{
+ FormulaNode<L, AP> node;
 }
 {
 	(node=untilFormula()
-|   node=andFormula()) {return node;}
+|	node=andFormula()) {return node;}
 }
 
-FormulaNode untilFormula():
+private FormulaNode<L, AP> untilFormula():
 {
- FormulaNode l, r;
- boolean isAll = false, isStrongUntil = false;
+	FormulaNode<L, AP> l, r;
+	boolean isAll = false, isStrongUntil = false;
 }
 {
 	(<ALL> {isAll=true;} | <EXISTS>) <LPAREN> l=formula() (<UNTIL> {isStrongUntil=true;} | <WUNTIL>) r=formula() <RPAREN>
 	{
 		if(isAll) {
-		    if(isStrongUntil) {
-		        return new AUNode(l, r);
+			if(isStrongUntil) {
+				return new AUNode<L, AP>(l, r);
 			}
-		    return new AWUNode(l, r);
+			return new AWUNode<L, AP>(l, r);
 		}
 		if(isStrongUntil) {
-		    return new EUNode(l, r);
+		    return new EUNode<L, AP>(l, r);
 		}
-		return new EWUNode(l, r);
+		return new EWUNode<L, AP>(l, r);
 	}
 }
 
-FormulaNode andFormula():
+private FormulaNode<L, AP> andFormula():
 {
- 	FormulaNode l;
-	FormulaNode r = null;}
+	FormulaNode<L, AP> l;
+	FormulaNode<L, AP> r = null;}
 {
-    l=orFormula() (<AND> r=andFormula())?
-    {
+	l=orFormula() (<AND> r=andFormula())?
+	{
+		if(r == null) {
+			return l;
+		}
+		return new AndNode<L, AP>(l, r);
+	}
+}
+
+private FormulaNode<L, AP> orFormula():
+{
+	FormulaNode<L, AP> l;
+	FormulaNode<L, AP> r = null;
+}
+{
+	l=implFormula() (<OR> r=orFormula())?
+	{
 		if(r == null) {
 		    return l;
 		}
-		return new AndNode(l, r);
+		return new OrNode<L, AP>(l, r);
 	}
 }
 
-FormulaNode orFormula():
+private FormulaNode<L, AP> implFormula():
 {
-	FormulaNode l;
-	FormulaNode r = null;
+	FormulaNode<L, AP> l;
+	FormulaNode<L, AP> r = null;
 }
 {
-    l=implFormula() (<OR> r=orFormula())?
-    {
+	l=equivFormula() (<IMPLICATION> r=implFormula())?
+	{
 		if(r == null) {
 		    return l;
 		}
-		return new OrNode(l, r);
+		return new OrNode<L, AP>(new NotNode<L, AP>(l), r);
 	}
 }
 
-FormulaNode implFormula():
+private FormulaNode<L, AP> equivFormula():
 {
- 	FormulaNode l;
-  	FormulaNode r = null;
+	FormulaNode<L, AP> l;
+	FormulaNode<L, AP> r = null;
 }
 {
-    l=equivFormula() (<IMPLICATION> r=implFormula())?
-    {
+	l=unary() (<EQUIVALENCE> r=equivFormula())?
+	{
 		if(r == null) {
 		    return l;
 		}
-		return new OrNode(new NotNode(l), r);
+		return new AndNode<L, AP>(new OrNode<L, AP>(new NotNode<L, AP>(l), r), new OrNode<L, AP>(new NotNode<L, AP>(r), l));
 	}
 }
 
-FormulaNode equivFormula():
+private FormulaNode<L, AP> unary():
 {
- 	FormulaNode l;
- 	FormulaNode r = null;
+	FormulaNode<L, AP> child;
+	Token action = null;
 }
 {
-    l=unary() (<EQUIVALENCE> r=equivFormula())?
-    {
-		if(r == null) {
-		    return l;
-		}
-		return new AndNode(new OrNode(new NotNode(l), r), new OrNode(new NotNode(r), l));
-	}
-}
-
-FormulaNode unary():
-{
- 	FormulaNode child;
- 	Token action = null;
-}
-{
-    <NEGATION> child=unary() {return new NotNode(child);}
-|	<AF> child=unary() {return new AFNode(child);}
-|	<AG> child=unary() {return new AGNode(child);}
-|	<EF> child=unary() {return new EFNode(child);}
-|   <EG> child=unary() {return new EGNode(child);}
-|   <LABRACKET> (action=<ID>)? <RABRACKET> child=unary() {return new DiamondNode(action==null ? "" : action.toString(), child);}
-|   <LBRACKET> (action=<ID>)? <RBRACKET> child=unary() {return new BoxNode(action==null ? "" : action.toString(), child);}
+	<NEGATION> child=unary() {return new NotNode<L, AP>(child);}
+|	<AF> child=unary() {return new AFNode<L, AP>(child);}
+|	<AG> child=unary() {return new AGNode<L, AP>(child);}
+|	<EF> child=unary() {return new EFNode<L, AP>(child);}
+|	<EG> child=unary() {return new EGNode<L, AP>(child);}
+|	<LABRACKET> (action=<ID>)? <RABRACKET> child=unary() {return new DiamondNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
+|	<LBRACKET> (action=<ID>)? <RBRACKET> child=unary() {return new BoxNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
 |	child=element() {return child;}
 }
 
-FormulaNode element():
+private FormulaNode<L, AP> element():
 {
- 	FormulaNode node;
- 	Token ap;
+	FormulaNode<L, AP> node;
+	Token ap;
 }
 {
-    ap=<QUOTED_ID>
-    {
+	ap=<QUOTED_ID>
+	{
 		String apString = ap.toString();
 		String apWithoutQuotMarks = apString.substring(1, apString.length()-1);
-		return new AtomicNode(apWithoutQuotMarks);
+		return new AtomicNode<L, AP>(this.apParser.apply(apWithoutQuotMarks));
 	}
-|	<TRUE> {return new TrueNode();}
-|	<FALSE> {return new FalseNode();}
+|	<TRUE> {return new TrueNode<L, AP>();}
+|	<FALSE> {return new FalseNode<L, AP>();}
 |	<LPAREN> node=formula() <RPAREN> {return node;}
 }

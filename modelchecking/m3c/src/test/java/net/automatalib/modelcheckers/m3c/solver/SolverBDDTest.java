@@ -19,12 +19,13 @@ import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
 
-public class SolverBDDTest extends SolverTest<BDDTransformer> {
+public class SolverBDDTest extends SolverTest<BDDTransformer<String, String>> {
 
-    public SolveDD<BDDTransformer, Character, String> getSolver(ModalContextFreeProcessSystem<Character, String> mcfps,
-                                                                String formula,
-                                                                boolean formulaIsCtl) throws ParseException {
-        return new SolveBDD<>(mcfps, formula, formulaIsCtl);
+    public SolveDD<BDDTransformer<String, String>, String, String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps,
+                                                                             String formula,
+                                                                             boolean formulaIsCtl)
+            throws ParseException {
+        return SolveBDD.solver(mcfps, formula, formulaIsCtl);
     }
 
 }

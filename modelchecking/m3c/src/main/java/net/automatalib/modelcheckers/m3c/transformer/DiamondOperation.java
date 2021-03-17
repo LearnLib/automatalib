@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelcheckers.m3c.transformer;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.BinaryOperator;
 
@@ -32,10 +33,10 @@ import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 
 public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
 
-    private final EquationalBlock block;
+    private final EquationalBlock<?, AP> block;
     private final Set<AP> atomicPropositions;
 
-    public DiamondOperation(Set<AP> atomicPropositions, EquationalBlock block) {
+    public DiamondOperation(Set<AP> atomicPropositions, EquationalBlock<?, AP> block) {
         this.atomicPropositions = atomicPropositions;
         this.block = block;
     }
@@ -43,7 +44,7 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
     @Override
     public BooleanVector apply(BooleanVector left, BooleanVector right) {
         boolean[] result = left.data().clone();
-        for (FormulaNode node : block.getNodes()) {
+        for (FormulaNode<?, AP> node : block.getNodes()) {
             int currentVar = node.getVarNumber();
             if (node instanceof BoxNode) {
                 result[currentVar] = result[currentVar] && right.data()[currentVar];
@@ -64,10 +65,10 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
             } else if (node instanceof NotNode) {
                 result[currentVar] = !result[node.getVarNumberLeft()];
             } else if (node instanceof AtomicNode) {
-                String prop = ((AtomicNode) node).getProposition();
+                Set<AP> prop = ((AtomicNode<?, AP>) node).getPropositions();
                 boolean satisfiesAtomicPropositions = false;
                 for (AP ap : atomicPropositions) {
-                    if (ap.toString().equals(prop)) {
+                    if (Objects.equals(ap, prop)) {
                         satisfiesAtomicPropositions = true;
                         break;
                     }

@@ -21,10 +21,10 @@ import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeToString;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 import net.automatalib.modelcheckers.m3c.formula.visitor.NNFVisitor;
 
-public abstract class FormulaNode {
+public abstract class FormulaNode<L, AP> {
 
-    protected FormulaNode leftChild;
-    protected FormulaNode rightChild;
+    protected FormulaNode<L, AP> leftChild;
+    protected FormulaNode<L, AP> rightChild;
     private Boolean belongsToMaxBlock;
     private int blockNumber;
     private int varNumber;
@@ -33,35 +33,35 @@ public abstract class FormulaNode {
         this(null);
     }
 
-    public FormulaNode(FormulaNode leftChild) {
+    public FormulaNode(FormulaNode<L, AP> leftChild) {
         this(leftChild, null);
     }
 
-    public FormulaNode(FormulaNode leftChild, FormulaNode rightChild) {
+    public FormulaNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
         this.leftChild = leftChild;
         this.rightChild = rightChild;
     }
 
-    public FormulaNode getLeftChild() {
+    public FormulaNode<L, AP> getLeftChild() {
         return leftChild;
     }
 
-    public void setLeftChild(FormulaNode leftChild) {
+    public void setLeftChild(FormulaNode<L, AP> leftChild) {
         this.leftChild = leftChild;
     }
 
-    public FormulaNode getRightChild() {
+    public FormulaNode<L, AP> getRightChild() {
         return rightChild;
     }
 
-    public void setRightChild(FormulaNode rightChild) {
+    public void setRightChild(FormulaNode<L, AP> rightChild) {
         this.rightChild = rightChild;
     }
 
-    public abstract <T> T accept(FormulaNodeVisitor<T> visitor);
+    public abstract <T> T accept(FormulaNodeVisitor<T, L, AP> visitor);
 
-    public FormulaNode toNNF() {
-        return new NNFVisitor().transformToNNF(this);
+    public FormulaNode<L, AP> toNNF() {
+        return new NNFVisitor<L, AP>().transformToNNF(this);
     }
 
     public Boolean isBelongsToMaxBlock() {
@@ -112,13 +112,13 @@ public abstract class FormulaNode {
             return false;
         }
 
-        FormulaNode that = (FormulaNode) o;
+        FormulaNode<?, ?> that = (FormulaNode<?, ?>) o;
 
         return Objects.equals(leftChild, that.leftChild) && Objects.equals(rightChild, that.rightChild);
     }
 
     @Override
     public String toString() {
-        return new FormulaNodeToString().visit(this);
+        return new FormulaNodeToString<L, AP>().visit(this);
     }
 }

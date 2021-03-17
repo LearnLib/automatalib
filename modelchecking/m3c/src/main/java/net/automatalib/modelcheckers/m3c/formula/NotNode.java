@@ -17,14 +17,14 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class NotNode extends UnaryFormulaNode {
+public class NotNode<L, AP> extends UnaryFormulaNode<L, AP> {
 
-    public NotNode(FormulaNode node) {
+    public NotNode(FormulaNode<L, AP> node) {
         super(node);
     }
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 

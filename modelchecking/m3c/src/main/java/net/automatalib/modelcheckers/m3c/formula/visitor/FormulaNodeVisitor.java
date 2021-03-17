@@ -36,48 +36,48 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
-public abstract class FormulaNodeVisitor<T> {
+public abstract class FormulaNodeVisitor<T, L, AP> {
 
-    public T visit(FormulaNode node) {
+    public T visit(FormulaNode<L, AP> node) {
         return node.accept(this);
     }
 
-    public abstract T visit(AFNode node);
+    public abstract T visit(AFNode<L, AP> node);
 
-    public abstract T visit(AGNode node);
+    public abstract T visit(AGNode<L, AP> node);
 
-    public abstract T visit(AUNode node);
+    public abstract T visit(AUNode<L, AP> node);
 
-    public abstract T visit(AWUNode node);
+    public abstract T visit(AWUNode<L, AP> node);
 
-    public abstract T visit(EFNode node);
+    public abstract T visit(EFNode<L, AP> node);
 
-    public abstract T visit(EGNode node);
+    public abstract T visit(EGNode<L, AP> node);
 
-    public abstract T visit(EUNode node);
+    public abstract T visit(EUNode<L, AP> node);
 
-    public abstract T visit(EWUNode node);
+    public abstract T visit(EWUNode<L, AP> node);
 
-    public abstract T visit(AndNode node);
+    public abstract T visit(AndNode<L, AP> node);
 
-    public abstract T visit(AtomicNode node);
+    public abstract T visit(AtomicNode<L, AP> node);
 
-    public abstract T visit(BoxNode node);
+    public abstract T visit(BoxNode<L, AP> node);
 
-    public abstract T visit(DiamondNode node);
+    public abstract T visit(DiamondNode<L, AP> node);
 
-    public abstract T visit(FalseNode node);
+    public abstract T visit(FalseNode<L, AP> node);
 
-    public abstract T visit(NotNode node);
+    public abstract T visit(NotNode<L, AP> node);
 
-    public abstract T visit(OrNode node);
+    public abstract T visit(OrNode<L, AP> node);
 
-    public abstract T visit(TrueNode node);
+    public abstract T visit(TrueNode<L, AP> node);
 
-    public abstract T visit(GfpNode node);
+    public abstract T visit(GfpNode<L, AP> node);
 
-    public abstract T visit(LfpNode node);
+    public abstract T visit(LfpNode<L, AP> node);
 
-    public abstract T visit(VariableNode node);
+    public abstract T visit(VariableNode<L, AP> node);
 
 }

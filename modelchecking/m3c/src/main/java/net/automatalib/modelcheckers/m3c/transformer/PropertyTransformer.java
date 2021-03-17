@@ -20,7 +20,7 @@ import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 
-public abstract class PropertyTransformer<T extends PropertyTransformer<T>> {
+public abstract class PropertyTransformer<T extends PropertyTransformer<T, L, AP>, L, AP> {
 
     protected boolean isMust = true;
 
@@ -28,7 +28,7 @@ public abstract class PropertyTransformer<T extends PropertyTransformer<T>> {
 
     public abstract T compose(T other);
 
-    public abstract <AP> T createUpdate(Set<AP> atomicPropositions, List<T> compositions, EquationalBlock currentBlock);
+    public abstract T createUpdate(Set<AP> atomicPropositions, List<T> compositions, EquationalBlock<L, AP> currentBlock);
 
     public boolean isMust() {
         return isMust;

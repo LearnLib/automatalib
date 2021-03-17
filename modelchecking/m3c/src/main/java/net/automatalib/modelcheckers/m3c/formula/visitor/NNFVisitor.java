@@ -31,146 +31,146 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
-public class NNFVisitor {
+public class NNFVisitor<L, AP> {
 
     private Set<String> varsToNegate;
 
-    public FormulaNode transformToNNF(FormulaNode node) {
+    public FormulaNode<L, AP> transformToNNF(FormulaNode<L, AP> node) {
         this.varsToNegate = new HashSet<>();
         return visit(node, false);
     }
 
-    private FormulaNode visit(FormulaNode node, boolean negate) {
+    private FormulaNode<L, AP> visit(FormulaNode<L, AP> node, boolean negate) {
         if (node instanceof GfpNode) {
-            return visitGFPNode((GfpNode) node, negate);
+            return visitGFPNode((GfpNode<L, AP>) node, negate);
         } else if (node instanceof LfpNode) {
-            return visitLFPNode((LfpNode) node, negate);
+            return visitLFPNode((LfpNode<L, AP>) node, negate);
         } else if (node instanceof AndNode) {
-            return visitAndNode((AndNode) node, negate);
+            return visitAndNode((AndNode<L, AP>) node, negate);
         } else if (node instanceof AtomicNode) {
-            return visitAtomicNode((AtomicNode) node, negate);
+            return visitAtomicNode((AtomicNode<L, AP>) node, negate);
         } else if (node instanceof BoxNode) {
-            return visitBoxNode((BoxNode) node, negate);
+            return visitBoxNode((BoxNode<L, AP>) node, negate);
         } else if (node instanceof DiamondNode) {
-            return visitDiamondNode((DiamondNode) node, negate);
+            return visitDiamondNode((DiamondNode<L, AP>) node, negate);
         } else if (node instanceof FalseNode) {
-            return visitFalseNode((FalseNode) node, negate);
+            return visitFalseNode((FalseNode<L, AP>) node, negate);
         } else if (node instanceof VariableNode) {
-            return visitVariableNode((VariableNode) node, negate);
+            return visitVariableNode((VariableNode<L, AP>) node, negate);
         } else if (node instanceof NotNode) {
-            return visitNotNode((NotNode) node, negate);
+            return visitNotNode((NotNode<L, AP>) node, negate);
         } else if (node instanceof OrNode) {
-            return visitOrNode((OrNode) node, negate);
+            return visitOrNode((OrNode<L, AP>) node, negate);
         } else if (node instanceof TrueNode) {
-            return visitTrueNode((TrueNode) node, negate);
+            return visitTrueNode((TrueNode<L, AP>) node, negate);
         } else {
             throw new IllegalArgumentException("Node is not a ModalMuNode");
         }
     }
 
-    private FormulaNode visitGFPNode(GfpNode node, boolean negate) {
+    private FormulaNode<L, AP> visitGFPNode(GfpNode<L, AP> node, boolean negate) {
         if (!negate) {
-            FormulaNode childNode = visit(node.getLeftChild(), false);
+            FormulaNode<L, AP> childNode = visit(node.getLeftChild(), false);
             node.setLeftChild(childNode);
             return node;
         }
 
         varsToNegate.add(node.getVariable());
-        FormulaNode childNode = visit(node.getLeftChild(), true);
+        FormulaNode<L, AP> childNode = visit(node.getLeftChild(), true);
         varsToNegate.remove(node.getVariable());
 
-        return new LfpNode(node.getVariable(), childNode);
+        return new LfpNode<>(node.getVariable(), childNode);
     }
 
-    private FormulaNode visitLFPNode(LfpNode node, boolean negate) {
+    private FormulaNode<L, AP> visitLFPNode(LfpNode<L, AP> node, boolean negate) {
         if (!negate) {
-            FormulaNode childNode = visit(node.getLeftChild(), false);
+            FormulaNode<L, AP> childNode = visit(node.getLeftChild(), false);
             node.setLeftChild(childNode);
             return node;
         }
 
         varsToNegate.add(node.getVariable());
-        FormulaNode childNode = visit(node.getLeftChild(), true);
+        FormulaNode<L, AP> childNode = visit(node.getLeftChild(), true);
         varsToNegate.remove(node.getVariable());
 
-        return new GfpNode(node.getVariable(), childNode);
+        return new GfpNode<>(node.getVariable(), childNode);
     }
 
-    private FormulaNode visitAndNode(AndNode node, boolean negate) {
+    private FormulaNode<L, AP> visitAndNode(AndNode<L, AP> node, boolean negate) {
         if (!negate) {
-            FormulaNode leftChild = visit(node.getLeftChild(), false);
-            FormulaNode rightChild = visit(node.getRightChild(), false);
+            FormulaNode<L, AP> leftChild = visit(node.getLeftChild(), false);
+            FormulaNode<L, AP> rightChild = visit(node.getRightChild(), false);
             node.setLeftChild(leftChild);
             node.setRightChild(rightChild);
             return node;
         }
-        FormulaNode leftChild = visit(node.getLeftChild(), true);
-        FormulaNode rightChild = visit(node.getRightChild(), true);
-        return new OrNode(leftChild, rightChild);
+        FormulaNode<L, AP> leftChild = visit(node.getLeftChild(), true);
+        FormulaNode<L, AP> rightChild = visit(node.getRightChild(), true);
+        return new OrNode<>(leftChild, rightChild);
     }
 
-    private FormulaNode visitAtomicNode(AtomicNode node, boolean negate) {
+    private FormulaNode<L, AP> visitAtomicNode(AtomicNode<L, AP> node, boolean negate) {
         if (negate) {
-            return new NotNode(node);
+            return new NotNode<>(node);
         }
         return node;
     }
 
-    private FormulaNode visitBoxNode(BoxNode node, boolean negate) {
+    private FormulaNode<L, AP> visitBoxNode(BoxNode<L, AP> node, boolean negate) {
         if (!negate) {
-            FormulaNode childNode = visit(node.getLeftChild(), false);
+            FormulaNode<L, AP> childNode = visit(node.getLeftChild(), false);
             node.setLeftChild(childNode);
             return node;
         }
-        DiamondNode diamondNode = new DiamondNode(node.getAction());
-        FormulaNode childNode = visit(node.getLeftChild(), true);
+        DiamondNode<L, AP> diamondNode = new DiamondNode<>(node.getAction());
+        FormulaNode<L, AP> childNode = visit(node.getLeftChild(), true);
         diamondNode.setLeftChild(childNode);
         return diamondNode;
     }
 
-    private FormulaNode visitDiamondNode(DiamondNode node, boolean negate) {
+    private FormulaNode<L, AP> visitDiamondNode(DiamondNode<L, AP> node, boolean negate) {
         if (!negate) {
-            FormulaNode childNode = visit(node.getLeftChild(), false);
+            FormulaNode<L, AP> childNode = visit(node.getLeftChild(), false);
             node.setLeftChild(childNode);
             return node;
         }
-        BoxNode boxNode = new BoxNode(node.getAction());
-        FormulaNode childNode = visit(node.getLeftChild(), true);
+        BoxNode<L, AP> boxNode = new BoxNode<>(node.getAction());
+        FormulaNode<L, AP> childNode = visit(node.getLeftChild(), true);
         boxNode.setLeftChild(childNode);
         return boxNode;
     }
 
-    private FormulaNode visitFalseNode(FalseNode node, boolean negate) {
-        return negate ? new TrueNode() : node;
+    private FormulaNode<L, AP> visitFalseNode(FalseNode<L, AP> node, boolean negate) {
+        return negate ? new TrueNode<>() : node;
     }
 
-    private FormulaNode visitVariableNode(VariableNode node, boolean negate) {
+    private FormulaNode<L, AP> visitVariableNode(VariableNode<L, AP> node, boolean negate) {
         boolean negateVariable = negate ^ varsToNegate.contains(node.getVariable());
         if (negateVariable) {
-            return new NotNode(node);
+            return new NotNode<>(node);
         }
         return node;
     }
 
-    private FormulaNode visitNotNode(NotNode node, boolean negate) {
+    private FormulaNode<L, AP> visitNotNode(NotNode<L, AP> node, boolean negate) {
         return visit(node.getLeftChild(), !negate);
     }
 
-    private FormulaNode visitOrNode(OrNode node, boolean negate) {
+    private FormulaNode<L, AP> visitOrNode(OrNode<L, AP> node, boolean negate) {
         if (!negate) {
-            FormulaNode leftChild = visit(node.getLeftChild(), false);
-            FormulaNode rightChild = visit(node.getRightChild(), false);
+            FormulaNode<L, AP> leftChild = visit(node.getLeftChild(), false);
+            FormulaNode<L, AP> rightChild = visit(node.getRightChild(), false);
             node.setLeftChild(leftChild);
             node.setRightChild(rightChild);
             return node;
         }
-        FormulaNode leftChild = visit(node.getLeftChild(), true);
-        FormulaNode rightChild = visit(node.getRightChild(), true);
-        return new AndNode(leftChild, rightChild);
+        FormulaNode<L, AP> leftChild = visit(node.getLeftChild(), true);
+        FormulaNode<L, AP> rightChild = visit(node.getRightChild(), true);
+        return new AndNode<>(leftChild, rightChild);
     }
 
-    private FormulaNode visitTrueNode(TrueNode node, boolean negate) {
-        return negate ? new FalseNode() : node;
+    private FormulaNode<L, AP> visitTrueNode(TrueNode<L, AP> node, boolean negate) {
+        return negate ? new FalseNode<>() : node;
     }
 
 }

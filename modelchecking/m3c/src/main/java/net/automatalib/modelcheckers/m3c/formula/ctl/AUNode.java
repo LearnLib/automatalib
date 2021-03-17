@@ -19,14 +19,14 @@ import net.automatalib.modelcheckers.m3c.formula.BinaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class AUNode extends BinaryFormulaNode {
+public class AUNode<L, AP> extends BinaryFormulaNode<L, AP> {
 
-    public AUNode(FormulaNode leftChild, FormulaNode rightChild) {
+    public AUNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
         super(leftChild, rightChild);
     }
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 

@@ -42,34 +42,34 @@ public class ParserCTLTest {
 
     @Test
     public void baseCasesTest() {
-        assertEquals("false", new FalseNode());
-        assertEquals("true", new TrueNode());
-        assertEquals("true && true", new AndNode(new TrueNode(), new TrueNode()));
-        assertEquals("true || false", new OrNode(new TrueNode(), new FalseNode()));
-        assertEquals("'a'", new AtomicNode("a"));
-        assertEquals("\"a\"", new AtomicNode("a"));
-        assertEquals("AG true", new AGNode(new TrueNode()));
-        assertEquals("AF true", new AFNode(new TrueNode()));
-        assertEquals("A(true U false)", new AUNode(new TrueNode(), new FalseNode()));
-        assertEquals("A(true W true)", new AWUNode(new TrueNode(), new TrueNode()));
-        assertEquals("EG true", new EGNode(new TrueNode()));
-        assertEquals("EF true", new EFNode(new TrueNode()));
-        assertEquals("E(false U false)", new EUNode(new FalseNode(), new FalseNode()));
-        assertEquals("E(true W false)", new EWUNode(new TrueNode(), new FalseNode()));
-        assertEquals("true -> false", new OrNode(new NotNode(new TrueNode()), new FalseNode()));
+        assertEquals("false", new FalseNode<>());
+        assertEquals("true", new TrueNode<>());
+        assertEquals("true && true", new AndNode<>(new TrueNode<>(), new TrueNode<>()));
+        assertEquals("true || false", new OrNode<>(new TrueNode<>(), new FalseNode<>()));
+        assertEquals("'a'", new AtomicNode<>("a"));
+        assertEquals("\"a\"", new AtomicNode<>("a"));
+        assertEquals("AG true", new AGNode<>(new TrueNode<>()));
+        assertEquals("AF true", new AFNode<>(new TrueNode<>()));
+        assertEquals("A(true U false)", new AUNode<>(new TrueNode<>(), new FalseNode<>()));
+        assertEquals("A(true W true)", new AWUNode<>(new TrueNode<>(), new TrueNode<>()));
+        assertEquals("EG true", new EGNode<>(new TrueNode<>()));
+        assertEquals("EF true", new EFNode<>(new TrueNode<>()));
+        assertEquals("E(false U false)", new EUNode<>(new FalseNode<>(), new FalseNode<>()));
+        assertEquals("E(true W false)", new EWUNode<>(new TrueNode<>(), new FalseNode<>()));
+        assertEquals("true -> false", new OrNode<>(new NotNode<>(new TrueNode<>()), new FalseNode<>()));
         assertEquals("true <-> false",
-                     new AndNode(new OrNode(new NotNode(new TrueNode()), new FalseNode()),
-                                 new OrNode(new NotNode(new FalseNode()), new TrueNode())));
-        assertEquals("!false", new NotNode(new FalseNode()));
-        assertEquals("[]true", new BoxNode("", new TrueNode()));
-        assertEquals("<>false", new DiamondNode("", new FalseNode()));
-        assertEquals("<a>false", new DiamondNode("a", new FalseNode()));
-        assertEquals("[c]true", new BoxNode("c", new TrueNode()));
+                     new AndNode<>(new OrNode<>(new NotNode<>(new TrueNode<>()), new FalseNode<>()),
+                                   new OrNode<>(new NotNode<>(new FalseNode<>()), new TrueNode<>())));
+        assertEquals("!false", new NotNode<>(new FalseNode<>()));
+        assertEquals("[]true", new BoxNode<>(null, new TrueNode<>()));
+        assertEquals("<>false", new DiamondNode<>(null, new FalseNode<>()));
+        assertEquals("<a>false", new DiamondNode<>("a", new FalseNode<>()));
+        assertEquals("[c]true", new BoxNode<>("c", new TrueNode<>()));
     }
 
-    private void assertEquals(String ctlFormula, FormulaNode expectedAST) {
+    private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) {
         try {
-            FormulaNode actualAST = ParserCTL.parse(ctlFormula);
+            FormulaNode<String, String> actualAST = ParserCTL.parse(ctlFormula);
             Assert.assertEquals(actualAST, expectedAST);
         } catch (net.automatalib.modelcheckers.m3c.formula.parser.ParseException e) {
             e.printStackTrace();
@@ -80,8 +80,8 @@ public class ParserCTLTest {
     @Test
     public void nestedFormulasTest() {
         assertEquals("(true && true) || (false && false)",
-                     new OrNode(new AndNode(new TrueNode(), new TrueNode()),
-                                new AndNode(new FalseNode(), new FalseNode())));
+                     new OrNode<>(new AndNode<>(new TrueNode<>(), new TrueNode<>()),
+                                  new AndNode<>(new FalseNode<>(), new FalseNode<>())));
     }
 
 }

@@ -18,9 +18,9 @@ package net.automatalib.modelcheckers.m3c.formula;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EquationalBlock {
+public class EquationalBlock<L, AP> {
 
-    private final List<FormulaNode> nodes;
+    private final List<FormulaNode<L, AP>> nodes;
     private boolean isMaxBlock;
     private int blockNumber;
 
@@ -41,7 +41,7 @@ public class EquationalBlock {
     }
 
     public boolean containsNodeWithVarNumber(int varNumber) {
-        for (FormulaNode node : nodes) {
+        for (FormulaNode<L, AP> node : nodes) {
             if (node.getVarNumber() == varNumber) {
                 return true;
             }
@@ -49,11 +49,11 @@ public class EquationalBlock {
         return false;
     }
 
-    public List<FormulaNode> getNodes() {
+    public List<FormulaNode<L, AP>> getNodes() {
         return nodes;
     }
 
-    public void addNode(FormulaNode node) {
+    public void addNode(FormulaNode<L, AP> node) {
         nodes.add(node);
     }
 

@@ -20,7 +20,7 @@ import java.util.Objects;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.UnaryFormulaNode;
 
-public abstract class FixedPointFormulaNode extends UnaryFormulaNode {
+public abstract class FixedPointFormulaNode<L, AP> extends UnaryFormulaNode<L, AP> {
 
     private final String variable;
 
@@ -28,7 +28,7 @@ public abstract class FixedPointFormulaNode extends UnaryFormulaNode {
         this.variable = variable;
     }
 
-    public FixedPointFormulaNode(String variable, FormulaNode leftChild) {
+    public FixedPointFormulaNode(String variable, FormulaNode<L, AP> leftChild) {
         super(leftChild);
         this.variable = variable;
     }
@@ -56,7 +56,7 @@ public abstract class FixedPointFormulaNode extends UnaryFormulaNode {
             return false;
         }
 
-        FixedPointFormulaNode that = (FixedPointFormulaNode) o;
+        FixedPointFormulaNode<?, ?> that = (FixedPointFormulaNode<?, ?>) o;
 
         return Objects.equals(variable, that.variable);
     }

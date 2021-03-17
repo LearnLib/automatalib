@@ -32,7 +32,7 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.ModalFormulaNode;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class ADDTransformer extends PropertyTransformer<ADDTransformer> {
+public class ADDTransformer<L, AP> extends PropertyTransformer<ADDTransformer<L, AP>, L, AP> {
 
     private final BooleanVectorLogicDDManager xddManager;
     private XDD<BooleanVector> add;
@@ -42,12 +42,12 @@ public class ADDTransformer extends PropertyTransformer<ADDTransformer> {
     }
 
     /* Initialization of a state property transformer*/
-    public ADDTransformer(BooleanVectorLogicDDManager xddManager, DependencyGraph dependGraph) {
+    public ADDTransformer(BooleanVectorLogicDDManager xddManager, DependencyGraph<L, AP> dependGraph) {
         this.xddManager = xddManager;
         boolean[] terminal = new boolean[dependGraph.getNumVariables()];
-        for (EquationalBlock block : dependGraph.getBlocks()) {
+        for (EquationalBlock<L, AP> block : dependGraph.getBlocks()) {
             if (block.isMaxBlock()) {
-                for (FormulaNode node : block.getNodes()) {
+                for (FormulaNode<L, AP> node : block.getNodes()) {
                     terminal[node.getVarNumber()] = true;
                 }
             }
@@ -82,18 +82,18 @@ public class ADDTransformer extends PropertyTransformer<ADDTransformer> {
     }
 
     /* Create the property transformer for an edge */
-    public <L, TP extends ModalEdgeProperty> ADDTransformer(BooleanVectorLogicDDManager xddManager,
-                                                            L edgeLabel,
-                                                            TP edgeProperty,
-                                                            DependencyGraph dependGraph) {
+    public <TP extends ModalEdgeProperty> ADDTransformer(BooleanVectorLogicDDManager xddManager,
+                                                         L edgeLabel,
+                                                         TP edgeProperty,
+                                                         DependencyGraph<L, AP> dependGraph) {
         this.xddManager = xddManager;
         List<XDD<BooleanVector>> list = new ArrayList<>();
-        for (FormulaNode node : dependGraph.getFormulaNodes()) {
+        for (FormulaNode<L, AP> node : dependGraph.getFormulaNodes()) {
             boolean[] terminal = new boolean[dependGraph.getNumVariables()];
             XDD<BooleanVector> falseDD = xddManager.constant(new BooleanVector(terminal));
             if (node instanceof ModalFormulaNode) {
-                String action = ((ModalFormulaNode) node).getAction();
-                if (("".equals(action) || action.equals(edgeLabel.toString())) &&
+                L action = ((ModalFormulaNode<L, AP>) node).getAction();
+                if ((action == null || action.equals(edgeLabel)) &&
                     (!(node instanceof DiamondNode) || edgeProperty.isMust())) {
                     int xj = node.getVarNumberLeft();
                     terminal[node.getVarNumber()] = true;
@@ -131,8 +131,8 @@ public class ADDTransformer extends PropertyTransformer<ADDTransformer> {
     }
 
     @Override
-    public ADDTransformer compose(ADDTransformer other) {
-        ADDTransformer composition = new ADDTransformer(xddManager);
+    public ADDTransformer<L, AP> compose(ADDTransformer<L, AP> other) {
+        ADDTransformer<L, AP> composition = new ADDTransformer<>(xddManager);
         XDD<BooleanVector> otherAdd = other.getAdd();
         XDD<BooleanVector> compAdd = otherAdd.monadicApply(arg -> {
             boolean[] terminal = arg.data().clone();
@@ -143,14 +143,14 @@ public class ADDTransformer extends PropertyTransformer<ADDTransformer> {
     }
 
     @Override
-    public <AP> ADDTransformer createUpdate(Set<AP> atomicPropositions,
-                                            List<ADDTransformer> compositions,
-                                            EquationalBlock currentBlock) {
-        ADDTransformer updatedTransformer = new ADDTransformer(xddManager);
+    public ADDTransformer<L, AP> createUpdate(Set<AP> atomicPropositions,
+                                              List<ADDTransformer<L, AP>> compositions,
+                                              EquationalBlock<L, AP> currentBlock) {
+        ADDTransformer<L, AP> updatedTransformer = new ADDTransformer<>(xddManager);
         XDD<BooleanVector> updatedADD = null;
         DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
         if (compositions.size() == 1) {
-            ADDTransformer succ = compositions.get(0);
+            ADDTransformer<L, AP> succ = compositions.get(0);
             updatedADD = succ.getAdd().apply(diamondOp, succ.getAdd());
         } else if (compositions.size() > 1) {
             updatedADD = compositions.get(0).getAdd();
@@ -184,7 +184,7 @@ public class ADDTransformer extends PropertyTransformer<ADDTransformer> {
             return false;
         }
 
-        ADDTransformer that = (ADDTransformer) o;
+        ADDTransformer<?, ?> that = (ADDTransformer<?, ?>) o;
 
         return Objects.equals(add, that.add);
     }

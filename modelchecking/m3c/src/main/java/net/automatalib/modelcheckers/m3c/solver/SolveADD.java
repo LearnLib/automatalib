@@ -19,19 +19,16 @@ import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParserCTL;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class SolveADD<L, AP> extends SolveDD<ADDTransformer, L, AP> {
+public class SolveADD<L, AP> extends SolveDD<ADDTransformer<L, AP>, L, AP> {
 
     private BooleanVectorLogicDDManager ddManager;
 
-    public SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl)
-            throws ParseException {
-        super(mcfps, formula, formulaIsCtl);
-    }
-
-    public SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
+    SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode<L, AP> formula, boolean formulaIsCtl) {
         super(mcfps, formula, formulaIsCtl);
     }
 
@@ -41,18 +38,32 @@ public class SolveADD<L, AP> extends SolveDD<ADDTransformer, L, AP> {
     }
 
     @Override
-    protected ADDTransformer createInitTransformerEnd() {
-        return new ADDTransformer(ddManager, dependGraph.getNumVariables());
+    protected ADDTransformer<L, AP> createInitTransformerEnd() {
+        return new ADDTransformer<>(ddManager, dependGraph.getNumVariables());
     }
 
     @Override
-    protected ADDTransformer createInitState() {
-        return new ADDTransformer(ddManager, dependGraph);
+    protected ADDTransformer<L, AP> createInitState() {
+        return new ADDTransformer<>(ddManager, dependGraph);
     }
 
     @Override
-    protected <TP extends ModalEdgeProperty> ADDTransformer createInitTransformerEdge(L edgeLabel, TP edgeProperty) {
-        return new ADDTransformer(ddManager, edgeLabel, edgeProperty, dependGraph);
+    protected <TP extends ModalEdgeProperty> ADDTransformer<L, AP> createInitTransformerEdge(L edgeLabel, TP edgeProperty) {
+        return new ADDTransformer<>(ddManager, edgeLabel, edgeProperty, dependGraph);
+    }
+
+    public static <L, AP> SolveADD<L, AP> solver(ModalContextFreeProcessSystem<L, AP> mcfps,
+                                                 FormulaNode<L, AP> formula,
+                                                 boolean formulaIsCtl) throws ParseException {
+        return new SolveADD<>(mcfps, formula, formulaIsCtl);
+    }
+
+    public static SolveADD<String, String> solver(ModalContextFreeProcessSystem<String, String> mcfps,
+                                                  String formula,
+                                                  boolean formulaIsCtl) throws ParseException {
+        return new SolveADD<>(mcfps,
+                              formulaIsCtl ? ParserCTL.parse(formula) : ParserMuCalc.parse(formula),
+                              formulaIsCtl);
     }
 
 }

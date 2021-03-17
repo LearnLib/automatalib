@@ -30,39 +30,39 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public abstract class SolverTest<T extends PropertyTransformer<T>> {
+public abstract class SolverTest<T extends PropertyTransformer<T, String, String>> {
 
-    protected static ModalContextFreeProcessSystem<Character, String> mcfps;
+    protected static ModalContextFreeProcessSystem<String, String> mcfps;
 
     @BeforeClass
     public static void setup() {
-        final CompactMPG<Character, String> mpg = buildMPG(new CompactMPG<>());
+        final CompactMPG<String, String> mpg = buildMPG(new CompactMPG<>());
 
-        mcfps = new ModalContextFreeProcessSystem<Character, String>() {
+        mcfps = new ModalContextFreeProcessSystem<String, String>() {
 
             @Override
-            public Alphabet<Character> getTerminalAlphabet() {
-                return Alphabets.fromArray('a', 'b', 'e');
+            public Alphabet<String> getTerminalAlphabet() {
+                return Alphabets.fromArray("a", "b", "e");
             }
 
             @Override
-            public Alphabet<Character> getProcessAlphabet() {
-                return Alphabets.singleton('P');
+            public Alphabet<String> getProcessAlphabet() {
+                return Alphabets.singleton("P");
             }
 
             @Override
-            public Map<Character, ModalProcessGraph<?, Character, ?, String, ?>> getMPGs() {
-                return Collections.singletonMap('P', mpg);
+            public Map<String, ModalProcessGraph<?, String, ?, String, ?>> getMPGs() {
+                return Collections.singletonMap("P", mpg);
             }
 
             @Override
-            public Character getMainProcess() {
-                return 'P';
+            public String getMainProcess() {
+                return "P";
             }
         };
     }
 
-    private static <N, E, AP, MMPG extends MutableModalProcessGraph<N, Character, E, AP, ?>> MMPG buildMPG(MMPG mpg) {
+    private static <N, E, AP, MMPG extends MutableModalProcessGraph<N, String, E, AP, ?>> MMPG buildMPG(MMPG mpg) {
 
         final N start = mpg.addNode();
         final N end = mpg.addNode();
@@ -78,16 +78,16 @@ public abstract class SolverTest<T extends PropertyTransformer<T>> {
         final E e4 = mpg.connect(s2, end);
 
         mpg.getEdgeProperty(e1).setMust();
-        mpg.setEdgeLabel(e1, 'a');
+        mpg.setEdgeLabel(e1, "a");
 
         mpg.getEdgeProperty(e2).setMust();
-        mpg.setEdgeLabel(e2, 'e');
+        mpg.setEdgeLabel(e2, "e");
 
         mpg.getEdgeProperty(e3).setMust();
-        mpg.setEdgeLabel(e3, 'P');
+        mpg.setEdgeLabel(e3, "P");
 
         mpg.getEdgeProperty(e4).setMust();
-        mpg.setEdgeLabel(e4, 'b');
+        mpg.setEdgeLabel(e4, "b");
 
         return mpg;
     }
@@ -95,7 +95,7 @@ public abstract class SolverTest<T extends PropertyTransformer<T>> {
     @Test
     void testSolve() throws ParseException {
         String formula = "mu X.(<b><b>true || <>X)";
-        SolveDD<T, Character, String> solver = getSolver(mcfps, formula, false);
+        SolveDD<T, String, String> solver = getSolver(mcfps, formula, false);
         assertSolve(solver, true);
 
         String negatedFormula = "!(" + formula + ")";
@@ -103,11 +103,11 @@ public abstract class SolverTest<T extends PropertyTransformer<T>> {
         assertSolve(solver, false);
     }
 
-    public abstract SolveDD<T, Character, String> getSolver(ModalContextFreeProcessSystem<Character, String> mcfps,
-                                                            String formula,
-                                                            boolean formulaIsCtl) throws ParseException;
+    public abstract SolveDD<T, String, String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps,
+                                                         String formula,
+                                                         boolean formulaIsCtl) throws ParseException;
 
-    protected void assertSolve(SolveDD<T, Character, String> solver, boolean expectedIsSat) {
+    protected void assertSolve(SolveDD<T, String, String> solver, boolean expectedIsSat) {
         solver.solve();
         Assert.assertEquals(expectedIsSat, solver.isSat());
     }

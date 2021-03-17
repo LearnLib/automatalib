@@ -17,18 +17,18 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class DiamondNode extends ModalFormulaNode {
+public class DiamondNode<L, AP> extends ModalFormulaNode<L, AP> {
 
-    public DiamondNode(String action) {
+    public DiamondNode(L action) {
         super(action);
     }
 
-    public DiamondNode(String action, FormulaNode node) {
+    public DiamondNode(L action, FormulaNode<L, AP> node) {
         super(action, node);
     }
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 

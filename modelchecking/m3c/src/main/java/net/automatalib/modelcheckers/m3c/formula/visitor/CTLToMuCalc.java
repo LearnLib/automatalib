@@ -36,7 +36,7 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
-public class CTLToMuCalc extends FormulaNodeVisitor<FormulaNode> {
+public class CTLToMuCalc<L, AP> extends FormulaNodeVisitor<FormulaNode<L, AP>, L, AP> {
 
     private int numFixedPointVars;
 
@@ -44,160 +44,160 @@ public class CTLToMuCalc extends FormulaNodeVisitor<FormulaNode> {
         numFixedPointVars = 0;
     }
 
-    public FormulaNode toMuCalc(FormulaNode ctlFormula) {
+    public FormulaNode<L, AP> toMuCalc(FormulaNode<L, AP> ctlFormula) {
         numFixedPointVars = 0;
         return visit(ctlFormula);
     }
 
     @Override
-    public FormulaNode visit(AFNode node) {
+    public FormulaNode<L, AP> visit(AFNode<L, AP> node) {
         /* AF p = mu X.(toMu(p) | (<>true & []X)) */
-        FormulaNode p = visit(node.getLeftChild());
+        FormulaNode<L, AP> p = visit(node.getLeftChild());
         String fixedPointVar = getFixedPointVar();
-        DiamondNode hasSuccessor = new DiamondNode("", new TrueNode());
-        BoxNode allSuccessorSatisfyX = new BoxNode("", new VariableNode(fixedPointVar));
-        AndNode and = new AndNode(hasSuccessor, allSuccessorSatisfyX);
-        OrNode or = new OrNode(p, and);
-        return new LfpNode(fixedPointVar, or);
+        DiamondNode<L, AP> hasSuccessor = new DiamondNode<>(null, new TrueNode<>());
+        BoxNode<L, AP> allSuccessorSatisfyX = new BoxNode<>(null, new VariableNode<>(fixedPointVar));
+        AndNode<L, AP> and = new AndNode<>(hasSuccessor, allSuccessorSatisfyX);
+        OrNode<L, AP> or = new OrNode<>(p, and);
+        return new LfpNode<>(fixedPointVar, or);
     }
 
     @Override
-    public FormulaNode visit(AGNode node) {
+    public FormulaNode<L, AP> visit(AGNode<L, AP> node) {
         /* AG p = nu X.(p & []X) */
-        FormulaNode p = visit(node.getLeftChild());
+        FormulaNode<L, AP> p = visit(node.getLeftChild());
         String fixedPointVar = getFixedPointVar();
-        BoxNode allSuccessorsSatisfyX = new BoxNode("", new VariableNode(fixedPointVar));
-        AndNode and = new AndNode(p, allSuccessorsSatisfyX);
-        return new GfpNode(fixedPointVar, and);
+        BoxNode<L, AP> allSuccessorsSatisfyX = new BoxNode<>(null, new VariableNode<>(fixedPointVar));
+        AndNode<L, AP> and = new AndNode<>(p, allSuccessorsSatisfyX);
+        return new GfpNode<>(fixedPointVar, and);
     }
 
     @Override
-    public FormulaNode visit(AUNode node) {
+    public FormulaNode<L, AP> visit(AUNode<L, AP> node) {
         /* A[p U q] = mu X.(toMu(q) | (toMu(p) & (<>true & []X))) */
-        FormulaNode p = visit(node.getLeftChild());
-        FormulaNode q = visit(node.getRightChild());
+        FormulaNode<L, AP> p = visit(node.getLeftChild());
+        FormulaNode<L, AP> q = visit(node.getRightChild());
         String fixedPointVar = getFixedPointVar();
-        DiamondNode hasSuccessor = new DiamondNode("", new TrueNode());
-        BoxNode allSuccessorsSatisfyX = new BoxNode("", new VariableNode(fixedPointVar));
-        AndNode innerAnd = new AndNode(hasSuccessor, allSuccessorsSatisfyX);
-        AndNode outerAnd = new AndNode(p, innerAnd);
-        OrNode or = new OrNode(q, outerAnd);
-        return new LfpNode(fixedPointVar, or);
+        DiamondNode<L, AP> hasSuccessor = new DiamondNode<>(null, new TrueNode<>());
+        BoxNode<L, AP> allSuccessorsSatisfyX = new BoxNode<>(null, new VariableNode<>(fixedPointVar));
+        AndNode<L, AP> innerAnd = new AndNode<>(hasSuccessor, allSuccessorsSatisfyX);
+        AndNode<L, AP> outerAnd = new AndNode<>(p, innerAnd);
+        OrNode<L, AP> or = new OrNode<>(q, outerAnd);
+        return new LfpNode<>(fixedPointVar, or);
     }
 
     @Override
-    public FormulaNode visit(AWUNode node) {
+    public FormulaNode<L, AP> visit(AWUNode<L, AP> node) {
         /* A[p WU q] = !E[!q U (!p & !q)] */
-        FormulaNode p = visit(node.getLeftChild());
-        FormulaNode q = visit(node.getRightChild());
-        AndNode and = new AndNode(new NotNode(p), new NotNode(q));
-        EUNode ewu = new EUNode(new NotNode(visit(node.getRightChild())), and);
-        return visit(new NotNode(ewu));
+        FormulaNode<L, AP> p = visit(node.getLeftChild());
+        FormulaNode<L, AP> q = visit(node.getRightChild());
+        AndNode<L, AP> and = new AndNode<>(new NotNode<>(p), new NotNode<>(q));
+        EUNode<L, AP> ewu = new EUNode<>(new NotNode<>(visit(node.getRightChild())), and);
+        return visit(new NotNode<>(ewu));
     }
 
     @Override
-    public FormulaNode visit(EFNode node) {
+    public FormulaNode<L, AP> visit(EFNode<L, AP> node) {
         /* EF p = mu X.(toMu(p) | <>X) */
         String fixedPointVar = getFixedPointVar();
-        FormulaNode p = visit(node.getLeftChild());
-        DiamondNode hasSuccessorSatisfyingX = new DiamondNode("", new VariableNode(fixedPointVar));
-        OrNode orNode = new OrNode(p, hasSuccessorSatisfyingX);
-        return new LfpNode(fixedPointVar, orNode);
+        FormulaNode<L, AP> p = visit(node.getLeftChild());
+        DiamondNode<L, AP> hasSuccessorSatisfyingX = new DiamondNode<>(null, new VariableNode<>(fixedPointVar));
+        OrNode<L, AP> orNode = new OrNode<>(p, hasSuccessorSatisfyingX);
+        return new LfpNode<>(fixedPointVar, orNode);
     }
 
     @Override
-    public FormulaNode visit(EGNode node) {
+    public FormulaNode<L, AP> visit(EGNode<L, AP> node) {
         /* EG p = nu X.(toMu(p) & (<>X | [] false)) */
         String fixedPointVar = getFixedPointVar();
-        FormulaNode childNode = visit(node.getLeftChild());
-        DiamondNode hasSuccessorSatisfyingX = new DiamondNode("", new VariableNode(fixedPointVar));
-        BoxNode hasNoSuccessor = new BoxNode("", new FalseNode());
-        OrNode or = new OrNode(hasSuccessorSatisfyingX, hasNoSuccessor);
-        AndNode and = new AndNode(childNode, or);
-        return new GfpNode(fixedPointVar, and);
+        FormulaNode<L, AP> childNode = visit(node.getLeftChild());
+        DiamondNode<L, AP> hasSuccessorSatisfyingX = new DiamondNode<>(null, new VariableNode<>(fixedPointVar));
+        BoxNode<L, AP> hasNoSuccessor = new BoxNode<>(null, new FalseNode<>());
+        OrNode<L, AP> or = new OrNode<>(hasSuccessorSatisfyingX, hasNoSuccessor);
+        AndNode<L, AP> and = new AndNode<>(childNode, or);
+        return new GfpNode<>(fixedPointVar, and);
     }
 
     @Override
-    public FormulaNode visit(EUNode node) {
+    public FormulaNode<L, AP> visit(EUNode<L, AP> node) {
         /* E[p U q] => mu X.(toMu(q) | (toMu(p) & <>X)) */
         String fixedPointVar = getFixedPointVar();
-        FormulaNode p = visit(node.getLeftChild());
-        FormulaNode q = visit(node.getRightChild());
-        AndNode andNode = new AndNode(p, new DiamondNode("", new VariableNode(fixedPointVar)));
-        OrNode orNode = new OrNode(q, andNode);
-        return new LfpNode(fixedPointVar, orNode);
+        FormulaNode<L, AP> p = visit(node.getLeftChild());
+        FormulaNode<L, AP> q = visit(node.getRightChild());
+        AndNode<L, AP> andNode = new AndNode<>(p, new DiamondNode<>(null, new VariableNode<>(fixedPointVar)));
+        OrNode<L, AP> orNode = new OrNode<>(q, andNode);
+        return new LfpNode<>(fixedPointVar, orNode);
     }
 
     @Override
-    public FormulaNode visit(EWUNode node) {
+    public FormulaNode<L, AP> visit(EWUNode<L, AP> node) {
         /* E[p WU q] = E[p U q] | EG p */
-        FormulaNode p = visit(node.getLeftChild());
-        FormulaNode q = visit(node.getRightChild());
-        EUNode until = new EUNode(p, q);
-        EGNode egNode = new EGNode(visit(node.getLeftChild()));
-        return visit(new OrNode(until, egNode));
+        FormulaNode<L, AP> p = visit(node.getLeftChild());
+        FormulaNode<L, AP> q = visit(node.getRightChild());
+        EUNode<L, AP> until = new EUNode<>(p, q);
+        EGNode<L, AP> egNode = new EGNode<>(visit(node.getLeftChild()));
+        return visit(new OrNode<>(until, egNode));
     }
 
     @Override
-    public FormulaNode visit(AndNode node) {
-        FormulaNode leftChild = visit(node.getLeftChild());
-        FormulaNode rightChild = visit(node.getRightChild());
-        return new AndNode(leftChild, rightChild);
+    public FormulaNode<L, AP> visit(AndNode<L, AP> node) {
+        FormulaNode<L, AP> leftChild = visit(node.getLeftChild());
+        FormulaNode<L, AP> rightChild = visit(node.getRightChild());
+        return new AndNode<>(leftChild, rightChild);
     }
 
     @Override
-    public FormulaNode visit(AtomicNode node) {
-        return new AtomicNode(node.getProposition());
+    public FormulaNode<L, AP> visit(AtomicNode<L, AP> node) {
+        return new AtomicNode<>(node.getPropositions());
     }
 
     @Override
-    public FormulaNode visit(BoxNode node) {
-        FormulaNode childNode = visit(node.getLeftChild());
-        return new BoxNode(node.getAction(), childNode);
+    public FormulaNode<L, AP> visit(BoxNode<L, AP> node) {
+        FormulaNode<L, AP> childNode = visit(node.getLeftChild());
+        return new BoxNode<>(node.getAction(), childNode);
     }
 
     @Override
-    public FormulaNode visit(DiamondNode node) {
-        FormulaNode childNode = visit(node.getLeftChild());
-        return new DiamondNode(node.getAction(), childNode);
+    public FormulaNode<L, AP> visit(DiamondNode<L, AP> node) {
+        FormulaNode<L, AP> childNode = visit(node.getLeftChild());
+        return new DiamondNode<>(node.getAction(), childNode);
     }
 
     @Override
-    public FormulaNode visit(FalseNode node) {
-        return new FalseNode();
+    public FormulaNode<L, AP> visit(FalseNode<L, AP> node) {
+        return new FalseNode<>();
     }
 
     @Override
-    public FormulaNode visit(NotNode node) {
-        FormulaNode childNode = visit(node.getLeftChild());
-        return new NotNode(childNode);
+    public FormulaNode<L, AP> visit(NotNode<L, AP> node) {
+        FormulaNode<L, AP> childNode = visit(node.getLeftChild());
+        return new NotNode<>(childNode);
     }
 
     @Override
-    public FormulaNode visit(OrNode node) {
-        FormulaNode leftChild = visit(node.getLeftChild());
-        FormulaNode rightChild = visit(node.getRightChild());
-        return new OrNode(leftChild, rightChild);
+    public FormulaNode<L, AP> visit(OrNode<L, AP> node) {
+        FormulaNode<L, AP> leftChild = visit(node.getLeftChild());
+        FormulaNode<L, AP> rightChild = visit(node.getRightChild());
+        return new OrNode<>(leftChild, rightChild);
     }
 
     @Override
-    public FormulaNode visit(TrueNode node) {
-        return new TrueNode();
+    public FormulaNode<L, AP> visit(TrueNode<L, AP> node) {
+        return new TrueNode<>();
     }
 
     @Override
-    public FormulaNode visit(GfpNode node) {
-        return new GfpNode(node.getVariable(), node.getLeftChild());
+    public FormulaNode<L, AP> visit(GfpNode<L, AP> node) {
+        return new GfpNode<>(node.getVariable(), node.getLeftChild());
     }
 
     @Override
-    public FormulaNode visit(LfpNode node) {
-        return new LfpNode(node.getVariable(), node.getLeftChild());
+    public FormulaNode<L, AP> visit(LfpNode<L, AP> node) {
+        return new LfpNode<>(node.getVariable(), node.getLeftChild());
     }
 
     @Override
-    public FormulaNode visit(VariableNode node) {
-        return new VariableNode(node.getVariable());
+    public FormulaNode<L, AP> visit(VariableNode<L, AP> node) {
+        return new VariableNode<>(node.getVariable());
     }
 
     private String getFixedPointVar() {

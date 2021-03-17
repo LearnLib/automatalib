@@ -43,14 +43,14 @@ public class FormulaNodeToStringTest {
     }
 
     private void testCorrectnessCTL(String ctlFormula) {
-        FormulaNode ast = null;
+        FormulaNode<String, String> ast = null;
         try {
             ast = ParserCTL.parse(ctlFormula);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         String astToString = ast.toString();
-        FormulaNode backToAst = null;
+        FormulaNode<String, String> backToAst = null;
         try {
             backToAst = ParserCTL.parse(astToString);
         } catch (ParseException e) {
@@ -60,14 +60,14 @@ public class FormulaNodeToStringTest {
     }
 
     private void testCorrectnessMuCalc(String muCalcFormula) {
-        FormulaNode ast = null;
+        FormulaNode<String, String> ast = null;
         try {
             ast = ParserMuCalc.parse(muCalcFormula);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         String astToString = ast.toString();
-        FormulaNode backToAst = null;
+        FormulaNode<String, String> backToAst = null;
         try {
             backToAst = ParserMuCalc.parse(astToString);
         } catch (ParseException e) {

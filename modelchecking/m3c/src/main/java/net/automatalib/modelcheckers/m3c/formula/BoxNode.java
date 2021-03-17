@@ -17,18 +17,18 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class BoxNode extends ModalFormulaNode {
+public class BoxNode<L, AP> extends ModalFormulaNode<L, AP> {
 
-    public BoxNode(String action) {
+    public BoxNode(L action) {
         super(action);
     }
 
-    public BoxNode(String action, FormulaNode node) {
+    public BoxNode(L action, FormulaNode<L, AP> node) {
         super(action, node);
     }
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 

@@ -38,30 +38,30 @@ import org.testng.annotations.Test;
 
 public class ADDTransformerTest {
 
-    private static DependencyGraph dg;
+    private static DependencyGraph<String, String> dg;
     private static BooleanVectorLogicDDManager xddManager;
-    private static OrNode orNode;
-    private static DiamondNode diaNode1;
-    private static DiamondNode diaNode2;
-    private static BoxNode boxNode;
-    private static TrueNode trueNode;
+    private static OrNode<String, String> orNode;
+    private static DiamondNode<String, String> diaNode1;
+    private static DiamondNode<String, String> diaNode2;
+    private static BoxNode<String, String> boxNode;
+    private static TrueNode<String, String> trueNode;
 
     @BeforeClass
     public static void setup() throws ParseException {
         String formula = "mu X.(<b>[b]true || <>X)";
-        FormulaNode ast = ParserMuCalc.parse(formula);
-        dg = new DependencyGraph(ast);
+        FormulaNode<String, String> ast = ParserMuCalc.parse(formula);
+        dg = new DependencyGraph<>(ast);
         xddManager = new BooleanVectorLogicDDManager(dg.getNumVariables());
-        orNode = (OrNode) ast.getLeftChild();
-        diaNode1 = (DiamondNode) orNode.getLeftChild();
-        diaNode2 = (DiamondNode) orNode.getRightChild();
-        boxNode = (BoxNode) diaNode1.getLeftChild();
-        trueNode = (TrueNode) boxNode.getLeftChild();
+        orNode = (OrNode<String, String>) ast.getLeftChild();
+        diaNode1 = (DiamondNode<String, String>) orNode.getLeftChild();
+        diaNode2 = (DiamondNode<String, String>) orNode.getRightChild();
+        boxNode = (BoxNode<String, String>) diaNode1.getLeftChild();
+        trueNode = (TrueNode<String, String>) boxNode.getLeftChild();
     }
 
     @Test
     void testADDIdentity() {
-        ADDTransformer transformer = new ADDTransformer(xddManager, dg.getNumVariables());
+        ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dg.getNumVariables());
         double numVarCombinations = Math.pow(2, dg.getNumVariables());
 
         /* Check output of each possible input */
@@ -89,11 +89,11 @@ public class ADDTransformerTest {
 
     @Test
     void testBDDStateInitialization() {
-        ADDTransformer transformer = new ADDTransformer(xddManager, dg);
+        ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dg);
         Assert.assertTrue(transformer.getAdd().isConstant());
         boolean[] leafData = transformer.getAdd().v().data();
-        for (EquationalBlock block : dg.getBlocks()) {
-            for (FormulaNode node : block.getNodes()) {
+        for (EquationalBlock<String, String> block : dg.getBlocks()) {
+            for (FormulaNode<String, String> node : block.getNodes()) {
                 boolean val = leafData[node.getVarNumber()];
                 boolean isMaxBlock = block.isMaxBlock();
                 Assert.assertEquals(isMaxBlock, val);
@@ -103,8 +103,8 @@ public class ADDTransformerTest {
 
     @Test
     void testEdgeTransformerMust() {
-        ADDTransformer transformer =
-                new ADDTransformer(xddManager, "b", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST), dg);
+        ADDTransformer<String, String> transformer =
+                new ADDTransformer<>(xddManager, "b", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST), dg);
         double numVarCombinations = Math.pow(2, dg.getNumVariables());
 
         for (int i = 0; i < numVarCombinations; i++) {
@@ -137,8 +137,8 @@ public class ADDTransformerTest {
 
     @Test
     void testEdgeTransformerNoMatch() {
-        ADDTransformer transformer =
-                new ADDTransformer(xddManager, "a", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST), dg);
+        ADDTransformer<String, String> transformer =
+                new ADDTransformer<>(xddManager, "a", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST), dg);
         double numVarCombinations = Math.pow(2, dg.getNumVariables());
         for (int i = 0; i < numVarCombinations; i++) {
 
@@ -167,8 +167,8 @@ public class ADDTransformerTest {
     @Test
     void testEdgeTransformerMay() {
         Edge edge = new Edge(null, null, "b", EdgeType.MAY);
-        ADDTransformer transformer =
-                new ADDTransformer(xddManager, "b", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY), dg);
+        ADDTransformer<String, String> transformer =
+                new ADDTransformer<>(xddManager, "b", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY), dg);
         double numVarCombinations = Math.pow(2, dg.getNumVariables());
         for (int i = 0; i < numVarCombinations; i++) {
 
@@ -196,12 +196,12 @@ public class ADDTransformerTest {
 
     @Test
     void testComposition() {
-        ADDTransformer transformer = new ADDTransformer(xddManager, dg);
-        ADDTransformer identity = new ADDTransformer(xddManager, dg.getNumVariables());
-        ADDTransformer composition = transformer.compose(identity);
+        ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dg);
+        ADDTransformer<String, String> identity = new ADDTransformer<>(xddManager, dg.getNumVariables());
+        ADDTransformer<String, String> composition = transformer.compose(identity);
         Assert.assertEquals(transformer, composition);
 
-        ADDTransformer inverseComposition = identity.compose(transformer);
+        ADDTransformer<String, String> inverseComposition = identity.compose(transformer);
         Assert.assertEquals(transformer, inverseComposition);
     }
 

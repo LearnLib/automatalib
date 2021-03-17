@@ -18,18 +18,18 @@ package net.automatalib.modelcheckers.m3c.formula.modalmu;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class LfpNode extends FixedPointFormulaNode {
+public class LfpNode<L, AP> extends FixedPointFormulaNode<L, AP> {
 
     public LfpNode(String variable) {
         super(variable);
     }
 
-    public LfpNode(String variable, FormulaNode node) {
+    public LfpNode(String variable, FormulaNode<L, AP> node) {
         super(variable, node);
     }
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 

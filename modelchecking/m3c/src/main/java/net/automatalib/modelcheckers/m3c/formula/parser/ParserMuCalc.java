@@ -16,7 +16,10 @@
 package net.automatalib.modelcheckers.m3c.formula.parser;
 
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Function;
 
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 
@@ -24,10 +27,14 @@ public final class ParserMuCalc {
 
     private ParserMuCalc() {}
 
-    public static FormulaNode parse(String muCalcFormula) throws ParseException {
-        InternalM3CParserMuCalc muCalcParser = new InternalM3CParserMuCalc(new StringReader(muCalcFormula));
-        muCalcParser.setFixedPointVars(new HashSet<>());
-        return muCalcParser.formula();
+    public static FormulaNode<String, String> parse(String ctlFormula) throws ParseException {
+        return parse(ctlFormula, Function.identity(), x -> new HashSet<>(Arrays.asList(x.split(","))));
+    }
+
+    public static <L, AP> FormulaNode<L, AP> parse(String ctlFormula,
+                                                   Function<String, L> labelParser,
+                                                   Function<String, Set<AP>> apParser) throws ParseException {
+        return new InternalM3CParserMuCalc<L, AP>(new StringReader(ctlFormula)).parse(labelParser, apParser);
     }
 
 }

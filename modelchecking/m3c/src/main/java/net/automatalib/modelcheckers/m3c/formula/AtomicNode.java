@@ -15,31 +15,37 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class AtomicNode extends FormulaNode {
+public class AtomicNode<L, AP> extends FormulaNode<L, AP> {
 
-    private final String proposition;
+    private final Set<AP> propositions;
 
-    public AtomicNode(String proposition) {
-        this.proposition = proposition;
+    public AtomicNode(AP proposition) {
+        this(Collections.singleton(proposition));
     }
 
-    public String getProposition() {
-        return proposition;
+    public AtomicNode(Set<AP> propositions) {
+        this.propositions = propositions;
+    }
+
+    public Set<AP> getPropositions() {
+        return propositions;
     }
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + Objects.hashCode(proposition);
+        result = 31 * result + Objects.hashCode(propositions);
         return result;
     }
 
@@ -55,9 +61,9 @@ public class AtomicNode extends FormulaNode {
             return false;
         }
 
-        AtomicNode that = (AtomicNode) o;
+        AtomicNode<?, ?> that = (AtomicNode<?, ?>) o;
 
-        return Objects.equals(proposition, that.proposition);
+        return Objects.equals(propositions, that.propositions);
     }
 
 }

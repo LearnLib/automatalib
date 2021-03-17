@@ -36,21 +36,18 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.NotNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserCTL;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import net.automatalib.modelcheckers.m3c.formula.visitor.CTLToMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.PropertyTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
+public abstract class SolveDD<T extends PropertyTransformer<T, L, AP>, L, AP> {
 
     protected ModalContextFreeProcessSystem<L, AP> mcfps;
-    protected DependencyGraph dependGraph;
+    protected DependencyGraph<L, AP> dependGraph;
     protected int currentBlockIndex;
     // Property transformer for every state
     protected List<List<T>> propTransformers;
-    private FormulaNode ast;
+    private FormulaNode<L, AP> ast;
     // For each act \in Actions there is a property Transformer
     private Map<L, T> mustTransformers;
     private Map<L, T> mayTransformers;
@@ -59,11 +56,7 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
     // Keeps track of which state's property transformers have to be updated.
     private BitSet[] workSet;
 
-    public SolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) throws ParseException {
-        this(mcfps, formulaIsCtl ? ParserCTL.parse(formula) : ParserMuCalc.parse(formula), formulaIsCtl);
-    }
-
-    public SolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
+    SolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode<L, AP> formula, boolean formulaIsCtl) {
         this.mcfps = mcfps;
         if (formulaIsCtl) {
             this.ast = ctlToMuCalc(formula);
@@ -73,8 +66,8 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
         this.ast = this.ast.toNNF();
     }
 
-    protected static FormulaNode ctlToMuCalc(FormulaNode ctlFormula) {
-        CTLToMuCalc transformation = new CTLToMuCalc();
+    protected static <L, AP> FormulaNode<L, AP> ctlToMuCalc(FormulaNode<L, AP> ctlFormula) {
+        CTLToMuCalc<L, AP> transformation = new CTLToMuCalc<>();
         return transformation.toMuCalc(ctlFormula);
     }
 
@@ -117,7 +110,7 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
 
     public void initialize() {
         this.workSet = new BitSet[mcfps.getMPGs().size()];
-        this.dependGraph = new DependencyGraph(ast);
+        this.dependGraph = new DependencyGraph<>(ast);
         this.propTransformers = new ArrayList<>(mcfps.getMPGs().size());
         for (int i = 0; i < mcfps.getMPGs().size(); i++) {
             this.propTransformers.add(null);
@@ -221,8 +214,8 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
     }
 
     private boolean isSat(int initialNodeId, int mpgId) {
-        List<FormulaNode> satisfiedFormulas = getSatisfiedSubformulas(initialNodeId, mpgId);
-        for (FormulaNode node : satisfiedFormulas) {
+        List<FormulaNode<L, AP>> satisfiedFormulas = getSatisfiedSubformulas(initialNodeId, mpgId);
+        for (FormulaNode<L, AP> node : satisfiedFormulas) {
             if (node.getVarNumber() == 0) {
                 return true;
             }
@@ -238,10 +231,10 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
         return mcfps.getProcessAlphabet().getSymbolIndex(mpgLabel);
     }
 
-    public List<FormulaNode> getSatisfiedSubformulas(int nodeId, int mpgId) {
+    public List<FormulaNode<L, AP>> getSatisfiedSubformulas(int nodeId, int mpgId) {
         Set<Integer> output = propTransformers.get(mpgId).get(nodeId).evaluate(toBoolArray(getAllAPDeadlockedState()));
-        List<FormulaNode> satisfiedSubFormulas = new ArrayList<>();
-        for (FormulaNode node : dependGraph.getFormulaNodes()) {
+        List<FormulaNode<L, AP>> satisfiedSubFormulas = new ArrayList<>();
+        for (FormulaNode<L, AP> node : dependGraph.getFormulaNodes()) {
             if (output.contains(node.getVarNumber())) {
                 satisfiedSubFormulas.add(node);
             }
@@ -274,14 +267,14 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
         Set<Integer> satisfiedVariables = new HashSet<>();
         N finalNode = mainMpg.getFinalNode();
         for (int blockIdx = dependGraph.getBlocks().size() - 1; blockIdx >= 0; blockIdx--) {
-            EquationalBlock block = dependGraph.getBlock(blockIdx);
-            for (FormulaNode node : block.getNodes()) {
+            EquationalBlock<L, AP> block = dependGraph.getBlock(blockIdx);
+            for (FormulaNode<L, AP> node : block.getNodes()) {
                 if (node instanceof TrueNode) {
                     satisfiedVariables.add(node.getVarNumber());
                 } else if (node instanceof AtomicNode) {
-                    String atomicProposition = ((AtomicNode) node).getProposition();
+                    Set<AP> atomicProposition = ((AtomicNode<L, AP>) node).getPropositions();
                     for (AP ap : mainMpg.getAtomicPropositions(finalNode)) {
-                        if (ap.toString().equals(atomicProposition)) {
+                        if (ap.equals(atomicProposition)) {
                             satisfiedVariables.add(node.getVarNumber());
                             break;
                         }
@@ -415,7 +408,7 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
                                               T stateTransformer,
                                               ModalProcessGraph<?, L, ?, AP, ?> mpg) {
         List<T> compositions = createCompositions(nodeId, mpgLabel, mpg);
-        EquationalBlock currentBlock = dependGraph.getBlock(currentBlockIndex);
+        EquationalBlock<L, AP> currentBlock = dependGraph.getBlock(currentBlockIndex);
         Set<AP> atomicPropositions = mpg.getAtomicPropositions(getNode(mpgLabel, nodeId));
         return stateTransformer.createUpdate(atomicPropositions, compositions, currentBlock);
     }
@@ -443,7 +436,7 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
         return workSet;
     }
 
-    public DependencyGraph getDependGraph() {
+    public DependencyGraph<L, AP> getDependGraph() {
         return dependGraph;
     }
 

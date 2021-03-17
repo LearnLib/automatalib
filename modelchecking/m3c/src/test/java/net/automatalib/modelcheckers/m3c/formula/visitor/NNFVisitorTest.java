@@ -35,19 +35,19 @@ public class NNFVisitorTest {
 
     @Test
     void testBaseCases() throws ParseException {
-        NNFVisitor nnfVisitor = new NNFVisitor();
+        NNFVisitor<String, String> nnfVisitor = new NNFVisitor<>();
 
-        FormulaNode atomicNode = ParserMuCalc.parse("! \"a\"");
-        FormulaNode nnfAtomicNode = nnfVisitor.transformToNNF(atomicNode);
+        FormulaNode<String, String> atomicNode = ParserMuCalc.parse("! \"a\"");
+        FormulaNode<String, String> nnfAtomicNode = nnfVisitor.transformToNNF(atomicNode);
         Assert.assertEquals(atomicNode, nnfAtomicNode);
 
-        FormulaNode trueNode = ParserMuCalc.parse("! true");
-        FormulaNode nnfTrueNode = nnfVisitor.transformToNNF(trueNode);
-        Assert.assertEquals(new FalseNode(), nnfTrueNode);
+        FormulaNode<String, String> trueNode = ParserMuCalc.parse("! true");
+        FormulaNode<String, String> nnfTrueNode = nnfVisitor.transformToNNF(trueNode);
+        Assert.assertEquals(new FalseNode<>(), nnfTrueNode);
 
-        FormulaNode falseNode = ParserMuCalc.parse("! false");
-        FormulaNode nnfFalseNode = nnfVisitor.transformToNNF(falseNode);
-        Assert.assertEquals(new TrueNode(), nnfFalseNode);
+        FormulaNode<String, String> falseNode = ParserMuCalc.parse("! false");
+        FormulaNode<String, String> nnfFalseNode = nnfVisitor.transformToNNF(falseNode);
+        Assert.assertEquals(new TrueNode<>(), nnfFalseNode);
 
         testGfp();
         testLfp();
@@ -59,67 +59,70 @@ public class NNFVisitorTest {
     }
 
     private void testGfp() throws ParseException {
-        FormulaNode gfpNode = ParserMuCalc.parse("! (nu X.(false || X))");
-        FormulaNode nnfGfpNode = gfpNode.toNNF();
+        FormulaNode<String, String> gfpNode = ParserMuCalc.parse("! (nu X.(false || X))");
+        FormulaNode<String, String> nnfGfpNode = gfpNode.toNNF();
 
         /* Create (mu X.(true & X)*/
-        LfpNode lfpNode = new LfpNode("X", new AndNode(new TrueNode(), new VariableNode("X")));
+        LfpNode<String, String> lfpNode = new LfpNode<>("X", new AndNode<>(new TrueNode<>(), new VariableNode<>("X")));
         Assert.assertEquals(lfpNode, nnfGfpNode);
     }
 
     private void testLfp() throws ParseException {
-        FormulaNode lfpNode = ParserMuCalc.parse("! (mu X.(false || !X))");
-        FormulaNode nnfLfpNode = lfpNode.toNNF();
+        FormulaNode<String, String> lfpNode = ParserMuCalc.parse("! (mu X.(false || !X))");
+        FormulaNode<String, String> nnfLfpNode = lfpNode.toNNF();
 
         /* Create nu X.(true & !X) */
-        GfpNode gfpNode = new GfpNode("X", new AndNode(new TrueNode(), new NotNode(new VariableNode("X"))));
+        GfpNode<String, String> gfpNode =
+                new GfpNode<>("X", new AndNode<>(new TrueNode<>(), new NotNode<>(new VariableNode<>("X"))));
         Assert.assertEquals(gfpNode, nnfLfpNode);
     }
 
     private void testAnd() throws ParseException {
-        FormulaNode andNode = ParserMuCalc.parse("!(<> false && true)");
-        FormulaNode nnfAndNode = andNode.toNNF();
+        FormulaNode<String, String> andNode = ParserMuCalc.parse("!(<> false && true)");
+        FormulaNode<String, String> nnfAndNode = andNode.toNNF();
 
         /* Create ([]true | false) */
-        OrNode orNode = new OrNode(new BoxNode("", new TrueNode()), new FalseNode());
+        OrNode<String, String> orNode = new OrNode<>(new BoxNode<>(null, new TrueNode<>()), new FalseNode<>());
         Assert.assertEquals(orNode, nnfAndNode);
     }
 
     private void testOr() throws ParseException {
-        FormulaNode orNode = ParserMuCalc.parse("!([a] false || true)");
-        FormulaNode nnfOrNode = orNode.toNNF();
+        FormulaNode<String, String> orNode = ParserMuCalc.parse("!([a] false || true)");
+        FormulaNode<String, String> nnfOrNode = orNode.toNNF();
 
         /* Create (<a> true & false) */
-        AndNode andNode = new AndNode(new DiamondNode("a", new TrueNode()), new FalseNode());
+        AndNode<String, String> andNode = new AndNode<>(new DiamondNode<>("a", new TrueNode<>()), new FalseNode<>());
         Assert.assertEquals(andNode, nnfOrNode);
     }
 
     private void testBoxNode() throws ParseException {
-        FormulaNode boxNode = ParserMuCalc.parse("![a]true");
-        FormulaNode nnfBoxNode = boxNode.toNNF();
+        FormulaNode<String, String> boxNode = ParserMuCalc.parse("![a]true");
+        FormulaNode<String, String> nnfBoxNode = boxNode.toNNF();
 
         /* Create (<a>false)*/
-        DiamondNode diamondNode = new DiamondNode("a", new FalseNode());
+        DiamondNode<String, String> diamondNode = new DiamondNode<>("a", new FalseNode<>());
         Assert.assertEquals(diamondNode, nnfBoxNode);
     }
 
     private void testDiamondNode() throws ParseException {
-        FormulaNode diamondNode = ParserMuCalc.parse("!<a>false");
-        FormulaNode nnfDiamondNode = diamondNode.toNNF();
+        FormulaNode<String, String> diamondNode = ParserMuCalc.parse("!<a>false");
+        FormulaNode<String, String> nnfDiamondNode = diamondNode.toNNF();
 
         /* Create ([a] true) */
-        BoxNode boxNode = new BoxNode("a", new TrueNode());
+        BoxNode<String, String> boxNode = new BoxNode<>("a", new TrueNode<>());
         Assert.assertEquals(boxNode, nnfDiamondNode);
     }
 
     private void testDefaultExample() throws ParseException {
-        FormulaNode ast = ParserMuCalc.parse("!(mu X.(<b><b>true || <>X))");
-        FormulaNode nnfAst = ast.toNNF();
+        FormulaNode<String, String> ast = ParserMuCalc.parse("!(mu X.(<b><b>true || <>X))");
+        FormulaNode<String, String> nnfAst = ast.toNNF();
 
         /* Create nu X.([b][b]false & []X)*/
-        GfpNode gfpNode = new GfpNode("X",
-                                      new AndNode(new BoxNode("b", new BoxNode("b", new FalseNode())),
-                                                  new BoxNode("", new VariableNode("X"))));
+        GfpNode<String, String> gfpNode = new GfpNode<>("X",
+                                                        new AndNode<>(new BoxNode<>("b",
+                                                                                    new BoxNode<>("b",
+                                                                                                  new FalseNode<>())),
+                                                                      new BoxNode<>(null, new VariableNode<>("X"))));
         Assert.assertEquals(gfpNode, nnfAst);
     }
 

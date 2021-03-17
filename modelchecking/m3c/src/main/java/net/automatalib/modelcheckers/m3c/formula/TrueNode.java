@@ -17,10 +17,10 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class TrueNode extends FormulaNode {
+public class TrueNode<L, AP> extends FormulaNode<L, AP> {
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 

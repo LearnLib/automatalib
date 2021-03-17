@@ -17,14 +17,14 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class AndNode extends BinaryFormulaNode {
+public class AndNode<L, AP> extends BinaryFormulaNode<L, AP> {
 
-    public AndNode(FormulaNode leftChild, FormulaNode rightChild) {
+    public AndNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
         super(leftChild, rightChild);
     }
 
     @Override
-    public <T> T accept(FormulaNodeVisitor<T> visitor) {
+    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
         return visitor.visit(this);
     }
 
