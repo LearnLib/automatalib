@@ -24,8 +24,6 @@ public abstract class PropertyTransformer<T extends PropertyTransformer<T>> {
 
     protected boolean isMust = true;
 
-    public PropertyTransformer() {}
-
     public abstract Set<Integer> evaluate(boolean[] input);
 
     public abstract T compose(T other);

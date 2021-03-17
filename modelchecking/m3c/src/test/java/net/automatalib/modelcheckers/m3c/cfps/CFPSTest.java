@@ -15,9 +15,8 @@
  */
 package net.automatalib.modelcheckers.m3c.cfps;
 
+import net.automatalib.modelcheckers.m3c.util.TestUtil;
 import org.testng.annotations.Test;
-
-import static net.automatalib.modelcheckers.m3c.util.TestUtil.assertCorrectlyCreated;
 
 class CFPSTest {
 
@@ -44,7 +43,7 @@ class CFPSTest {
         startState.addEdge(startToEnd);
         s1.addEdge(s1ToS2);
         s2.addEdge(s2TOEnd);
-        assertCorrectlyCreated(cfps);
+        TestUtil.assertCorrectlyCreated(cfps);
     }
 
     @Test
@@ -55,7 +54,7 @@ class CFPSTest {
         cfps.setMainGraph(ppg);
         addStates(ppg);
         cfps.addPPG(ppg);
-        assertCorrectlyCreated(cfps);
+        TestUtil.assertCorrectlyCreated(cfps);
     }
 
     private void addStates(ProceduralProcessGraph ppg) {
@@ -88,7 +87,7 @@ class CFPSTest {
         cfps.setMainGraph(ppg);
         cfps.addPPG(ppg);
         addStates(ppg);
-        assertCorrectlyCreated(cfps);
+        TestUtil.assertCorrectlyCreated(cfps);
     }
 
 }

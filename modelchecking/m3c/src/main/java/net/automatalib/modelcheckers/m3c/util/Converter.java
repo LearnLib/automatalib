@@ -32,7 +32,11 @@ import net.automatalib.modelcheckers.m3c.cfps.StateClass;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.words.Alphabet;
 
-public class Converter {
+public final class Converter {
+
+    private Converter() {
+        // prevent instantiation
+    }
 
     public static <L, AP> CFPS toCFPS(ModalContextFreeProcessSystem<L, AP> mcfps) {
 

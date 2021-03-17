@@ -36,7 +36,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * author murtovi
+ * @author murtovi
  */
 public class ParserCTLTest {
 

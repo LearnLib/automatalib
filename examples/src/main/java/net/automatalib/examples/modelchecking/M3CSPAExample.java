@@ -18,6 +18,7 @@ package net.automatalib.examples.modelchecking;
 import net.automatalib.automata.spa.MCFPSView;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.examples.spa.PalindromeExample;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.solver.SolveBDD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public final class M3CSPAExample {
         // prevent initialization
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         final SPA<?, Character> spa = PalindromeExample.buildSPA();
         final MCFPSView<Character> view = new MCFPSView<>(spa, elem -> {
             switch (elem) {

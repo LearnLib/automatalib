@@ -36,7 +36,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-class ADDTransformerTest {
+public class ADDTransformerTest {
 
     private static DependencyGraph dg;
     private static BooleanVectorLogicDDManager xddManager;

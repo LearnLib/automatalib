@@ -22,6 +22,7 @@ import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.graphs.ModalProcessGraph;
 import net.automatalib.graphs.MutableModalProcessGraph;
 import net.automatalib.graphs.base.compact.CompactMPG;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.PropertyTransformer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
@@ -29,7 +30,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-abstract class SolverTest<T extends PropertyTransformer<T>> {
+public abstract class SolverTest<T extends PropertyTransformer<T>> {
 
     protected static ModalContextFreeProcessSystem<Character, String> mcfps;
 
@@ -92,7 +93,7 @@ abstract class SolverTest<T extends PropertyTransformer<T>> {
     }
 
     @Test
-    void testSolve() {
+    void testSolve() throws ParseException {
         String formula = "mu X.(<b><b>true || <>X)";
         SolveDD<T, Character, String> solver = getSolver(mcfps, formula, false);
         assertSolve(solver, true);
@@ -104,7 +105,7 @@ abstract class SolverTest<T extends PropertyTransformer<T>> {
 
     public abstract SolveDD<T, Character, String> getSolver(ModalContextFreeProcessSystem<Character, String> mcfps,
                                                             String formula,
-                                                            boolean formulaIsCtl);
+                                                            boolean formulaIsCtl) throws ParseException;
 
     protected void assertSolve(SolveDD<T, Character, String> solver, boolean expectedIsSat) {
         solver.solve();

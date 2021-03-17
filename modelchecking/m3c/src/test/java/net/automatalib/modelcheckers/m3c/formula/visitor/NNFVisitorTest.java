@@ -31,7 +31,7 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-class NNFVisitorTest {
+public class NNFVisitorTest {
 
     @Test
     void testBaseCases() throws ParseException {

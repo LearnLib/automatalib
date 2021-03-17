@@ -20,7 +20,6 @@ import java.util.Set;
 
 import net.automatalib.graphs.concepts.MutableEdgeLabels;
 import net.automatalib.graphs.concepts.MutableKripkeInterpretation;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -39,6 +38,7 @@ public interface MutableModalProcessGraph<N, L, E, AP, TP extends MutableModalEd
         setNodeProperty(node, atomicPropositions);
     }
 
+    @Override
     default N addNode() {
         return addNode(Collections.emptySet());
     }

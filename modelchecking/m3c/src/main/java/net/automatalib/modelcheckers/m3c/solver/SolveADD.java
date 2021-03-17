@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.m3c.solver;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
@@ -25,7 +26,8 @@ public class SolveADD<L, AP> extends SolveDD<ADDTransformer, L, AP> {
 
     private BooleanVectorLogicDDManager ddManager;
 
-    public SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) {
+    public SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl)
+            throws ParseException {
         super(mcfps, formula, formulaIsCtl);
     }
 

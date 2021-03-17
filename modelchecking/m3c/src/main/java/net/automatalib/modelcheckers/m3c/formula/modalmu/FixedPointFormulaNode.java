@@ -15,34 +15,32 @@
  */
 package net.automatalib.modelcheckers.m3c.formula.modalmu;
 
+import java.util.Objects;
+
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.UnaryFormulaNode;
 
 public abstract class FixedPointFormulaNode extends UnaryFormulaNode {
 
-    private String variable;
+    private final String variable;
 
     public FixedPointFormulaNode(String variable) {
         this.variable = variable;
     }
 
     public FixedPointFormulaNode(String variable, FormulaNode leftChild) {
+        super(leftChild);
         this.variable = variable;
-        this.setLeftChild(leftChild);
     }
 
     public String getVariable() {
         return variable;
     }
 
-    public void setVariable(String variable) {
-        this.variable = variable;
-    }
-
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (variable != null ? variable.hashCode() : 0);
+        result = 31 * result + Objects.hashCode(variable);
         return result;
     }
 
@@ -60,6 +58,6 @@ public abstract class FixedPointFormulaNode extends UnaryFormulaNode {
 
         FixedPointFormulaNode that = (FixedPointFormulaNode) o;
 
-        return variable != null ? variable.equals(that.variable) : that.variable == null;
+        return Objects.equals(variable, that.variable);
     }
 }

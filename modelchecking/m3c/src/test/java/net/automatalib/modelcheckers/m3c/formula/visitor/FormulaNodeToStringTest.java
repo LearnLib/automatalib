@@ -22,7 +22,7 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-class FormulaNodeToStringTest {
+public class FormulaNodeToStringTest {
 
     @Test
     void testBaseCases() {

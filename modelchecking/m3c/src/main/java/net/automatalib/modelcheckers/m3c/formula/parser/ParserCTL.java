@@ -23,8 +23,8 @@ public final class ParserCTL {
 
     private ParserCTL() {}
 
-    public static FormulaNode parse(String ctlForumla) throws ParseException {
-        return new InternalM3CParserCTL(new StringReader(ctlForumla)).formula();
+    public static FormulaNode parse(String ctlFormula) throws ParseException {
+        return new InternalM3CParserCTL(new StringReader(ctlFormula)).formula();
     }
 
 }

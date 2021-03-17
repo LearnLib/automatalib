@@ -35,9 +35,6 @@ public class NNFVisitor {
 
     private Set<String> varsToNegate;
 
-    public NNFVisitor() {
-    }
-
     public FormulaNode transformToNNF(FormulaNode node) {
         this.varsToNegate = new HashSet<>();
         return visit(node, false);
@@ -77,12 +74,12 @@ public class NNFVisitor {
             node.setLeftChild(childNode);
             return node;
         }
+
         varsToNegate.add(node.getVariable());
-        LfpNode lfpNode = new LfpNode(node.getVariable());
         FormulaNode childNode = visit(node.getLeftChild(), true);
-        lfpNode.setLeftChild(childNode);
         varsToNegate.remove(node.getVariable());
-        return lfpNode;
+
+        return new LfpNode(node.getVariable(), childNode);
     }
 
     private FormulaNode visitLFPNode(LfpNode node, boolean negate) {
@@ -91,12 +88,12 @@ public class NNFVisitor {
             node.setLeftChild(childNode);
             return node;
         }
+
         varsToNegate.add(node.getVariable());
-        GfpNode gfpNode = new GfpNode(node.getVariable());
         FormulaNode childNode = visit(node.getLeftChild(), true);
-        gfpNode.setLeftChild(childNode);
         varsToNegate.remove(node.getVariable());
-        return gfpNode;
+
+        return new GfpNode(node.getVariable(), childNode);
     }
 
     private FormulaNode visitAndNode(AndNode node, boolean negate) {
@@ -107,12 +104,9 @@ public class NNFVisitor {
             node.setRightChild(rightChild);
             return node;
         }
-        OrNode orNode = new OrNode();
         FormulaNode leftChild = visit(node.getLeftChild(), true);
         FormulaNode rightChild = visit(node.getRightChild(), true);
-        orNode.setLeftChild(leftChild);
-        orNode.setRightChild(rightChild);
-        return orNode;
+        return new OrNode(leftChild, rightChild);
     }
 
     private FormulaNode visitAtomicNode(AtomicNode node, boolean negate) {
@@ -147,10 +141,7 @@ public class NNFVisitor {
     }
 
     private FormulaNode visitFalseNode(FalseNode node, boolean negate) {
-        if (!negate) {
-            return node;
-        }
-        return new TrueNode();
+        return negate ? new TrueNode() : node;
     }
 
     private FormulaNode visitVariableNode(VariableNode node, boolean negate) {
@@ -162,9 +153,7 @@ public class NNFVisitor {
     }
 
     private FormulaNode visitNotNode(NotNode node, boolean negate) {
-        FormulaNode leftChild = node.getLeftChild();
-        boolean invertedNegate = !negate;
-        return visit(leftChild, invertedNegate);
+        return visit(node.getLeftChild(), !negate);
     }
 
     private FormulaNode visitOrNode(OrNode node, boolean negate) {
@@ -175,19 +164,13 @@ public class NNFVisitor {
             node.setRightChild(rightChild);
             return node;
         }
-        AndNode andNode = new AndNode();
         FormulaNode leftChild = visit(node.getLeftChild(), true);
         FormulaNode rightChild = visit(node.getRightChild(), true);
-        andNode.setLeftChild(leftChild);
-        andNode.setRightChild(rightChild);
-        return andNode;
+        return new AndNode(leftChild, rightChild);
     }
 
     private FormulaNode visitTrueNode(TrueNode node, boolean negate) {
-        if (!negate) {
-            return node;
-        }
-        return new FalseNode();
+        return negate ? new FalseNode() : node;
     }
 
 }

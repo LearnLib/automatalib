@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class CFPS {
+public final class CFPS {
 
     private final List<ProceduralProcessGraph> processList;
     private final List<State> stateList;
@@ -70,15 +70,6 @@ public class CFPS {
         return stateList.get(stateNumber);
     }
 
-    public int getStateNumberOfProcess(String processName) {
-        for (ProceduralProcessGraph ppg : processList) {
-            if (ppg.getProcessName().equals(processName)) {
-                return ppg.getStartState().getStateNumber();
-            }
-        }
-        return -1;
-    }
-
     public State getState(String name) {
         for (State state : stateList) {
             if (state.getName().equals(name)) {
@@ -86,6 +77,15 @@ public class CFPS {
             }
         }
         return null;
+    }
+
+    public int getStateNumberOfProcess(String processName) {
+        for (ProceduralProcessGraph ppg : processList) {
+            if (ppg.getProcessName().equals(processName)) {
+                return ppg.getStartState().getStateNumber();
+            }
+        }
+        return -1;
     }
 
     public List<State> getAllEndStates() {

@@ -15,8 +15,8 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
-import net.automatalib.modelcheckers.m3c.formula.ctl.CTLNodeVisitor;
-import net.automatalib.modelcheckers.m3c.formula.modalmu.MuCalcNodeVisitor;
+import java.util.Objects;
+
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeToString;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 import net.automatalib.modelcheckers.m3c.formula.visitor.NNFVisitor;
@@ -30,6 +30,16 @@ public abstract class FormulaNode {
     private int varNumber;
 
     public FormulaNode() {
+        this(null);
+    }
+
+    public FormulaNode(FormulaNode leftChild) {
+        this(leftChild, null);
+    }
+
+    public FormulaNode(FormulaNode leftChild, FormulaNode rightChild) {
+        this.leftChild = leftChild;
+        this.rightChild = rightChild;
     }
 
     public FormulaNode getLeftChild() {
@@ -49,10 +59,6 @@ public abstract class FormulaNode {
     }
 
     public abstract <T> T accept(FormulaNodeVisitor<T> visitor);
-
-    public abstract <T> T accept(CTLNodeVisitor<T> visitor);
-
-    public abstract <T> T accept(MuCalcNodeVisitor<T> visitor);
 
     public FormulaNode toNNF() {
         return new NNFVisitor().transformToNNF(this);
@@ -90,14 +96,10 @@ public abstract class FormulaNode {
         return rightChild.getVarNumber();
     }
 
-    public String getLabel() {
-        throw new UnsupportedOperationException("Remove this");
-    }
-
     @Override
     public int hashCode() {
-        int result = leftChild != null ? leftChild.hashCode() : 0;
-        result = 31 * result + (rightChild != null ? rightChild.hashCode() : 0);
+        int result = Objects.hashCode(leftChild);
+        result = 31 * result + Objects.hash(rightChild);
         return result;
     }
 
@@ -112,10 +114,7 @@ public abstract class FormulaNode {
 
         FormulaNode that = (FormulaNode) o;
 
-        if (leftChild != null ? !leftChild.equals(that.leftChild) : that.leftChild != null) {
-            return false;
-        }
-        return rightChild != null ? rightChild.equals(that.rightChild) : that.rightChild == null;
+        return Objects.equals(leftChild, that.leftChild) && Objects.equals(rightChild, that.rightChild);
     }
 
     @Override

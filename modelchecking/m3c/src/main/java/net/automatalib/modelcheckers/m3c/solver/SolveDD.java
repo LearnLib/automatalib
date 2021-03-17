@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
@@ -41,12 +42,9 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import net.automatalib.modelcheckers.m3c.formula.visitor.CTLToMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.PropertyTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SolveDD.class);
     protected ModalContextFreeProcessSystem<L, AP> mcfps;
     protected DependencyGraph dependGraph;
     protected int currentBlockIndex;
@@ -61,31 +59,8 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
     // Keeps track of which state's property transformers have to be updated.
     private BitSet[] workSet;
 
-    public SolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) {
-        this.mcfps = mcfps;
-        if (formulaIsCtl) {
-            FormulaNode ctlFormula = null;
-            try {
-                ctlFormula = ParserCTL.parse(formula);
-            } catch (ParseException e) {
-                LOGGER.error(e.getMessage(), e);
-                throw new IllegalArgumentException("Input formula " + formula + " is not a valid CTL formula");
-            }
-            this.ast = ctlToMuCalc(ctlFormula);
-        } else {
-            try {
-                this.ast = ParserMuCalc.parse(formula);
-            } catch (ParseException e) {
-                LOGGER.error(e.getMessage(), e);
-                throw new IllegalArgumentException("Input formula " + formula + " is not a valid mu calculus formula");
-            }
-        }
-        this.ast = this.ast.toNNF();
-    }
-
-    protected static FormulaNode ctlToMuCalc(FormulaNode ctlFormula) {
-        CTLToMuCalc transformation = new CTLToMuCalc();
-        return transformation.toMuCalc(ctlFormula);
+    public SolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) throws ParseException {
+        this(mcfps, formulaIsCtl ? ParserCTL.parse(formula) : ParserMuCalc.parse(formula), formulaIsCtl);
     }
 
     public SolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode formula, boolean formulaIsCtl) {
@@ -97,6 +72,12 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
         }
         this.ast = this.ast.toNNF();
     }
+
+    protected static FormulaNode ctlToMuCalc(FormulaNode ctlFormula) {
+        CTLToMuCalc transformation = new CTLToMuCalc();
+        return transformation.toMuCalc(ctlFormula);
+    }
+
 
     public void solve() {
         checkCFPS();
@@ -188,18 +169,6 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
         }
     }
 
-    private void initPredecessorsMapping() {
-        predecessors = new ArrayList<>(mcfps.getMPGs().size());
-        for (int i = 0; i < mcfps.getMPGs().size(); i++) {
-            predecessors.add(null);
-        }
-        for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> labelMpg : mcfps.getMPGs().entrySet()) {
-            L mpgLabel = labelMpg.getKey();
-            ModalProcessGraph<?, L, ?, AP, ?> mpg = labelMpg.getValue();
-            initPredecessorsMapping(mpgLabel, mpg, getMpgId(mpgLabel));
-        }
-    }
-
     protected void initNodeIds() {
         nodeIDs = new ArrayList<>(mcfps.getMPGs().size());
         for (int i = 0; i < mcfps.getMPGs().size(); i++) {
@@ -218,6 +187,18 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
     protected abstract T createInitTransformerEnd();
 
     protected abstract T createInitState();
+
+    private void initPredecessorsMapping() {
+        predecessors = new ArrayList<>(mcfps.getMPGs().size());
+        for (int i = 0; i < mcfps.getMPGs().size(); i++) {
+            predecessors.add(null);
+        }
+        for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> labelMpg : mcfps.getMPGs().entrySet()) {
+            L mpgLabel = labelMpg.getKey();
+            ModalProcessGraph<?, L, ?, AP, ?> mpg = labelMpg.getValue();
+            initPredecessorsMapping(mpgLabel, mpg, getMpgId(mpgLabel));
+        }
+    }
 
     private <N, E> void initPredecessorsMapping(L mpgLabel, ModalProcessGraph<N, L, E, AP, ?> mpg, int mpgId) {
         Map<Integer, Set<Integer>> nodeToPredecessors = new HashMap<>();
@@ -280,13 +261,13 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
         return arr;
     }
 
-    public Set<Integer> getAllAPDeadlockedState() {
-        return getAllAPDeadlockedState(mcfps.getMPGs().get(mcfps.getMainProcess()));
-    }
-
     @SuppressWarnings("unchecked")
     private <N> NodeIDs<N> getNodeIDs(L mpgLabel) {
         return (NodeIDs<N>) nodeIDs.get(getMpgId(mpgLabel));
+    }
+
+    public Set<Integer> getAllAPDeadlockedState() {
+        return getAllAPDeadlockedState(mcfps.getMPGs().get(mcfps.getMainProcess()));
     }
 
     private <N, E, TP extends ModalEdgeProperty> Set<Integer> getAllAPDeadlockedState(ModalProcessGraph<N, L, E, AP, TP> mainMpg) {
@@ -339,7 +320,7 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
             propTransformers.get(getMpgId(mpgLabel)).set(nodeId, updatedTransformer);
             updateWorkSet(nodeId, mpgLabel);
         }
-        if (workSetIsEmpty() && (currentBlockIndex > 0)) {
+        if (workSetIsEmpty() && currentBlockIndex > 0) {
             currentBlockIndex--;
             fillWorkList();
         }
@@ -347,7 +328,7 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
 
     protected void updateWorkSet(int nodeId, L mpgLabel) {
         ModalProcessGraph<?, L, ?, AP, ?> mpg = mcfps.getMPGs().get(mpgLabel);
-        if (mpg.getInitialNode().equals(getNode(mpgLabel, nodeId))) {
+        if (Objects.equals(mpg.getInitialNode(), getNode(mpgLabel, nodeId))) {
             updateWorkSetStartState(mpgLabel);
         }
         addPredecessorsToWorkSet(nodeId, getMpgId(mpgLabel));
@@ -362,15 +343,15 @@ public abstract class SolveDD<T extends PropertyTransformer<T>, L, AP> {
         return true;
     }
 
-    protected void updateWorkSetStartState(L mpgLabel) {
-        for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> labelMpg : mcfps.getMPGs().entrySet()) {
-            updateWorkSetStartState(mpgLabel, labelMpg.getKey(), labelMpg.getValue());
-        }
-    }
-
     protected void addPredecessorsToWorkSet(int nodeId, int mpgId) {
         for (Integer predecessorId : predecessors.get(mpgId).getOrDefault(nodeId, new HashSet<>())) {
             workSet[mpgId].set(predecessorId, true);
+        }
+    }
+
+    protected void updateWorkSetStartState(L mpgLabel) {
+        for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> labelMpg : mcfps.getMPGs().entrySet()) {
+            updateWorkSetStartState(mpgLabel, labelMpg.getKey(), labelMpg.getValue());
         }
     }
 

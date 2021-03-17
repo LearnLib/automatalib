@@ -33,7 +33,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-class CTLToMuCalcTest {
+public class CTLToMuCalcTest {
 
     private static CTLToMuCalc transformer;
 

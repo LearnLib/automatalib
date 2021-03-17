@@ -133,12 +133,12 @@ public class State {
         outgoingEdges.add(edge);
     }
 
-    private void addIncomingEdge(Edge edge) {
-        incomingEdges.add(edge);
-    }
-
     public void addOutgoingEdge(State target, String edgeLabel, EdgeType edgeType) {
         outgoingEdges.add(new Edge(this, target, edgeLabel, edgeType));
+    }
+
+    private void addIncomingEdge(Edge edge) {
+        incomingEdges.add(edge);
     }
 
 }

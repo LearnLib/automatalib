@@ -61,10 +61,6 @@ public class CTLToMuCalc extends FormulaNodeVisitor<FormulaNode> {
         return new LfpNode(fixedPointVar, or);
     }
 
-    private String getFixedPointVar() {
-        return "Z" + numFixedPointVars++;
-    }
-
     @Override
     public FormulaNode visit(AGNode node) {
         /* AG p = nu X.(p & []X) */
@@ -125,13 +121,11 @@ public class CTLToMuCalc extends FormulaNodeVisitor<FormulaNode> {
     public FormulaNode visit(EUNode node) {
         /* E[p U q] => mu X.(toMu(q) | (toMu(p) & <>X)) */
         String fixedPointVar = getFixedPointVar();
-        LfpNode lfpNode = new LfpNode(fixedPointVar);
         FormulaNode p = visit(node.getLeftChild());
         FormulaNode q = visit(node.getRightChild());
         AndNode andNode = new AndNode(p, new DiamondNode("", new VariableNode(fixedPointVar)));
         OrNode orNode = new OrNode(q, andNode);
-        lfpNode.setLeftChild(orNode);
-        return lfpNode;
+        return new LfpNode(fixedPointVar, orNode);
     }
 
     @Override
@@ -204,6 +198,10 @@ public class CTLToMuCalc extends FormulaNodeVisitor<FormulaNode> {
     @Override
     public FormulaNode visit(VariableNode node) {
         return new VariableNode(node.getVariable());
+    }
+
+    private String getFixedPointVar() {
+        return "Z" + numFixedPointVars++;
     }
 
 }

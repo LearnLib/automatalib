@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.m3c.solver;
 import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
@@ -25,7 +26,8 @@ public class SolveBDD<L, AP> extends SolveDD<BDDTransformer, L, AP> {
 
     private BDDManager bddManager;
 
-    public SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl) {
+    public SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps, String formula, boolean formulaIsCtl)
+            throws ParseException {
         super(mcfps, formula, formulaIsCtl);
     }
 

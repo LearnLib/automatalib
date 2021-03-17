@@ -16,13 +16,14 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
 
 public class SolverBDDTest extends SolverTest<BDDTransformer> {
 
     public SolveDD<BDDTransformer, Character, String> getSolver(ModalContextFreeProcessSystem<Character, String> mcfps,
                                                                 String formula,
-                                                                boolean formulaIsCtl) {
+                                                                boolean formulaIsCtl) throws ParseException {
         return new SolveBDD<>(mcfps, formula, formulaIsCtl);
     }
 

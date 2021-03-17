@@ -22,7 +22,11 @@ import net.automatalib.modelcheckers.m3c.cfps.State;
 import net.automatalib.modelcheckers.m3c.cfps.StateClass;
 import org.testng.Assert;
 
-public class TestUtil {
+public final class TestUtil {
+
+    private TestUtil() {
+        // prevent instantiation
+    }
 
     public static void assertCorrectlyCreated(CFPS cfps) {
         Assert.assertEquals(1, cfps.getProcessList().size());

@@ -42,7 +42,18 @@ limitations under the License.
     <Match>
         <!-- TODO: mostly due to performance. However, usage should be checked again -->
         <Bug pattern="EI_EXPOSE_REP2"/>
-        <Class name="net.automatalib.util.partitionrefinement.PaigeTarjan"/>
+        <Or>
+            <Class name="net.automatalib.modelcheckers.m3c.transformer.BDDTransformer"/>
+            <Class name="net.automatalib.util.partitionrefinement.PaigeTarjan"/>
+        </Or>
+    </Match>
+    <Match>
+        <!-- TODO: mostly due to performance. However, usage should be checked again -->
+        <Bug pattern="EI_EXPOSE_REP"/>
+        <Or>
+            <Class name="net.automatalib.modelcheckers.m3c.solver.SolveDD"/>
+            <Class name="net.automatalib.modelcheckers.m3c.transformer.BDDTransformer"/>
+        </Or>
     </Match>
     <Match>
         <!-- mostly internal structures, where this behavior is fine -->

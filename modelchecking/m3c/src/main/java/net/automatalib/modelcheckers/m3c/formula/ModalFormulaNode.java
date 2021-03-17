@@ -15,31 +15,29 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
+import java.util.Objects;
+
 public abstract class ModalFormulaNode extends UnaryFormulaNode {
 
-    protected String action;
+    private final String action;
 
     public ModalFormulaNode(String action) {
         this.action = action;
     }
 
     public ModalFormulaNode(String action, FormulaNode node) {
+        super(node);
         this.action = action;
-        this.setLeftChild(node);
     }
 
     public String getAction() {
         return action;
     }
 
-    public void setAction(String action) {
-        this.action = action;
-    }
-
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (action != null ? action.hashCode() : 0);
+        result = 31 * result + Objects.hashCode(action);
         return result;
     }
 
@@ -57,6 +55,6 @@ public abstract class ModalFormulaNode extends UnaryFormulaNode {
 
         ModalFormulaNode that = (ModalFormulaNode) o;
 
-        return action != null ? action.equals(that.action) : that.action == null;
+        return Objects.equals(action, that.action);
     }
 }
