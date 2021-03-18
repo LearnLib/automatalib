@@ -47,7 +47,7 @@ public class SimpleStateIDs<S> implements StateIDs<S> {
             throw new IllegalArgumentException();
         }
 
-        return id.intValue();
+        return id;
     }
 
     @Override

@@ -65,7 +65,7 @@ final class StateSignature<O> implements Serializable {
             return false;
         }
 
-        final StateSignature other = (StateSignature) obj;
+        final StateSignature<?> other = (StateSignature<?>) obj;
 
         return hashCode == other.hashCode && Arrays.equals(outputs.array, other.outputs.array) &&
                Arrays.equals(successors.array, other.successors.array);

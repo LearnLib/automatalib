@@ -47,7 +47,7 @@ public class SimpleNodeIDs<N> implements NodeIDs<N> {
             throw new IllegalArgumentException();
         }
 
-        return id.intValue();
+        return id;
     }
 
     @Override

@@ -34,7 +34,7 @@ final class AcceptanceDecoder implements BlockPropertyDecoder<Boolean> {
         if (mask == 0) {
             start(in);
         }
-        Boolean prop = Boolean.valueOf((currAcc & mask) == mask);
+        boolean prop = (currAcc & mask) == mask;
         mask <<= 1;
         return prop;
     }

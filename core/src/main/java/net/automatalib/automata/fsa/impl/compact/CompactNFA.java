@@ -79,11 +79,6 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
     }
 
     @Override
-    public Integer addInitialState(boolean accepting) {
-        return super.addInitialState(Boolean.valueOf(accepting));
-    }
-
-    @Override
     public Integer addState(boolean accepting) {
         return addState(Boolean.valueOf(accepting));
     }

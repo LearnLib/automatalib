@@ -40,7 +40,7 @@ public class CharRange extends AbstractList<Character> implements ArrayWritable<
 
     @Override
     public Character get(int index) {
-        return Character.valueOf(charGet(index));
+        return charGet(index);
     }
 
     public char charGet(int index) {

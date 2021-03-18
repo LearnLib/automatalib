@@ -100,7 +100,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
     @Override
     public int getStateId(Integer state) {
-        return state.intValue();
+        return state;
     }
 
     @Override

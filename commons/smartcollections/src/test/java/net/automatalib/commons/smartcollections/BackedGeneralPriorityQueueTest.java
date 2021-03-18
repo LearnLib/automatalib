@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Ints;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -31,7 +32,7 @@ public class BackedGeneralPriorityQueueTest {
     @BeforeClass
     public void setUp() {
         final List<Character> values = Lists.charactersOf("abcdefghij");
-        final List<Integer> keys = Lists.newArrayList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        final List<Integer> keys = Ints.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         Collections.reverse(keys);
 
         this.queue = new BackedGeneralPriorityQueue<>(values, keys);

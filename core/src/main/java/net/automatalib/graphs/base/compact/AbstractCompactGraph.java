@@ -65,12 +65,12 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
 
     @Override
     public Integer getTarget(E edge) {
-        return Integer.valueOf(edge.getTarget());
+        return edge.getTarget();
     }
 
     @Override
     public Integer addNode(@Nullable NP properties) {
-        return Integer.valueOf(addIntNode(properties));
+        return addIntNode(properties);
     }
 
     public int addIntNode(@Nullable NP properties) {
@@ -118,12 +118,12 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
 
     @Override
     public int getNodeId(Integer node) {
-        return node.intValue();
+        return node;
     }
 
     @Override
     public Integer getNode(int id) {
-        return Integer.valueOf(id);
+        return id;
     }
 
     @Override

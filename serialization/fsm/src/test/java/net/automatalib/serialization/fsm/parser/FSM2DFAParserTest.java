@@ -18,7 +18,6 @@ package net.automatalib.serialization.fsm.parser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.function.Function;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -27,6 +26,7 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -79,15 +79,11 @@ public class FSM2DFAParserTest extends AbstractFSM2ParserTest {
     }
 
     @Override
-    protected CompactDFA<Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
+    protected CompactDFA<Character> getParsedAutomaton(@Nullable Collection<Character> requiredInputs)
             throws IOException {
         try (InputStream is = FSM2DFAParserTest.class.getResourceAsStream("/DFA2.fsm")) {
             final Function<String, Character> ip = s -> s.charAt(0);
-
-            final CompactDFA<Character> dfa =
-                    FSM2DFAParser.getParser(requiredInputs.orElse(null), ip, "label", "accept").readModel(is);
-
-            return dfa;
+            return FSM2DFAParser.getParser(requiredInputs, ip, "label", "accept").readModel(is);
         }
     }
 

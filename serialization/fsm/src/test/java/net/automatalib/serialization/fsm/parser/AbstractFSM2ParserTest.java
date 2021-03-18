@@ -19,11 +19,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.base.compact.AbstractCompactDeterministic;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractFSM2ParserTest {
 
-    protected abstract UniversalDeterministicAutomaton<?, Character, ?, ?, ?> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
+    protected abstract UniversalDeterministicAutomaton<?, Character, ?, ?, ?> getParsedAutomaton(@Nullable Collection<Character> requiredInputs)
             throws IOException;
 
     /**
@@ -57,8 +57,7 @@ public abstract class AbstractFSM2ParserTest {
         final Word<Character> mixedWord = Word.fromCharSequence("a[a[a[");
 
         // check automatically parsed inputs
-        final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> automaticAutomaton =
-                getParsedAutomaton(Optional.empty());
+        final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> automaticAutomaton = getParsedAutomaton(null);
 
         // just trace the word and ignore the result -- checks to not throw an exception
         automaticAutomaton.getState(existingWord);
@@ -66,7 +65,7 @@ public abstract class AbstractFSM2ParserTest {
 
         // check parsed automaton with existing inputs
         final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> existingAutomaton =
-                getParsedAutomaton(Optional.of(existingInputs));
+                getParsedAutomaton(existingInputs);
 
         // just trace the word and ignore the result -- checks to not throw an exception
         existingAutomaton.getState(existingWord);
@@ -74,14 +73,13 @@ public abstract class AbstractFSM2ParserTest {
 
         // check parsed automaton with non-existing inputs
         final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> nonExistingAutomaton =
-                getParsedAutomaton(Optional.of(nonExistingInputs));
+                getParsedAutomaton(nonExistingInputs);
 
         // check that we trace undefined transitions but don't throw an exception
         Assert.assertNull(nonExistingAutomaton.getState(nonExistingWord));
 
         // check parsed automaton with a mix of (non)-existing inputs
-        final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> mixedAutomaton =
-                getParsedAutomaton(Optional.of(mixedInputs));
+        final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> mixedAutomaton = getParsedAutomaton(mixedInputs);
 
         // check that we trace undefined transitions but don't throw an exception
         Assert.assertNull(mixedAutomaton.getState(mixedWord));

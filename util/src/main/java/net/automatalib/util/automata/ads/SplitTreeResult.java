@@ -16,8 +16,10 @@
 package net.automatalib.util.automata.ads;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
+
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class used by the algorithm of {@link LeeYannakakis}.
@@ -33,30 +35,26 @@ import java.util.Set;
  */
 class SplitTreeResult<S, I, O> {
 
-    private final Optional<SplitTree<S, I, O>> delegate;
+    private final @Nullable SplitTree<S, I, O> delegate;
     private final Set<S> indistinguishableStates;
 
     SplitTreeResult(final SplitTree<S, I, O> result) {
-        this.delegate = Optional.of(result);
+        this.delegate = result;
         this.indistinguishableStates = Collections.emptySet();
     }
 
     SplitTreeResult(final Set<S> indistinguishableStates) {
-        this.delegate = Optional.empty();
+        this.delegate = null;
         this.indistinguishableStates = indistinguishableStates;
     }
 
-    SplitTreeResult() {
-        this.delegate = Optional.empty();
-        this.indistinguishableStates = Collections.emptySet();
-    }
-
+    @EnsuresNonNullIf(expression = "this.delegate", result = true)
     public boolean isPresent() {
-        return this.delegate.isPresent();
+        return this.delegate != null;
     }
 
-    public SplitTree<S, I, O> get() {
-        return this.delegate.get();
+    public @Nullable SplitTree<S, I, O> get() {
+        return this.delegate;
     }
 
     public Set<S> getIndistinguishableStates() {

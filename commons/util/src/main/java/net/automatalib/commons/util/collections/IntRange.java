@@ -40,7 +40,7 @@ final class IntRange extends AbstractList<Integer> implements ArrayWritable<Inte
 
     @Override
     public Integer get(int index) {
-        return Integer.valueOf(intGet(index));
+        return intGet(index);
     }
 
     public int intGet(int index) {
@@ -64,7 +64,7 @@ final class IntRange extends AbstractList<Integer> implements ArrayWritable<Inte
         if (o == null || o.getClass() != Integer.class) {
             return -1;
         }
-        int i = ((Integer) o).intValue();
+        int i = (Integer) o;
         return indexOf(i);
     }
 

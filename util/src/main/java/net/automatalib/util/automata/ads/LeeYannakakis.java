@@ -80,11 +80,7 @@ public final class LeeYannakakis {
 
         if (str.isPresent()) {
             final Set<S> states = new HashSet<>(automaton.getStates());
-            return new LYResult<>(extractADS(automaton,
-                                             str.get(),
-                                             states,
-                                             new ReflexiveMapView<>(states),
-                                             null));
+            return new LYResult<>(extractADS(automaton, str.get(), states, new ReflexiveMapView<>(states), null));
         }
 
         return new LYResult<>(str.getIndistinguishableStates());
@@ -99,7 +95,10 @@ public final class LeeYannakakis {
 
         while (leaves.stream().anyMatch(LeeYannakakis::needsRefinement)) {
 
-            final int maxCardinality = leaves.stream().mapToInt(x -> x.getPartition().size()).max().getAsInt();
+            final int maxCardinality = leaves.stream()
+                                             .mapToInt(x -> x.getPartition().size())
+                                             .max()
+                                             .orElseThrow(IllegalStateException::new);
             final Set<SplitTree<S, I, O>> R =
                     leaves.stream().filter(x -> x.getPartition().size() == maxCardinality).collect(Collectors.toSet());
 

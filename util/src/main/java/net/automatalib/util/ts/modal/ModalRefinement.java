@@ -16,6 +16,8 @@
 package net.automatalib.util.ts.modal;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.BiPredicate;
@@ -93,12 +95,8 @@ public final class ModalRefinement {
             }
         }
 
-        Set<ModalEdgeProperty.ModalType> may = Sets.newHashSetWithExpectedSize(2);
-        may.add(ModalType.MAY);
-        may.add(ModalType.MUST);
-
-        Set<ModalType> must = Sets.newHashSetWithExpectedSize(1);
-        must.add(ModalType.MUST);
+        Set<ModalType> may = EnumSet.of(ModalType.MAY, ModalType.MUST);
+        Set<ModalType> must = Collections.singleton(ModalType.MUST);
 
         boolean update = true;
         while (update) {
