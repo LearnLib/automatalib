@@ -49,7 +49,6 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 public final class Minimizer<S, L> {
 
-    private static final ThreadLocal<Minimizer<?, ?>> LOCAL_INSTANCE = ThreadLocal.withInitial(Minimizer::new);
     // The following attributes may be reused. Most of them are used
     // as local variables in the split() method, but storing them
     // as attributes helps to avoid costly re-allocations.
@@ -63,11 +62,6 @@ public final class Minimizer<S, L> {
     private @Nullable MutableMapping<S, @Nullable State<S, L>> stateStorage;
     private @Nullable UnorderedCollection<Block<S, L>> partition;
     private int numBlocks;
-
-    /**
-     * Default constructor.
-     */
-    private Minimizer() {}
 
     /**
      * Minimizes an automaton. The automaton is not minimized directly, instead, a {@link MinimizationResult} structure
@@ -88,27 +82,7 @@ public final class Minimizer<S, L> {
 
     public static <S, L> MinimizationResult<S, L> minimize(UniversalGraph<S, ?, ?, L> graph,
                                                            Collection<? extends S> start) {
-        Minimizer<S, L> minimizer = getLocalInstance();
-        return minimizer.performMinimization(graph, start);
-    }
-
-    /**
-     * Retrieves the local instance of this minimizer.
-     * <p>
-     * The minimizer acts like a singleton of which each thread possesses their own. The minimizer instance returned by
-     * this method is the one belonging to the calling thread. Therefore, it is not safe to share such an instance
-     * between two threads.
-     *
-     * @param <S>
-     *         state class.
-     * @param <L>
-     *         transition label class.
-     *
-     * @return The minimizers local instance.
-     */
-    @SuppressWarnings("unchecked")
-    public static <S, L> Minimizer<S, L> getLocalInstance() {
-        return (Minimizer<S, L>) LOCAL_INSTANCE.get();
+        return new Minimizer<S, L>().performMinimization(graph, start);
     }
 
     /**
