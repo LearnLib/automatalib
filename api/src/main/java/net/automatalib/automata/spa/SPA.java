@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.fsa.DFA;
@@ -62,8 +63,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author frohme
  */
-public interface SPA<S, I>
-        extends DeterministicAcceptorTS<S, I>, SuffixOutput<I, Boolean>, InputAlphabetHolder<I>, GraphViewable {
+public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
+                                   SuffixOutput<I, Boolean>,
+                                   InputAlphabetHolder<I>,
+                                   FiniteRepresentation,
+                                   GraphViewable {
 
     /**
      * Refinement of {@link InputAlphabetHolder#getInputAlphabet()}' to add the constraint that an {@link SPA} operates
@@ -138,6 +142,7 @@ public interface SPA<S, I>
      *
      * @return the size of this {@link SPA}
      */
+    @Override
     default int size() {
         int size = 0;
 

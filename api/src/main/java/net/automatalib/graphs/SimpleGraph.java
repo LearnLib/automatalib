@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Iterators;
+import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.graphs.helpers.SimpleNodeIDs;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -33,13 +34,14 @@ import net.automatalib.visualization.VisualizationHelper;
  *
  * @author Malte Isberner
  */
-public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N> {
+public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N>, FiniteRepresentation {
 
     /**
      * Retrieves the number of nodes of this graph.
      *
      * @return the number of nodes of this graph.
      */
+    @Override
     default int size() {
         return getNodes().size();
     }

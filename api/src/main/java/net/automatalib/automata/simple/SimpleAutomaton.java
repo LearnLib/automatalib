@@ -18,6 +18,7 @@ package net.automatalib.automata.simple;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.helpers.SimpleStateIDs;
 import net.automatalib.automata.helpers.StateIDGrowingMapping;
@@ -36,7 +37,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
+public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S>, FiniteRepresentation {
 
     @Override
     default Iterator<S> iterator() {
@@ -69,6 +70,7 @@ public interface SimpleAutomaton<S, I> extends SimpleTS<S, I>, Iterable<S> {
      *
      * @return the number of states of this transition system
      */
+    @Override
     default int size() {
         return getStates().size();
     }
