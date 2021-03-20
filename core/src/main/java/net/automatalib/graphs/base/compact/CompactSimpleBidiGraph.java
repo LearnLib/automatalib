@@ -53,7 +53,7 @@ public class CompactSimpleBidiGraph<@Nullable EP> extends AbstractCompactSimpleG
 
     @Override
     public Integer getSource(CompactBidiEdge<EP> edge) {
-        return Integer.valueOf(getIntSource(edge));
+        return getIntSource(edge);
     }
 
     public int getIntSource(CompactBidiEdge<EP> edge) {

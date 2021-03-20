@@ -15,9 +15,8 @@
  */
 package net.automatalib.automata.words.util;
 
+import java.util.Arrays;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * Utilities for regular {@link net.automatalib.words.Alphabet} tests.
@@ -26,10 +25,10 @@ import com.google.common.collect.Lists;
  */
 public final class AlphabetTestUtil {
 
-    public static final Integer[] CONTAINED_SYMBOLS_ARR = new Integer[] {1, 2, 3, 4, 5};
-    public static final Integer[] NON_CONTAINED_SYMBOLS_ARR = new Integer[] {-1, 13, 42};
-    public static final List<Integer> CONTAINED_SYMBOLS_LIST = Lists.newArrayList(CONTAINED_SYMBOLS_ARR);
-    public static final List<Integer> NON_CONTAINED_SYMBOLS_LIST = Lists.newArrayList(NON_CONTAINED_SYMBOLS_ARR);
+    public static final Integer[] CONTAINED_SYMBOLS_ARR = {1, 2, 3, 4, 5};
+    public static final Integer[] NON_CONTAINED_SYMBOLS_ARR = {-1, 13, 42};
+    public static final List<Integer> CONTAINED_SYMBOLS_LIST = Arrays.asList(CONTAINED_SYMBOLS_ARR);
+    public static final List<Integer> NON_CONTAINED_SYMBOLS_LIST = Arrays.asList(NON_CONTAINED_SYMBOLS_ARR);
 
     private AlphabetTestUtil() {
         // prevent instantiation

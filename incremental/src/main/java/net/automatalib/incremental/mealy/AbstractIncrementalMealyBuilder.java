@@ -15,7 +15,6 @@
  */
 package net.automatalib.incremental.mealy;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,7 +26,7 @@ import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-public abstract class AbstractIncrementalMealyBuilder<I, O> implements IncrementalMealyBuilder<I, O>, Serializable {
+public abstract class AbstractIncrementalMealyBuilder<I, O> implements IncrementalMealyBuilder<I, O> {
 
     @Override
     public boolean hasDefinitiveInformation(Word<? extends I> word) {

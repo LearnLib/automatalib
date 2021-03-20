@@ -42,7 +42,7 @@ public final class ADSUtil {
             return 0;
         }
 
-        return 1 + node.getChildren().values().stream().mapToInt(ADSUtil::computeLength).max().getAsInt();
+        return 1 + node.getChildren().values().stream().mapToInt(ADSUtil::computeLength).max().orElse(0);
     }
 
     public static <S, I, O> int countSymbolNodes(final ADSNode<S, I, O> node) {

@@ -15,12 +15,10 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import java.io.Serializable;
-
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class Node<O> implements Serializable {
+final class Node<O> {
 
     private final ResizingArrayStorage<Edge<Node<O>, O>> outEdges;
 

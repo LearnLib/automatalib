@@ -226,6 +226,7 @@ class SAFInput {
             S state = result.addState(prop);
             stateList.add(state);
         }
+        decoder.finish(in);
 
         return stateList;
     }

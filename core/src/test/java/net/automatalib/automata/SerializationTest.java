@@ -15,11 +15,6 @@
  */
 package net.automatalib.automata;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Collection;
 
 import net.automatalib.automata.fsa.impl.FastDFA;
@@ -37,7 +32,10 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
+import org.nustaq.serialization.FSTConfiguration;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -53,6 +51,20 @@ public class SerializationTest {
         ENUM_A,
         ENUM_B,
         ENUM_C
+    }
+
+    private FSTConfiguration fstSerializer;
+
+    @BeforeClass
+    public void beforeClass() {
+        fstSerializer = FSTConfiguration.createDefaultConfiguration();
+        fstSerializer.setForceSerializable(true);
+        fstSerializer.setShareReferences(true);
+    }
+
+    @AfterClass
+    public void afterClass() {
+        fstSerializer.clearCaches();
     }
 
     @DataProvider(name = "alphabets")
@@ -170,24 +182,10 @@ public class SerializationTest {
 
     private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void testSerialization(M original,
                                                                                                   Alphabet<I> alphabet) {
-
-        final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-
-        try (ObjectOutputStream objectOut = new ObjectOutputStream(byteOut)) {
-            objectOut.writeObject(original);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        final ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
-
-        try (ObjectInputStream objectIn = new ObjectInputStream(byteIn)) {
-            @SuppressWarnings("unchecked")
-            final M deserialized = (M) objectIn.readObject();
-            testEquivalence(original, deserialized, alphabet);
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        final byte[] data = fstSerializer.asByteArray(original);
+        @SuppressWarnings("unchecked")
+        final M deserialized = (M) fstSerializer.asObject(data);
+        testEquivalence(original, deserialized, alphabet);
     }
 
     private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void testEquivalence(M original,

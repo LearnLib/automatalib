@@ -15,7 +15,6 @@
  */
 package net.automatalib.words;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -34,7 +33,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Malte Isberner
  * @see Collections#singletonList(Object)
  */
-final class LetterWord<I> extends Word<I> implements Serializable {
+final class LetterWord<I> extends Word<I> {
 
     private final I letter;
 

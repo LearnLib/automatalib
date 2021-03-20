@@ -15,7 +15,6 @@
  */
 package net.automatalib.incremental.mealy.tree.dynamic;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ import com.google.common.collect.Maps;
 import net.automatalib.incremental.mealy.tree.Edge;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class Node<I, O> implements Serializable {
+final class Node<I, O> {
 
     private final Map<I, Edge<Node<I, O>, O>> outEdges;
 

@@ -35,7 +35,7 @@ final class AcceptanceEncoder implements BlockPropertyEncoder<Boolean> {
             finish(out);
             start(out);
         }
-        if (property.booleanValue()) {
+        if (property) {
             currAcc |= mask;
         }
         mask <<= 1;

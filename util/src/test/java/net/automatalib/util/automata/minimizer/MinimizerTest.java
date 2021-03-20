@@ -66,8 +66,7 @@ public class MinimizerTest extends AbstractMinimizationTest {
     @Test
     public void testIssue41() {
         testIssue41Internal(dfa -> Minimizer.minimize(dfa.transitionGraphView()));
-        testIssue41Internal(dfa -> Minimizer.<Integer, Property<Character, Void>>getLocalInstance().performMinimization(
-                dfa.transitionGraphView()));
+        testIssue41Internal(dfa -> new Minimizer<Integer, Property<Character, Void>>().performMinimization(dfa.transitionGraphView()));
     }
 
     private void testIssue41Internal(Function<CompactDFA<Character>, MinimizationResult<Integer, ?>> minimizer) {

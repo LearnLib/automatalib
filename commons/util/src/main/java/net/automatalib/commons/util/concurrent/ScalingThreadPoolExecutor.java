@@ -73,9 +73,9 @@ public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
      *
      * @author frohme
      */
-    static class ScalingLinkedBlockingQueue extends LinkedBlockingQueue<Runnable> {
+    private static class ScalingLinkedBlockingQueue extends LinkedBlockingQueue<Runnable> {
 
-        private transient ThreadPoolExecutor tpe;
+        private ThreadPoolExecutor tpe;
 
         void setTpe(ThreadPoolExecutor tpe) {
             this.tpe = tpe;

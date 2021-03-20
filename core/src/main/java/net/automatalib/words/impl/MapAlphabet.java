@@ -71,7 +71,7 @@ public class MapAlphabet<I> extends AbstractAlphabet<I> {
         if (result == null) {
             throw new IllegalArgumentException("Symbol '" + symbol + "' is not contained in the alphabet");
         }
-        return result.intValue();
+        return result;
     }
 
     @Override

@@ -15,7 +15,6 @@
  */
 package net.automatalib.graphs.ads.impl;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author frohme
  */
 public abstract class AbstractRecursiveADSSymbolNode<S, I, O, N extends RecursiveADSNode<S, I, O, N>>
-        implements RecursiveADSNode<S, I, O, N>, Serializable {
+        implements RecursiveADSNode<S, I, O, N> {
 
     private @Nullable N parent;
 

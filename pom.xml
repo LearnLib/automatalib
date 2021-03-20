@@ -231,6 +231,7 @@ limitations under the License.
         <checkerframework.version>3.7.0</checkerframework.version>
         <checkstyle.version>8.36.2</checkstyle.version>
         <duzzt.version>0.1.0</duzzt.version>
+        <fst.version>2.57</fst.version>
         <error-prone.version>9+181-r4173-1</error-prone.version> <!-- required by checkerframework, keep in sync -->
         <guava.version>29.0-jre</guava.version>
         <graphviz-awt-shapes.version>0.0.1</graphviz-awt-shapes.version>
@@ -525,6 +526,12 @@ limitations under the License.
                 <version>${duzzt.version}</version>
                 <!-- Compile-time only -->
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>de.ruedigermoeller</groupId>
+                <artifactId>fst</artifactId>
+                <version>${fst.version}</version>
             </dependency>
 
             <dependency>

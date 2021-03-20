@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.collections.CollectionsUtil;
@@ -112,7 +113,7 @@ public class IncrementalWMethodTestsIteratorTest {
     }
 
     private Set<Word<Character>> computeIteratorTests() {
-        return Streams.stream(incIt).collect(Collectors.toSet());
+        return Sets.newHashSet(incIt);
     }
 
 }

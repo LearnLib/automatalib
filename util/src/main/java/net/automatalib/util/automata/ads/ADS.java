@@ -66,10 +66,7 @@ public final class ADS {
             return StateEquivalence.compute(automaton, input, states);
         } else if (states.size() == automaton.getStates().size()) {
             final LYResult<S, I, O> result = LeeYannakakis.compute(automaton, input);
-            if (result.isPresent()) {
-                return Optional.of(result.get());
-            }
-            return Optional.empty();
+            return Optional.ofNullable(result.get());
         } else {
             return BacktrackingSearch.compute(automaton, input, states);
         }

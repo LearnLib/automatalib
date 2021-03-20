@@ -15,7 +15,6 @@
  */
 package net.automatalib.words.impl;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import net.automatalib.words.VPDAlphabet;
@@ -30,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public final class VPDSym<T> implements Serializable {
+public final class VPDSym<T> {
 
     private final VPDAlphabet.SymbolType type;
     private final T userObject;

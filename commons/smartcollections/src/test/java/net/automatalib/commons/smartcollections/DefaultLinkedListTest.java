@@ -18,7 +18,6 @@ package net.automatalib.commons.smartcollections;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -65,7 +64,6 @@ public class DefaultLinkedListTest {
         Assert.assertEquals(linkedList.popFront(), fifth);
 
         final List<ElementReference> expected = Arrays.asList(fourthRef, firstRef, secondRef, thirdRef);
-        final List<ElementReference> refs = Lists.newArrayList(linkedList.referenceIterator());
-        Assert.assertEquals(expected, refs);
+        Assert.assertEquals(expected.iterator(), linkedList.referenceIterator());
     }
 }

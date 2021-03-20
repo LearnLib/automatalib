@@ -15,7 +15,6 @@
  */
 package net.automatalib.automata.base.compact;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -58,8 +57,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
                                                                StateIDs<Integer>,
                                                                UniversalFiniteAlphabetAutomaton<Integer, I, T, SP, TP>,
                                                                SupportsGrowingAlphabet<I>,
-                                                               StateLocalInput<Integer, I>,
-                                                               Serializable {
+                                                               StateLocalInput<Integer, I> {
 
     protected static final float DEFAULT_RESIZE_FACTOR = 1.5f;
     protected static final int DEFAULT_INIT_CAPACITY = 11;
@@ -100,7 +98,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
     @Override
     public int getStateId(Integer state) {
-        return state.intValue();
+        return state;
     }
 
     @Override

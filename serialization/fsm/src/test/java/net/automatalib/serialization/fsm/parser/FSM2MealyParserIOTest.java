@@ -18,7 +18,6 @@ package net.automatalib.serialization.fsm.parser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.function.Function;
 
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
@@ -61,15 +60,11 @@ public class FSM2MealyParserIOTest extends AbstractFSM2ParserTest {
     }
 
     @Override
-    protected CompactMealy<Character, Character> getParsedAutomaton(Optional<? extends Collection<Character>> requiredInputs)
+    protected CompactMealy<Character, Character> getParsedAutomaton(Collection<Character> requiredInputs)
             throws IOException {
         try (InputStream is = FSM2MealyParserIOTest.class.getResourceAsStream("/MealyIO.fsm")) {
-
             final Function<String, Character> ep = s -> s.charAt(0);
-            final CompactMealy<Character, Character> mealy =
-                    FSM2MealyParserIO.getParser(requiredInputs.orElse(null), ep).readModel(is);
-
-            return mealy;
+            return FSM2MealyParserIO.getParser(requiredInputs, ep).readModel(is);
         }
     }
 

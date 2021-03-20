@@ -15,7 +15,6 @@
  */
 package net.automatalib.automata.base.fast;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import net.automatalib.SupportsGrowingAlphabet;
@@ -41,12 +40,11 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
                    UniversalFiniteAlphabetAutomaton<S, I, T, SP, TP>,
                    StateIDs<S>,
                    SupportsGrowingAlphabet<I>,
-                   StateLocalInput<S, I>,
-                   Serializable {
+                   StateLocalInput<S, I> {
 
     protected final Alphabet<I> inputAlphabet;
     private final DynamicList<S> states = new DynamicList<>();
-    private final transient IDChangeNotifier<S> tracker = new IDChangeNotifier<>();
+    private final IDChangeNotifier<S> tracker = new IDChangeNotifier<>();
 
     public AbstractFastMutable(Alphabet<I> inputAlphabet) {
         this.inputAlphabet = inputAlphabet;

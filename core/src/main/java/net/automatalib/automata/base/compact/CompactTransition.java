@@ -15,12 +15,11 @@
  */
 package net.automatalib.automata.base.compact;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class CompactTransition<TP> implements Serializable {
+public final class CompactTransition<TP> {
 
     private int memoryIdx;
     private final int succId;

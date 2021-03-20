@@ -16,10 +16,11 @@
 package net.automatalib.util.automata.ads;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 
 import net.automatalib.graphs.ads.ADSNode;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class that holds some information aggregated during the ADS computation of {@link LeeYannakakis}.
@@ -35,31 +36,26 @@ import net.automatalib.graphs.ads.ADSNode;
  */
 public class LYResult<S, I, O> {
 
-    private final Optional<ADSNode<S, I, O>> delegate;
-
+    private final @Nullable ADSNode<S, I, O> delegate;
     private final Set<S> indistinguishableStates;
 
-    public LYResult(final ADSNode<S, I, O> result) {
-        this.delegate = Optional.of(result);
+    LYResult(@Nullable ADSNode<S, I, O> result) {
+        this.delegate = result;
         this.indistinguishableStates = Collections.emptySet();
     }
 
-    public LYResult(final Set<S> indistinguishableStates) {
-        this.delegate = Optional.empty();
+    LYResult(final Set<S> indistinguishableStates) {
+        this.delegate = null;
         this.indistinguishableStates = indistinguishableStates;
     }
 
-    public LYResult() {
-        this.delegate = Optional.empty();
-        this.indistinguishableStates = Collections.emptySet();
-    }
-
+    @EnsuresNonNullIf(expression = "this.delegate", result = true)
     public boolean isPresent() {
-        return this.delegate.isPresent();
+        return this.delegate != null;
     }
 
-    public ADSNode<S, I, O> get() {
-        return this.delegate.get();
+    public @Nullable ADSNode<S, I, O> get() {
+        return this.delegate;
     }
 
     public Set<S> getIndistinguishableStates() {

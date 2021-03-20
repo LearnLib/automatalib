@@ -15,7 +15,6 @@
  */
 package net.automatalib.incremental.dfa;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -35,7 +34,7 @@ import net.automatalib.words.Word;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFABuilder<I>, InputAlphabetHolder<I>, Serializable {
+public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFABuilder<I>, InputAlphabetHolder<I> {
 
     protected final Alphabet<I> inputAlphabet;
     protected int alphabetSize;

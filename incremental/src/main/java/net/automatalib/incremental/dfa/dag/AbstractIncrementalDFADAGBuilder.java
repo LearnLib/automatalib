@@ -193,11 +193,11 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
     private static int getStateId(State s, Map<State, Integer> idMap) {
         Integer id = idMap.get(s);
         if (id != null) {
-            return id.intValue();
+            return id;
         }
         id = idMap.size();
         idMap.put(s, id);
-        return id.intValue();
+        return id;
     }
 
     protected abstract @Nullable State getState(Word<? extends I> word);

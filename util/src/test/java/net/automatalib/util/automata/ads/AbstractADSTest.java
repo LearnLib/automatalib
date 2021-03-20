@@ -55,24 +55,34 @@ public abstract class AbstractADSTest {
                                                                                                  targets,
                                                                                                  BacktrackingSearch.CostAggregator.MIN_SIZE);
 
-        this.verifySuccess(mealy, targets, defaultADS);
-        this.verifySuccess(mealy, targets, bestEffortADS);
-        this.verifySuccess(mealy, targets, bfsMinLengthADS);
-        this.verifySuccess(mealy, targets, bfsMinSizeADS);
+        Assert.assertTrue(defaultADS.isPresent());
+        Assert.assertTrue(bestEffortADS.isPresent());
+        Assert.assertTrue(bfsMinLengthADS.isPresent());
+        Assert.assertTrue(bfsMinSizeADS.isPresent());
 
-        final int defaultLength = ADSUtil.computeLength(defaultADS.get());
-        final int bestEffortLength = ADSUtil.computeLength(bestEffortADS.get());
-        final int bfsMinLengthLength = ADSUtil.computeLength(bfsMinLengthADS.get());
-        final int bfsMinSizeLength = ADSUtil.computeLength(bfsMinSizeADS.get());
+        final ADSNode<Integer, I, O> def = defaultADS.get();
+        final ADSNode<Integer, I, O> bestEffort = bestEffortADS.get();
+        final ADSNode<Integer, I, O> bfsMinLength = bestEffortADS.get();
+        final ADSNode<Integer, I, O> bfsMinSize = bestEffortADS.get();
+
+        this.verifySuccess(mealy, targets, def);
+        this.verifySuccess(mealy, targets, bestEffort);
+        this.verifySuccess(mealy, targets, bfsMinLength);
+        this.verifySuccess(mealy, targets, bfsMinSize);
+
+        final int defaultLength = ADSUtil.computeLength(def);
+        final int bestEffortLength = ADSUtil.computeLength(bestEffort);
+        final int bfsMinLengthLength = ADSUtil.computeLength(bfsMinLength);
+        final int bfsMinSizeLength = ADSUtil.computeLength(bfsMinSize);
 
         Assert.assertTrue(bfsMinLengthLength <= defaultLength);
         Assert.assertTrue(bfsMinLengthLength <= bestEffortLength);
         Assert.assertTrue(bfsMinLengthLength <= bfsMinSizeLength);
 
-        final int defaultSize = ADSUtil.countSymbolNodes(defaultADS.get());
-        final int bestEffortSize = ADSUtil.countSymbolNodes(bestEffortADS.get());
-        final int bfsMinLengthSize = ADSUtil.countSymbolNodes(bfsMinLengthADS.get());
-        final int bfsMinSizeSize = ADSUtil.countSymbolNodes(bfsMinSizeADS.get());
+        final int defaultSize = ADSUtil.countSymbolNodes(def);
+        final int bestEffortSize = ADSUtil.countSymbolNodes(bestEffort);
+        final int bfsMinLengthSize = ADSUtil.countSymbolNodes(bfsMinLength);
+        final int bfsMinSizeSize = ADSUtil.countSymbolNodes(bfsMinSize);
 
         Assert.assertTrue(bfsMinSizeSize <= defaultSize);
         Assert.assertTrue(bfsMinSizeSize <= bestEffortSize);
@@ -81,17 +91,14 @@ public abstract class AbstractADSTest {
 
     protected <I, O> void verifySuccess(final CompactMealy<I, O> mealy,
                                         final Set<Integer> targets,
-                                        final Optional<ADSNode<Integer, I, O>> potentialADS) {
+                                        final ADSNode<Integer, I, O> ads) {
 
-        Assert.assertNotNull(potentialADS);
-        Assert.assertTrue(potentialADS.isPresent());
-
-        final ADSNode<Integer, I, O> ads = potentialADS.get();
         final Set<ADSNode<Integer, I, O>> leaves = ADSUtil.collectLeaves(ads);
 
         Assert.assertEquals(targets, leaves.stream().map(ADSNode::getHypothesisState).collect(Collectors.toSet()));
 
-        final Map<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> traces = Maps.asMap(leaves, ADSUtil::buildTraceForNode);
+        final Map<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> traces =
+                Maps.asMap(leaves, ADSUtil::buildTraceForNode);
 
         // check matching outputs
         for (Map.Entry<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> entry : traces.entrySet()) {

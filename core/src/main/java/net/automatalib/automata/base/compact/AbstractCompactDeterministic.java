@@ -15,7 +15,6 @@
  */
 package net.automatalib.automata.base.compact;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,8 +45,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends AbstractCompact<I, T, SP, TP> implements
                                                                                                        MutableDeterministic<Integer, I, T, SP, TP>,
                                                                                                        MutableDeterministic.StateIntAbstraction<I, T, SP, TP>,
-                                                                                                       MutableDeterministic.FullIntAbstraction<T, SP, TP>,
-                                                                                                       Serializable {
+                                                                                                       MutableDeterministic.FullIntAbstraction<T, SP, TP> {
 
     private int initial = AbstractCompact.INVALID_STATE;
 

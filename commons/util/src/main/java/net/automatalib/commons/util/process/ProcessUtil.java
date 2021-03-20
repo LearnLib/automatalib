@@ -285,11 +285,10 @@ public final class ProcessUtil {
     }
 
     private static void writeProcessInput(Process process, @Nullable Reader input) throws IOException {
-        try (OutputStream processInput = process.getOutputStream()) {
-            if (input != null) {
-                try (Writer writer = IOUtil.asBufferedUTF8Writer(processInput)) {
-                    CharStreams.copy(input, writer);
-                }
+        if (input != null) {
+            try (OutputStream processInput = process.getOutputStream();
+                 Writer writer = IOUtil.asBufferedUTF8Writer(processInput)) {
+                CharStreams.copy(input, writer);
             }
         }
     }

@@ -15,7 +15,6 @@
  */
 package net.automatalib.automata.base.fast;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +25,7 @@ import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastMutableDet<S extends AbstractFastState<T>, I, T, SP, TP>
-        extends AbstractFastMutable<S, I, T, SP, TP> implements ShrinkableDeterministic<S, I, T, SP, TP>, Serializable {
+        extends AbstractFastMutable<S, I, T, SP, TP> implements ShrinkableDeterministic<S, I, T, SP, TP> {
 
     private @Nullable S initialState;
 

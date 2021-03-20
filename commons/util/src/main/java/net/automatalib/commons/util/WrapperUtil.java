@@ -28,12 +28,12 @@ public final class WrapperUtil {
     }
 
     public static boolean booleanValue(@Nullable Boolean b, boolean def) {
-        return (b != null) ? b.booleanValue() : def;
+        return (b != null) ? b : def;
     }
 
     @SuppressWarnings("PMD.AvoidUsingShortType") // we don't perform arithmetic operations on Shorts, so usage is fine
     public static short shortValue(@Nullable Short s, short def) {
-        return (s != null) ? s.shortValue() : def;
+        return (s != null) ? s : def;
     }
 
     public static int intValue(@Nullable Integer i) {
@@ -41,7 +41,7 @@ public final class WrapperUtil {
     }
 
     public static int intValue(@Nullable Integer i, int def) {
-        return (i != null) ? i.intValue() : def;
+        return (i != null) ? i : def;
     }
 
     public static long longValue(@Nullable Long l) {
@@ -49,7 +49,7 @@ public final class WrapperUtil {
     }
 
     public static long longValue(@Nullable Long l, long def) {
-        return (l != null) ? l.longValue() : def;
+        return (l != null) ? l : def;
     }
 
     public static float floatValue(@Nullable Float f) {
@@ -57,7 +57,7 @@ public final class WrapperUtil {
     }
 
     public static float floatValue(@Nullable Float f, float def) {
-        return (f != null) ? f.floatValue() : def;
+        return (f != null) ? f : def;
     }
 
     public static double doubleValue(@Nullable Double d) {
@@ -65,7 +65,7 @@ public final class WrapperUtil {
     }
 
     public static double doubleValue(@Nullable Double d, double def) {
-        return (d != null) ? d.doubleValue() : def;
+        return (d != null) ? d : def;
     }
 
 }

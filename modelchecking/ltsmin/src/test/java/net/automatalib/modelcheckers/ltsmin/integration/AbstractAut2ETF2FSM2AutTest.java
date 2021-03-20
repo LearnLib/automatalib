@@ -16,8 +16,8 @@
 package net.automatalib.modelcheckers.ltsmin.integration;
 
 import java.io.File;
+import java.util.HashSet;
 
-import com.google.common.collect.Sets;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.commons.util.process.ProcessUtil;
@@ -104,7 +104,7 @@ public abstract class AbstractAut2ETF2FSM2AutTest<
                         s -> automatonOut.getSuccessor(s, i) != null)).collect(Alphabets.collector());
 
         // test we have the same alphabet ignoring order
-        Assert.assertEquals(Sets.newHashSet(inputAlphabet), Sets.newHashSet(automatonIn.getInputAlphabet()));
+        Assert.assertEquals(new HashSet<>(inputAlphabet), new HashSet<>(automatonIn.getInputAlphabet()));
 
         // test we have the same automaton
         Assert.assertNull(new NearLinearEquivalenceTest<>(automatonOut).findSeparatingWord(automatonIn, inputAlphabet));
