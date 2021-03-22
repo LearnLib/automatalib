@@ -15,9 +15,16 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
+import java.io.IOException;
+
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
 public class FalseNode<L, AP> extends FormulaNode<L, AP> {
+
+    @Override
+    public void print(Appendable a) throws IOException {
+        a.append("false");
+    }
 
     @Override
     public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {

@@ -82,7 +82,7 @@ public class NNFVisitorTest {
         FormulaNode<String, String> nnfAndNode = andNode.toNNF();
 
         /* Create ([]true | false) */
-        OrNode<String, String> orNode = new OrNode<>(new BoxNode<>(null, new TrueNode<>()), new FalseNode<>());
+        OrNode<String, String> orNode = new OrNode<>(new BoxNode<>(new TrueNode<>()), new FalseNode<>());
         Assert.assertEquals(orNode, nnfAndNode);
     }
 
@@ -122,7 +122,7 @@ public class NNFVisitorTest {
                                                         new AndNode<>(new BoxNode<>("b",
                                                                                     new BoxNode<>("b",
                                                                                                   new FalseNode<>())),
-                                                                      new BoxNode<>(null, new VariableNode<>("X"))));
+                                                                      new BoxNode<>(new VariableNode<>("X"))));
         Assert.assertEquals(gfpNode, nnfAst);
     }
 

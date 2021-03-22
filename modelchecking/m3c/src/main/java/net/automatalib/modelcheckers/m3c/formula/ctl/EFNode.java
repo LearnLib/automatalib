@@ -15,6 +15,8 @@
  */
 package net.automatalib.modelcheckers.m3c.formula.ctl;
 
+import java.io.IOException;
+
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.UnaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
@@ -23,6 +25,11 @@ public class EFNode<L, AP> extends UnaryFormulaNode<L, AP> {
 
     public EFNode(FormulaNode<L, AP> node) {
         super(node);
+    }
+
+    @Override
+    public void print(Appendable a) throws IOException {
+        printUnaryFormulaNode(a, "EF");
     }
 
     @Override

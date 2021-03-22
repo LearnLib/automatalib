@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelcheckers.m3c.formula.modalmu;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
@@ -30,6 +31,11 @@ public class VariableNode<L, AP> extends FormulaNode<L, AP> {
 
     public String getVariable() {
         return variable;
+    }
+
+    @Override
+    public void print(Appendable a) throws IOException {
+        a.append(variable);
     }
 
     @Override

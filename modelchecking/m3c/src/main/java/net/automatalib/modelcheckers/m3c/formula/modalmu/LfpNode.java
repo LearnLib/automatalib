@@ -15,17 +15,20 @@
  */
 package net.automatalib.modelcheckers.m3c.formula.modalmu;
 
+import java.io.IOException;
+
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
 public class LfpNode<L, AP> extends FixedPointFormulaNode<L, AP> {
 
-    public LfpNode(String variable) {
-        super(variable);
-    }
-
     public LfpNode(String variable, FormulaNode<L, AP> node) {
         super(variable, node);
+    }
+
+    @Override
+    public void print(Appendable a) throws IOException {
+        printMuCalcNode(a, "mu");
     }
 
     @Override

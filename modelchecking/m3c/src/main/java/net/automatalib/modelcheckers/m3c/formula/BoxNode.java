@@ -15,16 +15,23 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
+import java.io.IOException;
+
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
 public class BoxNode<L, AP> extends ModalFormulaNode<L, AP> {
 
-    public BoxNode(L action) {
-        super(action);
+    public BoxNode(FormulaNode<L, AP> node) {
+        this(null, node);
     }
 
     public BoxNode(L action, FormulaNode<L, AP> node) {
         super(action, node);
+    }
+
+    @Override
+    public void print(Appendable a) throws IOException {
+        printMuCalcNode(a, '[', ']');
     }
 
     @Override

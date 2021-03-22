@@ -15,15 +15,12 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public abstract class ModalFormulaNode<L, AP> extends UnaryFormulaNode<L, AP> {
 
     private final L action;
-
-    public ModalFormulaNode(L action) {
-        this.action = action;
-    }
 
     public ModalFormulaNode(L action, FormulaNode<L, AP> node) {
         super(node);
@@ -57,4 +54,19 @@ public abstract class ModalFormulaNode<L, AP> extends UnaryFormulaNode<L, AP> {
 
         return Objects.equals(action, that.action);
     }
+
+    protected void printMuCalcNode(Appendable a, char leftModalitySymbol, char rightModalitySymbol) throws IOException {
+        a.append('(');
+        a.append(leftModalitySymbol);
+
+        if (action != null) {
+            a.append(action.toString());
+        }
+
+        a.append(rightModalitySymbol);
+        a.append(' ');
+        getLeftChild().print(a);
+        a.append(')');
+    }
+
 }

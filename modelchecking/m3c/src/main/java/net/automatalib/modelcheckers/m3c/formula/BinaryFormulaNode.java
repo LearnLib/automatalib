@@ -15,10 +15,34 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
+import java.io.IOException;
+
 public abstract class BinaryFormulaNode<L, AP> extends FormulaNode<L, AP> {
 
     public BinaryFormulaNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
         super(leftChild, rightChild);
+    }
+
+    protected void printBinaryFormulaNode(Appendable a, String operator) throws IOException {
+        a.append('(');
+        getLeftChild().print(a);
+        a.append(' ');
+        a.append(operator);
+        a.append(' ');
+        getRightChild().print(a);
+        a.append(')');
+    }
+
+    protected void printUntilNode(Appendable a, char quantifier, char weakOrStrong) throws IOException {
+        a.append('(');
+        a.append(quantifier);
+        a.append('(');
+        getLeftChild().print(a);
+        a.append(' ');
+        a.append(weakOrStrong);
+        a.append(' ');
+        getRightChild().print(a);
+        a.append("))");
     }
 
 }

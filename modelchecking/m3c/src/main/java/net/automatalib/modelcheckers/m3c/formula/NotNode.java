@@ -15,12 +15,21 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
+import java.io.IOException;
+
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
 public class NotNode<L, AP> extends UnaryFormulaNode<L, AP> {
 
     public NotNode(FormulaNode<L, AP> node) {
         super(node);
+    }
+
+    @Override
+    public void print(Appendable a) throws IOException {
+        a.append("(!");
+        getLeftChild().print(a);
+        a.append(')');
     }
 
     @Override

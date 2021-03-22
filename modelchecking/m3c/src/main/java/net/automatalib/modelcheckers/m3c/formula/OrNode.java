@@ -15,12 +15,19 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
+import java.io.IOException;
+
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
 public class OrNode<L, AP> extends BinaryFormulaNode<L, AP> {
 
     public OrNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
         super(leftChild, rightChild);
+    }
+
+    @Override
+    public void print(Appendable a) throws IOException {
+        printBinaryFormulaNode(a, "||");
     }
 
     @Override

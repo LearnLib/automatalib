@@ -86,7 +86,7 @@ public class CTLToMuCalcTest {
 
     @Test
     void testDiamond() {
-        equals("<>false", new DiamondNode<>(null, new FalseNode<>()));
+        equals("<>false", new DiamondNode<>(new FalseNode<>()));
     }
 
     @Test
@@ -101,8 +101,8 @@ public class CTLToMuCalcTest {
 
     @Test
     void testAF() {
-        DiamondNode<String, String> diamond = new DiamondNode<>(null, new TrueNode<>());
-        BoxNode<String, String> box = new BoxNode<>(null, new VariableNode<>("Z0"));
+        DiamondNode<String, String> diamond = new DiamondNode<>(new TrueNode<>());
+        BoxNode<String, String> box = new BoxNode<>(new VariableNode<>("Z0"));
         AndNode<String, String> and = new AndNode<>(diamond, box);
         LfpNode<String, String> expected = new LfpNode<>("Z0", new OrNode<>(new AtomicNode<>("p"), and));
         equals("AF \"p\"", expected);
@@ -110,16 +110,15 @@ public class CTLToMuCalcTest {
 
     @Test
     void testAG() {
-        AndNode<String, String> and =
-                new AndNode<>(new AtomicNode<>("p"), new BoxNode<>(null, new VariableNode<>("Z0")));
+        AndNode<String, String> and = new AndNode<>(new AtomicNode<>("p"), new BoxNode<>(new VariableNode<>("Z0")));
         GfpNode<String, String> expected = new GfpNode<>("Z0", and);
         equals("AG \"p\"", expected);
     }
 
     @Test
     void testAU() {
-        DiamondNode<String, String> diamond = new DiamondNode<>(null, new TrueNode<>());
-        BoxNode<String, String> box = new BoxNode<>(null, new VariableNode<>("Z0"));
+        DiamondNode<String, String> diamond = new DiamondNode<>(new TrueNode<>());
+        BoxNode<String, String> box = new BoxNode<>(new VariableNode<>("Z0"));
         AndNode<String, String> innerAnd = new AndNode<>(diamond, box);
         AndNode<String, String> outerAnd = new AndNode<>(new AtomicNode<>("p"), innerAnd);
         OrNode<String, String> or = new OrNode<>(new AtomicNode<>("q"), outerAnd);
@@ -134,7 +133,7 @@ public class CTLToMuCalcTest {
         NotNode<String, String> notQ = new NotNode<>(new AtomicNode<>("q"));
         NotNode<String, String> notP = new NotNode<>(new AtomicNode<>("p"));
         AndNode<String, String> notPAndNotQ = new AndNode<>(notP, notQ);
-        AndNode<String, String> innerAnd = new AndNode<>(notQ, new DiamondNode<>(null, new VariableNode<>("Z0")));
+        AndNode<String, String> innerAnd = new AndNode<>(notQ, new DiamondNode<>(new VariableNode<>("Z0")));
         OrNode<String, String> or = new OrNode<>(notPAndNotQ, innerAnd);
         LfpNode<String, String> lfpNode = new LfpNode<>("Z0", or);
         NotNode<String, String> expected = new NotNode<>(lfpNode);
@@ -143,8 +142,7 @@ public class CTLToMuCalcTest {
 
     @Test
     void testEF() {
-        OrNode<String, String> or =
-                new OrNode<>(new AtomicNode<>("p"), new DiamondNode<>(null, new VariableNode<>("Z0")));
+        OrNode<String, String> or = new OrNode<>(new AtomicNode<>("p"), new DiamondNode<>(new VariableNode<>("Z0")));
         LfpNode<String, String> expected = new LfpNode<>("Z0", or);
         equals("EF \"p\"", expected);
     }
@@ -152,26 +150,24 @@ public class CTLToMuCalcTest {
     @Test
     void testEG() {
         OrNode<String, String> or =
-                new OrNode<>(new DiamondNode<>(null, new VariableNode<>("Z0")), new BoxNode<>(null, new FalseNode<>()));
+                new OrNode<>(new DiamondNode<>(new VariableNode<>("Z0")), new BoxNode<>(new FalseNode<>()));
         GfpNode<String, String> expected = new GfpNode<>("Z0", new AndNode<>(new AtomicNode<>("p"), or));
         equals("EG \"p\"", expected);
     }
 
     @Test
     void testEU() {
-        AndNode<String, String> and =
-                new AndNode<>(new AtomicNode<>("p"), new DiamondNode<>(null, new VariableNode<>("Z0")));
+        AndNode<String, String> and = new AndNode<>(new AtomicNode<>("p"), new DiamondNode<>(new VariableNode<>("Z0")));
         LfpNode<String, String> expected = new LfpNode<>("Z0", new OrNode<>(new TrueNode<>(), and));
         equals("E(\"p\" U true)", expected);
     }
 
     @Test
     void testEWU() {
-        AndNode<String, String> and =
-                new AndNode<>(new AtomicNode<>("p"), new DiamondNode<>(null, new VariableNode<>("Z0")));
+        AndNode<String, String> and = new AndNode<>(new AtomicNode<>("p"), new DiamondNode<>(new VariableNode<>("Z0")));
         LfpNode<String, String> lfp = new LfpNode<>("Z0", new OrNode<>(new AtomicNode<>("q"), and));
         OrNode<String, String> or =
-                new OrNode<>(new DiamondNode<>(null, new VariableNode<>("Z1")), new BoxNode<>(null, new FalseNode<>()));
+                new OrNode<>(new DiamondNode<>(new VariableNode<>("Z1")), new BoxNode<>(new FalseNode<>()));
         GfpNode<String, String> gfp = new GfpNode<>("Z1", new AndNode<>(new AtomicNode<>("p"), or));
         equals("E(\"p\" W \"q\")", new OrNode<>(lfp, gfp));
     }

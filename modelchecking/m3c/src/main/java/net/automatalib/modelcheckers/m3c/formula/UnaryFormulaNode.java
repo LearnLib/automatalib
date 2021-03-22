@@ -15,12 +15,20 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
-public abstract class UnaryFormulaNode<L, AP> extends FormulaNode<L, AP> {
+import java.io.IOException;
 
-    public UnaryFormulaNode() {}
+public abstract class UnaryFormulaNode<L, AP> extends FormulaNode<L, AP> {
 
     public UnaryFormulaNode(FormulaNode<L, AP> childNode) {
         super(childNode);
+    }
+
+    protected void printUnaryFormulaNode(Appendable a, String operator) throws IOException {
+        a.append('(');
+        a.append(operator);
+        a.append(' ');
+        getLeftChild().print(a);
+        a.append(')');
     }
 
 }

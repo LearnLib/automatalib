@@ -45,8 +45,8 @@ public class ParserMuCalcTest {
                      new AndNode<>(new OrNode<>(new NotNode<>(new TrueNode<>()), new FalseNode<>()),
                                    new OrNode<>(new NotNode<>(new FalseNode<>()), new TrueNode<>())));
         assertEquals("!false", new NotNode<>(new FalseNode<>()));
-        assertEquals("[]true", new BoxNode<>(null, new TrueNode<>()));
-        assertEquals("<>false", new DiamondNode<>(null, new FalseNode<>()));
+        assertEquals("[]true", new BoxNode<>(new TrueNode<>()));
+        assertEquals("<>false", new DiamondNode<>(new FalseNode<>()));
         assertEquals("<ab>false", new DiamondNode<>("ab", new FalseNode<>()));
         assertEquals("[ab]true", new BoxNode<>("ab", new TrueNode<>()));
         assertEquals("mu XY.(XY || false)",
@@ -59,16 +59,14 @@ public class ParserMuCalcTest {
     public void testNestedFixPoints() {
         assertEquals("nu X. ([]X && mu Y. (<>Y || (\"AP\" && [] false)))",
                      new GfpNode<>("X",
-                                   new AndNode<>(new BoxNode<>(null, new VariableNode<>("X")),
+                                   new AndNode<>(new BoxNode<>(new VariableNode<>("X")),
                                                  new LfpNode<>("Y",
-                                                               new OrNode<>(new DiamondNode<>(null,
-                                                                                              new VariableNode<>("Y")),
+                                                               new OrNode<>(new DiamondNode<>(new VariableNode<>("Y")),
                                                                             new AndNode<>(new AtomicNode<>("AP"),
-                                                                                          new BoxNode<>(null,
-                                                                                                        new FalseNode<>())))))));
+                                                                                          new BoxNode<>(new FalseNode<>())))))));
         assertEquals("nu X. ([]X && (<S>true -> mu Y. (<S>Y || <R>true)))",
                      new GfpNode<>("X",
-                                   new AndNode<>(new BoxNode<>(null, new VariableNode<>("X")),
+                                   new AndNode<>(new BoxNode<>(new VariableNode<>("X")),
                                                  new OrNode<>(new NotNode<>(new DiamondNode<>("S", new TrueNode<>())),
                                                               new LfpNode<>("Y",
                                                                             new OrNode<>(new DiamondNode<>("S",

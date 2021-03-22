@@ -15,7 +15,9 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
+import java.io.IOException;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -35,6 +37,23 @@ public class AtomicNode<L, AP> extends FormulaNode<L, AP> {
 
     public Set<AP> getPropositions() {
         return propositions;
+    }
+
+    @Override
+    public void print(Appendable a) throws IOException {
+        a.append('\"');
+
+        final Iterator<AP> iter = propositions.iterator();
+        if (iter.hasNext()) {
+            a.append(Objects.toString(iter.next()));
+        }
+
+        while (iter.hasNext()) {
+            a.append(',');
+            a.append(Objects.toString(iter.next()));
+        }
+
+        a.append('\"');
     }
 
     @Override

@@ -61,8 +61,8 @@ public class ParserCTLTest {
                      new AndNode<>(new OrNode<>(new NotNode<>(new TrueNode<>()), new FalseNode<>()),
                                    new OrNode<>(new NotNode<>(new FalseNode<>()), new TrueNode<>())));
         assertEquals("!false", new NotNode<>(new FalseNode<>()));
-        assertEquals("[]true", new BoxNode<>(null, new TrueNode<>()));
-        assertEquals("<>false", new DiamondNode<>(null, new FalseNode<>()));
+        assertEquals("[]true", new BoxNode<>(new TrueNode<>()));
+        assertEquals("<>false", new DiamondNode<>(new FalseNode<>()));
         assertEquals("<a>false", new DiamondNode<>("a", new FalseNode<>()));
         assertEquals("[c]true", new BoxNode<>("c", new TrueNode<>()));
     }

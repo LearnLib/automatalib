@@ -54,8 +54,8 @@ public class CTLToMuCalc<L, AP> extends FormulaNodeVisitor<FormulaNode<L, AP>, L
         /* AF p = mu X.(toMu(p) | (<>true & []X)) */
         FormulaNode<L, AP> p = visit(node.getLeftChild());
         String fixedPointVar = getFixedPointVar();
-        DiamondNode<L, AP> hasSuccessor = new DiamondNode<>(null, new TrueNode<>());
-        BoxNode<L, AP> allSuccessorSatisfyX = new BoxNode<>(null, new VariableNode<>(fixedPointVar));
+        DiamondNode<L, AP> hasSuccessor = new DiamondNode<>(new TrueNode<>());
+        BoxNode<L, AP> allSuccessorSatisfyX = new BoxNode<>(new VariableNode<>(fixedPointVar));
         AndNode<L, AP> and = new AndNode<>(hasSuccessor, allSuccessorSatisfyX);
         OrNode<L, AP> or = new OrNode<>(p, and);
         return new LfpNode<>(fixedPointVar, or);
@@ -66,7 +66,7 @@ public class CTLToMuCalc<L, AP> extends FormulaNodeVisitor<FormulaNode<L, AP>, L
         /* AG p = nu X.(p & []X) */
         FormulaNode<L, AP> p = visit(node.getLeftChild());
         String fixedPointVar = getFixedPointVar();
-        BoxNode<L, AP> allSuccessorsSatisfyX = new BoxNode<>(null, new VariableNode<>(fixedPointVar));
+        BoxNode<L, AP> allSuccessorsSatisfyX = new BoxNode<>(new VariableNode<>(fixedPointVar));
         AndNode<L, AP> and = new AndNode<>(p, allSuccessorsSatisfyX);
         return new GfpNode<>(fixedPointVar, and);
     }
@@ -77,8 +77,8 @@ public class CTLToMuCalc<L, AP> extends FormulaNodeVisitor<FormulaNode<L, AP>, L
         FormulaNode<L, AP> p = visit(node.getLeftChild());
         FormulaNode<L, AP> q = visit(node.getRightChild());
         String fixedPointVar = getFixedPointVar();
-        DiamondNode<L, AP> hasSuccessor = new DiamondNode<>(null, new TrueNode<>());
-        BoxNode<L, AP> allSuccessorsSatisfyX = new BoxNode<>(null, new VariableNode<>(fixedPointVar));
+        DiamondNode<L, AP> hasSuccessor = new DiamondNode<>(new TrueNode<>());
+        BoxNode<L, AP> allSuccessorsSatisfyX = new BoxNode<>(new VariableNode<>(fixedPointVar));
         AndNode<L, AP> innerAnd = new AndNode<>(hasSuccessor, allSuccessorsSatisfyX);
         AndNode<L, AP> outerAnd = new AndNode<>(p, innerAnd);
         OrNode<L, AP> or = new OrNode<>(q, outerAnd);
@@ -100,7 +100,7 @@ public class CTLToMuCalc<L, AP> extends FormulaNodeVisitor<FormulaNode<L, AP>, L
         /* EF p = mu X.(toMu(p) | <>X) */
         String fixedPointVar = getFixedPointVar();
         FormulaNode<L, AP> p = visit(node.getLeftChild());
-        DiamondNode<L, AP> hasSuccessorSatisfyingX = new DiamondNode<>(null, new VariableNode<>(fixedPointVar));
+        DiamondNode<L, AP> hasSuccessorSatisfyingX = new DiamondNode<>(new VariableNode<>(fixedPointVar));
         OrNode<L, AP> orNode = new OrNode<>(p, hasSuccessorSatisfyingX);
         return new LfpNode<>(fixedPointVar, orNode);
     }
@@ -110,8 +110,8 @@ public class CTLToMuCalc<L, AP> extends FormulaNodeVisitor<FormulaNode<L, AP>, L
         /* EG p = nu X.(toMu(p) & (<>X | [] false)) */
         String fixedPointVar = getFixedPointVar();
         FormulaNode<L, AP> childNode = visit(node.getLeftChild());
-        DiamondNode<L, AP> hasSuccessorSatisfyingX = new DiamondNode<>(null, new VariableNode<>(fixedPointVar));
-        BoxNode<L, AP> hasNoSuccessor = new BoxNode<>(null, new FalseNode<>());
+        DiamondNode<L, AP> hasSuccessorSatisfyingX = new DiamondNode<>(new VariableNode<>(fixedPointVar));
+        BoxNode<L, AP> hasNoSuccessor = new BoxNode<>(new FalseNode<>());
         OrNode<L, AP> or = new OrNode<>(hasSuccessorSatisfyingX, hasNoSuccessor);
         AndNode<L, AP> and = new AndNode<>(childNode, or);
         return new GfpNode<>(fixedPointVar, and);
@@ -123,7 +123,7 @@ public class CTLToMuCalc<L, AP> extends FormulaNodeVisitor<FormulaNode<L, AP>, L
         String fixedPointVar = getFixedPointVar();
         FormulaNode<L, AP> p = visit(node.getLeftChild());
         FormulaNode<L, AP> q = visit(node.getRightChild());
-        AndNode<L, AP> andNode = new AndNode<>(p, new DiamondNode<>(null, new VariableNode<>(fixedPointVar)));
+        AndNode<L, AP> andNode = new AndNode<>(p, new DiamondNode<>(new VariableNode<>(fixedPointVar)));
         OrNode<L, AP> orNode = new OrNode<>(q, andNode);
         return new LfpNode<>(fixedPointVar, orNode);
     }

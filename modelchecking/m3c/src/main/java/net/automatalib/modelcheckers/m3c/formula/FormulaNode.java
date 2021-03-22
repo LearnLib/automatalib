@@ -17,11 +17,11 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import java.util.Objects;
 
-import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeToString;
+import net.automatalib.commons.util.strings.AbstractPrintable;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 import net.automatalib.modelcheckers.m3c.formula.visitor.NNFVisitor;
 
-public abstract class FormulaNode<L, AP> {
+public abstract class FormulaNode<L, AP> extends AbstractPrintable {
 
     private final FormulaNode<L, AP> leftChild;
     private final FormulaNode<L, AP> rightChild;
@@ -109,8 +109,4 @@ public abstract class FormulaNode<L, AP> {
         return Objects.equals(leftChild, that.leftChild) && Objects.equals(rightChild, that.rightChild);
     }
 
-    @Override
-    public String toString() {
-        return new FormulaNodeToString<L, AP>().visit(this);
-    }
 }
