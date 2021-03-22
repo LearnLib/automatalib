@@ -15,98 +15,27 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
-import java.util.Objects;
-
-import net.automatalib.commons.util.strings.AbstractPrintable;
+import net.automatalib.commons.util.strings.Printable;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 import net.automatalib.modelcheckers.m3c.formula.visitor.NNFVisitor;
 
-public abstract class FormulaNode<L, AP> extends AbstractPrintable {
+public interface FormulaNode<L, AP> extends Printable {
 
-    private final FormulaNode<L, AP> leftChild;
-    private final FormulaNode<L, AP> rightChild;
-    private Boolean belongsToMaxBlock;
-    private int blockNumber;
-    private int varNumber;
+    FormulaNode<L, AP> getLeftChild();
 
-    public FormulaNode() {
-        this(null);
-    }
+    FormulaNode<L, AP> getRightChild();
 
-    public FormulaNode(FormulaNode<L, AP> leftChild) {
-        this(leftChild, null);
-    }
+    <T> T accept(FormulaNodeVisitor<T, L, AP> visitor);
 
-    public FormulaNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
-        this.leftChild = leftChild;
-        this.rightChild = rightChild;
-    }
-
-    public FormulaNode<L, AP> getLeftChild() {
-        return leftChild;
-    }
-
-    public FormulaNode<L, AP> getRightChild() {
-        return rightChild;
-    }
-
-    public abstract <T> T accept(FormulaNodeVisitor<T, L, AP> visitor);
-
-    public FormulaNode<L, AP> toNNF() {
+    default FormulaNode<L, AP> toNNF() {
         return new NNFVisitor<L, AP>().transformToNNF(this);
     }
 
-    public Boolean isBelongsToMaxBlock() {
-        return belongsToMaxBlock;
-    }
+    int getVarNumberLeft();
 
-    public void setBelongsToMaxBlock(Boolean belongsToMaxBlock) {
-        this.belongsToMaxBlock = belongsToMaxBlock;
-    }
+    int getVarNumber();
 
-    public int getBlockNumber() {
-        return blockNumber;
-    }
+    void setVarNumber(int varNumber);
 
-    public void setBlockNumber(int blockNumber) {
-        this.blockNumber = blockNumber;
-    }
-
-    public int getVarNumberLeft() {
-        return leftChild.getVarNumber();
-    }
-
-    public int getVarNumber() {
-        return varNumber;
-    }
-
-    public void setVarNumber(int varNumber) {
-        this.varNumber = varNumber;
-    }
-
-    public int getVarNumberRight() {
-        return rightChild.getVarNumber();
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hashCode(leftChild);
-        result = 31 * result + Objects.hash(rightChild);
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        FormulaNode<?, ?> that = (FormulaNode<?, ?>) o;
-
-        return Objects.equals(leftChild, that.leftChild) && Objects.equals(rightChild, that.rightChild);
-    }
-
+    int getVarNumberRight();
 }

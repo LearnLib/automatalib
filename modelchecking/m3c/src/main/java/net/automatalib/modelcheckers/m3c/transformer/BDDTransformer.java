@@ -29,6 +29,7 @@ import info.scce.addlib.dd.bdd.BDDManager;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanLogicDDManager;
 import info.scce.addlib.viewer.DotViewer;
+import net.automatalib.modelcheckers.m3c.formula.AbstractModalFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
@@ -37,13 +38,12 @@ import net.automatalib.modelcheckers.m3c.formula.DiamondNode;
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FalseNode;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-import net.automatalib.modelcheckers.m3c.formula.ModalFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.NotNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class BDDTransformer<L, AP> extends PropertyTransformer<BDDTransformer<L, AP>, L, AP> {
+public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransformer<L, AP>, L, AP> {
 
     private final BDDManager bddManager;
     /* One BDD for each lhs of equation system */
@@ -79,8 +79,8 @@ public class BDDTransformer<L, AP> extends PropertyTransformer<BDDTransformer<L,
         bdds = new BDD[dependencyGraph.getNumVariables()];
         for (FormulaNode<L, AP> node : dependencyGraph.getFormulaNodes()) {
             int xi = node.getVarNumber();
-            if (node instanceof ModalFormulaNode) {
-                L action = ((ModalFormulaNode<L, AP>) node).getAction();
+            if (node instanceof AbstractModalFormulaNode) {
+                L action = ((AbstractModalFormulaNode<L, AP>) node).getAction();
                 /* action matches edgeLabel AND (node instanceof DiamondNode => edge.isMust) */
                 if ((action == null || action.equals(edgeLabel)) &&
                     (!(node instanceof DiamondNode) || edgeProperty.isMust())) {

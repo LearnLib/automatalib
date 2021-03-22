@@ -13,26 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.m3c.formula;
+package net.automatalib.modelcheckers.m3c.formula.visitor;
 
-import java.io.IOException;
+import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 
-import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
-
-public class AndNode<L, AP> extends AbstractBinaryFormulaNode<L, AP> {
-
-    public AndNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
-        super(leftChild, rightChild);
-    }
+public abstract class AbstractFormulaNodeVisitor<T, L, AP> implements FormulaNodeVisitor<T, L, AP> {
 
     @Override
-    public void print(Appendable a) throws IOException {
-        printBinaryFormulaNode(a, "&&");
-    }
-
-    @Override
-    public <T> T accept(FormulaNodeVisitor<T, L, AP> visitor) {
-        return visitor.visit(this);
+    public T visit(FormulaNode<L, AP> node) {
+        return node.accept(this);
     }
 
 }

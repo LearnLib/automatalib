@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class NotNode<L, AP> extends UnaryFormulaNode<L, AP> {
+public class NotNode<L, AP> extends AbstractUnaryFormulaNode<L, AP> {
 
     public NotNode(FormulaNode<L, AP> node) {
         super(node);

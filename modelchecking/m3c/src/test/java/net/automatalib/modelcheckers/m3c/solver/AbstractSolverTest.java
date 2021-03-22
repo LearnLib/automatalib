@@ -23,14 +23,14 @@ import net.automatalib.graphs.ModalProcessGraph;
 import net.automatalib.graphs.MutableModalProcessGraph;
 import net.automatalib.graphs.base.compact.CompactMPG;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
-import net.automatalib.modelcheckers.m3c.transformer.PropertyTransformer;
+import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public abstract class SolverTest<T extends PropertyTransformer<T, String, String>> {
+public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T, String, String>> {
 
     protected static ModalContextFreeProcessSystem<String, String> mcfps;
 
@@ -95,7 +95,7 @@ public abstract class SolverTest<T extends PropertyTransformer<T, String, String
     @Test
     void testSolve() throws ParseException {
         String formula = "mu X.(<b><b>true || <>X)";
-        SolveDD<T, String, String> solver = getSolver(mcfps, formula, false);
+        AbstractSolveDD<T, String, String> solver = getSolver(mcfps, formula, false);
         assertSolve(solver, true);
 
         String negatedFormula = "!(" + formula + ")";
@@ -103,11 +103,11 @@ public abstract class SolverTest<T extends PropertyTransformer<T, String, String
         assertSolve(solver, false);
     }
 
-    public abstract SolveDD<T, String, String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps,
-                                                         String formula,
-                                                         boolean formulaIsCtl) throws ParseException;
+    public abstract AbstractSolveDD<T, String, String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps,
+                                                                 String formula,
+                                                                 boolean formulaIsCtl) throws ParseException;
 
-    protected void assertSolve(SolveDD<T, String, String> solver, boolean expectedIsSat) {
+    protected void assertSolve(AbstractSolveDD<T, String, String> solver, boolean expectedIsSat) {
         solver.solve();
         Assert.assertEquals(expectedIsSat, solver.isSat());
     }

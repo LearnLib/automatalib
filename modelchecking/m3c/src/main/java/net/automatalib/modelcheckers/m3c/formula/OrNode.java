@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class OrNode<L, AP> extends BinaryFormulaNode<L, AP> {
+public class OrNode<L, AP> extends AbstractBinaryFormulaNode<L, AP> {
 
     public OrNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
         super(leftChild, rightChild);

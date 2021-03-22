@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class TrueNode<L, AP> extends FormulaNode<L, AP> {
+public class TrueNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
     @Override
     public void print(Appendable a) throws IOException {

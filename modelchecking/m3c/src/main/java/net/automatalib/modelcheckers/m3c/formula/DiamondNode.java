@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class DiamondNode<L, AP> extends ModalFormulaNode<L, AP> {
+public class DiamondNode<L, AP> extends AbstractModalFormulaNode<L, AP> {
 
     public DiamondNode(FormulaNode<L, AP> node) {
         this(null, node);

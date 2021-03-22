@@ -20,7 +20,7 @@ import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 
-public abstract class PropertyTransformer<T extends PropertyTransformer<T, L, AP>, L, AP> {
+public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     protected boolean isMust = true;
 

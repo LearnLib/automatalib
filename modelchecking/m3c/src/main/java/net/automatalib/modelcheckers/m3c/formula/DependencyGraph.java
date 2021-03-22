@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import net.automatalib.modelcheckers.m3c.formula.modalmu.FixedPointFormulaNode;
+import net.automatalib.modelcheckers.m3c.formula.modalmu.AbstractFixedPointFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
@@ -87,7 +87,7 @@ public class DependencyGraph<L, AP> {
         }
 
         /* Only keep track of non FixedPoint/VariableNodes in blocks */
-        if (!(node instanceof FixedPointFormulaNode || node instanceof VariableNode)) {
+        if (!(node instanceof AbstractFixedPointFormulaNode || node instanceof VariableNode)) {
             currentBlock.addNode(node);
         }
 
@@ -108,8 +108,8 @@ public class DependencyGraph<L, AP> {
 
     private void setVarNumbers(FormulaNode<L, AP> node, AtomicInteger numVars) {
         /* Fill fixedPointVarMap */
-        if (node instanceof FixedPointFormulaNode) {
-            fixedPointVarMap.put(((FixedPointFormulaNode<L, AP>) node).getVariable(), node);
+        if (node instanceof AbstractFixedPointFormulaNode) {
+            fixedPointVarMap.put(((AbstractFixedPointFormulaNode<L, AP>) node).getVariable(), node);
         }
 
         /* Set node's variableNumber */
@@ -123,7 +123,7 @@ public class DependencyGraph<L, AP> {
         }
 
         /* Only count non FixedPoint/VariableNodes */
-        if (!(node instanceof FixedPointFormulaNode || node instanceof VariableNode)) {
+        if (!(node instanceof AbstractFixedPointFormulaNode || node instanceof VariableNode)) {
             numVars.incrementAndGet();
             formulaNodes.add(node);
         }

@@ -17,11 +17,11 @@ package net.automatalib.modelcheckers.m3c.formula.ctl;
 
 import java.io.IOException;
 
-import net.automatalib.modelcheckers.m3c.formula.BinaryFormulaNode;
+import net.automatalib.modelcheckers.m3c.formula.AbstractBinaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class AWUNode<L, AP> extends BinaryFormulaNode<L, AP> {
+public class AWUNode<L, AP> extends AbstractBinaryFormulaNode<L, AP> {
 
     public AWUNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
         super(leftChild, rightChild);

@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.m3c.formula;
+package net.automatalib.modelcheckers.m3c.formula.modalmu;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public abstract class ModalFormulaNode<L, AP> extends UnaryFormulaNode<L, AP> {
+import net.automatalib.modelcheckers.m3c.formula.AbstractUnaryFormulaNode;
+import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 
-    private final L action;
+public abstract class AbstractFixedPointFormulaNode<L, AP> extends AbstractUnaryFormulaNode<L, AP> {
 
-    public ModalFormulaNode(L action, FormulaNode<L, AP> node) {
-        super(node);
-        this.action = action;
+    private final String variable;
+
+    public AbstractFixedPointFormulaNode(String variable, FormulaNode<L, AP> leftChild) {
+        super(leftChild);
+        this.variable = variable;
     }
 
-    public L getAction() {
-        return action;
+    public String getVariable() {
+        return variable;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + Objects.hashCode(action);
+        result = 31 * result + Objects.hashCode(variable);
         return result;
     }
 
@@ -50,23 +53,19 @@ public abstract class ModalFormulaNode<L, AP> extends UnaryFormulaNode<L, AP> {
             return false;
         }
 
-        ModalFormulaNode<?, ?> that = (ModalFormulaNode<?, ?>) o;
+        AbstractFixedPointFormulaNode<?, ?> that = (AbstractFixedPointFormulaNode<?, ?>) o;
 
-        return Objects.equals(action, that.action);
+        return Objects.equals(variable, that.variable);
     }
 
-    protected void printMuCalcNode(Appendable a, char leftModalitySymbol, char rightModalitySymbol) throws IOException {
+    protected void printMuCalcNode(Appendable a, String fixedPoint) throws IOException {
         a.append('(');
-        a.append(leftModalitySymbol);
-
-        if (action != null) {
-            a.append(action.toString());
-        }
-
-        a.append(rightModalitySymbol);
+        a.append(fixedPoint);
         a.append(' ');
+        a.append(variable);
+        a.append(".(");
         getLeftChild().print(a);
-        a.append(')');
+        a.append("))");
     }
 
 }

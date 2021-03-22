@@ -17,18 +17,32 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import java.io.IOException;
 
-public abstract class UnaryFormulaNode<L, AP> extends FormulaNode<L, AP> {
+public abstract class AbstractBinaryFormulaNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
-    public UnaryFormulaNode(FormulaNode<L, AP> childNode) {
-        super(childNode);
+    public AbstractBinaryFormulaNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
+        super(leftChild, rightChild);
     }
 
-    protected void printUnaryFormulaNode(Appendable a, String operator) throws IOException {
+    protected void printBinaryFormulaNode(Appendable a, String operator) throws IOException {
         a.append('(');
+        getLeftChild().print(a);
+        a.append(' ');
         a.append(operator);
         a.append(' ');
-        getLeftChild().print(a);
+        getRightChild().print(a);
         a.append(')');
+    }
+
+    protected void printUntilNode(Appendable a, char quantifier, char weakOrStrong) throws IOException {
+        a.append('(');
+        a.append(quantifier);
+        a.append('(');
+        getLeftChild().print(a);
+        a.append(' ');
+        a.append(weakOrStrong);
+        a.append(' ');
+        getRightChild().print(a);
+        a.append("))");
     }
 
 }

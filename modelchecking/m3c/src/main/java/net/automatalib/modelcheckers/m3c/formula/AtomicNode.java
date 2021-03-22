@@ -23,7 +23,7 @@ import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class AtomicNode<L, AP> extends FormulaNode<L, AP> {
+public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
     private final Set<AP> propositions;
 

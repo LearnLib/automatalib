@@ -17,11 +17,11 @@ package net.automatalib.modelcheckers.m3c.formula.ctl;
 
 import java.io.IOException;
 
+import net.automatalib.modelcheckers.m3c.formula.AbstractUnaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-import net.automatalib.modelcheckers.m3c.formula.UnaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class EGNode<L, AP> extends UnaryFormulaNode<L, AP> {
+public class EGNode<L, AP> extends AbstractUnaryFormulaNode<L, AP> {
 
     public EGNode(FormulaNode<L, AP> node) {
         super(node);

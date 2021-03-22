@@ -37,10 +37,10 @@ import net.automatalib.modelcheckers.m3c.formula.NotNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.CTLToMuCalc;
-import net.automatalib.modelcheckers.m3c.transformer.PropertyTransformer;
+import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public abstract class SolveDD<T extends PropertyTransformer<T, L, AP>, L, AP> {
+public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     protected ModalContextFreeProcessSystem<L, AP> mcfps;
     protected DependencyGraph<L, AP> dependGraph;
@@ -56,7 +56,7 @@ public abstract class SolveDD<T extends PropertyTransformer<T, L, AP>, L, AP> {
     // Keeps track of which state's property transformers have to be updated.
     private BitSet[] workSet;
 
-    SolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode<L, AP> formula, boolean formulaIsCtl) {
+    AbstractSolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode<L, AP> formula, boolean formulaIsCtl) {
         this.mcfps = mcfps;
         if (formulaIsCtl) {
             this.ast = ctlToMuCalc(formula);

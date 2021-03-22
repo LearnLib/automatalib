@@ -18,10 +18,10 @@ package net.automatalib.modelcheckers.m3c.formula.modalmu;
 import java.io.IOException;
 import java.util.Objects;
 
-import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.formula.AbstractFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class VariableNode<L, AP> extends FormulaNode<L, AP> {
+public class VariableNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
     private final String variable;
 

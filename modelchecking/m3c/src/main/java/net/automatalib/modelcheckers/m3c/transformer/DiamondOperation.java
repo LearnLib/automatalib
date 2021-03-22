@@ -20,9 +20,9 @@ import java.util.Set;
 import java.util.function.BinaryOperator;
 
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
+import net.automatalib.modelcheckers.m3c.formula.AbstractBinaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
-import net.automatalib.modelcheckers.m3c.formula.BinaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
 import net.automatalib.modelcheckers.m3c.formula.DiamondNode;
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
@@ -50,7 +50,7 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
                 result[currentVar] = result[currentVar] && right.data()[currentVar];
             } else if (node instanceof DiamondNode) {
                 result[currentVar] = result[currentVar] || right.data()[currentVar];
-            } else if (node instanceof BinaryFormulaNode) {
+            } else if (node instanceof AbstractBinaryFormulaNode) {
                 int xj1 = node.getVarNumberLeft();
                 int xj2 = node.getVarNumberRight();
                 if (node instanceof AndNode) {

@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
-public class BoxNode<L, AP> extends ModalFormulaNode<L, AP> {
+public class BoxNode<L, AP> extends AbstractModalFormulaNode<L, AP> {
 
     public BoxNode(FormulaNode<L, AP> node) {
         this(null, node);

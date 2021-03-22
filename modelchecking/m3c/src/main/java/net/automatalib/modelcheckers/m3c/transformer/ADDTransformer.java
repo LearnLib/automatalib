@@ -24,15 +24,15 @@ import java.util.Set;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
+import net.automatalib.modelcheckers.m3c.formula.AbstractModalFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.formula.DiamondNode;
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-import net.automatalib.modelcheckers.m3c.formula.ModalFormulaNode;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class ADDTransformer<L, AP> extends PropertyTransformer<ADDTransformer<L, AP>, L, AP> {
+public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransformer<L, AP>, L, AP> {
 
     private final BooleanVectorLogicDDManager xddManager;
     private XDD<BooleanVector> add;
@@ -91,8 +91,8 @@ public class ADDTransformer<L, AP> extends PropertyTransformer<ADDTransformer<L,
         for (FormulaNode<L, AP> node : dependGraph.getFormulaNodes()) {
             boolean[] terminal = new boolean[dependGraph.getNumVariables()];
             XDD<BooleanVector> falseDD = xddManager.constant(new BooleanVector(terminal));
-            if (node instanceof ModalFormulaNode) {
-                L action = ((ModalFormulaNode<L, AP>) node).getAction();
+            if (node instanceof AbstractModalFormulaNode) {
+                L action = ((AbstractModalFormulaNode<L, AP>) node).getAction();
                 if ((action == null || action.equals(edgeLabel)) &&
                     (!(node instanceof DiamondNode) || edgeProperty.isMust())) {
                     int xj = node.getVarNumberLeft();

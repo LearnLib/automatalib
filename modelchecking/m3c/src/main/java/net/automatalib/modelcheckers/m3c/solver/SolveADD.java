@@ -24,7 +24,7 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class SolveADD<L, AP> extends SolveDD<ADDTransformer<L, AP>, L, AP> {
+public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, AP> {
 
     private BooleanVectorLogicDDManager ddManager;
 

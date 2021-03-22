@@ -54,7 +54,7 @@ limitations under the License.
         <!-- TODO: mostly due to performance. However, usage should be checked again -->
         <Bug pattern="EI_EXPOSE_REP"/>
         <Or>
-            <Class name="net.automatalib.modelcheckers.m3c.solver.SolveDD"/>
+            <Class name="net.automatalib.modelcheckers.m3c.solver.AbstractSolveDD"/>
             <Class name="net.automatalib.modelcheckers.m3c.transformer.BDDTransformer"/>
         </Or>
     </Match>

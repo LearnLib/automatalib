@@ -24,7 +24,7 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class SolveBDD<L, AP> extends SolveDD<BDDTransformer<L, AP>, L, AP> {
+public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, AP> {
 
     private BDDManager bddManager;
 

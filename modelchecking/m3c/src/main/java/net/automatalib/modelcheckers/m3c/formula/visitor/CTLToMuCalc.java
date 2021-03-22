@@ -36,7 +36,7 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
-public class CTLToMuCalc<L, AP> extends FormulaNodeVisitor<FormulaNode<L, AP>, L, AP> {
+public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L, AP>, L, AP> {
 
     private int numFixedPointVars;
 
