@@ -15,15 +15,6 @@
  */
 package net.automatalib.automata.vpda;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import net.automatalib.graphs.Graph;
-import net.automatalib.visualization.DefaultVisualizationHelper;
-import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -37,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L, AbstractOneSEVPA.SevpaViewEdge<L, I>> {
+public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I> {
 
     protected final VPDAlphabet<I> alphabet;
 
@@ -45,7 +36,8 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
         this.alphabet = alphabet;
     }
 
-    public VPDAlphabet<I> getAlphabet() {
+    @Override
+    public VPDAlphabet<I> getInputAlphabet() {
         return alphabet;
     }
 
@@ -95,93 +87,6 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
         return size() * alphabet.getNumCalls();
     }
 
-    // Explicitly declare method, since multiple interfaces define it
-    @Override
-    public abstract int size();
-
-    @Override
-    public Collection<L> getNodes() {
-        return Collections.unmodifiableCollection(getLocations());
-    }
-
-    @Override
-    public Collection<SevpaViewEdge<L, I>> getOutgoingEdges(final L location) {
-
-        final List<SevpaViewEdge<L, I>> result = new ArrayList<>();
-
-        // all internal transitions
-        for (final I i : alphabet.getInternalAlphabet()) {
-            final L succ = getInternalSuccessor(location, i);
-            if (succ != null) {
-                result.add(new SevpaViewEdge<>(i, -1, succ));
-            }
-        }
-
-        // all return transitions for every possible stack contents
-        for (final I i : alphabet.getReturnAlphabet()) {
-            for (final L loc : getLocations()) {
-                for (final I stackSymbol : alphabet.getCallAlphabet()) {
-                    final int sym = encodeStackSym(loc, stackSymbol);
-                    final L succ = getReturnSuccessor(location, i, sym);
-
-                    if (succ != null) {
-                        result.add(new SevpaViewEdge<>(i, sym, succ));
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
-    @Override
-    public L getTarget(final SevpaViewEdge<L, I> edge) {
-        return edge.target;
-    }
-
-    @Override
-    public VisualizationHelper<L, SevpaViewEdge<L, I>> getVisualizationHelper() {
-        return new DefaultVisualizationHelper<L, SevpaViewEdge<L, I>>() {
-
-            @Override
-            protected Collection<L> initialNodes() {
-                return Collections.singleton(getInitialLocation());
-            }
-
-            @Override
-            public boolean getNodeProperties(final L node, final Map<String, String> properties) {
-                super.getNodeProperties(node, properties);
-
-                properties.put(NodeAttrs.SHAPE,
-                               isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);
-                properties.put(NodeAttrs.LABEL, "L" + getLocationId(node));
-
-                return true;
-            }
-
-            @Override
-            public boolean getEdgeProperties(final L src,
-                                             final SevpaViewEdge<L, I> edge,
-                                             final L tgt,
-                                             final Map<String, String> properties) {
-
-                final I input = edge.input;
-                final int stack = edge.stack;
-
-                if (alphabet.isInternalSymbol(input)) {
-                    properties.put(EdgeAttrs.LABEL, String.valueOf(input));
-                } else if (alphabet.isReturnSymbol(input)) {
-                    properties.put(EdgeAttrs.LABEL,
-                                   input + "/(L" + getLocationId(getStackLoc(stack)) + ',' + getCallSym(stack) + ')');
-                } else {
-                    throw new IllegalArgumentException();
-                }
-
-                return true;
-            }
-        };
-    }
-
     public L getStackLoc(final int stackSym) {
         return getLocation(stackSym / alphabet.getNumCalls());
     }
@@ -190,16 +95,4 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I>, Graph<L,
         return alphabet.getCallSymbol(stackSym % alphabet.getNumCalls());
     }
 
-    static class SevpaViewEdge<S, I> {
-
-        final I input;
-        final int stack;
-        final S target;
-
-        SevpaViewEdge(I input, int stack, S target) {
-            this.target = target;
-            this.input = input;
-            this.stack = stack;
-        }
-    }
 }

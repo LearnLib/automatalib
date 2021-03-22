@@ -18,8 +18,14 @@ package net.automatalib.automata.vpda;
 import java.util.List;
 
 import com.google.common.collect.Iterables;
+import net.automatalib.automata.concepts.FiniteRepresentation;
+import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.SuffixOutput;
+import net.automatalib.automata.vpda.OneSEVPAGraphView.SevpaViewEdge;
+import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
+import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -37,7 +43,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>, SuffixOutput<I, Boolean> {
+public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>,
+                                        SuffixOutput<I, Boolean>,
+                                        InputAlphabetHolder<I>,
+                                        GraphViewable,
+                                        FiniteRepresentation {
+
+    @Override
+    VPDAlphabet<I> getInputAlphabet();
 
     int encodeStackSym(L srcLoc, I callSym);
 
@@ -52,8 +65,6 @@ public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>, Su
     int getNumStackSymbols();
 
     @Nullable L getReturnSuccessor(L loc, I retSym, int stackSym);
-
-    int size();
 
     @Override
     default Boolean computeOutput(Iterable<? extends I> input) {
@@ -80,4 +91,9 @@ public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>, Su
     }
 
     L getInitialLocation();
+
+    @Override
+    default Graph<L, SevpaViewEdge<L, I>> graphView() {
+        return new OneSEVPAGraphView<>(this);
+    }
 }

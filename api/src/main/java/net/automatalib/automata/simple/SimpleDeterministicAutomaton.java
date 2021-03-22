@@ -17,6 +17,7 @@ package net.automatalib.automata.simple;
 
 import java.util.function.IntFunction;
 
+import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Alphabet;
@@ -82,7 +83,7 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
      *
      * @author Malte Isberner
      */
-    interface IntAbstraction {
+    interface IntAbstraction extends FiniteRepresentation {
 
         /**
          * Representative for an invalid state. This is the value being returned by methods that would return {@code
@@ -91,13 +92,6 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
          * {@code [0, size() - 1]} is invalid, in particular all negative integers.
          */
         int INVALID_STATE = -1;
-
-        /**
-         * Retrieves the number of states of the (abstracted) automaton.
-         *
-         * @return the number of states.
-         */
-        int size();
 
         /**
          * Retrieves the initial state of the (abstracted) automaton as an integer. If the automaton has no initial

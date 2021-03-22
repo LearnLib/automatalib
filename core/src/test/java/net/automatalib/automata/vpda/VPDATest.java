@@ -18,7 +18,7 @@ package net.automatalib.automata.vpda;
 import java.util.Collections;
 import java.util.HashSet;
 
-import net.automatalib.automata.vpda.AbstractOneSEVPA.SevpaViewEdge;
+import net.automatalib.automata.vpda.OneSEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graphs.Graph;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
@@ -124,7 +124,7 @@ public class VPDATest {
             }
         }
 
-        verifyGraphRepresentation(alphabet, vpa, vpa);
+        verifyGraphRepresentation(alphabet, vpa, vpa.graphView());
     }
 
     private static <L, I> void verifyGraphRepresentation(VPDAlphabet<I> alphabet,
@@ -137,8 +137,9 @@ public class VPDATest {
             for (SevpaViewEdge<L, I> edge : graph.getOutgoingEdges(loc)) {
 
                 final I input = edge.input;
-                final int stack = edge.stack;
                 final L target = edge.target;
+                final int callLocId = edge.callLocId;
+                final I callSymbol = edge.callSymbol;
 
                 switch (alphabet.getSymbolType(input)) {
                     case CALL:
@@ -147,7 +148,8 @@ public class VPDATest {
                         Assert.assertEquals(vpa.getInternalSuccessor(loc, input), target);
                         continue;
                     case RETURN:
-                        Assert.assertEquals(vpa.getReturnSuccessor(loc, input, stack), target);
+                        final int stackSym = vpa.encodeStackSym(vpa.getLocation(callLocId), callSymbol);
+                        Assert.assertEquals(vpa.getReturnSuccessor(loc, input, stackSym), target);
                         continue;
                     default:
                         throw new IllegalStateException("Unknown symbol type: " + alphabet.getSymbolType(input));
