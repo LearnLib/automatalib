@@ -20,8 +20,6 @@ import java.util.List;
 
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
-import net.automatalib.modelcheckers.m3c.cfps.Edge;
-import net.automatalib.modelcheckers.m3c.cfps.EdgeType;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.formula.DiamondNode;
@@ -85,7 +83,7 @@ public class BDDTransformerTest {
         }
     }
 
-    @Test(enabled = false)
+    @Test
     void testEdgeTransformerMust() {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);
 
@@ -110,7 +108,7 @@ public class BDDTransformerTest {
         Assert.assertEquals(expectedBDDTrueNode, bddTrueNode);
     }
 
-    @Test(enabled = false)
+    @Test
     void testEdgeTransformerNoMatch() {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, "a", new ModalEdgePropertyImpl(ModalType.MUST), dg);
 
@@ -135,9 +133,8 @@ public class BDDTransformerTest {
         Assert.assertEquals(expectedBDDTrueNode, bddTrueNode);
     }
 
-    @Test(enabled = false)
+    @Test
     void testEdgeTransformerMay() {
-        Edge edge = new Edge(null, null, "b", EdgeType.MAY);
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MAY), dg);
 
         BDD bddOrNode = transformer.getBdds()[orNode.getVarNumber()];
@@ -192,9 +189,8 @@ public class BDDTransformerTest {
         Assert.assertEquals(bddManager.readOne(), disjunction);
     }
 
-    @Test(enabled = false)
+    @Test
     void testOrBDDListZeros() {
-        Edge edge = new Edge(null, null, "b", EdgeType.MUST);
         BDDTransformer<String, String> edgeTransformer = new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);
         BDDTransformer<String, String> oneTransformer = new BDDTransformer<>(bddManager);
         oneTransformer.setIsMust(true);

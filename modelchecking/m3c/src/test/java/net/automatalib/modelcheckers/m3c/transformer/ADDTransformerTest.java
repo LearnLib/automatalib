@@ -19,8 +19,6 @@ import java.util.BitSet;
 import java.util.Set;
 
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
-import net.automatalib.modelcheckers.m3c.cfps.Edge;
-import net.automatalib.modelcheckers.m3c.cfps.EdgeType;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.formula.DiamondNode;
@@ -101,7 +99,7 @@ public class ADDTransformerTest {
         }
     }
 
-    @Test(enabled = false)
+    @Test
     void testEdgeTransformerMust() {
         ADDTransformer<String, String> transformer =
                 new ADDTransformer<>(xddManager, "b", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST), dg);
@@ -135,7 +133,7 @@ public class ADDTransformerTest {
         }
     }
 
-    @Test(enabled = false)
+    @Test
     void testEdgeTransformerNoMatch() {
         ADDTransformer<String, String> transformer =
                 new ADDTransformer<>(xddManager, "a", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST), dg);
@@ -164,9 +162,8 @@ public class ADDTransformerTest {
         }
     }
 
-    @Test(enabled = false)
+    @Test
     void testEdgeTransformerMay() {
-        Edge edge = new Edge(null, null, "b", EdgeType.MAY);
         ADDTransformer<String, String> transformer =
                 new ADDTransformer<>(xddManager, "b", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MAY), dg);
         double numVarCombinations = Math.pow(2, dg.getNumVariables());
