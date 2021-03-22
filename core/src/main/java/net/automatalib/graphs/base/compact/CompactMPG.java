@@ -21,13 +21,14 @@ import java.util.Set;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import net.automatalib.graphs.MutableModalProcessGraph;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
-import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
+import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgePropertyImpl;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactMPG<L, AP>
-        extends AbstractCompactGraph<CompactMPGEdge<L, MutableModalEdgeProperty>, Set<AP>, MutableModalEdgeProperty>
-        implements MutableModalProcessGraph<Integer, L, CompactMPGEdge<L, MutableModalEdgeProperty>, AP, MutableModalEdgeProperty> {
+        extends AbstractCompactGraph<CompactMPGEdge<L, MutableProceduralModalEdgeProperty>, Set<AP>, MutableProceduralModalEdgeProperty>
+        implements MutableModalProcessGraph<Integer, L, CompactMPGEdge<L, MutableProceduralModalEdgeProperty>, AP, MutableProceduralModalEdgeProperty> {
 
     private final ResizingArrayStorage<Set<AP>> nodeProperties;
     private int initialNode;
@@ -59,12 +60,12 @@ public class CompactMPG<L, AP>
     }
 
     @Override
-    public L getEdgeLabel(CompactMPGEdge<L, MutableModalEdgeProperty> edge) {
+    public L getEdgeLabel(CompactMPGEdge<L, MutableProceduralModalEdgeProperty> edge) {
         return edge.getLabel();
     }
 
     @Override
-    public void setEdgeLabel(CompactMPGEdge<L, MutableModalEdgeProperty> edge, L label) {
+    public void setEdgeLabel(CompactMPGEdge<L, MutableProceduralModalEdgeProperty> edge, L label) {
         edge.setLabel(label);
     }
 
@@ -85,13 +86,13 @@ public class CompactMPG<L, AP>
     }
 
     @Override
-    protected CompactMPGEdge<L, MutableModalEdgeProperty> createEdge(int source,
-                                                                     int target,
-                                                                     @Nullable MutableModalEdgeProperty property) {
-        final MutableModalEdgeProperty prop;
+    protected CompactMPGEdge<L, MutableProceduralModalEdgeProperty> createEdge(int source,
+                                                                               int target,
+                                                                               @Nullable MutableProceduralModalEdgeProperty property) {
+        final MutableProceduralModalEdgeProperty prop;
 
         if (property == null) {
-            prop = new ModalEdgePropertyImpl(ModalType.MUST);
+            prop = new ProceduralModalEdgePropertyImpl(ProceduralType.INTERNAL, ModalType.MUST);
         } else {
             prop = property;
         }

@@ -15,26 +15,28 @@
  */
 package net.automatalib.ts.modal.transition;
 
+import java.util.Objects;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class ModalContractMembershipEdgePropertyImpl extends ModalContractEdgePropertyImpl
-        implements MutableGroupMemberEdge {
+public class ProceduralModalEdgePropertyImpl extends ModalEdgePropertyImpl
+        implements MutableProceduralModalEdgeProperty {
 
-    private int memberId;
+    private ProceduralType proceduralType;
 
-    public ModalContractMembershipEdgePropertyImpl(ModalType type, boolean tau, EdgeColor color, int memberId) {
-        super(type, tau, color);
-        this.memberId = memberId;
+    public ProceduralModalEdgePropertyImpl(ProceduralType proceduralType, ModalType modalType) {
+        super(modalType);
+        this.proceduralType = proceduralType;
     }
 
     @Override
-    public void setMemberId(int id) {
-        memberId = id;
+    public ProceduralType getProceduralType() {
+        return this.proceduralType;
     }
 
     @Override
-    public int getMemberId() {
-        return memberId;
+    public void setProceduralType(ProceduralType type) {
+        this.proceduralType = type;
     }
 
     @Override
@@ -49,15 +51,14 @@ public class ModalContractMembershipEdgePropertyImpl extends ModalContractEdgePr
             return false;
         }
 
-        final ModalContractMembershipEdgePropertyImpl that = (ModalContractMembershipEdgePropertyImpl) o;
-
-        return memberId == that.memberId;
+        final ProceduralModalEdgePropertyImpl that = (ProceduralModalEdgePropertyImpl) o;
+        return proceduralType == that.proceduralType;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + Integer.hashCode(memberId);
+        result = 31 * result + Objects.hashCode(proceduralType);
         return result;
     }
 }

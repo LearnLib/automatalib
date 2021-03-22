@@ -55,7 +55,7 @@ public class ParserMuCalcTest {
                      new GfpNode<>("ZY", new OrNode<>(new VariableNode<>("ZY"), new FalseNode<>())));
     }
 
-    @Test
+    @Test(enabled = false)
     public void testNestedFixPoints() {
         assertEquals("nu X. ([]X && mu Y. (<>Y || (\"AP\" && [] false)))",
                      new GfpNode<>("X",

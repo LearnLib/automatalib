@@ -58,10 +58,13 @@ public class ModalContractEdgePropertyImpl extends ModalEdgePropertyImpl impleme
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+        if (!super.equals(o)) {
+            return false;
+        }
 
         final ModalContractEdgePropertyImpl that = (ModalContractEdgePropertyImpl) o;
 
-        return this.getType() == that.getType() && this.tau == that.tau && this.color == that.color;
+        return this.tau == that.tau && this.color == that.color;
     }
 
     @Override

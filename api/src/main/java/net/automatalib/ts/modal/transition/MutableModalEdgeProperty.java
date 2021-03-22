@@ -17,14 +17,14 @@ package net.automatalib.ts.modal.transition;
 
 public interface MutableModalEdgeProperty extends ModalEdgeProperty {
 
-    void setType(ModalType type);
+    void setModalType(ModalType type);
 
     default void setMayOnly() {
-        setType(ModalType.MAY);
+        setModalType(ModalType.MAY);
     }
 
     default void setMust() {
-        setType(ModalType.MUST);
+        setModalType(ModalType.MUST);
     }
 
 }

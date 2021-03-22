@@ -24,8 +24,6 @@ import net.automatalib.graphs.MutableModalProcessGraph;
 import net.automatalib.graphs.base.compact.CompactMPG;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -39,16 +37,6 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         final CompactMPG<String, String> mpg = buildMPG(new CompactMPG<>());
 
         mcfps = new ModalContextFreeProcessSystem<String, String>() {
-
-            @Override
-            public Alphabet<String> getTerminalAlphabet() {
-                return Alphabets.fromArray("a", "b", "e");
-            }
-
-            @Override
-            public Alphabet<String> getProcessAlphabet() {
-                return Alphabets.singleton("P");
-            }
 
             @Override
             public Map<String, ModalProcessGraph<?, String, ?, String, ?>> getMPGs() {
@@ -84,6 +72,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         mpg.setEdgeLabel(e2, "e");
 
         mpg.getEdgeProperty(e3).setMust();
+        mpg.getEdgeProperty(e3).setProcess();
         mpg.setEdgeLabel(e3, "P");
 
         mpg.getEdgeProperty(e4).setMust();

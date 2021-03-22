@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.graphs;
+package net.automatalib.ts.modal.transition;
 
-import java.util.Map;
+public interface ProceduralModalEdgeProperty extends ModalEdgeProperty {
 
-import net.automatalib.automata.concepts.FiniteRepresentation;
+    enum ProceduralType {
+        PROCESS,
+        INTERNAL
+    }
 
-public interface ModalContextFreeProcessSystem<L, AP> extends FiniteRepresentation {
+    ProceduralType getProceduralType();
 
-    Map<L, ModalProcessGraph<?, L, ?, AP, ?>> getMPGs();
+    default boolean isProcess() {
+        return getProceduralType() == ProceduralType.PROCESS;
+    }
 
-    L getMainProcess();
-
-    @Override
-    default int size() {
-        return getMPGs().values().stream().mapToInt(ModalProcessGraph::size).sum();
+    default boolean isInternal() {
+        return getProceduralType() == ProceduralType.INTERNAL;
     }
 
 }

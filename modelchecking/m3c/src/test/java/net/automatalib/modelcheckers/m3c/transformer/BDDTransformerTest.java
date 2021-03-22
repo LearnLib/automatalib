@@ -85,7 +85,7 @@ public class BDDTransformerTest {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     void testEdgeTransformerMust() {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);
 
@@ -110,7 +110,7 @@ public class BDDTransformerTest {
         Assert.assertEquals(expectedBDDTrueNode, bddTrueNode);
     }
 
-    @Test
+    @Test(enabled = false)
     void testEdgeTransformerNoMatch() {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, "a", new ModalEdgePropertyImpl(ModalType.MUST), dg);
 
@@ -135,7 +135,7 @@ public class BDDTransformerTest {
         Assert.assertEquals(expectedBDDTrueNode, bddTrueNode);
     }
 
-    @Test
+    @Test(enabled = false)
     void testEdgeTransformerMay() {
         Edge edge = new Edge(null, null, "b", EdgeType.MAY);
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MAY), dg);
@@ -192,7 +192,7 @@ public class BDDTransformerTest {
         Assert.assertEquals(bddManager.readOne(), disjunction);
     }
 
-    @Test
+    @Test(enabled = false)
     void testOrBDDListZeros() {
         Edge edge = new Edge(null, null, "b", EdgeType.MUST);
         BDDTransformer<String, String> edgeTransformer = new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);

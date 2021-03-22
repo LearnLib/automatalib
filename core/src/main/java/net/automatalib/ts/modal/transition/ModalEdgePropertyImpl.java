@@ -21,25 +21,20 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ModalEdgePropertyImpl implements MutableModalEdgeProperty {
 
-    private ModalType type;
+    private ModalType modalType;
 
-    public ModalEdgePropertyImpl(ModalType type) {
-        this.type = type;
+    public ModalEdgePropertyImpl(ModalType modalType) {
+        this.modalType = modalType;
     }
 
     @Override
-    public ModalType getType() {
-        return this.type;
+    public ModalType getModalType() {
+        return this.modalType;
     }
 
     @Override
-    public void setType(ModalType type) {
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "[type=" + type + ']';
+    public void setModalType(ModalType type) {
+        this.modalType = type;
     }
 
     @Override
@@ -52,11 +47,11 @@ public class ModalEdgePropertyImpl implements MutableModalEdgeProperty {
         }
 
         final ModalEdgePropertyImpl that = (ModalEdgePropertyImpl) o;
-        return type == that.type;
+        return modalType == that.modalType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(type);
+        return Objects.hashCode(modalType);
     }
 }

@@ -19,16 +19,18 @@ import java.util.Set;
 
 import net.automatalib.graphs.concepts.FinalNode;
 import net.automatalib.graphs.concepts.InitialNode;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 
-public interface ModalProcessGraph<N, L, E, AP, TP extends ModalEdgeProperty> extends UniversalGraph<N, E, Set<AP>, TP>,
-                                                                                      FiniteKripkeStructure<N, E, AP>,
-                                                                                      FiniteLabeledGraph<N, E, L>,
-                                                                                      InitialNode<N>,
-                                                                                      FinalNode<N> {
+public interface ModalProcessGraph<N, L, E, AP, TP extends ProceduralModalEdgeProperty>
+        extends UniversalGraph<N, E, Set<AP>, TP>,
+                FiniteKripkeStructure<N, E, AP>,
+                FiniteLabeledGraph<N, E, L>,
+                InitialNode<N>,
+                FinalNode<N> {
 
     @Override
     default Set<AP> getAtomicPropositions(N node) {
         return getNodeProperty(node);
     }
+
 }

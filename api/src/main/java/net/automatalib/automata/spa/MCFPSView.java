@@ -15,8 +15,6 @@
  */
 package net.automatalib.automata.spa;
 
-import java.io.Serializable;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,52 +25,25 @@ import java.util.Set;
 
 import com.google.common.collect.Maps;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.graphs.ModalProcessGraph;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.words.Alphabet;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
 import net.automatalib.words.SPAAlphabet;
 
 public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
 
     private final SPA<?, I> spa;
     private final Map<I, ModalProcessGraph<?, I, ?, Void, ?>> mpgs;
-    private final Map<I, I> call2NonTerminal;
-    private final Alphabet<I> processAlphabet;
 
-    public MCFPSView(SPA<?, I> spa, Mapping<I, I> call2NonTerminal) {
+    public MCFPSView(SPA<?, I> spa) {
         this.spa = spa;
 
-        final Alphabet<I> callAlphabet = spa.getInputAlphabet().getCallAlphabet();
-        final int numProcedures = callAlphabet.size();
-        final List<I> nonTerminals = new ArrayList<>(numProcedures);
-        this.call2NonTerminal = Maps.newHashMapWithExpectedSize(numProcedures);
-
-        for (int i = 0; i < callAlphabet.size(); i++) {
-            final I callSym = callAlphabet.getSymbol(i);
-            final I nonTerminal = call2NonTerminal.get(callSym);
-            this.call2NonTerminal.put(callSym, nonTerminal);
-            nonTerminals.add(nonTerminal);
+        final Map<I, DFA<?, I>> procedures = spa.getProcedures();
+        this.mpgs = Maps.newHashMapWithExpectedSize(procedures.size());
+        for (Entry<I, DFA<?, I>> e : procedures.entrySet()) {
+            this.mpgs.put(e.getKey(), new MPGView<>(e.getKey(), e.getValue()));
         }
-        this.processAlphabet = new NonTerminalAlphabet<>(nonTerminals);
-
-        this.mpgs = Maps.newHashMapWithExpectedSize(numProcedures);
-        for (Entry<I, DFA<?, I>> e : spa.getProcedures().entrySet()) {
-            this.mpgs.put(this.call2NonTerminal.get(e.getKey()), new MPGView<>(e.getKey(), e.getValue()));
-        }
-    }
-
-    @Override
-    public Alphabet<I> getTerminalAlphabet() {
-        return spa.getInputAlphabet().getProceduralAlphabet();
-    }
-
-    @Override
-    public Alphabet<I> getProcessAlphabet() {
-        return processAlphabet;
     }
 
     @Override
@@ -82,10 +53,10 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
 
     @Override
     public I getMainProcess() {
-        return this.call2NonTerminal.get(this.spa.getInitialProcedure());
+        return this.spa.getInitialProcedure();
     }
 
-    private class MPGView<S> implements ModalProcessGraph<S, I, TransitionEdge<I, S>, Void, ModalEdgeProperty> {
+    private class MPGView<S> implements ModalProcessGraph<S, I, SPAEdge<I, S>, Void, ProceduralModalEdgeProperty> {
 
         private final I procedure;
         private final DFA<S, I> dfa;
@@ -94,7 +65,8 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
         private final S end;
         private final List<S> nodes;
 
-        @SuppressWarnings("unchecked") // we make sure to handle 'init' and 'end' correctly
+        // we make sure to handle 'init' and 'end' correctly
+        @SuppressWarnings("unchecked")
         MPGView(I procedure, DFA<S, I> dfa) {
             this.procedure = procedure;
             this.dfa = dfa;
@@ -108,31 +80,35 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
         }
 
         @Override
-        public Collection<TransitionEdge<I, S>> getOutgoingEdges(S node) {
+        public Collection<SPAEdge<I, S>> getOutgoingEdges(S node) {
             if (node == init) {
-                return Collections.singletonList(new TransitionEdge<>(this.procedure, dfa.getInitialState()));
+                return Collections.singletonList(new SPAEdge<>(this.procedure,
+                                                               dfa.getInitialState(),
+                                                               ProceduralType.INTERNAL));
             } else if (node == end) {
                 return Collections.emptyList();
             } else {
                 final SPAAlphabet<I> spaAlphabet = spa.getInputAlphabet();
-                final List<TransitionEdge<I, S>> result = new ArrayList<>(spaAlphabet.size());
+                final List<SPAEdge<I, S>> result = new ArrayList<>(spaAlphabet.size());
 
                 for (I i : spaAlphabet.getInternalAlphabet()) {
                     final S succ = this.dfa.getSuccessor(node, i);
                     if (succ != null) {
-                        result.add(new TransitionEdge<>(i, succ));
+                        result.add(new SPAEdge<>(i, succ, ProceduralType.INTERNAL));
                     }
                 }
 
                 for (I i : spaAlphabet.getCallAlphabet()) {
                     final S succ = this.dfa.getSuccessor(node, i);
                     if (succ != null) {
-                        result.add(new TransitionEdge<>(call2NonTerminal.get(i), succ));
+                        result.add(new SPAEdge<>(i, succ, ProceduralType.PROCESS));
                     }
                 }
 
                 if (this.dfa.isAccepting(node)) {
-                    result.add(new TransitionEdge<>(spaAlphabet.getReturnSymbol(), this.getFinalNode()));
+                    result.add(new SPAEdge<>(spaAlphabet.getReturnSymbol(),
+                                             this.getFinalNode(),
+                                             ProceduralType.INTERNAL));
                 }
 
                 return result;
@@ -140,8 +116,8 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
         }
 
         @Override
-        public S getTarget(TransitionEdge<I, S> edge) {
-            return edge.getTransition();
+        public S getTarget(SPAEdge<I, S> edge) {
+            return edge.succ;
         }
 
         @Override
@@ -155,13 +131,13 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
         }
 
         @Override
-        public ModalEdgeProperty getEdgeProperty(TransitionEdge<I, S> edge) {
-            return () -> ModalType.MUST;
+        public ProceduralModalEdgeProperty getEdgeProperty(SPAEdge<I, S> edge) {
+            return edge;
         }
 
         @Override
-        public I getEdgeLabel(TransitionEdge<I, S> edge) {
-            return edge.getInput();
+        public I getEdgeLabel(SPAEdge<I, S> edge) {
+            return edge.input;
         }
 
         @Override
@@ -175,32 +151,27 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
         }
     }
 
-    private static class NonTerminalAlphabet<I> extends AbstractList<I> implements Alphabet<I>, Serializable {
+    private static class SPAEdge<I, S> implements ProceduralModalEdgeProperty {
 
-        private final List<I> symbols;
+        private final I input;
+        private final S succ;
+        private final ProceduralType type;
 
-        NonTerminalAlphabet(List<I> symbols) {
-            this.symbols = symbols;
+        SPAEdge(I input, S succ, ProceduralType type) {
+            this.input = input;
+            this.succ = succ;
+            this.type = type;
         }
 
         @Override
-        public I get(int index) {
-            return symbols.get(index);
+        public ModalType getModalType() {
+            return ModalType.MUST;
         }
 
         @Override
-        public int size() {
-            return symbols.size();
-        }
-
-        @Override
-        public I getSymbol(int index) {
-            return get(index);
-        }
-
-        @Override
-        public int getSymbolIndex(I symbol) {
-            return symbols.indexOf(symbol);
+        public ProceduralType getProceduralType() {
+            return this.type;
         }
     }
+
 }

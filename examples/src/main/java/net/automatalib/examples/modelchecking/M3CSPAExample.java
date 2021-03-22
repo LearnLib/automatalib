@@ -39,16 +39,7 @@ public final class M3CSPAExample {
 
     public static void main(String[] args) throws ParseException {
         final SPA<?, Character> spa = PalindromeExample.buildSPA();
-        final MCFPSView<Character> view = new MCFPSView<>(spa, elem -> {
-            switch (elem) {
-                case 'S':
-                    return 'X';
-                case 'T':
-                    return 'Y';
-                default:
-                    throw new IllegalArgumentException("Unknown element: " + elem);
-            }
-        });
+        final MCFPSView<Character> view = new MCFPSView<>(spa);
 
         //@formatter:off
         final String[] formulae = {"mu X.(<>X || <b><b>true)", // there exists a path with "bb"

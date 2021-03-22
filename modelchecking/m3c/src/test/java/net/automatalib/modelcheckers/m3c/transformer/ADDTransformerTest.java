@@ -101,7 +101,7 @@ public class ADDTransformerTest {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     void testEdgeTransformerMust() {
         ADDTransformer<String, String> transformer =
                 new ADDTransformer<>(xddManager, "b", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST), dg);
@@ -135,7 +135,7 @@ public class ADDTransformerTest {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     void testEdgeTransformerNoMatch() {
         ADDTransformer<String, String> transformer =
                 new ADDTransformer<>(xddManager, "a", new ModalEdgePropertyImpl(ModalEdgeProperty.ModalType.MUST), dg);
@@ -164,7 +164,7 @@ public class ADDTransformerTest {
         }
     }
 
-    @Test
+    @Test(enabled = false)
     void testEdgeTransformerMay() {
         Edge edge = new Edge(null, null, "b", EdgeType.MAY);
         ADDTransformer<String, String> transformer =
