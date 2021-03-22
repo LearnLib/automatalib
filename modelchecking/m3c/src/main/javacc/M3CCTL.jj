@@ -77,10 +77,8 @@ TOKEN:
 |	< OR: "||" >
 |	< EQUIVALENCE: "<->" >
 |	< IMPLICATION: "->" >
-//|   < LETTER: ["a"-"z","A"-"Z"] >
-//|   < DIGIT: ["0"-"9"] >
-|   < ID: ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z"] | ["0"-"9"] | "_")* >
-|   < QUOTED_ID: ("\"" <ID> "\"") |  ("'" <ID> "'") >
+|	< ID: ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z"] | ["0"-"9"] | "_")* >
+|	< QUOTED_ID: ("\"" <ID> "\"") |  ("'" <ID> "'") >
 }
 
 FormulaNode<L, AP> parse(Function<String, L> labelParser, Function<String, Set<AP>> apParser):
@@ -117,7 +115,7 @@ private FormulaNode<L, AP> untilFormula():
 			return new AWUNode<L, AP>(l, r);
 		}
 		if(isStrongUntil) {
-		    return new EUNode<L, AP>(l, r);
+			return new EUNode<L, AP>(l, r);
 		}
 		return new EWUNode<L, AP>(l, r);
 	}
@@ -146,7 +144,7 @@ private FormulaNode<L, AP> orFormula():
 	l=implFormula() (<OR> r=orFormula())?
 	{
 		if(r == null) {
-		    return l;
+			return l;
 		}
 		return new OrNode<L, AP>(l, r);
 	}
@@ -161,7 +159,7 @@ private FormulaNode<L, AP> implFormula():
 	l=equivFormula() (<IMPLICATION> r=implFormula())?
 	{
 		if(r == null) {
-		    return l;
+			return l;
 		}
 		return new OrNode<L, AP>(new NotNode<L, AP>(l), r);
 	}
@@ -176,7 +174,7 @@ private FormulaNode<L, AP> equivFormula():
 	l=unary() (<EQUIVALENCE> r=equivFormula())?
 	{
 		if(r == null) {
-		    return l;
+			return l;
 		}
 		return new AndNode<L, AP>(new OrNode<L, AP>(new NotNode<L, AP>(l), r), new OrNode<L, AP>(new NotNode<L, AP>(r), l));
 	}

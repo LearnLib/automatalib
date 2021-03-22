@@ -115,7 +115,7 @@ private FormulaNode<L, AP> fixedPointFormula():
 		String fixedPointVar = var.toString();
 		fixedPointVars.remove(fixedPointVar);
 		if(isGFP) {
-		    return new GfpNode<L, AP>(fixedPointVar, child);
+			return new GfpNode<L, AP>(fixedPointVar, child);
 		}
 		return new LfpNode<L, AP>(fixedPointVar, child);
 	}
@@ -129,7 +129,7 @@ private FormulaNode<L, AP> andFormula():
 	l=orFormula() (<AND> r=andFormula())?
 	{
 		if(r == null) {
-		    return l;
+			return l;
 		}
 		return new AndNode<L, AP>(l, r);
 	}
@@ -144,7 +144,7 @@ private FormulaNode<L, AP> orFormula():
 	l=implFormula() (<OR> r=orFormula())?
 	{
 		if(r == null) {
-		    return l;
+			return l;
 		}
 		return new OrNode<L, AP>(l, r);
 	}
@@ -159,7 +159,7 @@ private FormulaNode<L, AP> implFormula():
 	l=equivFormula() (<IMPLICATION> r=implFormula())?
 	{
 		if(r == null) {
-		    return l;
+			return l;
 		}
 		return new OrNode<L, AP>(new NotNode<L, AP>(l), r);
 	}
@@ -174,7 +174,7 @@ private FormulaNode<L, AP> equivFormula():
 	l=unary() (<EQUIVALENCE> r=equivFormula())?
 	{
 		if(r == null) {
-		    return l;
+			return l;
 		}
 		return new AndNode<L, AP>(new OrNode<L, AP>(new NotNode<L, AP>(l), r), new OrNode<L, AP>(new NotNode<L, AP>(r), l));
 	}
