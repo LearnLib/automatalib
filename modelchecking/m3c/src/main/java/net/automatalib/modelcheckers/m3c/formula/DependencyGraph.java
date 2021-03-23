@@ -40,7 +40,7 @@ public class DependencyGraph<L, AP> {
 
     private int numVars;
 
-    private FormulaNode<L, AP> ast;
+    private final FormulaNode<L, AP> ast;
 
     public DependencyGraph(FormulaNode<L, AP> root) {
         this.formulaNodes = new ArrayList<>();
