@@ -23,8 +23,6 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
 
     private final FormulaNode<L, AP> leftChild;
     private final FormulaNode<L, AP> rightChild;
-    private Boolean belongsToMaxBlock;
-    private int blockNumber;
     private int varNumber;
 
     public AbstractFormulaNode() {
@@ -50,25 +48,14 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
         return rightChild;
     }
 
-    public Boolean isBelongsToMaxBlock() {
-        return belongsToMaxBlock;
-    }
-
-    public void setBelongsToMaxBlock(Boolean belongsToMaxBlock) {
-        this.belongsToMaxBlock = belongsToMaxBlock;
-    }
-
-    public int getBlockNumber() {
-        return blockNumber;
-    }
-
-    public void setBlockNumber(int blockNumber) {
-        this.blockNumber = blockNumber;
-    }
-
     @Override
     public int getVarNumberLeft() {
         return leftChild.getVarNumber();
+    }
+
+    @Override
+    public int getVarNumberRight() {
+        return rightChild.getVarNumber();
     }
 
     @Override
@@ -82,14 +69,10 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
     }
 
     @Override
-    public int getVarNumberRight() {
-        return rightChild.getVarNumber();
-    }
-
-    @Override
     public int hashCode() {
         int result = Objects.hashCode(leftChild);
         result = 31 * result + Objects.hash(rightChild);
+        result = 31 * result + Integer.hashCode(varNumber);
         return result;
     }
 
@@ -104,7 +87,8 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
 
         FormulaNode<?, ?> that = (FormulaNode<?, ?>) o;
 
-        return Objects.equals(leftChild, that.getLeftChild()) && Objects.equals(rightChild, that.getRightChild());
+        return this.varNumber == that.getVarNumber() && Objects.equals(leftChild, that.getLeftChild()) &&
+               Objects.equals(rightChild, that.getRightChild());
     }
 
 }
