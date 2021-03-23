@@ -40,13 +40,15 @@ public class DependencyGraph<L, AP> {
 
     private int numVars;
 
+    private FormulaNode<L, AP> ast;
+
     public DependencyGraph(FormulaNode<L, AP> root) {
         this.formulaNodes = new ArrayList<>();
         this.blocks = new ArrayList<>();
         this.fixedPointVarMap = new HashMap<>();
-        FormulaNode<L, AP> rootNNF = root.toNNF();
-        setVarNumbers(rootNNF);
-        createEquationalBlocks(rootNNF);
+        this.ast = root.toNNF();
+        setVarNumbers(ast);
+        createEquationalBlocks(ast);
     }
 
     private void sortBlocks() {
@@ -155,5 +157,9 @@ public class DependencyGraph<L, AP> {
 
     public Map<String, FormulaNode<L, AP>> getFixedPointVarMap() {
         return fixedPointVarMap;
+    }
+
+    public FormulaNode<L, AP> getAST() {
+        return ast;
     }
 }

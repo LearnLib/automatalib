@@ -49,6 +49,7 @@ public class ADDTransformerTest {
         String formula = "mu X.(<b>[b]true || <>X)";
         FormulaNode<String, String> ast = ParserMuCalc.parse(formula);
         dg = new DependencyGraph<>(ast);
+        ast = dg.getAST();
         xddManager = new BooleanVectorLogicDDManager(dg.getNumVariables());
         orNode = (OrNode<String, String>) ast.getLeftChild();
         diaNode1 = (DiamondNode<String, String>) orNode.getLeftChild();
