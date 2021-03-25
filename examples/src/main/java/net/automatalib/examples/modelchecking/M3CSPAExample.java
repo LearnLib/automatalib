@@ -25,7 +25,8 @@ import net.automatalib.examples.spa.PalindromeExample;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
-import net.automatalib.modelcheckers.m3c.solver.SolveBDD;
+import net.automatalib.modelcheckers.m3c.solver.Solver;
+import net.automatalib.modelcheckers.m3c.solver.Solvers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,10 +63,9 @@ public final class M3CSPAExample {
 
         for (String f : formulae) {
             final FormulaNode<Character, Void> formula = ParserMuCalc.parse(f, labelParser, apParser);
-            final SolveBDD<Character, Void> solver = SolveBDD.solver(view, formula, false);
-            solver.solve();
+            final Solver<FormulaNode<Character, Void>> solver = Solvers.genericBDDSolver(view);
 
-            LOGGER.info("Is '{}' satisfied? {}", f, solver.isSat());
+            LOGGER.info("Is '{}' satisfied? {}", f, solver.solve(formula, false));
         }
 
     }

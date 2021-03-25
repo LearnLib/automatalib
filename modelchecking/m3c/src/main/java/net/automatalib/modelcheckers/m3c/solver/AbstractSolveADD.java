@@ -17,19 +17,15 @@ package net.automatalib.modelcheckers.m3c.solver;
 
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserCTL;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, AP> {
+public abstract class AbstractSolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, AP> {
 
     private BooleanVectorLogicDDManager ddManager;
 
-    SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode<L, AP> formula, boolean formulaIsCtl) {
-        super(mcfps, formula, formulaIsCtl);
+    AbstractSolveADD(ModalContextFreeProcessSystem<L, AP> mcfps) {
+        super(mcfps);
     }
 
     @Override
@@ -48,22 +44,9 @@ public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, A
     }
 
     @Override
-    protected <TP extends ModalEdgeProperty> ADDTransformer<L, AP> createInitTransformerEdge(L edgeLabel, TP edgeProperty) {
+    protected <TP extends ModalEdgeProperty> ADDTransformer<L, AP> createInitTransformerEdge(L edgeLabel,
+                                                                                             TP edgeProperty) {
         return new ADDTransformer<>(ddManager, edgeLabel, edgeProperty, dependGraph);
-    }
-
-    public static <L, AP> SolveADD<L, AP> solver(ModalContextFreeProcessSystem<L, AP> mcfps,
-                                                 FormulaNode<L, AP> formula,
-                                                 boolean formulaIsCtl) throws ParseException {
-        return new SolveADD<>(mcfps, formula, formulaIsCtl);
-    }
-
-    public static SolveADD<String, String> solver(ModalContextFreeProcessSystem<String, String> mcfps,
-                                                  String formula,
-                                                  boolean formulaIsCtl) throws ParseException {
-        return new SolveADD<>(mcfps,
-                              formulaIsCtl ? ParserCTL.parse(formula) : ParserMuCalc.parse(formula),
-                              formulaIsCtl);
     }
 
 }

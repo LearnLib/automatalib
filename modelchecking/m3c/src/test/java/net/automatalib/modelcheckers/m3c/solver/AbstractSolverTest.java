@@ -83,22 +83,19 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @Test
     void testSolve() throws ParseException {
+        Solver<String> solver = getSolver(mcfps);
+
         String formula = "mu X.(<b><b>true || <>X)";
-        AbstractSolveDD<T, String, String> solver = getSolver(mcfps, formula, false);
-        assertSolve(solver, true);
+        assertSolve(solver, formula, true);
 
         String negatedFormula = "!(" + formula + ")";
-        solver = getSolver(mcfps, negatedFormula, false);
-        assertSolve(solver, false);
+        assertSolve(solver, negatedFormula, false);
     }
 
-    public abstract AbstractSolveDD<T, String, String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps,
-                                                                 String formula,
-                                                                 boolean formulaIsCtl) throws ParseException;
-
-    protected void assertSolve(AbstractSolveDD<T, String, String> solver, boolean expectedIsSat) {
-        solver.solve();
-        Assert.assertEquals(expectedIsSat, solver.isSat());
+    protected <P> void assertSolve(Solver<P> solver, P property, boolean expectedIsSat) throws ParseException {
+        Assert.assertEquals(solver.solve(property, false), expectedIsSat);
     }
+
+    public abstract Solver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps);
 
 }

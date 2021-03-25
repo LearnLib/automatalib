@@ -59,24 +59,26 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
     // Keeps track of which state's property transformers have to be updated.
     private Map<L, BitSet> workSet;
 
-    AbstractSolveDD(ModalContextFreeProcessSystem<L, AP> mcfps, FormulaNode<L, AP> formula, boolean formulaIsCtl) {
+    AbstractSolveDD(ModalContextFreeProcessSystem<L, AP> mcfps) {
         this.mcfps = mcfps;
+        checkCFPS();
+    }
+
+    private FormulaNode<L, AP> ctlToMuCalc(FormulaNode<L, AP> ctlFormula) {
+        CTLToMuCalc<L, AP> transformation = new CTLToMuCalc<>();
+        return transformation.toMuCalc(ctlFormula);
+    }
+
+    public boolean solve(FormulaNode<L, AP> formula, boolean formulaIsCtl) {
         if (formulaIsCtl) {
             this.ast = ctlToMuCalc(formula);
         } else {
             this.ast = formula;
         }
         this.ast = this.ast.toNNF();
-    }
 
-    protected static <L, AP> FormulaNode<L, AP> ctlToMuCalc(FormulaNode<L, AP> ctlFormula) {
-        CTLToMuCalc<L, AP> transformation = new CTLToMuCalc<>();
-        return transformation.toMuCalc(ctlFormula);
-    }
-
-    public void solve() {
-        checkCFPS();
         initialize();
+
         while (true) {
             boolean workSetIsEmpty = true;
             for (Entry<L, BitSet> entry : workSet.entrySet()) {
@@ -92,6 +94,8 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
                 break;
             }
         }
+
+        return isSat();
     }
 
     private void checkCFPS() {
@@ -126,7 +130,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
 
     protected abstract void initDDManager();
 
-    protected void fillWorkList() {
+    private void fillWorkList() {
         for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> labelMpg : mcfps.getMPGs().entrySet()) {
             L mpgLabel = labelMpg.getKey();
             ModalProcessGraph<?, L, ?, AP, ?> mpg = labelMpg.getValue();
@@ -139,7 +143,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         }
     }
 
-    protected void initTransformers() {
+    private void initTransformers() {
         for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> labelMpg : mcfps.getMPGs().entrySet()) {
             L mpgLabel = labelMpg.getKey();
             ModalProcessGraph<?, L, ?, AP, ?> mpg = labelMpg.getValue();
@@ -159,7 +163,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         }
     }
 
-    protected void initNodeIds() {
+    private void initNodeIds() {
         nodeIDs = Maps.newHashMapWithExpectedSize(mcfps.getMPGs().size());
         for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> entry : mcfps.getMPGs().entrySet()) {
             nodeIDs.put(entry.getKey(), entry.getValue().nodeIDs());
@@ -198,7 +202,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         predecessors.put(mpgLabel, nodeToPredecessors);
     }
 
-    public boolean isSat() {
+    private boolean isSat() {
         ModalProcessGraph<?, L, ?, AP, ?> mainMpg = mcfps.getMPGs().get(mcfps.getMainProcess());
         return isSat(getInitialNodeId(mcfps.getMainProcess(), mainMpg), mcfps.getMainProcess());
     }
@@ -217,7 +221,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         return getNodeId(mpgLabel, mpg.getInitialNode());
     }
 
-    public List<FormulaNode<L, AP>> getSatisfiedSubformulas(int nodeId, L mpgLabel) {
+    private List<FormulaNode<L, AP>> getSatisfiedSubformulas(int nodeId, L mpgLabel) {
         Set<Integer> output =
                 propTransformers.get(mpgLabel).get(nodeId).evaluate(toBoolArray(getAllAPDeadlockedState()));
         List<FormulaNode<L, AP>> satisfiedSubFormulas = new ArrayList<>();
@@ -229,7 +233,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         return satisfiedSubFormulas;
     }
 
-    protected <N> int getNodeId(L mpgLabel, N node) {
+    private <N> int getNodeId(L mpgLabel, N node) {
         return getNodeIDs(mpgLabel).getNodeId(node);
     }
 
@@ -246,7 +250,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         return (NodeIDs<N>) nodeIDs.get(mpgLabel);
     }
 
-    public Set<Integer> getAllAPDeadlockedState() {
+    private Set<Integer> getAllAPDeadlockedState() {
         return getAllAPDeadlockedState(mcfps.getMPGs().get(mcfps.getMainProcess()));
     }
 
@@ -287,7 +291,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         return satisfiedVariables;
     }
 
-    public void updateState(int nodeId, L mpgLabel) {
+    private void updateState(int nodeId, L mpgLabel) {
         initUpdate(nodeId, mpgLabel);
         T stateTransformer = getTransformer(mpgLabel, nodeId);
         ModalProcessGraph<?, L, ?, AP, ?> mpg = mcfps.getMPGs().get(mpgLabel);
@@ -295,7 +299,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         updateTransformerAndWorkSet(nodeId, mpgLabel, stateTransformer, updatedTransformer);
     }
 
-    protected void updateTransformerAndWorkSet(int nodeId, L mpgLabel, T stateTransformer, T updatedTransformer) {
+    private void updateTransformerAndWorkSet(int nodeId, L mpgLabel, T stateTransformer, T updatedTransformer) {
         if (!stateTransformer.equals(updatedTransformer)) {
             propTransformers.get(mpgLabel).set(nodeId, updatedTransformer);
             updateWorkSet(nodeId, mpgLabel);
@@ -306,7 +310,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         }
     }
 
-    protected void updateWorkSet(int nodeId, L mpgLabel) {
+    private void updateWorkSet(int nodeId, L mpgLabel) {
         ModalProcessGraph<?, L, ?, AP, ?> mpg = mcfps.getMPGs().get(mpgLabel);
         if (Objects.equals(mpg.getInitialNode(), getNode(mpgLabel, nodeId))) {
             updateWorkSetStartState(mpgLabel);
@@ -323,13 +327,13 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         return true;
     }
 
-    protected void addPredecessorsToWorkSet(int nodeId, L mpgId) {
+    private void addPredecessorsToWorkSet(int nodeId, L mpgId) {
         for (Integer predecessorId : predecessors.get(mpgId).getOrDefault(nodeId, new HashSet<>())) {
             workSet.get(mpgId).set(predecessorId, true);
         }
     }
 
-    protected void updateWorkSetStartState(L mpgLabel) {
+    private void updateWorkSetStartState(L mpgLabel) {
         for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> labelMpg : mcfps.getMPGs().entrySet()) {
             updateWorkSetStartState(mpgLabel, labelMpg.getKey(), labelMpg.getValue());
         }
@@ -348,7 +352,7 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         }
     }
 
-    protected void initUpdate(int nodeId, L mpgLabel) {
+    private void initUpdate(int nodeId, L mpgLabel) {
         ModalProcessGraph<?, L, ?, AP, ?> mpg = mcfps.getMPGs().get(mpgLabel);
         if (getNode(mpgLabel, nodeId).equals(mpg.getFinalNode())) {
             throw new IllegalArgumentException("End State must not be updated!");
@@ -357,11 +361,11 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
     }
 
     @SuppressWarnings("unchecked")
-    protected <N> N getNode(L mpgLabel, int nodeId) {
+    private <N> N getNode(L mpgLabel, int nodeId) {
         return (N) getNodeIDs(mpgLabel).getNode(nodeId);
     }
 
-    public <E> T getEdgeTransformer(E edge, ModalProcessGraph<?, L, E, AP, ?> mpg) {
+    private <E> T getEdgeTransformer(E edge, ModalProcessGraph<?, L, E, AP, ?> mpg) {
         T edgeTransformer;
         L edgeLabel = mpg.getEdgeLabel(edge);
         if (isProcessEdge(mpg, edge)) {
@@ -397,17 +401,17 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
 
     protected abstract <TP extends ModalEdgeProperty> T createInitTransformerEdge(L edgeLabel, TP edgeProperty);
 
-    protected T getUpdatedPropertyTransformer(int nodeId,
-                                              L mpgLabel,
-                                              T stateTransformer,
-                                              ModalProcessGraph<?, L, ?, AP, ?> mpg) {
+    private T getUpdatedPropertyTransformer(int nodeId,
+                                            L mpgLabel,
+                                            T stateTransformer,
+                                            ModalProcessGraph<?, L, ?, AP, ?> mpg) {
         List<T> compositions = createCompositions(nodeId, mpgLabel, mpg);
         EquationalBlock<L, AP> currentBlock = dependGraph.getBlock(currentBlockIndex);
         Set<AP> atomicPropositions = mpg.getAtomicPropositions(getNode(mpgLabel, nodeId));
         return stateTransformer.createUpdate(atomicPropositions, compositions, currentBlock);
     }
 
-    protected <N, E> List<T> createCompositions(int nodeId, L mpgLabel, ModalProcessGraph<N, L, E, AP, ?> mpg) {
+    private <N, E> List<T> createCompositions(int nodeId, L mpgLabel, ModalProcessGraph<N, L, E, AP, ?> mpg) {
         List<T> compositions = new ArrayList<>();
         N node = getNode(mpgLabel, nodeId);
         for (E edge : mpg.getOutgoingEdges(node)) {
@@ -422,32 +426,8 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         return compositions;
     }
 
-    protected T getTransformer(L mpgLabel, int nodeId) {
+    private T getTransformer(L mpgLabel, int nodeId) {
         return propTransformers.get(mpgLabel).get(nodeId);
-    }
-
-    public BitSet[] getWorkSet() {
-        return workSet.values().toArray(new BitSet[0]);
-    }
-
-    public DependencyGraph<L, AP> getDependGraph() {
-        return dependGraph;
-    }
-
-    public ModalContextFreeProcessSystem<L, AP> getCfps() {
-        return mcfps;
-    }
-
-    public List<T> getPropertyTransformers(L mpgLabel) {
-        return propTransformers.get(mpgLabel);
-    }
-
-    public Map<L, T> getMustTransformers() {
-        return mustTransformers;
-    }
-
-    public Map<L, T> getMayTransformers() {
-        return mayTransformers;
     }
 
 }

@@ -16,12 +16,19 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParserCTL;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 
-public class SolverBDDTest extends AbstractSolverTest<BDDTransformer<String, String>> {
+public class StringSolveADD extends AbstractSolveADD<String, String> implements Solver<String> {
 
-    public Solver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
-        return Solvers.stringBDDSolver(mcfps);
+    StringSolveADD(ModalContextFreeProcessSystem<String, String> mcfps) {
+        super(mcfps);
+    }
+
+    @Override
+    public boolean solve(String formula, boolean formulaIsCtl) throws ParseException {
+        return super.solve(formulaIsCtl ? ParserCTL.parse(formula) : ParserMuCalc.parse(formula), formulaIsCtl);
     }
 
 }
