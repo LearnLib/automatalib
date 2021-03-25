@@ -96,11 +96,82 @@ FormulaNode<L, AP> parse(Function<String, L> labelParser, Function<String, Set<A
 
 private FormulaNode<L, AP> formula():
 {
- FormulaNode<L, AP> node;
+	FormulaNode<L, AP> node;
 }
 {
-	(node=fixedPointFormula()
-|	node=andFormula()) {return node;}
+	node=equivFormula() {return node;}
+}
+
+private FormulaNode<L, AP> equivFormula():
+{
+	FormulaNode<L, AP> l;
+	FormulaNode<L, AP> r = null;
+}
+{
+	l=implFormula() (<EQUIVALENCE> r=implFormula())*
+	{
+		if(r == null) {
+			return l;
+		}
+		return new AndNode<L, AP>(new OrNode<L, AP>(new NotNode<L, AP>(l), r), new OrNode<L, AP>(new NotNode<L, AP>(r), l));
+	}
+}
+
+private FormulaNode<L, AP> implFormula():
+{
+	FormulaNode<L, AP> l;
+	FormulaNode<L, AP> r = null;
+}
+{
+	l=orFormula() (<IMPLICATION> r=orFormula())*
+	{
+		if(r == null) {
+			return l;
+		}
+		return new OrNode<L, AP>(new NotNode<L, AP>(l), r);
+	}
+}
+
+private FormulaNode<L, AP> orFormula():
+{
+	FormulaNode<L, AP> l;
+	FormulaNode<L, AP> r = null;
+}
+{
+	l=andFormula() (<OR> r=andFormula())*
+	{
+		if(r == null) {
+			return l;
+		}
+		return new OrNode<L, AP>(l, r);
+	}
+}
+
+private FormulaNode<L, AP> andFormula():
+{
+	FormulaNode<L, AP> l;
+	FormulaNode<L, AP> r = null;}
+{
+	l=unary() (<AND> r=unary() )*
+	{
+		if(r == null) {
+			return l;
+		}
+		return new AndNode<L, AP>(l, r);
+	}
+}
+
+private FormulaNode<L, AP> unary():
+{
+	FormulaNode<L, AP> child;
+	Token action = null;
+}
+{
+	child=fixedPointFormula() {return child;}
+|	<NEGATION> child=unary() {return new NotNode<L, AP>(child);}
+|	<LABRACKET> (action=<ID>)? <RABRACKET> child=unary() {return new DiamondNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
+|	<LBRACKET> (action=<ID>)? <RBRACKET> child=unary() {return new BoxNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
+|	child=element() {return child;}
 }
 
 private FormulaNode<L, AP> fixedPointFormula():
@@ -119,77 +190,6 @@ private FormulaNode<L, AP> fixedPointFormula():
 		}
 		return new LfpNode<L, AP>(fixedPointVar, child);
 	}
-}
-
-private FormulaNode<L, AP> andFormula():
-{
-	FormulaNode<L, AP> l;
-	FormulaNode<L, AP> r = null;}
-{
-	l=orFormula() (<AND> r=andFormula())?
-	{
-		if(r == null) {
-			return l;
-		}
-		return new AndNode<L, AP>(l, r);
-	}
-}
-
-private FormulaNode<L, AP> orFormula():
-{
-	FormulaNode<L, AP> l;
-	FormulaNode<L, AP> r = null;
-}
-{
-	l=implFormula() (<OR> r=orFormula())?
-	{
-		if(r == null) {
-			return l;
-		}
-		return new OrNode<L, AP>(l, r);
-	}
-}
-
-private FormulaNode<L, AP> implFormula():
-{
-	FormulaNode<L, AP> l;
-	FormulaNode<L, AP> r = null;
-}
-{
-	l=equivFormula() (<IMPLICATION> r=implFormula())?
-	{
-		if(r == null) {
-			return l;
-		}
-		return new OrNode<L, AP>(new NotNode<L, AP>(l), r);
-	}
-}
-
-private FormulaNode<L, AP> equivFormula():
-{
-	FormulaNode<L, AP> l;
-	FormulaNode<L, AP> r = null;
-}
-{
-	l=unary() (<EQUIVALENCE> r=equivFormula())?
-	{
-		if(r == null) {
-			return l;
-		}
-		return new AndNode<L, AP>(new OrNode<L, AP>(new NotNode<L, AP>(l), r), new OrNode<L, AP>(new NotNode<L, AP>(r), l));
-	}
-}
-
-private FormulaNode<L, AP> unary():
-{
-	FormulaNode<L, AP> child;
-	Token action = null;
-}
-{
-	<NEGATION> child=unary() {return new NotNode<L, AP>(child);}
-|	<LABRACKET> (action=<ID>)? <RABRACKET> child=unary() {return new DiamondNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
-|	<LBRACKET> (action=<ID>)? <RBRACKET> child=unary() {return new BoxNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
-|	child=element() {return child;}
 }
 
 private FormulaNode<L, AP> element():

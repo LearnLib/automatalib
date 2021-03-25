@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
 public class ParserMuCalcTest {
 
     @Test
-    public void baseCasesTest() {
+    public void testBaseCases() {
         assertEquals("false", new FalseNode<>());
         assertEquals("true", new TrueNode<>());
         assertEquals("true && true", new AndNode<>(new TrueNode<>(), new TrueNode<>()));
@@ -55,6 +55,39 @@ public class ParserMuCalcTest {
                      new GfpNode<>("ZY", new OrNode<>(new VariableNode<>("ZY"), new FalseNode<>())));
     }
 
+    private void assertEquals(String muCalcFormula, FormulaNode<String, String> expectedAST) {
+        try {
+            FormulaNode<String, String> actualAST = ParserMuCalc.parse(muCalcFormula);
+            Assert.assertEquals(actualAST, expectedAST);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testPrecedence() {
+        assertEquals("true || false && true", "true || (false && true)");
+        assertEquals("true -> false || true", "true -> (false || true)");
+        assertEquals("true <=> false -> true", "true <=> (false -> true)");
+        assertEquals("!true && false", "(!true) && false");
+        assertEquals("nu X.(X || true) && false", "(nu X.(X || true)) && false");
+        assertEquals("mu X.(X || true) && false", "(mu X.(X || true)) && false");
+        assertEquals("[]true && true", "([]true) && true");
+        assertEquals("[b]true && true", "([b]true) && true");
+        assertEquals("<>true && true", "(<>true) && true");
+        assertEquals("<b>true && true", "(<b>true) && true");
+
+    }
+
+    private void assertEquals(String actualMuCalcFormula, String expectedMuCalcFormula) {
+        try {
+            Assert.assertEquals(ParserMuCalc.parse(actualMuCalcFormula), ParserMuCalc.parse(expectedMuCalcFormula));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     public void testNestedFixPoints() {
         assertEquals("nu X. ([]X && mu Y. (<>Y || (\"AP\" && [] false)))",
@@ -74,16 +107,6 @@ public class ParserMuCalcTest {
                                                                                                                    "Y")),
                                                                                          new DiamondNode<>("R",
                                                                                                            new TrueNode<>())))))));
-    }
-
-    private void assertEquals(String muCalcFormula, FormulaNode<String, String> expectedAST) {
-        try {
-            FormulaNode<String, String> actualAST = ParserMuCalc.parse(muCalcFormula);
-            Assert.assertEquals(actualAST, expectedAST);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Assert.fail();
-        }
     }
 
 }
