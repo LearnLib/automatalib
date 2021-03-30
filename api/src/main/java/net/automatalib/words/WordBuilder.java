@@ -78,9 +78,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
     public WordBuilder(I initSym, int count) {
         this.array = new Object[count];
         if (initSym != null) {
-            for (int i = 0; i < count; i++) {
-                array[i] = initSym;
-            }
+            Arrays.fill(this.array, initSym);
         }
         length = count;
     }
@@ -99,9 +97,7 @@ public final class WordBuilder<I> extends AbstractList<I> {
     public WordBuilder(int capacity, I initSym, int count) {
         this.array = new Object[Math.max(capacity, count)];
         if (initSym != null) {
-            for (int i = 0; i < count; i++) {
-                array[i] = initSym;
-            }
+            Arrays.fill(this.array, 0, count, initSym);
         }
         length = count;
     }
