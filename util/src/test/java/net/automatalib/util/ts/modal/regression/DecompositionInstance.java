@@ -16,20 +16,12 @@
 package net.automatalib.util.ts.modal.regression;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-import net.automatalib.serialization.InputModelDeserializer;
-import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.MTSTransition;
-import net.automatalib.ts.modal.transition.ModalContractEdgeProperty;
-import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
+import net.automatalib.util.ts.modal.TestUtils;
 
 public class DecompositionInstance {
-
-    private static final InputModelDeserializer<String, CompactMTS<String>> MTS_PARSER = DOTParsers.mts();
-    private static final InputModelDeserializer<String, CompactMC<String>> MC_PARSER = DOTParsers.mc();
 
     public final CompactMTS<String> system;
     public final CompactMTS<String> context;
@@ -37,37 +29,9 @@ public class DecompositionInstance {
     public final CompactMC<String> modalContract;
 
     public DecompositionInstance(DecompositionTest decompositionTest) throws IOException {
-        system = loadMTSFromPath(decompositionTest.system);
-        context = loadMTSFromPath(decompositionTest.context);
-        origSys = loadMTSFromPath(decompositionTest.origSys);
-        modalContract = loadMCFromPath(decompositionTest.modalContract);
-    }
-
-    private static CompactMTS<String> loadMTSFromPath(String path) throws IOException {
-        try (InputStream is = CompositionInstance.class.getResourceAsStream(path)) {
-            return MTS_PARSER.readModel(is).model;
-        }
-    }
-
-    private static CompactMC<String> loadMCFromPath(String path) throws IOException {
-        try (InputStream is = CompositionInstance.class.getResourceAsStream(path)) {
-            final CompactMC<String> parsed = MC_PARSER.readModel(is).model;
-
-            for (Integer s : parsed.getStates()) {
-                for (String label : parsed.getInputAlphabet()) {
-                    for (MTSTransition<String, MutableModalContractEdgeProperty> transition : parsed.getTransitions(s,
-                                                                                                                    label)) {
-
-                        if (transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.RED ||
-                            transition.getProperty().getColor() == ModalContractEdgeProperty.EdgeColor.GREEN) {
-                            parsed.getCommunicationAlphabet().add(label);
-                        }
-
-                    }
-                }
-            }
-
-            return parsed;
-        }
+        system = TestUtils.loadMTSFromPath(decompositionTest.system);
+        context = TestUtils.loadMTSFromPath(decompositionTest.context);
+        origSys = TestUtils.loadMTSFromPath(decompositionTest.origSys);
+        modalContract = TestUtils.loadMCFromPath(decompositionTest.modalContract);
     }
 }

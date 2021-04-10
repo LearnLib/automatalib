@@ -25,9 +25,7 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
-import net.automatalib.automata.fsa.NFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.fixpoint.Worksets;
 import net.automatalib.ts.TransitionPredicate;
@@ -41,7 +39,6 @@ import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.graphs.Graphs;
 import net.automatalib.util.graphs.sssp.SSSPResult;
 import net.automatalib.util.ts.modal.Subgraphs.SubgraphType;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
 /**
@@ -130,22 +127,6 @@ public final class MTSUtil {
         }
 
         return reachableStates;
-    }
-
-    public static <S, I, T> NFA<?, I> asNFA(ModalTransitionSystem<S, I, T, ?> mts, boolean maximal) {
-
-        final Alphabet<I> alphabet = mts.getInputAlphabet();
-        final CompactNFA<I> result = new CompactNFA<>(alphabet);
-        AutomatonLowLevelCopy.rawCopy(AutomatonCopyMethod.STATE_BY_STATE,
-                                      mts,
-                                      alphabet,
-                                      result,
-                                      sp -> true,
-                                      tp -> null,
-                                      sf -> true,
-                                      (s, i, t) -> maximal || mts.getTransitionProperty(t).isMust());
-
-        return result;
     }
 
     public static <S, I, T> ModalTransitionSystem<?, I, ?, ?> toLTS(ModalTransitionSystem<S, I, T, ?> mts,
