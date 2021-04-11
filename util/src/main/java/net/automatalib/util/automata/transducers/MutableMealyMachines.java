@@ -23,7 +23,7 @@ import net.automatalib.util.automata.Automata;
 public final class MutableMealyMachines {
 
     private MutableMealyMachines() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     public static <I, O> void complete(MutableMealyMachine<?, I, ?, O> mealy,

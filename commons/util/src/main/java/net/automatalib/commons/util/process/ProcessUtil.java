@@ -36,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class ProcessUtil {
 
     private ProcessUtil() {
-        throw new AssertionError();
+        // prevent instantiation
     }
 
     /**

@@ -37,7 +37,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class ShortestPaths {
 
     private ShortestPaths() {
-        throw new AssertionError("Constructor should not be invoked");
+        // prevent instantiation
     }
 
     public static <N, E> Iterable<Path<N, E>> shortestPaths(IndefiniteGraph<N, E> graph, N start, int limit, N target) {

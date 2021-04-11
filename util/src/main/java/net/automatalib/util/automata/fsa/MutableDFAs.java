@@ -23,7 +23,7 @@ import net.automatalib.util.automata.Automata;
 public final class MutableDFAs {
 
     private MutableDFAs() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     public static <I> void complete(MutableDFA<?, I> dfa, Collection<? extends I> inputs) {

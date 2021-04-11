@@ -84,7 +84,7 @@ public final class LTSminUtil {
     }
 
     private LTSminUtil() {
-        throw new AssertionError();
+        // prevent instantiation
     }
 
     /**

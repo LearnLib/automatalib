@@ -77,6 +77,6 @@ public final class RegressionTestBundles {
     }
 
     private RegressionTestBundles() {
-        // do not instantiate
+        // prevent instantiation
     }
 }

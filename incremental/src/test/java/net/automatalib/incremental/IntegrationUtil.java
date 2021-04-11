@@ -42,7 +42,7 @@ import net.automatalib.words.impl.Alphabets;
 public final class IntegrationUtil {
 
     private IntegrationUtil() {
-        // do not instantiate
+        // prevent instantiation.
     }
 
     /**

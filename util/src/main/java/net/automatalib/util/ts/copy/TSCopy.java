@@ -33,7 +33,7 @@ import net.automatalib.util.ts.traversal.TSTraversalMethod;
 public final class TSCopy {
 
     private TSCopy() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     /**

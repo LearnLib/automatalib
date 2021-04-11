@@ -42,8 +42,9 @@ import net.automatalib.commons.util.io.NonClosingOutputStream;
  */
 public final class IOUtil {
 
-    // Prevent instantiation
-    private IOUtil() {}
+    private IOUtil() {
+        // prevent instantiation
+    }
 
     /**
      * Ensures that the returned stream is an uncompressed version of the supplied input stream.

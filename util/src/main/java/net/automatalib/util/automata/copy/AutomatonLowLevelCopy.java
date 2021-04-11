@@ -28,7 +28,7 @@ import net.automatalib.ts.TransitionPredicate;
 public final class AutomatonLowLevelCopy {
 
     private AutomatonLowLevelCopy() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     /**

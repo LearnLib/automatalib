@@ -29,8 +29,9 @@ import net.automatalib.commons.smartcollections.ArrayWritable;
  */
 public final class AWUtil {
 
-    //Prevent instantiation.
-    private AWUtil() {}
+    private AWUtil() {
+        // prevent instantiation
+    }
 
     /**
      * Writes the complete container data to an array. This method ensures that the array's capacity is not exceeded.
