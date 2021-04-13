@@ -227,7 +227,7 @@ limitations under the License.
         <!-- dependency versions -->
         <buildergen.version>0.1</buildergen.version>
         <brics-automaton.version>1.11-8</brics-automaton.version>
-        <cacio.version>1.9</cacio.version>
+        <cacio.version>1.10</cacio.version>
         <checkerframework.version>3.7.0</checkerframework.version>
         <checkstyle.version>8.36.2</checkstyle.version>
         <duzzt.version>0.1.0</duzzt.version>
@@ -562,7 +562,7 @@ limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>net.java.openjdk.cacio</groupId>
+                <groupId>com.github.caciocavallosilano</groupId>
                 <artifactId>cacio-tta</artifactId>
                 <version>${cacio.version}</version>
                 <scope>test</scope>
@@ -1135,6 +1135,15 @@ limitations under the License.
                     </plugins>
                 </pluginManagement>
             </build>
+        </profile>
+        <profile>
+            <id>jdk11-compat</id>
+            <activation>
+                <jdk>11</jdk>
+            </activation>
+            <properties>
+                <cacio.version>1.11</cacio.version>
+            </properties>
         </profile>
         <profile>
             <id>examples</id>

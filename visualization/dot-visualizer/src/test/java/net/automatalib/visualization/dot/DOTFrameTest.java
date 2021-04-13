@@ -44,8 +44,9 @@ public class DOTFrameTest {
     @Test(timeOut = 30000)
     public void testFrame() throws InvocationTargetException, InterruptedException {
 
-        if (JVMUtil.getCanonicalSpecVersion() > 8) {
-            throw new SkipException("The headless AWT environment currently only works with Java 8 and below");
+        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
+        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
+            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
 
         final Random random = new Random(42);

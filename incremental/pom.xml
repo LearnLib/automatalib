@@ -78,7 +78,7 @@ limitations under the License.
         </dependency>
 
         <dependency>
-            <groupId>net.java.openjdk.cacio</groupId>
+            <groupId>com.github.caciocavallosilano</groupId>
             <artifactId>cacio-tta</artifactId>
         </dependency>
 
@@ -95,8 +95,8 @@ limitations under the License.
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>
-                        <awt.toolkit>net.java.openjdk.cacio.ctc.CTCToolkit</awt.toolkit>
-                        <java.awt.graphicsenv>net.java.openjdk.cacio.ctc.CTCGraphicsEnvironment</java.awt.graphicsenv>
+                        <awt.toolkit>com.github.caciocavallosilano.cacio.ctc.CTCToolkit</awt.toolkit>
+                        <java.awt.graphicsenv>com.github.caciocavallosilano.cacio.ctc.CTCGraphicsEnvironment</java.awt.graphicsenv>
                         <java.awt.headless>false</java.awt.headless>
                     </systemPropertyVariables>
                 </configuration>
