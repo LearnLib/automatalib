@@ -52,12 +52,6 @@ public class ModalContractEdgePropertyImpl extends ModalEdgePropertyImpl impleme
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
         if (!super.equals(o)) {
             return false;
         }

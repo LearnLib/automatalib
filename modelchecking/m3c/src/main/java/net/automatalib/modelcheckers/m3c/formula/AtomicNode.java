@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
@@ -69,18 +70,12 @@ public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+    public boolean equals(@Nullable Object o) {
         if (!super.equals(o)) {
             return false;
         }
 
-        AtomicNode<?, ?> that = (AtomicNode<?, ?>) o;
+        final AtomicNode<?, ?> that = (AtomicNode<?, ?>) o;
 
         return Objects.equals(propositions, that.propositions);
     }

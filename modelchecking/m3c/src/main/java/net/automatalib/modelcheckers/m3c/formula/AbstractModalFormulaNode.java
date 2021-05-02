@@ -40,17 +40,11 @@ public abstract class AbstractModalFormulaNode<L, AP> extends AbstractUnaryFormu
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
         if (!super.equals(o)) {
             return false;
         }
 
-        AbstractModalFormulaNode<?, ?> that = (AbstractModalFormulaNode<?, ?>) o;
+        final AbstractModalFormulaNode<?, ?> that = (AbstractModalFormulaNode<?, ?>) o;
 
         return Objects.equals(action, that.action);
     }

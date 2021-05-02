@@ -30,7 +30,7 @@ public class CompactMPG<L, AP>
         extends AbstractCompactGraph<CompactMPGEdge<L, MutableProceduralModalEdgeProperty>, Set<AP>, MutableProceduralModalEdgeProperty>
         implements MutableModalProcessGraph<Integer, L, CompactMPGEdge<L, MutableProceduralModalEdgeProperty>, AP, MutableProceduralModalEdgeProperty> {
 
-    private final ResizingArrayStorage<Set<AP>> nodeProperties;
+    private final ResizingArrayStorage<@Nullable Set<AP>> nodeProperties;
     private int initialNode;
     private int finalNode;
 

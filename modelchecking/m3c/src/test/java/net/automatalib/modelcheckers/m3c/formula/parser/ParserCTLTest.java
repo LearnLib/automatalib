@@ -71,7 +71,7 @@ public class ParserCTLTest {
         try {
             FormulaNode<String, String> actualAST = ParserCTL.parse(ctlFormula);
             Assert.assertEquals(actualAST, expectedAST);
-        } catch (net.automatalib.modelcheckers.m3c.formula.parser.ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
             Assert.fail();
         }

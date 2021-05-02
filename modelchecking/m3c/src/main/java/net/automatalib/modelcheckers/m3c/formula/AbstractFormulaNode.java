@@ -18,6 +18,7 @@ package net.automatalib.modelcheckers.m3c.formula;
 import java.util.Objects;
 
 import net.automatalib.commons.util.strings.AbstractPrintable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable implements FormulaNode<L, AP> {
 
@@ -77,7 +78,7 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -85,7 +86,7 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
             return false;
         }
 
-        FormulaNode<?, ?> that = (FormulaNode<?, ?>) o;
+        final FormulaNode<?, ?> that = (FormulaNode<?, ?>) o;
 
         return this.varNumber == that.getVarNumber() && Objects.equals(leftChild, that.getLeftChild()) &&
                Objects.equals(rightChild, that.getRightChild());

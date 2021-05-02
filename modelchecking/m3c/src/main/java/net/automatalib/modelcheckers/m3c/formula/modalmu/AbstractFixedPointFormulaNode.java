@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import net.automatalib.modelcheckers.m3c.formula.AbstractUnaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFixedPointFormulaNode<L, AP> extends AbstractUnaryFormulaNode<L, AP> {
 
@@ -42,18 +43,12 @@ public abstract class AbstractFixedPointFormulaNode<L, AP> extends AbstractUnary
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+    public boolean equals(@Nullable Object o) {
         if (!super.equals(o)) {
             return false;
         }
 
-        AbstractFixedPointFormulaNode<?, ?> that = (AbstractFixedPointFormulaNode<?, ?>) o;
+        final AbstractFixedPointFormulaNode<?, ?> that = (AbstractFixedPointFormulaNode<?, ?>) o;
 
         return Objects.equals(variable, that.variable);
     }
