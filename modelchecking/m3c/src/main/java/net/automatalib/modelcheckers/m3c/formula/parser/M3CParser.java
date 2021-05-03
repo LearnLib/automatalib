@@ -23,18 +23,25 @@ import java.util.function.Function;
 
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 
-public final class ParserCTL {
+public final class M3CParser {
 
-    private ParserCTL() {}
+    private M3CParser() {}
 
-    public static FormulaNode<String, String> parse(String ctlFormula) throws ParseException {
-        return parse(ctlFormula, Function.identity(), x -> new HashSet<>(Arrays.asList(x.split(","))));
+    public static FormulaNode<String, String> parse(String formula) throws ParseException {
+        return parse(formula, Function.identity(), x -> new HashSet<>(Arrays.asList(x.split(","))));
     }
 
-    public static <L, AP> FormulaNode<L, AP> parse(String ctlFormula,
+    public static <L, AP> FormulaNode<L, AP> parse(String formula,
                                                    Function<String, L> labelParser,
                                                    Function<String, Set<AP>> apParser) throws ParseException {
-        return new InternalM3CParserCTL<L, AP>(new StringReader(ctlFormula)).parse(labelParser, apParser);
+
+        final StringReader reader = new StringReader(formula);
+
+        if (formula.contains("mu") || formula.contains("nu")) {
+            return new InternalM3CParserMuCalc<L, AP>(reader).parse(labelParser, apParser);
+        }
+
+        return new InternalM3CParserCTL<L, AP>(reader).parse(labelParser, apParser);
     }
 
 }

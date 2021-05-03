@@ -20,11 +20,11 @@ import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public abstract class AbstractSolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, AP> {
+public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, AP> {
 
     private BooleanVectorLogicDDManager ddManager;
 
-    AbstractSolveADD(ModalContextFreeProcessSystem<L, AP> mcfps) {
+    SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps) {
         super(mcfps);
     }
 

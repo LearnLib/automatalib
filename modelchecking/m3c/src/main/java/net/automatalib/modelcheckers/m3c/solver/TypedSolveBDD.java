@@ -17,26 +17,12 @@ package net.automatalib.modelcheckers.m3c.solver;
 
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 
-public final class Solvers {
+public class TypedSolveBDD<L, AP> extends SolveBDD<L, AP> implements TypedM3CSolver<FormulaNode<L, AP>> {
 
-    private Solvers() {
-        // prevent instantiation
+    TypedSolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps) {
+        super(mcfps);
     }
 
-    public static Solver<String> stringADDSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
-        return new StringSolveADD(mcfps);
-    }
-
-    public static <L, AP> Solver<FormulaNode<L, AP>> genericADDSolver(ModalContextFreeProcessSystem<L, AP> mcfps) {
-        return new GenericSolveADD<>(mcfps);
-    }
-
-    public static Solver<String> stringBDDSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
-        return new StringSolveBDD(mcfps);
-    }
-
-    public static <L, AP> Solver<FormulaNode<L, AP>> genericBDDSolver(ModalContextFreeProcessSystem<L, AP> mcfps) {
-        return new GenericSolveBDD<>(mcfps);
-    }
 }

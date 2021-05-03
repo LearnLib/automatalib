@@ -93,7 +93,7 @@ public class ParserMuCalcTest {
 
     private void assertEquals(String muCalcFormula, FormulaNode<String, String> expectedAST) {
         try {
-            FormulaNode<String, String> actualAST = ParserMuCalc.parse(muCalcFormula);
+            FormulaNode<String, String> actualAST = M3CParser.parse(muCalcFormula);
             Assert.assertEquals(actualAST, expectedAST);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -103,7 +103,7 @@ public class ParserMuCalcTest {
 
     private void assertEquals(String actualMuCalcFormula, String expectedMuCalcFormula) {
         try {
-            Assert.assertEquals(ParserMuCalc.parse(actualMuCalcFormula), ParserMuCalc.parse(expectedMuCalcFormula));
+            Assert.assertEquals(M3CParser.parse(actualMuCalcFormula), M3CParser.parse(expectedMuCalcFormula));
         } catch (ParseException e) {
             e.printStackTrace();
         }

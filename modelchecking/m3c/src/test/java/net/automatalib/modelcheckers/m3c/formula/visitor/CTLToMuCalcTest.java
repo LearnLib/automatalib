@@ -29,8 +29,8 @@ import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
+import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserCTL;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -52,7 +52,7 @@ public class CTLToMuCalcTest {
     private void equals(String inputFormula, FormulaNode<String, String> expectedResult) {
         FormulaNode<String, String> ctlNode = null;
         try {
-            ctlNode = ParserCTL.parse(inputFormula);
+            ctlNode = M3CParser.parse(inputFormula);
         } catch (ParseException e) {
             e.printStackTrace();
             Assert.fail();

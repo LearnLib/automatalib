@@ -26,8 +26,8 @@ import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
+import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import org.testng.Assert;
@@ -47,7 +47,7 @@ public class ADDTransformerTest {
     @BeforeClass
     public static void setup() throws ParseException {
         String formula = "mu X.(<b>[b]true || <>X)";
-        FormulaNode<String, String> ast = ParserMuCalc.parse(formula);
+        FormulaNode<String, String> ast = M3CParser.parse(formula);
         dg = new DependencyGraph<>(ast);
         ast = dg.getAST();
         xddManager = new BooleanVectorLogicDDManager(dg.getNumVariables());

@@ -16,9 +16,8 @@
 package net.automatalib.modelcheckers.m3c.formula.visitor;
 
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserCTL;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -45,14 +44,14 @@ public class FormulaNodeToStringTest {
     private void testCorrectnessCTL(String ctlFormula) {
         FormulaNode<String, String> ast = null;
         try {
-            ast = ParserCTL.parse(ctlFormula);
+            ast = M3CParser.parse(ctlFormula);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         String astToString = ast.toString();
         FormulaNode<String, String> backToAst = null;
         try {
-            backToAst = ParserCTL.parse(astToString);
+            backToAst = M3CParser.parse(astToString);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -62,14 +61,14 @@ public class FormulaNodeToStringTest {
     private void testCorrectnessMuCalc(String muCalcFormula) {
         FormulaNode<String, String> ast = null;
         try {
-            ast = ParserMuCalc.parse(muCalcFormula);
+            ast = M3CParser.parse(muCalcFormula);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         String astToString = ast.toString();
         FormulaNode<String, String> backToAst = null;
         try {
-            backToAst = ParserMuCalc.parse(astToString);
+            backToAst = M3CParser.parse(astToString);
         } catch (ParseException e) {
             e.printStackTrace();
         }

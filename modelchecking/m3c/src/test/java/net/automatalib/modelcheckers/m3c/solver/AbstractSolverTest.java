@@ -83,7 +83,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @Test
     void testSolve() throws ParseException {
-        Solver<String> solver = getSolver(mcfps);
+        M3CSolver<String> solver = getSolver(mcfps);
 
         String formula = "mu X.(<b><b>true || <>X)";
         assertSolve(solver, formula, true);
@@ -92,10 +92,10 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         assertSolve(solver, negatedFormula, false);
     }
 
-    protected <P> void assertSolve(Solver<P> solver, P property, boolean expectedIsSat) throws ParseException {
-        Assert.assertEquals(solver.solve(property, false), expectedIsSat);
+    protected <P> void assertSolve(M3CSolver<P> solver, P property, boolean expectedIsSat) throws ParseException {
+        Assert.assertEquals(solver.solve(property), expectedIsSat);
     }
 
-    public abstract Solver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps);
+    public abstract M3CSolver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps);
 
 }

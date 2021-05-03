@@ -20,8 +20,8 @@ import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
 
 public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, String>> {
 
-    public Solver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
-        return Solvers.stringADDSolver(mcfps);
+    public M3CSolver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
+        return M3CSolvers.addSolver(mcfps);
     }
 
 }

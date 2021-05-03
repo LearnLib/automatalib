@@ -26,8 +26,8 @@ import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
+import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,15 +37,15 @@ public class NNFVisitorTest {
     void testBaseCases() throws ParseException {
         NNFVisitor<String, String> nnfVisitor = new NNFVisitor<>();
 
-        FormulaNode<String, String> atomicNode = ParserMuCalc.parse("! \"a\"");
+        FormulaNode<String, String> atomicNode = M3CParser.parse("! \"a\"");
         FormulaNode<String, String> nnfAtomicNode = nnfVisitor.transformToNNF(atomicNode);
         Assert.assertEquals(atomicNode, nnfAtomicNode);
 
-        FormulaNode<String, String> trueNode = ParserMuCalc.parse("! true");
+        FormulaNode<String, String> trueNode = M3CParser.parse("! true");
         FormulaNode<String, String> nnfTrueNode = nnfVisitor.transformToNNF(trueNode);
         Assert.assertEquals(new FalseNode<>(), nnfTrueNode);
 
-        FormulaNode<String, String> falseNode = ParserMuCalc.parse("! false");
+        FormulaNode<String, String> falseNode = M3CParser.parse("! false");
         FormulaNode<String, String> nnfFalseNode = nnfVisitor.transformToNNF(falseNode);
         Assert.assertEquals(new TrueNode<>(), nnfFalseNode);
 
@@ -59,7 +59,7 @@ public class NNFVisitorTest {
     }
 
     private void testGfp() throws ParseException {
-        FormulaNode<String, String> gfpNode = ParserMuCalc.parse("! (nu X.(false || X))");
+        FormulaNode<String, String> gfpNode = M3CParser.parse("! (nu X.(false || X))");
         FormulaNode<String, String> nnfGfpNode = gfpNode.toNNF();
 
         /* Create (mu X.(true & X)*/
@@ -68,7 +68,7 @@ public class NNFVisitorTest {
     }
 
     private void testLfp() throws ParseException {
-        FormulaNode<String, String> lfpNode = ParserMuCalc.parse("! (mu X.(false || !X))");
+        FormulaNode<String, String> lfpNode = M3CParser.parse("! (mu X.(false || !X))");
         FormulaNode<String, String> nnfLfpNode = lfpNode.toNNF();
 
         /* Create nu X.(true & !X) */
@@ -78,7 +78,7 @@ public class NNFVisitorTest {
     }
 
     private void testAnd() throws ParseException {
-        FormulaNode<String, String> andNode = ParserMuCalc.parse("!(<> false && true)");
+        FormulaNode<String, String> andNode = M3CParser.parse("!(<> false && true)");
         FormulaNode<String, String> nnfAndNode = andNode.toNNF();
 
         /* Create ([]true | false) */
@@ -87,7 +87,7 @@ public class NNFVisitorTest {
     }
 
     private void testOr() throws ParseException {
-        FormulaNode<String, String> orNode = ParserMuCalc.parse("!([a] false || true)");
+        FormulaNode<String, String> orNode = M3CParser.parse("!([a] false || true)");
         FormulaNode<String, String> nnfOrNode = orNode.toNNF();
 
         /* Create (<a> true & false) */
@@ -96,7 +96,7 @@ public class NNFVisitorTest {
     }
 
     private void testBoxNode() throws ParseException {
-        FormulaNode<String, String> boxNode = ParserMuCalc.parse("![a]true");
+        FormulaNode<String, String> boxNode = M3CParser.parse("![a]true");
         FormulaNode<String, String> nnfBoxNode = boxNode.toNNF();
 
         /* Create (<a>false)*/
@@ -105,7 +105,7 @@ public class NNFVisitorTest {
     }
 
     private void testDiamondNode() throws ParseException {
-        FormulaNode<String, String> diamondNode = ParserMuCalc.parse("!<a>false");
+        FormulaNode<String, String> diamondNode = M3CParser.parse("!<a>false");
         FormulaNode<String, String> nnfDiamondNode = diamondNode.toNNF();
 
         /* Create ([a] true) */
@@ -114,7 +114,7 @@ public class NNFVisitorTest {
     }
 
     private void testDefaultExample() throws ParseException {
-        FormulaNode<String, String> ast = ParserMuCalc.parse("!(mu X.(<b><b>true || <>X))");
+        FormulaNode<String, String> ast = M3CParser.parse("!(mu X.(<b><b>true || <>X))");
         FormulaNode<String, String> nnfAst = ast.toNNF();
 
         /* Create nu X.([b][b]false & []X)*/

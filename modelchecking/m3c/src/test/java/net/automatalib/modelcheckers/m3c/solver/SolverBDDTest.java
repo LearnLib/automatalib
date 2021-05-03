@@ -20,8 +20,8 @@ import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
 
 public class SolverBDDTest extends AbstractSolverTest<BDDTransformer<String, String>> {
 
-    public Solver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
-        return Solvers.stringBDDSolver(mcfps);
+    public M3CSolver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
+        return M3CSolvers.bddSolver(mcfps);
     }
 
 }

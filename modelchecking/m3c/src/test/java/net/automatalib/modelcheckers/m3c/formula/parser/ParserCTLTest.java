@@ -69,7 +69,7 @@ public class ParserCTLTest {
 
     private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) {
         try {
-            FormulaNode<String, String> actualAST = ParserCTL.parse(ctlFormula);
+            FormulaNode<String, String> actualAST = M3CParser.parse(ctlFormula);
             Assert.assertEquals(actualAST, expectedAST);
         } catch (ParseException e) {
             e.printStackTrace();

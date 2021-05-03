@@ -19,8 +19,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParserMuCalc;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,7 +29,7 @@ public class DependencyGraphTest {
     @Test
     void testDependencyGraph() throws ParseException {
         String formula = "mu X.(<b><b>true || <>X)";
-        FormulaNode<String, String> ast = ParserMuCalc.parse(formula);
+        FormulaNode<String, String> ast = M3CParser.parse(formula);
         DependencyGraph<String, String> dg = new DependencyGraph<>(ast);
 
         /* Assert that number of variables are correct */

@@ -43,7 +43,7 @@ import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 
-public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
+abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     protected ModalContextFreeProcessSystem<L, AP> mcfps;
     protected DependencyGraph<L, AP> dependGraph;
@@ -69,12 +69,8 @@ public abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L
         return transformation.toMuCalc(ctlFormula);
     }
 
-    public boolean solve(FormulaNode<L, AP> formula, boolean formulaIsCtl) {
-        if (formulaIsCtl) {
-            this.ast = ctlToMuCalc(formula);
-        } else {
-            this.ast = formula;
-        }
+    public boolean solve(FormulaNode<L, AP> formula) {
+        this.ast = ctlToMuCalc(formula);
         this.ast = this.ast.toNNF();
 
         initialize();

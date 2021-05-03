@@ -20,11 +20,11 @@ import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
-public abstract class AbstractSolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, AP> {
+public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, AP> {
 
     private BDDManager bddManager;
 
-    AbstractSolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps) {
+    SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps) {
         super(mcfps);
     }
 

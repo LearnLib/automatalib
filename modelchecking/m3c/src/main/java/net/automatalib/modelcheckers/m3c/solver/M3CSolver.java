@@ -15,18 +15,15 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 
-public class GenericSolveADD<L, AP> extends AbstractSolveADD<L, AP> implements Solver<FormulaNode<L, AP>> {
+public interface M3CSolver<F> {
 
-    GenericSolveADD(ModalContextFreeProcessSystem<L, AP> mcfps) {
-        super(mcfps);
+    boolean solve(F formula) throws ParseException;
+
+    interface TypedM3CSolver<F> extends M3CSolver<F> {
+
+        @Override
+        boolean solve(F formula);
     }
-
-    @Override
-    public boolean solve(FormulaNode<L, AP> formula, boolean formulaIsCtl) {
-        return super.solve(formula, formulaIsCtl);
-    }
-
 }
