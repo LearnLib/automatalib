@@ -174,10 +174,11 @@ public final class SPAUtil {
     /**
      * Computes for a given {@link SPA} the set of access and return sequences using the given {@link SPAAlphabet
      * alphabet}. An access sequence (for procedure <i>p</i>) transfers an {@link SPA} from its initial state to a state
-     * that is able to successfully invoke <i>p</i> whereas the corresponding return sequence transfers the {@link SPA}
-     * to the global accepting state from an accepting state of <i>p</i>. This methods furthermore checks that
-     * potentially nested calls are well-defined, i.e. it only includes procedural invocations <i>p</i> for determining
-     * a access/return sequences if <i>p</i> has a valid terminating sequence and therefore can be expanded correctly.
+     * that is able to successfully execute a run of <i>p</i>, whereas the corresponding return sequence transfers the
+     * {@link SPA} to the global accepting state from an accepting state of <i>p</i>. This methods furthermore checks
+     * that potentially nested calls are well-defined, i.e. it only includes procedural invocations <i>p</i> for
+     * determining a access/return sequences if <i>p</i> has a valid terminating sequence and therefore can be expanded
+     * correctly.
      *
      * @param spa
      *         the {@link SPA} to analyze
