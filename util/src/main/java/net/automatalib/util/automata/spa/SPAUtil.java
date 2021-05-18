@@ -238,14 +238,14 @@ public final class SPAUtil {
         return Pair.of(accessSequences, returnSequences);
     }
 
-    private static <S, I> Collection<I> discoverAccessAndReturnSequences(SPAAlphabet<I> alphabet,
-                                                                         Collection<I> proceduralInputs,
-                                                                         I procedure,
-                                                                         DFA<S, I> dfa,
-                                                                         Set<I> finishedProcedures,
-                                                                         Map<I, Word<I>> accessSequences,
-                                                                         Map<I, Word<I>> terminatingSequences,
-                                                                         Map<I, Word<I>> returnSequences) {
+    private static <I> Collection<I> discoverAccessAndReturnSequences(SPAAlphabet<I> alphabet,
+                                                                      Collection<I> proceduralInputs,
+                                                                      I procedure,
+                                                                      DFA<?, I> dfa,
+                                                                      Set<I> finishedProcedures,
+                                                                      Map<I, Word<I>> accessSequences,
+                                                                      Map<I, Word<I>> terminatingSequences,
+                                                                      Map<I, Word<I>> returnSequences) {
 
         final List<I> newASRS = new ArrayList<>();
         final Iterator<Word<I>> transitionCoverIterator = Covers.transitionCoverIterator(dfa, proceduralInputs);
