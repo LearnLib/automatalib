@@ -41,7 +41,19 @@ public class IncrementalDFADAGBuilderTest extends AbstractIncrementalDFABuilderT
      */
     @Test
     public void testIntegration() throws IOException {
-        final ParsedTraces<Integer, Boolean> parsedData = IntegrationUtil.parseDFATraces();
+        validateTraces("/dfa_traces.gz");
+    }
+
+    /**
+     * Test case based on <a href="https://github.com/LearnLib/learnlib/issues/76">LearnLib issue #76</a>.
+     */
+    @Test
+    public void testLearnLib76() throws IOException {
+        validateTraces("/learnlib76/dfa.gz");
+    }
+
+    private void validateTraces(String pathToTraces) throws IOException {
+        final ParsedTraces<Integer, Boolean> parsedData = IntegrationUtil.parseDFATraces(pathToTraces);
         final Alphabet<Integer> alphabet = parsedData.alphabet;
         final List<Pair<Word<Integer>, Boolean>> traces = parsedData.traces;
 
@@ -49,12 +61,21 @@ public class IncrementalDFADAGBuilderTest extends AbstractIncrementalDFABuilderT
 
         // test insertion without errors
         for (Pair<Word<Integer>, Boolean> trace : traces) {
-            cache.insert(trace.getFirst(), trace.getSecond());
+            final Word<Integer> input = trace.getFirst();
+            final boolean value = trace.getSecond();
+
+            cache.insert(input, value);
+            // test direct caching behavior
+            Assert.assertEquals(value, cache.lookup(input).toBoolean());
         }
 
-        // test caching properties
+        // test global caching behavior
         for (Pair<Word<Integer>, Boolean> trace : traces) {
-            Assert.assertEquals(trace.getSecond().booleanValue(), cache.lookup(trace.getFirst()).toBoolean());
+            final Word<Integer> input = trace.getFirst();
+            final boolean value = trace.getSecond();
+
+            Assert.assertEquals(value, cache.lookup(input).toBoolean());
         }
     }
+
 }

@@ -196,6 +196,15 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
             PathElem next = path.pop();
             State state = next.state;
             int idx = next.transIdx;
+
+            // when extending the path we previously traversed (i.e. expanding the suffix), it may happen that we end up
+            // adding a cyclic transition. If this is the case, simply clone the current state and update the parent in
+            // the next iteration
+            if (state == last) {
+                last = clone(state, idx, last);
+                continue;
+            }
+
             State updated = updateSignature(state, idx, last);
             if (state == updated) {
                 return;

@@ -41,7 +41,19 @@ public class IncrementalMealyDAGBuilderTest extends AbstractIncrementalMealyBuil
      */
     @Test
     public void testIntegration() throws IOException {
-        final ParsedTraces<Integer, Word<Integer>> parsedData = IntegrationUtil.parseMealyTraces();
+        validateTraces("/mealy_traces.gz");
+    }
+
+    /**
+     * Test case based on <a href="https://github.com/LearnLib/learnlib/issues/76">LearnLib issue #76</a>.
+     */
+    @Test
+    public void testLearnLib76() throws IOException {
+        validateTraces("/learnlib76/mealy.gz");
+    }
+
+    private void validateTraces(String pathToTraces) throws IOException {
+        final ParsedTraces<Integer, Word<Integer>> parsedData = IntegrationUtil.parseMealyTraces(pathToTraces);
         final Alphabet<Integer> alphabet = parsedData.alphabet;
         final List<Pair<Word<Integer>, Word<Integer>>> traces = parsedData.traces;
 
@@ -49,12 +61,20 @@ public class IncrementalMealyDAGBuilderTest extends AbstractIncrementalMealyBuil
 
         // test insertion without errors
         for (Pair<Word<Integer>, Word<Integer>> trace : traces) {
-            cache.insert(trace.getFirst(), trace.getSecond());
+            final Word<Integer> input = trace.getFirst();
+            final Word<Integer> value = trace.getSecond();
+
+            cache.insert(input, value);
+            // test direct caching behavior
+            Assert.assertEquals(value, cache.lookup(input));
         }
 
-        // test caching properties
+        // test global caching behavior
         for (Pair<Word<Integer>, Word<Integer>> trace : traces) {
-            Assert.assertEquals(trace.getSecond(), cache.lookup(trace.getFirst()));
+            final Word<Integer> input = trace.getFirst();
+            final Word<Integer> value = trace.getSecond();
+
+            Assert.assertEquals(value, cache.lookup(input));
         }
     }
 }
