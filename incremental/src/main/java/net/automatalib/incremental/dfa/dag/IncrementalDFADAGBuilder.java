@@ -84,7 +84,10 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
 
         Deque<PathElem> path = new ArrayDeque<>();
 
+        // Find the internal state in the automaton that can be reached by a
+        // maximal prefix of the word (i.e., a path of secured information)
         for (I sym : word) {
+            // During this, store the *first* confluence state (i.e., state with multiple incoming edges).
             if (conf == null && curr.isConfluence()) {
                 conf = curr;
             }
@@ -151,6 +154,9 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                 hide(last);
             }
 
+            // We then create a suffix path, i.e., a linear sequence of states corresponding to
+            // the suffix (more precisely: the suffix minus the first symbol, since this is the
+            // transition which is used for gluing the suffix path to the existing automaton).
             @SuppressWarnings("assignment.type.incompatible") // TODO maybe properly enforce @KeyFor(this)?
             Word<? extends I> suffix = word.subWord(prefixLen);
             I sym = suffix.firstSymbol();

@@ -143,8 +143,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
         // maximal prefix of the word (i.e., a path of secured information)
         Iterator<? extends O> outWordIterator = outputWord.iterator();
         for (I sym : word) {
-            // During this, store the *first* confluence state (i.e., state with
-            // multiple incoming edges).
+            // During this, store the *first* confluence state (i.e., state with multiple incoming edges).
             if (conf == null && curr.isConfluence()) {
                 conf = curr;
             }
@@ -155,10 +154,8 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
                 break;
             }
 
-            // If a transition exists for the input symbol, it also has an
-            // output symbol.
-            // Check if this matches the provided one, otherwise there is a
-            // conflict
+            // If a transition exists for the input symbol, it also has an output symbol.
+            // Check if this matches the provided one, otherwise there is a conflict
             O outSym = outWordIterator.next();
             if (!Objects.equals(outSym, curr.getOutput(idx))) {
                 throw new ConflictException(
@@ -198,12 +195,9 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             hide(last);
         }
 
-        // We then create a suffix path, i.e., a linear sequence of states
-        // corresponding to
-        // the suffix (more precisely: the suffix minus the first symbol, since
-        // this is the
-        // transition which is used for gluing the suffix path to the existing
-        // automaton).
+        // We then create a suffix path, i.e., a linear sequence of states corresponding to
+        // the suffix (more precisely: the suffix minus the first symbol, since this is the
+        // transition which is used for gluing the suffix path to the existing automaton).
         Word<? extends I> suffix = word.subWord(prefixLen);
         Word<? extends O> suffixOut = outputWord.subWord(prefixLen);
 
@@ -239,11 +233,8 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
 
         if (conf != null) {
             // If there was a confluence state, we have to clone all nodes on
-            // the prefix path up to this state, in order to separate it from
-            // other
-            // prefixes reaching the confluence state (we do not know anything
-            // about them
-            // plus the suffix).
+            // the prefix path up to this state, in order to separate it from other
+            // prefixes reaching the confluence state (we do not know anything about them plus the suffix).
             PathElem<O> next;
             do {
                 next = path.pop();
@@ -254,8 +245,7 @@ public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBu
             } while (next.state != conf);
         }
 
-        // Finally, we have to refresh all the signatures, iterating backwards
-        // until the updating becomes stable.
+        // Finally, we have to refresh all the signatures, iterating backwards until the updating becomes stable.
         while (path.size() > 1) {
             PathElem<O> next = path.pop();
             State<O> state = next.state;
