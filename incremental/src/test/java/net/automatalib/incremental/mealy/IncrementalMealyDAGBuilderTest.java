@@ -41,7 +41,7 @@ public class IncrementalMealyDAGBuilderTest extends AbstractIncrementalMealyBuil
      */
     @Test
     public void testIntegration() throws IOException {
-        validateTraces("/mealy_traces.gz");
+        validateTraces("/spa/mealy_traces.gz");
     }
 
     /**

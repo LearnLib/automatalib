@@ -41,7 +41,7 @@ public class IncrementalPCDFADAGBuilderTest extends AbstractIncrementalPCDFABuil
      */
     @Test
     public void testIntegration() throws IOException {
-        final ParsedTraces<Integer, Boolean> parsedData = IntegrationUtil.parseDFATraces("/dfa_traces.gz");
+        final ParsedTraces<Integer, Boolean> parsedData = IntegrationUtil.parseDFATraces("/spa/dfa_traces.gz");
         final Alphabet<Integer> alphabet = parsedData.alphabet;
         final List<Pair<Word<Integer>, Boolean>> traces = parsedData.traces;
 

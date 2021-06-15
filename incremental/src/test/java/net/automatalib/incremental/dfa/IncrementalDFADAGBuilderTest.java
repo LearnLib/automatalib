@@ -41,7 +41,7 @@ public class IncrementalDFADAGBuilderTest extends AbstractIncrementalDFABuilderT
      */
     @Test
     public void testIntegration() throws IOException {
-        validateTraces("/dfa_traces.gz");
+        validateTraces("/spa/dfa_traces.gz");
     }
 
     /**
