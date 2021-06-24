@@ -40,8 +40,9 @@ public final class Mappings {
 
     private static final Mapping<?, String> TOSTRING_MAPPING = (Mapping<Object, String>) String::valueOf;
 
-    // Prevent instantiation
-    private Mappings() {}
+    private Mappings() {
+        // prevent instantiation
+    }
 
     /**
      * Retrieves the <code>null</code> mapping, which maps each domain value to <code>null</code>.

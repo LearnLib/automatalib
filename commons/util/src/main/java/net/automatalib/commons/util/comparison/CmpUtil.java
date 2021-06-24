@@ -28,8 +28,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public final class CmpUtil {
 
-    // Prevent instantiation.
-    private CmpUtil() {}
+    private CmpUtil() {
+        // prevent instantiation
+    }
 
     /**
      * Compares two {@link List}s with respect to canonical ordering.

@@ -31,8 +31,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public final class CollectionsUtil {
 
-    // Prevent instantiation.
-    private CollectionsUtil() {}
+    private CollectionsUtil() {
+        // prevent instantiation.
+    }
 
     public static <E> @Nullable E removeReplace(List<E> list, int index) {
         int lastIdx = list.size() - 1;

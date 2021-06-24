@@ -30,7 +30,7 @@ import net.automatalib.words.VPDAlphabet;
 public final class OneSEVPAs {
 
     private OneSEVPAs() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     /**

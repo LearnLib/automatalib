@@ -42,13 +42,12 @@ import net.automatalib.words.impl.Alphabets;
 public final class IntegrationUtil {
 
     private IntegrationUtil() {
-        // do not instantiate
+        // prevent instantiation.
     }
 
     /**
-     * This method returns traces from an external system, which exposed some issues in the DAG-based caches.
-     * <p>
-     * To reduce the size of the data, the traces have been encoded as shorts and follow the following structure:
+     * This method returns traces from an external system. To reduce the size of the data, the traces have been encoded
+     * as shorts and follow the following structure:
      * <ol>
      *     <li>number of input symbols</li>
      *     <li>number of traces</li>
@@ -63,11 +62,15 @@ public final class IntegrationUtil {
      *     </ol>
      *     </li>
      * </ol>
+     *
+     * @param resourcePath
+     *         the path to the resource which contains the trace information
      */
-    public static ParsedTraces<Integer, Boolean> parseDFATraces() throws IOException {
-        try (InputStream res = IntegrationUtil.class.getResourceAsStream("/dfa_traces.gz");
+    public static ParsedTraces<Integer, Boolean> parseDFATraces(String resourcePath) throws IOException {
+        try (InputStream res = IntegrationUtil.class.getResourceAsStream(resourcePath);
              InputStream buf = IOUtil.asBufferedInputStream(res);
-             InputStream is = IOUtil.asUncompressedInputStream(buf); DataInputStream in = new DataInputStream(is)) {
+             InputStream is = IOUtil.asUncompressedInputStream(buf);
+             DataInputStream in = new DataInputStream(is)) {
 
             final short numSyms = in.readShort();
             final short numTraces = in.readShort();
@@ -95,9 +98,8 @@ public final class IntegrationUtil {
     }
 
     /**
-     * This method returns traces from an external system, which exposed some issues in the DAG-based caches.
-     * <p>
-     * To reduce the size of the data, the traces have been encoded as shorts and follow the following structure:
+     * This method returns traces from an external system. To reduce the size of the data, the traces have been encoded
+     * as shorts and follow the following structure:
      * <ol>
      *     <li>number of input symbols</li>
      *     <li>number of output symbols</li>
@@ -115,9 +117,12 @@ public final class IntegrationUtil {
      *     </ul>
      *     </li>
      * </ol>
+     *
+     * @param resourcePath
+     *         the path to the resource which contains the trace information
      */
-    public static ParsedTraces<Integer, Word<Integer>> parseMealyTraces() throws IOException {
-        try (InputStream res = IncrementalDFADAGBuilderTest.class.getResourceAsStream("/mealy_traces.gz");
+    public static ParsedTraces<Integer, Word<Integer>> parseMealyTraces(String resourcePath) throws IOException {
+        try (InputStream res = IncrementalDFADAGBuilderTest.class.getResourceAsStream(resourcePath);
              InputStream buf = IOUtil.asBufferedInputStream(res);
              InputStream is = IOUtil.asUncompressedInputStream(buf); DataInputStream in = new DataInputStream(is)) {
 

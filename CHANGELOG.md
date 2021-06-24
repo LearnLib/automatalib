@@ -14,7 +14,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-* All `SuffixTrie` related are marked deprecated and will be removed in the future. Switch to one of the incremental constructions for prefix-trees
 * Refactored
   * `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automata.base.compact.CompactTransition`
   * `net.automatalib.commons.util.BitSetIterator` -> `net.automatalib.commons.util.collections.BitSetIterator`
@@ -32,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Removed the (package-private) classes `net.automatalib.util.automata.predicates.{AcceptanceStatePredicate,OutputSatisfies,TransitionPropertySatisfies}`.
 * Removed `net.automatalib.graphs.IndefiniteLTS.java`. By naming, this class should denote a `TransitionSystem` and not a `Graph` structure. However, since `TransitionSystem`s are inherently labeled, this class serves no more real purpose. To re-establish the previous functionality, simply implement `Graph` and `EdgeLabels`.
+* Removed (unused) `SuffixTrie` class without replacement. Similar functionality can be achieved with AutomataLib's incremental module.
 
 
 ## [0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11

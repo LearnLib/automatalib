@@ -30,7 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class FunctionsUtil {
 
     private FunctionsUtil() {
-        throw new AssertionError();
+        // prevent instantiation
     }
 
     /**

@@ -23,7 +23,7 @@ package net.automatalib.commons.smartcollections;
 public final class ArrayUtil {
 
     private ArrayUtil() {
-        throw new AssertionError("Should not be instantiated");
+        // prevent instantiation
     }
 
     /**

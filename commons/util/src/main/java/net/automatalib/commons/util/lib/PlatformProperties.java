@@ -55,6 +55,6 @@ public final class PlatformProperties {
     }
 
     private PlatformProperties() {
-        throw new AssertionError();
+        // prevent instantiation
     }
 }

@@ -43,7 +43,7 @@ import net.automatalib.words.Alphabet;
 public final class DFAs {
 
     private DFAs() {
-        throw new IllegalStateException("Constructor should never be invoked");
+        // prevent instantiation
     }
 
     /**

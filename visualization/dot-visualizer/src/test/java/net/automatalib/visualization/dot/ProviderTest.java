@@ -61,8 +61,9 @@ public class ProviderTest {
     @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 10000)
     public void testDisplay() throws InterruptedException, InvocationTargetException {
 
-        if (JVMUtil.getCanonicalSpecVersion() > 8) {
-            throw new SkipException("The headless AWT environment currently only works with Java 8 and below");
+        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
+        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
+            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
 
         final CompactDFA<Integer> dfa = TestUtil.generateRandomAutomaton(new Random(42));

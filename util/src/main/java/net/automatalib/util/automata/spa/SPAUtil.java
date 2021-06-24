@@ -91,7 +91,24 @@ public final class SPAUtil {
         return new ATRSequences<>(accessSequences, terminatingSequences, returnSequences);
     }
 
-    private static <I> Map<I, Word<I>> computeTerminatingSequences(SPA<?, I> spa, SPAAlphabet<I> alphabet) {
+    /**
+     * Computes for a given {@link SPA} the set of terminating sequences using the given {@link SPAAlphabet alphabet}.
+     * Terminating sequences transfer a procedure from its initial state to an accepting state. This methods furthermore
+     * checks that the hierarchy of calls is well-defined, i.e. it only includes procedural invocations <i>p</i> for
+     * determining a terminating sequence if <i>p</i> has a valid terminating sequence itself.
+     *
+     * @param spa
+     *         the {@link SPA} to analyze
+     * @param alphabet
+     *         the set of allowed alphabet symbols for determining the terminating sequences
+     * @param <I>
+     *         input symbol type
+     *
+     * @return A map from procedures (restricted to the call symbols of the given alphabet) to the terminating
+     * sequences. This map may be partial as some procedures may not have a well-defined terminating sequence for the
+     * given alphabet.
+     */
+    public static <I> Map<I, Word<I>> computeTerminatingSequences(SPA<?, I> spa, SPAAlphabet<I> alphabet) {
 
         final Map<I, DFA<?, I>> procedures = spa.getProcedures();
         final Map<I, Word<I>> terminatingSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
@@ -154,9 +171,32 @@ public final class SPAUtil {
         return terminatingSequences;
     }
 
-    private static <I> Pair<Map<I, Word<I>>, Map<I, Word<I>>> computeAccessAndReturnSequences(SPA<?, I> spa,
-                                                                                              SPAAlphabet<I> alphabet,
-                                                                                              Map<I, Word<I>> terminatingSequences) {
+    /**
+     * Computes for a given {@link SPA} the set of access and return sequences using the given {@link SPAAlphabet
+     * alphabet}. An access sequence (for procedure <i>p</i>) transfers an {@link SPA} from its initial state to a state
+     * that is able to successfully execute a run of <i>p</i>, whereas the corresponding return sequence transfers the
+     * {@link SPA} to the global accepting state from an accepting state of <i>p</i>. This methods furthermore checks
+     * that potentially nested calls are well-defined, i.e. it only includes procedural invocations <i>p</i> for
+     * determining a access/return sequences if <i>p</i> has a valid terminating sequence and therefore can be expanded
+     * correctly.
+     *
+     * @param spa
+     *         the {@link SPA} to analyze
+     * @param alphabet
+     *         the set of allowed alphabet symbols for determining the access and return sequences
+     * @param terminatingSequences
+     *         a map of terminating sequences (for a given call symbol) used to expand nested invocations in access and
+     *         return sequences
+     * @param <I>
+     *         input symbol type
+     *
+     * @return A pair of maps from procedures (restricted to the call symbols of the given alphabet) to the
+     * access/return sequences. tha  These maps may be partial as some procedures may not have well-defined
+     * access/terminating sequences for the given alphabet.
+     */
+    public static <I> Pair<Map<I, Word<I>>, Map<I, Word<I>>> computeAccessAndReturnSequences(SPA<?, I> spa,
+                                                                                             SPAAlphabet<I> alphabet,
+                                                                                             Map<I, Word<I>> terminatingSequences) {
         final I initialProcedure = spa.getInitialProcedure();
 
         if (initialProcedure == null) {
@@ -198,14 +238,14 @@ public final class SPAUtil {
         return Pair.of(accessSequences, returnSequences);
     }
 
-    private static <S, I> Collection<I> discoverAccessAndReturnSequences(SPAAlphabet<I> alphabet,
-                                                                         Collection<I> proceduralInputs,
-                                                                         I procedure,
-                                                                         DFA<S, I> dfa,
-                                                                         Set<I> finishedProcedures,
-                                                                         Map<I, Word<I>> accessSequences,
-                                                                         Map<I, Word<I>> terminatingSequences,
-                                                                         Map<I, Word<I>> returnSequences) {
+    private static <I> Collection<I> discoverAccessAndReturnSequences(SPAAlphabet<I> alphabet,
+                                                                      Collection<I> proceduralInputs,
+                                                                      I procedure,
+                                                                      DFA<?, I> dfa,
+                                                                      Set<I> finishedProcedures,
+                                                                      Map<I, Word<I>> accessSequences,
+                                                                      Map<I, Word<I>> terminatingSequences,
+                                                                      Map<I, Word<I>> returnSequences) {
 
         final List<I> newASRS = new ArrayList<>();
         final Iterator<Word<I>> transitionCoverIterator = Covers.transitionCoverIterator(dfa, proceduralInputs);
