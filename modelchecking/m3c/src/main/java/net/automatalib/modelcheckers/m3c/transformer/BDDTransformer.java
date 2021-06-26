@@ -42,6 +42,7 @@ import net.automatalib.modelcheckers.m3c.formula.NotNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransformer<L, AP>, L, AP> {
 
@@ -247,7 +248,7 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -257,6 +258,6 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
         BDDTransformer<?, ?> that = (BDDTransformer<?, ?>) o;
 
-        return Arrays.equals(bdds, that.bdds);
+        return Arrays.equals(this.bdds, that.bdds);
     }
 }

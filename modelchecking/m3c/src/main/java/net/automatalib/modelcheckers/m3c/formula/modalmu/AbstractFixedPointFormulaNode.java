@@ -50,7 +50,7 @@ public abstract class AbstractFixedPointFormulaNode<L, AP> extends AbstractUnary
 
         final AbstractFixedPointFormulaNode<?, ?> that = (AbstractFixedPointFormulaNode<?, ?>) o;
 
-        return Objects.equals(variable, that.variable);
+        return Objects.equals(this.variable, that.variable);
     }
 
     protected void printMuCalcNode(Appendable a, String fixedPoint) throws IOException {

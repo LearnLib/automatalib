@@ -88,8 +88,8 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
 
         final FormulaNode<?, ?> that = (FormulaNode<?, ?>) o;
 
-        return this.varNumber == that.getVarNumber() && Objects.equals(leftChild, that.getLeftChild()) &&
-               Objects.equals(rightChild, that.getRightChild());
+        return this.varNumber == that.getVarNumber() && Objects.equals(this.leftChild, that.getLeftChild()) &&
+               Objects.equals(this.rightChild, that.getRightChild());
     }
 
 }

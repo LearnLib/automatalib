@@ -77,7 +77,7 @@ public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
         final AtomicNode<?, ?> that = (AtomicNode<?, ?>) o;
 
-        return Objects.equals(propositions, that.propositions);
+        return Objects.equals(this.propositions, that.propositions);
     }
 
 }

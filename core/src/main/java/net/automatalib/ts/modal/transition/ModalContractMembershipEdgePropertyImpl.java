@@ -45,7 +45,7 @@ public class ModalContractMembershipEdgePropertyImpl extends ModalContractEdgePr
 
         final ModalContractMembershipEdgePropertyImpl that = (ModalContractMembershipEdgePropertyImpl) o;
 
-        return memberId == that.memberId;
+        return this.memberId == that.memberId;
     }
 
     @Override

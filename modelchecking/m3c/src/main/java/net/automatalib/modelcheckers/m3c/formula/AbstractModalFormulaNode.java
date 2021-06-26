@@ -46,7 +46,7 @@ public abstract class AbstractModalFormulaNode<L, AP> extends AbstractUnaryFormu
 
         final AbstractModalFormulaNode<?, ?> that = (AbstractModalFormulaNode<?, ?>) o;
 
-        return Objects.equals(action, that.action);
+        return Objects.equals(this.action, that.action);
     }
 
     protected void printMuCalcNode(Appendable a, char leftModalitySymbol, char rightModalitySymbol) throws IOException {

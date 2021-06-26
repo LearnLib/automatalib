@@ -47,7 +47,8 @@ public class ModalEdgePropertyImpl implements MutableModalEdgeProperty {
         }
 
         final ModalEdgePropertyImpl that = (ModalEdgePropertyImpl) o;
-        return modalType == that.modalType;
+
+        return this.modalType == that.modalType;
     }
 
     @Override

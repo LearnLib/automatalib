@@ -31,6 +31,7 @@ import net.automatalib.modelcheckers.m3c.formula.DiamondNode;
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransformer<L, AP>, L, AP> {
 
@@ -172,11 +173,11 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     @Override
     public int hashCode() {
-        return add != null ? add.hashCode() : 0;
+        return Objects.hashCode(add);
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -186,6 +187,6 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
         ADDTransformer<?, ?> that = (ADDTransformer<?, ?>) o;
 
-        return Objects.equals(add, that.add);
+        return Objects.equals(this.add, that.add);
     }
 }

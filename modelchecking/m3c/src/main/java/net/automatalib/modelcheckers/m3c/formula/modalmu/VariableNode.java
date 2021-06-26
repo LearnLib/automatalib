@@ -59,6 +59,6 @@ public class VariableNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
         final VariableNode<?, ?> that = (VariableNode<?, ?>) o;
 
-        return Objects.equals(variable, that.variable);
+        return Objects.equals(this.variable, that.variable);
     }
 }
