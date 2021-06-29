@@ -144,15 +144,12 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
             L mpgLabel = labelMpg.getKey();
             ModalProcessGraph<?, L, ?, AP, ?> mpg = labelMpg.getValue();
             List<T> transformers = new ArrayList<>(mpg.size());
-            for (int i = 0; i < mpg.size(); i++) {
-                transformers.add(null);
-            }
             int finalNodeId = getIdOfFinalNode(mpgLabel, mpg);
             for (int nodeId = 0; nodeId < mpg.size(); nodeId++) {
                 if (nodeId == finalNodeId) {
-                    transformers.set(nodeId, createInitTransformerEnd());
+                    transformers.add(createInitTransformerEnd());
                 } else {
-                    transformers.set(nodeId, createInitState());
+                    transformers.add(createInitState());
                 }
             }
             propTransformers.put(mpgLabel, transformers);

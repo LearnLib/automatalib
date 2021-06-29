@@ -18,16 +18,18 @@ package net.automatalib.modelcheckers.m3c.formula;
 import java.io.IOException;
 import java.util.Objects;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public abstract class AbstractModalFormulaNode<L, AP> extends AbstractUnaryFormulaNode<L, AP> {
 
-    private final L action;
+    private final @Nullable L action;
 
-    public AbstractModalFormulaNode(L action, FormulaNode<L, AP> node) {
+    public AbstractModalFormulaNode(@Nullable L action, FormulaNode<L, AP> node) {
         super(node);
         this.action = action;
     }
 
-    public L getAction() {
+    public @Nullable L getAction() {
         return action;
     }
 
@@ -39,7 +41,7 @@ public abstract class AbstractModalFormulaNode<L, AP> extends AbstractUnaryFormu
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (!super.equals(o)) {
             return false;
         }

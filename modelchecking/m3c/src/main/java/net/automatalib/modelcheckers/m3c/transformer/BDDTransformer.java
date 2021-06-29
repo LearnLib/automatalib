@@ -43,12 +43,16 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     private final BDDManager bddManager;
     /* One BDD for each lhs of equation system */
-    private BDD[] bdds;
+    private final BDD[] bdds;
+
+    public BDDTransformer(BDDManager bddManager, BDD[] bdds) {
+        this.bddManager = bddManager;
+        this.bdds = bdds;
+    }
 
     /* Initialize Property Transformer for a state */
     public BDDTransformer(BDDManager bddManager, DependencyGraph<L, AP> dependencyGraph) {
-        this(bddManager);
-        bdds = new BDD[dependencyGraph.getNumVariables()];
+        this(bddManager, new BDD[dependencyGraph.getNumVariables()]);
         for (EquationalBlock<L, AP> block : dependencyGraph.getBlocks()) {
             if (block.isMaxBlock()) {
                 for (FormulaNode<L, AP> node : block.getNodes()) {
@@ -62,22 +66,12 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         }
     }
 
-    public BDDTransformer(BDDManager bddManager) {
-        this.bddManager = bddManager;
-    }
-
-    public BDDTransformer(BDDManager bddManager, BDD[] bdds) {
-        this.bddManager = bddManager;
-        this.bdds = bdds;
-    }
-
     /* Create Property Transformer for an edge */
     public <TP extends ModalEdgeProperty> BDDTransformer(BDDManager bddManager,
                                                          L edgeLabel,
                                                          TP edgeProperty,
                                                          DependencyGraph<L, AP> dependencyGraph) {
-        this(bddManager);
-        bdds = new BDD[dependencyGraph.getNumVariables()];
+        this(bddManager, new BDD[dependencyGraph.getNumVariables()]);
         for (FormulaNode<L, AP> node : dependencyGraph.getFormulaNodes()) {
             int xi = node.getVarNumber();
             if (node instanceof AbstractModalFormulaNode) {
@@ -101,8 +95,7 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     /* The Property Transformer representing the identity function */
     public BDDTransformer(BDDManager bddManager, int numberOfVars) {
-        this(bddManager);
-        bdds = new BDD[numberOfVars];
+        this(bddManager, new BDD[numberOfVars]);
         for (int var = 0; var < numberOfVars; var++) {
             bdds[var] = bddManager.ithVar(var);
         }
@@ -121,14 +114,9 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     @Override
     public BDDTransformer<L, AP> compose(BDDTransformer<L, AP> other) {
-        BDD[] composedBDDs = new BDD[bdds.length];
-        //TODO: Can we maybe avoid copying the array?
-        BDD[] otherBDDs = new BDD[bdds.length];
-        for (int var = 0; var < other.getNumberOfVars(); var++) {
-            otherBDDs[var] = other.getBDD(var);
-        }
+        final BDD[] composedBDDs = new BDD[bdds.length];
         for (int var = 0; var < bdds.length; var++) {
-            BDD composedBDD = bdds[var].vectorCompose(otherBDDs);
+            BDD composedBDD = bdds[var].vectorCompose(other.bdds);
             composedBDDs[var] = composedBDD;
         }
         return new BDDTransformer<>(bddManager, composedBDDs);
@@ -140,7 +128,7 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
                                               EquationalBlock<L, AP> currentBlock) {
         /* Set BDDs of updated transformer to initial bdds as we do not update all bdds
          * but only those for the current block */
-        BDD[] updatedBDDs = Arrays.copyOf(bdds, bdds.length);
+        final BDD[] updatedBDDs = bdds.clone();
         for (FormulaNode<L, AP> node : currentBlock.getNodes()) {
             updateFormulaNode(atomicPropositions, compositions, updatedBDDs, node);
         }
