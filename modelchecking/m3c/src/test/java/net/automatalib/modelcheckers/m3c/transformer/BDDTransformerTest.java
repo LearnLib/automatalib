@@ -62,8 +62,8 @@ public class BDDTransformerTest {
     @Test
     void testBDDIdentity() {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, dg.getNumVariables());
-        for (int var = 0; var < transformer.getBdds().length; var++) {
-            Assert.assertEquals(transformer.getBdds()[var], bddManager.ithVar(var));
+        for (int var = 0; var < transformer.getNumberOfVars(); var++) {
+            Assert.assertEquals(transformer.getBDD(var), bddManager.ithVar(var));
         }
     }
 
@@ -72,7 +72,7 @@ public class BDDTransformerTest {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, dg);
         for (EquationalBlock<String, String> block : dg.getBlocks()) {
             for (FormulaNode<String, String> node : block.getNodes()) {
-                BDD actual = transformer.getBdds()[node.getVarNumber()];
+                BDD actual = transformer.getBDD(node.getVarNumber());
                 BDD expected;
                 if (block.isMaxBlock()) {
                     expected = bddManager.readOne();
@@ -89,23 +89,23 @@ public class BDDTransformerTest {
         BDDTransformer<String, String> transformer =
                 new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);
 
-        BDD bddOrNode = transformer.getBdds()[orNode.getVarNumber()];
+        BDD bddOrNode = transformer.getBDD(orNode.getVarNumber());
         BDD expectedBDDOrNode = bddManager.readLogicZero();
         Assert.assertEquals(expectedBDDOrNode, bddOrNode);
 
-        BDD bddDiaNode1 = transformer.getBdds()[diaNode1.getVarNumber()];
+        BDD bddDiaNode1 = transformer.getBDD(diaNode1.getVarNumber());
         BDD expectedBDDDiaNode1 = bddManager.ithVar(diaNode1.getVarNumberLeft());
         Assert.assertEquals(expectedBDDDiaNode1, bddDiaNode1);
 
-        BDD bddDiaNode2 = transformer.getBdds()[diaNode2.getVarNumber()];
+        BDD bddDiaNode2 = transformer.getBDD(diaNode2.getVarNumber());
         BDD expectedBDDDiaNode2 = bddManager.ithVar(diaNode2.getVarNumberLeft());
         Assert.assertEquals(expectedBDDDiaNode2, bddDiaNode2);
 
-        BDD bddBoxNode = transformer.getBdds()[boxNode.getVarNumber()];
+        BDD bddBoxNode = transformer.getBDD(boxNode.getVarNumber());
         BDD expectedBDDBoxNode = bddManager.ithVar(boxNode.getVarNumberLeft());
         Assert.assertEquals(expectedBDDBoxNode, bddBoxNode);
 
-        BDD bddTrueNode = transformer.getBdds()[trueNode.getVarNumber()];
+        BDD bddTrueNode = transformer.getBDD(trueNode.getVarNumber());
         BDD expectedBDDTrueNode = bddManager.readLogicZero();
         Assert.assertEquals(expectedBDDTrueNode, bddTrueNode);
     }
@@ -115,23 +115,23 @@ public class BDDTransformerTest {
         BDDTransformer<String, String> transformer =
                 new BDDTransformer<>(bddManager, "a", new ModalEdgePropertyImpl(ModalType.MUST), dg);
 
-        BDD bddOrNode = transformer.getBdds()[orNode.getVarNumber()];
+        BDD bddOrNode = transformer.getBDD(orNode.getVarNumber());
         BDD expectedBDDOrNode = bddManager.readLogicZero();
         Assert.assertEquals(expectedBDDOrNode, bddOrNode);
 
-        BDD bddDiaNode1 = transformer.getBdds()[diaNode1.getVarNumber()];
+        BDD bddDiaNode1 = transformer.getBDD(diaNode1.getVarNumber());
         BDD expectedBDDDiaNode1 = bddManager.readLogicZero();
         Assert.assertEquals(expectedBDDDiaNode1, bddDiaNode1);
 
-        BDD bddDiaNode2 = transformer.getBdds()[diaNode2.getVarNumber()];
+        BDD bddDiaNode2 = transformer.getBDD(diaNode2.getVarNumber());
         BDD expectedBDDDiaNode2 = bddManager.ithVar(diaNode2.getVarNumberLeft());
         Assert.assertEquals(expectedBDDDiaNode2, bddDiaNode2);
 
-        BDD bddBoxNode = transformer.getBdds()[boxNode.getVarNumber()];
+        BDD bddBoxNode = transformer.getBDD(boxNode.getVarNumber());
         BDD expectedBDDBoxNode = bddManager.readOne();
         Assert.assertEquals(expectedBDDBoxNode, bddBoxNode);
 
-        BDD bddTrueNode = transformer.getBdds()[trueNode.getVarNumber()];
+        BDD bddTrueNode = transformer.getBDD(trueNode.getVarNumber());
         BDD expectedBDDTrueNode = bddManager.readLogicZero();
         Assert.assertEquals(expectedBDDTrueNode, bddTrueNode);
     }
@@ -141,23 +141,23 @@ public class BDDTransformerTest {
         BDDTransformer<String, String> transformer =
                 new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MAY), dg);
 
-        BDD bddOrNode = transformer.getBdds()[orNode.getVarNumber()];
+        BDD bddOrNode = transformer.getBDD(orNode.getVarNumber());
         BDD expectedBDDOrNode = bddManager.readLogicZero();
         Assert.assertEquals(expectedBDDOrNode, bddOrNode);
 
-        BDD bddDiaNode1 = transformer.getBdds()[diaNode1.getVarNumber()];
+        BDD bddDiaNode1 = transformer.getBDD(diaNode1.getVarNumber());
         BDD expectedBDDDiaNode1 = bddManager.readLogicZero();
         Assert.assertEquals(expectedBDDDiaNode1, bddDiaNode1);
 
-        BDD bddDiaNode2 = transformer.getBdds()[diaNode2.getVarNumber()];
+        BDD bddDiaNode2 = transformer.getBDD(diaNode2.getVarNumber());
         BDD expectedBDDDiaNode2 = bddManager.readLogicZero();
         Assert.assertEquals(expectedBDDDiaNode2, bddDiaNode2);
 
-        BDD bddBoxNode = transformer.getBdds()[boxNode.getVarNumber()];
+        BDD bddBoxNode = transformer.getBDD(boxNode.getVarNumber());
         BDD expectedBDDBoxNode = bddManager.ithVar(boxNode.getVarNumberLeft());
         Assert.assertEquals(expectedBDDBoxNode, bddBoxNode);
 
-        BDD bddTrueNode = transformer.getBdds()[trueNode.getVarNumber()];
+        BDD bddTrueNode = transformer.getBDD(trueNode.getVarNumber());
         BDD expectedBDDTrueNode = bddManager.readLogicZero();
         Assert.assertEquals(expectedBDDTrueNode, bddTrueNode);
     }
@@ -167,7 +167,7 @@ public class BDDTransformerTest {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, dg);
         BDDTransformer<String, String> identity = new BDDTransformer<>(bddManager, dg.getNumVariables());
         BDDTransformer<String, String> composition = transformer.compose(identity);
-        Assert.assertEquals(5, composition.getBdds().length);
+        Assert.assertEquals(5, composition.getNumberOfVars());
         Assert.assertEquals(transformer, composition);
 
         BDDTransformer<String, String> inverseComposition = identity.compose(transformer);
@@ -178,14 +178,12 @@ public class BDDTransformerTest {
     void testOrBDDListOnes() {
         BDDTransformer<String, String> edgeTransformer =
                 new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);
-
-        BDDTransformer<String, String> oneTransformer = new BDDTransformer<>(bddManager);
-        oneTransformer.setIsMust(true);
         BDD[] oneBDDs = new BDD[dg.getNumVariables()];
         for (int var = 0; var < oneBDDs.length; var++) {
             oneBDDs[var] = bddManager.readOne();
         }
-        oneTransformer.setBDDs(oneBDDs);
+        BDDTransformer<String, String> oneTransformer = new BDDTransformer<>(bddManager, oneBDDs);
+        oneTransformer.setIsMust(true);
 
         List<BDDTransformer<String, String>> comps = new ArrayList<>();
         comps.add(edgeTransformer);
@@ -198,13 +196,12 @@ public class BDDTransformerTest {
     void testOrBDDListZeros() {
         BDDTransformer<String, String> edgeTransformer =
                 new BDDTransformer<>(bddManager, "b", new ModalEdgePropertyImpl(ModalType.MUST), dg);
-        BDDTransformer<String, String> oneTransformer = new BDDTransformer<>(bddManager);
-        oneTransformer.setIsMust(true);
         BDD[] oneBDDs = new BDD[dg.getNumVariables()];
         for (int var = 0; var < oneBDDs.length; var++) {
             oneBDDs[var] = bddManager.readLogicZero();
         }
-        oneTransformer.setBDDs(oneBDDs);
+        BDDTransformer<String, String> oneTransformer = new BDDTransformer<>(bddManager, oneBDDs);
+        oneTransformer.setIsMust(true);
 
         List<BDDTransformer<String, String>> comps = new ArrayList<>();
         comps.add(edgeTransformer);

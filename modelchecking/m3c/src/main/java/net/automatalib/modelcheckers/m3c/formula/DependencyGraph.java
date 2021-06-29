@@ -37,10 +37,8 @@ public class DependencyGraph<L, AP> {
 
     /* nu X1 -> fixedPointVarMap.get("X1") returns the node associated to nu X1 */
     private final Map<String, FormulaNode<L, AP>> fixedPointVarMap;
-
-    private int numVars;
-
     private final FormulaNode<L, AP> ast;
+    private int numVars;
 
     public DependencyGraph(FormulaNode<L, AP> root) {
         this.formulaNodes = new ArrayList<>();
@@ -65,7 +63,7 @@ public class DependencyGraph<L, AP> {
         if (root instanceof LfpNode) {
             isMax = false;
         }
-        EquationalBlock<L, AP> block = new EquationalBlock<>(isMax, 0);
+        EquationalBlock<L, AP> block = new EquationalBlock<>(isMax);
         blocks.add(block);
         createEquationalBlocks(root, blockNumber);
         sortBlocks();
@@ -80,11 +78,11 @@ public class DependencyGraph<L, AP> {
         int newBlockNumber = blockNumber;
         if (node instanceof GfpNode && !isMax) {
             newBlockNumber = blocks.size();
-            currentBlock = new EquationalBlock<>(true, newBlockNumber);
+            currentBlock = new EquationalBlock<>(true);
             blocks.add(currentBlock);
         } else if (node instanceof LfpNode && isMax) {
             newBlockNumber = blocks.size();
-            currentBlock = new EquationalBlock<>(false, newBlockNumber);
+            currentBlock = new EquationalBlock<>(false);
             blocks.add(currentBlock);
         }
 
@@ -153,10 +151,6 @@ public class DependencyGraph<L, AP> {
 
     public List<EquationalBlock<L, AP>> getBlocks() {
         return blocks;
-    }
-
-    public Map<String, FormulaNode<L, AP>> getFixedPointVarMap() {
-        return fixedPointVarMap;
     }
 
     public FormulaNode<L, AP> getAST() {

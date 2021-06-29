@@ -21,7 +21,7 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 
 public class StringSolveBDD extends SolveBDD<String, String> implements M3CSolver<String> {
 
-    public StringSolveBDD(ModalContextFreeProcessSystem<String, String> mcfps) {
+    StringSolveBDD(ModalContextFreeProcessSystem<String, String> mcfps) {
         super(mcfps);
     }
 

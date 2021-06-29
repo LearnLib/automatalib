@@ -15,7 +15,6 @@
  */
 package net.automatalib.modelcheckers.m3c.transformer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -23,12 +22,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import info.scce.addlib.dd.LabelledRegularDD;
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
-import info.scce.addlib.dd.xdd.XDD;
-import info.scce.addlib.dd.xdd.latticedd.example.BooleanLogicDDManager;
-import info.scce.addlib.viewer.DotViewer;
 import net.automatalib.modelcheckers.m3c.formula.AbstractModalFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
@@ -69,6 +64,11 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     public BDDTransformer(BDDManager bddManager) {
         this.bddManager = bddManager;
+    }
+
+    public BDDTransformer(BDDManager bddManager, BDD[] bdds) {
+        this.bddManager = bddManager;
+        this.bdds = bdds;
     }
 
     /* Create Property Transformer for an edge */
@@ -121,37 +121,35 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     @Override
     public BDDTransformer<L, AP> compose(BDDTransformer<L, AP> other) {
-        BDDTransformer<L, AP> composition = new BDDTransformer<>(bddManager);
-        composition.setBDDs(new BDD[bdds.length]);
-        BDD[] otherBdds = other.getBdds();
-        for (int var = 0; var < bdds.length; var++) {
-            BDD composedBDD = bdds[var].vectorCompose(otherBdds);
-            composition.setBDD(var, composedBDD);
+        BDD[] composedBDDs = new BDD[bdds.length];
+        //TODO: Can we maybe avoid copying the array?
+        BDD[] otherBDDs = new BDD[bdds.length];
+        for (int var = 0; var < other.getNumberOfVars(); var++) {
+            otherBDDs[var] = other.getBDD(var);
         }
-        return composition;
+        for (int var = 0; var < bdds.length; var++) {
+            BDD composedBDD = bdds[var].vectorCompose(otherBDDs);
+            composedBDDs[var] = composedBDD;
+        }
+        return new BDDTransformer<>(bddManager, composedBDDs);
     }
 
     @Override
     public BDDTransformer<L, AP> createUpdate(Set<AP> atomicPropositions,
                                               List<BDDTransformer<L, AP>> compositions,
                                               EquationalBlock<L, AP> currentBlock) {
-        BDDTransformer<L, AP> updatedTransformer = new BDDTransformer<>(bddManager);
-
         /* Set BDDs of updated transformer to initial bdds as we do not update all bdds
          * but only those for the current block */
-        updatedTransformer.setBDDs(new BDD[bdds.length]);
-        for (int var = 0; var < bdds.length; var++) {
-            updatedTransformer.setBDD(var, bdds[var]);
-        }
+        BDD[] updatedBDDs = Arrays.copyOf(bdds, bdds.length);
         for (FormulaNode<L, AP> node : currentBlock.getNodes()) {
-            updateFormulaNode(atomicPropositions, compositions, updatedTransformer, node);
+            updateFormulaNode(atomicPropositions, compositions, updatedBDDs, node);
         }
-        return updatedTransformer;
+        return new BDDTransformer<>(bddManager, updatedBDDs);
     }
 
     private void updateFormulaNode(Set<AP> atomicPropositions,
                                    List<BDDTransformer<L, AP>> compositions,
-                                   BDDTransformer<L, AP> updatedTransformer,
+                                   BDD[] updatedBDDs,
                                    FormulaNode<L, AP> node) {
         int varIdx = node.getVarNumber();
         BDD result;
@@ -160,11 +158,9 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         } else if (node instanceof DiamondNode) {
             result = orBddList(compositions, varIdx);
         } else if (node instanceof AndNode) {
-            result =
-                    updatedTransformer.getBdds()[node.getVarNumberLeft()].and(updatedTransformer.getBdds()[node.getVarNumberRight()]);
+            result = updatedBDDs[node.getVarNumberLeft()].and(updatedBDDs[node.getVarNumberRight()]);
         } else if (node instanceof OrNode) {
-            result =
-                    updatedTransformer.getBdds()[node.getVarNumberLeft()].or(updatedTransformer.getBdds()[node.getVarNumberRight()]);
+            result = updatedBDDs[node.getVarNumberLeft()].or(updatedBDDs[node.getVarNumberRight()]);
         } else if (node instanceof TrueNode) {
             result = bddManager.readOne();
         } else if (node instanceof FalseNode) {
@@ -188,12 +184,12 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         } else {
             throw new IllegalArgumentException("");
         }
-        updatedTransformer.setBDD(varIdx, result);
+        updatedBDDs[varIdx] = result;
     }
 
     public BDD andBddList(List<BDDTransformer<L, AP>> compositions, int var) {
         /* Conjunction over the var-th BDDs of compositions */
-        Optional<BDD> result = compositions.stream().map(comp -> comp.getBdds()[var]).reduce(BDD::and);
+        Optional<BDD> result = compositions.stream().map(comp -> comp.getBDD(var)).reduce(BDD::and);
         return result.orElseGet(bddManager::readOne);
     }
 
@@ -205,41 +201,16 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         }
         /* Disjunction over the var-th BDDs of compositions */
         Optional<BDD> result =
-                compositions.stream().filter(BDDTransformer::isMust).map(comp -> comp.getBdds()[var]).reduce(BDD::or);
+                compositions.stream().filter(BDDTransformer::isMust).map(comp -> comp.getBDD(var)).reduce(BDD::or);
         return result.orElseGet(bddManager::readLogicZero);
-    }
-
-    public void setBDDs(final BDD[] bdds) {
-        this.bdds = bdds;
-    }
-
-    public BDD[] getBdds() {
-        return this.bdds;
-    }
-
-    public void setBDD(int index, BDD bdd) {
-        bdds[index] = bdd;
-    }
-
-    public void viewBDDs() {
-        DotViewer<XDD<Boolean>> dotViewer = new DotViewer<>();
-        dotViewer.view(getXDDs());
-        dotViewer.waitUntilAllClosed();
-    }
-
-    public List<LabelledRegularDD<XDD<Boolean>>> getXDDs() {
-        BooleanLogicDDManager xddManager = new BooleanLogicDDManager();
-        List<LabelledRegularDD<XDD<Boolean>>> xdds = new ArrayList<>();
-        for (int i = 0; i < bdds.length; i++) {
-            XDD<Boolean> xdd = bdds[i].toXDD(xddManager);
-            LabelledRegularDD<XDD<Boolean>> labelledXDD = new LabelledRegularDD<>(xdd, "x" + i);
-            xdds.add(labelledXDD);
-        }
-        return xdds;
     }
 
     public int getNumberOfVars() {
         return bdds.length;
+    }
+
+    public BDD getBDD(int var) {
+        return bdds[var];
     }
 
     @Override

@@ -21,32 +21,11 @@ import java.util.List;
 public class EquationalBlock<L, AP> {
 
     private final List<FormulaNode<L, AP>> nodes;
-    private boolean isMaxBlock;
-    private int blockNumber;
-
-    public EquationalBlock() {
-        blockNumber = 0;
-        nodes = new ArrayList<>();
-    }
+    private final boolean isMaxBlock;
 
     public EquationalBlock(boolean isMaxBlock) {
         this.isMaxBlock = isMaxBlock;
         this.nodes = new ArrayList<>();
-    }
-
-    public EquationalBlock(boolean isMaxBlock, int blockNumber) {
-        this.isMaxBlock = isMaxBlock;
-        this.blockNumber = blockNumber;
-        this.nodes = new ArrayList<>();
-    }
-
-    public boolean containsNodeWithVarNumber(int varNumber) {
-        for (FormulaNode<L, AP> node : nodes) {
-            if (node.getVarNumber() == varNumber) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public List<FormulaNode<L, AP>> getNodes() {
@@ -57,20 +36,8 @@ public class EquationalBlock<L, AP> {
         nodes.add(node);
     }
 
-    public void setIsMaxBlock(boolean isMaxBlock) {
-        this.isMaxBlock = isMaxBlock;
-    }
-
     public boolean isMaxBlock() {
         return isMaxBlock;
-    }
-
-    public int getBlockNumber() {
-        return blockNumber;
-    }
-
-    public void setBlockNumber(int blockNumber) {
-        this.blockNumber = blockNumber;
     }
 
 }
