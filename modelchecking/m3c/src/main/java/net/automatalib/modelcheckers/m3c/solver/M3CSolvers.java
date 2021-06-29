@@ -29,7 +29,7 @@ public final class M3CSolvers {
         return new StringSolveADD(mcfps);
     }
 
-    public static <L, AP> M3CSolver<FormulaNode<L, AP>> typedADDSolver(ModalContextFreeProcessSystem<L, AP> mcfps) {
+    public static <L, AP> TypedM3CSolver<FormulaNode<L, AP>> typedADDSolver(ModalContextFreeProcessSystem<L, AP> mcfps) {
         return new TypedSolveADD<>(mcfps);
     }
 
