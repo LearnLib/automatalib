@@ -97,7 +97,7 @@ private FormulaNode<L, AP> formula():
 }
 {
 	(node=untilFormula()
-|	node=andFormula()) {return node;}
+|	node=equivFormula() ) {return node;}
 }
 
 private FormulaNode<L, AP> untilFormula():
@@ -121,32 +121,18 @@ private FormulaNode<L, AP> untilFormula():
 	}
 }
 
-private FormulaNode<L, AP> andFormula():
-{
-	FormulaNode<L, AP> l;
-	FormulaNode<L, AP> r = null;}
-{
-	l=orFormula() (<AND> r=andFormula())?
-	{
-		if(r == null) {
-			return l;
-		}
-		return new AndNode<L, AP>(l, r);
-	}
-}
-
-private FormulaNode<L, AP> orFormula():
+private FormulaNode<L, AP> equivFormula():
 {
 	FormulaNode<L, AP> l;
 	FormulaNode<L, AP> r = null;
 }
 {
-	l=implFormula() (<OR> r=orFormula())?
+	l=implFormula() (<EQUIVALENCE> r=equivFormula())?
 	{
 		if(r == null) {
 			return l;
 		}
-		return new OrNode<L, AP>(l, r);
+		return new AndNode<L, AP>(new OrNode<L, AP>(new NotNode<L, AP>(l), r), new OrNode<L, AP>(new NotNode<L, AP>(r), l));
 	}
 }
 
@@ -156,7 +142,7 @@ private FormulaNode<L, AP> implFormula():
 	FormulaNode<L, AP> r = null;
 }
 {
-	l=equivFormula() (<IMPLICATION> r=implFormula())?
+	l=orFormula() (<IMPLICATION> r=implFormula())?
 	{
 		if(r == null) {
 			return l;
@@ -165,18 +151,32 @@ private FormulaNode<L, AP> implFormula():
 	}
 }
 
-private FormulaNode<L, AP> equivFormula():
+private FormulaNode<L, AP> orFormula():
 {
 	FormulaNode<L, AP> l;
 	FormulaNode<L, AP> r = null;
 }
 {
-	l=unary() (<EQUIVALENCE> r=equivFormula())?
+	l=andFormula() (<OR> r=orFormula())?
 	{
 		if(r == null) {
 			return l;
 		}
-		return new AndNode<L, AP>(new OrNode<L, AP>(new NotNode<L, AP>(l), r), new OrNode<L, AP>(new NotNode<L, AP>(r), l));
+		return new OrNode<L, AP>(l, r);
+	}
+}
+
+private FormulaNode<L, AP> andFormula():
+{
+	FormulaNode<L, AP> l;
+	FormulaNode<L, AP> r = null;}
+{
+	l=unary() (<AND> r=andFormula())?
+	{
+		if(r == null) {
+			return l;
+		}
+		return new AndNode<L, AP>(l, r);
 	}
 }
 
