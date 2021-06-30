@@ -64,6 +64,22 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         checkCFPS();
     }
 
+    private void checkCFPS() {
+        if (mcfps.getMainProcess() == null) {
+            throw new IllegalArgumentException("The mcfps must have an assigned main process.");
+        }
+        for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> labelMpg : mcfps.getMPGs().entrySet()) {
+            L mpgLabel = labelMpg.getKey();
+            ModalProcessGraph<?, L, ?, AP, ?> mpg = labelMpg.getValue();
+            if (mpg.getInitialNode() == null) {
+                throw new IllegalArgumentException("MPG " + mpgLabel + " has no start state.");
+            }
+            if (mpg.getFinalNode() == null) {
+                throw new IllegalArgumentException("MPG " + mpgLabel + " has no end state.");
+            }
+        }
+    }
+
     private FormulaNode<L, AP> ctlToMuCalc(FormulaNode<L, AP> ctlFormula) {
         CTLToMuCalc<L, AP> transformation = new CTLToMuCalc<>();
         return transformation.toMuCalc(ctlFormula);
@@ -92,22 +108,6 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         }
 
         return isSat();
-    }
-
-    private void checkCFPS() {
-        if (mcfps.getMainProcess() == null) {
-            throw new IllegalArgumentException("The mcfps must have an assigned main process.");
-        }
-        for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> labelMpg : mcfps.getMPGs().entrySet()) {
-            L mpgLabel = labelMpg.getKey();
-            ModalProcessGraph<?, L, ?, AP, ?> mpg = labelMpg.getValue();
-            if (mpg.getInitialNode() == null) {
-                throw new IllegalArgumentException("MPG " + mpgLabel + " has no start state.");
-            }
-            if (mpg.getFinalNode() == null) {
-                throw new IllegalArgumentException("MPG " + mpgLabel + " has no end state.");
-            }
-        }
     }
 
     public void initialize() {
@@ -257,11 +257,16 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
                     satisfiedVariables.add(node.getVarNumber());
                 } else if (node instanceof AtomicNode) {
                     Set<AP> atomicProposition = ((AtomicNode<L, AP>) node).getPropositions();
-                    for (AP ap : mainMpg.getAtomicPropositions(finalNode)) {
-                        if (ap.equals(atomicProposition)) {
-                            satisfiedVariables.add(node.getVarNumber());
+                    Set<AP> finalNodeAPs = mainMpg.getAtomicPropositions(finalNode);
+                    boolean satisfiesAllAPs = true;
+                    for (AP ap : atomicProposition) {
+                        if (!finalNodeAPs.contains(ap)) {
+                            satisfiesAllAPs = false;
                             break;
                         }
+                    }
+                    if (satisfiesAllAPs) {
+                        satisfiedVariables.add(node.getVarNumber());
                     }
                 } else if (node instanceof BoxNode) {
                     /* End State has no outgoing edges */

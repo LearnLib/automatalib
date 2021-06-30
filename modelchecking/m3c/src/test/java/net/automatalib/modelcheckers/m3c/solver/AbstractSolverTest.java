@@ -15,8 +15,11 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.graphs.ModalProcessGraph;
@@ -34,9 +37,13 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @BeforeClass
     public static void setup() {
-        final CompactMPG<String, String> mpg = buildMPG(new CompactMPG<>());
+        mcfps = getMcfps(new HashSet<>());
+    }
 
-        mcfps = new ModalContextFreeProcessSystem<String, String>() {
+    private static ModalContextFreeProcessSystem<String, String> getMcfps(Set<String> finalNodesAP) {
+        final CompactMPG<String, String> mpg = buildMPG(new CompactMPG<>(), finalNodesAP);
+
+        return new ModalContextFreeProcessSystem<String, String>() {
 
             @Override
             public Map<String, ModalProcessGraph<?, String, ?, String, ?>> getMPGs() {
@@ -50,7 +57,8 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         };
     }
 
-    private static <N, E, AP, MMPG extends MutableModalProcessGraph<N, String, E, AP, ?>> MMPG buildMPG(MMPG mpg) {
+    private static <N, E, AP, MMPG extends MutableModalProcessGraph<N, String, E, AP, ?>> MMPG buildMPG(MMPG mpg,
+                                                                                                        Set<AP> finalNodeAPs) {
 
         final N start = mpg.addNode();
         final N end = mpg.addNode();
@@ -59,6 +67,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
         mpg.setInitialNode(start);
         mpg.setFinalNode(end);
+        mpg.setAtomicPropositions(end, finalNodeAPs);
 
         final E e1 = mpg.connect(start, s1);
         final E e2 = mpg.connect(start, end);
@@ -92,10 +101,22 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         assertSolve(solver, negatedFormula, false);
     }
 
+    public abstract M3CSolver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps);
+
     protected <P> void assertSolve(M3CSolver<P> solver, P property, boolean expectedIsSat) throws ParseException {
         Assert.assertEquals(solver.solve(property), expectedIsSat);
     }
 
-    public abstract M3CSolver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps);
+    @Test
+    void testSolveWithAPs() throws ParseException {
+        ModalContextFreeProcessSystem<String, String> mcfps = getMcfps(new HashSet<>(Arrays.asList("a", "b")));
+        String formula = "mu X.(<>X || 'a,b')";
+        M3CSolver<String> solver = getSolver(mcfps);
+        assertSolve(solver, formula, true);
+
+        mcfps = getMcfps(new HashSet<>(Collections.singletonList("a")));
+        solver = getSolver(mcfps);
+        assertSolve(solver, formula, false);
+    }
 
 }

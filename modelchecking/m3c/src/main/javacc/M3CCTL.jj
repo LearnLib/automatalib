@@ -78,7 +78,8 @@ TOKEN:
 |	< EQUIVALENCE: "<->" >
 |	< IMPLICATION: "->" >
 |	< ID: ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z"] | ["0"-"9"] | "_")* >
-|	< QUOTED_ID: ("\"" <ID> "\"") |  ("'" <ID> "'") >
+|	< STRING_LITERAL: ("'" (~["'", "\\"])* (("\\\'" | "\\\\") (~["'", "\\"])*)* "'")
+| ("\""  (~["\"", "\\"])* (("\\\"" | "\\\\") (~["\"", "\\"])*)* "\"")>
 }
 
 FormulaNode<L, AP> parse(Function<String, L> labelParser, Function<String, Set<AP>> apParser):
@@ -202,7 +203,7 @@ private FormulaNode<L, AP> element():
 	Token ap;
 }
 {
-	ap=<QUOTED_ID>
+	ap=<STRING_LITERAL>
 	{
 		String apString = ap.toString();
 		String apWithoutQuotMarks = apString.substring(1, apString.length()-1);
