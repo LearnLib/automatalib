@@ -8,7 +8,7 @@ env:
 
 jobs:
   tests-and-analysis:
-    name: "Code Analysis (JDK: ${{ matrix.jdk }})"
+    name: "Tests and Analysis (JDK: ${{ matrix.jdk }})"
     strategy:
       matrix:
         jdk: [ 1.8, 11 ]
@@ -16,6 +16,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
       - name: Set up cache
         uses: actions/cache@v2
         with:
@@ -23,32 +27,19 @@ jobs:
             ~/ltsmin
             ~/.m2
             !~/.m2/repository/net/automatalib
-          key: cache-code-analysis-${{ hashFiles('**/pom.xml') }}
+          key: cache-tests-and-analysis-${{ hashFiles('**/pom.xml') }}
           restore-keys: cache-code-analysis-
-#      - name: List Cache
-#        shell: bash
-#        run: |
-#          find ~/.m2
-#          find ~/ltsmin
+      - name: Set up GraphViz
+        run: sudo apt-get install graphviz
       - name: Set up LTSmin
         shell: bash
         run: |
           $GITHUB_WORKSPACE/.github/install-ltsmin.sh
           echo "~/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
-#      - name: Check LTSmin
-#        shell: bash
-#        run: ltsmin-convert --version
-#        continue-on-error: true # binary returns 255 on success
-      - name: Set up GraphViz
-        run: sudo apt-get install graphviz
-      - name: Set up JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.jdk }}
       - name: Run Maven
         run: mvn -B install site -Pcode-analysis,bundles
   platform-integration:
-    name: "Integration Tests (JDK: ${{ matrix.jdk }}, OS: ${{ matrix.os }})"
+    name: "Platform Integration (JDK: ${{ matrix.jdk }}, OS: ${{ matrix.os }})"
     needs: [ tests-and-analysis ]
     strategy:
       matrix:
@@ -62,11 +53,13 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.jdk }}
-      - name: Cache Maven packages
+      - name: Set up cache
         uses: actions/cache@v2
         with:
-          path: ~/.m2
-          key: cache-integration-tests-${{ hashFiles('**/pom.xml') }}
+          path: |
+            ~/.m2
+            !~/.m2/repository/net/automatalib
+          key: cache-platform-integration-${{ hashFiles('**/pom.xml') }}
       - name: Run Maven
         run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install
   coverage:
@@ -80,24 +73,22 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Cache Maven packages
+      - name: Set up cache
         uses: actions/cache@v2
         with:
           path: |
-            ~/.m2
             ~/ltsmin
+            ~/.m2
+            !~/.m2/repository/net/automatalib
           key: cache-coverage-${{ hashFiles('**/pom.xml') }}
           restore-keys: cache-coverage-
-#      - name: List Cache
-#        shell: bash
-#        run: find ~/.m2
-#      - name: Set Branch Name and PR Number # see https://github.com/trautonen/coveralls-maven-plugin/issues/136
-#        id: refs
-#        env:
-#          BRANCH_NAME_OR_REF: ${{ github.head_ref || github.ref }}
-#        run: |
-#          echo "::set-output name=branch_name::${BRANCH_NAME_OR_REF#refs/heads/}"
-#          echo "::set-output name=pr_number::$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")"
+      - name: Set up GraphViz
+        run: sudo apt-get install graphviz
+      - name: Set up LTSmin
+        shell: bash
+        run: |
+          $GITHUB_WORKSPACE/.github/install-ltsmin.sh
+          echo "~/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
       - name: Run Coverage # see https://github.com/trautonen/coveralls-maven-plugin/issues/136
         env:
           CI_NAME: github
@@ -121,10 +112,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Cache Maven packages
+      - name: Set up cache
         uses: actions/cache@v2
         with:
-          path: ~/.m2
+          path: |
+            ~/.m2
+            !~/.m2/repository/net/automatalib
           key: cache-deploy-${{ hashFiles('**/pom.xml') }}
           restore-keys: cache-deploy-
       - name: Run Maven
