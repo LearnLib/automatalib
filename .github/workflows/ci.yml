@@ -7,7 +7,7 @@ env:
   LTSMIN_REPO: Meijuh
 
 jobs:
-  code-analysis:
+  tests-and-analysis:
     name: "Code Analysis (JDK: ${{ matrix.jdk }})"
     strategy:
       matrix:
@@ -47,9 +47,9 @@ jobs:
           java-version: ${{ matrix.jdk }}
       - name: Run Maven
         run: mvn -B install site -Pcode-analysis,bundles
-  integration-tests:
+  platform-integration:
     name: "Integration Tests (JDK: ${{ matrix.jdk }}, OS: ${{ matrix.os }})"
-    needs: [ code-analysis ]
+    needs: [ tests-and-analysis ]
     strategy:
       matrix:
         jdk: [ 1.8, 11 ]
@@ -71,7 +71,7 @@ jobs:
         run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install
   coverage:
     name: "Coverage"
-    needs: [ integration-tests ]
+    needs: [ platform-integration ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -112,7 +112,7 @@ jobs:
   deploy:
     name: "Deploy"
     if: github.event_name != 'pull_request'
-    needs: [ integration-tests ]
+    needs: [ platform-integration ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
