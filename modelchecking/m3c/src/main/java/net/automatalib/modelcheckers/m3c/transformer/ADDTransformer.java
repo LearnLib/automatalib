@@ -36,14 +36,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransformer<L, AP>, L, AP> {
 
     private final BooleanVectorLogicDDManager xddManager;
-    private XDD<BooleanVector> add;
+    private final XDD<BooleanVector> add;
 
     public ADDTransformer(BooleanVectorLogicDDManager xddManager, XDD<BooleanVector> add) {
-        this(xddManager);
         this.add = add;
-    }
-
-    public ADDTransformer(BooleanVectorLogicDDManager xddManager) {
         this.xddManager = xddManager;
     }
 
@@ -70,7 +66,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         BooleanVector booleanVector = new BooleanVector(falseArr);
         XDD<BooleanVector> falseDD = xddManager.constant(booleanVector);
         XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(trueArr));
-        add = xddManager.ithVar(0, thenDD, falseDD);
+        XDD<BooleanVector> tmpADD = xddManager.ithVar(0, thenDD, falseDD);
         thenDD.recursiveDeref();
 
         for (int i = 1; i < numberOfVars; i++) {
@@ -80,11 +76,13 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
             thenDD = xddManager.constant(new BooleanVector(trueArr));
             XDD<BooleanVector> proj = xddManager.ithVar(i, thenDD, falseDD);
 
-            add = add.apply(BooleanVector::or, proj);
+            tmpADD = tmpADD.apply(BooleanVector::or, proj);
 
             thenDD.recursiveDeref();
             proj.recursiveDeref();
         }
+
+        this.add = tmpADD;
     }
 
     /* Create the property transformer for an edge */
@@ -112,14 +110,18 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                 }
             }
         }
+
+        XDD<BooleanVector> tmpADD;
         if (list.isEmpty()) {
-            add = xddManager.constant(new BooleanVector(new boolean[dependGraph.getNumVariables()]));
+            tmpADD = xddManager.constant(new BooleanVector(new boolean[dependGraph.getNumVariables()]));
         } else {
-            add = list.get(0);
+            tmpADD = list.get(0);
             for (int i = 1; i < list.size(); i++) {
-                add = add.apply(BooleanVector::or, list.get(i));
+                tmpADD = tmpADD.apply(BooleanVector::or, list.get(i));
             }
         }
+
+        this.add = tmpADD;
     }
 
     @Override
