@@ -38,6 +38,11 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     private final BooleanVectorLogicDDManager xddManager;
     private XDD<BooleanVector> add;
 
+    public ADDTransformer(BooleanVectorLogicDDManager xddManager, XDD<BooleanVector> add) {
+        this(xddManager);
+        this.add = add;
+    }
+
     public ADDTransformer(BooleanVectorLogicDDManager xddManager) {
         this.xddManager = xddManager;
     }
@@ -133,21 +138,18 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     @Override
     public ADDTransformer<L, AP> compose(ADDTransformer<L, AP> other) {
-        ADDTransformer<L, AP> composition = new ADDTransformer<>(xddManager);
         XDD<BooleanVector> otherAdd = other.getAdd();
         XDD<BooleanVector> compAdd = otherAdd.monadicApply(arg -> {
             boolean[] terminal = arg.data().clone();
             return this.getAdd().eval(terminal).v();
         });
-        composition.setAdd(compAdd);
-        return composition;
+        return new ADDTransformer<>(xddManager, compAdd);
     }
 
     @Override
     public ADDTransformer<L, AP> createUpdate(Set<AP> atomicPropositions,
                                               List<ADDTransformer<L, AP>> compositions,
                                               EquationalBlock<L, AP> currentBlock) {
-        ADDTransformer<L, AP> updatedTransformer = new ADDTransformer<>(xddManager);
         XDD<BooleanVector> updatedADD = null;
         DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
         if (compositions.size() == 1) {
@@ -159,16 +161,11 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                 updatedADD = compositions.get(i).getAdd().apply(diamondOp, updatedADD);
             }
         }
-        updatedTransformer.setAdd(updatedADD);
-        return updatedTransformer;
+        return new ADDTransformer<>(xddManager, updatedADD);
     }
 
     public XDD<BooleanVector> getAdd() {
         return add;
-    }
-
-    public void setAdd(XDD<BooleanVector> add) {
-        this.add = add;
     }
 
     @Override
