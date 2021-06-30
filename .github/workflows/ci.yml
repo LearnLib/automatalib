@@ -27,8 +27,8 @@ jobs:
             ~/ltsmin
             ~/.m2
             !~/.m2/repository/net/automatalib
-          key: cache-tests-and-analysis-${{ hashFiles('**/pom.xml') }}
-          restore-keys: cache-code-analysis-
+          key: cache-tests-and-analysis-${{ matrix.jdk }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: cache-tests-and-analysis-${{ matrix.jdk }}-
       - name: Set up GraphViz
         run: sudo apt-get install graphviz
       - name: Set up LTSmin
@@ -59,7 +59,8 @@ jobs:
           path: |
             ~/.m2
             !~/.m2/repository/net/automatalib
-          key: cache-platform-integration-${{ hashFiles('**/pom.xml') }}
+          key: cache-platform-integration-${{ matrix.jdk }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: cache-platform-integration-${{ matrix.jdk }}-
       - name: Run Maven
         run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install
   coverage:
