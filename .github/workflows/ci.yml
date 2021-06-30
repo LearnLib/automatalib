@@ -92,7 +92,7 @@ jobs:
       - name: Run Coverage # see https://github.com/trautonen/coveralls-maven-plugin/issues/136
         env:
           CI_NAME: github
-          CI_BUILD_NUMBER: ${{ github.run_id }}
+          CI_BUILD_NUMBER: ${{ github.run_number }}
           CI_BUILD_URL: https://github.com/${{ github.repository }}/commit/${{ github.event.after }}/checks
           BRANCH_NAME_OR_REF: ${{ github.head_ref || github.ref }}
         run: |
