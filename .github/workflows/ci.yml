@@ -71,7 +71,7 @@ jobs:
         run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install
   coverage:
     name: "Coverage"
-    needs: [ code-analysis ]
+    needs: [ integration-tests ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
