@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import net.automatalib.modelcheckers.m3c.formula.modalmu.AbstractFixedPointFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
@@ -101,12 +100,10 @@ public class DependencyGraph<L, AP> {
     }
 
     private void setVarNumbers(FormulaNode<L, AP> root) {
-        AtomicInteger numVarsAtomic = new AtomicInteger(0);
-        setVarNumbers(root, numVarsAtomic);
-        this.numVars = numVarsAtomic.get();
+        this.numVars = setVarNumbers(root, 0);
     }
 
-    private void setVarNumbers(FormulaNode<L, AP> node, AtomicInteger numVars) {
+    private int setVarNumbers(FormulaNode<L, AP> node, int varNumber) {
         /* Fill fixedPointVarMap */
         if (node instanceof AbstractFixedPointFormulaNode) {
             fixedPointVarMap.put(((AbstractFixedPointFormulaNode<L, AP>) node).getVariable(), node);
@@ -119,22 +116,25 @@ public class DependencyGraph<L, AP> {
             FormulaNode<L, AP> refNode = fixedPointVarMap.get(refVariable);
             node.setVarNumber(refNode.getVarNumber());
         } else {
-            node.setVarNumber(numVars.get());
+            node.setVarNumber(varNumber);
         }
 
+        int newVarNumber = varNumber;
         /* Only count non FixedPoint/VariableNodes */
         if (!(node instanceof AbstractFixedPointFormulaNode || node instanceof VariableNode)) {
-            numVars.incrementAndGet();
+            newVarNumber++;
             formulaNodes.add(node);
         }
 
         /* Recurse into subtrees */
         if (node.getLeftChild() != null) {
-            setVarNumbers(node.getLeftChild(), numVars);
+            newVarNumber = setVarNumbers(node.getLeftChild(), newVarNumber);
         }
         if (node.getRightChild() != null) {
-            setVarNumbers(node.getRightChild(), numVars);
+            newVarNumber = setVarNumbers(node.getRightChild(), newVarNumber);
         }
+
+        return newVarNumber;
     }
 
     public EquationalBlock<L, AP> getBlock(int index) {
