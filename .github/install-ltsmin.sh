@@ -10,7 +10,7 @@ fi
 # test if we have a cached version
 test -f "$HOME/ltsmin/${LTSMIN_VERSION}/bin/ltsmin-convert${FILE_SUFFIX}" -a -f "$HOME/ltsmin/${LTSMIN_VERSION}/bin/etf2lts-mc${FILE_SUFFIX}" && exit 0
 
-# create the directoy where the binaries and downloads end up.
+# create the directory where the binaries and downloads end up.
 mkdir -p "$HOME/ltsmin"
 mkdir -p "$HOME/ltsmin-download"
 

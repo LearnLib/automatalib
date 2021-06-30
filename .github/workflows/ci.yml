@@ -88,10 +88,12 @@ jobs:
         shell: bash
         run: |
           $GITHUB_WORKSPACE/.github/install-ltsmin.sh
-          echo "~/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
+          echo "$HOME/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
       - name: Check LTSmin
         shell: bash
-        run: ltsmin-convert --version
+        run: |
+          ltsmin-convert --version
+          etf2lts-mc --version
         continue-on-error: true # binary returns 255 on success
       - name: Run Coverage # see https://github.com/trautonen/coveralls-maven-plugin/issues/136
         env:
