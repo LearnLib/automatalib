@@ -1,9 +1,9 @@
 #!/bin/bash
 
-LTSMIN_NAME="ltsmin-${LTSMIN_VERSION}-$TRAVIS_OS_NAME.tgz"
+LTSMIN_NAME="ltsmin-${LTSMIN_VERSION}-$RUNNER_OS.tgz"
 LTSMIN_URL="https://github.com/${LTSMIN_REPO:-utwente-fmt}/ltsmin/releases/download/$LTSMIN_VERSION/$LTSMIN_NAME"
 
-if [ $TRAVIS_OS_NAME = "windows" ]; then
+if [ "$RUNNER_OS" = "windows" ]; then
    FILE_SUFFIX=".exe"
 fi
 
