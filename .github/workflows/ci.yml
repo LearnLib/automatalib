@@ -7,64 +7,64 @@ env:
   LTSMIN_REPO: Meijuh
 
 jobs:
-#  tests-and-analysis:
-#    name: "Tests and Analysis (JDK: ${{ matrix.jdk }})"
-#    strategy:
-#      matrix:
-#        jdk: [ 1.8, 11 ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#      - name: Set up JDK
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: ${{ matrix.jdk }}
-#      - name: Set up cache
-#        uses: actions/cache@v2
-#        with:
-#          path: |
-#            ~/ltsmin
-#            ~/.m2
-#            !~/.m2/repository/net/automatalib
-#          key: cache-tests-and-analysis-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: cache-code-analysis-
-#      - name: Set up GraphViz
-#        run: sudo apt-get install graphviz
-#      - name: Set up LTSmin
-#        shell: bash
-#        run: |
-#          $GITHUB_WORKSPACE/.github/install-ltsmin.sh
-#          echo "~/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
-#      - name: Run Maven
-#        run: mvn -B install site -Pcode-analysis,bundles
-#  platform-integration:
-#    name: "Platform Integration (JDK: ${{ matrix.jdk }}, OS: ${{ matrix.os }})"
-#    needs: [ tests-and-analysis ]
-#    strategy:
-#      matrix:
-#        jdk: [ 1.8, 11 ]
-#        os: [ ubuntu-latest, windows-latest, macOS-latest ]
-#    runs-on: ${{ matrix.os }}
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#      - name: Set up JDK
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: ${{ matrix.jdk }}
-#      - name: Set up cache
-#        uses: actions/cache@v2
-#        with:
-#          path: |
-#            ~/.m2
-#            !~/.m2/repository/net/automatalib
-#          key: cache-platform-integration-${{ hashFiles('**/pom.xml') }}
-#      - name: Run Maven
-#        run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install
+  tests-and-analysis:
+    name: "Tests and Analysis (JDK: ${{ matrix.jdk }})"
+    strategy:
+      matrix:
+        jdk: [ 1.8, 11 ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/ltsmin
+            ~/.m2
+            !~/.m2/repository/net/automatalib
+          key: cache-tests-and-analysis-${{ hashFiles('**/pom.xml') }}
+          restore-keys: cache-code-analysis-
+      - name: Set up GraphViz
+        run: sudo apt-get install graphviz
+      - name: Set up LTSmin
+        shell: bash
+        run: |
+          $GITHUB_WORKSPACE/.github/install-ltsmin.sh
+          echo "$HOME/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
+      - name: Run Maven
+        run: mvn -B install site -Pcode-analysis,bundles
+  platform-integration:
+    name: "Platform Integration (JDK: ${{ matrix.jdk }}, OS: ${{ matrix.os }})"
+    needs: [ tests-and-analysis ]
+    strategy:
+      matrix:
+        jdk: [ 1.8, 11 ]
+        os: [ ubuntu-latest, windows-latest, macOS-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2
+            !~/.m2/repository/net/automatalib
+          key: cache-platform-integration-${{ hashFiles('**/pom.xml') }}
+      - name: Run Maven
+        run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' install
   coverage:
     name: "Coverage"
-#    needs: [ platform-integration ]
+    needs: [ platform-integration ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -89,12 +89,6 @@ jobs:
         run: |
           $GITHUB_WORKSPACE/.github/install-ltsmin.sh
           echo "$HOME/ltsmin/${{ env.LTSMIN_VERSION }}/bin" >> $GITHUB_PATH
-      - name: Check LTSmin
-        shell: bash
-        run: |
-          ltsmin-convert --version
-          etf2lts-mc --version
-        continue-on-error: true # binary returns 255 on success
       - name: Run Coverage # see https://github.com/trautonen/coveralls-maven-plugin/issues/136
         env:
           CI_NAME: github
@@ -109,7 +103,7 @@ jobs:
   deploy:
     name: "Deploy"
     if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/develop' }}
-#    needs: [ platform-integration ]
+    needs: [ platform-integration ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
