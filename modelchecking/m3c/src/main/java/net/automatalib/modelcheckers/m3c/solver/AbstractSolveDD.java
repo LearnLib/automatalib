@@ -256,16 +256,9 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
                 if (node instanceof TrueNode) {
                     satisfiedVariables.add(node.getVarNumber());
                 } else if (node instanceof AtomicNode) {
-                    Set<AP> atomicProposition = ((AtomicNode<L, AP>) node).getPropositions();
+                    Set<AP> atomicPropositions = ((AtomicNode<L, AP>) node).getPropositions();
                     Set<AP> finalNodeAPs = mainMpg.getAtomicPropositions(finalNode);
-                    boolean satisfiesAllAPs = true;
-                    for (AP ap : atomicProposition) {
-                        if (!finalNodeAPs.contains(ap)) {
-                            satisfiesAllAPs = false;
-                            break;
-                        }
-                    }
-                    if (satisfiesAllAPs) {
+                    if(finalNodeAPs.containsAll(atomicPropositions)) {
                         satisfiedVariables.add(node.getVarNumber());
                     }
                 } else if (node instanceof BoxNode) {
