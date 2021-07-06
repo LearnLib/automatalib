@@ -24,7 +24,7 @@ public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, A
 
     private BooleanVectorLogicDDManager ddManager;
 
-    SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps) {
+    public SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps) {
         super(mcfps);
     }
 

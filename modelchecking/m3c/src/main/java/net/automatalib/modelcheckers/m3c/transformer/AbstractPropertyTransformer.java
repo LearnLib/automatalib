@@ -28,7 +28,11 @@ public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTran
 
     public abstract T compose(T other);
 
-    public abstract T createUpdate(Set<AP> atomicPropositions, List<T> compositions, EquationalBlock<L, AP> currentBlock);
+    public abstract T createUpdate(Set<AP> atomicPropositions,
+                                   List<T> compositions,
+                                   EquationalBlock<L, AP> currentBlock);
+
+    public abstract T copy();
 
     public boolean isMust() {
         return isMust;

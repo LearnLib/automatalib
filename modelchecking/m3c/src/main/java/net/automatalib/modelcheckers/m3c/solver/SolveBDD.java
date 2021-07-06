@@ -24,7 +24,7 @@ public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, A
 
     private BDDManager bddManager;
 
-    SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps) {
+    public SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps) {
         super(mcfps);
     }
 

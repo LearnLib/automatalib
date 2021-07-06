@@ -94,12 +94,12 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         while (true) {
             boolean workSetIsEmpty = true;
             for (Entry<L, BitSet> entry : workSet.entrySet()) {
-                BitSet mpgWorkSet = entry.getValue();
+                final BitSet mpgWorkSet = entry.getValue();
                 if (!mpgWorkSet.isEmpty()) {
                     workSetIsEmpty = false;
-                    int nodeId = mpgWorkSet.nextSetBit(0);
-                    L mpgLabel = entry.getKey();
-                    updateState(nodeId, mpgLabel);
+                    final int nodeId = mpgWorkSet.nextSetBit(0);
+                    final L mpgLabel = entry.getKey();
+                    updatedStateAndGetCompositions(nodeId, mpgLabel);
                 }
             }
             if (workSetIsEmpty) {
@@ -110,7 +110,78 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         return isSat();
     }
 
-    public void initialize() {
+    public SolverHistory<T, L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
+        this.ast = ctlToMuCalc(formula);
+        this.ast = this.ast.toNNF();
+
+        initialize();
+        //TODO: write tests
+        final List<SolverState<T, L, AP>> solverStates = new ArrayList<>();
+        final SolverState<T, L, AP> initialSolverState =
+                new SolverState<>(getPropTransformersCopy(), getWorkSetCopy(), computeSatisfiedSubformulas());
+        solverStates.add(initialSolverState);
+
+        while (true) {
+            boolean workSetIsEmpty = true;
+            for (Entry<L, BitSet> entry : workSet.entrySet()) {
+                final BitSet mpgWorkSet = entry.getValue();
+                if (!mpgWorkSet.isEmpty()) {
+                    workSetIsEmpty = false;
+                    final int nodeId = mpgWorkSet.nextSetBit(0);
+                    final L mpgLabel = entry.getKey();
+                    final List<T> compositions = updatedStateAndGetCompositions(nodeId, mpgLabel);
+                    final SolverState<T, L, AP> currentSolverState = new SolverState<>(getPropTransformersCopy(),
+                                                                                       compositions,
+                                                                                       nodeId,
+                                                                                       mpgLabel,
+                                                                                       getWorkSetCopy(),
+                                                                                       computeSatisfiedSubformulas());
+                    solverStates.add(currentSolverState);
+                }
+            }
+            if (workSetIsEmpty) {
+                break;
+            }
+        }
+        return new SolverHistory<>(nodeIDs, mustTransformers, mayTransformers, solverStates);
+    }
+
+    private Map<L, List<T>> getPropTransformersCopy() {
+        //TODO: only create copy of updated state
+        Map<L, List<T>> propTransformersCopy = Maps.newHashMapWithExpectedSize(propTransformers.size());
+        for (Map.Entry<L, List<T>> mpgPropTransformers : propTransformers.entrySet()) {
+            List<T> propTransformerCopies = new ArrayList<>(mpgPropTransformers.getValue().size());
+            for (T propTransformer : mpgPropTransformers.getValue()) {
+                propTransformerCopies.add(propTransformer.copy());
+            }
+            propTransformersCopy.put(mpgPropTransformers.getKey(), propTransformerCopies);
+        }
+        return propTransformersCopy;
+    }
+
+    private Map<L, BitSet> getWorkSetCopy() {
+        Map<L, BitSet> workSetCopy = new HashMap<>();
+        for (Map.Entry<L, BitSet> mpgWorkSet : workSet.entrySet()) {
+            workSetCopy.put(mpgWorkSet.getKey(), (BitSet) mpgWorkSet.getValue().clone());
+        }
+        return workSetCopy;
+    }
+
+    private Map<L, List<List<FormulaNode<L, AP>>>> computeSatisfiedSubformulas() {
+        Map<L, List<List<FormulaNode<L, AP>>>> satisfiedSubformulas = new HashMap<>();
+        for (Map.Entry<L, ModalProcessGraph<?, L, ?, AP, ?>> mpgLabelAndMpg : mcfps.getMPGs().entrySet()) {
+            L mpgLabel = mpgLabelAndMpg.getKey();
+            ModalProcessGraph<?, L, ?, AP, ?> mpg = mpgLabelAndMpg.getValue();
+            List<List<FormulaNode<L, AP>>> mpgSatisfiedSubformulas = new ArrayList<>();
+            for (int nodeId = 0; nodeId < mpg.size(); nodeId++) {
+                mpgSatisfiedSubformulas.add(getSatisfiedSubformulas(nodeId, mpgLabel));
+            }
+            satisfiedSubformulas.put(mpgLabel, mpgSatisfiedSubformulas);
+        }
+        return satisfiedSubformulas;
+    }
+
+    private void initialize() {
         this.workSet = Maps.newHashMapWithExpectedSize(mcfps.getMPGs().size());
         this.dependGraph = new DependencyGraph<>(ast);
         this.propTransformers = Maps.newHashMapWithExpectedSize(mcfps.getMPGs().size());
@@ -258,7 +329,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
                 } else if (node instanceof AtomicNode) {
                     Set<AP> atomicPropositions = ((AtomicNode<L, AP>) node).getPropositions();
                     Set<AP> finalNodeAPs = mainMpg.getAtomicPropositions(finalNode);
-                    if(finalNodeAPs.containsAll(atomicPropositions)) {
+                    if (finalNodeAPs.containsAll(atomicPropositions)) {
                         satisfiedVariables.add(node.getVarNumber());
                     }
                 } else if (node instanceof BoxNode) {
@@ -282,12 +353,14 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         return satisfiedVariables;
     }
 
-    private void updateState(int nodeId, L mpgLabel) {
+    private List<T> updatedStateAndGetCompositions(int nodeId, L mpgLabel) {
         initUpdate(nodeId, mpgLabel);
         T stateTransformer = getTransformer(mpgLabel, nodeId);
         ModalProcessGraph<?, L, ?, AP, ?> mpg = mcfps.getMPGs().get(mpgLabel);
-        T updatedTransformer = getUpdatedPropertyTransformer(nodeId, mpgLabel, stateTransformer, mpg);
+        List<T> compositions = createCompositions(nodeId, mpgLabel, mpg);
+        T updatedTransformer = getUpdatedPropertyTransformer(nodeId, mpgLabel, stateTransformer, mpg, compositions);
         updateTransformerAndWorkSet(nodeId, mpgLabel, stateTransformer, updatedTransformer);
+        return compositions;
     }
 
     private void updateTransformerAndWorkSet(int nodeId, L mpgLabel, T stateTransformer, T updatedTransformer) {
@@ -320,7 +393,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
     private void addPredecessorsToWorkSet(int nodeId, L mpgId) {
         for (Integer predecessorId : predecessors.get(mpgId).getOrDefault(nodeId, new HashSet<>())) {
-            workSet.get(mpgId).set(predecessorId, true);
+            addToWorkSet(mpgId, predecessorId);
         }
     }
 
@@ -337,7 +410,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
             for (E outgoingEdge : mpg.getOutgoingEdges(node)) {
                 if (mpg.getEdgeLabel(outgoingEdge).equals(mpgLabelOfUpdatedProcess)) {
                     int nodeId = getNodeId(mpgLabel, node);
-                    workSet.get(mpgLabel).set(nodeId, true);
+                    addToWorkSet(mpgLabel, nodeId);
                 }
             }
         }
@@ -395,8 +468,8 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     private T getUpdatedPropertyTransformer(int nodeId,
                                             L mpgLabel,
                                             T stateTransformer,
-                                            ModalProcessGraph<?, L, ?, AP, ?> mpg) {
-        List<T> compositions = createCompositions(nodeId, mpgLabel, mpg);
+                                            ModalProcessGraph<?, L, ?, AP, ?> mpg,
+                                            List<T> compositions) {
         EquationalBlock<L, AP> currentBlock = dependGraph.getBlock(currentBlockIndex);
         Set<AP> atomicPropositions = mpg.getAtomicPropositions(getNode(mpgLabel, nodeId));
         return stateTransformer.createUpdate(atomicPropositions, compositions, currentBlock);
@@ -419,6 +492,10 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
     private T getTransformer(L mpgLabel, int nodeId) {
         return propTransformers.get(mpgLabel).get(nodeId);
+    }
+
+    private void addToWorkSet(L mpgId, int nodeId) {
+        workSet.get(mpgId).set(nodeId, true);
     }
 
 }

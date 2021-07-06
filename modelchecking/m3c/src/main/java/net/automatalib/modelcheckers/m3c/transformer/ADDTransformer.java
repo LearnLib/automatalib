@@ -166,6 +166,11 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         return new ADDTransformer<>(xddManager, updatedADD);
     }
 
+    @Override
+    public ADDTransformer<L, AP> copy() {
+        return new ADDTransformer<>(xddManager, new XDD<>(add.ptr(), xddManager));
+    }
+
     public XDD<BooleanVector> getAdd() {
         return add;
     }

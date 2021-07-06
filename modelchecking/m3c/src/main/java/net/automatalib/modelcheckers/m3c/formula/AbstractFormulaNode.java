@@ -55,11 +55,6 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
     }
 
     @Override
-    public int getVarNumberRight() {
-        return rightChild.getVarNumber();
-    }
-
-    @Override
     public int getVarNumber() {
         return varNumber;
     }
@@ -67,6 +62,11 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
     @Override
     public void setVarNumber(int varNumber) {
         this.varNumber = varNumber;
+    }
+
+    @Override
+    public int getVarNumberRight() {
+        return rightChild.getVarNumber();
     }
 
     @Override
