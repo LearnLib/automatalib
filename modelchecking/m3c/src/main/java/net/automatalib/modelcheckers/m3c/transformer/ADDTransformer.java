@@ -152,17 +152,20 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     public ADDTransformer<L, AP> createUpdate(Set<AP> atomicPropositions,
                                               List<ADDTransformer<L, AP>> compositions,
                                               EquationalBlock<L, AP> currentBlock) {
-        XDD<BooleanVector> updatedADD = null;
+        XDD<BooleanVector> updatedADD;
         DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
-        if (compositions.size() == 1) {
+        if (compositions.isEmpty()) {
+            updatedADD = this.add;
+        } else if (compositions.size() == 1) {
             ADDTransformer<L, AP> succ = compositions.get(0);
             updatedADD = succ.getAdd().apply(diamondOp, succ.getAdd());
-        } else if (compositions.size() > 1) {
+        } else {
             updatedADD = compositions.get(0).getAdd();
             for (int i = 1; i < compositions.size(); i++) {
                 updatedADD = compositions.get(i).getAdd().apply(diamondOp, updatedADD);
             }
         }
+
         return new ADDTransformer<>(xddManager, updatedADD);
     }
 

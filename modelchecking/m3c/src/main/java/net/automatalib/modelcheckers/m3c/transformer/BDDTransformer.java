@@ -138,7 +138,7 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     @Override
     public BDDTransformer<L, AP> copy() {
         BDD[] bddCopies = new BDD[bdds.length];
-        for(int i = 0; i < bdds.length; i++) {
+        for (int i = 0; i < bdds.length; i++) {
             bddCopies[i] = new BDD(bdds[i].ptr(), bddManager);
         }
         return new BDDTransformer<>(bddManager, bddCopies);

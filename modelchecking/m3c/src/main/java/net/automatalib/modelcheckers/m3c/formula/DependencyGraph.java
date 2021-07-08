@@ -26,7 +26,7 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
-public class DependencyGraph<L, AP> {
+public final class DependencyGraph<L, AP> {
 
     /* All formulaNodes except FixedPoint- and VariableNode */
     private final List<FormulaNode<L, AP>> formulaNodes;
@@ -37,14 +37,14 @@ public class DependencyGraph<L, AP> {
     /* nu X1 -> fixedPointVarMap.get("X1") returns the node associated to nu X1 */
     private final Map<String, FormulaNode<L, AP>> fixedPointVarMap;
     private final FormulaNode<L, AP> ast;
-    private int numVars;
+    private final int numVars;
 
     public DependencyGraph(FormulaNode<L, AP> root) {
         this.formulaNodes = new ArrayList<>();
         this.blocks = new ArrayList<>();
         this.fixedPointVarMap = new HashMap<>();
         this.ast = root.toNNF();
-        setVarNumbers(ast);
+        this.numVars = setVarNumbers(ast, 0);
         createEquationalBlocks(ast);
     }
 
@@ -99,10 +99,6 @@ public class DependencyGraph<L, AP> {
         }
     }
 
-    private void setVarNumbers(FormulaNode<L, AP> root) {
-        this.numVars = setVarNumbers(root, 0);
-    }
-
     private int setVarNumbers(FormulaNode<L, AP> node, int varNumber) {
         /* Fill fixedPointVarMap */
         if (node instanceof AbstractFixedPointFormulaNode) {
@@ -114,6 +110,7 @@ public class DependencyGraph<L, AP> {
             /* VariableNode has same variableNumber as the fixed point it references */
             String refVariable = ((VariableNode<L, AP>) node).getVariable();
             FormulaNode<L, AP> refNode = fixedPointVarMap.get(refVariable);
+            assert refNode != null : "Cannot reference unknown variable"; // validated by the parser
             node.setVarNumber(refNode.getVarNumber());
         } else {
             node.setVarNumber(varNumber);
