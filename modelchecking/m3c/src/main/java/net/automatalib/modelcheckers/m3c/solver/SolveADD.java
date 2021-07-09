@@ -17,6 +17,7 @@ package net.automatalib.modelcheckers.m3c.solver;
 
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
+import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
@@ -29,24 +30,29 @@ public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, A
     }
 
     @Override
-    protected void initDDManager() {
-        this.ddManager = new BooleanVectorLogicDDManager(dependGraph.getNumVariables());
+    protected void initDDManager(DependencyGraph<L, AP> dependencyGraph) {
+        this.ddManager = new BooleanVectorLogicDDManager(dependencyGraph.getNumVariables());
     }
 
     @Override
-    protected ADDTransformer<L, AP> createInitTransformerEnd() {
-        return new ADDTransformer<>(ddManager, dependGraph.getNumVariables());
+    protected ADDTransformer<L, AP> createInitTransformerEnd(DependencyGraph<L, AP> dependencyGraph) {
+        return new ADDTransformer<>(ddManager, dependencyGraph.getNumVariables());
     }
 
     @Override
-    protected ADDTransformer<L, AP> createInitState() {
-        return new ADDTransformer<>(ddManager, dependGraph);
+    protected ADDTransformer<L, AP> createInitState(DependencyGraph<L, AP> dependencyGraph) {
+        return new ADDTransformer<>(ddManager, dependencyGraph);
     }
 
     @Override
-    protected <TP extends ModalEdgeProperty> ADDTransformer<L, AP> createInitTransformerEdge(L edgeLabel,
+    protected <TP extends ModalEdgeProperty> ADDTransformer<L, AP> createInitTransformerEdge(DependencyGraph<L, AP> dependencyGraph,
+                                                                                             L edgeLabel,
                                                                                              TP edgeProperty) {
-        return new ADDTransformer<>(ddManager, edgeLabel, edgeProperty, dependGraph);
+        return new ADDTransformer<>(ddManager, edgeLabel, edgeProperty, dependencyGraph);
     }
 
+    @Override
+    protected void shutdownDDManager() {
+        this.ddManager.quit();
+    }
 }

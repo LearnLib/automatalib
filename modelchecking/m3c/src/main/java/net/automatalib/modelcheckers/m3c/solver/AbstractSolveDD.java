@@ -15,16 +15,16 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Queue;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
@@ -32,6 +32,7 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.graphs.ModalProcessGraph;
+import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
@@ -56,7 +57,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     private final @KeyFor("workUnits") L mainProcess;
 
     // Attributes that change for each formula
-    protected DependencyGraph<L, AP> dependGraph;
+    private DependencyGraph<L, AP> dependencyGraph;
     private int currentBlockIndex;
 
     // Per-procedure attributes
@@ -93,13 +94,24 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
     public boolean solve(FormulaNode<L, AP> formula) {
         this.solveInternal(formula, false, Collections.emptyList());
-        return isSat();
+
+        final boolean sat = isSat();
+        shutdownDDManager();
+        return sat;
     }
 
     public SolverHistory<T, L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
         final List<SolverState<T, L, AP>> history = new ArrayList<>();
         this.solveInternal(formula, true, history);
-        return new SolverHistory<>(Collections.emptyMap(), mustTransformers, mayTransformers, history);
+
+        // TODO simplify?
+        final Map<L, NodeIDs<?>> nodeIDs = Maps.newHashMapWithExpectedSize(this.workUnits.size());
+        for (Entry<L, WorkUnit<?, ?>> e : this.workUnits.entrySet()) {
+            nodeIDs.put(e.getKey(), e.getValue().mpg.nodeIDs());
+        }
+
+        shutdownDDManager();
+        return new SolverHistory<>(nodeIDs, mustTransformers, mayTransformers, history);
     }
 
     private void solveInternal(FormulaNode<L, AP> formula, boolean recordHistory, List<SolverState<T, L, AP>> history) {
@@ -107,9 +119,9 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
         initialize(ast);
 
-        //        if (recordHistory) {
-        //            history.add(new SolverState<>(getPropTransformersCopy(), getWorkSetCopy(), computeSatisfiedSubformulas()));
-        //        }
+        if (recordHistory) {
+            history.add(new SolverState<>(copyPropTransformers(), copyWorkSet(), computeSatisfiedSubformulas()));
+        }
 
         boolean workSetIsEmpty = false;
         while (!workSetIsEmpty) {
@@ -122,19 +134,23 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
     private <N> boolean solveInternal(WorkUnit<N, ?> unit, boolean recordHistory, List<SolverState<T, L, AP>> history) {
         if (!unit.workSet.isEmpty()) {
-            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            final @NonNull N node = unit.workSet.poll();
+            final Iterator<N> iter = unit.workSet.iterator();
+            final N node = iter.next();
+            iter.remove();
+
             final L mpgLabel = unit.label;
             final List<T> compositions = updatedStateAndGetCompositions(unit, node);
 
-            //            if (recordHistory) {
-            //                history.add(new SolverState<>(getPropTransformersCopy(),
-            //                                              compositions,
-            //                                              node.hashCode(), // TODO
-            //                                              mpgLabel,
-            //                                              getWorkSetCopy(),
-            //                                              computeSatisfiedSubformulas()));
-            //            }
+            if (recordHistory) {
+                //TODO: simplify?
+                int nodeId = unit.mpg.nodeIDs().getNodeId(node);
+                history.add(new SolverState<>(copyPropTransformers(),
+                                              compositions,
+                                              nodeId,
+                                              mpgLabel,
+                                              copyWorkSet(),
+                                              computeSatisfiedSubformulas()));
+            }
 
             return false;
         }
@@ -147,42 +163,79 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         return transformation.toMuCalc(ctlFormula);
     }
 
-    //    private Map<L, List<T>> getPropTransformersCopy() {
-    //        //TODO: only create copy of updated state
-    //        final Map<L, List<T>> propTransformersCopy = Maps.newHashMapWithExpectedSize(configuration.size());
-    //        for (Map.Entry<L, Config<?, ?>> entry : configuration.entrySet()) {
-    //            final List<T> propTransformers = entry.getValue().propTransformers;
-    //            final List<T> propTransformerCopies = new ArrayList<>(propTransformers.size());
-    //            for (T propTransformer : propTransformers) {
-    //                propTransformerCopies.add(propTransformer.copy());
-    //            }
-    //            propTransformersCopy.put(entry.getKey(), propTransformerCopies);
-    //        }
-    //        return propTransformersCopy;
-    //    }
-    //
-    //    private Map<L, BitSet> getWorkSetCopy() {
-    //        final Map<L, BitSet> workSetCopy = Maps.newHashMapWithExpectedSize(configuration.size());
-    //        for (Map.Entry<L, Config<?, ?>> entry : configuration.entrySet()) {
-    //            workSetCopy.put(entry.getKey(), (BitSet) entry.getValue().workSet.clone());
-    //        }
-    //        return workSetCopy;
-    //    }
-    //
-    //    private Map<L, List<List<FormulaNode<L, AP>>>> computeSatisfiedSubformulas() {
-    //        final Map<L, List<List<FormulaNode<L, AP>>>> satisfiedSubformulas =
-    //                Maps.newHashMapWithExpectedSize(configuration.size());
-    //        for (Map.Entry<L, Config<?, ?>> entry : configuration.entrySet()) {
-    //            L mpgLabel = entry.getKey();
-    //            ModalProcessGraph<?, L, ?, AP, ?> mpg = entry.getValue().mpg;
-    //            List<List<FormulaNode<L, AP>>> mpgSatisfiedSubformulas = new ArrayList<>();
-    //            for (int nodeId = 0; nodeId < mpg.size(); nodeId++) {
-    //                mpgSatisfiedSubformulas.add(getSatisfiedSubformulas(nodeId, entry.getValue()));
-    //            }
-    //            satisfiedSubformulas.put(mpgLabel, mpgSatisfiedSubformulas);
-    //        }
-    //        return satisfiedSubformulas;
-    //    }
+    private Map<L, List<T>> copyPropTransformers() {
+        final Map<L, List<T>> copy = Maps.newHashMapWithExpectedSize(workUnits.size());
+
+        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
+            copy.put(e.getKey(), copyPropTransformers(e.getValue()));
+        }
+
+        return copy;
+    }
+
+    private <N> List<T> copyPropTransformers(WorkUnit<N, ?> unit) {
+
+        final ModalProcessGraph<N, L, ?, AP, ?> mpg = unit.mpg;
+        final NodeIDs<N> nodeIDs = mpg.nodeIDs();
+
+        final List<T> result = new ArrayList<>(mpg.size());
+
+        for (int i = 0; i < mpg.size(); i++) {
+            result.add(unit.propTransformers.get(nodeIDs.getNode(i)));
+        }
+
+        return result;
+    }
+
+    private Map<L, BitSet> copyWorkSet() {
+        final Map<L, BitSet> copy = Maps.newHashMapWithExpectedSize(workUnits.size());
+
+        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
+            copy.put(e.getKey(), copyWorkSet(e.getValue()));
+        }
+
+        return copy;
+    }
+
+    private <N> BitSet copyWorkSet(WorkUnit<N, ?> unit) {
+
+        final ModalProcessGraph<N, L, ?, AP, ?> mpg = unit.mpg;
+        final NodeIDs<N> nodeIDs = mpg.nodeIDs();
+
+        final BitSet result = new BitSet(mpg.size());
+
+        for (int i = 0; i < mpg.size(); i++) {
+            if (unit.workSet.contains(nodeIDs.getNode(i))) {
+                result.set(i);
+            }
+        }
+
+        return result;
+    }
+
+    private Map<L, List<List<FormulaNode<L, AP>>>> computeSatisfiedSubformulas() {
+        final Map<L, List<List<FormulaNode<L, AP>>>> result = Maps.newHashMapWithExpectedSize(workUnits.size());
+
+        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
+            result.put(e.getKey(), computeSatisfiedSubformulas(e.getValue()));
+        }
+
+        return result;
+    }
+
+    private <N> List<List<FormulaNode<L, AP>>> computeSatisfiedSubformulas(WorkUnit<N, ?> unit) {
+
+        final ModalProcessGraph<N, L, ?, AP, ?> mpg = unit.mpg;
+        final NodeIDs<N> nodeIDs = mpg.nodeIDs();
+
+        final List<List<FormulaNode<L, AP>>> result = new ArrayList<>(mpg.size());
+
+        for (int i = 0; i < mpg.size(); i++) {
+            result.add(getSatisfiedSubformulas(unit, nodeIDs.getNode(i)));
+        }
+
+        return result;
+    }
 
     private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractSolveDD<T, L, AP> this,
                                                    L label,
@@ -212,10 +265,10 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     }
 
     private void initialize(FormulaNode<L, AP> ast) {
-        this.dependGraph = new DependencyGraph<>(ast);
-        this.currentBlockIndex = dependGraph.getBlocks().size() - 1;
+        this.dependencyGraph = new DependencyGraph<>(ast);
+        this.currentBlockIndex = dependencyGraph.getBlocks().size() - 1;
 
-        initDDManager();
+        initDDManager(this.dependencyGraph);
 
         this.mustTransformers = new HashMap<>();
         this.mayTransformers = new HashMap<>();
@@ -239,11 +292,9 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         unit.workSet = newWorkSet(unit.mpg);
     }
 
-    private <N> Queue<N> newWorkSet(ModalProcessGraph<N, L, ?, AP, ?> mpg) {
-        Queue<N> workset = new ArrayDeque<>(mpg.size());
-
+    private <N> Set<N> newWorkSet(ModalProcessGraph<N, L, ?, AP, ?> mpg) {
         // Add all states to work set except final state, which is never updated
-        workset.addAll(mpg.getNodes());
+        Set<N> workset = new HashSet<>(mpg.getNodes());
         workset.remove(mpg.getFinalNode());
 
         return workset;
@@ -255,9 +306,9 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
         for (N n : mpg) {
             if (Objects.equals(n, finalNode)) {
-                transformers.put(n, createInitTransformerEnd());
+                transformers.put(n, createInitTransformerEnd(dependencyGraph));
             } else {
-                transformers.put(n, createInitState());
+                transformers.put(n, createInitState(dependencyGraph));
             }
         }
         return (MutableMapping<N, T>) transformers; // we put a transformer for every node, so it's no longer null
@@ -286,7 +337,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     private <N> List<FormulaNode<L, AP>> getSatisfiedSubformulas(WorkUnit<N, ?> unit, N node) {
         Set<Integer> output = unit.propTransformers.get(node).evaluate(toBoolArray(getAllAPDeadlockedState()));
         List<FormulaNode<L, AP>> satisfiedSubFormulas = new ArrayList<>();
-        for (FormulaNode<L, AP> n : dependGraph.getFormulaNodes()) {
+        for (FormulaNode<L, AP> n : dependencyGraph.getFormulaNodes()) {
             if (output.contains(n.getVarNumber())) {
                 satisfiedSubFormulas.add(n);
             }
@@ -295,7 +346,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     }
 
     private boolean[] toBoolArray(Set<Integer> satisfiedVars) {
-        boolean[] arr = new boolean[dependGraph.getNumVariables()];
+        boolean[] arr = new boolean[dependencyGraph.getNumVariables()];
         for (Integer satisfiedVar : satisfiedVars) {
             arr[satisfiedVar] = true;
         }
@@ -310,8 +361,8 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         Set<Integer> satisfiedVariables = new HashSet<>();
         @SuppressWarnings("nullness") // we have checked non-nullness of final nodes in the constructor
         @NonNull N finalNode = mainMpg.getFinalNode();
-        for (int blockIdx = dependGraph.getBlocks().size() - 1; blockIdx >= 0; blockIdx--) {
-            EquationalBlock<L, AP> block = dependGraph.getBlock(blockIdx);
+        for (int blockIdx = dependencyGraph.getBlocks().size() - 1; blockIdx >= 0; blockIdx--) {
+            EquationalBlock<L, AP> block = dependencyGraph.getBlock(blockIdx);
             for (FormulaNode<L, AP> node : block.getNodes()) {
                 if (node instanceof TrueNode) {
                     satisfiedVariables.add(node.getVarNumber());
@@ -425,14 +476,14 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
                 if (mustTransformers.containsKey(edgeLabel)) {
                     edgeTransformer = mustTransformers.get(edgeLabel);
                 } else {
-                    edgeTransformer = createInitTransformerEdge(edgeLabel, mpg.getEdgeProperty(edge));
+                    edgeTransformer = createInitTransformerEdge(dependencyGraph, edgeLabel, mpg.getEdgeProperty(edge));
                     mustTransformers.put(edgeLabel, edgeTransformer);
                 }
             } else {
                 if (mayTransformers.containsKey(edgeLabel)) {
                     edgeTransformer = mayTransformers.get(edgeLabel);
                 } else {
-                    edgeTransformer = createInitTransformerEdge(edgeLabel, mpg.getEdgeProperty(edge));
+                    edgeTransformer = createInitTransformerEdge(dependencyGraph, edgeLabel, mpg.getEdgeProperty(edge));
                     mayTransformers.put(edgeLabel, edgeTransformer);
                 }
             }
@@ -455,7 +506,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     }
 
     private <N> T getUpdatedPropertyTransformer(WorkUnit<N, ?> unit, N node, T stateTransformer, List<T> compositions) {
-        EquationalBlock<L, AP> currentBlock = dependGraph.getBlock(currentBlockIndex);
+        EquationalBlock<L, AP> currentBlock = dependencyGraph.getBlock(currentBlockIndex);
         Set<AP> atomicPropositions = unit.mpg.getAtomicPropositions(node);
         return stateTransformer.createUpdate(atomicPropositions, compositions, currentBlock);
     }
@@ -482,13 +533,17 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         unit.workSet.add(node);
     }
 
-    protected abstract void initDDManager();
+    protected abstract void initDDManager(DependencyGraph<L, AP> dependencyGraph);
 
-    protected abstract T createInitTransformerEnd();
+    protected abstract T createInitTransformerEnd(DependencyGraph<L, AP> dependencyGraph);
 
-    protected abstract T createInitState();
+    protected abstract T createInitState(DependencyGraph<L, AP> dependencyGraph);
 
-    protected abstract <TP extends ModalEdgeProperty> T createInitTransformerEdge(L edgeLabel, TP edgeProperty);
+    protected abstract <TP extends ModalEdgeProperty> T createInitTransformerEdge(DependencyGraph<L, AP> dependencyGraph,
+                                                                                  L edgeLabel,
+                                                                                  TP edgeProperty);
+
+    protected abstract void shutdownDDManager();
 
     private class WorkUnit<N, E> {
 
@@ -496,7 +551,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         private final ModalProcessGraph<N, L, E, AP, ?> mpg;
         private final Mapping<N, @Nullable Set<N>> predecessors;
         private MutableMapping<N, T> propTransformers;
-        private Queue<N> workSet; // Keeps track of which state's property transformers have to be updated.
+        private Set<N> workSet; // Keeps track of which state's property transformers have to be updated.
 
         WorkUnit(L label, ModalProcessGraph<N, L, E, AP, ?> mpg, Mapping<N, @Nullable Set<N>> predecessors) {
             this.label = label;

@@ -17,6 +17,7 @@ package net.automatalib.modelcheckers.m3c.solver;
 
 import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
+import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
@@ -29,24 +30,30 @@ public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, A
     }
 
     @Override
-    protected void initDDManager() {
+    protected void initDDManager(DependencyGraph<L, AP> dependencyGraph) {
         this.bddManager = new BDDManager();
     }
 
     @Override
-    protected BDDTransformer<L, AP> createInitTransformerEnd() {
-        return new BDDTransformer<>(bddManager, dependGraph.getNumVariables());
+    protected BDDTransformer<L, AP> createInitTransformerEnd(DependencyGraph<L, AP> dependencyGraph) {
+        return new BDDTransformer<>(bddManager, dependencyGraph.getNumVariables());
     }
 
     @Override
-    protected BDDTransformer<L, AP> createInitState() {
-        return new BDDTransformer<>(bddManager, dependGraph);
+    protected BDDTransformer<L, AP> createInitState(DependencyGraph<L, AP> dependencyGraph) {
+        return new BDDTransformer<>(bddManager, dependencyGraph);
     }
 
     @Override
-    protected <TP extends ModalEdgeProperty> BDDTransformer<L, AP> createInitTransformerEdge(L edgeLabel,
+    protected <TP extends ModalEdgeProperty> BDDTransformer<L, AP> createInitTransformerEdge(DependencyGraph<L, AP> dependencyGraph,
+                                                                                             L edgeLabel,
                                                                                              TP edgeProperty) {
-        return new BDDTransformer<>(bddManager, edgeLabel, edgeProperty, dependGraph);
+        return new BDDTransformer<>(bddManager, edgeLabel, edgeProperty, dependencyGraph);
+    }
+
+    @Override
+    protected void shutdownDDManager() {
+        this.bddManager.quit();
     }
 
 }
