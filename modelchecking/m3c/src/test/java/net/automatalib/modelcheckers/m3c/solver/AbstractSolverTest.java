@@ -18,12 +18,11 @@ package net.automatalib.modelcheckers.m3c.solver;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.graphs.ModalProcessGraph;
 import net.automatalib.graphs.MutableModalProcessGraph;
+import net.automatalib.graphs.base.DefaultMCFPS;
 import net.automatalib.graphs.base.compact.CompactMPG;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
@@ -43,18 +42,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
     private static ModalContextFreeProcessSystem<String, String> getMcfps(Set<String> finalNodesAP) {
         final CompactMPG<String, String> mpg = buildMPG(new CompactMPG<>(), finalNodesAP);
 
-        return new ModalContextFreeProcessSystem<String, String>() {
-
-            @Override
-            public Map<String, ModalProcessGraph<?, String, ?, String, ?>> getMPGs() {
-                return Collections.singletonMap("P", mpg);
-            }
-
-            @Override
-            public String getMainProcess() {
-                return "P";
-            }
-        };
+        return new DefaultMCFPS<>("P", Collections.singletonMap("P", mpg));
     }
 
     private static <N, E, AP, MMPG extends MutableModalProcessGraph<N, String, E, AP, ?>> MMPG buildMPG(MMPG mpg,

@@ -23,10 +23,11 @@ import net.automatalib.automata.spa.MCFPSView;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.examples.spa.PalindromeExample;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelcheckers.m3c.solver.M3CSolvers;
+import net.automatalib.visualization.Visualization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,8 @@ public final class M3CSPAExample {
     public static void main(String[] args) throws ParseException {
         final SPA<?, Character> spa = PalindromeExample.buildSPA();
         final MCFPSView<Character> view = new MCFPSView<>(spa);
+
+        Visualization.visualize(view);
 
         //@formatter:off
         final String[] formulae = {"mu X.(<>X || <b><b>true)", // there exists a path with "bb"

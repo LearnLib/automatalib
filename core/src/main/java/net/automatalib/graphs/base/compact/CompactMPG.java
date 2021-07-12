@@ -81,7 +81,7 @@ public class CompactMPG<L, AP>
 
     @Override
     public void setNodeProperty(int node, @Nullable Set<AP> property) {
-        nodeProperties.ensureCapacity(node);
+        nodeProperties.ensureCapacity(node + 1);
         nodeProperties.array[node] = property;
     }
 

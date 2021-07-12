@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
@@ -30,6 +31,7 @@ import net.automatalib.graphs.ModalProcessGraph;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
 import net.automatalib.words.SPAAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
 
@@ -39,10 +41,11 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
     public MCFPSView(SPA<?, I> spa) {
         this.spa = spa;
 
+        final SPAAlphabet<I> spaAlphabet = spa.getInputAlphabet();
         final Map<I, DFA<?, I>> procedures = spa.getProcedures();
         this.mpgs = Maps.newHashMapWithExpectedSize(procedures.size());
         for (Entry<I, DFA<?, I>> e : procedures.entrySet()) {
-            this.mpgs.put(e.getKey(), new MPGView<>(e.getKey(), e.getValue()));
+            this.mpgs.put(e.getKey(), new MPGView<>(spaAlphabet, e.getKey(), e.getValue()));
         }
     }
 
@@ -52,53 +55,76 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
     }
 
     @Override
-    public I getMainProcess() {
+    public @Nullable I getMainProcess() {
         return this.spa.getInitialProcedure();
     }
 
-    private class MPGView<S> implements ModalProcessGraph<S, I, SPAEdge<I, S>, Void, ProceduralModalEdgeProperty> {
+    private static class MPGView<S, I>
+            implements ModalProcessGraph<S, I, SPAEdge<I, S>, Void, ProceduralModalEdgeProperty> {
 
+        private static final Object INIT;
+        private static final Object END;
+
+        static {
+            INIT = new Object() {
+
+                @Override
+                public String toString() {
+                    return "init";
+                }
+            };
+            END = new Object() {
+
+                @Override
+                public String toString() {
+                    return "end";
+                }
+            };
+
+        }
+
+        private final SPAAlphabet<I> spaAlphabet;
         private final I procedure;
         private final DFA<S, I> dfa;
+        private final S dfaInit;
 
         private final S init;
         private final S end;
-        private final List<S> nodes;
 
         // we make sure to handle 'init' and 'end' correctly
         @SuppressWarnings("unchecked")
-        MPGView(I procedure, DFA<S, I> dfa) {
+        MPGView(SPAAlphabet<I> spaAlphabet, I procedure, DFA<S, I> dfa) {
+            this.spaAlphabet = spaAlphabet;
             this.procedure = procedure;
             this.dfa = dfa;
 
-            this.init = (S) new Object();
-            this.end = (S) new Object();
-            this.nodes = new ArrayList<>(dfa.size() + 2);
-            this.nodes.add(this.init);
-            this.nodes.add(this.end);
-            this.nodes.addAll(dfa.getStates());
+            final S dfaInit = this.dfa.getInitialState();
+            if (dfaInit == null) {
+                throw new IllegalArgumentException("Empty DFAs cannot be mapped to ModalProcessGraphs");
+            }
+            this.dfaInit = dfaInit;
+
+            this.init = (S) INIT;
+            this.end = (S) END;
         }
 
         @Override
         public Collection<SPAEdge<I, S>> getOutgoingEdges(S node) {
             if (node == init) {
-                return Collections.singletonList(new SPAEdge<>(this.procedure,
-                                                               dfa.getInitialState(),
-                                                               ProceduralType.INTERNAL));
+                return Collections.singletonList(new SPAEdge<>(this.procedure, this.dfaInit, ProceduralType.INTERNAL));
             } else if (node == end) {
                 return Collections.emptyList();
             } else {
-                final SPAAlphabet<I> spaAlphabet = spa.getInputAlphabet();
-                final List<SPAEdge<I, S>> result = new ArrayList<>(spaAlphabet.size());
+                final List<SPAEdge<I, S>> result = new ArrayList<>(this.spaAlphabet.size());
 
-                for (I i : spaAlphabet.getInternalAlphabet()) {
+                for (I i : this.spaAlphabet.getInternalAlphabet()) {
                     final S succ = this.dfa.getSuccessor(node, i);
                     if (succ != null) {
                         result.add(new SPAEdge<>(i, succ, ProceduralType.INTERNAL));
                     }
                 }
 
-                for (I i : spaAlphabet.getCallAlphabet()) {
+                for (I i : this.spaAlphabet.getCallAlphabet()) {
                     final S succ = this.dfa.getSuccessor(node, i);
                     if (succ != null) {
                         result.add(new SPAEdge<>(i, succ, ProceduralType.PROCESS));
@@ -106,7 +132,7 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
                 }
 
                 if (this.dfa.isAccepting(node)) {
-                    result.add(new SPAEdge<>(spaAlphabet.getReturnSymbol(),
+                    result.add(new SPAEdge<>(this.spaAlphabet.getReturnSymbol(),
                                              this.getFinalNode(),
                                              ProceduralType.INTERNAL));
                 }
@@ -122,7 +148,11 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
 
         @Override
         public Collection<S> getNodes() {
-            return this.nodes;
+            final List<S> nodes = new ArrayList<>(dfa.size() + 2);
+            nodes.add(this.init);
+            nodes.add(this.end);
+            nodes.addAll(dfa.getStates());
+            return nodes;
         }
 
         @Override
@@ -171,6 +201,11 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
         @Override
         public ProceduralType getProceduralType() {
             return this.type;
+        }
+
+        @Override
+        public String toString() {
+            return Objects.toString(input);
         }
     }
 

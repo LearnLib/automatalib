@@ -84,6 +84,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
             workUnits.put(mpgLabel, initializeWorkUnits(mpgLabel, mpg));
         }
 
+        // TODO handle empty MCFPSs
         final L mainProcess = mcfps.getMainProcess();
         if (!workUnits.containsKey(mainProcess)) {
             throw new IllegalArgumentException("The main process has no corresponding MPG.");

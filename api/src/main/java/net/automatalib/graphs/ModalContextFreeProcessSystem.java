@@ -18,16 +18,23 @@ package net.automatalib.graphs;
 import java.util.Map;
 
 import net.automatalib.automata.concepts.FiniteRepresentation;
+import net.automatalib.graphs.concepts.GraphViewable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public interface ModalContextFreeProcessSystem<L, AP> extends FiniteRepresentation {
+public interface ModalContextFreeProcessSystem<L, AP> extends FiniteRepresentation, GraphViewable {
 
     Map<L, ModalProcessGraph<?, L, ?, AP, ?>> getMPGs();
 
-    L getMainProcess();
+    @Nullable L getMainProcess();
 
     @Override
     default int size() {
         return getMPGs().values().stream().mapToInt(ModalProcessGraph::size).sum();
     }
 
+    @Override
+    default Graph<?, ?> graphView() {
+        // explicit type specification is required by checker-framework
+        return new MCFPSGraphView<@Nullable Object, L, @Nullable Object, AP>(getMPGs());
+    }
 }
