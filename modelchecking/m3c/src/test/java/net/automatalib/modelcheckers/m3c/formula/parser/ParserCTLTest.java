@@ -15,6 +15,11 @@
  */
 package net.automatalib.modelcheckers.m3c.formula.parser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.common.collect.Sets;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
@@ -40,14 +45,17 @@ import org.testng.annotations.Test;
  */
 public class ParserCTLTest {
 
+    private final List<FormulaNode<String, String>> formulas = new ArrayList<>();
+
     @Test
-    public void baseCasesTest() {
+    public void baseCasesTest() throws ParseException {
         assertEquals("false", new FalseNode<>());
         assertEquals("true", new TrueNode<>());
         assertEquals("true && true", new AndNode<>(new TrueNode<>(), new TrueNode<>()));
         assertEquals("true || false", new OrNode<>(new TrueNode<>(), new FalseNode<>()));
         assertEquals("'a'", new AtomicNode<>("a"));
-        assertEquals("\"a\"", new AtomicNode<>("a"));
+        assertEquals("\"b\"", new AtomicNode<>("b"));
+        assertEquals("\"a,b,c\"", new AtomicNode<>(Sets.newHashSet("a", "b", "c")));
         assertEquals("AG true", new AGNode<>(new TrueNode<>()));
         assertEquals("AF true", new AFNode<>(new TrueNode<>()));
         assertEquals("A(true U false)", new AUNode<>(new TrueNode<>(), new FalseNode<>()));
@@ -67,21 +75,28 @@ public class ParserCTLTest {
         assertEquals("[c]true", new BoxNode<>("c", new TrueNode<>()));
     }
 
-    private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) {
-        try {
-            FormulaNode<String, String> actualAST = M3CParser.parse(ctlFormula);
-            Assert.assertEquals(actualAST, expectedAST);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Assert.fail();
-        }
-    }
-
     @Test
-    public void nestedFormulasTest() {
+    public void nestedFormulasTest() throws ParseException {
         assertEquals("(true && true) || (false && false)",
                      new OrNode<>(new AndNode<>(new TrueNode<>(), new TrueNode<>()),
                                   new AndNode<>(new FalseNode<>(), new FalseNode<>())));
+    }
+
+    @Test(dependsOnMethods = {"baseCasesTest", "nestedFormulasTest"})
+    public void testEqualities() {
+        for (FormulaNode<String, String> n1 : formulas) {
+            for (FormulaNode<String, String> n2 : formulas) {
+                Assert.assertEquals(n1.equals(n2), n1 == n2, "n1: " + n1 + ", n2: " + n2);
+            }
+        }
+    }
+
+    private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) throws ParseException {
+        FormulaNode<String, String> actualAST = M3CParser.parse(ctlFormula);
+        Assert.assertEquals(actualAST, expectedAST);
+        Assert.assertEquals(actualAST.hashCode(), expectedAST.hashCode());
+
+        this.formulas.add(actualAST);
     }
 
 }

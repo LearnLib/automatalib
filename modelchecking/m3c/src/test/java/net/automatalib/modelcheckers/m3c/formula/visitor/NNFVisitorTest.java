@@ -48,17 +48,10 @@ public class NNFVisitorTest {
         FormulaNode<String, String> falseNode = M3CParser.parse("! false");
         FormulaNode<String, String> nnfFalseNode = nnfVisitor.transformToNNF(falseNode);
         Assert.assertEquals(new TrueNode<>(), nnfFalseNode);
-
-        testGfp();
-        testLfp();
-        testAnd();
-        testOr();
-        testBoxNode();
-        testDiamondNode();
-        testDefaultExample();
     }
 
-    private void testGfp() throws ParseException {
+    @Test
+    void testGfp() throws ParseException {
         FormulaNode<String, String> gfpNode = M3CParser.parse("! (nu X.(false || X))");
         FormulaNode<String, String> nnfGfpNode = gfpNode.toNNF();
 
@@ -67,7 +60,8 @@ public class NNFVisitorTest {
         Assert.assertEquals(lfpNode, nnfGfpNode);
     }
 
-    private void testLfp() throws ParseException {
+    @Test
+    void testLfp() throws ParseException {
         FormulaNode<String, String> lfpNode = M3CParser.parse("! (mu X.(false || !X))");
         FormulaNode<String, String> nnfLfpNode = lfpNode.toNNF();
 
@@ -77,7 +71,8 @@ public class NNFVisitorTest {
         Assert.assertEquals(gfpNode, nnfLfpNode);
     }
 
-    private void testAnd() throws ParseException {
+    @Test
+    void testAnd() throws ParseException {
         FormulaNode<String, String> andNode = M3CParser.parse("!(<> false && true)");
         FormulaNode<String, String> nnfAndNode = andNode.toNNF();
 
@@ -86,7 +81,8 @@ public class NNFVisitorTest {
         Assert.assertEquals(orNode, nnfAndNode);
     }
 
-    private void testOr() throws ParseException {
+    @Test
+    void testOr() throws ParseException {
         FormulaNode<String, String> orNode = M3CParser.parse("!([a] false || true)");
         FormulaNode<String, String> nnfOrNode = orNode.toNNF();
 
@@ -95,7 +91,8 @@ public class NNFVisitorTest {
         Assert.assertEquals(andNode, nnfOrNode);
     }
 
-    private void testBoxNode() throws ParseException {
+    @Test
+    void testBoxNode() throws ParseException {
         FormulaNode<String, String> boxNode = M3CParser.parse("![a]true");
         FormulaNode<String, String> nnfBoxNode = boxNode.toNNF();
 
@@ -104,7 +101,8 @@ public class NNFVisitorTest {
         Assert.assertEquals(diamondNode, nnfBoxNode);
     }
 
-    private void testDiamondNode() throws ParseException {
+    @Test
+    void testDiamondNode() throws ParseException {
         FormulaNode<String, String> diamondNode = M3CParser.parse("!<a>false");
         FormulaNode<String, String> nnfDiamondNode = diamondNode.toNNF();
 
@@ -113,7 +111,8 @@ public class NNFVisitorTest {
         Assert.assertEquals(boxNode, nnfDiamondNode);
     }
 
-    private void testDefaultExample() throws ParseException {
+    @Test
+    void testDefaultExample() throws ParseException {
         FormulaNode<String, String> ast = M3CParser.parse("!(mu X.(<b><b>true || <>X))");
         FormulaNode<String, String> nnfAst = ast.toNNF();
 

@@ -15,8 +15,6 @@
  */
 package net.automatalib.modelcheckers.m3c.formula.visitor;
 
-import java.util.Collections;
-
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
@@ -32,75 +30,54 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class CTLToMuCalcTest {
 
-    private static CTLToMuCalc<String, String> transformer;
-
-    @BeforeClass
-    public static void setupParserAndTransformer() {
-        transformer = new CTLToMuCalc<>();
-    }
+    private final CTLToMuCalc<String, String> transformer = new CTLToMuCalc<>();
 
     @Test
-    void testTrue() {
+    void testTrue() throws ParseException {
         equals("true", new TrueNode<>());
     }
 
-    private void equals(String inputFormula, FormulaNode<String, String> expectedResult) {
-        FormulaNode<String, String> ctlNode = null;
-        try {
-            ctlNode = M3CParser.parse(inputFormula);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Assert.fail();
-        }
-        Assert.assertEquals(expectedResult, toMuCalc(ctlNode));
-    }
-
-    private FormulaNode<String, String> toMuCalc(FormulaNode<String, String> ctlNode) {
-        return transformer.toMuCalc(ctlNode);
-    }
-
     @Test
-    void testFalse() {
+    void testFalse() throws ParseException {
         equals("false", new FalseNode<>());
     }
 
     @Test
-    void testAtomicProposition() {
-        equals("\"p\"", new AtomicNode<>(Collections.singleton("p")));
+    void testAtomicProposition() throws ParseException {
+        equals("\"p\"", new AtomicNode<>("p"));
     }
 
     @Test
-    void testNegation() {
-        equals("!\"p\"", new NotNode<>(new AtomicNode<>(Collections.singleton("p"))));
+    void testNegation() throws ParseException {
+        equals("!\"p\"", new NotNode<>(new AtomicNode<>("p")));
     }
 
     @Test
-    void testBox() {
+    void testBox() throws ParseException {
         equals("[abc]true", new BoxNode<>("abc", new TrueNode<>()));
     }
 
     @Test
-    void testDiamond() {
+    void testDiamond() throws ParseException {
         equals("<>false", new DiamondNode<>(new FalseNode<>()));
     }
 
     @Test
-    void testOr() {
+    void testOr() throws ParseException {
         equals("\"p\" || \"q\"", new OrNode<>(new AtomicNode<>("p"), new AtomicNode<>("q")));
     }
 
     @Test
-    void testAnd() {
+    void testAnd() throws ParseException {
         equals("\"p\" && \"q\"", new AndNode<>(new AtomicNode<>("p"), new AtomicNode<>("q")));
     }
 
     @Test
-    void testAF() {
+    void testAF() throws ParseException {
         DiamondNode<String, String> diamond = new DiamondNode<>(new TrueNode<>());
         BoxNode<String, String> box = new BoxNode<>(new VariableNode<>("Z0"));
         AndNode<String, String> and = new AndNode<>(diamond, box);
@@ -109,14 +86,14 @@ public class CTLToMuCalcTest {
     }
 
     @Test
-    void testAG() {
+    void testAG() throws ParseException {
         AndNode<String, String> and = new AndNode<>(new AtomicNode<>("p"), new BoxNode<>(new VariableNode<>("Z0")));
         GfpNode<String, String> expected = new GfpNode<>("Z0", and);
         equals("AG \"p\"", expected);
     }
 
     @Test
-    void testAU() {
+    void testAU() throws ParseException {
         DiamondNode<String, String> diamond = new DiamondNode<>(new TrueNode<>());
         BoxNode<String, String> box = new BoxNode<>(new VariableNode<>("Z0"));
         AndNode<String, String> innerAnd = new AndNode<>(diamond, box);
@@ -127,7 +104,7 @@ public class CTLToMuCalcTest {
     }
 
     @Test
-    void testAWU() {
+    void testAWU() throws ParseException {
         /* A[p WU q] = !E[!q U (!p & !q)] */
         /* !E[!q U (!p & !q)] = !(mu X.((!p & !q) | (!q & <>X))) */
         NotNode<String, String> notQ = new NotNode<>(new AtomicNode<>("q"));
@@ -141,14 +118,14 @@ public class CTLToMuCalcTest {
     }
 
     @Test
-    void testEF() {
+    void testEF() throws ParseException {
         OrNode<String, String> or = new OrNode<>(new AtomicNode<>("p"), new DiamondNode<>(new VariableNode<>("Z0")));
         LfpNode<String, String> expected = new LfpNode<>("Z0", or);
         equals("EF \"p\"", expected);
     }
 
     @Test
-    void testEG() {
+    void testEG() throws ParseException {
         OrNode<String, String> or =
                 new OrNode<>(new DiamondNode<>(new VariableNode<>("Z0")), new BoxNode<>(new FalseNode<>()));
         GfpNode<String, String> expected = new GfpNode<>("Z0", new AndNode<>(new AtomicNode<>("p"), or));
@@ -156,19 +133,24 @@ public class CTLToMuCalcTest {
     }
 
     @Test
-    void testEU() {
+    void testEU() throws ParseException {
         AndNode<String, String> and = new AndNode<>(new AtomicNode<>("p"), new DiamondNode<>(new VariableNode<>("Z0")));
         LfpNode<String, String> expected = new LfpNode<>("Z0", new OrNode<>(new TrueNode<>(), and));
         equals("E(\"p\" U true)", expected);
     }
 
     @Test
-    void testEWU() {
+    void testEWU() throws ParseException {
         AndNode<String, String> and = new AndNode<>(new AtomicNode<>("p"), new DiamondNode<>(new VariableNode<>("Z0")));
         LfpNode<String, String> lfp = new LfpNode<>("Z0", new OrNode<>(new AtomicNode<>("q"), and));
         OrNode<String, String> or =
                 new OrNode<>(new DiamondNode<>(new VariableNode<>("Z1")), new BoxNode<>(new FalseNode<>()));
         GfpNode<String, String> gfp = new GfpNode<>("Z1", new AndNode<>(new AtomicNode<>("p"), or));
         equals("E(\"p\" W \"q\")", new OrNode<>(lfp, gfp));
+    }
+
+    private void equals(String inputFormula, FormulaNode<String, String> expectedResult) throws ParseException {
+        FormulaNode<String, String> ctlNode = M3CParser.parse(inputFormula);
+        Assert.assertEquals(expectedResult, transformer.toMuCalc(ctlNode));
     }
 }

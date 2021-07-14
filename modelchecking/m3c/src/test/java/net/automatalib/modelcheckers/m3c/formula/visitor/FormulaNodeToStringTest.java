@@ -24,55 +24,34 @@ import org.testng.annotations.Test;
 public class FormulaNodeToStringTest {
 
     @Test
-    void testBaseCases() {
-        testCorrectnessCTL("true");
-        testCorrectnessCTL("false");
-        testCorrectnessCTL("\"a\"");
-        testCorrectnessCTL("AF true");
-        testCorrectnessCTL("AG true");
-        testCorrectnessCTL("A(false U true)");
-        testCorrectnessCTL("A(false W true)");
-        testCorrectnessCTL("E(false U true)");
-        testCorrectnessCTL("E(false W true)");
-        testCorrectnessCTL("true || false");
-        testCorrectnessCTL("true && false");
+    void testBaseCases() throws ParseException {
+        // CTL
+        testCorrectness("true");
+        testCorrectness("false");
+        testCorrectness("!true");
+        testCorrectness("\"a,b,c\"");
+        testCorrectness("AF true");
+        testCorrectness("AG true");
+        testCorrectness("A(false U true)");
+        testCorrectness("A(false W true)");
+        testCorrectness("EF true");
+        testCorrectness("EG true");
+        testCorrectness("E(false U true)");
+        testCorrectness("E(false W true)");
+        testCorrectness("true || false");
+        testCorrectness("true && false");
 
-        testCorrectnessMuCalc("mu X.(\"a\" || <>X)");
-        testCorrectnessMuCalc("nu X.(\"a\" || <>X)");
+        // mu-calc
+        testCorrectness("mu X.(\"a\" || <>X)");
+        testCorrectness("nu X.(\"a\" || <>X)");
+        testCorrectness("mu X.(\"a\" || [b]X)");
+        testCorrectness("nu X.(\"a\" || [b]X)");
     }
 
-    private void testCorrectnessCTL(String ctlFormula) {
-        FormulaNode<String, String> ast = null;
-        try {
-            ast = M3CParser.parse(ctlFormula);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    private void testCorrectness(String formula) throws ParseException {
+        FormulaNode<String, String> ast = M3CParser.parse(formula);
         String astToString = ast.toString();
-        FormulaNode<String, String> backToAst = null;
-        try {
-            backToAst = M3CParser.parse(astToString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        FormulaNode<String, String> backToAst = M3CParser.parse(astToString);
         Assert.assertEquals(ast, backToAst);
     }
-
-    private void testCorrectnessMuCalc(String muCalcFormula) {
-        FormulaNode<String, String> ast = null;
-        try {
-            ast = M3CParser.parse(muCalcFormula);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        String astToString = ast.toString();
-        FormulaNode<String, String> backToAst = null;
-        try {
-            backToAst = M3CParser.parse(astToString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Assert.assertEquals(ast, backToAst);
-    }
-
 }

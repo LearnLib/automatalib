@@ -15,6 +15,10 @@
  */
 package net.automatalib.modelcheckers.m3c.formula.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Sets;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
@@ -32,14 +36,17 @@ import org.testng.annotations.Test;
 
 public class ParserMuCalcTest {
 
+    private final List<FormulaNode<String, String>> formulas = new ArrayList<>();
+
     @Test
-    public void testBaseCases() {
+    public void testBaseCases() throws ParseException {
         assertEquals("false", new FalseNode<>());
         assertEquals("true", new TrueNode<>());
         assertEquals("true && true", new AndNode<>(new TrueNode<>(), new TrueNode<>()));
         assertEquals("true || false", new OrNode<>(new TrueNode<>(), new FalseNode<>()));
         assertEquals("'a'", new AtomicNode<>("a"));
-        assertEquals("\"a\"", new AtomicNode<>("a"));
+        assertEquals("\"b\"", new AtomicNode<>("b"));
+        assertEquals("\"a,b,c\"", new AtomicNode<>(Sets.newHashSet("a", "b", "c")));
         assertEquals("true -> false", new OrNode<>(new NotNode<>(new TrueNode<>()), new FalseNode<>()));
         assertEquals("true <-> false",
                      new AndNode<>(new OrNode<>(new NotNode<>(new TrueNode<>()), new FalseNode<>()),
@@ -56,7 +63,7 @@ public class ParserMuCalcTest {
     }
 
     @Test
-    public void testNestedFixPoints() {
+    public void testNestedFixPoints() throws ParseException {
         assertEquals("nu X. ([]X && mu Y. (<>Y || (\"AP\" && [] false)))",
                      new GfpNode<>("X",
                                    new AndNode<>(new BoxNode<>(new VariableNode<>("X")),
@@ -77,10 +84,10 @@ public class ParserMuCalcTest {
     }
 
     @Test
-    public void testPrecedence() {
+    public void testPrecedence() throws ParseException {
         assertEquals("true || false && true", "true || (false && true)");
         assertEquals("true -> false || true", "true -> (false || true)");
-        assertEquals("true <=> false -> true", "true <=> (false -> true)");
+        assertEquals("true <-> false -> true", "true <-> (false -> true)");
         assertEquals("!true && false", "(!true) && false");
         assertEquals("nu X.(X || true) && false", "(nu X.(X || true)) && false");
         assertEquals("mu X.(X || true) && false", "(mu X.(X || true)) && false");
@@ -91,22 +98,25 @@ public class ParserMuCalcTest {
 
     }
 
-    private void assertEquals(String muCalcFormula, FormulaNode<String, String> expectedAST) {
-        try {
-            FormulaNode<String, String> actualAST = M3CParser.parse(muCalcFormula);
-            Assert.assertEquals(actualAST, expectedAST);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Assert.fail();
+    @Test(dependsOnMethods = {"testBaseCases", "testNestedFixPoints", "testPrecedence"})
+    public void testEqualities() {
+        for (FormulaNode<String, String> n1 : formulas) {
+            for (FormulaNode<String, String> n2 : formulas) {
+                Assert.assertEquals(n1.equals(n2), n1 == n2, "n1: " + n1 + ", n2: " + n2);
+            }
         }
     }
 
-    private void assertEquals(String actualMuCalcFormula, String expectedMuCalcFormula) {
-        try {
-            Assert.assertEquals(M3CParser.parse(actualMuCalcFormula), M3CParser.parse(expectedMuCalcFormula));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    private void assertEquals(String actualMuCalcFormula, String expectedMuCalcFormula) throws ParseException {
+        assertEquals(actualMuCalcFormula, M3CParser.parse(expectedMuCalcFormula));
+    }
+
+    private void assertEquals(String muCalcFormula, FormulaNode<String, String> expectedAST) throws ParseException {
+        FormulaNode<String, String> actualAST = M3CParser.parse(muCalcFormula);
+        Assert.assertEquals(actualAST, expectedAST);
+        Assert.assertEquals(actualAST.hashCode(), expectedAST.hashCode());
+
+        this.formulas.add(actualAST);
     }
 
 }
