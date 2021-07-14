@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.m3c.transformer;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -165,21 +164,14 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         } else if (node instanceof NotNode) {
             result = bdds[node.getVarNumberLeft()].not();
         } else if (node instanceof AtomicNode) {
-            Set<AP> atomicProp = ((AtomicNode<L, AP>) node).getPropositions();
-            boolean satisfiesAtomicProp = false;
-            for (AP ap : atomicPropositions) {
-                if (Objects.equals(ap, atomicProp)) {
-                    satisfiesAtomicProp = true;
-                    break;
-                }
-            }
-            if (satisfiesAtomicProp) {
+            final Set<AP> atomicProp = ((AtomicNode<L, AP>) node).getPropositions();
+            if (atomicPropositions.containsAll(atomicProp)) {
                 result = bddManager.readOne();
             } else {
                 result = bddManager.readLogicZero();
             }
         } else {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException();
         }
         updatedBDDs[varIdx] = result;
     }
@@ -191,11 +183,6 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     public BDD orBddList(List<BDDTransformer<L, AP>> compositions, int var) {
-        for (BDDTransformer<L, AP> comp : compositions) {
-            if (!comp.isMust()) {
-                throw new IllegalArgumentException("");
-            }
-        }
         /* Disjunction over the var-th BDDs of compositions */
         Optional<BDD> result =
                 compositions.stream().filter(BDDTransformer::isMust).map(comp -> comp.getBDD(var)).reduce(BDD::or);

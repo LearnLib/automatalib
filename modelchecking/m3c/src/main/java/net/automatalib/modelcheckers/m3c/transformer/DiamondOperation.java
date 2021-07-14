@@ -66,15 +66,8 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
                 result[currentVar] = !result[node.getVarNumberLeft()];
             } else if (node instanceof AtomicNode) {
                 @SuppressWarnings("unchecked")
-                Set<AP> prop = ((AtomicNode<?, AP>) node).getPropositions();
-                boolean satisfiesAtomicPropositions = false;
-                for (AP ap : atomicPropositions) {
-                    if (Objects.equals(ap, prop)) {
-                        satisfiesAtomicPropositions = true;
-                        break;
-                    }
-                }
-                result[currentVar] = satisfiesAtomicPropositions;
+                final Set<AP> prop = ((AtomicNode<?, AP>) node).getPropositions();
+                result[currentVar] = atomicPropositions.containsAll(prop);
             }
         }
         return new BooleanVector(result);
