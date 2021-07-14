@@ -15,7 +15,6 @@
  */
 package net.automatalib.modelcheckers.m3c.transformer;
 
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.BinaryOperator;
 

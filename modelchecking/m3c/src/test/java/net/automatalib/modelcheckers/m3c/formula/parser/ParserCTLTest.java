@@ -16,7 +16,6 @@
 package net.automatalib.modelcheckers.m3c.formula.parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.Sets;
@@ -89,6 +88,12 @@ public class ParserCTLTest {
                 Assert.assertEquals(n1.equals(n2), n1 == n2, "n1: " + n1 + ", n2: " + n2);
             }
         }
+    }
+
+    @Test
+    public void testIllegalFormulas() throws ParseException {
+        Assert.assertNotEquals(M3CParser.parse("true <=> false -> true"), new TrueNode<>());
+        Assert.assertNotEquals(M3CParser.parse("true <=> (false -> true)"), new TrueNode<>());
     }
 
     private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) throws ParseException {
