@@ -42,18 +42,17 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
 
     @Override
     public BooleanVector apply(BooleanVector left, BooleanVector right) {
-        boolean[] result = left.data().clone();
+        final boolean[] result = left.data().clone();
         for (FormulaNode<?, AP> node : block.getNodes()) {
-            int currentVar = node.getVarNumber();
+            final int currentVar = node.getVarNumber();
             if (node instanceof BoxNode) {
                 result[currentVar] = result[currentVar] && right.data()[currentVar];
             } else if (node instanceof DiamondNode) {
                 result[currentVar] = result[currentVar] || right.data()[currentVar];
             } else if (node instanceof AbstractBinaryFormulaNode) {
-                @SuppressWarnings("unchecked")
-                final AbstractBinaryFormulaNode<?, AP> binaryNode = (AbstractBinaryFormulaNode<?, AP>) node;
-                int xj1 = binaryNode.getVarNumberLeft();
-                int xj2 = binaryNode.getVarNumberRight();
+                final AbstractBinaryFormulaNode<?, ?> binaryNode = (AbstractBinaryFormulaNode<?, ?>) node;
+                final int xj1 = binaryNode.getVarNumberLeft();
+                final int xj2 = binaryNode.getVarNumberRight();
                 if (binaryNode instanceof AndNode) {
                     result[currentVar] = result[xj1] && result[xj2];
                 } else {
@@ -64,8 +63,7 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
             } else if (node instanceof FalseNode) {
                 result[currentVar] = false;
             } else if (node instanceof NotNode) {
-                @SuppressWarnings("unchecked")
-                final NotNode<?, AP> notNode = (NotNode<?, AP>) node;
+                final NotNode<?, ?> notNode = (NotNode<?, ?>) node;
                 result[currentVar] = !result[notNode.getVarNumberChild()];
             } else if (node instanceof AtomicNode) {
                 @SuppressWarnings("unchecked")

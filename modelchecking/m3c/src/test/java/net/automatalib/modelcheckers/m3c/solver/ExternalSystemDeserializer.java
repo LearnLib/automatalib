@@ -33,6 +33,7 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -46,48 +47,53 @@ final class ExternalSystemDeserializer {
             throws ParserConfigurationException, IOException, SAXException {
 
         final Map<String, Integer> idToNode = new HashMap<>();
-        final CompactMPG<String, AP> mpg = new CompactMPG<>();
+        final CompactMPG<String, AP> mpg = new CompactMPG<>("");
 
         final Element root = getRoot(is);
 
-        final Element statesElement = (Element) root.getElementsByTagName("states").item(0);
+        final Element statesElement = getFirstElementByTagName(root, "states");
         final NodeList states = statesElement.getElementsByTagName("state");
         for (int i = 0; i < states.getLength(); i++) {
-            Element state = (Element) states.item(i);
+            final Element state = (Element) states.item(i);
             addNode(mpg, state, idToNode);
         }
 
-        Element transitionsElement = (Element) root.getElementsByTagName("transitions").item(0);
-        NodeList transitions = transitionsElement.getElementsByTagName("transition");
+        final Element transitionsElement = getFirstElementByTagName(root, "transitions");
+        final NodeList transitions = transitionsElement.getElementsByTagName("transition");
         for (int i = 0; i < transitions.getLength(); i++) {
-            Element transition = (Element) transitions.item(i);
+            final Element transition = (Element) transitions.item(i);
             addEdge(mpg, transition, idToNode);
         }
 
         return new DefaultMCFPS<>("main", Collections.singletonMap("main", mpg));
     }
 
-    private static Element getRoot(InputStream is)
-            throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(is);
+    private static Element getRoot(InputStream is) throws ParserConfigurationException, IOException, SAXException {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilder builder = factory.newDocumentBuilder();
+        final Document document = builder.parse(is);
         return document.getDocumentElement();
+    }
+
+    private static Element getFirstElementByTagName(Element elem, String tagName) {
+        final Node node = elem.getElementsByTagName(tagName).item(0);
+        assert node != null;
+        return (Element) node;
     }
 
     private static <N> void addNode(MutableModalProcessGraph<N, String, ?, ?, ?> mpg,
                                     Element state,
                                     Map<String, N> idToNode) {
 
-        final String id = state.getElementsByTagName("id").item(0).getTextContent();
-        final Element attributes = (Element) state.getElementsByTagName("attributes").item(0);
-        boolean isInitial = attributes.getElementsByTagName("isInitial").item(0).getTextContent().equals("true");
+        final String id = getFirstElementByTagName(state, "id").getTextContent();
+        final Element attributes = getFirstElementByTagName(state, "attributes");
+        boolean isInitial = "true".equals(getFirstElementByTagName(attributes, "isInitial").getTextContent());
 
         final N node = mpg.addNode(Collections.emptySet());
 
         if (isInitial) {
             mpg.setInitialNode(node);
-        } else if (id.equals("end")) {
+        } else if ("end".equals(id)) {
             mpg.setFinalNode(node);
         }
 
@@ -97,16 +103,16 @@ final class ExternalSystemDeserializer {
     private static <N, E> void addEdge(MutableModalProcessGraph<N, String, E, ?, ? extends MutableProceduralModalEdgeProperty> mpg,
                                        Element transition,
                                        Map<String, N> idToNode) {
-        final String sourceId = transition.getElementsByTagName("sourceId").item(0).getTextContent();
-        final String targetId = transition.getElementsByTagName("targetId").item(0).getTextContent();
-        final String label = transition.getElementsByTagName("label").item(0).getTextContent();
+        final String sourceId = getFirstElementByTagName(transition, "sourceId").getTextContent();
+        final String targetId = getFirstElementByTagName(transition, "targetId").getTextContent();
+        final String label = getFirstElementByTagName(transition, "label").getTextContent();
 
-        final Element attributesElement = (Element) transition.getElementsByTagName("attributes").item(0);
-        final String isMust = attributesElement.getElementsByTagName("isMust").item(0).getTextContent();
+        final Element attributesElement = getFirstElementByTagName(transition, "attributes");
+        final String isMust = getFirstElementByTagName(attributesElement, "isMust").getTextContent();
 
         final E edge = mpg.connect(idToNode.get(sourceId), idToNode.get(targetId));
         mpg.getEdgeProperty(edge).setInternal();
-        mpg.getEdgeProperty(edge).setModalType(isMust.equals("true") ? ModalType.MUST : ModalType.MAY);
+        mpg.getEdgeProperty(edge).setModalType("true".equals(isMust) ? ModalType.MUST : ModalType.MAY);
         mpg.setEdgeLabel(edge, label);
     }
 

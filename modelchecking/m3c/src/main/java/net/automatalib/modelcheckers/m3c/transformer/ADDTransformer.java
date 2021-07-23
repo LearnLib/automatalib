@@ -56,7 +56,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     public ADDTransformer(BooleanVectorLogicDDManager xddManager, DependencyGraph<L, AP> dependGraph) {
         super();
         this.xddManager = xddManager;
-        boolean[] terminal = new boolean[dependGraph.getNumVariables()];
+        final boolean[] terminal = new boolean[dependGraph.getNumVariables()];
         for (EquationalBlock<L, AP> block : dependGraph.getBlocks()) {
             if (block.isMaxBlock()) {
                 for (FormulaNode<L, AP> node : block.getNodes()) {
@@ -71,11 +71,11 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     public ADDTransformer(BooleanVectorLogicDDManager ddManager, int numberOfVars) {
         super();
         this.xddManager = ddManager;
-        boolean[] falseArr = new boolean[numberOfVars];
+        final boolean[] falseArr = new boolean[numberOfVars];
         boolean[] trueArr = new boolean[numberOfVars];
         trueArr[0] = true;
-        BooleanVector booleanVector = new BooleanVector(falseArr);
-        XDD<BooleanVector> falseDD = xddManager.constant(booleanVector);
+        final BooleanVector booleanVector = new BooleanVector(falseArr);
+        final XDD<BooleanVector> falseDD = xddManager.constant(booleanVector);
         XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(trueArr));
         XDD<BooleanVector> tmpADD = xddManager.ithVar(0, thenDD, falseDD);
         thenDD.recursiveDeref();
@@ -85,7 +85,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
             trueArr[i] = true;
 
             thenDD = xddManager.constant(new BooleanVector(trueArr));
-            XDD<BooleanVector> proj = xddManager.ithVar(i, thenDD, falseDD);
+            final XDD<BooleanVector> proj = xddManager.ithVar(i, thenDD, falseDD);
 
             tmpADD = tmpADD.apply(BooleanVector::or, proj);
 
@@ -103,10 +103,10 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                                                          DependencyGraph<L, AP> dependGraph) {
         //        super(edgeProperty.isMust());
         this.xddManager = xddManager;
-        List<XDD<BooleanVector>> list = new ArrayList<>();
+        final List<XDD<BooleanVector>> list = new ArrayList<>();
         for (FormulaNode<L, AP> node : dependGraph.getFormulaNodes()) {
-            boolean[] terminal = new boolean[dependGraph.getNumVariables()];
-            XDD<BooleanVector> falseDD = xddManager.constant(new BooleanVector(terminal));
+            final boolean[] terminal = new boolean[dependGraph.getNumVariables()];
+            final XDD<BooleanVector> falseDD = xddManager.constant(new BooleanVector(terminal));
             if (node instanceof AbstractModalFormulaNode) {
                 final AbstractModalFormulaNode<L, AP> modalNode = (AbstractModalFormulaNode<L, AP>) node;
                 final L action = modalNode.getAction();
@@ -114,8 +114,8 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                     (!(modalNode instanceof DiamondNode) || edgeProperty.isMust())) {
                     int xj = modalNode.getVarNumberChild();
                     terminal[modalNode.getVarNumber()] = true;
-                    XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(terminal));
-                    XDD<BooleanVector> id = xddManager.ithVar(xj, thenDD, falseDD);
+                    final XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(terminal));
+                    final XDD<BooleanVector> id = xddManager.ithVar(xj, thenDD, falseDD);
                     list.add(id);
                 } else if (modalNode instanceof BoxNode) {
                     terminal[modalNode.getVarNumber()] = true;
@@ -139,10 +139,10 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     @Override
     public Set<Integer> evaluate(boolean[] input) {
-        XDD<BooleanVector> resultLeaf = add.eval(input);
-        BooleanVector leafValue = resultLeaf.v();
-        boolean[] leafData = leafValue.data();
-        Set<Integer> satisfiedVars = new HashSet<>();
+        final XDD<BooleanVector> resultLeaf = add.eval(input);
+        final BooleanVector leafValue = resultLeaf.v();
+        final boolean[] leafData = leafValue.data();
+        final Set<Integer> satisfiedVars = new HashSet<>();
         for (int i = 0; i < leafData.length; i++) {
             if (leafValue.data()[i]) {
                 satisfiedVars.add(i);
@@ -153,10 +153,9 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     @Override
     public ADDTransformer<L, AP> compose(ADDTransformer<L, AP> other, boolean isMust) {
-        XDD<BooleanVector> otherAdd = other.getAdd();
-        XDD<BooleanVector> compAdd = otherAdd.monadicApply(arg -> {
+        final XDD<BooleanVector> compAdd = other.add.monadicApply(arg -> {
             boolean[] terminal = arg.data().clone();
-            return this.getAdd().eval(terminal).v();
+            return this.add.eval(terminal).v();
         });
         return new ADDTransformer<>(xddManager, compAdd, isMust);
     }
@@ -166,16 +165,16 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                                               List<ADDTransformer<L, AP>> compositions,
                                               EquationalBlock<L, AP> currentBlock) {
         XDD<BooleanVector> updatedADD;
-        DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
+        final DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
         if (compositions.isEmpty()) {
             updatedADD = this.add;
         } else if (compositions.size() == 1) {
             ADDTransformer<L, AP> succ = compositions.get(0);
-            updatedADD = succ.getAdd().apply(diamondOp, succ.getAdd());
+            updatedADD = succ.add.apply(diamondOp, succ.add);
         } else {
-            updatedADD = compositions.get(0).getAdd();
+            updatedADD = compositions.get(0).add;
             for (int i = 1; i < compositions.size(); i++) {
-                updatedADD = compositions.get(i).getAdd().apply(diamondOp, updatedADD);
+                updatedADD = compositions.get(i).add.apply(diamondOp, updatedADD);
             }
         }
 
@@ -184,7 +183,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     @Override
     public List<String> serialize() {
-        XDDSerializer<BooleanVector> xddSerializer = new XDDSerializer<>();
+        final XDDSerializer<BooleanVector> xddSerializer = new XDDSerializer<>();
         return Collections.singletonList(xddSerializer.serialize(add));
     }
 
@@ -206,7 +205,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
             return false;
         }
 
-        ADDTransformer<?, ?> that = (ADDTransformer<?, ?>) o;
+        final ADDTransformer<?, ?> that = (ADDTransformer<?, ?>) o;
 
         return Objects.equals(this.add, that.add);
     }

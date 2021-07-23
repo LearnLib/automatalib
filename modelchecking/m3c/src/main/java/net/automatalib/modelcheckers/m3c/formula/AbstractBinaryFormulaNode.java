@@ -51,8 +51,7 @@ public abstract class AbstractBinaryFormulaNode<L, AP> extends AbstractFormulaNo
             return false;
         }
 
-        @SuppressWarnings("unchecked")
-        final AbstractBinaryFormulaNode<L, AP> that = (AbstractBinaryFormulaNode<L, AP>) o;
+        final AbstractBinaryFormulaNode<?, ?> that = (AbstractBinaryFormulaNode<?, ?>) o;
 
         return this.leftChild.equals(that.leftChild) && this.rightChild.equals(that.rightChild);
     }

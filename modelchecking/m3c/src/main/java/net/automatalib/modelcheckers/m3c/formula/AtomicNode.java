@@ -65,7 +65,7 @@ public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + Objects.hashCode(propositions);
+        result = 31 * result + propositions.hashCode();
         return result;
     }
 
@@ -77,7 +77,7 @@ public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
         final AtomicNode<?, ?> that = (AtomicNode<?, ?>) o;
 
-        return Objects.equals(this.propositions, that.propositions);
+        return this.propositions.equals(that.propositions);
     }
 
 }

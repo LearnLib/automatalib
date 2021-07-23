@@ -28,7 +28,7 @@ public final class Examples {
     private Examples() {}
 
     public static ModalContextFreeProcessSystem<String, String> getMcfpsAnBn(Set<String> finalNodesAP) {
-        final CompactMPG<String, String> mpg = buildMPG(new CompactMPG<>(), finalNodesAP);
+        final CompactMPG<String, String> mpg = buildMPG(new CompactMPG<>(""), finalNodesAP);
         return new DefaultMCFPS<>("P", Collections.singletonMap("P", mpg));
     }
 

@@ -26,8 +26,8 @@ public abstract class AbstractFixedPointFormulaNode<L, AP> extends AbstractUnary
 
     private final String variable;
 
-    public AbstractFixedPointFormulaNode(String variable, FormulaNode<L, AP> leftChild) {
-        super(leftChild);
+    public AbstractFixedPointFormulaNode(String variable, FormulaNode<L, AP> child) {
+        super(child);
         this.variable = variable;
     }
 
@@ -50,7 +50,7 @@ public abstract class AbstractFixedPointFormulaNode<L, AP> extends AbstractUnary
 
         final AbstractFixedPointFormulaNode<?, ?> that = (AbstractFixedPointFormulaNode<?, ?>) o;
 
-        return Objects.equals(this.variable, that.variable);
+        return this.variable.equals(that.variable);
     }
 
     protected void printMuCalcNode(Appendable a, String fixedPoint) throws IOException {

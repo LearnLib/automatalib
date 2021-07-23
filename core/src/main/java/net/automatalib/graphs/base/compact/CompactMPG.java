@@ -31,12 +31,14 @@ public class CompactMPG<L, AP>
         implements MutableModalProcessGraph<Integer, L, CompactMPGEdge<L, MutableProceduralModalEdgeProperty>, AP, MutableProceduralModalEdgeProperty> {
 
     private final ResizingArrayStorage<@Nullable Set<AP>> nodeProperties;
+    private final L defaultLabel;
     private int initialNode;
     private int finalNode;
 
-    public CompactMPG() {
+    public CompactMPG(L defaultLabel) {
         super();
         this.nodeProperties = new ResizingArrayStorage<>(Set.class);
+        this.defaultLabel = defaultLabel;
         this.initialNode = -1;
         this.finalNode = -1;
     }
@@ -97,7 +99,7 @@ public class CompactMPG<L, AP>
             prop = property;
         }
 
-        return new CompactMPGEdge<>(target, prop, null);
+        return new CompactMPGEdge<>(target, prop, this.defaultLabel);
     }
 
     @Override

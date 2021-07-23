@@ -41,8 +41,7 @@ public abstract class AbstractUnaryFormulaNode<L, AP> extends AbstractFormulaNod
             return false;
         }
 
-        @SuppressWarnings("unchecked")
-        final AbstractUnaryFormulaNode<L, AP> that = (AbstractUnaryFormulaNode<L, AP>) o;
+        final AbstractUnaryFormulaNode<?, ?> that = (AbstractUnaryFormulaNode<?, ?>) o;
 
         return this.child.equals(that.child);
     }

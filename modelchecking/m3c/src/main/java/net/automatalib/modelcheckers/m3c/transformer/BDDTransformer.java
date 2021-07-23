@@ -113,7 +113,7 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     @Override
     public Set<Integer> evaluate(boolean[] input) {
-        Set<Integer> output = new HashSet<>();
+        final Set<Integer> output = new HashSet<>();
         for (int i = 0; i < bdds.length; i++) {
             if (bdds[i].eval(input).equals(bddManager.readOne())) {
                 output.add(i);
@@ -126,7 +126,7 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     public BDDTransformer<L, AP> compose(BDDTransformer<L, AP> other, boolean isMust) {
         final BDD[] composedBDDs = new BDD[bdds.length];
         for (int var = 0; var < bdds.length; var++) {
-            BDD composedBDD = bdds[var].vectorCompose(other.bdds);
+            final BDD composedBDD = bdds[var].vectorCompose(other.bdds);
             composedBDDs[var] = composedBDD;
         }
         return new BDDTransformer<>(bddManager, composedBDDs, isMust);
@@ -147,11 +147,11 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     @Override
     public List<String> serialize() {
-        XDDSerializer<Boolean> xddSerializer = new XDDSerializer<>();
-        List<String> serializedBDDs = new ArrayList<>();
-        BooleanLogicDDManager booleanLogicDDManager = new BooleanLogicDDManager();
+        final XDDSerializer<Boolean> xddSerializer = new XDDSerializer<>();
+        final List<String> serializedBDDs = new ArrayList<>();
+        final BooleanLogicDDManager booleanLogicDDManager = new BooleanLogicDDManager();
         for (BDD bdd : bdds) {
-            XDD<Boolean> bddAsXDD = bdd.toXDD(booleanLogicDDManager);
+            final XDD<Boolean> bddAsXDD = bdd.toXDD(booleanLogicDDManager);
             serializedBDDs.add(xddSerializer.serialize(bddAsXDD));
             bddAsXDD.recursiveDeref();
         }
@@ -162,8 +162,8 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
                                    List<BDDTransformer<L, AP>> compositions,
                                    BDD[] updatedBDDs,
                                    FormulaNode<L, AP> node) {
-        int varIdx = node.getVarNumber();
-        BDD result;
+        final int varIdx = node.getVarNumber();
+        final BDD result;
         if (node instanceof BoxNode) {
             result = andBddList(compositions, varIdx);
         } else if (node instanceof DiamondNode) {
@@ -196,13 +196,13 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
 
     public BDD andBddList(List<BDDTransformer<L, AP>> compositions, int var) {
         /* Conjunction over the var-th BDDs of compositions */
-        Optional<BDD> result = compositions.stream().map(comp -> comp.getBDD(var)).reduce(BDD::and);
+        final Optional<BDD> result = compositions.stream().map(comp -> comp.getBDD(var)).reduce(BDD::and);
         return result.orElseGet(bddManager::readOne);
     }
 
     public BDD orBddList(List<BDDTransformer<L, AP>> compositions, int var) {
         /* Disjunction over the var-th BDDs of compositions */
-        Optional<BDD> result =
+        final Optional<BDD> result =
                 compositions.stream().filter(BDDTransformer::isMust).map(comp -> comp.getBDD(var)).reduce(BDD::or);
         return result.orElseGet(bddManager::readLogicZero);
     }
@@ -229,7 +229,7 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
             return false;
         }
 
-        BDDTransformer<?, ?> that = (BDDTransformer<?, ?>) o;
+        final BDDTransformer<?, ?> that = (BDDTransformer<?, ?>) o;
 
         return Arrays.equals(this.bdds, that.bdds);
     }

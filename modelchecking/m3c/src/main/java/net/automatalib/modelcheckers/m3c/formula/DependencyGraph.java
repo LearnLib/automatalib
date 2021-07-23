@@ -56,15 +56,11 @@ public final class DependencyGraph<L, AP> {
     }
 
     private void createEquationalBlocks(FormulaNode<L, AP> root) {
-        int blockNumber = 0;
-        boolean isMax = true;
         //TODO: What do we do when root is not a FixedPointNode? -> Atm. use maxBlock?
-        if (root instanceof LfpNode) {
-            isMax = false;
-        }
+        boolean isMax = !(root instanceof LfpNode);
         EquationalBlock<L, AP> block = new EquationalBlock<>(isMax);
         blocks.add(block);
-        createEquationalBlocks(root, blockNumber);
+        createEquationalBlocks(root, 0);
         sortBlocks();
     }
 
@@ -95,9 +91,9 @@ public final class DependencyGraph<L, AP> {
             final AbstractUnaryFormulaNode<L, AP> unaryNode = (AbstractUnaryFormulaNode<L, AP>) node;
             createEquationalBlocks(unaryNode.getChild(), newBlockNumber);
         } else if (node instanceof AbstractBinaryFormulaNode) {
-            final AbstractBinaryFormulaNode<L, AP> biaryNode = (AbstractBinaryFormulaNode<L, AP>) node;
-            createEquationalBlocks(biaryNode.getLeftChild(), newBlockNumber);
-            createEquationalBlocks(biaryNode.getRightChild(), newBlockNumber);
+            final AbstractBinaryFormulaNode<L, AP> binaryNode = (AbstractBinaryFormulaNode<L, AP>) node;
+            createEquationalBlocks(binaryNode.getLeftChild(), newBlockNumber);
+            createEquationalBlocks(binaryNode.getRightChild(), newBlockNumber);
         }
     }
 

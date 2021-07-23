@@ -46,9 +46,9 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
             return false;
         }
 
-        final FormulaNode<?, ?> that = (FormulaNode<?, ?>) o;
+        final AbstractFormulaNode<?, ?> that = (AbstractFormulaNode<?, ?>) o;
 
-        return this.varNumber == that.getVarNumber();
+        return this.varNumber == that.varNumber;
     }
 
 }
