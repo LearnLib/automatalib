@@ -21,21 +21,13 @@ import net.automatalib.modelcheckers.m3c.formula.visitor.NNFVisitor;
 
 public interface FormulaNode<L, AP> extends Printable {
 
-    FormulaNode<L, AP> getLeftChild();
-
-    FormulaNode<L, AP> getRightChild();
-
     <T> T accept(FormulaNodeVisitor<T, L, AP> visitor);
 
     default FormulaNode<L, AP> toNNF() {
         return new NNFVisitor<L, AP>().transformToNNF(this);
     }
 
-    int getVarNumberLeft();
-
     int getVarNumber();
 
     void setVarNumber(int varNumber);
-
-    int getVarNumberRight();
 }

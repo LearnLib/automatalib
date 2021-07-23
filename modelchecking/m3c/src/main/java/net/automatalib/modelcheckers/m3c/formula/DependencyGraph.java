@@ -91,11 +91,13 @@ public final class DependencyGraph<L, AP> {
         }
 
         /* Recurse into subtrees */
-        if (node.getLeftChild() != null) {
-            createEquationalBlocks(node.getLeftChild(), newBlockNumber);
-        }
-        if (node.getRightChild() != null) {
-            createEquationalBlocks(node.getRightChild(), newBlockNumber);
+        if (node instanceof AbstractUnaryFormulaNode) {
+            final AbstractUnaryFormulaNode<L, AP> unaryNode = (AbstractUnaryFormulaNode<L, AP>) node;
+            createEquationalBlocks(unaryNode.getChild(), newBlockNumber);
+        } else if (node instanceof AbstractBinaryFormulaNode) {
+            final AbstractBinaryFormulaNode<L, AP> biaryNode = (AbstractBinaryFormulaNode<L, AP>) node;
+            createEquationalBlocks(biaryNode.getLeftChild(), newBlockNumber);
+            createEquationalBlocks(biaryNode.getRightChild(), newBlockNumber);
         }
     }
 
@@ -124,11 +126,13 @@ public final class DependencyGraph<L, AP> {
         }
 
         /* Recurse into subtrees */
-        if (node.getLeftChild() != null) {
-            newVarNumber = setVarNumbers(node.getLeftChild(), newVarNumber);
-        }
-        if (node.getRightChild() != null) {
-            newVarNumber = setVarNumbers(node.getRightChild(), newVarNumber);
+        if (node instanceof AbstractUnaryFormulaNode) {
+            final AbstractUnaryFormulaNode<L, AP> unaryNode = (AbstractUnaryFormulaNode<L, AP>) node;
+            newVarNumber = setVarNumbers(unaryNode.getChild(), newVarNumber);
+        } else if (node instanceof AbstractBinaryFormulaNode) {
+            final AbstractBinaryFormulaNode<L, AP> binaryNode = (AbstractBinaryFormulaNode<L, AP>) node;
+            newVarNumber = setVarNumbers(binaryNode.getLeftChild(), newVarNumber);
+            newVarNumber = setVarNumbers(binaryNode.getRightChild(), newVarNumber);
         }
 
         return newVarNumber;

@@ -59,7 +59,7 @@ public abstract class AbstractFixedPointFormulaNode<L, AP> extends AbstractUnary
         a.append(' ');
         a.append(variable);
         a.append(".(");
-        getLeftChild().print(a);
+        getChild().print(a);
         a.append("))");
     }
 

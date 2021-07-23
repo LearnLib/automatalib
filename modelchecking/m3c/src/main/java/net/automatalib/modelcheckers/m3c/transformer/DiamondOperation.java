@@ -50,9 +50,11 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
             } else if (node instanceof DiamondNode) {
                 result[currentVar] = result[currentVar] || right.data()[currentVar];
             } else if (node instanceof AbstractBinaryFormulaNode) {
-                int xj1 = node.getVarNumberLeft();
-                int xj2 = node.getVarNumberRight();
-                if (node instanceof AndNode) {
+                @SuppressWarnings("unchecked")
+                final AbstractBinaryFormulaNode<?, AP> binaryNode = (AbstractBinaryFormulaNode<?, AP>) node;
+                int xj1 = binaryNode.getVarNumberLeft();
+                int xj2 = binaryNode.getVarNumberRight();
+                if (binaryNode instanceof AndNode) {
                     result[currentVar] = result[xj1] && result[xj2];
                 } else {
                     result[currentVar] = result[xj1] || result[xj2];
@@ -62,7 +64,9 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
             } else if (node instanceof FalseNode) {
                 result[currentVar] = false;
             } else if (node instanceof NotNode) {
-                result[currentVar] = !result[node.getVarNumberLeft()];
+                @SuppressWarnings("unchecked")
+                final NotNode<?, AP> notNode = (NotNode<?, AP>) node;
+                result[currentVar] = !result[notNode.getVarNumberChild()];
             } else if (node instanceof AtomicNode) {
                 @SuppressWarnings("unchecked")
                 final Set<AP> prop = ((AtomicNode<?, AP>) node).getPropositions();

@@ -61,7 +61,7 @@ public abstract class AbstractModalFormulaNode<L, AP> extends AbstractUnaryFormu
 
         a.append(rightModalitySymbol);
         a.append(' ');
-        getLeftChild().print(a);
+        getChild().print(a);
         a.append(')');
     }
 

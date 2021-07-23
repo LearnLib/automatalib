@@ -70,12 +70,12 @@ public class NNFVisitor<L, AP> {
 
     private FormulaNode<L, AP> visitGFPNode(GfpNode<L, AP> node, boolean negate) {
         if (!negate) {
-            FormulaNode<L, AP> childNode = visit(node.getLeftChild(), false);
+            FormulaNode<L, AP> childNode = visit(node.getChild(), false);
             return new GfpNode<>(node.getVariable(), childNode);
         }
 
         varsToNegate.add(node.getVariable());
-        FormulaNode<L, AP> childNode = visit(node.getLeftChild(), true);
+        FormulaNode<L, AP> childNode = visit(node.getChild(), true);
         varsToNegate.remove(node.getVariable());
 
         return new LfpNode<>(node.getVariable(), childNode);
@@ -83,12 +83,12 @@ public class NNFVisitor<L, AP> {
 
     private FormulaNode<L, AP> visitLFPNode(LfpNode<L, AP> node, boolean negate) {
         if (!negate) {
-            FormulaNode<L, AP> childNode = visit(node.getLeftChild(), false);
+            FormulaNode<L, AP> childNode = visit(node.getChild(), false);
             return new LfpNode<>(node.getVariable(), childNode);
         }
 
         varsToNegate.add(node.getVariable());
-        FormulaNode<L, AP> childNode = visit(node.getLeftChild(), true);
+        FormulaNode<L, AP> childNode = visit(node.getChild(), true);
         varsToNegate.remove(node.getVariable());
 
         return new GfpNode<>(node.getVariable(), childNode);
@@ -107,14 +107,14 @@ public class NNFVisitor<L, AP> {
     }
 
     private FormulaNode<L, AP> visitBoxNode(BoxNode<L, AP> node, boolean negate) {
-        final FormulaNode<L, AP> childNode = visit(node.getLeftChild(), negate);
+        final FormulaNode<L, AP> childNode = visit(node.getChild(), negate);
         final L action = node.getAction();
 
         return negate ? new DiamondNode<>(action, childNode) : new BoxNode<>(action, childNode);
     }
 
     private FormulaNode<L, AP> visitDiamondNode(DiamondNode<L, AP> node, boolean negate) {
-        final FormulaNode<L, AP> childNode = visit(node.getLeftChild(), negate);
+        final FormulaNode<L, AP> childNode = visit(node.getChild(), negate);
         final L action = node.getAction();
 
         return negate ? new BoxNode<>(action, childNode) : new DiamondNode<>(action, childNode);
@@ -132,7 +132,7 @@ public class NNFVisitor<L, AP> {
     }
 
     private FormulaNode<L, AP> visitNotNode(NotNode<L, AP> node, boolean negate) {
-        return visit(node.getLeftChild(), !negate);
+        return visit(node.getChild(), !negate);
     }
 
     private FormulaNode<L, AP> visitOrNode(OrNode<L, AP> node, boolean negate) {

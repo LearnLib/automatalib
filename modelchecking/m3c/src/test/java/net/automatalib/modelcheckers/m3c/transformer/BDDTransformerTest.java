@@ -27,6 +27,7 @@ import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
+import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
@@ -47,16 +48,15 @@ public class BDDTransformerTest {
 
     @BeforeClass
     public static void setup() throws ParseException {
-        String formula = "mu X.(<b>[b]true || <>X)";
-        FormulaNode<String, String> ast = M3CParser.parse(formula);
-        dg = new DependencyGraph<>(ast);
-        ast = dg.getAST();
+        final String formula = "mu X.(<b>[b]true || <>X)";
+        dg = new DependencyGraph<>(M3CParser.parse(formula));
         bddManager = new BDDManager();
-        orNode = (OrNode<String, String>) ast.getLeftChild();
+        final LfpNode<String, String> gfpNode = (LfpNode<String, String>) dg.getAST();
+        orNode = (OrNode<String, String>) gfpNode.getChild();
         diaNode1 = (DiamondNode<String, String>) orNode.getLeftChild();
         diaNode2 = (DiamondNode<String, String>) orNode.getRightChild();
-        boxNode = (BoxNode<String, String>) diaNode1.getLeftChild();
-        trueNode = (TrueNode<String, String>) boxNode.getLeftChild();
+        boxNode = (BoxNode<String, String>) diaNode1.getChild();
+        trueNode = (TrueNode<String, String>) boxNode.getChild();
     }
 
     @Test
@@ -94,15 +94,15 @@ public class BDDTransformerTest {
         Assert.assertEquals(expectedBDDOrNode, bddOrNode);
 
         BDD bddDiaNode1 = transformer.getBDD(diaNode1.getVarNumber());
-        BDD expectedBDDDiaNode1 = bddManager.ithVar(diaNode1.getVarNumberLeft());
+        BDD expectedBDDDiaNode1 = bddManager.ithVar(diaNode1.getVarNumberChild());
         Assert.assertEquals(expectedBDDDiaNode1, bddDiaNode1);
 
         BDD bddDiaNode2 = transformer.getBDD(diaNode2.getVarNumber());
-        BDD expectedBDDDiaNode2 = bddManager.ithVar(diaNode2.getVarNumberLeft());
+        BDD expectedBDDDiaNode2 = bddManager.ithVar(diaNode2.getVarNumberChild());
         Assert.assertEquals(expectedBDDDiaNode2, bddDiaNode2);
 
         BDD bddBoxNode = transformer.getBDD(boxNode.getVarNumber());
-        BDD expectedBDDBoxNode = bddManager.ithVar(boxNode.getVarNumberLeft());
+        BDD expectedBDDBoxNode = bddManager.ithVar(boxNode.getVarNumberChild());
         Assert.assertEquals(expectedBDDBoxNode, bddBoxNode);
 
         BDD bddTrueNode = transformer.getBDD(trueNode.getVarNumber());
@@ -124,7 +124,7 @@ public class BDDTransformerTest {
         Assert.assertEquals(expectedBDDDiaNode1, bddDiaNode1);
 
         BDD bddDiaNode2 = transformer.getBDD(diaNode2.getVarNumber());
-        BDD expectedBDDDiaNode2 = bddManager.ithVar(diaNode2.getVarNumberLeft());
+        BDD expectedBDDDiaNode2 = bddManager.ithVar(diaNode2.getVarNumberChild());
         Assert.assertEquals(expectedBDDDiaNode2, bddDiaNode2);
 
         BDD bddBoxNode = transformer.getBDD(boxNode.getVarNumber());
@@ -154,7 +154,7 @@ public class BDDTransformerTest {
         Assert.assertEquals(expectedBDDDiaNode2, bddDiaNode2);
 
         BDD bddBoxNode = transformer.getBDD(boxNode.getVarNumber());
-        BDD expectedBDDBoxNode = bddManager.ithVar(boxNode.getVarNumberLeft());
+        BDD expectedBDDBoxNode = bddManager.ithVar(boxNode.getVarNumberChild());
         Assert.assertEquals(expectedBDDBoxNode, bddBoxNode);
 
         BDD bddTrueNode = transformer.getBDD(trueNode.getVarNumber());
@@ -205,7 +205,7 @@ public class BDDTransformerTest {
         comps.add(edgeTransformer);
         comps.add(oneTransformer);
         BDD disjunction = edgeTransformer.orBddList(comps, diaNode1.getVarNumber());
-        Assert.assertEquals(bddManager.ithVar(diaNode1.getVarNumberLeft()), disjunction);
+        Assert.assertEquals(bddManager.ithVar(diaNode1.getVarNumberChild()), disjunction);
     }
 
 }

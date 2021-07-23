@@ -28,7 +28,7 @@ public class NotNode<L, AP> extends AbstractUnaryFormulaNode<L, AP> {
     @Override
     public void print(Appendable a) throws IOException {
         a.append("(!");
-        getLeftChild().print(a);
+        getChild().print(a);
         a.append(')');
     }
 

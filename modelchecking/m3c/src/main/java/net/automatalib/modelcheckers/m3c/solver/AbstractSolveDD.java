@@ -284,17 +284,22 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
                     /* End State has no outgoing edges */
                     satisfiedVariables.add(node.getVarNumber());
                 } else if (node instanceof AndNode) {
-                    if (satisfiedVariables.contains(node.getVarNumberLeft()) &&
-                        satisfiedVariables.contains(node.getVarNumberRight())) {
-                        satisfiedVariables.add(node.getVarNumber());
+                    final AndNode<L, AP> andNode = (AndNode<L, AP>) node;
+                    if (satisfiedVariables.contains(andNode.getVarNumberLeft()) &&
+                        satisfiedVariables.contains(andNode.getVarNumberRight())) {
+                        satisfiedVariables.add(andNode.getVarNumber());
                     }
                 } else if (node instanceof OrNode) {
-                    if (satisfiedVariables.contains(node.getVarNumberLeft()) ||
-                        satisfiedVariables.contains(node.getVarNumberRight())) {
-                        satisfiedVariables.add(node.getVarNumber());
+                    final OrNode<L, AP> orNode = (OrNode<L, AP>) node;
+                    if (satisfiedVariables.contains(orNode.getVarNumberLeft()) ||
+                        satisfiedVariables.contains(orNode.getVarNumberRight())) {
+                        satisfiedVariables.add(orNode.getVarNumber());
                     }
-                } else if (node instanceof NotNode && !satisfiedVariables.contains(node.getVarNumberLeft())) {
-                    satisfiedVariables.add(node.getVarNumber());
+                } else if (node instanceof NotNode) {
+                    final NotNode<L, AP> notNode = (NotNode<L, AP>) node;
+                    if (!satisfiedVariables.contains(notNode.getVarNumberChild())) {
+                        satisfiedVariables.add(notNode.getVarNumber());
+                    }
                 }
             }
         }

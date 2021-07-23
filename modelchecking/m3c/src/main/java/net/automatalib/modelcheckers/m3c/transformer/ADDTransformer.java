@@ -108,16 +108,17 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
             boolean[] terminal = new boolean[dependGraph.getNumVariables()];
             XDD<BooleanVector> falseDD = xddManager.constant(new BooleanVector(terminal));
             if (node instanceof AbstractModalFormulaNode) {
-                L action = ((AbstractModalFormulaNode<L, AP>) node).getAction();
+                final AbstractModalFormulaNode<L, AP> modalNode = (AbstractModalFormulaNode<L, AP>) node;
+                final L action = modalNode.getAction();
                 if ((action == null || action.equals(edgeLabel)) &&
-                    (!(node instanceof DiamondNode) || edgeProperty.isMust())) {
-                    int xj = node.getVarNumberLeft();
-                    terminal[node.getVarNumber()] = true;
+                    (!(modalNode instanceof DiamondNode) || edgeProperty.isMust())) {
+                    int xj = modalNode.getVarNumberChild();
+                    terminal[modalNode.getVarNumber()] = true;
                     XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(terminal));
                     XDD<BooleanVector> id = xddManager.ithVar(xj, thenDD, falseDD);
                     list.add(id);
-                } else if (node instanceof BoxNode) {
-                    terminal[node.getVarNumber()] = true;
+                } else if (modalNode instanceof BoxNode) {
+                    terminal[modalNode.getVarNumber()] = true;
                     list.add(xddManager.constant(new BooleanVector(terminal)));
                 }
             }

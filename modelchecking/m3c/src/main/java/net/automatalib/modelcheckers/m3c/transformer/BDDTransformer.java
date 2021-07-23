@@ -85,15 +85,16 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         for (FormulaNode<L, AP> node : dependencyGraph.getFormulaNodes()) {
             int xi = node.getVarNumber();
             if (node instanceof AbstractModalFormulaNode) {
-                L action = ((AbstractModalFormulaNode<L, AP>) node).getAction();
+                final AbstractModalFormulaNode<L, AP> modalNode = (AbstractModalFormulaNode<L, AP>) node;
+                final L action = modalNode.getAction();
                 /* action matches edgeLabel AND (node instanceof DiamondNode => edge.isMust) */
                 if ((action == null || action.equals(edgeLabel)) &&
-                    (!(node instanceof DiamondNode) || edgeProperty.isMust())) {
-                    int xj = node.getVarNumberLeft();
+                    (!(modalNode instanceof DiamondNode) || edgeProperty.isMust())) {
+                    int xj = modalNode.getVarNumberChild();
                     bdds[xi] = bddManager.ithVar(xj);
-                } else if (node instanceof DiamondNode) {
+                } else if (modalNode instanceof DiamondNode) {
                     bdds[xi] = bddManager.readLogicZero();
-                } else if (node instanceof BoxNode) {
+                } else if (modalNode instanceof BoxNode) {
                     bdds[xi] = bddManager.readOne();
                 }
             } else {
@@ -168,15 +169,18 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         } else if (node instanceof DiamondNode) {
             result = orBddList(compositions, varIdx);
         } else if (node instanceof AndNode) {
-            result = updatedBDDs[node.getVarNumberLeft()].and(updatedBDDs[node.getVarNumberRight()]);
+            final AndNode<L, AP> andNode = (AndNode<L, AP>) node;
+            result = updatedBDDs[andNode.getVarNumberLeft()].and(updatedBDDs[andNode.getVarNumberRight()]);
         } else if (node instanceof OrNode) {
-            result = updatedBDDs[node.getVarNumberLeft()].or(updatedBDDs[node.getVarNumberRight()]);
+            final OrNode<L, AP> orNode = (OrNode<L, AP>) node;
+            result = updatedBDDs[orNode.getVarNumberLeft()].or(updatedBDDs[orNode.getVarNumberRight()]);
         } else if (node instanceof TrueNode) {
             result = bddManager.readOne();
         } else if (node instanceof FalseNode) {
             result = bddManager.readLogicZero();
         } else if (node instanceof NotNode) {
-            result = bdds[node.getVarNumberLeft()].not();
+            final NotNode<L, AP> notNode = (NotNode<L, AP>) node;
+            result = bdds[notNode.getVarNumberChild()].not();
         } else if (node instanceof AtomicNode) {
             final Set<AP> atomicProp = ((AtomicNode<L, AP>) node).getPropositions();
             if (atomicPropositions.containsAll(atomicProp)) {

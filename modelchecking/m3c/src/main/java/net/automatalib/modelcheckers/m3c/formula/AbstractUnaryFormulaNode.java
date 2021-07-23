@@ -17,18 +17,48 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import java.io.IOException;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public abstract class AbstractUnaryFormulaNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
-    public AbstractUnaryFormulaNode(FormulaNode<L, AP> childNode) {
-        super(childNode);
+    private final FormulaNode<L, AP> child;
+
+    public AbstractUnaryFormulaNode(FormulaNode<L, AP> child) {
+        this.child = child;
+    }
+
+    public FormulaNode<L, AP> getChild() {
+        return this.child;
+    }
+
+    public int getVarNumberChild() {
+        return this.child.getVarNumber();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        @SuppressWarnings("unchecked")
+        final AbstractUnaryFormulaNode<L, AP> that = (AbstractUnaryFormulaNode<L, AP>) o;
+
+        return this.child.equals(that.child);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + child.hashCode();
+        return result;
     }
 
     protected void printUnaryFormulaNode(Appendable a, String operator) throws IOException {
         a.append('(');
         a.append(operator);
         a.append(' ');
-        getLeftChild().print(a);
+        getChild().print(a);
         a.append(')');
     }
-
 }

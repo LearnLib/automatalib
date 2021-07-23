@@ -52,7 +52,7 @@ public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L
     @Override
     public FormulaNode<L, AP> visit(AFNode<L, AP> node) {
         /* AF p = mu X.(toMu(p) | (<>true & []X)) */
-        FormulaNode<L, AP> p = visit(node.getLeftChild());
+        FormulaNode<L, AP> p = visit(node.getChild());
         String fixedPointVar = getFixedPointVar();
         DiamondNode<L, AP> hasSuccessor = new DiamondNode<>(new TrueNode<>());
         BoxNode<L, AP> allSuccessorSatisfyX = new BoxNode<>(new VariableNode<>(fixedPointVar));
@@ -64,7 +64,7 @@ public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L
     @Override
     public FormulaNode<L, AP> visit(AGNode<L, AP> node) {
         /* AG p = nu X.(p & []X) */
-        FormulaNode<L, AP> p = visit(node.getLeftChild());
+        FormulaNode<L, AP> p = visit(node.getChild());
         String fixedPointVar = getFixedPointVar();
         BoxNode<L, AP> allSuccessorsSatisfyX = new BoxNode<>(new VariableNode<>(fixedPointVar));
         AndNode<L, AP> and = new AndNode<>(p, allSuccessorsSatisfyX);
@@ -99,7 +99,7 @@ public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L
     public FormulaNode<L, AP> visit(EFNode<L, AP> node) {
         /* EF p = mu X.(toMu(p) | <>X) */
         String fixedPointVar = getFixedPointVar();
-        FormulaNode<L, AP> p = visit(node.getLeftChild());
+        FormulaNode<L, AP> p = visit(node.getChild());
         DiamondNode<L, AP> hasSuccessorSatisfyingX = new DiamondNode<>(new VariableNode<>(fixedPointVar));
         OrNode<L, AP> orNode = new OrNode<>(p, hasSuccessorSatisfyingX);
         return new LfpNode<>(fixedPointVar, orNode);
@@ -109,7 +109,7 @@ public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L
     public FormulaNode<L, AP> visit(EGNode<L, AP> node) {
         /* EG p = nu X.(toMu(p) & (<>X | [] false)) */
         String fixedPointVar = getFixedPointVar();
-        FormulaNode<L, AP> childNode = visit(node.getLeftChild());
+        FormulaNode<L, AP> childNode = visit(node.getChild());
         DiamondNode<L, AP> hasSuccessorSatisfyingX = new DiamondNode<>(new VariableNode<>(fixedPointVar));
         BoxNode<L, AP> hasNoSuccessor = new BoxNode<>(new FalseNode<>());
         OrNode<L, AP> or = new OrNode<>(hasSuccessorSatisfyingX, hasNoSuccessor);
@@ -152,13 +152,13 @@ public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L
 
     @Override
     public FormulaNode<L, AP> visit(BoxNode<L, AP> node) {
-        FormulaNode<L, AP> childNode = visit(node.getLeftChild());
+        FormulaNode<L, AP> childNode = visit(node.getChild());
         return new BoxNode<>(node.getAction(), childNode);
     }
 
     @Override
     public FormulaNode<L, AP> visit(DiamondNode<L, AP> node) {
-        FormulaNode<L, AP> childNode = visit(node.getLeftChild());
+        FormulaNode<L, AP> childNode = visit(node.getChild());
         return new DiamondNode<>(node.getAction(), childNode);
     }
 
@@ -169,7 +169,7 @@ public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L
 
     @Override
     public FormulaNode<L, AP> visit(NotNode<L, AP> node) {
-        FormulaNode<L, AP> childNode = visit(node.getLeftChild());
+        FormulaNode<L, AP> childNode = visit(node.getChild());
         return new NotNode<>(childNode);
     }
 
@@ -187,12 +187,12 @@ public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L
 
     @Override
     public FormulaNode<L, AP> visit(GfpNode<L, AP> node) {
-        return new GfpNode<>(node.getVariable(), visit(node.getLeftChild()));
+        return new GfpNode<>(node.getVariable(), visit(node.getChild()));
     }
 
     @Override
     public FormulaNode<L, AP> visit(LfpNode<L, AP> node) {
-        return new LfpNode<>(node.getVariable(), visit(node.getLeftChild()));
+        return new LfpNode<>(node.getVariable(), visit(node.getChild()));
     }
 
     @Override

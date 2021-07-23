@@ -15,44 +15,12 @@
  */
 package net.automatalib.modelcheckers.m3c.formula;
 
-import java.util.Objects;
-
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable implements FormulaNode<L, AP> {
 
-    private final FormulaNode<L, AP> leftChild;
-    private final FormulaNode<L, AP> rightChild;
     private int varNumber;
-
-    public AbstractFormulaNode() {
-        this(null);
-    }
-
-    public AbstractFormulaNode(FormulaNode<L, AP> leftChild) {
-        this(leftChild, null);
-    }
-
-    public AbstractFormulaNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
-        this.leftChild = leftChild;
-        this.rightChild = rightChild;
-    }
-
-    @Override
-    public FormulaNode<L, AP> getLeftChild() {
-        return leftChild;
-    }
-
-    @Override
-    public FormulaNode<L, AP> getRightChild() {
-        return rightChild;
-    }
-
-    @Override
-    public int getVarNumberLeft() {
-        return leftChild.getVarNumber();
-    }
 
     @Override
     public int getVarNumber() {
@@ -65,16 +33,8 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
     }
 
     @Override
-    public int getVarNumberRight() {
-        return rightChild.getVarNumber();
-    }
-
-    @Override
     public int hashCode() {
-        int result = Objects.hashCode(leftChild);
-        result = 31 * result + Objects.hash(rightChild);
-        result = 31 * result + Integer.hashCode(varNumber);
-        return result;
+        return Integer.hashCode(varNumber);
     }
 
     @Override
@@ -88,8 +48,7 @@ public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable imple
 
         final FormulaNode<?, ?> that = (FormulaNode<?, ?>) o;
 
-        return this.varNumber == that.getVarNumber() && Objects.equals(this.leftChild, that.getLeftChild()) &&
-               Objects.equals(this.rightChild, that.getRightChild());
+        return this.varNumber == that.getVarNumber();
     }
 
 }

@@ -26,6 +26,7 @@ import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
+import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
@@ -47,15 +48,14 @@ public class ADDTransformerTest {
     @BeforeClass
     public static void setup() throws ParseException {
         String formula = "mu X.(<b>[b]true || <>X)";
-        FormulaNode<String, String> ast = M3CParser.parse(formula);
-        dg = new DependencyGraph<>(ast);
-        ast = dg.getAST();
+        dg = new DependencyGraph<>(M3CParser.parse(formula));
         xddManager = new BooleanVectorLogicDDManager(dg.getNumVariables());
-        orNode = (OrNode<String, String>) ast.getLeftChild();
+        final LfpNode<String, String> gfpNode = (LfpNode<String, String>) dg.getAST();
+        orNode = (OrNode<String, String>) gfpNode.getChild();
         diaNode1 = (DiamondNode<String, String>) orNode.getLeftChild();
         diaNode2 = (DiamondNode<String, String>) orNode.getRightChild();
-        boxNode = (BoxNode<String, String>) diaNode1.getLeftChild();
-        trueNode = (TrueNode<String, String>) boxNode.getLeftChild();
+        boxNode = (BoxNode<String, String>) diaNode1.getChild();
+        trueNode = (TrueNode<String, String>) boxNode.getChild();
     }
 
     @Test
@@ -118,15 +118,15 @@ public class ADDTransformerTest {
             Set<Integer> satisfiedVars = transformer.evaluate(input);
             Assert.assertFalse(satisfiedVars.contains(orNode.getVarNumber()));
 
-            boolean diaNode1ExpectedTrue = input[diaNode1.getVarNumberLeft()];
+            boolean diaNode1ExpectedTrue = input[diaNode1.getVarNumberChild()];
             boolean diaNode1ActualTrue = satisfiedVars.contains(diaNode1.getVarNumber());
             Assert.assertEquals(diaNode1ExpectedTrue, diaNode1ActualTrue);
 
-            boolean diaNode2ExpectedTrue = input[diaNode2.getVarNumberLeft()];
+            boolean diaNode2ExpectedTrue = input[diaNode2.getVarNumberChild()];
             boolean diaNode2ActualTrue = satisfiedVars.contains(diaNode2.getVarNumber());
             Assert.assertEquals(diaNode2ExpectedTrue, diaNode2ActualTrue);
 
-            boolean boxNodeExpectedTrue = input[boxNode.getVarNumberLeft()];
+            boolean boxNodeExpectedTrue = input[boxNode.getVarNumberChild()];
             boolean boxNodeActualTrue = satisfiedVars.contains(boxNode.getVarNumber());
             Assert.assertEquals(boxNodeExpectedTrue, boxNodeActualTrue);
 
@@ -153,7 +153,7 @@ public class ADDTransformerTest {
 
             Assert.assertFalse(satisfiedVars.contains(diaNode1.getVarNumber()));
 
-            boolean diaNode2ExpectedTrue = input[diaNode2.getVarNumberLeft()];
+            boolean diaNode2ExpectedTrue = input[diaNode2.getVarNumberChild()];
             boolean diaNode2ActualTrue = satisfiedVars.contains(diaNode2.getVarNumber());
             Assert.assertEquals(diaNode2ExpectedTrue, diaNode2ActualTrue);
 
@@ -184,7 +184,7 @@ public class ADDTransformerTest {
 
             Assert.assertFalse(satisfiedVars.contains(diaNode2.getVarNumber()));
 
-            boolean boxNodeExpectedTrue = input[boxNode.getVarNumberLeft()];
+            boolean boxNodeExpectedTrue = input[boxNode.getVarNumberChild()];
             boolean boxNodeActualTrue = satisfiedVars.contains(boxNode.getVarNumber());
             Assert.assertEquals(boxNodeExpectedTrue, boxNodeActualTrue);
 

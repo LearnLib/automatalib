@@ -17,10 +17,52 @@ package net.automatalib.modelcheckers.m3c.formula;
 
 import java.io.IOException;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public abstract class AbstractBinaryFormulaNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
+    private final FormulaNode<L, AP> leftChild;
+    private final FormulaNode<L, AP> rightChild;
+
     public AbstractBinaryFormulaNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {
-        super(leftChild, rightChild);
+        this.leftChild = leftChild;
+        this.rightChild = rightChild;
+    }
+
+    public FormulaNode<L, AP> getRightChild() {
+        return this.rightChild;
+    }
+
+    public int getVarNumberRight() {
+        return this.rightChild.getVarNumber();
+    }
+
+    public FormulaNode<L, AP> getLeftChild() {
+        return this.leftChild;
+    }
+
+    public int getVarNumberLeft() {
+        return this.leftChild.getVarNumber();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object o) {
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        @SuppressWarnings("unchecked")
+        final AbstractBinaryFormulaNode<L, AP> that = (AbstractBinaryFormulaNode<L, AP>) o;
+
+        return this.leftChild.equals(that.leftChild) && this.rightChild.equals(that.rightChild);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + leftChild.hashCode();
+        result = 31 * result + rightChild.hashCode();
+        return result;
     }
 
     protected void printBinaryFormulaNode(Appendable a, String operator) throws IOException {
