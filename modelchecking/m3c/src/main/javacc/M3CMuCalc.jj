@@ -92,7 +92,7 @@ FormulaNode<L, AP> parse(Function<String, L> labelParser, Function<String, Set<A
 	FormulaNode<L, AP> node;
 }
 {
-	node=formula() {return node;}
+	node=formula() <EOF> {return node;}
 }
 
 private FormulaNode<L, AP> formula():

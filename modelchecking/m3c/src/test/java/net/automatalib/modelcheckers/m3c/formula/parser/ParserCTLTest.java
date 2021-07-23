@@ -74,6 +74,14 @@ public class ParserCTLTest {
         assertEquals("[c]true", new BoxNode<>("c", new TrueNode<>()));
     }
 
+    private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) throws ParseException {
+        FormulaNode<String, String> actualAST = M3CParser.parse(ctlFormula);
+        Assert.assertEquals(actualAST, expectedAST);
+        Assert.assertEquals(actualAST.hashCode(), expectedAST.hashCode());
+
+        this.formulas.add(actualAST);
+    }
+
     @Test
     public void nestedFormulasTest() throws ParseException {
         assertEquals("(true && true) || (false && false)",
@@ -91,17 +99,18 @@ public class ParserCTLTest {
     }
 
     @Test
-    public void testIllegalFormulas() throws ParseException {
-        Assert.assertNotEquals(M3CParser.parse("true <=> false -> true"), new TrueNode<>());
-        Assert.assertNotEquals(M3CParser.parse("true <=> (false -> true)"), new TrueNode<>());
+    public void testIllegalFormulas() {
+        assertIllegal("true <=> false -> true");
+        assertIllegal("true <=> (false -> true)");
     }
 
-    private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) throws ParseException {
-        FormulaNode<String, String> actualAST = M3CParser.parse(ctlFormula);
-        Assert.assertEquals(actualAST, expectedAST);
-        Assert.assertEquals(actualAST.hashCode(), expectedAST.hashCode());
-
-        this.formulas.add(actualAST);
+    private void assertIllegal(String formula) {
+        try {
+            M3CParser.parse(formula);
+            Assert.fail();
+        } catch (ParseException e) {
+            // Expected exception
+        }
     }
 
 }
