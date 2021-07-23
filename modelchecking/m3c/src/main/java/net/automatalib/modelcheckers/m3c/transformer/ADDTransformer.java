@@ -41,12 +41,20 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     private final XDD<BooleanVector> add;
 
     public ADDTransformer(BooleanVectorLogicDDManager xddManager, XDD<BooleanVector> add) {
+        super();
+        this.add = add;
+        this.xddManager = xddManager;
+    }
+
+    public ADDTransformer(BooleanVectorLogicDDManager xddManager, XDD<BooleanVector> add, boolean isMust) {
+        super(isMust);
         this.add = add;
         this.xddManager = xddManager;
     }
 
     /* Initialization of a state property transformer*/
     public ADDTransformer(BooleanVectorLogicDDManager xddManager, DependencyGraph<L, AP> dependGraph) {
+        super();
         this.xddManager = xddManager;
         boolean[] terminal = new boolean[dependGraph.getNumVariables()];
         for (EquationalBlock<L, AP> block : dependGraph.getBlocks()) {
@@ -61,6 +69,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     /* Creates the identity function */
     public ADDTransformer(BooleanVectorLogicDDManager ddManager, int numberOfVars) {
+        super();
         this.xddManager = ddManager;
         boolean[] falseArr = new boolean[numberOfVars];
         boolean[] trueArr = new boolean[numberOfVars];
@@ -92,6 +101,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                                                          L edgeLabel,
                                                          TP edgeProperty,
                                                          DependencyGraph<L, AP> dependGraph) {
+        //        super(edgeProperty.isMust());
         this.xddManager = xddManager;
         List<XDD<BooleanVector>> list = new ArrayList<>();
         for (FormulaNode<L, AP> node : dependGraph.getFormulaNodes()) {
@@ -141,13 +151,13 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     }
 
     @Override
-    public ADDTransformer<L, AP> compose(ADDTransformer<L, AP> other) {
+    public ADDTransformer<L, AP> compose(ADDTransformer<L, AP> other, boolean isMust) {
         XDD<BooleanVector> otherAdd = other.getAdd();
         XDD<BooleanVector> compAdd = otherAdd.monadicApply(arg -> {
             boolean[] terminal = arg.data().clone();
             return this.getAdd().eval(terminal).v();
         });
-        return new ADDTransformer<>(xddManager, compAdd);
+        return new ADDTransformer<>(xddManager, compAdd, isMust);
     }
 
     @Override

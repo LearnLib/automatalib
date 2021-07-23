@@ -187,12 +187,12 @@ public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L
 
     @Override
     public FormulaNode<L, AP> visit(GfpNode<L, AP> node) {
-        return new GfpNode<>(node.getVariable(), node.getLeftChild());
+        return new GfpNode<>(node.getVariable(), visit(node.getLeftChild()));
     }
 
     @Override
     public FormulaNode<L, AP> visit(LfpNode<L, AP> node) {
-        return new LfpNode<>(node.getVariable(), node.getLeftChild());
+        return new LfpNode<>(node.getVariable(), visit(node.getLeftChild()));
     }
 
     @Override

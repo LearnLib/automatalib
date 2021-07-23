@@ -22,11 +22,19 @@ import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 
 public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
-    protected boolean isMust = true;
+    private final boolean isMust;
+
+    AbstractPropertyTransformer() {
+        this(true);
+    }
+
+    AbstractPropertyTransformer(boolean isMust) {
+        this.isMust = isMust;
+    }
 
     public abstract Set<Integer> evaluate(boolean[] input);
 
-    public abstract T compose(T other);
+    public abstract T compose(T other, boolean isMust);
 
     public abstract T createUpdate(Set<AP> atomicPropositions,
                                    List<T> compositions,
@@ -36,10 +44,6 @@ public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTran
 
     public boolean isMust() {
         return isMust;
-    }
-
-    public void setIsMust(boolean isMust) {
-        this.isMust = isMust;
     }
 
 }

@@ -18,14 +18,11 @@ package net.automatalib.modelcheckers.m3c.solver;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.graphs.MutableModalProcessGraph;
-import net.automatalib.graphs.base.DefaultMCFPS;
-import net.automatalib.graphs.base.compact.CompactMPG;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
+import net.automatalib.modelcheckers.m3c.util.Examples;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -36,46 +33,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @BeforeClass
     public static void setup() {
-        mcfps = getMcfps(new HashSet<>());
-    }
-
-    private static ModalContextFreeProcessSystem<String, String> getMcfps(Set<String> finalNodesAP) {
-        final CompactMPG<String, String> mpg = buildMPG(new CompactMPG<>(), finalNodesAP);
-
-        return new DefaultMCFPS<>("P", Collections.singletonMap("P", mpg));
-    }
-
-    private static <N, E, AP, MMPG extends MutableModalProcessGraph<N, String, E, AP, ?>> MMPG buildMPG(MMPG mpg,
-                                                                                                        Set<AP> finalNodeAPs) {
-
-        final N start = mpg.addNode();
-        final N end = mpg.addNode();
-        final N s1 = mpg.addNode();
-        final N s2 = mpg.addNode();
-
-        mpg.setInitialNode(start);
-        mpg.setFinalNode(end);
-        mpg.setAtomicPropositions(end, finalNodeAPs);
-
-        final E e1 = mpg.connect(start, s1);
-        final E e2 = mpg.connect(start, end);
-        final E e3 = mpg.connect(s1, s2);
-        final E e4 = mpg.connect(s2, end);
-
-        mpg.getEdgeProperty(e1).setMust();
-        mpg.setEdgeLabel(e1, "a");
-
-        mpg.getEdgeProperty(e2).setMust();
-        mpg.setEdgeLabel(e2, "e");
-
-        mpg.getEdgeProperty(e3).setMust();
-        mpg.getEdgeProperty(e3).setProcess();
-        mpg.setEdgeLabel(e3, "P");
-
-        mpg.getEdgeProperty(e4).setMust();
-        mpg.setEdgeLabel(e4, "b");
-
-        return mpg;
+        mcfps = Examples.getMcfpsAnBn(new HashSet<>());
     }
 
     @Test
@@ -97,12 +55,13 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @Test
     void testSolveWithAPs() throws ParseException {
-        ModalContextFreeProcessSystem<String, String> mcfps = getMcfps(new HashSet<>(Arrays.asList("a", "b")));
+        ModalContextFreeProcessSystem<String, String> mcfps =
+                Examples.getMcfpsAnBn(new HashSet<>(Arrays.asList("a", "b")));
         String formula = "mu X.(<>X || 'a,b')";
         M3CSolver<String> solver = getSolver(mcfps);
         assertSolve(solver, formula, true);
 
-        mcfps = getMcfps(new HashSet<>(Collections.singletonList("a")));
+        mcfps = Examples.getMcfpsAnBn(new HashSet<>(Collections.singletonList("a")));
         solver = getSolver(mcfps);
         assertSolve(solver, formula, false);
     }

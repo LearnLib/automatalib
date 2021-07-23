@@ -166,11 +166,11 @@ public class BDDTransformerTest {
     void testComposition() {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, dg);
         BDDTransformer<String, String> identity = new BDDTransformer<>(bddManager, dg.getNumVariables());
-        BDDTransformer<String, String> composition = transformer.compose(identity);
+        BDDTransformer<String, String> composition = transformer.compose(identity, true);
         Assert.assertEquals(5, composition.getNumberOfVars());
         Assert.assertEquals(transformer, composition);
 
-        BDDTransformer<String, String> inverseComposition = identity.compose(transformer);
+        BDDTransformer<String, String> inverseComposition = identity.compose(transformer, true);
         Assert.assertEquals(transformer, inverseComposition);
     }
 
@@ -183,7 +183,6 @@ public class BDDTransformerTest {
             oneBDDs[var] = bddManager.readOne();
         }
         BDDTransformer<String, String> oneTransformer = new BDDTransformer<>(bddManager, oneBDDs);
-        oneTransformer.setIsMust(true);
 
         List<BDDTransformer<String, String>> comps = new ArrayList<>();
         comps.add(edgeTransformer);
@@ -201,7 +200,6 @@ public class BDDTransformerTest {
             oneBDDs[var] = bddManager.readLogicZero();
         }
         BDDTransformer<String, String> oneTransformer = new BDDTransformer<>(bddManager, oneBDDs);
-        oneTransformer.setIsMust(true);
 
         List<BDDTransformer<String, String>> comps = new ArrayList<>();
         comps.add(edgeTransformer);

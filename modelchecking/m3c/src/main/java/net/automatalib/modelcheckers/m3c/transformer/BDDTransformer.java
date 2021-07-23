@@ -65,6 +65,13 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     public BDDTransformer(BDDManager bddManager, BDD[] bdds) {
+        super();
+        this.bddManager = bddManager;
+        this.bdds = bdds;
+    }
+
+    public BDDTransformer(BDDManager bddManager, BDD[] bdds, boolean isMust) {
+        super(isMust);
         this.bddManager = bddManager;
         this.bdds = bdds;
     }
@@ -74,7 +81,7 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
                                                          L edgeLabel,
                                                          TP edgeProperty,
                                                          DependencyGraph<L, AP> dependencyGraph) {
-        this(bddManager, new BDD[dependencyGraph.getNumVariables()]);
+        this(bddManager, new BDD[dependencyGraph.getNumVariables()], edgeProperty.isMust());
         for (FormulaNode<L, AP> node : dependencyGraph.getFormulaNodes()) {
             int xi = node.getVarNumber();
             if (node instanceof AbstractModalFormulaNode) {
@@ -93,7 +100,6 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
                 bdds[xi] = bddManager.readLogicZero();
             }
         }
-        isMust = edgeProperty.isMust();
     }
 
     /* The Property Transformer representing the identity function */
@@ -116,13 +122,13 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     @Override
-    public BDDTransformer<L, AP> compose(BDDTransformer<L, AP> other) {
+    public BDDTransformer<L, AP> compose(BDDTransformer<L, AP> other, boolean isMust) {
         final BDD[] composedBDDs = new BDD[bdds.length];
         for (int var = 0; var < bdds.length; var++) {
             BDD composedBDD = bdds[var].vectorCompose(other.bdds);
             composedBDDs[var] = composedBDD;
         }
-        return new BDDTransformer<>(bddManager, composedBDDs);
+        return new BDDTransformer<>(bddManager, composedBDDs, isMust);
     }
 
     @Override
