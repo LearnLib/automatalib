@@ -22,6 +22,16 @@ import net.automatalib.modelcheckers.m3c.formula.AbstractUnaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Abstract super-class for fix-point (sub-) formulas.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public abstract class AbstractFixedPointFormulaNode<L, AP> extends AbstractUnaryFormulaNode<L, AP> {
 
     private final String variable;

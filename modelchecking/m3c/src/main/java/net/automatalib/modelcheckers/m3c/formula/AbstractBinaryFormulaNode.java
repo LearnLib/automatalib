@@ -19,6 +19,16 @@ import java.io.IOException;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Abstract super-class for binary (sub-) formulas.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public abstract class AbstractBinaryFormulaNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
     private final FormulaNode<L, AP> leftChild;

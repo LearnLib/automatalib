@@ -19,6 +19,11 @@ import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 
+/**
+ * A {@link SolveBDD BDD solver} for generic, string-based formulas.
+ *
+ * @author frohme
+ */
 public class StringSolveBDD extends SolveBDD<String, String> implements M3CSolver<String> {
 
     StringSolveBDD(ModalContextFreeProcessSystem<String, String> mcfps) {

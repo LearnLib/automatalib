@@ -18,6 +18,16 @@ package net.automatalib.modelcheckers.m3c.formula;
 import net.automatalib.commons.util.strings.AbstractPrintable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Abstract super-class for (sub-) formulas.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public abstract class AbstractFormulaNode<L, AP> extends AbstractPrintable implements FormulaNode<L, AP> {
 
     private int varNumber;

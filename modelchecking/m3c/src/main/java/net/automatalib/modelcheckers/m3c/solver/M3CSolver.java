@@ -17,12 +17,49 @@ package net.automatalib.modelcheckers.m3c.solver;
 
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 
+/**
+ * An interface for a generic M3C solver which may need to parse the given formula and thus may throw an exception when
+ * doing so.
+ *
+ * @param <F>
+ *         formula type
+ *
+ * @author frohme
+ */
 public interface M3CSolver<F> {
 
+    /**
+     * Checks whether the given formula is satisfied.
+     *
+     * @param formula
+     *         the formula whose satisfiability should be checked
+     *
+     * @return {@code true} if the formula is satisfied, {@code false} otherwise.
+     *
+     * @throws ParseException
+     *         when the given formula object cannot be parsed
+     */
     boolean solve(F formula) throws ParseException;
 
+    /**
+     * A specialized {@link M3CSolver} which no longer throws a {@link ParseException} when parsing a formula, but which
+     * may require an already parsed, type-safe formula object.
+     *
+     * @param <F>
+     *         formula type
+     *
+     * @author frohme
+     */
     interface TypedM3CSolver<F> extends M3CSolver<F> {
 
+        /**
+         * Checks whether the given formula is satisfied.
+         *
+         * @param formula
+         *         the formula whose satisfiability should be checked
+         *
+         * @return {@code true} if the formula is satisfied, {@code false} otherwise.
+         */
         @Override
         boolean solve(F formula);
     }

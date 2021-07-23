@@ -30,6 +30,9 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.NotNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 
+/**
+ * @author murtovi
+ */
 public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
 
     private final EquationalBlock<?, AP> block;

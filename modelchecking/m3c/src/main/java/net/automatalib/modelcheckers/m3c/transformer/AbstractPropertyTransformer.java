@@ -20,6 +20,9 @@ import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 
+/**
+ * @author murtovi
+ */
 public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     private final boolean isMust;

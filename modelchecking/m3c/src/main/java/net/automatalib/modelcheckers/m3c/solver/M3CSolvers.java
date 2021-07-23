@@ -19,6 +19,11 @@ import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 
+/**
+ * A factory for constructing {@link M3CSolver}s depending on the given {@link ModalContextFreeProcessSystem}.
+ *
+ * @author frohme
+ */
 public final class M3CSolvers {
 
     private M3CSolvers() {

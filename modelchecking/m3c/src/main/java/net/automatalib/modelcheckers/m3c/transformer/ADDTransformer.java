@@ -35,6 +35,9 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * @author murtovi
+ */
 public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransformer<L, AP>, L, AP> {
 
     private final BooleanVectorLogicDDManager xddManager;

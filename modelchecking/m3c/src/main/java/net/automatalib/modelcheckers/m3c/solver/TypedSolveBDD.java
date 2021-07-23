@@ -19,6 +19,11 @@ import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 
+/**
+ * A {@link SolveBDD BDD solver} for strongly-typed formulas.
+ *
+ * @author frohme
+ */
 public class TypedSolveBDD<L, AP> extends SolveBDD<L, AP> implements TypedM3CSolver<FormulaNode<L, AP>> {
 
     TypedSolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps) {

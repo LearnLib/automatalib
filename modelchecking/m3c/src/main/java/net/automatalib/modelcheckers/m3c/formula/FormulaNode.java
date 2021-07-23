@@ -16,9 +16,21 @@
 package net.automatalib.modelcheckers.m3c.formula;
 
 import net.automatalib.commons.util.strings.Printable;
+import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 import net.automatalib.modelcheckers.m3c.formula.visitor.NNFVisitor;
 
+/**
+ * Generic interface for formulas return by {@link M3CParser}s.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ * @author frohme
+ */
 public interface FormulaNode<L, AP> extends Printable {
 
     <T> T accept(FormulaNodeVisitor<T, L, AP> visitor);

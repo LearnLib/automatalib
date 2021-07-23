@@ -19,6 +19,16 @@ import java.io.IOException;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
+/**
+ * Java representation of a "false" (sub-)formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class FalseNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
     @Override

@@ -31,6 +31,16 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
+/**
+ * A visitor that transforms a given mu-calculus or CTL formula to negative-normal-form.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class NNFVisitor<L, AP> {
 
     private Set<String> varsToNegate;

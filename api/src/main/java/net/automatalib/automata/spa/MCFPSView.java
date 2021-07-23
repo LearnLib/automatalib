@@ -33,6 +33,15 @@ import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.Procedura
 import net.automatalib.words.SPAAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * This class represent a {@link ModalContextFreeProcessSystem}-based view on the instrumented language of a given
+ * {@link SPA}, which allows to model-check language properties of an {@link SPA} with tools such as M3C.
+ *
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
 public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
 
     private final SPA<?, I> spa;

@@ -19,6 +19,16 @@ import java.io.IOException;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
+/**
+ * Java representation of a "!" (sub-)formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class NotNode<L, AP> extends AbstractUnaryFormulaNode<L, AP> {
 
     public NotNode(FormulaNode<L, AP> node) {

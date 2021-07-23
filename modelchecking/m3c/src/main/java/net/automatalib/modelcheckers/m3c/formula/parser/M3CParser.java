@@ -23,6 +23,7 @@ import java.util.function.Function;
 
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 
+// TODO: Add documentation with formula grammars
 public final class M3CParser {
 
     private M3CParser() {}

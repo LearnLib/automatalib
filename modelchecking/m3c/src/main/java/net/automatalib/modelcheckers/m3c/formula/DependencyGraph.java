@@ -26,6 +26,9 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
+/**
+ * @author murtovi
+ */
 public final class DependencyGraph<L, AP> {
 
     /* All formulaNodes except FixedPoint- and VariableNode */

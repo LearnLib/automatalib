@@ -22,6 +22,9 @@ import java.util.Set;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * @author murtovi
+ */
 public final class SolverState<N, L, AP> {
 
     private final List<String> updatedPropTransformer;

@@ -21,6 +21,16 @@ import net.automatalib.modelcheckers.m3c.formula.AbstractBinaryFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
+/**
+ * Java representation of a "AWU" (sub-)formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class AWUNode<L, AP> extends AbstractBinaryFormulaNode<L, AP> {
 
     public AWUNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {

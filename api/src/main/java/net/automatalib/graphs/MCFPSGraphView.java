@@ -26,6 +26,21 @@ import net.automatalib.graphs.visualization.MCFPSVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+/**
+ * Graph representation of a {@link ModalContextFreeProcessSystem} that displays all nodes of its sub-procedures once,
+ * i.e. without incorporating execution semantics such as stack contents.
+ *
+ * @param <S>
+ *         common procedural state type
+ * @param <L>
+ *         label type
+ * @param <E>
+ *         edge type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author frohme
+ */
 public class MCFPSGraphView<S, L, E, AP> implements Graph<Pair<L, S>, Pair<L, E>> {
 
     private final Map<L, ModalProcessGraph<S, L, E, AP, ?>> mpgs;

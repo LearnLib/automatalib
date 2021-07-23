@@ -24,6 +24,16 @@ import java.util.Set;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Java representation of an "atomic proposition" (sub-)formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
     private final Set<AP> propositions;

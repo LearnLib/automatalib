@@ -19,6 +19,16 @@ import java.io.IOException;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
+/**
+ * Java representation of a "||" (sub-)formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class OrNode<L, AP> extends AbstractBinaryFormulaNode<L, AP> {
 
     public OrNode(FormulaNode<L, AP> leftChild, FormulaNode<L, AP> rightChild) {

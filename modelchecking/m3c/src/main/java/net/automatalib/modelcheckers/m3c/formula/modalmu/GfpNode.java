@@ -20,6 +20,16 @@ import java.io.IOException;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
+/**
+ * Java representation of a "nu" (sub-)formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class GfpNode<L, AP> extends AbstractFixedPointFormulaNode<L, AP> {
 
     public GfpNode(String variable, FormulaNode<L, AP> node) {

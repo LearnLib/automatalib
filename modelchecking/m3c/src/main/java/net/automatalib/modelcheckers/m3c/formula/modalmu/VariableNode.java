@@ -22,6 +22,16 @@ import net.automatalib.modelcheckers.m3c.formula.AbstractFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Java representation of an "X" (sub-)formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class VariableNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
     private final String variable;

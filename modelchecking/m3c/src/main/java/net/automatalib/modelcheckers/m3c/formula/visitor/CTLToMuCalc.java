@@ -36,6 +36,16 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
+/**
+ * A visitor that transforms a given CTL formula to an equivalent mu-calculus formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class CTLToMuCalc<L, AP> extends AbstractFormulaNodeVisitor<FormulaNode<L, AP>, L, AP> {
 
     private int numFixedPointVars;

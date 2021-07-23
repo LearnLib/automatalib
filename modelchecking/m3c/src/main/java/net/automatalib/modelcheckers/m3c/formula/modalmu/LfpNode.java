@@ -20,6 +20,16 @@ import java.io.IOException;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
+/**
+ * Java representation of a "mu" (sub-)formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class LfpNode<L, AP> extends AbstractFixedPointFormulaNode<L, AP> {
 
     public LfpNode(String variable, FormulaNode<L, AP> node) {

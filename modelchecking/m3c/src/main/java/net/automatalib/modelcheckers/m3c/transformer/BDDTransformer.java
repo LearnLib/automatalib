@@ -42,6 +42,9 @@ import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * @author murtovi
+ */
 public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransformer<L, AP>, L, AP> {
 
     private final BDDManager bddManager;

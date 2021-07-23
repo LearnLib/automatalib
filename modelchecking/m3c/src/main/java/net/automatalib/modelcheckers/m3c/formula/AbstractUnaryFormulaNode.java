@@ -19,6 +19,16 @@ import java.io.IOException;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Abstract super-class for unary (sub-) formulas.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public abstract class AbstractUnaryFormulaNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
     private final FormulaNode<L, AP> child;

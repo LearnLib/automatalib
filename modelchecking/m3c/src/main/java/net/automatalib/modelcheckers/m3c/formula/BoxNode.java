@@ -20,6 +20,16 @@ import java.io.IOException;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Java representation of a "[]" (sub-)formula.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author murtovi
+ */
 public class BoxNode<L, AP> extends AbstractModalFormulaNode<L, AP> {
 
     public BoxNode(FormulaNode<L, AP> node) {

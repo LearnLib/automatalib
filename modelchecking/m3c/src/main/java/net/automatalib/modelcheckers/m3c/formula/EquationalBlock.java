@@ -18,6 +18,9 @@ package net.automatalib.modelcheckers.m3c.formula;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author murtovi
+ */
 public class EquationalBlock<L, AP> {
 
     private final List<FormulaNode<L, AP>> nodes;

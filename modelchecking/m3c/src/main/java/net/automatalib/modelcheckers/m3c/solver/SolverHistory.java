@@ -21,6 +21,9 @@ import java.util.Map;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 
+/**
+ * @author murtovi
+ */
 public final class SolverHistory<L, AP> {
 
     private final Map<L, NodeIDs<?>> nodeIDs;
