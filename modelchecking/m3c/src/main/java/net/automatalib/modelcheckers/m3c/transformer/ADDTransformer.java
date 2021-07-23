@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.m3c.transformer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +25,7 @@ import java.util.Set;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
+import info.scce.addlib.serializer.XDDSerializer;
 import net.automatalib.modelcheckers.m3c.formula.AbstractModalFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
@@ -170,8 +172,9 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     }
 
     @Override
-    public ADDTransformer<L, AP> copy() {
-        return new ADDTransformer<>(xddManager, new XDD<>(add.ptr(), xddManager));
+    public List<String> serialize() {
+        XDDSerializer<BooleanVector> xddSerializer = new XDDSerializer<>();
+        return Collections.singletonList(xddSerializer.serialize(add));
     }
 
     public XDD<BooleanVector> getAdd() {

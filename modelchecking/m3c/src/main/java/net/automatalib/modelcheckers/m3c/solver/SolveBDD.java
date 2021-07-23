@@ -56,4 +56,9 @@ public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, A
         this.bddManager.quit();
     }
 
+    @Override
+    protected SolverHistory.DDType getDDType() {
+        return SolverHistory.DDType.BDD;
+    }
+
 }

@@ -19,41 +19,71 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.graphs.concepts.NodeIDs;
-import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
+import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 
-public final class SolverHistory<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
+public final class SolverHistory<L, AP> {
 
     private final Map<L, NodeIDs<?>> nodeIDs;
-    private final Map<L, T> mustTransformers;
-    private final Map<L, T> mayTransformers;
-    private final List<SolverState<T, L, AP>> solverStates;
+    private final Map<L, Map<?, List<String>>> initialPropertyTransformers;
+    private final Map<L, Map<?, List<FormulaNode<L, AP>>>> initialSatisfiedSubformulas;
+    private final Map<L, List<String>> mustTransformers;
+    private final Map<L, List<String>> mayTransformers;
+    private final List<SolverState<?, L, AP>> solverStates;
+    private final boolean isSat;
+    private final DDType ddType;
 
     SolverHistory(Map<L, NodeIDs<?>> nodeIDs,
-                  Map<L, T> mustTransformers,
-                  Map<L, T> mayTransformers,
-                  List<SolverState<T, L, AP>> solverStates) {
+                  Map<L, Map<?, List<String>>> initialPropertyTransformers,
+                  Map<L, Map<?, List<FormulaNode<L, AP>>>> initialSatisfiedSubformulas,
+                  Map<L, List<String>> mustTransformers,
+                  Map<L, List<String>> mayTransformers,
+                  List<SolverState<?, L, AP>> solverStates,
+                  boolean isSat,
+                  DDType ddType) {
         this.nodeIDs = nodeIDs;
+        this.initialPropertyTransformers = initialPropertyTransformers;
+        this.initialSatisfiedSubformulas = initialSatisfiedSubformulas;
         this.mustTransformers = mustTransformers;
         this.mayTransformers = mayTransformers;
         this.solverStates = solverStates;
-    }
-
-    public List<SolverState<T, L, AP>> getSolverStates() {
-        return solverStates;
-    }
-
-    public Map<L, T> getMustTransformers() {
-        return mustTransformers;
-    }
-
-    public Map<L, T> getMayTransformers() {
-        return mayTransformers;
+        this.isSat = isSat;
+        this.ddType = ddType;
     }
 
     public Map<L, NodeIDs<?>> getNodeIDs() {
         return nodeIDs;
     }
 
-    //TODO boolean isSat();
+    public Map<L, Map<?, List<String>>> getInitialPropertyTransformers() {
+        return initialPropertyTransformers;
+    }
 
+    public Map<L, Map<?, List<FormulaNode<L, AP>>>> getInitialSatisfiedSubformulas() {
+        return initialSatisfiedSubformulas;
+    }
+
+    public Map<L, List<String>> getMustTransformers() {
+        return mustTransformers;
+    }
+
+    public Map<L, List<String>> getMayTransformers() {
+        return mayTransformers;
+    }
+
+    public List<SolverState<?, L, AP>> getSolverStates() {
+        return solverStates;
+    }
+
+    public boolean isSat() {
+        return isSat;
+    }
+
+    public DDType getDDType() {
+        return ddType;
+    }
+
+    public enum DDType {
+        ADD,
+        BDD
+    }
 }

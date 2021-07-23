@@ -55,4 +55,9 @@ public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, A
     protected void shutdownDDManager() {
         this.ddManager.quit();
     }
+
+    @Override
+    protected SolverHistory.DDType getDDType() {
+        return SolverHistory.DDType.ADD;
+    }
 }

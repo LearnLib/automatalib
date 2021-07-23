@@ -16,7 +16,6 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,12 +55,11 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     // Attributes that are constant for a given CFPS
     private final @KeyFor("workUnits") L mainProcess;
 
+    // Per-procedure attributes
+    private final Map<L, WorkUnit<?, ?>> workUnits;
     // Attributes that change for each formula
     private DependencyGraph<L, AP> dependencyGraph;
     private int currentBlockIndex;
-
-    // Per-procedure attributes
-    private final Map<L, WorkUnit<?, ?>> workUnits;
     // Per-action attributes
     private Map<L, T> mustTransformers;
     private Map<L, T> mayTransformers;
@@ -93,152 +91,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         this.mainProcess = mainProcess;
     }
 
-    public boolean solve(FormulaNode<L, AP> formula) {
-        this.solveInternal(formula, false, Collections.emptyList());
-
-        final boolean sat = isSat();
-        shutdownDDManager();
-        return sat;
-    }
-
-    public SolverHistory<T, L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
-        final List<SolverState<T, L, AP>> history = new ArrayList<>();
-        this.solveInternal(formula, true, history);
-
-        // TODO simplify?
-        final Map<L, NodeIDs<?>> nodeIDs = Maps.newHashMapWithExpectedSize(this.workUnits.size());
-        for (Entry<L, WorkUnit<?, ?>> e : this.workUnits.entrySet()) {
-            nodeIDs.put(e.getKey(), e.getValue().mpg.nodeIDs());
-        }
-
-        shutdownDDManager();
-        return new SolverHistory<>(nodeIDs, mustTransformers, mayTransformers, history);
-    }
-
-    private void solveInternal(FormulaNode<L, AP> formula, boolean recordHistory, List<SolverState<T, L, AP>> history) {
-        FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
-
-        initialize(ast);
-
-        if (recordHistory) {
-            history.add(new SolverState<>(copyPropTransformers(), copyWorkSet(), computeSatisfiedSubformulas()));
-        }
-
-        boolean workSetIsEmpty = false;
-        while (!workSetIsEmpty) {
-            workSetIsEmpty = true;
-            for (Entry<L, WorkUnit<?, ?>> entry : workUnits.entrySet()) {
-                workSetIsEmpty &= solveInternal(entry.getValue(), recordHistory, history);
-            }
-        }
-    }
-
-    private <N> boolean solveInternal(WorkUnit<N, ?> unit, boolean recordHistory, List<SolverState<T, L, AP>> history) {
-        if (!unit.workSet.isEmpty()) {
-            final Iterator<N> iter = unit.workSet.iterator();
-            final N node = iter.next();
-            iter.remove();
-
-            final L mpgLabel = unit.label;
-            final List<T> compositions = updatedStateAndGetCompositions(unit, node);
-
-            if (recordHistory) {
-                //TODO: simplify?
-                int nodeId = unit.mpg.nodeIDs().getNodeId(node);
-                history.add(new SolverState<>(copyPropTransformers(),
-                                              compositions,
-                                              nodeId,
-                                              mpgLabel,
-                                              copyWorkSet(),
-                                              computeSatisfiedSubformulas()));
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private FormulaNode<L, AP> ctlToMuCalc(FormulaNode<L, AP> ctlFormula) {
-        CTLToMuCalc<L, AP> transformation = new CTLToMuCalc<>();
-        return transformation.toMuCalc(ctlFormula);
-    }
-
-    private Map<L, List<T>> copyPropTransformers() {
-        final Map<L, List<T>> copy = Maps.newHashMapWithExpectedSize(workUnits.size());
-
-        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
-            copy.put(e.getKey(), copyPropTransformers(e.getValue()));
-        }
-
-        return copy;
-    }
-
-    private <N> List<T> copyPropTransformers(WorkUnit<N, ?> unit) {
-
-        final ModalProcessGraph<N, L, ?, AP, ?> mpg = unit.mpg;
-        final NodeIDs<N> nodeIDs = mpg.nodeIDs();
-
-        final List<T> result = new ArrayList<>(mpg.size());
-
-        for (int i = 0; i < mpg.size(); i++) {
-            result.add(unit.propTransformers.get(nodeIDs.getNode(i)));
-        }
-
-        return result;
-    }
-
-    private Map<L, BitSet> copyWorkSet() {
-        final Map<L, BitSet> copy = Maps.newHashMapWithExpectedSize(workUnits.size());
-
-        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
-            copy.put(e.getKey(), copyWorkSet(e.getValue()));
-        }
-
-        return copy;
-    }
-
-    private <N> BitSet copyWorkSet(WorkUnit<N, ?> unit) {
-
-        final ModalProcessGraph<N, L, ?, AP, ?> mpg = unit.mpg;
-        final NodeIDs<N> nodeIDs = mpg.nodeIDs();
-
-        final BitSet result = new BitSet(mpg.size());
-
-        for (int i = 0; i < mpg.size(); i++) {
-            if (unit.workSet.contains(nodeIDs.getNode(i))) {
-                result.set(i);
-            }
-        }
-
-        return result;
-    }
-
-    private Map<L, List<List<FormulaNode<L, AP>>>> computeSatisfiedSubformulas() {
-        final Map<L, List<List<FormulaNode<L, AP>>>> result = Maps.newHashMapWithExpectedSize(workUnits.size());
-
-        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
-            result.put(e.getKey(), computeSatisfiedSubformulas(e.getValue()));
-        }
-
-        return result;
-    }
-
-    private <N> List<List<FormulaNode<L, AP>>> computeSatisfiedSubformulas(WorkUnit<N, ?> unit) {
-
-        final ModalProcessGraph<N, L, ?, AP, ?> mpg = unit.mpg;
-        final NodeIDs<N> nodeIDs = mpg.nodeIDs();
-
-        final List<List<FormulaNode<L, AP>>> result = new ArrayList<>(mpg.size());
-
-        for (int i = 0; i < mpg.size(); i++) {
-            result.add(getSatisfiedSubformulas(unit, nodeIDs.getNode(i)));
-        }
-
-        return result;
-    }
-
-    private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractSolveDD<T, L, AP> this,
+    private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractSolveDD<T, L, AP>this,
                                                    L label,
                                                    ModalProcessGraph<N, L, ?, AP, ?> mpg) {
         return new WorkUnit<>(label, mpg, initPredecessorsMapping(mpg));
@@ -265,74 +118,130 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         return nodeToPredecessors;
     }
 
-    private void initialize(FormulaNode<L, AP> ast) {
-        this.dependencyGraph = new DependencyGraph<>(ast);
-        this.currentBlockIndex = dependencyGraph.getBlocks().size() - 1;
+    public boolean solve(FormulaNode<L, AP> formula) {
+        this.solveInternal(formula, false, Collections.emptyList());
 
-        initDDManager(this.dependencyGraph);
+        final boolean sat = isSat();
+        shutdownDDManager();
+        return sat;
+    }
 
-        this.mustTransformers = new HashMap<>();
-        this.mayTransformers = new HashMap<>();
-        for (WorkUnit<?, ?> unit : workUnits.values()) {
-            initialize(unit);
+    public SolverHistory<L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
+        final List<SolverState<?, L, AP>> history = new ArrayList<>();
+        this.solveInternal(formula, true, history);
+
+        // TODO simplify?
+        final Map<L, NodeIDs<?>> nodeIDs = Maps.newHashMapWithExpectedSize(this.workUnits.size());
+        for (Entry<L, WorkUnit<?, ?>> e : this.workUnits.entrySet()) {
+            nodeIDs.put(e.getKey(), e.getValue().mpg.nodeIDs());
         }
+
+        final boolean isSat = isSat();
+        Map<L, Map<?, List<String>>> serializedPropertyTransformers = serializePropertyTransformers();
+        Map<L, Map<?, List<FormulaNode<L, AP>>>> satisfiedSubformulas = computeSatisfiedSubformulas();
+        Map<L, List<String>> serializedMustTransformers = serializePropertyTransformerMap(mustTransformers);
+        Map<L, List<String>> serializedMayTransformers = serializePropertyTransformerMap(mayTransformers);
+        shutdownDDManager();
+        return new SolverHistory<>(nodeIDs,
+                                   serializedPropertyTransformers,
+                                   satisfiedSubformulas,
+                                   serializedMustTransformers,
+                                   serializedMayTransformers,
+                                   history,
+                                   isSat,
+                                   getDDType());
     }
 
-    private <N> void initialize(WorkUnit<N, ?> unit) {
-        unit.workSet = newWorkSet(unit.mpg);
-        unit.propTransformers = initTransformers(unit.mpg);
-    }
-
-    private void resetWorkSet() {
-        for (WorkUnit<?, ?> value : this.workUnits.values()) {
-            resetWorkSet(value);
+    private Map<L, List<String>> serializePropertyTransformerMap(Map<L, T> transformers) {
+        Map<L, List<String>> serializedTransformers = Maps.newHashMapWithExpectedSize(transformers.size());
+        for (Map.Entry<L, T> entry : transformers.entrySet()) {
+            serializedTransformers.put(entry.getKey(), entry.getValue().serialize());
         }
+        return serializedTransformers;
     }
 
-    private <N> void resetWorkSet(WorkUnit<N, ?> unit) {
-        unit.workSet = newWorkSet(unit.mpg);
-    }
-
-    private <N> Set<N> newWorkSet(ModalProcessGraph<N, L, ?, AP, ?> mpg) {
-        // Add all states to work set except final state, which is never updated
-        Set<N> workset = new HashSet<>(mpg.getNodes());
-        workset.remove(mpg.getFinalNode());
-
-        return workset;
-    }
-
-    private <N> MutableMapping<N, T> initTransformers(ModalProcessGraph<N, L, ?, AP, ?> mpg) {
-        MutableMapping<N, @Nullable T> transformers = mpg.createStaticNodeMapping();
-        N finalNode = mpg.getFinalNode();
-
-        for (N n : mpg) {
-            if (Objects.equals(n, finalNode)) {
-                transformers.put(n, createInitTransformerEnd(dependencyGraph));
-            } else {
-                transformers.put(n, createInitState(dependencyGraph));
+    private void solveInternal(FormulaNode<L, AP> formula, boolean recordHistory, List<SolverState<?, L, AP>> history) {
+        FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
+        initialize(ast);
+        boolean workSetIsEmpty = false;
+        while (!workSetIsEmpty) {
+            workSetIsEmpty = true;
+            for (Entry<L, WorkUnit<?, ?>> entry : workUnits.entrySet()) {
+                workSetIsEmpty &= solveInternal(entry.getValue(), recordHistory, history);
             }
         }
-        return (MutableMapping<N, T>) transformers; // we put a transformer for every node, so it's no longer null
     }
 
-    private boolean isSat() {
-        return isSat(workUnits.get(mainProcess));
-    }
+    private <N> boolean solveInternal(WorkUnit<N, ?> unit, boolean recordHistory, List<SolverState<?, L, AP>> history) {
+        if (!unit.workSet.isEmpty()) {
+            final Iterator<N> iter = unit.workSet.iterator();
+            final N node = iter.next();
+            iter.remove();
 
-    private <N> boolean isSat(WorkUnit<N, ?> unit) {
-        @SuppressWarnings("nullness") // we have checked non-nullness of initial nodes in the constructor
-        @NonNull N initialNode = unit.mpg.getInitialNode();
-        return isSat(unit, initialNode);
-    }
-
-    private <N> boolean isSat(WorkUnit<N, ?> unit, N initialNode) {
-        List<FormulaNode<L, AP>> satisfiedFormulas = getSatisfiedSubformulas(unit, initialNode);
-        for (FormulaNode<L, AP> node : satisfiedFormulas) {
-            if (node.getVarNumber() == 0) {
-                return true;
+            final L mpgLabel = unit.label;
+            final List<T> compositions = updatedStateAndGetCompositions(unit, node);
+            if (recordHistory) {
+                //TODO: simplify?
+                final List<List<String>> serializedCompositions = new ArrayList<>(compositions.size());
+                for (T composition : compositions) {
+                    serializedCompositions.add(composition.serialize());
+                }
+                //TODO: Not sure how casting workUnits.get(mpgLabel) can be eliminated
+                history.add(new SolverState<>(unit.propTransformers.get(node).serialize(),
+                                              serializedCompositions,
+                                              node,
+                                              mpgLabel,
+                                              copyWorkSet(),
+                                              getSatisfiedSubformulas((WorkUnit<N, ?>) workUnits.get(mpgLabel), node)));
             }
+
+            return false;
         }
-        return false;
+
+        return true;
+    }
+
+    private <N> List<T> updatedStateAndGetCompositions(WorkUnit<N, ?> unit, N node) {
+        initUpdate(unit, node);
+        T stateTransformer = getTransformer(unit, node);
+        List<T> compositions = createCompositions(unit, node);
+        T updatedTransformer = getUpdatedPropertyTransformer(unit, node, stateTransformer, compositions);
+        updateTransformerAndWorkSet(unit, node, stateTransformer, updatedTransformer);
+        return compositions;
+    }
+
+    private Map<L, Set<?>> copyWorkSet() {
+        final Map<L, Set<?>> copy = Maps.newHashMapWithExpectedSize(workUnits.size());
+
+        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
+            copy.put(e.getKey(), copyWorkSet(e.getValue()));
+        }
+
+        return copy;
+    }
+
+    private <N> Set<N> copyWorkSet(WorkUnit<N, ?> unit) {
+        return new HashSet<>(unit.workSet);
+    }
+
+    private Map<L, Map<?, List<FormulaNode<L, AP>>>> computeSatisfiedSubformulas() {
+        final Map<L, Map<?, List<FormulaNode<L, AP>>>> result = Maps.newHashMapWithExpectedSize(workUnits.size());
+        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
+            result.put(e.getKey(), computeSatisfiedSubformulas(e.getValue()));
+        }
+
+        return result;
+    }
+
+    private <N> Map<N, List<FormulaNode<L, AP>>> computeSatisfiedSubformulas(WorkUnit<N, ?> unit) {
+        final ModalProcessGraph<N, L, ?, AP, ?> mpg = unit.mpg;
+
+        final Map<N, List<FormulaNode<L, AP>>> result = Maps.newHashMapWithExpectedSize(mpg.size());
+        for (N node : unit.mpg.getNodes()) {
+            result.put(node, getSatisfiedSubformulas(unit, node));
+        }
+
+        return result;
     }
 
     private <N> List<FormulaNode<L, AP>> getSatisfiedSubformulas(WorkUnit<N, ?> unit, N node) {
@@ -394,13 +303,33 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         return satisfiedVariables;
     }
 
-    private <N> List<T> updatedStateAndGetCompositions(WorkUnit<N, ?> unit, N node) {
-        initUpdate(unit, node);
-        T stateTransformer = getTransformer(unit, node);
-        List<T> compositions = createCompositions(unit, node);
-        T updatedTransformer = getUpdatedPropertyTransformer(unit, node, stateTransformer, compositions);
-        updateTransformerAndWorkSet(unit, node, stateTransformer, updatedTransformer);
+    private <N> void initUpdate(WorkUnit<N, ?> unit, N node) {
+        assert !Objects.equals(node, unit.mpg.getFinalNode()) : "End State must not be updated!";
+        unit.workSet.remove(node);
+    }
+
+    private <N> T getTransformer(WorkUnit<N, ?> unit, N node) {
+        return unit.propTransformers.get(node);
+    }
+
+    private <N, E> List<T> createCompositions(WorkUnit<N, E> unit, N node) {
+        ModalProcessGraph<N, L, E, AP, ?> mpg = unit.mpg;
+        List<T> compositions = new ArrayList<>();
+        for (E edge : mpg.getOutgoingEdges(node)) {
+            N targetNode = mpg.getTarget(edge);
+            T edgeTransformer = getEdgeTransformer(unit, edge);
+            T succTransformer = getTransformer(unit, targetNode);
+            T composition = edgeTransformer.compose(succTransformer);
+            composition.setIsMust(isMustEdge(mpg, edge));
+            compositions.add(composition);
+        }
         return compositions;
+    }
+
+    private <N> T getUpdatedPropertyTransformer(WorkUnit<N, ?> unit, N node, T stateTransformer, List<T> compositions) {
+        EquationalBlock<L, AP> currentBlock = dependencyGraph.getBlock(currentBlockIndex);
+        Set<AP> atomicPropositions = unit.mpg.getAtomicPropositions(node);
+        return stateTransformer.createUpdate(atomicPropositions, compositions, currentBlock);
     }
 
     private <N> void updateTransformerAndWorkSet(WorkUnit<N, ?> unit,
@@ -417,53 +346,6 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         }
     }
 
-    private <N> void updateWorkSet(WorkUnit<N, ?> unit, N node) {
-        if (Objects.equals(unit.mpg.getInitialNode(), node)) {
-            updateWorkSetStartState(unit.label);
-        }
-        addPredecessorsToWorkSet(unit, node);
-    }
-
-    private boolean workSetIsEmpty() {
-        for (WorkUnit<?, ?> unit : workUnits.values()) {
-            if (!unit.workSet.isEmpty()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private <N> void addPredecessorsToWorkSet(WorkUnit<N, ?> unit, N node) {
-        Set<N> preds = unit.predecessors.get(node);
-        if (preds != null) {
-            for (N pred : preds) {
-                addToWorkSet(unit, pred);
-            }
-        }
-    }
-
-    private void updateWorkSetStartState(L mpgLabel) {
-        for (WorkUnit<?, ?> unit : workUnits.values()) {
-            updateWorkSetStartState(unit, mpgLabel);
-        }
-    }
-
-    private <N, E> void updateWorkSetStartState(WorkUnit<N, E> unit, L mpgLabelOfUpdatedProcess) {
-        final ModalProcessGraph<N, L, E, AP, ?> mpg = unit.mpg;
-        for (N node : mpg) {
-            for (E outgoingEdge : mpg.getOutgoingEdges(node)) {
-                if (Objects.equals(mpg.getEdgeLabel(outgoingEdge), mpgLabelOfUpdatedProcess)) {
-                    addToWorkSet(unit, node);
-                }
-            }
-        }
-    }
-
-    private <N> void initUpdate(WorkUnit<N, ?> unit, N node) {
-        assert !Objects.equals(node, unit.mpg.getFinalNode()) : "End State must not be updated!";
-        unit.workSet.remove(node);
-    }
-
     private <E> T getEdgeTransformer(WorkUnit<?, E> unit, E edge) {
         T edgeTransformer;
         ModalProcessGraph<?, L, E, AP, ?> mpg = unit.mpg;
@@ -474,6 +356,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
             edgeTransformer = getInitialEdgeTransformer(edgeUnit);
         } else {
             if (isMustEdge(mpg, edge)) {
+                //TODO: initialize once at the beginning
                 if (mustTransformers.containsKey(edgeLabel)) {
                     edgeTransformer = mustTransformers.get(edgeLabel);
                 } else {
@@ -492,46 +375,161 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         return edgeTransformer;
     }
 
-    private <N> T getInitialEdgeTransformer(WorkUnit<N, ?> unit) {
-        @SuppressWarnings("nullness") // we have checked non-nullness of initial nodes in the constructor
-        @NonNull N initialNode = unit.mpg.getInitialNode();
-        return unit.propTransformers.get(initialNode);
+    private <E> boolean isMustEdge(ModalProcessGraph<?, L, E, AP, ?> mpg, E edge) {
+        return mpg.getEdgeProperty(edge).isMust();
+    }
+
+    private <N> void updateWorkSet(WorkUnit<N, ?> unit, N node) {
+        if (Objects.equals(unit.mpg.getInitialNode(), node)) {
+            updateWorkSetStartState(unit.label);
+        }
+        addPredecessorsToWorkSet(unit, node);
+    }
+
+    private boolean workSetIsEmpty() {
+        for (WorkUnit<?, ?> unit : workUnits.values()) {
+            if (!unit.workSet.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void resetWorkSet() {
+        for (WorkUnit<?, ?> value : this.workUnits.values()) {
+            resetWorkSet(value);
+        }
     }
 
     private <E> boolean isProcessEdge(ModalProcessGraph<?, L, E, AP, ?> mpg, E edge) {
         return mpg.getEdgeProperty(edge).isProcess();
     }
 
-    private <E> boolean isMustEdge(ModalProcessGraph<?, L, E, AP, ?> mpg, E edge) {
-        return mpg.getEdgeProperty(edge).isMust();
+    private <N> T getInitialEdgeTransformer(WorkUnit<N, ?> unit) {
+        @SuppressWarnings("nullness") // we have checked non-nullness of initial nodes in the constructor
+        @NonNull N initialNode = unit.mpg.getInitialNode();
+        return unit.propTransformers.get(initialNode);
     }
 
-    private <N> T getUpdatedPropertyTransformer(WorkUnit<N, ?> unit, N node, T stateTransformer, List<T> compositions) {
-        EquationalBlock<L, AP> currentBlock = dependencyGraph.getBlock(currentBlockIndex);
-        Set<AP> atomicPropositions = unit.mpg.getAtomicPropositions(node);
-        return stateTransformer.createUpdate(atomicPropositions, compositions, currentBlock);
-    }
+    protected abstract <TP extends ModalEdgeProperty> T createInitTransformerEdge(DependencyGraph<L, AP> dependencyGraph,
+                                                                                  L edgeLabel,
+                                                                                  TP edgeProperty);
 
-    private <N, E> List<T> createCompositions(WorkUnit<N, E> unit, N node) {
-        ModalProcessGraph<N, L, E, AP, ?> mpg = unit.mpg;
-        List<T> compositions = new ArrayList<>();
-        for (E edge : mpg.getOutgoingEdges(node)) {
-            N targetNode = mpg.getTarget(edge);
-            T edgeTransformer = getEdgeTransformer(unit, edge);
-            T succTransformer = getTransformer(unit, targetNode);
-            T composition = edgeTransformer.compose(succTransformer);
-            composition.setIsMust(isMustEdge(mpg, edge));
-            compositions.add(composition);
+    private void updateWorkSetStartState(L mpgLabel) {
+        for (WorkUnit<?, ?> unit : workUnits.values()) {
+            updateWorkSetStartState(unit, mpgLabel);
         }
-        return compositions;
     }
 
-    private <N> T getTransformer(WorkUnit<N, ?> unit, N node) {
-        return unit.propTransformers.get(node);
+    private <N> void addPredecessorsToWorkSet(WorkUnit<N, ?> unit, N node) {
+        Set<N> preds = unit.predecessors.get(node);
+        if (preds != null) {
+            for (N pred : preds) {
+                addToWorkSet(unit, pred);
+            }
+        }
+    }
+
+    private <N> void resetWorkSet(WorkUnit<N, ?> unit) {
+        unit.workSet = newWorkSet(unit.mpg);
+    }
+
+    private <N, E> void updateWorkSetStartState(WorkUnit<N, E> unit, L mpgLabelOfUpdatedProcess) {
+        final ModalProcessGraph<N, L, E, AP, ?> mpg = unit.mpg;
+        for (N node : mpg) {
+            for (E outgoingEdge : mpg.getOutgoingEdges(node)) {
+                if (Objects.equals(mpg.getEdgeLabel(outgoingEdge), mpgLabelOfUpdatedProcess)) {
+                    addToWorkSet(unit, node);
+                }
+            }
+        }
     }
 
     private <N> void addToWorkSet(WorkUnit<N, ?> unit, N node) {
         unit.workSet.add(node);
+    }
+
+    private <N> Set<N> newWorkSet(ModalProcessGraph<N, L, ?, AP, ?> mpg) {
+        // Add all states to work set except final state, which is never updated
+        Set<N> workset = new HashSet<>(mpg.getNodes());
+        workset.remove(mpg.getFinalNode());
+
+        return workset;
+    }
+
+    private FormulaNode<L, AP> ctlToMuCalc(FormulaNode<L, AP> ctlFormula) {
+        CTLToMuCalc<L, AP> transformation = new CTLToMuCalc<>();
+        return transformation.toMuCalc(ctlFormula);
+    }
+
+    private Map<L, Map<?, List<String>>> serializePropertyTransformers() {
+        final Map<L, Map<?, List<String>>> copy = Maps.newHashMapWithExpectedSize(workUnits.size());
+
+        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
+            copy.put(e.getKey(), copyPropTransformers(e.getValue()));
+        }
+
+        return copy;
+    }
+
+    private <N> Map<N, List<String>> copyPropTransformers(WorkUnit<N, ?> unit) {
+        Map<N, List<String>> nodeToSerializePropertyTransformer = Maps.newHashMapWithExpectedSize(unit.mpg.size());
+        for (N node : unit.mpg.getNodes()) {
+            nodeToSerializePropertyTransformer.put(node, unit.propTransformers.get(node).serialize());
+        }
+        return nodeToSerializePropertyTransformer;
+    }
+
+    private void initialize(FormulaNode<L, AP> ast) {
+        this.dependencyGraph = new DependencyGraph<>(ast);
+        this.currentBlockIndex = dependencyGraph.getBlocks().size() - 1;
+
+        initDDManager(this.dependencyGraph);
+
+        this.mustTransformers = new HashMap<>();
+        this.mayTransformers = new HashMap<>();
+        for (WorkUnit<?, ?> unit : workUnits.values()) {
+            initialize(unit);
+        }
+    }
+
+    private <N> void initialize(WorkUnit<N, ?> unit) {
+        unit.workSet = newWorkSet(unit.mpg);
+        unit.propTransformers = initTransformers(unit.mpg);
+    }
+
+    private <N> MutableMapping<N, T> initTransformers(ModalProcessGraph<N, L, ?, AP, ?> mpg) {
+        MutableMapping<N, @Nullable T> transformers = mpg.createStaticNodeMapping();
+        N finalNode = mpg.getFinalNode();
+
+        for (N n : mpg) {
+            if (Objects.equals(n, finalNode)) {
+                transformers.put(n, createInitTransformerEnd(dependencyGraph));
+            } else {
+                transformers.put(n, createInitState(dependencyGraph));
+            }
+        }
+        return (MutableMapping<N, T>) transformers; // we put a transformer for every node, so it's no longer null
+    }
+
+    private boolean isSat() {
+        return isSat(workUnits.get(mainProcess));
+    }
+
+    private <N> boolean isSat(WorkUnit<N, ?> unit) {
+        @SuppressWarnings("nullness") // we have checked non-nullness of initial nodes in the constructor
+        @NonNull N initialNode = unit.mpg.getInitialNode();
+        return isSat(unit, initialNode);
+    }
+
+    private <N> boolean isSat(WorkUnit<N, ?> unit, N initialNode) {
+        List<FormulaNode<L, AP>> satisfiedFormulas = getSatisfiedSubformulas(unit, initialNode);
+        for (FormulaNode<L, AP> node : satisfiedFormulas) {
+            if (node.getVarNumber() == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected abstract void initDDManager(DependencyGraph<L, AP> dependencyGraph);
@@ -540,11 +538,9 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
     protected abstract T createInitState(DependencyGraph<L, AP> dependencyGraph);
 
-    protected abstract <TP extends ModalEdgeProperty> T createInitTransformerEdge(DependencyGraph<L, AP> dependencyGraph,
-                                                                                  L edgeLabel,
-                                                                                  TP edgeProperty);
-
     protected abstract void shutdownDDManager();
+
+    protected abstract SolverHistory.DDType getDDType();
 
     private class WorkUnit<N, E> {
 

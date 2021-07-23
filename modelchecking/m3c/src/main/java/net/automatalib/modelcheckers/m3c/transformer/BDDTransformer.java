@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelcheckers.m3c.transformer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +24,9 @@ import java.util.Set;
 
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
+import info.scce.addlib.dd.xdd.XDD;
+import info.scce.addlib.dd.xdd.latticedd.example.BooleanLogicDDManager;
+import info.scce.addlib.serializer.XDDSerializer;
 import net.automatalib.modelcheckers.m3c.formula.AbstractModalFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
@@ -44,11 +48,6 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     /* One BDD for each lhs of equation system */
     private final BDD[] bdds;
 
-    public BDDTransformer(BDDManager bddManager, BDD[] bdds) {
-        this.bddManager = bddManager;
-        this.bdds = bdds;
-    }
-
     /* Initialize Property Transformer for a state */
     public BDDTransformer(BDDManager bddManager, DependencyGraph<L, AP> dependencyGraph) {
         this(bddManager, new BDD[dependencyGraph.getNumVariables()]);
@@ -63,6 +62,11 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
                 }
             }
         }
+    }
+
+    public BDDTransformer(BDDManager bddManager, BDD[] bdds) {
+        this.bddManager = bddManager;
+        this.bdds = bdds;
     }
 
     /* Create Property Transformer for an edge */
@@ -135,12 +139,16 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     @Override
-    public BDDTransformer<L, AP> copy() {
-        BDD[] bddCopies = new BDD[bdds.length];
-        for (int i = 0; i < bdds.length; i++) {
-            bddCopies[i] = new BDD(bdds[i].ptr(), bddManager);
+    public List<String> serialize() {
+        XDDSerializer<Boolean> xddSerializer = new XDDSerializer<>();
+        List<String> serializedBDDs = new ArrayList<>();
+        BooleanLogicDDManager booleanLogicDDManager = new BooleanLogicDDManager();
+        for (BDD bdd : bdds) {
+            XDD<Boolean> bddAsXDD = bdd.toXDD(booleanLogicDDManager);
+            serializedBDDs.add(xddSerializer.serialize(bddAsXDD));
+            bddAsXDD.recursiveDeref();
         }
-        return new BDDTransformer<>(bddManager, bddCopies);
+        return serializedBDDs;
     }
 
     private void updateFormulaNode(Set<AP> atomicPropositions,
@@ -189,12 +197,12 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         return result.orElseGet(bddManager::readLogicZero);
     }
 
-    public int getNumberOfVars() {
-        return bdds.length;
-    }
-
     public BDD getBDD(int var) {
         return bdds[var];
+    }
+
+    public int getNumberOfVars() {
+        return bdds.length;
     }
 
     @Override

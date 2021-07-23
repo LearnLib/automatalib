@@ -32,7 +32,7 @@ public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTran
                                    List<T> compositions,
                                    EquationalBlock<L, AP> currentBlock);
 
-    public abstract T copy();
+    public abstract List<String> serialize();
 
     public boolean isMust() {
         return isMust;
