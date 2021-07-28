@@ -21,10 +21,14 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.concepts.FiniteRepresentation;
+import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.concepts.NodeIDs;
+import net.automatalib.graphs.helpers.NodeIDGrowingMapping;
+import net.automatalib.graphs.helpers.NodeIDStaticMapping;
 import net.automatalib.graphs.helpers.SimpleNodeIDs;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The finite version of a {@link IndefiniteSimpleGraph}.
@@ -60,6 +64,16 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N>, F
 
     default Stream<N> nodesStream() {
         return getNodes().stream();
+    }
+
+    @Override
+    default <@Nullable V> MutableMapping<N, V> createStaticNodeMapping() {
+        return new NodeIDStaticMapping<>(nodeIDs(), size());
+    }
+
+    @Override
+    default <@Nullable V> MutableMapping<N, V> createDynamicNodeMapping() {
+        return new NodeIDGrowingMapping<>(nodeIDs(), size());
     }
 
     default NodeIDs<N> nodeIDs() {

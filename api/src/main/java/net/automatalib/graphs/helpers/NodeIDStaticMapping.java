@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.helpers;
+package net.automatalib.graphs.helpers;
 
-import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.graphs.concepts.NodeIDs;
 
-public class StateIDStaticMapping<S, V> implements MutableMapping<S, V> {
+public class NodeIDStaticMapping<S, V> implements MutableMapping<S, V> {
 
-    private final StateIDs<S> stateIds;
+    private final NodeIDs<S> nodeIDs;
     private final V[] storage;
 
     @SuppressWarnings("unchecked")
-    public StateIDStaticMapping(StateIDs<S> stateIds, int size) {
-        this.stateIds = stateIds;
+    public NodeIDStaticMapping(NodeIDs<S> nodeIDs, int size) {
+        this.nodeIDs = nodeIDs;
         this.storage = (V[]) new Object[size];
     }
 
     @Override
     public V get(S elem) {
-        return storage[stateIds.getStateId(elem)];
+        return storage[nodeIDs.getNodeId(elem)];
     }
 
     @Override
     public V put(S key, V value) {
-        final int stateId = stateIds.getStateId(key);
-        final V old = storage[stateId];
-        storage[stateId] = value;
+        final int nodeId = nodeIDs.getNodeId(key);
+        final V old = storage[nodeId];
+        storage[nodeId] = value;
         return old;
     }
 
