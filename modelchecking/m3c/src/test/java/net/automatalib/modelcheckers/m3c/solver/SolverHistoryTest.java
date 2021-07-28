@@ -21,10 +21,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Iterators;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanLogicDDManager;
 import info.scce.addlib.serializer.XDDSerializer;
+import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.graphs.ModalProcessGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
@@ -53,45 +53,84 @@ public class SolverHistoryTest {
         final SolveBDD<String, String> solver = new SolveBDD<>(mcfps);
         final FormulaNode<String, String> formula = M3CParser.parse("mu X.(<b><b>true || <>X)");
         final SolverHistory<String, String> history = solver.solveAndRecordHistory(formula);
-        final ModalProcessGraph<?, String, ?, String, ?> mpg = mcfps.getMPGs().get(mcfps.getMainProcess());
-        testSolverHistory(history, mpg);
+        final Map<String, SolverData<String, ?, String>> data = history.getData();
+
+        Assert.assertEquals(data.size(), 1);
+
+        final SolverData<String, ?, String> solverData = data.get("P");
+
+        Assert.assertNotNull(solverData);
+        testSolverHistory(history, solverData);
     }
 
-    private <N> void testSolverHistory(SolverHistory<String, String> history,
-                                       ModalProcessGraph<N, String, ?, String, ?> mpg) {
+    private <N> void testSolverHistory(SolverHistory<String, String> history, SolverData<String, N, String> data) {
+        final ModalProcessGraph<N, String, ?, String, ?> mpg = data.getMpg();
         final N initialNode = mpg.getInitialNode();
         final N s1 = getS1(mpg);
         final N s2 = getS2(mpg, s1);
 
-        testNodeIDs(history, mpg);
-        testInitialPropertyTransformers(history, mpg, s1, s2);
-        testInitialSatisifedSubformulas(history, mpg, s1, s2);
+        testNodeIDs(data);
+        testInitialPropertyTransformers(data, s1, s2);
+        testInitialSatisifedSubformulas(data, s1, s2);
         testMustTransformers(history);
-        Assert.assertTrue(history.getMayTransformers().isEmpty());
         testSolverStates(history, mpg, initialNode, s1, s2);
+
+        Assert.assertTrue(history.getMayTransformers().isEmpty());
         Assert.assertEquals(SolverHistory.DDType.BDD, history.getDDType());
         Assert.assertTrue(history.isSat());
     }
 
-    private <N> void testSolverStates(SolverHistory<String, String> history,
-                                      ModalProcessGraph<N, String, ?, String, ?> mpg,
-                                      N initialNode,
-                                      N s1,
-                                      N s2) {
-        final List<N> updatedOrder =
-                Arrays.asList(initialNode, s1, initialNode, s2, s1, initialNode, s1, initialNode, s1, initialNode, s1);
-        Assert.assertEquals(history.getSolverStates().size(), updatedOrder.size());
+    private <N> void testNodeIDs(SolverData<String, N, String> data) {
 
-        for (int i = 0; i < updatedOrder.size(); i++) {
-            final N expectedState = updatedOrder.get(i);
-            final SolverState<N, String, String> solverState =
-                    (SolverState<N, String, String>) history.getSolverStates().get(i);
-            final N actualState = solverState.getUpdatedState();
-            Assert.assertEquals(actualState, expectedState);
-            Assert.assertEquals(Iterators.size(mpg.getOutgoingEdges(actualState).iterator()),
-                                solverState.getCompositions().size());
-            Assert.assertEquals(solverState.getUpdatedStateMPG(), mcfps.getMainProcess());
+        final ModalProcessGraph<N, String, ?, String, ?> mpg = data.getMpg();
+        final NodeIDs<N> nodeIDs = data.getNodeIDs();
+
+        // check that nodeIDs contains a mapping for each node in mpg
+        for (final N node : mpg.getNodes()) {
+            nodeIDs.getNodeId(node);
         }
+    }
+
+    private <N> void testInitialPropertyTransformers(SolverData<String, N, String> data, N s1, N s2) {
+
+        final ModalProcessGraph<N, String, ?, String, ?> mpg = data.getMpg();
+        final Mapping<N, List<String>> initialPropertyTransformers = data.getInitialPropertyTransformers();
+
+        final List<XDD<Boolean>> startPT = getDDs(initialPropertyTransformers.get(mpg.getInitialNode()));
+        final List<XDD<Boolean>> endPT = getDDs(initialPropertyTransformers.get(mpg.getFinalNode()));
+        final List<XDD<Boolean>> s1PT = getDDs(initialPropertyTransformers.get(s1));
+        final List<XDD<Boolean>> s2PT = getDDs(initialPropertyTransformers.get(s2));
+
+        // the PTs of start, s1 and s2 are initialized with an array of zero BDDs
+        Assert.assertEquals(startPT, s1PT);
+        Assert.assertEquals(startPT, s2PT);
+        Assert.assertEquals(s1PT, s2PT);
+        // the end state PT is initialized with the identity function
+        Assert.assertNotEquals(startPT, endPT);
+
+        final XDD<Boolean> zeroDD = ddManager.zero();
+        for (final XDD<Boolean> startDD : startPT) {
+            Assert.assertEquals(startDD, zeroDD);
+        }
+        for (int i = 0; i < endPT.size(); i++) {
+            Assert.assertEquals(endPT.get(i), ddManager.ithVar(i));
+        }
+    }
+
+    private <N> void testInitialSatisifedSubformulas(SolverData<String, N, String> data, N s1, N s2) {
+
+        final ModalProcessGraph<N, String, ?, String, ?> mpg = data.getMpg();
+        final Mapping<N, List<FormulaNode<String, String>>> initialSatisfiedSubformulas =
+                data.getInitialSatisfiedSubformulas();
+
+        Assert.assertTrue(initialSatisfiedSubformulas.get(mpg.getInitialNode()).isEmpty());
+        Assert.assertTrue(initialSatisfiedSubformulas.get(s1).isEmpty());
+        Assert.assertTrue(initialSatisfiedSubformulas.get(s2).isEmpty());
+
+        final List<FormulaNode<String, String>> finalNodeSatisfiedSubformulas =
+                initialSatisfiedSubformulas.get(mpg.getFinalNode());
+        Assert.assertEquals(finalNodeSatisfiedSubformulas.size(), 1);
+        Assert.assertTrue(finalNodeSatisfiedSubformulas.get(0) instanceof TrueNode);
     }
 
     private void testMustTransformers(SolverHistory<String, String> history) {
@@ -120,51 +159,23 @@ public class SolverHistoryTest {
         }
     }
 
-    private <N> void testInitialSatisifedSubformulas(SolverHistory<String, String> history,
-                                                     ModalProcessGraph<N, String, ?, String, ?> mpg,
-                                                     N s1,
-                                                     N s2) {
-        final Map<String, Map<?, List<FormulaNode<String, String>>>> initialSatisfiedSubformulas =
-                history.getInitialSatisfiedSubformulas();
-        Assert.assertEquals(initialSatisfiedSubformulas.size(), 1);
-        final Map<N, List<FormulaNode<String, String>>> mpgSatisfiedSubformulas =
-                (Map<N, List<FormulaNode<String, String>>>) initialSatisfiedSubformulas.get(mcfps.getMainProcess());
-        Assert.assertTrue(mpgSatisfiedSubformulas.get(mpg.getInitialNode()).isEmpty());
-        Assert.assertTrue(mpgSatisfiedSubformulas.get(s1).isEmpty());
-        Assert.assertTrue(mpgSatisfiedSubformulas.get(s2).isEmpty());
-        final List<FormulaNode<String, String>> finalNodeSatisfiedSubformulas =
-                mpgSatisfiedSubformulas.get(mpg.getFinalNode());
-        Assert.assertEquals(finalNodeSatisfiedSubformulas.size(), 1);
-        Assert.assertTrue(finalNodeSatisfiedSubformulas.get(0) instanceof TrueNode);
-    }
+    private <N> void testSolverStates(SolverHistory<String, String> history,
+                                      ModalProcessGraph<N, String, ?, String, ?> mpg,
+                                      N initialNode,
+                                      N s1,
+                                      N s2) {
+        final List<N> updatedOrder =
+                Arrays.asList(initialNode, s1, initialNode, s2, s1, initialNode, s1, initialNode, s1, initialNode, s1);
+        Assert.assertEquals(history.getSolverStates().size(), updatedOrder.size());
 
-    private <N> void testInitialPropertyTransformers(SolverHistory<String, String> history,
-                                                     ModalProcessGraph<N, String, ?, String, ?> mpg,
-                                                     N s1,
-                                                     N s2) {
-        final Map<String, Map<?, List<String>>> initialPropertyTransformers = history.getInitialPropertyTransformers();
-        Assert.assertEquals(initialPropertyTransformers.size(), 1);
-        final Map<N, List<String>> mpgInitialPropertyTransformers =
-                (Map<N, List<String>>) initialPropertyTransformers.get(mcfps.getMainProcess());
-        Assert.assertEquals(mpgInitialPropertyTransformers.size(), 4);
-        final List<XDD<Boolean>> startPT = getDDs(mpgInitialPropertyTransformers.get(mpg.getInitialNode()));
-        final List<XDD<Boolean>> endPT = getDDs(mpgInitialPropertyTransformers.get(mpg.getFinalNode()));
-        final List<XDD<Boolean>> s1PT = getDDs(mpgInitialPropertyTransformers.get(s1));
-        final List<XDD<Boolean>> s2PT = getDDs(mpgInitialPropertyTransformers.get(s2));
-
-        // the PTs of start, s1 and s2 are initialized with an array of zero BDDs
-        Assert.assertEquals(startPT, s1PT);
-        Assert.assertEquals(startPT, s2PT);
-        Assert.assertEquals(s1PT, s2PT);
-        // the end state PT is initialized with the identity function
-        Assert.assertNotEquals(startPT, endPT);
-
-        final XDD<Boolean> zeroDD = ddManager.zero();
-        for (final XDD<Boolean> startDD : startPT) {
-            Assert.assertEquals(startDD, zeroDD);
-        }
-        for (int i = 0; i < endPT.size(); i++) {
-            Assert.assertEquals(endPT.get(i), ddManager.ithVar(i));
+        for (int i = 0; i < updatedOrder.size(); i++) {
+            final N expectedState = updatedOrder.get(i);
+            final SolverState<?, String, String> solverState = history.getSolverStates().get(i);
+            @SuppressWarnings("unchecked")
+            final N actualState = (N) solverState.getUpdatedState();
+            Assert.assertEquals(actualState, expectedState);
+            Assert.assertEquals(mpg.getOutgoingEdges(actualState).size(), solverState.getCompositions().size());
+            Assert.assertEquals(solverState.getUpdatedStateMPG(), mcfps.getMainProcess());
         }
     }
 
@@ -180,11 +191,11 @@ public class SolverHistoryTest {
         final N initalNode = mpg.getInitialNode();
         // the initial node is connected to s1 by an "a" labeled edge
         for (final E edge : mpg.getOutgoingEdges(initalNode)) {
-            if (mpg.getEdgeLabel(edge).equals("a")) {
+            if ("a".equals(mpg.getEdgeLabel(edge))) {
                 return mpg.getTarget(edge);
             }
         }
-        return null;
+        throw new IllegalStateException("unexpected modal process graph");
     }
 
     private <N, E> N getS2(ModalProcessGraph<N, String, E, String, ?> mpg, N s1) {
@@ -192,19 +203,7 @@ public class SolverHistoryTest {
         for (final N adjacentTarget : mpg.getAdjacentTargets(s1)) {
             return adjacentTarget;
         }
-        return null;
-    }
-
-    private <N> void testNodeIDs(SolverHistory<String, String> history,
-                                 ModalProcessGraph<N, String, ?, String, ?> mpg) {
-        final Map<String, NodeIDs<?>> nodeIDs = history.getNodeIDs();
-        Assert.assertEquals(nodeIDs.size(), 1);
-        final NodeIDs<N> mpgNodeIDs = (NodeIDs<N>) nodeIDs.get(mcfps.getMainProcess());
-
-        // check that mpgNodeIDs contains a mapping for each node in mpg
-        for (final N node : mpg.getNodes()) {
-            mpgNodeIDs.getNodeId(node);
-        }
+        throw new IllegalStateException("unexpected modal process graph");
     }
 
 }

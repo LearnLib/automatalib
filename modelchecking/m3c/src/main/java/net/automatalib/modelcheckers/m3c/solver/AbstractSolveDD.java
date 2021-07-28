@@ -31,7 +31,6 @@ import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.graphs.ModalProcessGraph;
-import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
@@ -138,11 +137,9 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
         initialize(ast);
 
-        final Map<L, Map<?, List<String>>> serializedPropertyTransformers = serializePropertyTransformers();
-        final Map<L, Map<?, List<FormulaNode<L, AP>>>> initialSatisfiedSubformulas = computeSatisfiedSubformulas();
-        final Map<L, NodeIDs<?>> nodeIDs = Maps.newHashMapWithExpectedSize(this.workUnits.size());
+        final Map<L, SolverData<L, ?, AP>> data = Maps.newHashMapWithExpectedSize(this.workUnits.size());
         for (Entry<L, WorkUnit<?, ?>> e : this.workUnits.entrySet()) {
-            nodeIDs.put(e.getKey(), e.getValue().mpg.nodeIDs());
+            data.put(e.getKey(), createProcessData(e.getValue()));
         }
 
         this.solveInternal(true, history);
@@ -153,14 +150,16 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
         shutdownDDManager();
 
-        return new SolverHistory<>(nodeIDs,
-                                   serializedPropertyTransformers,
-                                   initialSatisfiedSubformulas,
+        return new SolverHistory<>(data,
                                    serializedMustTransformers,
                                    serializedMayTransformers,
                                    history,
                                    isSat,
                                    getDDType());
+    }
+
+    private <N, E> SolverData<L, N, AP> createProcessData(WorkUnit<N, E> unit) {
+        return new SolverData<>(unit.mpg, serializePropertyTransformers(unit), computeSatisfiedSubformulas(unit));
     }
 
     private Map<L, List<String>> serializePropertyTransformerMap(Map<L, T> transformers) {
@@ -230,23 +229,14 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         return new HashSet<>(unit.workSet);
     }
 
-    private Map<L, Map<?, List<FormulaNode<L, AP>>>> computeSatisfiedSubformulas() {
-        final Map<L, Map<?, List<FormulaNode<L, AP>>>> result = Maps.newHashMapWithExpectedSize(workUnits.size());
-        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
-            result.put(e.getKey(), computeSatisfiedSubformulas(e.getValue()));
-        }
-        return result;
-    }
-
-    private <N> Map<N, List<FormulaNode<L, AP>>> computeSatisfiedSubformulas(WorkUnit<N, ?> unit) {
-        final ModalProcessGraph<N, L, ?, AP, ?> mpg = unit.mpg;
-
-        final Map<N, List<FormulaNode<L, AP>>> result = Maps.newHashMapWithExpectedSize(mpg.size());
+    private <N> Mapping<N, List<FormulaNode<L, AP>>> computeSatisfiedSubformulas(WorkUnit<N, ?> unit) {
+        final MutableMapping<N, @Nullable List<FormulaNode<L, AP>>> result = unit.mpg.createStaticNodeMapping();
         for (N node : unit.mpg.getNodes()) {
             result.put(node, getSatisfiedSubformulas(unit, node));
         }
 
-        return result;
+        // we put a transformer for every node, so it's no longer null
+        return (MutableMapping<N, List<FormulaNode<L, AP>>>) result;
     }
 
     private <N> List<FormulaNode<L, AP>> getSatisfiedSubformulas(WorkUnit<N, ?> unit, N node) {
@@ -466,22 +456,13 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         return transformation.toMuCalc(ctlFormula);
     }
 
-    private Map<L, Map<?, List<String>>> serializePropertyTransformers() {
-        final Map<L, Map<?, List<String>>> copy = Maps.newHashMapWithExpectedSize(workUnits.size());
-
-        for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
-            copy.put(e.getKey(), serializePropertyTransformers(e.getValue()));
-        }
-
-        return copy;
-    }
-
-    private <N> Map<N, List<String>> serializePropertyTransformers(WorkUnit<N, ?> unit) {
-        final Map<N, List<String>> nodeToSerializePropertyTransformer = Maps.newHashMapWithExpectedSize(unit.mpg.size());
+    private <N> Mapping<N, List<String>> serializePropertyTransformers(WorkUnit<N, ?> unit) {
+        final MutableMapping<N, @Nullable List<String>> result = unit.mpg.createStaticNodeMapping();
         for (N node : unit.mpg.getNodes()) {
-            nodeToSerializePropertyTransformer.put(node, unit.propTransformers.get(node).serialize());
+            result.put(node, unit.propTransformers.get(node).serialize());
         }
-        return nodeToSerializePropertyTransformer;
+        // we put a transformer for every node, so it's no longer null
+        return (MutableMapping<N, List<String>>) result;
     }
 
     private void initialize(FormulaNode<L, AP> ast) {

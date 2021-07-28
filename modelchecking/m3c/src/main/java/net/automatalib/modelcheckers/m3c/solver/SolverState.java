@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author murtovi
@@ -31,13 +30,13 @@ public final class SolverState<N, L, AP> {
     private final List<List<String>> compositions;
     private final List<FormulaNode<L, AP>> updatedStateSatisfiedSubformula;
     private final N updatedState;
-    private final @Nullable L updatedStateMPG;
+    private final L updatedStateMPG;
     private final Map<L, Set<?>> workSet;
 
     SolverState(List<String> updatedPropTransformer,
                 List<List<String>> compositions,
                 N updatedState,
-                @Nullable L updatedStateMPG,
+                L updatedStateMPG,
                 Map<L, Set<?>> workSet,
                 List<FormulaNode<L, AP>> updatedStateSatisfiedSubformula) {
         this.updatedPropTransformer = updatedPropTransformer;
@@ -64,7 +63,7 @@ public final class SolverState<N, L, AP> {
         return updatedState;
     }
 
-    public @Nullable L getUpdatedStateMPG() {
+    public L getUpdatedStateMPG() {
         return updatedStateMPG;
     }
 

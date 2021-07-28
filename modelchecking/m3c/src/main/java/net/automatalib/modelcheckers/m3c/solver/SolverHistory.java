@@ -18,34 +18,25 @@ package net.automatalib.modelcheckers.m3c.solver;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.graphs.concepts.NodeIDs;
-import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-
 /**
  * @author murtovi
  */
 public final class SolverHistory<L, AP> {
 
-    private final Map<L, NodeIDs<?>> nodeIDs;
-    private final Map<L, Map<?, List<String>>> initialPropertyTransformers;
-    private final Map<L, Map<?, List<FormulaNode<L, AP>>>> initialSatisfiedSubformulas;
+    private final Map<L, SolverData<L, ?, AP>> data;
     private final Map<L, List<String>> mustTransformers;
     private final Map<L, List<String>> mayTransformers;
     private final List<SolverState<?, L, AP>> solverStates;
     private final boolean isSat;
     private final DDType ddType;
 
-    SolverHistory(Map<L, NodeIDs<?>> nodeIDs,
-                  Map<L, Map<?, List<String>>> initialPropertyTransformers,
-                  Map<L, Map<?, List<FormulaNode<L, AP>>>> initialSatisfiedSubformulas,
+    SolverHistory(Map<L, SolverData<L, ?, AP>> data,
                   Map<L, List<String>> mustTransformers,
                   Map<L, List<String>> mayTransformers,
                   List<SolverState<?, L, AP>> solverStates,
                   boolean isSat,
                   DDType ddType) {
-        this.nodeIDs = nodeIDs;
-        this.initialPropertyTransformers = initialPropertyTransformers;
-        this.initialSatisfiedSubformulas = initialSatisfiedSubformulas;
+        this.data = data;
         this.mustTransformers = mustTransformers;
         this.mayTransformers = mayTransformers;
         this.solverStates = solverStates;
@@ -53,16 +44,8 @@ public final class SolverHistory<L, AP> {
         this.ddType = ddType;
     }
 
-    public Map<L, NodeIDs<?>> getNodeIDs() {
-        return nodeIDs;
-    }
-
-    public Map<L, Map<?, List<String>>> getInitialPropertyTransformers() {
-        return initialPropertyTransformers;
-    }
-
-    public Map<L, Map<?, List<FormulaNode<L, AP>>>> getInitialSatisfiedSubformulas() {
-        return initialSatisfiedSubformulas;
+    public Map<L, SolverData<L, ?, AP>> getData() {
+        return data;
     }
 
     public Map<L, List<String>> getMustTransformers() {
@@ -89,4 +72,5 @@ public final class SolverHistory<L, AP> {
         ADD,
         BDD
     }
+
 }
