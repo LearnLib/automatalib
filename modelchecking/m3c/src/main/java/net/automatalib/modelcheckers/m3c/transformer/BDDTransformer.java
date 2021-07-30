@@ -68,7 +68,6 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     public BDDTransformer(BDDManager bddManager, BDD[] bdds) {
-        super();
         this.bddManager = bddManager;
         this.bdds = bdds;
     }

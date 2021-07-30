@@ -43,32 +43,32 @@ public final class M3CSPAExample {
         final SPA<?, Character> spa = PalindromeExample.buildSPA();
         final MCFPSView<Character> view = new MCFPSView<>(spa);
 
-        Visualization.visualize(view);
-
         //@formatter:off
         final String[] formulae = {"mu X.(<>X || <b><b>true)", // there exists a path with "bb"
                                    "mu X.(<>X || <b><S><b>true)", // there exists a path with "bSb"
-                                   "mu X.(<>X || <T><b>true)", // there exists a path with "bTb"
-                                   // "nu X. ([]X && mu Y. (<>Y || (\"fin\" && [] false)))", // on all paths there exists a path to the final state
-                                   "nu X. ([]X || (\"fin\" && [] false))", // on all paths there exists a path to the final state
-                                   "mu X. ([]X || (\"fin\" && [] false))", // on all paths there exists a path to the final state
-                                   // "nu X. ([]X && (<S>true -> mu Y. (<S>Y || <R>true)))", // globally, if there exists and S, it must be followed by an R eventually
+                                   "mu X.(<>X || <b><T><b>true)", // there exists a path with "bTb"
                                    "<S><T><a>true", // There exists a starting sequence of STa
                                    "<S><T><b>true", // There exists a starting sequence of STb
                                    "<S><T><c>true", // There exists a starting sequence of STc
                                    "<S><a><T><c>true", // There exists a starting sequence of SaTc
                                    "<S><a><S><T><c>true", // There exists a starting sequence of SaSTc
+                                   "nu X. ([]X && [] false)", // all paths reach the final state
+                                   "mu X. (<>X || [] false)", // there exists a path to the final state
+                                   "nu X. ([]X && mu Y. (<>Y || [] false))", // on all paths there exists a path to the final state
+                                   "nu X. ([]X && (<S>true -> mu Y. (<S>Y || <R>true)))", // globally, if there exists an S, it must be followed by an R eventually
         };
         //@formatter:on
 
         final Function<String, Character> labelParser = s -> s.charAt(0);
         final Function<String, Set<Void>> apParser = s -> Collections.emptySet();
-        final TypedM3CSolver<FormulaNode<Character, Void>> solver = M3CSolvers.typedBDDSolver(view);
+        final TypedM3CSolver<FormulaNode<Character, Void>> solver = M3CSolvers.typedSolver(view);
 
         for (String f : formulae) {
             final FormulaNode<Character, Void> formula = M3CParser.parse(f, labelParser, apParser);
             LOGGER.info("Is '{}' satisfied? {}", f, solver.solve(formula));
         }
+
+        Visualization.visualize(view);
 
     }
 }

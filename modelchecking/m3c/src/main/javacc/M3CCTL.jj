@@ -59,18 +59,18 @@ TOKEN:
 // atoms
 	< LPAREN: "(" >
 |	< RPAREN: ")" >
-|   < LBRACKET: "[" >
-|   < RBRACKET: "]" >
-|   < LABRACKET: "<" >
-|   < RABRACKET: ">" >
+|	< LBRACKET: "[" >
+|	< RBRACKET: "]" >
+|	< LABRACKET: "<" >
+|	< RABRACKET: ">" >
 // junctors
 |	< NEGATION: "!" >
 |	< ALL: "A" >
 |	< EXISTS: "E" >
 |	< AF: "AF" >
 |	< AG: "AG" >
-|   < EF: "EF" >
-|   < EG: "EG" >
+|	< EF: "EF" >
+|	< EG: "EG" >
 |	< UNTIL: "U" >
 |	< WUNTIL: "W" >
 |	< AND: "&&" >

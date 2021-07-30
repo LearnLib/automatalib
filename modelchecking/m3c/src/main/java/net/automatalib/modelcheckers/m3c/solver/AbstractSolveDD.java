@@ -265,7 +265,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     private <N, E, TP extends ProceduralModalEdgeProperty> Set<Integer> getAllAPDeadlockedState(ModalProcessGraph<N, L, E, AP, TP> mainMpg) {
         final Set<Integer> satisfiedVariables = new HashSet<>();
         @SuppressWarnings("nullness") // we have checked non-nullness of final nodes in the constructor
-        @NonNull N finalNode = mainMpg.getFinalNode();
+        final @NonNull N finalNode = mainMpg.getFinalNode();
         for (int blockIdx = dependencyGraph.getBlocks().size() - 1; blockIdx >= 0; blockIdx--) {
             final EquationalBlock<L, AP> block = dependencyGraph.getBlock(blockIdx);
             for (FormulaNode<L, AP> node : block.getNodes()) {

@@ -53,13 +53,11 @@ public final class DependencyGraph<L, AP> {
 
     private void sortBlocks() {
         for (EquationalBlock<L, AP> block : blocks) {
-            //TODO: Test if this is always enough
             Collections.reverse(block.getNodes());
         }
     }
 
     private void createEquationalBlocks(FormulaNode<L, AP> root) {
-        //TODO: What do we do when root is not a FixedPointNode? -> Atm. use maxBlock?
         boolean isMax = !(root instanceof LfpNode);
         EquationalBlock<L, AP> block = new EquationalBlock<>(isMax);
         blocks.add(block);
@@ -68,7 +66,6 @@ public final class DependencyGraph<L, AP> {
     }
 
     private void createEquationalBlocks(FormulaNode<L, AP> node, int blockNumber) {
-        //TODO: Test this
         EquationalBlock<L, AP> currentBlock = blocks.get(blockNumber);
         boolean isMax = currentBlock.isMaxBlock();
 

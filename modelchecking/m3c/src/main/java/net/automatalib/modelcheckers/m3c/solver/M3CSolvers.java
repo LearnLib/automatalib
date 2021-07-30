@@ -30,18 +30,80 @@ public final class M3CSolvers {
         // prevent instantiation
     }
 
+    /**
+     * Returns a default {@link M3CSolver} solver for string-based modal context-free process systems. This method
+     * currently delegates solver construction to {@link #bddSolver(ModalContextFreeProcessSystem)}.
+     *
+     * @param mcfps
+     *         the modal context-free process system to evaluate formulae on
+     *
+     * @return a default {@link M3CSolver} solver for string-based modal context-free process systems
+     *
+     * @see #bddSolver(ModalContextFreeProcessSystem)
+     */
+    public static M3CSolver<String> solver(ModalContextFreeProcessSystem<String, String> mcfps) {
+        return bddSolver(mcfps);
+    }
+
+    /**
+     * Returns a default {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems. This
+     * method currently delegates solver construction to {@link #typedBDDSolver(ModalContextFreeProcessSystem)}.
+     *
+     * @param mcfps
+     *         the modal context-free process system to evaluate formulae on
+     *
+     * @return a default {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
+     *
+     * @see #typedBDDSolver(ModalContextFreeProcessSystem)
+     */
+    public static <L, AP> TypedM3CSolver<FormulaNode<L, AP>> typedSolver(ModalContextFreeProcessSystem<L, AP> mcfps) {
+        return typedBDDSolver(mcfps);
+    }
+
+    /**
+     * Returns an ADD-backed {@link M3CSolver} solver for string-based modal context-free process systems.
+     *
+     * @param mcfps
+     *         the modal context-free process system to evaluate formulae on
+     *
+     * @return an ADD-backed {@link M3CSolver} solver for string-based modal context-free process systems
+     */
     public static M3CSolver<String> addSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
         return new StringSolveADD(mcfps);
     }
 
+    /**
+     * Returns an ADD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems.
+     *
+     * @param mcfps
+     *         the modal context-free process system to evaluate formulae on
+     *
+     * @return an ADD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
+     */
     public static <L, AP> TypedM3CSolver<FormulaNode<L, AP>> typedADDSolver(ModalContextFreeProcessSystem<L, AP> mcfps) {
         return new TypedSolveADD<>(mcfps);
     }
 
+    /**
+     * Returns a BDD-backed {@link M3CSolver} solver for string-based modal context-free process systems.
+     *
+     * @param mcfps
+     *         the modal context-free process system to evaluate formulae on
+     *
+     * @return an ADD-backed {@link M3CSolver} solver for string-based modal context-free process systems
+     */
     public static M3CSolver<String> bddSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
         return new StringSolveBDD(mcfps);
     }
 
+    /**
+     * Returns a BDD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems.
+     *
+     * @param mcfps
+     *         the modal context-free process system to evaluate formulae on
+     *
+     * @return a BDD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
+     */
     public static <L, AP> TypedM3CSolver<FormulaNode<L, AP>> typedBDDSolver(ModalContextFreeProcessSystem<L, AP> mcfps) {
         return new TypedSolveBDD<>(mcfps);
     }

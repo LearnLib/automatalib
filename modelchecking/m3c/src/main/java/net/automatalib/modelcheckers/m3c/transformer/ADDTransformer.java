@@ -44,7 +44,6 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     private final XDD<BooleanVector> add;
 
     public ADDTransformer(BooleanVectorLogicDDManager xddManager, XDD<BooleanVector> add) {
-        super();
         this.add = add;
         this.xddManager = xddManager;
     }
@@ -57,7 +56,6 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     /* Initialization of a state property transformer*/
     public ADDTransformer(BooleanVectorLogicDDManager xddManager, DependencyGraph<L, AP> dependGraph) {
-        super();
         this.xddManager = xddManager;
         final boolean[] terminal = new boolean[dependGraph.getNumVariables()];
         for (EquationalBlock<L, AP> block : dependGraph.getBlocks()) {
@@ -72,27 +70,26 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     /* Creates the identity function */
     public ADDTransformer(BooleanVectorLogicDDManager ddManager, int numberOfVars) {
-        super();
         this.xddManager = ddManager;
         final boolean[] falseArr = new boolean[numberOfVars];
-        boolean[] trueArr = new boolean[numberOfVars];
+        final boolean[] trueArr = new boolean[numberOfVars];
         trueArr[0] = true;
         final BooleanVector booleanVector = new BooleanVector(falseArr);
         final XDD<BooleanVector> falseDD = xddManager.constant(booleanVector);
-        XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(trueArr));
+        final XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(trueArr));
         XDD<BooleanVector> tmpADD = xddManager.ithVar(0, thenDD, falseDD);
         thenDD.recursiveDeref();
 
         for (int i = 1; i < numberOfVars; i++) {
-            trueArr = new boolean[numberOfVars];
-            trueArr[i] = true;
+            final boolean[] arr = new boolean[numberOfVars];
+            arr[i] = true;
 
-            thenDD = xddManager.constant(new BooleanVector(trueArr));
-            final XDD<BooleanVector> proj = xddManager.ithVar(i, thenDD, falseDD);
+            final XDD<BooleanVector> dd = xddManager.constant(new BooleanVector(arr));
+            final XDD<BooleanVector> proj = xddManager.ithVar(i, dd, falseDD);
 
             tmpADD = tmpADD.apply(BooleanVector::or, proj);
 
-            thenDD.recursiveDeref();
+            dd.recursiveDeref();
             proj.recursiveDeref();
         }
 
@@ -104,7 +101,6 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                                                          L edgeLabel,
                                                          TP edgeProperty,
                                                          DependencyGraph<L, AP> dependGraph) {
-        //        super(edgeProperty.isMust());
         this.xddManager = xddManager;
         final List<XDD<BooleanVector>> list = new ArrayList<>();
         for (FormulaNode<L, AP> node : dependGraph.getFormulaNodes()) {

@@ -223,9 +223,9 @@ public class SolverHistoryTest {
         List<Set<N>> workSets = new ArrayList<>();
         workSets.add(new HashSet<>(Arrays.asList(s1, s2)));
         workSets.add(new HashSet<>(Arrays.asList(initialNode, s2)));
-        workSets.add(new HashSet<>(Collections.singletonList(s2)));
-        Set<N> workSetOnlyS1 = new HashSet<>(Collections.singletonList(s1));
-        Set<N> workSetOnlyInitialNode = new HashSet<>(Collections.singletonList(initialNode));
+        workSets.add(Collections.singleton(s2));
+        Set<N> workSetOnlyS1 = Collections.singleton(s1);
+        Set<N> workSetOnlyInitialNode = Collections.singleton(initialNode);
         workSets.add(workSetOnlyS1);
         workSets.add(workSetOnlyInitialNode);
         workSets.add(workSetOnlyS1);
@@ -233,7 +233,7 @@ public class SolverHistoryTest {
         workSets.add(workSetOnlyS1);
         workSets.add(workSetOnlyInitialNode);
         workSets.add(workSetOnlyS1);
-        workSets.add(new HashSet<>());
+        workSets.add(Collections.emptySet());
         return workSets;
     }
 
