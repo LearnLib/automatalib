@@ -53,12 +53,12 @@ public class SolverHistoryTest {
         this.ddManager = new BooleanLogicDDManager();
     }
 
-//    @AfterClass
+    @AfterClass
     public void after() {
         ddManager.quit();
     }
 
-//    @Test
+    @Test(enabled = false)
     public void testSolverHistory() throws ParseException {
         final SolveBDD<String, String> solver = new SolveBDD<>(mcfps);
         final FormulaNode<String, String> formula = M3CParser.parse("mu X.(<b><b>true || <>X)");
