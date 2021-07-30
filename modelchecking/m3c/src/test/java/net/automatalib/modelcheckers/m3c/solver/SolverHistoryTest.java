@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import info.scce.addlib.dd.DD;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanLogicDDManager;
 import info.scce.addlib.serializer.XDDSerializer;
@@ -37,6 +38,7 @@ import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.util.Examples;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 public class SolverHistoryTest {
@@ -49,6 +51,11 @@ public class SolverHistoryTest {
         this.mcfps = Examples.getMcfpsAnBn(Collections.emptySet());
         this.serializer = new XDDSerializer<>();
         this.ddManager = new BooleanLogicDDManager();
+    }
+
+    @AfterClass
+    public void after() {
+        ddManager.quit();
     }
 
     @Test
@@ -114,9 +121,14 @@ public class SolverHistoryTest {
         final XDD<Boolean> zeroDD = ddManager.zero();
         for (final XDD<Boolean> startDD : startPT) {
             Assert.assertEquals(startDD, zeroDD);
+            startDD.recursiveDeref();
         }
+        s1PT.forEach(DD::recursiveDeref);
+        s2PT.forEach(DD::recursiveDeref);
         for (int i = 0; i < endPT.size(); i++) {
-            Assert.assertEquals(endPT.get(i), ddManager.ithVar(i));
+            XDD<Boolean> ithDD = endPT.get(i);
+            Assert.assertEquals(ithDD, ddManager.ithVar(i));
+            ithDD.recursiveDeref();
         }
     }
 
@@ -150,6 +162,7 @@ public class SolverHistoryTest {
             } else {
                 Assert.assertEquals(aDDs.get(i), ddManager.zero());
             }
+            aDDs.get(i).recursiveDeref();
         }
         for (int i = 0; i < bDDs.size(); i++) {
             if (i == 1 || i == 2) {
@@ -159,7 +172,9 @@ public class SolverHistoryTest {
             } else {
                 Assert.assertEquals(bDDs.get(i), ddManager.zero());
             }
+            bDDs.get(i).recursiveDeref();
         }
+        eDDs.forEach(DD::recursiveDeref);
     }
 
     private <N> void testSolverStates(SolverHistory<String, String> history,
@@ -195,6 +210,7 @@ public class SolverHistoryTest {
             if (updatedPropertyTransformer.get(j).eval(allAPDeadlockedState).equals(ddManager.one())) {
                 expectedSatisfiedSubformulas.add(j);
             }
+            updatedPropertyTransformer.get(j).recursiveDeref();
         }
         Set<Integer> actualSatisfiedSubformulas = solverState.getUpdatedStateSatisfiedSubformula()
                                                              .stream()
