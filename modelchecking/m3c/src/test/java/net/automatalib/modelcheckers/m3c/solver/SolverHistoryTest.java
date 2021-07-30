@@ -18,8 +18,11 @@ package net.automatalib.modelcheckers.m3c.solver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanLogicDDManager;
@@ -167,7 +170,9 @@ public class SolverHistoryTest {
         final List<N> updatedOrder =
                 Arrays.asList(initialNode, s1, initialNode, s2, s1, initialNode, s1, initialNode, s1, initialNode, s1);
         Assert.assertEquals(history.getSolverStates().size(), updatedOrder.size());
-
+        List<Set<N>> workSets = getWorkSetHistory(initialNode, s1, s2);
+        boolean[] allAPDeadlockedState = new boolean[5];
+        allAPDeadlockedState[3] = true;
         for (int i = 0; i < updatedOrder.size(); i++) {
             final N expectedState = updatedOrder.get(i);
             final SolverState<?, String, String> solverState = history.getSolverStates().get(i);
@@ -176,7 +181,44 @@ public class SolverHistoryTest {
             Assert.assertEquals(actualState, expectedState);
             Assert.assertEquals(mpg.getOutgoingEdges(actualState).size(), solverState.getCompositions().size());
             Assert.assertEquals(solverState.getUpdatedStateMPG(), mcfps.getMainProcess());
+            Assert.assertEquals(solverState.getWorkSet().get(mcfps.getMainProcess()), workSets.get(i));
+            testSatisfiedSubformulasAndUpdatedPT(allAPDeadlockedState, solverState);
         }
+
+    }
+
+    private void testSatisfiedSubformulasAndUpdatedPT(boolean[] allAPDeadlockedState,
+                                                      SolverState<?, String, String> solverState) {
+        List<XDD<Boolean>> updatedPropertyTransformer = getDDs(solverState.getUpdatedPropTransformer());
+        Set<Integer> expectedSatisfiedSubformulas = new HashSet<>();
+        for (int j = 0; j < updatedPropertyTransformer.size(); j++) {
+            if (updatedPropertyTransformer.get(j).eval(allAPDeadlockedState).equals(ddManager.one())) {
+                expectedSatisfiedSubformulas.add(j);
+            }
+        }
+        Set<Integer> actualSatisfiedSubformulas = solverState.getUpdatedStateSatisfiedSubformula()
+                                                             .stream()
+                                                             .map(FormulaNode::getVarNumber)
+                                                             .collect(Collectors.toSet());
+        Assert.assertEquals(actualSatisfiedSubformulas, expectedSatisfiedSubformulas);
+    }
+
+    private <N> List<Set<N>> getWorkSetHistory(N initialNode, N s1, N s2) {
+        List<Set<N>> workSets = new ArrayList<>();
+        workSets.add(new HashSet<>(Arrays.asList(s1, s2)));
+        workSets.add(new HashSet<>(Arrays.asList(initialNode, s2)));
+        workSets.add(new HashSet<>(Collections.singletonList(s2)));
+        Set<N> workSetOnlyS1 = new HashSet<>(Collections.singletonList(s1));
+        Set<N> workSetOnlyInitialNode = new HashSet<>(Collections.singletonList(initialNode));
+        workSets.add(workSetOnlyS1);
+        workSets.add(workSetOnlyInitialNode);
+        workSets.add(workSetOnlyS1);
+        workSets.add(workSetOnlyInitialNode);
+        workSets.add(workSetOnlyS1);
+        workSets.add(workSetOnlyInitialNode);
+        workSets.add(workSetOnlyS1);
+        workSets.add(new HashSet<>());
+        return workSets;
     }
 
     private List<XDD<Boolean>> getDDs(List<String> serializedDDs) {

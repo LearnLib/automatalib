@@ -45,6 +45,10 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
         String negatedFormula = "!(" + formula + ")";
         assertSolve(solver, negatedFormula, false);
+
+        // use !'a' to simulate true, as no state satiesfies 'a'
+        String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
+        assertSolve(solver, formulaWithNegatedAP, true);
     }
 
     public abstract M3CSolver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps);
@@ -60,6 +64,9 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         String formula = "mu X.(<>X || 'a,b')";
         M3CSolver<String> solver = getSolver(mcfps);
         assertSolve(solver, formula, true);
+
+        String formulaWithNegatedAP = "mu X.(<>X || !'a,b')";
+        assertSolve(solver, formulaWithNegatedAP, true);
 
         mcfps = Examples.getMcfpsAnBn(new HashSet<>(Collections.singletonList("a")));
         solver = getSolver(mcfps);
