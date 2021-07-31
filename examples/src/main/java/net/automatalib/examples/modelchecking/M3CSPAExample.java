@@ -55,7 +55,7 @@ public final class M3CSPAExample {
                                    "nu X. ([]X && [] false)", // all paths reach the final state
                                    "mu X. (<>X || [] false)", // there exists a path to the final state
                                    "nu X. ([]X && mu Y. (<>Y || [] false))", // on all paths there exists a path to the final state
-                                   "nu X. ([]X && (<S>true -> mu Y. (<S>Y || <R>true)))", // globally, if there exists an S, it must be followed by an R eventually
+                                   "nu X. ([]X && (<S>true -> [S](mu Y. (<>Y || <R>true))))", // globally, if there exists an S, it must be followed by an R eventually
         };
         //@formatter:on
 
