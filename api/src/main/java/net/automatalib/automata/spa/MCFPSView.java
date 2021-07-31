@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
@@ -71,26 +70,8 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
     private static class MPGView<S, I>
             implements ModalProcessGraph<S, I, SPAEdge<I, S>, Void, ProceduralModalEdgeProperty> {
 
-        private static final Object INIT;
-        private static final Object END;
-
-        static {
-            INIT = new Object() {
-
-                @Override
-                public String toString() {
-                    return "init";
-                }
-            };
-            END = new Object() {
-
-                @Override
-                public String toString() {
-                    return "end";
-                }
-            };
-
-        }
+        private static final Object INIT = new Object();
+        private static final Object END = new Object();
 
         private final SPAAlphabet<I> spaAlphabet;
         private final I procedure;
@@ -210,11 +191,6 @@ public class MCFPSView<I> implements ModalContextFreeProcessSystem<I, Void> {
         @Override
         public ProceduralType getProceduralType() {
             return this.type;
-        }
-
-        @Override
-        public String toString() {
-            return Objects.toString(input);
         }
     }
 

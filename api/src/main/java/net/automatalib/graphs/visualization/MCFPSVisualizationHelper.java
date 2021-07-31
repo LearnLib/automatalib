@@ -99,7 +99,7 @@ public class MCFPSVisualizationHelper<N, L, E, AP> extends DefaultVisualizationH
             styleJoiner.add(EdgeStyles.BOLD);
         }
 
-        properties.put(EdgeAttrs.LABEL, String.valueOf(edge.getSecond()));
+        properties.put(EdgeAttrs.LABEL, String.valueOf(mpg.getEdgeLabel(edge.getSecond())));
         properties.put(EdgeAttrs.STYLE, styleJoiner.toString());
 
         return true;
