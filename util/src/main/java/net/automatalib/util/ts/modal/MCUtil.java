@@ -71,17 +71,15 @@ public final class MCUtil {
                                                                 sp -> null,
                                                                 tpMapping,
                                                                 s -> true,
-                                                                (s, i, t) -> modalContract.getTransitionProperty(t)
-                                                                                          .getColor() !=
-                                                                             ModalContractEdgeProperty.EdgeColor.RED);
+                                                                (s, i, t) -> !modalContract.getTransitionProperty(t)
+                                                                                           .isRed());
 
         S2 uniqueState = result.addState();
 
         for (S1 state : modalContract.getStates()) {
             for (I input : modalContract.getInputAlphabet()) {
                 for (T1 transition : modalContract.getTransitions(state, input)) {
-                    if (modalContract.getTransitionProperty(transition).getColor() ==
-                        ModalContractEdgeProperty.EdgeColor.RED) {
+                    if (modalContract.getTransitionProperty(transition).isRed()) {
                         S2 source = mapping.get(state);
                         TP2 property = mayOnlySupplier.get();
                         assert property.isMayOnly();

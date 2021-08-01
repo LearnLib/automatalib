@@ -56,8 +56,7 @@ public final class TestUtils {
 
             for (Integer s : parsed.getStates()) {
                 for (String label : parsed.getInputAlphabet()) {
-                    for (MTSTransition<String, MutableModalContractEdgeProperty> transition : parsed.getTransitions(s,
-                                                                                                                    label)) {
+                    for (MTSTransition<MutableModalContractEdgeProperty> transition : parsed.getTransitions(s, label)) {
 
                         if (transition.getProperty().isRed() || transition.getProperty().isGreen()) {
                             parsed.getCommunicationAlphabet().add(label);
@@ -77,9 +76,8 @@ public final class TestUtils {
 
             for (Integer s : parsed.getStates()) {
                 for (String label : parsed.getInputAlphabet()) {
-                    for (MTSTransition<String, ModalContractMembershipEdgePropertyImpl> transition : parsed.getTransitions(
-                            s,
-                            label)) {
+                    for (MTSTransition<ModalContractMembershipEdgePropertyImpl> transition : parsed.getTransitions(s,
+                                                                                                                   label)) {
 
                         if (transition.getProperty().isRed() || transition.getProperty().isGreen()) {
                             parsed.addCommunicationSymbol(label);

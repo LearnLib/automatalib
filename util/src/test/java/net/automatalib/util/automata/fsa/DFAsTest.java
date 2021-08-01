@@ -21,7 +21,6 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 @Test
@@ -39,14 +38,10 @@ public class DFAsTest {
     private static final boolean[] IMPL_RESULT = {true, false, true, true};
 
     private final Alphabet<Integer> testAlphabet;
-    private CompactDFA<Integer> testDfa1, testDfa2;
+    private final CompactDFA<Integer> testDfa1, testDfa2;
 
     public DFAsTest() {
         this.testAlphabet = Alphabets.integers(0, 0);
-    }
-
-    @BeforeClass
-    public void setUp() {
         this.testDfa1 = forVector(VECTOR_1);
         this.testDfa2 = forVector(VECTOR_2);
     }

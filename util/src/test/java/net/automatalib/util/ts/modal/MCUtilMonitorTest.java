@@ -133,13 +133,12 @@ public class MCUtilMonitorTest {
         // the following tests require fixed state-labels
         Assertions.assertThat(allOutgoingTransitions(redContext, monitor.getCommunicationAlphabet(), init))
                   .hasSize(1)
-                  .allMatch(t -> t.getLabel() == 'b')
                   .allMatch(t -> t.getTarget() == b);
 
         Assertions.assertThat(allOutgoingTransitions(redContext, monitor.getCommunicationAlphabet(), b))
                   .hasSize(2)
-                  .anyMatch(t -> t.getLabel() == 'b' && t.getTarget() == bb)
-                  .anyMatch(t -> t.getLabel() == 'd' && t.getTarget() == bd);
+                  .anyMatch(t -> t.getTarget() == bb)
+                  .anyMatch(t -> t.getTarget() == bd);
 
         Assertions.assertThat(allOutgoingTransitions(redContext, monitor.getCommunicationAlphabet(), bb))
                   .hasSize(2)
@@ -169,10 +168,8 @@ public class MCUtilMonitorTest {
         CompactMTS<Character> greenContext = MCUtil.greenContextComponent(dfa,
                                                                           CompactMTS::new,
                                                                           monitor.getCommunicationAlphabet(),
-                                                                          () -> new ModalEdgePropertyImpl(
-                                                                                  ModalType.MAY),
-                                                                          () -> new ModalEdgePropertyImpl(
-                                                                                  ModalType.MUST));
+                                                                          () -> new ModalEdgePropertyImpl(ModalType.MAY),
+                                                                          () -> new ModalEdgePropertyImpl(ModalType.MUST));
 
         Assertions.assertThat(greenContext.getInputAlphabet())
                   .containsExactlyInAnyOrderElementsOf(monitor.getCommunicationAlphabet());

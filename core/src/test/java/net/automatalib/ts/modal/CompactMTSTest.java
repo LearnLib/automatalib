@@ -145,12 +145,12 @@ public class CompactMTSTest {
         final Integer as1 = s.addState();
         final Integer as2 = s.addState();
 
-        final MTSTransition<String, MutableModalEdgeProperty> t1 = s.addModalTransition(as0, "a", as0, ModalType.MUST);
-        final MTSTransition<String, MutableModalEdgeProperty> t2 = s.addModalTransition(as0, "b", as1, ModalType.MUST);
-        final MTSTransition<String, MutableModalEdgeProperty> t3 = s.addModalTransition(as1, "a", as1, ModalType.MUST);
-        final MTSTransition<String, MutableModalEdgeProperty> t4 = s.addModalTransition(as1, "b", as2, ModalType.MAY);
-        final MTSTransition<String, MutableModalEdgeProperty> t5 = s.addModalTransition(as2, "a", as2, ModalType.MAY);
-        final MTSTransition<String, MutableModalEdgeProperty> t6 = s.addModalTransition(as2, "b", as2, ModalType.MAY);
+        final MTSTransition<MutableModalEdgeProperty> t1 = s.addModalTransition(as0, "a", as0, ModalType.MUST);
+        final MTSTransition<MutableModalEdgeProperty> t2 = s.addModalTransition(as0, "b", as1, ModalType.MUST);
+        final MTSTransition<MutableModalEdgeProperty> t3 = s.addModalTransition(as1, "a", as1, ModalType.MUST);
+        final MTSTransition<MutableModalEdgeProperty> t4 = s.addModalTransition(as1, "b", as2, ModalType.MAY);
+        final MTSTransition<MutableModalEdgeProperty> t5 = s.addModalTransition(as2, "a", as2, ModalType.MAY);
+        final MTSTransition<MutableModalEdgeProperty> t6 = s.addModalTransition(as2, "b", as2, ModalType.MAY);
 
         Assertions.assertThat(s.getTransitions(as0, "a"))
                   .containsExactly(t1)
@@ -159,37 +159,27 @@ public class CompactMTSTest {
 
         Assertions.assertThat(s.getTransitions(as0, "b"))
                   .containsExactly(t2)
-                  .allMatch(t -> Objects.equals(t.getSource(), as0))
                   .allMatch(t -> Objects.equals(t.getTarget(), as1))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MUST)
-                  .allMatch(t -> "b".equals(t.getLabel()));
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MUST);
 
         Assertions.assertThat(s.getTransitions(as1, "a"))
                   .containsExactly(t3)
-                  .allMatch(t -> Objects.equals(t.getSource(), as1))
                   .allMatch(t -> Objects.equals(t.getTarget(), as1))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MUST)
-                  .allMatch(t -> "a".equals(t.getLabel()));
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MUST);
 
         Assertions.assertThat(s.getTransitions(as1, "b"))
                   .containsExactly(t4)
-                  .allMatch(t -> Objects.equals(t.getSource(), as1))
                   .allMatch(t -> Objects.equals(t.getTarget(), as2))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY)
-                  .allMatch(t -> "b".equals(t.getLabel()));
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY);
 
         Assertions.assertThat(s.getTransitions(as2, "a"))
                   .containsExactly(t5)
-                  .allMatch(t -> Objects.equals(t.getSource(), as2))
                   .allMatch(t -> Objects.equals(t.getTarget(), as2))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY)
-                  .allMatch(t -> "a".equals(t.getLabel()));
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY);
 
         Assertions.assertThat(s.getTransitions(as2, "b"))
                   .containsExactly(t6)
-                  .allMatch(t -> Objects.equals(t.getSource(), as2))
                   .allMatch(t -> Objects.equals(t.getTarget(), as2))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY)
-                  .allMatch(t -> "b".equals(t.getLabel()));
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY);
     }
 }

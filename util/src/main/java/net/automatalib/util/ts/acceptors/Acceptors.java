@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.ts.acceptors;
 
+import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.ts.acceptors.AcceptorTS;
 import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
@@ -23,41 +24,18 @@ public final class Acceptors {
 
     private Acceptors() {}
 
-    public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> and(
+    public static <S1, S2, I, TS1 extends AcceptorTS<S1, I>, TS2 extends AcceptorTS<S2, I>> AcceptorTS<Pair<S1, S2>, I> combine(
             TS1 ts1,
-            TS2 ts2) {
-        return combine(ts1, ts2, AcceptanceCombiner.AND);
+            TS2 ts2,
+            AcceptanceCombiner combiner) {
+        return new AcceptorComposition<>(ts1, ts2, combiner);
     }
 
-    public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> combine(
+    public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DeterministicAcceptorTS<Pair<S1, S2>, I> combine(
             TS1 ts1,
             TS2 ts2,
             AcceptanceCombiner combiner) {
         return new DetAcceptorComposition<>(ts1, ts2, combiner);
-    }
-
-    public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> or(
-            TS1 ts1,
-            TS2 ts2) {
-        return combine(ts1, ts2, AcceptanceCombiner.OR);
-    }
-
-    public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> xor(
-            TS1 ts1,
-            TS2 ts2) {
-        return combine(ts1, ts2, AcceptanceCombiner.XOR);
-    }
-
-    public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> equiv(
-            TS1 ts1,
-            TS2 ts2) {
-        return combine(ts1, ts2, AcceptanceCombiner.EQUIV);
-    }
-
-    public static <S1, S2, I, TS1 extends DeterministicAcceptorTS<S1, I>, TS2 extends DeterministicAcceptorTS<S2, I>> DetAcceptorComposition<S1, S2, I, TS1, TS2> impl(
-            TS1 ts1,
-            TS2 ts2) {
-        return combine(ts1, ts2, AcceptanceCombiner.IMPL);
     }
 
     public static <S> Mapping<S, Boolean> acceptance(final AcceptorTS<S, ?> acceptor) {

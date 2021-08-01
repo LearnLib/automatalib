@@ -15,13 +15,14 @@
  */
 package net.automatalib.util.ts.transducers;
 
+import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.output.MealyTransitionSystem;
 
 public final class Transducers {
 
     private Transducers() {}
 
-    public static <S1, S2, I, T1, T2, O1, O2, TS1 extends MealyTransitionSystem<S1, I, T1, O1>, TS2 extends MealyTransitionSystem<S2, I, T2, O2>> DetMealyComposition<S1, S2, I, T1, T2, O1, O2, TS1, TS2> combine(
+    public static <S1, S2, I, T1, T2, O1, O2, TS1 extends MealyTransitionSystem<S1, I, T1, O1>, TS2 extends MealyTransitionSystem<S2, I, T2, O2>> MealyTransitionSystem<Pair<S1, S2>, I, Pair<T1, T2>, Pair<O1, O2>> combine(
             TS1 ts1,
             TS2 ts2) {
         return new DetMealyComposition<>(ts1, ts2);

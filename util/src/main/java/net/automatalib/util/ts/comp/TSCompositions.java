@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.ts.comp;
+package net.automatalib.util.ts.comp;
 
+import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.TransitionSystem;
 
@@ -22,13 +23,13 @@ public final class TSCompositions {
 
     private TSCompositions() {}
 
-    public static <S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I, T1>, TS2 extends TransitionSystem<S2, I, T2>> TSComposition<S1, S2, I, T1, T2, TS1, TS2> compose(
+    public static <S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I, T1>, TS2 extends TransitionSystem<S2, I, T2>> TransitionSystem<Pair<S1, S2>, I, Pair<T1, T2>> compose(
             TS1 ts1,
             TS2 ts2) {
         return new TSComposition<>(ts1, ts2);
     }
 
-    public static <S1, S2, I, T1, T2, TS1 extends DeterministicTransitionSystem<S1, I, T1>, TS2 extends DeterministicTransitionSystem<S2, I, T2>> DTSComposition<S1, S2, I, T1, T2, TS1, TS2> compose(
+    public static <S1, S2, I, T1, T2, TS1 extends DeterministicTransitionSystem<S1, I, T1>, TS2 extends DeterministicTransitionSystem<S2, I, T2>> DeterministicTransitionSystem<Pair<S1, S2>, I, Pair<T1, T2>> compose(
             TS1 ts1,
             TS2 ts2) {
         return new DTSComposition<>(ts1, ts2);

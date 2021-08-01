@@ -17,15 +17,25 @@ package net.automatalib.ts.modal;
 
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 
-public class MTSTransition<I, TP extends MutableModalEdgeProperty> extends Transition<Integer, I, TP> {
+public class MTSTransition<TP extends MutableModalEdgeProperty> {
+
+    private final int target;
+    private TP property;
 
     MTSTransition(int target, TP property) {
-        super(target, property);
+        this.target = target;
+        this.property = property;
     }
 
-    @Override
-    public String toString() {
-        return "MTSTransition{" + "source=" + source + ", target=" + target + ", label=" + label + ", property={" +
-               property + "} }";
+    public int getTarget() {
+        return target;
+    }
+
+    public TP getProperty() {
+        return property;
+    }
+
+    void setProperty(TP property) {
+        this.property = property;
     }
 }

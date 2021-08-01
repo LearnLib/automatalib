@@ -24,8 +24,8 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
 import net.automatalib.words.abstractimpl.AbstractVPDAlphabet;
 
 /**
- * A {@link net.automatalib.words.VPDAlphabet} implementation that allows to add new symbols after its construction.
- * Wraps input symbols in a {@link VPDSym} instance to allow faster mappings from symbols to indexes.
+ * A {@link VPDAlphabet} implementation that allows to add new symbols after its construction. Wraps input symbols in a
+ * {@link VPDSym} instance to allow faster mappings from symbols to indexes.
  *
  * @param <I>
  *         input symbol type

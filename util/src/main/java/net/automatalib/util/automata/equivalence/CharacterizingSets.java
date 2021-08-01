@@ -123,7 +123,7 @@ public final class CharacterizingSets {
 
             result.add(suffix);
 
-            List<@Nullable Object> trace = buildTrace(automaton, state, suffix);
+            List<?> trace = buildTrace(automaton, state, suffix);
 
             List<S> nextBlock = new ArrayList<>();
             while (it.hasNext()) {
@@ -142,11 +142,11 @@ public final class CharacterizingSets {
         return new IncrementalCharacterizingSetIterator<>(automaton, inputs, Collections.emptyList());
     }
 
-    private static <S, I, T> List<@Nullable Object> buildTrace(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                               S state,
-                                                               Word<I> suffix) {
+    private static <S, I, T, SP, TP> List<?> buildTrace(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
+                                                        S state,
+                                                        Word<I> suffix) {
         if (suffix.isEmpty()) {
-            @Nullable Object prop = automaton.getStateProperty(state);
+            SP prop = automaton.getStateProperty(state);
             return Collections.singletonList(prop);
         }
         List<@Nullable Object> trace = new ArrayList<>(2 * suffix.length());
@@ -160,23 +160,23 @@ public final class CharacterizingSets {
                 break;
             }
 
-            @Nullable Object prop = automaton.getTransitionProperty(trans);
-            trace.add(prop);
+            TP transitionProperty = automaton.getTransitionProperty(trans);
+            trace.add(transitionProperty);
 
             curr = automaton.getSuccessor(trans);
-            prop = automaton.getStateProperty(curr);
-            trace.add(prop);
+            SP stateProperty = automaton.getStateProperty(curr);
+            trace.add(stateProperty);
         }
 
         return trace;
     }
 
-    private static <S, I, T> boolean checkTrace(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                S state,
-                                                Word<I> suffix,
-                                                List<Object> trace) {
+    private static <S, I, T, SP, TP, P> boolean checkTrace(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
+                                                           S state,
+                                                           Word<I> suffix,
+                                                           List<P> trace) {
 
-        Iterator<@Nullable Object> it = trace.iterator();
+        Iterator<P> it = trace.iterator();
         S curr = state;
 
         for (I sym : suffix) {
@@ -186,16 +186,16 @@ public final class CharacterizingSets {
                 return trans == null;
             }
 
-            @Nullable Object prop = automaton.getTransitionProperty(trans);
+            TP transitionProperty = automaton.getTransitionProperty(trans);
 
-            if (!Objects.equals(prop, it.next())) {
+            if (!Objects.equals(transitionProperty, it.next())) {
                 return false;
             }
 
             curr = automaton.getSuccessor(trans);
-            prop = automaton.getStateProperty(curr);
+            SP stateProperty = automaton.getStateProperty(curr);
 
-            if (!Objects.equals(prop, it.next())) {
+            if (!Objects.equals(stateProperty, it.next())) {
                 return false;
             }
         }
@@ -246,10 +246,10 @@ public final class CharacterizingSets {
 
     private static <S, I, T> Queue<List<S>> buildInitialBlocks(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
                                                                List<? extends Word<I>> oldSuffixes) {
-        Map<List<List<Object>>, List<S>> initialPartitioning = new HashMap<>();
+        Map<List<List<?>>, List<S>> initialPartitioning = new HashMap<>();
         Queue<List<S>> blocks = new ArrayDeque<>();
         for (S state : automaton) {
-            List<List<Object>> sig = buildSignature(automaton, oldSuffixes, state);
+            List<List<?>> sig = buildSignature(automaton, oldSuffixes, state);
             List<S> block = initialPartitioning.get(sig);
             if (block == null) {
                 block = new ArrayList<>();
@@ -262,13 +262,13 @@ public final class CharacterizingSets {
         return blocks;
     }
 
-    private static <S, I, T> List<List<Object>> buildSignature(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                               List<? extends Word<I>> suffixes,
-                                                               S state) {
-        List<List<Object>> signature = new ArrayList<>(suffixes.size());
+    private static <S, I, T> List<List<?>> buildSignature(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
+                                                          List<? extends Word<I>> suffixes,
+                                                          S state) {
+        List<List<?>> signature = new ArrayList<>(suffixes.size());
 
         for (Word<I> suffix : suffixes) {
-            List<Object> trace = buildTrace(automaton, state, suffix);
+            List<?> trace = buildTrace(automaton, state, suffix);
             signature.add(trace);
         }
 
@@ -322,7 +322,7 @@ public final class CharacterizingSets {
             if (suffix != null) {
                 int otherBlocks = blockQueue.size();
 
-                Map<List<@Nullable Object>, List<S>> buckets = new HashMap<>();
+                Map<List<?>, List<S>> buckets = new HashMap<>();
 
                 List<S> firstBucket = new ArrayList<>();
                 List<S> secondBucket = new ArrayList<>();
@@ -352,12 +352,12 @@ public final class CharacterizingSets {
         return null;
     }
 
-    private static <S, I, T> Map<?, List<S>> clusterByProperty(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                               List<S> states) {
-        Map<@Nullable Object, List<S>> result = new HashMap<>();
+    private static <S, I, T, SP> Map<?, List<S>> clusterByProperty(UniversalDeterministicAutomaton<S, I, T, SP, ?> automaton,
+                                                                   List<S> states) {
+        Map<SP, List<S>> result = new HashMap<>();
 
         for (S state : states) {
-            Object prop = automaton.getStateProperty(state);
+            SP prop = automaton.getStateProperty(state);
             List<S> block = result.computeIfAbsent(prop, k -> new ArrayList<>());
             block.add(state);
         }
@@ -368,11 +368,11 @@ public final class CharacterizingSets {
     private static <S, I, T> void cluster(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
                                           Word<I> suffix,
                                           Iterator<S> stateIt,
-                                          Map<List<@Nullable Object>, List<S>> bucketMap) {
+                                          Map<List<?>, List<S>> bucketMap) {
 
         while (stateIt.hasNext()) {
             S state = stateIt.next();
-            List<@Nullable Object> trace = buildTrace(automaton, state, suffix);
+            List<?> trace = buildTrace(automaton, state, suffix);
             List<S> bucket = bucketMap.computeIfAbsent(trace, k -> new ArrayList<>());
             bucket.add(state);
         }

@@ -15,16 +15,18 @@
  */
 package net.automatalib.util.ts.acceptors;
 
-import net.automatalib.commons.util.Pair;
-import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
-import net.automatalib.util.ts.comp.DTSComposition;
+import java.util.Collection;
 
-final class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorTS<S1, I>, A2 extends DeterministicAcceptorTS<S2, I>>
-        extends DTSComposition<S1, S2, I, S1, S2, A1, A2> implements DeterministicAcceptorTS<Pair<S1, S2>, I> {
+import net.automatalib.commons.util.Pair;
+import net.automatalib.ts.acceptors.AcceptorTS;
+import net.automatalib.util.ts.comp.TSComposition;
+
+final class AcceptorComposition<S1, S2, I, A1 extends AcceptorTS<S1, I>, A2 extends AcceptorTS<S2, I>>
+        extends TSComposition<S1, S2, I, S1, S2, A1, A2> implements AcceptorTS<Pair<S1, S2>, I> {
 
     private final AcceptanceCombiner combiner;
 
-    DetAcceptorComposition(A1 ts1, A2 ts2, AcceptanceCombiner combiner) {
+    AcceptorComposition(A1 ts1, A2 ts2, AcceptanceCombiner combiner) {
         super(ts1, ts2);
         this.combiner = combiner;
     }
@@ -33,8 +35,18 @@ final class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorTS
     public boolean isAccepting(Pair<S1, S2> state) {
         S1 s1 = state.getFirst();
         S2 s2 = state.getSecond();
-        boolean acc1 = s1 != null && ts1.isAccepting(s1);
-        boolean acc2 = s2 != null && ts2.isAccepting(s2);
+        boolean acc1 = ts1.isAccepting(s1);
+        boolean acc2 = ts2.isAccepting(s2);
         return combiner.combine(acc1, acc2);
+    }
+
+    @Override
+    public boolean isAccepting(Collection<? extends Pair<S1, S2>> states) {
+        for (Pair<S1, S2> state : states) {
+            if (isAccepting(state)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
