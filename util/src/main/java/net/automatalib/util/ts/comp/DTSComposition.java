@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.ts.comp;
+package net.automatalib.util.ts.comp;
 
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.DeterministicTransitionSystem;
@@ -35,14 +35,6 @@ public class DTSComposition<S1, S2, I, T1, T2, TS1 extends DeterministicTransiti
         this.ts1 = ts1;
         this.ts2 = ts2;
         this.allowPartial = allowPartial;
-    }
-
-    public TS1 getFirstTS() {
-        return ts1;
-    }
-
-    public TS2 getSecondTS() {
-        return ts2;
     }
 
     @Override

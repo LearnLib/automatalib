@@ -19,9 +19,9 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import net.automatalib.automata.base.compact.AbstractCompact;
 import net.automatalib.commons.util.collections.IntSet;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
@@ -40,11 +40,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author msc
  */
 public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
-        extends AbstractCompact<I, MTSTransition<I, TP>, Void, TP>
-        implements MutableModalTransitionSystem<Integer, I, MTSTransition<I, TP>, TP> {
+        extends AbstractCompact<I, MTSTransition<TP>, Void, TP>
+        implements MutableModalTransitionSystem<Integer, I, MTSTransition<TP>, TP> {
 
     private final BitSet initialStates;
-    private @Nullable Set<MTSTransition<I, TP>>[] transitions;
+    private @Nullable Set<MTSTransition<TP>>[] transitions;
 
     public AbstractCompactMTS(Alphabet<I> alphabet) {
         this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
@@ -74,23 +74,13 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     public void setStateProperty(int state, Void property) {}
 
     @Override
-    public void setTransitionProperty(MTSTransition<I, TP> transition, TP property) {
+    public void setTransitionProperty(MTSTransition<TP> transition, TP property) {
         transition.setProperty(property);
     }
 
     @Override
-    public void setTransitions(Integer state, I input, Collection<? extends MTSTransition<I, TP>> transitions) {
-        this.removeAllTransitions(state, input);
-
-        final Set<MTSTransition<I, TP>> trans = Sets.newHashSetWithExpectedSize(transitions.size());
-
-        for (final MTSTransition<I, TP> t : transitions) {
-            t.setSource(state);
-            t.setLabel(input);
-            trans.add(t);
-        }
-
-        this.transitions[toMemoryIndex(state, getSymbolIndex(input))] = trans;
+    public void setTransitions(Integer state, I input, Collection<? extends MTSTransition<TP>> transitions) {
+        this.transitions[toMemoryIndex(state, getSymbolIndex(input))] = new HashSet<>(transitions);
     }
 
     @Override
@@ -106,17 +96,17 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     }
 
     @Override
-    public MTSTransition<I, TP> createTransition(Integer successor) {
+    public MTSTransition<TP> createTransition(Integer successor) {
         return createTransition(successor, null);
     }
 
     @Override
-    public MTSTransition<I, TP> createTransition(Integer successor, @Nullable TP properties) {
+    public MTSTransition<TP> createTransition(Integer successor, @Nullable TP properties) {
         return new MTSTransition<>(successor, properties == null ? getDefaultTransitionProperty() : properties);
     }
 
     @Override
-    public MTSTransition<I, TP> addModalTransition(Integer src, I input, Integer tgt, ModalType modalType) {
+    public MTSTransition<TP> addModalTransition(Integer src, I input, Integer tgt, ModalType modalType) {
         return this.addTransition(src, input, tgt, buildModalProperty(modalType));
     }
 
@@ -126,18 +116,18 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     }
 
     @Override
-    public TP getTransitionProperty(MTSTransition<I, TP> transition) {
+    public TP getTransitionProperty(MTSTransition<TP> transition) {
         return transition.getProperty();
     }
 
     @Override
-    public Collection<MTSTransition<I, TP>> getTransitions(Integer state, I input) {
-        final Set<MTSTransition<I, TP>> trans = transitions[toMemoryIndex(state, getSymbolIndex(input))];
+    public Collection<MTSTransition<TP>> getTransitions(Integer state, I input) {
+        final Set<MTSTransition<TP>> trans = transitions[toMemoryIndex(state, getSymbolIndex(input))];
         return trans == null ? Collections.emptySet() : Collections.unmodifiableCollection(trans);
     }
 
     @Override
-    public Integer getSuccessor(MTSTransition<I, TP> transition) {
+    public Integer getSuccessor(MTSTransition<TP> transition) {
         return transition.getTarget();
     }
 
@@ -158,7 +148,7 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
     @Override
     protected void updateTransitionStorage(Payload payload) {
         this.transitions =
-                (Set<MTSTransition<I, TP>>[]) updateTransitionStorage(this.transitions, Set[]::new, null, payload);
+                (Set<MTSTransition<TP>>[]) updateTransitionStorage(this.transitions, Set[]::new, null, payload);
         super.updateTransitionStorage(payload);
     }
 

@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import com.google.common.collect.Sets;
 import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.UniversalAutomaton;
@@ -147,7 +148,7 @@ public final class Closures {
 
             for (I input : inputs) {
 
-                Set<S1> reachable = new HashSet<>(currentT.size());
+                Set<S1> reachable = Sets.newHashSetWithExpectedSize(currentT.size());
 
                 for (S1 state : currentT) {
                     for (T1 transition : inputTS.getTransitions(state, input)) {

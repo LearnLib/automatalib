@@ -27,14 +27,269 @@ import java.util.Map;
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.automata.fsa.MutableDFA;
+import net.automatalib.automata.fsa.MutableNFA;
 import net.automatalib.automata.fsa.NFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.fsa.impl.compact.CompactNFA;
+import net.automatalib.ts.acceptors.AcceptorTS;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.util.ts.acceptors.AcceptanceCombiner;
+import net.automatalib.util.ts.acceptors.Acceptors;
+import net.automatalib.util.ts.copy.TSCopy;
+import net.automatalib.util.ts.traversal.TSTraversal;
+import net.automatalib.util.ts.traversal.TSTraversalMethod;
 import net.automatalib.words.Alphabet;
 
+/**
+ * Operations on {@link NFA}s.
+ * <p>
+ * Note that the methods provided by this class do not modify their input arguments. Furthermore, results are copied
+ * into new datastructures. For read-only views you may use the more generic {@link Acceptors} factory.
+ *
+ * @author Malte Isberner
+ * @author frohme
+ */
 public final class NFAs {
 
-    private NFAs() {}
+    private NFAs() {
+        // prevent instantiation
+    }
+
+    /**
+     * Most general way of combining two NFAs. The behavior is the same as of the above {@link #combine(NFA, NFA,
+     * Collection, MutableNFA, AcceptanceCombiner)}, but the result automaton is automatically created as a {@link
+     * CompactNFA}.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param combiner
+     *         combination method for acceptance values
+     *
+     * @return a new NFA representing the combination of the specified NFAs
+     */
+    public static <I> CompactNFA<I> combine(NFA<?, I> nfa1,
+                                            NFA<?, I> nfa2,
+                                            Alphabet<I> inputAlphabet,
+                                            AcceptanceCombiner combiner) {
+        return combine(nfa1, nfa2, inputAlphabet, new CompactNFA<>(inputAlphabet), combiner);
+    }
+
+    /**
+     * Most general way of combining two NFAs. The {@link AcceptanceCombiner} specified via the {@code combiner}
+     * parameter specifies how acceptance values of the NFAs will be combined to an acceptance value in the result NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         the mutable NFA for storing the result
+     * @param combiner
+     *         combination method for acceptance values
+     *
+     * @return {@code out}, for convenience
+     */
+    public static <I, S, A extends MutableNFA<S, I>> A combine(NFA<?, I> nfa1,
+                                                               NFA<?, I> nfa2,
+                                                               Collection<? extends I> inputs,
+                                                               A out,
+                                                               AcceptanceCombiner combiner) {
+        AcceptorTS<?, I> acc = Acceptors.combine(nfa1, nfa2, combiner);
+
+        TSCopy.copy(TSTraversalMethod.DEPTH_FIRST, acc, TSTraversal.NO_LIMIT, inputs, out);
+        return out;
+    }
+
+    /**
+     * Calculates the conjunction ("and") of two NFAs, and returns the result as a new NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     *
+     * @return a new NFA representing the conjunction of the specified NFA
+     */
+    public static <I> CompactNFA<I> and(NFA<?, I> nfa1, NFA<?, I> nfa2, Alphabet<I> inputAlphabet) {
+        return and(nfa1, nfa2, inputAlphabet, new CompactNFA<>(inputAlphabet));
+    }
+
+    /**
+     * Calculates the conjunction ("and") of two NFAs, and stores the result in a given mutable NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         a mutable NFA for storing the result
+     *
+     * @return {@code out}, for convenience
+     */
+    public static <I, S, A extends MutableNFA<S, I>> A and(NFA<?, I> nfa1,
+                                                           NFA<?, I> nfa2,
+                                                           Collection<? extends I> inputs,
+                                                           A out) {
+        return combine(nfa1, nfa2, inputs, out, AcceptanceCombiner.AND);
+    }
+
+    /**
+     * Calculates the disjunction ("or") of two NFAs, and returns the result as a new NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     *
+     * @return a new NFA representing the conjunction of the specified NFA
+     */
+    public static <I> CompactNFA<I> or(NFA<?, I> nfa1, NFA<?, I> nfa2, Alphabet<I> inputAlphabet) {
+        return or(nfa1, nfa2, inputAlphabet, new CompactNFA<>(inputAlphabet));
+    }
+
+    /**
+     * Calculates the disjunction ("or") of two NFAs, and stores the result in a given mutable NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         a mutable NFA for storing the result
+     *
+     * @return {@code out}, for convenience
+     */
+    public static <I, S, A extends MutableNFA<S, I>> A or(NFA<?, I> nfa1,
+                                                          NFA<?, I> nfa2,
+                                                          Collection<? extends I> inputs,
+                                                          A out) {
+        return combine(nfa1, nfa2, inputs, out, AcceptanceCombiner.OR);
+    }
+
+    /**
+     * Calculates the exclusive-or ("xor") of two NFAs, and returns the result as a new NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     *
+     * @return a new NFA representing the conjunction of the specified NFA
+     */
+    public static <I> CompactNFA<I> xor(NFA<?, I> nfa1, NFA<?, I> nfa2, Alphabet<I> inputAlphabet) {
+        return xor(nfa1, nfa2, inputAlphabet, new CompactNFA<>(inputAlphabet));
+    }
+
+    /**
+     * Calculates the exclusive-or ("xor") of two NFAs, and stores the result in a given mutable NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         a mutable NFA for storing the result
+     *
+     * @return {@code out}, for convenience
+     */
+    public static <I, S, A extends MutableNFA<S, I>> A xor(NFA<?, I> nfa1,
+                                                           NFA<?, I> nfa2,
+                                                           Collection<? extends I> inputs,
+                                                           A out) {
+        return combine(nfa1, nfa2, inputs, out, AcceptanceCombiner.XOR);
+    }
+
+    /**
+     * Calculates the equivalence ("&lt;=&gt;") of two NFAs, and returns the result as a new NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     *
+     * @return a new NFA representing the conjunction of the specified NFA
+     */
+    public static <I> CompactNFA<I> equiv(NFA<?, I> nfa1, NFA<?, I> nfa2, Alphabet<I> inputAlphabet) {
+        return equiv(nfa1, nfa2, inputAlphabet, new CompactNFA<>(inputAlphabet));
+    }
+
+    /**
+     * Calculates the equivalence ("&lt;=&gt;") of two NFAs, and stores the result in a given mutable NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         a mutable NFA for storing the result
+     *
+     * @return {@code out}, for convenience
+     */
+    public static <I, S, A extends MutableNFA<S, I>> A equiv(NFA<?, I> nfa1,
+                                                             NFA<?, I> nfa2,
+                                                             Collection<? extends I> inputs,
+                                                             A out) {
+        return combine(nfa1, nfa2, inputs, out, AcceptanceCombiner.EQUIV);
+    }
+
+    /**
+     * Calculates the implication ("=&gt;") of two NFAs, and returns the result as a new NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     *
+     * @return a new NFA representing the conjunction of the specified NFA
+     */
+    public static <I> CompactNFA<I> impl(NFA<?, I> nfa1, NFA<?, I> nfa2, Alphabet<I> inputAlphabet) {
+        return impl(nfa1, nfa2, inputAlphabet, new CompactNFA<>(inputAlphabet));
+    }
+
+    /**
+     * Calculates the implication ("=&gt;") of two NFAs, and stores the result in a given mutable NFA.
+     *
+     * @param nfa1
+     *         the first NFA
+     * @param nfa2
+     *         the second NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param out
+     *         a mutable NFA for storing the result
+     *
+     * @return {@code out}, for convenience
+     */
+    public static <I, S, A extends MutableNFA<S, I>> A impl(NFA<?, I> nfa1,
+                                                            NFA<?, I> nfa2,
+                                                            Collection<? extends I> inputs,
+                                                            A out) {
+        return combine(nfa1, nfa2, inputs, out, AcceptanceCombiner.IMPL);
+    }
 
     public static <I> CompactDFA<I> determinize(NFA<?, I> nfa, Alphabet<I> inputAlphabet) {
         return determinize(nfa, inputAlphabet, false, true);

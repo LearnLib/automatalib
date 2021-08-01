@@ -15,10 +15,8 @@
  */
 package net.automatalib.words.impl;
 
-import java.util.Objects;
-
 import net.automatalib.words.VPDAlphabet;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import net.automatalib.words.VPDAlphabet.SymbolType;
 
 /**
  * Utility class used to wrap input symbols of a {@link VPDAlphabet}. Stores additional index information to allow fast
@@ -31,11 +29,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public final class VPDSym<T> {
 
-    private final VPDAlphabet.SymbolType type;
     private final T userObject;
+    private final SymbolType type;
     private final int localIndex, globalIndex;
 
-    VPDSym(final T userObject, final VPDAlphabet.SymbolType type, final int localIndex, final int globalIndex) {
+    VPDSym(final T userObject, final SymbolType type, final int localIndex, final int globalIndex) {
         this.userObject = userObject;
         this.type = type;
         this.localIndex = localIndex;
@@ -56,30 +54,6 @@ public final class VPDSym<T> {
 
     public int getGlobalIndex() {
         return globalIndex;
-    }
-
-    @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof VPDSym)) {
-            return false;
-        }
-
-        final VPDSym<?> that = (VPDSym<?>) o;
-        return localIndex == that.localIndex && globalIndex == that.globalIndex && type == that.type &&
-               Objects.equals(userObject, that.userObject);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = 1;
-        result = 31 * result + Objects.hashCode(userObject);
-        result = 31 * result + Objects.hashCode(userObject);
-        result = 31 * result + Integer.hashCode(localIndex);
-        result = 31 * result + Integer.hashCode(globalIndex);
-        return result;
     }
 
     @Override

@@ -27,7 +27,6 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
-import net.automatalib.ts.modal.Transition;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.words.Alphabet;
@@ -92,49 +91,44 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
     @Override
     public Collection<Pair<S0, S1>> update(Map<Pair<S0, S1>, S> mapping, Pair<S0, S1> currentTuple) {
         List<Pair<S0, S1>> discovered = new ArrayList<>();
-        List<Transition<Pair<S0, S1>, I, ModalType>> transitions = generateNewTransitions(currentTuple);
+        List<TransitionData<S0, S1, I>> transitions = generateNewTransitions(currentTuple);
 
-        for (Transition<Pair<S0, S1>, I, ModalType> transition : transitions) {
+        for (TransitionData<S0, S1, I> transition : transitions) {
 
             S mappedTarget;
-            if (mapping.containsKey(transition.getTarget())) {
-                mappedTarget = mapping.get(transition.getTarget());
+            if (mapping.containsKey(transition.target)) {
+                mappedTarget = mapping.get(transition.target);
             } else {
                 mappedTarget = result.addState();
-                mapping.put(transition.getTarget(), mappedTarget);
-                discovered.add(transition.getTarget());
+                mapping.put(transition.target, mappedTarget);
+                discovered.add(transition.target);
             }
-            result.addModalTransition(mapping.get(currentTuple),
-                                      transition.getLabel(),
-                                      mappedTarget,
-                                      transition.getProperty());
+            result.addModalTransition(mapping.get(currentTuple), transition.label, mappedTarget, transition.property);
         }
         return discovered;
     }
 
-    protected List<Transition<Pair<S0, S1>, I, ModalType>> generateNewTransitions(Pair<S0, S1> productState) {
-        List<Transition<Pair<S0, S1>, I, ModalType>> newTransitions = new ArrayList<>();
+    protected List<TransitionData<S0, S1, I>> generateNewTransitions(Pair<S0, S1> productState) {
+        List<TransitionData<S0, S1, I>> newTransitions = new ArrayList<>();
 
         for (I symbol : mts0.getInputAlphabet()) {
             for (T0 transition : mts0.getTransitions(productState.getFirst(), symbol)) {
 
                 if (!mts1.getInputAlphabet().contains(symbol)) {
-                    newTransitions.add(new Transition<>(productState,
-                                                        symbol,
-                                                        Pair.of(mts0.getSuccessor(transition),
-                                                                productState.getSecond()),
-                                                        mts0.getTransitionProperty(transition).getType()));
+                    newTransitions.add(new TransitionData<>(symbol,
+                                                            Pair.of(mts0.getSuccessor(transition),
+                                                                    productState.getSecond()),
+                                                            mts0.getTransitionProperty(transition).getType()));
                 } else {
                     for (T1 partnerTransition : mts1.getTransitions(productState.getSecond(), symbol)) {
-                        newTransitions.add(new Transition<>(productState,
-                                                            symbol,
-                                                            Pair.of(mts0.getSuccessor(transition),
-                                                                    mts1.getSuccessor(partnerTransition)),
-                                                            minimalCompatibleType(mts0.getTransitionProperty(transition)
-                                                                                      .getType(),
-                                                                                  mts1.getTransitionProperty(
-                                                                                          partnerTransition)
-                                                                                      .getType())));
+                        newTransitions.add(new TransitionData<>(symbol,
+                                                                Pair.of(mts0.getSuccessor(transition),
+                                                                        mts1.getSuccessor(partnerTransition)),
+                                                                minimalCompatibleType(mts0.getTransitionProperty(
+                                                                        transition).getType(),
+                                                                                      mts1.getTransitionProperty(
+                                                                                              partnerTransition)
+                                                                                          .getType())));
                     }
                 }
             }
@@ -145,10 +139,9 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
 
         for (I symbol : alphabetDifference) {
             for (T1 transition : mts1.getTransitions(productState.getSecond(), symbol)) {
-                newTransitions.add(new Transition<>(productState,
-                                                    symbol,
-                                                    Pair.of(productState.getFirst(), mts1.getSuccessor(transition)),
-                                                    mts1.getTransitionProperty(transition).getType()));
+                newTransitions.add(new TransitionData<>(symbol,
+                                                        Pair.of(productState.getFirst(), mts1.getSuccessor(transition)),
+                                                        mts1.getTransitionProperty(transition).getType()));
             }
         }
 
@@ -166,6 +159,19 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
     @Override
     public A result() {
         return result;
+    }
+
+    private static class TransitionData<S0, S1, I> {
+
+        private final I label;
+        private final Pair<S0, S1> target;
+        private final ModalType property;
+
+        TransitionData(I label, Pair<S0, S1> target, ModalType property) {
+            this.label = label;
+            this.target = target;
+            this.property = property;
+        }
     }
 
 }

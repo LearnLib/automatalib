@@ -29,7 +29,7 @@ import net.automatalib.words.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactMMC<I> extends AbstractCompactMTS<I, ModalContractMembershipEdgePropertyImpl>
-        implements MutableMembershipModalContract<Integer, I, MTSTransition<I, ModalContractMembershipEdgePropertyImpl>, ModalContractMembershipEdgePropertyImpl> {
+        implements MutableMembershipModalContract<Integer, I, MTSTransition<ModalContractMembershipEdgePropertyImpl>, ModalContractMembershipEdgePropertyImpl> {
 
     protected Set<I> communicationAlphabet;
 
@@ -100,22 +100,22 @@ public class CompactMMC<I> extends AbstractCompactMTS<I, ModalContractMembership
     }
 
     @Override
-    public MTSTransition<I, ModalContractMembershipEdgePropertyImpl> addContractTransition(Integer src,
-                                                                                           I input,
-                                                                                           Integer tgt,
-                                                                                           ModalType modalType,
-                                                                                           boolean tau,
-                                                                                           EdgeColor color) {
+    public MTSTransition<ModalContractMembershipEdgePropertyImpl> addContractTransition(Integer src,
+                                                                                        I input,
+                                                                                        Integer tgt,
+                                                                                        ModalType modalType,
+                                                                                        boolean tau,
+                                                                                        EdgeColor color) {
         return addContractTransition(src, input, tgt, modalType, tau, color, -1);
     }
 
-    public MTSTransition<I, ModalContractMembershipEdgePropertyImpl> addContractTransition(Integer src,
-                                                                                           I input,
-                                                                                           Integer tgt,
-                                                                                           ModalType modalType,
-                                                                                           boolean tau,
-                                                                                           EdgeColor color,
-                                                                                           int memberId) {
+    public MTSTransition<ModalContractMembershipEdgePropertyImpl> addContractTransition(Integer src,
+                                                                                        I input,
+                                                                                        Integer tgt,
+                                                                                        ModalType modalType,
+                                                                                        boolean tau,
+                                                                                        EdgeColor color,
+                                                                                        int memberId) {
         return super.addTransition(src, input, tgt, buildContractProperty(modalType, tau, color, memberId));
     }
 

@@ -36,7 +36,8 @@ import net.automatalib.words.Alphabet;
  * Operations on {@link DFA}s.
  * <p>
  * Note that the methods provided by this class do not modify their input arguments. Such methods are instead provided
- * by the {@link MutableDFAs} class.
+ * by the {@link MutableDFAs} class. Furthermore, results are copied into new datastructures. For read-only views you
+ * may use the more generic {@link Acceptors} factory.
  *
  * @author Malte Isberner
  */
@@ -372,13 +373,17 @@ public final class DFAs {
 
     /**
      * Computes whether the language of the given DFA is prefix-closed.
-     *
+     * <p>
      * Assumes all states in the given {@link DFA} are reachable from the initial state.
      *
-     * @param dfa the DFA to check
-     * @param alphabet the Alphabet
-     * @param <S> the type of state
-     * @param <I> the type of input
+     * @param dfa
+     *         the DFA to check
+     * @param alphabet
+     *         the Alphabet
+     * @param <S>
+     *         the type of state
+     * @param <I>
+     *         the type of input
      *
      * @return whether the DFA is prefix-closed.
      */
@@ -391,11 +396,13 @@ public final class DFAs {
 
     /**
      * Computes whether the given {@link DFA} accepts the empty language.
-     *
+     * <p>
      * Assumes all states in the given {@link DFA} are reachable from the initial state.
      *
-     * @param dfa the {@link DFA} to check.
-     * @param <S> the state type.
+     * @param dfa
+     *         the {@link DFA} to check.
+     * @param <S>
+     *         the state type.
      *
      * @return whether the given {@link DFA} accepts the empty language.
      */

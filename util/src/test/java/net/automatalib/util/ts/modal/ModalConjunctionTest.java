@@ -44,7 +44,7 @@ public class ModalConjunctionTest {
 
     private CompactMTS<Character> block0;
     private CompactMTS<Character> block1;
-    private ModalConjunction<CompactMTS<Character>, Integer, Integer, Integer, Character, MTSTransition<Character, MutableModalEdgeProperty>, MTSTransition<Character, MutableModalEdgeProperty>, MTSTransition<Character, MutableModalEdgeProperty>, MutableModalEdgeProperty, MutableModalEdgeProperty>
+    private ModalConjunction<CompactMTS<Character>, Integer, Integer, Integer, Character, MTSTransition<MutableModalEdgeProperty>, MTSTransition<MutableModalEdgeProperty>, MTSTransition<MutableModalEdgeProperty>, MutableModalEdgeProperty, MutableModalEdgeProperty>
             algo;
 
     private Integer b0s0;
@@ -232,17 +232,13 @@ public class ModalConjunctionTest {
         Assert.assertTrue(mts.size() <= a.size() * b.size());
 
         boolean onlyMayA = true, onlyMayB = true;
-        for (MTSTransition<Character, MutableModalEdgeProperty> t : a.getTransitions(a.getInitialStates()
-                                                                                      .iterator()
-                                                                                      .next())) {
+        for (MTSTransition<MutableModalEdgeProperty> t : a.getTransitions(a.getInitialStates().iterator().next())) {
             if (t.getProperty().isMust()) {
                 onlyMayA = false;
             }
         }
 
-        for (MTSTransition<Character, MutableModalEdgeProperty> t : b.getTransitions(b.getInitialStates()
-                                                                                      .iterator()
-                                                                                      .next())) {
+        for (MTSTransition<MutableModalEdgeProperty> t : b.getTransitions(b.getInitialStates().iterator().next())) {
             if (t.getProperty().isMust()) {
                 onlyMayB = false;
             }

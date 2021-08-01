@@ -30,10 +30,10 @@ import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
 public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdgeProperty>
-        implements MutableModalContract<Integer, I, MTSTransition<I, MutableModalContractEdgeProperty>, MutableModalContractEdgeProperty> {
+        implements MutableModalContract<Integer, I, MTSTransition<MutableModalContractEdgeProperty>, MutableModalContractEdgeProperty> {
 
     protected final GrowingAlphabet<I> communicationAlphabet;
-    protected final Set<MTSTransition<I, MutableModalContractEdgeProperty>> redTransitions;
+    protected final Set<MTSTransition<MutableModalContractEdgeProperty>> redTransitions;
 
     public CompactMC(Alphabet<I> alphabet, Collection<I> gamma) {
         super(alphabet);
@@ -63,12 +63,12 @@ public class CompactMC<I> extends AbstractCompactMTS<I, MutableModalContractEdge
     }
 
     @Override
-    public MTSTransition<I, MutableModalContractEdgeProperty> addContractTransition(Integer src,
-                                                                                    I input,
-                                                                                    Integer tgt,
-                                                                                    ModalType modalType,
-                                                                                    boolean tau,
-                                                                                    EdgeColor color) {
+    public MTSTransition<MutableModalContractEdgeProperty> addContractTransition(Integer src,
+                                                                                 I input,
+                                                                                 Integer tgt,
+                                                                                 ModalType modalType,
+                                                                                 boolean tau,
+                                                                                 EdgeColor color) {
         return super.addTransition(src, input, tgt, buildContractProperty(modalType, tau, color));
     }
 
