@@ -93,8 +93,14 @@ final class ExternalSystemDeserializer {
         return (Element) node;
     }
 
-    private static boolean getBooleanContentByTagName(Element elem, String tagName) {
-        final Node node = elem.getElementsByTagName(tagName).item(0);
+    private static boolean getBooleanAttributeByTagName(Element elem, String tagName) {
+        final Element attributes = (Element) elem.getElementsByTagName("attributes").item(0);
+
+        if (attributes == null) {
+            return false;
+        }
+
+        final Node node = attributes.getElementsByTagName(tagName).item(0);
         return node != null && Boolean.parseBoolean(node.getTextContent());
     }
 
@@ -103,8 +109,7 @@ final class ExternalSystemDeserializer {
                                     Map<String, N> idToNode) {
 
         final String id = getFirstElementByTagName(state, "id").getTextContent();
-        final Element attributes = getFirstElementByTagName(state, "attributes");
-        boolean isInitial = getBooleanContentByTagName(attributes, "isInitial");
+        boolean isInitial = getBooleanAttributeByTagName(state, "isInitial");
 
         final N node = mpg.addNode(Collections.emptySet());
 
@@ -124,9 +129,8 @@ final class ExternalSystemDeserializer {
         final String targetId = getFirstElementByTagName(transition, "targetId").getTextContent();
         final String label = getFirstElementByTagName(transition, "label").getTextContent();
 
-        final Element attributesElement = getFirstElementByTagName(transition, "attributes");
-        final boolean isMust = getBooleanContentByTagName(attributesElement, "isMust");
-        final boolean isProcedural = getBooleanContentByTagName(attributesElement, "isProcedural");
+        final boolean isMust = getBooleanAttributeByTagName(transition, "isMust");
+        final boolean isProcedural = getBooleanAttributeByTagName(transition, "isProcedural");
 
         final E edge = mpg.connect(idToNode.get(sourceId), idToNode.get(targetId));
         mpg.getEdgeProperty(edge).setProceduralType(isProcedural ? ProceduralType.PROCESS : ProceduralType.INTERNAL);

@@ -10,45 +10,24 @@
             </state>
             <state>
                 <id>s0</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s1</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s2</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s3</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s4</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s5</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>end</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
         </states>
         <transitions>
@@ -58,7 +37,6 @@
                 <label>S</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -67,7 +45,6 @@
                 <label>R</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -76,7 +53,6 @@
                 <label>a</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -85,7 +61,6 @@
                 <label>b</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -103,7 +78,6 @@
                 <label>R</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -121,7 +95,6 @@
                 <label>R</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -139,7 +112,6 @@
                 <label>a</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -148,7 +120,6 @@
                 <label>b</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -157,7 +128,6 @@
                 <label>R</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
         </transitions>
@@ -173,33 +143,18 @@
             </state>
             <state>
                 <id>t0</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>t1</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>t2</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>t3</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>end</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
         </states>
         <transitions>
@@ -209,7 +164,6 @@
                 <label>T</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -218,7 +172,6 @@
                 <label>c</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -236,7 +189,6 @@
                 <label>R</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -254,7 +206,6 @@
                 <label>c</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
             <transition>
@@ -263,7 +214,6 @@
                 <label>R</label>
                 <attributes>
                     <isMust>true</isMust>
-                    <isProcedural>false</isProcedural>
                 </attributes>
             </transition>
         </transitions>

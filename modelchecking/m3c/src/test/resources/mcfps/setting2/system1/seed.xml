@@ -4,153 +4,78 @@
         <states>
             <state>
                 <id>s45</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s16</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s9</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s42</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s25</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s5</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s10</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s44</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s19</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s17</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s20</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s32</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s36</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s35</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s40</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s30</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s3</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s33</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s24</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s27</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s4</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s26</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s34</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s2</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s8</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s0</id>
@@ -160,129 +85,66 @@
             </state>
             <state>
                 <id>s28</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s14</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s31</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s38</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s12</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s43</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s15</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s11</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s23</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s39</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s22</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s6</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s29</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s37</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s41</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s1</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s13</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s21</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s7</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>s18</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>end</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
         </states>
         <transitions>
@@ -298,9 +160,6 @@
                 <sourceId>s11</sourceId>
                 <targetId>s12</targetId>
                 <label>h</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s1</sourceId>
@@ -322,73 +181,46 @@
                 <sourceId>s44</sourceId>
                 <targetId>s45</targetId>
                 <label>a</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s45</sourceId>
                 <targetId>s45</targetId>
                 <label>a</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s12</sourceId>
                 <targetId>s13</targetId>
                 <label>i</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s12</sourceId>
                 <targetId>s13</targetId>
                 <label>g</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s12</sourceId>
                 <targetId>s13</targetId>
                 <label>c</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s13</sourceId>
                 <targetId>s13</targetId>
                 <label>a</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s13</sourceId>
                 <targetId>s13</targetId>
                 <label>i</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s13</sourceId>
                 <targetId>s13</targetId>
                 <label>g</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s13</sourceId>
                 <targetId>s13</targetId>
                 <label>c</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s13</sourceId>
@@ -442,9 +274,6 @@
                 <sourceId>s4</sourceId>
                 <targetId>s5</targetId>
                 <label>g</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s1</sourceId>
@@ -498,9 +327,6 @@
                 <sourceId>s6</sourceId>
                 <targetId>s8</targetId>
                 <label>g</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s22</sourceId>
@@ -514,9 +340,6 @@
                 <sourceId>s3</sourceId>
                 <targetId>s43</targetId>
                 <label>d</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s23</sourceId>
@@ -570,9 +393,6 @@
                 <sourceId>s43</sourceId>
                 <targetId>s44</targetId>
                 <label>h</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s7</sourceId>
@@ -690,9 +510,6 @@
                 <sourceId>s8</sourceId>
                 <targetId>s10</targetId>
                 <label>d</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s34</sourceId>
@@ -714,9 +531,6 @@
                 <sourceId>s9</sourceId>
                 <targetId>s9</targetId>
                 <label>a</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s36</sourceId>
@@ -746,9 +560,6 @@
                 <sourceId>s9</sourceId>
                 <targetId>s9</targetId>
                 <label>i</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s38</sourceId>
@@ -762,9 +573,6 @@
                 <sourceId>s9</sourceId>
                 <targetId>s9</targetId>
                 <label>g</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s39</sourceId>
@@ -778,17 +586,11 @@
                 <sourceId>s2</sourceId>
                 <targetId>s3</targetId>
                 <label>g</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s9</sourceId>
                 <targetId>s9</targetId>
                 <label>f</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s40</sourceId>
@@ -818,9 +620,6 @@
                 <sourceId>s10</sourceId>
                 <targetId>s12</targetId>
                 <label>a</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s0</sourceId>
@@ -834,9 +633,6 @@
                 <sourceId>s12</sourceId>
                 <targetId>s13</targetId>
                 <label>a</label>
-                <attributes>
-                    <isMust>false</isMust>
-                </attributes>
             </transition>
             <transition>
                 <sourceId>s0</sourceId>

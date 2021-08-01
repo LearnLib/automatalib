@@ -4,69 +4,36 @@
         <states>
             <state>
                 <id>11</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>10</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>13</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>12</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>15</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>14</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>17</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>16</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>19</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>18</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>20</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>1</id>
@@ -76,57 +43,30 @@
             </state>
             <state>
                 <id>3</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>2</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>5</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>4</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>7</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>6</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>9</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>8</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
             <state>
                 <id>end</id>
-                <attributes>
-                    <isInitial>false</isInitial>
-                </attributes>
             </state>
         </states>
         <transitions>
