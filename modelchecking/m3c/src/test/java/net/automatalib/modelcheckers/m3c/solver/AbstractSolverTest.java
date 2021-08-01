@@ -24,30 +24,44 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelcheckers.m3c.util.Examples;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T, String, String>> {
 
-    protected static ModalContextFreeProcessSystem<String, String> mcfps;
+    @Test
+    void testSolve() throws ParseException {
+        final M3CSolver<String> solver = getSolver(Examples.getMcfpsAnBn(Collections.emptySet()));
 
-    @BeforeClass
-    public static void setup() {
-        mcfps = Examples.getMcfpsAnBn(new HashSet<>());
+        final String formula = "mu X.(<b><b>true || <>X)";
+        assertSolve(solver, formula, true);
+
+        final String negatedFormula = "!(" + formula + ")";
+        assertSolve(solver, negatedFormula, false);
+
+        // use !'a' to simulate true, as no state satisfies 'a'
+        final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
+        assertSolve(solver, formulaWithNegatedAP, true);
     }
 
     @Test
-    void testSolve() throws ParseException {
-        M3CSolver<String> solver = getSolver(mcfps);
+    void testSolveWithSingleAP() throws ParseException {
+        final ModalContextFreeProcessSystem<String, String> mcfps = Examples.getMcfpsAnBn(Collections.singleton("a"));
+        final M3CSolver<String> solver = getSolver(mcfps);
+        final String formula = "mu X.(<>X || 'a,b')";
 
-        String formula = "mu X.(<b><b>true || <>X)";
+        assertSolve(solver, formula, false);
+    }
+
+    @Test
+    void testSolveWithMultipleAPs() throws ParseException {
+        final ModalContextFreeProcessSystem<String, String> mcfps =
+                Examples.getMcfpsAnBn(new HashSet<>(Arrays.asList("a", "b")));
+        final M3CSolver<String> solver = getSolver(mcfps);
+
+        final String formula = "mu X.(<>X || 'a,b')";
         assertSolve(solver, formula, true);
 
-        String negatedFormula = "!(" + formula + ")";
-        assertSolve(solver, negatedFormula, false);
-
-        // use !'a' to simulate true, as no state satiesfies 'a'
-        String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
+        final String formulaWithNegatedAP = "mu X.(<>X || !'a,b')";
         assertSolve(solver, formulaWithNegatedAP, true);
     }
 
@@ -55,22 +69,6 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     protected <P> void assertSolve(M3CSolver<P> solver, P property, boolean expectedIsSat) throws ParseException {
         Assert.assertEquals(solver.solve(property), expectedIsSat);
-    }
-
-    @Test
-    void testSolveWithAPs() throws ParseException {
-        ModalContextFreeProcessSystem<String, String> mcfps =
-                Examples.getMcfpsAnBn(new HashSet<>(Arrays.asList("a", "b")));
-        String formula = "mu X.(<>X || 'a,b')";
-        M3CSolver<String> solver = getSolver(mcfps);
-        assertSolve(solver, formula, true);
-
-        String formulaWithNegatedAP = "mu X.(<>X || !'a,b')";
-        assertSolve(solver, formulaWithNegatedAP, true);
-
-        mcfps = Examples.getMcfpsAnBn(new HashSet<>(Collections.singletonList("a")));
-        solver = getSolver(mcfps);
-        assertSolve(solver, formula, false);
     }
 
 }

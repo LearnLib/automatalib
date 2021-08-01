@@ -45,8 +45,9 @@ public class MCFPSVisualizationHelper<N, L, E, AP> extends DefaultVisualizationH
 
         for (Entry<L, ModalProcessGraph<N, L, E, AP, ?>> e : this.mpgs.entrySet()) {
             final N init = e.getValue().getInitialNode();
-            assert init != null;
-            initialNodes.add(Pair.of(e.getKey(), init));
+            if (init != null) {
+                initialNodes.add(Pair.of(e.getKey(), init));
+            }
         }
 
         return initialNodes;
@@ -64,10 +65,10 @@ public class MCFPSVisualizationHelper<N, L, E, AP> extends DefaultVisualizationH
         final @NonNull ModalProcessGraph<N, L, E, AP, ?> mpg = this.mpgs.get(process);
         final Set<AP> aps = mpg.getNodeProperty(node.getSecond());
 
-        if (!aps.isEmpty()) {
-            properties.put(NodeAttrs.LABEL, aps.toString());
-        } else {
+        if (aps.isEmpty()) {
             properties.put(NodeAttrs.LABEL, "");
+        } else {
+            properties.put(NodeAttrs.LABEL, aps.toString());
         }
 
         properties.put(NodeAttrs.SHAPE, NodeShapes.CIRCLE);
