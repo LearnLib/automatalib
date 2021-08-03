@@ -166,18 +166,38 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         XDD<BooleanVector> updatedADD;
         final DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
         if (compositions.isEmpty()) {
-            updatedADD = this.add;
+            //TODO: Test this
+            updatedADD = this.add.apply(diamondOp, this.add);
         } else if (compositions.size() == 1) {
-            ADDTransformer<L, AP> succ = compositions.get(0);
-            updatedADD = succ.add.apply(diamondOp, succ.add);
+            ADDTransformer<L, AP> singleComposition = compositions.get(0);
+            XDD<BooleanVector> compositionWithPreservedInformation =
+                    preserveUpdatedTransformer(singleComposition.add, currentBlock);
+            updatedADD = compositionWithPreservedInformation.apply(diamondOp, singleComposition.add);
         } else {
-            updatedADD = compositions.get(0).add;
+            updatedADD = preserveUpdatedTransformer(compositions.get(0).add, currentBlock);
             for (int i = 1; i < compositions.size(); i++) {
                 updatedADD = compositions.get(i).add.apply(diamondOp, updatedADD);
             }
         }
 
         return new ADDTransformer<>(xddManager, updatedADD);
+    }
+
+    public XDD<BooleanVector> preserveUpdatedTransformer(XDD<BooleanVector> rightDD,
+                                                         EquationalBlock<L, AP> currentBlock) {
+        /* We create a new XDD where the information of this.add (the add before the update) is 'injected'
+        into rightDD, the composition DD such that the bits corresponding to subformulas outside of the current
+        block are preserved */
+        XDD<BooleanVector> xdd = this.add.apply((booleanVectorBeforeUpdate, booleanVectorRight) -> {
+            boolean[] result = booleanVectorBeforeUpdate.data().clone();
+            for (FormulaNode<?, AP> node : currentBlock.getNodes()) {
+                result[node.getVarNumber()] = booleanVectorRight.data()[node.getVarNumber()];
+            }
+            return new BooleanVector(result);
+        }, rightDD);
+        this.add.recursiveDeref();
+        rightDD.recursiveDeref();
+        return xdd;
     }
 
     @Override

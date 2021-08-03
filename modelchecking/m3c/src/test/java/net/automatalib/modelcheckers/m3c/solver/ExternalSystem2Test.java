@@ -48,7 +48,7 @@ public class ExternalSystem2Test {
         return new Function<?, ?>[] {addSolver, bddSolver};
     }
 
-    @Test(enabled = false)
+    @Test
     public void testPalindrome() throws IOException, ParserConfigurationException, SAXException, ParseException {
         testRERSBenchmark("/mcfps/palindrome/");
     }
