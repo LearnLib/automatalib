@@ -66,7 +66,7 @@ public class ADDTransformerTest {
         /* Check output of each possible input */
         for (int i = 0; i < numVarCombinations; i++) {
 
-            /* Construct boolean  input vector from BitSet */
+            /* Construct boolean input vector from BitSet */
             BitSet bs = BitSet.valueOf(new long[] {i});
             boolean[] input = new boolean[dg.getNumVariables()];
             for (int idx = 0; idx < dg.getNumVariables(); idx++) {
@@ -87,7 +87,7 @@ public class ADDTransformerTest {
     }
 
     @Test
-    void testBDDStateInitialization() {
+    void testADDStateInitialization() {
         ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dg);
         Assert.assertTrue(transformer.getAdd().isConstant());
         boolean[] leafData = transformer.getAdd().v().data();

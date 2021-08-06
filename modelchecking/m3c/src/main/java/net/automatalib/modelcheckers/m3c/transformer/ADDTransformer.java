@@ -42,16 +42,19 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     private final BooleanVectorLogicDDManager xddManager;
     private final XDD<BooleanVector> add;
+    private final boolean isIdentity;
 
     public ADDTransformer(BooleanVectorLogicDDManager xddManager, XDD<BooleanVector> add) {
         this.add = add;
         this.xddManager = xddManager;
+        this.isIdentity = false;
     }
 
     public ADDTransformer(BooleanVectorLogicDDManager xddManager, XDD<BooleanVector> add, boolean isMust) {
         super(isMust);
         this.add = add;
         this.xddManager = xddManager;
+        this.isIdentity = false;
     }
 
     /* Initialization of a state property transformer*/
@@ -66,12 +69,15 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
             }
         }
         add = xddManager.constant(new BooleanVector(terminal));
+        this.isIdentity = false;
     }
 
     /* Creates the identity function */
     public ADDTransformer(BooleanVectorLogicDDManager ddManager, int numberOfVars) {
         this.xddManager = ddManager;
-        final boolean[] falseArr = new boolean[numberOfVars];
+        this.isIdentity = true;
+        this.add = null;
+        /*final boolean[] falseArr = new boolean[numberOfVars];
         final boolean[] trueArr = new boolean[numberOfVars];
         trueArr[0] = true;
         final BooleanVector booleanVector = new BooleanVector(falseArr);
@@ -93,7 +99,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
             proj.recursiveDeref();
         }
 
-        this.add = tmpADD;
+        this.add = tmpADD;*/
     }
 
     /* Create the property transformer for an edge */
@@ -134,16 +140,22 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         }
 
         this.add = tmpADD;
+        this.isIdentity = false;
     }
 
     @Override
     public Set<Integer> evaluate(boolean[] input) {
-        final XDD<BooleanVector> resultLeaf = add.eval(input);
-        final BooleanVector leafValue = resultLeaf.v();
-        final boolean[] leafData = leafValue.data();
+        boolean[] leafData;
+        if (this.add == null && this.isIdentity) {
+            leafData = input;
+        } else {
+            final XDD<BooleanVector> resultLeaf = add.eval(input);
+            final BooleanVector leafValue = resultLeaf.v();
+            leafData = leafValue.data();
+        }
         final Set<Integer> satisfiedVars = new HashSet<>();
         for (int i = 0; i < leafData.length; i++) {
-            if (leafValue.data()[i]) {
+            if (leafData[i]) {
                 satisfiedVars.add(i);
             }
         }
@@ -152,10 +164,17 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
 
     @Override
     public ADDTransformer<L, AP> compose(ADDTransformer<L, AP> other, boolean isMust) {
-        final XDD<BooleanVector> compAdd = other.add.monadicApply(arg -> {
-            boolean[] terminal = arg.data().clone();
-            return this.add.eval(terminal).v();
-        });
+        XDD<BooleanVector> compAdd;
+        if (this.isIdentity) {
+            compAdd = new XDD<>(other.add.ptr(), xddManager);
+        } else if (other.isIdentity) {
+            compAdd = new XDD<>(this.add.ptr(), xddManager);
+        } else {
+            compAdd = other.add.monadicApply(arg -> {
+                boolean[] terminal = arg.data().clone();
+                return this.add.eval(terminal).v();
+            });
+        }
         return new ADDTransformer<>(xddManager, compAdd, isMust);
     }
 
@@ -167,16 +186,15 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         final DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
         if (compositions.isEmpty()) {
             //TODO: Test this
-            updatedADD = this.add.apply(diamondOp, this.add);
+            updatedADD = this.add.monadicApply(new DiamondOperationDeadlock<>(atomicPropositions, currentBlock));
         } else if (compositions.size() == 1) {
             ADDTransformer<L, AP> singleComposition = compositions.get(0);
-            XDD<BooleanVector> compositionWithPreservedInformation =
-                    preserveUpdatedTransformer(singleComposition.add, currentBlock);
-            updatedADD = compositionWithPreservedInformation.apply(diamondOp, singleComposition.add);
+            updatedADD = preserveUpdatedTransformer(singleComposition.add, currentBlock).apply(diamondOp,
+                                                                                               singleComposition.add);
         } else {
             updatedADD = preserveUpdatedTransformer(compositions.get(0).add, currentBlock);
             for (int i = 1; i < compositions.size(); i++) {
-                updatedADD = compositions.get(i).add.apply(diamondOp, updatedADD);
+                updatedADD = updatedADD.apply(diamondOp, compositions.get(i).add);
             }
         }
 
@@ -186,7 +204,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     public XDD<BooleanVector> preserveUpdatedTransformer(XDD<BooleanVector> rightDD,
                                                          EquationalBlock<L, AP> currentBlock) {
         /* We create a new XDD where the information of this.add (the add before the update) is 'injected'
-        into rightDD, the composition DD such that the bits corresponding to subformulas outside of the current
+        into rightDD, the first composition DD, such that the bits corresponding to subformulas outside of the current
         block are preserved */
         XDD<BooleanVector> xdd = this.add.apply((booleanVectorBeforeUpdate, booleanVectorRight) -> {
             boolean[] result = booleanVectorBeforeUpdate.data().clone();
@@ -195,13 +213,12 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
             }
             return new BooleanVector(result);
         }, rightDD);
-        this.add.recursiveDeref();
-        rightDD.recursiveDeref();
         return xdd;
     }
 
     @Override
     public List<String> serialize() {
+        if (add == null) { return new ArrayList<>(); }
         final XDDSerializer<BooleanVector> xddSerializer = new XDDSerializer<>();
         return Collections.singletonList(xddSerializer.serialize(add));
     }
