@@ -18,6 +18,8 @@ package net.automatalib.modelcheckers.m3c.transformer;
 import java.util.BitSet;
 import java.util.Set;
 
+import info.scce.addlib.dd.xdd.XDD;
+import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
@@ -60,7 +62,7 @@ public class ADDTransformerTest {
 
     @Test
     void testADDIdentity() {
-        ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dg.getNumVariables());
+        ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager);
         double numVarCombinations = Math.pow(2, dg.getNumVariables());
 
         /* Check output of each possible input */
@@ -89,8 +91,10 @@ public class ADDTransformerTest {
     @Test
     void testADDStateInitialization() {
         ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dg);
-        Assert.assertTrue(transformer.getAdd().isConstant());
-        boolean[] leafData = transformer.getAdd().v().data();
+        XDD<BooleanVector> add = transformer.getAdd();
+        Assert.assertNotNull(add);
+        Assert.assertTrue(add.isConstant());
+        boolean[] leafData = add.v().data();
         for (EquationalBlock<String, String> block : dg.getBlocks()) {
             for (FormulaNode<String, String> node : block.getNodes()) {
                 boolean val = leafData[node.getVarNumber()];
@@ -195,7 +199,7 @@ public class ADDTransformerTest {
     @Test
     void testComposition() {
         ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dg);
-        ADDTransformer<String, String> identity = new ADDTransformer<>(xddManager, dg.getNumVariables());
+        ADDTransformer<String, String> identity = new ADDTransformer<>(xddManager);
         ADDTransformer<String, String> composition = transformer.compose(identity, true);
         Assert.assertEquals(transformer, composition);
 

@@ -39,7 +39,7 @@ public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, A
 
     @Override
     protected ADDTransformer<L, AP> createInitTransformerEnd(DependencyGraph<L, AP> dependencyGraph) {
-        return new ADDTransformer<>(ddManager, dependencyGraph.getNumVariables());
+        return new ADDTransformer<>(ddManager);
     }
 
     @Override
