@@ -15,7 +15,6 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,10 +23,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import info.scce.addlib.dd.DD;
-import info.scce.addlib.dd.xdd.XDD;
-import info.scce.addlib.dd.xdd.latticedd.example.BooleanLogicDDManager;
-import info.scce.addlib.serializer.XDDSerializer;
+import info.scce.addlib.dd.bdd.BDD;
+import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.graphs.ModalProcessGraph;
@@ -36,6 +33,8 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
+import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
+import net.automatalib.modelcheckers.m3c.transformer.BDDTransformerSerializer;
 import net.automatalib.modelcheckers.m3c.util.Examples;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -44,36 +43,38 @@ import org.testng.annotations.Test;
 public class SolverHistoryTest {
 
     private final ModalContextFreeProcessSystem<String, String> mcfps;
-    private final XDDSerializer<Boolean> serializer;
-    private final BooleanLogicDDManager ddManager;
+    private final BDDManager bddManager;
+    private final BDDTransformerSerializer<String, String> transformerSerializer;
 
     public SolverHistoryTest() {
         this.mcfps = Examples.getMcfpsAnBn(Collections.emptySet());
-        this.serializer = new XDDSerializer<>();
-        this.ddManager = new BooleanLogicDDManager();
+        this.bddManager = new BDDManager();
+        this.transformerSerializer = new BDDTransformerSerializer<>(this.bddManager);
     }
 
     @AfterClass
     public void after() {
-        ddManager.quit();
+        bddManager.quit();
     }
 
-    @Test(enabled = false)
+    @Test
     public void testSolverHistory() throws ParseException {
         final SolveBDD<String, String> solver = new SolveBDD<>(mcfps);
         final FormulaNode<String, String> formula = M3CParser.parse("mu X.(<b><b>true || <>X)");
-        final SolverHistory<String, String> history = solver.solveAndRecordHistory(formula);
-        final Map<String, SolverData<String, ?, String>> data = history.getData();
+        final SolverHistory<BDDTransformer<String, String>, String, String> history =
+                solver.solveAndRecordHistory(formula);
+        final Map<String, SolverData<?, BDDTransformer<String, String>, String, String>> data = history.getData();
 
         Assert.assertEquals(data.size(), 1);
 
-        final SolverData<String, ?, String> solverData = data.get("P");
+        final SolverData<?, BDDTransformer<String, String>, String, String> solverData = data.get("P");
 
         Assert.assertNotNull(solverData);
         testSolverHistory(history, solverData);
     }
 
-    private <N> void testSolverHistory(SolverHistory<String, String> history, SolverData<String, N, String> data) {
+    private <N> void testSolverHistory(SolverHistory<BDDTransformer<String, String>, String, String> history,
+                                       SolverData<N, BDDTransformer<String, String>, String, String> data) {
         final ModalProcessGraph<N, String, ?, String, ?> mpg = data.getMpg();
         final N initialNode = mpg.getInitialNode();
         final N s1 = getS1(mpg);
@@ -85,12 +86,11 @@ public class SolverHistoryTest {
         testMustTransformers(history);
         testSolverStates(history, mpg, initialNode, s1, s2);
 
-        Assert.assertTrue(history.getMayTransformers().isEmpty());
-        Assert.assertEquals(SolverHistory.DDType.BDD, history.getDDType());
+        Assert.assertTrue(history.getMayTransformers(transformerSerializer).isEmpty());
         Assert.assertTrue(history.isSat());
     }
 
-    private <N> void testNodeIDs(SolverData<String, N, String> data) {
+    private <N> void testNodeIDs(SolverData<N, BDDTransformer<String, String>, String, String> data) {
 
         final ModalProcessGraph<N, String, ?, String, ?> mpg = data.getMpg();
         final NodeIDs<N> nodeIDs = data.getNodeIDs();
@@ -101,15 +101,18 @@ public class SolverHistoryTest {
         }
     }
 
-    private <N> void testInitialPropertyTransformers(SolverData<String, N, String> data, N s1, N s2) {
+    private <N> void testInitialPropertyTransformers(SolverData<N, BDDTransformer<String, String>, String, String> data,
+                                                     N s1,
+                                                     N s2) {
 
         final ModalProcessGraph<N, String, ?, String, ?> mpg = data.getMpg();
-        final Mapping<N, List<String>> initialPropertyTransformers = data.getInitialPropertyTransformers();
+        final Mapping<N, BDDTransformer<String, String>> initialPropertyTransformers =
+                data.getInitialPropertyTransformers(transformerSerializer);
 
-        final List<XDD<Boolean>> startPT = getDDs(initialPropertyTransformers.get(mpg.getInitialNode()));
-        final List<XDD<Boolean>> endPT = getDDs(initialPropertyTransformers.get(mpg.getFinalNode()));
-        final List<XDD<Boolean>> s1PT = getDDs(initialPropertyTransformers.get(s1));
-        final List<XDD<Boolean>> s2PT = getDDs(initialPropertyTransformers.get(s2));
+        final BDDTransformer<String, String> startPT = initialPropertyTransformers.get(mpg.getInitialNode());
+        final BDDTransformer<String, String> endPT = initialPropertyTransformers.get(mpg.getFinalNode());
+        final BDDTransformer<String, String> s1PT = initialPropertyTransformers.get(s1);
+        final BDDTransformer<String, String> s2PT = initialPropertyTransformers.get(s2);
 
         // the PTs of start, s1 and s2 are initialized with an array of zero BDDs
         Assert.assertEquals(startPT, s1PT);
@@ -118,21 +121,19 @@ public class SolverHistoryTest {
         // the end state PT is initialized with the identity function
         Assert.assertNotEquals(startPT, endPT);
 
-        final XDD<Boolean> zeroDD = ddManager.zero();
-        for (final XDD<Boolean> startDD : startPT) {
-            Assert.assertEquals(startDD, zeroDD);
-            startDD.recursiveDeref();
+        final BDD zeroDD = bddManager.readLogicZero();
+        for (int i = 0; i < startPT.getNumberOfVars(); i++) {
+            Assert.assertEquals(startPT.getBDD(i), zeroDD);
         }
-        s1PT.forEach(DD::recursiveDeref);
-        s2PT.forEach(DD::recursiveDeref);
-        for (int i = 0; i < endPT.size(); i++) {
-            XDD<Boolean> ithDD = endPT.get(i);
-            Assert.assertEquals(ithDD, ddManager.ithVar(i));
-            ithDD.recursiveDeref();
+        for (int i = 0; i < endPT.getNumberOfVars(); i++) {
+            BDD ithDD = endPT.getBDD(i);
+            Assert.assertEquals(ithDD, bddManager.ithVar(i));
         }
     }
 
-    private <N> void testInitialSatisifedSubformulas(SolverData<String, N, String> data, N s1, N s2) {
+    private <N> void testInitialSatisifedSubformulas(SolverData<N, BDDTransformer<String, String>, String, String> data,
+                                                     N s1,
+                                                     N s2) {
 
         final ModalProcessGraph<N, String, ?, String, ?> mpg = data.getMpg();
         final Mapping<N, List<FormulaNode<String, String>>> initialSatisfiedSubformulas =
@@ -148,36 +149,38 @@ public class SolverHistoryTest {
         Assert.assertTrue(finalNodeSatisfiedSubformulas.get(0) instanceof TrueNode);
     }
 
-    private void testMustTransformers(SolverHistory<String, String> history) {
-        final Map<String, List<String>> mustTransformers = history.getMustTransformers();
+    private void testMustTransformers(SolverHistory<BDDTransformer<String, String>, String, String> history) {
+        final Map<String, BDDTransformer<String, String>> mustTransformers =
+                history.getMustTransformers(transformerSerializer);
         Assert.assertEquals(mustTransformers.size(), 3);
-        final List<XDD<Boolean>> aDDs = getDDs(mustTransformers.get("a"));
-        final List<XDD<Boolean>> bDDs = getDDs(mustTransformers.get("b"));
-        final List<XDD<Boolean>> eDDs = getDDs(mustTransformers.get("e"));
+        final BDDTransformer<String, String> aDDs = mustTransformers.get("a");
+        final BDDTransformer<String, String> bDDs = mustTransformers.get("b");
+        final BDDTransformer<String, String> eDDs = mustTransformers.get("e");
         Assert.assertEquals(aDDs, eDDs);
         Assert.assertNotEquals(aDDs, bDDs);
-        for (int i = 0; i < aDDs.size(); i++) {
+
+        for (int i = 0; i < aDDs.getNumberOfVars(); i++) {
+            final BDD aDD = aDDs.getBDD(i);
             if (i == 4) {
-                Assert.assertEquals(aDDs.get(i), ddManager.ithVar(0));
+                Assert.assertEquals(aDD, bddManager.ithVar(0));
             } else {
-                Assert.assertEquals(aDDs.get(i), ddManager.zero());
+                Assert.assertEquals(aDD, bddManager.readLogicZero());
             }
-            aDDs.get(i).recursiveDeref();
         }
-        for (int i = 0; i < bDDs.size(); i++) {
+
+        for (int i = 0; i < bDDs.getNumberOfVars(); i++) {
+            final BDD bDD = bDDs.getBDD(i);
             if (i == 1 || i == 2) {
-                Assert.assertEquals(bDDs.get(i), ddManager.ithVar(i + 1));
+                Assert.assertEquals(bDD, bddManager.ithVar(i + 1));
             } else if (i == 4) {
-                Assert.assertEquals(bDDs.get(i), ddManager.ithVar(0));
+                Assert.assertEquals(bDD, bddManager.ithVar(0));
             } else {
-                Assert.assertEquals(bDDs.get(i), ddManager.zero());
+                Assert.assertEquals(bDD, bddManager.readLogicZero());
             }
-            bDDs.get(i).recursiveDeref();
         }
-        eDDs.forEach(DD::recursiveDeref);
     }
 
-    private <N> void testSolverStates(SolverHistory<String, String> history,
+    private <N> void testSolverStates(SolverHistory<BDDTransformer<String, String>, String, String> history,
                                       ModalProcessGraph<N, String, ?, String, ?> mpg,
                                       N initialNode,
                                       N s1,
@@ -190,11 +193,13 @@ public class SolverHistoryTest {
         allAPDeadlockedState[3] = true;
         for (int i = 0; i < updatedOrder.size(); i++) {
             final N expectedState = updatedOrder.get(i);
-            final SolverState<?, String, String> solverState = history.getSolverStates().get(i);
+            final SolverState<?, BDDTransformer<String, String>, String, String> solverState =
+                    history.getSolverStates().get(i);
             @SuppressWarnings("unchecked")
             final N actualState = (N) solverState.getUpdatedState();
             Assert.assertEquals(actualState, expectedState);
-            Assert.assertEquals(mpg.getOutgoingEdges(actualState).size(), solverState.getCompositions().size());
+            Assert.assertEquals(mpg.getOutgoingEdges(actualState).size(),
+                                solverState.getCompositions(transformerSerializer).size());
             Assert.assertEquals(solverState.getUpdatedStateMPG(), mcfps.getMainProcess());
             Assert.assertEquals(solverState.getWorkSet().get(mcfps.getMainProcess()), workSets.get(i));
             testSatisfiedSubformulasAndUpdatedPT(allAPDeadlockedState, solverState);
@@ -203,46 +208,40 @@ public class SolverHistoryTest {
     }
 
     private void testSatisfiedSubformulasAndUpdatedPT(boolean[] allAPDeadlockedState,
-                                                      SolverState<?, String, String> solverState) {
-        List<XDD<Boolean>> updatedPropertyTransformer = getDDs(solverState.getUpdatedPropTransformer());
-        Set<Integer> expectedSatisfiedSubformulas = new HashSet<>();
-        for (int j = 0; j < updatedPropertyTransformer.size(); j++) {
-            if (updatedPropertyTransformer.get(j).eval(allAPDeadlockedState).equals(ddManager.one())) {
-                expectedSatisfiedSubformulas.add(j);
+                                                      SolverState<?, BDDTransformer<String, String>, String, String> solverState) {
+        final BDDTransformer<String, String> updatedPropertyTransformer =
+                solverState.getUpdatedPropTransformer(transformerSerializer);
+        final Set<Integer> expectedSatisfiedSubformulas = new HashSet<>();
+
+        for (int i = 0; i < updatedPropertyTransformer.getNumberOfVars(); i++) {
+            final BDD transformerBDD = updatedPropertyTransformer.getBDD(i);
+            if (transformerBDD.eval(allAPDeadlockedState).equals(bddManager.readOne())) {
+                expectedSatisfiedSubformulas.add(i);
             }
-            updatedPropertyTransformer.get(j).recursiveDeref();
         }
-        Set<Integer> actualSatisfiedSubformulas = solverState.getUpdatedStateSatisfiedSubformula()
-                                                             .stream()
-                                                             .map(FormulaNode::getVarNumber)
-                                                             .collect(Collectors.toSet());
+
+        final Set<Integer> actualSatisfiedSubformulas = solverState.getUpdatedStateSatisfiedSubformula()
+                                                                   .stream()
+                                                                   .map(FormulaNode::getVarNumber)
+                                                                   .collect(Collectors.toSet());
         Assert.assertEquals(actualSatisfiedSubformulas, expectedSatisfiedSubformulas);
     }
 
     private <N> List<Set<N>> getWorkSetHistory(N initialNode, N s1, N s2) {
-        List<Set<N>> workSets = new ArrayList<>();
-        workSets.add(new HashSet<>(Arrays.asList(s1, s2)));
-        workSets.add(new HashSet<>(Arrays.asList(initialNode, s2)));
-        workSets.add(Collections.singleton(s2));
-        Set<N> workSetOnlyS1 = Collections.singleton(s1);
-        Set<N> workSetOnlyInitialNode = Collections.singleton(initialNode);
-        workSets.add(workSetOnlyS1);
-        workSets.add(workSetOnlyInitialNode);
-        workSets.add(workSetOnlyS1);
-        workSets.add(workSetOnlyInitialNode);
-        workSets.add(workSetOnlyS1);
-        workSets.add(workSetOnlyInitialNode);
-        workSets.add(workSetOnlyS1);
-        workSets.add(Collections.emptySet());
-        return workSets;
-    }
+        final Set<N> workSetOnlyS1 = Collections.singleton(s1);
+        final Set<N> workSetOnlyInitialNode = Collections.singleton(initialNode);
 
-    private List<XDD<Boolean>> getDDs(List<String> serializedDDs) {
-        final List<XDD<Boolean>> dds = new ArrayList<>(serializedDDs.size());
-        for (final String serializedDD : serializedDDs) {
-            dds.add(serializer.deserialize(ddManager, serializedDD));
-        }
-        return dds;
+        return Arrays.asList(new HashSet<>(Arrays.asList(s1, s2)),
+                             new HashSet<>(Arrays.asList(initialNode, s2)),
+                             Collections.singleton(s2),
+                             workSetOnlyS1,
+                             workSetOnlyInitialNode,
+                             workSetOnlyS1,
+                             workSetOnlyInitialNode,
+                             workSetOnlyS1,
+                             workSetOnlyInitialNode,
+                             workSetOnlyS1,
+                             Collections.emptySet());
     }
 
     private <N, E> N getS1(ModalProcessGraph<N, String, E, String, ?> mpg) {

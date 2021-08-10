@@ -19,6 +19,8 @@ import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
+import net.automatalib.modelcheckers.m3c.transformer.BDDTransformerSerializer;
+import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
 /**
@@ -60,8 +62,7 @@ public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, A
     }
 
     @Override
-    protected SolverHistory.DDType getDDType() {
-        return SolverHistory.DDType.BDD;
+    protected TransformerSerializer<BDDTransformer<L, AP>, L, AP> getSerializer() {
+        return new BDDTransformerSerializer<>(this.bddManager);
     }
-
 }

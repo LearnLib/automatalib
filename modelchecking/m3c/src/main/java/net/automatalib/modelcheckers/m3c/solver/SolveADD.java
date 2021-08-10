@@ -15,10 +15,14 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
+import info.scce.addlib.dd.xdd.XDDManager;
+import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
 import net.automatalib.graphs.ModalContextFreeProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
+import net.automatalib.modelcheckers.m3c.transformer.ADDTransformerSerializer;
+import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
 /**
@@ -26,7 +30,7 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
  */
 public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, AP> {
 
-    private BooleanVectorLogicDDManager ddManager;
+    private XDDManager<BooleanVector> ddManager;
 
     public SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps) {
         super(mcfps);
@@ -60,7 +64,7 @@ public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, A
     }
 
     @Override
-    protected SolverHistory.DDType getDDType() {
-        return SolverHistory.DDType.ADD;
+    protected TransformerSerializer<ADDTransformer<L, AP>, L, AP> getSerializer() {
+        return new ADDTransformerSerializer<>(ddManager);
     }
 }

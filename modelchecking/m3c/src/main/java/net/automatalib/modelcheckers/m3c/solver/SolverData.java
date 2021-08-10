@@ -16,13 +16,18 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.List;
+import java.util.Map;
 
+import com.google.common.collect.Maps;
 import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.commons.util.mappings.Mappings;
 import net.automatalib.graphs.ModalProcessGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
+import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
-public final class SolverData<L, N, AP> {
+public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     private final ModalProcessGraph<N, L, ?, AP, ?> mpg;
     private final NodeIDs<N> nodeIDs;
@@ -46,8 +51,14 @@ public final class SolverData<L, N, AP> {
         return nodeIDs;
     }
 
-    public Mapping<N, List<String>> getInitialPropertyTransformers() {
-        return initialPropertyTransformers;
+    public Mapping<N, T> getInitialPropertyTransformers(TransformerSerializer<T, L, AP> serializer) {
+        final Map<N, T> result = Maps.newHashMapWithExpectedSize(this.mpg.size());
+
+        for (N n : this.mpg) {
+            result.put(n, serializer.deserialize(this.initialPropertyTransformers.get(n)));
+        }
+
+        return Mappings.fromMap(result);
     }
 
     public Mapping<N, List<FormulaNode<L, AP>>> getInitialSatisfiedSubformulas() {

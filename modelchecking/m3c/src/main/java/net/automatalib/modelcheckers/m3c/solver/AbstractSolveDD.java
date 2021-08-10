@@ -42,6 +42,7 @@ import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.CTLToMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
+import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
@@ -58,6 +59,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     private final @KeyFor("workUnits") L mainProcess;
 
     // Attributes that change for each formula
+    private TransformerSerializer<T, L, AP> serializer;
     private DependencyGraph<L, AP> dependencyGraph;
     private int currentBlockIndex;
     // Per-procedure attributes
@@ -131,13 +133,13 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         return sat;
     }
 
-    public SolverHistory<L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
-        final List<SolverState<?, L, AP>> history = new ArrayList<>();
+    public SolverHistory<T, L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
+        final List<SolverState<?, T, L, AP>> history = new ArrayList<>();
         final FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
 
         initialize(ast);
 
-        final Map<L, SolverData<L, ?, AP>> data = Maps.newHashMapWithExpectedSize(this.workUnits.size());
+        final Map<L, SolverData<?, T, L, AP>> data = Maps.newHashMapWithExpectedSize(this.workUnits.size());
         for (Entry<L, WorkUnit<?, ?>> e : this.workUnits.entrySet()) {
             data.put(e.getKey(), createProcessData(e.getValue()));
         }
@@ -150,27 +152,22 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
         shutdownDDManager();
 
-        return new SolverHistory<>(data,
-                                   serializedMustTransformers,
-                                   serializedMayTransformers,
-                                   history,
-                                   isSat,
-                                   getDDType());
+        return new SolverHistory<>(data, serializedMustTransformers, serializedMayTransformers, history, isSat);
     }
 
-    private <N, E> SolverData<L, N, AP> createProcessData(WorkUnit<N, E> unit) {
+    private <N, E> SolverData<N, T, L, AP> createProcessData(WorkUnit<N, E> unit) {
         return new SolverData<>(unit.mpg, serializePropertyTransformers(unit), computeSatisfiedSubformulas(unit));
     }
 
     private Map<L, List<String>> serializePropertyTransformerMap(Map<L, T> transformers) {
         final Map<L, List<String>> serializedTransformers = Maps.newHashMapWithExpectedSize(transformers.size());
         for (Map.Entry<L, T> entry : transformers.entrySet()) {
-            serializedTransformers.put(entry.getKey(), entry.getValue().serialize());
+            serializedTransformers.put(entry.getKey(), serializer.serialize(entry.getValue()));
         }
         return serializedTransformers;
     }
 
-    private void solveInternal(boolean recordHistory, List<SolverState<?, L, AP>> history) {
+    private void solveInternal(boolean recordHistory, List<SolverState<?, T, L, AP>> history) {
         boolean workSetIsEmpty = false;
         while (!workSetIsEmpty) {
             workSetIsEmpty = true;
@@ -180,7 +177,9 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         }
     }
 
-    private <N> boolean solveInternal(WorkUnit<N, ?> unit, boolean recordHistory, List<SolverState<?, L, AP>> history) {
+    private <N> boolean solveInternal(WorkUnit<N, ?> unit,
+                                      boolean recordHistory,
+                                      List<SolverState<?, T, L, AP>> history) {
         if (!unit.workSet.isEmpty()) {
             final Iterator<N> iter = unit.workSet.iterator();
             final N node = iter.next();
@@ -192,9 +191,9 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
             if (recordHistory) {
                 final List<List<String>> serializedCompositions = new ArrayList<>(compositions.size());
                 for (T composition : compositions) {
-                    serializedCompositions.add(composition.serialize());
+                    serializedCompositions.add(serializer.serialize(composition));
                 }
-                history.add(new SolverState<>(unit.propTransformers.get(node).serialize(),
+                history.add(new SolverState<>(serializer.serialize(unit.propTransformers.get(node)),
                                               serializedCompositions,
                                               node,
                                               mpgLabel,
@@ -459,7 +458,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     private <N> Mapping<N, List<String>> serializePropertyTransformers(WorkUnit<N, ?> unit) {
         final MutableMapping<N, @Nullable List<String>> result = unit.mpg.createStaticNodeMapping();
         for (N node : unit.mpg.getNodes()) {
-            result.put(node, unit.propTransformers.get(node).serialize());
+            result.put(node, serializer.serialize(unit.propTransformers.get(node)));
         }
         // we put a transformer for every node, so it's no longer null
         return (MutableMapping<N, List<String>>) result;
@@ -471,8 +470,10 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
         initDDManager(this.dependencyGraph);
 
+        this.serializer = getSerializer();
         this.mustTransformers = new HashMap<>();
         this.mayTransformers = new HashMap<>();
+
         for (WorkUnit<?, ?> unit : workUnits.values()) {
             initialize(unit);
         }
@@ -529,7 +530,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
 
     protected abstract void shutdownDDManager();
 
-    protected abstract SolverHistory.DDType getDDType();
+    protected abstract TransformerSerializer<T, L, AP> getSerializer();
 
     private class WorkUnit<N, E> {
 

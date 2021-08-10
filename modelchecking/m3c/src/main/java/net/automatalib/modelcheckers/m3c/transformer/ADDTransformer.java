@@ -16,16 +16,14 @@
 package net.automatalib.modelcheckers.m3c.transformer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import info.scce.addlib.dd.xdd.XDD;
+import info.scce.addlib.dd.xdd.XDDManager;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
-import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
-import info.scce.addlib.serializer.XDDSerializer;
 import net.automatalib.modelcheckers.m3c.formula.AbstractModalFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
@@ -33,6 +31,7 @@ import net.automatalib.modelcheckers.m3c.formula.DiamondNode;
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -41,22 +40,22 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransformer<L, AP>, L, AP> {
 
-    private final BooleanVectorLogicDDManager xddManager;
+    private final XDDManager<BooleanVector> xddManager;
     private final @MonotonicNonNull XDD<BooleanVector> add;
 
-    public ADDTransformer(BooleanVectorLogicDDManager xddManager, XDD<BooleanVector> add) {
-        this.add = add;
+    ADDTransformer(XDDManager<BooleanVector> xddManager, XDD<BooleanVector> add) {
         this.xddManager = xddManager;
+        this.add = add;
     }
 
-    public ADDTransformer(BooleanVectorLogicDDManager xddManager, XDD<BooleanVector> add, boolean isMust) {
+    ADDTransformer(XDDManager<BooleanVector> xddManager, XDD<BooleanVector> add, boolean isMust) {
         super(isMust);
-        this.add = add;
         this.xddManager = xddManager;
+        this.add = add;
     }
 
     /* Initialization of a state property transformer*/
-    public ADDTransformer(BooleanVectorLogicDDManager xddManager, DependencyGraph<L, AP> dependGraph) {
+    public ADDTransformer(XDDManager<BooleanVector> xddManager, DependencyGraph<L, AP> dependGraph) {
         this.xddManager = xddManager;
         final boolean[] terminal = new boolean[dependGraph.getNumVariables()];
         for (EquationalBlock<L, AP> block : dependGraph.getBlocks()) {
@@ -72,13 +71,13 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     /* Creates the identity function */
     // false-positive, see https://github.com/typetools/checker-framework/issues/2215
     @SuppressWarnings("assignment.type.incompatible")
-    public ADDTransformer(BooleanVectorLogicDDManager ddManager) {
+    public ADDTransformer(XDDManager<BooleanVector> ddManager) {
         this.xddManager = ddManager;
         this.add = null;
     }
 
     /* Create the property transformer for an edge */
-    public <TP extends ModalEdgeProperty> ADDTransformer(BooleanVectorLogicDDManager xddManager,
+    public <TP extends ModalEdgeProperty> ADDTransformer(XDDManager<BooleanVector> xddManager,
                                                          L edgeLabel,
                                                          TP edgeProperty,
                                                          DependencyGraph<L, AP> dependGraph) {
@@ -130,15 +129,16 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     }
 
     @Override
-    @SuppressWarnings("dereference.of.nullable") // false-positive
+    // false-positive, see https://github.com/typetools/checker-framework/issues/4872
+    @SuppressWarnings("dereference.of.nullable")
     public ADDTransformer<L, AP> compose(ADDTransformer<L, AP> other, boolean isMust) {
         final XDD<BooleanVector> compAdd;
 
-        if (this.add == null && other.add == null) {
+        if (this.isIdentity() && other.isIdentity()) {
             throw new IllegalStateException("Two identity functions should never be composed");
-        } else if (this.add == null) {
+        } else if (this.isIdentity()) {
             compAdd = new XDD<>(other.add.ptr(), xddManager);
-        } else if (other.add == null) {
+        } else if (other.isIdentity()) {
             compAdd = new XDD<>(this.add.ptr(), xddManager);
         } else {
             compAdd = other.add.monadicApply(arg -> {
@@ -189,17 +189,14 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         }, rightDD);
     }
 
-    @Override
-    public List<String> serialize() {
-        if (add == null) {
-            return Collections.emptyList();
-        }
-        final XDDSerializer<BooleanVector> xddSerializer = new XDDSerializer<>();
-        return Collections.singletonList(xddSerializer.serialize(add));
+    public @Nullable XDD<BooleanVector> getAdd() {
+        return this.add;
     }
 
-    public @Nullable XDD<BooleanVector> getAdd() {
-        return add;
+    @EnsuresNonNullIf(result = false, expression = {"add", "getAdd()"})
+    @SuppressWarnings("contracts.conditional.postcondition.not.satisfied") // getAdd() is pure
+    public boolean isIdentity() {
+        return this.add == null;
     }
 
     @Override

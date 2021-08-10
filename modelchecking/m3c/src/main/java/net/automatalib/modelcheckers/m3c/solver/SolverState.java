@@ -15,16 +15,19 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
+import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
  * @author murtovi
  */
-public final class SolverState<N, L, AP> {
+public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     private final List<String> updatedPropTransformer;
     private final List<List<String>> compositions;
@@ -47,12 +50,18 @@ public final class SolverState<N, L, AP> {
         this.updatedStateSatisfiedSubformula = updatedStateSatisfiedSubformula;
     }
 
-    public List<String> getUpdatedPropTransformer() {
-        return updatedPropTransformer;
+    public T getUpdatedPropTransformer(TransformerSerializer<T, L, AP> serializer) {
+        return serializer.deserialize(this.updatedPropTransformer);
     }
 
-    public List<List<String>> getCompositions() {
-        return compositions;
+    public List<T> getCompositions(TransformerSerializer<T, L, AP> serializer) {
+        final List<T> result = new ArrayList<>(this.compositions.size());
+
+        for (List<String> c : this.compositions) {
+            result.add(serializer.deserialize(c));
+        }
+
+        return result;
     }
 
     public List<FormulaNode<L, AP>> getUpdatedStateSatisfiedSubformula() {

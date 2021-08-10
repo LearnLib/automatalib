@@ -17,46 +17,48 @@ package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.google.common.collect.Maps;
+import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
+import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
  * @author murtovi
  */
-public final class SolverHistory<L, AP> {
+public final class SolverHistory<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
-    private final Map<L, SolverData<L, ?, AP>> data;
+    private final Map<L, SolverData<?, T, L, AP>> data;
     private final Map<L, List<String>> mustTransformers;
     private final Map<L, List<String>> mayTransformers;
-    private final List<SolverState<?, L, AP>> solverStates;
+    private final List<SolverState<?, T, L, AP>> solverStates;
     private final boolean isSat;
-    private final DDType ddType;
 
-    SolverHistory(Map<L, SolverData<L, ?, AP>> data,
+    SolverHistory(Map<L, SolverData<?, T, L, AP>> data,
                   Map<L, List<String>> mustTransformers,
                   Map<L, List<String>> mayTransformers,
-                  List<SolverState<?, L, AP>> solverStates,
-                  boolean isSat,
-                  DDType ddType) {
+                  List<SolverState<?, T, L, AP>> solverStates,
+                  boolean isSat) {
         this.data = data;
         this.mustTransformers = mustTransformers;
         this.mayTransformers = mayTransformers;
         this.solverStates = solverStates;
         this.isSat = isSat;
-        this.ddType = ddType;
     }
 
-    public Map<L, SolverData<L, ?, AP>> getData() {
+    public Map<L, SolverData<?, T, L, AP>> getData() {
         return data;
     }
 
-    public Map<L, List<String>> getMustTransformers() {
-        return mustTransformers;
+    public Map<L, T> getMustTransformers(TransformerSerializer<T, L, AP> serializer) {
+        return transform(this.mustTransformers, serializer);
     }
 
-    public Map<L, List<String>> getMayTransformers() {
-        return mayTransformers;
+    public Map<L, T> getMayTransformers(TransformerSerializer<T, L, AP> serializer) {
+        return transform(this.mayTransformers, serializer);
     }
 
-    public List<SolverState<?, L, AP>> getSolverStates() {
+    public List<SolverState<?, T, L, AP>> getSolverStates() {
         return solverStates;
     }
 
@@ -64,13 +66,13 @@ public final class SolverHistory<L, AP> {
         return isSat;
     }
 
-    public DDType getDDType() {
-        return ddType;
-    }
+    private Map<L, T> transform(Map<L, List<String>> input, TransformerSerializer<T, L, AP> serializer) {
+        final Map<L, T> result = Maps.newHashMapWithExpectedSize(input.size());
 
-    public enum DDType {
-        ADD,
-        BDD
-    }
+        for (Entry<L, List<String>> e : input.entrySet()) {
+            result.put(e.getKey(), serializer.deserialize(e.getValue()));
+        }
 
+        return result;
+    }
 }
