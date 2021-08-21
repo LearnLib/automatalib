@@ -140,7 +140,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
             return new MealyMachine<Integer, I, CompactTransition<O>, O>() {
 
                 @Override
-                @SuppressWarnings("nullness") // TODO XXX FIXME: Returning non-null values would currently break InclusionOracles in LearnLib. We should rethink a clean API here.
+                @SuppressWarnings("nullness") // TODO XXX FIXME: Returning non-null values would currently break PropertyOracles in LearnLib. We should rethink a clean API here.
                 public Word<O> computeStateOutput(Integer state, Iterable<? extends I> input) {
                     final Integer succ = getSuccessor(state, input);
 

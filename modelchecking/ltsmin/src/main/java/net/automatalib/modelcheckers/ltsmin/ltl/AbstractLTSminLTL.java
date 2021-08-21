@@ -15,12 +15,12 @@
  */
 package net.automatalib.modelcheckers.ltsmin.ltl;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import com.google.common.collect.Lists;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelchecking.Lasso;
@@ -32,10 +32,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * An LTSmin model checker for full LTL.
  *
+ * @author Jeroen Meijer
  * @see <a href="http://ltsmin.utwente.nl/assets/man/etf2lts-mc.html">man etf2lts-mc</a>
  * @see AbstractLTSmin
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends AbstractLTSmin<I, A, L>
         implements ModelCheckerLasso<I, A, String, L> {
@@ -47,13 +46,17 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
     /**
      * Constructs a new AbstractLTSminLTL.
      *
-     * @param multiplier the multiplier.
-     * @param minimumUnfolds the minimum number of unfolds.
+     * @param multiplier
+     *         the multiplier.
+     * @param minimumUnfolds
+     *         the minimum number of unfolds.
      *
      * @see AbstractLTSmin#AbstractLTSmin(boolean, Function)
      */
-    protected AbstractLTSminLTL(boolean keepFiles, Function<String, I> string2Input,
-                                int minimumUnfolds, double multiplier) {
+    protected AbstractLTSminLTL(boolean keepFiles,
+                                Function<String, I> string2Input,
+                                int minimumUnfolds,
+                                double multiplier) {
         super(keepFiles, string2Input);
         unfolder = new AbstractUnfoldingModelChecker<I, A, String, L>(minimumUnfolds, multiplier) {
 
@@ -71,10 +74,10 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
 
     @Override
     protected List<String> getExtraCommandLineOptions() {
-        return Lists.newArrayList(// use Buchi automata created by spot
-                                  "--buchi-type=spotba",
-                                  // use the Union-Find strategy
-                                  "--strategy=ufscc");
+        return Arrays.asList(// use Buchi automata created by spot
+                             "--buchi-type=spotba",
+                             // use the Union-Find strategy
+                             "--strategy=ufscc");
     }
 
     @Override
