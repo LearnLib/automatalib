@@ -16,7 +16,7 @@
 
 /**
  * This package provides the implementation of the paper "M3C: Modal Meta Model Checking" by Bernhard Steffen and Alnis
- * Murtovi which is based on the paper "Model Checking for Context-Free Processes" (CONCUR '92) paper by Olaf Burkart
+ * Murtovi which is based on the paper "Model Checking for Context-Free Processes" (CONCUR '92) by Olaf Burkart
  * and Bernhard Steffen.
  *
  * @author frohme
