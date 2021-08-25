@@ -21,6 +21,12 @@ import java.util.Set;
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 
 /**
+ * Base class used to represent a property transformer, i.e. a function which maps a subset of formulas to a subset of
+ * formulas. Can also be seen as a function which maps bit vectors of length n to bit vectors of length n.
+ *
+ * @param <T>  property transformer type
+ * @param <L>  edge label type
+ * @param <AP> atomic proposition type
  * @author murtovi
  */
 public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
@@ -35,14 +41,35 @@ public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTran
         this.isMust = isMust;
     }
 
+    /**
+     * @param input a boolean array representing a set of subformulas.
+     * @return the set of variable numbers of subformulas y with f(input)=y, where f is the property transformer.
+     * represented by {@code this}.
+     */
     public abstract Set<Integer> evaluate(boolean[] input);
 
-    public abstract T compose(T other, boolean isMust);
+    /**
+     * Returns h such that h(x) = this(other(x)).
+     *
+     * @param other function which is first applied to an input.
+     * @return the composition of {@code this} and {@code other}. The {@code isMust} attribute of the composition is set
+     * to the {@code isMust} attribute of {@code this}.
+     */
+    public abstract T compose(T other);
 
+    /**
+     * @param atomicPropositions of the node
+     * @param compositions       of the property transformers belonging to the outgoing edges and their target nodes
+     * @param currentBlock       the block which is considered during this update
+     * @return the updated property transformer of a node.
+     */
     public abstract T createUpdate(Set<AP> atomicPropositions,
                                    List<T> compositions,
                                    EquationalBlock<L, AP> currentBlock);
 
+    /**
+     * @return {@code true} if the property transformer belongs to a node or to a must edge, else {@code false}.
+     */
     public boolean isMust() {
         return isMust;
     }

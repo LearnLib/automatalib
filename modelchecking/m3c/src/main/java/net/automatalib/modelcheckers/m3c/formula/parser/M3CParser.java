@@ -23,15 +23,49 @@ import java.util.function.Function;
 
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 
-// TODO: Add documentation with formula grammars
+/**
+ * This class can be used to parse formulas in CTL and the mu-calculus.
+ *
+ * <p>
+ * CTL grammar: f := AF f | AG f | A(f U f) | EF f | EG f | E(f U f) | f && f | f || f | f -&gt; f | f &lt;-&gt; f | !f | &lt;&gt;f |
+ * &lt;ID&gt;f | []f | [ID]f | AP | true | false | (f)
+ * </p>
+ * <p>
+ * mu-calculus grammar: f := mu ID.(f) | nu ID.(f) | ID | f && f | f || f | f -&gt; f | f &lt;-&gt; f | !f | &lt;&gt;f | &lt;ID&gt;f | []f |
+ * [ID]f | AP | true | false | (f)
+ * </p>
+ * <p>
+ * AP := "arbitrary string not containing double quotation marks" | 'arbitrary string not containing single quotation
+ * marks'
+ * </p>
+ * <p>
+ * ID := ["a"-"z","A"-"Z"] (["a"-"z","A"-"Z"] | ["0"-"9"] | "_")*
+ * </p>
+ */
 public final class M3CParser {
 
     private M3CParser() {}
 
+    /**
+     * @param formula ctl or mu-calculus formula to be parsed
+     * @return {@code formula}'s abstract syntax tree. Each label is transformed to a {@code String}. Each atomic
+     * proposition is transformed to a {@code String}. A formula can represent a set of atomic propositions, i.e.\ a
+     * conjunction of atomic propositions, through a comma-separated list of atomic propositions.
+     * @throws ParseException if {@code formula} is not a valid formula.
+     */
     public static FormulaNode<String, String> parse(String formula) throws ParseException {
         return parse(formula, Function.identity(), x -> new HashSet<>(Arrays.asList(x.split(","))));
     }
 
+    /**
+     * @param formula     ctl or mu-calculus formula to be parsed
+     * @param labelParser used to parse the label within a diamond or box operator to an object of type {@code L}.
+     * @param apParser    used to parse an atomic proposition to an object of type {@code AP}.
+     * @param <L>         edge label type
+     * @param <AP>        atomic proposition type
+     * @return {@code formula}'s abstract syntax tree.
+     * @throws ParseException if {@code formula} is not a valid formula.
+     */
     public static <L, AP> FormulaNode<L, AP> parse(String formula,
                                                    Function<String, L> labelParser,
                                                    Function<String, Set<AP>> apParser) throws ParseException {

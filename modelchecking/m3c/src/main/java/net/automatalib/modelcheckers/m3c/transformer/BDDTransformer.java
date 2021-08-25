@@ -39,6 +39,10 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * A BDDTransformer represents a property transformer by a list of BDDs (Binary Decision Diagrams), one per subformula.
+ *
+ * @param <L>  edge label type
+ * @param <AP> atomic proposition type
  * @author murtovi
  */
 public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransformer<L, AP>, L, AP> {
@@ -58,7 +62,12 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         this.bdds = bdds;
     }
 
-    /* Initialize Property Transformer for a state */
+    /**
+     * Constructor used to initialize the property transformer of a node.
+     *
+     * @param bddManager      used to create the BDDs
+     * @param dependencyGraph of the formula that is currently being solved
+     */
     public BDDTransformer(BDDManager bddManager, DependencyGraph<L, AP> dependencyGraph) {
         this(bddManager, new BDD[dependencyGraph.getNumVariables()]);
         for (EquationalBlock<L, AP> block : dependencyGraph.getBlocks()) {
@@ -74,7 +83,15 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         }
     }
 
-    /* Create Property Transformer for an edge */
+    /**
+     * Constructor used to create the property transformer for an edge.
+     *
+     * @param bddManager      used to create the BDDs
+     * @param edgeLabel       of the edge
+     * @param edgeProperty    of the edge
+     * @param dependencyGraph of the formula that is currently being solved
+     * @param <TP>            edge property type
+     */
     public <TP extends ModalEdgeProperty> BDDTransformer(BDDManager bddManager,
                                                          L edgeLabel,
                                                          TP edgeProperty,
@@ -101,7 +118,10 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         }
     }
 
-    /* The Property Transformer representing the identity function */
+    /**
+     * @param bddManager   used to create the BDDs
+     * @param numberOfVars the number of subformulas
+     */
     public BDDTransformer(BDDManager bddManager, int numberOfVars) {
         this(bddManager, new BDD[numberOfVars]);
         for (int var = 0; var < numberOfVars; var++) {
@@ -121,13 +141,13 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     @Override
-    public BDDTransformer<L, AP> compose(BDDTransformer<L, AP> other, boolean isMust) {
+    public BDDTransformer<L, AP> compose(BDDTransformer<L, AP> other) {
         final BDD[] composedBDDs = new BDD[bdds.length];
         for (int var = 0; var < bdds.length; var++) {
             final BDD composedBDD = bdds[var].vectorCompose(other.bdds);
             composedBDDs[var] = composedBDD;
         }
-        return new BDDTransformer<>(bddManager, composedBDDs, isMust);
+        return new BDDTransformer<>(bddManager, composedBDDs, this.isMust());
     }
 
     @Override
@@ -179,23 +199,30 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
         updatedBDDs[varIdx] = result;
     }
 
-    public BDD andBddList(List<BDDTransformer<L, AP>> compositions, int var) {
+    BDD andBddList(List<BDDTransformer<L, AP>> compositions, int var) {
         /* Conjunction over the var-th BDDs of compositions */
         final Optional<BDD> result = compositions.stream().map(comp -> comp.getBDD(var)).reduce(BDD::and);
         return result.orElseGet(bddManager::readOne);
     }
 
-    public BDD orBddList(List<BDDTransformer<L, AP>> compositions, int var) {
+    BDD orBddList(List<BDDTransformer<L, AP>> compositions, int var) {
         /* Disjunction over the var-th BDDs of compositions */
         final Optional<BDD> result =
                 compositions.stream().filter(BDDTransformer::isMust).map(comp -> comp.getBDD(var)).reduce(BDD::or);
         return result.orElseGet(bddManager::readLogicZero);
     }
 
+    /**
+     * @param var index of the BDD to return
+     * @return the BDD used to compute the satisfiability of subformula with variable number {@code var}.
+     */
     public BDD getBDD(int var) {
         return bdds[var];
     }
 
+    /**
+     * @return the number of subformulas.
+     */
     public int getNumberOfVars() {
         return bdds.length;
     }

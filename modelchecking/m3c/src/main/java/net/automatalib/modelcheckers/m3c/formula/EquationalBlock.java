@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Represents an equational block as described in "Model Checking for Context-Free Processes" (CONCUR '92).
+ *
+ * @param <L>  edge label type
+ * @param <AP> atomic proposition type
  * @author murtovi
  */
 public class EquationalBlock<L, AP> {

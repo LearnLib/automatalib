@@ -196,11 +196,11 @@ public class SolverHistoryTest {
             final SolverState<?, BDDTransformer<String, String>, String, String> solverState =
                     history.getSolverStates().get(i);
             @SuppressWarnings("unchecked")
-            final N actualState = (N) solverState.getUpdatedState();
+            final N actualState = (N) solverState.getUpdatedNode();
             Assert.assertEquals(actualState, expectedState);
             Assert.assertEquals(mpg.getOutgoingEdges(actualState).size(),
                                 solverState.getCompositions(transformerSerializer).size());
-            Assert.assertEquals(solverState.getUpdatedStateMPG(), mcfps.getMainProcess());
+            Assert.assertEquals(solverState.getUpdatedNodeMPG(), mcfps.getMainProcess());
             Assert.assertEquals(solverState.getWorkSet().get(mcfps.getMainProcess()), workSets.get(i));
             testSatisfiedSubformulasAndUpdatedPT(allAPDeadlockedState, solverState);
         }

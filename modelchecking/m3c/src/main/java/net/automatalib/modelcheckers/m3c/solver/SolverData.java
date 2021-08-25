@@ -27,6 +27,15 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
+/**
+ * A class used to store {@link ModalProcessGraph} specific data for the {@link SolverHistory}.
+ *
+ * @param <N>  node type
+ * @param <T>  property transformer type
+ * @param <L>  edge label type
+ * @param <AP> atomic proposition type
+ * @author murtovi
+ */
 public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     private final ModalProcessGraph<N, L, ?, AP, ?> mpg;
@@ -43,14 +52,27 @@ public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>
         this.initialSatisfiedSubformulas = initialSatisfiedSubformulas;
     }
 
+    /**
+     * @return the {@link ModalProcessGraph} whose data is stored in an instance of this class.
+     */
     public ModalProcessGraph<N, L, ?, AP, ?> getMpg() {
         return mpg;
     }
 
+    /**
+     * @return the NodeIDs of the mpg returned by {@link SolverData#getMpg()}. The nodeIDs have already been computed
+     * and cached.
+     */
     public NodeIDs<N> getNodeIDs() {
         return nodeIDs;
     }
 
+    /**
+     * @param serializer used to deserialize each property transformer from a {@code String}.
+     * @return a map which maps nodes to their initial property transformer. This methods requires a {@link
+     * TransformerSerializer} as all property transform are stored as {@code Strings} in this class. The returned map is
+     * not cached and will be computed on each call.
+     */
     public Mapping<N, T> getInitialPropertyTransformers(TransformerSerializer<T, L, AP> serializer) {
         final Map<N, T> result = Maps.newHashMapWithExpectedSize(this.mpg.size());
 
@@ -61,6 +83,10 @@ public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>
         return Mappings.fromMap(result);
     }
 
+    /**
+     * @return a mapping which contains the list of the initial satisfied subformulas for each node of the mpg whose
+     * data is stored in an instance of this class.
+     */
     public Mapping<N, List<FormulaNode<L, AP>>> getInitialSatisfiedSubformulas() {
         return initialSatisfiedSubformulas;
     }

@@ -20,19 +20,23 @@ import java.util.List;
 /**
  * Utility interface for serializing {@link AbstractPropertyTransformer} implementations.
  *
- * @param <T>
- *         the concrente transformer class
- * @param <L>
- *         the label class
- * @param <AP>
- *         the atomic proposition class
- *
+ * @param <T>  the concrete transformer class
+ * @param <L>  the label class
+ * @param <AP> the atomic proposition class
  * @author frohme
  */
 public interface TransformerSerializer<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
+    /**
+     * @param transformer the property transformer to be serialized.
+     * @return the serialized property transformer.
+     */
     List<String> serialize(T transformer);
 
+    /**
+     * @param data a serialized property transformer.
+     * @return the deserialized property transformer.
+     */
     T deserialize(List<String> data);
 
 }

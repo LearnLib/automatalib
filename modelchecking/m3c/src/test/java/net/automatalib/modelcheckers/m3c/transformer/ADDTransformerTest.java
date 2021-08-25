@@ -200,10 +200,10 @@ public class ADDTransformerTest {
     void testComposition() {
         ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dg);
         ADDTransformer<String, String> identity = new ADDTransformer<>(xddManager);
-        ADDTransformer<String, String> composition = transformer.compose(identity, true);
+        ADDTransformer<String, String> composition = transformer.compose(identity);
         Assert.assertEquals(transformer, composition);
 
-        ADDTransformer<String, String> inverseComposition = identity.compose(transformer, true);
+        ADDTransformer<String, String> inverseComposition = identity.compose(transformer);
         Assert.assertEquals(transformer, inverseComposition);
     }
 

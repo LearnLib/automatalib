@@ -27,6 +27,11 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
 /**
+ * A dependency graph is essentially used to represent a hierarchical equational system (see "Model Checking for
+ * Context-Free Processes" (CONCUR '92).
+ *
+ * @param <L>  edge label type
+ * @param <AP> atomic proposition type
  * @author murtovi
  */
 public final class DependencyGraph<L, AP> {
@@ -134,22 +139,38 @@ public final class DependencyGraph<L, AP> {
         return newVarNumber;
     }
 
+    /**
+     * @param index of the equational block to return
+     * @return equational block at the given {@code index}.
+     */
     public EquationalBlock<L, AP> getBlock(int index) {
         return blocks.get(index);
     }
 
+    /**
+     * @return the number of variables which is equal to the number of subformulas.
+     */
     public int getNumVariables() {
         return numVars;
     }
 
+    /**
+     * @return a list of all subformulas.
+     */
     public List<FormulaNode<L, AP>> getFormulaNodes() {
         return formulaNodes;
     }
 
+    /**
+     * @return all equational blocks of the equational system.
+     */
     public List<EquationalBlock<L, AP>> getBlocks() {
         return blocks;
     }
 
+    /**
+     * @return the abstract syntax tree of the input formula after it has been transformed into negation normal form.
+     */
     public FormulaNode<L, AP> getAST() {
         return ast;
     }

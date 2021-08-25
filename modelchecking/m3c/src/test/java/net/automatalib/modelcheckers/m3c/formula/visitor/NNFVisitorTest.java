@@ -55,7 +55,7 @@ public class NNFVisitorTest {
         FormulaNode<String, String> gfpNode = M3CParser.parse("! (nu X.(false || X))");
         FormulaNode<String, String> nnfGfpNode = gfpNode.toNNF();
 
-        /* Create (mu X.(true & X)*/
+        /* Create (mu X.(true & X) */
         LfpNode<String, String> lfpNode = new LfpNode<>("X", new AndNode<>(new TrueNode<>(), new VariableNode<>("X")));
         Assert.assertEquals(lfpNode, nnfGfpNode);
     }

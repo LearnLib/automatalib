@@ -24,6 +24,11 @@ import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
 /**
+ * Implementation of the "Model Checking for Context-Free Processes" (CONCUR '92) Paper by Olaf Burkart and Bernhard
+ * Steffen based on property transformers being represented by BDDs (Binary Decision Diagrams).
+ *
+ * @param <L>  edge label type
+ * @param <AP> atomic proposition type
  * @author murtovi
  */
 public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, AP> {

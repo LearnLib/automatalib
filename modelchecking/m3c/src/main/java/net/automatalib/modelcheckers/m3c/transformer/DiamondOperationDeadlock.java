@@ -31,6 +31,10 @@ import net.automatalib.modelcheckers.m3c.formula.NotNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 
 /**
+ * Implementation of the diamond function as described in "Model Checking for Context-Free Processes" (CONCUR '92) when
+ * k=1 (the state has exactly one successor).
+ *
+ * @param <AP> atomic proposition type
  * @author murtovi
  */
 public class DiamondOperationDeadlock<AP> implements UnaryOperator<BooleanVector> {

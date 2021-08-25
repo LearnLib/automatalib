@@ -51,6 +51,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * Base implementation of the "Model Checking for Context-Free Processes" (CONCUR '92) paper by Olaf Burkart and Bernhard
+ * Steffen.
+ *
+ * @param <T>  property transformer type
+ * @param <L>  edge label type
+ * @param <AP> atomic proposition type
  * @author murtovi
  */
 abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
@@ -318,7 +324,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
             final N targetNode = mpg.getTarget(edge);
             final T edgeTransformer = getEdgeTransformer(unit, edge);
             final T succTransformer = getTransformer(unit, targetNode);
-            final T composition = edgeTransformer.compose(succTransformer, isMustEdge(mpg, edge));
+            final T composition = edgeTransformer.compose(succTransformer);
             compositions.add(composition);
         }
         return compositions;

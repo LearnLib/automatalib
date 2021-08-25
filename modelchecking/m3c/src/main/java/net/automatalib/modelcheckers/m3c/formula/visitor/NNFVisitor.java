@@ -32,7 +32,7 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
 /**
- * A visitor that transforms a given mu-calculus or CTL formula to negative-normal-form.
+ * A visitor that transforms a given mu-calculus or CTL formula to negation-normal-form.
  *
  * @param <L>
  *         label type

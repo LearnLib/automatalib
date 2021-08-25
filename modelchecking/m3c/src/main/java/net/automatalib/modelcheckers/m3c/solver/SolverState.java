@@ -25,6 +25,12 @@ import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
+ * A SolverState stores internal information produced during the update of a state in {@link AbstractSolveDD}.
+ *
+ * @param <N>  node type
+ * @param <T>  property transformer type
+ * @param <L>  edge label type
+ * @param <AP> atomic proposition type
  * @author murtovi
  */
 public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
@@ -32,28 +38,37 @@ public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP
     private final List<String> updatedPropTransformer;
     private final List<List<String>> compositions;
     private final List<FormulaNode<L, AP>> updatedStateSatisfiedSubformula;
-    private final N updatedState;
-    private final L updatedStateMPG;
+    private final N updatedNode;
+    private final L updatedNodeMPG;
     private final Map<L, Set<?>> workSet;
 
     SolverState(List<String> updatedPropTransformer,
                 List<List<String>> compositions,
-                N updatedState,
-                L updatedStateMPG,
+                N updatedNode,
+                L updatedNodeMPG,
                 Map<L, Set<?>> workSet,
                 List<FormulaNode<L, AP>> updatedStateSatisfiedSubformula) {
         this.updatedPropTransformer = updatedPropTransformer;
         this.compositions = compositions;
-        this.updatedState = updatedState;
-        this.updatedStateMPG = updatedStateMPG;
+        this.updatedNode = updatedNode;
+        this.updatedNodeMPG = updatedNodeMPG;
         this.workSet = workSet;
         this.updatedStateSatisfiedSubformula = updatedStateSatisfiedSubformula;
     }
 
+    /**
+     * @param serializer used to deserialize a property transformer from a {@code String}.
+     * @return the updated property transformer
+     */
     public T getUpdatedPropTransformer(TransformerSerializer<T, L, AP> serializer) {
         return serializer.deserialize(this.updatedPropTransformer);
     }
 
+    /**
+     * @param serializer used to deserialize a property transformer from a {@code String}.
+     * @return the property transformers representing the compositions of the property transformer of the outgoing edges
+     * and their target nodes.
+     */
     public List<T> getCompositions(TransformerSerializer<T, L, AP> serializer) {
         final List<T> result = new ArrayList<>(this.compositions.size());
 
@@ -64,18 +79,30 @@ public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP
         return result;
     }
 
+    /**
+     * @return the list of satisified subformulas the node updated in this step satisfies after the update.
+     */
     public List<FormulaNode<L, AP>> getUpdatedStateSatisfiedSubformula() {
         return updatedStateSatisfiedSubformula;
     }
 
-    public N getUpdatedState() {
-        return updatedState;
+    /**
+     * @return the node updated in this step.
+     */
+    public N getUpdatedNode() {
+        return updatedNode;
     }
 
-    public L getUpdatedStateMPG() {
-        return updatedStateMPG;
+    /**
+     * @return the name of the mpg which contains the node updated in this step.
+     */
+    public L getUpdatedNodeMPG() {
+        return updatedNodeMPG;
     }
 
+    /**
+     * @return a map which returns the set of nodes which are in the work set for each procedure after the update.
+     */
     public Map<L, Set<?>> getWorkSet() {
         return workSet;
     }

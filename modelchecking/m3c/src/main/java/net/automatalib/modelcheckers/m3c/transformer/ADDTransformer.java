@@ -36,6 +36,10 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * An ADDTransformer represents a property transformer by a single ADD (Algebraic Decision Diagram).
+ *
+ * @param <L>  edge label type
+ * @param <AP> atomic proposition type
  * @author murtovi
  */
 public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransformer<L, AP>, L, AP> {
@@ -55,6 +59,13 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     }
 
     /* Initialization of a state property transformer*/
+
+    /**
+     * Constructor used to initialize the property transformer of a node.
+     *
+     * @param xddManager  used to create the ADD
+     * @param dependGraph of the formula that is currently being solved
+     */
     public ADDTransformer(XDDManager<BooleanVector> xddManager, DependencyGraph<L, AP> dependGraph) {
         this.xddManager = xddManager;
         final boolean[] terminal = new boolean[dependGraph.getNumVariables()];
@@ -68,7 +79,12 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         add = xddManager.constant(new BooleanVector(terminal));
     }
 
-    /* Creates the identity function */
+    /**
+     * Creates the identity function. Sets {@code this.add} to null to avoid the construction of the ADD which is very
+     * expensive. In all other places where {@code this.add} is used, it has to be checked if {@code this.add} is null.
+     *
+     * @param ddManager used to create the ADD
+     */
     // false-positive, see https://github.com/typetools/checker-framework/issues/2215
     @SuppressWarnings("assignment.type.incompatible")
     public ADDTransformer(XDDManager<BooleanVector> ddManager) {
@@ -76,7 +92,15 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         this.add = null;
     }
 
-    /* Create the property transformer for an edge */
+    /**
+     * Constructor used to create the property transformer for an edge.
+     *
+     * @param xddManager   used to create the ADD
+     * @param edgeLabel    of the edge
+     * @param edgeProperty of the edge
+     * @param dependGraph  of the formula that is currently being solved
+     * @param <TP>         edge property type
+     */
     public <TP extends ModalEdgeProperty> ADDTransformer(XDDManager<BooleanVector> xddManager,
                                                          L edgeLabel,
                                                          TP edgeProperty,
@@ -131,7 +155,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     @Override
     // false-positive, see https://github.com/typetools/checker-framework/issues/4872
     @SuppressWarnings("dereference.of.nullable")
-    public ADDTransformer<L, AP> compose(ADDTransformer<L, AP> other, boolean isMust) {
+    public ADDTransformer<L, AP> compose(ADDTransformer<L, AP> other) {
         final XDD<BooleanVector> compAdd;
 
         if (this.isIdentity() && other.isIdentity()) {
@@ -147,7 +171,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
             });
         }
 
-        return new ADDTransformer<>(xddManager, compAdd, isMust);
+        return new ADDTransformer<>(xddManager, compAdd, this.isMust());
     }
 
     @Override
@@ -174,8 +198,8 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         return new ADDTransformer<>(xddManager, updatedADD);
     }
 
-    public XDD<BooleanVector> preserveUpdatedTransformer(XDD<BooleanVector> rightDD,
-                                                         EquationalBlock<L, AP> currentBlock) {
+    private XDD<BooleanVector> preserveUpdatedTransformer(XDD<BooleanVector> rightDD,
+                                                          EquationalBlock<L, AP> currentBlock) {
         assert this.add != null : "The identity function should never be updated";
         /* We create a new XDD where the information of this.add (the add before the update) is 'injected'
         into rightDD, the first composition DD, such that the bits corresponding to subformulas outside of the current
@@ -189,10 +213,17 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         }, rightDD);
     }
 
+    /**
+     * @return the ADD which represents the property transformer or {@code null} if the property transformer is the
+     * identity function
+     */
     public @Nullable XDD<BooleanVector> getAdd() {
         return this.add;
     }
 
+    /**
+     * @return true if the property transformer is the identity function.
+     */
     @EnsuresNonNullIf(result = false, expression = {"add", "getAdd()"})
     @SuppressWarnings("contracts.conditional.postcondition.not.satisfied") // getAdd() is pure
     public boolean isIdentity() {
