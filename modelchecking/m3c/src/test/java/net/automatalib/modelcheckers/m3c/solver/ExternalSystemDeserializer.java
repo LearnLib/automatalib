@@ -26,10 +26,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.google.common.collect.Maps;
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.graphs.MutableModalProcessGraph;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
+import net.automatalib.graphs.MutableProceduralModalProcessGraph;
 import net.automatalib.graphs.base.DefaultMCFPS;
-import net.automatalib.graphs.base.compact.CompactMPG;
+import net.automatalib.graphs.base.compact.CompactPMPG;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
@@ -45,39 +45,40 @@ final class ExternalSystemDeserializer {
         // prevent instantiation
     }
 
-    static <AP> ModalContextFreeProcessSystem<String, AP> parse(InputStream is)
+    static <AP> ContextFreeModalProcessSystem<String, AP> parse(InputStream is)
             throws ParserConfigurationException, IOException, SAXException {
 
         final Element root = getRoot(is);
-        final NodeList procedures = root.getElementsByTagName("mpg");
-        final Map<String, CompactMPG<String, AP>> mpgs = Maps.newLinkedHashMapWithExpectedSize(procedures.getLength());
+        final NodeList procedures = root.getElementsByTagName("pmpg");
+        final Map<String, CompactPMPG<String, AP>> pmpgs =
+                Maps.newLinkedHashMapWithExpectedSize(procedures.getLength());
 
         for (int i = 0; i < procedures.getLength(); i++) {
             final Element procedure = (Element) procedures.item(i);
             final String id = getFirstElementByTagName(procedure, "id").getTextContent();
 
             final Map<String, Integer> idToNode = new HashMap<>();
-            final CompactMPG<String, AP> mpg = new CompactMPG<>("");
+            final CompactPMPG<String, AP> pmpg = new CompactPMPG<>("");
 
             final Element statesElement = getFirstElementByTagName(procedure, "states");
             final NodeList states = statesElement.getElementsByTagName("state");
             for (int j = 0; j < states.getLength(); j++) {
                 final Element state = (Element) states.item(j);
-                addNode(mpg, state, idToNode);
+                addNode(pmpg, state, idToNode);
             }
 
             final Element transitionsElement = getFirstElementByTagName(procedure, "transitions");
             final NodeList transitions = transitionsElement.getElementsByTagName("transition");
             for (int j = 0; j < transitions.getLength(); j++) {
                 final Element transition = (Element) transitions.item(j);
-                addEdge(mpg, transition, idToNode);
+                addEdge(pmpg, transition, idToNode);
             }
 
-            mpgs.put(id, mpg);
+            pmpgs.put(id, pmpg);
         }
 
-        final String initialId = mpgs.keySet().iterator().next();
-        return new DefaultMCFPS<>(initialId, mpgs);
+        final String initialId = pmpgs.keySet().iterator().next();
+        return new DefaultMCFPS<>(initialId, pmpgs);
     }
 
     private static Element getRoot(InputStream is) throws ParserConfigurationException, IOException, SAXException {
@@ -104,25 +105,25 @@ final class ExternalSystemDeserializer {
         return node != null && Boolean.parseBoolean(node.getTextContent());
     }
 
-    private static <N> void addNode(MutableModalProcessGraph<N, String, ?, ?, ?> mpg,
+    private static <N> void addNode(MutableProceduralModalProcessGraph<N, String, ?, ?, ?> pmpg,
                                     Element state,
                                     Map<String, N> idToNode) {
 
         final String id = getFirstElementByTagName(state, "id").getTextContent();
         boolean isInitial = getBooleanAttributeByTagName(state, "isInitial");
 
-        final N node = mpg.addNode(Collections.emptySet());
+        final N node = pmpg.addNode(Collections.emptySet());
 
         if (isInitial) {
-            mpg.setInitialNode(node);
+            pmpg.setInitialNode(node);
         } else if ("end".equals(id)) {
-            mpg.setFinalNode(node);
+            pmpg.setFinalNode(node);
         }
 
         idToNode.put(id, node);
     }
 
-    private static <N, E> void addEdge(MutableModalProcessGraph<N, String, E, ?, ? extends MutableProceduralModalEdgeProperty> mpg,
+    private static <N, E> void addEdge(MutableProceduralModalProcessGraph<N, String, E, ?, ? extends MutableProceduralModalEdgeProperty> pmpg,
                                        Element transition,
                                        Map<String, N> idToNode) {
         final String sourceId = getFirstElementByTagName(transition, "sourceId").getTextContent();
@@ -132,10 +133,10 @@ final class ExternalSystemDeserializer {
         final boolean isMust = getBooleanAttributeByTagName(transition, "isMust");
         final boolean isProcedural = getBooleanAttributeByTagName(transition, "isProcedural");
 
-        final E edge = mpg.connect(idToNode.get(sourceId), idToNode.get(targetId));
-        mpg.getEdgeProperty(edge).setProceduralType(isProcedural ? ProceduralType.PROCESS : ProceduralType.INTERNAL);
-        mpg.getEdgeProperty(edge).setModalType(isMust ? ModalType.MUST : ModalType.MAY);
-        mpg.setEdgeLabel(edge, label);
+        final E edge = pmpg.connect(idToNode.get(sourceId), idToNode.get(targetId));
+        pmpg.getEdgeProperty(edge).setProceduralType(isProcedural ? ProceduralType.PROCESS : ProceduralType.INTERNAL);
+        pmpg.getEdgeProperty(edge).setModalType(isMust ? ModalType.MUST : ModalType.MAY);
+        pmpg.setEdgeLabel(edge, label);
     }
 
 }

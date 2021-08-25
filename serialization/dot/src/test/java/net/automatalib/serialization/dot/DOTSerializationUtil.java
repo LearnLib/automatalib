@@ -28,8 +28,8 @@ import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.graphs.base.DefaultMCFPS;
 import net.automatalib.graphs.base.compact.CompactGraph;
-import net.automatalib.graphs.base.compact.CompactMPG;
-import net.automatalib.graphs.base.compact.CompactMPGEdge;
+import net.automatalib.graphs.base.compact.CompactPMPG;
+import net.automatalib.graphs.base.compact.CompactPMPGEdge;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
@@ -56,7 +56,7 @@ final class DOTSerializationUtil {
     static final String MTS_RESOURCE = "/mts.dot";
     static final String MC_RESOURCE = "/mc.dot";
     static final String CLUSTER_RESOURCE = "/cluster.dot";
-    static final String MCFPS_RESOURCE = "/mcfps.dot";
+    static final String MCFPS_RESOURCE = "/cfmps.dot";
 
     static final String FAULTY_AUTOMATON_RESOURCE = "/faulty_automaton.dot";
     static final String FAULTY_GRAPH_RESOURCE = "/faulty_graph.dot";
@@ -74,7 +74,7 @@ final class DOTSerializationUtil {
     static final CompactGraph<String, String> GRAPH;
     static final CompactMTS<String> MTS;
     static final CompactMC<String> MC;
-    static final DefaultMCFPS<Character, Character> MCFPS;
+    static final DefaultMCFPS<Character, Character> CFMPS;
 
     static {
         STRING_ALPHABET = Alphabets.closedCharStringRange('a', 'c');
@@ -88,7 +88,7 @@ final class DOTSerializationUtil {
         GRAPH = buildGraph();
         MTS = buildMTS();
         MC = buildMC();
-        MCFPS = buildMCFPS();
+        CFMPS = buildMCFPS();
     }
 
     private DOTSerializationUtil() {}
@@ -255,15 +255,15 @@ final class DOTSerializationUtil {
         final ProceduralModalEdgePropertyImpl p4 =
                 new ProceduralModalEdgePropertyImpl(ProceduralType.PROCESS, ModalType.MAY);
 
-        final CompactMPG<Character, Character> s = new CompactMPG<>('?');
+        final CompactPMPG<Character, Character> s = new CompactPMPG<>('?');
         final int s0 = s.addIntNode();
         final int s1 = s.addIntNode(Sets.newHashSet('a', 'b'));
         final int s2 = s.addIntNode(Collections.singleton('c'));
 
-        final CompactMPGEdge<Character, MutableProceduralModalEdgeProperty> e1 = s.connect(s0, s1, p1);
-        final CompactMPGEdge<Character, MutableProceduralModalEdgeProperty> e2 = s.connect(s0, s1, p2);
-        final CompactMPGEdge<Character, MutableProceduralModalEdgeProperty> e3 = s.connect(s1, s2, p3);
-        final CompactMPGEdge<Character, MutableProceduralModalEdgeProperty> e4 = s.connect(s2, s0, p4);
+        final CompactPMPGEdge<Character, MutableProceduralModalEdgeProperty> e1 = s.connect(s0, s1, p1);
+        final CompactPMPGEdge<Character, MutableProceduralModalEdgeProperty> e2 = s.connect(s0, s1, p2);
+        final CompactPMPGEdge<Character, MutableProceduralModalEdgeProperty> e3 = s.connect(s1, s2, p3);
+        final CompactPMPGEdge<Character, MutableProceduralModalEdgeProperty> e4 = s.connect(s2, s0, p4);
 
         s.setEdgeLabel(e1, '1');
         s.setEdgeLabel(e2, '2');
@@ -271,7 +271,7 @@ final class DOTSerializationUtil {
         s.setEdgeLabel(e4, '4');
         s.setInitialNode(s0);
 
-        final CompactMPG<Character, Character> t = new CompactMPG<>('?');
+        final CompactPMPG<Character, Character> t = new CompactPMPG<>('?');
         final int t0 = t.addIntNode();
         final int t1 = t.addIntNode(Collections.singleton('d'));
 
@@ -280,10 +280,10 @@ final class DOTSerializationUtil {
         t.connect(t1, t1, p3);
         t.connect(t1, t0, p4);
 
-        final Map<Character, CompactMPG<Character, Character>> mpgs = Maps.newHashMapWithExpectedSize(2);
-        mpgs.put('s', s);
-        mpgs.put('t', t);
+        final Map<Character, CompactPMPG<Character, Character>> pmpgs = Maps.newHashMapWithExpectedSize(2);
+        pmpgs.put('s', s);
+        pmpgs.put('t', t);
 
-        return new DefaultMCFPS<>('s', mpgs);
+        return new DefaultMCFPS<>('s', pmpgs);
     }
 }

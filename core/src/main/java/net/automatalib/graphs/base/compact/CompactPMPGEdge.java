@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.m3c.solver;
+package net.automatalib.graphs.base.compact;
 
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
-import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
+public class CompactPMPGEdge<L, EP> extends CompactEdge<EP> {
 
-/**
- * A {@link SolveBDD BDD solver} for generic, string-based formulas.
- *
- * @author frohme
- */
-public class StringSolveBDD extends SolveBDD<String, String> implements M3CSolver<String> {
+    private L label;
 
-    StringSolveBDD(ContextFreeModalProcessSystem<String, String> cfmps) {
-        super(cfmps);
+    public CompactPMPGEdge(int target, EP property, L label) {
+        super(target, property);
+        this.label = label;
     }
 
-    @Override
-    public boolean solve(String formula) throws ParseException {
-        return super.solve(M3CParser.parse(formula));
+    public L getLabel() {
+        return label;
     }
 
+    void setLabel(L label) {
+        this.label = label;
+    }
 }

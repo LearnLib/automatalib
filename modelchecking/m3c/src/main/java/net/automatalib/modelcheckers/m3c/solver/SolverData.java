@@ -21,14 +21,14 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.Mappings;
-import net.automatalib.graphs.ModalProcessGraph;
+import net.automatalib.graphs.ProceduralModalProcessGraph;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
- * A class used to store {@link ModalProcessGraph} specific data for the {@link SolverHistory}.
+ * A class used to store {@link ProceduralModalProcessGraph} specific data for the {@link SolverHistory}.
  *
  * @param <N>
  *         node type
@@ -43,32 +43,32 @@ import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
  */
 public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
-    private final ModalProcessGraph<N, L, ?, AP, ?> mpg;
+    private final ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg;
     private final NodeIDs<N> nodeIDs;
     private final Mapping<N, List<String>> initialPropertyTransformers;
     private final Mapping<N, List<FormulaNode<L, AP>>> initialSatisfiedSubformulas;
 
-    SolverData(ModalProcessGraph<N, L, ?, AP, ?> mpg,
+    SolverData(ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg,
                Mapping<N, List<String>> initialPropertyTransformers,
                Mapping<N, List<FormulaNode<L, AP>>> initialSatisfiedSubformulas) {
-        this.mpg = mpg;
-        this.nodeIDs = mpg.nodeIDs();
+        this.pmpg = pmpg;
+        this.nodeIDs = pmpg.nodeIDs();
         this.initialPropertyTransformers = initialPropertyTransformers;
         this.initialSatisfiedSubformulas = initialSatisfiedSubformulas;
     }
 
     /**
-     * Returns the {@link ModalProcessGraph} whose data is stored in an instance of this class.
+     * Returns the {@link ProceduralModalProcessGraph} whose data is stored in an instance of this class.
      *
-     * @return the {@link ModalProcessGraph} whose data is stored in an instance of this class
+     * @return the {@link ProceduralModalProcessGraph} whose data is stored in an instance of this class
      */
-    public ModalProcessGraph<N, L, ?, AP, ?> getMpg() {
-        return mpg;
+    public ProceduralModalProcessGraph<N, L, ?, AP, ?> getPmpg() {
+        return pmpg;
     }
 
     /**
-     * Returns the {@link NodeIDs} of the mpg returned by {@link #getMpg()}. The nodeIDs have already been computed and
-     * cached.
+     * Returns the {@link NodeIDs} of the {@link ProceduralModalProcessGraph} returned by {@link #getPmpg()}. The
+     * nodeIDs have already been computed and cached.
      *
      * @return the nodeIDs
      */
@@ -87,9 +87,9 @@ public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>
      * @return a {@link Mapping} which maps nodes to their initial property transformer
      */
     public Mapping<N, T> getInitialPropertyTransformers(TransformerSerializer<T, L, AP> serializer) {
-        final Map<N, T> result = Maps.newHashMapWithExpectedSize(this.mpg.size());
+        final Map<N, T> result = Maps.newHashMapWithExpectedSize(this.pmpg.size());
 
-        for (N n : this.mpg) {
+        for (N n : this.pmpg) {
             result.put(n, serializer.deserialize(this.initialPropertyTransformers.get(n)));
         }
 
@@ -97,8 +97,8 @@ public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     /**
-     * Returns a {@link Mapping} which contains the list of the initial satisfied subformulas for each node of the mpg
-     * whose data is stored in an instance of this class.
+     * Returns a {@link Mapping} which contains the list of the initial satisfied subformulas for each node of the
+     * {@link ProceduralModalProcessGraph} whose data is stored in an instance of this class.
      *
      * @return a {@link Mapping} which contains the list of the initial satisfied subformulas
      */

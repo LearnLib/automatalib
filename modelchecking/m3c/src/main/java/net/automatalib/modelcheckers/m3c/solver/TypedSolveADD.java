@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 
@@ -26,8 +26,8 @@ import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
  */
 public class TypedSolveADD<L, AP> extends SolveADD<L, AP> implements TypedM3CSolver<FormulaNode<L, AP>> {
 
-    TypedSolveADD(ModalContextFreeProcessSystem<L, AP> mcfps) {
-        super(mcfps);
+    TypedSolveADD(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        super(cfmps);
     }
 
 }

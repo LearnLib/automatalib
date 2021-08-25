@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelcheckers.m3c.util.Examples;
@@ -30,7 +30,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @Test
     void testSolve() throws ParseException {
-        final M3CSolver<String> solver = getSolver(Examples.getMcfpsAnBn(Collections.emptySet()));
+        final M3CSolver<String> solver = getSolver(Examples.getCfmpsAnBn(Collections.emptySet()));
 
         final String formula = "mu X.(<b><b>true || <>X)";
         assertSolve(solver, formula, true);
@@ -45,8 +45,8 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @Test
     void testSolveWithSingleAP() throws ParseException {
-        final ModalContextFreeProcessSystem<String, String> mcfps = Examples.getMcfpsAnBn(Collections.singleton("a"));
-        final M3CSolver<String> solver = getSolver(mcfps);
+        final ContextFreeModalProcessSystem<String, String> cfmps = Examples.getCfmpsAnBn(Collections.singleton("a"));
+        final M3CSolver<String> solver = getSolver(cfmps);
         final String formula = "mu X.(<>X || 'a,b')";
 
         assertSolve(solver, formula, false);
@@ -54,9 +54,9 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @Test
     void testSolveWithMultipleAPs() throws ParseException {
-        final ModalContextFreeProcessSystem<String, String> mcfps =
-                Examples.getMcfpsAnBn(new HashSet<>(Arrays.asList("a", "b")));
-        final M3CSolver<String> solver = getSolver(mcfps);
+        final ContextFreeModalProcessSystem<String, String> cfmps =
+                Examples.getCfmpsAnBn(new HashSet<>(Arrays.asList("a", "b")));
+        final M3CSolver<String> solver = getSolver(cfmps);
 
         final String formula = "mu X.(<>X || 'a,b')";
         assertSolve(solver, formula, true);
@@ -65,7 +65,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         assertSolve(solver, formulaWithNegatedAP, true);
     }
 
-    public abstract M3CSolver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps);
+    public abstract M3CSolver<String> getSolver(ContextFreeModalProcessSystem<String, String> cfmps);
 
     protected <P> void assertSolve(M3CSolver<P> solver, P property, boolean expectedIsSat) throws ParseException {
         Assert.assertEquals(solver.solve(property), expectedIsSat);

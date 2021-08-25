@@ -18,7 +18,7 @@ package net.automatalib.modelcheckers.m3c.solver;
 import info.scce.addlib.dd.xdd.XDDManager;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformerSerializer;
@@ -39,8 +39,8 @@ public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, A
 
     private XDDManager<BooleanVector> ddManager;
 
-    public SolveADD(ModalContextFreeProcessSystem<L, AP> mcfps) {
-        super(mcfps);
+    public SolveADD(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        super(cfmps);
     }
 
     @Override

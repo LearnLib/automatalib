@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 
@@ -26,8 +26,8 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
  */
 public class StringSolveADD extends SolveADD<String, String> implements M3CSolver<String> {
 
-    StringSolveADD(ModalContextFreeProcessSystem<String, String> mcfps) {
-        super(mcfps);
+    StringSolveADD(ContextFreeModalProcessSystem<String, String> cfmps) {
+        super(cfmps);
     }
 
     @Override

@@ -149,9 +149,9 @@ public class DOTSerializationTest {
     @Test
     public void testMCFPSExport() throws IOException {
 
-        final DefaultMCFPS<Character, Character> mcfps = DOTSerializationUtil.MCFPS;
+        final DefaultMCFPS<Character, Character> cfmps = DOTSerializationUtil.CFMPS;
 
-        ThrowingWriter writer = w -> GraphDOT.write(mcfps, w);
+        ThrowingWriter writer = w -> GraphDOT.write(cfmps, w);
         checkDOTOutput(writer, DOTSerializationUtil.MCFPS_RESOURCE);
     }
 

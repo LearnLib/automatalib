@@ -16,7 +16,7 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import info.scce.addlib.dd.bdd.BDDManager;
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformer;
 import net.automatalib.modelcheckers.m3c.transformer.BDDTransformerSerializer;
@@ -37,8 +37,8 @@ public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, A
 
     private BDDManager bddManager;
 
-    public SolveBDD(ModalContextFreeProcessSystem<L, AP> mcfps) {
-        super(mcfps);
+    public SolveBDD(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        super(cfmps);
     }
 
     @Override

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.automatalib.graphs.ProceduralModalProcessGraph;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
@@ -114,9 +115,9 @@ public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP
     }
 
     /**
-     * Returns the name of the mpg which contains the node updated in this step.
+     * Returns the name of the {@link ProceduralModalProcessGraph} which contains the node updated in this step.
      *
-     * @return the name of the mpg which contains the node updated in this step
+     * @return the name of the {@link ProceduralModalProcessGraph} which contains the node updated in this step
      */
     public L getUpdatedNodeMPG() {
         return updatedNodeMPG;

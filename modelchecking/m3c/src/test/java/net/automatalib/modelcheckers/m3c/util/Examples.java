@@ -18,52 +18,52 @@ package net.automatalib.modelcheckers.m3c.util;
 import java.util.Collections;
 import java.util.Set;
 
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.graphs.MutableModalProcessGraph;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
+import net.automatalib.graphs.MutableProceduralModalProcessGraph;
 import net.automatalib.graphs.base.DefaultMCFPS;
-import net.automatalib.graphs.base.compact.CompactMPG;
+import net.automatalib.graphs.base.compact.CompactPMPG;
 
 public final class Examples {
 
     private Examples() {}
 
-    public static ModalContextFreeProcessSystem<String, String> getMcfpsAnBn(Set<String> finalNodesAP) {
-        final CompactMPG<String, String> mpg = buildMPG(new CompactMPG<>(""), finalNodesAP);
-        return new DefaultMCFPS<>("P", Collections.singletonMap("P", mpg));
+    public static ContextFreeModalProcessSystem<String, String> getCfmpsAnBn(Set<String> finalNodesAP) {
+        final CompactPMPG<String, String> pmpg = buildPMPG(new CompactPMPG<>(""), finalNodesAP);
+        return new DefaultMCFPS<>("P", Collections.singletonMap("P", pmpg));
     }
 
-    private static <N, E, AP, MMPG extends MutableModalProcessGraph<N, String, E, AP, ?>> MMPG buildMPG(MMPG mpg,
-                                                                                                        Set<AP> finalNodeAPs) {
+    private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, ?>> M buildPMPG(M pmpg,
+                                                                                                             Set<AP> finalNodeAPs) {
 
-        final N start = mpg.addNode();
-        final N end = mpg.addNode();
-        final N s1 = mpg.addNode();
-        final N s2 = mpg.addNode();
+        final N start = pmpg.addNode();
+        final N end = pmpg.addNode();
+        final N s1 = pmpg.addNode();
+        final N s2 = pmpg.addNode();
 
-        mpg.setInitialNode(start);
-        mpg.setFinalNode(end);
-        mpg.setAtomicPropositions(s2, finalNodeAPs);
-        mpg.setAtomicPropositions(end, finalNodeAPs);
+        pmpg.setInitialNode(start);
+        pmpg.setFinalNode(end);
+        pmpg.setAtomicPropositions(s2, finalNodeAPs);
+        pmpg.setAtomicPropositions(end, finalNodeAPs);
 
-        final E e1 = mpg.connect(start, s1);
-        final E e2 = mpg.connect(start, end);
-        final E e3 = mpg.connect(s1, s2);
-        final E e4 = mpg.connect(s2, end);
+        final E e1 = pmpg.connect(start, s1);
+        final E e2 = pmpg.connect(start, end);
+        final E e3 = pmpg.connect(s1, s2);
+        final E e4 = pmpg.connect(s2, end);
 
-        mpg.getEdgeProperty(e1).setMust();
-        mpg.setEdgeLabel(e1, "a");
+        pmpg.getEdgeProperty(e1).setMust();
+        pmpg.setEdgeLabel(e1, "a");
 
-        mpg.getEdgeProperty(e2).setMust();
-        mpg.setEdgeLabel(e2, "e");
+        pmpg.getEdgeProperty(e2).setMust();
+        pmpg.setEdgeLabel(e2, "e");
 
-        mpg.getEdgeProperty(e3).setMust();
-        mpg.getEdgeProperty(e3).setProcess();
-        mpg.setEdgeLabel(e3, "P");
+        pmpg.getEdgeProperty(e3).setMust();
+        pmpg.getEdgeProperty(e3).setProcess();
+        pmpg.setEdgeLabel(e3, "P");
 
-        mpg.getEdgeProperty(e4).setMust();
-        mpg.setEdgeLabel(e4, "b");
+        pmpg.getEdgeProperty(e4).setMust();
+        pmpg.setEdgeLabel(e4, "b");
 
-        return mpg;
+        return pmpg;
     }
 
 }

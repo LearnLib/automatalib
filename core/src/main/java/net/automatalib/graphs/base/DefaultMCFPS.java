@@ -19,26 +19,26 @@ import java.util.Collections;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
-import net.automatalib.graphs.ModalProcessGraph;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
+import net.automatalib.graphs.ProceduralModalProcessGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class DefaultMCFPS<L, AP> implements ModalContextFreeProcessSystem<L, AP> {
+public class DefaultMCFPS<L, AP> implements ContextFreeModalProcessSystem<L, AP> {
 
-    private final Map<L, ModalProcessGraph<?, L, ?, AP, ?>> mpgs;
+    private final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs;
     private final L mainProcess;
 
-    public DefaultMCFPS(L mainProcess, Map<L, ? extends ModalProcessGraph<?, L, ?, AP, ?>> mpgs) {
-        Preconditions.checkArgument(mpgs.containsKey(mainProcess),
+    public DefaultMCFPS(L mainProcess, Map<L, ? extends ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs) {
+        Preconditions.checkArgument(pmpgs.containsKey(mainProcess),
                                     "There exists no process graph for the main process");
 
-        this.mpgs = Collections.unmodifiableMap(mpgs);
+        this.pmpgs = Collections.unmodifiableMap(pmpgs);
         this.mainProcess = mainProcess;
     }
 
     @Override
-    public Map<L, ModalProcessGraph<?, L, ?, AP, ?>> getMPGs() {
-        return this.mpgs;
+    public Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> getPMPGs() {
+        return this.pmpgs;
     }
 
     @Override

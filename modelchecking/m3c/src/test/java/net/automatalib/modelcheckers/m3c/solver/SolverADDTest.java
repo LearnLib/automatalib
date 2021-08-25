@@ -15,13 +15,13 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
-import net.automatalib.graphs.ModalContextFreeProcessSystem;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
 
 public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, String>> {
 
-    public M3CSolver<String> getSolver(ModalContextFreeProcessSystem<String, String> mcfps) {
-        return M3CSolvers.addSolver(mcfps);
+    public M3CSolver<String> getSolver(ContextFreeModalProcessSystem<String, String> cfmps) {
+        return M3CSolvers.addSolver(cfmps);
     }
 
 }
