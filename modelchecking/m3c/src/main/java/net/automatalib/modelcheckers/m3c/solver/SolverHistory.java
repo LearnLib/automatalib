@@ -29,9 +29,13 @@ import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
  * the satisfiability of a formula. The internal information could for example be used for debugging or visualization
  * purposes.
  *
- * @param <T>  property transformer type
- * @param <L>  edge label type
- * @param <AP> atomic proposition type
+ * @param <T>
+ *         property transformer type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 public final class SolverHistory<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
@@ -55,44 +59,59 @@ public final class SolverHistory<T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     /**
-     * @return a map containing information per procedure name.
+     * Returns a {@link Map} containing information per procedure name.
+     *
+     * @return a {@link Map} containing information per procedure name
      */
     public Map<L, SolverData<?, T, L, AP>> getData() {
         return data;
     }
 
     /**
-     * @param serializer used to deserialize each property transformer from a {@code String}.
-     * @return a map which maps the edge label of must edges to their property transformer. This methods requires a
-     * {@link TransformerSerializer} as all property transform are stored as {@code Strings} in this class. The returned
-     * map is not cached and will be computed on each call. The property transformer of an edge is initialized once and
-     * will not be modified which is why this map is only stored once and not in each {@link SolverState}.
+     * Returns a {@link Map} which maps the edge label of must edges to their property transformer. This method
+     * requires a {@link TransformerSerializer} as all property transform are stored as {@link String}s in this class.
+     * The returned map is not cached and will be computed on each call. The property transformer of an edge is
+     * initialized once and will not be modified which is why this map is only stored once and not in each {@link
+     * SolverState}.
+     *
+     * @param serializer
+     *         used to deserialize each property transformer from a {@link String}
+     *
+     * @return a {@link Map} which maps the edge label of must edges to their property transformer
      */
     public Map<L, T> getMustTransformers(TransformerSerializer<T, L, AP> serializer) {
         return transform(this.mustTransformers, serializer);
     }
 
     /**
-     * @param serializer used to deserialize each property transformer from a {@code String}.
-     * @return a map which maps the edge label of may edges to their property transformer. This methods requires a
-     * {@link TransformerSerializer} as all property transform are stored as {@code Strings} in this class. The returned
-     * map is not cached and will be computed on each call. The property transformer of an edge is initialized once and
-     * will not be modified which is why this map is only stored once and not in each {@link SolverState}.
+     * Returns a {@link Map} which maps the edge label of may edges to their property transformer. This method requires
+     * a {@link TransformerSerializer} as all property transform are stored as {@link String}s in this class. The
+     * returned map is not cached and will be computed on each call. The property transformer of an edge is initialized
+     * once and will not be modified which is why this map is only stored once and not in each {@link SolverState}.
+     *
+     * @param serializer
+     *         used to deserialize each property transformer from a {@link String}
+     *
+     * @return a {@link Map} which maps the edge label of may edges to their property transformer
      */
     public Map<L, T> getMayTransformers(TransformerSerializer<T, L, AP> serializer) {
         return transform(this.mayTransformers, serializer);
     }
 
     /**
-     * @return a list of SolverStates, one per update of a state.
+     * Returns the list of {@link SolverState}s, one per update of a state.
+     *
+     * @return the list of {@link SolverState}s
      */
     public List<SolverState<?, T, L, AP>> getSolverStates() {
         return solverStates;
     }
 
     /**
-     * @return {@code true} if formula input into {@link AbstractSolveDD#solveAndRecordHistory(FormulaNode formula)} is
-     * satisfied, else {@code false}.
+     * Returns whether the formulate put into {@link AbstractSolveDD#solveAndRecordHistory(FormulaNode formula)} is
+     * satisfied.
+     *
+     * @return {@code true} if formula is satisfied, {@code false} otherwise
      */
     public boolean isSat() {
         return isSat;

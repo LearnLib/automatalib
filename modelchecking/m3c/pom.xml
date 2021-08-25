@@ -28,7 +28,9 @@ limitations under the License.
     <artifactId>automata-modelchecking-m3c</artifactId>
 
     <name>AutomataLib :: Model Checking :: M3C</name>
-    <description>The Modal Meta Model Checker</description>
+    <description>The Modal Meta Model Checker as presented in the paper "M3C: Modal Meta Model Checking". Note that this
+        implementation requires a dependency to ADDLib, which is optional by default due to packaging.
+    </description>
 
     <dependencies>
         <!-- internal -->

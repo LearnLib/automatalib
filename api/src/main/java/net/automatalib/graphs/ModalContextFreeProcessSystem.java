@@ -25,8 +25,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Represents a Context-Free Modal Transition System as defined in "M3C: Modal Meta Model Checking" (FMICS 2018) by
  * Bernhard Steffen and Alnis Murtovi.
  *
- * @param <L> edge label type
- * @param <AP> atomic proposition type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
  */
 public interface ModalContextFreeProcessSystem<L, AP> extends FiniteRepresentation, GraphViewable {
 

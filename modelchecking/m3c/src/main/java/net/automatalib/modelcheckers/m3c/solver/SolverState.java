@@ -25,12 +25,17 @@ import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
- * A SolverState stores internal information produced during the update of a state in {@link AbstractSolveDD}.
+ * Stores internal information produced during the update of a state in {@link AbstractSolveDD}.
  *
- * @param <N>  node type
- * @param <T>  property transformer type
- * @param <L>  edge label type
- * @param <AP> atomic proposition type
+ * @param <N>
+ *         node type
+ * @param <T>
+ *         property transformer type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
@@ -57,7 +62,12 @@ public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP
     }
 
     /**
-     * @param serializer used to deserialize a property transformer from a {@code String}.
+     * Returns the updated property transformer. This method requires a {@link TransformerSerializer} as all property
+     * transform are stored as {@link String}s in this class.
+     *
+     * @param serializer
+     *         used to deserialize a property transformer from a {@link String}.
+     *
      * @return the updated property transformer
      */
     public T getUpdatedPropTransformer(TransformerSerializer<T, L, AP> serializer) {
@@ -65,7 +75,13 @@ public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP
     }
 
     /**
-     * @param serializer used to deserialize a property transformer from a {@code String}.
+     * Returns a {@link List} of the property transformers representing the compositions of the property transformer of
+     * the outgoing edges and their target nodes. This method requires a {@link TransformerSerializer} as all property
+     * transform are stored as {@link String}s in this class.
+     *
+     * @param serializer
+     *         used to deserialize a property transformer from a {@link String}.
+     *
      * @return the property transformers representing the compositions of the property transformer of the outgoing edges
      * and their target nodes.
      */
@@ -80,28 +96,38 @@ public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP
     }
 
     /**
-     * @return the list of satisified subformulas the node updated in this step satisfies after the update.
+     * Returns the list of satisfied subformulas the node updated in this step satisfies after the update.
+     *
+     * @return the list of satisfied subformulas
      */
     public List<FormulaNode<L, AP>> getUpdatedStateSatisfiedSubformula() {
         return updatedStateSatisfiedSubformula;
     }
 
     /**
-     * @return the node updated in this step.
+     * Returns the node updated in this step.
+     *
+     * @return the node updated in this step
      */
     public N getUpdatedNode() {
         return updatedNode;
     }
 
     /**
-     * @return the name of the mpg which contains the node updated in this step.
+     * Returns the name of the mpg which contains the node updated in this step.
+     *
+     * @return the name of the mpg which contains the node updated in this step
      */
     public L getUpdatedNodeMPG() {
         return updatedNodeMPG;
     }
 
     /**
-     * @return a map which returns the set of nodes which are in the work set for each procedure after the update.
+     * Returns a {@link Map} which returns the set of nodes which are in the work set for each procedure after the
+     * update.
+     *
+     * @return a {@link Map} which returns the set of nodes which are in the work set for each procedure after the
+     * update
      */
     public Map<L, Set<?>> getWorkSet() {
         return workSet;

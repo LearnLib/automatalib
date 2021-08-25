@@ -188,8 +188,6 @@ public class BDDTransformerTest {
         comps.add(edgeTransformer);
         comps.add(oneTransformer);
 
-
-
         BDD disjunction = edgeTransformer.orBddList(comps, diaNode1.getVarNumber());
         Assert.assertEquals(bddManager.readOne(), disjunction);
     }

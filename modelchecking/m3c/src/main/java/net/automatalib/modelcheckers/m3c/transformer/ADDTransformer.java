@@ -38,8 +38,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * An ADDTransformer represents a property transformer by a single ADD (Algebraic Decision Diagram).
  *
- * @param <L>  edge label type
- * @param <AP> atomic proposition type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransformer<L, AP>, L, AP> {
@@ -58,13 +61,13 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         this.add = add;
     }
 
-    /* Initialization of a state property transformer*/
-
     /**
      * Constructor used to initialize the property transformer of a node.
      *
-     * @param xddManager  used to create the ADD
-     * @param dependGraph of the formula that is currently being solved
+     * @param xddManager
+     *         used to create the ADD
+     * @param dependGraph
+     *         of the formula that is currently being solved
      */
     public ADDTransformer(XDDManager<BooleanVector> xddManager, DependencyGraph<L, AP> dependGraph) {
         this.xddManager = xddManager;
@@ -80,10 +83,12 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     }
 
     /**
-     * Creates the identity function. Sets {@code this.add} to null to avoid the construction of the ADD which is very
-     * expensive. In all other places where {@code this.add} is used, it has to be checked if {@code this.add} is null.
+     * Creates the identity function. This sets the internal {@link XDD ADD} to {@code null} to avoid the construction
+     * of the ADD, which is very expensive. To prevent null-pointer exceptions when using {@link #getAdd()}, it can be
+     * checked with {@link #isIdentity()}.
      *
-     * @param ddManager used to create the ADD
+     * @param ddManager
+     *         used to create the ADD
      */
     // false-positive, see https://github.com/typetools/checker-framework/issues/2215
     @SuppressWarnings("assignment.type.incompatible")
@@ -95,11 +100,16 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     /**
      * Constructor used to create the property transformer for an edge.
      *
-     * @param xddManager   used to create the ADD
-     * @param edgeLabel    of the edge
-     * @param edgeProperty of the edge
-     * @param dependGraph  of the formula that is currently being solved
-     * @param <TP>         edge property type
+     * @param xddManager
+     *         used to create the ADD
+     * @param edgeLabel
+     *         of the edge
+     * @param edgeProperty
+     *         of the edge
+     * @param dependGraph
+     *         of the formula that is currently being solved
+     * @param <TP>
+     *         edge property type
      */
     public <TP extends ModalEdgeProperty> ADDTransformer(XDDManager<BooleanVector> xddManager,
                                                          L edgeLabel,
@@ -214,6 +224,8 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     }
 
     /**
+     * Returns the ADD which represents the property transformer.
+     *
      * @return the ADD which represents the property transformer or {@code null} if the property transformer is the
      * identity function
      */
@@ -222,7 +234,9 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     }
 
     /**
-     * @return true if the property transformer is the identity function.
+     * Returns whether the property transformer is the identity function.
+     *
+     * @return {@code true} if the property transformer is the identity function, {@code false} otherwise
      */
     @EnsuresNonNullIf(result = false, expression = {"add", "getAdd()"})
     @SuppressWarnings("contracts.conditional.postcondition.not.satisfied") // getAdd() is pure

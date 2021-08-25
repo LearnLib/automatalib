@@ -26,8 +26,11 @@ import info.scce.addlib.serializer.XDDSerializer;
 /**
  * This class can be used to serialize and deserialize {@link ADDTransformer}s.
  *
- * @param <L>  edge label type
- * @param <AP> atomic proposition type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 public class ADDTransformerSerializer<L, AP> implements TransformerSerializer<ADDTransformer<L, AP>, L, AP> {
@@ -38,11 +41,6 @@ public class ADDTransformerSerializer<L, AP> implements TransformerSerializer<AD
         this.xddManager = xddManager;
     }
 
-    /**
-     * @param transformer the property transformer to be serialized.
-     * @return a list of {@code String}s which is empty if the {@code transformer} represents the identity function and
-     * else contains exactly one entry, the serialized ADD.
-     */
     @Override
     public List<String> serialize(ADDTransformer<L, AP> transformer) {
         if (transformer.isIdentity()) {

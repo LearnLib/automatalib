@@ -30,10 +30,15 @@ import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 /**
  * A class used to store {@link ModalProcessGraph} specific data for the {@link SolverHistory}.
  *
- * @param <N>  node type
- * @param <T>  property transformer type
- * @param <L>  edge label type
- * @param <AP> atomic proposition type
+ * @param <N>
+ *         node type
+ * @param <T>
+ *         property transformer type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
@@ -53,25 +58,33 @@ public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     /**
-     * @return the {@link ModalProcessGraph} whose data is stored in an instance of this class.
+     * Returns the {@link ModalProcessGraph} whose data is stored in an instance of this class.
+     *
+     * @return the {@link ModalProcessGraph} whose data is stored in an instance of this class
      */
     public ModalProcessGraph<N, L, ?, AP, ?> getMpg() {
         return mpg;
     }
 
     /**
-     * @return the NodeIDs of the mpg returned by {@link SolverData#getMpg()}. The nodeIDs have already been computed
-     * and cached.
+     * Returns the {@link NodeIDs} of the mpg returned by {@link #getMpg()}. The nodeIDs have already been computed and
+     * cached.
+     *
+     * @return the nodeIDs
      */
     public NodeIDs<N> getNodeIDs() {
         return nodeIDs;
     }
 
     /**
-     * @param serializer used to deserialize each property transformer from a {@code String}.
-     * @return a map which maps nodes to their initial property transformer. This methods requires a {@link
-     * TransformerSerializer} as all property transform are stored as {@code Strings} in this class. The returned map is
-     * not cached and will be computed on each call.
+     * Returns a {@link Mapping} which maps nodes to their initial property transformer. This methods requires a {@link
+     * TransformerSerializer} as all property transform are stored as {@link String}s in this class. The returned map is
+     * not cached and will be re-computed on each call.
+     *
+     * @param serializer
+     *         used to deserialize each property transformer from a {@link String}.
+     *
+     * @return a {@link Mapping} which maps nodes to their initial property transformer
      */
     public Mapping<N, T> getInitialPropertyTransformers(TransformerSerializer<T, L, AP> serializer) {
         final Map<N, T> result = Maps.newHashMapWithExpectedSize(this.mpg.size());
@@ -84,8 +97,10 @@ public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     /**
-     * @return a mapping which contains the list of the initial satisfied subformulas for each node of the mpg whose
-     * data is stored in an instance of this class.
+     * Returns a {@link Mapping} which contains the list of the initial satisfied subformulas for each node of the mpg
+     * whose data is stored in an instance of this class.
+     *
+     * @return a {@link Mapping} which contains the list of the initial satisfied subformulas
      */
     public Mapping<N, List<FormulaNode<L, AP>>> getInitialSatisfiedSubformulas() {
         return initialSatisfiedSubformulas;

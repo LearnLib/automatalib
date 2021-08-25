@@ -51,12 +51,15 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Base implementation of the "Model Checking for Context-Free Processes" (CONCUR '92) paper by Olaf Burkart and Bernhard
- * Steffen.
+ * Base implementation of the model checker which supports different types of property transformers.
  *
- * @param <T>  property transformer type
- * @param <L>  edge label type
- * @param <AP> atomic proposition type
+ * @param <T>
+ *         property transformer type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {

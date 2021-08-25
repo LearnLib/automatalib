@@ -31,9 +31,11 @@ import net.automatalib.modelcheckers.m3c.formula.NotNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 
 /**
- * Implementation of the diamond function as described in "Model Checking for Context-Free Processes" (CONCUR '92).
+ * Implementation of the diamond function.
  *
- * @param <AP> atomic proposition type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {

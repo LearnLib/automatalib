@@ -27,11 +27,13 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 
 /**
- * A dependency graph is essentially used to represent a hierarchical equational system (see "Model Checking for
- * Context-Free Processes" (CONCUR '92).
+ * A dependency graph is used to represent a hierarchical equational system.
  *
- * @param <L>  edge label type
- * @param <AP> atomic proposition type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 public final class DependencyGraph<L, AP> {
@@ -140,28 +142,38 @@ public final class DependencyGraph<L, AP> {
     }
 
     /**
-     * @param index of the equational block to return
-     * @return equational block at the given {@code index}.
+     * Returns the equational block for the given index.
+     *
+     * @param index
+     *         index of the equational block to return
+     *
+     * @return the equational block at the given {@code index}.
      */
     public EquationalBlock<L, AP> getBlock(int index) {
         return blocks.get(index);
     }
 
     /**
-     * @return the number of variables which is equal to the number of subformulas.
+     * Returns the number of variables which is equal to the number of subformulas.
+     *
+     * @return the number of variables.
      */
     public int getNumVariables() {
         return numVars;
     }
 
     /**
-     * @return a list of all subformulas.
+     * Returns the list of all subformulas.
+     *
+     * @return the list of all subformulas.
      */
     public List<FormulaNode<L, AP>> getFormulaNodes() {
         return formulaNodes;
     }
 
     /**
+     * Returns all equational blocks of the equational system.
+     *
      * @return all equational blocks of the equational system.
      */
     public List<EquationalBlock<L, AP>> getBlocks() {
@@ -169,7 +181,9 @@ public final class DependencyGraph<L, AP> {
     }
 
     /**
-     * @return the abstract syntax tree of the input formula after it has been transformed into negation normal form.
+     * Returns the abstract syntax tree of the input formula after it has been transformed into negation normal form.
+     *
+     * @return the abstract syntax tree in negation normal form.
      */
     public FormulaNode<L, AP> getAST() {
         return ast;

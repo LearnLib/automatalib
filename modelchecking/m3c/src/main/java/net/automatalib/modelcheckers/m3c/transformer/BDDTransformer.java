@@ -41,8 +41,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A BDDTransformer represents a property transformer by a list of BDDs (Binary Decision Diagrams), one per subformula.
  *
- * @param <L>  edge label type
- * @param <AP> atomic proposition type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransformer<L, AP>, L, AP> {
@@ -65,8 +68,10 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     /**
      * Constructor used to initialize the property transformer of a node.
      *
-     * @param bddManager      used to create the BDDs
-     * @param dependencyGraph of the formula that is currently being solved
+     * @param bddManager
+     *         used to create the BDDs
+     * @param dependencyGraph
+     *         of the formula that is currently being solved
      */
     public BDDTransformer(BDDManager bddManager, DependencyGraph<L, AP> dependencyGraph) {
         this(bddManager, new BDD[dependencyGraph.getNumVariables()]);
@@ -86,11 +91,16 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     /**
      * Constructor used to create the property transformer for an edge.
      *
-     * @param bddManager      used to create the BDDs
-     * @param edgeLabel       of the edge
-     * @param edgeProperty    of the edge
-     * @param dependencyGraph of the formula that is currently being solved
-     * @param <TP>            edge property type
+     * @param bddManager
+     *         used to create the BDDs
+     * @param edgeLabel
+     *         of the edge
+     * @param edgeProperty
+     *         of the edge
+     * @param dependencyGraph
+     *         of the formula that is currently being solved
+     * @param <TP>
+     *         edge property type
      */
     public <TP extends ModalEdgeProperty> BDDTransformer(BDDManager bddManager,
                                                          L edgeLabel,
@@ -119,8 +129,12 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     /**
-     * @param bddManager   used to create the BDDs
-     * @param numberOfVars the number of subformulas
+     * The Property Transformer representing the identity function.
+     *
+     * @param bddManager
+     *         used to create the BDDs
+     * @param numberOfVars
+     *         the number of subformulas
      */
     public BDDTransformer(BDDManager bddManager, int numberOfVars) {
         this(bddManager, new BDD[numberOfVars]);
@@ -213,15 +227,21 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     /**
-     * @param var index of the BDD to return
-     * @return the BDD used to compute the satisfiability of subformula with variable number {@code var}.
+     * Returns the {@link BDD} used to compute the satisfiability of subformula with variable number {@code var}.
+     *
+     * @param var
+     *         index of the BDD to return
+     *
+     * @return the {@link BDD} used to compute the satisfiability of subformula with variable number {@code var}
      */
     public BDD getBDD(int var) {
         return bdds[var];
     }
 
     /**
-     * @return the number of subformulas.
+     * Returns the number of subformulas.
+     *
+     * @return the number of subformulas
      */
     public int getNumberOfVars() {
         return bdds.length;

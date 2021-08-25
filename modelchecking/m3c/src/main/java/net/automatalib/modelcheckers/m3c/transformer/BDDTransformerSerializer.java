@@ -29,8 +29,11 @@ import info.scce.addlib.serializer.XDDSerializer;
 /**
  * This class can be used to serialize and deserialize {@link BDDTransformer}s.
  *
- * @param <L>  edge label type
- * @param <AP> atomic proposition type
+ * @param <L>
+ *         edge label type
+ * @param <AP>
+ *         atomic proposition type
+ *
  * @author murtovi
  */
 public class BDDTransformerSerializer<L, AP> implements TransformerSerializer<BDDTransformer<L, AP>, L, AP> {
@@ -41,10 +44,6 @@ public class BDDTransformerSerializer<L, AP> implements TransformerSerializer<BD
         this.bddManager = bddManager;
     }
 
-    /**
-     * @param transformer the property transformer to be serialized.
-     * @return a list of {@code String}s where each {@code String} represents one BDD.
-     */
     @Override
     public List<String> serialize(BDDTransformer<L, AP> transformer) {
         final XDDSerializer<Boolean> xddSerializer = new XDDSerializer<>();
