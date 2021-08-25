@@ -23,6 +23,14 @@ import net.automatalib.graphs.concepts.MutableKripkeInterpretation;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A mutable {@link ModalProcessGraph}.
+ * @param <N> node type
+ * @param <L> edge label type
+ * @param <E> edge type
+ * @param <AP> atomic proposition type
+ * @param <TP> edge proposition type
+ */
 public interface MutableModalProcessGraph<N, L, E, AP, TP extends MutableProceduralModalEdgeProperty> extends
                                                                                                       ModalProcessGraph<N, L, E, AP, TP>,
                                                                                                       MutableGraph<N, E, Set<AP>, TP>,

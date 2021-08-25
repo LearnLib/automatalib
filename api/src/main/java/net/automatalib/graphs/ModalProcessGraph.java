@@ -21,6 +21,16 @@ import net.automatalib.graphs.concepts.FinalNode;
 import net.automatalib.graphs.concepts.InitialNode;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 
+/**
+ * Represents a Procedural Modal Transition System as defined in "M3C: Modal Meta Model Checking" (FMICS 2018) by
+ * Bernhard Steffen and Alnis Murtovi.
+ *
+ * @param <N>  node type
+ * @param <L>  edge label type
+ * @param <E>  edge type
+ * @param <AP> atomic proposition type
+ * @param <TP> edge property type
+ */
 public interface ModalProcessGraph<N, L, E, AP, TP extends ProceduralModalEdgeProperty>
         extends UniversalGraph<N, E, Set<AP>, TP>,
                 FiniteKripkeStructure<N, E, AP>,

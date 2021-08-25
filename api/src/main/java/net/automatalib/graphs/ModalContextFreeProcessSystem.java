@@ -21,6 +21,13 @@ import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.graphs.concepts.GraphViewable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Represents a Context-Free Modal Transition System as defined in "M3C: Modal Meta Model Checking" (FMICS 2018) by
+ * Bernhard Steffen and Alnis Murtovi.
+ *
+ * @param <L>
+ * @param <AP>
+ */
 public interface ModalContextFreeProcessSystem<L, AP> extends FiniteRepresentation, GraphViewable {
 
     Map<L, ModalProcessGraph<?, L, ?, AP, ?>> getMPGs();
