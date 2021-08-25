@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -85,17 +86,13 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
             final L label = e.getKey();
             final ProceduralModalProcessGraph<?, L, ?, AP, ?> pmpg = e.getValue();
 
-            if (pmpg.getInitialNode() == null) {
-                throw new IllegalArgumentException("MPG " + label + " has no start state.");
-            }
-            if (pmpg.getFinalNode() == null) {
-                throw new IllegalArgumentException("MPG " + label + " has no end state.");
-            }
+            Preconditions.checkNotNull(pmpg.getInitialNode(), "PMPG '%s' has no start state", label);
+            Preconditions.checkNotNull(pmpg.getFinalNode(), "PMPG '%s' has no end state", label);
 
             workUnits.put(label, initializeWorkUnits(label, pmpg));
         }
 
-        // TODO handle empty MCFPSs
+        // TODO handle empty CFMPSs
         final L mainProcess = cfmps.getMainProcess();
         if (mainProcess == null || !workUnits.containsKey(mainProcess)) {
             throw new IllegalArgumentException("The main process is undefined or has no corresponding MPG.");
