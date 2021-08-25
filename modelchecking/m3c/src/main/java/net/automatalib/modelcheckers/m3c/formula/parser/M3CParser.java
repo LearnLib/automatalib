@@ -27,12 +27,12 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
  * This class can be used to parse formulas in CTL and the mu-calculus.
  *
  * <p>
- * CTL grammar: f := AF f | AG f | A(f U f) | EF f | EG f | E(f U f) | f && f | f || f | f -&gt; f | f &lt;-&gt; f | !f | &lt;&gt;f |
- * &lt;ID&gt;f | []f | [ID]f | AP | true | false | (f)
+ * CTL grammar: f := AF f | AG f | A(f U f) | EF f | EG f | E(f U f) | f &amp;&amp; f | f || f | f -&gt; f | f &lt;-&gt;
+ * f | !f | &lt;&gt;f | &lt;ID&gt;f | []f | [ID]f | AP | true | false | (f)
  * </p>
  * <p>
- * mu-calculus grammar: f := mu ID.(f) | nu ID.(f) | ID | f && f | f || f | f -&gt; f | f &lt;-&gt; f | !f | &lt;&gt;f | &lt;ID&gt;f | []f |
- * [ID]f | AP | true | false | (f)
+ * mu-calculus grammar: f := mu ID.(f) | nu ID.(f) | ID | f &amp;&amp; f | f || f | f -&gt; f | f &lt;-&gt; f | !f |
+ * &lt;&gt;f | &lt;ID&gt;f | []f | [ID]f | AP | true | false | (f)
  * </p>
  * <p>
  * AP := "arbitrary string not containing double quotation marks" | 'arbitrary string not containing single quotation
@@ -72,6 +72,7 @@ public final class M3CParser {
 
         final StringReader reader = new StringReader(formula);
 
+        //TODO: test ctl formula having an atomic proposition containing the substrings mu and nu
         if (formula.contains("mu") || formula.contains("nu")) {
             return new InternalM3CParserMuCalc<L, AP>(reader).parse(labelParser, apParser);
         }
