@@ -65,7 +65,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
-    // Attributes that are constant for a given CFPS
+    // Attributes that are constant for a given CFMPS
     private final @KeyFor("workUnits") L mainProcess;
 
     // Attributes that change for each formula
