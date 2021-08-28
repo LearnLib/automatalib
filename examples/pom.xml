@@ -91,7 +91,7 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>info.scce</groupId>
-            <artifactId>addlib</artifactId>
+            <artifactId>addlib-cudd</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
