@@ -20,10 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import info.scce.addlib.backend.BackendProvider;
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanLogicDDManager;
+import info.scce.addlib.serializer.DDProperty;
 import info.scce.addlib.serializer.XDDSerializer;
 
 /**
@@ -48,7 +50,7 @@ public class BDDTransformerSerializer<L, AP> implements TransformerSerializer<BD
     public List<String> serialize(BDDTransformer<L, AP> transformer) {
         final XDDSerializer<Boolean> xddSerializer = new XDDSerializer<>();
         final List<String> serializedBDDs = new ArrayList<>();
-        final BooleanLogicDDManager ddManager = new BooleanLogicDDManager();
+        final BooleanLogicDDManager ddManager = new BooleanLogicDDManager(BackendProvider.getADDBackend());
 
         for (int i = 0; i < transformer.getNumberOfVars(); i++) {
             final XDD<Boolean> bddAsXDD = transformer.getBDD(i).toXDD(ddManager);
@@ -61,12 +63,12 @@ public class BDDTransformerSerializer<L, AP> implements TransformerSerializer<BD
 
     @Override
     public BDDTransformer<L, AP> deserialize(List<String> data) {
-        final BooleanLogicDDManager ddManager = new BooleanLogicDDManager();
+        final BooleanLogicDDManager ddManager = new BooleanLogicDDManager(BackendProvider.getADDBackend());
         final XDDSerializer<Boolean> serializer = new XDDSerializer<>();
         final List<XDD<Boolean>> xdds = new ArrayList<>();
 
         for (String serializedDD : data) {
-            xdds.add(serializer.deserialize(ddManager, serializedDD));
+            xdds.add(serializer.deserialize(ddManager, serializedDD, DDProperty.VARINDEX));
         }
 
         final BDD[] bdds = new BDD[xdds.size()];

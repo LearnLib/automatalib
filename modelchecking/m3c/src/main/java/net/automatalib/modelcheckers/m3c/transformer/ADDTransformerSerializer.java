@@ -21,6 +21,7 @@ import java.util.List;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.XDDManager;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
+import info.scce.addlib.serializer.DDProperty;
 import info.scce.addlib.serializer.XDDSerializer;
 
 /**
@@ -58,7 +59,7 @@ public class ADDTransformerSerializer<L, AP> implements TransformerSerializer<AD
         }
 
         final XDDSerializer<BooleanVector> xddSerializer = new XDDSerializer<>();
-        final XDD<BooleanVector> transformer = xddSerializer.deserialize(xddManager, data.get(0));
+        final XDD<BooleanVector> transformer = xddSerializer.deserialize(xddManager, data.get(0), DDProperty.VARINDEX);
         return new ADDTransformer<>(xddManager, transformer);
     }
 }

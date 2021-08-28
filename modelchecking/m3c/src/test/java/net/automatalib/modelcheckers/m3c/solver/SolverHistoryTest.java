@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import info.scce.addlib.backend.BackendProvider;
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.commons.util.mappings.Mapping;
@@ -48,7 +49,7 @@ public class SolverHistoryTest {
 
     public SolverHistoryTest() {
         this.cfmps = Examples.getCfmpsAnBn(Collections.emptySet());
-        this.bddManager = new BDDManager();
+        this.bddManager = new BDDManager(BackendProvider.getBDDBackend());
         this.transformerSerializer = new BDDTransformerSerializer<>(this.bddManager);
     }
 

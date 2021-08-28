@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
+import info.scce.addlib.backend.BackendProvider;
 import info.scce.addlib.dd.xdd.XDDManager;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
@@ -45,7 +46,8 @@ public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, A
 
     @Override
     protected void initDDManager(DependencyGraph<L, AP> dependencyGraph) {
-        this.ddManager = new BooleanVectorLogicDDManager(dependencyGraph.getNumVariables());
+        this.ddManager =
+                new BooleanVectorLogicDDManager(BackendProvider.getADDBackend(), dependencyGraph.getNumVariables());
     }
 
     @Override
