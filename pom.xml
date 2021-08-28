@@ -176,19 +176,6 @@ limitations under the License.
         <system>Travis</system>
         <url>https://travis-ci.org/LearnLib/automatalib</url>
     </ciManagement>
-    <repositories>
-        <!-- explicitly name maven-central, so it is queried first -->
-        <repository>
-            <id>maven-central</id>
-            <name>Maven Central Repository</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
     <distributionManagement>
         <repository>
             <id>ossrh</id>
@@ -622,6 +609,20 @@ limitations under the License.
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <!-- explicitly name maven-central, so it is queried first -->
+        <repository>
+            <id>maven-central</id>
+            <name>Maven Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
 
     <!--
     ================================= BUILD PLUGINS =============================
