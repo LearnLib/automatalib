@@ -415,11 +415,6 @@ limitations under the License.
                                     <version>${brics-automaton.version}</version>
                                 </additionalDependency>
                                 <additionalDependency>
-                                    <groupId>info.scce</groupId>
-                                    <artifactId>addlib</artifactId>
-                                    <version>${addlib.version}</version>
-                                </additionalDependency>
-                                <additionalDependency>
                                     <groupId>org.kohsuke.metainf-services</groupId>
                                     <artifactId>metainf-services</artifactId>
                                     <version>${metainf-services.version}</version>
