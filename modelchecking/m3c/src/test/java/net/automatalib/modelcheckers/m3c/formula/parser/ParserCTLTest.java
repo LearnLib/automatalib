@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.m3c.formula.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Sets;
@@ -96,6 +97,12 @@ public class ParserCTLTest {
                 Assert.assertEquals(n1.equals(n2), n1 == n2, "n1: " + n1 + ", n2: " + n2);
             }
         }
+    }
+
+    @Test(enabled = false)
+    public void testCTLDetection() throws ParseException {
+        assertEquals("AG 'mum'", new AGNode<>(new AtomicNode<>(Collections.singleton("mum"))));
+        assertEquals("AG 'number'", new AGNode<>(new AtomicNode<>(Collections.singleton("number"))));
     }
 
     @Test
