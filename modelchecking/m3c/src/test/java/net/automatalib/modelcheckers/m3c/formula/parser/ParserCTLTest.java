@@ -16,7 +16,6 @@
 package net.automatalib.modelcheckers.m3c.formula.parser;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Sets;
