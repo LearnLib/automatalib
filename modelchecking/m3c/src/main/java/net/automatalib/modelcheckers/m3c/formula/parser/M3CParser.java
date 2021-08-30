@@ -99,13 +99,7 @@ public final class M3CParser {
                                                    Function<String, Set<AP>> apParser) throws ParseException {
 
         final StringReader reader = new StringReader(formula);
-
-        //TODO: test ctl formula having an atomic proposition containing the substrings mu and nu
-        if (formula.contains("mu") || formula.contains("nu")) {
-            return new InternalM3CParserMuCalc<L, AP>(reader).parse(labelParser, apParser);
-        }
-
-        return new InternalM3CParserCTL<L, AP>(reader).parse(labelParser, apParser);
+        return new InternalM3CParser<L, AP>(reader).parse(labelParser, apParser);
     }
 
 }

@@ -99,8 +99,9 @@ public class ParserCTLTest {
         }
     }
 
-    @Test(enabled = false)
+    @Test
     public void testCTLDetection() throws ParseException {
+        // ctl formulas containing substrings mu and nu
         assertEquals("AG 'mum'", new AGNode<>(new AtomicNode<>(Collections.singleton("mum"))));
         assertEquals("AG 'number'", new AGNode<>(new AtomicNode<>(Collections.singleton("number"))));
     }
@@ -109,6 +110,9 @@ public class ParserCTLTest {
     public void testIllegalFormulas() {
         assertIllegal("true <=> false -> true");
         assertIllegal("true <=> (false -> true)");
+        assertIllegal("AG (mu X.(<>X))");
+        assertIllegal("(AF true) && (mu X.(<b> true || <>X)");
+        assertIllegal("(mu X.(<b> true || <>X) || (AF true)");
     }
 
     private void assertIllegal(String formula) {
