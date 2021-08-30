@@ -210,16 +210,11 @@ public class ADDTransformerTest {
         Assert.assertEquals(transformer, inverseComposition);
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalStateException.class)
     void testCompositionWithTwoIdentities() {
         ADDTransformer<String, String> identity = new ADDTransformer<>(xddManager);
         ADDTransformer<String, String> anotherIdentity = new ADDTransformer<>(xddManager);
-        try {
-            identity.compose(anotherIdentity);
-            Assert.fail();
-        } catch (IllegalStateException e) {
-            // expected exception
-        }
+        identity.compose(anotherIdentity);
     }
 
     @Test
@@ -244,7 +239,19 @@ public class ADDTransformerTest {
         });
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    void testUpdateDeadlockException() throws ParseException {
+        final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
+        DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
+        ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dependencyGraph);
+        Set<String> atomicPropositions = new HashSet<>();
+        atomicPropositions.add("a");
+        EquationalBlock<String, String> block = new EquationalBlock<>(false);
+        block.addNode(new AGNode<>(new TrueNode<>()));
+        transformer.createUpdate(atomicPropositions, Collections.emptyList(), block);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
     void testUpdateException() throws ParseException {
         final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
         DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
@@ -253,20 +260,7 @@ public class ADDTransformerTest {
         atomicPropositions.add("a");
         EquationalBlock<String, String> block = new EquationalBlock<>(false);
         block.addNode(new AGNode<>(new TrueNode<>()));
-        try {
-            transformer.createUpdate(atomicPropositions, Collections.emptyList(), block);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            // expected exception
-        }
-
-        try {
-            transformer.createUpdate(atomicPropositions, Collections.singletonList(transformer), block);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            // expected exception
-        }
-
+        transformer.createUpdate(atomicPropositions, Collections.singletonList(transformer), block);
     }
 
 }

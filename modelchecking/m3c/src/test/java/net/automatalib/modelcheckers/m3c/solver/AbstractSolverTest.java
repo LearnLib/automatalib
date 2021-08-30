@@ -69,8 +69,8 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         assertSolve(solver, formulaWithNegatedAP, true);
     }
 
-    @Test
-    void testSolveWithInvalidCFMPS() {
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    void testSolveWithInvalidMainProcess() {
         ContextFreeModalProcessSystem<String, String> cfmps = new ContextFreeModalProcessSystem<String, String>() {
 
             @Override
@@ -83,15 +83,12 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
                 return "P";
             }
         };
+        getSolver(cfmps);
+    }
 
-        try {
-            getSolver(cfmps);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            // expected exception
-        }
-
-        cfmps = new ContextFreeModalProcessSystem<String, String>() {
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    void testSolveWithNoMainProcess() {
+        ContextFreeModalProcessSystem<String, String> cfmps = new ContextFreeModalProcessSystem<String, String>() {
 
             @Override
             public Map<String, ProceduralModalProcessGraph<?, String, ?, String, ?>> getPMPGs() {
@@ -103,13 +100,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
                 return null;
             }
         };
-
-        try {
-            getSolver(cfmps);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            // expected exception
-        }
+        getSolver(cfmps);
     }
 
     public abstract M3CSolver<String> getSolver(ContextFreeModalProcessSystem<String, String> cfmps);

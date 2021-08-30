@@ -126,15 +126,10 @@ public class NNFVisitorTest {
         Assert.assertEquals(gfpNode, nnfAst);
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class)
     void testError() {
         FormulaNode<String, String> ast = new AGNode<>(new TrueNode<>());
-        try {
-            ast.toNNF();
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            // expected exception
-        }
+        ast.toNNF();
     }
 
 }

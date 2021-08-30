@@ -213,7 +213,7 @@ public class BDDTransformerTest {
         Assert.assertEquals(bddManager.ithVar(diaNode1.getVarNumberChild()), disjunction);
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testUpdateException() throws ParseException {
         final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
         DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
@@ -222,13 +222,7 @@ public class BDDTransformerTest {
         atomicPropositions.add("a");
         EquationalBlock<String, String> block = new EquationalBlock<>(false);
         block.addNode(new AGNode<>(new TrueNode<>()));
-        try {
-            transformer.createUpdate(atomicPropositions, Collections.emptyList(), block);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            // expected exception
-        }
-
+        transformer.createUpdate(atomicPropositions, Collections.emptyList(), block);
     }
 
 }
