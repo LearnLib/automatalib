@@ -77,6 +77,8 @@ public class DiamondOperation<AP> implements BinaryOperator<BooleanVector> {
                 @SuppressWarnings("unchecked")
                 final Set<AP> prop = ((AtomicNode<?, AP>) node).getPropositions();
                 result[currentVar] = atomicPropositions.containsAll(prop);
+            } else {
+                throw new IllegalArgumentException("The current equational block contains an unsupported formula type.");
             }
         }
         return new BooleanVector(result);

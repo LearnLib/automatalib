@@ -16,6 +16,8 @@
 package net.automatalib.modelcheckers.m3c.transformer;
 
 import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import info.scce.addlib.dd.xdd.XDD;
@@ -28,6 +30,7 @@ import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
+import net.automatalib.modelcheckers.m3c.formula.ctl.AGNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
@@ -205,6 +208,65 @@ public class ADDTransformerTest {
 
         ADDTransformer<String, String> inverseComposition = identity.compose(transformer);
         Assert.assertEquals(transformer, inverseComposition);
+    }
+
+    @Test
+    void testCompositionWithTwoIdentities() {
+        ADDTransformer<String, String> identity = new ADDTransformer<>(xddManager);
+        ADDTransformer<String, String> anotherIdentity = new ADDTransformer<>(xddManager);
+        try {
+            identity.compose(anotherIdentity);
+            Assert.fail();
+        } catch (IllegalStateException e) {
+            // expected exception
+        }
+    }
+
+    @Test
+    void testUpdate() throws ParseException {
+        final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
+        DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
+        ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dependencyGraph);
+        Set<String> atomicPropositions = new HashSet<>();
+        atomicPropositions.add("a");
+        ADDTransformer<String, String> updatedTransformer =
+                transformer.createUpdate(atomicPropositions, Collections.emptyList(), dependencyGraph.getBlock(0));
+        assert updatedTransformer.getAdd() != null;
+        updatedTransformer.getAdd().monadicApply(vector -> {
+            boolean[] result = vector.data();
+            Assert.assertFalse(result[0]);
+            Assert.assertFalse(result[1]);
+            Assert.assertFalse(result[2]);
+            Assert.assertFalse(result[3]);
+            Assert.assertTrue(result[4]);
+            Assert.assertFalse(result[5]);
+            return new BooleanVector(result);
+        });
+    }
+
+    @Test
+    void testUpdateException() throws ParseException {
+        final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
+        DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
+        ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dependencyGraph);
+        Set<String> atomicPropositions = new HashSet<>();
+        atomicPropositions.add("a");
+        EquationalBlock<String, String> block = new EquationalBlock<>(false);
+        block.addNode(new AGNode<>(new TrueNode<>()));
+        try {
+            transformer.createUpdate(atomicPropositions, Collections.emptyList(), block);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            // expected exception
+        }
+
+        try {
+            transformer.createUpdate(atomicPropositions, Collections.singletonList(transformer), block);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            // expected exception
+        }
+
     }
 
 }

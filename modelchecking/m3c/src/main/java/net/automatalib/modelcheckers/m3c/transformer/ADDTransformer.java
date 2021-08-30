@@ -192,7 +192,6 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
         final DiamondOperation<AP> diamondOp = new DiamondOperation<>(atomicPropositions, currentBlock);
         if (compositions.isEmpty()) {
             assert this.add != null : "The identity function should never be updated";
-            //TODO: Test this
             updatedADD = this.add.monadicApply(new DiamondOperationDeadlock<>(atomicPropositions, currentBlock));
         } else {
             final XDD<BooleanVector> firstAdd = compositions.get(0).add;

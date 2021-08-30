@@ -23,6 +23,7 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.NotNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
+import net.automatalib.modelcheckers.m3c.formula.ctl.AGNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
@@ -123,6 +124,17 @@ public class NNFVisitorTest {
                                                                                                   new FalseNode<>())),
                                                                       new BoxNode<>(new VariableNode<>("X"))));
         Assert.assertEquals(gfpNode, nnfAst);
+    }
+
+    @Test
+    void testError() {
+        FormulaNode<String, String> ast = new AGNode<>(new TrueNode<>());
+        try {
+            ast.toNNF();
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            // expected exception
+        }
     }
 
 }

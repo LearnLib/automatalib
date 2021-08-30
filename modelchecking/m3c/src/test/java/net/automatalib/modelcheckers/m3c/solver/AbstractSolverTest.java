@@ -17,12 +17,16 @@ package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
+import net.automatalib.graphs.ProceduralModalProcessGraph;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelcheckers.m3c.util.Examples;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -63,6 +67,49 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
         final String formulaWithNegatedAP = "mu X.(<>X || !'a,b')";
         assertSolve(solver, formulaWithNegatedAP, true);
+    }
+
+    @Test
+    void testSolveWithInvalidCFMPS() {
+        ContextFreeModalProcessSystem<String, String> cfmps = new ContextFreeModalProcessSystem<String, String>() {
+
+            @Override
+            public Map<String, ProceduralModalProcessGraph<?, String, ?, String, ?>> getPMPGs() {
+                return new HashMap<>();
+            }
+
+            @Override
+            public @Nullable String getMainProcess() {
+                return "P";
+            }
+        };
+
+        try {
+            getSolver(cfmps);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            // expected exception
+        }
+
+        cfmps = new ContextFreeModalProcessSystem<String, String>() {
+
+            @Override
+            public Map<String, ProceduralModalProcessGraph<?, String, ?, String, ?>> getPMPGs() {
+                return new HashMap<>();
+            }
+
+            @Override
+            public @Nullable String getMainProcess() {
+                return null;
+            }
+        };
+
+        try {
+            getSolver(cfmps);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            // expected exception
+        }
     }
 
     public abstract M3CSolver<String> getSolver(ContextFreeModalProcessSystem<String, String> cfmps);

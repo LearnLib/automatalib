@@ -16,7 +16,10 @@
 package net.automatalib.modelcheckers.m3c.transformer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
@@ -27,6 +30,7 @@ import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.OrNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
+import net.automatalib.modelcheckers.m3c.formula.ctl.AGNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
@@ -207,6 +211,24 @@ public class BDDTransformerTest {
         comps.add(oneTransformer);
         BDD disjunction = edgeTransformer.orBddList(comps, diaNode1.getVarNumber());
         Assert.assertEquals(bddManager.ithVar(diaNode1.getVarNumberChild()), disjunction);
+    }
+
+    @Test
+    public void testUpdateException() throws ParseException {
+        final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
+        DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
+        BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, dependencyGraph);
+        Set<String> atomicPropositions = new HashSet<>();
+        atomicPropositions.add("a");
+        EquationalBlock<String, String> block = new EquationalBlock<>(false);
+        block.addNode(new AGNode<>(new TrueNode<>()));
+        try {
+            transformer.createUpdate(atomicPropositions, Collections.emptyList(), block);
+            Assert.fail();
+        } catch (IllegalArgumentException e) {
+            // expected exception
+        }
+
     }
 
 }
