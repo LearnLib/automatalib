@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.m3c.transformer;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.scce.addlib.backend.BackendProvider;
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
@@ -51,7 +50,7 @@ public class BDDTransformerTest {
     public static void setup() throws ParseException {
         final String formula = "mu X.(<b>[b]true || <>X)";
         dg = new DependencyGraph<>(M3CParser.parse(formula));
-        bddManager = new BDDManager(BackendProvider.getBDDBackend());
+        bddManager = new BDDManager();
         final LfpNode<String, String> gfpNode = (LfpNode<String, String>) dg.getAST();
         orNode = (OrNode<String, String>) gfpNode.getChild();
         diaNode1 = (DiamondNode<String, String>) orNode.getLeftChild();

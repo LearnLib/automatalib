@@ -15,7 +15,6 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
-import info.scce.addlib.backend.BackendProvider;
 import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
@@ -44,7 +43,7 @@ public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, A
 
     @Override
     protected void initDDManager(DependencyGraph<L, AP> dependencyGraph) {
-        this.bddManager = new BDDManager(BackendProvider.getBDDBackend());
+        this.bddManager = new BDDManager();
     }
 
     @Override

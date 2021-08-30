@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.m3c.transformer;
 import java.util.BitSet;
 import java.util.Set;
 
-import info.scce.addlib.backend.BackendProvider;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
@@ -52,7 +51,7 @@ public class ADDTransformerTest {
     public static void setup() throws ParseException {
         String formula = "mu X.(<b>[b]true || <>X)";
         dg = new DependencyGraph<>(M3CParser.parse(formula));
-        xddManager = new BooleanVectorLogicDDManager(BackendProvider.getADDBackend(), dg.getNumVariables());
+        xddManager = new BooleanVectorLogicDDManager(dg.getNumVariables());
         final LfpNode<String, String> gfpNode = (LfpNode<String, String>) dg.getAST();
         orNode = (OrNode<String, String>) gfpNode.getChild();
         diaNode1 = (DiamondNode<String, String>) orNode.getLeftChild();

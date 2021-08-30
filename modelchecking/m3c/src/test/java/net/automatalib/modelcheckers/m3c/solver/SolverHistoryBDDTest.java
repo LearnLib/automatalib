@@ -17,7 +17,6 @@ package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.Map;
 
-import info.scce.addlib.backend.BackendProvider;
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
 import net.automatalib.commons.util.mappings.Mapping;
@@ -31,7 +30,7 @@ public class SolverHistoryBDDTest extends AbstractSolverHistoryTest<BDDTransform
     private final BDDManager bddManager;
 
     public SolverHistoryBDDTest() {
-        this.bddManager = new BDDManager(BackendProvider.getBDDBackend());
+        this.bddManager = new BDDManager();
         this.serializer = new BDDTransformerSerializer<>(bddManager);
     }
 

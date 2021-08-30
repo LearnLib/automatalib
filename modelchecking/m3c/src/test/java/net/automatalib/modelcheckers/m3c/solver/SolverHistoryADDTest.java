@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.m3c.solver;
 import java.util.Map;
 import java.util.Set;
 
-import info.scce.addlib.backend.BackendProvider;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.XDDManager;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
@@ -36,7 +35,7 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
 
     public SolverHistoryADDTest() {
         this.numSubformulas = 5;
-        this.xddManager = new BooleanVectorLogicDDManager(BackendProvider.getADDBackend(), numSubformulas);
+        this.xddManager = new BooleanVectorLogicDDManager(numSubformulas);
         this.serializer = new ADDTransformerSerializer<>(xddManager);
     }
 

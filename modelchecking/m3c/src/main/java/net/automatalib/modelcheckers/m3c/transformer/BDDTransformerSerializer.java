@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import info.scce.addlib.backend.BackendProvider;
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
 import info.scce.addlib.dd.xdd.XDD;
@@ -50,7 +49,7 @@ public class BDDTransformerSerializer<L, AP> implements TransformerSerializer<BD
     public List<String> serialize(BDDTransformer<L, AP> transformer) {
         final XDDSerializer<Boolean> xddSerializer = new XDDSerializer<>();
         final List<String> serializedBDDs = new ArrayList<>();
-        final BooleanLogicDDManager ddManager = new BooleanLogicDDManager(BackendProvider.getADDBackend());
+        final BooleanLogicDDManager ddManager = new BooleanLogicDDManager();
 
         for (int i = 0; i < transformer.getNumberOfVars(); i++) {
             final XDD<Boolean> bddAsXDD = transformer.getBDD(i).toXDD(ddManager);
@@ -63,7 +62,7 @@ public class BDDTransformerSerializer<L, AP> implements TransformerSerializer<BD
 
     @Override
     public BDDTransformer<L, AP> deserialize(List<String> data) {
-        final BooleanLogicDDManager ddManager = new BooleanLogicDDManager(BackendProvider.getADDBackend());
+        final BooleanLogicDDManager ddManager = new BooleanLogicDDManager();
         final XDDSerializer<Boolean> serializer = new XDDSerializer<>();
         final List<XDD<Boolean>> xdds = new ArrayList<>();
 
