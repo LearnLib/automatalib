@@ -68,6 +68,7 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
         Assert.assertEquals(startPT, s2PT);
         Assert.assertEquals(s1PT, s2PT);
         XDD<BooleanVector> startDD = startPT.getAdd();
+        Assert.assertNotNull(startDD);
         Assert.assertTrue(startDD.isConstant());
         Assert.assertEquals(startDD.v().data(), new boolean[numSubformulas]);
 
