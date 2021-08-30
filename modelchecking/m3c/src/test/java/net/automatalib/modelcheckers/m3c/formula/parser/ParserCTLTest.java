@@ -116,12 +116,7 @@ public class ParserCTLTest {
     }
 
     private void assertIllegal(String formula) {
-        try {
-            M3CParser.parse(formula);
-            Assert.fail();
-        } catch (ParseException e) {
-            // Expected exception
-        }
+        Assert.assertThrows(ParseException.class, () -> M3CParser.parse(formula));
     }
 
 }

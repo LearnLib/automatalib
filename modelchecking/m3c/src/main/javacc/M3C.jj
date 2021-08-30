@@ -37,8 +37,6 @@ class InternalM3CParser<L, AP> {
 	private Set<String> fixedPointVars;
 	private Function<String, L> labelParser;
 	private Function<String, Set<AP>> apParser;
-	private boolean ctlOperatorParsed;
-	private boolean muCalcOperatorParsed;
 
 	private void addFixedPointVar(String fixedPointVar) throws ParseException {
 		if (fixedPointVars.contains(fixedPointVar)) {
@@ -46,26 +44,11 @@ class InternalM3CParser<L, AP> {
 		}
 		fixedPointVars.add(fixedPointVar);
 	}
-
-	private void checkIfMuCalcOperatorHasBeenParsed() throws ParseException {
-	    if(this.muCalcOperatorParsed) {
-	        throw new ParseException("Input formula is not valid. The formula contains a mixture of CTL and mu-calculus operators.");
-	    }
-	    this.ctlOperatorParsed = true;
-	}
-
-	private void checkIfCTLOperatorHasBeenParsed() throws ParseException {
-	    if(this.ctlOperatorParsed) {
-	        throw new ParseException("Input formula is not valid. The formula contains a mixture of CTL and mu-calculus operators.");
-	    }
-	    this.muCalcOperatorParsed = true;
-	}
-
 }
 
 PARSER_END(InternalM3CParser)
 
-SKIP :
+<*> SKIP :
 {
 	" "
 |	"\r"
@@ -73,13 +56,31 @@ SKIP :
 |	"\n"
 }
 
-TOKEN [IGNORE_CASE]:
+<*> TOKEN [IGNORE_CASE]:
 {
 	< TRUE: "true" >
 |	< FALSE: "false" >
 }
 
-TOKEN:
+<DEFAULT, CTL> TOKEN:
+{
+	< ALL: "A" > : CTL
+|	< EXISTS: "E" > : CTL
+|	< AF: "AF" > : CTL
+|	< AG: "AG" > : CTL
+|	< EF: "EF" > : CTL
+|	< EG: "EG" > : CTL
+|	< UNTIL: "U" > : CTL
+|	< WUNTIL: "W" > : CTL
+}
+
+<DEFAULT, MUCALC> TOKEN:
+{
+	< NU: "nu" > : MUCALC
+|	< MU: "mu" > : MUCALC
+}
+
+<*> TOKEN:
 {
 // atoms
 	< LPAREN: "(" >
@@ -90,16 +91,6 @@ TOKEN:
 |	< RABRACKET: ">" >
 // junctors
 |	< NEGATION: "!" >
-|	< ALL: "A" >
-|	< EXISTS: "E" >
-|	< AF: "AF" >
-|	< AG: "AG" >
-|	< EF: "EF" >
-|	< EG: "EG" >
-|	< UNTIL: "U" >
-|	< WUNTIL: "W" >
-|	< NU: "nu" >
-|	< MU: "mu" >
 |	< DOT: "." >
 |	< AND: "&&" >
 |	< OR: "||" >
@@ -112,7 +103,7 @@ TOKEN:
 
 FormulaNode<L, AP> parse(Function<String, L> labelParser, Function<String, Set<AP>> apParser):
 {
- 	this.fixedPointVars = new HashSet<String>();
+	this.fixedPointVars = new HashSet<String>();
 	this.labelParser = labelParser;
 	this.apParser = apParser;
 	FormulaNode<L, AP> node;
@@ -138,7 +129,6 @@ private FormulaNode<L, AP> untilFormula():
 {
 	(<ALL> {isAll=true;} | <EXISTS>) <LPAREN> l=formula() (<UNTIL> {isStrongUntil=true;} | <WUNTIL>) r=formula() <RPAREN>
 	{
-		checkIfMuCalcOperatorHasBeenParsed();
 		if(isAll) {
 			if(isStrongUntil) {
 				return new AUNode<L, AP>(l, r);
@@ -217,32 +207,12 @@ private FormulaNode<L, AP> unary():
 	Token action = null;
 }
 {
-	child=fixedPointFormula()
-	{
-		checkIfCTLOperatorHasBeenParsed();
-		return child;
-	}
+	child=fixedPointFormula() {return child;}
 |	<NEGATION> child=unary() {return new NotNode<L, AP>(child);}
-|	<AF> child=unary()
- 	{
-		checkIfMuCalcOperatorHasBeenParsed();
-		return new AFNode<L, AP>(child);
-	}
-|	<AG> child=unary()
-	{
-		checkIfMuCalcOperatorHasBeenParsed();
-		return new AGNode<L, AP>(child);
-	}
-|	<EF> child=unary()
-	{
-		checkIfMuCalcOperatorHasBeenParsed();
-		return new EFNode<L, AP>(child);
-	}
-|	<EG> child=unary()
-	{
-		checkIfMuCalcOperatorHasBeenParsed();
-		return new EGNode<L, AP>(child);
-	}
+|	<AF> child=unary() {return new AFNode<L, AP>(child);}
+|	<AG> child=unary() {return new AGNode<L, AP>(child);}
+|	<EF> child=unary() {return new EFNode<L, AP>(child);}
+|	<EG> child=unary() {return new EGNode<L, AP>(child);}
 |	<LABRACKET> (action=<ID>)? <RABRACKET> child=unary() {return new DiamondNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
 |	<LBRACKET> (action=<ID>)? <RBRACKET> child=unary() {return new BoxNode<L, AP>(action==null ? null : this.labelParser.apply(action.toString()), child);}
 |	child=element() {return child;}
@@ -257,7 +227,6 @@ private FormulaNode<L, AP> fixedPointFormula():
 {
 	(<NU> {isGFP=true;}| <MU>) var=<ID> {addFixedPointVar(var.toString());} <DOT> <LPAREN> child=formula() <RPAREN>
 	{
-		checkIfCTLOperatorHasBeenParsed();
 		String fixedPointVar = var.toString();
 		fixedPointVars.remove(fixedPointVar);
 		if(isGFP) {
@@ -281,7 +250,6 @@ private FormulaNode<L, AP> element():
 	}
 |	var=<ID>
 	{
-		checkIfCTLOperatorHasBeenParsed();
 		String fixedPointVar = var.toString();
 		if (!fixedPointVars.contains(fixedPointVar)) {
 			throw new ParseException("Referenced variable " + fixedPointVar + " is not in scope.");

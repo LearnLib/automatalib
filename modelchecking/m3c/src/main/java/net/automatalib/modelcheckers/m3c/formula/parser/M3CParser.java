@@ -33,7 +33,7 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
  * f := true | false | AP | (f) |
  *      !f | f &amp;&amp; f | f || f | f -&gt; f | f &lt;-&gt; f |
  *      &lt;&gt;f | &lt;ID&gt;f | []f | [ID]f |
- *      AF f | AG f | A(f U f) | EF f | EG f | E(f U f)
+ *      AF f | AG f | A(f U f) | A(f W f) | EF f | EG f | E(f U f) | E(f W f)
  * </pre>
  *     </li>
  *     <li>

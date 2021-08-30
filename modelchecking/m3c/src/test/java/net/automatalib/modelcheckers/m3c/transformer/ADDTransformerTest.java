@@ -226,8 +226,9 @@ public class ADDTransformerTest {
         atomicPropositions.add("a");
         ADDTransformer<String, String> updatedTransformer =
                 transformer.createUpdate(atomicPropositions, Collections.emptyList(), dependencyGraph.getBlock(0));
-        assert updatedTransformer.getAdd() != null;
-        updatedTransformer.getAdd().monadicApply(vector -> {
+        XDD<BooleanVector> add = updatedTransformer.getAdd();
+        Assert.assertNotNull(add);
+        add.monadicApply(vector -> {
             boolean[] result = vector.data();
             Assert.assertFalse(result[0]);
             Assert.assertFalse(result[1]);
