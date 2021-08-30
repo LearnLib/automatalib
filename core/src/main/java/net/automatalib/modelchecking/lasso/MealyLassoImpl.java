@@ -51,7 +51,7 @@ public class MealyLassoImpl<I, O> extends AbstractLasso<I, Word<O>> implements M
     }
 
     @Override
-    @SuppressWarnings("nullness") // TODO XXX FIXME: Returning non-null values would currently break InclusionOracles in LearnLib. We should rethink a clean API here.
+    @SuppressWarnings("nullness") // TODO XXX FIXME: Returning non-null values would currently break PropertyOracles in LearnLib. We should rethink a clean API here.
     public Word<O> computeOutput(Iterable<? extends I> input) {
         final Integer state = getState(input);
         return state != null && state.equals(getWord().length()) ? getOutput() : null;

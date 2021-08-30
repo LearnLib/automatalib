@@ -15,10 +15,10 @@
  */
 package net.automatalib.modelcheckers.ltsmin.monitor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import com.google.common.collect.Lists;
 import net.automatalib.modelcheckers.ltsmin.AbstractLTSmin;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
@@ -26,11 +26,10 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 /**
  * An LTSmin model checker for monitors.
  *
+ * @author Jeroen Meijer
  * @see AbstractLTSmin
  * @see <a href="https://spot.lrde.epita.fr/tut11.html">https://spot.lrde.epita.fr/tut11.html</a>
  * @see <a href="http://ltsmin.utwente.nl/assets/man/etf2lts-mc.html">man etf2lts-mc</a>
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractLTSminMonitor<I, A, R> extends AbstractLTSmin<I, A, R> {
 
@@ -52,7 +51,6 @@ public abstract class AbstractLTSminMonitor<I, A, R> extends AbstractLTSmin<I, A
 
     @Override
     protected List<String> getExtraCommandLineOptions() {
-        return Lists.newArrayList(// use a monitor created by spot
-                                  "--buchi-type=monitor");
+        return Collections.singletonList("--buchi-type=monitor"); // use a monitor created by spot
     }
 }
