@@ -48,7 +48,7 @@ class InternalM3CParser<L, AP> {
 
 PARSER_END(InternalM3CParser)
 
-<*> SKIP :
+<*> SKIP:
 {
 	" "
 |	"\r"

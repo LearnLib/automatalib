@@ -97,9 +97,9 @@ public final class M3CParser {
     public static <L, AP> FormulaNode<L, AP> parse(String formula,
                                                    Function<String, L> labelParser,
                                                    Function<String, Set<AP>> apParser) throws ParseException {
-
         final StringReader reader = new StringReader(formula);
-        return new InternalM3CParser<L, AP>(reader).parse(labelParser, apParser);
+        final InternalM3CParser<L, AP> parser = new InternalM3CParser<>(reader);
+        return parser.parse(labelParser, apParser);
     }
 
 }
