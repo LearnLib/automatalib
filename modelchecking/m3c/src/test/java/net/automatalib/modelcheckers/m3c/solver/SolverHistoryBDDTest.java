@@ -62,7 +62,7 @@ public class SolverHistoryBDDTest extends AbstractSolverHistoryTest<BDDTransform
         Assert.assertEquals(startPT, s1PT);
         Assert.assertEquals(startPT, s2PT);
         Assert.assertEquals(s1PT, s2PT);
-        // the end state PT is initialized with the identity function
+        // the end node PT is initialized with the identity function
         Assert.assertNotEquals(startPT, endPT);
 
         final BDD zeroDD = bddManager.readLogicZero();

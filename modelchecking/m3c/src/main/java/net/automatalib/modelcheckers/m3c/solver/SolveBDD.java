@@ -47,12 +47,12 @@ public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, A
     }
 
     @Override
-    protected BDDTransformer<L, AP> createInitTransformerEnd(DependencyGraph<L, AP> dependencyGraph) {
+    protected BDDTransformer<L, AP> createInitTransformerEndNode(DependencyGraph<L, AP> dependencyGraph) {
         return new BDDTransformer<>(bddManager, dependencyGraph.getNumVariables());
     }
 
     @Override
-    protected BDDTransformer<L, AP> createInitState(DependencyGraph<L, AP> dependencyGraph) {
+    protected BDDTransformer<L, AP> createInitTransformerNode(DependencyGraph<L, AP> dependencyGraph) {
         return new BDDTransformer<>(bddManager, dependencyGraph);
     }
 

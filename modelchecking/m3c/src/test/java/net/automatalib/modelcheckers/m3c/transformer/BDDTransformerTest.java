@@ -72,7 +72,7 @@ public class BDDTransformerTest {
     }
 
     @Test
-    void testBDDStateInitialization() {
+    void testBDDNodeInitialization() {
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, dg);
         for (EquationalBlock<String, String> block : dg.getBlocks()) {
             for (FormulaNode<String, String> node : block.getNodes()) {

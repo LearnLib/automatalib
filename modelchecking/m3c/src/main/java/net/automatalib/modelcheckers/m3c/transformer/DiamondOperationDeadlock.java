@@ -31,7 +31,7 @@ import net.automatalib.modelcheckers.m3c.formula.NotNode;
 import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 
 /**
- * Implementation of the diamond function when the state has exactly one successor.
+ * Implementation of the diamond function when the node has exactly one successor.
  *
  * @param <AP>
  *         atomic proposition type

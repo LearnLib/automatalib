@@ -42,7 +42,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
         final String negatedFormula = "!(" + formula + ")";
         assertSolve(solver, negatedFormula, false);
 
-        // use !'a' to simulate true, as no state satisfies 'a'
+        // use !'a' to simulate true, as no node satisfies 'a'
         final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
         assertSolve(solver, formulaWithNegatedAP, true);
     }

@@ -101,19 +101,19 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
                 Arrays.asList(initialNode, s1, initialNode, s2, s1, initialNode, s1, initialNode, s1, initialNode, s1);
         Assert.assertEquals(history.getSolverStates().size(), updatedOrder.size());
         List<Set<N>> workSets = getWorkSetHistory(initialNode, s1, s2);
-        boolean[] allAPDeadlockedState = new boolean[5];
-        allAPDeadlockedState[3] = true;
+        boolean[] allAPDeadlockedNode = new boolean[5];
+        allAPDeadlockedNode[3] = true;
         for (int i = 0; i < updatedOrder.size(); i++) {
-            final N expectedState = updatedOrder.get(i);
+            final N expectedNode = updatedOrder.get(i);
             final SolverState<?, T, String, String> solverState = history.getSolverStates().get(i);
             @SuppressWarnings("unchecked")
-            final N actualState = (N) solverState.getUpdatedNode();
-            Assert.assertEquals(actualState, expectedState);
-            Assert.assertEquals(pmpg.getOutgoingEdges(actualState).size(),
+            final N actualNode = (N) solverState.getUpdatedNode();
+            Assert.assertEquals(actualNode, expectedNode);
+            Assert.assertEquals(pmpg.getOutgoingEdges(actualNode).size(),
                                 solverState.getCompositions(serializer).size());
-            Assert.assertEquals(solverState.getUpdatedNodeMPG(), cfmps.getMainProcess());
+            Assert.assertEquals(solverState.getUpdatedNodePMPG(), cfmps.getMainProcess());
             Assert.assertEquals(solverState.getWorkSet().get(cfmps.getMainProcess()), workSets.get(i));
-            testSatisfiedSubformulasAndUpdatedPT(allAPDeadlockedState, solverState);
+            testSatisfiedSubformulasAndUpdatedPT(allAPDeadlockedNode, solverState);
         }
     }
 
@@ -144,14 +144,14 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
         Assert.assertTrue(finalNodeSatisfiedSubformulas.get(0) instanceof TrueNode);
     }
 
-    public void testSatisfiedSubformulasAndUpdatedPT(boolean[] allAPDeadlockedState,
+    public void testSatisfiedSubformulasAndUpdatedPT(boolean[] allAPDeadlockedNode,
                                                      SolverState<?, T, String, String> solverState) {
-        final Set<Integer> actualSatisfiedSubformulas = solverState.getUpdatedStateSatisfiedSubformula()
+        final Set<Integer> actualSatisfiedSubformulas = solverState.getUpdatedNodeSatisfiedSubformula()
                                                                    .stream()
                                                                    .map(FormulaNode::getVarNumber)
                                                                    .collect(Collectors.toSet());
         final T updatedPropertyTransformer = solverState.getUpdatedPropTransformer(serializer);
-        Set<Integer> expectedSatisfiedSubformulas = updatedPropertyTransformer.evaluate(allAPDeadlockedState);
+        Set<Integer> expectedSatisfiedSubformulas = updatedPropertyTransformer.evaluate(allAPDeadlockedNode);
         Assert.assertEquals(actualSatisfiedSubformulas, expectedSatisfiedSubformulas);
     }
 

@@ -26,7 +26,7 @@ import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
- * Stores internal information produced during the update of a state in {@link AbstractSolveDD}.
+ * Stores internal information produced during the update of a node in {@link AbstractSolveDD}.
  *
  * @param <N>
  *         node type
@@ -43,23 +43,23 @@ public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP
 
     private final List<String> updatedPropTransformer;
     private final List<List<String>> compositions;
-    private final List<FormulaNode<L, AP>> updatedStateSatisfiedSubformula;
+    private final List<FormulaNode<L, AP>> updatedNodeSatisfiedSubformula;
     private final N updatedNode;
-    private final L updatedNodeMPG;
+    private final L updatedNodePMPG;
     private final Map<L, Set<?>> workSet;
 
     SolverState(List<String> updatedPropTransformer,
                 List<List<String>> compositions,
                 N updatedNode,
-                L updatedNodeMPG,
+                L updatedNodePMPG,
                 Map<L, Set<?>> workSet,
-                List<FormulaNode<L, AP>> updatedStateSatisfiedSubformula) {
+                List<FormulaNode<L, AP>> updatedNodeSatisfiedSubformula) {
         this.updatedPropTransformer = updatedPropTransformer;
         this.compositions = compositions;
         this.updatedNode = updatedNode;
-        this.updatedNodeMPG = updatedNodeMPG;
+        this.updatedNodePMPG = updatedNodePMPG;
         this.workSet = workSet;
-        this.updatedStateSatisfiedSubformula = updatedStateSatisfiedSubformula;
+        this.updatedNodeSatisfiedSubformula = updatedNodeSatisfiedSubformula;
     }
 
     /**
@@ -101,8 +101,8 @@ public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP
      *
      * @return the list of satisfied subformulas
      */
-    public List<FormulaNode<L, AP>> getUpdatedStateSatisfiedSubformula() {
-        return updatedStateSatisfiedSubformula;
+    public List<FormulaNode<L, AP>> getUpdatedNodeSatisfiedSubformula() {
+        return updatedNodeSatisfiedSubformula;
     }
 
     /**
@@ -119,8 +119,8 @@ public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP
      *
      * @return the name of the {@link ProceduralModalProcessGraph} which contains the node updated in this step
      */
-    public L getUpdatedNodeMPG() {
-        return updatedNodeMPG;
+    public L getUpdatedNodePMPG() {
+        return updatedNodePMPG;
     }
 
     /**

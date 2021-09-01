@@ -92,7 +92,7 @@ public class ADDTransformerTest {
     }
 
     @Test
-    void testADDStateInitialization() {
+    void testADDNodeInitialization() {
         ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dg);
         XDD<BooleanVector> add = transformer.getAdd();
         Assert.assertNotNull(add);

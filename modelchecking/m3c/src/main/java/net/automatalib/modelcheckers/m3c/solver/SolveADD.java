@@ -49,12 +49,12 @@ public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, A
     }
 
     @Override
-    protected ADDTransformer<L, AP> createInitTransformerEnd(DependencyGraph<L, AP> dependencyGraph) {
+    protected ADDTransformer<L, AP> createInitTransformerEndNode(DependencyGraph<L, AP> dependencyGraph) {
         return new ADDTransformer<>(ddManager);
     }
 
     @Override
-    protected ADDTransformer<L, AP> createInitState(DependencyGraph<L, AP> dependencyGraph) {
+    protected ADDTransformer<L, AP> createInitTransformerNode(DependencyGraph<L, AP> dependencyGraph) {
         return new ADDTransformer<>(ddManager, dependencyGraph);
     }
 

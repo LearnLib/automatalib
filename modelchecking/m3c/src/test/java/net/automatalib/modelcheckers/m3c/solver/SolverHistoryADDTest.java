@@ -72,7 +72,7 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
         Assert.assertTrue(startDD.isConstant());
         Assert.assertEquals(startDD.v().data(), new boolean[numSubformulas]);
 
-        // the end state PT is initialized with the identity function
+        // the end node PT is initialized with the identity function
         Assert.assertTrue(endPT.isIdentity());
     }
 

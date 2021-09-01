@@ -99,7 +99,7 @@ public final class SolverHistory<T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     /**
-     * Returns the list of {@link SolverState}s, one per update of a state.
+     * Returns the list of {@link SolverState}s, one per update of a node.
      *
      * @return the list of {@link SolverState}s
      */
