@@ -71,8 +71,8 @@ public final class M3CParser {
     }
 
     /**
-     * Returns the abstract syntax tree of a given formula. Each label and set of atomic propositions is transformed
-     * according to the given parsers.
+     * Returns the abstract syntax tree of a given formula. Each label and atomic proposition is transformed according
+     * to the given parsers.
      *
      * @param formula
      *         ctl or mu-calculus formula to be parsed

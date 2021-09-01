@@ -26,8 +26,7 @@ import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
  * A class used to store internal information produced by {@link AbstractDDSolver#solveAndRecordHistory} while checking
- * the satisfiability of a formula. The internal information could for example be used for debugging or visualization
- * purposes.
+ * the satisfiability of a formula. The internal information can be used for debugging or visualization purposes.
  *
  * @param <T>
  *         property transformer type
@@ -68,11 +67,10 @@ public final class SolverHistory<T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     /**
-     * Returns a {@link Map} which maps the edge label of must edges to their property transformer. This method
-     * requires a {@link TransformerSerializer} as all property transform are stored as {@link String}s in this class.
-     * The returned map is not cached and will be computed on each call. The property transformer of an edge is
-     * initialized once and will not be modified which is why this map is only stored once and not in each {@link
-     * SolverState}.
+     * Returns a {@link Map} which maps the edge label of must edges to their property transformer. This method requires
+     * a {@link TransformerSerializer} as all property transform are stored as {@link String}s in this class. The
+     * returned map is not cached and will be computed on each call. The property transformer of an edge is initialized
+     * once and will not be modified which is why this map is only stored once and not in each {@link SolverState}.
      *
      * @param serializer
      *         used to deserialize each property transformer from a {@link String}
@@ -108,8 +106,7 @@ public final class SolverHistory<T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     /**
-     * Returns whether the formulate put into {@link AbstractDDSolver#solveAndRecordHistory(FormulaNode formula)} is
-     * satisfied.
+     * Returns whether the formula put into {@link AbstractDDSolver#solveAndRecordHistory(FormulaNode)} is satisfied.
      *
      * @return {@code true} if formula is satisfied, {@code false} otherwise
      */

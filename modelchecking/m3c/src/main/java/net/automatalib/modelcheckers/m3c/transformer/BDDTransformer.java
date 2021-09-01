@@ -39,7 +39,7 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A BDDTransformer represents a property transformer by a list of BDDs (Binary Decision Diagrams), one per subformula.
+ * A BDDTransformer represents a property transformer for a list of BDDs (Binary Decision Diagrams), one per subformula.
  *
  * @param <L>
  *         edge label type

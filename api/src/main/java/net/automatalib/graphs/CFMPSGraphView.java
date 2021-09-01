@@ -28,7 +28,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Graph representation of a {@link ContextFreeModalProcessSystem} that displays all nodes of its sub-procedures once,
- * i.e. without incorporating execution semantics such as stack contents.
+ * i.e., without incorporating execution semantics such as stack contents.
  *
  * @param <S>
  *         common procedural state type

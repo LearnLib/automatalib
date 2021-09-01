@@ -35,7 +35,7 @@ public final class M3CSolvers {
      * currently delegates solver construction to {@link #bddSolver(ContextFreeModalProcessSystem)}.
      *
      * @param cfmps
-     *         the modal context-free process system to evaluate formulae on
+     *         the system to evaluate formulas on
      *
      * @return a default {@link M3CSolver} solver for string-based modal context-free process systems
      *
@@ -50,7 +50,7 @@ public final class M3CSolvers {
      * method currently delegates solver construction to {@link #typedBDDSolver(ContextFreeModalProcessSystem)}.
      *
      * @param cfmps
-     *         the modal context-free process system to evaluate formulae on
+     *         the system to evaluate formulas on
      *
      * @return a default {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
      *
@@ -64,7 +64,7 @@ public final class M3CSolvers {
      * Returns an ADD-backed {@link M3CSolver} solver for string-based modal context-free process systems.
      *
      * @param cfmps
-     *         the modal context-free process system to evaluate formulae on
+     *         the system to evaluate formulas on
      *
      * @return an ADD-backed {@link M3CSolver} solver for string-based modal context-free process systems
      */
@@ -76,7 +76,7 @@ public final class M3CSolvers {
      * Returns an ADD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems.
      *
      * @param cfmps
-     *         the modal context-free process system to evaluate formulae on
+     *         the system to evaluate formulas on
      *
      * @return an ADD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
      */
@@ -85,24 +85,24 @@ public final class M3CSolvers {
     }
 
     /**
-     * Returns a BDD-backed {@link M3CSolver} solver for string-based modal context-free process systems.
+     * Returns a BDD-backed {@link M3CSolver} solver for string-based {@link ContextFreeModalProcessSystem}.
      *
      * @param cfmps
-     *         the modal context-free process system to evaluate formulae on
+     *         the system to evaluate formulas on
      *
-     * @return an ADD-backed {@link M3CSolver} solver for string-based modal context-free process systems
+     * @return an ADD-backed {@link M3CSolver} for string-based systems
      */
     public static M3CSolver<String> bddSolver(ContextFreeModalProcessSystem<String, String> cfmps) {
         return new StringBDDSolver(cfmps);
     }
 
     /**
-     * Returns a BDD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems.
+     * Returns a BDD-backed {@link TypedM3CSolver} solver for strongly-typed {@link ContextFreeModalProcessSystem}.
      *
      * @param cfmps
-     *         the modal context-free process system to evaluate formulae on
+     *         the system to evaluate formulas on
      *
-     * @return a BDD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
+     * @return a BDD-backed {@link TypedM3CSolver} for strongly-typed systems
      */
     public static <L, AP> TypedM3CSolver<FormulaNode<L, AP>> typedBDDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
         return new TypedBDDSolver<>(cfmps);

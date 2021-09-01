@@ -20,15 +20,23 @@ import java.util.function.Function;
 import net.automatalib.automata.spa.CFMPSView;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.examples.spa.PalindromeExample;
+import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
+import net.automatalib.modelcheckers.m3c.solver.M3CSolver;
 import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelcheckers.m3c.solver.M3CSolvers;
 import net.automatalib.visualization.Visualization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * An example in which we transform the {@link PalindromeExample palindrome SPA} into a {@link
+ * ContextFreeModalProcessSystem} and use the {@link M3CSolver} to evaluate properties on the system.
+ *
+ * @author frohme
+ */
 public final class M3CSPAExample {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(M3CSPAExample.class);
@@ -42,7 +50,7 @@ public final class M3CSPAExample {
         final CFMPSView<Character> view = new CFMPSView<>(spa);
 
         //@formatter:off
-        final String[] formulae = {"mu X.(<>X || <b><b>true)", // there exists a path with "bb"
+        final String[] formulas = {"mu X.(<>X || <b><b>true)", // there exists a path with "bb"
                                    "mu X.(<>X || <b><S><b>true)", // there exists a path with "bSb"
                                    "mu X.(<>X || <b><T><b>true)", // there exists a path with "bTb"
                                    "<S><T><a>true", // There exists a starting sequence of STa
@@ -61,12 +69,11 @@ public final class M3CSPAExample {
         final Function<String, Void> apParser = s -> null;
         final TypedM3CSolver<FormulaNode<Character, Void>> solver = M3CSolvers.typedSolver(view);
 
-        for (String f : formulae) {
+        for (String f : formulas) {
             final FormulaNode<Character, Void> formula = M3CParser.parse(f, labelParser, apParser);
             LOGGER.info("Is '{}' satisfied? {}", f, solver.solve(formula));
         }
 
         Visualization.visualize(view);
-
     }
 }

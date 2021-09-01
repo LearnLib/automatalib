@@ -47,13 +47,13 @@ public class ProceduralModalEdgePropertyImpl extends ModalEdgePropertyImpl
 
         final ProceduralModalEdgePropertyImpl that = (ProceduralModalEdgePropertyImpl) o;
 
-        return proceduralType == that.proceduralType;
+        return this.proceduralType == that.proceduralType;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + Objects.hashCode(proceduralType);
+        result = 31 * result + Objects.hashCode(this.proceduralType);
         return result;
     }
 }

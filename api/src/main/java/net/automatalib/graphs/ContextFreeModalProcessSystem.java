@@ -24,9 +24,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Represents a Context-Free Modal Transition System as defined in the paper <a href="http://dx.doi.org/10.1007/978-3-030-00244-2_15">M3C:
- * Modal Meta Model Checking</a>. Note that we use the <i>process system</i> suffix from the <a
- * href="https://link.springer.com/chapter/10.1007/BFb0084787">base paper</a> to prevent confusion with AutomataLib's
- * concept of {@link TransitionSystem}s.
+ * Modal Meta Model Checking</a>. Note that we use the term <i>process system</i> from the <a
+ * href="https://link.springer.com/chapter/10.1007/BFb0084787">original paper</a> to prevent confusion with
+ * AutomataLib's concept of {@link TransitionSystem}s.
  *
  * @param <L>
  *         edge label type

@@ -36,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * An ADDTransformer represents a property transformer by a single ADD (Algebraic Decision Diagram).
+ * An ADDTransformer represents a property transformer for a single ADD (Algebraic Decision Diagram).
  *
  * @param <L>
  *         edge label type

@@ -55,12 +55,6 @@ limitations under the License.
             <artifactId>addlib-core</artifactId>
             <version>${addlib.version}</version>
         </dependency>
-        <dependency>
-            <groupId>info.scce</groupId>
-            <artifactId>addlib-cudd</artifactId>
-            <version>${addlib.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <!-- build -->
         <dependency>
@@ -69,6 +63,12 @@ limitations under the License.
         </dependency>
 
         <!-- test -->
+        <dependency>
+            <groupId>info.scce</groupId>
+            <artifactId>addlib-cudd</artifactId>
+            <version>${addlib.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-core</artifactId>

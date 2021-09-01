@@ -24,9 +24,9 @@ import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 
 /**
  * Represents a <i>Procedural Modal Transition System</i> as defined in the paper <a
- * href="http://dx.doi.org/10.1007/978-3-030-00244-2_15">M3C: Modal Meta Model Checking</a>. Note that we use the
- * <i>process graph</i> suffix from the <a href="https://link.springer.com/chapter/10.1007/BFb0084787">base paper</a>
- * to prevent confusion with AutomataLib's concept of {@link TransitionSystem}s.
+ * href="http://dx.doi.org/10.1007/978-3-030-00244-2_15">M3C: Modal Meta Model Checking</a>. Note that we use the term
+ * <i>process graph</i> from the <a href="https://link.springer.com/chapter/10.1007/BFb0084787">original paper</a> to
+ * prevent confusion with AutomataLib's concept of {@link TransitionSystem}s.
  *
  * @param <N>
  *         node type

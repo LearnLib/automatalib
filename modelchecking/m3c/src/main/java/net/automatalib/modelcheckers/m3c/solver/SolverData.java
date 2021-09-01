@@ -28,7 +28,7 @@ import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
- * A class used to store {@link ProceduralModalProcessGraph} specific data for the {@link SolverHistory}.
+ * A class used to store {@link ProceduralModalProcessGraph}-specific data for the {@link SolverHistory}.
  *
  * @param <N>
  *         node type

@@ -21,7 +21,7 @@ import java.util.Set;
 import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
 
 /**
- * Base class used to represent a property transformer, i.e. a function which maps a subset of formulas to a subset of
+ * Base class used to represent a property transformer, i.e., a function which maps a subset of formulas to a subset of
  * formulas. Can also be seen as a function which maps bit vectors of length n to bit vectors of length n.
  *
  * @param <T>
