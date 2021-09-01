@@ -78,7 +78,7 @@ public class RegressionTests {
                                                                                               new CompactMTS.Creator<>(),
                                                                                               (x) -> new ModalEdgePropertyImpl(
                                                                                                       x.getProperty()
-                                                                                                       .getType()),
+                                                                                                       .getModalType()),
                                                                                               () -> new ModalEdgePropertyImpl(
                                                                                                       ModalType.MAY));
 
@@ -112,7 +112,7 @@ public class RegressionTests {
                                                                                               new CompactMTS.Creator<>(),
                                                                                               (x) -> new ModalEdgePropertyImpl(
                                                                                                       x.getProperty()
-                                                                                                       .getType()),
+                                                                                                       .getModalType()),
                                                                                               () -> new ModalEdgePropertyImpl(
                                                                                                       ModalType.MAY));
 
@@ -150,7 +150,7 @@ public class RegressionTests {
                                                                                               new CompactMTS.Creator<>(),
                                                                                               (x) -> new ModalEdgePropertyImpl(
                                                                                                       x.getProperty()
-                                                                                                       .getType()),
+                                                                                                       .getModalType()),
                                                                                               () -> new ModalEdgePropertyImpl(
                                                                                                       ModalType.MAY));
 

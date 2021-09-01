@@ -22,14 +22,14 @@ public interface ModalEdgeProperty {
         MUST
     }
 
-    ModalType getType();
+    ModalType getModalType();
 
     default boolean isMayOnly() {
-        return getType() == ModalType.MAY;
+        return getModalType() == ModalType.MAY;
     }
 
     default boolean isMust() {
-        return getType() == ModalType.MUST;
+        return getModalType() == ModalType.MUST;
     }
 
 }

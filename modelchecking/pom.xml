@@ -33,5 +33,6 @@ limitations under the License.
 
     <modules>
         <module>ltsmin</module>
+        <module>m3c</module>
     </modules>
 </project>

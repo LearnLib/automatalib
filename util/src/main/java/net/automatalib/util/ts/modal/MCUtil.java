@@ -232,7 +232,7 @@ public final class MCUtil {
                                                                                                x -> new ModalEdgePropertyImpl(
                                                                                                        contract.getTransitionProperty(
                                                                                                                x)
-                                                                                                               .getType()),
+                                                                                                               .getModalType()),
                                                                                                () -> new ModalEdgePropertyImpl(
                                                                                                        ModalType.MAY));
 
@@ -250,7 +250,7 @@ public final class MCUtil {
                                                                                                x -> new ModalEdgePropertyImpl(
                                                                                                        contract.getTransitionProperty(
                                                                                                                x)
-                                                                                                               .getType()),
+                                                                                                               .getModalType()),
                                                                                                () -> new ModalEdgePropertyImpl(
                                                                                                        ModalType.MAY));
 

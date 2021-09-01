@@ -48,7 +48,7 @@ public class MCVisualizationHelper<S, I, T, TP extends ModalContractEdgeProperty
             properties.put(EdgeAttrs.COLOR, "red");
         }
 
-        properties.put(MCEdgeAttrs.CONTRACT, transitionProperty.getColor().toString());
+        properties.put(MCEdgeAttrs.CONTRACT, transitionProperty.getColor().name());
 
         return true;
     }

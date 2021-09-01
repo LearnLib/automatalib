@@ -76,6 +76,13 @@ limitations under the License.
                             <exclude>net/automatalib/modelcheckers/ltsmin/Token.class</exclude>
                             <exclude>net/automatalib/modelcheckers/ltsmin/TokenMgrError.class</exclude>
 
+                            <!-- generated parser for M3C formula parser -->
+                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/InternalM3CParser*.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/ParseException.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/SimpleCharStream.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/Token.class</exclude>
+                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/TokenMgrError.class</exclude>
+
                             <!-- generated builders for model checkers -->
                             <exclude>net/automatalib/modelcheckers/ltsmin/ltl/LTSminLTLAlternatingBuilder.class</exclude>
                             <exclude>net/automatalib/modelcheckers/ltsmin/ltl/LTSminLTLDFABuilder.class</exclude>
@@ -254,6 +261,7 @@ limitations under the License.
                                         <arg>-AskipDefs=^net.automatalib.serialization.taf.parser.(Internal.*|Token.*|SimpleCharStream)|\
                                                         ^net.automatalib.serialization.dot.(Internal.*|Token.*|SimpleCharStream)|\
                                                         ^net.automatalib.modelcheckers.ltsmin.(Internal.*|Token.*|SimpleCharStream)|\
+                                                        ^net.automatalib.modelcheckers.m3c.formula.parser.(Internal.*|Token.*|SimpleCharStream)|\
                                         </arg>
                                         <arg>-AskipUses=^com.google.*|\
                                                         ^java.(awt.*|util.Arrays|io.StreamTokenizer)|\

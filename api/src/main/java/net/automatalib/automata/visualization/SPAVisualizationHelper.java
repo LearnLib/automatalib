@@ -87,7 +87,7 @@ public class SPAVisualizationHelper<I, S> extends DefaultVisualizationHelper<Pai
         properties.put(EdgeAttrs.LABEL, String.valueOf(edge.getSecond()));
 
         if (callAlphabet.containsSymbol(edge.getSecond())) {
-            properties.put(EdgeAttrs.STYLE, EdgeStyles.DASHED);
+            properties.put(EdgeAttrs.STYLE, EdgeStyles.BOLD);
         }
 
         return true;

@@ -37,6 +37,7 @@ import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.graphs.Graph;
+import net.automatalib.graphs.base.DefaultMCFPS;
 import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.ts.modal.CompactMC;
@@ -143,6 +144,15 @@ public class DOTSerializationTest {
 
         ThrowingWriter writer = w -> GraphDOT.write(clusters, w);
         checkDOTOutput(writer, DOTSerializationUtil.CLUSTER_RESOURCE);
+    }
+
+    @Test
+    public void testMCFPSExport() throws IOException {
+
+        final DefaultMCFPS<Character, Character> cfmps = DOTSerializationUtil.CFMPS;
+
+        ThrowingWriter writer = w -> GraphDOT.write(cfmps, w);
+        checkDOTOutput(writer, DOTSerializationUtil.MCFPS_RESOURCE);
     }
 
     @Test

@@ -44,7 +44,7 @@ public final class ModalRefinement {
         for (BT candidateTransition : b.getTransitions(source, input)) {
             BTP property = b.getTransitionProperty(candidateTransition);
 
-            if (property != null && acceptableValues.contains(property.getType())) {
+            if (property != null && acceptableValues.contains(property.getModalType())) {
                 coTransitions.add(candidateTransition);
             }
         }
@@ -62,7 +62,7 @@ public final class ModalRefinement {
 
         for (I label : inputs) {
             for (AT transition : a.getTransitions(source, label)) {
-                if (!acceptableValues.contains(a.getTransitionProperty(transition).getType())) {
+                if (!acceptableValues.contains(a.getTransitionProperty(transition).getModalType())) {
                     continue;
                 }
 

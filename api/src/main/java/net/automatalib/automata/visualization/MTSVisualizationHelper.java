@@ -40,7 +40,7 @@ public class MTSVisualizationHelper<S, I, T, TP extends ModalEdgeProperty, M ext
             properties.put(EdgeAttrs.STYLE, EdgeStyles.DASHED);
         }
 
-        properties.put(MTSEdgeAttrs.MODALITY, transitionProperty.getType().toString());
+        properties.put(MTSEdgeAttrs.MODALITY, transitionProperty.getModalType().name());
 
         return true;
     }

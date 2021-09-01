@@ -160,26 +160,26 @@ public class CompactMTSTest {
         Assertions.assertThat(s.getTransitions(as0, "b"))
                   .containsExactly(t2)
                   .allMatch(t -> Objects.equals(t.getTarget(), as1))
-                  .allMatch(t -> t.getProperty().getType() == ModalType.MUST);
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MUST);
 
         Assertions.assertThat(s.getTransitions(as1, "a"))
                   .containsExactly(t3)
                   .allMatch(t -> Objects.equals(t.getTarget(), as1))
-                  .allMatch(t -> t.getProperty().getType() == ModalType.MUST);
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MUST);
 
         Assertions.assertThat(s.getTransitions(as1, "b"))
                   .containsExactly(t4)
                   .allMatch(t -> Objects.equals(t.getTarget(), as2))
-                  .allMatch(t -> t.getProperty().getType() == ModalType.MAY);
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY);
 
         Assertions.assertThat(s.getTransitions(as2, "a"))
                   .containsExactly(t5)
                   .allMatch(t -> Objects.equals(t.getTarget(), as2))
-                  .allMatch(t -> t.getProperty().getType() == ModalType.MAY);
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY);
 
         Assertions.assertThat(s.getTransitions(as2, "b"))
                   .containsExactly(t6)
                   .allMatch(t -> Objects.equals(t.getTarget(), as2))
-                  .allMatch(t -> t.getProperty().getType() == ModalType.MAY);
+                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY);
     }
 }

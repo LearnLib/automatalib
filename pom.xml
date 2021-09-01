@@ -85,6 +85,14 @@ limitations under the License.
             </roles>
         </contributor>
         <contributor>
+            <name>Alnis Murtovi</name>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
+        <contributor>
             <name>Maximilian Schlüter</name>
             <organization>TU Dortmund, Chair for Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
@@ -225,6 +233,7 @@ limitations under the License.
         <tidy-pom.version>1.1.0</tidy-pom.version>
 
         <!-- dependency versions -->
+        <addlib.version>2.0.20-BETA-SNAPSHOT</addlib.version>
         <buildergen.version>0.1</buildergen.version>
         <brics-automaton.version>1.11-8</brics-automaton.version>
         <cacio.version>1.10</cacio.version>
@@ -375,6 +384,12 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-modelchecking-m3c</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- serialization -->
             <dependency>
                 <groupId>net.automatalib</groupId>
@@ -505,7 +520,7 @@ limitations under the License.
                 <artifactId>graphviz-awt-shapes</artifactId>
                 <version>${graphviz-awt-shapes.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.github.misberner.buildergen</groupId>
                 <artifactId>buildergen</artifactId>
@@ -548,6 +563,18 @@ limitations under the License.
             </dependency>
 
             <dependency>
+                <groupId>info.scce</groupId>
+                <artifactId>addlib-core</artifactId>
+                <version>${addlib.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>info.scce</groupId>
+                <artifactId>addlib-cudd</artifactId>
+                <version>${addlib.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
@@ -576,6 +603,20 @@ limitations under the License.
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <!-- explicitly name maven-central, so it is queried first -->
+        <repository>
+            <id>maven-central</id>
+            <name>Maven Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
 
     <!--
     ================================= BUILD PLUGINS =============================

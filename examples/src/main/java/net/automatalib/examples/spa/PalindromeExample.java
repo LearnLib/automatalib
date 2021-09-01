@@ -30,6 +30,7 @@ import net.automatalib.words.SPAAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultSPAAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,19 +49,7 @@ public final class PalindromeExample {
     }
 
     public static void main(String[] args) {
-
-        final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
-        final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
-        final SPAAlphabet<Character> alphabet = new DefaultSPAAlphabet<>(internalAlphabet, callAlphabet, 'R');
-
-        final DFA<?, Character> sProcedure = buildSProcedure(alphabet);
-        final DFA<?, Character> tProcedure = buildTProcedure(alphabet);
-
-        final Map<Character, DFA<?, Character>> subModels = new HashMap<>();
-        subModels.put('S', sProcedure);
-        subModels.put('T', tProcedure);
-
-        final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', subModels);
+        final SPA<?, Character> spa = buildSPA();
 
         LOGGER.info("Well-matched palindromes");
         checkWord(spa, Word.fromCharSequence("SR"));
@@ -86,6 +75,22 @@ public final class PalindromeExample {
     private static <S, I> void checkWord(SPA<S, I> spa, Word<I> input) {
         final boolean accepted = spa.accepts(input);
         LOGGER.info("Word '{}' is {}accepted by the SPA", input, accepted ? "" : "not ");
+    }
+
+    public static SPA<?, Character> buildSPA() {
+        final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
+        final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
+        final SPAAlphabet<Character> alphabet = new DefaultSPAAlphabet<>(internalAlphabet, callAlphabet, 'R');
+
+        final DFA<?, Character> sProcedure = buildSProcedure(alphabet);
+        final DFA<?, Character> tProcedure = buildTProcedure(alphabet);
+
+        final Map<Character, DFA<?, Character>> subModels = new HashMap<>();
+        subModels.put('S', sProcedure);
+        subModels.put('T', tProcedure);
+
+        // explicit type variable declaration to make checker-framework happy
+        return new StackSPA<@Nullable Object, Character>(alphabet, 'S', subModels);
     }
 
     /**

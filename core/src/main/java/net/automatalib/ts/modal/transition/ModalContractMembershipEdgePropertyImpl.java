@@ -15,8 +15,6 @@
  */
 package net.automatalib.ts.modal.transition;
 
-import java.util.Objects;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ModalContractMembershipEdgePropertyImpl extends ModalContractEdgePropertyImpl
@@ -40,27 +38,20 @@ public class ModalContractMembershipEdgePropertyImpl extends ModalContractEdgePr
     }
 
     @Override
-    public String toString() {
-        return "color={" + getColor() + "}, memberId={" + memberId + "}, type={" + getType() + '}';
-    }
-
-    @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
+        if (!super.equals(o)) {
             return false;
         }
 
         final ModalContractMembershipEdgePropertyImpl that = (ModalContractMembershipEdgePropertyImpl) o;
 
-        return this.getType() == that.getType() && this.isTau() == that.isTau() && this.getColor() == that.getColor() &&
-               memberId == that.memberId;
+        return this.memberId == that.memberId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), memberId);
+        int result = super.hashCode();
+        result = 31 * result + Integer.hashCode(memberId);
+        return result;
     }
 }

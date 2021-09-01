@@ -68,6 +68,10 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
+            <artifactId>automata-modelchecking-m3c</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-dot</artifactId>
         </dependency>
         <dependency>
@@ -84,6 +88,11 @@ limitations under the License.
         <dependency>
             <groupId>dk.brics.automaton</groupId>
             <artifactId>automaton</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.scce</groupId>
+            <artifactId>addlib-cudd</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

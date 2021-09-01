@@ -96,6 +96,14 @@ limitations under the License.
             <Class name="net.automatalib.modelcheckers.ltsmin.SimpleCharStream"/>
             <Class name="net.automatalib.modelcheckers.ltsmin.Token"/>
             <Class name="net.automatalib.modelcheckers.ltsmin.TokenMgrError"/>
+
+            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.InternalM3CParser"/>
+            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.InternalM3CParserConstants"/>
+            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.InternalM3CParserTokenManager"/>
+            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.ParseException"/>
+            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.SimpleCharStream"/>
+            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.Token"/>
+            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.TokenMgrError"/>
         </Or>
     </Match>
 </FindBugsFilter>
