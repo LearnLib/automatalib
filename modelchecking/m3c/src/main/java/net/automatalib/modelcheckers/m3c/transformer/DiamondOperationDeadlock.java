@@ -75,8 +75,8 @@ public class DiamondOperationDeadlock<AP> implements UnaryOperator<BooleanVector
                 result[currentVar] = !result[notNode.getVarNumberChild()];
             } else if (node instanceof AtomicNode) {
                 @SuppressWarnings("unchecked")
-                final Set<AP> prop = ((AtomicNode<?, AP>) node).getPropositions();
-                result[currentVar] = atomicPropositions.containsAll(prop);
+                final AP prop = ((AtomicNode<?, AP>) node).getProposition();
+                result[currentVar] = atomicPropositions.contains(prop);
             } else {
                 throw new IllegalArgumentException("The current equational block contains an unsupported formula type.");
             }

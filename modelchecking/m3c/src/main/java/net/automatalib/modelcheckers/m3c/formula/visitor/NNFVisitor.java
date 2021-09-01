@@ -112,7 +112,7 @@ public class NNFVisitor<L, AP> {
     }
 
     private FormulaNode<L, AP> visitAtomicNode(AtomicNode<L, AP> node, boolean negate) {
-        final FormulaNode<L, AP> newNode = new AtomicNode<>(node.getPropositions());
+        final FormulaNode<L, AP> newNode = new AtomicNode<>(node.getProposition());
         return negate ? new NotNode<>(newNode) : newNode;
     }
 

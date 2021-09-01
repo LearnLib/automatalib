@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.m3c.formula.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Sets;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
@@ -54,7 +53,8 @@ public class ParserCTLTest {
         assertEquals("true || false", new OrNode<>(new TrueNode<>(), new FalseNode<>()));
         assertEquals("'a'", new AtomicNode<>("a"));
         assertEquals("\"b\"", new AtomicNode<>("b"));
-        assertEquals("\"a,b,c\"", new AtomicNode<>(Sets.newHashSet("a", "b", "c")));
+        assertEquals("\"a\" && \"b\" && \"c\"",
+                     new AndNode<>(new AtomicNode<>("a"), new AndNode<>(new AtomicNode<>("b"), new AtomicNode<>("c"))));
         assertEquals("AG true", new AGNode<>(new TrueNode<>()));
         assertEquals("AF true", new AFNode<>(new TrueNode<>()));
         assertEquals("A(true U false)", new AUNode<>(new TrueNode<>(), new FalseNode<>()));

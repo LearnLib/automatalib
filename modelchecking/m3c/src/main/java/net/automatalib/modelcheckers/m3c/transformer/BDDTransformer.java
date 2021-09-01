@@ -201,8 +201,8 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
             final NotNode<L, AP> notNode = (NotNode<L, AP>) node;
             result = bdds[notNode.getVarNumberChild()].not();
         } else if (node instanceof AtomicNode) {
-            final Set<AP> atomicProp = ((AtomicNode<L, AP>) node).getPropositions();
-            if (atomicPropositions.containsAll(atomicProp)) {
+            final AP atomicProp = ((AtomicNode<L, AP>) node).getProposition();
+            if (atomicPropositions.contains(atomicProp)) {
                 result = bddManager.readOne();
             } else {
                 result = bddManager.readLogicZero();

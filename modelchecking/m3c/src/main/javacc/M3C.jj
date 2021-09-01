@@ -36,7 +36,7 @@ import java.util.function.Function;
 class InternalM3CParser<L, AP> {
 	private Set<String> fixedPointVars;
 	private Function<String, L> labelParser;
-	private Function<String, Set<AP>> apParser;
+	private Function<String, AP> apParser;
 
 	private void addFixedPointVar(String fixedPointVar) throws ParseException {
 		if (fixedPointVars.contains(fixedPointVar)) {
@@ -101,7 +101,7 @@ PARSER_END(InternalM3CParser)
 | ("\""  (~["\"", "\\"])* (("\\\"" | "\\\\") (~["\"", "\\"])*)* "\"")>
 }
 
-FormulaNode<L, AP> parse(Function<String, L> labelParser, Function<String, Set<AP>> apParser):
+FormulaNode<L, AP> parse(Function<String, L> labelParser, Function<String, AP> apParser):
 {
 	this.fixedPointVars = new HashSet<String>();
 	this.labelParser = labelParser;

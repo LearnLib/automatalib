@@ -16,9 +16,6 @@
 package net.automatalib.modelcheckers.m3c.formula.parser;
 
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Function;
 
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
@@ -71,7 +68,7 @@ public final class M3CParser {
      *         if {@code formula} is not a valid formula.
      */
     public static FormulaNode<String, String> parse(String formula) throws ParseException {
-        return parse(formula, Function.identity(), x -> new HashSet<>(Arrays.asList(x.split(","))));
+        return parse(formula, Function.identity(), Function.identity());
     }
 
     /**
@@ -96,7 +93,7 @@ public final class M3CParser {
      */
     public static <L, AP> FormulaNode<L, AP> parse(String formula,
                                                    Function<String, L> labelParser,
-                                                   Function<String, Set<AP>> apParser) throws ParseException {
+                                                   Function<String, AP> apParser) throws ParseException {
         try (StringReader reader = new StringReader(formula)) {
             final InternalM3CParser<L, AP> parser = new InternalM3CParser<>(reader);
             return parser.parse(labelParser, apParser);

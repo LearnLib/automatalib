@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.m3c.formula.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.Sets;
 import net.automatalib.modelcheckers.m3c.formula.AndNode;
 import net.automatalib.modelcheckers.m3c.formula.AtomicNode;
 import net.automatalib.modelcheckers.m3c.formula.BoxNode;
@@ -46,7 +45,8 @@ public class ParserMuCalcTest {
         assertEquals("true || false", new OrNode<>(new TrueNode<>(), new FalseNode<>()));
         assertEquals("'a'", new AtomicNode<>("a"));
         assertEquals("\"b\"", new AtomicNode<>("b"));
-        assertEquals("\"a,b,c\"", new AtomicNode<>(Sets.newHashSet("a", "b", "c")));
+        assertEquals("\"a\" && \"b\" && \"c\"",
+                     new AndNode<>(new AtomicNode<>("a"), new AndNode<>(new AtomicNode<>("b"), new AtomicNode<>("c"))));
         assertEquals("true -> false", new OrNode<>(new NotNode<>(new TrueNode<>()), new FalseNode<>()));
         assertEquals("true <-> false",
                      new AndNode<>(new OrNode<>(new NotNode<>(new TrueNode<>()), new FalseNode<>()),

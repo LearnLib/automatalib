@@ -162,7 +162,7 @@ public class CTLToMuCalc<L, AP> implements FormulaNodeVisitor<FormulaNode<L, AP>
 
     @Override
     public FormulaNode<L, AP> visit(AtomicNode<L, AP> node) {
-        return new AtomicNode<>(node.getPropositions());
+        return new AtomicNode<>(node.getProposition());
     }
 
     @Override

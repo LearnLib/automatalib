@@ -16,10 +16,7 @@
 package net.automatalib.modelcheckers.m3c.formula;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.Objects;
-import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -36,34 +33,20 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
-    private final Set<AP> propositions;
+    private final AP proposition;
 
     public AtomicNode(AP proposition) {
-        this(Collections.singleton(proposition));
+        this.proposition = proposition;
     }
 
-    public AtomicNode(Set<AP> propositions) {
-        this.propositions = propositions;
-    }
-
-    public Set<AP> getPropositions() {
-        return propositions;
+    public AP getProposition() {
+        return proposition;
     }
 
     @Override
     public void print(Appendable a) throws IOException {
         a.append('\"');
-
-        final Iterator<AP> iter = propositions.iterator();
-        if (iter.hasNext()) {
-            a.append(Objects.toString(iter.next()));
-        }
-
-        while (iter.hasNext()) {
-            a.append(',');
-            a.append(Objects.toString(iter.next()));
-        }
-
+        a.append(Objects.toString(proposition));
         a.append('\"');
     }
 
@@ -75,7 +58,7 @@ public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + propositions.hashCode();
+        result = 31 * result + proposition.hashCode();
         return result;
     }
 
@@ -87,7 +70,7 @@ public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
         final AtomicNode<?, ?> that = (AtomicNode<?, ?>) o;
 
-        return this.propositions.equals(that.propositions);
+        return this.proposition.equals(that.proposition);
     }
 
 }
