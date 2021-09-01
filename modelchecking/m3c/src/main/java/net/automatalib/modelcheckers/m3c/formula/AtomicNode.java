@@ -33,13 +33,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
-    private final @Nullable AP proposition;
+    private final AP proposition;
 
-    public AtomicNode(@Nullable AP proposition) {
+    public AtomicNode(AP proposition) {
         this.proposition = proposition;
     }
 
-    public @Nullable AP getProposition() {
+    public AP getProposition() {
         return proposition;
     }
 
