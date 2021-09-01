@@ -15,8 +15,10 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
@@ -56,13 +58,14 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
     @Test
     void testSolveWithMultipleAPs() throws ParseException {
-        final ContextFreeModalProcessSystem<String, String> cfmps = Examples.getCfmpsAnBn(Collections.singleton("a"));
+        final ContextFreeModalProcessSystem<String, String> cfmps =
+                Examples.getCfmpsAnBn(new HashSet<>(Arrays.asList("a", "b")));
         final M3CSolver<String> solver = getSolver(cfmps);
 
-        final String formula = "mu X.(<>X || 'a')";
+        final String formula = "mu X.(<>X || 'a' && 'b')";
         assertSolve(solver, formula, true);
 
-        final String formulaWithNegatedAP = "mu X.(<>X || !'a')";
+        final String formulaWithNegatedAP = "mu X.(<>X || !('a' && 'b'))";
         assertSolve(solver, formulaWithNegatedAP, true);
     }
 

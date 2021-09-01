@@ -16,23 +16,18 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
-import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
+import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 
 /**
- * A {@link SolveBDD BDD solver} for generic, string-based formulas.
+ * A {@link BDDSolver BDD solver} for strongly-typed formulas.
  *
  * @author frohme
  */
-public class StringSolveBDD extends SolveBDD<String, String> implements M3CSolver<String> {
+public class TypedBDDSolver<L, AP> extends BDDSolver<L, AP> implements TypedM3CSolver<FormulaNode<L, AP>> {
 
-    StringSolveBDD(ContextFreeModalProcessSystem<String, String> cfmps) {
+    TypedBDDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
         super(cfmps);
-    }
-
-    @Override
-    public boolean solve(String formula) throws ParseException {
-        return super.solve(M3CParser.parse(formula));
     }
 
 }

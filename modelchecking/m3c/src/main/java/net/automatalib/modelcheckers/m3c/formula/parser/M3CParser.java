@@ -56,8 +56,7 @@ public final class M3CParser {
 
     /**
      * Returns the abstract syntax tree of a given formula. Each label is transformed to a {@code String}. Each atomic
-     * proposition is transformed to a {@code String}. A formula can represent a set of atomic propositions, i.e. a
-     * conjunction of atomic propositions, through a comma-separated list of atomic propositions.
+     * proposition is transformed to a {@code String}.
      *
      * @param formula
      *         ctl or mu-calculus formula to be parsed

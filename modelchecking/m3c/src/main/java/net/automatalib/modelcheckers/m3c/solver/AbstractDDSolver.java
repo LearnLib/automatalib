@@ -63,7 +63,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author murtovi
  */
-abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
+abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     // Attributes that are constant for a given CFMPS
     private final @KeyFor("workUnits") L mainProcess;
@@ -78,7 +78,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
     private Map<L, T> mustTransformers;
     private Map<L, T> mayTransformers;
 
-    AbstractSolveDD(ContextFreeModalProcessSystem<L, AP> cfmps) {
+    AbstractDDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
         final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs = cfmps.getPMPGs();
 
         this.workUnits = Maps.newHashMapWithExpectedSize(pmpgs.size());
@@ -101,7 +101,7 @@ abstract class AbstractSolveDD<T extends AbstractPropertyTransformer<T, L, AP>, 
         this.mainProcess = mainProcess;
     }
 
-    private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractSolveDD<T, L, AP> this,
+    private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractDDSolver<T, L, AP> this,
                                                    L label,
                                                    ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
         return new WorkUnit<>(label, pmpg, initPredecessorsMapping(pmpg));

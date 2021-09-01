@@ -15,8 +15,6 @@
  */
 package net.automatalib.examples.modelchecking;
 
-import java.util.Collections;
-import java.util.Set;
 import java.util.function.Function;
 
 import net.automatalib.automata.spa.CFMPSView;
@@ -60,7 +58,7 @@ public final class M3CSPAExample {
         //@formatter:on
 
         final Function<String, Character> labelParser = s -> s.charAt(0);
-        final Function<String, Set<Void>> apParser = s -> Collections.emptySet();
+        final Function<String, Void> apParser = s -> null;
         final TypedM3CSolver<FormulaNode<Character, Void>> solver = M3CSolvers.typedSolver(view);
 
         for (String f : formulae) {

@@ -35,8 +35,8 @@ public class SolverHistoryBDDTest extends AbstractSolverHistoryTest<BDDTransform
     }
 
     @Override
-    public AbstractSolveDD<BDDTransformer<String, String>, String, String> getSolver() {
-        return new SolveBDD<>(cfmps);
+    public AbstractDDSolver<BDDTransformer<String, String>, String, String> getSolver() {
+        return new BDDSolver<>(cfmps);
     }
 
     @Override

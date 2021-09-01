@@ -33,13 +33,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
 
-    private final AP proposition;
+    private final @Nullable AP proposition;
 
-    public AtomicNode(AP proposition) {
+    public AtomicNode(@Nullable AP proposition) {
         this.proposition = proposition;
     }
 
-    public AP getProposition() {
+    public @Nullable AP getProposition() {
         return proposition;
     }
 
@@ -58,7 +58,7 @@ public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + proposition.hashCode();
+        result = 31 * result + Objects.hash(proposition);
         return result;
     }
 
@@ -69,8 +69,7 @@ public class AtomicNode<L, AP> extends AbstractFormulaNode<L, AP> {
         }
 
         final AtomicNode<?, ?> that = (AtomicNode<?, ?>) o;
-
-        return this.proposition.equals(that.proposition);
+        return Objects.equals(this.proposition, that.proposition);
     }
 
 }

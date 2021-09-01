@@ -25,7 +25,7 @@ import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
- * A class used to store internal information produced by {@link AbstractSolveDD#solveAndRecordHistory} while checking
+ * A class used to store internal information produced by {@link AbstractDDSolver#solveAndRecordHistory} while checking
  * the satisfiability of a formula. The internal information could for example be used for debugging or visualization
  * purposes.
  *
@@ -108,7 +108,7 @@ public final class SolverHistory<T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     /**
-     * Returns whether the formulate put into {@link AbstractSolveDD#solveAndRecordHistory(FormulaNode formula)} is
+     * Returns whether the formulate put into {@link AbstractDDSolver#solveAndRecordHistory(FormulaNode formula)} is
      * satisfied.
      *
      * @return {@code true} if formula is satisfied, {@code false} otherwise

@@ -35,11 +35,11 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
  *
  * @author murtovi
  */
-public class SolveADD<L, AP> extends AbstractSolveDD<ADDTransformer<L, AP>, L, AP> {
+public class ADDSolver<L, AP> extends AbstractDDSolver<ADDTransformer<L, AP>, L, AP> {
 
     private XDDManager<BooleanVector> ddManager;
 
-    public SolveADD(ContextFreeModalProcessSystem<L, AP> cfmps) {
+    public ADDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
         super(cfmps);
     }
 

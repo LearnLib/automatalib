@@ -69,7 +69,7 @@ public final class M3CSolvers {
      * @return an ADD-backed {@link M3CSolver} solver for string-based modal context-free process systems
      */
     public static M3CSolver<String> addSolver(ContextFreeModalProcessSystem<String, String> cfmps) {
-        return new StringSolveADD(cfmps);
+        return new StringADDSolver(cfmps);
     }
 
     /**
@@ -81,7 +81,7 @@ public final class M3CSolvers {
      * @return an ADD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
      */
     public static <L, AP> TypedM3CSolver<FormulaNode<L, AP>> typedADDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
-        return new TypedSolveADD<>(cfmps);
+        return new TypedADDSolver<>(cfmps);
     }
 
     /**
@@ -93,7 +93,7 @@ public final class M3CSolvers {
      * @return an ADD-backed {@link M3CSolver} solver for string-based modal context-free process systems
      */
     public static M3CSolver<String> bddSolver(ContextFreeModalProcessSystem<String, String> cfmps) {
-        return new StringSolveBDD(cfmps);
+        return new StringBDDSolver(cfmps);
     }
 
     /**
@@ -105,6 +105,6 @@ public final class M3CSolvers {
      * @return a BDD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
      */
     public static <L, AP> TypedM3CSolver<FormulaNode<L, AP>> typedBDDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
-        return new TypedSolveBDD<>(cfmps);
+        return new TypedBDDSolver<>(cfmps);
     }
 }

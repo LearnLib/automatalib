@@ -45,8 +45,8 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
     }
 
     @Override
-    public AbstractSolveDD<ADDTransformer<String, String>, String, String> getSolver() {
-        return new SolveADD<>(cfmps);
+    public AbstractDDSolver<ADDTransformer<String, String>, String, String> getSolver() {
+        return new ADDSolver<>(cfmps);
     }
 
     @Override

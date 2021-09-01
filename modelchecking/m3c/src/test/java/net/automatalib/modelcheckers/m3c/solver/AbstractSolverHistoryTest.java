@@ -52,7 +52,7 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
         shutdownDDManager();
     }
 
-    public abstract AbstractSolveDD<T, String, String> getSolver();
+    public abstract AbstractDDSolver<T, String, String> getSolver();
 
     public abstract <N> void testInitialPropertyTransformers(SolverData<N, T, String, String> data, N s1, N s2);
 
@@ -62,7 +62,7 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
 
     @Test
     public void testSolverHistory() throws ParseException {
-        final AbstractSolveDD<T, String, String> solver = getSolver();
+        final AbstractDDSolver<T, String, String> solver = getSolver();
         final FormulaNode<String, String> formula = M3CParser.parse("mu X.(<b><b>true || <>X)");
         final SolverHistory<T, String, String> history = solver.solveAndRecordHistory(formula);
         final Map<String, SolverData<?, T, String, String>> data = history.getData();

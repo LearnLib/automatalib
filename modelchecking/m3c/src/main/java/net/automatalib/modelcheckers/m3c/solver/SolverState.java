@@ -26,7 +26,7 @@ import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
 
 /**
- * Stores internal information produced during the update of a node in {@link AbstractSolveDD}.
+ * Stores internal information produced during the update of a node in {@link AbstractDDSolver}.
  *
  * @param <N>
  *         node type

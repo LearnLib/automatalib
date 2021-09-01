@@ -33,11 +33,11 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
  *
  * @author murtovi
  */
-public class SolveBDD<L, AP> extends AbstractSolveDD<BDDTransformer<L, AP>, L, AP> {
+public class BDDSolver<L, AP> extends AbstractDDSolver<BDDTransformer<L, AP>, L, AP> {
 
     private BDDManager bddManager;
 
-    public SolveBDD(ContextFreeModalProcessSystem<L, AP> cfmps) {
+    public BDDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
         super(cfmps);
     }
 
