@@ -28,7 +28,9 @@ limitations under the License.
     <artifactId>automata-modelchecking-ltsmin</artifactId>
 
     <name>AutomataLib :: Model Checking :: LTSmin</name>
-    <description>LTSmin Model Checker</description>
+    <description>The LTSmin Model Checker. Note that this implementation requires a local installation of the LTSmin
+        binaries (see https://ltsmin.utwente.nl/) which are not explicitly included in this artifact.
+    </description>
 
     <dependencies>
         <!-- internal -->
