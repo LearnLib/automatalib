@@ -85,12 +85,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         for (Map.Entry<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> e : pmpgs.entrySet()) {
             final L label = e.getKey();
             final ProceduralModalProcessGraph<?, L, ?, AP, ?> pmpg = e.getValue();
-
-            Preconditions.checkNotNull(pmpg.getInitialNode(), "PMPG '%s' has no start node", label);
-            Preconditions.checkNotNull(pmpg.getFinalNode(), "PMPG '%s' has no end node", label);
-            Preconditions.checkArgument(isGuarded(pmpg),
-                                        "PMPG '%s' is not guarded. All initial transitions must be labelled with atomic actions.");
-
+            checkPMPG(label, pmpg);
             workUnits.put(label, initializeWorkUnits(label, pmpg));
         }
 
@@ -103,12 +98,21 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         this.mainProcess = mainProcess;
     }
 
-    private <N, E> boolean isGuarded(@UnderInitialization AbstractDDSolver<T, L, AP> this,
-                                     ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg) {
+    private <N> void checkPMPG(@UnderInitialization AbstractDDSolver<T, L, AP> this,
+                               L label,
+                               ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
         final N initialNode = pmpg.getInitialNode();
         if (initialNode == null) {
-            return false;
+            throw new IllegalArgumentException("PMPG '" + label + "' has no start node");
         }
+        Preconditions.checkNotNull(pmpg.getFinalNode(), "PMPG '%s' has no end node", label);
+        Preconditions.checkArgument(isGuarded(pmpg, initialNode),
+                                    "PMPG '%s' is not guarded. All initial transitions must be labelled with atomic actions.");
+    }
+
+    private <N, E> boolean isGuarded(@UnderInitialization AbstractDDSolver<T, L, AP> this,
+                                     ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg,
+                                     N initialNode) {
         for (E initialTransition : pmpg.getOutgoingEdges(initialNode)) {
             if (pmpg.getEdgeProperty(initialTransition).isProcess()) {
                 return false;
