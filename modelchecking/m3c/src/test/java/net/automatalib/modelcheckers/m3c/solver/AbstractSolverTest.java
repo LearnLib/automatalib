@@ -22,7 +22,10 @@ import java.util.HashSet;
 import java.util.Map;
 
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
+import net.automatalib.graphs.MutableProceduralModalProcessGraph;
 import net.automatalib.graphs.ProceduralModalProcessGraph;
+import net.automatalib.graphs.base.DefaultMCFPS;
+import net.automatalib.graphs.base.compact.CompactPMPG;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelcheckers.m3c.util.Examples;
@@ -101,6 +104,31 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
             }
         };
         getSolver(cfmps);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    void testSolveWithUnguardedProcess() {
+        final CompactPMPG<String, String> pmpg = getUnguardedPMPG(new CompactPMPG<>(""));
+        getSolver(new DefaultMCFPS<>("P", Collections.singletonMap("P", pmpg)));
+    }
+
+    private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, ?>> M getUnguardedPMPG(M pmpg) {
+        final N start = pmpg.addNode();
+        final N end = pmpg.addNode();
+
+        pmpg.setInitialNode(start);
+        pmpg.setFinalNode(end);
+
+        final E e1 = pmpg.connect(start, end);
+        pmpg.getEdgeProperty(e1).setMust();
+        pmpg.setEdgeLabel(e1, "a");
+
+        final E e2 = pmpg.connect(start, end);
+        pmpg.getEdgeProperty(e2).setMust();
+        pmpg.getEdgeProperty(e2).setProcess();
+        pmpg.setEdgeLabel(e2, "P");
+
+        return pmpg;
     }
 
     public abstract M3CSolver<String> getSolver(ContextFreeModalProcessSystem<String, String> cfmps);

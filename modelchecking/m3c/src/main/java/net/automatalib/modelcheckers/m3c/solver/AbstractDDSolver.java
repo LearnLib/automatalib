@@ -88,6 +88,8 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
 
             Preconditions.checkNotNull(pmpg.getInitialNode(), "PMPG '%s' has no start node", label);
             Preconditions.checkNotNull(pmpg.getFinalNode(), "PMPG '%s' has no end node", label);
+            Preconditions.checkArgument(isGuarded(pmpg),
+                                        "PMPG '%s' is not guarded. All initial transitions must be labelled with atomic actions.");
 
             workUnits.put(label, initializeWorkUnits(label, pmpg));
         }
@@ -99,6 +101,20 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
 
         this.mainProcess = mainProcess;
+    }
+
+    private <N, E> boolean isGuarded(@UnderInitialization AbstractDDSolver<T, L, AP> this,
+                                     ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg) {
+        final N initialNode = pmpg.getInitialNode();
+        if (initialNode == null) {
+            return false;
+        }
+        for (E initialTransition : pmpg.getOutgoingEdges(initialNode)) {
+            if (pmpg.getEdgeProperty(initialTransition).isProcess()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractDDSolver<T, L, AP> this,
@@ -337,10 +353,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         return nodeTransformer.createUpdate(atomicPropositions, compositions, currentBlock);
     }
 
-    private <N> void updateTransformerAndWorkSet(WorkUnit<N, ?> unit,
-                                                 N node,
-                                                 T nodeTransformer,
-                                                 T updatedTransformer) {
+    private <N> void updateTransformerAndWorkSet(WorkUnit<N, ?> unit, N node, T nodeTransformer, T updatedTransformer) {
         if (!nodeTransformer.equals(updatedTransformer)) {
             unit.propTransformers.put(node, updatedTransformer);
             updateWorkSet(unit, node);
