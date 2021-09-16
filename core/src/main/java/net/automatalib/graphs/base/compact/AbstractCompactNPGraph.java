@@ -41,7 +41,7 @@ public abstract class AbstractCompactNPGraph<E extends CompactEdge<EP>, @Nullabl
     }
 
     @Override
-    public NP getNodeProperties(int node) {
+    public NP getNodeProperty(int node) {
         return npStorage.array[node];
     }
 

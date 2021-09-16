@@ -103,7 +103,7 @@ public class CompactPMPG<L, AP>
     }
 
     @Override
-    public Set<AP> getNodeProperties(int node) {
+    public Set<AP> getNodeProperty(int node) {
         if (node > nodeProperties.array.length) {
             return Collections.emptySet();
         }

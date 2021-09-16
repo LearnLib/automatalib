@@ -128,10 +128,10 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
 
     @Override
     public NP getNodeProperty(Integer node) {
-        return getNodeProperties(node.intValue());
+        return getNodeProperty(node.intValue());
     }
 
-    public abstract NP getNodeProperties(int node);
+    public abstract NP getNodeProperty(int node);
 
     @Override
     public EP getEdgeProperty(E edge) {

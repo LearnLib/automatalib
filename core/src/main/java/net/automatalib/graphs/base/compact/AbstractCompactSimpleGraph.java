@@ -30,7 +30,7 @@ public abstract class AbstractCompactSimpleGraph<E extends CompactEdge<EP>, EP>
     public void setNodeProperty(int node, Void property) {}
 
     @Override
-    public Void getNodeProperties(int node) {
+    public Void getNodeProperty(int node) {
         return null;
     }
 

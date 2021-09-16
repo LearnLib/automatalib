@@ -46,7 +46,7 @@ public class CompactGraph<@Nullable NP, @Nullable EP> extends AbstractCompactGra
     }
 
     @Override
-    public NP getNodeProperties(int node) {
+    public NP getNodeProperty(int node) {
         if (node < nodeProperties.array.length) {
             return nodeProperties.array[node];
         }
