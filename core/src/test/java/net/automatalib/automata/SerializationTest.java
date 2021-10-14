@@ -17,6 +17,7 @@ package net.automatalib.automata;
 
 import java.util.Collection;
 
+import com.thoughtworks.xstream.XStream;
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastNFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -32,9 +33,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.FastAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
-import org.nustaq.serialization.FSTConfiguration;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -53,18 +52,12 @@ public class SerializationTest {
         ENUM_C
     }
 
-    private FSTConfiguration fstSerializer;
+    private XStream xstream;
 
     @BeforeClass
     public void beforeClass() {
-        fstSerializer = FSTConfiguration.createDefaultConfiguration();
-        fstSerializer.setForceSerializable(true);
-        fstSerializer.setShareReferences(true);
-    }
-
-    @AfterClass
-    public void afterClass() {
-        fstSerializer.clearCaches();
+        xstream = new XStream();
+        xstream.allowTypesByRegExp(new String[] {"net.automatalib.*"});
     }
 
     @DataProvider(name = "alphabets")
@@ -182,9 +175,9 @@ public class SerializationTest {
 
     private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void testSerialization(M original,
                                                                                                   Alphabet<I> alphabet) {
-        final byte[] data = fstSerializer.asByteArray(original);
+        final String data = xstream.toXML(original);
         @SuppressWarnings("unchecked")
-        final M deserialized = (M) fstSerializer.asObject(data);
+        final M deserialized = (M) xstream.fromXML(data);
         testEquivalence(original, deserialized, alphabet);
     }
 

@@ -98,4 +98,30 @@ limitations under the License.
             <artifactId>assertj-core</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>fix-ST4</id>
+            <activation>
+                <jdk>[16,)</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <version>${compiler-plugin.version}</version>
+                            <configuration>
+                                <fork>true</fork>
+                                <compilerArgs>
+                                    <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                                </compilerArgs>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 </project>
