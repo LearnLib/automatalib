@@ -50,18 +50,18 @@ public final class M3CSPAExample {
         final CFMPSView<Character> view = new CFMPSView<>(spa);
 
         //@formatter:off
-        final String[] formulas = {"mu X.(<>X || <b><b>true)", // there exists a path with "bb"
-                                   "mu X.(<>X || <b><S><b>true)", // there exists a path with "bSb"
-                                   "mu X.(<>X || <b><T><b>true)", // there exists a path with "bTb"
+        final String[] formulas = {"EF <b><b>true", // there exists a path with "bb"
+                                   "EF <b><S><b>true", // there exists a path with "bSb"
+                                   "EF <b><T><b>true", // there exists a path with "bTb"
                                    "<S><T><a>true", // There exists a starting sequence of STa
                                    "<S><T><b>true", // There exists a starting sequence of STb
                                    "<S><T><c>true", // There exists a starting sequence of STc
                                    "<S><a><T><c>true", // There exists a starting sequence of SaTc
                                    "<S><a><S><T><c>true", // There exists a starting sequence of SaSTc
-                                   "nu X. ([]X && [] false)", // all paths reach the final state
-                                   "mu X. (<>X || [] false)", // there exists a path to the final state
-                                   "nu X. ([]X && mu Y. (<>Y || [] false))", // on all paths there exists a path to the final state
-                                   "nu X. ([]X && (<S>true -> [S](mu Y. (<>Y || <R>true))))", // globally, if there exists an S, it must be followed by an R eventually
+                                   "EF [] false", // there exists a path to the final state
+                                   "AF [] false", // all paths reach the final state
+                                   "AG EF [] false", // on all paths there exists a path to the final state
+                                   "AG ([S] (AF <R>true))", // globally, every S path must be followed by an R eventually
         };
         //@formatter:on
 
