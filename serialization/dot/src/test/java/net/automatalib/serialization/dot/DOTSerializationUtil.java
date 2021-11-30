@@ -26,7 +26,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.automata.transducers.impl.compact.CompactSST;
-import net.automatalib.graphs.base.DefaultMCFPS;
+import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.graphs.base.compact.CompactPMPG;
 import net.automatalib.graphs.base.compact.CompactPMPGEdge;
@@ -74,7 +74,7 @@ final class DOTSerializationUtil {
     static final CompactGraph<String, String> GRAPH;
     static final CompactMTS<String> MTS;
     static final CompactMC<String> MC;
-    static final DefaultMCFPS<Character, Character> CFMPS;
+    static final DefaultCFMPS<Character, Character> CFMPS;
 
     static {
         STRING_ALPHABET = Alphabets.closedCharStringRange('a', 'c');
@@ -245,7 +245,7 @@ final class DOTSerializationUtil {
         return result;
     }
 
-    private static DefaultMCFPS<Character, Character> buildMCFPS() {
+    private static DefaultCFMPS<Character, Character> buildMCFPS() {
         final ProceduralModalEdgePropertyImpl p1 =
                 new ProceduralModalEdgePropertyImpl(ProceduralType.INTERNAL, ModalType.MUST);
         final ProceduralModalEdgePropertyImpl p2 =
@@ -284,6 +284,6 @@ final class DOTSerializationUtil {
         pmpgs.put('s', s);
         pmpgs.put('t', t);
 
-        return new DefaultMCFPS<>('s', pmpgs);
+        return new DefaultCFMPS<>('s', pmpgs);
     }
 }

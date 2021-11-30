@@ -23,12 +23,12 @@ import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.graphs.ProceduralModalProcessGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class DefaultMCFPS<L, AP> implements ContextFreeModalProcessSystem<L, AP> {
+public class DefaultCFMPS<L, AP> implements ContextFreeModalProcessSystem<L, AP> {
 
     private final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs;
     private final L mainProcess;
 
-    public DefaultMCFPS(L mainProcess, Map<L, ? extends ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs) {
+    public DefaultCFMPS(L mainProcess, Map<L, ? extends ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs) {
         Preconditions.checkArgument(pmpgs.containsKey(mainProcess),
                                     "There exists no process graph for the main process");
 

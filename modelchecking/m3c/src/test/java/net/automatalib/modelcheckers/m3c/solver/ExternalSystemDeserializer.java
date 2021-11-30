@@ -28,7 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import com.google.common.collect.Maps;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.graphs.MutableProceduralModalProcessGraph;
-import net.automatalib.graphs.base.DefaultMCFPS;
+import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.graphs.base.compact.CompactPMPG;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
@@ -78,7 +78,7 @@ final class ExternalSystemDeserializer {
         }
 
         final String initialId = pmpgs.keySet().iterator().next();
-        return new DefaultMCFPS<>(initialId, pmpgs);
+        return new DefaultCFMPS<>(initialId, pmpgs);
     }
 
     private static Element getRoot(InputStream is) throws ParserConfigurationException, IOException, SAXException {

@@ -20,7 +20,7 @@ import java.util.Set;
 
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.graphs.MutableProceduralModalProcessGraph;
-import net.automatalib.graphs.base.DefaultMCFPS;
+import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.graphs.base.compact.CompactPMPG;
 
 public final class Examples {
@@ -29,7 +29,7 @@ public final class Examples {
 
     public static ContextFreeModalProcessSystem<String, String> getCfmpsAnBn(Set<String> finalNodesAP) {
         final CompactPMPG<String, String> pmpg = buildPMPG(new CompactPMPG<>(""), finalNodesAP);
-        return new DefaultMCFPS<>("P", Collections.singletonMap("P", pmpg));
+        return new DefaultCFMPS<>("P", Collections.singletonMap("P", pmpg));
     }
 
     private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, ?>> M buildPMPG(M pmpg,

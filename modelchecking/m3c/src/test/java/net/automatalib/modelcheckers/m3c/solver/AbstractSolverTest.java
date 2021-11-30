@@ -24,7 +24,7 @@ import java.util.Map;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.graphs.MutableProceduralModalProcessGraph;
 import net.automatalib.graphs.ProceduralModalProcessGraph;
-import net.automatalib.graphs.base.DefaultMCFPS;
+import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.graphs.base.compact.CompactPMPG;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
@@ -109,7 +109,7 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
     @Test(expectedExceptions = IllegalArgumentException.class)
     void testSolveWithUnguardedProcess() {
         final CompactPMPG<String, String> pmpg = getUnguardedPMPG(new CompactPMPG<>(""));
-        getSolver(new DefaultMCFPS<>("P", Collections.singletonMap("P", pmpg)));
+        getSolver(new DefaultCFMPS<>("P", Collections.singletonMap("P", pmpg)));
     }
 
     private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, ?>> M getUnguardedPMPG(M pmpg) {
