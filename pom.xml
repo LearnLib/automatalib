@@ -235,7 +235,7 @@ limitations under the License.
 
         <!-- dependency versions -->
         <addlib.version>2.0.20-BETA-SNAPSHOT</addlib.version>
-        <assertj.version>3.15.0</assertj.version>
+        <assertj.version>3.21.0</assertj.version>
         <buildergen.version>0.1</buildergen.version>
         <brics-automaton.version>1.11-8</brics-automaton.version>
         <cacio.version>1.10</cacio.version>
