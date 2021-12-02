@@ -158,12 +158,12 @@ public class DOTSerializationTest {
     }
 
     @Test
-    public void testMCFPSExport() throws IOException {
+    public void testCFMPSExport() throws IOException {
 
         final DefaultCFMPS<Character, Character> cfmps = DOTSerializationUtil.CFMPS;
 
         ThrowingWriter writer = w -> GraphDOT.write(cfmps, w);
-        checkDOTOutput(writer, DOTSerializationUtil.MCFPS_RESOURCE);
+        checkDOTOutput(writer, DOTSerializationUtil.CFMPS_RESOURCE);
     }
 
     @Test

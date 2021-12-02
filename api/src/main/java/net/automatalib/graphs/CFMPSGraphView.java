@@ -28,10 +28,10 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * Graph representation of a {@link ContextFreeModalProcessSystem} that displays all nodes of its sub-procedures once,
- * i.e., without incorporating execution semantics such as stack contents.
+ * i.e., without incorporating execution semantics such as expansion.
  *
- * @param <S>
- *         common procedural state type
+ * @param <N>
+ *         common node type
  * @param <L>
  *         label type
  * @param <E>
@@ -41,21 +41,21 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @author frohme
  */
-public class CFMPSGraphView<S, L, E, AP> implements Graph<Pair<L, S>, Pair<L, E>> {
+public class CFMPSGraphView<N, L, E, AP> implements Graph<Pair<L, N>, Pair<L, E>> {
 
-    private final Map<L, ProceduralModalProcessGraph<S, L, E, AP, ?>> pmpgs;
+    private final Map<L, ProceduralModalProcessGraph<N, L, E, AP, ?>> pmpgs;
 
     // cast is fine, because we make sure to only query nodes/edges belonging to the respective procedures
     @SuppressWarnings("unchecked")
-    public CFMPSGraphView(Map<L, ? extends ProceduralModalProcessGraph<? extends S, L, ? extends E, AP, ?>> pmpgs) {
-        this.pmpgs = (Map<L, ProceduralModalProcessGraph<S, L, E, AP, ?>>) pmpgs;
+    public CFMPSGraphView(Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, AP, ?>> pmpgs) {
+        this.pmpgs = (Map<L, ProceduralModalProcessGraph<N, L, E, AP, ?>>) pmpgs;
     }
 
     @Override
-    public Collection<Pair<L, E>> getOutgoingEdges(Pair<L, S> node) {
+    public Collection<Pair<L, E>> getOutgoingEdges(Pair<L, N> node) {
         final L process = node.getFirst();
         @SuppressWarnings("assignment.type.incompatible") // we only use identifier for which pmpgs exist
-        final @NonNull ProceduralModalProcessGraph<S, L, E, AP, ?> pmpg = pmpgs.get(process);
+        final @NonNull ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg = pmpgs.get(process);
         final Collection<E> outgoingEdges = pmpg.getOutgoingEdges(node.getSecond());
 
         final Collection<Pair<L, E>> result = new ArrayList<>(outgoingEdges.size());
@@ -68,23 +68,23 @@ public class CFMPSGraphView<S, L, E, AP> implements Graph<Pair<L, S>, Pair<L, E>
     }
 
     @Override
-    public Pair<L, S> getTarget(Pair<L, E> edge) {
+    public Pair<L, N> getTarget(Pair<L, E> edge) {
         final L process = edge.getFirst();
         @SuppressWarnings("assignment.type.incompatible") // we only use identifier for which pmpgs exist
-        final @NonNull ProceduralModalProcessGraph<S, L, E, AP, ?> pmpg = pmpgs.get(process);
+        final @NonNull ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg = pmpgs.get(process);
 
         return Pair.of(process, pmpg.getTarget(edge.getSecond()));
     }
 
     @Override
-    public Collection<Pair<L, S>> getNodes() {
+    public Collection<Pair<L, N>> getNodes() {
         final int numNodes = this.pmpgs.values().stream().mapToInt(Graph::size).sum();
-        final List<Pair<L, S>> result = new ArrayList<>(numNodes);
+        final List<Pair<L, N>> result = new ArrayList<>(numNodes);
 
-        for (Entry<L, ProceduralModalProcessGraph<S, L, E, AP, ?>> e : this.pmpgs.entrySet()) {
+        for (Entry<L, ProceduralModalProcessGraph<N, L, E, AP, ?>> e : this.pmpgs.entrySet()) {
             final L process = e.getKey();
-            for (S s : e.getValue()) {
-                result.add(Pair.of(process, s));
+            for (N n : e.getValue()) {
+                result.add(Pair.of(process, n));
             }
         }
 
@@ -92,7 +92,7 @@ public class CFMPSGraphView<S, L, E, AP> implements Graph<Pair<L, S>, Pair<L, E>
     }
 
     @Override
-    public VisualizationHelper<Pair<L, S>, Pair<L, E>> getVisualizationHelper() {
+    public VisualizationHelper<Pair<L, N>, Pair<L, E>> getVisualizationHelper() {
         return new CFMPSVisualizationHelper<>(this.pmpgs);
     }
 }

@@ -57,7 +57,7 @@ final class DOTSerializationUtil {
     static final String MC_RESOURCE = "/mc.dot";
     static final String CLUSTER_RESOURCE = "/cluster.dot";
     static final String PMPG_RESOURCE = "/pmpg.dot";
-    static final String MCFPS_RESOURCE = "/cfmps.dot";
+    static final String CFMPS_RESOURCE = "/cfmps.dot";
 
     static final String FAULTY_AUTOMATON_RESOURCE = "/faulty_automaton.dot";
     static final String FAULTY_GRAPH_RESOURCE = "/faulty_graph.dot";
@@ -89,7 +89,7 @@ final class DOTSerializationUtil {
         GRAPH = buildGraph();
         MTS = buildMTS();
         MC = buildMC();
-        CFMPS = buildMCFPS();
+        CFMPS = buildCFMPS();
     }
 
     private DOTSerializationUtil() {}
@@ -246,7 +246,7 @@ final class DOTSerializationUtil {
         return result;
     }
 
-    private static DefaultCFMPS<Character, Character> buildMCFPS() {
+    private static DefaultCFMPS<Character, Character> buildCFMPS() {
         final ProceduralModalEdgePropertyImpl p1 =
                 new ProceduralModalEdgePropertyImpl(ProceduralType.INTERNAL, ModalType.MUST);
         final ProceduralModalEdgePropertyImpl p2 =
