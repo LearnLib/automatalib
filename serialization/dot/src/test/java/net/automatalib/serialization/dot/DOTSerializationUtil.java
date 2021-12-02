@@ -56,6 +56,7 @@ final class DOTSerializationUtil {
     static final String MTS_RESOURCE = "/mts.dot";
     static final String MC_RESOURCE = "/mc.dot";
     static final String CLUSTER_RESOURCE = "/cluster.dot";
+    static final String PMPG_RESOURCE = "/pmpg.dot";
     static final String MCFPS_RESOURCE = "/cfmps.dot";
 
     static final String FAULTY_AUTOMATON_RESOURCE = "/faulty_automaton.dot";

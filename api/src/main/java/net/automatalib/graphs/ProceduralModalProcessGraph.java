@@ -19,8 +19,10 @@ import java.util.Set;
 
 import net.automatalib.graphs.concepts.FinalNode;
 import net.automatalib.graphs.concepts.InitialNode;
+import net.automatalib.graphs.visualization.PMPGVisualizationHelper;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * Represents a <i>Procedural Modal Transition System</i> as defined in the paper <a
@@ -54,4 +56,8 @@ public interface ProceduralModalProcessGraph<N, L, E, AP, TP extends ProceduralM
         return getNodeProperty(node);
     }
 
+    @Override
+    default VisualizationHelper<N, E> getVisualizationHelper() {
+        return new PMPGVisualizationHelper<>(this);
+    }
 }
