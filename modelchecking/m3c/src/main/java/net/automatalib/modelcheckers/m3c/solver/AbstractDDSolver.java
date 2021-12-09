@@ -107,7 +107,8 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
         Preconditions.checkNotNull(pmpg.getFinalNode(), "PMPG '%s' has no end node", label);
         Preconditions.checkArgument(isGuarded(pmpg, initialNode),
-                                    "PMPG '%s' is not guarded. All initial transitions must be labelled with atomic actions.");
+                                    "PMPG '%s' is not guarded. All initial transitions must be labelled with atomic actions.",
+                                    label);
     }
 
     private <N, E> boolean isGuarded(@UnderInitialization AbstractDDSolver<T, L, AP> this,
