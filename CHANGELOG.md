@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Fixed a cache consistency bug in various DAG-based incremental builders.
 * Fixed a regression in `AbstractLTSminMonitorMealy` regarding BBC (#46).
+* Fixed a bug in `CharacterizingSets` which ignored the semantics of acceptors, i.e., not all states of an acceptor could be distinguished solely based on acceptance.
 
 ### Removed
 

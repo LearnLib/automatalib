@@ -28,6 +28,7 @@ import java.util.Queue;
 
 import com.google.common.collect.AbstractIterator;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.fsa.FiniteStateAcceptor;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -157,7 +158,7 @@ public final class CharacterizingSets {
             T trans = automaton.getTransition(curr, sym);
 
             if (trans == null) {
-                break;
+                return trace;
             }
 
             TP transitionProperty = automaton.getTransitionProperty(trans);
@@ -166,6 +167,11 @@ public final class CharacterizingSets {
             curr = automaton.getSuccessor(trans);
             SP stateProperty = automaton.getStateProperty(curr);
             trace.add(stateProperty);
+        }
+
+        // acceptors are evaluated on the reached state, therefore no prefixes discriminate
+        if (automaton instanceof FiniteStateAcceptor) {
+            return trace.subList(trace.size() - 2, trace.size());
         }
 
         return trace;

@@ -21,11 +21,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.util.automata.fsa.MutableDFAs;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -46,6 +48,8 @@ public class CharacterizingSetsTest {
     private static final CompactDFA<Integer> DFA = RandomAutomata.randomDFA(RANDOM, AUTOMATON_SIZE, INPUT_ALPHABET);
     private static final CompactMealy<Integer, Character> MEALY =
             RandomAutomata.randomMealy(RANDOM, AUTOMATON_SIZE, INPUT_ALPHABET, OUTPUT_ALPHABET);
+    private static final CompactMoore<Integer, Character> MOORE =
+            RandomAutomata.randomMoore(RANDOM, AUTOMATON_SIZE, INPUT_ALPHABET, OUTPUT_ALPHABET);
 
     @Test
     public void characterizingDFATest() {
@@ -79,6 +83,22 @@ public class CharacterizingSetsTest {
         checkCharacterizingSet(MEALY, state, characterizingSet);
     }
 
+    @Test
+    public void characterizingMooreTest() {
+        final List<Word<Integer>> characterizingSet = Automata.characterizingSet(MOORE, INPUT_ALPHABET);
+
+        checkCharacterizingSet(MOORE, characterizingSet);
+    }
+
+    @Test
+    public void characterizingMooreSingleTest() {
+        final Integer state = MOORE.getState(AUTOMATON_SIZE / 2);
+        final List<Word<Integer>> characterizingSet = new ArrayList<>();
+        CharacterizingSets.findCharacterizingSet(MOORE, INPUT_ALPHABET, state, characterizingSet);
+
+        checkCharacterizingSet(MOORE, state, characterizingSet);
+    }
+
     /*
      * See https://github.com/LearnLib/automatalib/issues/36
      */
@@ -108,49 +128,56 @@ public class CharacterizingSetsTest {
         checkCharacterizingSet(machine, characterizingSet);
     }
 
-    private <S, I> void checkCharacterizingSet(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+    /**
+     * A test based on the "person" procedure of the pedigree system of <a href="https://github.com/LearnLib/learnlib-spa">https://github.com/LearnLib/learnlib-spa</a>.
+     */
+    @Test
+    public void pedigreeTest() {
+        final Alphabet<Character> inputs = Alphabets.fromArray('P', 'M', 'F', 'n', 'd');
+
+        // @formatter:off
+        final CompactDFA<Character> dfa = AutomatonBuilders.forDFA(new CompactDFA<>(inputs))
+                                                           .withInitial("s0")
+                                                           .from("s0").on('n').to("s1")
+                                                           .from("s0").on('d').to("s3")
+                                                           .from("s1").on('d').to("s4")
+                                                           .from("s1").on('M').to("s6")
+                                                           .from("s1").on('F').to("s5")
+                                                           .from("s3").on('n').to("s4")
+                                                           .from("s4").on('M').to("s6")
+                                                           .from("s4").on('F').to("s5")
+                                                           .from("s5").on('M').to("s7")
+                                                           .from("s6").on('F').to("s7")
+                                                           .withAccepting("s1", "s4", "s5", "s6", "s7")
+                                                           .create();
+        // @formatter:on
+
+        MutableDFAs.complete(dfa, inputs);
+
+        final List<Word<Character>> characterizingSet = Automata.characterizingSet(dfa, inputs);
+        checkCharacterizingSet(dfa, characterizingSet);
+    }
+
+    private <S, I> void checkCharacterizingSet(DetSuffixOutputAutomaton<S, I, ?, ?> automaton,
                                                Collection<Word<I>> characterizingSet) {
         for (final S s : automaton) {
             checkCharacterizingSet(automaton, s, characterizingSet);
         }
     }
 
-    private <S, I, T, SP, TP> void checkCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, SP, TP> automaton,
-                                                          S state,
-                                                          Collection<Word<I>> characterizingSet) {
+    private <S, I, D> void checkCharacterizingSet(DetSuffixOutputAutomaton<S, I, ?, D> automaton,
+                                                  S state,
+                                                  Collection<Word<I>> characterizingSet) {
 
         outer:
         for (final S s : automaton) {
             if (!Objects.equals(s, state)) {
                 for (final Word<I> trace : characterizingSet) {
 
-                    S baseIter = state;
-                    S checkIter = s;
+                    final D baseOutput = automaton.computeStateOutput(state, trace);
+                    final D checkOutput = automaton.computeStateOutput(s, trace);
 
-                    final List<Object> baseSignature = new ArrayList<>(trace.size() + 1);
-                    final List<Object> checkSignature = new ArrayList<>(trace.size() + 1);
-
-                    baseSignature.add(automaton.getStateProperty(baseIter));
-                    checkSignature.add(automaton.getStateProperty(checkIter));
-
-                    for (final I i : trace) {
-                        final T baseTrans = automaton.getTransition(baseIter, i);
-                        final T checkTrans = automaton.getTransition(checkIter, i);
-
-                        baseSignature.add(automaton.getTransitionProperty(baseTrans));
-                        checkSignature.add(automaton.getTransitionProperty(checkTrans));
-
-                        // update values for next iteration
-                        baseIter = automaton.getSuccessor(baseTrans);
-                        checkIter = automaton.getSuccessor(checkTrans);
-
-                        baseSignature.add(automaton.getStateProperty(baseIter));
-                        checkSignature.add(automaton.getStateProperty(checkIter));
-                    }
-
-                    Assert.assertEquals(baseSignature.size(), checkSignature.size());
-
-                    if (!baseSignature.equals(checkSignature)) {
+                    if (!Objects.equals(baseOutput, checkOutput)) {
                         continue outer;
                     }
                 }
