@@ -28,6 +28,7 @@ import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.spa.StackSPA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.automata.vpda.DefaultOneSEVPA;
 import net.automatalib.automata.vpda.Location;
 import net.automatalib.util.automata.Automata;
@@ -294,6 +295,40 @@ public class RandomAutomata {
                                                         Alphabet<I> inputs,
                                                         Collection<? extends O> outputs) {
         return randomMealy(rand, numStates, inputs, outputs, true);
+    }
+
+    public <I, O> CompactMoore<I, O> randomMoore(@NonNegative int numStates,
+                                                 Alphabet<I> inputs,
+                                                 Collection<? extends O> outputs,
+                                                 boolean minimize) {
+        return randomMoore(this.random, numStates, inputs, outputs, minimize);
+    }
+
+    public static <I, O> CompactMoore<I, O> randomMoore(Random rand,
+                                                        @NonNegative int numStates,
+                                                        Alphabet<I> inputs,
+                                                        Collection<? extends O> outputs,
+                                                        boolean minimize) {
+        return randomDeterministic(rand,
+                                   numStates,
+                                   inputs,
+                                   outputs,
+                                   Collections.singleton(null),
+                                   new CompactMoore<>(inputs),
+                                   minimize);
+    }
+
+    public <I, O> CompactMoore<I, O> randomMoore(@NonNegative int numStates,
+                                                 Alphabet<I> inputs,
+                                                 Collection<? extends O> outputs) {
+        return randomMoore(this.random, numStates, inputs, outputs);
+    }
+
+    public static <I, O> CompactMoore<I, O> randomMoore(Random rand,
+                                                        @NonNegative int numStates,
+                                                        Alphabet<I> inputs,
+                                                        Collection<? extends O> outputs) {
+        return randomMoore(rand, numStates, inputs, outputs, true);
     }
 
     private static final class InstanceHolder {
