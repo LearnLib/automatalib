@@ -62,9 +62,9 @@ public final class CharacterizingSets {
      * @param result
      *         the collection in which to store the characterizing words
      */
-    public static <S, I, T> void findCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                       Collection<? extends I> inputs,
-                                                       Collection<? super Word<I>> result) {
+    public static <I> void findCharacterizingSet(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+                                                 Collection<? extends I> inputs,
+                                                 Collection<? super Word<I>> result) {
         findIncrementalCharacterizingSet(automaton, inputs, Collections.emptyList(), result);
     }
 
@@ -80,10 +80,10 @@ public final class CharacterizingSets {
      * @param result
      *         the collection in which to store the characterizing words
      */
-    public static <S, I, T> void findCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                       Collection<? extends I> inputs,
-                                                       S state,
-                                                       Collection<? super Word<I>> result) {
+    public static <S, I> void findCharacterizingSet(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                                    Collection<? extends I> inputs,
+                                                    S state,
+                                                    Collection<? super Word<I>> result) {
 
         Object prop = automaton.getStateProperty(state);
 
@@ -137,8 +137,8 @@ public final class CharacterizingSets {
         }
     }
 
-    public static <S, I, T> Iterator<Word<I>> characterizingSetIterator(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                                        Collection<? extends I> inputs) {
+    public static <I> Iterator<Word<I>> characterizingSetIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+                                                                  Collection<? extends I> inputs) {
         return new IncrementalCharacterizingSetIterator<>(automaton, inputs, Collections.emptyList());
     }
 
@@ -203,10 +203,10 @@ public final class CharacterizingSets {
         return true;
     }
 
-    public static <S, I, T> boolean findIncrementalCharacterizingSet(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                                     Collection<? extends I> inputs,
-                                                                     Collection<? extends Word<I>> oldSuffixes,
-                                                                     Collection<? super Word<I>> newSuffixes) {
+    public static <S, I> boolean findIncrementalCharacterizingSet(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                                                  Collection<? extends I> inputs,
+                                                                  Collection<? extends Word<I>> oldSuffixes,
+                                                                  Collection<? super Word<I>> newSuffixes) {
 
         boolean refined = false;
 
@@ -230,9 +230,9 @@ public final class CharacterizingSets {
         return refined;
     }
 
-    public static <S, I, T> Iterator<Word<I>> incrementalCharacterizingSetIterator(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                                                   Collection<? extends I> inputs,
-                                                                                   Collection<? extends Word<I>> oldSuffixes) {
+    public static <I> Iterator<Word<I>> incrementalCharacterizingSetIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
+                                                                             Collection<? extends I> inputs,
+                                                                             Collection<? extends Word<I>> oldSuffixes) {
         return new IncrementalCharacterizingSetIterator<>(automaton, inputs, oldSuffixes);
     }
 
@@ -244,8 +244,8 @@ public final class CharacterizingSets {
         }
     }
 
-    private static <S, I, T> Queue<List<S>> buildInitialBlocks(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                               List<? extends Word<I>> oldSuffixes) {
+    private static <S, I> Queue<List<S>> buildInitialBlocks(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                                            List<? extends Word<I>> oldSuffixes) {
         Map<List<List<?>>, List<S>> initialPartitioning = new HashMap<>();
         Queue<List<S>> blocks = new ArrayDeque<>();
         for (S state : automaton) {
@@ -262,9 +262,9 @@ public final class CharacterizingSets {
         return blocks;
     }
 
-    private static <S, I, T> List<List<?>> buildSignature(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                          List<? extends Word<I>> suffixes,
-                                                          S state) {
+    private static <S, I> List<List<?>> buildSignature(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                                       List<? extends Word<I>> suffixes,
+                                                       S state) {
         List<List<?>> signature = new ArrayList<>(suffixes.size());
 
         for (Word<I> suffix : suffixes) {
@@ -275,8 +275,8 @@ public final class CharacterizingSets {
         return signature;
     }
 
-    private static <S, I, T> boolean epsilonRefine(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                   Queue<List<S>> blockQueue) {
+    private static <S, I> boolean epsilonRefine(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                                Queue<List<S>> blockQueue) {
 
         int initialSize = blockQueue.size();
 
@@ -298,9 +298,9 @@ public final class CharacterizingSets {
         return refined;
     }
 
-    private static <S, I, T> @Nullable Word<I> refine(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                                      Collection<? extends I> inputs,
-                                                      Queue<List<S>> blockQueue) {
+    private static <S, I> @Nullable Word<I> refine(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                                   Collection<? extends I> inputs,
+                                                   Queue<List<S>> blockQueue) {
 
         List<S> currBlock;
         while ((currBlock = blockQueue.poll()) != null) {
@@ -352,8 +352,8 @@ public final class CharacterizingSets {
         return null;
     }
 
-    private static <S, I, T, SP> Map<?, List<S>> clusterByProperty(UniversalDeterministicAutomaton<S, I, T, SP, ?> automaton,
-                                                                   List<S> states) {
+    private static <S, I, SP> Map<?, List<S>> clusterByProperty(UniversalDeterministicAutomaton<S, I, ?, SP, ?> automaton,
+                                                                List<S> states) {
         Map<SP, List<S>> result = new HashMap<>();
 
         for (S state : states) {
@@ -365,10 +365,10 @@ public final class CharacterizingSets {
         return result;
     }
 
-    private static <S, I, T> void cluster(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
-                                          Word<I> suffix,
-                                          Iterator<S> stateIt,
-                                          Map<List<?>, List<S>> bucketMap) {
+    private static <S, I> void cluster(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                       Word<I> suffix,
+                                       Iterator<S> stateIt,
+                                       Map<List<?>, List<S>> bucketMap) {
 
         while (stateIt.hasNext()) {
             S state = stateIt.next();
