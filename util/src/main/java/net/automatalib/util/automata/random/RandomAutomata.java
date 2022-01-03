@@ -40,20 +40,10 @@ import net.automatalib.words.SPAAlphabet;
 import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
 
-public class RandomAutomata {
+public final class RandomAutomata {
 
-    private final Random random;
-
-    public RandomAutomata() {
-        this(new Random());
-    }
-
-    public RandomAutomata(Random random) {
-        this.random = random;
-    }
-
-    public static RandomAutomata getInstance() {
-        return InstanceHolder.INSTANCE;
+    private RandomAutomata() {
+        // prevent instantiation
     }
 
     /**
@@ -190,14 +180,6 @@ public class RandomAutomata {
         return result;
     }
 
-    public <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(@NonNegative int numStates,
-                                                                                                    Collection<? extends I> inputs,
-                                                                                                    Collection<? extends SP> stateProps,
-                                                                                                    Collection<? extends TP> transProps,
-                                                                                                    A out) {
-        return randomDeterministic(this.random, numStates, inputs, stateProps, transProps, out);
-    }
-
     public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(Random rand,
                                                                                                            @NonNegative int numStates,
                                                                                                            Collection<? extends I> inputs,
@@ -229,19 +211,6 @@ public class RandomAutomata {
         return out;
     }
 
-    public <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(@NonNegative int numStates,
-                                                                                                    Collection<? extends I> inputs,
-                                                                                                    Collection<? extends SP> stateProps,
-                                                                                                    Collection<? extends TP> transProps,
-                                                                                                    A out,
-                                                                                                    boolean minimize) {
-        return randomDeterministic(this.random, numStates, inputs, stateProps, transProps, out, minimize);
-    }
-
-    public <I> CompactDFA<I> randomDFA(@NonNegative int numStates, Alphabet<I> inputs, boolean minimize) {
-        return randomDFA(this.random, numStates, inputs, minimize);
-    }
-
     public static <I> CompactDFA<I> randomDFA(Random rand,
                                               @NonNegative int numStates,
                                               Alphabet<I> inputs,
@@ -255,19 +224,8 @@ public class RandomAutomata {
                                    minimize);
     }
 
-    public <I> CompactDFA<I> randomDFA(@NonNegative int numStates, Alphabet<I> inputs) {
-        return randomDFA(this.random, numStates, inputs);
-    }
-
     public static <I> CompactDFA<I> randomDFA(Random rand, @NonNegative int numStates, Alphabet<I> inputs) {
         return randomDFA(rand, numStates, inputs, true);
-    }
-
-    public <I, O> CompactMealy<I, O> randomMealy(@NonNegative int numStates,
-                                                 Alphabet<I> inputs,
-                                                 Collection<? extends O> outputs,
-                                                 boolean minimize) {
-        return randomMealy(this.random, numStates, inputs, outputs, minimize);
     }
 
     public static <I, O> CompactMealy<I, O> randomMealy(Random rand,
@@ -284,24 +242,11 @@ public class RandomAutomata {
                                    minimize);
     }
 
-    public <I, O> CompactMealy<I, O> randomMealy(@NonNegative int numStates,
-                                                 Alphabet<I> inputs,
-                                                 Collection<? extends O> outputs) {
-        return randomMealy(this.random, numStates, inputs, outputs);
-    }
-
     public static <I, O> CompactMealy<I, O> randomMealy(Random rand,
                                                         @NonNegative int numStates,
                                                         Alphabet<I> inputs,
                                                         Collection<? extends O> outputs) {
         return randomMealy(rand, numStates, inputs, outputs, true);
-    }
-
-    public <I, O> CompactMoore<I, O> randomMoore(@NonNegative int numStates,
-                                                 Alphabet<I> inputs,
-                                                 Collection<? extends O> outputs,
-                                                 boolean minimize) {
-        return randomMoore(this.random, numStates, inputs, outputs, minimize);
     }
 
     public static <I, O> CompactMoore<I, O> randomMoore(Random rand,
@@ -318,22 +263,11 @@ public class RandomAutomata {
                                    minimize);
     }
 
-    public <I, O> CompactMoore<I, O> randomMoore(@NonNegative int numStates,
-                                                 Alphabet<I> inputs,
-                                                 Collection<? extends O> outputs) {
-        return randomMoore(this.random, numStates, inputs, outputs);
-    }
-
     public static <I, O> CompactMoore<I, O> randomMoore(Random rand,
                                                         @NonNegative int numStates,
                                                         Alphabet<I> inputs,
                                                         Collection<? extends O> outputs) {
         return randomMoore(rand, numStates, inputs, outputs, true);
-    }
-
-    private static final class InstanceHolder {
-
-        public static final RandomAutomata INSTANCE = new RandomAutomata();
     }
 
 }
