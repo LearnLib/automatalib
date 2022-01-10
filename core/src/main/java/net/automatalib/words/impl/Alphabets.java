@@ -17,7 +17,6 @@ package net.automatalib.words.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collector;
 
@@ -65,7 +64,7 @@ public final class Alphabets {
     }
 
     public static <T> Alphabet<T> singleton(T symbol) {
-        return fromList(Collections.singletonList(symbol));
+        return new SingletonAlphabet<>(symbol);
     }
 
     @SuppressWarnings("unchecked")
