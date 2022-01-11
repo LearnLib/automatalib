@@ -52,54 +52,54 @@ final class StackSPAState<I, S> {
         this.procedureState = procedureState;
     }
 
-    public StackSPAState<I, S> push(DFA<S, I> newProcedure, S newState) {
+    StackSPAState<I, S> push(DFA<S, I> newProcedure, S newState) {
         return new StackSPAState<>(this, newProcedure, newState);
     }
 
-    public StackSPAState<I, S> pop() {
+    StackSPAState<I, S> pop() {
         assert !isStatic() : "This method should never be called on static states";
         return prev;
     }
 
-    public StackSPAState<I, S> updateState(S state) {
+    StackSPAState<I, S> updateState(S state) {
         assert !isStatic() : "This method should never be called on static states";
         return new StackSPAState<>(prev, procedure, state);
     }
 
-    public DFA<S, I> getProcedure() {
+    DFA<S, I> getProcedure() {
         assert !isStatic() : "This method should never be called on static states";
         return procedure;
     }
 
-    public S getCurrentState() {
+    S getCurrentState() {
         assert !isStatic() : "This method should never be called on static states";
         return procedureState;
     }
 
     @SuppressWarnings("unchecked")
-    public static <I, S> StackSPAState<I, S> sink() {
+    static <I, S> StackSPAState<I, S> sink() {
         return (StackSPAState<I, S>) SINK;
     }
 
-    public boolean isSink() {
+    boolean isSink() {
         return this == SINK;
     }
 
     @SuppressWarnings("unchecked")
-    public static <I, S> StackSPAState<I, S> init() {
+    static <I, S> StackSPAState<I, S> init() {
         return (StackSPAState<I, S>) INIT;
     }
 
-    public boolean isInit() {
+    boolean isInit() {
         return this == INIT;
     }
 
     @SuppressWarnings("unchecked")
-    public static <I, S> StackSPAState<I, S> term() {
+    static <I, S> StackSPAState<I, S> term() {
         return (StackSPAState<I, S>) TERM;
     }
 
-    public boolean isTerm() {
+    boolean isTerm() {
         return this == TERM;
     }
 
