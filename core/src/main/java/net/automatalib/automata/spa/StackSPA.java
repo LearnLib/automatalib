@@ -57,10 +57,9 @@ public class StackSPA<S, I> implements SPA<StackSPAState<I, S>, I>, SimpleDTS<St
                 return StackSPAState.sink();
             }
 
-            final I procedure = state.getCurrentProcedure();
             // if we returned the state before, we checked that a procedure is available
             @SuppressWarnings("assignment.type.incompatible")
-            final @NonNull DFA<S, I> model = this.procedures.get(procedure);
+            final @NonNull DFA<S, I> model = state.getProcedure();
             final S next = model.getTransition(state.getCurrentState(), input);
 
             // undefined internal transition
@@ -70,6 +69,10 @@ public class StackSPA<S, I> implements SPA<StackSPAState<I, S>, I>, SimpleDTS<St
 
             return state.updateState(next);
         } else if (alphabet.isCallSymbol(input)) {
+            if (state.isInit() && !Objects.equals(this.initialCall, input)) {
+                return StackSPAState.sink();
+            }
+
             final DFA<S, I> model = this.procedures.get(input);
 
             if (model == null) {
@@ -82,44 +85,34 @@ public class StackSPA<S, I> implements SPA<StackSPAState<I, S>, I>, SimpleDTS<St
                 return StackSPAState.sink();
             }
 
-            return state.push(input, next);
+            // store the procedural successor in the stack so that we don't need to look it up on return symbols
+            final StackSPAState<I, S> returnState;
+            if (state.isInit()) {
+                returnState = StackSPAState.term();
+            } else {
+                final S succ = state.getProcedure().getSuccessor(state.getCurrentState(), input);
+                if (succ == null) {
+                    return StackSPAState.sink();
+                }
+                returnState = state.updateState(succ);
+            }
+
+            return returnState.push(model, next);
         } else if (alphabet.isReturnSymbol(input)) {
             if (state.isInit()) {
                 return StackSPAState.sink();
             }
 
-            final I procedure = state.getCurrentProcedure();
             // if we returned the state before, we checked that a procedure is available
             @SuppressWarnings("assignment.type.incompatible")
-            final @NonNull DFA<S, I> model = this.procedures.get(procedure);
+            final @NonNull DFA<S, I> model = state.getProcedure();
 
-            // cannot return, return unaccepted word
+            // cannot return, reject word
             if (!model.isAccepting(state.getCurrentState())) {
                 return StackSPAState.sink();
             }
 
-            final StackSPAState<I, S> previousState = state.pop();
-
-            if (previousState.isInit()) {
-                if (Objects.equals(this.initialCall, procedure)) {
-                    return StackSPAState.term();
-                } else {
-                    return StackSPAState.sink();
-                }
-            }
-
-            final I previousProcedure = previousState.getCurrentProcedure();
-            // if we returned the state before, we checked that a procedure is available
-            @SuppressWarnings("assignment.type.incompatible")
-            final @NonNull DFA<S, I> previousModel = this.procedures.get(previousProcedure);
-            final S next = previousModel.getSuccessor(previousState.getCurrentState(), procedure);
-
-            // undefined internal transition
-            if (next == null) {
-                return StackSPAState.sink();
-            }
-
-            return previousState.updateState(next);
+            return state.pop();
         } else {
             return StackSPAState.sink();
         }

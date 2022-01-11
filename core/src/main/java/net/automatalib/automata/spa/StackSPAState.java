@@ -15,6 +15,7 @@
  */
 package net.automatalib.automata.spa;
 
+import net.automatalib.automata.fsa.DFA;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -36,7 +37,7 @@ final class StackSPAState<I, S> {
     private static final StackSPAState<?, ?> TERM = new StackSPAState<>();
 
     private final @Nullable StackSPAState<I, S> prev;
-    private final @Nullable I procedure;
+    private final @Nullable DFA<S, I> procedure;
     private final @Nullable S procedureState;
 
     private StackSPAState() {
@@ -45,13 +46,13 @@ final class StackSPAState<I, S> {
         this.procedureState = null;
     }
 
-    private StackSPAState(StackSPAState<I, S> prev, I procedure, S procedureState) {
+    private StackSPAState(StackSPAState<I, S> prev, DFA<S, I> procedure, S procedureState) {
         this.prev = prev;
         this.procedure = procedure;
         this.procedureState = procedureState;
     }
 
-    public StackSPAState<I, S> push(I newProcedure, S newState) {
+    public StackSPAState<I, S> push(DFA<S, I> newProcedure, S newState) {
         return new StackSPAState<>(this, newProcedure, newState);
     }
 
@@ -65,7 +66,7 @@ final class StackSPAState<I, S> {
         return new StackSPAState<>(prev, procedure, state);
     }
 
-    public I getCurrentProcedure() {
+    public DFA<S, I> getProcedure() {
         assert !isStatic() : "This method should never be called on static states";
         return procedure;
     }
