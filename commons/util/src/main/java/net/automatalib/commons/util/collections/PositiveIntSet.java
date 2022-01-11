@@ -23,20 +23,20 @@ import java.util.Set;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A {@link Set} of {@link Integer int}s that internally stores its elements in a {@link BitSet}. This class may also be
- * used as a(n) (im)mutable {@link Set}-view of an existing {@link BitSet}.
+ * A {@link Set} for positive {@link Integer int}s that internally stores its elements in a {@link BitSet}. This class
+ * may also be used as a(n) (im)mutable {@link Set}-view of an existing {@link BitSet}.
  *
  * @author frohme
  */
-public class IntSet extends AbstractSet<Integer> {
+public class PositiveIntSet extends AbstractSet<Integer> {
 
     private final BitSet delegate;
     private final boolean immutable;
 
     /**
-     * Default constructor for a mutable {@link IntSet}.
+     * Default constructor for a mutable {@link PositiveIntSet}.
      */
-    public IntSet() {
+    public PositiveIntSet() {
         this(new BitSet(), false);
     }
 
@@ -46,19 +46,19 @@ public class IntSet extends AbstractSet<Integer> {
      * @param delegate
      *         the backing {@link BitSet}
      */
-    public IntSet(BitSet delegate) {
+    public PositiveIntSet(BitSet delegate) {
         this(delegate, true);
     }
 
     /**
-     * Constructor for a(n) (immutable) view of a given {@link IntSet}.
+     * Constructor for a(n) (immutable) view of a given {@link PositiveIntSet}.
      *
      * @param delegate
      *         the backing {@link BitSet}
      * @param immutable
      *         a flag indicating whether mutating operations should write through to the backing {@link BitSet}
      */
-    public IntSet(BitSet delegate, boolean immutable) {
+    public PositiveIntSet(BitSet delegate, boolean immutable) {
         this.delegate = delegate;
         this.immutable = immutable;
     }

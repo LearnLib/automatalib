@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.automatalib.automata.base.compact.AbstractCompact;
-import net.automatalib.commons.util.collections.IntSet;
+import net.automatalib.commons.util.collections.PositiveIntSet;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
@@ -133,7 +133,7 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
 
     @Override
     public Set<Integer> getInitialStates() {
-        return new IntSet(this.initialStates);
+        return new PositiveIntSet(this.initialStates);
     }
 
     @Override

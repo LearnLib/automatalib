@@ -28,12 +28,12 @@ import org.testng.internal.collections.Ints;
 /**
  * @author frohme
  */
-public class IntSetTest {
+public class PositiveIntSetTest {
 
     @Test
     public void testBackedView() {
         final BitSet set = new BitSet();
-        final IntSet view = new IntSet(set);
+        final PositiveIntSet view = new PositiveIntSet(set);
 
         set.set(1);
         Assert.assertTrue(view.contains(1));
@@ -60,7 +60,7 @@ public class IntSetTest {
 
     @Test
     public void testMutability() {
-        final IntSet set = new IntSet();
+        final PositiveIntSet set = new PositiveIntSet();
 
         Assert.assertTrue(set.isEmpty());
 
@@ -92,7 +92,7 @@ public class IntSetTest {
     @Test
     public void testImmutability() {
         final int[] ints = {1, 2, 3};
-        final IntSet view = getExampleView(true, ints);
+        final PositiveIntSet view = getExampleView(true, ints);
         final Collection<Integer> tmp = Ints.asList(ints);
 
         Assert.assertThrows(UnsupportedOperationException.class, () -> view.add(1));
@@ -104,9 +104,9 @@ public class IntSetTest {
         Assert.assertThrows(UnsupportedOperationException.class, () -> view.retainAll(Collections.emptyList()));
     }
 
-    private IntSet getExampleView(boolean immutable, int... ints) {
+    private PositiveIntSet getExampleView(boolean immutable, int... ints) {
         final BitSet set = new BitSet();
         IntStream.of(ints).forEach(set::set);
-        return new IntSet(set, immutable);
+        return new PositiveIntSet(set, immutable);
     }
 }

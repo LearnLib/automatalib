@@ -23,7 +23,7 @@ import java.util.Set;
 
 import net.automatalib.automata.base.fast.AbstractFastMutableNondet;
 import net.automatalib.automata.fsa.NFA;
-import net.automatalib.commons.util.collections.IntSet;
+import net.automatalib.commons.util.collections.PositiveIntSet;
 import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -212,11 +212,11 @@ public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact
 
     public Set<Integer> getTransitions(int state, int inputIdx) {
         final BitSet transition = transitions[toMemoryIndex(state, inputIdx)];
-        return transition == null ? Collections.emptySet() : new IntSet(transition);
+        return transition == null ? Collections.emptySet() : new PositiveIntSet(transition);
     }
 
     @Override
     public Set<Integer> getInitialStates() {
-        return new IntSet(initial);
+        return new PositiveIntSet(initial);
     }
 }
