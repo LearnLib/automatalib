@@ -15,6 +15,10 @@
  */
 package net.automatalib.graphs;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 
@@ -39,5 +43,31 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
     @Override
     default Graph<N, E> asNormalGraph() {
         return this;
+    }
+
+    /**
+     * Interface for {@link SimpleGraph.IntAbstraction node integer abstractions} of a {@link Graph}.
+     *
+     * @param <E>
+     *         edge type
+     */
+    interface IntAbstraction<E> extends SimpleGraph.IntAbstraction {
+
+        Collection<E> getOutgoingEdges(int node);
+
+        int getIntTarget(E edge);
+
+        @Override
+        default boolean isConnected(int source, int target) {
+            return outgoingEdgesStream(source).mapToInt(this::getIntTarget).anyMatch(n -> n == target);
+        }
+
+        default Stream<E> outgoingEdgesStream(int node) {
+            return getOutgoingEdges(node).stream();
+        }
+
+        default Collection<E> getEdgesBetween(int from, int to) {
+            return outgoingEdgesStream(from).filter(e -> getIntTarget(e) == to).collect(Collectors.toList());
+        }
     }
 }

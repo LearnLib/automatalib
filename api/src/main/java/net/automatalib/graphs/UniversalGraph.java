@@ -15,4 +15,22 @@
  */
 package net.automatalib.graphs;
 
-public interface UniversalGraph<N, E, NP, EP> extends Graph<N, E>, UniversalIndefiniteGraph<N, E, NP, EP> {}
+public interface UniversalGraph<N, E, NP, EP> extends Graph<N, E>, UniversalIndefiniteGraph<N, E, NP, EP> {
+
+    /**
+     * Interface for {@link Graph.IntAbstraction node integer abstractions} of a {@link UniversalGraph}.
+     *
+     * @param <E>
+     *         edge type
+     * @param <NP>
+     *         node property type
+     * @param <EP>
+     *         edge property type
+     */
+    interface IntAbstraction<E, NP, EP> extends Graph.IntAbstraction<E> {
+
+        NP getNodeProperty(int node);
+
+        EP getEdgeProperty(E edge);
+    }
+}

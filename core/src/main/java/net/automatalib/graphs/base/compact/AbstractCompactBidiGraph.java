@@ -21,12 +21,14 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import net.automatalib.graphs.BidirectionalGraph;
 import net.automatalib.graphs.MutableUniversalBidirectionalGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
         extends AbstractCompactGraph<CompactBidiEdge<EP>, NP, EP>
-        implements MutableUniversalBidirectionalGraph<Integer, CompactBidiEdge<EP>, NP, EP> {
+        implements MutableUniversalBidirectionalGraph<Integer, CompactBidiEdge<EP>, NP, EP>,
+                   BidirectionalGraph.IntAbstraction<CompactBidiEdge<EP>> {
 
     private final ResizingArrayStorage<List<CompactBidiEdge<EP>>> inEdges;
 
@@ -45,6 +47,7 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
         return getIncomingEdges(node.intValue());
     }
 
+    @Override
     public Collection<CompactBidiEdge<EP>> getIncomingEdges(int node) {
         return Collections.unmodifiableCollection(this.inEdges.array[node]);
     }
@@ -62,6 +65,7 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
         return getIntSource(edge);
     }
 
+    @Override
     public int getIntSource(CompactBidiEdge<EP> edge) {
         return edge.getSource();
     }

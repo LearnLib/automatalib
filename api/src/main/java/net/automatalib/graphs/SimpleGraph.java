@@ -76,4 +76,12 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N>, F
         return new SimpleNormalGraphView<>(this);
     }
 
+    /**
+     * Basic interface for integer abstractions of graphs. In an integer abstraction, each node of a graph is identified
+     * with an integer in the range {@code [0, size() - 1]}.
+     */
+    interface IntAbstraction extends FiniteRepresentation {
+
+        boolean isConnected(int source, int target);
+    }
 }

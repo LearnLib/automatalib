@@ -87,4 +87,32 @@ public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP>
 
     void setEdgeProperty(E edge, EP property);
 
+    /**
+     * Interface for {@link UniversalGraph.IntAbstraction node integer abstractions} of a {@link MutableGraph}.
+     *
+     * @param <E>
+     *         edge type
+     * @param <NP>
+     *         node property type
+     * @param <EP>
+     *         edge property type
+     */
+    interface IntAbstraction<E, NP, EP> extends UniversalGraph.IntAbstraction<E, NP, EP> {
+
+        default int addIntNode() {
+            return addIntNode(null);
+        }
+
+        int addIntNode(@Nullable NP property);
+
+        default E connect(int source, int target) {
+            return connect(source, target, null);
+        }
+
+        E connect(int source, int target, @Nullable EP property);
+
+        void setNodeProperty(int node, @Nullable NP property);
+
+        void setEdgeProperty(E edge, EP property);
+    }
 }
