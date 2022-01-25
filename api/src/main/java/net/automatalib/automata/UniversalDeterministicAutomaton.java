@@ -17,6 +17,7 @@ package net.automatalib.automata;
 
 import java.util.function.IntFunction;
 
+import net.automatalib.automata.abstraction.UniversalDeterministicAbstractions;
 import net.automatalib.ts.UniversalDTS;
 import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -48,16 +49,18 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
 
     @Override
     default FullIntAbstraction<T, SP, TP> fullIntAbstraction(int numInputs, IntFunction<? extends I> symMapping) {
-        return new FullIntAbstraction.DefaultAbstraction<>(stateIntAbstraction(), numInputs, symMapping);
+        return new UniversalDeterministicAbstractions.FullIntAbstraction<>(stateIntAbstraction(),
+                                                                           numInputs,
+                                                                           symMapping);
     }
 
     @Override
     default StateIntAbstraction<I, T, SP, TP> stateIntAbstraction() {
-        return new StateIntAbstraction.DefaultAbstraction<>(this);
+        return new UniversalDeterministicAbstractions.StateIntAbstraction<>(this);
     }
 
     /**
-     * Base interface for {@link IntAbstraction integer abstractions} of a {@link
+     * Base interface for {@link DeterministicAutomaton.IntAbstraction integer abstractions} of a {@link
      * UniversalDeterministicAutomaton}.
      *
      * @param <T>
@@ -93,7 +96,7 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
     }
 
     /**
-     * Interface for {@link StateIntAbstraction state integer abstractions} of a {@link
+     * Interface for {@link DeterministicAutomaton.StateIntAbstraction state integer abstractions} of a {@link
      * UniversalDeterministicAutomaton}.
      *
      * @param <I>
@@ -118,28 +121,10 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
             return null;
         }
 
-        class DefaultAbstraction<S, I, T, SP, TP, A extends UniversalDeterministicAutomaton<S, I, T, SP, TP>>
-                extends DeterministicAutomaton.StateIntAbstraction.DefaultAbstraction<S, I, T, A>
-                implements StateIntAbstraction<I, T, SP, TP> {
-
-            public DefaultAbstraction(A automaton) {
-                super(automaton);
-            }
-
-            @Override
-            public SP getStateProperty(int state) {
-                return automaton.getStateProperty(intToState(state));
-            }
-
-            @Override
-            public TP getTransitionProperty(T transition) {
-                return automaton.getTransitionProperty(transition);
-            }
-        }
     }
 
     /**
-     * Interface for {@link FullIntAbstraction full integer abstractions} of a {@link
+     * Interface for {@link DeterministicAutomaton.FullIntAbstraction full integer abstractions} of a {@link
      * UniversalDeterministicAutomaton}.
      *
      * @param <T>
@@ -162,24 +147,6 @@ public interface UniversalDeterministicAutomaton<S, I, T, SP, TP>
             return null;
         }
 
-        class DefaultAbstraction<I, T, SP, TP, A extends StateIntAbstraction<I, T, SP, TP>>
-                extends DeterministicAutomaton.FullIntAbstraction.DefaultAbstraction<I, T, A>
-                implements FullIntAbstraction<T, SP, TP> {
-
-            public DefaultAbstraction(A stateAbstraction, int numInputs, IntFunction<? extends I> symMapping) {
-                super(stateAbstraction, numInputs, symMapping);
-            }
-
-            @Override
-            public SP getStateProperty(int state) {
-                return stateAbstraction.getStateProperty(state);
-            }
-
-            @Override
-            public TP getTransitionProperty(T transition) {
-                return stateAbstraction.getTransitionProperty(transition);
-            }
-        }
     }
 }
 

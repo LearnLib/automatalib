@@ -17,11 +17,10 @@ package net.automatalib.automata.simple;
 
 import java.util.function.IntFunction;
 
+import net.automatalib.automata.abstraction.SimpleDeterministicAbstractions;
 import net.automatalib.automata.concepts.FiniteRepresentation;
-import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.Alphabet;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simple deterministic automaton.
@@ -63,7 +62,7 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
      * @return a {@link FullIntAbstraction}
      */
     default FullIntAbstraction fullIntAbstraction(int numInputs, IntFunction<? extends I> symMapping) {
-        return new FullIntAbstraction.DefaultAbstraction<>(stateIntAbstraction(), numInputs, symMapping);
+        return new SimpleDeterministicAbstractions.FullIntAbstraction<>(stateIntAbstraction(), numInputs, symMapping);
     }
 
     /**
@@ -72,7 +71,7 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
      * @return a {@link StateIntAbstraction}
      */
     default StateIntAbstraction<I> stateIntAbstraction() {
-        return new StateIntAbstraction.DefaultAbstraction<>(this);
+        return new SimpleDeterministicAbstractions.StateIntAbstraction<>(this);
     }
 
     /**
@@ -101,55 +100,6 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
          */
         int getIntInitialState();
 
-        /**
-         * Base class implementing the default way of obtaining an integer abstraction from an automaton, i.e., by
-         * mapping states to integers and vice versa using the {@link StateIDs} mapping obtained via {@link
-         * SimpleDeterministicAutomaton#stateIDs()}.
-         *
-         * @param <S>
-         *         state type
-         * @param <A>
-         *         automaton type
-         *
-         * @author Malte Isberner
-         */
-        class DefaultAbstraction<S, A extends SimpleDeterministicAutomaton<S, ?>> implements IntAbstraction {
-
-            protected final A automaton;
-            protected final StateIDs<S> stateIds;
-
-            public DefaultAbstraction(A automaton) {
-                this.automaton = automaton;
-                this.stateIds = automaton.stateIDs();
-            }
-
-            @Override
-            public int size() {
-                return automaton.size();
-            }
-
-            protected final S intToState(int stateId) {
-                return stateIds.getState(stateId);
-            }
-
-            protected final @Nullable S safeIntToState(int stateId) {
-                return (stateId == INVALID_STATE) ? null : intToState(stateId);
-            }
-
-            @Override
-            public int getIntInitialState() {
-                return safeStateToInt(automaton.getInitialState());
-            }
-
-            protected final int stateToInt(S state) {
-                return stateIds.getStateId(state);
-            }
-
-            protected final int safeStateToInt(@Nullable S state) {
-                return (state == null) ? INVALID_STATE : stateToInt(state);
-            }
-
-        }
     }
 
     /**
@@ -176,31 +126,6 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
          */
         int getSuccessor(int state, I input);
 
-        /**
-         * Base class implementing the default way of obtaining a {@link StateIntAbstraction}.
-         *
-         * @param <S>
-         *         state type
-         * @param <I>
-         *         input symbol type
-         * @param <A>
-         *         automaton type
-         *
-         * @author Malte Isberner
-         * @see IntAbstraction.DefaultAbstraction
-         */
-        class DefaultAbstraction<S, I, A extends SimpleDeterministicAutomaton<S, I>>
-                extends IntAbstraction.DefaultAbstraction<S, A> implements StateIntAbstraction<I> {
-
-            public DefaultAbstraction(A automaton) {
-                super(automaton);
-            }
-
-            @Override
-            public int getSuccessor(int state, I input) {
-                return safeStateToInt(automaton.getSuccessor(intToState(state), input));
-            }
-        }
     }
 
     /**
@@ -233,54 +158,6 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
          */
         int numInputs();
 
-        /**
-         * Base class implementing the default way of obtaining a {@link FullIntAbstraction}, i.e., building on top of a
-         * {@link StateIntAbstraction} and a mapping from integers to (concrete) input symbols.
-         *
-         * @param <I>
-         *         input symbol type
-         * @param <A>
-         *         state abstraction type
-         *
-         * @author Malte Isberner
-         */
-        class DefaultAbstraction<I, A extends StateIntAbstraction<I>> implements FullIntAbstraction {
-
-            protected final A stateAbstraction;
-            protected final int numInputs;
-            protected final IntFunction<? extends I> symMapping;
-
-            public DefaultAbstraction(A stateAbstraction, int numInputs, IntFunction<? extends I> symMapping) {
-                this.stateAbstraction = stateAbstraction;
-                this.numInputs = numInputs;
-                this.symMapping = symMapping;
-            }
-
-            @Override
-            public int getSuccessor(int state, int input) {
-                return stateAbstraction.getSuccessor(state, intToSym(input));
-            }
-
-            @Override
-            public int numInputs() {
-                return numInputs;
-            }
-
-            protected final I intToSym(int input) {
-                return symMapping.apply(input); // TODO range checks?
-            }
-
-            @Override
-            public int size() {
-                return stateAbstraction.size();
-            }
-
-            @Override
-            public int getIntInitialState() {
-                return stateAbstraction.getIntInitialState();
-            }
-
-        }
     }
 
 }

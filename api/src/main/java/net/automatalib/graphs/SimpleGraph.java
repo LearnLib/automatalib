@@ -23,6 +23,7 @@ import com.google.common.collect.Iterators;
 import net.automatalib.automata.concepts.FiniteRepresentation;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.graphs.helpers.SimpleNodeIDs;
+import net.automatalib.graphs.helpers.SimpleNormalGraphView;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 
@@ -72,36 +73,7 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N>, F
 
     @Override
     default Graph<N, ?> asNormalGraph() {
-        return new NormalGraphView<>(this);
-    }
-
-    class NormalGraphView<N, G extends SimpleGraph<N>> extends IndefiniteSimpleGraph.NormalGraphView<N, G>
-            implements Graph<N, N> {
-
-        public NormalGraphView(G simpleGraph) {
-            super(simpleGraph);
-        }
-
-        @Override
-        public int size() {
-            return simpleGraph.size();
-        }
-
-        @Override
-        public Collection<N> getNodes() {
-            return simpleGraph.getNodes();
-        }
-
-        @Override
-        public Iterator<N> iterator() {
-            return simpleGraph.iterator();
-        }
-
-        @Override
-        public Stream<N> nodesStream() {
-            return simpleGraph.nodesStream();
-        }
-
+        return new SimpleNormalGraphView<>(this);
     }
 
 }

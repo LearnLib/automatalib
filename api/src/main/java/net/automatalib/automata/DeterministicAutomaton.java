@@ -17,6 +17,7 @@ package net.automatalib.automata;
 
 import java.util.function.IntFunction;
 
+import net.automatalib.automata.abstraction.DeterministicAbstractions;
 import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.words.Alphabet;
@@ -45,12 +46,12 @@ public interface DeterministicAutomaton<S, I, T>
 
     @Override
     default FullIntAbstraction<T> fullIntAbstraction(int numInputs, IntFunction<? extends I> symMapping) {
-        return new FullIntAbstraction.DefaultAbstraction<>(stateIntAbstraction(), numInputs, symMapping);
+        return new DeterministicAbstractions.FullIntAbstraction<>(stateIntAbstraction(), numInputs, symMapping);
     }
 
     @Override
     default StateIntAbstraction<I, T> stateIntAbstraction() {
-        return new StateIntAbstraction.DefaultAbstraction<>(this);
+        return new DeterministicAbstractions.StateIntAbstraction<>(this);
     }
 
     /**
@@ -110,24 +111,6 @@ public interface DeterministicAutomaton<S, I, T>
          */
         @Nullable T getTransition(int state, I input);
 
-        class DefaultAbstraction<S, I, T, A extends DeterministicAutomaton<S, I, T>>
-                extends SimpleDeterministicAutomaton.StateIntAbstraction.DefaultAbstraction<S, I, A>
-                implements StateIntAbstraction<I, T> {
-
-            public DefaultAbstraction(A automaton) {
-                super(automaton);
-            }
-
-            @Override
-            public int getIntSuccessor(T transition) {
-                return stateToInt(automaton.getSuccessor(transition));
-            }
-
-            @Override
-            public @Nullable T getTransition(int state, I input) {
-                return automaton.getTransition(intToState(state), input);
-            }
-        }
     }
 
     /**
@@ -163,24 +146,5 @@ public interface DeterministicAutomaton<S, I, T>
          */
         @Nullable T getTransition(int state, int input);
 
-        class DefaultAbstraction<I, T, A extends StateIntAbstraction<I, T>>
-                extends SimpleDeterministicAutomaton.FullIntAbstraction.DefaultAbstraction<I, A>
-                implements FullIntAbstraction<T> {
-
-            public DefaultAbstraction(A stateAbstraction, int numInputs, IntFunction<? extends I> symMapping) {
-                super(stateAbstraction, numInputs, symMapping);
-            }
-
-            @Override
-            public @Nullable T getTransition(int state, int input) {
-                return stateAbstraction.getTransition(state, intToSym(input));
-            }
-
-            @Override
-            public int getIntSuccessor(T transition) {
-                return stateAbstraction.getIntSuccessor(transition);
-            }
-
-        }
     }
 }

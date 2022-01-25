@@ -15,6 +15,4 @@
  */
 package net.automatalib.graphs;
 
-public interface UniversalGraph<N, E, NP, EP> extends Graph<N, E>, UniversalIndefiniteGraph<N, E, NP, EP> {
-
-}
+public interface UniversalGraph<N, E, NP, EP> extends Graph<N, E>, UniversalIndefiniteGraph<N, E, NP, EP> {}
