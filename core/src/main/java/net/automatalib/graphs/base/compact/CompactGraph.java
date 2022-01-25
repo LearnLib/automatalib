@@ -34,7 +34,7 @@ public class CompactGraph<@Nullable NP, @Nullable EP> extends AbstractCompactGra
 
     @Override
     public void setNodeProperty(int node, @Nullable NP property) {
-        nodeProperties.ensureCapacity(size);
+        nodeProperties.ensureCapacity(node + 1);
         nodeProperties.array[node] = property;
     }
 

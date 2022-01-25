@@ -28,7 +28,7 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
         extends AbstractCompactGraph<CompactBidiEdge<EP>, NP, EP>
         implements MutableUniversalBidirectionalGraph<Integer, CompactBidiEdge<EP>, NP, EP> {
 
-    protected final ResizingArrayStorage<List<CompactBidiEdge<EP>>> inEdges;
+    private final ResizingArrayStorage<List<CompactBidiEdge<EP>>> inEdges;
 
     public AbstractCompactBidiGraph() {
         super();
@@ -51,8 +51,8 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
 
     @Override
     public int addIntNode(@Nullable NP property) {
-        inEdges.ensureCapacity(size + 1);
         int node = super.addIntNode(property);
+        inEdges.ensureCapacity(node + 1);
         inEdges.array[node] = new ArrayList<>();
         return node;
     }

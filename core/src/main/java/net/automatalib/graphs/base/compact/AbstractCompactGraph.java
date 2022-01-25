@@ -29,8 +29,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
         implements MutableGraph<Integer, E, NP, EP>, NodeIDs<Integer> {
 
-    protected final ResizingArrayStorage<List<E>> edges;
-    protected int size;
+    private final ResizingArrayStorage<List<E>> edges;
+    private int size;
 
     public AbstractCompactGraph() {
         this.edges = new ResizingArrayStorage<>(List.class);
@@ -56,11 +56,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     }
 
     public Collection<E> getOutgoingEdges(int node) {
-        return Collections.unmodifiableCollection(getOutEdgeList(node));
-    }
-
-    protected List<E> getOutEdgeList(int node) {
-        return edges.array[node];
+        return Collections.unmodifiableCollection(edges.array[node]);
     }
 
     @Override
@@ -74,9 +70,9 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     }
 
     public int addIntNode(@Nullable NP property) {
-        edges.ensureCapacity(size + 1);
-        edges.array[size] = new ArrayList<>();
         int n = size++;
+        edges.ensureCapacity(n + 1);
+        edges.array[n] = new ArrayList<>();
         setNodeProperty(n, property);
         return n;
     }
@@ -99,7 +95,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
 
     public E connect(int source, int target, @Nullable EP property) {
         E edge = createEdge(source, target, property);
-        List<E> edges = getOutEdgeList(source);
+        List<E> edges = this.edges.array[source];
         edge.outIndex = edges.size();
         edges.add(edge);
         return edge;
