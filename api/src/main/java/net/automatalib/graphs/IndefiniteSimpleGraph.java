@@ -16,7 +16,6 @@
 package net.automatalib.graphs;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -36,22 +35,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface IndefiniteSimpleGraph<N> {
 
-    default Iterable<N> adjacentTargets(N node) {
-        return () -> adjacentTargetsIterator(node);
-    }
-
-    default Iterator<N> adjacentTargetsIterator(N node) {
-        return getAdjacentTargets(node).iterator();
-    }
-
     Collection<N> getAdjacentTargets(N node);
-
-    default boolean isConnected(N source, N target) {
-        return adjacentTargetsStream(source).anyMatch(n -> Objects.equals(n, target));
-    }
 
     default Stream<N> adjacentTargetsStream(N node) {
         return getAdjacentTargets(node).stream();
+    }
+
+    default boolean isConnected(N source, N target) {
+        return adjacentTargetsStream(source).anyMatch(n -> Objects.equals(n, target));
     }
 
     default <@Nullable V> MutableMapping<N, V> createStaticNodeMapping() {

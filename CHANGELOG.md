@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed non-static methods on `RandomAutomata` factory (including the `getInstance()` method).
 * Removed `AbstractCompactNPGraph`, use `AbstractCompactGraph` instead.
 * Removed `AbstractCompactSimpleGraph`. All functionality is provided in `CompactSimpleGraph`.
+* Removed `Iterable`- and `Iterator`-based methods for adjacent nodes/edges on graphs. For lazy/indefinite fetching use the `Stream`-based methods, for complete fetching use the `Collection`-based methods.
 
 
 ## [0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11

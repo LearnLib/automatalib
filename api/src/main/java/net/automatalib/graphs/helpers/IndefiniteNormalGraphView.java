@@ -16,7 +16,6 @@
 package net.automatalib.graphs.helpers;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.stream.Stream;
 
 import net.automatalib.commons.util.mappings.MutableMapping;
@@ -30,11 +29,6 @@ public class IndefiniteNormalGraphView<N, G extends IndefiniteSimpleGraph<N>> im
 
     public IndefiniteNormalGraphView(G simpleGraph) {
         this.simpleGraph = simpleGraph;
-    }
-
-    @Override
-    public Iterator<N> adjacentTargetsIterator(N node) {
-        return simpleGraph.adjacentTargetsIterator(node);
     }
 
     @Override
@@ -55,11 +49,6 @@ public class IndefiniteNormalGraphView<N, G extends IndefiniteSimpleGraph<N>> im
     @Override
     public N getTarget(N edge) {
         return edge;
-    }
-
-    @Override
-    public Iterable<N> adjacentTargets(N node) {
-        return simpleGraph.adjacentTargets(node);
     }
 
     @Override
