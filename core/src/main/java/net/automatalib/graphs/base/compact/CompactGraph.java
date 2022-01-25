@@ -34,23 +34,18 @@ public class CompactGraph<@Nullable NP, @Nullable EP> extends AbstractCompactGra
 
     @Override
     public void setNodeProperty(int node, @Nullable NP property) {
-        if (node >= nodeProperties.array.length) {
-            nodeProperties.ensureCapacity(size);
-        }
+        nodeProperties.ensureCapacity(size);
         nodeProperties.array[node] = property;
+    }
+
+    @Override
+    public NP getNodeProperty(int node) {
+        return node < nodeProperties.array.length ? nodeProperties.array[node] : null;
     }
 
     @Override
     protected CompactEdge<EP> createEdge(int source, int target, @Nullable EP property) {
         return new CompactEdge<>(target, property);
-    }
-
-    @Override
-    public NP getNodeProperty(int node) {
-        if (node < nodeProperties.array.length) {
-            return nodeProperties.array[node];
-        }
-        return null;
     }
 
 }

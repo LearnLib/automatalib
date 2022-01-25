@@ -13,26 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.graphs.base.compact;
+package net.automatalib.graphs;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
-public class CompactSimpleBidiGraph<@Nullable EP> extends AbstractCompactBidiGraph<Void, EP> {
-
-    public CompactSimpleBidiGraph() {
-        super();
-    }
-
-    public CompactSimpleBidiGraph(int initialCapacity) {
-        super(initialCapacity);
-    }
-
-    @Override
-    public void setNodeProperty(int node, @Nullable Void property) {}
-
-    @Override
-    public Void getNodeProperty(int node) {
-        return null;
-    }
-
-}
+public interface UniversalBidirectionalGraph<N, E, NP, EP>
+        extends UniversalGraph<N, E, NP, EP>, BidirectionalGraph<N, E> {}

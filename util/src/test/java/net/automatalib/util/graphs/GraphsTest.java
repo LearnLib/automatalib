@@ -26,6 +26,7 @@ import net.automatalib.automata.fsa.DFA;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.mappings.Mappings;
 import net.automatalib.graphs.MutableGraph;
+import net.automatalib.graphs.base.compact.CompactBidiGraph;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.graphs.base.compact.CompactSimpleBidiGraph;
 import net.automatalib.graphs.base.compact.CompactSimpleGraph;
@@ -50,6 +51,7 @@ public class GraphsTest {
         final DFA<?, Integer> dfa = RandomAutomata.randomDFA(new Random(42), 10, alphabet);
 
         checkIncomingEdges(dfa, alphabet, new CompactGraph<>(dfa.size()));
+        checkIncomingEdges(dfa, alphabet, new CompactBidiGraph<>(dfa.size()));
         checkIncomingEdges(dfa, alphabet, new CompactSimpleGraph<>(dfa.size()));
         checkIncomingEdges(dfa, alphabet, new CompactSimpleBidiGraph<>(dfa.size()));
         checkIncomingEdges(dfa, alphabet, new SimpleMapGraph<>());

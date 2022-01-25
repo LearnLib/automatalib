@@ -13,25 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.graphs.base.compact;
+package net.automatalib.graphs;
 
-public abstract class AbstractCompactSimpleGraph<E extends CompactEdge<EP>, EP>
-        extends AbstractCompactGraph<E, Void, EP> {
-
-    public AbstractCompactSimpleGraph() {
-        super();
-    }
-
-    public AbstractCompactSimpleGraph(int initialCapacity) {
-        super(initialCapacity);
-    }
-
-    @Override
-    public void setNodeProperty(int node, Void property) {}
-
-    @Override
-    public Void getNodeProperty(int node) {
-        return null;
-    }
-
-}
+public interface MutableUniversalBidirectionalGraph<N, E, NP, EP>
+        extends MutableGraph<N, E, NP, EP>, BidirectionalGraph<N, E> {}

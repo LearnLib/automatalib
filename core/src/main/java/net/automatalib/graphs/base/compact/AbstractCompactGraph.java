@@ -69,15 +69,15 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     }
 
     @Override
-    public Integer addNode(@Nullable NP properties) {
-        return addIntNode(properties);
+    public Integer addNode(@Nullable NP property) {
+        return addIntNode(property);
     }
 
-    public int addIntNode(@Nullable NP properties) {
+    public int addIntNode(@Nullable NP property) {
         edges.ensureCapacity(size + 1);
         edges.array[size] = new ArrayList<>();
         int n = size++;
-        setNodeProperty(n, properties);
+        setNodeProperty(n, property);
         return n;
     }
 
@@ -93,8 +93,8 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     public abstract void setNodeProperty(int node, @Nullable NP property);
 
     @Override
-    public E connect(Integer source, Integer target, @Nullable EP properties) {
-        return connect(source.intValue(), target.intValue(), properties);
+    public E connect(Integer source, Integer target, @Nullable EP property) {
+        return connect(source.intValue(), target.intValue(), property);
     }
 
     public E connect(int source, int target, @Nullable EP property) {

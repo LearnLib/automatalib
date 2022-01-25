@@ -18,31 +18,28 @@ package net.automatalib.graphs.base.compact;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractCompactNPGraph<E extends CompactEdge<EP>, @Nullable NP, EP>
-        extends AbstractCompactGraph<E, NP, EP> {
+public class CompactBidiGraph<@Nullable NP, @Nullable EP> extends AbstractCompactBidiGraph<NP, EP> {
 
-    protected final ResizingArrayStorage<NP> npStorage;
+    private final ResizingArrayStorage<NP> nodeProperties;
 
-    public AbstractCompactNPGraph() {
-        this.npStorage = new ResizingArrayStorage<>(Object.class);
+    public CompactBidiGraph() {
+        this.nodeProperties = new ResizingArrayStorage<>(Object.class);
     }
 
-    @Override
-    public int addIntNode(@Nullable NP properties) {
-        int node = super.addIntNode(properties);
-        npStorage.ensureCapacity(size);
-        npStorage.array[node] = properties;
-        return node;
+    public CompactBidiGraph(int initialCapacity) {
+        super(initialCapacity);
+        this.nodeProperties = new ResizingArrayStorage<>(Object.class, initialCapacity);
     }
 
     @Override
     public void setNodeProperty(int node, @Nullable NP property) {
-        npStorage.array[node] = property;
+        nodeProperties.ensureCapacity(node + 1);
+        nodeProperties.array[node] = property;
     }
 
     @Override
     public NP getNodeProperty(int node) {
-        return npStorage.array[node];
+        return node < nodeProperties.array.length ? nodeProperties.array[node] : null;
     }
 
 }

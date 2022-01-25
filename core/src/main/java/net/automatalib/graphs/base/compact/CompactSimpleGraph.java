@@ -17,7 +17,7 @@ package net.automatalib.graphs.base.compact;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class CompactSimpleGraph<@Nullable EP> extends AbstractCompactSimpleGraph<CompactEdge<EP>, EP> {
+public class CompactSimpleGraph<@Nullable EP> extends AbstractCompactGraph<CompactEdge<EP>, Void, EP> {
 
     public CompactSimpleGraph() {
         super();
@@ -25,6 +25,14 @@ public class CompactSimpleGraph<@Nullable EP> extends AbstractCompactSimpleGraph
 
     public CompactSimpleGraph(int initialCapacity) {
         super(initialCapacity);
+    }
+
+    @Override
+    public void setNodeProperty(int node, Void property) {}
+
+    @Override
+    public Void getNodeProperty(int node) {
+        return null;
     }
 
     @Override
