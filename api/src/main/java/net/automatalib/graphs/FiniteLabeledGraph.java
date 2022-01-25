@@ -17,6 +17,4 @@ package net.automatalib.graphs;
 
 import net.automatalib.graphs.concepts.EdgeLabels;
 
-public interface FiniteLabeledGraph<N, E, L> extends Graph<N, E>, EdgeLabels<E, L> {
-
-}
+public interface FiniteLabeledGraph<N, E, L> extends Graph<N, E>, EdgeLabels<E, L> {}

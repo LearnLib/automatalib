@@ -30,6 +30,4 @@ import net.automatalib.graphs.concepts.KripkeInterpretation;
  * @author Malte Isberner
  * @see KripkeInterpretation
  */
-public interface FiniteKripkeStructure<N, E, AP> extends Graph<N, E>, KripkeInterpretation<N, AP> {
-
-}
+public interface FiniteKripkeStructure<N, E, AP> extends Graph<N, E>, KripkeInterpretation<N, AP> {}

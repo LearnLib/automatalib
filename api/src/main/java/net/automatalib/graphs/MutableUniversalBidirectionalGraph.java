@@ -16,4 +16,4 @@
 package net.automatalib.graphs;
 
 public interface MutableUniversalBidirectionalGraph<N, E, NP, EP>
-        extends MutableGraph<N, E, NP, EP>, BidirectionalGraph<N, E> {}
+        extends MutableGraph<N, E, NP, EP>, UniversalBidirectionalGraph<N, E, NP, EP> {}
