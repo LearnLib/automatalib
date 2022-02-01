@@ -15,26 +15,11 @@
  */
 package net.automatalib.automata.vpda;
 
-import java.util.List;
-
-import com.google.common.collect.Iterables;
-import net.automatalib.automata.concepts.FiniteRepresentation;
-import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.automata.concepts.SuffixOutput;
-import net.automatalib.automata.vpda.OneSEVPAGraphView.SevpaViewEdge;
-import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.concepts.GraphViewable;
-import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
-import net.automatalib.words.VPDAlphabet;
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
- * Interface for the 1-SEVPA (1-single entry visibly push-down automaton), a visibly push-down automaton of specific
- * structure and semantics. Additionally -- unless specified other by an implementation -- this interface only accepts
- * well-matched words.
- * <p>
- * For more information on the semantics of VPAs see e.g. "Congruences for Visibly Pushdown Languages" by Alur, Kumar,
- * Madhusudan and Viswanathan.
+ * A specialized interface for 1-SEVPAs (1-module single entry visibly push-down automata). Note that contrary to the
+ * original definition of Alur et al. where 1-SEVPAs consist of one (separate) "main" module and one module for all call
+ * symbols, this implementation assumes a single module for both the "main" procedure and all call symbols, i.e., the
+ * initial location and all module entries coincide.
  *
  * @param <L>
  *         location type
@@ -43,57 +28,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public interface OneSEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>,
-                                        SuffixOutput<I, Boolean>,
-                                        InputAlphabetHolder<I>,
-                                        GraphViewable,
-                                        FiniteRepresentation {
+public interface OneSEVPA<L, I> extends SEVPA<L, I> {
 
     @Override
-    VPDAlphabet<I> getInputAlphabet();
-
-    int encodeStackSym(L srcLoc, I callSym);
-
-    @Nullable L getInternalSuccessor(L loc, I intSym);
-
-    L getLocation(int id);
-
-    int getLocationId(L loc);
-
-    List<L> getLocations();
-
-    int getNumStackSymbols();
-
-    @Nullable L getReturnSuccessor(L loc, I retSym, int stackSym);
-
-    @Override
-    default Boolean computeOutput(Iterable<? extends I> input) {
-        return accepts(input);
+    default L getModuleEntry(I callSym) {
+        return getInitialLocation();
     }
 
-    @Override
-    default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        State<L> state = this.getState(Iterables.concat(prefix, suffix));
-        return state != null && isAccepting(state);
-    }
-
-    @Override
-    default boolean isAccepting(State<L> state) {
-        return state.getLocation() != null && isAcceptingLocation(state.getLocation()) &&
-               state.getStackContents() == null;
-    }
-
-    boolean isAcceptingLocation(L loc);
-
-    @Override
-    default State<L> getInitialState() {
-        return new State<>(getInitialLocation(), null);
-    }
-
-    L getInitialLocation();
-
-    @Override
-    default Graph<L, SevpaViewEdge<L, I>> graphView() {
-        return new OneSEVPAGraphView<>(this);
-    }
 }

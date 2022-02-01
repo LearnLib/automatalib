@@ -21,26 +21,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.automata.vpda.OneSEVPAGraphView.SevpaViewEdge;
+import net.automatalib.automata.vpda.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graphs.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class OneSEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
+public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
-    private final OneSEVPA<L, I> oneSevpa;
+    private final SEVPA<L, I> sevpa;
     private final VPDAlphabet<I> alphabet;
 
-    public OneSEVPAGraphView(OneSEVPA<L, I> oneSevpa) {
-        this.oneSevpa = oneSevpa;
-        this.alphabet = oneSevpa.getInputAlphabet();
+    public SEVPAGraphView(SEVPA<L, I> sevpa) {
+        this.sevpa = sevpa;
+        this.alphabet = sevpa.getInputAlphabet();
     }
 
     @Override
     public Collection<L> getNodes() {
-        return Collections.unmodifiableCollection(oneSevpa.getLocations());
+        return Collections.unmodifiableCollection(sevpa.getLocations());
     }
 
     @Override
@@ -48,9 +48,17 @@ public class OneSEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
         final List<SevpaViewEdge<L, I>> result = new ArrayList<>();
 
+        // all call transitions
+        for (final I i : alphabet.getCallAlphabet()) {
+            final L succ = sevpa.getModuleEntry(i);
+            if (succ != null) {
+                result.add(new SevpaViewEdge<>(i, succ));
+            }
+        }
+
         // all internal transitions
         for (final I i : alphabet.getInternalAlphabet()) {
-            final L succ = oneSevpa.getInternalSuccessor(location, i);
+            final L succ = sevpa.getInternalSuccessor(location, i);
             if (succ != null) {
                 result.add(new SevpaViewEdge<>(i, succ));
             }
@@ -58,13 +66,13 @@ public class OneSEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
         // all return transitions for every possible stack contents
         for (final I i : alphabet.getReturnAlphabet()) {
-            for (final L loc : oneSevpa.getLocations()) {
+            for (final L loc : sevpa.getLocations()) {
                 for (final I stackSymbol : alphabet.getCallAlphabet()) {
-                    final int sym = oneSevpa.encodeStackSym(loc, stackSymbol);
-                    final L succ = oneSevpa.getReturnSuccessor(location, i, sym);
+                    final int sym = sevpa.encodeStackSym(loc, stackSymbol);
+                    final L succ = sevpa.getReturnSuccessor(location, i, sym);
 
                     if (succ != null) {
-                        result.add(new SevpaViewEdge<>(i, succ, oneSevpa.getLocationId(loc), stackSymbol));
+                        result.add(new SevpaViewEdge<>(i, succ, sevpa.getLocationId(loc), stackSymbol));
                     }
                 }
             }
@@ -84,7 +92,7 @@ public class OneSEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
             @Override
             protected Collection<L> initialNodes() {
-                return Collections.singleton(oneSevpa.getInitialLocation());
+                return Collections.singleton(sevpa.getInitialLocation());
             }
 
             @Override
@@ -92,8 +100,8 @@ public class OneSEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
                 super.getNodeProperties(node, properties);
 
                 properties.put(NodeAttrs.SHAPE,
-                               oneSevpa.isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);
-                properties.put(NodeAttrs.LABEL, "L" + oneSevpa.getLocationId(node));
+                               sevpa.isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);
+                properties.put(NodeAttrs.LABEL, "L" + sevpa.getLocationId(node));
 
                 return true;
             }
@@ -106,12 +114,10 @@ public class OneSEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
                 final I input = edge.input;
 
-                if (alphabet.isInternalSymbol(input)) {
-                    properties.put(EdgeAttrs.LABEL, String.valueOf(input));
-                } else if (alphabet.isReturnSymbol(input)) {
+                if (alphabet.isReturnSymbol(input)) {
                     properties.put(EdgeAttrs.LABEL, input + "/(L" + edge.callLocId + ',' + edge.callSymbol + ')');
                 } else {
-                    throw new IllegalArgumentException();
+                    properties.put(EdgeAttrs.LABEL, String.valueOf(input));
                 }
 
                 return true;

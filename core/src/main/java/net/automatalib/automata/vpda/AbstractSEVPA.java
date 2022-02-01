@@ -19,7 +19,7 @@ import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Abstract class for 1-SEVPAs that implements functionality shared across different subtypes.
+ * Abstract class for k-SEVPAs that implements functionality shared across different subtypes.
  *
  * @param <L>
  *         location type
@@ -28,11 +28,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I> {
+public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
 
     protected final VPDAlphabet<I> alphabet;
 
-    public AbstractOneSEVPA(final VPDAlphabet<I> alphabet) {
+    public AbstractSEVPA(final VPDAlphabet<I> alphabet) {
         this.alphabet = alphabet;
     }
 
@@ -48,7 +48,8 @@ public abstract class AbstractOneSEVPA<L, I> implements OneSEVPA<L, I> {
         switch (type) {
             case CALL:
                 final int newStackElem = encodeStackSym(loc, input);
-                return new State<>(getInitialLocation(), StackContents.push(newStackElem, state.getStackContents()));
+                return new State<>(getModuleEntry(input),
+                                   StackContents.push(newStackElem, state.getStackContents()));
             case RETURN: {
                 final StackContents contents = state.getStackContents();
                 if (contents == null) {

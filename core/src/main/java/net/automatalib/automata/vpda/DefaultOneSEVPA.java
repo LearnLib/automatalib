@@ -15,97 +15,24 @@
  */
 package net.automatalib.automata.vpda;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.automatalib.words.VPDAlphabet;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Default implementation for 1-SEVPA.
+ * Default implementation for 1-SEVPAs.
  *
  * @param <I>
  *         input symbol type
  *
  * @author Malte Isberner
  */
-public class DefaultOneSEVPA<I> extends AbstractOneSEVPA<Location, I> {
-
-    private final List<Location> locations;
-    private Location initLoc;
+public class DefaultOneSEVPA<I> extends AbstractDefaultSEVPA<I> implements OneSEVPA<Location, I> {
 
     public DefaultOneSEVPA(final VPDAlphabet<I> alphabet) {
-        super(alphabet);
-        this.locations = new ArrayList<>();
+        this(alphabet, DEFAULT_SIZE);
     }
 
     public DefaultOneSEVPA(final VPDAlphabet<I> alphabet, final int capacity) {
-        super(alphabet);
-        this.locations = new ArrayList<>(capacity);
-    }
-
-    public Location addInitialLocation(final boolean accepting) {
-        final Location loc = addLocation(accepting);
-        setInitialLocation(loc);
-        return loc;
-    }
-
-    public Location addLocation(final boolean accepting) {
-        final Location loc = new Location(alphabet, locations.size(), accepting);
-        locations.add(loc);
-        return loc;
-    }
-
-    @Override
-    public int size() {
-        return locations.size();
-    }
-
-    public void setInternalSuccessor(final Location loc, final I intSym, final Location succ) {
-        loc.setInternalSuccessor(alphabet.getInternalSymbolIndex(intSym), succ);
-    }
-
-    public void setReturnSuccessor(final Location loc, final I retSym, final int stackSym, final Location succ) {
-        loc.setReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym, succ);
-    }
-
-    @Override
-    public Location getInternalSuccessor(final Location loc, final I intSym) {
-        return loc.getInternalSuccessor(alphabet.getInternalSymbolIndex(intSym));
-    }
-
-    @Override
-    public Location getLocation(final int id) {
-        return locations.get(id);
-    }
-
-    @Override
-    public int getLocationId(final Location loc) {
-        return loc.getIndex();
-    }
-
-    @Override
-    public List<Location> getLocations() {
-        return locations;
-    }
-
-    @Override
-    public @Nullable Location getReturnSuccessor(final Location loc, final I retSym, final int stackSym) {
-        return loc.getReturnSuccessor(alphabet.getReturnSymbolIndex(retSym), stackSym);
-    }
-
-    @Override
-    public boolean isAcceptingLocation(final Location loc) {
-        return loc.isAccepting();
-    }
-
-    @Override
-    public Location getInitialLocation() {
-        return initLoc;
-    }
-
-    public void setInitialLocation(final Location loc) {
-        this.initLoc = loc;
+        super(alphabet, capacity);
     }
 
 }

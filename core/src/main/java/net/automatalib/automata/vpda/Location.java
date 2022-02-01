@@ -39,7 +39,7 @@ public class Location {
         this.index = index;
         this.accepting = accepting;
         this.intSuccessors = new ArrayStorage<>(alphabet.getNumInternals());
-        this.returnSuccessors = new ArrayStorage<>(alphabet.getNumReturns(), ArrayList::new);
+        this.returnSuccessors = new ArrayStorage<>(alphabet.getNumReturns());
     }
 
     public int getIndex() {

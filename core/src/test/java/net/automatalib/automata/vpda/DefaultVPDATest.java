@@ -18,7 +18,7 @@ package net.automatalib.automata.vpda;
 import java.util.Collections;
 import java.util.HashSet;
 
-import net.automatalib.automata.vpda.OneSEVPAGraphView.SevpaViewEdge;
+import net.automatalib.automata.vpda.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graphs.Graph;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.VPDAlphabet;
@@ -31,38 +31,83 @@ import org.testng.annotations.Test;
 /**
  * @author frohme
  */
-public class VPDATest {
+public class DefaultVPDATest {
 
     /**
      * Tests the language of correctly matched brace-words, which can be described by the EBNF
      * <code>S -> ( S ) | [ S ] | () | []</code>.
      */
     @Test
-    public void testBracketLanguage() {
+    public void testBracketLanguageOneSevpa() {
 
         final Alphabet<Character> callAlphabet = Alphabets.fromArray('(', '[');
         final Alphabet<Character> returnAlphabet = Alphabets.fromArray(')', ']');
         final VPDAlphabet<Character> alphabet =
                 new DefaultVPDAlphabet<>(Collections.emptyList(), callAlphabet, returnAlphabet);
 
-        final DefaultOneSEVPA<Character> vpda = new DefaultOneSEVPA<>(alphabet);
+        final DefaultOneSEVPA<Character> vpa = new DefaultOneSEVPA<>(alphabet);
 
-        final Location init = vpda.addInitialLocation(false);
-        final Location accepting = vpda.addLocation(true);
+        final Location init = vpa.addInitialLocation(false);
+        final Location accepting = vpa.addLocation(true);
 
-        vpda.setReturnSuccessor(init, ')', vpda.encodeStackSym(init, callAlphabet.getSymbolIndex('(')), accepting);
-        vpda.setReturnSuccessor(init, ']', vpda.encodeStackSym(init, callAlphabet.getSymbolIndex('[')), accepting);
-        vpda.setReturnSuccessor(accepting, ')', vpda.encodeStackSym(init, callAlphabet.getSymbolIndex('(')), accepting);
-        vpda.setReturnSuccessor(accepting, ']', vpda.encodeStackSym(init, callAlphabet.getSymbolIndex('[')), accepting);
+        vpa.setReturnSuccessor(init, ')', vpa.encodeStackSym(init, callAlphabet.getSymbolIndex('(')), accepting);
+        vpa.setReturnSuccessor(init, ']', vpa.encodeStackSym(init, callAlphabet.getSymbolIndex('[')), accepting);
+        vpa.setReturnSuccessor(accepting, ')', vpa.encodeStackSym(init, callAlphabet.getSymbolIndex('(')), accepting);
+        vpa.setReturnSuccessor(accepting, ']', vpa.encodeStackSym(init, callAlphabet.getSymbolIndex('[')), accepting);
 
-        Assert.assertTrue(vpda.accepts(Word.fromCharSequence("(([[]]))")));
-        Assert.assertTrue(vpda.accepts(Word.fromCharSequence("([([])])")));
-        Assert.assertTrue(vpda.accepts(Word.fromCharSequence("[(())]")));
+        checkBracketWord(vpa);
+    }
 
-        Assert.assertFalse(vpda.accepts(Word.fromCharSequence("([([")));
-        Assert.assertFalse(vpda.accepts(Word.fromCharSequence("(((]]]")));
-        Assert.assertFalse(vpda.accepts(Word.fromCharSequence(")(")));
-        Assert.assertFalse(vpda.accepts(Word.fromCharSequence("()()")));
+    /**
+     * Tests the language of correctly matched brace-words, which can be described by the EBNF
+     * <code>S -> ( S ) | [ S ] | () | []</code>.
+     */
+    @Test
+    public void testBracketLanguageNSevpa() {
+
+        final Alphabet<Character> callAlphabet = Alphabets.fromArray('(', '[');
+        final Alphabet<Character> returnAlphabet = Alphabets.fromArray(')', ']');
+        final VPDAlphabet<Character> alphabet =
+                new DefaultVPDAlphabet<>(Collections.emptyList(), callAlphabet, returnAlphabet);
+
+        final DefaultNSEVPA<Character> vpa = new DefaultNSEVPA<>(alphabet);
+
+        final Location init = vpa.addInitialLocation(false);
+        final Location m1 = vpa.addModuleEntryLocation('(', false);
+        final Location m2 = vpa.addModuleEntryLocation('[', false);
+        final Location accepting = vpa.addLocation(true);
+
+        vpa.setReturnSuccessor(m1, ')', vpa.encodeStackSym(init, (Character) '('), accepting);
+        vpa.setReturnSuccessor(m2, ']', vpa.encodeStackSym(init, (Character) '['), accepting);
+
+        vpa.setReturnSuccessor(m1, ')', vpa.encodeStackSym(init, (Character) '('), accepting);
+        vpa.setReturnSuccessor(m1, ')', vpa.encodeStackSym(m1, (Character) '('), m1);
+        vpa.setReturnSuccessor(m1, ')', vpa.encodeStackSym(m2, (Character) '('), m2);
+        vpa.setReturnSuccessor(m2, ']', vpa.encodeStackSym(init, (Character) '['), accepting);
+        vpa.setReturnSuccessor(m2, ']', vpa.encodeStackSym(m2, (Character) '['), m2);
+        vpa.setReturnSuccessor(m2, ']', vpa.encodeStackSym(m1, (Character) '['), m1);
+
+        checkBracketWord(vpa);
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> vpa.setInternalSuccessor(m1, null, m2));
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> vpa.setReturnSuccessor(m1, ')', vpa.encodeStackSym(init, (Character) '('), m1));
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> vpa.setReturnSuccessor(m2, ']', vpa.encodeStackSym(init, (Character) '['), m2));
+    }
+
+    private void checkBracketWord(SEVPA<?, Character> sevpa) {
+        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("()")));
+        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("[]")));
+        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("(([[]]))")));
+        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("([([])])")));
+        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("[(())]")));
+
+        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence("")));
+        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence("([([")));
+        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence("(((]]]")));
+        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence(")(")));
+        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence("()()")));
     }
 
     /**
@@ -143,14 +188,15 @@ public class VPDATest {
 
                 switch (alphabet.getSymbolType(input)) {
                     case CALL:
-                        throw new IllegalStateException("Call edges are implicit in a 1-SEVPA");
+                        Assert.assertEquals(vpa.getModuleEntry(input), target);
+                        break;
                     case INTERNAL:
                         Assert.assertEquals(vpa.getInternalSuccessor(loc, input), target);
-                        continue;
+                        break;
                     case RETURN:
                         final int stackSym = vpa.encodeStackSym(vpa.getLocation(callLocId), callSymbol);
                         Assert.assertEquals(vpa.getReturnSuccessor(loc, input, stackSym), target);
-                        continue;
+                        break;
                     default:
                         throw new IllegalStateException("Unknown symbol type: " + alphabet.getSymbolType(input));
                 }

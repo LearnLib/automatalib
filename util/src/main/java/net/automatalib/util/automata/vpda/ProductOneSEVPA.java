@@ -18,7 +18,7 @@ package net.automatalib.util.automata.vpda;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.automata.vpda.AbstractOneSEVPA;
+import net.automatalib.automata.vpda.AbstractSEVPA;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.util.ts.acceptors.AcceptanceCombiner;
@@ -38,7 +38,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public class ProductOneSEVPA<L1, L2, I> extends AbstractOneSEVPA<Pair<L1, L2>, I> {
+public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> implements OneSEVPA<Pair<L1, L2>, I> {
 
     private final OneSEVPA<L1, I> sevpa1;
     private final OneSEVPA<L2, I> sevpa2;
