@@ -43,7 +43,7 @@ public interface M3CSolver<F> {
 
     /**
      * A specialized {@link M3CSolver} which no longer throws a {@link ParseException} when solving a formula, but
-     * requires an type-safe formula object.
+     * requires a type-safe formula object.
      *
      * @param <F>
      *         formula type
