@@ -22,7 +22,6 @@ import java.util.Objects;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.SPAAlphabet;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A stack-based implementation for {@link SPA}s.
@@ -57,9 +56,7 @@ public class StackSPA<S, I> implements SPA<StackSPAState<I, S>, I>, SimpleDTS<St
                 return StackSPAState.sink();
             }
 
-            // if we returned the state before, we checked that a procedure is available
-            @SuppressWarnings("assignment.type.incompatible")
-            final @NonNull DFA<S, I> model = state.getProcedure();
+            final DFA<S, I> model = state.getProcedure();
             final S next = model.getTransition(state.getCurrentState(), input);
 
             // undefined internal transition
@@ -104,8 +101,7 @@ public class StackSPA<S, I> implements SPA<StackSPAState<I, S>, I>, SimpleDTS<St
             }
 
             // if we returned the state before, we checked that a procedure is available
-            @SuppressWarnings("assignment.type.incompatible")
-            final @NonNull DFA<S, I> model = state.getProcedure();
+            final DFA<S, I> model = state.getProcedure();
 
             // cannot return, reject word
             if (!model.isAccepting(state.getCurrentState())) {
