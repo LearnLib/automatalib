@@ -15,8 +15,36 @@
  */
 package net.automatalib.words.abstractimpl;
 
-import net.automatalib.commons.util.nid.AbstractMutableNumericID;
+import java.util.Objects;
 
-// we want to aggregate functionality of an abstract class and an interface
-@SuppressWarnings("PMD.AbstractClassWithoutAnyMethod")
-public abstract class AbstractSymbol<S extends Object> extends AbstractMutableNumericID implements Comparable<S> {}
+import net.automatalib.commons.util.nid.AbstractMutableNumericID;
+import net.automatalib.words.impl.Symbol;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+public abstract class AbstractSymbol<S extends AbstractSymbol<S>> extends AbstractMutableNumericID
+        implements Comparable<S> {
+
+    @Override
+    public int compareTo(S that) {
+        return this.id - that.id;
+    }
+
+    @Override
+    public final boolean equals(@Nullable Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Symbol)) {
+            return false;
+        }
+
+        final AbstractSymbol<?> that = (AbstractSymbol<?>) o;
+        return this.id == that.id;
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hashCode(super.id);
+    }
+
+}

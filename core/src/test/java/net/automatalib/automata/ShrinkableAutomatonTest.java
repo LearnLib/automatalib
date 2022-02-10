@@ -36,7 +36,7 @@ public class ShrinkableAutomatonTest {
     @Test
     public void testDeterministic() {
 
-        final FastMealy<Symbol, String> mealy = TestUtil.constructMealy();
+        final FastMealy<Symbol<Character>, String> mealy = TestUtil.constructMealy();
         final StateIDs<FastMealyState<String>> stateIds = mealy.stateIDs();
 
         final FastMealyState<String> s0 = stateIds.getState(0);
@@ -45,8 +45,9 @@ public class ShrinkableAutomatonTest {
 
         mealy.removeState(s2);
 
-        final Word<Symbol> input1 = Word.fromSymbols(TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_A);
-        final Word<Symbol> input2 = Word.fromSymbols(TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_B, TestUtil.IN_B);
+        final Word<Symbol<Character>> input1 = Word.fromSymbols(TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_A);
+        final Word<Symbol<Character>> input2 =
+                Word.fromSymbols(TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_B, TestUtil.IN_B);
 
         final Word<String> expectedOutput1 = Word.fromSymbols(TestUtil.OUT_ERROR, TestUtil.OUT_OK);
         final Word<String> expectedOutput2 =
@@ -69,7 +70,7 @@ public class ShrinkableAutomatonTest {
     @Test
     public void testNonDeterministic() {
 
-        final FastNFA<Symbol> nfa = TestUtil.constructNFA();
+        final FastNFA<Symbol<Character>> nfa = TestUtil.constructNFA();
         final StateIDs<FastNFAState> stateIds = nfa.stateIDs();
 
         final FastNFAState s0 = stateIds.getState(0);
@@ -78,8 +79,8 @@ public class ShrinkableAutomatonTest {
 
         nfa.removeState(s2);
 
-        final Word<Symbol> input1 = Word.fromSymbols(TestUtil.IN_A, TestUtil.IN_A, TestUtil.IN_B);
-        final Word<Symbol> input2 = Word.fromSymbols(TestUtil.IN_A, TestUtil.IN_B, TestUtil.IN_A);
+        final Word<Symbol<Character>> input1 = Word.fromSymbols(TestUtil.IN_A, TestUtil.IN_A, TestUtil.IN_B);
+        final Word<Symbol<Character>> input2 = Word.fromSymbols(TestUtil.IN_A, TestUtil.IN_B, TestUtil.IN_A);
 
         Assert.assertFalse(nfa.accepts(input1));
         Assert.assertTrue(nfa.accepts(input2));

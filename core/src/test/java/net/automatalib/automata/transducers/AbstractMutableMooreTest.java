@@ -29,12 +29,12 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractMutableMooreTest {
 
-    protected abstract MutableMooreMachine<?, Symbol, ?, String> getMoore();
+    protected abstract MutableMooreMachine<?, Symbol<Character>, ?, String> getMoore();
 
     @Test
     public void testTrace() {
-        final MutableMooreMachine<?, Symbol, ?, String> fm = getMoore();
-        final List<Symbol> input = Arrays.asList(TestUtil.IN_A, TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_B);
+        final MutableMooreMachine<?, Symbol<Character>, ?, String> fm = getMoore();
+        final List<Symbol<Character>> input = Arrays.asList(TestUtil.IN_A, TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_B);
 
         final Word<String> output = fm.computeOutput(input);
 
@@ -51,13 +51,13 @@ public abstract class AbstractMutableMooreTest {
         testPartialTraceInternal(getMoore());
     }
 
-    private <S, T> void testPartialTraceInternal(MutableMooreMachine<S, Symbol, T, String> fm) {
+    private <S, T> void testPartialTraceInternal(MutableMooreMachine<S, Symbol<Character>, T, String> fm) {
 
         final S aSucc = fm.getSuccessor(fm.getInitialState(), TestUtil.IN_A);
         final T transToRemove = fm.getTransition(aSucc, TestUtil.IN_A);
         fm.removeTransition(aSucc, TestUtil.IN_A, transToRemove);
 
-        final Word<Symbol> input =
+        final Word<Symbol<Character>> input =
                 Word.fromSymbols(TestUtil.IN_A, TestUtil.IN_B, TestUtil.IN_B, TestUtil.IN_A, TestUtil.IN_A);
         final Word<String> output = fm.computeOutput(input);
 

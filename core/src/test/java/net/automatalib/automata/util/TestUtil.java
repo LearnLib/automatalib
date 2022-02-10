@@ -28,9 +28,9 @@ import net.automatalib.words.impl.Symbol;
 
 public final class TestUtil {
 
-    public static final Symbol IN_A = new Symbol("a");
-    public static final Symbol IN_B = new Symbol("b");
-    public static final Alphabet<Symbol> ALPHABET = new FastAlphabet<>();
+    public static final Symbol<Character> IN_A = new Symbol<>('a');
+    public static final Symbol<Character> IN_B = new Symbol<>('b');
+    public static final Alphabet<Symbol<Character>> ALPHABET = new FastAlphabet<>();
 
     public static final String OUT_OK = "ok";
     public static final String OUT_ERROR = "error";
@@ -44,11 +44,11 @@ public final class TestUtil {
         // prevent instantiation
     }
 
-    public static FastMealy<Symbol, String> constructMealy() {
+    public static FastMealy<Symbol<Character>, String> constructMealy() {
         return constructMealy(FastMealy::new);
     }
 
-    public static <S, T, M extends MutableMealyMachine<S, Symbol, T, String>> M constructMealy(Function<Alphabet<Symbol>, M> constructor) {
+    public static <S, T, M extends MutableMealyMachine<S, Symbol<Character>, T, String>> M constructMealy(Function<Alphabet<Symbol<Character>>, M> constructor) {
         M fm = constructor.apply(ALPHABET);
 
         S s0 = fm.addInitialState(), s1 = fm.addState(), s2 = fm.addState();
@@ -65,7 +65,7 @@ public final class TestUtil {
         return fm;
     }
 
-    public static <S, T, M extends MutableMooreMachine<S, Symbol, T, String>> M constructMoore(Function<Alphabet<Symbol>, M> constructor) {
+    public static <S, T, M extends MutableMooreMachine<S, Symbol<Character>, T, String>> M constructMoore(Function<Alphabet<Symbol<Character>>, M> constructor) {
         M fm = constructor.apply(ALPHABET);
 
         S s0 = fm.addInitialState(OUT_OK), s1 = fm.addState(OUT_ERROR), s2 = fm.addState(OUT_OK);
@@ -82,8 +82,8 @@ public final class TestUtil {
         return fm;
     }
 
-    public static FastNFA<Symbol> constructNFA() {
-        FastNFA<Symbol> fnfa = new FastNFA<>(ALPHABET);
+    public static FastNFA<Symbol<Character>> constructNFA() {
+        FastNFA<Symbol<Character>> fnfa = new FastNFA<>(ALPHABET);
 
         FastNFAState s0 = fnfa.addInitialState(), s1 = fnfa.addState(true), s2 = fnfa.addState();
 

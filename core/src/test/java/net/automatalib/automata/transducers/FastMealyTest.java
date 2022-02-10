@@ -25,7 +25,7 @@ import net.automatalib.words.impl.Symbol;
 public class FastMealyTest extends AbstractMutableMealyTest {
 
     @Override
-    protected MutableMealyMachine<?, Symbol, ?, String> getMealy() {
+    protected MutableMealyMachine<?, Symbol<Character>, ?, String> getMealy() {
         return TestUtil.constructMealy(FastMealy::new);
     }
 }

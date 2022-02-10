@@ -25,7 +25,7 @@ import net.automatalib.words.impl.Symbol;
 public class CompactMooreTest extends AbstractMutableMooreTest {
 
     @Override
-    protected MutableMooreMachine<?, Symbol, ?, String> getMoore() {
+    protected MutableMooreMachine<?, Symbol<Character>, ?, String> getMoore() {
         return TestUtil.constructMoore(CompactMoore::new);
     }
 }

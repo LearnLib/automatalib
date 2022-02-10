@@ -31,13 +31,13 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractMutableMealyTest {
 
-    protected abstract MutableMealyMachine<?, Symbol, ?, String> getMealy();
+    protected abstract MutableMealyMachine<?, Symbol<Character>, ?, String> getMealy();
 
     @Test
     public void testTrace() {
-        MutableMealyMachine<?, Symbol, ?, String> fm = getMealy();
+        MutableMealyMachine<?, Symbol<Character>, ?, String> fm = getMealy();
 
-        final List<Symbol> trace = Arrays.asList(TestUtil.IN_A, TestUtil.IN_A, TestUtil.IN_A);
+        final List<Symbol<Character>> trace = Arrays.asList(TestUtil.IN_A, TestUtil.IN_A, TestUtil.IN_A);
         final Word<String> output = fm.computeOutput(trace);
 
         Assert.assertTrue(fm.trace(trace, new ArrayList<>(trace.size())));
@@ -54,8 +54,8 @@ public abstract class AbstractMutableMealyTest {
         testRemoveTransitionInternal(getMealy());
     }
 
-    private <S, T> void testRemoveTransitionInternal(MutableMealyMachine<S, Symbol, T, String> fm) {
-        List<Symbol> trace = new ArrayList<>();
+    private <S, T> void testRemoveTransitionInternal(MutableMealyMachine<S, Symbol<Character>, T, String> fm) {
+        List<Symbol<Character>> trace = new ArrayList<>();
         trace.add(TestUtil.IN_A);
         trace.add(TestUtil.IN_A);
 
@@ -75,8 +75,8 @@ public abstract class AbstractMutableMealyTest {
         testRemoveAllTransitions(getMealy());
     }
 
-    private <S, T> void testRemoveAllTransitions(MutableMealyMachine<S, Symbol, T, String> fm) {
-        List<Symbol> trace = new ArrayList<>();
+    private <S, T> void testRemoveAllTransitions(MutableMealyMachine<S, Symbol<Character>, T, String> fm) {
+        List<Symbol<Character>> trace = new ArrayList<>();
         trace.add(TestUtil.IN_A);
         trace.add(TestUtil.IN_A);
 
@@ -94,8 +94,8 @@ public abstract class AbstractMutableMealyTest {
         testRedefineTransition(getMealy());
     }
 
-    private <S, T> void testRedefineTransition(MutableMealyMachine<S, Symbol, T, String> fm) {
-        List<Symbol> trace = new ArrayList<>();
+    private <S, T> void testRedefineTransition(MutableMealyMachine<S, Symbol<Character>, T, String> fm) {
+        List<Symbol<Character>> trace = new ArrayList<>();
         trace.add(TestUtil.IN_A);
         trace.add(TestUtil.IN_A);
 

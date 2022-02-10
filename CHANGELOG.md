@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `Minimizer` no longer provides a `getInstance()` method but can be instantiated directly.
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.
 * `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.
+* `Symbol` now has a type-safe user object and id-based `hashcode`/`equals` semantics.
 
 ### Fixed
 
