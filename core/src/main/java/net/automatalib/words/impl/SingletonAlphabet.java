@@ -53,6 +53,11 @@ public class SingletonAlphabet<I> extends AbstractAlphabet<I> implements Alphabe
     }
 
     @Override
+    public boolean containsSymbol(I symbol) {
+        return Objects.equals(this.symbol, symbol);
+    }
+
+    @Override
     public int size() {
         return 1;
     }
