@@ -248,7 +248,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
     }
 
     /**
-     * Removes a state and all of its successors from the register.
+     * Removes a state and all of its (non-confluent) successors from the register.
      *
      * @param state
      *         the state to purge
@@ -284,7 +284,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
      * @param suffix
      *         the suffix word
      * @param accepting
-     *         whether or not the final state should be accepting
+     *         whether the final state should be accepting
      *
      * @return the first state in the sequence
      */
