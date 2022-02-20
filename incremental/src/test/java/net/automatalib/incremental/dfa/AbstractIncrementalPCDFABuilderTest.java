@@ -72,6 +72,11 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
         Assert.assertEquals(incPcDfa.lookup(W_2), Acceptance.DONT_KNOW);
         Assert.assertEquals(incPcDfa.lookup(W_3), Acceptance.DONT_KNOW);
 
+        incPcDfa.insert(Word.epsilon(), true);
+        Assert.assertEquals(incPcDfa.lookup(W_1), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incPcDfa.lookup(W_2), Acceptance.DONT_KNOW);
+        Assert.assertEquals(incPcDfa.lookup(W_3), Acceptance.DONT_KNOW);
+
         incPcDfa.insert(W_1, true);
         Assert.assertEquals(incPcDfa.lookup(W_1), Acceptance.TRUE);
         Assert.assertEquals(incPcDfa.lookup(W_1.prefix(2)), Acceptance.TRUE);
