@@ -122,7 +122,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                 if (sink == null) {
                     sink = State.SINK;
                 }
-                if (conf == null) {
+                if (conf == null && !last.isConfluence()) {
                     purge(last);
                 }
                 if (last == init) {

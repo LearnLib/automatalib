@@ -40,8 +40,20 @@ public class IncrementalPCDFADAGBuilderTest extends AbstractIncrementalPCDFABuil
      * propagation.
      */
     @Test
-    public void testIntegration() throws IOException {
-        final ParsedTraces<Integer, Boolean> parsedData = IntegrationUtil.parseDFATraces("/spa/dfa_traces.gz");
+    public void testIntegrationSPA() throws IOException {
+        runIntegration("/spa/dfa_traces.gz");
+    }
+
+    /**
+     * This tests case validates a set of traces from an external system which exposed an issue in state purging.
+     */
+    @Test
+    public void testIntegrationSBA() throws IOException {
+        runIntegration("/sba/dfa_traces.gz");
+    }
+
+    private void runIntegration(String path) throws IOException {
+        final ParsedTraces<Integer, Boolean> parsedData = IntegrationUtil.parseDFATraces(path);
         final Alphabet<Integer> alphabet = parsedData.alphabet;
         final List<Pair<Word<Integer>, Boolean>> traces = parsedData.traces;
 
