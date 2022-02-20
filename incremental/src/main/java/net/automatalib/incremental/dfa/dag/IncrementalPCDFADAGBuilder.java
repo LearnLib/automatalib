@@ -268,7 +268,11 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         for (int i = 0; i < alphabetSize; i++) {
             State succ = sig.successors.array[i];
             if (succ != null) {
-                purge(succ);
+                if (succ.isConfluence()) {
+                    succ.decreaseIncoming();
+                } else {
+                    purge(succ);
+                }
             }
         }
     }
