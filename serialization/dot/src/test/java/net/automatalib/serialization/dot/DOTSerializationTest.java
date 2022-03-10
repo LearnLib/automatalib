@@ -22,6 +22,7 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import com.google.common.io.ByteStreams;
@@ -43,6 +44,7 @@ import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -181,9 +183,37 @@ public class DOTSerializationTest {
     }
 
     @Test
+    public void testHTMLVisualizationHelper() throws IOException {
+
+        final CompactGraph<String, String> graph = DOTSerializationUtil.GRAPH;
+
+        ThrowingWriter writer = w -> GraphDOT.write(graph, w, new HTMLHelper<>());
+        checkDOTOutput(writer, DOTSerializationUtil.GRAPH_HTML_RESOURCE);
+    }
+
+    @Test
+    public void testGlobalVisualizationHelper() throws IOException {
+
+        final CompactGraph<String, String> graph = DOTSerializationUtil.GRAPH;
+
+        ThrowingWriter writer = w -> GraphDOT.write(graph, w, new GlobalHelper<>());
+        checkDOTOutput(writer, DOTSerializationUtil.GRAPH_GLOBAL_RESOURCE);
+    }
+
+    @Test
+    public void testNullVisualizationHelper() throws IOException {
+
+        final CompactGraph<String, String> graph = DOTSerializationUtil.GRAPH;
+
+        ThrowingWriter writer = w -> GraphDOT.write(graph, w, new NullHelper<>());
+        checkDOTOutput(writer, DOTSerializationUtil.EMPTY_RESOURCE);
+    }
+
+    @Test
     public void doNotCloseOutputStreamTest() throws IOException {
-        DOTSerializationProvider.<Integer, CompactEdge<String>>getInstance().writeModel(new UnclosableOutputStream(
-                ByteStreams.nullOutputStream()), DOTSerializationUtil.GRAPH);
+        DOTSerializationProvider.<Integer, CompactEdge<String>>getInstance()
+                                .writeModel(new UnclosableOutputStream(ByteStreams.nullOutputStream()),
+                                            DOTSerializationUtil.GRAPH);
     }
 
     private void checkDOTOutput(ThrowingWriter writer, String resource) throws IOException {
@@ -255,6 +285,58 @@ public class DOTSerializationTest {
         public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
             properties.put(EdgeAttrs.LABEL, String.valueOf(epExtractor.apply(edge)));
             return true;
+        }
+    }
+
+    private static class HTMLHelper<N, E> extends DefaultVisualizationHelper<N, E> {
+
+        @Override
+        public boolean getNodeProperties(N node, Map<String, String> properties) {
+            // Both types of HTML markup should be supported
+            if (Objects.hashCode(node) % 2 == 0) {
+                properties.put(NodeAttrs.LABEL, "<HTML><U>" + node + "</U>");
+            } else {
+                properties.put(NodeAttrs.LABEL, "<HTML><U>" + node + "</U></HTML>");
+            }
+            return true;
+        }
+    }
+
+    private static class GlobalHelper<N, E> implements VisualizationHelper<N, E> {
+
+        @Override
+        public void getGlobalNodeProperties(Map<String, String> properties) {
+            properties.put(NodeAttrs.SHAPE, NodeShapes.OCTAGON);
+        }
+
+        @Override
+        public void getGlobalEdgeProperties(Map<String, String> properties) {
+            properties.put(EdgeAttrs.COLOR, "green");
+        }
+
+        @Override
+        public boolean getNodeProperties(N node, Map<String, String> properties) {
+            properties.clear();
+            return true;
+        }
+
+        @Override
+        public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
+            properties.clear();
+            return true;
+        }
+    }
+
+    private static class NullHelper<N, E> implements VisualizationHelper<N, E> {
+
+        @Override
+        public boolean getNodeProperties(N node, Map<String, String> properties) {
+            return false;
+        }
+
+        @Override
+        public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
+            return false;
         }
     }
 }

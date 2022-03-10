@@ -35,6 +35,7 @@ import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UndirectedGraph;
 import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper.CommonAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -46,6 +47,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class GraphDOT {
 
     private static final String INITIAL_LABEL = "__start";
+    private static final String HTML_START_TAG = "<HTML>";
+    private static final String HTML_END_TAG = "</HTML>";
 
     private GraphDOT() {}
 
@@ -383,11 +386,20 @@ public final class GraphDOT {
             String key = e.getKey();
             String value = e.getValue();
             a.append(e.getKey()).append("=");
-            // HTML labels have to be enclosed in <> instead of ""
-            final String htmlTag = "<HTML>";
-            if (key.equals(VisualizationHelper.CommonAttrs.LABEL) &&
-                value.toUpperCase(Locale.ROOT).startsWith(htmlTag)) {
-                a.append('<').append(value.substring(htmlTag.length())).append('>');
+            if (key.equals(CommonAttrs.LABEL)) {
+                // HTML labels have to be enclosed in <> instead of ""
+                final String upperCase = value.toUpperCase(Locale.ROOT);
+                if (upperCase.startsWith(HTML_START_TAG)) {
+                    a.append('<');
+                    if (upperCase.endsWith(HTML_END_TAG)) {
+                        a.append(value.substring(HTML_START_TAG.length(), value.length() - HTML_END_TAG.length()));
+                    } else {
+                        a.append(value.substring(HTML_START_TAG.length()));
+                    }
+                    a.append('>');
+                } else {
+                    StringUtil.enquote(e.getValue(), a);
+                }
             } else {
                 StringUtil.enquote(e.getValue(), a);
             }

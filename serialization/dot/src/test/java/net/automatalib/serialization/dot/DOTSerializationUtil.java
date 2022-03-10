@@ -46,6 +46,7 @@ import net.automatalib.words.impl.Alphabets;
  */
 final class DOTSerializationUtil {
 
+    static final String EMPTY_RESOURCE = "/empty.dot";
     static final String DFA_RESOURCE = "/dfa.dot";
     static final String NFA_RESOURCE = "/nfa.dot";
     static final String NFA2_RESOURCE = "/nfa2.dot";
@@ -53,6 +54,8 @@ final class DOTSerializationUtil {
     static final String MOORE_RESOURCE = "/moore.dot";
     static final String SST_RESOURCE = "/sst.dot";
     static final String GRAPH_RESOURCE = "/graph.dot";
+    static final String GRAPH_GLOBAL_RESOURCE = "/graph_global.dot";
+    static final String GRAPH_HTML_RESOURCE = "/graph_html.dot";
     static final String MTS_RESOURCE = "/mts.dot";
     static final String MC_RESOURCE = "/mc.dot";
     static final String CLUSTER_RESOURCE = "/cluster.dot";
