@@ -16,9 +16,12 @@
 package net.automatalib.util.automata.spa;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
+import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -26,6 +29,7 @@ import net.automatalib.automata.spa.EmptySPA;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.spa.StackSPA;
 import net.automatalib.util.automata.Automata;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.SPAAlphabet;
@@ -389,6 +393,66 @@ public class SPAUtilTest {
         final Word<I> sepWord = Automata.findSeparatingWord(spa1, spa2, alphabet);
         Assert.assertNotNull(sepWord);
         Assert.assertNotEquals(spa1.accepts(sepWord), spa2.accepts(sepWord));
+    }
+
+    @Test
+    public void testTransitionCover() {
+        // create exemplary system in which the regular transition coverage does not detect existing access sequences
+        final SPAAlphabet<Integer> alphabet =
+                new DefaultSPAAlphabet<>(Alphabets.integers(0, 9), Alphabets.integers(10, 12), -1);
+
+        // @formatter:off
+        CompactDFA<Integer> p10 = AutomatonBuilders.newDFA(alphabet.getProceduralAlphabet())
+                                                   .withInitial("s0")
+                                                   .from("s0").on(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12).loop()
+                                                   .from("s0").on(0).to("s1")
+                                                   .from("s1").on(0, 1, 3, 4, 10, 11, 12).to("s0")
+                                                   .from("s1").on(2, 5, 7).loop()
+                                                   .withAccepting("s1")
+                                                   .create();
+
+        CompactDFA<Integer> p11 = AutomatonBuilders.newDFA(alphabet.getProceduralAlphabet())
+                                                   .withInitial("s0")
+                                                   .from("s0").on(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11).loop()
+                                                   .from("s0").on(12).to("s1")
+                                                   .from("s1").on(0).loop()
+                                                   .from("s1").on(1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12).to("s0")
+                                                   .withAccepting("s1")
+                                                   .create();
+
+        CompactDFA<Integer> p12 = AutomatonBuilders.newDFA(alphabet.getProceduralAlphabet())
+                                                   .withInitial("s0")
+                                                   .from("s0").on(0).to("s1")
+                                                   .from("s0").on(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12).to("s2")
+                                                   .from("s1").on(6, 12).to("s0")
+                                                   .from("s1").on(0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11).to("s2")
+                                                   .from("s2").on(8).to("s0")
+                                                   .from("s2").on(5).to("s1")
+                                                   .from("s2").on(0, 1, 2, 3, 4, 6, 7, 9, 10, 11, 12).loop()
+                                                   .withAccepting("s0")
+                                                   .create();
+        // @formatter:on
+
+        final Map<Integer, DFA<?, Integer>> procedures = new HashMap<>();
+        procedures.put(10, p10);
+        procedures.put(11, p11);
+        procedures.put(12, p12);
+
+        final SPA<?, Integer> spa = new StackSPA<>(alphabet, 11, procedures);
+
+        final ATRSequences<Integer> atr = SPAUtil.computeATRSequences(spa);
+
+        for (Integer c : alphabet.getCallAlphabet()) {
+            final Word<Integer> as = atr.accessSequences.get(c);
+            final Word<Integer> ts = atr.terminatingSequences.get(c);
+            final Word<Integer> rs = atr.returnSequences.get(c);
+
+            Assert.assertNotNull(as, Integer.toString(c));
+            Assert.assertNotNull(ts, Integer.toString(c));
+            Assert.assertNotNull(rs, Integer.toString(c));
+            Assert.assertTrue(spa.accepts(Word.fromWords(as, ts, rs)), Integer.toString(c));
+        }
+
     }
 
     @Test

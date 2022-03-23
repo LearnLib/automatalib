@@ -31,6 +31,7 @@ import com.google.common.collect.Sets;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.cover.Covers;
@@ -248,11 +249,11 @@ public final class SPAUtil {
                                                                       Map<I, Word<I>> returnSequences) {
 
         final List<I> newASRS = new ArrayList<>();
-        final Iterator<Word<I>> transitionCoverIterator = Covers.transitionCoverIterator(dfa, proceduralInputs);
+        final Iterable<List<I>> pathIterator = CollectionsUtil.allTuples(proceduralInputs, 0, dfa.size());
 
         tc:
-        while (transitionCoverIterator.hasNext()) {
-            final Word<I> trace = transitionCoverIterator.next();
+        for (List<I> path : pathIterator) {
+            final Word<I> trace = Word.fromList(path);
 
             if (dfa.accepts(trace)) {
 
