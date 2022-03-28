@@ -369,7 +369,7 @@ public final class SPAUtil {
         final Alphabet<I> callAlphabet = alphabet.getCallAlphabet();
         return atrSequences.accessSequences.keySet().containsAll(callAlphabet) &&
                atrSequences.terminatingSequences.keySet().containsAll(callAlphabet) &&
-               atrSequences.terminatingSequences.keySet().containsAll(callAlphabet);
+               atrSequences.returnSequences.keySet().containsAll(callAlphabet);
     }
 
     /**

@@ -17,7 +17,6 @@ package net.automatalib.commons.util.collections;
 
 import java.util.AbstractSet;
 import java.util.BitSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -79,16 +78,24 @@ public class PositiveIntSet extends AbstractSet<Integer> {
             return false;
         }
 
-        return delegate.get((Integer) o);
+        return containsInt((Integer) o);
+    }
+
+    public boolean containsInt(int integer) {
+        return delegate.get(integer);
     }
 
     @Override
-    public Iterator<Integer> iterator() {
+    public BitSetIterator iterator() {
         return new BitSetIterator(delegate, immutable);
     }
 
     @Override
     public boolean add(Integer integer) {
+        return addInt(integer);
+    }
+
+    public boolean addInt(int integer) {
         if (immutable) {
             throw new UnsupportedOperationException("This is a read-only set-view");
         }
@@ -101,17 +108,20 @@ public class PositiveIntSet extends AbstractSet<Integer> {
 
     @Override
     public boolean remove(@Nullable Object o) {
-        if (immutable) {
-            throw new UnsupportedOperationException("This is a read-only set-view");
-        }
-
         if (!(o instanceof Integer)) {
             return false;
         }
 
-        int asInt = (Integer) o;
-        boolean containedBefore = delegate.get(asInt);
-        delegate.clear(asInt);
+        return removeInt((Integer) o);
+    }
+
+    public boolean removeInt(int integer) {
+        if (immutable) {
+            throw new UnsupportedOperationException("This is a read-only set-view");
+        }
+
+        boolean containedBefore = delegate.get(integer);
+        delegate.clear(integer);
         return containedBefore;
     }
 

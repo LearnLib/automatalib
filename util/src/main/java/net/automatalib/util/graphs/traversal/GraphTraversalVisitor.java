@@ -47,7 +47,7 @@ public interface GraphTraversalVisitor<N, E, D> {
      * Called when the exploration of a node is started.
      *
      * @param node
-     *         the node which's exploration is about to be started
+     *         the node whose exploration is about to be started
      * @param data
      *         the user data associated with this node
      *
@@ -59,7 +59,7 @@ public interface GraphTraversalVisitor<N, E, D> {
      * Called when the exploration of a node is finished.
      *
      * @param node
-     *         the node which's exploration is being finished
+     *         the node whose exploration is being finished
      * @param inData
      *         the user data associated with this node
      */

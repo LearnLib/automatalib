@@ -59,7 +59,7 @@ public final class GraphTraversal {
                                              IndefiniteGraph<N, E> graph,
                                              N initialNode,
                                              GraphTraversalVisitor<N, E, D> vis) {
-        return traverse(order, graph, -1, Collections.singleton(initialNode), vis);
+        return traverse(order, graph, Collections.singleton(initialNode), vis);
     }
 
     public static <N, E, D> boolean traverse(TraversalOrder order,
@@ -166,14 +166,14 @@ public final class GraphTraversal {
     public static <N, E, D> boolean depthFirst(IndefiniteGraph<N, E> graph,
                                                N initNode,
                                                GraphTraversalVisitor<N, E, D> vis) {
-        return depthFirst(graph, -1, initNode, vis);
+        return depthFirst(graph, Collections.singleton(initNode), vis);
     }
 
     public static <N, E, D> boolean depthFirst(IndefiniteGraph<N, E> graph,
                                                int limit,
                                                N initNode,
                                                GraphTraversalVisitor<N, E, D> vis) {
-        return depthFirst(graph, Collections.singleton(initNode), vis);
+        return depthFirst(graph, limit, Collections.singleton(initNode), vis);
     }
 
     public static <N, E, D> boolean depthFirst(IndefiniteGraph<N, E> graph,
@@ -282,13 +282,13 @@ public final class GraphTraversal {
     public static <N, E, D> boolean breadthFirst(IndefiniteGraph<N, E> graph,
                                                  N initialNode,
                                                  GraphTraversalVisitor<N, E, D> visitor) {
-        return breadthFirst(graph, -1, Collections.singleton(initialNode), visitor);
+        return breadthFirst(graph, Collections.singleton(initialNode), visitor);
     }
 
     public static <N, E, D> boolean dfs(IndefiniteGraph<N, E> graph,
                                         N initialNode,
                                         DFSVisitor<? super N, ? super E, D> visitor) {
-        return dfs(graph, -1, Collections.singleton(initialNode), visitor);
+        return dfs(graph, Collections.singleton(initialNode), visitor);
     }
 
     public static <N, E, D> boolean dfs(IndefiniteGraph<N, E> graph,
