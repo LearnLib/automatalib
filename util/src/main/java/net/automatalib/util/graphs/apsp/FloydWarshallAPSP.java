@@ -17,6 +17,7 @@ package net.automatalib.util.graphs.apsp;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -121,6 +122,10 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
     public float getShortestPathDistance(N src, N tgt) {
         int srcId = ids.getNodeId(src), tgtId = ids.getNodeId(tgt);
 
+        if (srcId == tgtId) {
+            return 0;
+        }
+
         APSPRecord<E> rec = table[srcId][tgtId];
         if (rec == null) {
             return Graphs.INVALID_DISTANCE;
@@ -132,6 +137,10 @@ public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
     @Override
     public @Nullable List<E> getShortestPath(N src, N tgt) {
         int srcId = ids.getNodeId(src), tgtId = ids.getNodeId(tgt);
+
+        if (srcId == tgtId) {
+            return Collections.emptyList();
+        }
 
         APSPRecord<E> rec = table[srcId][tgtId];
 

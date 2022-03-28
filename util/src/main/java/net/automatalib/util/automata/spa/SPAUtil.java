@@ -25,16 +25,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.cover.Covers;
+import net.automatalib.util.graphs.Graphs;
+import net.automatalib.util.graphs.apsp.APSPResult;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.SPAAlphabet;
 import net.automatalib.words.Word;
@@ -249,64 +254,62 @@ public final class SPAUtil {
                                                                       Map<I, Word<I>> returnSequences) {
 
         final List<I> newASRS = new ArrayList<>();
-        final Iterable<List<I>> pathIterator = CollectionsUtil.allTuples(proceduralInputs, 0, dfa.size());
+        final List<Word<I>> acceptingPaths =
+                exploreAccessSequences(dfa, CollectionsUtil.randomAccessList(proceduralInputs), alphabet::isCallSymbol);
 
         tc:
-        for (List<I> path : pathIterator) {
-            final Word<I> trace = Word.fromList(path);
+        for (Word<I> trace : acceptingPaths) {
 
-            if (dfa.accepts(trace)) {
+            for (int i = 0; i < trace.length(); i++) {
+                final I input = trace.getSymbol(i);
 
-                for (int i = 0; i < trace.length(); i++) {
-                    final I input = trace.getSymbol(i);
+                if (alphabet.isCallSymbol(input)) {
+                    if (!finishedProcedures.contains(input)) {
 
-                    if (alphabet.isCallSymbol(input)) {
-                        if (!finishedProcedures.contains(input)) {
-
-                            final Word<I> remainingTrace = trace.subWord(i + 1);
-                            for (I r : remainingTrace) {
-                                if (alphabet.isCallSymbol(r) && !terminatingSequences.containsKey(r)) {
-                                    // If we encounter a call symbol for which we do not have a terminating sequence,
-                                    // the remaining return sequences cannot be expanded properly.
-                                    // Therefore skip the current trace.
-                                    continue tc;
-                                }
+                        final Word<I> remainingTrace = trace.subWord(i + 1);
+                        for (I r : remainingTrace) {
+                            if (alphabet.isCallSymbol(r) && !terminatingSequences.containsKey(r)) {
+                                // If we encounter a call symbol for which we do not have a terminating sequence,
+                                // the remaining return sequences cannot be expanded properly.
+                                // Therefore skip the current trace.
+                                continue tc;
                             }
-
-                            // we only query existing terminating sequences, therefore nullity is fine
-                            @SuppressWarnings("methodref.return.invalid")
-                            final Mapping<I, Word<I>> tsMapping = terminatingSequences::get;
-
-                            final WordBuilder<I> accessBuilder = new WordBuilder<>();
-                            // we only invoke this method with finished procedures
-                            @SuppressWarnings("assignment.type.incompatible")
-                            final @NonNull Word<I> as = accessSequences.get(procedure);
-                            accessBuilder.append(as);
-                            accessBuilder.append(alphabet.expand(trace.subWord(0, i), tsMapping));
-                            accessBuilder.append(input);
-
-                            accessSequences.put(input, accessBuilder.toWord());
-
-                            final WordBuilder<I> terminatingBuilder = new WordBuilder<>();
-                            // we only invoke this method with finished procedures
-                            @SuppressWarnings("assignment.type.incompatible")
-                            final @NonNull Word<I> rs = returnSequences.get(procedure);
-                            terminatingBuilder.append(alphabet.getReturnSymbol());
-                            terminatingBuilder.append(alphabet.expand(remainingTrace, tsMapping));
-                            terminatingBuilder.append(rs);
-
-                            returnSequences.put(input, terminatingBuilder.toWord());
-
-                            finishedProcedures.add(input);
-                            newASRS.add(input);
-                        } else if (!terminatingSequences.containsKey(input)) {
-                            // If we encounter a call symbol for which we do not have a terminating sequence,
-                            // all local access sequences of future call symbols cannot be expanded properly.
-                            // Therefore skip the current trace.
-                            continue tc;
                         }
+
+                        // we only query existing terminating sequences, therefore nullity is fine
+                        @SuppressWarnings("methodref.return.invalid")
+                        final Mapping<I, Word<I>> tsMapping = terminatingSequences::get;
+
+                        final WordBuilder<I> accessBuilder = new WordBuilder<>();
+                        // we only invoke this method with finished procedures
+                        @SuppressWarnings("assignment.type.incompatible")
+                        final @NonNull Word<I> as = accessSequences.get(procedure);
+                        accessBuilder.append(as);
+                        accessBuilder.append(alphabet.expand(trace.subWord(0, i), tsMapping));
+                        accessBuilder.append(input);
+
+                        accessSequences.put(input, accessBuilder.toWord());
+
+                        final WordBuilder<I> terminatingBuilder = new WordBuilder<>();
+                        // we only invoke this method with finished procedures
+                        @SuppressWarnings("assignment.type.incompatible")
+                        final @NonNull Word<I> rs = returnSequences.get(procedure);
+                        terminatingBuilder.append(alphabet.getReturnSymbol());
+                        terminatingBuilder.append(alphabet.expand(remainingTrace, tsMapping));
+                        terminatingBuilder.append(rs);
+
+                        returnSequences.put(input, terminatingBuilder.toWord());
+
+                        finishedProcedures.add(input);
+                        newASRS.add(input);
+                    } else if (!terminatingSequences.containsKey(input)) {
+                        // If we encounter a call symbol for which we do not have a terminating sequence,
+                        // all local access sequences of future call symbols cannot be expanded properly.
+                        // Therefore skip the current trace.
+                        continue tc;
                     }
                 }
+                //                }
 
                 if (finishedProcedures.containsAll(alphabet.getCallAlphabet())) {
                     return newASRS;
@@ -467,4 +470,60 @@ public final class SPAUtil {
         return null;
     }
 
+    private static <S, I> List<Word<I>> exploreAccessSequences(DFA<S, I> dfa,
+                                                               List<I> inputs,
+                                                               Predicate<I> callPredicate) {
+        final S init = dfa.getInitialState();
+
+        if (init == null) {
+            return Collections.emptyList();
+        }
+
+        final List<Word<I>> result = new ArrayList<>(inputs.size());
+        final UniversalGraph<S, TransitionEdge<I, S>, ?, ?> tgv = dfa.transitionGraphView(inputs);
+        final APSPResult<S, TransitionEdge<I, S>> apsp = Graphs.findAPSP(tgv, (edge) -> 0F);
+
+        final List<S> acceptingStates = new ArrayList<>(dfa.size());
+        for (S s : dfa) {
+            if (dfa.isAccepting(s)) {
+                acceptingStates.add(s);
+            }
+        }
+
+        calls:
+        for (I i : inputs) {
+            if (callPredicate.test(i)) {
+                for (S s : dfa) {
+                    final S succ = dfa.getSuccessor(s, i);
+
+                    if (succ != null) {
+                        final List<TransitionEdge<I, S>> init2s = apsp.getShortestPath(init, s);
+
+                        if (init2s != null) {
+                            for (S acc : acceptingStates) {
+                                final List<TransitionEdge<I, S>> succ2acc = apsp.getShortestPath(succ, acc);
+
+                                if (succ2acc != null) {
+                                    final WordBuilder<I> wb = new WordBuilder<>(init2s.size() + succ2acc.size() + 1);
+
+                                    for (TransitionEdge<I, S> t : init2s) {
+                                        wb.append(t.getInput());
+                                    }
+                                    wb.append(i);
+                                    for (TransitionEdge<I, S> t : succ2acc) {
+                                        wb.append(t.getInput());
+                                    }
+
+                                    result.add(wb.toWord());
+                                    continue calls;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 }
