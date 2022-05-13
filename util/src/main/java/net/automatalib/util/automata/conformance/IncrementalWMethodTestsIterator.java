@@ -72,7 +72,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
             item.maxPrefix = oldNumPrefixes;
             item.suffixIdx = oldNumSuffixes;
             item.minSuffix = oldNumSuffixes;
-            item.middle = startMiddleWord();
+            item.middle = Word.epsilon();
             itemQueue.insert(item);
         }
         // new prefixes with *all* suffixes
@@ -83,13 +83,9 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
             item.maxPrefix = prefixes.size();
             item.suffixIdx = 0;
             item.minSuffix = 0;
-            item.middle = startMiddleWord();
+            item.middle = Word.epsilon();
             itemQueue.insert(item);
         }
-    }
-
-    private Word<I> startMiddleWord() {
-        return Word.epsilon();
     }
 
     @Override
@@ -111,8 +107,10 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 
     private Word<I> assembleWord(Item<I> item) {
         Word<I> prefix = prefixes.get(item.prefixIdx);
-        Word<I> suffix = suffixes.get(item.suffixIdx);
-        return prefix.concat(item.middle, suffix);
+        if (suffixes.isEmpty()) {
+            return prefix.concat(item.middle);
+        }
+        return prefix.concat(item.middle, suffixes.get(item.suffixIdx));
     }
 
     private @Nullable Item<I> increment(Item<I> item) {

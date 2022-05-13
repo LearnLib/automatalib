@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
@@ -96,6 +97,27 @@ public class IncrementalWMethodTestsIteratorTest {
         iteratorTests.removeAll(initialWMethodTests);
 
         Assert.assertEquals(wMethodTests, iteratorTests);
+    }
+
+    @Test
+    public void testSingleStateAutomaton() {
+
+        final CompactDFA<Character> dfa = new CompactDFA<>(alphabet);
+        final int init = dfa.addIntInitialState(false);
+
+        for (Character c : alphabet) {
+            dfa.setTransition(init, c, init, null);
+        }
+
+        final IncrementalWMethodTestsIterator<Character> iter = new IncrementalWMethodTestsIterator<>(alphabet);
+        iter.setMaxDepth(MAX_DEPTH);
+        iter.update(dfa);
+
+        final Set<Word<Character>> tests = Streams.stream(iter).collect(Collectors.toSet());
+
+        for (Character c : alphabet) {
+            Assert.assertTrue(tests.contains(Word.fromLetter(c)));
+        }
     }
 
     private Set<Word<Character>> computeWMethodTests() {
