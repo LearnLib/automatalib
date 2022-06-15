@@ -52,6 +52,18 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactT
         this(alphabet, DEFAULT_INIT_CAPACITY, DEFAULT_RESIZE_FACTOR);
     }
 
+    public CompactMealy(CompactMealy<I, O> other) {
+        super(other.getInputAlphabet(), other);
+        this.transitions = other.transitions.clone();
+        this.outputs = other.outputs.clone();
+    }
+
+    public CompactMealy(Alphabet<I> alphabet, CompactMealy<I, O> other) {
+        super(alphabet, other);
+        this.transitions = other.transitions.clone();
+        this.outputs = other.outputs.clone();
+    }
+
     @Override
     protected void updateTransitionStorage(Payload payload) {
         this.transitions = updateTransitionStorage(this.transitions, AbstractCompact.INVALID_STATE, payload);
