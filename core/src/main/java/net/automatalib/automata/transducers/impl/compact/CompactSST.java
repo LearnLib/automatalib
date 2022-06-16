@@ -27,4 +27,8 @@ public class CompactSST<I, O> extends UniversalCompactDet<I, Word<O>, Word<O>>
     public CompactSST(Alphabet<I> alphabet) {
         super(alphabet);
     }
+
+    public CompactSST(CompactSST<I, O> other) {
+        super(other.getInputAlphabet(), other);
+    }
 }

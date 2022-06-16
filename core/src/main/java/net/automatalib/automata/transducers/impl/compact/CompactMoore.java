@@ -32,6 +32,14 @@ public class CompactMoore<I, @Nullable O> extends UniversalCompactSimpleDet<I, O
         super(alphabet, stateCapacity, resizeFactor);
     }
 
+    public CompactMoore(CompactMoore<I, O> other) {
+        this(other.getInputAlphabet(), other);
+    }
+
+    protected CompactMoore(Alphabet<I> alphabet, CompactMoore<?, O> other) {
+        super(alphabet, other);
+    }
+
     @Override
     public void setStateOutput(Integer state, O output) {
         setStateProperty(state, output);

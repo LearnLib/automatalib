@@ -54,6 +54,13 @@ public class UniversalCompactDet<I, SP, TP> extends AbstractCompactDeterministic
         Arrays.fill(this.transitions, AbstractCompact.INVALID_STATE);
     }
 
+    protected UniversalCompactDet(Alphabet<I> alphabet, UniversalCompactDet<?, SP, TP> other) {
+        super(alphabet, other);
+        this.transitions = other.transitions.clone();
+        this.stateProperties = other.stateProperties.clone();
+        this.transitionProperties = other.transitionProperties.clone();
+    }
+
     @Override
     public @Nullable CompactTransition<TP> getTransition(int state, int input) {
         final int idx = toMemoryIndex(state, input);

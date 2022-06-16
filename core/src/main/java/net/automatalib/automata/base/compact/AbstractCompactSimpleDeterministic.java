@@ -46,7 +46,7 @@ public abstract class AbstractCompactSimpleDeterministic<I, SP>
         Arrays.fill(this.transitions, AbstractCompact.INVALID_STATE);
     }
 
-    public AbstractCompactSimpleDeterministic(Alphabet<I> alphabet, AbstractCompactSimpleDeterministic<?, ?> other) {
+    protected AbstractCompactSimpleDeterministic(Alphabet<I> alphabet, AbstractCompactSimpleDeterministic<?, SP> other) {
         super(alphabet, other);
         this.transitions = other.transitions.clone();
     }

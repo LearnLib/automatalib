@@ -45,6 +45,15 @@ public class UniversalCompactSimpleDet<I, @Nullable SP> extends AbstractCompactS
         this.stateProperties = new Object[stateCapacity];
     }
 
+    public UniversalCompactSimpleDet(UniversalCompactSimpleDet<I, SP> other) {
+        this(other.getInputAlphabet(), other);
+    }
+
+    protected UniversalCompactSimpleDet(Alphabet<I> alphabet, UniversalCompactSimpleDet<?, SP> other) {
+        super(alphabet, other);
+        this.stateProperties = other.stateProperties.clone();
+    }
+
     @Override
     public void clear() {
         Arrays.fill(stateProperties, 0, size(), null);

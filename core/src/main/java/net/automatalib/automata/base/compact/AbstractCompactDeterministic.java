@@ -53,7 +53,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
         super(alphabet, stateCapacity, resizeFactor);
     }
 
-    public AbstractCompactDeterministic(Alphabet<I> alphabet, AbstractCompactDeterministic<?, ?, ?, ?> other) {
+    protected AbstractCompactDeterministic(Alphabet<I> alphabet, AbstractCompactDeterministic<?, ?, ?, ?> other) {
         super(alphabet, other);
         this.initial = other.initial;
     }

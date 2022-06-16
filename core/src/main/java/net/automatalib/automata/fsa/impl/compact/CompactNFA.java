@@ -37,6 +37,10 @@ public class CompactNFA<I> extends AbstractCompactSimpleNondet<I, Boolean> imple
         this(alphabet, DEFAULT_INIT_CAPACITY);
     }
 
+    public CompactNFA(CompactNFA<I> other) {
+        this(other.getInputAlphabet(), other);
+    }
+
     protected CompactNFA(Alphabet<I> alphabet, CompactNFA<?> other) {
         super(alphabet, other);
         this.accepting = (BitSet) other.accepting.clone();
