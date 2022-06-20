@@ -53,9 +53,7 @@ public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactT
     }
 
     public CompactMealy(CompactMealy<I, O> other) {
-        super(other.getInputAlphabet(), other);
-        this.transitions = other.transitions.clone();
-        this.outputs = other.outputs.clone();
+        this(other.getInputAlphabet(), other);
     }
 
     protected CompactMealy(Alphabet<I> alphabet, CompactMealy<?, O> other) {
