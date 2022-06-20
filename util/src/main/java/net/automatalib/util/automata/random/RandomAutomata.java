@@ -77,14 +77,28 @@ public final class RandomAutomata {
         return minimize ? DFAs.minimize(dfa) : dfa;
     }
 
-    public static <I> DefaultOneSEVPA<I> randomOneSEVPA(final Random r,
-                                                        final int locCount,
-                                                        final VPDAlphabet<I> alphabet,
-                                                        final double acceptanceProb,
-                                                        final double initialRetTransProb,
-                                                        final boolean minimize) {
-        final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, locCount);
+    public static <I> DefaultOneSEVPA<I> randomOneSEVPA(Random r,
+                                                        int locCount,
+                                                        VPDAlphabet<I> alphabet,
+                                                        double acceptanceProb,
+                                                        double initialRetTransProb,
+                                                        boolean minimize) {
+        return randomOneSEVPA(r,
+                              locCount,
+                              alphabet,
+                              acceptanceProb,
+                              initialRetTransProb,
+                              minimize,
+                              new DefaultOneSEVPA<>(alphabet, locCount));
+    }
 
+    public static <I> DefaultOneSEVPA<I> randomOneSEVPA(Random r,
+                                                        int locCount,
+                                                        VPDAlphabet<I> alphabet,
+                                                        double acceptanceProb,
+                                                        double initialRetTransProb,
+                                                        boolean minimize,
+                                                        DefaultOneSEVPA<I> result) {
         result.addInitialLocation(r.nextDouble() < initialRetTransProb);
 
         for (int i = 0; i < locCount - 1; i++) {
