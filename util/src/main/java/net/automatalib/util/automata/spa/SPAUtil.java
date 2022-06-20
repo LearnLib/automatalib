@@ -205,7 +205,7 @@ public final class SPAUtil {
                                                                                              Map<I, Word<I>> terminatingSequences) {
         final I initialProcedure = spa.getInitialProcedure();
 
-        if (initialProcedure == null) {
+        if (initialProcedure == null || !alphabet.isCallSymbol(initialProcedure)) {
             return Pair.of(Collections.emptyMap(), Collections.emptyMap());
         }
 
