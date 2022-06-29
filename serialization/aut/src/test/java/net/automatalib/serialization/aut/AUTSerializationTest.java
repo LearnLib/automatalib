@@ -28,12 +28,15 @@ import java.util.Set;
 import com.google.common.io.ByteStreams;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.simple.SimpleAutomaton;
 import net.automatalib.commons.util.io.UnclosableInputStream;
 import net.automatalib.commons.util.io.UnclosableOutputStream;
+import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.ArrayAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -64,6 +67,29 @@ public class AUTSerializationTest {
             Assert.assertEquals(Collections.singleton(3), s3);
         }
     }
+
+    @Test
+    public void sinkStateTest() throws Exception {
+        try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/sinkStateTest.aut")) {
+            final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
+            Assert.assertEquals(3, automaton.size());
+
+            final Alphabet<String> alphabet = new ArrayAlphabet<String>("input", "output");
+
+            final Set<Integer> s0 = automaton.getInitialStates();
+            final Set<Integer> t1 = automaton.getSuccessors(s0, Collections.singletonList("input"));
+            final Set<Integer> t2 = automaton.getSuccessors(s0, Collections.singletonList("output"));
+            final Set<Integer> t3 = automaton.getSuccessors(s0, Arrays.asList("input", "output"));
+            final Set<Integer> t4 = automaton.getSuccessors(s0, Arrays.asList("input", "output", "output"));
+
+            Assert.assertEquals(Collections.singleton(0), s0);
+            Assert.assertEquals(Collections.singleton(1), t1);
+            Assert.assertEquals(Collections.singleton(2), t2);
+            Assert.assertEquals(Collections.singleton(0), t3);
+            Assert.assertEquals(Collections.singleton(2), t4);
+        }
+    }
+
 
     @Test
     public void serializationTest() throws Exception {

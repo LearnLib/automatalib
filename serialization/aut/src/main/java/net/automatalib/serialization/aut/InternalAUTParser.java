@@ -38,6 +38,7 @@ import net.automatalib.words.impl.Alphabets;
 class InternalAUTParser {
 
     private int initialState;
+    private int numStates;
     private final Set<String> alphabetSymbols = new HashSet<>();
     private final Map<Integer, Map<String, Integer>> transitionMap = new HashMap<>();
 
@@ -65,7 +66,7 @@ class InternalAUTParser {
 
             final CompactNFA<I> result = new CompactNFA<>(alphabet, transitionMap.size());
 
-            for (int i = 0; i < transitionMap.size(); i++) {
+            for (int i = 0; i < numStates; i++) {
                 result.addState();
             }
 
@@ -98,9 +99,9 @@ class InternalAUTParser {
         verifyLBracketAndShift();
         initialState = parseNumberAndShift();
         verifyCommaAndShift();
-        parseNumberAndShift(); // ignore number of states
-        verifyCommaAndShift();
         parseNumberAndShift(); // ignore number of transitions
+        verifyCommaAndShift();
+        numStates = parseNumberAndShift(); // store number of states
         verifyRBracketAndShift();
     }
 
