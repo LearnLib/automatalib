@@ -64,7 +64,7 @@ class InternalAUTParser {
             final Map<String, I> inputMap = Maps.asMap(alphabetSymbols, inputTransformer::apply);
             final Alphabet<I> alphabet = Alphabets.fromCollection(inputMap.values());
 
-            final CompactNFA<I> result = new CompactNFA<>(alphabet, transitionMap.size());
+            final CompactNFA<I> result = new CompactNFA<>(alphabet, numStates);
 
             for (int i = 0; i < numStates; i++) {
                 result.addState();
