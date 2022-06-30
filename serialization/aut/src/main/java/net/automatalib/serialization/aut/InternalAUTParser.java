@@ -102,7 +102,7 @@ class InternalAUTParser {
         parseNumberAndShift(); // ignore number of transitions
         verifyCommaAndShift();
         numStates = parseNumberAndShift(); // store number of states
-        if(numStates == 0) {
+        if(numStates < 1) {
             throw new IllegalArgumentException("Number of states must be >= 1");
         }
         verifyRBracketAndShift();
@@ -194,10 +194,15 @@ class InternalAUTParser {
         if(sym == '-') {
             throw new IllegalArgumentException(buildErrorMessage("Negative numbers not compatible with AUT format"));
         }
+
         while (Character.isDigit(sym)) {
             sb.append(sym);
             currentPos++;
             sym = currentLineContent[currentPos];
+        }
+
+        if(sb.length() == 0){
+            throw new IllegalArgumentException(buildErrorMessage("Expected number"));
         }
 
         // forward pointer

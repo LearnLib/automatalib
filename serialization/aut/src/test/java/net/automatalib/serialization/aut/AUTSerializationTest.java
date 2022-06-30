@@ -90,7 +90,6 @@ public class AUTSerializationTest {
         }
     }
 
-
     @Test
     public void serializationTest() throws Exception {
         final Alphabet<Integer> alphabet = Alphabets.integers(0, 2);
@@ -118,10 +117,14 @@ public class AUTSerializationTest {
     public void errorTest() throws IOException {
         try (InputStream e1 = AUTSerializationTest.class.getResourceAsStream("/error1.aut");
              InputStream e2 = AUTSerializationTest.class.getResourceAsStream("/error2.aut");
-             InputStream e3 = AUTSerializationTest.class.getResourceAsStream("/error3.aut")) {
+             InputStream e3 = AUTSerializationTest.class.getResourceAsStream("/error3.aut");
+             InputStream e4 = AUTSerializationTest.class.getResourceAsStream("/error4.aut");
+             InputStream e5 = AUTSerializationTest.class.getResourceAsStream("/error5.aut")) {
             Assert.assertThrows(() -> AUTParser.readAutomaton(e1));
             Assert.assertThrows(() -> AUTParser.readAutomaton(e2));
             Assert.assertThrows(() -> AUTParser.readAutomaton(e3));
+            Assert.assertThrows(() -> AUTParser.readAutomaton(e4));
+            Assert.assertThrows(() -> AUTParser.readAutomaton(e5));
         }
     }
 
