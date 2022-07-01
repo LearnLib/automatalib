@@ -34,6 +34,7 @@ import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.ArrayAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -66,6 +67,28 @@ public class AUTSerializationTest {
     }
 
     @Test
+    public void sinkStateTest() throws Exception {
+        try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/sinkStateTest.aut")) {
+            final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
+            Assert.assertEquals(3, automaton.size());
+
+            final Alphabet<String> alphabet = new ArrayAlphabet<String>("input", "output");
+
+            final Set<Integer> s0 = automaton.getInitialStates();
+            final Set<Integer> t1 = automaton.getSuccessors(s0, Collections.singletonList("input"));
+            final Set<Integer> t2 = automaton.getSuccessors(s0, Collections.singletonList("output"));
+            final Set<Integer> t3 = automaton.getSuccessors(s0, Arrays.asList("input", "output"));
+            final Set<Integer> t4 = automaton.getSuccessors(s0, Arrays.asList("input", "output", "output"));
+
+            Assert.assertEquals(Collections.singleton(0), s0);
+            Assert.assertEquals(Collections.singleton(1), t1);
+            Assert.assertEquals(Collections.singleton(2), t2);
+            Assert.assertEquals(Collections.singleton(0), t3);
+            Assert.assertEquals(Collections.singleton(2), t4);
+        }
+    }
+
+    @Test
     public void serializationTest() throws Exception {
         final Alphabet<Integer> alphabet = Alphabets.integers(0, 2);
         final Random random = new Random(0);
@@ -92,10 +115,14 @@ public class AUTSerializationTest {
     public void errorTest() throws IOException {
         try (InputStream e1 = AUTSerializationTest.class.getResourceAsStream("/error1.aut");
              InputStream e2 = AUTSerializationTest.class.getResourceAsStream("/error2.aut");
-             InputStream e3 = AUTSerializationTest.class.getResourceAsStream("/error3.aut")) {
+             InputStream e3 = AUTSerializationTest.class.getResourceAsStream("/error3.aut");
+             InputStream e4 = AUTSerializationTest.class.getResourceAsStream("/error4.aut");
+             InputStream e5 = AUTSerializationTest.class.getResourceAsStream("/error5.aut")) {
             Assert.assertThrows(() -> AUTParser.readAutomaton(e1));
             Assert.assertThrows(() -> AUTParser.readAutomaton(e2));
             Assert.assertThrows(() -> AUTParser.readAutomaton(e3));
+            Assert.assertThrows(() -> AUTParser.readAutomaton(e4));
+            Assert.assertThrows(() -> AUTParser.readAutomaton(e5));
         }
     }
 

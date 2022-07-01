@@ -38,6 +38,7 @@ import net.automatalib.words.impl.Alphabets;
 class InternalAUTParser {
 
     private int initialState;
+    private int numStates;
     private final Set<String> alphabetSymbols = new HashSet<>();
     private final Map<Integer, Map<String, Integer>> transitionMap = new HashMap<>();
 
@@ -63,9 +64,9 @@ class InternalAUTParser {
             final Map<String, I> inputMap = Maps.asMap(alphabetSymbols, inputTransformer::apply);
             final Alphabet<I> alphabet = Alphabets.fromCollection(inputMap.values());
 
-            final CompactNFA<I> result = new CompactNFA<>(alphabet, transitionMap.size());
+            final CompactNFA<I> result = new CompactNFA<>(alphabet, numStates);
 
-            for (int i = 0; i < transitionMap.size(); i++) {
+            for (int i = 0; i < numStates; i++) {
                 result.addState();
             }
 
@@ -98,9 +99,12 @@ class InternalAUTParser {
         verifyLBracketAndShift();
         initialState = parseNumberAndShift();
         verifyCommaAndShift();
-        parseNumberAndShift(); // ignore number of states
-        verifyCommaAndShift();
         parseNumberAndShift(); // ignore number of transitions
+        verifyCommaAndShift();
+        numStates = parseNumberAndShift(); // store number of states
+        if (numStates < 1) {
+            throw new IllegalArgumentException("Number of states must be >= 1");
+        }
         verifyRBracketAndShift();
     }
 
@@ -192,6 +196,10 @@ class InternalAUTParser {
             sb.append(sym);
             currentPos++;
             sym = currentLineContent[currentPos];
+        }
+
+        if (sb.length() == 0){
+            throw new IllegalArgumentException(buildErrorMessage("Expected a positive number"));
         }
 
         // forward pointer
