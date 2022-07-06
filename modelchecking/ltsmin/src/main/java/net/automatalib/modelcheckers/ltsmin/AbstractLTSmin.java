@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.ltsmin;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -177,6 +178,27 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
             throw new ModelCheckingException(ioe);
         }
 
+        final File ltlFile;
+
+        try {
+            // create a file that will contain the LTL of the specification
+            ltlFile = File.createTempFile("formula", ".ltl");
+
+            try {
+                // write to the file
+                FileWriter writer = new FileWriter(ltlFile);
+                writer.write(formula);
+                writer.close();
+            } catch (IOException ioe) {
+                if (!keepFiles && !ltlFile.delete()) {
+                    LOGGER.warn("Could not delete file: " + ltlFile.getAbsolutePath());
+                }
+                throw ioe;
+            }
+        } catch (IOException ioe) {
+            throw new ModelCheckingException(ioe);
+        }
+
         final File gcf;
 
         try {
@@ -195,7 +217,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
                                                                   // add the ETF file that contains the hypothesis
                                                                   etf.getAbsolutePath(),
                                                                   // add the LTL formula
-                                                                  "--ltl=" + formula,
+                                                                  "--ltl=" + ltlFile,
                                                                   // write the trace to this file
                                                                   "--trace=" + gcf.getAbsolutePath(),
                                                                   // use only one thread (hypotheses are always small)
@@ -258,6 +280,9 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
             if (!keepFiles) {
                 if (!etf.delete()) {
                     LOGGER.warn("Could not delete file: " + etf.getAbsolutePath());
+                }
+                if (!ltlFile.delete()) {
+                    LOGGER.warn("Could not delete file: " + ltlFile.getAbsolutePath());
                 }
                 if (!gcf.delete()) {
                     LOGGER.warn("Could not delete file: " + gcf.getAbsolutePath());
