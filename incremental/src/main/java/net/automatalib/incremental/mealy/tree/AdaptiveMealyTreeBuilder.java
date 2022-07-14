@@ -28,7 +28,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 
 public class AdaptiveMealyTreeBuilder<I, O> extends IncrementalMealyTreeBuilder<I, O> {
-    private final Map<Node<O>, Pair<Word<I>, Integer>> stateToQuery = new HashMap<>();
+    private final Map<Node<O>, Pair<Word<? extends I>, Integer>> stateToQuery = new HashMap<>();
     private final PriorityQueue<Node<O>> queryStates = new PriorityQueue<>(
             (Node<O> a, Node<O> b) -> Integer.compare(stateToQuery.get(a).getSecond(),
                     stateToQuery.get(b).getSecond()));
@@ -39,15 +39,16 @@ public class AdaptiveMealyTreeBuilder<I, O> extends IncrementalMealyTreeBuilder<
 
     @Override
     public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
-        throw new UnsupportedOperationException("Use insert: (Word<I>, Word<O>, Intger) -> Boolean");
+        this.insert(input, outputWord, 0);
     }
 
-    public Boolean insert(Word<I> input, Word<O> outputWord, Integer queryIndex) {
+    public Boolean insert(Word<? extends I> input, Word<? extends O> outputWord, Integer queryIndex) {
         Boolean hasOverwritten = false;
         Node<O> curr = root;
 
         Iterator<? extends O> outputIt = outputWord.iterator();
-        for (I sym : input) {
+        for (int i = 0; i < input.length(); i++) {
+            I sym = input.getSymbol(i);
             O out = outputIt.next();
             Edge<Node<O>, O> edge = getEdge(curr, sym);
             if (edge == null) {
@@ -64,23 +65,34 @@ public class AdaptiveMealyTreeBuilder<I, O> extends IncrementalMealyTreeBuilder<
             }
         }
 
+        assert curr != null;
         stateToQuery.put(curr, Pair.of(input, queryIndex));
+
+        // Make sure it uses the new ages.
+        queryStates.remove(curr);
         queryStates.add(curr);
+
+        assert stateToQuery.size() == queryStates.size();
+
         return hasOverwritten;
     }
 
     private void removeQueries(Node<O> node) {
         GraphTraversal.bfIterator(this.asGraph(), Collections.singleton(node)).forEachRemaining(n -> {
-            queryStates.remove(n);
+            if (queryStates.contains(n)) {
+                queryStates.remove(n);
+            }
             stateToQuery.remove(n);
         });
+
+        assert stateToQuery.size() == queryStates.size();
     }
 
     private void removeEdge(Node<O> node, I symbol) {
-        node.setEdge(inputAlphabet.getSymbolIndex(symbol), null);
+        node.setEdge(this.getInputAlphabet().getSymbolIndex(symbol), null);
     }
 
-    public Word<I> getOldestQuery() {
+    public Word<? extends I> getOldestQuery() {
         return stateToQuery.get(queryStates.peek()).getFirst();
     }
 }
