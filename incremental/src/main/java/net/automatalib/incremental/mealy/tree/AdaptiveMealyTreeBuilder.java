@@ -42,6 +42,28 @@ public class AdaptiveMealyTreeBuilder<I, O> extends IncrementalMealyTreeBuilder<
         this.insert(input, outputWord, 0);
     }
 
+    public Boolean conflicts(Word<? extends I> input, Word<? extends O> outputWord) {
+        Node<O> curr = root;
+
+        Iterator<? extends O> outputIt = outputWord.iterator();
+        for (int i = 0; i < input.length(); i++) {
+            I sym = input.getSymbol(i);
+            O out = outputIt.next();
+            Edge<Node<O>, O> edge = getEdge(curr, sym);
+            if (edge == null) {
+                return false;
+            } else {
+                if (!Objects.equals(out, edge.getOutput())) {
+                    return true;
+                } else {
+                    curr = edge.getTarget();
+                }
+            }
+        }
+
+        return false;
+    }
+
     public Boolean insert(Word<? extends I> input, Word<? extends O> outputWord, Integer queryIndex) {
         Boolean hasOverwritten = false;
         Node<O> curr = root;

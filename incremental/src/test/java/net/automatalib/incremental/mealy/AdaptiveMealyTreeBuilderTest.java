@@ -131,6 +131,8 @@ public class AdaptiveMealyTreeBuilderTest {
     @Test(dependsOnMethods = "testFindSeparatingWord")
     public void testConflict() {
         adaptiveMealy.insert(W_1, W_1_O);
+        Assert.assertFalse("Expected no conflict but triggered one.", adaptiveMealy.conflicts(W_1, W_1_O));
+        Assert.assertTrue("Expected conflict but found none.", adaptiveMealy.conflicts(W_1, W_3_O));
         adaptiveMealy.insert(W_1, W_3_O);
         LinkedList<Character> out = new LinkedList<>();
         adaptiveMealy.lookup(W_1, out);
