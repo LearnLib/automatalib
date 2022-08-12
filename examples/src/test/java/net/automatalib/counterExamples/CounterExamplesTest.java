@@ -16,6 +16,8 @@
 package net.automatalib.counterExamples;
 
 import net.automatalib.commons.util.system.JVMUtil;
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleSolver;
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleTree;
 import net.automatalib.counterExamples.CounterExampleSolver.GraphGenerator.GraphGenerator;
 import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
@@ -41,9 +43,7 @@ import java.util.ArrayList;
  */
 public class CounterExamplesTest {
 
-    static Logger logger = LoggerFactory.getLogger(CounterExamplesTest.class);
     GraphGenerator g = new GraphGenerator(false);
-
 
     public CounterExamplesTest() throws IOException, ParserConfigurationException, SAXException {
     }
@@ -64,19 +64,19 @@ public class CounterExamplesTest {
         formulas.add("false || false|| false|| false|| false|| false|| false|| true");
         DefaultCFMPS<String, Void> cfmps = g.cfmpsList.get(2);
         M3CSolver.TypedM3CSolver<FormulaNode<String, Void>> m3c = M3CSolvers.typedSolver(cfmps);
-        SuperSolver<String, Void> solver = new SuperSolver<>(cfmps);
+        CounterExampleSolver<String, Void> solver = new CounterExampleSolver<>(cfmps);
 
 
 
-        ArrayList<MagicTree> resultTrees = new ArrayList<>();
+        ArrayList<CounterExampleTree> resultTrees = new ArrayList<>();
         for (String fGoal: formulas) {
             FormulaNode<String, Void> formula = M3CParser.parse(fGoal, l -> l,
                     ap -> null);
             m3c.solve(formula); //keeps context open on each iteration, otherwise crash
-            SuperSolver x = new SuperSolver(cfmps);
-            MagicTree tree = x.computeWitness(cfmps, formula);
-            System.out.println("M3C time: " + x.calcFulfilledTime/1000000+"ms");
-            System.out.println("Tree time: " + x.calcTreeTime/1000000+"ms");
+            CounterExampleSolver ceSolver = new CounterExampleSolver(cfmps);
+            CounterExampleTree tree = ceSolver.computeWitness(cfmps, formula);
+            System.out.println("M3C time: " + ceSolver.calcFulfilledTime/1000000+"ms");
+            System.out.println("Tree time: " + ceSolver.calcTreeTime/1000000+"ms");
             System.out.println("Tree size: " + tree.size());
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             resultTrees.add(tree);
@@ -84,17 +84,10 @@ public class CounterExamplesTest {
 
 
         Assert.assertEquals(resultTrees.get(0).resultString.length(), 3);
-        //Assert.assertEquals(resultTrees.get(1).resultString.length(), 33);
         Assert.assertEquals(resultTrees.get(1).resultString.length(), 1);
         Assert.assertEquals(resultTrees.get(2).resultString.length(), 5);
         Assert.assertEquals(resultTrees.get(3).resultString.length(), 5);
         Assert.assertEquals(resultTrees.get(4).resultString.length(), 1);
-
-    }
-
-    @Test
-    public void checkCFMPSSetting1System1Fulfilled() throws IOException, ParserConfigurationException, SAXException {
-        checkJVMCompatibility();
 
     }
 
@@ -109,29 +102,18 @@ public class CounterExamplesTest {
         formulas.add("mu X.((<a>true) || <>X )");
         DefaultCFMPS<String, Void> cfmps = g.cfmpsList.get(4);
         M3CSolver.TypedM3CSolver<FormulaNode<String, Void>> m3c = M3CSolvers.typedSolver(cfmps);
-        SuperSolver<String, Void> solver = new SuperSolver<>(cfmps);
+        CounterExampleSolver<String, Void> solver = new CounterExampleSolver<>(cfmps);
 
-
-
-        ArrayList<MagicTree> resultTrees = new ArrayList<>();
+        ArrayList<CounterExampleTree> resultTrees = new ArrayList<>();
         for (String fGoal: formulas) {
             FormulaNode<String, Void> formula = M3CParser.parse(fGoal, l -> l,
                     ap -> null);
             System.out.println("formula fulfilled? ->"+ m3c.solve(formula)); //keeps context open on each iteration, otherwise crash
-            SuperSolver x = new SuperSolver(cfmps);
-            MagicTree tree = x.computeWitness(cfmps, formula);
-            System.out.println("M3C time: " + x.calcFulfilledTime/1000000+"ms");
+            CounterExampleSolver ceSolver = new CounterExampleSolver(cfmps);
+            CounterExampleTree tree = ceSolver.computeWitness(cfmps, formula);
+            System.out.println("M3C time: " + ceSolver.calcFulfilledTime/1000000+"ms");
             resultTrees.add(tree);
         }
-
-
-        /*Assert.assertEquals(resultTrees.get(0).resultString.length(), 3);
-        //Assert.assertEquals(resultTrees.get(1).resultString.length(), 33);
-        Assert.assertEquals(resultTrees.get(1).resultString.length(), 1);
-        Assert.assertEquals(resultTrees.get(2).resultString.length(), 5);
-        Assert.assertEquals(resultTrees.get(3).resultString.length(), 5);
-        Assert.assertEquals(resultTrees.get(4).resultString.length(), 1);*/
-
     }
 
     private static void checkJVMCompatibility() {

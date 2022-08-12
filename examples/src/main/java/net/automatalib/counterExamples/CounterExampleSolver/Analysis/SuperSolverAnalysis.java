@@ -22,8 +22,6 @@ import java.util.ArrayList;
 
 public class SuperSolverAnalysis {
 
-    static Logger logger = LoggerFactory.getLogger(SuperSolverAnalysis.class);
-
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, ParseException {
         GraphGenerator graphGenerator = new GraphGenerator(false);
         //set up formulas under test
