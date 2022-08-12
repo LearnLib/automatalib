@@ -1,5 +1,6 @@
 package net.automatalib.counterExamples.CounterExampleSolver.Visualisation;
 
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleTree;
 import net.automatalib.graphs.base.compact.CompactBidiEdge;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 
@@ -7,10 +8,10 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class AbstractVisualizationHelper extends DefaultVisualizationHelper<Integer, CompactBidiEdge<String>> {
-    MagicTree resultTree;
+    CounterExampleTree resultTree;
     int maxRecDepth;
 
-    public AbstractVisualizationHelper(MagicTree resultTree){
+    public AbstractVisualizationHelper(CounterExampleTree resultTree){
         this.resultTree = resultTree;
         maxRecDepth = resultTree.calcMaxRecDepth();
     }

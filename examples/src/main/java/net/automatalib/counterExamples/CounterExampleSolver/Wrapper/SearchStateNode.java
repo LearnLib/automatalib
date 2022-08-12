@@ -51,15 +51,6 @@ public class SearchStateNode {
         String result = "";
         String indent = "                                        "; //20 spaces
         result += "State: " + indent.substring(0, indent.length() - String.valueOf(state).length()) + state + "\n";
-        /*String subformulaString = subformula.toString();
-        result += "Current formula: " + indent.substring(0, indent.length() - subformulaString.length()) + subformulaString + "\n";
-        result += "Procedures: " + indent.substring(0, indent.length() - procedures.size()) + procedures + "\n";
-        String contextString = contexts.toString();
-
-        result += "Contexts: " + indent.substring(0, indent.length() - contexts.size()) + contextString + "\n";
-        result += "ReturnAddress: " + indent.substring(0, indent.length() - returnAddress.size()) + returnAddress + "\n";
-        result += "RecDepth: " + indent.substring(0, indent.length() - contexts.size()) + expansionDepth + "\n";
-*/
         return result;
     }
 
@@ -70,29 +61,6 @@ public class SearchStateNode {
         result += "<TR><TD>State: </TD><TD>" +   state + "</TD> </TR>";
         String contextString = contexts.toString();
         result += "<TR><TD>Contexts: </TD><TD>" + contextString + "</TD></TR>";
-        //String subformulaString = subformula.toString();
-        /*if(subformulaString.length() > trimLength){
-            subformulaString = subformulaString.substring(0,trimLength) + "...";
-        }*/
-        //result += "<TR><TD>Current formula: </TD><TD> \"" + subformulaString + "\"</TD></TR>";
-
-        /*String proceduresString = procedures.toString();
-        if(proceduresString.length() > trimLength){
-            proceduresString = proceduresString.substring(0,trimLength) + "...";
-        }
-        result += "Procedures: " + indent.substring(0, indent.length() - procedures.size()) + proceduresString + "\n";
-
-        String contextString = contexts.toString();
-        if(contextString.length() > trimLength){
-            contextString = contextString.substring(0,trimLength) + "...";
-        }
-        result += "Contexts: " + indent.substring(0, indent.length() - contexts.size()) + contextString + "\n";
-
-        String returnAddressString = returnAddress.toString();
-        if(returnAddressString.length() > trimLength){
-            returnAddressString = returnAddressString.substring(0,trimLength) + "...";
-        }
-        result += "ReturnAddress: " + indent.substring(0, indent.length() - returnAddress.size()) + returnAddressString + "\n";*/
 
         result += "</TABLE>";
 

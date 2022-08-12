@@ -1,5 +1,6 @@
 package net.automatalib.counterExamples.CounterExampleSolver.Visualisation;
 
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleTree;
 import net.automatalib.graphs.base.compact.CompactBidiEdge;
 
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Objects;
 public class EdgeVisualizationHelper extends AbstractVisualizationHelper{
     private boolean colorResultPath;
 
-    public EdgeVisualizationHelper(MagicTree resultTree, boolean colorResultPath){
+    public EdgeVisualizationHelper(CounterExampleTree resultTree, boolean colorResultPath){
         super(resultTree);
         this.colorResultPath = colorResultPath;
     }

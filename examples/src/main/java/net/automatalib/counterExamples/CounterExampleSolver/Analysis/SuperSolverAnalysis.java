@@ -1,5 +1,7 @@
 package net.automatalib.counterExamples.CounterExampleSolver.Analysis;
 
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleSolver;
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleTree;
 import net.automatalib.counterExamples.CounterExampleSolver.GraphGenerator.GraphGenerator;
 import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
@@ -64,20 +66,20 @@ public class SuperSolverAnalysis {
             String path ="";
             for(int i=0; i < averageAmount; i++){
                 M3CSolver.TypedM3CSolver<FormulaNode<String, Void>> m3c = M3CSolvers.typedSolver(cfmps);
-                SuperSolver<String, Void> solver = new SuperSolver<>(cfmps);
+                CounterExampleSolver<String, Void> ceSolver = new CounterExampleSolver<>(cfmps);
                 FormulaNode<String, Void> formula = M3CParser.parse(fGoal, l -> l,
                         ap -> null);
 
                 boolean isFulfilled = m3c.solve(formula);
 
                 if(isFulfilled){
-                    MagicTree magicTree = solver.computeWitness(cfmps, formula);
-                    path = magicTree.resultString;
-                    calcM3C += solver.calcFulfilledTime;
-                    calcTree += solver.calcTreeTime;
-                    calcPath += magicTree.extractionTime;
-                    height += magicTree.maxDepth;
-                    size += magicTree.size();
+                    CounterExampleTree counterExampleTree = ceSolver.computeWitness(cfmps, formula);
+                    path = counterExampleTree.resultString;
+                    calcM3C += ceSolver.calcFulfilledTime;
+                    calcTree += ceSolver.calcTreeTime;
+                    calcPath += counterExampleTree.extractionTime;
+                    height += counterExampleTree.maxDepth;
+                    size += counterExampleTree.size();
                 }
             }
             writer.append("################### Formula " + iteration + " ###################\n");

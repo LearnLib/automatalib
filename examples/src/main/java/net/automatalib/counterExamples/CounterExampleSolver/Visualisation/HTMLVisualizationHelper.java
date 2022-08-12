@@ -1,12 +1,14 @@
 package net.automatalib.counterExamples.CounterExampleSolver.Visualisation;
 
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleTree;
+
 import java.util.Map;
 
 public class HTMLVisualizationHelper extends AbstractVisualizationHelper{
     private int trimLength;
     private boolean showFormulaAsGrammar;
 
-    public HTMLVisualizationHelper(MagicTree resultTree, int trimLength, boolean showFormulaAsGrammar){
+    public HTMLVisualizationHelper(CounterExampleTree resultTree, int trimLength, boolean showFormulaAsGrammar){
         super(resultTree);
         this.trimLength = trimLength;
         this.showFormulaAsGrammar = showFormulaAsGrammar;
@@ -22,12 +24,12 @@ public class HTMLVisualizationHelper extends AbstractVisualizationHelper{
         boxNodeLabel += "<TR><TD>State:</TD><TD>" + resultTree.getNodeProperty(node).state + "</TD> </TR>";
 
         String contextString = resultTree.getNodeProperty(node).contexts.toString();
+
         boxNodeLabel += "<TR><TD>Contexts:</TD><TD>" + contextString + "</TD></TR>";
 
         boxNodeLabel += "<TR><TD>Procedures:</TD><TD>" + resultTree.getNodeProperty(node).procedures.toString() + "</TD> </TR>";
 
         boxNodeLabel += "<TR><TD>ReturnAddress:</TD><TD>" + resultTree.getNodeProperty(node).returnAddress.toString() + "</TD></TR>";
-
 
         boxNodeLabel += "<TR><TD>Formula:</TD><TD> " + transformFormulaForHTML(node) + " </TD></TR>";
 

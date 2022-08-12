@@ -1,12 +1,14 @@
 package net.automatalib.counterExamples.CounterExampleSolver.Visualisation;
 
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleTree;
+
 import java.util.Map;
 
 public class ColorVisualizationHelper extends AbstractVisualizationHelper{
 
     private boolean colorResultPath;
     private boolean colorRecDepth;
-    public ColorVisualizationHelper(MagicTree resultTree, boolean colorResultPath, boolean colorRecDepth){
+    public ColorVisualizationHelper(CounterExampleTree resultTree, boolean colorResultPath, boolean colorRecDepth){
         super(resultTree);
         this.colorResultPath = colorResultPath;
         this.colorRecDepth = colorRecDepth;

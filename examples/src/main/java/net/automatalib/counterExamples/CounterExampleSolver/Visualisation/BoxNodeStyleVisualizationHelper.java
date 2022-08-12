@@ -1,12 +1,14 @@
 package net.automatalib.counterExamples.CounterExampleSolver.Visualisation;
 
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleTree;
+
 import java.util.Map;
 
 public class BoxNodeStyleVisualizationHelper extends AbstractVisualizationHelper {
     private boolean shapeResultPath;
     private boolean thickBordersDepth;
 
-    public BoxNodeStyleVisualizationHelper(MagicTree resultTree, boolean shapeResultPath, boolean thickBordersDepth){
+    public BoxNodeStyleVisualizationHelper(CounterExampleTree resultTree, boolean shapeResultPath, boolean thickBordersDepth){
         super(resultTree);
         this.shapeResultPath = shapeResultPath;
         this.thickBordersDepth = thickBordersDepth;
