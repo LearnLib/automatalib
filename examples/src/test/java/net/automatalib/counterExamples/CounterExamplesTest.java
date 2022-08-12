@@ -16,11 +16,8 @@
 package net.automatalib.counterExamples;
 
 import net.automatalib.commons.util.system.JVMUtil;
-import net.automatalib.counterExamples.SuperSolver.GraphGenerator.GraphGenerator;
-import net.automatalib.counterExamples.SuperSolver.MagicTree;
-import net.automatalib.counterExamples.SuperSolver.SuperSolver;
+import net.automatalib.counterExamples.CounterExampleSolver.GraphGenerator.GraphGenerator;
 import net.automatalib.graphs.base.DefaultCFMPS;
-import net.automatalib.graphs.base.compact.CompactPMPG;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
@@ -36,7 +33,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Run the examples as part of (integration) testing.

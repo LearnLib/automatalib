@@ -1,14 +1,13 @@
-package net.automatalib.counterExamples.SuperSolver;
+package net.automatalib.counterExamples.CounterExampleSolver;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
-import net.automatalib.counterExamples.SuperSolver.Wrapper.SearchStateNode;
+import net.automatalib.counterExamples.CounterExampleSolver.Wrapper.SearchStateNode;
 import net.automatalib.graphs.base.compact.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class MagicTree extends AbstractCompactBidiGraph<SearchStateNode, String> {
+public class CounterExampleTree extends AbstractCompactBidiGraph<SearchStateNode, String> {
 
     public String defaultLabel;
     public final ResizingArrayStorage<@Nullable SearchStateNode> nodeProperties;
@@ -20,7 +19,7 @@ public class MagicTree extends AbstractCompactBidiGraph<SearchStateNode, String>
     public long extractionTime;
     public int maxDepth;
 
-    MagicTree(String label){
+    CounterExampleTree(String label){
         this.defaultLabel = label;
         this.nodeProperties = new ResizingArrayStorage(SearchStateNode.class);
         finishingNode = -1;
@@ -71,7 +70,7 @@ public class MagicTree extends AbstractCompactBidiGraph<SearchStateNode, String>
         int root = 0;
         maxDepth = calcMaxDepth(root);
     }
-    public int calcMaxDepth(Integer node){
+    private int calcMaxDepth(Integer node){
         if(node < 0 || node == null){
             return 0;
         }

@@ -1,4 +1,4 @@
-package net.automatalib.counterExamples.SuperSolver.GraphGenerator;
+package net.automatalib.counterExamples.CounterExampleSolver.GraphGenerator;
 
 
 

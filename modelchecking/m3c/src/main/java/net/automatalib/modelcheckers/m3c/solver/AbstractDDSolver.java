@@ -63,17 +63,17 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author murtovi
  */
-abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
+public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 
     // Attributes that are constant for a given CFMPS
     private final @KeyFor("workUnits") L mainProcess;
 
     // Attributes that change for each formula
     private TransformerSerializer<T, L, AP> serializer;
-    private DependencyGraph<L, AP> dependencyGraph;
+    public DependencyGraph<L, AP> dependencyGraph;
     private int currentBlockIndex;
     // Per-procedure attributes
-    private final Map<L, WorkUnit<?, ?>> workUnits;
+    public final Map<L, WorkUnit<?, ?>> workUnits;
     // Per-action attributes
     private Map<L, T> mustTransformers;
     private Map<L, T> mayTransformers;
@@ -276,7 +276,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         return satisfiedSubFormulas;
     }
 
-    private boolean[] toBoolArray(Set<Integer> satisfiedVars) {
+    public boolean[] toBoolArray(Set<Integer> satisfiedVars) {
         final boolean[] arr = new boolean[dependencyGraph.getNumVariables()];
         for (Integer satisfiedVar : satisfiedVars) {
             arr[satisfiedVar] = true;
@@ -284,7 +284,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         return arr;
     }
 
-    private Set<Integer> getAllAPDeadlockedNode() {
+    public Set<Integer> getAllAPDeadlockedNode() {
         return getAllAPDeadlockedNode(workUnits.get(mainProcess).pmpg);
     }
 
@@ -557,12 +557,12 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
 
     protected abstract TransformerSerializer<T, L, AP> getSerializer();
 
-    private class WorkUnit<N, E> {
+    public class WorkUnit<N, E> {
 
-        private final L label;
-        private final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
+        public final L label;
+        public final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
         private final Mapping<N, @Nullable Set<N>> predecessors;
-        private MutableMapping<N, T> propTransformers;
+        public MutableMapping<N, T> propTransformers;
         private Set<N> workSet; // Keeps track of which node's property transformers have to be updated.
 
         WorkUnit(L label, ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg, Mapping<N, @Nullable Set<N>> predecessors) {

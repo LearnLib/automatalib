@@ -1,14 +1,12 @@
 
-package net.automatalib.counterExamples.SuperSolver;
+package net.automatalib.counterExamples.CounterExampleSolver;
 
 import com.google.common.collect.Sets;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.commons.util.strings.AbstractPrintable;
-import net.automatalib.counterExamples.SuperSolver.GraphGenerator.GraphGenerator;
-import net.automatalib.counterExamples.SuperSolver.Visualisation.*;
-import net.automatalib.counterExamples.SuperSolver.Wrapper.SearchStateNode;
-import net.automatalib.counterExamples.SuperSolver.gearElements.IModel;
-import net.automatalib.counterExamples.SuperSolver.gearElements.NodeExplorer;
+import net.automatalib.counterExamples.CounterExampleSolver.Wrapper.SearchStateNode;
+import net.automatalib.counterExamples.CounterExampleSolver.gearElements.IModel;
+import net.automatalib.counterExamples.CounterExampleSolver.gearElements.NodeExplorer;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.graphs.ProceduralModalProcessGraph;
 import net.automatalib.graphs.base.DefaultCFMPS;
@@ -17,16 +15,10 @@ import net.automatalib.graphs.base.compact.CompactPMPGEdge;
 import net.automatalib.graphs.concepts.NodeIDs;
 import net.automatalib.modelcheckers.m3c.formula.*;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
-import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.solver.BDDSolver;
-import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
-import net.automatalib.modelcheckers.m3c.solver.M3CSolvers;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgePropertyImpl;
 import net.automatalib.util.graphs.Graphs;
-import net.automatalib.visualization.Visualization;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,56 +26,24 @@ import java.io.IOException;
 import java.util.*;
 
 @SuppressWarnings({"rawtypes", "unchecked", "WhileLoopReplaceableByForEach"})
-public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
+public class CounterExampleSolver<L, AP> extends BDDSolver<L, AP> {
 
     boolean continueCalc = true;
     int graphSize = 0;
-    public MagicTree resultTree = new MagicTree("lambda");
-    static Logger logger = LoggerFactory.getLogger(SuperSolver.class);
+    public CounterExampleTree resultTree = new CounterExampleTree("lambda");
 
     //benchmark variables
     public long calcFulfilledTime;
     public long calcTreeTime;
 
-    public SuperSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
+    public CounterExampleSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
         super(cfmps);
     }
 
-    //main is rather used as a debugging function now, actual tests/benchmarks in happen in their respective classes
     public static void main(String[] args) throws ParseException, IOException, ParserConfigurationException, SAXException {
-
-        //generate graphs
-        GraphGenerator graphGenerator = new GraphGenerator(false);
-
-        //initialise mcfps + solver
-        DefaultCFMPS<String, Void> cfmps = graphGenerator.cfmpsList.get(0);
-
-        TypedM3CSolver<FormulaNode<String, Void>> m3c =
-                M3CSolvers.typedSolver(cfmps);
-        SuperSolver<String, Void> solver = new SuperSolver<>(cfmps);
-
-        //set up formulas under test
-        String fGoal = "mu X.(<b>true || <>X)";
-        FormulaNode<String, Void> formula = M3CParser.parse(fGoal, l -> l,
-                ap -> null);
-
-        //evaluate formula
-        boolean isFulfilled = m3c.solve(formula);
-        logger.info(formula + " erfüllt? -> " + isFulfilled);
-
-        if(isFulfilled){
-            MagicTree magicTree = solver.computeWitness(cfmps, formula);
-            magicTree.calcMaxDepthInit();
-            Visualization.visualize(magicTree,
-                    //new ColorVisualizationHelper(magicTree, false, true),
-                    new HTMLVisualizationHelper(magicTree, 20, false),
-                    new BoxNodeStyleVisualizationHelper(magicTree, true, true)
-                    //new EdgeVisualizationHelper(magicTree, true)
-            );
-        }
     }
 
-    public MagicTree computeWitness(DefaultCFMPS cfmps, FormulaNode<L, AP> formula) {
+    public CounterExampleTree computeWitness(DefaultCFMPS cfmps, FormulaNode<L, AP> formula) {
         try {
             long startTimeFulfilled = System.nanoTime();
             boolean isFulfilled = solve(formula);
@@ -95,38 +55,29 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
             }
         } finally {
             shutdownDDManager();
-            logger.debug("Finished calculation");
         }
         return null;
     }
 
-    public MagicTree computeWitnessStep(DefaultCFMPS cfmps, FormulaNode<L, AP> formula){
-
+    public CounterExampleTree computeWitnessStep(DefaultCFMPS cfmps, FormulaNode<L, AP> formula){
         LinkedList<SearchStateNode> queueBFS = new LinkedList<>();
         Wrapper apMain = new Wrapper<>(super.workUnits.get(cfmps.getMainProcess()));
         SearchStateNode currentSearchStateWrapper = fillInitialSearchStateWrapper(apMain, formula);
-        logger.trace("first Wrapper initialized with: \n" + currentSearchStateWrapper.printSearchStateWrapper());
 
         queueBFS.add(currentSearchStateWrapper);
 
-        logger.trace("starting pseudoBFS");
         long startTimePathCalc = System.nanoTime();
 
         while(!queueBFS.isEmpty()){
-            if(!continueCalc){
+            if(!continueCalc) {
                 break;
             }
-            logger.debug("------ starting work on next queue element ------");
             SearchStateNode queueElement = queueBFS.getFirst();
-            logger.debug(queueElement.printSearchStateWrapper());
             queueBFS.removeFirst();
 
             int positionInResultTree = resultTree.addNode(queueElement);
 
-            if(positionInResultTree <= 0){
-                logger.trace("positionInResultTree is <= 0, so no connection needed");
-            } else {
-                logger.debug("connecting " + queueElement.parentNode + " with " + positionInResultTree);
+            if(positionInResultTree > 0){
                 resultTree.connect(queueElement.parentNode.intValue(), positionInResultTree, queueElement.edgeLabel);
             }
 
@@ -134,14 +85,11 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
 
             if(fulfilledNext.size() != 0 && continueCalc){
                 queueBFS.addAll(fulfilledNext);
-            } else {
-                logger.debug("fulfilledNext is empty, terminating");
             }
         }
         long endTimePathCalc = System.nanoTime();
         calcTreeTime = endTimePathCalc - startTimePathCalc;
         resultTree.calcMaxDepthInit();
-        logger.debug("maxDepth should be: " + resultTree.calcMaxDepth(0));
         resultTree.extractPath();
 
         return resultTree;
@@ -164,12 +112,10 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
                 return exploreDia(visitedFormula, queueElement);
             }
             else if (visitedFormula instanceof TrueNode){
-                //logger.info("TrueNode found, terminating with empty list at " + queueElement.resultGraphSize);
                 resultTree.finishingNode = queueElement.resultGraphSize;
                 continueCalc = false;
             }
             else if (visitedFormula instanceof AtomicNode){
-                logger.info("AtomicNode found, terminating with empty list at " + queueElement.resultGraphSize);
                 resultTree.finishingNode = queueElement.resultGraphSize;
                 continueCalc = false;
             }
@@ -178,18 +124,15 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
         return new ArrayList<>();
     }
 
-    // starte einzelne formelnsuche hier
     private ArrayList<SearchStateNode> exploreOR(FormulaNode<L, AP> formula, SearchStateNode queueElement){
         String formulaLeft = findGlobalVarNumber(((OrNode<L, AP>) formula).getLeftChild().toNNF());
         String formulaRight = findGlobalVarNumber(((OrNode<L, AP>) formula).getRightChild().toNNF());
-        logger.debug("debugging exploreOR of " + queueElement.state);
-        logger.debug("formulaLeft " + formulaLeft + "  and formulaRight " + formulaRight);
+
         ArrayList<SearchStateNode> result = new ArrayList<>();
 
         int nextCurrentNode = graphSize;
 
         if(queueElement.apMain.getAtomicPropositions(queueElement.state).contains(Integer.parseInt(formulaLeft))) {
-            logger.debug("left is valid");
             nextCurrentNode++;
             result.add(new SearchStateNode(queueElement.procedures,
                             queueElement.contexts, queueElement.expansionDepth, queueElement.state, nextCurrentNode, queueElement.resultGraphSize,
@@ -201,7 +144,6 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
             graphSize++;
         }
         if(queueElement.apMain.getAtomicPropositions(queueElement.state).contains(Integer.parseInt(formulaRight))){
-            logger.debug("right is valid");
             nextCurrentNode++;
             result.add(new SearchStateNode(queueElement.procedures,
                             queueElement.contexts, queueElement.expansionDepth, queueElement.state, nextCurrentNode, queueElement.resultGraphSize,
@@ -212,22 +154,17 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
             );
             graphSize++;
         }
-        logger.debug("exploring OR of " + queueElement.state + " found " + result.size() + " answer/s");
         return result;
     }
     private ArrayList<SearchStateNode> exploreDia(FormulaNode<L, AP> formula, SearchStateNode queueElement){
         ArrayList<SearchStateNode> result;
 
-        logger.debug("exploring dia of " + queueElement.state);
         String diaMoveLabel = findDiaMoveLabel(formula);
         if(diaMoveLabel.equals(">")){
-            logger.debug("dia move is via '>', check fulfilled in next");
             result = findDiaMoveWithEmpty(queueElement, formula);
         } else if (queueElement.state == (int)queueElement.apMain.pmpg.getFinalNode() && queueElement.returnAddress.size() > 0){
-            logger.debug("dia move from endNode -> check returnAddress");
             result = findDiaMoveEndNodeReturn(queueElement);
         } else {
-            logger.debug("dia move is via a specific path");
             result = findDiaMoveRegularStep(queueElement, formula);
         }
 
@@ -238,23 +175,23 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
         ArrayList<SearchStateNode> result = new ArrayList<>();
         Iterator edgeIter = queueElement.apMain.getOutgoingEdges(queueElement.state).iterator();
         int formulaNode = queueElement.subformula.getVarNumber();
-        while(edgeIter.hasNext()){
+        while(edgeIter.hasNext()) {
             CompactPMPGEdge edge = (CompactPMPGEdge) edgeIter.next();
-            if(dependencyGraph.getFormulaNodes().get(formulaNode).toString().substring(0,3).equals("(<>") && !dependencyGraph.getFormulaNodes().get(formulaNode).toString().contains("X")){
+            if (dependencyGraph.getFormulaNodes().get(formulaNode).toString().substring(0, 3).equals("(<>") && !dependencyGraph.getFormulaNodes().get(formulaNode).toString().contains("X")) {
                 formulaNode++;
             }
-            if(dependencyGraph.getFormulaNodes().get(formulaNode).toString().contains("X")){
+            if (dependencyGraph.getFormulaNodes().get(formulaNode).toString().contains("X")) {
                 formulaNode = 0;
             }
-            switch ( ((ProceduralModalEdgePropertyImpl)edge.getProperty()).getProceduralType() ) {
+            switch (((ProceduralModalEdgePropertyImpl) edge.getProperty()).getProceduralType()) {
                 case INTERNAL:
-                    if(queueElement.apMain.getAtomicPropositions(edge.getTarget()).contains(formula.getVarNumber()) ) {
+                    if (queueElement.apMain.getAtomicPropositions(edge.getTarget()).contains(formula.getVarNumber())) {
                         SearchStateNode toAdd = new SearchStateNode(
                                 queueElement.procedures,
                                 queueElement.contexts,
                                 queueElement.expansionDepth,
                                 edge.getTarget(),
-                                graphSize+1,
+                                graphSize + 1,
                                 queueElement.resultGraphSize,
                                 dependencyGraph.getFormulaNodes().get(formulaNode),
                                 queueElement.returnAddress,
@@ -266,7 +203,6 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
                     }
                     break;
                 case PROCESS:
-                    logger.debug("target is a procedural edge!");
                     Stack newProcedures = new Stack();
                     newProcedures.addAll(queueElement.procedures);
                     newProcedures.push(edge.getLabel().toString());
@@ -279,9 +215,9 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
                     SearchStateNode toAdd = new SearchStateNode(
                             newProcedures,
                             newContext,
-                            queueElement.expansionDepth+1,
+                            queueElement.expansionDepth + 1,
                             0,
-                            graphSize+1,
+                            graphSize + 1,
                             queueElement.resultGraphSize,
                             dependencyGraph.getFormulaNodes().get(formulaNode),
                             newReturnAddresses,
@@ -290,15 +226,13 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
                     );
                     graphSize++;
                     result.add(toAdd);
-                break;
+                    break;
             }
         }
-        if(result.size() == 0) { logger.debug("found nothing in findDiaMoveWithEmpty");}
         return result;
     }
     private ArrayList<SearchStateNode> findDiaMoveEndNodeReturn(SearchStateNode queueElement){
         ArrayList<SearchStateNode> result = new ArrayList<>();
-        //wir sind im endzustand mit rücksprungadressen
         Set<Integer> nextContext = queueElement.contexts.pop();
         queueElement.procedures.pop();
         String procedureName = queueElement.procedures.peek();
@@ -365,11 +299,9 @@ public class SuperSolver<L, AP> extends BDDSolver<L, AP> {
                         edge.getLabel().toString()
                 );
                 graphSize++;
-                logger.debug("adding this from within findDiaMoveRegularStep:\n" + toAdd.printSearchStateWrapper());
                 result.add(toAdd);
             }
         }
-        if(result.size() == 0) {logger.debug("found nothing in findDiaMoveRegularStep");}
         return result;
     }
 

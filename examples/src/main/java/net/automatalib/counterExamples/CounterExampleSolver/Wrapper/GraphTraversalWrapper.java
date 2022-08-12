@@ -1,9 +1,7 @@
-package net.automatalib.counterExamples.SuperSolver.Wrapper;
+package net.automatalib.counterExamples.CounterExampleSolver.Wrapper;
 
 import net.automatalib.graphs.base.compact.CompactPMPG;
 import net.automatalib.graphs.base.compact.CompactPMPGEdge;
-import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
-import net.automatalib.ts.modal.transition.ProceduralModalEdgePropertyImpl;
 
 import java.util.Iterator;
 

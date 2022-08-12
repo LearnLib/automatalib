@@ -1,10 +1,9 @@
-package net.automatalib.counterExamples.SuperSolver.Analysis;
+package net.automatalib.counterExamples.CounterExampleSolver.Analysis;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 
 public class AverageBroker {

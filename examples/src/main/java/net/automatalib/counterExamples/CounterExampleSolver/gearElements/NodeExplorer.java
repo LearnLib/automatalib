@@ -1,4 +1,4 @@
-package net.automatalib.counterExamples.SuperSolver.gearElements;
+package net.automatalib.counterExamples.CounterExampleSolver.gearElements;
 
 import net.automatalib.modelcheckers.m3c.formula.*;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;

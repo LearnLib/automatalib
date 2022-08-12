@@ -114,6 +114,14 @@ limitations under the License.
                 </picUrl>
             </properties>
         </contributor>
+        <contributor>
+            <name>Maximilian Freese</name>
+            <organization>TU Dortmund, Chair for Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </contributor>
     </contributors>
 
     <mailingLists>

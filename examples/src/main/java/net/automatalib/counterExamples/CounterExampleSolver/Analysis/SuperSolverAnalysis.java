@@ -1,8 +1,6 @@
-package net.automatalib.counterExamples.SuperSolver.Analysis;
+package net.automatalib.counterExamples.CounterExampleSolver.Analysis;
 
-import net.automatalib.counterExamples.SuperSolver.GraphGenerator.GraphGenerator;
-import net.automatalib.counterExamples.SuperSolver.MagicTree;
-import net.automatalib.counterExamples.SuperSolver.SuperSolver;
+import net.automatalib.counterExamples.CounterExampleSolver.GraphGenerator.GraphGenerator;
 import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;

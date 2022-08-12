@@ -1,6 +1,4 @@
-package net.automatalib.counterExamples.SuperSolver.Visualisation;
-
-import net.automatalib.counterExamples.SuperSolver.MagicTree;
+package net.automatalib.counterExamples.CounterExampleSolver.Visualisation;
 
 import java.util.Map;
 

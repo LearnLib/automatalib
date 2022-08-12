@@ -1,22 +1,12 @@
-package net.automatalib.counterExamples.SuperSolver.GraphGenerator;
+package net.automatalib.counterExamples.CounterExampleSolver.GraphGenerator;
 
-import net.automatalib.counterExamples.SuperSolver.SuperSolver;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.graphs.base.compact.CompactPMPG;
 import net.automatalib.graphs.base.compact.CompactPMPGEdge;
-import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-import net.automatalib.modelcheckers.m3c.solver.M3CSolver;
-import net.automatalib.modelcheckers.m3c.solver.M3CSolvers;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty;
-import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
-import net.automatalib.ts.modal.transition.ProceduralModalEdgePropertyImpl;
-import net.automatalib.visualization.Visualization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.util.*;
 

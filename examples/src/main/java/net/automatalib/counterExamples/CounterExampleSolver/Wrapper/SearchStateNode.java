@@ -1,7 +1,7 @@
-package net.automatalib.counterExamples.SuperSolver.Wrapper;
+package net.automatalib.counterExamples.CounterExampleSolver.Wrapper;
 
 
-import net.automatalib.counterExamples.SuperSolver.SuperSolver;
+import net.automatalib.counterExamples.CounterExampleSolver.CounterExampleSolver;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 
 import java.util.*;
@@ -16,7 +16,7 @@ public class SearchStateNode {
     public Integer resultGraphSize;
     public FormulaNode subformula;
     public Stack<Integer> returnAddress;
-    public SuperSolver.Wrapper apMain;
+    public CounterExampleSolver.Wrapper apMain;
     public String edgeLabel;
     public boolean isPartOfResult;
 
@@ -24,7 +24,7 @@ public class SearchStateNode {
                               int depthOutside, int givenState, Integer resultGraphSizeOutside, Integer parentNode,
                               FormulaNode givenSubformula,
                               List<Integer> givenReturnAddresses,
-                              SuperSolver.Wrapper apOutside,
+                              CounterExampleSolver.Wrapper apOutside,
                               String edgeLabelOutside){
         procedures = new Stack<>();
         procedures.addAll(givenProcedures);

@@ -1,6 +1,5 @@
-package net.automatalib.counterExamples.SuperSolver.Visualisation;
+package net.automatalib.counterExamples.CounterExampleSolver.Visualisation;
 
-import net.automatalib.counterExamples.SuperSolver.MagicTree;
 import java.util.Map;
 
 public class HTMLVisualizationHelper extends AbstractVisualizationHelper{

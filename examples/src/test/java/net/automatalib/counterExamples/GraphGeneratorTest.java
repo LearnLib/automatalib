@@ -15,29 +15,8 @@
  */
 package net.automatalib.counterExamples;
 
-import net.automatalib.commons.util.system.JVMUtil;
-
-import net.automatalib.counterExamples.SuperSolver.GraphGenerator.GraphGenerator;
-import net.automatalib.counterExamples.SuperSolver.MagicTree;
-import net.automatalib.counterExamples.SuperSolver.SuperSolver;
-import net.automatalib.graphs.base.DefaultCFMPS;
-import net.automatalib.graphs.base.compact.CompactPMPG;
-import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
-import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
-import net.automatalib.modelcheckers.m3c.solver.M3CSolver;
-import net.automatalib.modelcheckers.m3c.solver.M3CSolvers;
-import net.automatalib.visualization.Visualization;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.SkipException;
-import org.testng.annotations.Test;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.util.Collections;
 
 /**
  * Run the examples as part of (integration) testing.
