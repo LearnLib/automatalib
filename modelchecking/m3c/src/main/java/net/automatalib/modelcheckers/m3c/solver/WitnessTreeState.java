@@ -1,0 +1,90 @@
+/* Copyright (C) 2013-2022 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package net.automatalib.modelcheckers.m3c.solver;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import net.automatalib.graphs.ProceduralModalProcessGraph;
+import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
+import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
+public class WitnessTreeState<N, L, E, AP> {
+
+    public final @Nullable WitnessTreeState<?, L, ?, AP> stack;
+    public final AbstractDDSolver<?, L, AP>.WorkUnit<N, E> unit;
+    public final L procedure;
+    public final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
+    public final N state;
+    public final FormulaNode<L, AP> subformula;
+    public final Set<Integer> context;
+    public final int parentId;
+    public final int id;
+    public final String displayLabel;
+    public final @Nullable L edgeLabel;
+    public boolean isPartOfResult;
+
+    WitnessTreeState(@Nullable WitnessTreeState<?, L, ?, AP> stack,
+                     AbstractDDSolver<?, L, AP>.WorkUnit<N, E> unit,
+                     N state,
+                     FormulaNode<L, AP> subformula,
+                     Set<Integer> context,
+                     String displayLabel,
+                     @Nullable L edgeLabel,
+                     int id,
+                     int parentId) {
+        this.stack = stack;
+        this.unit = unit;
+        this.procedure = unit.label;
+        this.pmpg = unit.pmpg;
+        this.state = state;
+        this.subformula = subformula;
+        this.context = context;
+
+        this.edgeLabel = edgeLabel;
+        if (parentId < 0) {
+            this.parentId = -1;
+        } else {
+            this.parentId = parentId;
+        }
+        this.id = id;
+        this.displayLabel = displayLabel;
+        this.isPartOfResult = false;
+    }
+
+    Set<Integer> getSatisfiedSubformulae(DependencyGraph<L, AP> dependencyGraph, N node) {
+
+        final Set<Integer> output = unit.propTransformers.get(node).evaluate(toBoolArray(dependencyGraph, context));
+        final Set<Integer> satisfiedSubFormulas = new HashSet<>();
+        for (FormulaNode<L, AP> n : dependencyGraph.getFormulaNodes()) {
+            if (output.contains(n.getVarNumber())) {
+                satisfiedSubFormulas.add(n.getVarNumber());
+            }
+        }
+
+        return satisfiedSubFormulas;
+    }
+
+    private boolean[] toBoolArray(DependencyGraph<L, AP> dependencyGraph, Set<Integer> satisfiedVars) {
+        final boolean[] arr = new boolean[dependencyGraph.getNumVariables()];
+        for (Integer satisfiedVar : satisfiedVars) {
+            arr[satisfiedVar] = true;
+        }
+        return arr;
+    }
+
+}

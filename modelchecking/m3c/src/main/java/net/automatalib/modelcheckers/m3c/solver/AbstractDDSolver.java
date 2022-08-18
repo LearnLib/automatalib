@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.CTLToMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
+import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
@@ -63,7 +65,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author murtovi
  */
-public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
+public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP>
+        implements ModelChecker<L, ContextFreeModalProcessSystem<L, AP>, FormulaNode<L, AP>, WitnessTree<L, AP>> {
 
     // Attributes that are constant for a given CFMPS
     private final @KeyFor("workUnits") L mainProcess;
@@ -147,6 +150,34 @@ public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, 
         }
 
         return nodeToPredecessors;
+    }
+
+    @Override
+    public @Nullable WitnessTree<L, AP> findCounterExample(ContextFreeModalProcessSystem<L, AP> cfmps,
+                                                           Collection<? extends L> inputs,
+                                                           FormulaNode<L, AP> formulaNode) {
+        final NotNode<L, AP> negatedFormula = new NotNode<>(formulaNode);
+        final FormulaNode<L, AP> ast = ctlToMuCalc(negatedFormula).toNNF();
+
+        initialize(ast);
+        this.solveInternal(false, Collections.emptyList());
+
+        final boolean sat = isSat();
+
+        if (sat) {
+            try {
+                final Map<L, AbstractDDSolver<?, L, AP>.WorkUnit<?, ?>> units = Collections.unmodifiableMap(workUnits);
+                return WitnessTreeExtractor.computeWitness(cfmps,
+                                                           units,
+                                                           dependencyGraph,
+                                                           ast,
+                                                           getAllAPDeadlockedNode());
+            } finally {
+                shutdownDDManager();
+            }
+        }
+
+        return null;
     }
 
     public boolean solve(FormulaNode<L, AP> formula) {
