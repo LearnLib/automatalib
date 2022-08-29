@@ -49,7 +49,7 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
      * @param word
      *         the word to insert
      * @param accepting
-     *         whether or not this word should be marked as accepting
+     *         whether this word should be marked as accepting
      *
      * @throws ConflictException
      *         if the newly provided information conflicts with existing information

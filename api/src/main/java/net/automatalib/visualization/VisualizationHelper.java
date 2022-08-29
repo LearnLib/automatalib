@@ -47,7 +47,7 @@ public interface VisualizationHelper<N, E> {
      * @param properties
      *         the property map
      *
-     * @return whether or not this node should be rendered
+     * @return whether this node should be rendered
      */
     boolean getNodeProperties(N node, Map<String, String> properties);
 
@@ -65,7 +65,7 @@ public interface VisualizationHelper<N, E> {
      * @param properties
      *         the property map
      *
-     * @return whether or not this edge should be rendered
+     * @return whether this edge should be rendered
      */
     boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties);
 

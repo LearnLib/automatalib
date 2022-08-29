@@ -49,7 +49,7 @@ public final class PaigeTarjanInitializers {
      * @param ip
      *         the initial partitioning mode
      * @param pruneUnreachable
-     *         whether or not to prune unreachable states during initialization
+     *         whether to prune unreachable states during initialization
      */
     public static void initCompleteDeterministic(PaigeTarjan pt,
                                                  UniversalDeterministicAutomaton.FullIntAbstraction<?, ?, ?> absAutomaton,
@@ -74,7 +74,7 @@ public final class PaigeTarjanInitializers {
      * @param initialClassification
      *         the function determining the initial classification
      * @param pruneUnreachable
-     *         whether or not to prune unreachable states during initialization
+     *         whether to prune unreachable states during initialization
      */
     public static void initCompleteDeterministic(PaigeTarjan pt,
                                                  SimpleDeterministicAutomaton.FullIntAbstraction absAutomaton,

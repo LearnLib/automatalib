@@ -57,8 +57,8 @@ public final class RandomAutomata {
      * @param inputs
      *         the input alphabet
      * @param minimize
-     *         determines whether or not the DFA will be minimized before being returned. Note that if {@code true} is
-     *         passed for this parameter, the resulting automaton might have a {@link Automaton#size() size} less than
+     *         determines whether the DFA will be minimized before being returned. Note that if {@code true} is passed
+     *         for this parameter, the resulting automaton might have a {@link Automaton#size() size} less than
      *         {@code numStates}
      *
      * @return a randomly generated ICDFA

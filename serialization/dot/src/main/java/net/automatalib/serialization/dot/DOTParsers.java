@@ -299,7 +299,7 @@ public final class DOTParsers {
 
     /**
      * Parser for {@link FiniteStateAcceptor}s with a custom automaton instance, custom node and edge attributes, custom
-     * labels for initial nodes and a flag whether or not the initial nodes are artificial.
+     * labels for initial nodes and a flag whether the initial nodes are artificial.
      *
      * @param creator
      *         a creator that is used to instantiate the returned automaton
@@ -310,11 +310,11 @@ public final class DOTParsers {
      * @param initialNodeIds
      *         the ids of the initial nodes
      * @param fakeInitialNodeIds
-     *         a flag indicating whether or not the {@code initialNodeIds} are artificial or not. If {@code true}, the
-     *         nodes matching the {@code initialNodeIds} will not be added to the automaton. Instead, their direct
-     *         successors will be initial states instead. This may be useful for instances where there are artificial
-     *         nodes used to display in incoming arrow for the actual initial states. If {@code false}, the nodes
-     *         matching the {@code initialNodeIds} will be used as initial nodes.
+     *         a flag indicating whether the {@code initialNodeIds} are artificial or not. If {@code true}, the nodes
+     *         matching the {@code initialNodeIds} will not be added to the automaton. Instead, their direct successors
+     *         will be initial states instead. This may be useful for instances where there are artificial nodes used to
+     *         display in incoming arrow for the actual initial states. If {@code false}, the nodes matching the
+     *         {@code initialNodeIds} will be used as initial nodes.
      * @param <S>
      *         the state type of the returned automaton
      * @param <I>
@@ -425,7 +425,7 @@ public final class DOTParsers {
 
     /**
      * Parser for {@link MealyMachine}s with a custom automaton instance, custom edge attributes and a custom label for
-     * the initial node and a flag whether or not the initial nodes are artificial.
+     * the initial node and a flag whether the initial nodes are artificial.
      *
      * @param creator
      *         a creator that is used to instantiate the returned automaton
@@ -434,11 +434,11 @@ public final class DOTParsers {
      * @param initialNodeId
      *         the id of the initial node
      * @param fakeInitialNodeId
-     *         a flag indicating whether or not the {@code initialNodeId} are artificial or not. If {@code true}, the
-     *         nodes matching the {@code initialNodeId} will not be added to the automaton. Instead, their direct
-     *         successors will be initial states instead. This may be useful for instances where there are artificial
-     *         nodes used to display in incoming arrow for the actual initial states. If {@code false}, the nodes
-     *         matching the {@code initialNodeId} will be used as initial nodes.
+     *         a flag indicating whether the {@code initialNodeId} are artificial or not. If {@code true}, the nodes
+     *         matching the {@code initialNodeId} will not be added to the automaton. Instead, their direct successors
+     *         will be initial states instead. This may be useful for instances where there are artificial nodes used to
+     *         display in incoming arrow for the actual initial states. If {@code false}, the nodes matching the
+     *         {@code initialNodeId} will be used as initial nodes.
      * @param <S>
      *         the state type of the returned automaton
      * @param <I>
@@ -563,7 +563,7 @@ public final class DOTParsers {
 
     /**
      * Parser for {@link MooreMachine}s with a custom automaton instance, custom node and edge attributes, a custom
-     * label for the initial node and a flag whether or not the initial node is artificial.
+     * label for the initial node and a flag whether the initial node is artificial.
      *
      * @param creator
      *         a creator that is used to instantiate the returned automaton
@@ -574,11 +574,11 @@ public final class DOTParsers {
      * @param initialNodeId
      *         the id of the initial node
      * @param fakeInitialNodeId
-     *         a flag indicating whether or not the {@code initialNodeId} are artificial or not. If {@code true}, the
-     *         nodes matching the {@code initialNodeId} will not be added to the automaton. Instead, their direct
-     *         successors will be initial states instead. This may be useful for instances where there are artificial
-     *         nodes used to display in incoming arrow for the actual initial states. If {@code false}, the nodes
-     *         matching the {@code initialNodeId} will be used as initial nodes.
+     *         a flag indicating whether the {@code initialNodeId} are artificial or not. If {@code true}, the nodes
+     *         matching the {@code initialNodeId} will not be added to the automaton. Instead, their direct successors
+     *         will be initial states instead. This may be useful for instances where there are artificial nodes used to
+     *         display in incoming arrow for the actual initial states. If {@code false}, the nodes matching the
+     *         {@code initialNodeId} will be used as initial nodes.
      * @param <S>
      *         the state type of the returned automaton
      * @param <I>

@@ -229,7 +229,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
     }
 
     /**
-     * Checks whether or not this block is empty, i.e., contains no states.
+     * Checks whether this block is empty, i.e., contains no states.
      *
      * @return <code>true</code> iff the block is empty, <code>false</code> otherwise.
      */
@@ -238,7 +238,7 @@ public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>,
     }
 
     /**
-     * Checks whether or not this block is a singleton, i.e., contains only a single state.
+     * Checks whether this block is a singleton, i.e., contains only a single state.
      *
      * @return <code>true</code> iff this block is a singleton, <code>false</code> otherwise.
      */

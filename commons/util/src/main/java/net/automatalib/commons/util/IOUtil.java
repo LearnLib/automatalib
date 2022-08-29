@@ -122,8 +122,8 @@ public final class IOUtil {
 
     /**
      * Ensures that the returned stream is a buffered version of the supplied output stream. The result must not
-     * necessarily be an instance of {@link BufferedOutputStream}, it can also be, e.g., a {@link ByteArrayOutputStream},
-     * depending on the type of the supplied output stream.
+     * necessarily be an instance of {@link BufferedOutputStream}, it can also be, e.g., a
+     * {@link ByteArrayOutputStream}, depending on the type of the supplied output stream.
      *
      * @param os
      *         the output stream
@@ -215,8 +215,8 @@ public final class IOUtil {
     }
 
     /**
-     * Returns a writer that writes contents to the given output stream with {@link StandardCharsets#UTF_8} encoding.
-     * If the given output stream is not already a buffering output stream, additionally buffers the output stream to
+     * Returns a writer that writes contents to the given output stream with {@link StandardCharsets#UTF_8} encoding. If
+     * the given output stream is not already a buffering output stream, additionally buffers the output stream to
      * improve performance.
      * <p>
      * Implementation note: the output stream (byte-wise representation) will be buffered, not the writer (character-
@@ -253,7 +253,7 @@ public final class IOUtil {
      * @return a (potentially) de-compressing, buffered, non-closing version of {@code is}
      *
      * @throws IOException
-     *         if reading the stream (for detecting whether or not it contains compressed contents) fails
+     *         if reading the stream (for detecting whether it contains compressed contents) fails
      * @see NonClosingInputStream
      * @see #asBufferedInputStream(InputStream)
      * @see #asUncompressedInputStream(InputStream)
@@ -281,7 +281,7 @@ public final class IOUtil {
      * @return a (potentially) de-compressing, buffered, non-closing, UTF-8-decoding version of {@code is}
      *
      * @throws IOException
-     *         if reading the stream (for detecting whether or not it contains compressed contents) fails
+     *         if reading the stream (for detecting whether it contains compressed contents) fails
      * @see #asUTF8Reader(InputStream)
      * @see #asUncompressedBufferedNonClosingInputStream(InputStream)
      */

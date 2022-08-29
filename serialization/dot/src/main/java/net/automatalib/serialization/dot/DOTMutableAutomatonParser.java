@@ -74,11 +74,11 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
      * @param initialNodeIds
      *         the ids of the initial nodes
      * @param fakeInitialNodeIds
-     *         a flag indicating whether or not the {@code initialNodeIds} are artificial or not. If {@code true}, the
-     *         nodes matching the {@code initialNodeIds} will not be added to the automaton. Instead, their direct
-     *         successors will be initial states instead. This may be useful for instances where there are artificial
-     *         nodes used to display in incoming arrow for the actual initial states. If {@code false}, the nodes
-     *         matching the {@code initialNodeIds} will be used as initial nodes.
+     *         a flag indicating whether the {@code initialNodeIds} are artificial or not. If {@code true}, the nodes
+     *         matching the {@code initialNodeIds} will not be added to the automaton. Instead, their direct successors
+     *         will be initial states instead. This may be useful for instances where there are artificial nodes used to
+     *         display in incoming arrow for the actual initial states. If {@code false}, the nodes matching the
+     *         {@code initialNodeIds} will be used as initial nodes.
      */
     public DOTMutableAutomatonParser(AutomatonCreator<A, I> creator,
                                      Function<Map<String, String>, SP> nodeParser,
@@ -118,7 +118,8 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
         }
     }
 
-    private Mapping<S, String> parseNodesAndEdges(InternalDOTParser parser, MutableAutomaton<S, I, ?, SP, TP> automaton) {
+    private Mapping<S, String> parseNodesAndEdges(InternalDOTParser parser,
+                                                  MutableAutomaton<S, I, ?, SP, TP> automaton) {
         final List<Node> nodes = parser.getNodes();
         final Map<String, S> stateMap = Maps.newHashMapWithExpectedSize(nodes.size());
         final MutableMapping<S, String> mapping = automaton.createDynamicStateMapping();

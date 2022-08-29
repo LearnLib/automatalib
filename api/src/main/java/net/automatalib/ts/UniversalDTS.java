@@ -31,8 +31,8 @@ public interface UniversalDTS<S, I, T, SP, TP>
      * Retrieves the transition property of the outgoing transition corresponding to the given state and input, if it
      * exists. Otherwise, {@code null} is returned.
      * <p>
-     * Note that this method alone is insufficient for determining whether or not a transition actually exists, as
-     * {@code null} might either be property of an existing transition, or indicate that the transition does not exist.
+     * Note that this method alone is insufficient for determining whether a transition actually exists, as {@code null}
+     * might either be property of an existing transition, or indicate that the transition does not exist.
      *
      * @param state
      *         the source state
