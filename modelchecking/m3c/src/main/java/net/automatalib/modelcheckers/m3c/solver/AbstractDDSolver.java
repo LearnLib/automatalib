@@ -54,7 +54,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Base implementation of the model checker which supports different types of property transformers.
+ * Base implementation of the model checker which supports different types of property transformers. The
+ * {@link ModelChecker} is (currently) implemented on the basis of the {@link WitnessTreeExtractor} including all its
+ * restrictions.
  *
  * @param <T>
  *         property transformer type
@@ -65,7 +67,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author murtovi
  */
-public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP>
+abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP>
         implements ModelChecker<L, ContextFreeModalProcessSystem<L, AP>, FormulaNode<L, AP>, WitnessTree<L, AP>> {
 
     // Attributes that are constant for a given CFMPS
@@ -73,10 +75,10 @@ public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, 
 
     // Attributes that change for each formula
     private TransformerSerializer<T, L, AP> serializer;
-    public DependencyGraph<L, AP> dependencyGraph;
+    private DependencyGraph<L, AP> dependencyGraph;
     private int currentBlockIndex;
     // Per-procedure attributes
-    public final Map<L, WorkUnit<?, ?>> workUnits;
+    private final Map<L, WorkUnit<?, ?>> workUnits;
     // Per-action attributes
     private Map<L, T> mustTransformers;
     private Map<L, T> mayTransformers;
@@ -307,7 +309,7 @@ public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, 
         return satisfiedSubFormulas;
     }
 
-    public boolean[] toBoolArray(Set<Integer> satisfiedVars) {
+    private boolean[] toBoolArray(Set<Integer> satisfiedVars) {
         final boolean[] arr = new boolean[dependencyGraph.getNumVariables()];
         for (Integer satisfiedVar : satisfiedVars) {
             arr[satisfiedVar] = true;
@@ -315,7 +317,7 @@ public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, 
         return arr;
     }
 
-    public Set<Integer> getAllAPDeadlockedNode() {
+    private Set<Integer> getAllAPDeadlockedNode() {
         return getAllAPDeadlockedNode(workUnits.get(mainProcess).pmpg);
     }
 
@@ -588,12 +590,12 @@ public abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, 
 
     protected abstract TransformerSerializer<T, L, AP> getSerializer();
 
-    public class WorkUnit<N, E> {
+    class WorkUnit<N, E> {
 
-        public final L label;
-        public final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
+        final L label;
+        final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
         private final Mapping<N, @Nullable Set<N>> predecessors;
-        public MutableMapping<N, T> propTransformers;
+        MutableMapping<N, T> propTransformers;
         private Set<N> workSet; // Keeps track of which node's property transformers have to be updated.
 
         WorkUnit(L label, ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg, Mapping<N, @Nullable Set<N>> predecessors) {

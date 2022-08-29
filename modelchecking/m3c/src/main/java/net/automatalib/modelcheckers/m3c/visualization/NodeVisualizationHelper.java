@@ -18,7 +18,15 @@ package net.automatalib.modelcheckers.m3c.visualization;
 import java.util.Map;
 
 import net.automatalib.modelcheckers.m3c.solver.WitnessTree;
+import net.automatalib.visualization.VisualizationHelper;
 
+/**
+ * A {@link VisualizationHelper} for {@link WitnessTree}s that emphasizes nodes of the witness and de-emphasizes the
+ * remaining ones.
+ *
+ * @author freese
+ * @author frohme
+ */
 public class NodeVisualizationHelper extends AbstractVisualizationHelper {
 
     public NodeVisualizationHelper(WitnessTree<?, ?> resultTree) {

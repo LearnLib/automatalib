@@ -23,6 +23,21 @@ import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A utility class that represents a current configuration (node property) in the {@link WitnessTree}.
+ *
+ * @param <N>
+ *         node type of the referenced {@link ProceduralModalProcessGraph}
+ * @param <L>
+ *         label type
+ * @param <E>
+ *         edge type of the referenced {@link ProceduralModalProcessGraph}
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author freese
+ * @author frohme
+ */
 public class WitnessTreeState<N, L, E, AP> {
 
     public final @Nullable WitnessTreeState<?, L, ?, AP> stack;
@@ -32,10 +47,9 @@ public class WitnessTreeState<N, L, E, AP> {
     public final N state;
     public final FormulaNode<L, AP> subformula;
     public final Set<Integer> context;
-    public final int parentId;
-    public final int id;
     public final String displayLabel;
     public final @Nullable L edgeLabel;
+    public final int parentId;
     public boolean isPartOfResult;
 
     WitnessTreeState(@Nullable WitnessTreeState<?, L, ?, AP> stack,
@@ -45,7 +59,6 @@ public class WitnessTreeState<N, L, E, AP> {
                      Set<Integer> context,
                      String displayLabel,
                      @Nullable L edgeLabel,
-                     int id,
                      int parentId) {
         this.stack = stack;
         this.unit = unit;
@@ -56,12 +69,7 @@ public class WitnessTreeState<N, L, E, AP> {
         this.context = context;
 
         this.edgeLabel = edgeLabel;
-        if (parentId < 0) {
-            this.parentId = -1;
-        } else {
-            this.parentId = parentId;
-        }
-        this.id = id;
+        this.parentId = parentId;
         this.displayLabel = displayLabel;
         this.isPartOfResult = false;
     }

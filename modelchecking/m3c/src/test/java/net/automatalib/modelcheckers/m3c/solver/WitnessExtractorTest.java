@@ -42,28 +42,27 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 /**
- * Run the examples as part of (integration) testing.
- *
+ * @author freese
  * @author frohme
  */
 public class WitnessExtractorTest {
 
     @DataProvider
-    public static Object[][] formulasOnP() {
+    public static Object[][] formulasOnAnCBn() {
         return new Object[][] {{"mu X.((<b>true) || <>X)", Word.fromSymbols("a", "c", "b")},
                                {"mu X.((<c>true) || <>X || (<b><b>true))", Word.fromLetter("c")},
                                {"mu X.((<c><c>true) || <>X || (<b><b>true))", Word.fromSymbols("a", "a", "c", "b", "b")},
-                               {"mu X.(mu Y.(<a><a>true) || <>X || (<b><b>true))", Word.fromSymbols("a", "a", "c", "b", "b")},
+                               {"mu X.(mu Y.(<c><b>true) || <>X || (<b><b>true))", Word.fromSymbols("a", "c", "b")},
                                {"mu X.(<b><b>true || <>X) || mu Y. (<a><a>true || <>Y)", Word.fromSymbols("a", "a")},
                                {"mu X.((<a>true) || <>X )", Word.fromLetter("a")},
                                {"true || false", Word.epsilon()}};
     }
 
-    @Test(dataProvider = "formulasOnP")
-    public void checkSimpleFormulasOnP(String formula, Word<String> expectedWitness)
+    @Test(dataProvider = "formulasOnAnCBn")
+    public void checkFormulasOnAnCBn(String formula, Word<String> expectedWitness)
             throws IOException, ParserConfigurationException, SAXException, ParseException {
 
-        final ContextFreeModalProcessSystem<String, Void> cfmps = parseCFMPS("/cfmps/ce/03_maxProcessP2Add.xml");
+        final ContextFreeModalProcessSystem<String, Void> cfmps = parseCFMPS("/cfmps/witness/an_c_bn.xml");
         final BDDSolver<String, Void> m3c = new BDDSolver<>(cfmps);
 
         final FormulaNode<String, Void> f = M3CParser.parse(formula, l -> l, ap -> null);
@@ -83,10 +82,8 @@ public class WitnessExtractorTest {
         Assert.assertThrows(IllegalArgumentException.class,
                             () -> m3c.findCounterExample(cfmps, Collections.emptyList(), new NotNode<>(f1)));
 
-
         final FormulaNode<String, Void> f2 = M3CParser.parse("<S><T><b>true", l -> l, ap -> null);
         Assert.assertNull(m3c.findCounterExample(cfmps, Collections.emptyList(), new NotNode<>(f2)));
-
 
         final FormulaNode<String, Void> f3 = M3CParser.parse("<S><><S><T><c>true", l -> l, ap -> null);
         final WitnessTree<String, Void> tree =
@@ -115,7 +112,7 @@ public class WitnessExtractorTest {
     }
 
     private String parseDOT(String name) throws IOException {
-        try (InputStream is = WitnessExtractorTest.class.getResourceAsStream("/dot/ce/" + name);
+        try (InputStream is = WitnessExtractorTest.class.getResourceAsStream("/dot/witness/" + name);
              Reader r = IOUtil.asBufferedUTF8Reader(is)) {
             return CharStreams.toString(r);
         }

@@ -37,9 +37,22 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * An implementation for generating witnesses of satisfied µ-calculus formulae based on the tableau algorithm of <a
+ * href="https://link.springer.com/chapter/10.1007/3-540-50939-9_144">Colin Stirling &amp; David Walker</a>. This
+ * implementation is (currently) restricted to witnesses of negated safety-properties, as for these properties a single
+ * witnesses is sufficient and the witnesses are guaranteed to be finite.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
+ *
+ * @author freese
+ * @author frohme
+ */
 final class WitnessTreeExtractor<L, AP> {
 
-    private int graphSize;
     private final WitnessTree<L, AP> wTree = new WitnessTree<>();
     private final Map<L, AbstractDDSolver<?, L, AP>.WorkUnit<?, ?>> units;
     private final DependencyGraph<L, AP> dg;
@@ -88,14 +101,12 @@ final class WitnessTreeExtractor<L, AP> {
             final List<WitnessTreeState<?, L, ?, AP>> nextTreeStates = getNextTreeStates(queueElement);
 
             if (nextTreeStates.isEmpty()) {
-                wTree.finishingNode = currentNode;
+                wTree.computePath(currentNode);
                 break;
             } else {
                 queue.addAll(nextTreeStates);
             }
         }
-
-        wTree.computePath();
 
         return wTree;
     }
@@ -132,10 +143,7 @@ final class WitnessTreeExtractor<L, AP> {
 
         final List<WitnessTreeState<?, L, ?, AP>> result = new ArrayList<>();
 
-        int nextCurrentNode = graphSize;
-
         if (queueElement.getSatisfiedSubformulae(dg, queueElement.state).contains(leftFormula.getVarNumber())) {
-            nextCurrentNode++;
             result.add(new WitnessTreeState<>(queueElement.stack,
                                               queueElement.unit,
                                               queueElement.state,
@@ -143,12 +151,9 @@ final class WitnessTreeExtractor<L, AP> {
                                               queueElement.context,
                                               leftFormula.toString(),
                                               null,
-                                              nextCurrentNode,
-                                              queueElement.id));
-            graphSize++;
+                                              wTree.size() - 1));
         }
         if (queueElement.getSatisfiedSubformulae(dg, queueElement.state).contains(rightFormula.getVarNumber())) {
-            nextCurrentNode++;
             result.add(new WitnessTreeState<>(queueElement.stack,
                                               queueElement.unit,
                                               queueElement.state,
@@ -156,9 +161,7 @@ final class WitnessTreeExtractor<L, AP> {
                                               queueElement.context,
                                               rightFormula.toString(),
                                               null,
-                                              nextCurrentNode,
-                                              queueElement.id));
-            graphSize++;
+                                              wTree.size() - 1));
         }
         return result;
     }
@@ -194,9 +197,7 @@ final class WitnessTreeExtractor<L, AP> {
                                                                                        queueElement.context,
                                                                                        Objects.toString(label),
                                                                                        label,
-                                                                                       graphSize + 1,
-                                                                                       queueElement.id);
-                    graphSize++;
+                                                                                       wTree.size() - 1);
                     result.add(toAdd);
                 }
             } else {
@@ -206,7 +207,6 @@ final class WitnessTreeExtractor<L, AP> {
                         buildProcessNode(queueElement, unit, label, target, formula);
 
                 if (toAdd != null) {
-                    graphSize++;
                     result.add(toAdd);
                 }
             }
@@ -218,8 +218,6 @@ final class WitnessTreeExtractor<L, AP> {
 
         assert queueElement.stack != null;
         final WitnessTreeState<?, L, ?, AP> toAdd = buildReturnNode(queueElement, queueElement.stack);
-
-        graphSize++;
 
         return Collections.singletonList(toAdd);
     }
@@ -244,9 +242,7 @@ final class WitnessTreeExtractor<L, AP> {
                                                                                        queueElement.context,
                                                                                        Objects.toString(label),
                                                                                        label,
-                                                                                       graphSize + 1,
-                                                                                       queueElement.id);
-                    graphSize++;
+                                                                                       wTree.size() - 1);
                     result.add(toAdd);
                 }
             } else {
@@ -256,7 +252,6 @@ final class WitnessTreeExtractor<L, AP> {
                         buildProcessNode(queueElement, unit, label, target, formula);
 
                 if (toAdd != null) {
-                    graphSize++;
                     result.add(toAdd);
                 }
             }
@@ -277,7 +272,6 @@ final class WitnessTreeExtractor<L, AP> {
                                                                            queueElement.context,
                                                                            Objects.toString(label),
                                                                            null,
-                                                                           queueElement.id,
                                                                            queueElement.parentId);
 
         @SuppressWarnings("nullness") // we have checked non-nullness of initial nodes in the model checker
@@ -291,8 +285,7 @@ final class WitnessTreeExtractor<L, AP> {
                                                                         finalFormulae,
                                                                         Objects.toString(label),
                                                                         null,
-                                                                        graphSize + 1,
-                                                                        queueElement.id);
+                                                                        wTree.size() - 1);
 
         if (result.getSatisfiedSubformulae(dg, result.state).contains(formula.getVarNumber())) {
             return result;
@@ -304,7 +297,6 @@ final class WitnessTreeExtractor<L, AP> {
 
     private <N1, N2, E1, E2> WitnessTreeState<N2, L, E2, AP> buildReturnNode(WitnessTreeState<N1, L, E1, AP> queueElement,
                                                                              WitnessTreeState<N2, L, E2, AP> prev) {
-
         return new WitnessTreeState<>(prev.stack,
                                       prev.unit,
                                       prev.state,
@@ -312,15 +304,14 @@ final class WitnessTreeExtractor<L, AP> {
                                       prev.context,
                                       "return",
                                       null,
-                                      graphSize + 1,
-                                      queueElement.id);
+                                      wTree.size() - 1);
     }
 
     private <N, E> WitnessTreeState<?, L, ?, AP> getInitialTreeState(AbstractDDSolver<?, L, AP>.WorkUnit<N, E> unit,
                                                                      FormulaNode<L, AP> formula) {
         @SuppressWarnings("nullness") // we have checked non-nullness of initial nodes in the model checker
         final @NonNull N initialNode = unit.pmpg.getInitialNode();
-        return new WitnessTreeState<>(null, unit, initialNode, formula, initialContext, "", null, 0, -1);
+        return new WitnessTreeState<>(null, unit, initialNode, formula, initialContext, "", null, -1);
     }
 
 }

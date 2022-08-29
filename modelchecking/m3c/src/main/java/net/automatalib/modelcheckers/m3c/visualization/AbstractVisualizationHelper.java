@@ -18,13 +18,20 @@ package net.automatalib.modelcheckers.m3c.visualization;
 import java.util.Map;
 import java.util.Objects;
 
-import net.automatalib.graphs.base.compact.CompactBidiEdge;
+import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.modelcheckers.m3c.solver.WitnessTree;
 import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
-abstract class AbstractVisualizationHelper extends DefaultVisualizationHelper<Integer, CompactBidiEdge<String>> {
+/**
+ * A base {@link VisualizationHelper} for {@link WitnessTree}s.
+ *
+ * @author freese
+ * @author frohme
+ */
+abstract class AbstractVisualizationHelper extends DefaultVisualizationHelper<Integer, CompactEdge<String>> {
 
-    WitnessTree<?, ?> resultTree;
+    protected final WitnessTree<?, ?> resultTree;
 
     AbstractVisualizationHelper(WitnessTree<?, ?> resultTree) {
         this.resultTree = resultTree;
@@ -43,7 +50,7 @@ abstract class AbstractVisualizationHelper extends DefaultVisualizationHelper<In
 
     @Override
     public boolean getEdgeProperties(Integer src,
-                                     CompactBidiEdge<String> edge,
+                                     CompactEdge<String> edge,
                                      Integer tgt,
                                      Map<String, String> properties) {
         if (super.getEdgeProperties(src, edge, tgt, properties)) {

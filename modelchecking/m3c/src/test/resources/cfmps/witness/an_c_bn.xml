@@ -17,7 +17,6 @@
             <state>
                 <id>end</id>
             </state>
-
         </states>
         <transitions>
             <transition>
@@ -25,52 +24,15 @@
                 <targetId>1</targetId>
                 <label>a</label>
                 <attributes>
-
                     <isMust>true</isMust>
-
                 </attributes>
             </transition>
-            <transition>
-                <sourceId>0</sourceId>
-                <targetId>1</targetId>
-                <label>d</label>
-                <attributes>
-
-                    <isMust>true</isMust>
-
-                </attributes>
-            </transition>
-            <transition>
-                <sourceId>0</sourceId>
-                <targetId>1</targetId>
-                <label>e</label>
-                <attributes>
-
-                    <isMust>true</isMust>
-
-                </attributes>
-            </transition>
-            <transition>
-                <sourceId>0</sourceId>
-                <targetId>1</targetId>
-                <label>f</label>
-                <attributes>
-
-                    <isMust>true</isMust>
-
-                </attributes>
-            </transition>
-
-
-
             <transition>
                 <sourceId>0</sourceId>
                 <targetId>end</targetId>
                 <label>c</label>
                 <attributes>
-
                     <isMust>true</isMust>
-
                 </attributes>
             </transition>
             <transition>
@@ -78,7 +40,6 @@
                 <targetId>2</targetId>
                 <label>P</label>
                 <attributes>
-
                     <isMust>true</isMust>
                     <isProcedural>true</isProcedural>
                 </attributes>
@@ -88,13 +49,9 @@
                 <targetId>end</targetId>
                 <label>b</label>
                 <attributes>
-
                     <isMust>true</isMust>
-
                 </attributes>
             </transition>
-
-
         </transitions>
     </pmpg>
 </cfmps>
