@@ -99,7 +99,7 @@ public final class RandomAutomata {
                                                         double initialRetTransProb,
                                                         boolean minimize,
                                                         DefaultOneSEVPA<I> result) {
-        result.addInitialLocation(r.nextDouble() < initialRetTransProb);
+        result.addInitialLocation(r.nextDouble() < acceptanceProb);
 
         for (int i = 0; i < locCount - 1; i++) {
             if (alphabet.getNumInternals() == 0 || r.nextDouble() < initialRetTransProb) {
