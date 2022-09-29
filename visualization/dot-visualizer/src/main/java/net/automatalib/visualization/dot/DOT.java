@@ -248,7 +248,7 @@ public final class DOT {
      * @param r
      *         the reader from which the description is obtained.
      * @param modal
-     *         whether or not the dialog should be modal.
+     *         whether the dialog should be modal.
      */
     public static void renderDOT(Reader r, boolean modal) {
         final DOTComponent cmp = createDOTComponent(r);
@@ -369,7 +369,7 @@ public final class DOT {
      * rendering result appears.
      *
      * @param modal
-     *         whether or not this window is modal (if set to {@code true}, calls to {@link Writer#close()} will block.
+     *         whether this window is modal (if set to {@code true}, calls to {@link Writer#close()} will block.
      *
      * @return the writer
      */

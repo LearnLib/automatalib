@@ -88,7 +88,7 @@ public final class LTSminUtil {
     }
 
     /**
-     * Returns whether or not an LTSmin installation was detected.
+     * Returns whether an LTSmin installation was detected.
      *
      * @return {@code true} if an LTSmin installation was detected, {@code false} otherwise.
      */

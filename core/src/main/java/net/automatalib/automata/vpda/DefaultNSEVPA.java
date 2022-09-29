@@ -51,10 +51,9 @@ public class DefaultNSEVPA<I> extends AbstractDefaultSEVPA<I> {
     }
 
     public Location addLocation(I module, boolean accepting) {
-        final Location loc = super.addLocation(accepting);
-        this.moduleMapping.ensureCapacity(loc.getIndex() + 1);
-        this.moduleMapping.array[loc.getIndex()] = module;
-        return loc;
+        final Location result = this.addLocation(accepting);
+        this.moduleMapping.array[result.getIndex()] = module;
+        return result;
     }
 
     public Location addModuleEntryLocation(I callSym, boolean accepting) {

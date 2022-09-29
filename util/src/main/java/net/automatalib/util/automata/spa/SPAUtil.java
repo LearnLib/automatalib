@@ -319,6 +319,63 @@ public final class SPAUtil {
         return newASRS;
     }
 
+    private static <S, I> List<Word<I>> exploreAccessSequences(DFA<S, I> dfa,
+                                                               List<I> inputs,
+                                                               Predicate<I> callPredicate) {
+        final S init = dfa.getInitialState();
+
+        if (init == null) {
+            return Collections.emptyList();
+        }
+
+        final List<Word<I>> result = new ArrayList<>(inputs.size());
+        final UniversalGraph<S, TransitionEdge<I, S>, ?, ?> tgv = dfa.transitionGraphView(inputs);
+        final APSPResult<S, TransitionEdge<I, S>> apsp = Graphs.findAPSP(tgv, (edge) -> 0F);
+
+        final List<S> acceptingStates = new ArrayList<>(dfa.size());
+        for (S s : dfa) {
+            if (dfa.isAccepting(s)) {
+                acceptingStates.add(s);
+            }
+        }
+
+        calls:
+        for (I i : inputs) {
+            if (callPredicate.test(i)) {
+                for (S s : dfa) {
+                    final S succ = dfa.getSuccessor(s, i);
+
+                    if (succ != null) {
+                        final List<TransitionEdge<I, S>> init2s = apsp.getShortestPath(init, s);
+
+                        if (init2s != null) {
+                            for (S acc : acceptingStates) {
+                                final List<TransitionEdge<I, S>> succ2acc = apsp.getShortestPath(succ, acc);
+
+                                if (succ2acc != null) {
+                                    final WordBuilder<I> wb = new WordBuilder<>(init2s.size() + succ2acc.size() + 1);
+
+                                    for (TransitionEdge<I, S> t : init2s) {
+                                        wb.append(t.getInput());
+                                    }
+                                    wb.append(i);
+                                    for (TransitionEdge<I, S> t : succ2acc) {
+                                        wb.append(t.getInput());
+                                    }
+
+                                    result.add(wb.toWord());
+                                    continue calls;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
     /**
      * Convenience method for {@link #isRedundancyFree(SPA, SPAAlphabet)} that uses {@link SPA#getInputAlphabet()} as
      * {@code alphabet}.
@@ -468,62 +525,5 @@ public final class SPAUtil {
         }
 
         return null;
-    }
-
-    private static <S, I> List<Word<I>> exploreAccessSequences(DFA<S, I> dfa,
-                                                               List<I> inputs,
-                                                               Predicate<I> callPredicate) {
-        final S init = dfa.getInitialState();
-
-        if (init == null) {
-            return Collections.emptyList();
-        }
-
-        final List<Word<I>> result = new ArrayList<>(inputs.size());
-        final UniversalGraph<S, TransitionEdge<I, S>, ?, ?> tgv = dfa.transitionGraphView(inputs);
-        final APSPResult<S, TransitionEdge<I, S>> apsp = Graphs.findAPSP(tgv, (edge) -> 0F);
-
-        final List<S> acceptingStates = new ArrayList<>(dfa.size());
-        for (S s : dfa) {
-            if (dfa.isAccepting(s)) {
-                acceptingStates.add(s);
-            }
-        }
-
-        calls:
-        for (I i : inputs) {
-            if (callPredicate.test(i)) {
-                for (S s : dfa) {
-                    final S succ = dfa.getSuccessor(s, i);
-
-                    if (succ != null) {
-                        final List<TransitionEdge<I, S>> init2s = apsp.getShortestPath(init, s);
-
-                        if (init2s != null) {
-                            for (S acc : acceptingStates) {
-                                final List<TransitionEdge<I, S>> succ2acc = apsp.getShortestPath(succ, acc);
-
-                                if (succ2acc != null) {
-                                    final WordBuilder<I> wb = new WordBuilder<>(init2s.size() + succ2acc.size() + 1);
-
-                                    for (TransitionEdge<I, S> t : init2s) {
-                                        wb.append(t.getInput());
-                                    }
-                                    wb.append(i);
-                                    for (TransitionEdge<I, S> t : succ2acc) {
-                                        wb.append(t.getInput());
-                                    }
-
-                                    result.add(wb.toWord());
-                                    continue calls;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return result;
     }
 }

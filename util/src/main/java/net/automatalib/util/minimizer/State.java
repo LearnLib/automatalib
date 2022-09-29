@@ -49,7 +49,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
     // A reference to this state in the block's collection.
     private ElementReference blockReference;
 
-    // Signals whether or not this state is a split point, i.e.,
+    // Signals whether this state is a split point, i.e.,
     // differs from the preceeding states in the final list.
     private boolean splitPoint;
 
@@ -158,7 +158,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
      * Sets the split point property of this state.
      *
      * @param splitPoint
-     *         whether or not this state is a split point.
+     *         whether this state is a split point.
      */
     public void setSplitPoint(boolean splitPoint) {
         this.splitPoint = splitPoint;
@@ -237,7 +237,7 @@ final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<
     }
 
     /**
-     * Retrieves whether or not the block containing this state is a singleton, i.e., contains <i>only</i> this state.
+     * Retrieves whether the block containing this state is a singleton, i.e., contains <i>only</i> this state.
      *
      * @return <code>true</code> if the containing block is a singleton, <code>false</code> otherwise.
      */
