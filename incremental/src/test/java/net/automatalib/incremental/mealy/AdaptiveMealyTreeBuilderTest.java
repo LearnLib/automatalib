@@ -149,14 +149,14 @@ public class AdaptiveMealyTreeBuilderTest {
         words.add(Pair.of(W_3, W_3_O));
 
         for (int i = 0; i < words.size(); i++) {
-            adaptiveMealy.insert(words.get(i).getFirst(), words.get(i).getSecond(), i);
+            adaptiveMealy.insert(words.get(i).getFirst(), words.get(i).getSecond());
         }
         Assert.assertEquals(W_1, adaptiveMealy.getOldestQuery());
-        adaptiveMealy.insert(W_1, W_1_O, 5);
+        adaptiveMealy.insert(W_1, W_1_O);
         Assert.assertEquals(W_2, adaptiveMealy.getOldestQuery());
-        adaptiveMealy.insert(W_2, W_2_O, 6);
+        adaptiveMealy.insert(W_2, W_2_O);
         Assert.assertEquals(W_3, adaptiveMealy.getOldestQuery());
-        adaptiveMealy.insert(W_3, W_3_O, 7);
+        adaptiveMealy.insert(W_3, W_3_O);
         Assert.assertEquals(W_1, adaptiveMealy.getOldestQuery());
     }
 

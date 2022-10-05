@@ -32,6 +32,7 @@ public class AdaptiveMealyTreeBuilder<I, O> extends IncrementalMealyTreeBuilder<
     private final PriorityQueue<Node<O>> queryStates = new PriorityQueue<>(
             (Node<O> a, Node<O> b) -> Integer.compare(stateToQuery.get(a).getSecond(),
                     stateToQuery.get(b).getSecond()));
+    private Integer insertCounter = 0;
 
     public AdaptiveMealyTreeBuilder(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
@@ -39,7 +40,46 @@ public class AdaptiveMealyTreeBuilder<I, O> extends IncrementalMealyTreeBuilder<
 
     @Override
     public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
-        this.insert(input, outputWord, 0);
+        Node<O> curr = root;
+
+        Iterator<? extends O> outputIt = outputWord.iterator();
+        for (int i = 0; i < input.length(); i++) {
+            I sym = input.getSymbol(i);
+            O out = outputIt.next();
+            Edge<Node<O>, O> edge = getEdge(curr, sym);
+            if (edge == null) {
+                curr = insertNode(curr, sym, out);
+            } else {
+                if (!Objects.equals(out, edge.getOutput())) {
+                    removeQueries(edge.getTarget());
+                    removeEdge(curr, sym);
+                    curr = insertNode(curr, sym, out);
+                } else {
+                    curr = edge.getTarget();
+                }
+            }
+        }
+
+        assert curr != null;
+        stateToQuery.put(curr, Pair.of(input, insertCounter));
+        insertCounter += 1;
+
+        // Make sure it uses the new ages.
+        queryStates.remove(curr);
+        queryStates.add(curr);
+
+        assert stateToQuery.size() == queryStates.size();
+    }
+
+    private void removeQueries(Node<O> node) {
+        GraphTraversal.bfIterator(this.asGraph(), Collections.singleton(node)).forEachRemaining(n -> {
+            if (queryStates.contains(n)) {
+                queryStates.remove(n);
+            }
+            stateToQuery.remove(n);
+        });
+
+        assert stateToQuery.size() == queryStates.size();
     }
 
     public Boolean conflicts(Word<? extends I> input, Word<? extends O> outputWord) {
@@ -62,52 +102,6 @@ public class AdaptiveMealyTreeBuilder<I, O> extends IncrementalMealyTreeBuilder<
         }
 
         return false;
-    }
-
-    public Boolean insert(Word<? extends I> input, Word<? extends O> outputWord, Integer queryIndex) {
-        Boolean hasOverwritten = false;
-        Node<O> curr = root;
-
-        Iterator<? extends O> outputIt = outputWord.iterator();
-        for (int i = 0; i < input.length(); i++) {
-            I sym = input.getSymbol(i);
-            O out = outputIt.next();
-            Edge<Node<O>, O> edge = getEdge(curr, sym);
-            if (edge == null) {
-                curr = insertNode(curr, sym, out);
-            } else {
-                if (!Objects.equals(out, edge.getOutput())) {
-                    removeQueries(edge.getTarget());
-                    removeEdge(curr, sym);
-                    curr = insertNode(curr, sym, out);
-                    hasOverwritten = true;
-                } else {
-                    curr = edge.getTarget();
-                }
-            }
-        }
-
-        assert curr != null;
-        stateToQuery.put(curr, Pair.of(input, queryIndex));
-
-        // Make sure it uses the new ages.
-        queryStates.remove(curr);
-        queryStates.add(curr);
-
-        assert stateToQuery.size() == queryStates.size();
-
-        return hasOverwritten;
-    }
-
-    private void removeQueries(Node<O> node) {
-        GraphTraversal.bfIterator(this.asGraph(), Collections.singleton(node)).forEachRemaining(n -> {
-            if (queryStates.contains(n)) {
-                queryStates.remove(n);
-            }
-            stateToQuery.remove(n);
-        });
-
-        assert stateToQuery.size() == queryStates.size();
     }
 
     private void removeEdge(Node<O> node, I symbol) {
