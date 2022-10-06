@@ -20,11 +20,12 @@ import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.automata.concepts.InputAlphabetHolder;
+import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
 public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyTreeBuilder<Node<O>, I, O>
-        implements InputAlphabetHolder<I> {
+        implements IncrementalMealyBuilder<I, O>, InputAlphabetHolder<I> {
 
     private final Alphabet<I> inputAlphabet;
     private int alphabetSize;

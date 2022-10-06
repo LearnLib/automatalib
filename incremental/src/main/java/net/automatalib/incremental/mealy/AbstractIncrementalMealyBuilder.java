@@ -26,15 +26,15 @@ import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
-public abstract class AbstractIncrementalMealyBuilder<I, O> implements IncrementalMealyBuilder<I, O> {
+public abstract class AbstractIncrementalMealyBuilder<I, O> {
 
-    @Override
+    public abstract boolean lookup(Word<? extends I> inputWord, List<? super O> output);
+
     public boolean hasDefinitiveInformation(Word<? extends I> word) {
         List<O> unused = new ArrayList<>(word.length());
         return lookup(word, unused);
     }
 
-    @Override
     public Word<O> lookup(Word<? extends I> inputWord) {
         WordBuilder<O> wb = new WordBuilder<>(inputWord.size());
         lookup(inputWord, wb);

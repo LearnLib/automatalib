@@ -19,12 +19,11 @@ import java.util.List;
 
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Word;
 
-public interface IncrementalMealyBuilder<I, O>
+public interface AdaptiveMealyBuilder<I, O>
         extends IncrementalConstruction<MealyMachine<?, I, ?, O>, I>, SupportsGrowingAlphabet<I> {
 
     Word<O> lookup(Word<? extends I> inputWord);
@@ -51,10 +50,9 @@ public interface IncrementalMealyBuilder<I, O>
      * @param outputWord
      *         the corresponding output word
      *
-     * @throws ConflictException
-     *         if this information conflicts with information already stored
+     * @return {@code true} if the inserted output word has overridden existing information, {@code false} otherwise.
      */
-    void insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
+    boolean insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
 
     @Override
     GraphView<I, O, ?, ?> asGraph();

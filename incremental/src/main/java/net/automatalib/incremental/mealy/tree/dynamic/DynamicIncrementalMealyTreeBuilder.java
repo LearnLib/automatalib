@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.tree.AbstractIncrementalMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.AnnotatedEdge;
 import net.automatalib.incremental.mealy.tree.Edge;
@@ -41,7 +42,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author frohme
  */
-public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyTreeBuilder<Node<I, O>, I, O> {
+public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyTreeBuilder<Node<I, O>, I, O>
+        implements IncrementalMealyBuilder<I, O> {
 
     public DynamicIncrementalMealyTreeBuilder() {
         this(new Node<>());

@@ -46,7 +46,6 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
         this.root = root;
     }
 
-    @Override
     public boolean lookup(Word<? extends I> word, List<? super O> output) {
         N curr = root;
 
@@ -62,7 +61,6 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
         return true;
     }
 
-    @Override
     public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
         N curr = root;
 
@@ -81,17 +79,14 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
         }
     }
 
-    @Override
     public GraphView asGraph() {
         return new GraphView();
     }
 
-    @Override
     public TransitionSystemView asTransitionSystem() {
         return new TransitionSystemView();
     }
 
-    @Override
     public @Nullable Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
                                                 Collection<? extends I> inputs,
                                                 boolean omitUndefined) {
