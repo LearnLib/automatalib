@@ -24,24 +24,7 @@ import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Word;
 
-public interface IncrementalMealyBuilder<I, O>
-        extends IncrementalConstruction<MealyMachine<?, I, ?, O>, I>, SupportsGrowingAlphabet<I> {
-
-    Word<O> lookup(Word<? extends I> inputWord);
-
-    /**
-     * Retrieves the output word for the given input word. If no definitive information for the input word exists, the
-     * output for the longest known prefix will be returned.
-     *
-     * @param inputWord
-     *         the input word
-     * @param output
-     *         a consumer for constructing the output word
-     *
-     * @return {@code true} if the information contained was complete (in this case, {@code word.length() ==
-     * output.size()} will hold), {@code false} otherwise.
-     */
-    boolean lookup(Word<? extends I> inputWord, List<? super O> output);
+public interface IncrementalMealyBuilder<I, O> extends MealyBuilder<I, O> {
 
     /**
      * Incorporates a pair of input/output words into the stored information.
@@ -55,11 +38,5 @@ public interface IncrementalMealyBuilder<I, O>
      *         if this information conflicts with information already stored
      */
     void insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
-
-    @Override
-    GraphView<I, O, ?, ?> asGraph();
-
-    @Override
-    MealyTransitionSystem<?, I, ?, O> asTransitionSystem();
 
 }

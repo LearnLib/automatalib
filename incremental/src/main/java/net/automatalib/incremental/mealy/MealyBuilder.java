@@ -19,22 +19,41 @@ import java.util.List;
 
 import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.graphs.Graph;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Word;
 
-public interface AdaptiveMealyBuilder<I, O> extends MealyBuilder<I, O> {
+interface MealyBuilder<I, O> extends IncrementalConstruction<MealyMachine<?, I, ?, O>, I>, SupportsGrowingAlphabet<I> {
+
+    Word<O> lookup(Word<? extends I> inputWord);
 
     /**
-     * Incorporates a pair of input/output words into the stored information.
+     * Retrieves the output word for the given input word. If no definitive information for the input word exists, the
+     * output for the longest known prefix will be returned.
      *
      * @param inputWord
      *         the input word
-     * @param outputWord
-     *         the corresponding output word
+     * @param output
+     *         a consumer for constructing the output word
      *
-     * @return {@code true} if the inserted output word has overridden existing information, {@code false} otherwise.
+     * @return {@code true} if the information contained was complete (in this case,
+     * {@code word.length() == output.size()} will hold), {@code false} otherwise.
      */
-    boolean insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
+    boolean lookup(Word<? extends I> inputWord, List<? super O> output);
 
+    @Override
+    GraphView<I, O, ?, ?> asGraph();
+
+    @Override
+    MealyTransitionSystem<?, I, ?, O> asTransitionSystem();
+
+    interface GraphView<I, O, N, E> extends Graph<N, E> {
+
+        I getInputSymbol(E edge);
+
+        O getOutputSymbol(E edge);
+
+        N getInitialNode();
+    }
 }

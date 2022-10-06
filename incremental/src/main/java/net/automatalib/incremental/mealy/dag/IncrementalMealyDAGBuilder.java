@@ -33,7 +33,7 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.UnionFind;
 import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
+import net.automatalib.incremental.mealy.AbstractMealyBuilder;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
@@ -54,7 +54,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public class IncrementalMealyDAGBuilder<I, O> extends AbstractIncrementalMealyBuilder<I, O>
+public class IncrementalMealyDAGBuilder<I, O> extends AbstractMealyBuilder<I, O>
         implements IncrementalMealyBuilder<I, O>, InputAlphabetHolder<I> {
 
     private final Map<@Nullable StateSignature<O>, State<O>> register = new HashMap<>();

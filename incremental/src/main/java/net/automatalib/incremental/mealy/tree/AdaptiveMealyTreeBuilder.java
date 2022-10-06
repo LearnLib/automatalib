@@ -33,7 +33,7 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
-public class AdaptiveMealyTreeBuilder<I, O> extends AbstractIncrementalMealyTreeBuilder<Node<O>, I, O>
+public class AdaptiveMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Node<O>, I, O>
         implements IncrementalMealyBuilder<I, O>, InputAlphabetHolder<I> {
 
     private final Map<Node<O>, Pair<Word<? extends I>, Integer>> stateToQuery = new HashMap<>();
