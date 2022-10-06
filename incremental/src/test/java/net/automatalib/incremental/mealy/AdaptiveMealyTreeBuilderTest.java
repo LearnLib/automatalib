@@ -128,17 +128,6 @@ public class AdaptiveMealyTreeBuilderTest {
 
     }
 
-    @Test(dependsOnMethods = "testFindSeparatingWord")
-    public void testConflict() {
-        adaptiveMealy.insert(W_1, W_1_O);
-        Assert.assertFalse("Expected no conflict but triggered one.", adaptiveMealy.conflicts(W_1, W_1_O));
-        Assert.assertTrue("Expected conflict but found none.", adaptiveMealy.conflicts(W_1, W_3_O));
-        adaptiveMealy.insert(W_1, W_3_O);
-        LinkedList<Character> out = new LinkedList<>();
-        adaptiveMealy.lookup(W_1, out);
-        Assert.assertEquals(W_3_O, Word.fromList(out));
-    }
-
     @Test
     public void testAges() {
         LinkedList<Pair<Word<Character>, Word<Character>>> words = new LinkedList<>();
@@ -216,7 +205,7 @@ public class AdaptiveMealyTreeBuilderTest {
 
     @Test
     public void testCounterexampleOfLengthOne() {
-        final IncrementalMealyBuilder<Character, Character> incMealy = new AdaptiveMealyTreeBuilder<>(TEST_ALPHABET);
+        final AdaptiveMealyBuilder<Character, Character> incMealy = new AdaptiveMealyTreeBuilder<>(TEST_ALPHABET);
         incMealy.insert(Word.fromCharSequence("a"), Word.fromCharSequence("x"));
 
         final CompactMealy<Character, Character> dfa = new CompactMealy<>(TEST_ALPHABET);
@@ -232,7 +221,7 @@ public class AdaptiveMealyTreeBuilderTest {
     @Test(dependsOnMethods = "testLookup")
     public void testNewInputSymbol() {
         final GrowingAlphabet<Character> alphabet = new GrowingMapAlphabet<>(TEST_ALPHABET);
-        final IncrementalMealyBuilder<Character, Character> growableBuilder = new AdaptiveMealyTreeBuilder<>(
+        final AdaptiveMealyBuilder<Character, Character> growableBuilder = new AdaptiveMealyTreeBuilder<>(
                 alphabet);
 
         growableBuilder.addAlphabetSymbol('d');

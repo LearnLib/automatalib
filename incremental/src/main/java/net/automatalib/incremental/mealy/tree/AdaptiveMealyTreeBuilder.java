@@ -27,14 +27,14 @@ import java.util.PriorityQueue;
 
 import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
+import net.automatalib.incremental.mealy.AdaptiveMealyBuilder;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 
 public class AdaptiveMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Node<O>, I, O>
-        implements IncrementalMealyBuilder<I, O>, InputAlphabetHolder<I> {
+        implements AdaptiveMealyBuilder<I, O>, InputAlphabetHolder<I> {
 
     private final Map<Node<O>, Pair<Word<? extends I>, Integer>> stateToQuery = new HashMap<>();
     private final PriorityQueue<Node<O>> queryStates = new PriorityQueue<>(
@@ -110,9 +110,9 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Nod
         return inputAlphabet;
     }
 
-    @Override
-    public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
+    public boolean insert(Word<? extends I> input, Word<? extends O> outputWord) {
         Node<O> curr = root;
+        boolean hasOverwritten = false;
 
         Iterator<? extends O> outputIt = outputWord.iterator();
         for (int i = 0; i < input.length(); i++) {
@@ -123,6 +123,7 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Nod
                 curr = insertNode(curr, sym, out);
             } else {
                 if (!Objects.equals(out, edge.getOutput())) {
+                    hasOverwritten = true;
                     removeQueries(edge.getTarget());
                     removeEdge(curr, sym);
                     curr = insertNode(curr, sym, out);
@@ -141,6 +142,8 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Nod
         queryStates.add(curr);
 
         assert stateToQuery.size() == queryStates.size();
+
+        return hasOverwritten;
     }
 
     private void removeQueries(Node<O> node) {
@@ -152,28 +155,6 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Nod
         });
 
         assert stateToQuery.size() == queryStates.size();
-    }
-
-    public Boolean conflicts(Word<? extends I> input, Word<? extends O> outputWord) {
-        Node<O> curr = root;
-
-        Iterator<? extends O> outputIt = outputWord.iterator();
-        for (int i = 0; i < input.length(); i++) {
-            I sym = input.getSymbol(i);
-            O out = outputIt.next();
-            Edge<Node<O>, O> edge = getEdge(curr, sym);
-            if (edge == null) {
-                return false;
-            } else {
-                if (!Objects.equals(out, edge.getOutput())) {
-                    return true;
-                } else {
-                    curr = edge.getTarget();
-                }
-            }
-        }
-
-        return false;
     }
 
     private void removeEdge(Node<O> node, I symbol) {
