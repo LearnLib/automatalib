@@ -82,7 +82,7 @@ public class AdaptiveMealyTreeBuilder<I, O> extends IncrementalMealyTreeBuilder<
         assert stateToQuery.size() == queryStates.size();
     }
 
-    public Node<O> conflicts(Word<? extends I> input, Word<? extends O> outputWord) {
+    public Boolean conflicts(Word<? extends I> input, Word<? extends O> outputWord) {
         Node<O> curr = root;
 
         Iterator<? extends O> outputIt = outputWord.iterator();
@@ -91,17 +91,17 @@ public class AdaptiveMealyTreeBuilder<I, O> extends IncrementalMealyTreeBuilder<
             O out = outputIt.next();
             Edge<Node<O>, O> edge = getEdge(curr, sym);
             if (edge == null) {
-                return null;
+                return false;
             } else {
                 if (!Objects.equals(out, edge.getOutput())) {
-                    return edge.getTarget();
+                    return true;
                 } else {
                     curr = edge.getTarget();
                 }
             }
         }
 
-        return null;
+        return false;
     }
 
     private void removeEdge(Node<O> node, I symbol) {
