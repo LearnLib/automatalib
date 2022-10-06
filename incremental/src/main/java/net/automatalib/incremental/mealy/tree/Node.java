@@ -18,7 +18,7 @@ package net.automatalib.incremental.mealy.tree;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class Node<O> {
+final class Node<O> {
 
     private final ResizingArrayStorage<Edge<Node<O>, O>> outEdges;
 
