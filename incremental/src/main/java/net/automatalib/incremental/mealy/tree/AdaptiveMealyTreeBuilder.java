@@ -161,7 +161,7 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Nod
         node.setEdge(this.getInputAlphabet().getSymbolIndex(symbol), null);
     }
 
-    public Word<? extends I> getOldestQuery() {
+    public Word<? extends I> getOldestInput() {
         return stateToQuery.get(queryStates.peek()).getFirst();
     }
 }

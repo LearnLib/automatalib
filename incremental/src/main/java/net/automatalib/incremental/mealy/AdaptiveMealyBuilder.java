@@ -15,12 +15,6 @@
  */
 package net.automatalib.incremental.mealy;
 
-import java.util.List;
-
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.incremental.IncrementalConstruction;
-import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Word;
 
 public interface AdaptiveMealyBuilder<I, O> extends MealyBuilder<I, O> {
@@ -36,5 +30,12 @@ public interface AdaptiveMealyBuilder<I, O> extends MealyBuilder<I, O> {
      * @return {@code true} if the inserted output word has overridden existing information, {@code false} otherwise.
      */
     boolean insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
+
+    /**
+     * Returns the oldest input that has been introduced, and persisted.
+     * 
+     * @return the {@code Word} representing the oldest stored input.
+     */
+    Word<? extends I> getOldestInput();
 
 }

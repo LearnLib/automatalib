@@ -140,13 +140,13 @@ public class AdaptiveMealyTreeBuilderTest {
         for (int i = 0; i < words.size(); i++) {
             adaptiveMealy.insert(words.get(i).getFirst(), words.get(i).getSecond());
         }
-        Assert.assertEquals(W_1, adaptiveMealy.getOldestQuery());
+        Assert.assertEquals(W_1, adaptiveMealy.getOldestInput());
         adaptiveMealy.insert(W_1, W_1_O);
-        Assert.assertEquals(W_2, adaptiveMealy.getOldestQuery());
+        Assert.assertEquals(W_2, adaptiveMealy.getOldestInput());
         adaptiveMealy.insert(W_2, W_2_O);
-        Assert.assertEquals(W_3, adaptiveMealy.getOldestQuery());
+        Assert.assertEquals(W_3, adaptiveMealy.getOldestInput());
         adaptiveMealy.insert(W_3, W_3_O);
-        Assert.assertEquals(W_1, adaptiveMealy.getOldestQuery());
+        Assert.assertEquals(W_1, adaptiveMealy.getOldestInput());
     }
 
     @Test(dependsOnMethods = "testLookup")
