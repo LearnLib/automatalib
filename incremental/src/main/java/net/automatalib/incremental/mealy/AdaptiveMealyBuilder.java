@@ -17,6 +17,18 @@ package net.automatalib.incremental.mealy;
 
 import net.automatalib.words.Word;
 
+/**
+ * A variation of the {@link IncrementalMealyBuilder} interface that allows one to override previously inserted
+ * traces.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ *
+ * @author ferreira
+ * @author frohme
+ */
 public interface AdaptiveMealyBuilder<I, O> extends MealyBuilder<I, O> {
 
     /**
@@ -32,8 +44,8 @@ public interface AdaptiveMealyBuilder<I, O> extends MealyBuilder<I, O> {
     boolean insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
 
     /**
-     * Returns the oldest input that has been introduced, and persisted.
-     * 
+     * Returns the oldest, non-overridden input that has been introduced and persisted.
+     *
      * @return the {@code Word} representing the oldest stored input.
      */
     Word<? extends I> getOldestInput();

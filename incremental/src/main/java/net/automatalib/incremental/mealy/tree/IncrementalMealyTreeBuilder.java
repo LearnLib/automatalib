@@ -15,83 +15,37 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Objects;
 
-import net.automatalib.automata.concepts.InputAlphabetHolder;
+import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.Word;
 
-public class IncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyTreeBuilder<Node<O>, I, O>
-        implements IncrementalMealyBuilder<I, O>, InputAlphabetHolder<I> {
-
-    private final Alphabet<I> inputAlphabet;
-    private int alphabetSize;
+public class IncrementalMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTreeBuilder<I, O>
+        implements IncrementalMealyBuilder<I, O> {
 
     public IncrementalMealyTreeBuilder(Alphabet<I> inputAlphabet) {
-        super(new Node<>(inputAlphabet.size()));
-        this.inputAlphabet = inputAlphabet;
-        this.alphabetSize = inputAlphabet.size();
+        super(inputAlphabet);
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
-        if (!inputAlphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(inputAlphabet).addSymbol(symbol);
-        }
+    public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
+        Node<O> curr = root;
 
-        final int newAlphabetSize = inputAlphabet.size();
-        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
-        if (alphabetSize < newAlphabetSize) {
-            ensureInputCapacity(root, alphabetSize, newAlphabetSize);
-            alphabetSize = newAlphabetSize;
-        }
-    }
-
-    private void ensureInputCapacity(Node<O> node, int oldAlphabetSize, int newAlphabetSize) {
-        node.ensureInputCapacity(newAlphabetSize);
-        for (int i = 0; i < oldAlphabetSize; i++) {
-            final Node<O> child = node.getSuccessor(i);
-            if (child != null) {
-                ensureInputCapacity(child, oldAlphabetSize, newAlphabetSize);
+        Iterator<? extends O> outputIt = outputWord.iterator();
+        for (I sym : input) {
+            O out = outputIt.next();
+            Edge<Node<O>, O> edge = getEdge(curr, sym);
+            if (edge == null) {
+                curr = insertNode(curr, sym, out);
+            } else {
+                if (!Objects.equals(out, edge.getOutput())) {
+                    throw new ConflictException();
+                }
+                curr = edge.getTarget();
             }
         }
-    }
-
-    @Override
-    protected Edge<Node<O>, O> getEdge(Node<O> node, I symbol) {
-        return node.getEdge(inputAlphabet.getSymbolIndex(symbol));
-    }
-
-    @Override
-    protected Node<O> createNode() {
-        return new Node<>(alphabetSize);
-    }
-
-    @Override
-    protected Node<O> insertNode(Node<O> parent, I symIdx, O output) {
-        Node<O> succ = createNode();
-        Edge<Node<O>, O> edge = new Edge<>(output, succ);
-        parent.setEdge(inputAlphabet.getSymbolIndex(symIdx), edge);
-        return succ;
-    }
-
-    @Override
-    protected Collection<AnnotatedEdge<Node<O>, I, O>> getOutgoingEdges(Node<O> node) {
-        List<AnnotatedEdge<Node<O>, I, O>> result = new ArrayList<>(alphabetSize);
-        for (int i = 0; i < alphabetSize; i++) {
-            Edge<Node<O>, O> edge = node.getEdge(i);
-            if (edge != null) {
-                result.add(new AnnotatedEdge<>(edge, inputAlphabet.getSymbol(i)));
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public Alphabet<I> getInputAlphabet() {
-        return inputAlphabet;
     }
 }

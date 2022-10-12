@@ -15,101 +15,33 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.PriorityQueue;
 
-import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.incremental.mealy.AdaptiveMealyBuilder;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
 
-public class AdaptiveMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Node<O>, I, O>
-        implements AdaptiveMealyBuilder<I, O>, InputAlphabetHolder<I> {
+public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTreeBuilder<I, O>
+        implements AdaptiveMealyBuilder<I, O> {
 
     private final Map<Node<O>, Pair<Word<? extends I>, Integer>> stateToQuery = new HashMap<>();
-    private final PriorityQueue<Node<O>> queryStates = new PriorityQueue<>(
-            (Node<O> a, Node<O> b) -> Integer.compare(stateToQuery.get(a).getSecond(),
-                    stateToQuery.get(b).getSecond()));
+    private final PriorityQueue<Node<O>> queryStates = new PriorityQueue<>((Node<O> a, Node<O> b) -> Integer.compare(
+            stateToQuery.get(a).getSecond(),
+            stateToQuery.get(b).getSecond()));
     private Integer insertCounter = 0;
 
-    private final Alphabet<I> inputAlphabet;
-    private int alphabetSize;
-
     public AdaptiveMealyTreeBuilder(Alphabet<I> inputAlphabet) {
-        super(new Node<>(inputAlphabet.size()));
-        this.inputAlphabet = inputAlphabet;
-        this.alphabetSize = inputAlphabet.size();
+        super(inputAlphabet);
     }
 
     @Override
-    public void addAlphabetSymbol(I symbol) {
-        if (!inputAlphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(inputAlphabet).addSymbol(symbol);
-        }
-
-        final int newAlphabetSize = inputAlphabet.size();
-        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
-        if (alphabetSize < newAlphabetSize) {
-            ensureInputCapacity(root, alphabetSize, newAlphabetSize);
-            alphabetSize = newAlphabetSize;
-        }
-    }
-
-    private void ensureInputCapacity(Node<O> node, int oldAlphabetSize, int newAlphabetSize) {
-        node.ensureInputCapacity(newAlphabetSize);
-        for (int i = 0; i < oldAlphabetSize; i++) {
-            final Node<O> child = node.getSuccessor(i);
-            if (child != null) {
-                ensureInputCapacity(child, oldAlphabetSize, newAlphabetSize);
-            }
-        }
-    }
-
-    @Override
-    protected Edge<Node<O>, O> getEdge(Node<O> node, I symbol) {
-        return node.getEdge(inputAlphabet.getSymbolIndex(symbol));
-    }
-
-    @Override
-    protected Node<O> createNode() {
-        return new Node<>(alphabetSize);
-    }
-
-    @Override
-    protected Node<O> insertNode(Node<O> parent, I symIdx, O output) {
-        Node<O> succ = createNode();
-        Edge<Node<O>, O> edge = new Edge<>(output, succ);
-        parent.setEdge(inputAlphabet.getSymbolIndex(symIdx), edge);
-        return succ;
-    }
-
-    @Override
-    protected Collection<AnnotatedEdge<Node<O>, I, O>> getOutgoingEdges(Node<O> node) {
-        List<AnnotatedEdge<Node<O>, I, O>> result = new ArrayList<>(alphabetSize);
-        for (int i = 0; i < alphabetSize; i++) {
-            Edge<Node<O>, O> edge = node.getEdge(i);
-            if (edge != null) {
-                result.add(new AnnotatedEdge<>(edge, inputAlphabet.getSymbol(i)));
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public Alphabet<I> getInputAlphabet() {
-        return inputAlphabet;
-    }
-
     public boolean insert(Word<? extends I> input, Word<? extends O> outputWord) {
         Node<O> curr = root;
         boolean hasOverwritten = false;
@@ -161,6 +93,7 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Nod
         node.setEdge(this.getInputAlphabet().getSymbolIndex(symbol), null);
     }
 
+    @Override
     public Word<? extends I> getOldestInput() {
         return stateToQuery.get(queryStates.peek()).getFirst();
     }

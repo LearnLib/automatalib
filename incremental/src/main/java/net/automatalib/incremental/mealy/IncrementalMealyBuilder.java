@@ -15,13 +15,7 @@
  */
 package net.automatalib.incremental.mealy;
 
-import java.util.List;
-
-import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.IncrementalConstruction;
-import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Word;
 
 public interface IncrementalMealyBuilder<I, O> extends MealyBuilder<I, O> {

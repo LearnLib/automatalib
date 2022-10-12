@@ -27,7 +27,8 @@ import java.util.Objects;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.incremental.mealy.AbstractMealyBuilder;
+import net.automatalib.incremental.mealy.AbstractGraphView;
+import net.automatalib.incremental.mealy.MealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.visualization.VisualizationHelper;
@@ -37,7 +38,7 @@ import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractMealyTreeBuilder<N, I, O> extends AbstractMealyBuilder<I, O> {
+public abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<I, O> {
 
     protected final N root;
 

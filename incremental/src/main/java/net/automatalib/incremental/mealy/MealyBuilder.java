@@ -15,6 +15,7 @@
  */
 package net.automatalib.incremental.mealy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.automatalib.SupportsGrowingAlphabet;
@@ -23,10 +24,19 @@ import net.automatalib.graphs.Graph;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
 
-interface MealyBuilder<I, O> extends IncrementalConstruction<MealyMachine<?, I, ?, O>, I>, SupportsGrowingAlphabet<I> {
-
-    Word<O> lookup(Word<? extends I> inputWord);
+/**
+ * A utility interface to share functionality between {@link IncrementalMealyBuilder}s and
+ * {@link AdaptiveMealyBuilder}s.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ */
+public interface MealyBuilder<I, O>
+        extends IncrementalConstruction<MealyMachine<?, I, ?, O>, I>, SupportsGrowingAlphabet<I> {
 
     /**
      * Retrieves the output word for the given input word. If no definitive information for the input word exists, the
@@ -41,6 +51,17 @@ interface MealyBuilder<I, O> extends IncrementalConstruction<MealyMachine<?, I, 
      * {@code word.length() == output.size()} will hold), {@code false} otherwise.
      */
     boolean lookup(Word<? extends I> inputWord, List<? super O> output);
+
+    default Word<O> lookup(Word<? extends I> inputWord) {
+        WordBuilder<O> wb = new WordBuilder<>(inputWord.size());
+        lookup(inputWord, wb);
+        return wb.toWord();
+    }
+
+    @Override
+    default boolean hasDefinitiveInformation(Word<? extends I> word) {
+        return lookup(word, new ArrayList<>(word.length()));
+    }
 
     @Override
     GraphView<I, O, ?, ?> asGraph();

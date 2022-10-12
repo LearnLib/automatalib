@@ -15,6 +15,9 @@
  */
 package net.automatalib.incremental.mealy;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.incremental.mealy.tree.AdaptiveMealyTreeBuilder;
@@ -25,13 +28,9 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.GrowingMapAlphabet;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import junit.framework.Assert;
 
 @Test
 public class AdaptiveMealyTreeBuilderTest {
@@ -137,8 +136,8 @@ public class AdaptiveMealyTreeBuilderTest {
         words.add(Pair.of(W_2, W_2_O));
         words.add(Pair.of(W_3, W_3_O));
 
-        for (int i = 0; i < words.size(); i++) {
-            adaptiveMealy.insert(words.get(i).getFirst(), words.get(i).getSecond());
+        for (Pair<Word<Character>, Word<Character>> word : words) {
+            adaptiveMealy.insert(word.getFirst(), word.getSecond());
         }
         Assert.assertEquals(W_1, adaptiveMealy.getOldestInput());
         adaptiveMealy.insert(W_1, W_1_O);
