@@ -16,29 +16,25 @@
 package net.automatalib.incremental.mealy.tree;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.PriorityQueue;
 
-import net.automatalib.commons.util.Pair;
 import net.automatalib.incremental.mealy.AdaptiveMealyBuilder;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTreeBuilder<I, O>
         implements AdaptiveMealyBuilder<I, O> {
 
-    private final Map<Node<O>, Pair<Word<? extends I>, Integer>> stateToQuery = new HashMap<>();
-    private final PriorityQueue<Node<O>> queryStates = new PriorityQueue<>((Node<O> a, Node<O> b) -> Integer.compare(
-            stateToQuery.get(a).getSecond(),
-            stateToQuery.get(b).getSecond()));
-    private Integer insertCounter = 0;
+    private final Map<Node<O>, Word<I>> stateToQuery;
 
     public AdaptiveMealyTreeBuilder(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
+        this.stateToQuery = new LinkedHashMap<>();
     }
 
     @Override
@@ -66,27 +62,15 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTr
         }
 
         assert curr != null;
-        stateToQuery.put(curr, Pair.of(input, insertCounter));
-        insertCounter += 1;
-
         // Make sure it uses the new ages.
-        queryStates.remove(curr);
-        queryStates.add(curr);
-
-        assert stateToQuery.size() == queryStates.size();
+        stateToQuery.remove(curr);
+        stateToQuery.put(curr, Word.upcast(input));
 
         return hasOverwritten;
     }
 
     private void removeQueries(Node<O> node) {
-        GraphTraversal.bfIterator(this.asGraph(), Collections.singleton(node)).forEachRemaining(n -> {
-            if (queryStates.contains(n)) {
-                queryStates.remove(n);
-            }
-            stateToQuery.remove(n);
-        });
-
-        assert stateToQuery.size() == queryStates.size();
+        GraphTraversal.bfIterator(this.asGraph(), Collections.singleton(node)).forEachRemaining(stateToQuery::remove);
     }
 
     private void removeEdge(Node<O> node, I symbol) {
@@ -94,7 +78,8 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTr
     }
 
     @Override
-    public Word<? extends I> getOldestInput() {
-        return stateToQuery.get(queryStates.peek()).getFirst();
+    public @Nullable Word<I> getOldestInput() {
+        final Iterator<Word<I>> iter = stateToQuery.values().iterator();
+        return iter.hasNext() ? iter.next() : null;
     }
 }

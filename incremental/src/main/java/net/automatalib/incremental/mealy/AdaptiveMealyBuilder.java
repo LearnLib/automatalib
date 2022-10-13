@@ -16,10 +16,10 @@
 package net.automatalib.incremental.mealy;
 
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A variation of the {@link IncrementalMealyBuilder} interface that allows one to override previously inserted
- * traces.
+ * A variation of the {@link IncrementalMealyBuilder} interface that allows one to override previously inserted traces.
  *
  * @param <I>
  *         input symbol type
@@ -46,8 +46,8 @@ public interface AdaptiveMealyBuilder<I, O> extends MealyBuilder<I, O> {
     /**
      * Returns the oldest, non-overridden input that has been introduced and persisted.
      *
-     * @return the {@code Word} representing the oldest stored input.
+     * @return the {@code Word} representing the oldest stored input, {@code null} if the cache is empty.
      */
-    Word<? extends I> getOldestInput();
+    @Nullable Word<I> getOldestInput();
 
 }

@@ -31,7 +31,6 @@ import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-
 @Test
 public class AdaptiveMealyTreeBuilderTest {
 
@@ -51,8 +50,8 @@ public class AdaptiveMealyTreeBuilderTest {
     private static final Word<Character> W_B_3 = Word.fromString("aabaa");
     private static final Word<Character> W_B_3_O = Word.fromString("xxxxx");
 
-    private AdaptiveMealyTreeBuilder<Character, Character> adaptiveMealy = new AdaptiveMealyTreeBuilder<>(
-            TEST_ALPHABET);
+    private AdaptiveMealyTreeBuilder<Character, Character> adaptiveMealy =
+            new AdaptiveMealyTreeBuilder<>(TEST_ALPHABET);
 
     @Test
     public void testConfluenceBug() {
@@ -124,7 +123,6 @@ public class AdaptiveMealyTreeBuilderTest {
     @Test(dependsOnMethods = "testLookup")
     public void testInsertSame() {
         adaptiveMealy.insert(W_1, W_1_O);
-
     }
 
     @Test
@@ -220,8 +218,7 @@ public class AdaptiveMealyTreeBuilderTest {
     @Test(dependsOnMethods = "testLookup")
     public void testNewInputSymbol() {
         final GrowingAlphabet<Character> alphabet = new GrowingMapAlphabet<>(TEST_ALPHABET);
-        final AdaptiveMealyBuilder<Character, Character> growableBuilder = new AdaptiveMealyTreeBuilder<>(
-                alphabet);
+        final AdaptiveMealyBuilder<Character, Character> growableBuilder = new AdaptiveMealyTreeBuilder<>(alphabet);
 
         growableBuilder.addAlphabetSymbol('d');
         growableBuilder.addAlphabetSymbol('d');
@@ -238,5 +235,13 @@ public class AdaptiveMealyTreeBuilderTest {
 
         Assert.assertFalse(growableBuilder.hasDefinitiveInformation(input2));
         Assert.assertEquals(growableBuilder.lookup(input2), Word.fromLetter('1'));
+    }
+
+    @Test
+    public void testEmpty() {
+        final AdaptiveMealyBuilder<Character, Character> incMealy = new AdaptiveMealyTreeBuilder<>(TEST_ALPHABET);
+
+        Assert.assertTrue(incMealy.lookup(W_B_1).isEmpty());
+        Assert.assertNull(incMealy.getOldestInput());
     }
 }
