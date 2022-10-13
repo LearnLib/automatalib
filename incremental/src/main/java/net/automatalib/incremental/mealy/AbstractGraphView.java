@@ -44,7 +44,6 @@ public abstract class AbstractGraphView<I, O, N, E> implements GraphView<I, O, N
                 properties.put(EdgeAttrs.LABEL, input + " / " + output);
                 return true;
             }
-
         };
     }
 }

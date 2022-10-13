@@ -15,7 +15,6 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import java.util.Iterator;
 import java.util.Objects;
 
 import net.automatalib.incremental.ConflictException;
@@ -34,9 +33,9 @@ public class IncrementalMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMeal
     public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
         Node<O> curr = root;
 
-        Iterator<? extends O> outputIt = outputWord.iterator();
-        for (I sym : input) {
-            O out = outputIt.next();
+        for (int i = 0; i < input.length(); i++) {
+            I sym = input.getSymbol(i);
+            O out = outputWord.getSymbol(i);
             Edge<Node<O>, O> edge = getEdge(curr, sym);
             if (edge == null) {
                 curr = insertNode(curr, sym, out);

@@ -30,11 +30,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTreeBuilder<I, O>
         implements AdaptiveMealyBuilder<I, O> {
 
-    private final Map<Node<O>, Word<I>> stateToQuery;
+    private final Map<Node<O>, Word<I>> nodeToQuery;
 
     public AdaptiveMealyTreeBuilder(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
-        this.stateToQuery = new LinkedHashMap<>();
+        this.nodeToQuery = new LinkedHashMap<>();
     }
 
     @Override
@@ -42,10 +42,9 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTr
         Node<O> curr = root;
         boolean hasOverwritten = false;
 
-        Iterator<? extends O> outputIt = outputWord.iterator();
         for (int i = 0; i < input.length(); i++) {
             I sym = input.getSymbol(i);
-            O out = outputIt.next();
+            O out = outputWord.getSymbol(i);
             Edge<Node<O>, O> edge = getEdge(curr, sym);
             if (edge == null) {
                 curr = insertNode(curr, sym, out);
@@ -63,14 +62,14 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTr
 
         assert curr != null;
         // Make sure it uses the new ages.
-        stateToQuery.remove(curr);
-        stateToQuery.put(curr, Word.upcast(input));
+        nodeToQuery.remove(curr);
+        nodeToQuery.put(curr, Word.upcast(input));
 
         return hasOverwritten;
     }
 
     private void removeQueries(Node<O> node) {
-        GraphTraversal.bfIterator(this.asGraph(), Collections.singleton(node)).forEachRemaining(stateToQuery::remove);
+        GraphTraversal.bfIterator(this.asGraph(), Collections.singleton(node)).forEachRemaining(nodeToQuery::remove);
     }
 
     private void removeEdge(Node<O> node, I symbol) {
@@ -79,7 +78,7 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTr
 
     @Override
     public @Nullable Word<I> getOldestInput() {
-        final Iterator<Word<I>> iter = stateToQuery.values().iterator();
+        final Iterator<Word<I>> iter = nodeToQuery.values().iterator();
         return iter.hasNext() ? iter.next() : null;
     }
 }

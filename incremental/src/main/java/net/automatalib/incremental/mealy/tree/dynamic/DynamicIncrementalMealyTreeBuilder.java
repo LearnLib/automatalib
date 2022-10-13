@@ -17,7 +17,6 @@ package net.automatalib.incremental.mealy.tree.dynamic;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -57,9 +56,9 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractMealyTreeB
     public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
         Node<I, O> curr = root;
 
-        Iterator<? extends O> outputIt = outputWord.iterator();
-        for (I sym : input) {
-            O out = outputIt.next();
+        for (int i = 0; i < input.length(); i++) {
+            I sym = input.getSymbol(i);
+            O out = outputWord.getSymbol(i);
             Edge<Node<I, O>, O> edge = getEdge(curr, sym);
             if (edge == null) {
                 curr = insertNode(curr, sym, out);
