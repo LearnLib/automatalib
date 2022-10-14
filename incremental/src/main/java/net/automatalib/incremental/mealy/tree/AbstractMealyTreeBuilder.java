@@ -27,8 +27,8 @@ import java.util.Objects;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.mealy.AbstractIncrementalMealyBuilder;
+import net.automatalib.incremental.mealy.AbstractGraphView;
+import net.automatalib.incremental.mealy.MealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 import net.automatalib.visualization.VisualizationHelper;
@@ -38,11 +38,11 @@ import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends AbstractIncrementalMealyBuilder<I, O> {
+public abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<I, O> {
 
     protected final N root;
 
-    public AbstractIncrementalMealyTreeBuilder(N root) {
+    public AbstractMealyTreeBuilder(N root) {
         this.root = root;
     }
 
@@ -60,25 +60,6 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
         }
 
         return true;
-    }
-
-    @Override
-    public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
-        N curr = root;
-
-        Iterator<? extends O> outputIt = outputWord.iterator();
-        for (I sym : input) {
-            O out = outputIt.next();
-            Edge<N, O> edge = getEdge(curr, sym);
-            if (edge == null) {
-                curr = insertNode(curr, sym, out);
-            } else {
-                if (!Objects.equals(out, edge.getOutput())) {
-                    throw new ConflictException();
-                }
-                curr = edge.getTarget();
-            }
-        }
     }
 
     @Override
@@ -182,7 +163,7 @@ public abstract class AbstractIncrementalMealyTreeBuilder<N, I, O> extends Abstr
 
         @Override
         public Collection<AnnotatedEdge<N, I, O>> getOutgoingEdges(N node) {
-            return AbstractIncrementalMealyTreeBuilder.this.getOutgoingEdges(node);
+            return AbstractMealyTreeBuilder.this.getOutgoingEdges(node);
         }
 
         @Override

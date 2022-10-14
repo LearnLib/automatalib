@@ -15,10 +15,21 @@
  */
 package net.automatalib.incremental.mealy;
 
-import net.automatalib.incremental.ConflictException;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public interface IncrementalMealyBuilder<I, O> extends MealyBuilder<I, O> {
+/**
+ * A variation of the {@link IncrementalMealyBuilder} interface that allows one to override previously inserted traces.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ *
+ * @author ferreira
+ * @author frohme
+ */
+public interface AdaptiveMealyBuilder<I, O> extends MealyBuilder<I, O> {
 
     /**
      * Incorporates a pair of input/output words into the stored information.
@@ -28,9 +39,15 @@ public interface IncrementalMealyBuilder<I, O> extends MealyBuilder<I, O> {
      * @param outputWord
      *         the corresponding output word
      *
-     * @throws ConflictException
-     *         if this information conflicts with information already stored
+     * @return {@code true} if the inserted output word has overridden existing information, {@code false} otherwise.
      */
-    void insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
+    boolean insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
+
+    /**
+     * Returns the oldest, non-overridden input that has been introduced and persisted.
+     *
+     * @return the {@code Word} representing the oldest stored input, {@code null} if the cache is empty.
+     */
+    @Nullable Word<I> getOldestInput();
 
 }

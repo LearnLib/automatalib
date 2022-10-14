@@ -19,11 +19,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import net.automatalib.incremental.mealy.tree.AbstractIncrementalMealyTreeBuilder;
+import net.automatalib.incremental.ConflictException;
+import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
+import net.automatalib.incremental.mealy.tree.AbstractMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.AnnotatedEdge;
 import net.automatalib.incremental.mealy.tree.Edge;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
+import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -41,14 +45,30 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author frohme
  */
-public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractIncrementalMealyTreeBuilder<Node<I, O>, I, O> {
+public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Node<I, O>, I, O>
+        implements IncrementalMealyBuilder<I, O> {
 
     public DynamicIncrementalMealyTreeBuilder() {
-        this(new Node<>());
+        super(new Node<>());
     }
 
-    DynamicIncrementalMealyTreeBuilder(Node<I, O> root) {
-        super(root);
+    @Override
+    public void insert(Word<? extends I> input, Word<? extends O> outputWord) {
+        Node<I, O> curr = root;
+
+        for (int i = 0; i < input.length(); i++) {
+            I sym = input.getSymbol(i);
+            O out = outputWord.getSymbol(i);
+            Edge<Node<I, O>, O> edge = getEdge(curr, sym);
+            if (edge == null) {
+                curr = insertNode(curr, sym, out);
+            } else {
+                if (!Objects.equals(out, edge.getOutput())) {
+                    throw new ConflictException();
+                }
+                curr = edge.getTarget();
+            }
+        }
     }
 
     @Override
