@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ import net.automatalib.modelcheckers.m3c.formula.TrueNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.CTLToMuCalc;
 import net.automatalib.modelcheckers.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
+import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 import org.checkerframework.checker.initialization.qual.UnderInitialization;
@@ -52,7 +54,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Base implementation of the model checker which supports different types of property transformers.
+ * Base implementation of the model checker which supports different types of property transformers. The
+ * {@link ModelChecker} is (currently) implemented on the basis of the {@link WitnessTreeExtractor} including all its
+ * restrictions.
  *
  * @param <T>
  *         property transformer type
@@ -63,7 +67,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author murtovi
  */
-abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
+abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP>
+        implements ModelChecker<L, ContextFreeModalProcessSystem<L, AP>, FormulaNode<L, AP>, WitnessTree<L, AP>> {
 
     // Attributes that are constant for a given CFMPS
     private final @KeyFor("workUnits") L mainProcess;
@@ -147,6 +152,34 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         }
 
         return nodeToPredecessors;
+    }
+
+    @Override
+    public @Nullable WitnessTree<L, AP> findCounterExample(ContextFreeModalProcessSystem<L, AP> cfmps,
+                                                           Collection<? extends L> inputs,
+                                                           FormulaNode<L, AP> formulaNode) {
+        final NotNode<L, AP> negatedFormula = new NotNode<>(formulaNode);
+        final FormulaNode<L, AP> ast = ctlToMuCalc(negatedFormula).toNNF();
+
+        initialize(ast);
+        this.solveInternal(false, Collections.emptyList());
+
+        final boolean sat = isSat();
+
+        if (sat) {
+            try {
+                final Map<L, AbstractDDSolver<?, L, AP>.WorkUnit<?, ?>> units = Collections.unmodifiableMap(workUnits);
+                return WitnessTreeExtractor.computeWitness(cfmps,
+                                                           units,
+                                                           dependencyGraph,
+                                                           ast,
+                                                           getAllAPDeadlockedNode());
+            } finally {
+                shutdownDDManager();
+            }
+        }
+
+        return null;
     }
 
     public boolean solve(FormulaNode<L, AP> formula) {
@@ -266,7 +299,8 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     private <N> List<FormulaNode<L, AP>> getSatisfiedSubformulas(WorkUnit<N, ?> unit, N node) {
-        final Set<Integer> output = unit.propTransformers.get(node).evaluate(toBoolArray(getAllAPDeadlockedNode()));
+        final Set<Integer> output =
+                unit.propTransformers.get(node).evaluate(dependencyGraph.toBoolArray(getAllAPDeadlockedNode()));
         final List<FormulaNode<L, AP>> satisfiedSubFormulas = new ArrayList<>();
         for (FormulaNode<L, AP> n : dependencyGraph.getFormulaNodes()) {
             if (output.contains(n.getVarNumber())) {
@@ -274,14 +308,6 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
             }
         }
         return satisfiedSubFormulas;
-    }
-
-    private boolean[] toBoolArray(Set<Integer> satisfiedVars) {
-        final boolean[] arr = new boolean[dependencyGraph.getNumVariables()];
-        for (Integer satisfiedVar : satisfiedVars) {
-            arr[satisfiedVar] = true;
-        }
-        return arr;
     }
 
     private Set<Integer> getAllAPDeadlockedNode() {
@@ -557,12 +583,12 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
 
     protected abstract TransformerSerializer<T, L, AP> getSerializer();
 
-    private class WorkUnit<N, E> {
+    class WorkUnit<N, E> {
 
-        private final L label;
-        private final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
+        final L label;
+        final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
         private final Mapping<N, @Nullable Set<N>> predecessors;
-        private MutableMapping<N, T> propTransformers;
+        MutableMapping<N, T> propTransformers;
         private Set<N> workSet; // Keeps track of which node's property transformers have to be updated.
 
         WorkUnit(L label, ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg, Mapping<N, @Nullable Set<N>> predecessors) {
