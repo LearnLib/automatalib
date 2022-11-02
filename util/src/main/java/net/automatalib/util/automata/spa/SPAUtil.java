@@ -271,7 +271,7 @@ public final class SPAUtil {
                             if (alphabet.isCallSymbol(r) && !terminatingSequences.containsKey(r)) {
                                 // If we encounter a call symbol for which we do not have a terminating sequence,
                                 // the remaining return sequences cannot be expanded properly.
-                                // Therefore skip the current trace.
+                                // Therefore, skip the current trace.
                                 continue tc;
                             }
                         }
@@ -305,11 +305,10 @@ public final class SPAUtil {
                     } else if (!terminatingSequences.containsKey(input)) {
                         // If we encounter a call symbol for which we do not have a terminating sequence,
                         // all local access sequences of future call symbols cannot be expanded properly.
-                        // Therefore skip the current trace.
+                        // Therefore, skip the current trace.
                         continue tc;
                     }
                 }
-                //                }
 
                 if (finishedProcedures.containsAll(alphabet.getCallAlphabet())) {
                     return newASRS;
