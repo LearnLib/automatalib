@@ -16,7 +16,7 @@
 package net.automatalib.modelcheckers.m3c.transformer;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.BitSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -151,12 +151,12 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
     }
 
     @Override
-    public Set<Integer> evaluate(boolean[] input) {
+    public BitSet evaluate(boolean[] input) {
         final boolean[] leafData = this.add == null ? input : this.add.eval(input).v().data();
-        final Set<Integer> satisfiedVars = new HashSet<>();
+        final BitSet satisfiedVars = new BitSet();
         for (int i = 0; i < leafData.length; i++) {
             if (leafData[i]) {
-                satisfiedVars.add(i);
+                satisfiedVars.set(i);
             }
         }
         return satisfiedVars;

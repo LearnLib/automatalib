@@ -79,12 +79,12 @@ public class ADDTransformerTest {
             }
 
             /* Test correctness of identity by checking if input equals output */
-            Set<Integer> satisfiedVars = transformer.evaluate(input);
+            BitSet satisfiedVars = transformer.evaluate(input);
             for (int idx = 0; i < input.length; i++) {
                 if (input[idx]) {
-                    Assert.assertTrue(satisfiedVars.contains(idx));
+                    Assert.assertTrue(satisfiedVars.get(idx));
                 }
-                if (satisfiedVars.contains(idx)) {
+                if (satisfiedVars.get(idx)) {
                     Assert.assertTrue(input[idx]);
                 }
             }
@@ -122,22 +122,22 @@ public class ADDTransformerTest {
                 input[idx] = bs.get(idx);
             }
 
-            Set<Integer> satisfiedVars = transformer.evaluate(input);
-            Assert.assertFalse(satisfiedVars.contains(orNode.getVarNumber()));
+            BitSet satisfiedVars = transformer.evaluate(input);
+            Assert.assertFalse(satisfiedVars.get(orNode.getVarNumber()));
 
             boolean diaNode1ExpectedTrue = input[diaNode1.getVarNumberChild()];
-            boolean diaNode1ActualTrue = satisfiedVars.contains(diaNode1.getVarNumber());
+            boolean diaNode1ActualTrue = satisfiedVars.get(diaNode1.getVarNumber());
             Assert.assertEquals(diaNode1ExpectedTrue, diaNode1ActualTrue);
 
             boolean diaNode2ExpectedTrue = input[diaNode2.getVarNumberChild()];
-            boolean diaNode2ActualTrue = satisfiedVars.contains(diaNode2.getVarNumber());
+            boolean diaNode2ActualTrue = satisfiedVars.get(diaNode2.getVarNumber());
             Assert.assertEquals(diaNode2ExpectedTrue, diaNode2ActualTrue);
 
             boolean boxNodeExpectedTrue = input[boxNode.getVarNumberChild()];
-            boolean boxNodeActualTrue = satisfiedVars.contains(boxNode.getVarNumber());
+            boolean boxNodeActualTrue = satisfiedVars.get(boxNode.getVarNumber());
             Assert.assertEquals(boxNodeExpectedTrue, boxNodeActualTrue);
 
-            Assert.assertFalse(satisfiedVars.contains(trueNode.getVarNumber()));
+            Assert.assertFalse(satisfiedVars.get(trueNode.getVarNumber()));
         }
     }
 
@@ -155,18 +155,18 @@ public class ADDTransformerTest {
                 input[idx] = bs.get(idx);
             }
 
-            Set<Integer> satisfiedVars = transformer.evaluate(input);
-            Assert.assertFalse(satisfiedVars.contains(orNode.getVarNumber()));
+            BitSet satisfiedVars = transformer.evaluate(input);
+            Assert.assertFalse(satisfiedVars.get(orNode.getVarNumber()));
 
-            Assert.assertFalse(satisfiedVars.contains(diaNode1.getVarNumber()));
+            Assert.assertFalse(satisfiedVars.get(diaNode1.getVarNumber()));
 
             boolean diaNode2ExpectedTrue = input[diaNode2.getVarNumberChild()];
-            boolean diaNode2ActualTrue = satisfiedVars.contains(diaNode2.getVarNumber());
+            boolean diaNode2ActualTrue = satisfiedVars.get(diaNode2.getVarNumber());
             Assert.assertEquals(diaNode2ExpectedTrue, diaNode2ActualTrue);
 
-            Assert.assertTrue(satisfiedVars.contains(boxNode.getVarNumber()));
+            Assert.assertTrue(satisfiedVars.get(boxNode.getVarNumber()));
 
-            Assert.assertFalse(satisfiedVars.contains(trueNode.getVarNumber()));
+            Assert.assertFalse(satisfiedVars.get(trueNode.getVarNumber()));
         }
     }
 
@@ -184,18 +184,18 @@ public class ADDTransformerTest {
                 input[idx] = bs.get(idx);
             }
 
-            Set<Integer> satisfiedVars = transformer.evaluate(input);
-            Assert.assertFalse(satisfiedVars.contains(orNode.getVarNumber()));
+            BitSet satisfiedVars = transformer.evaluate(input);
+            Assert.assertFalse(satisfiedVars.get(orNode.getVarNumber()));
 
-            Assert.assertFalse(satisfiedVars.contains(diaNode1.getVarNumber()));
+            Assert.assertFalse(satisfiedVars.get(diaNode1.getVarNumber()));
 
-            Assert.assertFalse(satisfiedVars.contains(diaNode2.getVarNumber()));
+            Assert.assertFalse(satisfiedVars.get(diaNode2.getVarNumber()));
 
             boolean boxNodeExpectedTrue = input[boxNode.getVarNumberChild()];
-            boolean boxNodeActualTrue = satisfiedVars.contains(boxNode.getVarNumber());
+            boolean boxNodeActualTrue = satisfiedVars.get(boxNode.getVarNumber());
             Assert.assertEquals(boxNodeExpectedTrue, boxNodeActualTrue);
 
-            Assert.assertFalse(satisfiedVars.contains(trueNode.getVarNumber()));
+            Assert.assertFalse(satisfiedVars.get(trueNode.getVarNumber()));
         }
     }
 

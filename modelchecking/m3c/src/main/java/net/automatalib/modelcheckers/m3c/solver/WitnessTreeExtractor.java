@@ -17,12 +17,12 @@ package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.graphs.ProceduralModalProcessGraph;
@@ -56,11 +56,11 @@ final class WitnessTreeExtractor<L, AP> {
     private final WitnessTree<L, AP> wTree = new WitnessTree<>();
     private final Map<L, AbstractDDSolver<?, L, AP>.WorkUnit<?, ?>> units;
     private final DependencyGraph<L, AP> dg;
-    private final Set<Integer> initialContext;
+    private final BitSet initialContext;
 
     private WitnessTreeExtractor(Map<L, AbstractDDSolver<?, L, AP>.WorkUnit<?, ?>> units,
                                  DependencyGraph<L, AP> dg,
-                                 Set<Integer> initialContext) {
+                                 BitSet initialContext) {
         this.units = units;
         this.dg = dg;
         this.initialContext = initialContext;
@@ -70,7 +70,7 @@ final class WitnessTreeExtractor<L, AP> {
                                                      Map<L, AbstractDDSolver<?, L, AP>.WorkUnit<?, ?>> workUnits,
                                                      DependencyGraph<L, AP> dependencyGraph,
                                                      FormulaNode<L, AP> formula,
-                                                     Set<Integer> initialContext) {
+                                                     BitSet initialContext) {
 
         // assert that the formula equals the AST (in NNF) so that we can continue to use the AST for its set varNumbers
         assert Objects.equals(dependencyGraph.getAST().toString(), formula.toString());
@@ -143,7 +143,7 @@ final class WitnessTreeExtractor<L, AP> {
 
         final List<WitnessTreeState<?, L, ?, AP>> result = new ArrayList<>();
 
-        if (queueElement.getSatisfiedSubformulae(dg, queueElement.state).contains(leftFormula.getVarNumber())) {
+        if (queueElement.getSatisfiedSubformulae(dg, queueElement.state).get(leftFormula.getVarNumber())) {
             result.add(new WitnessTreeState<>(queueElement.stack,
                                               queueElement.unit,
                                               queueElement.state,
@@ -153,7 +153,7 @@ final class WitnessTreeExtractor<L, AP> {
                                               null,
                                               wTree.size() - 1));
         }
-        if (queueElement.getSatisfiedSubformulae(dg, queueElement.state).contains(rightFormula.getVarNumber())) {
+        if (queueElement.getSatisfiedSubformulae(dg, queueElement.state).get(rightFormula.getVarNumber())) {
             result.add(new WitnessTreeState<>(queueElement.stack,
                                               queueElement.unit,
                                               queueElement.state,
@@ -190,7 +190,7 @@ final class WitnessTreeExtractor<L, AP> {
             final L label = pmpg.getEdgeLabel(edge);
 
             if (pmpg.getEdgeProperty(edge).isInternal()) {
-                if (queueElement.getSatisfiedSubformulae(dg, target).contains(formula.getChild().getVarNumber())) {
+                if (queueElement.getSatisfiedSubformulae(dg, target).get(formula.getChild().getVarNumber())) {
                     final WitnessTreeState<?, L, ?, AP> toAdd = new WitnessTreeState<>(queueElement.stack,
                                                                                        queueElement.unit,
                                                                                        target,
@@ -236,7 +236,7 @@ final class WitnessTreeExtractor<L, AP> {
 
             if (pmpg.getEdgeProperty(edge).isInternal()) {
                 if (Objects.equals(label, moveLabel) &&
-                    queueElement.getSatisfiedSubformulae(dg, target).contains(formula.getChild().getVarNumber())) {
+                    queueElement.getSatisfiedSubformulae(dg, target).get(formula.getChild().getVarNumber())) {
                     final WitnessTreeState<?, L, ?, AP> toAdd = new WitnessTreeState<>(queueElement.stack,
                                                                                        queueElement.unit,
                                                                                        target,
@@ -278,7 +278,7 @@ final class WitnessTreeExtractor<L, AP> {
 
         @SuppressWarnings("nullness") // we have checked non-nullness of initial nodes in the model checker
         final @NonNull N2 initialNode = unit.pmpg.getInitialNode();
-        final Set<Integer> finalFormulae = queueElement.getSatisfiedSubformulae(dg, target);
+        final BitSet finalFormulae = queueElement.getSatisfiedSubformulae(dg, target);
 
         WitnessTreeState<N2, L, E2, AP> result = new WitnessTreeState<>(succ,
                                                                         unit,
@@ -289,7 +289,7 @@ final class WitnessTreeExtractor<L, AP> {
                                                                         null,
                                                                         wTree.size() - 1);
 
-        if (result.getSatisfiedSubformulae(dg, result.state).contains(formula.getVarNumber())) {
+        if (result.getSatisfiedSubformulae(dg, result.state).get(formula.getVarNumber())) {
             return result;
         } else {
             return null;

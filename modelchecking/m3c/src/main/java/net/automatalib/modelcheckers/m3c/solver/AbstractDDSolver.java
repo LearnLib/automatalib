@@ -16,6 +16,7 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -299,56 +300,55 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     private <N> List<FormulaNode<L, AP>> getSatisfiedSubformulas(WorkUnit<N, ?> unit, N node) {
-        final Set<Integer> output =
+        final BitSet output =
                 unit.propTransformers.get(node).evaluate(dependencyGraph.toBoolArray(getAllAPDeadlockedNode()));
         final List<FormulaNode<L, AP>> satisfiedSubFormulas = new ArrayList<>();
         for (FormulaNode<L, AP> n : dependencyGraph.getFormulaNodes()) {
-            if (output.contains(n.getVarNumber())) {
+            if (output.get(n.getVarNumber())) {
                 satisfiedSubFormulas.add(n);
             }
         }
         return satisfiedSubFormulas;
     }
 
-    private Set<Integer> getAllAPDeadlockedNode() {
+    private BitSet getAllAPDeadlockedNode() {
         return getAllAPDeadlockedNode(workUnits.get(mainProcess).pmpg);
     }
 
-    private <N, E, TP extends ProceduralModalEdgeProperty> Set<Integer> getAllAPDeadlockedNode(
-            ProceduralModalProcessGraph<N, L, E, AP, TP> mainMpg) {
-        final Set<Integer> satisfiedVariables = new HashSet<>();
+    private <N, E, TP extends ProceduralModalEdgeProperty> BitSet getAllAPDeadlockedNode(ProceduralModalProcessGraph<N, L, E, AP, TP> mainMpg) {
+        final BitSet satisfiedVariables = new BitSet();
         @SuppressWarnings("nullness") // we have checked non-nullness of final nodes in the constructor
         final @NonNull N finalNode = mainMpg.getFinalNode();
         for (int blockIdx = dependencyGraph.getBlocks().size() - 1; blockIdx >= 0; blockIdx--) {
             final EquationalBlock<L, AP> block = dependencyGraph.getBlock(blockIdx);
             for (FormulaNode<L, AP> node : block.getNodes()) {
                 if (node instanceof TrueNode) {
-                    satisfiedVariables.add(node.getVarNumber());
+                    satisfiedVariables.set(node.getVarNumber());
                 } else if (node instanceof AtomicNode) {
                     final AP atomicProposition = ((AtomicNode<L, AP>) node).getProposition();
                     final Set<AP> finalNodeAPs = mainMpg.getAtomicPropositions(finalNode);
                     if (finalNodeAPs.contains(atomicProposition)) {
-                        satisfiedVariables.add(node.getVarNumber());
+                        satisfiedVariables.set(node.getVarNumber());
                     }
                 } else if (node instanceof BoxNode) {
                     /* End node has no outgoing edges */
-                    satisfiedVariables.add(node.getVarNumber());
+                    satisfiedVariables.set(node.getVarNumber());
                 } else if (node instanceof AndNode) {
                     final AndNode<L, AP> andNode = (AndNode<L, AP>) node;
-                    if (satisfiedVariables.contains(andNode.getVarNumberLeft()) &&
-                        satisfiedVariables.contains(andNode.getVarNumberRight())) {
-                        satisfiedVariables.add(andNode.getVarNumber());
+                    if (satisfiedVariables.get(andNode.getVarNumberLeft()) &&
+                        satisfiedVariables.get(andNode.getVarNumberRight())) {
+                        satisfiedVariables.set(andNode.getVarNumber());
                     }
                 } else if (node instanceof OrNode) {
                     final OrNode<L, AP> orNode = (OrNode<L, AP>) node;
-                    if (satisfiedVariables.contains(orNode.getVarNumberLeft()) ||
-                        satisfiedVariables.contains(orNode.getVarNumberRight())) {
-                        satisfiedVariables.add(orNode.getVarNumber());
+                    if (satisfiedVariables.get(orNode.getVarNumberLeft()) ||
+                        satisfiedVariables.get(orNode.getVarNumberRight())) {
+                        satisfiedVariables.set(orNode.getVarNumber());
                     }
                 } else if (node instanceof NotNode) {
                     final NotNode<L, AP> notNode = (NotNode<L, AP>) node;
-                    if (!satisfiedVariables.contains(notNode.getVarNumberChild())) {
-                        satisfiedVariables.add(notNode.getVarNumber());
+                    if (!satisfiedVariables.get(notNode.getVarNumberChild())) {
+                        satisfiedVariables.set(notNode.getVarNumber());
                     }
                 }
             }

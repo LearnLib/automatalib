@@ -15,8 +15,7 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.BitSet;
 
 import net.automatalib.graphs.ProceduralModalProcessGraph;
 import net.automatalib.modelcheckers.m3c.formula.DependencyGraph;
@@ -46,7 +45,7 @@ public class WitnessTreeState<N, L, E, AP> {
     public final ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg;
     public final N state;
     public final FormulaNode<L, AP> subformula;
-    public final Set<Integer> context;
+    public final BitSet context;
     public final String displayLabel;
     public final @Nullable L edgeLabel;
     public final int parentId;
@@ -56,7 +55,7 @@ public class WitnessTreeState<N, L, E, AP> {
                      AbstractDDSolver<?, L, AP>.WorkUnit<N, E> unit,
                      N state,
                      FormulaNode<L, AP> subformula,
-                     Set<Integer> context,
+                     BitSet context,
                      String displayLabel,
                      @Nullable L edgeLabel,
                      int parentId) {
@@ -74,16 +73,7 @@ public class WitnessTreeState<N, L, E, AP> {
         this.isPartOfResult = false;
     }
 
-    Set<Integer> getSatisfiedSubformulae(DependencyGraph<L, AP> dependencyGraph, N node) {
-
-        final Set<Integer> output = unit.propTransformers.get(node).evaluate(dependencyGraph.toBoolArray(context));
-        final Set<Integer> satisfiedSubFormulas = new HashSet<>();
-        for (FormulaNode<L, AP> n : dependencyGraph.getFormulaNodes()) {
-            if (output.contains(n.getVarNumber())) {
-                satisfiedSubFormulas.add(n.getVarNumber());
-            }
-        }
-
-        return satisfiedSubFormulas;
+    BitSet getSatisfiedSubformulae(DependencyGraph<L, AP> dependencyGraph, N node) {
+        return unit.propTransformers.get(node).evaluate(dependencyGraph.toBoolArray(context));
     }
 }

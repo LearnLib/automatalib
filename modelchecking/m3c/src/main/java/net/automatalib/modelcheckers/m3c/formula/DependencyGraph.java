@@ -16,12 +16,13 @@
 package net.automatalib.modelcheckers.m3c.formula;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+import net.automatalib.commons.util.collections.BitSetIterator;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.AbstractFixedPointFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.LfpNode;
@@ -200,11 +201,14 @@ public final class DependencyGraph<L, AP> {
      * @return a boolean array that is sized according to {@link #getNumVariables()} such that every index provided in
      * {@code satisfiedVars} is set to {@code true}.
      */
-    public boolean[] toBoolArray(Set<Integer> satisfiedVars) {
+    public boolean[] toBoolArray(BitSet satisfiedVars) {
         final boolean[] arr = new boolean[getNumVariables()];
-        for (Integer satisfiedVar : satisfiedVars) {
-            arr[satisfiedVar] = true;
+        final BitSetIterator iter = new BitSetIterator(satisfiedVars);
+
+        while (iter.hasNext()) {
+            arr[iter.nextInt()] = true;
         }
+
         return arr;
     }
 }

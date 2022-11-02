@@ -16,12 +16,12 @@
 package net.automatalib.modelcheckers.m3c.solver;
 
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
@@ -146,12 +146,12 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
 
     public void testSatisfiedSubformulasAndUpdatedPT(boolean[] allAPDeadlockedNode,
                                                      SolverState<?, T, String, String> solverState) {
-        final Set<Integer> actualSatisfiedSubformulas = solverState.getUpdatedNodeSatisfiedSubformula()
-                                                                   .stream()
-                                                                   .map(FormulaNode::getVarNumber)
-                                                                   .collect(Collectors.toSet());
+        final BitSet actualSatisfiedSubformulas = solverState.getUpdatedNodeSatisfiedSubformula()
+                                                             .stream()
+                                                             .map(FormulaNode::getVarNumber)
+                                                             .collect(BitSet::new, BitSet::set, BitSet::or);
         final T updatedPropertyTransformer = solverState.getUpdatedPropTransformer(serializer);
-        Set<Integer> expectedSatisfiedSubformulas = updatedPropertyTransformer.evaluate(allAPDeadlockedNode);
+        BitSet expectedSatisfiedSubformulas = updatedPropertyTransformer.evaluate(allAPDeadlockedNode);
         Assert.assertEquals(actualSatisfiedSubformulas, expectedSatisfiedSubformulas);
     }
 

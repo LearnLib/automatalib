@@ -15,8 +15,8 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
+import java.util.BitSet;
 import java.util.Map;
-import java.util.Set;
 
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.XDDManager;
@@ -94,10 +94,10 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
             input[2] = binaryString.charAt(2) == '1';
             input[3] = binaryString.charAt(3) == '1';
             input[4] = binaryString.charAt(4) == '1';
-            Set<Integer> aSatVarNumbers = aPT.evaluate(input);
+            BitSet aSatVarNumbers = aPT.evaluate(input);
             boolean[] aResult = new boolean[numSubformulas];
             for (int j = 0; j < numSubformulas; j++) {
-                aResult[j] = aSatVarNumbers.contains(j);
+                aResult[j] = aSatVarNumbers.get(j);
             }
             Assert.assertEquals(aResult[4], input[0]);
             Assert.assertFalse(aResult[0]);
@@ -105,10 +105,10 @@ public class SolverHistoryADDTest extends AbstractSolverHistoryTest<ADDTransform
             Assert.assertFalse(aResult[2]);
             Assert.assertFalse(aResult[3]);
 
-            Set<Integer> bSatVarNumbers = bPT.evaluate(input);
+            BitSet bSatVarNumbers = bPT.evaluate(input);
             boolean[] bResult = new boolean[numSubformulas];
             for (int j = 0; j < numSubformulas; j++) {
-                bResult[j] = bSatVarNumbers.contains(j);
+                bResult[j] = bSatVarNumbers.get(j);
             }
             Assert.assertEquals(bResult[1], input[2]);
             Assert.assertEquals(bResult[2], input[3]);

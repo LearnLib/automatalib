@@ -16,7 +16,7 @@
 package net.automatalib.modelcheckers.m3c.transformer;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.BitSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -144,11 +144,11 @@ public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransf
     }
 
     @Override
-    public Set<Integer> evaluate(boolean[] input) {
-        final Set<Integer> output = new HashSet<>();
+    public BitSet evaluate(boolean[] input) {
+        final BitSet output = new BitSet();
         for (int i = 0; i < bdds.length; i++) {
             if (bdds[i].eval(input).equals(bddManager.readOne())) {
-                output.add(i);
+                output.set(i);
             }
         }
         return output;

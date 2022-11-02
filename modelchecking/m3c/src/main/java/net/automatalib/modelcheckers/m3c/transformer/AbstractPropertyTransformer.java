@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelcheckers.m3c.transformer;
 
+import java.util.BitSet;
 import java.util.List;
 import java.util.Set;
 
@@ -54,7 +55,7 @@ public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTran
      *
      * @return the set of variable numbers of subformulas
      */
-    public abstract Set<Integer> evaluate(boolean[] input);
+    public abstract BitSet evaluate(boolean[] input);
 
     /**
      * Returns the composition {@code h} of {@code this} and {@code other} such that {@code h(x) = this(other(x))}. The
