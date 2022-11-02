@@ -299,7 +299,8 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     private <N> List<FormulaNode<L, AP>> getSatisfiedSubformulas(WorkUnit<N, ?> unit, N node) {
-        final Set<Integer> output = unit.propTransformers.get(node).evaluate(toBoolArray(getAllAPDeadlockedNode()));
+        final Set<Integer> output =
+                unit.propTransformers.get(node).evaluate(dependencyGraph.toBoolArray(getAllAPDeadlockedNode()));
         final List<FormulaNode<L, AP>> satisfiedSubFormulas = new ArrayList<>();
         for (FormulaNode<L, AP> n : dependencyGraph.getFormulaNodes()) {
             if (output.contains(n.getVarNumber())) {
@@ -307,14 +308,6 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
             }
         }
         return satisfiedSubFormulas;
-    }
-
-    private boolean[] toBoolArray(Set<Integer> satisfiedVars) {
-        final boolean[] arr = new boolean[dependencyGraph.getNumVariables()];
-        for (Integer satisfiedVar : satisfiedVars) {
-            arr[satisfiedVar] = true;
-        }
-        return arr;
     }
 
     private Set<Integer> getAllAPDeadlockedNode() {

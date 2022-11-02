@@ -163,6 +163,7 @@ final class WitnessTreeExtractor<L, AP> {
                                               null,
                                               wTree.size() - 1));
         }
+
         return result;
     }
 
@@ -211,6 +212,7 @@ final class WitnessTreeExtractor<L, AP> {
                 }
             }
         }
+
         return result;
     }
 
@@ -292,7 +294,6 @@ final class WitnessTreeExtractor<L, AP> {
         } else {
             return null;
         }
-
     }
 
     private <N1, N2, E1, E2> WitnessTreeState<N2, L, E2, AP> buildReturnNode(WitnessTreeState<N1, L, E1, AP> queueElement,
@@ -313,5 +314,4 @@ final class WitnessTreeExtractor<L, AP> {
         final @NonNull N initialNode = unit.pmpg.getInitialNode();
         return new WitnessTreeState<>(null, unit, initialNode, formula, initialContext, "", null, -1);
     }
-
 }

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.automatalib.modelcheckers.m3c.formula.modalmu.AbstractFixedPointFormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.modalmu.GfpNode;
@@ -187,5 +188,23 @@ public final class DependencyGraph<L, AP> {
      */
     public FormulaNode<L, AP> getAST() {
         return ast;
+    }
+
+    /**
+     * Returns a boolean array that is sized according to {@link #getNumVariables()} such that every index provided in
+     * {@code satisfiedVars} is set to {@code true}.
+     *
+     * @param satisfiedVars
+     *         the set of indices that should be set to {@code true}
+     *
+     * @return a boolean array that is sized according to {@link #getNumVariables()} such that every index provided in
+     * {@code satisfiedVars} is set to {@code true}.
+     */
+    public boolean[] toBoolArray(Set<Integer> satisfiedVars) {
+        final boolean[] arr = new boolean[getNumVariables()];
+        for (Integer satisfiedVar : satisfiedVars) {
+            arr[satisfiedVar] = true;
+        }
+        return arr;
     }
 }

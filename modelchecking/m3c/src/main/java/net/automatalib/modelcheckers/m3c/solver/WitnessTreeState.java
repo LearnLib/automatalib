@@ -76,7 +76,7 @@ public class WitnessTreeState<N, L, E, AP> {
 
     Set<Integer> getSatisfiedSubformulae(DependencyGraph<L, AP> dependencyGraph, N node) {
 
-        final Set<Integer> output = unit.propTransformers.get(node).evaluate(toBoolArray(dependencyGraph, context));
+        final Set<Integer> output = unit.propTransformers.get(node).evaluate(dependencyGraph.toBoolArray(context));
         final Set<Integer> satisfiedSubFormulas = new HashSet<>();
         for (FormulaNode<L, AP> n : dependencyGraph.getFormulaNodes()) {
             if (output.contains(n.getVarNumber())) {
@@ -86,13 +86,4 @@ public class WitnessTreeState<N, L, E, AP> {
 
         return satisfiedSubFormulas;
     }
-
-    private boolean[] toBoolArray(DependencyGraph<L, AP> dependencyGraph, Set<Integer> satisfiedVars) {
-        final boolean[] arr = new boolean[dependencyGraph.getNumVariables()];
-        for (Integer satisfiedVar : satisfiedVars) {
-            arr[satisfiedVar] = true;
-        }
-        return arr;
-    }
-
 }
