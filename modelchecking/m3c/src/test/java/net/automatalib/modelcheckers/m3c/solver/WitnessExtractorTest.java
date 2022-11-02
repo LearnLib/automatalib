@@ -49,13 +49,16 @@ public class WitnessExtractorTest {
 
     @DataProvider
     public static Object[][] formulasOnAnCBn() {
+        // @formatter:off
         return new Object[][] {{"mu X.((<b>true) || <>X)", Word.fromSymbols("a", "c", "b")},
                                {"mu X.((<c>true) || <>X || (<b><b>true))", Word.fromLetter("c")},
                                {"mu X.((<c><c>true) || <>X || (<b><b>true))", Word.fromSymbols("a", "a", "c", "b", "b")},
                                {"mu X.(mu Y.(<c><b>true) || <>X || (<b><b>true))", Word.fromSymbols("a", "c", "b")},
                                {"mu X.(<b><b>true || <>X) || mu Y. (<a><a>true || <>Y)", Word.fromSymbols("a", "a")},
+                               {"mu X.(<c><b>true || <b>X) || mu Y. (<c><b><b>true || <a>Y)", Word.fromSymbols("a", "a", "c", "b", "b")},
                                {"mu X.((<a>true) || <>X )", Word.fromLetter("a")},
                                {"true || false", Word.epsilon()}};
+        // @formatter:on
     }
 
     @Test(dataProvider = "formulasOnAnCBn")
@@ -102,6 +105,39 @@ public class WitnessExtractorTest {
         final String expectedDOT = parseDOT("palindrome.dot");
 
         Assert.assertEquals(sw.toString(), expectedDOT);
+    }
+
+    @Test
+    public void checkLoopSystem() throws ParseException, IOException, ParserConfigurationException, SAXException {
+
+        final ContextFreeModalProcessSystem<String, Void> cfmps = parseCFMPS("/cfmps/witness/loop.xml");
+        final BDDSolver<String, Void> m3c = new BDDSolver<>(cfmps);
+
+        // good
+        final FormulaNode<String, Void> f1 = M3CParser.parse("<a><b><b><c>true", l -> l, ap -> null);
+        final WitnessTree<String, Void> t1 = m3c.findCounterExample(cfmps, Collections.emptyList(), new NotNode<>(f1));
+
+        Assert.assertNotNull(t1);
+        Assert.assertEquals(t1.getWitness(), Word.fromSymbols("a", "b", "b", "c"));
+
+        // good
+        final FormulaNode<String, Void> f2 = M3CParser.parse("<a><b><b><b><c><a><b><b><c>true", l -> l, ap -> null);
+        final WitnessTree<String, Void> t2 = m3c.findCounterExample(cfmps, Collections.emptyList(), new NotNode<>(f2));
+
+        Assert.assertNotNull(t2);
+        Assert.assertEquals(t2.getWitness(), Word.fromSymbols("a", "b", "b", "b", "c", "a", "b", "b", "c"));
+
+        // should fail on single b in second iteration
+        final FormulaNode<String, Void> f3 = M3CParser.parse("<a><b><b><c><a><b><c>true", l -> l, ap -> null);
+        final WitnessTree<String, Void> t3 = m3c.findCounterExample(cfmps, Collections.emptyList(), new NotNode<>(f3));
+
+        Assert.assertNull(t3);
+
+        // should fail on single b
+        final FormulaNode<String, Void> f4 = M3CParser.parse("<a><b><c>true", l -> l, ap -> null);
+        final WitnessTree<String, Void> t4 = m3c.findCounterExample(cfmps, Collections.emptyList(), new NotNode<>(f4));
+
+        Assert.assertNull(t4);
     }
 
     private ContextFreeModalProcessSystem<String, Void> parseCFMPS(String name)
