@@ -184,11 +184,9 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
             // create a file that will contain the LTL of the specification
             ltlFile = File.createTempFile("formula", ".ltl");
 
-            try {
+            try (FileWriter writer = new FileWriter(ltlFile)) {
                 // write to the file
-                FileWriter writer = new FileWriter(ltlFile);
                 writer.write(formula);
-                writer.close();
             } catch (IOException ioe) {
                 if (!keepFiles && !ltlFile.delete()) {
                     LOGGER.warn("Could not delete file: " + ltlFile.getAbsolutePath());
