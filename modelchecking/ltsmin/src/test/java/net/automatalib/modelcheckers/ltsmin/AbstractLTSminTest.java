@@ -88,18 +88,26 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
         R ce = getModelChecker().findCounterExample(automaton, alphabet, falseProperty);
         Assert.assertNotNull(ce);
         Assert.assertEquals(counterExample.computeOutput(input), ce.computeOutput(input));
+    }
 
-        StringBuilder complexProperty = new StringBuilder();
-        final int maxNumOperators = 90;
-        for (int numOperators = 0; numOperators < maxNumOperators; ++numOperators) {
-            for (int i = 0; i < numOperators; ++i) {
-                complexProperty.append("X ");
-            }
-            complexProperty.append(falseProperty);
-            if (numOperators + 1 < maxNumOperators) {
-                complexProperty.append(" && ");
-            }
+    /**
+     * It appears that the input buffer of LTSmin for input formulae is limited to 8192 (2^13) bytes. As a result, we
+     * need to pass longer formulae as a file. This test checks for compatibility with long formulae.
+     */
+    @Test
+    public void testLongFormula() {
+        final StringBuilder builder = new StringBuilder();
+        final int length = falseProperty.length();
+        final int max = ((1 << 13) / length) + 1;
+
+        for (int i = 0; i < max; i++) {
+            builder.append(falseProperty);
+            builder.append(" && ");
         }
-        getModelChecker().findCounterExample(automaton, alphabet, complexProperty.toString());
+        builder.append(falseProperty);
+
+        final R ce = getModelChecker().findCounterExample(automaton, alphabet, builder.toString());
+        Assert.assertNotNull(ce);
+        Assert.assertEquals(counterExample.computeOutput(input), ce.computeOutput(input));
     }
 }
