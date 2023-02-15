@@ -16,8 +16,8 @@
 package net.automatalib.modelcheckers.ltsmin;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +25,7 @@ import java.util.function.Function;
 
 import com.google.common.collect.Lists;
 import net.automatalib.AutomataLibSettings;
+import net.automatalib.commons.util.IOUtil;
 import net.automatalib.commons.util.process.ProcessUtil;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.ModelChecker;
@@ -181,12 +182,12 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
         final File ltlFile;
 
         try {
-            // create a file that will contain the LTL of the specification
+            // write LTL formula to a file because long formulae may cause problems as direct inputs to LTSmin
             ltlFile = File.createTempFile("formula", ".ltl");
 
-            try (FileWriter writer = new FileWriter(ltlFile)) {
+            try (Writer w = IOUtil.asBufferedUTF8Writer(ltlFile)) {
                 // write to the file
-                writer.write(formula);
+                w.write(formula);
             } catch (IOException ioe) {
                 if (!keepFiles && !ltlFile.delete()) {
                     LOGGER.warn("Could not delete file: " + ltlFile.getAbsolutePath());
