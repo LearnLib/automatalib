@@ -89,4 +89,25 @@ public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
         Assert.assertNotNull(ce);
         Assert.assertEquals(counterExample.computeOutput(input), ce.computeOutput(input));
     }
+
+    /**
+     * It appears that the input buffer of LTSmin for input formulae is limited to 8192 (2^13) bytes. As a result, we
+     * need to pass longer formulae as a file. This test checks for compatibility with long formulae.
+     */
+    @Test
+    public void testLongFormula() {
+        final StringBuilder builder = new StringBuilder();
+        final int length = falseProperty.length();
+        final int max = ((1 << 13) / length) + 1;
+
+        for (int i = 0; i < max; i++) {
+            builder.append(falseProperty);
+            builder.append(" && ");
+        }
+        builder.append(falseProperty);
+
+        final R ce = getModelChecker().findCounterExample(automaton, alphabet, builder.toString());
+        Assert.assertNotNull(ce);
+        Assert.assertEquals(counterExample.computeOutput(input), ce.computeOutput(input));
+    }
 }
