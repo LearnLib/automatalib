@@ -59,7 +59,7 @@ public class ADDTransformerSerializer<L, AP> implements TransformerSerializer<AD
         }
 
         final XDDSerializer<BooleanVector> xddSerializer = new XDDSerializer<>();
-        final XDD<BooleanVector> transformer = xddSerializer.deserialize(xddManager, data.get(0), DDProperty.VARINDEX);
+        final XDD<BooleanVector> transformer = xddSerializer.deserialize(xddManager, data.get(0), DDProperty.VARNAMEANDVARINDEX);
         return new ADDTransformer<>(xddManager, transformer);
     }
 }

@@ -67,7 +67,7 @@ public class BDDTransformerSerializer<L, AP> implements TransformerSerializer<BD
         final List<XDD<Boolean>> xdds = new ArrayList<>();
 
         for (String serializedDD : data) {
-            xdds.add(serializer.deserialize(ddManager, serializedDD, DDProperty.VARINDEX));
+            xdds.add(serializer.deserialize(ddManager, serializedDD, DDProperty.VARNAMEANDVARINDEX));
         }
 
         final BDD[] bdds = new BDD[xdds.size()];
