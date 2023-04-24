@@ -162,8 +162,9 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         final NotNode<L, AP> negatedFormula = new NotNode<>(formulaNode);
         final FormulaNode<L, AP> ast = ctlToMuCalc(negatedFormula).toNNF();
 
+        initialize(ast);
+
         try {
-            initialize(ast);
             this.solveInternal(false, Collections.emptyList());
 
             final boolean sat = isSat();
@@ -185,8 +186,9 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     public boolean solve(FormulaNode<L, AP> formula) {
         final FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
 
+        initialize(ast);
+
         try {
-            initialize(ast);
             this.solveInternal(false, Collections.emptyList());
 
             return isSat();
@@ -199,9 +201,9 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         final List<SolverState<?, T, L, AP>> history = new ArrayList<>();
         final FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
 
-        try {
-            initialize(ast);
+        initialize(ast);
 
+        try {
             final Map<L, SolverData<?, T, L, AP>> data = Maps.newHashMapWithExpectedSize(this.workUnits.size());
             for (Entry<L, WorkUnit<?, ?>> e : this.workUnits.entrySet()) {
                 data.put(e.getKey(), createProcessData(e.getValue()));
