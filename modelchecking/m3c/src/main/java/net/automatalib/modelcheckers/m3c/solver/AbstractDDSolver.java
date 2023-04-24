@@ -162,58 +162,61 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         final NotNode<L, AP> negatedFormula = new NotNode<>(formulaNode);
         final FormulaNode<L, AP> ast = ctlToMuCalc(negatedFormula).toNNF();
 
-        initialize(ast);
-        this.solveInternal(false, Collections.emptyList());
+        try {
+            initialize(ast);
+            this.solveInternal(false, Collections.emptyList());
 
-        final boolean sat = isSat();
+            final boolean sat = isSat();
 
-        if (sat) {
-            try {
+            if (sat) {
                 final Map<L, AbstractDDSolver<?, L, AP>.WorkUnit<?, ?>> units = Collections.unmodifiableMap(workUnits);
                 return WitnessTreeExtractor.computeWitness(cfmps,
                                                            units,
                                                            dependencyGraph,
                                                            ast,
                                                            getAllAPDeadlockedNode());
-            } finally {
-                shutdownDDManager();
             }
+            return null;
+        } finally {
+            shutdownDDManager();
         }
-
-        return null;
     }
 
     public boolean solve(FormulaNode<L, AP> formula) {
         final FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
 
-        initialize(ast);
-        this.solveInternal(false, Collections.emptyList());
+        try {
+            initialize(ast);
+            this.solveInternal(false, Collections.emptyList());
 
-        final boolean sat = isSat();
-        shutdownDDManager();
-        return sat;
+            return isSat();
+        } finally {
+            shutdownDDManager();
+        }
     }
 
     public SolverHistory<T, L, AP> solveAndRecordHistory(FormulaNode<L, AP> formula) {
         final List<SolverState<?, T, L, AP>> history = new ArrayList<>();
         final FormulaNode<L, AP> ast = ctlToMuCalc(formula).toNNF();
 
-        initialize(ast);
+        try {
+            initialize(ast);
 
-        final Map<L, SolverData<?, T, L, AP>> data = Maps.newHashMapWithExpectedSize(this.workUnits.size());
-        for (Entry<L, WorkUnit<?, ?>> e : this.workUnits.entrySet()) {
-            data.put(e.getKey(), createProcessData(e.getValue()));
+            final Map<L, SolverData<?, T, L, AP>> data = Maps.newHashMapWithExpectedSize(this.workUnits.size());
+            for (Entry<L, WorkUnit<?, ?>> e : this.workUnits.entrySet()) {
+                data.put(e.getKey(), createProcessData(e.getValue()));
+            }
+
+            this.solveInternal(true, history);
+
+            final Map<L, List<String>> serializedMustTransformers = serializePropertyTransformerMap(mustTransformers);
+            final Map<L, List<String>> serializedMayTransformers = serializePropertyTransformerMap(mayTransformers);
+            final boolean isSat = isSat();
+
+            return new SolverHistory<>(data, serializedMustTransformers, serializedMayTransformers, history, isSat);
+        } finally {
+            shutdownDDManager();
         }
-
-        this.solveInternal(true, history);
-
-        final Map<L, List<String>> serializedMustTransformers = serializePropertyTransformerMap(mustTransformers);
-        final Map<L, List<String>> serializedMayTransformers = serializePropertyTransformerMap(mayTransformers);
-        final boolean isSat = isSat();
-
-        shutdownDDManager();
-
-        return new SolverHistory<>(data, serializedMustTransformers, serializedMayTransformers, history, isSat);
     }
 
     private <N, E> SolverData<N, T, L, AP> createProcessData(WorkUnit<N, E> unit) {
