@@ -109,11 +109,19 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
                                ProceduralModalProcessGraph<N, L, ?, AP, ?> pmpg) {
         final N initialNode = pmpg.getInitialNode();
         if (initialNode == null) {
-            throw new IllegalArgumentException("PMPG '" + label + "' has no start node");
+            throw new IllegalArgumentException("PMPG '" + label + "' has no initial node");
         }
-        Preconditions.checkNotNull(pmpg.getFinalNode(), "PMPG '%s' has no end node", label);
+
+        final N finalNode = pmpg.getFinalNode();
+        if (finalNode == null) {
+            throw new IllegalArgumentException("PMPG '" + label + "' has no final node");
+        }
+
         Preconditions.checkArgument(isGuarded(pmpg, initialNode),
                                     "PMPG '%s' is not guarded. All initial transitions must be labelled with atomic actions.",
+                                    label);
+        Preconditions.checkArgument(isTerminating(pmpg, finalNode),
+                                    "PMPG '%s' is not terminating. The final node is not allowed to have outgoing transitions.",
                                     label);
     }
 
@@ -126,6 +134,12 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
             }
         }
         return true;
+    }
+
+    private <N, E> boolean isTerminating(@UnderInitialization AbstractDDSolver<T, L, AP> this,
+                                         ProceduralModalProcessGraph<N, L, E, AP, ?> pmpg,
+                                         N finalNode) {
+        return pmpg.getOutgoingEdges(finalNode).isEmpty();
     }
 
     private <N> WorkUnit<N, ?> initializeWorkUnits(@UnderInitialization AbstractDDSolver<T, L, AP> this,
