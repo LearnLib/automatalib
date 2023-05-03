@@ -31,21 +31,36 @@ limitations under the License.
     </Match>
     <Match>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
-        <Or>
-            <And>
-                <!-- Fine according to JavaDoc -->
-                <Class name="net.automatalib.commons.smartcollections.AbstractLinkedList"/>
-                <Or>
-                    <Method name="popBack" returns="java.lang.Object"/>
-                    <Method name="popFront" returns="java.lang.Object"/>
-                </Or>
-            </And>
-        </Or>
+        <And>
+            <!-- Fine according to JavaDoc -->
+            <Class name="net.automatalib.commons.smartcollections.AbstractLinkedList"/>
+            <Or>
+                <Method name="popBack" returns="java.lang.Object"/>
+                <Method name="popFront" returns="java.lang.Object"/>
+            </Or>
+        </And>
     </Match>
     <Match>
-        <!-- TODO: mostly due to performance. However, usage should be checked again -->
-        <Bug pattern="EI_EXPOSE_REP2"/>
-        <Class name="net.automatalib.util.partitionrefinement.PaigeTarjan"/>
+        <!-- Passing references is mostly fine for performance reasons. Since we do not deal with security-related code,
+             we can leave to the developer's choice
+        -->
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Bug pattern="MS_EXPOSE_REP"/>
+        <Or>
+            <!-- They are all stateless, immutable instances -->
+            <Class name="net.automatalib.serialization.aut.AUTSerializationProvider"/>
+            <Class name="net.automatalib.serialization.dot.DOTSerializationProvider"/>
+            <Class name="net.automatalib.serialization.etf.writer.DFA2ETFWriter"/>
+            <Class name="net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating"/>
+            <Class name="net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO"/>
+            <Class name="net.automatalib.serialization.learnlibv2.LearnLibV2Serialization"/>
+            <Class name="net.automatalib.serialization.saf.SAFSerializationDFA"/>
+            <Class name="net.automatalib.serialization.saf.SAFSerializationNFA"/>
+            <Class name="net.automatalib.serialization.taf.TAFSerializationDFA"/>
+            <Class name="net.automatalib.serialization.taf.TAFSerializationMealy"/>
+        </Or>
     </Match>
     <Match>
         <!-- mostly internal structures, where this behavior is fine -->

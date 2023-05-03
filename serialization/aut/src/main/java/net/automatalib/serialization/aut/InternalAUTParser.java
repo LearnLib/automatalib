@@ -172,17 +172,8 @@ class InternalAUTParser {
     }
 
     private void shiftToNextNonWhitespace() {
-        for (int i = currentPos; i < currentLineContent.length; i++) {
-            switch (currentLineContent[i]) {
-                case ' ':
-                case '\t':
-                case '\r': // probably already filtered by readline
-                case '\n': // probably already filtered by readline
-                    break;
-                default:
-                    currentPos = i;
-                    return;
-            }
+        while (currentPos < currentLineContent.length && Character.isWhitespace(currentLineContent[currentPos])) {
+            currentPos++;
         }
     }
 
