@@ -28,6 +28,8 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.visualization.dot.DOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Example for using the DOT visualizer for displaying multiple automata at the same time.
@@ -35,6 +37,8 @@ import net.automatalib.words.impl.Alphabets;
  * @author frohme
  */
 public final class DOTExample {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DOTExample.class);
 
     private static final Alphabet<Integer> INPUT_ALPHABET = Alphabets.integers(1, 6);
     private static final Alphabet<Character> OUTPUT_ALPHABET = Alphabets.characters('a', 'f');
@@ -45,12 +49,16 @@ public final class DOTExample {
     }
 
     public static void main(String[] args) throws IOException {
-        final Random r = new Random(42);
-        final List<Pair<String, String>> graphs = Arrays.asList(Pair.of("Automaton 1", generateRandomAutomaton(r)),
-                                                                Pair.of("Automaton 2", generateRandomAutomaton(r)),
-                                                                Pair.of("Automaton 3", generateRandomAutomaton(r)));
+        if (DOT.checkUsable()) {
+            final Random r = new Random(42);
+            final List<Pair<String, String>> graphs = Arrays.asList(Pair.of("Automaton 1", generateRandomAutomaton(r)),
+                                                                    Pair.of("Automaton 2", generateRandomAutomaton(r)),
+                                                                    Pair.of("Automaton 3", generateRandomAutomaton(r)));
 
-        DOT.renderDOTStrings(graphs, true);
+            DOT.renderDOTStrings(graphs, true);
+        } else {
+            LOGGER.warn("DOT does not seem usable. Check you configuration.");
+        }
     }
 
     /**
