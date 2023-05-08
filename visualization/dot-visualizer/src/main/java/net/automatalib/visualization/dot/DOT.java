@@ -16,61 +16,46 @@
 package net.automatalib.visualization.dot;
 
 import java.awt.Desktop;
-import java.awt.Dialog;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 
+import com.google.common.io.CharStreams;
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.commons.util.IOUtil;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.process.ProcessUtil;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import net.automatalib.visualization.dot.DOTMultiDialog.ThrowableExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility class to simplify operating the GraphVIZ "dot" utility. Please note that all of the provided methods require
+ * Utility class to simplify operating the GraphVIZ "dot" utility. Please note that all the provided methods require
  * GraphVIZ to be installed on the system, and that the "dot" binary resides in the execution path.
  *
  * @author Malte Isberner
+ * @author frohme
  */
 public final class DOT {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DOT.class);
 
-    private static final int MAX_WIDTH = 800;
-    private static final int MAX_HEIGHT = 600;
-
     private static String dotExe;
 
     static {
-        AutomataLibSettings settings = AutomataLibSettings.getInstance();
+        final AutomataLibSettings settings = AutomataLibSettings.getInstance();
 
-        String dotExePath = settings.getProperty(AutomataLibProperty.DOT_EXE_DIR);
-        String dotExeName = settings.getProperty(AutomataLibProperty.DOT_EXE_NAME, "dot");
+        final String dotExePath = settings.getProperty(AutomataLibProperty.DOT_EXE_DIR);
+        final String dotExeName = settings.getProperty(AutomataLibProperty.DOT_EXE_NAME, "dot");
 
         String dotExe = dotExeName;
         if (dotExePath != null) {
@@ -79,15 +64,24 @@ public final class DOT {
             dotExe = resolvedDotPath.toString();
         }
 
-        DOT.dotExe = dotExe;
+        net.automatalib.visualization.dot.DOT.dotExe = dotExe;
     }
 
     private DOT() {}
 
+    /**
+     * Explicitly sets the path to the DOT utility executable.
+     *
+     * @param dotExe
+     *         the path to the DOT utility executable
+     */
     public static void setDotExe(String dotExe) {
-        DOT.dotExe = dotExe;
+        net.automatalib.visualization.dot.DOT.dotExe = dotExe;
     }
 
+    /**
+     * Checks whether the DOT utility can be successfully invoked.
+     */
     public static boolean checkUsable() {
         try {
             final String[] dotCheck = buildRawDOTCommand("-V");
@@ -98,29 +92,14 @@ public final class DOT {
         return false;
     }
 
-    public static String[] buildRawDOTCommand(String... opts) {
-        String[] dotArgs = new String[1 + opts.length];
-        dotArgs[0] = dotExe;
-        System.arraycopy(opts, 0, dotArgs, 1, opts.length);
-
-        return dotArgs;
-    }
-
-    public static String[] buildDOTCommand(String format, String... additionalOpts) {
-        String[] dotArgs = new String[1 + additionalOpts.length];
-        dotArgs[0] = "-T" + format;
-        System.arraycopy(additionalOpts, 0, dotArgs, 1, additionalOpts.length);
-
-        return buildRawDOTCommand(dotArgs);
-    }
-
     /**
-     * Invokes the DOT utility on a string. Convenience method, see {@link #runDOT(Reader, String, String...)}
+     * Invokes the DOT utility on a file. Convenience method, see {@link #runDOT(Reader, String, String...)}.
+     *
+     * @throws IOException
+     *         if reading from the file or the call to the DOT utility fails.
      */
-    public static InputStream runDOT(String dotText, String format, String... additionalOpts) throws IOException {
-        try (StringReader sr = new StringReader(dotText)) {
-            return runDOT(sr, format, additionalOpts);
-        }
+    public static InputStream runDOT(File dotFile, String format, String... additionalOpts) throws IOException {
+        return runDOT(IOUtil.asBufferedUTF8Reader(dotFile), format, additionalOpts);
     }
 
     /**
@@ -134,29 +113,37 @@ public final class DOT {
      * @return an input stream from which the image data can be read.
      *
      * @throws IOException
-     *         if reading from the specified reader fails.
+     *         if reading from the reader or the call to the DOT utility fails.
      */
     public static InputStream runDOT(Reader r, String format, String... additionalOpts) throws IOException {
-        String[] dotCommand = buildDOTCommand(format, additionalOpts);
+        final String[] dotCommand = buildDOTCommand(format, additionalOpts);
 
-        Process p = ProcessUtil.buildProcess(dotCommand, r, null, LOGGER::warn);
+        final Process p = ProcessUtil.buildProcess(dotCommand, r, null, LOGGER::warn);
 
         return p.getInputStream();
     }
 
     /**
-     * Invokes the DOT utility on a file. Convenience method, see {@link #runDOT(Reader, String, String...)}.
+     * Invokes the DOT utility on a string. Convenience method, see {@link #runDOT(Reader, String, String...)}
+     *
+     * @throws IOException
+     *         if the call to the DOT utility fails.
      */
-    public static InputStream runDOT(File dotFile, String format, String... additionalOpts) throws IOException {
-        return runDOT(IOUtil.asBufferedUTF8Reader(dotFile), format, additionalOpts);
+    public static InputStream runDOT(String dotText, String format, String... additionalOpts) throws IOException {
+        try (StringReader sr = new StringReader(dotText)) {
+            return runDOT(sr, format, additionalOpts);
+        }
     }
 
     /**
-     * Invokes the DOT utility on a string, producing an output file. Convenience method, see {@link #runDOT(Reader,
-     * String, File)}.
+     * Invokes the DOT utility on a file, producing an output file. Convenience method, see
+     * {@link #runDOT(Reader, String, File)}.
+     *
+     * @throws IOException
+     *         if reading from the file, the call to the DOT utility, or writing to the file fails.
      */
-    public static void runDOT(String dotText, String format, File out) throws IOException {
-        runDOT(new StringReader(dotText), format, out);
+    public static void runDOT(File dotFile, String format, File out) throws IOException {
+        runDOT(IOUtil.asBufferedUTF8Reader(dotFile), format, out);
     }
 
     /**
@@ -170,10 +157,10 @@ public final class DOT {
      *         the file to which the output is written.
      *
      * @throws IOException
-     *         if an I/O error occurs reading from the given input or writing to the output file.
+     *         if reading from the reader, the call to the DOT utility, or writing to the file fails.
      */
     public static void runDOT(Reader r, String format, File out) throws IOException {
-        String[] dotCommand = buildDOTCommand(format, "-o" + out.getAbsolutePath());
+        final String[] dotCommand = buildDOTCommand(format, "-o" + out.getAbsolutePath());
 
         try {
             ProcessUtil.invokeProcess(dotCommand, r, LOGGER::warn);
@@ -183,19 +170,25 @@ public final class DOT {
     }
 
     /**
-     * Invokes the DOT utility on a file, producing an output file. Convenience method, see {@link #runDOT(Reader,
-     * String, File)}.
+     * Invokes the DOT utility on a string, producing an output file. Convenience method, see
+     * {@link #runDOT(Reader, String, File)}.
+     *
+     * @throws IOException
+     *         if the call to the DOT utility or writing to the file fails.
      */
-    public static void runDOT(File dotFile, String format, File out) throws IOException {
-        runDOT(IOUtil.asBufferedUTF8Reader(dotFile), format, out);
+    public static void runDOT(String dotText, String format, File out) throws IOException {
+        runDOT(new StringReader(dotText), format, out);
     }
 
     /**
-     * Renders a GraphVIZ description from a string, using an external program for displaying. Convenience method, see
+     * Renders a GraphVIZ description from a file, using an external program for displaying. Convenience method, see
      * {@link #renderDOTExternal(Reader, String)}.
+     *
+     * @throws IOException
+     *         if reading from the file or the call to the DOT utility fails.
      */
-    public static void renderDOTExternal(String dotText, String format) {
-        renderDOTExternal(new StringReader(dotText), format);
+    public static void renderDOTExternal(File dotFile, String format) throws IOException {
+        renderDOTExternal(IOUtil.asBufferedUTF8Reader(dotFile), format);
     }
 
     /**
@@ -206,114 +199,137 @@ public final class DOT {
      *         the reader from which the GraphVIZ description is read.
      * @param format
      *         the output format, as understood by the dot utility, e.g., png, ps, ...
+     *
+     * @throws IOException
+     *         if reading from the reader or the call to the DOT utility fails.
      */
-    public static void renderDOTExternal(Reader r, String format) {
-        try {
-            File image = File.createTempFile("dot", format);
-            runDOT(r, format, image);
-            Desktop.getDesktop().open(image);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,
-                                          "Error rendering DOT: " + e.getMessage(),
-                                          "Error",
-                                          JOptionPane.ERROR_MESSAGE);
-        }
+    public static void renderDOTExternal(Reader r, String format) throws IOException {
+        final File image = File.createTempFile("dot", format);
+        runDOT(r, format, image);
+        Desktop.getDesktop().open(image);
     }
 
     /**
-     * Renders a GraphVIZ description from a file, using an external program for displaying. Convenience method, see
+     * Renders a GraphVIZ description from a string, using an external program for displaying. Convenience method, see
      * {@link #renderDOTExternal(Reader, String)}.
      *
      * @throws IOException
-     *         if opening the file resulted in errors.
+     *         if the call to the DOT utility fails.
      */
-    public static void renderDOTExternal(File dotFile, String format) throws IOException {
-        renderDOTExternal(IOUtil.asBufferedUTF8Reader(dotFile), format);
+    public static void renderDOTExternal(String dotText, String format) throws IOException {
+        renderDOTExternal(new StringReader(dotText), format);
     }
 
     /**
-     * Renders a GraphVIZ description from a string and displays it in a Swing window. Convenience method, see {@link
-     * #renderDOT(Reader, boolean)}.
+     * Renders a GraphVIZ description from a {@link File} and displays it in a Swing window. Convenience method, see
+     * {@link #renderDOT(Reader, boolean)}.
      *
-     * @throws FileNotFoundException
-     *         if opening the file resulted in errors.
+     * @throws IOException
+     *         if reading from the file or the call to the DOT utility fails.
      */
     public static void renderDOT(File dotFile, boolean modal) throws IOException {
         renderDOT(IOUtil.asBufferedUTF8Reader(dotFile), modal);
     }
 
     /**
+     * Renders a GraphVIZ description from a {@link Reader} and displays it in a Swing window. Convenience method, see
+     * {@link #renderDOT(String, boolean)}.
+     *
+     * @throws IOException
+     *         if reading from the reader or the call to the DOT utility fails.
+     */
+    public static void renderDOT(Reader r, boolean modal) throws IOException {
+        renderDOT(CharStreams.toString(r), modal);
+    }
+
+    /**
      * Renders a GraphVIZ description and displays it in a Swing window.
      *
-     * @param r
-     *         the reader from which the description is obtained.
+     * @param dotText
+     *         the {@link String} from which the description is obtained.
      * @param modal
      *         whether the dialog should be modal.
+     *
+     * @throws IOException
+     *         if the call to the DOT utility fails.
      */
-    public static void renderDOT(Reader r, boolean modal) {
-        final DOTComponent cmp = createDOTComponent(r);
-        if (cmp == null) {
-            return;
-        }
-
-        final JDialog frame = new JDialog((Dialog) null, modal);
-        JScrollPane scrollPane = new JScrollPane(cmp);
-        frame.setContentPane(scrollPane);
-        frame.setMaximumSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
-        frame.pack();
-        JMenu menu = new JMenu("File");
-        menu.add(cmp.getSavePngAction());
-        menu.add(cmp.getSaveDotAction());
-        menu.addSeparator();
-        menu.add(new AbstractAction("Close") {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-            }
-        });
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.add(menu);
-        frame.setJMenuBar(menuBar);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setVisible(true);
-        frame.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-                    frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-                }
-            }
-        });
+    public static void renderDOT(String dotText, boolean modal) throws IOException {
+        new DOTDialog(dotText, modal);
     }
 
     /**
-     * Renders a GraphVIZ description from a string and displays it in a Swing window. Convenience method, see {@link
-     * #renderDOT(Reader, boolean)}.
+     * Renders multiple (named) GraphVIZ descriptions from {@link File}s and displays them in a Swing window.
+     * Convenience method, see {@link #renderDOTStrings(List, boolean)}.
+     *
+     * @throws IOException
+     *         if reading from the files or the calls to the DOT utility fail.
      */
-    public static void renderDOT(String dotText, boolean modal) {
-        renderDOT(new StringReader(dotText), modal);
+    public static void renderDOTFiles(List<Pair<String, File>> files, boolean modal) throws IOException {
+        renderDOTInternal(files, modal, f -> CharStreams.toString(IOUtil.asBufferedUTF8Reader(f)));
     }
 
     /**
-     * Creates a {@link DOTComponent} that displays the result of rendering a DOT description read from a {@link
-     * Reader}.
+     * Renders multiple (named) GraphVIZ descriptions from {@link Reader}s and displays them in a Swing window.
+     * Convenience method, see {@link #renderDOTStrings(List, boolean)}.
      *
-     * @param r
-     *         the reader to read from
-     *
-     * @return the DOT component
+     * @throws IOException
+     *         if reading from the readers or the calls to the DOT utility fail.
      */
-    public static @Nullable DOTComponent createDOTComponent(Reader r) {
-        try {
-            return new DOTComponent(r);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,
-                                          "Could not run DOT: " + e.getMessage(),
-                                          "Failed to run DOT",
-                                          JOptionPane.ERROR_MESSAGE);
-            return null;
+    public static void renderDOTReaders(List<Pair<String, Reader>> readers, boolean modal) throws IOException {
+        renderDOTInternal(readers, modal, CharStreams::toString);
+    }
+
+    /**
+     * Renders multiple (named) GraphVIZ descriptions and displays them in a Swing window.
+     *
+     * @param dotTexts
+     *         the {@link String}s from which the description is obtained. The first element of the {@link Pair} should
+     *         contain the name, the second element should contain the DOT code.
+     * @param modal
+     *         whether the dialog should be modal.
+     *
+     * @throws IOException
+     *         if the calls to the DOT utility fail.
+     */
+    public static void renderDOTStrings(List<Pair<String, String>> dotTexts, boolean modal) throws IOException {
+        renderDOTInternal(dotTexts, modal, s -> s);
+    }
+
+    private static <I> void renderDOTInternal(List<Pair<String, I>> dots,
+                                              boolean modal,
+                                              ThrowableExtractor<I, String> extractor) throws IOException {
+        new DOTMultiDialog<>(dots, modal, extractor);
+    }
+
+    /**
+     * Reads a DOT description from a file and returns the PNG rendering result as a {@link BufferedImage}.
+     *
+     * @param dotFile
+     *         the file containing the DOT description
+     *
+     * @return the rendering result
+     *
+     * @throws IOException
+     *         if reading from the file or the call to the DOT utility fails.
+     */
+    public static BufferedImage renderDOTImage(File dotFile) throws IOException {
+        return renderDOTImage(IOUtil.asBufferedUTF8Reader(dotFile));
+    }
+
+    /**
+     * Reads a DOT description from a reader and returns the PNG rendering result as a {@link BufferedImage}.
+     *
+     * @param dotReader
+     *         the reader from which to read the description
+     *
+     * @return the rendering result
+     *
+     * @throws IOException
+     *         if reading from the reader or the call to the DOT utility fails.
+     */
+    public static BufferedImage renderDOTImage(Reader dotReader) throws IOException {
+        try (InputStream pngIs = runDOT(dotReader, "png")) {
+            return ImageIO.read(pngIs);
         }
     }
 
@@ -326,62 +342,26 @@ public final class DOT {
      * @return the rendering result
      *
      * @throws IOException
-     *         if the pipe to the DOT process breaks.
+     *         if the call to the DOT utility fails.
      */
     public static BufferedImage renderDOTImage(String dotText) throws IOException {
         return renderDOTImage(new StringReader(dotText));
     }
 
-    /**
-     * Reads a DOT description from a reader and returns the PNG rendering result as a {@link BufferedImage}.
-     *
-     * @param dotReader
-     *         the reader from which to read the description
-     *
-     * @return the rendering result
-     *
-     * @throws IOException
-     *         if reading from the reader fails, or the pipe to the DOT process breaks.
-     */
-    public static BufferedImage renderDOTImage(Reader dotReader) throws IOException {
-        try (InputStream pngIs = runDOT(dotReader, "png")) {
-            return ImageIO.read(pngIs);
-        }
+    private static String[] buildRawDOTCommand(String... opts) {
+        String[] dotArgs = new String[1 + opts.length];
+        dotArgs[0] = dotExe;
+        System.arraycopy(opts, 0, dotArgs, 1, opts.length);
+
+        return dotArgs;
     }
 
-    /**
-     * Reads a DOT description from a file and returns the PNG rendering result as a {@link BufferedImage}.
-     *
-     * @param dotFile
-     *         the file containing the DOT description
-     *
-     * @return the rendering result
-     *
-     * @throws IOException
-     *         if reading from the file fails or the pipe to the DOT process breaks.
-     */
-    public static BufferedImage renderDOTImage(File dotFile) throws IOException {
-        return renderDOTImage(IOUtil.asBufferedUTF8Reader(dotFile));
-    }
+    private static String[] buildDOTCommand(String format, String... additionalOpts) {
+        String[] dotArgs = new String[1 + additionalOpts.length];
+        dotArgs[0] = "-T" + format;
+        System.arraycopy(additionalOpts, 0, dotArgs, 1, additionalOpts.length);
 
-    /**
-     * Creates a Writer that can be used to write a DOT description to. Upon closing the writer, a window with the
-     * rendering result appears.
-     *
-     * @param modal
-     *         whether this window is modal (if set to {@code true}, calls to {@link Writer#close()} will block.
-     *
-     * @return the writer
-     */
-    public static Writer createDotWriter(final boolean modal) {
-        return new StringWriter() {
-
-            @Override
-            public void close() throws IOException {
-                renderDOT(toString(), modal);
-                super.close();
-            }
-        };
+        return buildRawDOTCommand(dotArgs);
     }
 
 }

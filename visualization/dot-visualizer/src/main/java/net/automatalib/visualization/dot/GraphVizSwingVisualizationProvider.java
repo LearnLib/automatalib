@@ -16,7 +16,6 @@
 package net.automatalib.visualization.dot;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
@@ -58,10 +57,15 @@ public class GraphVizSwingVisualizationProvider implements VisualizationProvider
                                  List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> visOptions) {
-        try (Writer w = DOT.createDotWriter(modal)) {
-            GraphDOT.write(graph, w, additionalHelpers);
+        try {
+            final StringBuilder sb = new StringBuilder();
+            GraphDOT.write(graph, sb, additionalHelpers);
+            DOT.renderDOT(sb.toString(), modal);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error rendering graph: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null,
+                                          "Error rendering graph: " + ex.getMessage(),
+                                          "Error rendering graph",
+                                          JOptionPane.ERROR_MESSAGE);
         }
     }
 }

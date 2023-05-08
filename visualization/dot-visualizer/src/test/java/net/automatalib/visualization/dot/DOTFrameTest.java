@@ -16,12 +16,15 @@
 package net.automatalib.visualization.dot;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
+import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.system.JVMUtil;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
@@ -40,7 +43,7 @@ public class DOTFrameTest {
         }
     }
 
-    // Headless GUI testing is a pain. Therefore just check that we don't throw any exceptions for now.
+    // Headless GUI testing is a pain. Therefore, just check that we don't throw any exceptions for now.
     @Test(timeOut = 30000)
     public void testFrame() throws InvocationTargetException, InterruptedException {
 
@@ -49,22 +52,38 @@ public class DOTFrameTest {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
 
-        final Random random = new Random(42);
+        final Random r = new Random(42);
+        final List<Pair<String, String>> graphs =
+                Arrays.asList(Pair.of("Automaton 1", TestUtil.generateRandomAutomatonDot(r)),
+                              Pair.of("Automaton 2", TestUtil.generateRandomAutomatonDot(r)),
+                              Pair.of("Automaton 3", TestUtil.generateRandomAutomatonDot(r)));
 
         // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.
         SwingUtilities.invokeAndWait(() -> {
-            final DOTFrame frame = new DOTFrame();
-
-            frame.addGraph("1", TestUtil.generateRandomAutomatonDot(random));
-            frame.addGraph("2", TestUtil.generateRandomAutomatonDot(random));
-
             try {
-                frame.addGraph("3", new StringReader(TestUtil.generateRandomAutomatonDot(random)));
+                DOT.renderDOTStrings(graphs, false);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        });
+    }
 
-            frame.setVisible(true);
+    // Headless GUI testing is a pain. Therefore, just check that we don't throw any exceptions for now.
+    @Test(timeOut = 30000)
+    public void testEmptyFrame() throws InvocationTargetException, InterruptedException {
+
+        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
+        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
+            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
+        }
+
+        // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.
+        SwingUtilities.invokeAndWait(() -> {
+            try {
+                DOT.renderDOTReaders(Collections.emptyList(), false);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 }

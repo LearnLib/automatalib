@@ -16,83 +16,30 @@
 package net.automatalib.visualization.dot;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.Writer;
 
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
+class PlottedGraph {
 
-import com.google.common.io.CharStreams;
-import net.automatalib.commons.util.IOUtil;
-import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+    private final String name;
+    private final String dotText;
+    private final BufferedImage image;
 
-final class PlottedGraph {
-
-    private String name;
-    private String dotText;
-    private BufferedImage image;
-
-    PlottedGraph(String name, Reader dotText) throws IOException {
+    PlottedGraph(String name, String dotText) throws IOException {
         this.name = name;
-
-        final StringBuilder sb = new StringBuilder();
-        CharStreams.copy(dotText, sb);
-
-        updateDOTText(sb.toString());
+        this.dotText = dotText;
+        this.image = DOT.renderDOTImage(dotText);
     }
 
-    public boolean updateDOTText(@UnknownInitialization PlottedGraph this, String dotText) {
-        try {
-            try (InputStream pngIs = DOT.runDOT(dotText, "png")) {
-                this.image = ImageIO.read(pngIs);
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,
-                                          "Failed to invoke the DOT command!",
-                                          "Failure rendering graph",
-                                          JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
+    String getDotText() {
+        return dotText;
+    }
 
-        this.dotText = dotText;
-        return true;
+    BufferedImage getImage() {
+        return image;
     }
 
     @Override
     public String toString() {
         return name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BufferedImage getImage() {
-        return image;
-    }
-
-    public void setImage(BufferedImage image) {
-        this.image = image;
-    }
-
-    public String getDOTText() {
-        return dotText;
-    }
-
-    public void saveDot(File file) throws IOException {
-        try (Writer w = IOUtil.asBufferedUTF8Writer(file)) {
-            w.write(dotText);
-        }
-    }
-
-    public void savePng(File file) throws IOException {
-        ImageIO.write(this.image, "png", file);
     }
 }

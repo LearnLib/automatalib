@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.
 * `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.
 * `Symbol` now has a type-safe user object and id-based `hashcode`/`equals` semantics.
+* The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
 
 ### Fixed
 
@@ -44,6 +45,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed `AbstractCompactNPGraph`, use `AbstractCompactGraph` instead.
 * Removed `AbstractCompactSimpleGraph`. All functionality is provided in `CompactSimpleGraph`.
 * Removed `Iterable`- and `Iterator`-based methods for adjacent nodes/edges on graphs. For lazy/indefinite fetching use the `Stream`-based methods, for complete fetching use the `Collection`-based methods.
+* The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
 
 
 ## [0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11

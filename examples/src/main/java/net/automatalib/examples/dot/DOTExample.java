@@ -17,12 +17,15 @@ package net.automatalib.examples.dot;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import net.automatalib.automata.Automaton;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.visualization.dot.DOTFrame;
+import net.automatalib.visualization.dot.DOT;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
@@ -42,14 +45,12 @@ public final class DOTExample {
     }
 
     public static void main(String[] args) throws IOException {
-        final Random random = new Random(42);
-        final DOTFrame frame = new DOTFrame();
+        final Random r = new Random(42);
+        final List<Pair<String, String>> graphs = Arrays.asList(Pair.of("Automaton 1", generateRandomAutomaton(r)),
+                                                                Pair.of("Automaton 2", generateRandomAutomaton(r)),
+                                                                Pair.of("Automaton 3", generateRandomAutomaton(r)));
 
-        frame.addGraph("Automaton 1", generateRandomAutomaton(random));
-        frame.addGraph("Automaton 2", generateRandomAutomaton(random));
-        frame.addGraph("Automaton 3", generateRandomAutomaton(random));
-
-        frame.setVisible(true);
+        DOT.renderDOTStrings(graphs, true);
     }
 
     /**

@@ -18,7 +18,6 @@ package net.automatalib.visualization.dot;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
@@ -62,22 +61,30 @@ public class GraphVizBrowserVisualizationProvider implements VisualizationProvid
                                  List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> visOptions) {
-        try (StringWriter sw = new StringWriter()) {
-            GraphDOT.write(graph, sw, additionalHelpers);
-            File imgTmp = File.createTempFile(ID, ".png");
-            DOT.runDOT(sw.getBuffer().toString(), "png", imgTmp);
-            File htmlTmp = File.createTempFile(ID, ".html");
+        try {
+            final StringBuilder sb = new StringBuilder();
+            GraphDOT.write(graph, sb, additionalHelpers);
+
+            final File imgTmp = File.createTempFile(ID, ".png");
+            DOT.runDOT(sb.toString(), "png", imgTmp);
+
+            final File htmlTmp = File.createTempFile(ID, ".html");
             try (Writer w = IOUtil.asBufferedUTF8Writer(htmlTmp)) {
                 w.write("<html><body><img src=\"");
                 w.write(imgTmp.toURI().toString());
                 w.write("\"></body></html>");
             }
+
             Desktop.getDesktop().browse(htmlTmp.toURI());
+
             if (modal) {
                 JOptionPane.showMessageDialog(null, "Click OK to continue ...");
             }
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Could not render graph: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null,
+                                          "Error rendering graph: " + ex.getMessage(),
+                                          "Error rendering graph",
+                                          JOptionPane.ERROR_MESSAGE);
         }
     }
 

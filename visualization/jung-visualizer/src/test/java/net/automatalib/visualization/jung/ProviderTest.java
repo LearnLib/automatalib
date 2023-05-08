@@ -49,7 +49,7 @@ public class ProviderTest {
         Assert.assertTrue(provider instanceof JungGraphVisualizationProvider);
     }
 
-    // Headless GUI testing is a pain. Therefore just check that we don't throw any exceptions for now.
+    // Headless GUI testing is a pain. Therefore, just check that we don't throw any exceptions for now.
     @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 30000)
     public void testDisplay() throws InterruptedException, InvocationTargetException {
 
