@@ -64,7 +64,7 @@ public final class DOT {
             dotExe = resolvedDotPath.toString();
         }
 
-        net.automatalib.visualization.dot.DOT.dotExe = dotExe;
+        DOT.dotExe = dotExe;
     }
 
     private DOT() {}
@@ -76,7 +76,7 @@ public final class DOT {
      *         the path to the DOT utility executable
      */
     public static void setDotExe(String dotExe) {
-        net.automatalib.visualization.dot.DOT.dotExe = dotExe;
+        DOT.dotExe = dotExe;
     }
 
     /**
