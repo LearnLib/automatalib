@@ -42,11 +42,11 @@ class DOTMultiDialog<I> extends JDialog {
         super((Dialog) null, modal);
 
         final DefaultListModel<PlottedGraph> graphs = new DefaultListModel<>();
-        final DOTImageComponent imgCmp = new DOTImageComponent();
+        final DOTImageComponent cmp = new DOTImageComponent();
         final JList<PlottedGraph> listBox = new JList<>(graphs);
 
-        final Action saveDotAction = imgCmp.getSaveDotAction();
-        final Action savePngAction = imgCmp.getSavePngAction();
+        final Action saveDotAction = cmp.getSaveDotAction();
+        final Action savePngAction = cmp.getSavePngAction();
 
         for (Pair<String, I> d : dots) {
             final PlottedGraph pg = new PlottedGraph(d.getFirst(), extractor.extract(d.getSecond()));
@@ -66,7 +66,7 @@ class DOTMultiDialog<I> extends JDialog {
         c.weightx = 1.0;
         c.weighty = 1.0;
 
-        final JScrollPane scrollPane = new JScrollPane(imgCmp);
+        final JScrollPane scrollPane = new JScrollPane(cmp);
         mainPanel.add(scrollPane, c);
 
         c.gridx = 1;
@@ -77,11 +77,11 @@ class DOTMultiDialog<I> extends JDialog {
         listBox.addListSelectionListener(e -> {
             final PlottedGraph pg = listBox.getSelectedValue();
             if (pg == null) {
-                imgCmp.setData(null);
+                cmp.setData(null);
                 saveDotAction.setEnabled(false);
                 savePngAction.setEnabled(false);
             } else {
-                imgCmp.setData(pg);
+                cmp.setData(pg);
                 saveDotAction.setEnabled(true);
                 savePngAction.setEnabled(true);
             }
@@ -93,26 +93,27 @@ class DOTMultiDialog<I> extends JDialog {
         if (!graphs.isEmpty()) {
             listBox.setSelectedIndex(0);
         } else {
-            imgCmp.setData(null);
+            cmp.setData(null);
             saveDotAction.setEnabled(false);
             savePngAction.setEnabled(false);
         }
 
         // configure this window
-        setContentPane(mainPanel);
-        setPreferredSize(new Dimension(DOTUtil.DEFAULT_WIDTH, DOTUtil.DEFAULT_HEIGHT));
 
         final JMenu menu = new JMenu("File");
-        menu.add(imgCmp.getSaveDotAction());
-        menu.add(imgCmp.getSavePngAction());
+        menu.add(cmp.getSaveDotAction());
+        menu.add(cmp.getSavePngAction());
         menu.addSeparator();
         menu.add(DOTUtil.getCloseAction(this));
 
         final JMenuBar jMenuBar = new JMenuBar();
         jMenuBar.add(menu);
-        setJMenuBar(jMenuBar);
 
+        setContentPane(mainPanel);
+        setJMenuBar(jMenuBar);
+        setPreferredSize(new Dimension(DOTUtil.DEFAULT_WIDTH, DOTUtil.DEFAULT_HEIGHT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         addKeyListener(DOTUtil.closeOnEscapeAdapter(this));
 
         pack();

@@ -35,8 +35,6 @@ class DOTDialog extends JDialog {
         cmp.setData(pg);
 
         final JScrollPane scrollPane = new JScrollPane(cmp);
-        setContentPane(scrollPane);
-        setPreferredSize(new Dimension(DOTUtil.DEFAULT_WIDTH, DOTUtil.DEFAULT_HEIGHT));
 
         final JMenu menu = new JMenu("File");
         menu.add(cmp.getSavePngAction());
@@ -46,9 +44,12 @@ class DOTDialog extends JDialog {
 
         final JMenuBar menuBar = new JMenuBar();
         menuBar.add(menu);
-        setJMenuBar(menuBar);
 
+        setContentPane(scrollPane);
+        setJMenuBar(menuBar);
+        setPreferredSize(new Dimension(DOTUtil.DEFAULT_WIDTH, DOTUtil.DEFAULT_HEIGHT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         addKeyListener(DOTUtil.closeOnEscapeAdapter(this));
 
         pack();

@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
 /**
  * @author frohme
  */
-public class DOTFrameTest {
+public class DOTMultiDialogTest {
 
     @BeforeClass
     public void checkDOT() {

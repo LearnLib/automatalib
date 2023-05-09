@@ -16,9 +16,12 @@
 package net.automatalib.visualization.dot;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Writer;
@@ -29,6 +32,8 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JViewport;
+import javax.swing.event.MouseInputAdapter;
 
 import net.automatalib.commons.util.IOUtil;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
@@ -104,7 +109,11 @@ class DOTImageComponent extends JComponent {
      * Default constructor.
      */
     DOTImageComponent() {
+        final DnDMover dnDMover = new DnDMover();
+
         setPreferredSize(new Dimension(DOTUtil.DEFAULT_WIDTH, DOTUtil.DEFAULT_HEIGHT));
+        addMouseListener(dnDMover);
+        addMouseMotionListener(dnDMover);
     }
 
     /**
@@ -113,7 +122,7 @@ class DOTImageComponent extends JComponent {
      * @param img
      *         the image to be displayed
      */
-    void setImage(@UnknownInitialization(DOTImageComponent.class) DOTImageComponent this, @Nullable BufferedImage img) {
+    void setImage(@UnknownInitialization(DOTImageComponent.class)DOTImageComponent this, @Nullable BufferedImage img) {
         this.img = img;
         Dimension dim;
         if (img != null) {
@@ -160,6 +169,75 @@ class DOTImageComponent extends JComponent {
         g.fillRect(0, 0, getWidth(), getHeight());
         if (img != null) {
             g.drawImage(img, 0, 0, null);
+        }
+    }
+
+    /*
+     * Based on https://stackoverflow.com/questions/31171502/scroll-jscrollpane-by-dragging-mouse-java-swing/58815302#58815302
+     */
+    private class DnDMover extends MouseInputAdapter {
+
+        private final DOTImageComponent cmp;
+        private Point holdPointOnView;
+
+        DnDMover() {
+            this.cmp = DOTImageComponent.this;
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            cmp.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+            holdPointOnView = e.getPoint();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            cmp.setCursor(null);
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            final Point dragEventPoint = e.getPoint();
+            final JViewport viewport = (JViewport) cmp.getParent();
+
+            assert viewport != null;
+
+            final Point viewPos = viewport.getViewPosition();
+
+            final int maxViewPosX = cmp.getWidth() - viewport.getWidth();
+            final int maxViewPosY = cmp.getHeight() - viewport.getHeight();
+
+            assert holdPointOnView != null;
+
+            if (cmp.getWidth() > viewport.getWidth()) {
+                viewPos.x -= dragEventPoint.x - holdPointOnView.x;
+
+                if (viewPos.x < 0) {
+                    viewPos.x = 0;
+                    holdPointOnView.x = dragEventPoint.x;
+                }
+
+                if (viewPos.x > maxViewPosX) {
+                    viewPos.x = maxViewPosX;
+                    holdPointOnView.x = dragEventPoint.x;
+                }
+            }
+
+            if (cmp.getHeight() > viewport.getHeight()) {
+                viewPos.y -= dragEventPoint.y - holdPointOnView.y;
+
+                if (viewPos.y < 0) {
+                    viewPos.y = 0;
+                    holdPointOnView.y = dragEventPoint.y;
+                }
+
+                if (viewPos.y > maxViewPosY) {
+                    viewPos.y = maxViewPosY;
+                    holdPointOnView.y = dragEventPoint.y;
+                }
+            }
+
+            viewport.setViewPosition(viewPos);
         }
     }
 }
