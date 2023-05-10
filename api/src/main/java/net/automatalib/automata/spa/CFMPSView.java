@@ -33,8 +33,8 @@ import net.automatalib.words.SPAAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * This class represent a {@link ContextFreeModalProcessSystem}-based view on the instrumented language of a given
- * {@link SPA}, which allows to model-check language properties of an {@link SPA} with tools such as M3C.
+ * This class represents a {@link ContextFreeModalProcessSystem}-based view on the instrumented language of a given
+ * {@link SPA}, which allows one to model-check language properties of an {@link SPA} with tools such as M3C.
  *
  * @param <I>
  *         input symbol type
@@ -49,11 +49,11 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
     public CFMPSView(SPA<?, I> spa) {
         this.spa = spa;
 
-        final SPAAlphabet<I> spaAlphabet = spa.getInputAlphabet();
         final Map<I, DFA<?, I>> procedures = spa.getProcedures();
         this.pmpgs = Maps.newHashMapWithExpectedSize(procedures.size());
+
         for (Entry<I, DFA<?, I>> e : procedures.entrySet()) {
-            this.pmpgs.put(e.getKey(), new MPGView<>(spaAlphabet, e.getKey(), e.getValue()));
+            this.pmpgs.put(e.getKey(), new MPGView<>(spa, e.getKey(), e.getValue()));
         }
     }
 
@@ -74,6 +74,7 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
         private static final Object END = new Object();
 
         private final SPAAlphabet<I> spaAlphabet;
+        private final Collection<I> proceduralInputs;
         private final I procedure;
         private final DFA<S, I> dfa;
         private final S dfaInit;
@@ -83,15 +84,17 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
 
         // we make sure to handle 'init' and 'end' correctly
         @SuppressWarnings("unchecked")
-        MPGView(SPAAlphabet<I> spaAlphabet, I procedure, DFA<S, I> dfa) {
-            this.spaAlphabet = spaAlphabet;
-            this.procedure = procedure;
-            this.dfa = dfa;
+        MPGView(SPA<?, I> spa, I procedure, DFA<S, I> dfa) {
 
-            final S dfaInit = this.dfa.getInitialState();
+            final S dfaInit = dfa.getInitialState();
             if (dfaInit == null) {
                 throw new IllegalArgumentException("Empty DFAs cannot be mapped to ModalProcessGraphs");
             }
+
+            this.spaAlphabet = spa.getInputAlphabet();
+            this.proceduralInputs = spa.getProceduralInputs();
+            this.procedure = procedure;
+            this.dfa = dfa;
             this.dfaInit = dfaInit;
 
             this.init = (S) INIT;
@@ -105,26 +108,32 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
             } else if (node == end) {
                 return Collections.emptyList();
             } else {
-                final List<SPAEdge<I, S>> result = new ArrayList<>(this.spaAlphabet.size());
-
-                for (I i : this.spaAlphabet.getInternalAlphabet()) {
-                    final S succ = this.dfa.getSuccessor(node, i);
-                    if (succ != null) {
-                        result.add(new SPAEdge<>(i, succ, ProceduralType.INTERNAL));
-                    }
-                }
-
-                for (I i : this.spaAlphabet.getCallAlphabet()) {
-                    final S succ = this.dfa.getSuccessor(node, i);
-                    if (succ != null) {
-                        result.add(new SPAEdge<>(i, succ, ProceduralType.PROCESS));
-                    }
-                }
+                final List<SPAEdge<I, S>> result;
 
                 if (this.dfa.isAccepting(node)) {
+                    result = new ArrayList<>(this.proceduralInputs.size() + 1);
                     result.add(new SPAEdge<>(this.spaAlphabet.getReturnSymbol(),
                                              this.getFinalNode(),
                                              ProceduralType.INTERNAL));
+                } else {
+                    result = new ArrayList<>(this.proceduralInputs.size());
+                }
+
+                for (I i : proceduralInputs) {
+                    final S succ = this.dfa.getSuccessor(node, i);
+                    if (succ != null) {
+                        final ProceduralType type;
+
+                        if (spaAlphabet.isCallSymbol(i)) {
+                            type = ProceduralType.PROCESS;
+                        } else if (spaAlphabet.isInternalSymbol(i)) {
+                            type = ProceduralType.INTERNAL;
+                        } else {
+                            throw new IllegalStateException("Unexpected symbol type");
+                        }
+
+                        result.add(new SPAEdge<>(i, succ, type));
+                    }
                 }
 
                 return result;

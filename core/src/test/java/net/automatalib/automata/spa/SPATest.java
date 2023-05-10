@@ -35,22 +35,29 @@ import org.testng.annotations.Test;
  */
 public class SPATest {
 
-    final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'd');
-    final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'U');
-    final SPAAlphabet<Character> alphabet = new DefaultSPAAlphabet<>(internalAlphabet, callAlphabet, 'R');
+    static final SPAAlphabet<Character> ALPHABET;
+    static final Map<Character, DFA<?, Character>> SUB_MODELS;
 
-    final Map<Character, DFA<?, Character>> subModels =
-            ImmutableMap.of('S', buildSProcedure(alphabet), 'T', buildTProcedure(alphabet));
+    static {
+        final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'd');
+        final Alphabet<Character> smallCallAlphabet = Alphabets.characters('S', 'T');
+        final Alphabet<Character> bigCallAlphabet = Alphabets.characters('S', 'U');
+
+        final SPAAlphabet<Character> smallAlphabet = new DefaultSPAAlphabet<>(internalAlphabet, smallCallAlphabet, 'R');
+
+        ALPHABET = new DefaultSPAAlphabet<>(internalAlphabet, bigCallAlphabet, 'R');
+        SUB_MODELS = ImmutableMap.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
+    }
 
     @Test
     public void testStackSPA() {
-        final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', subModels);
+        final SPA<?, Character> spa = new StackSPA<>(ALPHABET, 'S', SUB_MODELS);
 
         // Check getters
-        Assert.assertEquals(spa.getInputAlphabet(), alphabet);
+        Assert.assertEquals(spa.getInputAlphabet(), ALPHABET);
         Assert.assertEquals(spa.getInitialProcedure(), (Character) 'S');
-        Assert.assertEquals(spa.getProcedures(), subModels);
-        Assert.assertEquals(spa.size(), subModels.values().stream().mapToInt(DFA::size).sum());
+        Assert.assertEquals(spa.getProcedures(), SUB_MODELS);
+        Assert.assertEquals(spa.size(), SUB_MODELS.values().stream().mapToInt(DFA::size).sum());
 
         // Well-matched palindromes
         Assert.assertTrue(spa.computeOutput(Word.fromCharSequence("SR")));
@@ -75,10 +82,10 @@ public class SPATest {
 
     @Test
     public void testEmptySPA() {
-        final SPA<?, Character> spa = new EmptySPA<>(alphabet);
+        final SPA<?, Character> spa = new EmptySPA<>(ALPHABET);
 
         // Check getters
-        Assert.assertEquals(spa.getInputAlphabet(), alphabet);
+        Assert.assertEquals(spa.getInputAlphabet(), ALPHABET);
         Assert.assertNull(spa.getInitialProcedure());
         Assert.assertTrue(spa.getProcedures().isEmpty());
 
