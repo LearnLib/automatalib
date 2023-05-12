@@ -27,13 +27,17 @@ import org.testng.annotations.Test;
  */
 public class AutomataLibSettingsTest {
 
-    @BeforeSuite
-    public static void setUp() {
+    public static void overrideEmptyWordProperty() {
         final URL resource = AutomataLibSettingsTest.class.getResource("/automatalib.properties");
         assert resource != null;
         final File properties = new File(resource.getFile());
         System.setProperty("automatalib.properties", properties.getAbsolutePath());
         System.setProperty(AutomataLibProperty.WORD_EMPTY_REP.getPropertyKey(), "OVERRIDDEN");
+    }
+
+    @BeforeSuite
+    public void setUp() {
+        AutomataLibSettingsTest.overrideEmptyWordProperty();
     }
 
     @Test

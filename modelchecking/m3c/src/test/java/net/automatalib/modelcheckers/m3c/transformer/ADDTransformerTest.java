@@ -37,21 +37,19 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class ADDTransformerTest {
 
-    private static DependencyGraph<String, String> dg;
-    private static BooleanVectorLogicDDManager xddManager;
-    private static OrNode<String, String> orNode;
-    private static DiamondNode<String, String> diaNode1;
-    private static DiamondNode<String, String> diaNode2;
-    private static BoxNode<String, String> boxNode;
-    private static TrueNode<String, String> trueNode;
+    private final DependencyGraph<String, String> dg;
+    private final BooleanVectorLogicDDManager xddManager;
+    private final OrNode<String, String> orNode;
+    private final DiamondNode<String, String> diaNode1;
+    private final DiamondNode<String, String> diaNode2;
+    private final BoxNode<String, String> boxNode;
+    private final TrueNode<String, String> trueNode;
 
-    @BeforeClass
-    public static void setup() throws ParseException {
+    public ADDTransformerTest() throws ParseException {
         String formula = "mu X.(<b>[b]true || <>X)";
         dg = new DependencyGraph<>(M3CParser.parse(formula));
         xddManager = new BooleanVectorLogicDDManager(dg.getNumVariables());

@@ -32,8 +32,8 @@ import org.testng.annotations.Test;
 public class WordTest {
 
     @BeforeSuite
-    public static void setUp() {
-        AutomataLibSettingsTest.setUp();
+    public void setUp() {
+        AutomataLibSettingsTest.overrideEmptyWordProperty();
     }
 
     @Test
