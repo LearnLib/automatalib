@@ -126,8 +126,9 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                 if ((action == null || action.equals(edgeLabel)) &&
                     (!(modalNode instanceof DiamondNode) || edgeProperty.isMust())) {
                     int xj = modalNode.getVarNumberChild();
-                    terminal[modalNode.getVarNumber()] = true;
-                    final XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(terminal));
+                    final boolean[] thenTerminal = new boolean[dependGraph.getNumVariables()];
+                    thenTerminal[modalNode.getVarNumber()] = true;
+                    final XDD<BooleanVector> thenDD = xddManager.constant(new BooleanVector(thenTerminal));
                     final XDD<BooleanVector> id = xddManager.ithVar(xj, thenDD, falseDD);
                     list.add(id);
                 } else if (modalNode instanceof BoxNode) {

@@ -15,8 +15,22 @@
  */
 package net.automatalib.modelcheckers.m3c.solver;
 
+import java.util.Collections;
+
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.spa.CFMPSView;
+import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.spa.StackSPA;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
+import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
+import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
+import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
+import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.DefaultSPAAlphabet;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, String>> {
 
@@ -24,4 +38,30 @@ public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, Str
         return M3CSolvers.addSolver(cfmps);
     }
 
+    /**
+     * This test-case resulted from an external application of the M3C model-checker.
+     */
+    @Test
+    public void testRegression() throws ParseException {
+
+        final SPAAlphabet<Character> alphabet =
+                new DefaultSPAAlphabet<>(Alphabets.singleton('a'), Alphabets.singleton('S'), 'R');
+
+        final CompactDFA<Character> p = new CompactDFA<>(alphabet.getProceduralAlphabet());
+        final Integer s0 = p.addInitialState(true);
+        final Integer s1 = p.addState(false);
+
+        p.addTransition(s0, 'a', s0);
+        p.addTransition(s0, 'S', s1);
+        p.addTransition(s1, 'a', s1);
+        p.addTransition(s1, 'S', s1);
+
+        final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', Collections.singletonMap('S', p));
+        final CFMPSView<Character> cfmps = new CFMPSView<>(spa);
+
+        final FormulaNode<Character, Void> formula = M3CParser.parse("[S][a][R]false", l -> l.charAt(0), ap -> null);
+        final ADDSolver<Character, Void> solver = new ADDSolver<>(cfmps);
+
+        Assert.assertFalse(solver.solve(formula));
+    }
 }
