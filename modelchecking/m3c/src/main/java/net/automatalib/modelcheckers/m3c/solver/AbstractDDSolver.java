@@ -288,7 +288,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     private <N> List<T> updateNodeAndGetCompositions(WorkUnit<N, ?> unit, N node) {
-        initUpdate(unit, node);
+        assert !Objects.equals(node, unit.pmpg.getFinalNode()) : "End node must not be updated!";
         final T nodeTransformer = getTransformer(unit, node);
         final List<T> compositions = createCompositions(unit, node);
         final T updatedTransformer = getUpdatedPropertyTransformer(unit, node, nodeTransformer, compositions);
@@ -373,11 +373,6 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
             }
         }
         return satisfiedVariables;
-    }
-
-    private <N> void initUpdate(WorkUnit<N, ?> unit, N node) {
-        assert !Objects.equals(node, unit.pmpg.getFinalNode()) : "End node must not be updated!";
-        unit.workSet.remove(node);
     }
 
     private <N> T getTransformer(WorkUnit<N, ?> unit, N node) {
