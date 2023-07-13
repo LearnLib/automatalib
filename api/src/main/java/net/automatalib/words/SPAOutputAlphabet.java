@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.transducers;
+package net.automatalib.words;
 
-import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
-import net.automatalib.automata.concepts.Output;
-import net.automatalib.ts.output.DeterministicStateOutputTS;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import java.util.Objects;
 
-public interface StateOutputAutomaton<S, I, T, O>
-        extends DetSuffixOutputAutomaton<S, I, T, Word<O>>, DeterministicStateOutputTS<S, I, T, O> {
+/**
+ * @author frohme
+ */
+public interface SPAOutputAlphabet<O> extends Alphabet<O> {
 
-    @Override
-    default Word<O> computeStateOutput(S state, Iterable<? extends I> input) {
-        final WordBuilder<O> result = Output.getBuilderFor(input);
+    Alphabet<O> getInternalAlphabet();
 
-        trace(state, input, result);
+    O getErrorSymbol();
 
-        return result.toWord();
+    default boolean isErrorSymbol(O symbol) {
+        return Objects.equals(getErrorSymbol(), symbol);
     }
+
 }

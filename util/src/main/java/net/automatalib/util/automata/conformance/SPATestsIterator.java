@@ -68,7 +68,7 @@ public class SPATestsIterator<I> extends AbstractTwoLevelIterator<I, Word<I>, Wo
     @Override
     protected Iterator<Word<I>> l2Iterator(I callSymbol) {
         @SuppressWarnings("assignment.type.incompatible") // we check redundancy-free-ness in the constructor
-        final @NonNull DFA<?, I> dfa = spa.getProcedures().get(callSymbol);
+        final @NonNull DFA<?, I> dfa = spa.getProcedure(callSymbol);
         return conformanceTestProvider.apply(dfa, alphabet.getProceduralAlphabet());
     }
 

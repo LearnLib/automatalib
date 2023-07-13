@@ -26,7 +26,9 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.sba.SBA;
 import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.spmm.SPMM;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.graphs.Graph;
@@ -35,7 +37,9 @@ import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.util.automata.equivalence.CharacterizingSets;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.util.automata.sba.SBAUtil;
 import net.automatalib.util.automata.spa.SPAUtil;
+import net.automatalib.util.automata.spmm.SPMMUtil;
 import net.automatalib.util.automata.vpda.OneSEVPAUtil;
 import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
@@ -196,6 +200,12 @@ public class Automata extends TS {
         return SPAUtil.testEquivalence(spa1, spa2, inputs);
     }
 
+    public static <I> boolean testEquivalence(final SBA<?, I> sba1,
+                                              final SBA<?, I> sba2,
+                                              final SPAAlphabet<I> inputs) {
+        return SBAUtil.testEquivalence(sba1, sba2, inputs);
+    }
+
     /**
      * Finds a separating word for two automata. A separating word is a word that exposes a difference (differing state
      * or transition properties, or a transition undefined in only one of the automata) between the two automata.
@@ -252,6 +262,18 @@ public class Automata extends TS {
 
     public static <I> @Nullable Word<I> findSeparatingWord(SPA<?, I> spa1, SPA<?, I> spa2, SPAAlphabet<I> inputs) {
         return SPAUtil.findSeparatingWord(spa1, spa2, inputs);
+    }
+
+    public static <I> @Nullable Word<I> findSeparatingWord(final SBA<?, I> sba1,
+                                                           final SBA<?, I> sba2,
+                                                           final SPAAlphabet<I> inputs) {
+        return SBAUtil.findSeparatingWord(sba1, sba2, inputs);
+    }
+
+    public static <I, O> @Nullable Word<I> findSeparatingWord(final SPMM<?, I, ?, O> sba1,
+                                                           final SPMM<?, I, ?, O> sba2,
+                                                           final SPAAlphabet<I> inputs) {
+        return SPMMUtil.findSeparatingWord(sba1, sba2, inputs);
     }
 
     /**

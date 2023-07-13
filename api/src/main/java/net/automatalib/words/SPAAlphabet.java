@@ -18,6 +18,7 @@ package net.automatalib.words;
 import java.util.List;
 
 import net.automatalib.automata.spa.SPA;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 
 /**
@@ -196,7 +197,7 @@ public interface SPAAlphabet<I> extends VPDAlphabet<I> {
      * the single respective * {@link #getCallAlphabet() call symbol}.
      */
     @SuppressWarnings("PMD.AvoidReassigningLoopVariables") // we want to skip indices here
-    default Word<I> normalize(Word<I> input, int idx) {
+    default Word<I> project(Word<I> input, int idx) {
         final WordBuilder<I> wb = new WordBuilder<>(input.size());
 
         for (int i = Math.max(0, idx); i < input.size(); i++) {
@@ -216,5 +217,35 @@ public interface SPAAlphabet<I> extends VPDAlphabet<I> {
 
         return wb.toWord();
     }
+
+    @SuppressWarnings("PMD.AvoidReassigningLoopVariables") // we want to skip indices here
+    default <O> Pair<Word<I>, Word<O>> project(final Word<I> input, final Word<O> output, final int idx) {
+        assert input.size() == output.size();
+        final WordBuilder<I> inBuilder = new WordBuilder<>(input.size() - idx);
+        final WordBuilder<O> outBuilder = new WordBuilder<>(input.size() - idx);
+
+        for (int i = idx; i < input.size(); i++) {
+            final I sym = input.getSymbol(i);
+
+            if (isCallSymbol(sym)) {
+                final int returnIdx = findReturnIndex(input, i + 1);
+
+                // an unmatched call is only allowed for the last symbol
+                if (returnIdx == -1 && i < input.size() - 1) {
+                    throw new IllegalArgumentException();
+                }
+
+                inBuilder.append(input.getSymbol(i));
+                outBuilder.append(output.getSymbol(i));
+                i = returnIdx == -1 ? input.size() : returnIdx;
+            } else {
+                inBuilder.append(input.getSymbol(i));
+                outBuilder.append(output.getSymbol(i));
+            }
+        }
+
+        return Pair.of(inBuilder.toWord(), outBuilder.toWord());
+    }
+
 
 }

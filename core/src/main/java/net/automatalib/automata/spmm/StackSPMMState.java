@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.spa;
+package net.automatalib.automata.spmm;
 
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.spa.StackSPA;
+import net.automatalib.automata.transducers.MealyMachine;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -30,43 +31,43 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author frohme
  */
-public final class StackSPAState<I, S> {
+public final class StackSPMMState<S, I, T, O> {
 
-    private static final StackSPAState<?, ?> INIT = new StackSPAState<>();
-    private static final StackSPAState<?, ?> SINK = new StackSPAState<>();
-    private static final StackSPAState<?, ?> TERM = new StackSPAState<>();
+    private static final StackSPMMState<?, ?, ?, ?> INIT = new StackSPMMState<>();
+    private static final StackSPMMState<?, ?, ?, ?> SINK = new StackSPMMState<>();
+    private static final StackSPMMState<?, ?, ?, ?> TERM = new StackSPMMState<>();
 
-    private final @Nullable StackSPAState<I, S> prev;
-    private final @Nullable DFA<S, I> procedure;
+    private final @Nullable StackSPMMState<S, I, T, O> prev;
+    private final @Nullable MealyMachine<S, I, T, O> procedure;
     private final @Nullable S procedureState;
 
-    private StackSPAState() {
+    private StackSPMMState() {
         this.prev = null;
         this.procedure = null;
         this.procedureState = null;
     }
 
-    private StackSPAState(StackSPAState<I, S> prev, DFA<S, I> procedure, S procedureState) {
+    private StackSPMMState(StackSPMMState<S, I, T, O> prev, MealyMachine<S, I, T, O> procedure, S procedureState) {
         this.prev = prev;
         this.procedure = procedure;
         this.procedureState = procedureState;
     }
 
-    public StackSPAState<I, S> push(DFA<S, I> newProcedure, S newState) {
-        return new StackSPAState<>(this, newProcedure, newState);
+    public StackSPMMState<S, I, T, O> push(MealyMachine<S, I, T, O> newProcedure, S newState) {
+        return new StackSPMMState<>(this, newProcedure, newState);
     }
 
-    public StackSPAState<I, S> pop() {
+    public StackSPMMState<S, I, T, O> pop() {
         assert !isStatic() : "This method should never be called on static states";
         return prev;
     }
 
-    public StackSPAState<I, S> updateState(S state) {
+    public StackSPMMState<S, I, T, O> updateState(S dfaState) {
         assert !isStatic() : "This method should never be called on static states";
-        return new StackSPAState<>(prev, procedure, state);
+        return new StackSPMMState<>(prev, procedure, dfaState);
     }
 
-    public DFA<S, I> getProcedure() {
+    public MealyMachine<S, I, T, O> getProcedure() {
         assert !isStatic() : "This method should never be called on static states";
         return procedure;
     }
@@ -77,8 +78,8 @@ public final class StackSPAState<I, S> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <I, S> StackSPAState<I, S> sink() {
-        return (StackSPAState<I, S>) SINK;
+    public static <S, I, T, O> StackSPMMState<S, I, T, O> sink() {
+        return (StackSPMMState<S, I, T, O>) SINK;
     }
 
     public boolean isSink() {
@@ -86,8 +87,8 @@ public final class StackSPAState<I, S> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <I, S> StackSPAState<I, S> init() {
-        return (StackSPAState<I, S>) INIT;
+    public static <S, I, T, O> StackSPMMState<S, I, T, O> init() {
+        return (StackSPMMState<S, I, T, O>) INIT;
     }
 
     public boolean isInit() {
@@ -95,8 +96,8 @@ public final class StackSPAState<I, S> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <I, S> StackSPAState<I, S> term() {
-        return (StackSPAState<I, S>) TERM;
+    public static <S, I, T, O> StackSPMMState<S, I, T, O> term() {
+        return (StackSPMMState<S, I, T, O>) TERM;
     }
 
     public boolean isTerm() {

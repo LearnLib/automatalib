@@ -15,18 +15,27 @@
  */
 package net.automatalib.util.automata.random;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import com.google.common.collect.Maps;
 import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automata.sba.SBA;
+import net.automatalib.automata.sba.StackSBA;
 import net.automatalib.automata.spa.SPA;
 import net.automatalib.automata.spa.StackSPA;
+import net.automatalib.automata.spmm.SPMM;
+import net.automatalib.automata.spmm.StackSPMM;
+import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.automata.vpda.DefaultOneSEVPA;
@@ -37,6 +46,7 @@ import net.automatalib.util.automata.spa.SPAUtil;
 import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.SPAOutputAlphabet;
 import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -166,32 +176,156 @@ public final class RandomAutomata {
 
     public static <I> SPA<?, I> randomSPA(Random random, SPAAlphabet<I> alphabet, int procedureSize, boolean minimize) {
 
-        final Map<I, DFA<?, I>> dfas = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        final Alphabet<I> proceduralAlphabet = alphabet.getProceduralAlphabet();
-
-        for (I procedure : alphabet.getCallAlphabet()) {
-            final DFA<?, I> dfa = RandomAutomata.randomDFA(random, procedureSize, proceduralAlphabet, minimize);
-            dfas.put(procedure, dfa);
-        }
-
-        return new StackSPA<>(alphabet, alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())), dfas);
-    }
-
-    public static <I> SPA<?, I> randomRedundancyFreeSPA(Random random, SPAAlphabet<I> alphabet, int procedureSize) {
-        return randomRedundancyFreeSPA(random, alphabet, procedureSize, true);
-    }
-
-    public static <I> SPA<?, I> randomRedundancyFreeSPA(Random random,
-                                                        SPAAlphabet<I> alphabet,
-                                                        int procedureSize,
-                                                        boolean minimize) {
         SPA<?, I> result;
 
         do {
-            result = randomSPA(random, alphabet, procedureSize, minimize);
-        } while (!SPAUtil.isRedundancyFree(result));
+            final Map<I, DFA<?, I>> dfas = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+            final Alphabet<I> proceduralAlphabet = alphabet.getProceduralAlphabet();
+
+            for (final I procedure : alphabet.getCallAlphabet()) {
+                final DFA<?, I> dfa = RandomAutomata.randomDFA(random, procedureSize, proceduralAlphabet, minimize);
+                dfas.put(procedure, dfa);
+            }
+
+            result = new StackSPA<>(alphabet, alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())), dfas);
+        } while (minimize && !SPAUtil.isRedundancyFree(result));
 
         return result;
+    }
+
+    public static <I> SBA<?, I> randomSBA(Random random, SPAAlphabet<I> alphabet, int procedureSize) {
+        return randomSBA(random, alphabet, procedureSize, true);
+    }
+
+    public static <I> SBA<?, I> randomSBA(Random random, SPAAlphabet<I> alphabet, int procedureSize, boolean minimize) {
+
+        assert procedureSize > 1;
+
+        final List<I> inputs = new ArrayList<>(alphabet.size());
+        final List<I> nonTerminatingProcedures = new ArrayList<>(alphabet.getNumCalls());
+
+        inputs.add(alphabet.getReturnSymbol());
+        inputs.addAll(alphabet.getInternalAlphabet());
+
+        for (I i : alphabet.getCallAlphabet()) {
+            if (random.nextBoolean()) {
+                inputs.add(i);
+            } else {
+                nonTerminatingProcedures.add(i);
+            }
+        }
+
+        final Map<I, DFA<?, I>> dfas = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+
+        for (final I procedure : alphabet.getCallAlphabet()) {
+            final CompactDFA<I> dfa = new CompactDFA<>(alphabet);
+            RandomAutomata.randomDeterministic(random,
+                                               procedureSize - 2,
+                                               inputs,
+                                               Collections.singletonList(Boolean.TRUE),
+                                               DFA.TRANSITION_PROPERTIES,
+                                               dfa,
+                                               false);
+
+            final List<Integer> originalStates = new ArrayList<>(dfa.getStates());
+            final Integer successSink = dfa.addState(true);
+            final Integer sink = dfa.addState(false);
+
+            for (I i : alphabet) {
+                dfa.setTransition(successSink, i, sink);
+                dfa.setTransition(sink, i, sink);
+            }
+
+            for (Integer s : originalStates) {
+                for (I i : nonTerminatingProcedures) {
+                    dfa.setTransition(s, i, successSink);
+                }
+                if (nonTerminatingProcedures.contains(procedure)) {
+                    dfa.setTransition(s, alphabet.getReturnSymbol(), sink);
+                } else if (random.nextBoolean()) {
+                    dfa.setTransition(s, alphabet.getReturnSymbol(), successSink);
+                } else {
+                    dfa.setTransition(s, alphabet.getReturnSymbol(), sink);
+                }
+            }
+
+            if (minimize) {
+                Automata.invasiveMinimize(dfa, alphabet);
+            }
+
+            assert DFAs.isPrefixClosed(dfa, alphabet);
+            dfas.put(procedure, dfa);
+        }
+
+        return new StackSBA<>(alphabet, alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())), dfas);
+    }
+
+    public static <I, O> SPMM<?, I, ?, O> randomSPMM(Random random,
+                                                     SPAAlphabet<I> inputAlphabet,
+                                                     SPAOutputAlphabet<O> outputAlphabet,
+                                                     int procedureSize) {
+        return randomSPMM(random, inputAlphabet, outputAlphabet, procedureSize, true);
+    }
+
+    public static <I, O> SPMM<?, I, ?, O> randomSPMM(Random random,
+                                                     SPAAlphabet<I> inputAlphabet,
+                                                     SPAOutputAlphabet<O> outputAlphabet,
+                                                     int procedureSize,
+                                                     boolean minimize) {
+
+        assert procedureSize > 0;
+
+        final Set<I> nonContinuableSymbols = new HashSet<>();
+
+        nonContinuableSymbols.add(inputAlphabet.getReturnSymbol());
+
+        for (I i : inputAlphabet.getCallAlphabet()) {
+            if (random.nextBoolean()) {
+                nonContinuableSymbols.add(i);
+            }
+        }
+
+        final Map<I, MealyMachine<?, I, ?, O>> mealies = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
+
+        for (final I procedure : inputAlphabet.getCallAlphabet()) {
+            final CompactMealy<I, O> mealy = new CompactMealy<>(inputAlphabet);
+            RandomAutomata.randomDeterministic(random,
+                                               procedureSize - 1,
+                                               inputAlphabet,
+                                               Collections.emptyList(),
+                                               outputAlphabet,
+                                               mealy,
+                                               false);
+
+            final List<Integer> originalStates = new ArrayList<>(mealy.getStates());
+            final Integer sink = mealy.addState();
+
+            for (I i : inputAlphabet) {
+                mealy.setTransition(sink, i, sink, outputAlphabet.getErrorSymbol());
+                boolean isNonContinuable = nonContinuableSymbols.contains(i);
+
+                for (Integer s : originalStates) {
+                    final O output = mealy.getTransitionProperty(s, i);
+
+                    if (isNonContinuable || outputAlphabet.isErrorSymbol(output)) {
+                        mealy.setTransition(s, i, sink, output);
+                    }
+                }
+            }
+
+            if (minimize) {
+                Automata.invasiveMinimize(mealy, inputAlphabet);
+            }
+
+            mealies.put(procedure, mealy);
+        }
+
+        final Alphabet<O> internalOutputs = outputAlphabet.getInternalAlphabet();
+        return new StackSPMM<>(inputAlphabet,
+                               outputAlphabet,
+                               inputAlphabet.getCallSymbol(random.nextInt(inputAlphabet.getNumCalls())),
+                               internalOutputs.getSymbol(random.nextInt(internalOutputs.size())),
+                               mealies);
     }
 
     public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A randomDeterministic(Random rand,

@@ -126,18 +126,18 @@ public abstract class AbstractSPAAlphabetTest<M extends SPAAlphabet<Character>>
         final M alphabet = getAlphabet();
         final Word<Character> word = Word.fromCharSequence("SaSTcRRaR");
 
-        Assert.assertEquals(alphabet.normalize(Word.epsilon(), 0), Word.epsilon());
-        Assert.assertEquals(alphabet.normalize(word, -1), Word.fromLetter('S'));
-        Assert.assertEquals(alphabet.normalize(word, 0), Word.fromLetter('S')); //S
-        Assert.assertEquals(alphabet.normalize(word, 1), Word.fromCharSequence("aSaR")); //a
-        Assert.assertEquals(alphabet.normalize(word, 2), Word.fromCharSequence("SaR")); //S
-        Assert.assertEquals(alphabet.normalize(word, 3), Word.fromCharSequence("TRaR")); //T
-        Assert.assertEquals(alphabet.normalize(word, 4), Word.fromCharSequence("cRRaR")); //c
-        Assert.assertEquals(alphabet.normalize(word, 5), Word.fromCharSequence("RRaR")); //R
-        Assert.assertEquals(alphabet.normalize(word, 6), Word.fromCharSequence("RaR")); //R
-        Assert.assertEquals(alphabet.normalize(word, 7), Word.fromCharSequence("aR")); //a
-        Assert.assertEquals(alphabet.normalize(word, 8), Word.fromLetter('R')); //R
-        Assert.assertEquals(alphabet.normalize(word, 9), Word.epsilon());
-        Assert.assertEquals(alphabet.normalize(word, 10), Word.epsilon());
+        Assert.assertEquals(alphabet.project(Word.epsilon(), 0), Word.epsilon());
+        Assert.assertEquals(alphabet.project(word, -1), Word.fromLetter('S'));
+        Assert.assertEquals(alphabet.project(word, 0), Word.fromLetter('S')); //S
+        Assert.assertEquals(alphabet.project(word, 1), Word.fromCharSequence("aSaR")); //a
+        Assert.assertEquals(alphabet.project(word, 2), Word.fromCharSequence("SaR")); //S
+        Assert.assertEquals(alphabet.project(word, 3), Word.fromCharSequence("TRaR")); //T
+        Assert.assertEquals(alphabet.project(word, 4), Word.fromCharSequence("cRRaR")); //c
+        Assert.assertEquals(alphabet.project(word, 5), Word.fromCharSequence("RRaR")); //R
+        Assert.assertEquals(alphabet.project(word, 6), Word.fromCharSequence("RaR")); //R
+        Assert.assertEquals(alphabet.project(word, 7), Word.fromCharSequence("aR")); //a
+        Assert.assertEquals(alphabet.project(word, 8), Word.fromLetter('R')); //R
+        Assert.assertEquals(alphabet.project(word, 9), Word.epsilon());
+        Assert.assertEquals(alphabet.project(word, 10), Word.epsilon());
     }
 }

@@ -55,7 +55,7 @@ public class SPATestsIteratorTest {
         final Random random = new Random(42);
         final SPAAlphabet<Character> alphabet =
                 new DefaultSPAAlphabet<>(Alphabets.characters('a', 'e'), Alphabets.characters('A', 'C'), 'R');
-        final SPA<?, Character> spa = RandomAutomata.randomRedundancyFreeSPA(random, alphabet, 10);
+        final SPA<?, Character> spa = RandomAutomata.randomSPA(random, alphabet, 10);
 
         final List<Word<Character>> testTraces = new ArrayList<>();
         Iterators.addAll(testTraces, new SPATestsIterator<>(spa, conformanceTestProvider));
@@ -82,7 +82,7 @@ public class SPATestsIteratorTest {
                 if (Objects.equals(procedure, sym)) {
                     final int returnIdx = alphabet.findReturnIndex(trace, i + 1);
                     final Word<I> wellMatched = trace.subWord(i + 1, returnIdx);
-                    final Word<I> normalized = alphabet.normalize(wellMatched, 0);
+                    final Word<I> normalized = alphabet.project(wellMatched, 0);
                     localTraces.remove(normalized);
                 }
             }

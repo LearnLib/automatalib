@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automata.spa;
+package net.automatalib.automata.sba;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,44 +33,16 @@ import net.automatalib.words.SPAAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A system of procedural automata. An {@link SPA} is a context-free system where each non-terminal (procedure) is
- * represented by a {@link DFA} that accepts the language of right-hand sides of its respective production rules.
- * <p>
- * Take, for example, the following context-free palindrome system over {@code a,b,c} using two non-terminals {@code
- * S,T}:
- * <pre>
- *     S -&gt; a | a S a | b | b S b | T | ε
- *     T -&gt; c | c T c | S
- * </pre>
- * The corresponding {@link SPA} would consist of {@link DFA procedures} (for {@code S} and {@code T}), accepting the
- * regular languages {@code {a,aSa,b,bSb,T,ε}} and {@code {c,cTc,S}} respectively.
- * <p>
- * In {@link SPA}s, calls to and returns from procedures are visible which make {@link SPA}s a special kind of visibly
- * push-down automata. For the above example, a possible word accepted by the respective {@link SPA} (when using {@code
- * S} as {@link #getInitialProcedure() initial procedure}) would be {@code SaSTcRRaR} (where {@code R} denotes the
- * designated {@link SPAAlphabet#getReturnSymbol() return symbol}.
- * <p>
- * This interface makes no assumptions about how the semantics are implemented. One may use a stack-based approach,
- * graph expansion, or else. However, {@link SPA}s should be <i>consistent</i> with their alphabet definitions, i.e. an
- * {@link SPA} should be able to {@link #accepts(Iterable) parse} words over the {@link #getInputAlphabet() specified
- * alphabet} and each {@link #getProcedures() procedure} should be able to {@link DFA#accepts(Iterable) parse} words
- * over the {@link #getProceduralInputs() procedural inputs}.
- *
- * @param <S>
- *         state type
- * @param <I>
- *         input symbol type
- *
  * @author frohme
  */
-public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
+public interface SBA<S, I> extends DeterministicAcceptorTS<S, I>,
                                    SuffixOutput<I, Boolean>,
                                    InputAlphabetHolder<I>,
                                    FiniteRepresentation,
                                    GraphViewable {
 
     /**
-     * Refinement of {@link InputAlphabetHolder#getInputAlphabet()}' to add the constraint that an {@link SPA} operates
+     * Refinement of {@link InputAlphabetHolder#getInputAlphabet()}' to add the constraint that an {@link SBA} operates
      * on {@link SPAAlphabet}s.
      *
      * @return the input alphabet
@@ -79,7 +51,7 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
     SPAAlphabet<I> getInputAlphabet();
 
     /**
-     * Returns the initial procedure of this {@link SPA}, i.e. the call symbol with which each accepted word has to
+     * Returns the initial procedure of this {@link SBA}, i.e. the call symbol with which each accepted word has to
      * start.
      *
      * @return the initial procedure
@@ -87,10 +59,10 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
     @Nullable I getInitialProcedure();
 
     /**
-     * In a complete {@link SPA} every {@link #getInputAlphabet() call symbol} should be mapped to a corresponding
+     * In a complete {@link SBA} every {@link #getInputAlphabet() call symbol} should be mapped to a corresponding
      * procedure.
      *
-     * @return the procedures of this {@link SPA}
+     * @return the procedures of this {@link SBA}
      */
     Map<I, DFA<?, I>> getProcedures();
 
@@ -100,10 +72,10 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
     }
 
     /**
-     * Convenience method for {@link #getProceduralInputs(SPAAlphabet)} which uses the {@link #getInputAlphabet() input
-     * alphabet} of {@code this} {@link SPA} as {@code constraints}.
+     * Convenience method for {@link #getProceduralInputs(SPAAlphabet)} which uses the
+     * {@link #getInputAlphabet() input alphabet} of {@code this} {@link SBA} as {@code constraints}.
      *
-     * @return a collection of defined inputs for {@code this} {@link SPA}'s procedures.
+     * @return a collection of defined inputs for {@code this} {@link SBA}'s procedures.
      */
     default Collection<I> getProceduralInputs() {
         return getProceduralInputs(this.getInputAlphabet());
@@ -111,8 +83,8 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
 
     /**
      * Returns a collection of input symbols which the procedural automata can process. The collection is computed by
-     * the union of this {@link SPA}s {@link SPAAlphabet#getInternalAlphabet() internal symbols} and the {@link
-     * #getProcedures() available procedure keys}.
+     * the union of this {@link SBA}s {@link SPAAlphabet#getInternalAlphabet() internal symbols} and the
+     * {@link #getProcedures() available procedure keys}.
      * <p>
      * This collection can be further constrained via the {@code constraints} parameter which is used in a final
      * intersection operation with the previous collection.
@@ -123,7 +95,7 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
      * @return the (constrained) procedural inputs
      */
     default Collection<I> getProceduralInputs(SPAAlphabet<I> constraints) {
-        final List<I> symbols = new ArrayList<>(constraints.size() - 1);
+        final List<I> symbols = new ArrayList<>(constraints.size());
 
         for (I i : getInputAlphabet()) {
             if (constraints.isInternalSymbol(i)) {
@@ -137,15 +109,17 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
             }
         }
 
+        symbols.add(constraints.getReturnSymbol());
+
         return symbols;
     }
 
     /**
-     * Return the size of this {@link SPA} which is given by the sum of the sizes of all {@link #getProcedures()
-     * procedures}. Note that this value does not necessarily correspond to the classical notion of {@link
-     * SimpleAutomaton#size()}, since semantically an {@link SPA}s may be infinite-sized {@link SimpleTS}.
+     * Return the size of this {@link SBA} which is given by the sum of the sizes of all
+     * {@link #getProcedures() procedures}. Note that this value does not necessarily correspond to the classical notion
+     * of {@link SimpleAutomaton#size()}, since semantically an {@link SBA}s may be infinite-sized {@link SimpleTS}.
      *
-     * @return the size of this {@link SPA}
+     * @return the size of this {@link SBA}
      */
     @Override
     default int size() {
@@ -167,7 +141,7 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
     default Graph<?, ?> graphView() {
         final SPAAlphabet<I> alphabet = this.getInputAlphabet();
         // explicit type specification is required by checker-framework
-        return new SPAGraphView<@Nullable Object, I>(alphabet.getCallAlphabet(),
+        return new SBAGraphView<@Nullable Object, I>(alphabet.getCallAlphabet(),
                                                      this.getProceduralInputs(alphabet),
                                                      this.getProcedures());
     }

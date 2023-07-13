@@ -15,6 +15,11 @@
  */
 package net.automatalib.automata.concepts;
 
+import java.util.Collection;
+
+import net.automatalib.words.Word;
+import net.automatalib.words.WordBuilder;
+
 /**
  * Feature for automata that compute an output.
  *
@@ -28,4 +33,14 @@ package net.automatalib.automata.concepts;
 public interface Output<I, D> {
 
     D computeOutput(Iterable<? extends I> input);
+
+    static <T> WordBuilder<T> getBuilderFor(Iterable<?> iterable) {
+        if (iterable instanceof Word) {
+            return new WordBuilder<>(((Word<?>) iterable).length());
+        } else if (iterable instanceof Collection) {
+            return new WordBuilder<>(((Collection<?>) iterable).size());
+        } else {
+            return new WordBuilder<>();
+        }
+    }
 }
