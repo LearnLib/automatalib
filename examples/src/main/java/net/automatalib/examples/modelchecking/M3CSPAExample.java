@@ -17,9 +17,9 @@ package net.automatalib.examples.modelchecking;
 
 import java.util.function.Function;
 
-import net.automatalib.automata.spa.CFMPSView;
-import net.automatalib.automata.spa.SPA;
-import net.automatalib.examples.spa.PalindromeExample;
+import net.automatalib.automata.procedural.CFMPSView;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.examples.procedural.PalindromeSPAExample;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An example in which we transform the {@link PalindromeExample palindrome SPA} into a {@link
+ * An example in which we transform the {@link PalindromeSPAExample palindrome SPA} into a {@link
  * ContextFreeModalProcessSystem} and use the {@link M3CSolver} to evaluate properties on the system.
  *
  * @author frohme
@@ -46,7 +46,7 @@ public final class M3CSPAExample {
     }
 
     public static void main(String[] args) throws ParseException {
-        final SPA<?, Character> spa = PalindromeExample.buildSPA();
+        final SPA<?, Character> spa = PalindromeSPAExample.buildSPA();
         final CFMPSView<Character> view = new CFMPSView<>(spa);
 
         //@formatter:off

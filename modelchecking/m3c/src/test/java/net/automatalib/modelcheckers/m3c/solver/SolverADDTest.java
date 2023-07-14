@@ -18,17 +18,17 @@ package net.automatalib.modelcheckers.m3c.solver;
 import java.util.Collections;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.spa.CFMPSView;
-import net.automatalib.automata.spa.SPA;
-import net.automatalib.automata.spa.StackSPA;
+import net.automatalib.automata.procedural.CFMPSView;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.StackSPA;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.parser.M3CParser;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 import net.automatalib.modelcheckers.m3c.transformer.ADDTransformer;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultSPAAlphabet;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -44,8 +44,8 @@ public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, Str
     @Test
     public void testRegression() throws ParseException {
 
-        final SPAAlphabet<Character> alphabet =
-                new DefaultSPAAlphabet<>(Alphabets.singleton('a'), Alphabets.singleton('S'), 'R');
+        final ProceduralInputAlphabet<Character> alphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.singleton('a'), Alphabets.singleton('S'), 'R');
 
         final CompactDFA<Character> p = new CompactDFA<>(alphabet.getProceduralAlphabet());
         final Integer s0 = p.addInitialState(true);

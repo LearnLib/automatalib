@@ -29,12 +29,12 @@ import net.automatalib.automata.Automaton;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.sba.SBA;
-import net.automatalib.automata.sba.StackSBA;
-import net.automatalib.automata.spa.SPA;
-import net.automatalib.automata.spa.StackSPA;
-import net.automatalib.automata.spmm.SPMM;
-import net.automatalib.automata.spmm.StackSPMM;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.SPMM;
+import net.automatalib.automata.procedural.StackSBA;
+import net.automatalib.automata.procedural.StackSPA;
+import net.automatalib.automata.procedural.StackSPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
@@ -42,11 +42,11 @@ import net.automatalib.automata.vpda.DefaultOneSEVPA;
 import net.automatalib.automata.vpda.Location;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.fsa.DFAs;
-import net.automatalib.util.automata.spa.SPAUtil;
+import net.automatalib.util.automata.procedural.SPAUtil;
 import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
-import net.automatalib.words.SPAOutputAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
+import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -170,11 +170,11 @@ public final class RandomAutomata {
         return result;
     }
 
-    public static <I> SPA<?, I> randomSPA(Random random, SPAAlphabet<I> alphabet, int procedureSize) {
+    public static <I> SPA<?, I> randomSPA(Random random, ProceduralInputAlphabet<I> alphabet, int procedureSize) {
         return randomSPA(random, alphabet, procedureSize, true);
     }
 
-    public static <I> SPA<?, I> randomSPA(Random random, SPAAlphabet<I> alphabet, int procedureSize, boolean minimize) {
+    public static <I> SPA<?, I> randomSPA(Random random, ProceduralInputAlphabet<I> alphabet, int procedureSize, boolean minimize) {
 
         SPA<?, I> result;
 
@@ -193,11 +193,11 @@ public final class RandomAutomata {
         return result;
     }
 
-    public static <I> SBA<?, I> randomSBA(Random random, SPAAlphabet<I> alphabet, int procedureSize) {
+    public static <I> SBA<?, I> randomSBA(Random random, ProceduralInputAlphabet<I> alphabet, int procedureSize) {
         return randomSBA(random, alphabet, procedureSize, true);
     }
 
-    public static <I> SBA<?, I> randomSBA(Random random, SPAAlphabet<I> alphabet, int procedureSize, boolean minimize) {
+    public static <I> SBA<?, I> randomSBA(Random random, ProceduralInputAlphabet<I> alphabet, int procedureSize, boolean minimize) {
 
         assert procedureSize > 1;
 
@@ -261,15 +261,15 @@ public final class RandomAutomata {
     }
 
     public static <I, O> SPMM<?, I, ?, O> randomSPMM(Random random,
-                                                     SPAAlphabet<I> inputAlphabet,
-                                                     SPAOutputAlphabet<O> outputAlphabet,
+                                                     ProceduralInputAlphabet<I> inputAlphabet,
+                                                     ProceduralOutputAlphabet<O> outputAlphabet,
                                                      int procedureSize) {
         return randomSPMM(random, inputAlphabet, outputAlphabet, procedureSize, true);
     }
 
     public static <I, O> SPMM<?, I, ?, O> randomSPMM(Random random,
-                                                     SPAAlphabet<I> inputAlphabet,
-                                                     SPAOutputAlphabet<O> outputAlphabet,
+                                                     ProceduralInputAlphabet<I> inputAlphabet,
+                                                     ProceduralOutputAlphabet<O> outputAlphabet,
                                                      int procedureSize,
                                                      boolean minimize) {
 

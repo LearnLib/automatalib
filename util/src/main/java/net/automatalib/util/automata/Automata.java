@@ -26,9 +26,9 @@ import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.automata.sba.SBA;
-import net.automatalib.automata.spa.SPA;
-import net.automatalib.automata.spmm.SPMM;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.graphs.Graph;
@@ -37,16 +37,16 @@ import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.util.automata.equivalence.CharacterizingSets;
 import net.automatalib.util.automata.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
-import net.automatalib.util.automata.sba.SBAUtil;
-import net.automatalib.util.automata.spa.SPAUtil;
-import net.automatalib.util.automata.spmm.SPMMUtil;
+import net.automatalib.util.automata.procedural.SBAUtil;
+import net.automatalib.util.automata.procedural.SPAUtil;
+import net.automatalib.util.automata.procedural.SPMMUtil;
 import net.automatalib.util.automata.vpda.OneSEVPAUtil;
 import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.util.ts.TS;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -196,13 +196,13 @@ public class Automata extends TS {
         return OneSEVPAUtil.testEquivalence(sevpa1, sevpa2, inputs);
     }
 
-    public static <I> boolean testEquivalence(SPA<?, I> spa1, SPA<?, I> spa2, SPAAlphabet<I> inputs) {
+    public static <I> boolean testEquivalence(SPA<?, I> spa1, SPA<?, I> spa2, ProceduralInputAlphabet<I> inputs) {
         return SPAUtil.testEquivalence(spa1, spa2, inputs);
     }
 
     public static <I> boolean testEquivalence(final SBA<?, I> sba1,
                                               final SBA<?, I> sba2,
-                                              final SPAAlphabet<I> inputs) {
+                                              final ProceduralInputAlphabet<I> inputs) {
         return SBAUtil.testEquivalence(sba1, sba2, inputs);
     }
 
@@ -260,19 +260,19 @@ public class Automata extends TS {
         return OneSEVPAUtil.findSeparatingWord(sevpa1, sevpa2, inputs);
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(SPA<?, I> spa1, SPA<?, I> spa2, SPAAlphabet<I> inputs) {
+    public static <I> @Nullable Word<I> findSeparatingWord(SPA<?, I> spa1, SPA<?, I> spa2, ProceduralInputAlphabet<I> inputs) {
         return SPAUtil.findSeparatingWord(spa1, spa2, inputs);
     }
 
     public static <I> @Nullable Word<I> findSeparatingWord(final SBA<?, I> sba1,
                                                            final SBA<?, I> sba2,
-                                                           final SPAAlphabet<I> inputs) {
+                                                           final ProceduralInputAlphabet<I> inputs) {
         return SBAUtil.findSeparatingWord(sba1, sba2, inputs);
     }
 
     public static <I, O> @Nullable Word<I> findSeparatingWord(final SPMM<?, I, ?, O> sba1,
                                                            final SPMM<?, I, ?, O> sba2,
-                                                           final SPAAlphabet<I> inputs) {
+                                                           final ProceduralInputAlphabet<I> inputs) {
         return SPMMUtil.findSeparatingWord(sba1, sba2, inputs);
     }
 

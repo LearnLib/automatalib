@@ -20,12 +20,12 @@ import java.util.function.BiFunction;
 
 import com.google.common.base.Preconditions;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.procedural.SPA;
 import net.automatalib.commons.util.collections.AbstractTwoLevelIterator;
-import net.automatalib.util.automata.spa.ATRSequences;
-import net.automatalib.util.automata.spa.SPAUtil;
+import net.automatalib.util.automata.procedural.ATRSequences;
+import net.automatalib.util.automata.procedural.SPAUtil;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -41,7 +41,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 public class SPATestsIterator<I> extends AbstractTwoLevelIterator<I, Word<I>, Word<I>> {
 
     private final SPA<?, I> spa;
-    private final SPAAlphabet<I> alphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
     private final BiFunction<DFA<?, I>, Alphabet<I>, Iterator<Word<I>>> conformanceTestProvider;
 
     private final ATRSequences<I> atrSequences;
@@ -52,7 +52,7 @@ public class SPATestsIterator<I> extends AbstractTwoLevelIterator<I, Word<I>, Wo
     }
 
     public SPATestsIterator(SPA<?, I> spa,
-                            SPAAlphabet<I> alphabet,
+                            ProceduralInputAlphabet<I> alphabet,
                             BiFunction<DFA<?, I>, Alphabet<I>, Iterator<Word<I>>> conformanceTestProvider) {
         super(alphabet.getCallAlphabet().iterator());
 

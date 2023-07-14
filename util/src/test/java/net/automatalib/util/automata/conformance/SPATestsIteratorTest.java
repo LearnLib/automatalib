@@ -26,13 +26,13 @@ import java.util.function.BiFunction;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.spa.SPA;
+import net.automatalib.automata.procedural.SPA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.SPAAlphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultSPAAlphabet;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -53,8 +53,8 @@ public class SPATestsIteratorTest {
 
     private void testIterator(BiFunction<DFA<?, Character>, Alphabet<Character>, Iterator<Word<Character>>> conformanceTestProvider) {
         final Random random = new Random(42);
-        final SPAAlphabet<Character> alphabet =
-                new DefaultSPAAlphabet<>(Alphabets.characters('a', 'e'), Alphabets.characters('A', 'C'), 'R');
+        final ProceduralInputAlphabet<Character> alphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'e'), Alphabets.characters('A', 'C'), 'R');
         final SPA<?, Character> spa = RandomAutomata.randomSPA(random, alphabet, 10);
 
         final List<Word<Character>> testTraces = new ArrayList<>();
@@ -67,7 +67,7 @@ public class SPATestsIteratorTest {
 
     private <I> void verifyProcedure(I procedure,
                                      DFA<?, I> dfa,
-                                     SPAAlphabet<I> alphabet,
+                                     ProceduralInputAlphabet<I> alphabet,
                                      Collection<Word<I>> globalTraces,
                                      BiFunction<DFA<?, I>, Alphabet<I>, Iterator<Word<I>>> conformanceTestProvider) {
 
