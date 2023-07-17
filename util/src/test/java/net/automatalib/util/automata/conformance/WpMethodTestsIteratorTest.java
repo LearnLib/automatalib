@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.comparison.CmpUtil;
 import net.automatalib.util.automata.cover.Covers;
@@ -43,7 +43,31 @@ import org.testng.annotations.Test;
 public class WpMethodTestsIteratorTest {
 
     private final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);
-    private final DFA<?, Integer> dfa = RandomAutomata.randomDFA(new Random(42), 10, alphabet);
+    private final CompactDFA<Integer> dfa = RandomAutomata.randomDFA(new Random(42), 10, alphabet);
+
+    @Test
+    public void testEpsilonDiscriminator() {
+
+        final CompactDFA<Integer> dfa1 = new CompactDFA<>(dfa);
+        final Integer oldInit1 = dfa1.getInitialState();
+        dfa1.setInitial(oldInit1, false);
+        dfa1.addInitialState(true);
+
+        final CompactDFA<Integer> dfa2 = new CompactDFA<>(dfa);
+        final Integer oldInit2 = dfa2.getInitialState();
+        dfa2.setInitial(oldInit2, false);
+        dfa2.addInitialState(false);
+
+        final List<Word<Integer>> testWords = Lists.newArrayList(new WpMethodTestsIterator<>(dfa1, alphabet, 0));
+
+        for (Word<Integer> t : testWords) {
+            if (dfa1.accepts(t) != dfa2.accepts(t)) {
+                return;
+            }
+        }
+
+        Assert.fail("WpMethod did not detect difference in two different automata");
+    }
 
     @Test
     public void testIteratorWithoutMiddleParts() {
@@ -90,9 +114,9 @@ public class WpMethodTestsIteratorTest {
         Covers.cover(automaton, inputs, stateCover, transitionCover);
         CharacterizingSets.findCharacterizingSet(automaton, inputs, characterizingSet);
 
-        assert !stateCover.isEmpty();
-        assert !transitionCover.isEmpty();
-        assert !characterizingSet.isEmpty();
+        Assert.assertFalse(stateCover.isEmpty());
+        Assert.assertFalse(transitionCover.isEmpty());
+        Assert.assertFalse(characterizingSet.isEmpty());
 
         final List<Word<I>> result = new ArrayList<>();
 

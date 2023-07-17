@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.collect.Iterators;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.util.collections.AbstractThreeLevelIterator;
 import net.automatalib.commons.util.collections.CollectionsUtil;
@@ -75,8 +76,10 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<List<I>,
                                 Collection<? extends I> inputs,
                                 int maxDepth) {
         super(CollectionsUtil.<I>allTuples(inputs, 0, maxDepth).iterator());
-        this.prefixes = new ReusableIterator<>(Covers.transitionCoverIterator(automaton, inputs),
-                                               new ArrayList<>(automaton.size() * inputs.size()));
+
+        final Iterator<Word<I>> tci = Covers.transitionCoverIterator(automaton, inputs);
+        this.prefixes = new ReusableIterator<>(Iterators.concat(Iterators.singletonIterator(Word.epsilon()), tci),
+                                               new ArrayList<>(automaton.size() * inputs.size() + 1));
 
         final Iterator<Word<I>> characterizingSet = CharacterizingSets.characterizingSetIterator(automaton, inputs);
 

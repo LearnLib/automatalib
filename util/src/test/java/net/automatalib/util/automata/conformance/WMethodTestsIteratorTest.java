@@ -23,8 +23,9 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
@@ -41,11 +42,37 @@ import org.testng.annotations.Test;
 public class WMethodTestsIteratorTest {
 
     private final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);
-    private final DFA<?, Integer> dfa = RandomAutomata.randomDFA(new Random(42), 5, alphabet);
+    private final CompactDFA<Integer> dfa = RandomAutomata.randomDFA(new Random(42), 5, alphabet);
+
+    @Test
+    public void testEpsilonDiscriminator() {
+
+        final CompactDFA<Integer> dfa1 = new CompactDFA<>(dfa);
+        final Integer oldInit1 = dfa1.getInitialState();
+        dfa1.setInitial(oldInit1, false);
+        dfa1.addInitialState(true);
+
+        final CompactDFA<Integer> dfa2 = new CompactDFA<>(dfa);
+        final Integer oldInit2 = dfa2.getInitialState();
+        dfa2.setInitial(oldInit2, false);
+        dfa2.addInitialState(false);
+
+        final List<Word<Integer>> testWords = Lists.newArrayList(new WMethodTestsIterator<>(dfa1, alphabet, 0));
+
+        for (Word<Integer> t : testWords) {
+            if (dfa1.accepts(t) != dfa2.accepts(t)) {
+                return;
+            }
+        }
+
+        Assert.fail("WMethod did not detect difference in two different automata");
+    }
 
     @Test
     public void testVanillaIterator() {
         final List<Word<Integer>> transCover = Automata.transitionCover(dfa, alphabet);
+        Assert.assertFalse(transCover.contains(Word.epsilon()));
+        transCover.add(Word.epsilon());
         final List<Word<Integer>> characterizingSet = Automata.characterizingSet(dfa, alphabet);
 
         final List<Word<Integer>> expectedWords =
@@ -61,6 +88,8 @@ public class WMethodTestsIteratorTest {
         final int lookahead = 2;
 
         final List<Word<Integer>> transCover = Automata.transitionCover(dfa, alphabet);
+        Assert.assertFalse(transCover.contains(Word.epsilon()));
+        transCover.add(Word.epsilon());
         final Iterable<Word<Integer>> middleTuples =
                 Iterables.transform(CollectionsUtil.allTuples(alphabet, 0, lookahead), Word::fromList);
         final List<Word<Integer>> characterizingSet = Automata.characterizingSet(dfa, alphabet);
