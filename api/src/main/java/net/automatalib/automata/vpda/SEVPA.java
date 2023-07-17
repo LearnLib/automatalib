@@ -75,8 +75,7 @@ public interface SEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>,
 
     @Override
     default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        State<L> state = this.getState(Iterables.concat(prefix, suffix));
-        return state != null && isAccepting(state);
+        return this.accepts(Iterables.concat(prefix, suffix));
     }
 
     @Override
