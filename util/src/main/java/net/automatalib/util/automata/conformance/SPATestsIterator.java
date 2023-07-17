@@ -61,7 +61,7 @@ public class SPATestsIterator<I> extends AbstractTwoLevelIterator<I, Word<I>, Wo
         this.conformanceTestProvider = conformanceTestProvider;
         this.atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
 
-        Preconditions.checkArgument(SPAUtil.isRedundancyFree(alphabet, this.atrSequences),
+        Preconditions.checkArgument(SPAUtil.isMinimal(alphabet, this.atrSequences),
                                     "The given SPA contains redundant procedures. You require me to check procedures I cannot check.");
     }
 

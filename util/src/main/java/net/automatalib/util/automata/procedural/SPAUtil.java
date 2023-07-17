@@ -98,10 +98,11 @@ public final class SPAUtil {
     }
 
     /**
-     * Computes for a given {@link SPA} the set of terminating sequences using the given {@link ProceduralInputAlphabet alphabet}.
-     * Terminating sequences transfer a procedure from its initial state to an accepting state. This methods furthermore
-     * checks that the hierarchy of calls is well-defined, i.e. it only includes procedural invocations <i>p</i> for
-     * determining a terminating sequence if <i>p</i> has a valid terminating sequence itself.
+     * Computes for a given {@link SPA} the set of terminating sequences using the given
+     * {@link ProceduralInputAlphabet alphabet}. Terminating sequences transfer a procedure from its initial state to an
+     * accepting state. This method furthermore checks that the hierarchy of calls is well-defined, i.e. it only
+     * includes procedural invocations <i>p</i> for determining a terminating sequence if <i>p</i> has a valid
+     * terminating sequence itself.
      *
      * @param spa
      *         the {@link SPA} to analyze
@@ -178,13 +179,13 @@ public final class SPAUtil {
     }
 
     /**
-     * Computes for a given {@link SPA} the set of access and return sequences using the given {@link ProceduralInputAlphabet
-     * alphabet}. An access sequence (for procedure <i>p</i>) transfers an {@link SPA} from its initial state to a state
-     * that is able to successfully execute a run of <i>p</i>, whereas the corresponding return sequence transfers the
-     * {@link SPA} to the global accepting state from an accepting state of <i>p</i>. This methods furthermore checks
-     * that potentially nested calls are well-defined, i.e. it only includes procedural invocations <i>p</i> for
-     * determining a access/return sequences if <i>p</i> has a valid terminating sequence and therefore can be expanded
-     * correctly.
+     * Computes for a given {@link SPA} the set of access and return sequences using the given
+     * {@link ProceduralInputAlphabet alphabet}. An access sequence (for procedure <i>p</i>) transfers an {@link SPA}
+     * from its initial state to a state that is able to successfully execute a run of <i>p</i>, whereas the
+     * corresponding return sequence transfers the {@link SPA} to the global accepting state from an accepting state of
+     * <i>p</i>. This method furthermore checks that potentially nested calls are well-defined, i.e. it only includes
+     * procedural invocations <i>p</i> for determining a access/return sequences if <i>p</i> has a valid terminating
+     * sequence and therefore can be expanded correctly.
      *
      * @param spa
      *         the {@link SPA} to analyze
@@ -205,7 +206,7 @@ public final class SPAUtil {
                                                                                              Map<I, Word<I>> terminatingSequences) {
         final I initialProcedure = spa.getInitialProcedure();
 
-        if (initialProcedure == null || !alphabet.isCallSymbol(initialProcedure)) {
+        if (initialProcedure == null || spa.getProcedure(initialProcedure) == null) {
             return Pair.of(Collections.emptyMap(), Collections.emptyMap());
         }
 
@@ -376,8 +377,8 @@ public final class SPAUtil {
     }
 
     /**
-     * Convenience method for {@link #isRedundancyFree(SPA, ProceduralInputAlphabet)} that uses {@link SPA#getInputAlphabet()} as
-     * {@code alphabet}.
+     * Convenience method for {@link #isMinimal(SPA, ProceduralInputAlphabet)} that uses
+     * {@link SPA#getInputAlphabet()} as {@code alphabet}.
      *
      * @param spa
      *         the {@link SPA} to check
@@ -386,8 +387,8 @@ public final class SPAUtil {
      *
      * @return {@code true} if {@code spa} is redundancy-free, {@code false} otherwise.
      */
-    public static <I> boolean isRedundancyFree(SPA<?, I> spa) {
-        return isRedundancyFree(spa, spa.getInputAlphabet());
+    public static <I> boolean isMinimal(SPA<?, I> spa) {
+        return isMinimal(spa, spa.getInputAlphabet());
     }
 
     /**
@@ -403,8 +404,8 @@ public final class SPAUtil {
      *
      * @return {@code true} if {@code spa} is redundancy-free, {@code false} otherwise.
      */
-    public static <I> boolean isRedundancyFree(SPA<?, I> spa, ProceduralInputAlphabet<I> alphabet) {
-        return isRedundancyFree(alphabet, computeATRSequences(spa, alphabet));
+    public static <I> boolean isMinimal(SPA<?, I> spa, ProceduralInputAlphabet<I> alphabet) {
+        return isMinimal(alphabet, computeATRSequences(spa, alphabet));
     }
 
     /**
@@ -419,9 +420,9 @@ public final class SPAUtil {
      *
      * @return {@code true} if {@code spa} is redundancy-free, {@code false} otherwise.
      *
-     * @see #isRedundancyFree(SPA, ProceduralInputAlphabet)
+     * @see #isMinimal(SPA, ProceduralInputAlphabet)
      */
-    public static <I> boolean isRedundancyFree(ProceduralInputAlphabet<I> alphabet, ATRSequences<I> atrSequences) {
+    public static <I> boolean isMinimal(ProceduralInputAlphabet<I> alphabet, ATRSequences<I> atrSequences) {
         final Alphabet<I> callAlphabet = alphabet.getCallAlphabet();
         return atrSequences.accessSequences.keySet().containsAll(callAlphabet) &&
                atrSequences.terminatingSequences.keySet().containsAll(callAlphabet) &&
@@ -429,8 +430,8 @@ public final class SPAUtil {
     }
 
     /**
-     * Checks if the two given {@link SPA}s are equivalent, i.e. whether there exists a {@link #findSeparatingWord(SPA,
-     * SPA, ProceduralInputAlphabet) separating word} for them.
+     * Checks if the two given {@link SPA}s are equivalent, i.e. whether there exists a
+     * {@link #findSeparatingWord(SPA, SPA, ProceduralInputAlphabet) separating word} for them.
      *
      * @param spa1
      *         the first {@link SPA}
@@ -462,7 +463,9 @@ public final class SPAUtil {
      *
      * @return a separating word, if existent, {@code null} otherwise.
      */
-    public static <I> @Nullable Word<I> findSeparatingWord(SPA<?, I> spa1, SPA<?, I> spa2, ProceduralInputAlphabet<I> alphabet) {
+    public static <I> @Nullable Word<I> findSeparatingWord(SPA<?, I> spa1,
+                                                           SPA<?, I> spa2,
+                                                           ProceduralInputAlphabet<I> alphabet) {
 
         final ATRSequences<I> atr1 = computeATRSequences(spa1, alphabet);
         final ATRSequences<I> atr2 = computeATRSequences(spa2, alphabet);

@@ -52,7 +52,7 @@ public interface SPMM<S, I, T, O> extends MealyTransitionSystem<S, I, T, O>,
 
     Map<I, MealyMachine<?, I, ?, O>> getProcedures();
 
-    default MealyMachine<?, I, ?, O> getProcedure(I callSymbol) {
+    default @Nullable MealyMachine<?, I, ?, O> getProcedure(I callSymbol) {
         assert getInputAlphabet().isCallSymbol(callSymbol);
         return getProcedures().get(callSymbol);
     }
@@ -97,6 +97,10 @@ public interface SPMM<S, I, T, O> extends MealyTransitionSystem<S, I, T, O>,
 
         final S state = this.getState(prefix);
 
+        if (state == null) {
+            return Word.epsilon();
+        }
+
         final WordBuilder<O> result = Output.getBuilderFor(suffix);
 
         this.trace(state, suffix, result);
@@ -107,7 +111,8 @@ public interface SPMM<S, I, T, O> extends MealyTransitionSystem<S, I, T, O>,
     @Override
     default Graph<?, ?> graphView() {
         final ProceduralInputAlphabet<I> alphabet = this.getInputAlphabet();
-        return new ProceduralGraphView<>(alphabet.getCallAlphabet(),
+        // explicit type specification is required by checker-framework
+        return new ProceduralGraphView<@Nullable Object, I>(alphabet.getCallAlphabet(),
                                          this.getProceduralInputs(alphabet),
                                          this.getProcedures());
     }

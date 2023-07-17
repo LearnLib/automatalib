@@ -15,15 +15,14 @@
  */
 package net.automatalib.automata.procedural;
 
-import java.util.Collection;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.MutableMealyMachine;
 import net.automatalib.automata.transducers.impl.FastMealy;
 import net.automatalib.automata.transducers.impl.FastMealyState;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
@@ -39,17 +38,24 @@ import org.testng.annotations.Test;
 public class SPMMTest {
 
     private final SPMM<?, Character, ?, Character> spmm;
+    private final EmptySPMM<Character, Character> emptySpmm;
 
     public SPMMTest() {
-        final ProceduralInputAlphabet<Character> inputAlphabet =
-                new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), Alphabets.fromArray('S', 'T'), 'R');
+        final Alphabet<Character> smallCallAlphabet = Alphabets.characters('S', 'T');
+        final Alphabet<Character> bigCallAlphabet = Alphabets.characters('S', 'U');
+
+        final ProceduralInputAlphabet<Character> smallAlphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), smallCallAlphabet, 'R');
+        final ProceduralInputAlphabet<Character> bigAlphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), bigCallAlphabet, 'R');
         final ProceduralOutputAlphabet<Character> outputAlphabet =
-                new DefaultProceduralOutputAlphabet<>(Alphabets.characters('x', 'z'), '✗');
+                new DefaultProceduralOutputAlphabet<>(Alphabets.characters('x', 'z'), '-');
 
         final Map<Character, MealyMachine<?, Character, ?, Character>> mealies =
-                ImmutableMap.of('S', buildSProcedure(inputAlphabet), 'T', buildTProcedure(inputAlphabet));
+                ImmutableMap.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
 
-        spmm = new StackSPMM<>(inputAlphabet, outputAlphabet, 'S', '✓', mealies);
+        spmm = new StackSPMM<>(bigAlphabet, outputAlphabet, 'S', '✓', mealies);
+        emptySpmm = new EmptySPMM<>(bigAlphabet, outputAlphabet);
     }
 
     private static MealyMachine<?, Character, ?, Character> buildSProcedure(ProceduralInputAlphabet<Character> alphabet) {
@@ -75,8 +81,6 @@ public class SPMMTest {
         procedure.addTransition(s4, 'b', s5, 'y');
         procedure.addTransition(s5, 'R', s6, '✓');
 
-        complete(procedure, alphabet, '✗');
-
         return procedure;
     }
 
@@ -96,45 +100,108 @@ public class SPMMTest {
         procedure.addTransition(t2, 'c', t3, 'z');
         procedure.addTransition(t3, 'R', t4, '✓');
 
-        complete(procedure, alphabet, '✗');
-
         return procedure;
     }
 
-    private static <S, I, O> void complete(MutableMealyMachine<S, I, ?, O> mealy,
-                                           Collection<? extends I> inputs,
-                                           O undefinedOutput) {
-        S sink = null;
-
-        for (S state : mealy) {
-            for (I input : inputs) {
-                S succ = mealy.getSuccessor(state, input);
-                if (succ == null) {
-                    if (sink == null) {
-                        sink = mealy.addState();
-                        for (I inputSym : inputs) {
-                            mealy.addTransition(sink, inputSym, sink, undefinedOutput);
-                        }
-                    }
-                    mealy.addTransition(state, input, sink, undefinedOutput);
-                }
-            }
-        }
-    }
-
     @Test
-    public void testTransduction() {
+    public void testSPMM() {
         final Word<Character> i1 = Word.fromCharSequence("SaSTcRRaR");
         final Word<Character> o1 = Word.fromCharSequence("✓x✓✓z✓✓x✓");
+        Assert.assertEquals(spmm.computeOutput(i1), o1);
 
         final Word<Character> i2 = Word.fromCharSequence("SaSbRaR");
         final Word<Character> o2 = Word.fromCharSequence("✓x✓y✓x✓");
+        Assert.assertEquals(spmm.computeOutput(i2), o2);
 
         final Word<Character> i3 = Word.fromCharSequence("SaSbaRcRabc");
-        final Word<Character> o3 = Word.fromCharSequence("✓x✓y✗✗✗✗✗✗✗");
-
-        Assert.assertEquals(spmm.computeOutput(i1), o1);
-        Assert.assertEquals(spmm.computeOutput(i2), o2);
+        final Word<Character> o3 = Word.fromCharSequence("✓x✓y-------");
         Assert.assertEquals(spmm.computeOutput(i3), o3);
+
+        final Word<Character> i4 = Word.fromCharSequence("SaUcR");
+        final Word<Character> o4 = Word.fromCharSequence("✓x---");
+        Assert.assertEquals(spmm.computeOutput(i4), o4);
+
+        final Word<Character> i5 = Word.fromCharSequence("TcR");
+        final Word<Character> o5 = Word.fromCharSequence("---");
+        Assert.assertEquals(spmm.computeOutput(i5), o5);
+
+        final Word<Character> i6 = Word.fromCharSequence("Sd");
+        final Word<Character> o6 = Word.fromCharSequence("✓-");
+        Assert.assertEquals(spmm.computeOutput(i6), o6);
+
+        final Word<Character> i7 = Word.fromCharSequence("aca");
+        final Word<Character> o7 = Word.fromCharSequence("---");
+        Assert.assertEquals(spmm.computeOutput(i7), o7);
+
+        final Word<Character> i8 = Word.fromCharSequence("SacTcR");
+        final Word<Character> o8 = Word.fromCharSequence("✓x----");
+        Assert.assertEquals(spmm.computeOutput(i8), o8);
+
+        final Word<Character> i9 = Word.fromCharSequence("R");
+        final Word<Character> o9 = Word.fromCharSequence("-");
+        Assert.assertEquals(spmm.computeOutput(i9), o9);
+
+        final Word<Character> i10 = Word.fromCharSequence("STTc");
+        final Word<Character> o10 = Word.fromCharSequence("✓✓--");
+        Assert.assertEquals(spmm.computeOutput(i10), o10);
+
+        final Word<Character> i11 = Word.fromCharSequence("SaSRR");
+        final Word<Character> o11 = Word.fromCharSequence("✓x✓✓-");
+        Assert.assertEquals(spmm.computeOutput(i11), o11);
+
+        final Word<Character> i12 = Word.epsilon();
+        final Word<Character> o12 = Word.epsilon();
+        Assert.assertEquals(spmm.computeOutput(i12), o12);
+    }
+
+    @Test
+    public void testEmptySPMM() {
+        final Word<Character> i1 = Word.fromCharSequence("SaSTcRRaR");
+        final Word<Character> o1 = Word.fromCharSequence("---------");
+        Assert.assertEquals(emptySpmm.computeOutput(i1), o1);
+
+        final Word<Character> i2 = Word.fromCharSequence("SaSbRaR");
+        final Word<Character> o2 = Word.fromCharSequence("-------");
+        Assert.assertEquals(emptySpmm.computeOutput(i2), o2);
+
+        final Word<Character> i3 = Word.fromCharSequence("SaSbaRcRabc");
+        final Word<Character> o3 = Word.fromCharSequence("-----------");
+        Assert.assertEquals(emptySpmm.computeOutput(i3), o3);
+
+        final Word<Character> i4 = Word.fromCharSequence("SaUcR");
+        final Word<Character> o4 = Word.fromCharSequence("-----");
+        Assert.assertEquals(emptySpmm.computeOutput(i4), o4);
+
+        final Word<Character> i5 = Word.fromCharSequence("TcR");
+        final Word<Character> o5 = Word.fromCharSequence("---");
+        Assert.assertEquals(emptySpmm.computeOutput(i5), o5);
+
+        final Word<Character> i6 = Word.fromCharSequence("Sd");
+        final Word<Character> o6 = Word.fromCharSequence("--");
+        Assert.assertEquals(emptySpmm.computeOutput(i6), o6);
+
+        final Word<Character> i7 = Word.fromCharSequence("aca");
+        final Word<Character> o7 = Word.fromCharSequence("---");
+        Assert.assertEquals(emptySpmm.computeOutput(i7), o7);
+
+        final Word<Character> i8 = Word.fromCharSequence("SacTcR");
+        final Word<Character> o8 = Word.fromCharSequence("------");
+        Assert.assertEquals(emptySpmm.computeOutput(i8), o8);
+
+        final Word<Character> i9 = Word.fromCharSequence("R");
+        final Word<Character> o9 = Word.fromCharSequence("-");
+        Assert.assertEquals(emptySpmm.computeOutput(i9), o9);
+
+        final Word<Character> i10 = Word.fromCharSequence("STTc");
+        final Word<Character> o10 = Word.fromCharSequence("----");
+        Assert.assertEquals(emptySpmm.computeOutput(i10), o10);
+
+        final Word<Character> i11 = Word.fromCharSequence("SaSRR");
+        final Word<Character> o11 = Word.fromCharSequence("-----");
+        Assert.assertEquals(emptySpmm.computeOutput(i11), o11);
+
+        final Word<Character> i12 = Word.epsilon();
+        final Word<Character> o12 = Word.epsilon();
+        Assert.assertEquals(spmm.computeOutput(i12), o12);
     }
 }

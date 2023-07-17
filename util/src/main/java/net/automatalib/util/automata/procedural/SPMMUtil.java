@@ -52,7 +52,8 @@ public final class SPMMUtil {
         return computeATSequences(spmm, spmm.getInputAlphabet());
     }
 
-    public static <I, O> ATSequences<I> computeATSequences(SPMM<?, I, ?, O> spmm, ProceduralInputAlphabet<I> inputAlphabet) {
+    public static <I, O> ATSequences<I> computeATSequences(SPMM<?, I, ?, O> spmm,
+                                                           ProceduralInputAlphabet<I> inputAlphabet) {
 
         assert isValid(spmm, inputAlphabet);
 
@@ -79,9 +80,8 @@ public final class SPMMUtil {
                     final Word<I> trace = iter.next();
                     final Word<O> output =
                             mealy.computeSuffixOutput(trace, Word.fromLetter(inputAlphabet.getReturnSymbol()));
-                    assert output.size() == 1;
 
-                    if (!outputAlphabet.isErrorSymbol(output.firstSymbol())) {
+                    if (!output.isEmpty() && !outputAlphabet.isErrorSymbol(output.firstSymbol())) {
                         terminatingSequences.put(procedure, trace);
                         break;
                     }
@@ -114,9 +114,8 @@ public final class SPMMUtil {
                         final Word<I> trace = iter.next();
                         final Word<O> output =
                                 mealy.computeSuffixOutput(trace, Word.fromLetter(inputAlphabet.getReturnSymbol()));
-                        assert output.size() == 1;
 
-                        if (!outputAlphabet.isErrorSymbol(output.firstSymbol())) {
+                        if (!output.isEmpty() && !outputAlphabet.isErrorSymbol(output.firstSymbol())) {
                             terminatingSequences.put(i, inputAlphabet.expand(trace, terminatingSequences::get));
                             remainingProcedures.remove(i);
                             eligibleInputs.add(i);
@@ -137,6 +136,12 @@ public final class SPMMUtil {
         final I initialProcedure = spmm.getInitialProcedure();
 
         if (initialProcedure == null) {
+            return Collections.emptyMap();
+        }
+
+        final MealyMachine<?, I, ?, O> initialP = spmm.getProcedure(initialProcedure);
+
+        if (initialP == null || initialP.getInitialState() == null) {
             return Collections.emptyMap();
         }
 
@@ -197,7 +202,7 @@ public final class SPMMUtil {
 
                         if (outputAlphabet.isErrorSymbol(output)) {
                             // If we encounter a failing call we land in a sink state and don't need to analyse further
-                            // transitions. Therefore skip the remaining trace.
+                            // transitions. Therefore, skip the remaining trace.
                             continue tc;
                         } else {
 
@@ -266,7 +271,7 @@ public final class SPMMUtil {
                 final O output = procedure.getOutput(s, i);
                 final S succ = procedure.getSuccessor(s, i);
 
-                if ((isNonContinuable || Objects.equals(output, errorOutput)) &&
+                if (succ != null && (isNonContinuable || Objects.equals(output, errorOutput)) &&
                     !isSink(procedure, inputAlphabet, succ, errorOutput)) {
                     return false;
                 }
@@ -282,8 +287,8 @@ public final class SPMMUtil {
                                                O output) {
         for (I i : inputs) {
             final T t = m.getTransition(state, i);
-            if (t == null || !Objects.equals(m.getSuccessor(t), state) ||
-                !Objects.equals(m.getTransitionOutput(t), output)) {
+            if (t != null &&
+                (!Objects.equals(m.getSuccessor(t), state) || !Objects.equals(m.getTransitionOutput(t), output))) {
                 return false;
             }
         }

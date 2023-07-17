@@ -66,7 +66,7 @@ public interface SBA<S, I> extends DeterministicAcceptorTS<S, I>,
      */
     Map<I, DFA<?, I>> getProcedures();
 
-    default DFA<?, I> getProcedure(I callSymbol) {
+    default @Nullable DFA<?, I> getProcedure(I callSymbol) {
         assert getInputAlphabet().isCallSymbol(callSymbol);
         return getProcedures().get(callSymbol);
     }

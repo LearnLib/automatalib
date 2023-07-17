@@ -69,9 +69,8 @@ public class EmptySPMM<I, O> implements SPMM<Void, I, Void, O> {
         return null;
     }
 
-    @Nullable
     @Override
-    public Void getInitialState() {
+    public @Nullable Void getInitialState() {
         return null;
     }
 

@@ -200,10 +200,14 @@ public class Automata extends TS {
         return SPAUtil.testEquivalence(spa1, spa2, inputs);
     }
 
-    public static <I> boolean testEquivalence(final SBA<?, I> sba1,
-                                              final SBA<?, I> sba2,
-                                              final ProceduralInputAlphabet<I> inputs) {
+    public static <I> boolean testEquivalence(SBA<?, I> sba1, SBA<?, I> sba2, ProceduralInputAlphabet<I> inputs) {
         return SBAUtil.testEquivalence(sba1, sba2, inputs);
+    }
+
+    public static <I, O> boolean testEquivalence(SPMM<?, I, ?, O> spmm1,
+                                                 SPMM<?, I, ?, O> spmm2,
+                                                 ProceduralInputAlphabet<I> inputs) {
+        return SPMMUtil.testEquivalence(spmm1, spmm2, inputs);
     }
 
     /**
@@ -260,19 +264,21 @@ public class Automata extends TS {
         return OneSEVPAUtil.findSeparatingWord(sevpa1, sevpa2, inputs);
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(SPA<?, I> spa1, SPA<?, I> spa2, ProceduralInputAlphabet<I> inputs) {
+    public static <I> @Nullable Word<I> findSeparatingWord(SPA<?, I> spa1,
+                                                           SPA<?, I> spa2,
+                                                           ProceduralInputAlphabet<I> inputs) {
         return SPAUtil.findSeparatingWord(spa1, spa2, inputs);
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(final SBA<?, I> sba1,
-                                                           final SBA<?, I> sba2,
-                                                           final ProceduralInputAlphabet<I> inputs) {
+    public static <I> @Nullable Word<I> findSeparatingWord(SBA<?, I> sba1,
+                                                           SBA<?, I> sba2,
+                                                           ProceduralInputAlphabet<I> inputs) {
         return SBAUtil.findSeparatingWord(sba1, sba2, inputs);
     }
 
-    public static <I, O> @Nullable Word<I> findSeparatingWord(final SPMM<?, I, ?, O> sba1,
-                                                           final SPMM<?, I, ?, O> sba2,
-                                                           final ProceduralInputAlphabet<I> inputs) {
+    public static <I, O> @Nullable Word<I> findSeparatingWord(SPMM<?, I, ?, O> sba1,
+                                                              SPMM<?, I, ?, O> sba2,
+                                                              ProceduralInputAlphabet<I> inputs) {
         return SPMMUtil.findSeparatingWord(sba1, sba2, inputs);
     }
 
@@ -300,8 +306,8 @@ public class Automata extends TS {
     /**
      * Computes a characterizing set for the given automaton.
      * <p>
-     * This is a convenience method acting as a shortcut to {@link CharacterizingSets#findCharacterizingSet(
-     * UniversalDeterministicAutomaton, Collection, Collection)}.
+     * This is a convenience method acting as a shortcut to
+     * {@link CharacterizingSets#findCharacterizingSet(UniversalDeterministicAutomaton, Collection, Collection)}.
      *
      * @param <I>
      *         input symbol type
@@ -356,8 +362,9 @@ public class Automata extends TS {
     /**
      * Computes a characterizing set for a single state.
      * <p>
-     * This is a convenience method acting as a shortcut to {@link CharacterizingSets#findCharacterizingSet(
-     * UniversalDeterministicAutomaton, Collection, Object, Collection)}.
+     * This is a convenience method acting as a shortcut to
+     * {@link CharacterizingSets#findCharacterizingSet(UniversalDeterministicAutomaton, Collection, Object,
+     * Collection)}.
      *
      * @param <S>
      *         state type

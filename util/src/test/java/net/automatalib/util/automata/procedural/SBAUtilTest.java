@@ -21,6 +21,7 @@ import java.util.Random;
 import com.google.common.collect.ImmutableMap;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.procedural.EmptySBA;
 import net.automatalib.automata.procedural.SBA;
@@ -86,7 +87,7 @@ public class SBAUtilTest {
     }
 
     @Test
-    public void testSeparatingWord() {
+    public void testDefaultSeparatingWord() {
         final Random random = new Random(42);
         final int size = 10;
 
@@ -107,6 +108,126 @@ public class SBAUtilTest {
         Assert.assertNull(Automata.findSeparatingWord(sba2, sba2, emptyAlphabet));
         Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, emptyAlphabet));
         Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, emptyAlphabet));
+    }
+
+    // Copied and adjusted from the corresponding method in the SPAUtil test
+    @Test
+    public void testIntricateSeparatingWord() {
+        // construct a simple (pseudo) palindrome system which we will gradually alter to model different cases
+        final CompactDFA<Character> s1 = new CompactDFA<>(alphabet);
+        final FastDFA<Character> t1 = new FastDFA<>(alphabet);
+
+        final FastDFAState t1t0 = t1.addInitialState(true);
+        final FastDFAState t1t4 = t1.addState(false);
+
+        t1.addTransition(t1t0, 'R', t1t4);
+
+        final SBA<?, Character> sba1 = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', s1, 'T', t1));
+
+        final CompactDFA<Character> s2 = new CompactDFA<>(alphabet);
+        final FastDFA<Character> t2 = new FastDFA<>(alphabet);
+
+        final FastDFAState t2t0 = t2.addInitialState(true);
+        final FastDFAState t2t4 = t2.addState(false);
+
+        t2.addTransition(t2t0, 'R', t2t4);
+
+        final SBA<?, Character> sba2 = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', s2, 'T', t2));
+        final SBA<?, Character> emptySBA = new EmptySBA<>(alphabet);
+
+        // no accessible procedures, no separating word should exist. Even with the empty SBAs
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(emptySBA, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba1, emptySBA, alphabet));
+
+        // make SBA1's 'S' procedure not empty. Now there should exist a separating word
+        final int s1s0 = s1.addInitialState(true);
+
+        verifySepWord(sba1, sba2, alphabet);
+        verifySepWord(sba2, sba1, alphabet);
+        verifySepWord(sba1, emptySBA, alphabet);
+        verifySepWord(emptySBA, sba1, alphabet);
+
+        // make SBA1's initial procedure accept 'a';
+        final int s1s1 = s1.addState(true);
+        s1.addTransition(s1s0, 'a', s1s1);
+
+        final int s2s0 = s2.addInitialState(true);
+        final int s2s1 = s2.addState(false);
+        s2.addTransition(s2s0, 'a', s2s1);
+
+        // There should not exist a separating word if we restrict the alphabet to 'b','c'
+        final ProceduralInputAlphabet<Character> bcAlphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.characters('b', 'c'), callAlphabet, returnSymbol);
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, bcAlphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, bcAlphabet));
+
+        // only with the empty SBA
+        Assert.assertEquals(Automata.findSeparatingWord(sba1, emptySBA, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(Automata.findSeparatingWord(emptySBA, sba1, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(Automata.findSeparatingWord(sba2, emptySBA, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(Automata.findSeparatingWord(emptySBA, sba2, bcAlphabet), Word.fromLetter('S'));
+
+        // update SBA2 according to SBA1. There should no longer exist a separating word
+        s2.setAccepting(s2s1, true);
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, alphabet));
+
+        // make SBA1's s5 accept so that we introduce procedure 'T'. This also adds a new separating word (two 'a's)
+        final int s1s5 = s1.addState(true);
+        s1.addTransition(s1s0, 'T', s1s5);
+
+        verifySepWord(sba1, sba2, alphabet);
+        verifySepWord(sba2, sba1, alphabet);
+
+        // update SBA2 accordingly
+        final int s2s5 = s2.addState(true);
+        s2.addTransition(s2s0, 'T', s2s5);
+
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, alphabet));
+
+        // make SBA1's procedure 'T' accept 'c' so that we can find another separating word
+        final FastDFAState t1t1 = t1.addState(true);
+        t1.addTransition(t1t0, 'c', t1t1);
+
+        verifySepWord(sba1, sba2, alphabet);
+        verifySepWord(sba2, sba1, alphabet);
+
+        // this should also work for partial SBAs
+        final SBA<?, Character> partial1 = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', s1));
+        verifySepWord(sba1, partial1, alphabet);
+        verifySepWord(partial1, sba1, alphabet);
+
+        // If we restrict ourselves to only 'S' call symbols, a separating word should no longer exist
+        final ProceduralInputAlphabet<Character> sAlphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, sAlphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, sAlphabet));
+
+        // update SBA2 accordingly
+        final FastDFAState t2t1 = t2.addState(true);
+        t2.addTransition(t2t0, 'c', t2t1);
+
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, alphabet));
+
+        // make SBA1's 'T' procedure return on c.
+        // This should yield a separating word even if we restrict ourselves to only 'c' as internal symbol
+        t1.setAccepting(t1t4, true);
+
+        final ProceduralInputAlphabet<Character> cAlphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.singleton('c'), callAlphabet, returnSymbol);
+        verifySepWord(sba1, sba2, alphabet);
+        verifySepWord(sba2, sba1, alphabet);
+        verifySepWord(sba1, sba2, cAlphabet);
+        verifySepWord(sba2, sba1, cAlphabet);
+    }
+
+    private static <I> void verifySepWord(SBA<?, I> sba1, SBA<?, I> sba2, ProceduralInputAlphabet<I> alphabet) {
+        final Word<I> sepWord = Automata.findSeparatingWord(sba1, sba2, alphabet);
+        Assert.assertNotNull(sepWord);
+        Assert.assertNotEquals(sba1.accepts(sepWord), sba2.accepts(sepWord));
     }
 
     @Test

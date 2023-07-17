@@ -188,7 +188,7 @@ public final class RandomAutomata {
             }
 
             result = new StackSPA<>(alphabet, alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())), dfas);
-        } while (minimize && !SPAUtil.isRedundancyFree(result));
+        } while (minimize && !SPAUtil.isMinimal(result));
 
         return result;
     }

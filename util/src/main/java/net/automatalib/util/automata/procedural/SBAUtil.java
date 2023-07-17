@@ -142,6 +142,12 @@ public final class SBAUtil {
             return Collections.emptyMap();
         }
 
+        final DFA<?, I> initialP = sba.getProcedure(initialProcedure);
+
+        if (initialP == null || initialP.getInitialState() == null) {
+            return Collections.emptyMap();
+        }
+
         final Map<I, DFA<?, I>> procedures = sba.getProcedures();
         final Map<I, Word<I>> accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
         final Set<I> finishedProcedures = Sets.newHashSetWithExpectedSize(alphabet.getNumCalls());
@@ -195,7 +201,7 @@ public final class SBAUtil {
 
                         final S succ = dfa.getSuccessor(iter, input);
 
-                        if (dfa.isAccepting(succ)) {
+                        if (succ != null && dfa.isAccepting(succ)) {
 
                             final WordBuilder<I> accessBuilder = new WordBuilder<>();
                             final Word<I> as = accessSequences.get(procedure);
@@ -259,7 +265,7 @@ public final class SBAUtil {
                 final S succ = procedure.getSuccessor(s, i);
                 final S toAnalyze;
 
-                if (procedure.isAccepting(succ)) {
+                if (succ != null && procedure.isAccepting(succ)) {
                     toAnalyze = procedure.getSuccessor(succ, i);
 
                     // ensure that toAnalyze is effectively a "success sink"
@@ -272,7 +278,7 @@ public final class SBAUtil {
                     toAnalyze = succ;
                 }
 
-                if (!isSink(procedure, alphabet, toAnalyze)) {
+                if (toAnalyze != null && !isSink(procedure, alphabet, toAnalyze)) {
                     return false;
                 }
             }
@@ -289,7 +295,7 @@ public final class SBAUtil {
 
         for (I i : inputs) {
             final S succ = dfa.getSuccessor(state, i);
-            if (!Objects.equals(succ, state)) {
+            if (succ != null && !Objects.equals(succ, state)) {
                 return false;
             }
         }
@@ -301,7 +307,9 @@ public final class SBAUtil {
         return findSeparatingWord(sba1, sba2, alphabet) == null;
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(SBA<?, I> sba1, SBA<?, I> sba2, ProceduralInputAlphabet<I> alphabet) {
+    public static <I> @Nullable Word<I> findSeparatingWord(SBA<?, I> sba1,
+                                                           SBA<?, I> sba2,
+                                                           ProceduralInputAlphabet<I> alphabet) {
 
         final ATSequences<I> at1 = computeATSequences(sba1, alphabet);
         final ATSequences<I> at2 = computeATSequences(sba2, alphabet);
@@ -332,14 +340,10 @@ public final class SBAUtil {
                         // deterministically select at1 because any mismatch will suffice for a counterexample
                         final Word<I> as = at1.accessSequences.get(procedure);
 
-                        if (sepWord.isEmpty()) {
-                            return as;
-                        } else {
-                            // do not expand the last symbol, because it may be an open call
-                            final Word<I> expandedSepWord =
-                                    alphabet.expand(sepWord.prefix(-1), at1.terminatingSequences::get);
-                            return Word.fromWords(as, expandedSepWord, Word.fromLetter(sepWord.lastSymbol()));
-                        }
+                        // do not expand the last symbol, because it may be an open call
+                        final Word<I> expandedSepWord =
+                                alphabet.expand(sepWord.prefix(-1), at1.terminatingSequences::get);
+                        return Word.fromWords(as, expandedSepWord, Word.fromLetter(sepWord.lastSymbol()));
                     }
                 } else if (as1 == null && as2 != null) {
                     return as2;

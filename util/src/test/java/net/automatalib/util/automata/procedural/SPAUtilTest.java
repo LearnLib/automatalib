@@ -102,8 +102,8 @@ public class SPAUtilTest {
         Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry);
         Assertions.assertThat(atrSequences.terminatingSequences).isEmpty();
         Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry);
-        Assertions.assertThat(SPAUtil.isRedundancyFree(spa)).isFalse();
-        Assertions.assertThat(SPAUtil.isRedundancyFree(emptyAlphabet, atrSequences)).isTrue();
+        Assertions.assertThat(SPAUtil.isMinimal(spa)).isFalse();
+        Assertions.assertThat(SPAUtil.isMinimal(emptyAlphabet, atrSequences)).isTrue();
 
         // Now we make the initial state of S accepting
         // This should give us a terminating sequence for S but still no sequences for T.
@@ -114,9 +114,9 @@ public class SPAUtilTest {
         Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry);
         Assertions.assertThat(atrSequences.terminatingSequences).containsOnly(sTsEntry);
         Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry);
-        Assertions.assertThat(SPAUtil.isRedundancyFree(spa)).isFalse();
-        Assertions.assertThat(SPAUtil.isRedundancyFree(halfAlphabet, atrSequences)).isTrue();
-        Assertions.assertThat(SPAUtil.isRedundancyFree(emptyAlphabet, atrSequences)).isTrue();
+        Assertions.assertThat(SPAUtil.isMinimal(spa)).isFalse();
+        Assertions.assertThat(SPAUtil.isMinimal(halfAlphabet, atrSequences)).isTrue();
+        Assertions.assertThat(SPAUtil.isMinimal(emptyAlphabet, atrSequences)).isTrue();
 
         // Now we make s5 of S accepting.
         // This gives us a terminating sequence that traverses T and therefore allows us to extract access and terminating sequences for T.
@@ -127,9 +127,9 @@ public class SPAUtilTest {
         Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry, tAsEntry);
         Assertions.assertThat(atrSequences.terminatingSequences).containsOnly(sTsEntry);
         Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry, tRsEntry);
-        Assertions.assertThat(SPAUtil.isRedundancyFree(spa)).isFalse();
-        Assertions.assertThat(SPAUtil.isRedundancyFree(halfAlphabet, atrSequences)).isTrue();
-        Assertions.assertThat(SPAUtil.isRedundancyFree(emptyAlphabet, atrSequences)).isTrue();
+        Assertions.assertThat(SPAUtil.isMinimal(spa)).isFalse();
+        Assertions.assertThat(SPAUtil.isMinimal(halfAlphabet, atrSequences)).isTrue();
+        Assertions.assertThat(SPAUtil.isMinimal(emptyAlphabet, atrSequences)).isTrue();
 
         // Now make t3 of T accepting.
         // The only path to an accepting state contains a recursive call to T, so we still cannot extract a valid terminating sequence.
@@ -140,9 +140,9 @@ public class SPAUtilTest {
         Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry, tAsEntry);
         Assertions.assertThat(atrSequences.terminatingSequences).containsOnly(sTsEntry);
         Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry, tRsEntry);
-        Assertions.assertThat(SPAUtil.isRedundancyFree(spa)).isFalse();
-        Assertions.assertThat(SPAUtil.isRedundancyFree(halfAlphabet, atrSequences)).isTrue();
-        Assertions.assertThat(SPAUtil.isRedundancyFree(emptyAlphabet, atrSequences)).isTrue();
+        Assertions.assertThat(SPAUtil.isMinimal(spa)).isFalse();
+        Assertions.assertThat(SPAUtil.isMinimal(halfAlphabet, atrSequences)).isTrue();
+        Assertions.assertThat(SPAUtil.isMinimal(emptyAlphabet, atrSequences)).isTrue();
 
         // Now make t1 of T accepting.
         // This allows us to construct a valid terminating sequence for T and therefore make the global ATRSequences valid.
@@ -153,7 +153,7 @@ public class SPAUtilTest {
         Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry, tAsEntry);
         Assertions.assertThat(atrSequences.terminatingSequences).containsOnly(sTsEntry, tTsEntry);
         Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry, tRsEntry);
-        Assertions.assertThat(SPAUtil.isRedundancyFree(spa)).isTrue();
+        Assertions.assertThat(SPAUtil.isMinimal(spa)).isTrue();
     }
 
     @Test
@@ -169,8 +169,8 @@ public class SPAUtilTest {
         Assertions.assertThat(atrSequences.terminatingSequences).containsOnlyKeys('S');
         Assertions.assertThat(atrSequences.returnSequences).containsOnlyKeys('S');
 
-        Assertions.assertThat(SPAUtil.isRedundancyFree(spa, halfAlphabet)).isTrue();
-        Assertions.assertThat(SPAUtil.isRedundancyFree(alphabet, atrSequences)).isFalse();
+        Assertions.assertThat(SPAUtil.isMinimal(spa, halfAlphabet)).isTrue();
+        Assertions.assertThat(SPAUtil.isMinimal(alphabet, atrSequences)).isFalse();
     }
 
     @Test
@@ -185,8 +185,8 @@ public class SPAUtilTest {
         Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
         Assert.assertTrue(atrSequences.returnSequences.isEmpty());
 
-        Assert.assertFalse(SPAUtil.isRedundancyFree(spa, halfAlphabet));
-        Assert.assertFalse(SPAUtil.isRedundancyFree(alphabet, atrSequences));
+        Assert.assertFalse(SPAUtil.isMinimal(spa, halfAlphabet));
+        Assert.assertFalse(SPAUtil.isMinimal(alphabet, atrSequences));
     }
 
     @Test
@@ -198,7 +198,7 @@ public class SPAUtilTest {
         Assert.assertTrue(atrSequences.accessSequences.keySet().containsAll(alphabet.getCallAlphabet()));
         Assert.assertTrue(atrSequences.terminatingSequences.keySet().containsAll(alphabet.getCallAlphabet()));
         Assert.assertTrue(atrSequences.returnSequences.keySet().containsAll(alphabet.getCallAlphabet()));
-        Assert.assertTrue(SPAUtil.isRedundancyFree(spa));
+        Assert.assertTrue(SPAUtil.isMinimal(spa));
     }
 
     @Test
@@ -209,7 +209,7 @@ public class SPAUtilTest {
         Assert.assertTrue(atrSequences.accessSequences.isEmpty());
         Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
         Assert.assertTrue(atrSequences.returnSequences.isEmpty());
-        Assert.assertFalse(SPAUtil.isRedundancyFree(spa));
+        Assert.assertFalse(SPAUtil.isMinimal(spa));
     }
 
     @Test
@@ -323,7 +323,7 @@ public class SPAUtilTest {
 
         final SPA<?, Character> emptySPA = new EmptySPA<>(alphabet);
 
-        // no accessible procedures, no separating word should exists. Even with the empty SPAs
+        // no accessible procedures, no separating word should exist. Even with the empty SPAs
         Assert.assertNull(Automata.findSeparatingWord(spa1, spa2, alphabet));
         Assert.assertNull(Automata.findSeparatingWord(emptySPA, spa2, alphabet));
         Assert.assertNull(Automata.findSeparatingWord(spa1, emptySPA, alphabet));
