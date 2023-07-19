@@ -17,20 +17,28 @@ package net.automatalib.util.automata.procedural;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.FastDFA;
 import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.procedural.EmptySPA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.automata.procedural.StackSPA;
+import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpda.SEVPA;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.util.automata.conformance.SPATestsIterator;
+import net.automatalib.util.automata.conformance.WMethodTestsIterator;
+import net.automatalib.util.automata.fsa.MutableDFAs;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
@@ -39,6 +47,7 @@ import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.assertj.core.api.Assertions;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
@@ -546,6 +555,40 @@ public class SPAUtilTest {
         Assert.assertFalse(Automata.testEquivalence(spa2, spa1, alphabet));
     }
 
+    @Test(dataProvider = "systems")
+    public <I> void testOneSEVPAConversion(SPA<?, I> spa) {
+        final OneSEVPA<?, I> oneSEVPA = SPAUtil.toOneSEVPA(spa);
+
+        final List<Word<I>> tests = Lists.newArrayList(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
+
+        for (Word<I> t : tests) {
+            Assert.assertEquals(spa.accepts(t), oneSEVPA.accepts(t));
+        }
+    }
+
+    @Test(dataProvider = "systems")
+    public <I> void testNSEVPAConversion(SPA<?, I> spa) {
+        final SEVPA<?, I> sevpa = SPAUtil.toNSEVPA(spa);
+
+        final List<Word<I>> tests = Lists.newArrayList(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
+
+        for (Word<I> t : tests) {
+            Assert.assertEquals(spa.accepts(t), sevpa.accepts(t));
+        }
+    }
+
+    @DataProvider(name = "systems")
+    private static Object[][] getExampleSystems() {
+        final ProceduralInputAlphabet<Character> alphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.characters('0', '9'),
+                                                     Alphabets.characters('A', 'C'),
+                                                     'R');
+
+        return new Object[][] {{RandomAutomata.randomSPA(new Random(42), alphabet, 5)},
+                               {buildPalindromeSystem()},
+                               {buildDissSystem()}};
+    }
+
     private static <I> void verifyATR(SPA<?, I> spa, ProceduralInputAlphabet<I> alphabet, ATRSequences<I> atr) {
 
         for (I i : alphabet.getCallAlphabet()) {
@@ -559,4 +602,80 @@ public class SPAUtilTest {
             Assert.assertTrue(spa.accepts(Word.fromWords(as, ts, rs)), Objects.toString(i));
         }
     }
+
+    private static SPA<?, ?> buildPalindromeSystem() {
+        final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
+        final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
+        final ProceduralInputAlphabet<Character> alphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, 'R');
+
+        // @formatter:off
+        final MutableDFA<?, Character> sProcedure =
+                AutomatonBuilders.forDFA(new CompactDFA<>(alphabet.getProceduralAlphabet()))
+                                 .withInitial("s0")
+                                 .from("s0").on('T').to("s5")
+                                 .from("s0").on('a').to("s1")
+                                 .from("s0").on('b').to("s2")
+                                 .from("s1").on('S').to("s3")
+                                 .from("s2").on('S').to("s4")
+                                 .from("s3").on('a').to("s5")
+                                 .from("s4").on('b').to("s5")
+                                 .withAccepting("s0", "s1", "s2", "s5")
+                                 .create();
+
+        final MutableDFA<?, Character> tProcedure =
+                AutomatonBuilders.forDFA(new FastDFA<>(alphabet.getProceduralAlphabet()))
+                                 .withInitial("t0")
+                                 .from("t0").on('S').to("t3")
+                                 .from("t0").on('c').to("t1")
+                                 .from("t1").on('T').to("t2")
+                                 .from("t2").on('c').to("t3")
+                                 .withAccepting("t1", "t3")
+                                 .create();
+        // @formatter:on
+
+        MutableDFAs.complete(sProcedure, alphabet.getProceduralAlphabet());
+        MutableDFAs.complete(tProcedure, alphabet.getProceduralAlphabet());
+
+        return new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', sProcedure, 'T', tProcedure));
+    }
+
+    private static SPA<?, ?> buildDissSystem() {
+        final Alphabet<String> internalAlphabet = Alphabets.fromArray("a", "b");
+        final Alphabet<String> callAlphabet = Alphabets.fromArray("main", "c_1", "c_2");
+        final ProceduralInputAlphabet<String> alphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, "r");
+
+        // @formatter:off
+        final MutableDFA<?, String> mainProcedure =
+                AutomatonBuilders.forDFA(new CompactDFA<>(alphabet.getProceduralAlphabet()))
+                                 .withInitial("s0")
+                                 .from("s0").on("c_1", "c_2").to("s1")
+                                 .withAccepting("s1")
+                                 .create();
+
+        final MutableDFA<?, String> aProcedure =
+                AutomatonBuilders.forDFA(new CompactDFA<>(alphabet.getProceduralAlphabet()))
+                                 .withInitial("s0")
+                                 .from("s0").on("a").to("s1")
+                                 .withAccepting("s1")
+                                 .create();
+
+        final MutableDFA<?, String> bProcedure =
+                AutomatonBuilders.forDFA(new CompactDFA<>(alphabet.getProceduralAlphabet()))
+                                 .withInitial("s0")
+                                 .from("s0").on("b").to("s1")
+                                 .withAccepting("s1")
+                                 .create();
+        // @formatter:on
+
+        MutableDFAs.complete(mainProcedure, alphabet.getProceduralAlphabet());
+        MutableDFAs.complete(aProcedure, alphabet.getProceduralAlphabet());
+        MutableDFAs.complete(bProcedure, alphabet.getProceduralAlphabet());
+
+        return new StackSPA<>(alphabet,
+                              "main",
+                              ImmutableMap.of("main", mainProcedure, "c_1", aProcedure, "c_2", bProcedure));
+    }
+
 }

@@ -32,6 +32,8 @@ import com.google.common.collect.Sets;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpda.SEVPA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.Mapping;
@@ -528,4 +530,13 @@ public final class SPAUtil {
 
         return null;
     }
+
+    public static <I> OneSEVPA<?, I> toOneSEVPA(SPA<?, I> spa) {
+        return OneSEVPAConverter.convert(spa);
+    }
+
+    public static <I> SEVPA<?, I> toNSEVPA(SPA<?, I> spa) {
+        return NSEVPAConverter.convert(spa);
+    }
+
 }
