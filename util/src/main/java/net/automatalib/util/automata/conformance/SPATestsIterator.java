@@ -62,23 +62,23 @@ public class SPATestsIterator<I> extends AbstractTwoLevelIterator<I, Word<I>, Wo
         this.atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
 
         Preconditions.checkArgument(SPAUtil.isMinimal(alphabet, this.atrSequences),
-                                    "The given SPA contains redundant procedures. You require me to check procedures I cannot check.");
+                                    "The given SPA is not minimal. You want me to check procedures I cannot check.");
     }
 
     @Override
     protected Iterator<Word<I>> l2Iterator(I callSymbol) {
-        @SuppressWarnings("assignment.type.incompatible") // we check redundancy-free-ness in the constructor
+        @SuppressWarnings("assignment.type.incompatible") // we check minimality in the constructor
         final @NonNull DFA<?, I> dfa = spa.getProcedure(callSymbol);
         return conformanceTestProvider.apply(dfa, alphabet.getProceduralAlphabet());
     }
 
     @Override
     protected Word<I> combine(I callSymbol, Word<I> testSequence) {
-        @SuppressWarnings("assignment.type.incompatible") // we check redundancy-free-ness in the constructor
+        @SuppressWarnings("assignment.type.incompatible") // we check minimality in the constructor
         final @NonNull Word<I> as = this.atrSequences.accessSequences.get(callSymbol);
-        @SuppressWarnings("assignment.type.incompatible") // we check redundancy-free-ness in the constructor
+        @SuppressWarnings("assignment.type.incompatible") // we check minimality in the constructor
         final Word<I> ts = this.alphabet.expand(testSequence, this.atrSequences.terminatingSequences::get);
-        @SuppressWarnings("assignment.type.incompatible") // we check redundancy-free-ness in the constructor
+        @SuppressWarnings("assignment.type.incompatible") // we check minimality in the constructor
         final @NonNull Word<I> rs = this.atrSequences.returnSequences.get(callSymbol);
 
         return Word.fromWords(as, ts, rs);

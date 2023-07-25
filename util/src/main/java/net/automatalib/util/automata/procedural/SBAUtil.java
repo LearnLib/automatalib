@@ -398,35 +398,4 @@ public final class SBAUtil {
         return result;
     }
 
-    public static <I> List<Word<I>> characterizingSet(SBA<?, I> sul, ProceduralInputAlphabet<I> alphabet) {
-
-        final List<Word<I>> tests = new ArrayList<>();
-        final ATSequences<I> ats = SBAUtil.computeATSequences(sul, alphabet);
-
-        final Set<I> eligibleInputs = new HashSet<>(ats.terminatingSequences.keySet());
-        eligibleInputs.addAll(alphabet.getInternalAlphabet());
-
-        for (Entry<I, DFA<?, I>> e : sul.getProcedures().entrySet()) {
-            final Word<I> as = ats.accessSequences.get(e.getKey());
-            final DFA<?, I> dfa = e.getValue();
-
-            final List<Word<I>> sCov = Automata.stateCover(dfa, eligibleInputs);
-            final List<Word<I>> cSet = Automata.characterizingSet(dfa, alphabet);
-
-            for (Word<I> c : sCov) {
-                for (I i : alphabet) {
-                    if (!alphabet.isCallSymbol(i) || ats.terminatingSequences.containsKey(i)) {
-                        final Word<I> ts = c.append(i);
-                        for (Word<I> cs : cSet) {
-                            tests.add(as.concat(alphabet.expand(ts.concat(cs), ats.terminatingSequences::get)));
-                        }
-                    } else {
-                        tests.add(as.concat(alphabet.expand(c, ats.terminatingSequences::get)).append(i));
-                    }
-                }
-            }
-        }
-
-        return tests;
-    }
 }
