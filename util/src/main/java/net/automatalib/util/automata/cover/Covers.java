@@ -123,7 +123,7 @@ public final class Covers {
      */
     public static <I> Iterator<Word<I>> transitionCoverIterator(DeterministicAutomaton<?, I, ?> automaton,
                                                                 Collection<? extends I> inputs) {
-        return new TransitionCoverIterator<>(automaton, inputs);
+        return new IncrementalTransitionCoverIterator<>(automaton, inputs, Collections.emptyList());
     }
 
     /**

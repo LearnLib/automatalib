@@ -25,11 +25,15 @@ import java.util.Set;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
+import net.automatalib.util.graphs.Graphs;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import org.assertj.core.util.Lists;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -142,11 +146,35 @@ public class CoversTest {
         final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);
         final DFA<?, Integer> dfa = RandomAutomata.randomDFA(random, 15, alphabet);
 
-        testStateCover(dfa, Automata.stateCover(dfa, alphabet));
+        testStateCover(dfa, alphabet, Automata.stateCover(dfa, alphabet));
         testTransitionCover(dfa, alphabet, Automata.transitionCover(dfa, alphabet));
     }
 
+    @Test
+    public void testPartialIterators() {
+        final Random random = new Random(42);
+        final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);
+        final CompactDFA<Integer> dfa = new CompactDFA<>(alphabet);
+
+        RandomAutomata.randomDeterministic(random,
+                                           15,
+                                           Alphabets.integers(0, 4),
+                                           DFA.STATE_PROPERTIES,
+                                           DFA.TRANSITION_PROPERTIES,
+                                           dfa);
+
+        dfa.addState(true);
+        dfa.addState(false);
+
+        final List<Word<Integer>> sCov = Lists.newArrayList(Covers.stateCoverIterator(dfa, alphabet));
+        final List<Word<Integer>> tCov = Lists.newArrayList(Covers.transitionCoverIterator(dfa, alphabet));
+
+        testStateCover(dfa, alphabet, sCov);
+        testTransitionCover(dfa, alphabet, tCov);
+    }
+
     private static <S, I> void testStateCover(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
+                                              Alphabet<I> alphabet,
                                               Collection<Word<I>> cover) {
 
         final Set<S> states = new HashSet<>(automaton.getStates());
@@ -155,7 +183,13 @@ public class CoversTest {
             Assert.assertTrue(states.remove(automaton.getState(w)));
         }
 
-        Assert.assertTrue(states.isEmpty());
+        final Mapping<S, ? extends @Nullable Collection<?>> mapping =
+                Graphs.incomingEdges(automaton.transitionGraphView(alphabet));
+
+        for (S s : states) {
+            final Collection<?> incoming = mapping.get(s);
+            Assert.assertTrue(incoming == null || incoming.isEmpty());
+        }
     }
 
     private static <S, I, T> void testTransitionCover(UniversalDeterministicAutomaton<S, I, T, ?, ?> automaton,
@@ -166,15 +200,20 @@ public class CoversTest {
 
         for (final S s : automaton.getStates()) {
             for (final I i : alphabet) {
-                transitions.add(automaton.getTransition(s, i));
+                T t = automaton.getTransition(s, i);
+                if (t != null) {
+                    transitions.add(t);
+                }
             }
         }
+
+        Assert.assertEquals(cover.size(), transitions.size()); // make sure we only cover defined transitions
 
         for (final Word<I> w : cover) {
             final S s = automaton.getState(w.prefix(-1));
             Assert.assertTrue(transitions.remove(automaton.getTransition(s, w.lastSymbol())));
         }
 
-        Assert.assertTrue(transitions.isEmpty());
+        Assert.assertTrue(transitions.isEmpty()); // make sure we cover all defined transitions
     }
 }
