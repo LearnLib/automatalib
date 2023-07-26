@@ -15,14 +15,8 @@
  */
 package net.automatalib.util.automata.procedural;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -30,7 +24,6 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.MutableDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -38,16 +31,13 @@ import net.automatalib.automata.procedural.SBA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.automata.procedural.StackSPA;
 import net.automatalib.ts.TransitionPredicate;
-import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.copy.AutomatonCopyMethod;
 import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
-import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.util.automata.fsa.DFAs;
 import net.automatalib.util.automata.fsa.MutableDFAs;
 import net.automatalib.util.automata.predicates.TransitionPredicates;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -74,166 +64,21 @@ public final class SBAUtil {
     }
 
     public static <I> Map<I, Word<I>> computeTerminatingSequences(SBA<?, I> sba, ProceduralInputAlphabet<I> alphabet) {
-
-        final Map<I, DFA<?, I>> procedures = sba.getProcedures();
-        final Map<I, Word<I>> terminatingSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-
-        // initial internal sequences
-        for (I procedure : alphabet.getCallAlphabet()) {
-            final DFA<?, I> dfa = procedures.get(procedure);
-
-            if (dfa != null) {
-                final Iterator<Word<I>> iter = Covers.stateCoverIterator(dfa, alphabet.getInternalAlphabet());
-                while (iter.hasNext()) {
-                    final Word<I> trace = iter.next();
-                    if (dfa.accepts(trace.append(alphabet.getReturnSymbol()))) {
-                        terminatingSequences.put(procedure, trace);
-                        break;
-                    }
-                }
-            }
-        }
-
-        final Set<I> remainingProcedures = new HashSet<>(alphabet.getCallAlphabet());
-        remainingProcedures.removeAll(terminatingSequences.keySet());
-
-        final Set<I> eligibleInputs = new HashSet<>(alphabet.getInternalAlphabet());
-        eligibleInputs.addAll(terminatingSequences.keySet());
-
-        boolean stable = false;
-
-        while (!stable) {
-            stable = true;
-
-            for (final I i : new ArrayList<>(remainingProcedures)) {
-
-                final DFA<?, I> dfa = procedures.get(i);
-
-                if (dfa == null) {
-                    // for non-existing procedures we cannot compute any terminating sequences
-                    remainingProcedures.remove(i);
-                } else {
-                    final Iterator<Word<I>> iter = Covers.stateCoverIterator(dfa, eligibleInputs);
-
-                    while (iter.hasNext()) {
-                        final Word<I> trace = iter.next();
-
-                        if (dfa.accepts(trace.append(alphabet.getReturnSymbol()))) {
-                            terminatingSequences.put(i, alphabet.expand(trace, terminatingSequences::get));
-                            remainingProcedures.remove(i);
-                            eligibleInputs.add(i);
-                            stable = false;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return terminatingSequences;
+        final Word<I> returnWord = Word.fromLetter(alphabet.getReturnSymbol());
+        return ProceduralUtil.computeTerminatingSequences(sba.getProcedures(),
+                                                          alphabet,
+                                                          (dfa, trace) -> dfa.computeSuffixOutput(trace, returnWord));
     }
 
     public static <I> Map<I, Word<I>> computeAccessSequences(SBA<?, I> sba,
                                                              ProceduralInputAlphabet<I> alphabet,
                                                              Map<I, Word<I>> terminatingSequences) {
-        final I initialProcedure = sba.getInitialProcedure();
 
-        if (initialProcedure == null) {
-            return Collections.emptyMap();
-        }
-
-        final DFA<?, I> initialP = sba.getProcedure(initialProcedure);
-
-        if (initialP == null || initialP.getInitialState() == null) {
-            return Collections.emptyMap();
-        }
-
-        final Map<I, DFA<?, I>> procedures = sba.getProcedures();
-        final Map<I, Word<I>> accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        final Set<I> finishedProcedures = Sets.newHashSetWithExpectedSize(alphabet.getNumCalls());
-
-        // initial value
-        accessSequences.put(initialProcedure, Word.fromLetter(initialProcedure));
-        finishedProcedures.add(initialProcedure);
-
-        final Deque<I> pendingProcedures = new ArrayDeque<>();
-        pendingProcedures.add(initialProcedure);
-
-        while (!pendingProcedures.isEmpty()) {
-            final I i = pendingProcedures.pop();
-            final DFA<?, I> dfa = procedures.get(i);
-
-            if (dfa != null) {
-                final Collection<I> newProcedures = discoverAccessSequences(alphabet,
-                                                                            i,
-                                                                            dfa,
-                                                                            finishedProcedures,
-                                                                            accessSequences,
-                                                                            terminatingSequences);
-                pendingProcedures.addAll(newProcedures);
-            }
-        }
-
-        return accessSequences;
-    }
-
-    private static <S, I> Collection<I> discoverAccessSequences(ProceduralInputAlphabet<I> alphabet,
-                                                                I procedure,
-                                                                DFA<S, I> dfa,
-                                                                Set<I> finishedProcedures,
-                                                                Map<I, Word<I>> accessSequences,
-                                                                Map<I, Word<I>> terminatingSequences) {
-
-        final List<I> newAS = new ArrayList<>();
-        final Iterator<Word<I>> transitionCoverIterator = Covers.transitionCoverIterator(dfa, alphabet);
-
-        tc:
-        while (transitionCoverIterator.hasNext()) {
-            final Word<I> trace = transitionCoverIterator.next();
-
-            S iter = dfa.getInitialState();
-
-            for (int i = 0; i < trace.length(); i++) {
-                final I input = trace.getSymbol(i);
-
-                if (alphabet.isCallSymbol(input)) {
-                    if (!finishedProcedures.contains(input)) {
-
-                        final S succ = dfa.getSuccessor(iter, input);
-
-                        if (succ != null && dfa.isAccepting(succ)) {
-
-                            final WordBuilder<I> accessBuilder = new WordBuilder<>();
-                            final Word<I> as = accessSequences.get(procedure);
-                            accessBuilder.append(as);
-                            accessBuilder.append(alphabet.expand(trace.subWord(0, i), terminatingSequences::get));
-                            accessBuilder.append(input);
-
-                            accessSequences.put(input, accessBuilder.toWord());
-
-                            finishedProcedures.add(input);
-                            newAS.add(input);
-                        } else {
-                            // If we encounter a failing call we land in a sink state and don't need to analyse further
-                            // transitions. Therefore, skip the remaining trace.
-                            continue tc;
-                        }
-                    } else if (!terminatingSequences.containsKey(input)) {
-                        // If we encounter a call symbol for which we do not have a terminating sequence,
-                        // all local access sequences of future call symbols cannot be expanded properly.
-                        // Therefore, skip the remaining trace.
-                        continue tc;
-                    }
-                }
-
-                iter = dfa.getSuccessor(iter, input);
-            }
-
-            if (finishedProcedures.containsAll(alphabet.getCallAlphabet())) {
-                return newAS;
-            }
-        }
-        return newAS;
+        return ProceduralUtil.computeAccessSequences(sba.getProcedures(),
+                                                     alphabet,
+                                                     sba.getInitialProcedure(),
+                                                     terminatingSequences,
+                                                     DFA::accepts);
     }
 
     public static <I> boolean isValid(SBA<?, I> sba) {
@@ -314,58 +159,7 @@ public final class SBAUtil {
         final ATSequences<I> at1 = computeATSequences(sba1, alphabet);
         final ATSequences<I> at2 = computeATSequences(sba2, alphabet);
 
-        for (final I procedure : alphabet.getCallAlphabet()) {
-            final DFA<?, I> p1 = sba1.getProcedures().get(procedure);
-            final DFA<?, I> p2 = sba2.getProcedures().get(procedure);
-
-            if (p1 != null && p2 != null) {
-                final Word<I> as1 = at1.accessSequences.get(procedure);
-                final Word<I> ts1 = at1.terminatingSequences.get(procedure);
-
-                final Word<I> as2 = at2.accessSequences.get(procedure);
-                final Word<I> ts2 = at2.terminatingSequences.get(procedure);
-
-                if (as1 != null && as2 != null) {
-                    // we can access both procedures
-
-                    if (ts1 == null && ts2 != null) {
-                        return Word.fromWords(as2, ts2, Word.fromLetter(alphabet.getReturnSymbol()));
-                    } else if (ts1 != null && ts2 == null) {
-                        return Word.fromWords(as1, ts1, Word.fromLetter(alphabet.getReturnSymbol()));
-                    }
-
-                    final Word<I> sepWord = Automata.findSeparatingWord(p1, p2, alphabet);
-
-                    if (sepWord != null) {
-                        // deterministically select at1 because any mismatch will suffice for a counterexample
-                        final Word<I> as = at1.accessSequences.get(procedure);
-
-                        // do not expand the last symbol, because it may be an open call
-                        final Word<I> expandedSepWord =
-                                alphabet.expand(sepWord.prefix(-1), at1.terminatingSequences::get);
-                        return Word.fromWords(as, expandedSepWord, Word.fromLetter(sepWord.lastSymbol()));
-                    }
-                } else if (as1 == null && as2 != null) {
-                    return as2;
-                } else if (as1 != null) {
-                    return as1;
-                } // else no procedures are accessible
-            } else if (p1 != null) {
-                final Word<I> as = at1.accessSequences.get(procedure);
-
-                if (as != null) {
-                    return as;
-                }
-            } else if (p2 != null) {
-                final Word<I> as = at2.accessSequences.get(procedure);
-
-                if (as != null) {
-                    return as;
-                }
-            } // else both procedures are null and therefore skip this call symbol
-        }
-
-        return null;
+        return ProceduralUtil.findSeparatingWord(sba1.getProcedures(), at1, sba2.getProcedures(), at2, alphabet);
     }
 
     public static <I> SPA<?, I> reduce(SBA<?, I> sba) {

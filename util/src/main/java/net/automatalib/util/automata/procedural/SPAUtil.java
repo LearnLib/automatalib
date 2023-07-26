@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +38,6 @@ import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.automata.Automata;
-import net.automatalib.util.automata.cover.Covers;
 import net.automatalib.util.graphs.Graphs;
 import net.automatalib.util.graphs.apsp.APSPResult;
 import net.automatalib.words.Alphabet;
@@ -118,66 +116,7 @@ public final class SPAUtil {
      * given alphabet.
      */
     public static <I> Map<I, Word<I>> computeTerminatingSequences(SPA<?, I> spa, ProceduralInputAlphabet<I> alphabet) {
-
-        final Map<I, DFA<?, I>> procedures = spa.getProcedures();
-        final Map<I, Word<I>> terminatingSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-
-        // initial internal sequences
-        for (I procedure : alphabet.getCallAlphabet()) {
-            final DFA<?, I> dfa = procedures.get(procedure);
-
-            if (dfa != null) {
-                if (dfa.accepts(Word.epsilon())) {
-                    terminatingSequences.put(procedure, Word.epsilon());
-                } else {
-                    final Iterator<Word<I>> iter = Covers.stateCoverIterator(dfa, alphabet.getInternalAlphabet());
-                    while (iter.hasNext()) {
-                        final Word<I> trace = iter.next();
-                        if (dfa.accepts(trace)) {
-                            terminatingSequences.put(procedure, trace);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        final Set<I> remainingProcedures = new HashSet<>(alphabet.getCallAlphabet());
-        remainingProcedures.removeAll(terminatingSequences.keySet());
-
-        final Set<I> eligibleInputs = new HashSet<>(alphabet.getInternalAlphabet());
-        eligibleInputs.addAll(terminatingSequences.keySet());
-
-        boolean stable = false;
-
-        while (!stable) {
-            stable = true;
-
-            for (I i : new ArrayList<>(remainingProcedures)) {
-
-                final DFA<?, I> dfa = procedures.get(i);
-
-                if (dfa == null) {
-                    // for non-existing procedures we cannot compute any terminating sequences
-                    remainingProcedures.remove(i);
-                } else {
-                    final Iterator<Word<I>> iter = Covers.stateCoverIterator(dfa, eligibleInputs);
-
-                    while (iter.hasNext()) {
-                        final Word<I> trace = iter.next();
-                        if (dfa.accepts(trace)) {
-                            terminatingSequences.put(i, alphabet.expand(trace, terminatingSequences::get));
-                            remainingProcedures.remove(i);
-                            eligibleInputs.add(i);
-                            stable = false;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        return terminatingSequences;
+        return ProceduralUtil.computeTerminatingSequences(spa.getProcedures(), alphabet, DFA::accepts);
     }
 
     /**
@@ -379,8 +318,8 @@ public final class SPAUtil {
     }
 
     /**
-     * Convenience method for {@link #isMinimal(SPA, ProceduralInputAlphabet)} that uses
-     * {@link SPA#getInputAlphabet()} as {@code alphabet}.
+     * Convenience method for {@link #isMinimal(SPA, ProceduralInputAlphabet)} that uses {@link SPA#getInputAlphabet()}
+     * as {@code alphabet}.
      *
      * @param spa
      *         the {@link SPA} to check
