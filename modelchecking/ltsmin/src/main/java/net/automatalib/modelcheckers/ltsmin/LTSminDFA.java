@@ -33,7 +33,7 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * A model checker using LTSmin for DFAs.
- *
+ * <p>
  * An important feature of this {@link DFAModelChecker}, is that it will check if a given DFA hypothesis is
  * prefix-closed.
  * <p>
@@ -43,7 +43,7 @@ import net.automatalib.words.impl.Alphabets;
  * @param <I> the input type.
  * @param <R> the type of a counterexample
  *
- * @see DFAs#isPrefixClosed(DFA, Alphabet)
+ * @see DFAs#isPrefixClosed(DFA, Collection)
  *
  * @author Jeroen Meijer
  */
