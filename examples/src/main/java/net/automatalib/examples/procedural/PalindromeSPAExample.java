@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A small example for constructing a (context-free) palindrome example over the letters {@code a, b, c} using two
- * separate procedures (non-terminals) {@code S} and {@code T}.
+ * separate procedures (non-terminals) {@code F} and {@code G}.
  *
  * @author frohme
  */
@@ -52,21 +52,21 @@ public final class PalindromeSPAExample {
         final SPA<?, Character> spa = buildSPA();
 
         LOGGER.info("Well-matched palindromes");
-        checkWord(spa, Word.fromCharSequence("SR"));
-        checkWord(spa, Word.fromCharSequence("SaR"));
-        checkWord(spa, Word.fromCharSequence("SaSRaR"));
-        checkWord(spa, Word.fromCharSequence("SbSTcRRbR"));
+        checkWord(spa, Word.fromCharSequence("FR"));
+        checkWord(spa, Word.fromCharSequence("FaR"));
+        checkWord(spa, Word.fromCharSequence("FaFaR"));
+        checkWord(spa, Word.fromCharSequence("FbFGcRRbR"));
 
         LOGGER.info("");
         LOGGER.info("Well-matched but invalid words");
-        checkWord(spa, Word.fromCharSequence("SaaR"));
-        checkWord(spa, Word.fromCharSequence("SaTaRaR"));
+        checkWord(spa, Word.fromCharSequence("FaaR"));
+        checkWord(spa, Word.fromCharSequence("FaGaRaR"));
         checkWord(spa, Word.epsilon());
 
         LOGGER.info("");
         LOGGER.info("Ill-matched/non-rooted words");
-        checkWord(spa, Word.fromCharSequence("SSS"));
-        checkWord(spa, Word.fromCharSequence("RS"));
+        checkWord(spa, Word.fromCharSequence("FFF"));
+        checkWord(spa, Word.fromCharSequence("RF"));
         checkWord(spa, Word.fromCharSequence("aba"));
 
         Visualization.visualize(spa);
@@ -79,34 +79,34 @@ public final class PalindromeSPAExample {
 
     public static SPA<?, Character> buildSPA() {
         final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
-        final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
+        final Alphabet<Character> callAlphabet = Alphabets.characters('F', 'G');
         final ProceduralInputAlphabet<Character> alphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, 'R');
 
-        final DFA<?, Character> sProcedure = buildSProcedure(alphabet);
-        final DFA<?, Character> tProcedure = buildTProcedure(alphabet);
+        final DFA<?, Character> sProcedure = buildFProcedure(alphabet);
+        final DFA<?, Character> tProcedure = buildGProcedure(alphabet);
 
         final Map<Character, DFA<?, Character>> subModels = new HashMap<>();
-        subModels.put('S', sProcedure);
-        subModels.put('T', tProcedure);
+        subModels.put('F', sProcedure);
+        subModels.put('G', tProcedure);
 
         // explicit type variable declaration to make checker-framework happy
-        return new StackSPA<@Nullable Object, Character>(alphabet, 'S', subModels);
+        return new StackSPA<@Nullable Object, Character>(alphabet, 'F', subModels);
     }
 
     /**
      * Utility method for building a procedure based on a {@link CompactDFA} that emits terminal symbols 'a', 'b' or
-     * delegates to procedure {@link #buildTProcedure(ProceduralInputAlphabet) 'T'}.
+     * delegates to procedure {@link #buildGProcedure(ProceduralInputAlphabet) 'G'}.
      */
-    private static DFA<?, Character> buildSProcedure(ProceduralInputAlphabet<Character> alphabet) {
+    private static DFA<?, Character> buildFProcedure(ProceduralInputAlphabet<Character> alphabet) {
         // @formatter:off
         return AutomatonBuilders.forDFA(new CompactDFA<>(alphabet.getProceduralAlphabet()))
                                 .withInitial("s0")
-                                .from("s0").on('T').to("s5")
+                                .from("s0").on('G').to("s5")
                                 .from("s0").on('a').to("s1")
                                 .from("s0").on('b').to("s2")
-                                .from("s1").on('S').to("s3")
-                                .from("s2").on('S').to("s4")
+                                .from("s1").on('F').to("s3")
+                                .from("s2").on('F').to("s4")
                                 .from("s3").on('a').to("s5")
                                 .from("s4").on('b').to("s5")
                                 .withAccepting("s0", "s1", "s2", "s5")
@@ -116,15 +116,15 @@ public final class PalindromeSPAExample {
 
     /**
      * Utility method for building a procedure based on a {@link FastDFA} that emits the terminal symbol 'c' or
-     * delegates to procedure {@link #buildSProcedure(ProceduralInputAlphabet) 'S'}.
+     * delegates to procedure {@link #buildFProcedure(ProceduralInputAlphabet) 'F'}.
      */
-    private static DFA<?, Character> buildTProcedure(ProceduralInputAlphabet<Character> alphabet) {
+    private static DFA<?, Character> buildGProcedure(ProceduralInputAlphabet<Character> alphabet) {
         // @formatter:off
         return AutomatonBuilders.forDFA(new FastDFA<>(alphabet.getProceduralAlphabet()))
                                 .withInitial("t0")
-                                .from("t0").on('S').to("t3")
+                                .from("t0").on('F').to("t3")
                                 .from("t0").on('c').to("t1")
-                                .from("t1").on('T').to("t2")
+                                .from("t1").on('G').to("t2")
                                 .from("t2").on('c').to("t3")
                                 .withAccepting("t1", "t3")
                                 .create();
