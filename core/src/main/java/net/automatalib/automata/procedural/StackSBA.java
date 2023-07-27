@@ -22,6 +22,7 @@ import java.util.Objects;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.words.ProceduralInputAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A stack-based implementation for the (instrumented) semantics of a System of Procedural Automata.
@@ -36,13 +37,13 @@ import net.automatalib.words.ProceduralInputAlphabet;
 public class StackSBA<S, I> implements SBA<StackState<S, I, DFA<S, I>>, I>, SimpleDTS<StackState<S, I, DFA<S, I>>, I> {
 
     private final ProceduralInputAlphabet<I> alphabet;
-    private final I initialCall;
+    private final @Nullable I initialCall;
     private final Map<I, DFA<S, I>> procedures;
 
     // cast is fine, because we make sure to only query states belonging to the respective procedures
     @SuppressWarnings("unchecked")
     public StackSBA(ProceduralInputAlphabet<I> alphabet,
-                    I initialCall,
+                    @Nullable I initialCall,
                     Map<I, ? extends DFA<? extends S, I>> procedures) {
         this.alphabet = alphabet;
         this.initialCall = initialCall;
@@ -130,7 +131,7 @@ public class StackSBA<S, I> implements SBA<StackState<S, I, DFA<S, I>>, I>, Simp
     }
 
     @Override
-    public I getInitialProcedure() {
+    public @Nullable I getInitialProcedure() {
         return initialCall;
     }
 

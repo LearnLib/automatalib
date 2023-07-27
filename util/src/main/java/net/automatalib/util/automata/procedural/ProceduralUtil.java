@@ -109,7 +109,7 @@ final class ProceduralUtil {
     static <I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> Map<I, Word<I>> computeAccessSequences(Map<I, ? extends M> procedures,
                                                                                                                 ProceduralInputAlphabet<I> alphabet,
                                                                                                                 Collection<I> proceduralInputs,
-                                                                                                                I initialProcedure,
+                                                                                                                @Nullable I initialProcedure,
                                                                                                                 Map<I, Word<I>> terminatingSequences,
                                                                                                                 BiPredicate<M, Word<I>> transitionPredicate) {
 

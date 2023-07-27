@@ -23,6 +23,7 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.MealyTransition;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A stack-based implementation for the (instrumented) semantics of a System of Procedural Automata.
@@ -44,14 +45,14 @@ public class StackSPMM<S, I, T, O>
     private final ProceduralInputAlphabet<I> inputAlphabet;
     private final ProceduralOutputAlphabet<O> outputAlphabet;
 
-    private final I initialCall;
+    private final @Nullable I initialCall;
     private final O initialOutput;
     private final Map<I, MealyMachine<S, I, T, O>> procedures;
 
     @SuppressWarnings("unchecked")
     public StackSPMM(ProceduralInputAlphabet<I> inputAlphabet,
                      ProceduralOutputAlphabet<O> outputAlphabet,
-                     I initialCall,
+                     @Nullable I initialCall,
                      O initialOutput,
                      Map<I, ? extends MealyMachine<? extends S, I, ? extends T, O>> procedures) {
         this.inputAlphabet = inputAlphabet;
@@ -140,7 +141,7 @@ public class StackSPMM<S, I, T, O>
     }
 
     @Override
-    public I getInitialProcedure() {
+    public @Nullable I getInitialProcedure() {
         return initialCall;
     }
 

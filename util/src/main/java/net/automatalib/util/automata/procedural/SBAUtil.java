@@ -36,6 +36,7 @@ import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automata.fsa.DFAs;
 import net.automatalib.util.automata.fsa.MutableDFAs;
 import net.automatalib.util.automata.predicates.TransitionPredicates;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -167,32 +168,47 @@ public final class SBAUtil {
     }
 
     public static <I> SPA<?, I> reduce(SBA<?, I> sba) {
-        final ProceduralInputAlphabet<I> alphabet = sba.getInputAlphabet();
-
-        final Map<I, DFA<?, I>> procedures = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        for (Entry<I, DFA<?, I>> e : sba.getProcedures().entrySet()) {
-            procedures.put(e.getKey(), reduce(e.getValue(), alphabet));
-        }
-
-        return new StackSPA<>(alphabet, sba.getInitialProcedure(), procedures);
+        return reduce(sba, sba.getInputAlphabet());
     }
 
-    private static <S, I> DFA<?, I> reduce(DFA<S, I> dfa, ProceduralInputAlphabet<I> alphabet) {
-        final MutableDFA<Integer, I> result = new CompactDFA<>(alphabet.getProceduralAlphabet());
+    public static <I> SPA<?, I> reduce(SBA<?, I> sba, ProceduralInputAlphabet<I> alphabet) {
+        final Map<I, DFA<?, I>> procedures = sba.getProcedures();
+        final Map<I, DFA<?, I>> spaProcedures = Maps.newHashMapWithExpectedSize(procedures.size());
+        final Collection<I> proceduralInputs = sba.getProceduralInputs(alphabet);
+        proceduralInputs.remove(alphabet.getReturnSymbol());
 
-        final Function<S, Boolean> spMapping = s -> dfa.isAccepting(dfa.getSuccessor(s, alphabet.getReturnSymbol()));
-        final TransitionPredicate<S, I, S> transFilter = TransitionPredicates.inputIsNot(alphabet.getReturnSymbol());
+        for (Entry<I, DFA<?, I>> e : procedures.entrySet()) {
+            spaProcedures.put(e.getKey(), reduce(e.getValue(), alphabet, proceduralInputs));
+        }
 
+        // explicit type specification is required by checker-framework
+        return new StackSPA<@Nullable Object, I>(alphabet, sba.getInitialProcedure(), spaProcedures);
+    }
+
+    private static <S, I> DFA<?, I> reduce(DFA<S, I> dfa,
+                                           ProceduralInputAlphabet<I> alphabet,
+                                           Collection<I> sourceInputs) {
+
+        final I returnSymbol = alphabet.getReturnSymbol();
+        final Alphabet<I> proceduralAlphabet = alphabet.getProceduralAlphabet();
+
+        final Function<S, Boolean> spMapping = s -> {
+            final S succ = dfa.getSuccessor(s, returnSymbol);
+            return succ != null && dfa.isAccepting(succ);
+        };
+        final TransitionPredicate<S, I, S> transFilter = TransitionPredicates.inputIsNot(returnSymbol);
+
+        final MutableDFA<Integer, I> result = new CompactDFA<>(proceduralAlphabet);
         AutomatonLowLevelCopy.rawCopy(AutomatonCopyMethod.BFS,
                                       dfa,
-                                      alphabet,
+                                      sourceInputs,
                                       result,
                                       spMapping,
                                       o -> null,
                                       o -> true,
                                       transFilter);
 
-        MutableDFAs.complete(result, alphabet.getProceduralAlphabet(), true);
+        MutableDFAs.complete(result, proceduralAlphabet, true);
         return result;
     }
 
