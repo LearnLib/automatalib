@@ -42,8 +42,8 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>>
         extends AbstractTwoLevelIterator<I, Word<I>, Word<I>> {
 
-    private static final Iterator<List<Word<?>>> EPSILON =
-            Iterators.singletonIterator(Collections.singletonList(Word.epsilon()));
+    private static final List<List<Word<?>>> EPSILON =
+            Collections.singletonList(Collections.singletonList(Word.epsilon()));
 
     private final ProceduralInputAlphabet<I> alphabet;
     private final Collection<I> proceduralInputs;
@@ -141,7 +141,7 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
         @SuppressWarnings("unchecked")
         @Override
         protected Iterator<List<Word<I>>> l2Iterator(Word<I> cSet) {
-            final Iterator<List<Word<I>>> epsilon = (Iterator<List<Word<I>>>) ((Iterator<?>) EPSILON);
+            final Iterator<List<Word<I>>> epsilon = ((List<List<Word<I>>>) (List<?>) EPSILON).iterator();
             return Iterators.concat(epsilon, CollectionsUtil.cartesianProduct(sCov, continuableWords).iterator());
         }
 
