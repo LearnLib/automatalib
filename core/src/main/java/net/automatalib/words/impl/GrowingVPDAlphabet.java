@@ -51,7 +51,7 @@ public class GrowingVPDAlphabet<I> extends AbstractVPDAlphabet<VPDSym<I>> implem
         this.allSyms = new ArrayList<>();
     }
 
-    public VPDSym<I> addNewSymbol(final I userObject, final SymbolType type) {
+    public VPDSym<I> addNewSymbol(I userObject, SymbolType type) {
         final List<VPDSym<I>> localList;
         switch (type) {
             case CALL:

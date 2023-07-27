@@ -37,7 +37,7 @@ public final class ADSUtil {
 
     private ADSUtil() {}
 
-    public static <S, I, O> int computeLength(final ADSNode<S, I, O> node) {
+    public static <S, I, O> int computeLength(ADSNode<S, I, O> node) {
         if (node.isLeaf()) {
             return 0;
         }
@@ -45,7 +45,7 @@ public final class ADSUtil {
         return 1 + node.getChildren().values().stream().mapToInt(ADSUtil::computeLength).max().orElse(0);
     }
 
-    public static <S, I, O> int countSymbolNodes(final ADSNode<S, I, O> node) {
+    public static <S, I, O> int countSymbolNodes(ADSNode<S, I, O> node) {
         if (node.isLeaf()) {
             return 0;
         }
@@ -53,9 +53,9 @@ public final class ADSUtil {
         return 1 + node.getChildren().values().stream().mapToInt(ADSUtil::countSymbolNodes).sum();
     }
 
-    public static <S, I, T, O> Pair<ADSNode<S, I, O>, ADSNode<S, I, O>> buildFromTrace(final MealyMachine<S, I, T, O> automaton,
-                                                                                       final Word<I> trace,
-                                                                                       final S state) {
+    public static <S, I, T, O> Pair<ADSNode<S, I, O>, ADSNode<S, I, O>> buildFromTrace(MealyMachine<S, I, T, O> automaton,
+                                                                                       Word<I> trace,
+                                                                                       S state) {
         final Iterator<I> sequenceIter = trace.iterator();
         final I input = sequenceIter.next();
         final ADSNode<S, I, O> head = new ADSSymbolNode<>(null, input);
@@ -82,14 +82,13 @@ public final class ADSUtil {
         return Pair.of(head, tempADS);
     }
 
-    public static <S, I, O> Set<ADSNode<S, I, O>> collectLeaves(final ADSNode<S, I, O> root) {
+    public static <S, I, O> Set<ADSNode<S, I, O>> collectLeaves(ADSNode<S, I, O> root) {
         final Set<ADSNode<S, I, O>> result = new LinkedHashSet<>();
         collectLeavesRecursively(result, root);
         return result;
     }
 
-    private static <S, I, O> void collectLeavesRecursively(final Set<ADSNode<S, I, O>> nodes,
-                                                           final ADSNode<S, I, O> current) {
+    private static <S, I, O> void collectLeavesRecursively(Set<ADSNode<S, I, O>> nodes, ADSNode<S, I, O> current) {
         if (current.isLeaf()) {
             nodes.add(current);
         } else {
@@ -99,7 +98,7 @@ public final class ADSUtil {
         }
     }
 
-    public static <S, I, O> Pair<Word<I>, Word<O>> buildTraceForNode(final ADSNode<S, I, O> node) {
+    public static <S, I, O> Pair<Word<I>, Word<O>> buildTraceForNode(ADSNode<S, I, O> node) {
 
         ADSNode<S, I, O> parentIter = node.getParent();
         ADSNode<S, I, O> nodeIter = node;
@@ -118,7 +117,7 @@ public final class ADSUtil {
         return Pair.of(inputBuilder.reverse().toWord(), outputBuilder.reverse().toWord());
     }
 
-    public static <S, I, O> O getOutputForSuccessor(final ADSNode<S, I, O> node, final ADSNode<S, I, O> successor) {
+    public static <S, I, O> O getOutputForSuccessor(ADSNode<S, I, O> node, ADSNode<S, I, O> successor) {
 
         if (!node.equals(successor.getParent())) {
             throw new IllegalArgumentException("No parent relationship");
@@ -148,7 +147,7 @@ public final class ADSUtil {
      *
      * @return upper bound for the length of a splitting word
      */
-    public static long computeMaximumSplittingWordLength(final int n, final int i, final int m) {
+    public static long computeMaximumSplittingWordLength(int n, int i, int m) {
         if (m == 2) {
             return n;
         }

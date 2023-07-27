@@ -157,7 +157,7 @@ public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends Abstrac
     public Collection<I> getLocalInputs(Integer state) {
         final Alphabet<I> alphabet = getInputAlphabet();
         final List<I> result = new ArrayList<>(alphabet.size());
-        for (final I i : alphabet) {
+        for (I i : alphabet) {
             if (getTransition(state, i) != null) {
                 result.add(i);
             }

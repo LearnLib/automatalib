@@ -306,7 +306,7 @@ public class ModalConjunctionTest {
 
         final Collection<T> transitions = mts.getTransitions(source, input);
 
-        for (final T t : transitions) {
+        for (T t : transitions) {
             if (target.equals(mts.getSuccessor(t))) {
                 return t;
             }

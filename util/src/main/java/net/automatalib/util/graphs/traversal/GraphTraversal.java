@@ -305,8 +305,7 @@ public final class GraphTraversal {
         return dfs(graph, -1, initialNodes, visitor);
     }
 
-    public static <N, E> Iterable<N> breadthFirstOrder(final IndefiniteGraph<N, E> graph,
-                                                       final Collection<? extends N> start) {
+    public static <N, E> Iterable<N> breadthFirstOrder(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {
 
         return () -> bfIterator(graph, start);
     }
@@ -315,8 +314,7 @@ public final class GraphTraversal {
         return new BreadthFirstIterator<>(graph, start);
     }
 
-    public static <N, E> Iterable<N> depthFirstOrder(final IndefiniteGraph<N, E> graph,
-                                                     final Collection<? extends N> start) {
+    public static <N, E> Iterable<N> depthFirstOrder(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {
 
         return () -> dfIterator(graph, start);
     }

@@ -40,9 +40,9 @@ public class ADSRandomMealyTest extends AbstractADSTest {
     final CompactMealy<Integer, Character> target;
 
     @Factory(dataProvider = "randomMealies")
-    public ADSRandomMealyTest(final boolean completeExpected,
-                              final boolean partialExpected,
-                              final CompactMealy<Integer, Character> target) {
+    public ADSRandomMealyTest(boolean completeExpected,
+                              boolean partialExpected,
+                              CompactMealy<Integer, Character> target) {
         this.completeExpected = completeExpected;
         this.partialExpected = partialExpected;
         this.target = target;

@@ -157,8 +157,8 @@ public class MutableAutomatonTest {
                                                                                             List<? extends TP> transProps) {
         final StateIDs<S> stateIDs = automaton.stateIDs();
 
-        for (final S s : automaton) {
-            for (final I i : alphabet) {
+        for (S s : automaton) {
+            for (I i : alphabet) {
                 final TP tProp = RandomUtil.choose(transProps, RANDOM);
                 final S succ = stateIDs.getState(RANDOM.nextInt(automaton.size()));
                 final T trans = automaton.createTransition(succ, null);
@@ -235,7 +235,7 @@ public class MutableAutomatonTest {
 
         automaton.removeAllTransitions(s);
 
-        for (final I i : alphabet) {
+        for (I i : alphabet) {
             Assert.assertTrue(automaton.getSuccessors(s, i).isEmpty());
             Assert.assertTrue(automaton.getTransitions(s, i).isEmpty());
 
@@ -268,8 +268,8 @@ public class MutableAutomatonTest {
 
     private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void checkEmptyProperties(M automaton,
                                                                                                      Alphabet<I> alphabet) {
-        for (final S s : automaton) {
-            for (final I i : alphabet) {
+        for (S s : automaton) {
+            for (I i : alphabet) {
                 Assert.assertTrue(automaton.getSuccessors(s, i).isEmpty());
                 Assert.assertTrue(automaton.getTransitions(s, i).isEmpty());
 

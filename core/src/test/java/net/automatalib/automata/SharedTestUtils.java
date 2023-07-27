@@ -27,13 +27,13 @@ final class SharedTestUtils {
 
     private SharedTestUtils() {}
 
-    static <S, I> void checkOutput(final DFA<S, I> dfa, final Word<I> word, final Boolean expected) {
+    static <S, I> void checkOutput(DFA<S, I> dfa, Word<I> word, Boolean expected) {
         Assert.assertEquals(dfa.computeOutput(word), expected);
         Assert.assertEquals(dfa.computeStateOutput(dfa.getInitialState(), word), expected);
         Assert.assertEquals(dfa.computeSuffixOutput(word.prefix(word.length()), word.suffix(word.length())), expected);
     }
 
-    static <S, I> void checkOutput(final NFA<S, I> dfa, final Word<I> word, final Boolean expected) {
+    static <S, I> void checkOutput(NFA<S, I> dfa, Word<I> word, Boolean expected) {
         Assert.assertEquals(dfa.computeOutput(word), expected);
         Assert.assertEquals(dfa.computeSuffixOutput(word.prefix(word.length()), word.suffix(word.length())), expected);
     }

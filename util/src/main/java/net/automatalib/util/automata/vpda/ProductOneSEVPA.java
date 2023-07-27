@@ -45,10 +45,10 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
 
     private final AcceptanceCombiner accCombiner;
 
-    public ProductOneSEVPA(final VPDAlphabet<I> alphabet,
-                           final OneSEVPA<L1, I> sevpa1,
-                           final OneSEVPA<L2, I> sevpa2,
-                           final AcceptanceCombiner combiner) {
+    public ProductOneSEVPA(VPDAlphabet<I> alphabet,
+                           OneSEVPA<L1, I> sevpa1,
+                           OneSEVPA<L2, I> sevpa2,
+                           AcceptanceCombiner combiner) {
         super(alphabet);
         this.sevpa1 = sevpa1;
         this.sevpa2 = sevpa2;
@@ -56,7 +56,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
     }
 
     @Override
-    public @Nullable Pair<L1, L2> getInternalSuccessor(final Pair<L1, L2> loc, final I intSym) {
+    public @Nullable Pair<L1, L2> getInternalSuccessor(Pair<L1, L2> loc, I intSym) {
         final L1 succ1 = sevpa1.getInternalSuccessor(loc.getFirst(), intSym);
         if (succ1 == null) {
             return null;
@@ -69,14 +69,14 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
     }
 
     @Override
-    public Pair<L1, L2> getLocation(final int id) {
+    public Pair<L1, L2> getLocation(int id) {
         final int l1Id = id / sevpa2.size();
         final int l2Id = id % sevpa2.size();
         return Pair.of(sevpa1.getLocation(l1Id), sevpa2.getLocation(l2Id));
     }
 
     @Override
-    public int getLocationId(final Pair<L1, L2> loc) {
+    public int getLocationId(Pair<L1, L2> loc) {
         return sevpa1.getLocationId(loc.getFirst()) * sevpa2.size() + sevpa2.getLocationId(loc.getSecond());
     }
 
@@ -94,7 +94,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
     }
 
     @Override
-    public @Nullable Pair<L1, L2> getReturnSuccessor(final Pair<L1, L2> loc, final I retSym, final int stackSym) {
+    public @Nullable Pair<L1, L2> getReturnSuccessor(Pair<L1, L2> loc, I retSym, int stackSym) {
         final int stackSym1 = stackSym / sevpa2.getNumStackSymbols();
         final L1 succ1 = sevpa1.getReturnSuccessor(loc.getFirst(), retSym, stackSym1);
         if (succ1 == null) {
@@ -109,7 +109,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
     }
 
     @Override
-    public boolean isAcceptingLocation(final Pair<L1, L2> loc) {
+    public boolean isAcceptingLocation(Pair<L1, L2> loc) {
         return accCombiner.combine(sevpa1.isAcceptingLocation(loc.getFirst()),
                                    sevpa2.isAcceptingLocation(loc.getSecond()));
     }
@@ -120,7 +120,7 @@ public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> i
     }
 
     @Override
-    public int encodeStackSym(final Pair<L1, L2> srcLoc, final I callSym) {
+    public int encodeStackSym(Pair<L1, L2> srcLoc, I callSym) {
         final int stackSym1 = sevpa1.encodeStackSym(srcLoc.getFirst(), callSym);
         final int stackSym2 = sevpa2.encodeStackSym(srcLoc.getSecond(), callSym);
         return stackSym1 * sevpa2.getNumStackSymbols() + stackSym2;

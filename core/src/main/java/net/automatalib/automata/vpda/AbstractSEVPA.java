@@ -32,7 +32,7 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
 
     protected final VPDAlphabet<I> alphabet;
 
-    public AbstractSEVPA(final VPDAlphabet<I> alphabet) {
+    public AbstractSEVPA(VPDAlphabet<I> alphabet) {
         this.alphabet = alphabet;
     }
 
@@ -42,7 +42,7 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
     }
 
     @Override
-    public @Nullable State<L> getTransition(final State<L> state, final I input) {
+    public @Nullable State<L> getTransition(State<L> state, I input) {
         final L loc = state.getLocation();
         final VPDAlphabet.SymbolType type = alphabet.getSymbolType(input);
         switch (type) {
@@ -75,11 +75,11 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
     }
 
     @Override
-    public int encodeStackSym(final L srcLoc, final I callSym) {
+    public int encodeStackSym(L srcLoc, I callSym) {
         return encodeStackSym(srcLoc, alphabet.getCallSymbolIndex(callSym));
     }
 
-    public int encodeStackSym(final L srcLoc, final int callSymIdx) {
+    public int encodeStackSym(L srcLoc, int callSymIdx) {
         return alphabet.getNumCalls() * getLocationId(srcLoc) + callSymIdx;
     }
 
@@ -88,11 +88,11 @@ public abstract class AbstractSEVPA<L, I> implements SEVPA<L, I> {
         return size() * alphabet.getNumCalls();
     }
 
-    public L getStackLoc(final int stackSym) {
+    public L getStackLoc(int stackSym) {
         return getLocation(stackSym / alphabet.getNumCalls());
     }
 
-    public I getCallSym(final int stackSym) {
+    public I getCallSym(int stackSym) {
         return alphabet.getCallSymbol(stackSym % alphabet.getNumCalls());
     }
 

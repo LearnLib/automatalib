@@ -123,7 +123,7 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
         final NodeIDs<N> nodeIDs = data.getNodeIDs();
 
         // check that nodeIDs contains a mapping for each node in pmpg
-        for (final N node : pmpg.getNodes()) {
+        for (N node : pmpg.getNodes()) {
             nodeIDs.getNodeId(node);
         }
     }
@@ -175,7 +175,7 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
     protected <N, E> N getS1(ProceduralModalProcessGraph<N, String, E, String, ?> pmpg) {
         final N initalNode = pmpg.getInitialNode();
         // the initial node is connected to s1 by an "a" labeled edge
-        for (final E edge : pmpg.getOutgoingEdges(initalNode)) {
+        for (E edge : pmpg.getOutgoingEdges(initalNode)) {
             if ("a".equals(pmpg.getEdgeLabel(edge))) {
                 return pmpg.getTarget(edge);
             }
@@ -185,7 +185,7 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
 
     protected <N, E> N getS2(ProceduralModalProcessGraph<N, String, E, String, ?> pmpg, N s1) {
         // s1's only adjacent target is s2
-        for (final N adjacentTarget : pmpg.getAdjacentTargets(s1)) {
+        for (N adjacentTarget : pmpg.getAdjacentTargets(s1)) {
             return adjacentTarget;
         }
         throw new IllegalStateException("unexpected modal process graph");

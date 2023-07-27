@@ -90,7 +90,7 @@ public abstract class AbstractCompactMTS<I, TP extends MutableModalEdgeProperty>
 
     @Override
     public void removeAllTransitions(Integer state) {
-        for (final I i : getInputAlphabet()) {
+        for (I i : getInputAlphabet()) {
             removeAllTransitions(state, i);
         }
     }

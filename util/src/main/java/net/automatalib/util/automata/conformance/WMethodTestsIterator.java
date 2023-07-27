@@ -15,7 +15,6 @@
  */
 package net.automatalib.util.automata.conformance;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -41,12 +40,12 @@ import net.automatalib.words.WordBuilder;
  *
  * @author Malte Isberner
  */
-public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<List<I>, Word<I>, Word<I>, Word<I>> {
+public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>, List<I>, Word<I>, Word<I>> {
 
-    private final Iterable<Word<I>> prefixes;
+    private final Collection<? extends I> inputs;
+    private final int maxDepth;
+
     private final Iterable<Word<I>> suffixes;
-
-    private final WordBuilder<I> wordBuilder = new WordBuilder<>();
 
     /**
      * Convenience-constructor for {@link #WMethodTestsIterator(UniversalDeterministicAutomaton, Collection, int)} that
@@ -75,11 +74,11 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<List<I>,
     public WMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
                                 Collection<? extends I> inputs,
                                 int maxDepth) {
-        super(CollectionsUtil.<I>allTuples(inputs, 0, maxDepth).iterator());
+        super(Iterators.concat(Iterators.singletonIterator(Word.epsilon()),
+                               Covers.transitionCoverIterator(automaton, inputs)));
 
-        final Iterator<Word<I>> tci = Covers.transitionCoverIterator(automaton, inputs);
-        this.prefixes = new ReusableIterator<>(Iterators.concat(Iterators.singletonIterator(Word.epsilon()), tci),
-                                               new ArrayList<>(automaton.size() * inputs.size() + 1));
+        this.inputs = inputs;
+        this.maxDepth = maxDepth;
 
         final Iterator<Word<I>> characterizingSet = CharacterizingSets.characterizingSetIterator(automaton, inputs);
 
@@ -93,20 +92,18 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<List<I>,
     }
 
     @Override
-    protected Iterator<Word<I>> l2Iterator(List<I> l1Object) {
-        return prefixes.iterator();
+    protected Iterator<List<I>> l2Iterator(Word<I> l1Object) {
+        return CollectionsUtil.<I>allTuples(inputs, 0, maxDepth).iterator();
     }
 
     @Override
-    protected Iterator<Word<I>> l3Iterator(List<I> l1Object, Word<I> l2Object) {
+    protected Iterator<Word<I>> l3Iterator(Word<I> prefix, List<I> middle) {
         return suffixes.iterator();
     }
 
     @Override
-    protected Word<I> combine(List<I> middle, Word<I> prefix, Word<I> suffix) {
-        wordBuilder.ensureAdditionalCapacity(prefix.size() + middle.size() + suffix.size());
-        Word<I> word = wordBuilder.append(prefix).append(middle).append(suffix).toWord();
-        wordBuilder.clear();
-        return word;
+    protected Word<I> combine(Word<I> prefix, List<I> middle, Word<I> suffix) {
+        final WordBuilder<I> wb = new WordBuilder<>(prefix.size() + middle.size() + suffix.size());
+        return wb.append(prefix).append(middle).append(suffix).toWord();
     }
 }

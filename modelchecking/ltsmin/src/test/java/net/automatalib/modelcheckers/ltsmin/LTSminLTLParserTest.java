@@ -60,12 +60,12 @@ public class LTSminLTLParserTest {
     }
 
     @Test(dataProvider = "letter")
-    public void testLetterFormulae(final String formula, boolean expectedValidity) {
+    public void testLetterFormulae(String formula, boolean expectedValidity) {
         Assert.assertEquals(LTSminLTLParser.isValidLetterFormula(formula), expectedValidity);
     }
 
     @Test(dataProvider = "io")
-    public void testIOFormulae(final String formula, boolean expectedValidity) {
+    public void testIOFormulae(String formula, boolean expectedValidity) {
         Assert.assertEquals(LTSminLTLParser.isValidIOFormula(formula), expectedValidity);
     }
 }

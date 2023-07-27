@@ -27,11 +27,11 @@ import net.automatalib.words.VPDAlphabet;
  */
 public class DefaultOneSEVPA<I> extends AbstractDefaultSEVPA<I> implements OneSEVPA<Location, I> {
 
-    public DefaultOneSEVPA(final VPDAlphabet<I> alphabet) {
+    public DefaultOneSEVPA(VPDAlphabet<I> alphabet) {
         this(alphabet, DEFAULT_SIZE);
     }
 
-    public DefaultOneSEVPA(final VPDAlphabet<I> alphabet, final int capacity) {
+    public DefaultOneSEVPA(VPDAlphabet<I> alphabet, int capacity) {
         super(alphabet, capacity);
     }
 

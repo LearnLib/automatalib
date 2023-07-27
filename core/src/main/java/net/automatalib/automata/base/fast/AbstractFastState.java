@@ -45,7 +45,7 @@ public abstract class AbstractFastState<T> extends AbstractMutableNumericID {
         }
     }
 
-    protected void clearTransitionObject(final @Nullable T transition) {
+    protected void clearTransitionObject(@Nullable T transition) {
         // do nothing in particular, but sub-classes may cleanup additional resources
     }
 

@@ -33,7 +33,7 @@ public final class VPDSym<T> {
     private final SymbolType type;
     private final int localIndex, globalIndex;
 
-    VPDSym(final T userObject, final SymbolType type, final int localIndex, final int globalIndex) {
+    VPDSym(T userObject, SymbolType type, int localIndex, int globalIndex) {
         this.userObject = userObject;
         this.type = type;
         this.localIndex = localIndex;

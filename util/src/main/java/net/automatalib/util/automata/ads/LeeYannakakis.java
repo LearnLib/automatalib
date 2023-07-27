@@ -73,8 +73,7 @@ public final class LeeYannakakis {
      * @return A {@link LYResult} containing an adaptive distinguishing sequence (if existent) and a possible set of
      * indistinguishable states.
      */
-    public static <S, I, O> LYResult<S, I, O> compute(final MealyMachine<S, I, ?, O> automaton,
-                                                      final Alphabet<I> input) {
+    public static <S, I, O> LYResult<S, I, O> compute(MealyMachine<S, I, ?, O> automaton, Alphabet<I> input) {
 
         final SplitTreeResult<S, I, O> str = computeSplitTree(automaton, input);
 
@@ -86,8 +85,8 @@ public final class LeeYannakakis {
         return new LYResult<>(str.getIndistinguishableStates());
     }
 
-    private static <S, I, O> SplitTreeResult<S, I, O> computeSplitTree(final MealyMachine<S, I, ?, O> automaton,
-                                                                       final Alphabet<I> input) {
+    private static <S, I, O> SplitTreeResult<S, I, O> computeSplitTree(MealyMachine<S, I, ?, O> automaton,
+                                                                       Alphabet<I> input) {
 
         final SplitTree<S, I, O> st = new SplitTree<>(new HashSet<>(automaton.getStates()));
         final Set<SplitTree<S, I, O>> leaves = Sets.newHashSetWithExpectedSize(automaton.size());
@@ -110,7 +109,7 @@ public final class LeeYannakakis {
 
                 final Set<S> indistinguishableStates = new HashSet<>();
 
-                for (final Pair<Word<I>, SplitTree<S, I, O>> pair : set) {
+                for (Pair<Word<I>, SplitTree<S, I, O>> pair : set) {
                     indistinguishableStates.addAll(pair.getSecond().getPartition());
                 }
 
@@ -118,7 +117,7 @@ public final class LeeYannakakis {
             }
 
             // a-valid partitions
-            for (final Pair<Word<I>, SplitTree<S, I, O>> aPartition : validitySetMap.get(Validity.A_VALID)) {
+            for (Pair<Word<I>, SplitTree<S, I, O>> aPartition : validitySetMap.get(Validity.A_VALID)) {
 
                 assert aPartition.getFirst().size() == 1 : "a-valid inputs should always contain exactly 1 symbol";
 
@@ -138,13 +137,13 @@ public final class LeeYannakakis {
                     nodeToRefine.getSuccessors().put(entry.getKey(), child);
                     leaves.add(child);
                 }
-                for (final S s : nodeToRefine.getPartition()) {
+                for (S s : nodeToRefine.getPartition()) {
                     nodeToRefine.getMapping().put(s, automaton.getSuccessor(s, aValidInput));
                 }
             }
 
             // b-valid partitions
-            for (final Pair<Word<I>, SplitTree<S, I, O>> bPartition : validitySetMap.get(Validity.B_VALID)) {
+            for (Pair<Word<I>, SplitTree<S, I, O>> bPartition : validitySetMap.get(Validity.B_VALID)) {
 
                 assert bPartition.getFirst().size() == 1 : "b-valid inputs should always contain exactly 1 symbol";
 
@@ -161,7 +160,7 @@ public final class LeeYannakakis {
                 nodeToRefine.setSequence(v.getSequence().prepend(bValidInput));
                 leaves.remove(nodeToRefine);
 
-                for (final Map.Entry<O, SplitTree<S, I, O>> entry : v.getSuccessors().entrySet()) {
+                for (Map.Entry<O, SplitTree<S, I, O>> entry : v.getSuccessors().entrySet()) {
 
                     final Set<S> wSet = entry.getValue().getPartition();
                     final Set<S> intersection = new HashSet<>(successorsToNodes.keySet());
@@ -175,13 +174,13 @@ public final class LeeYannakakis {
                         leaves.add(newChild);
                     }
                 }
-                for (final S s : nodeToRefine.getPartition()) {
+                for (S s : nodeToRefine.getPartition()) {
                     nodeToRefine.getMapping().put(s, v.getMapping().get(automaton.getSuccessor(s, bValidInput)));
                 }
             }
 
             // c-valid partitions
-            for (final Pair<Word<I>, SplitTree<S, I, O>> cPartition : validitySetMap.get(Validity.C_VALID)) {
+            for (Pair<Word<I>, SplitTree<S, I, O>> cPartition : validitySetMap.get(Validity.C_VALID)) {
                 final Word<I> cValidInput = cPartition.getFirst();
                 final SplitTree<S, I, O> nodeToRefine = cPartition.getSecond();
                 final Map<S, S> successorsToNodes = nodeToRefine.getPartition()
@@ -195,7 +194,7 @@ public final class LeeYannakakis {
                 nodeToRefine.setSequence(cValidInput.concat(C.getSequence()));
                 leaves.remove(nodeToRefine);
 
-                for (final Map.Entry<O, SplitTree<S, I, O>> entry : C.getSuccessors().entrySet()) {
+                for (Map.Entry<O, SplitTree<S, I, O>> entry : C.getSuccessors().entrySet()) {
 
                     final Set<S> wSet = entry.getValue().getPartition();
                     final Set<S> intersection = new HashSet<>(successorsToNodes.keySet());
@@ -209,7 +208,7 @@ public final class LeeYannakakis {
                         leaves.add(newChild);
                     }
                 }
-                for (final S s : nodeToRefine.getPartition()) {
+                for (S s : nodeToRefine.getPartition()) {
                     nodeToRefine.getMapping().put(s, C.getMapping().get(automaton.getSuccessor(s, cValidInput)));
                 }
             }
@@ -218,11 +217,11 @@ public final class LeeYannakakis {
         return new SplitTreeResult<>(st);
     }
 
-    private static <S, I, O> ADSNode<S, I, O> extractADS(final MealyMachine<S, I, ?, O> automaton,
-                                                         final SplitTree<S, I, O> st,
-                                                         final Set<S> currentSet,
-                                                         final Map<S, S> currentToInitialMapping,
-                                                         final ADSNode<S, I, O> predecessor) {
+    private static <S, I, O> ADSNode<S, I, O> extractADS(MealyMachine<S, I, ?, O> automaton,
+                                                         SplitTree<S, I, O> st,
+                                                         Set<S> currentSet,
+                                                         Map<S, S> currentToInitialMapping,
+                                                         ADSNode<S, I, O> predecessor) {
 
         if (currentSet.size() == 1) {
             final S currentNode = currentSet.iterator().next();
@@ -240,7 +239,7 @@ public final class LeeYannakakis {
 
         head.setParent(predecessor);
 
-        for (final Map.Entry<O, SplitTree<S, I, O>> entry : u.getSuccessors().entrySet()) {
+        for (Map.Entry<O, SplitTree<S, I, O>> entry : u.getSuccessors().entrySet()) {
 
             final O output = entry.getKey();
             final SplitTree<S, I, O> tree = entry.getValue();
@@ -263,17 +262,15 @@ public final class LeeYannakakis {
         return head;
     }
 
-    private static <S, I, O> boolean needsRefinement(final SplitTree<S, I, O> node) {
+    private static <S, I, O> boolean needsRefinement(SplitTree<S, I, O> node) {
         return node.getPartition().size() > 1;
     }
 
-    private static <S, I, O> boolean isValidInput(final MealyMachine<S, I, ?, O> automaton,
-                                                  final I input,
-                                                  final Set<S> states) {
+    private static <S, I, O> boolean isValidInput(MealyMachine<S, I, ?, O> automaton, I input, Set<S> states) {
 
         final Map<O, Set<S>> successors = new HashMap<>();
 
-        for (final S s : states) {
+        for (S s : states) {
             final O output = automaton.getOutput(s, input);
             final S successor = automaton.getSuccessor(s, input);
 
@@ -289,10 +286,10 @@ public final class LeeYannakakis {
         return true;
     }
 
-    private static <S, I, O> Map<Validity, Set<Pair<Word<I>, SplitTree<S, I, O>>>> computeValidities(final MealyMachine<S, I, ?, O> automaton,
-                                                                                                     final Alphabet<I> inputs,
-                                                                                                     final Set<SplitTree<S, I, O>> R,
-                                                                                                     final Set<SplitTree<S, I, O>> pi) {
+    private static <S, I, O> Map<Validity, Set<Pair<Word<I>, SplitTree<S, I, O>>>> computeValidities(MealyMachine<S, I, ?, O> automaton,
+                                                                                                     Alphabet<I> inputs,
+                                                                                                     Set<SplitTree<S, I, O>> R,
+                                                                                                     Set<SplitTree<S, I, O>> pi) {
 
         final Map<Validity, Set<Pair<Word<I>, SplitTree<S, I, O>>>> result = new EnumMap<>(Validity.class);
         final Map<S, Integer> stateToPartitionMap = new HashMap<>();
@@ -300,7 +297,7 @@ public final class LeeYannakakis {
 
         int counter = 0;
         for (SplitTree<S, I, O> partition : pi) {
-            for (final S s : partition.getPartition()) {
+            for (S s : partition.getPartition()) {
                 final Integer previousValue = stateToPartitionMap.put(s, counter);
                 assert previousValue == null : "Not a true partition";
             }
@@ -308,7 +305,7 @@ public final class LeeYannakakis {
             counter++;
         }
 
-        for (final Validity v : Validity.values()) {
+        for (Validity v : Validity.values()) {
             result.put(v, new HashSet<>());
         }
 
@@ -322,16 +319,16 @@ public final class LeeYannakakis {
         }
 
         partitionLoop:
-        for (final SplitTree<S, I, O> B : R) {
+        for (SplitTree<S, I, O> B : R) {
 
             // general validity
             final Map<I, Boolean> validInputMap = Maps.newHashMapWithExpectedSize(inputs.size());
-            for (final I i : inputs) {
+            for (I i : inputs) {
                 validInputMap.put(i, isValidInput(automaton, i, B.getPartition()));
             }
 
             // a valid
-            for (final I i : inputs) {
+            for (I i : inputs) {
 
                 if (!validInputMap.get(i)) {
                     continue;
@@ -349,7 +346,7 @@ public final class LeeYannakakis {
             }
 
             // b valid
-            for (final I i : inputs) {
+            for (I i : inputs) {
 
                 if (!validInputMap.get(i)) {
                     continue;
@@ -370,7 +367,7 @@ public final class LeeYannakakis {
 
             // c valid
             // we defer evaluation to later point in time, because we need to check if the target partitions are a- or b-valid
-            for (final I i : inputs) {
+            for (I i : inputs) {
 
                 if (!validInputMap.get(i)) {
                     continue;
@@ -398,7 +395,7 @@ public final class LeeYannakakis {
 
         //check remaining potential Cs
         pendingCLoop:
-        for (final SplitTree<S, I, O> pendingC : pendingCs) {
+        for (SplitTree<S, I, O> pendingC : pendingCs) {
 
             final Integer pendingPartition = partitionToNodeMap.inverse().get(pendingC);
             final Iterator<Integer> iter =

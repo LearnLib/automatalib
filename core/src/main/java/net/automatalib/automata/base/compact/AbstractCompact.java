@@ -173,7 +173,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     @Override
     public Collection<I> getLocalInputs(Integer state) {
         final List<I> result = new ArrayList<>(alphabet.size());
-        for (final I i : alphabet) {
+        for (I i : alphabet) {
             if (!getTransitions(state, i).isEmpty()) {
                 result.add(i);
             }

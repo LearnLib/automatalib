@@ -45,7 +45,7 @@ public final class Graphs {
 
     private Graphs() {}
 
-    public static <N, E> Mapping<N, @Nullable Collection<E>> incomingEdges(final Graph<N, E> graph) {
+    public static <N, E> Mapping<N, @Nullable Collection<E>> incomingEdges(Graph<N, E> graph) {
         if (graph instanceof BidirectionalGraph) {
             final BidirectionalGraph<N, E> bdGraph = (BidirectionalGraph<N, E>) graph;
             return bdGraph::getIncomingEdges;
@@ -69,7 +69,7 @@ public final class Graphs {
         return inEdgesMapping;
     }
 
-    public static <N, E> @Nullable Path<N, E> findShortestPath(final IndefiniteGraph<N, E> graph,
+    public static <N, E> @Nullable Path<N, E> findShortestPath(IndefiniteGraph<N, E> graph,
                                                                int limit,
                                                                N start,
                                                                Collection<? extends N> targets) {

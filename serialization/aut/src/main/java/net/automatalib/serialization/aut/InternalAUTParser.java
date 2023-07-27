@@ -70,9 +70,9 @@ class InternalAUTParser {
                 result.addState();
             }
 
-            for (final Map.Entry<Integer, Map<String, Integer>> outgoing : transitionMap.entrySet()) {
+            for (Map.Entry<Integer, Map<String, Integer>> outgoing : transitionMap.entrySet()) {
                 final Integer src = outgoing.getKey();
-                for (final Map.Entry<String, Integer> targets : outgoing.getValue().entrySet()) {
+                for (Map.Entry<String, Integer> targets : outgoing.getValue().entrySet()) {
                     final String input = targets.getKey();
                     final Integer dest = targets.getValue();
                     result.addTransition(src, inputMap.get(input), dest);

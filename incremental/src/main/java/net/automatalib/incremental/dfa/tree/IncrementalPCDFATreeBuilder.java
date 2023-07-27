@@ -55,7 +55,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
     }
 
     @Override
-    protected <S> @Nullable Word<I> doFindSeparatingWord(final DFA<S, I> target,
+    protected <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
                                                          Collection<? extends I> inputs,
                                                          boolean omitUndefined) {
 

@@ -133,9 +133,9 @@ public abstract class AbstractAutomatonCopyTest {
                                        Predicate<S> stateFilterForRemoval,
                                        TransitionPredicate<S, I, T> transitionFilterForRemoval) {
 
-        for (final S s : automaton) {
-            for (final I i : alphabet) {
-                for (final T t : automaton.getTransitions(s, i)) {
+        for (S s : automaton) {
+            for (I i : alphabet) {
+                for (T t : automaton.getTransitions(s, i)) {
                     if (transitionFilterForRemoval.apply(s, i, t)) {
                         automaton.removeTransition(s, i, t);
                     }
@@ -143,7 +143,7 @@ public abstract class AbstractAutomatonCopyTest {
             }
         }
 
-        for (final S s : automaton) {
+        for (S s : automaton) {
             if (stateFilterForRemoval.test(s)) {
                 ShrinkableAutomaton.unlinkState(automaton, s, null, alphabet);
             }

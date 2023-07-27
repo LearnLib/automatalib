@@ -133,7 +133,7 @@ public final class Mappings {
      *
      * @return the mapped collection.
      */
-    public static <D, R> Collection<R> apply(final Mapping<? super D, R> mapping, final Collection<? extends D> coll) {
+    public static <D, R> Collection<R> apply(Mapping<? super D, R> mapping, Collection<? extends D> coll) {
         return Collections2.transform(coll, mapping::get);
     }
 
@@ -167,7 +167,7 @@ public final class Mappings {
      *
      * @return the mapped list.
      */
-    public static <D, R> List<R> apply(final Mapping<? super D, R> mapping, final List<? extends D> list) {
+    public static <D, R> List<R> apply(Mapping<? super D, R> mapping, List<? extends D> list) {
         return Lists.transform(list, mapping::get);
     }
 
@@ -186,7 +186,7 @@ public final class Mappings {
      *
      * @return the mapped iterable.
      */
-    public static <D, R> Iterable<R> apply(final Mapping<? super D, R> mapping, final Iterable<? extends D> it) {
+    public static <D, R> Iterable<R> apply(Mapping<? super D, R> mapping, Iterable<? extends D> it) {
         return Iterables.transform(it, mapping::get);
     }
 

@@ -37,8 +37,8 @@ public class RandomICAutomatonTest {
 
         final CompactDFA<Character> automaton = RandomAutomata.randomICDFA(random, size, alphabet, false);
 
-        for (final Integer s : automaton) {
-            for (final Character i : alphabet) {
+        for (Integer s : automaton) {
+            for (Character i : alphabet) {
                 Assert.assertNotNull(automaton.getSuccessor(s, i));
             }
         }

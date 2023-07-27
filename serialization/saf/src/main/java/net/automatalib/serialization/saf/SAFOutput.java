@@ -171,7 +171,7 @@ public class SAFOutput {
         // 'writeInts'
         out.writeInt(initialStates.size());
 
-        for (final S s : initialStates) {
+        for (S s : initialStates) {
             out.writeInt(states.indexOf(s));
         }
         // end 'writeInts'
@@ -191,7 +191,7 @@ public class SAFOutput {
 
                 out.writeInt(succs.size());
 
-                for (final T t : succs) {
+                for (T t : succs) {
                     final S succState = source.getSuccessor(t);
                     out.writeInt(stateList.indexOf(succState));
                     tpEncoder.writeProperty(out, source.getTransitionProperty(t));
@@ -205,7 +205,7 @@ public class SAFOutput {
                                                BlockPropertyEncoder<? super SP> encoder) throws IOException {
         encoder.start(out);
 
-        for (final S s : states) {
+        for (S s : states) {
             encoder.encodeProperty(out, source.getStateProperty(s));
         }
 

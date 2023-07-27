@@ -165,7 +165,7 @@ public final class IOUtil {
      * @throws IOException
      *         if accessing the file results in an I/O error
      */
-    public static Reader asBufferedUTF8Reader(final File file) throws IOException {
+    public static Reader asBufferedUTF8Reader(File file) throws IOException {
         return Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8);
     }
 
@@ -182,7 +182,7 @@ public final class IOUtil {
      *
      * @return a buffered, UTF-8-decoding reader for the input stream.
      */
-    public static Reader asBufferedUTF8Reader(final InputStream is) {
+    public static Reader asBufferedUTF8Reader(InputStream is) {
         return asUTF8Reader(asBufferedInputStream(is));
     }
 
@@ -194,7 +194,7 @@ public final class IOUtil {
      *
      * @return a UTF-8-decoding reader for the input stream
      */
-    public static Reader asUTF8Reader(final InputStream is) {
+    public static Reader asUTF8Reader(InputStream is) {
         return new InputStreamReader(is, StandardCharsets.UTF_8);
     }
 
@@ -210,7 +210,7 @@ public final class IOUtil {
      * @throws IOException
      *         if writing to the file results in I/O errors
      */
-    public static Writer asBufferedUTF8Writer(final File file) throws IOException {
+    public static Writer asBufferedUTF8Writer(File file) throws IOException {
         return Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8);
     }
 
@@ -227,7 +227,7 @@ public final class IOUtil {
      *
      * @return a buffered, UTF-8 encoding writer for the output stream
      */
-    public static Writer asBufferedUTF8Writer(final OutputStream os) {
+    public static Writer asBufferedUTF8Writer(OutputStream os) {
         return asUTF8Writer(asBufferedOutputStream(os));
     }
 
@@ -239,7 +239,7 @@ public final class IOUtil {
      *
      * @return a UTF-8-encoding writer for the output stream.
      */
-    public static Writer asUTF8Writer(final OutputStream os) {
+    public static Writer asUTF8Writer(OutputStream os) {
         return new OutputStreamWriter(os, StandardCharsets.UTF_8);
     }
 
@@ -285,7 +285,7 @@ public final class IOUtil {
      * @see #asUTF8Reader(InputStream)
      * @see #asUncompressedBufferedNonClosingInputStream(InputStream)
      */
-    public static Reader asUncompressedBufferedNonClosingUTF8Reader(final InputStream is) throws IOException {
+    public static Reader asUncompressedBufferedNonClosingUTF8Reader(InputStream is) throws IOException {
         return asUTF8Reader(asUncompressedBufferedNonClosingInputStream(is));
     }
 
@@ -325,7 +325,7 @@ public final class IOUtil {
      * @see #asBufferedNonClosingOutputStream(OutputStream)
      * @see #asUTF8Writer(OutputStream)
      */
-    public static Writer asBufferedNonClosingUTF8Writer(final OutputStream os) {
+    public static Writer asBufferedNonClosingUTF8Writer(OutputStream os) {
         return asUTF8Writer(asBufferedNonClosingOutputStream(os));
     }
 

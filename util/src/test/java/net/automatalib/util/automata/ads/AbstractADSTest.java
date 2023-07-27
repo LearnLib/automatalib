@@ -34,15 +34,15 @@ import org.testng.Assert;
  */
 public abstract class AbstractADSTest {
 
-    protected <I, O> void verifySuccess(final CompactMealy<I, O> mealy) {
+    protected <I, O> void verifySuccess(CompactMealy<I, O> mealy) {
         this.verifySuccess(mealy, mealy.getStates());
     }
 
-    protected <I, O> void verifySuccess(final CompactMealy<I, O> mealy, final Collection<Integer> targets) {
+    protected <I, O> void verifySuccess(CompactMealy<I, O> mealy, Collection<Integer> targets) {
         this.verifySuccess(mealy, new HashSet<>(targets));
     }
 
-    protected <I, O> void verifySuccess(final CompactMealy<I, O> mealy, final Set<Integer> targets) {
+    protected <I, O> void verifySuccess(CompactMealy<I, O> mealy, Set<Integer> targets) {
         final Optional<ADSNode<Integer, I, O>> defaultADS = ADS.compute(mealy, mealy.getInputAlphabet(), targets);
         final Optional<ADSNode<Integer, I, O>> bestEffortADS =
                 BacktrackingSearch.compute(mealy, mealy.getInputAlphabet(), targets);
@@ -89,9 +89,7 @@ public abstract class AbstractADSTest {
         Assert.assertTrue(bfsMinSizeSize <= bfsMinLengthSize);
     }
 
-    protected <I, O> void verifySuccess(final CompactMealy<I, O> mealy,
-                                        final Set<Integer> targets,
-                                        final ADSNode<Integer, I, O> ads) {
+    protected <I, O> void verifySuccess(CompactMealy<I, O> mealy, Set<Integer> targets, ADSNode<Integer, I, O> ads) {
 
         final Set<ADSNode<Integer, I, O>> leaves = ADSUtil.collectLeaves(ads);
 
@@ -113,15 +111,15 @@ public abstract class AbstractADSTest {
         Assert.assertEquals(traces.size(), outputSet.size());
     }
 
-    protected <I, O> void verifyFailure(final CompactMealy<I, O> mealy) {
+    protected <I, O> void verifyFailure(CompactMealy<I, O> mealy) {
         this.verifyFailure(mealy, mealy.getStates());
     }
 
-    protected <I, O> void verifyFailure(final CompactMealy<I, O> mealy, final Collection<Integer> targets) {
+    protected <I, O> void verifyFailure(CompactMealy<I, O> mealy, Collection<Integer> targets) {
         this.verifyFailure(mealy, new HashSet<>(targets));
     }
 
-    protected <I, O> void verifyFailure(final CompactMealy<I, O> mealy, final Set<Integer> targets) {
+    protected <I, O> void verifyFailure(CompactMealy<I, O> mealy, Set<Integer> targets) {
         final Optional<ADSNode<Integer, I, O>> defaultADS = ADS.compute(mealy, mealy.getInputAlphabet(), targets);
         final Optional<ADSNode<Integer, I, O>> bestEffortADS =
                 BacktrackingSearch.compute(mealy, mealy.getInputAlphabet(), targets);

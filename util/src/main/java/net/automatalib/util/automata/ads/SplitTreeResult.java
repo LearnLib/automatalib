@@ -38,12 +38,12 @@ class SplitTreeResult<S, I, O> {
     private final @Nullable SplitTree<S, I, O> delegate;
     private final Set<S> indistinguishableStates;
 
-    SplitTreeResult(final SplitTree<S, I, O> result) {
+    SplitTreeResult(SplitTree<S, I, O> result) {
         this.delegate = result;
         this.indistinguishableStates = Collections.emptySet();
     }
 
-    SplitTreeResult(final Set<S> indistinguishableStates) {
+    SplitTreeResult(Set<S> indistinguishableStates) {
         this.delegate = null;
         this.indistinguishableStates = indistinguishableStates;
     }

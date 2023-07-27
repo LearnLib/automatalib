@@ -27,7 +27,6 @@ import com.google.common.collect.Sets;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.commons.util.collections.AbstractThreeLevelIterator;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.commons.util.collections.ReusableIterator;
 import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.cover.Covers;
@@ -84,20 +83,18 @@ public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
 
         Covers.cover(automaton, inputs, stateCover, transitionCover);
 
-        final Iterable<Word<I>> characterizingSet;
-        final Iterator<Word<I>> characterizingIter = CharacterizingSets.characterizingSetIterator(automaton, inputs);
+        Iterator<Word<I>> characterizingIter = CharacterizingSets.characterizingSetIterator(automaton, inputs);
 
         // Special case: List of characterizing suffixes may be empty,
         // but in this case we still need to iterate over the prefixes!
         if (!characterizingIter.hasNext()) {
-            characterizingSet = Collections.singletonList(Word.epsilon());
-        } else {
-            characterizingSet = new ReusableIterator<>(characterizingIter);
+            characterizingIter = Iterators.singletonIterator(Word.epsilon());
         }
 
         // Phase 1: state cover * middle part * global suffixes
-        final Iterator<Word<I>> firstIterator =
-                new FirstPhaseIterator<>(stateCover, CollectionsUtil.allTuples(inputs, 0, maxDepth), characterizingSet);
+        final Iterator<Word<I>> firstIterator = new FirstPhaseIterator<>(stateCover,
+                                                                         CollectionsUtil.allTuples(inputs, 0, maxDepth),
+                                                                         characterizingIter);
 
         // Phase 2: transitions (not in state cover) * middle part * local suffixes
         transitionCover.removeAll(stateCover);
@@ -116,69 +113,63 @@ public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
         return wpIterator;
     }
 
-    private static class FirstPhaseIterator<I> extends AbstractThreeLevelIterator<List<I>, Word<I>, Word<I>, Word<I>> {
+    private static class FirstPhaseIterator<I> extends AbstractThreeLevelIterator<Word<I>, List<I>, Word<I>, Word<I>> {
 
         private final Iterable<Word<I>> prefixes;
-        private final Iterable<Word<I>> suffixes;
+        private final Iterable<List<I>> middleParts;
 
-        private final WordBuilder<I> wordBuilder = new WordBuilder<>();
-
-        FirstPhaseIterator(Iterable<Word<I>> prefixes, Iterable<List<I>> middleParts, Iterable<Word<I>> suffixes) {
-            super(middleParts.iterator());
+        FirstPhaseIterator(Iterable<Word<I>> prefixes, Iterable<List<I>> middleParts, Iterator<Word<I>> suffixes) {
+            super(suffixes);
 
             this.prefixes = prefixes;
-            this.suffixes = suffixes;
+            this.middleParts = middleParts;
         }
 
         @Override
-        protected Iterator<Word<I>> l2Iterator(List<I> l1Object) {
+        protected Iterator<List<I>> l2Iterator(Word<I> suffix) {
+            return middleParts.iterator();
+        }
+
+        @Override
+        protected Iterator<Word<I>> l3Iterator(Word<I> suffix, List<I> middle) {
             return prefixes.iterator();
         }
 
         @Override
-        protected Iterator<Word<I>> l3Iterator(List<I> l1Object, Word<I> l2Object) {
-            return suffixes.iterator();
-        }
-
-        @Override
-        protected Word<I> combine(List<I> middle, Word<I> prefix, Word<I> suffix) {
-            wordBuilder.ensureAdditionalCapacity(prefix.size() + middle.size() + suffix.size());
-            Word<I> word = wordBuilder.append(prefix).append(middle).append(suffix).toWord();
-            wordBuilder.clear();
-            return word;
+        protected Word<I> combine(Word<I> suffix, List<I> middle, Word<I> prefix) {
+            final WordBuilder<I> wb = new WordBuilder<>(prefix.size() + middle.size() + suffix.size());
+            return wb.append(prefix).append(middle).append(suffix).toWord();
         }
     }
 
     private static class SecondPhaseIterator<S, I>
-            extends AbstractThreeLevelIterator<List<I>, Word<I>, Word<I>, Word<I>> {
+            extends AbstractThreeLevelIterator<Word<I>, List<I>, Word<I>, Word<I>> {
 
         private final UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton;
         private final Collection<? extends I> inputs;
 
         private final MutableMapping<S, @Nullable List<Word<I>>> localSuffixSets;
-        private final Iterable<Word<I>> prefixes;
-
-        private final WordBuilder<I> wordBuilder = new WordBuilder<>();
+        private final Iterable<List<I>> middleParts;
 
         SecondPhaseIterator(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
                             Collection<? extends I> inputs,
                             Iterable<Word<I>> prefixes,
                             Iterable<List<I>> middleParts) {
-            super(middleParts.iterator());
+            super(prefixes.iterator());
 
             this.automaton = automaton;
             this.inputs = inputs;
             this.localSuffixSets = automaton.createStaticStateMapping();
-            this.prefixes = prefixes;
+            this.middleParts = middleParts;
         }
 
         @Override
-        protected Iterator<Word<I>> l2Iterator(List<I> l1Object) {
-            return prefixes.iterator();
+        protected Iterator<List<I>> l2Iterator(Word<I> prefix) {
+            return middleParts.iterator();
         }
 
         @Override
-        protected Iterator<Word<I>> l3Iterator(List<I> middle, Word<I> prefix) {
+        protected Iterator<Word<I>> l3Iterator(Word<I> prefix, List<I> middle) {
 
             @SuppressWarnings("nullness") // input sequences have been computed on defined transitions
             final @NonNull S tmp = automaton.getState(prefix);
@@ -199,11 +190,9 @@ public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
         }
 
         @Override
-        protected Word<I> combine(List<I> middle, Word<I> prefix, Word<I> suffix) {
-            wordBuilder.ensureAdditionalCapacity(prefix.size() + middle.size() + suffix.size());
-            Word<I> word = wordBuilder.append(prefix).append(middle).append(suffix).toWord();
-            wordBuilder.clear();
-            return word;
+        protected Word<I> combine(Word<I> prefix, List<I> middle, Word<I> suffix) {
+            final WordBuilder<I> wb = new WordBuilder<>(prefix.size() + middle.size() + suffix.size());
+            return wb.append(prefix).append(middle).append(suffix).toWord();
         }
     }
 }

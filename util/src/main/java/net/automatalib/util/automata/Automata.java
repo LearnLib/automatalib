@@ -188,15 +188,11 @@ public class Automata extends TS {
         return findSeparatingWord(reference, other, inputs) == null;
     }
 
-    public static <I> boolean testEquivalence(final OneSEVPA<?, I> sevpa1,
-                                              final OneSEVPA<?, I> sevpa2,
-                                              final VPDAlphabet<I> inputs) {
+    public static <I> boolean testEquivalence(OneSEVPA<?, I> sevpa1, OneSEVPA<?, I> sevpa2, VPDAlphabet<I> inputs) {
         return OneSEVPAUtil.testEquivalence(sevpa1, sevpa2, inputs);
     }
 
-    public static <I> boolean testEquivalence(final SPA<?, I> spa1,
-                                              final SPA<?, I> spa2,
-                                              final SPAAlphabet<I> inputs) {
+    public static <I> boolean testEquivalence(SPA<?, I> spa1, SPA<?, I> spa2, SPAAlphabet<I> inputs) {
         return SPAUtil.testEquivalence(spa1, spa2, inputs);
     }
 
@@ -248,15 +244,13 @@ public class Automata extends TS {
         return NearLinearEquivalenceTest.findSeparatingWord(automaton, state1, state2, inputs);
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(final OneSEVPA<?, I> sevpa1,
-                                                           final OneSEVPA<?, I> sevpa2,
-                                                           final VPDAlphabet<I> inputs) {
+    public static <I> @Nullable Word<I> findSeparatingWord(OneSEVPA<?, I> sevpa1,
+                                                           OneSEVPA<?, I> sevpa2,
+                                                           VPDAlphabet<I> inputs) {
         return OneSEVPAUtil.findSeparatingWord(sevpa1, sevpa2, inputs);
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(final SPA<?, I> spa1,
-                                                           final SPA<?, I> spa2,
-                                                           final SPAAlphabet<I> inputs) {
+    public static <I> @Nullable Word<I> findSeparatingWord(SPA<?, I> spa1, SPA<?, I> spa2, SPAAlphabet<I> inputs) {
         return SPAUtil.findSeparatingWord(spa1, spa2, inputs);
     }
 

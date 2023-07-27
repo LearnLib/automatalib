@@ -378,8 +378,8 @@ public final class DFAs {
      *
      * @param dfa
      *         the DFA to check
-     * @param alphabet
-     *         the Alphabet
+     * @param inputs
+     *         the input symbols to consider
      * @param <S>
      *         the type of state
      * @param <I>
@@ -387,11 +387,19 @@ public final class DFAs {
      *
      * @return whether the DFA is prefix-closed.
      */
-    public static <S, I> boolean isPrefixClosed(DFA<S, I> dfa, Alphabet<I> alphabet) {
-        return dfa.getStates()
-                  .stream()
-                  .allMatch(s -> dfa.isAccepting(s) ||
-                                 alphabet.stream().noneMatch(i -> dfa.isAccepting(dfa.getSuccessors(s, i))));
+    public static <S, I> boolean isPrefixClosed(DFA<S, I> dfa, Collection<I> inputs) {
+        for (S s : dfa) {
+            if (!dfa.isAccepting(s)) {
+                for (I i : inputs) {
+                    final S succ = dfa.getSuccessor(s, i);
+                    if (succ != null && dfa.isAccepting(succ)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -407,6 +415,11 @@ public final class DFAs {
      * @return whether the given {@link DFA} accepts the empty language.
      */
     public static <S> boolean acceptsEmptyLanguage(DFA<S, ?> dfa) {
-        return dfa.getStates().stream().noneMatch(dfa::isAccepting);
+        for (S s : dfa) {
+            if (dfa.isAccepting(s)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

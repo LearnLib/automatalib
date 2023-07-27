@@ -107,7 +107,7 @@ public class PowersetViewTest {
                                                      Word<I> traceFromInit) {
         S iter = view.getInitialState();
 
-        for (final I i : traceFromInit) {
+        for (I i : traceFromInit) {
             final T trans = view.getTransition(iter, i);
             final S tSucc = view.getSuccessor(trans);
 
@@ -122,7 +122,7 @@ public class PowersetViewTest {
     private static <S extends NumericID> FastPowersetState<S> toFastPowersetState(Collection<S> from) {
         final FastPowersetState<S> result = new FastPowersetState<>();
 
-        for (final S s : from) {
+        for (S s : from) {
             result.add(s, s.getId());
         }
 

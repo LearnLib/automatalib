@@ -51,12 +51,12 @@ public final class AUTWriter {
 
         final Set<TransitionTriple<S, I>> transitions = new HashSet<>();
 
-        for (final S s : automaton.getStates()) {
-            for (final I i : alphabet) {
+        for (S s : automaton.getStates()) {
+            for (I i : alphabet) {
                 final Set<S> succs = automaton.getSuccessors(s, i);
 
                 if (!succs.isEmpty()) {
-                    for (final S succ : succs) {
+                    for (S succ : succs) {
                         transitions.add(new TransitionTriple<>(s, i, succ));
                     }
 
@@ -101,7 +101,7 @@ public final class AUTWriter {
 
         final StateIDs<S> stateIds = automaton.stateIDs();
 
-        for (final TransitionTriple<S, I> trans : transitions) {
+        for (TransitionTriple<S, I> trans : transitions) {
             appendable.append('(');
             appendable.append(Integer.toString(stateIds.getStateId(trans.src)));
             appendable.append(", ");

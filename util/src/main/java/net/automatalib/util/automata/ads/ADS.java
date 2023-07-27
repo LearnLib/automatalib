@@ -53,9 +53,9 @@ public final class ADS {
      * @return {@code Optional.empty()} if there exists no ADS that distinguishes the given states, a valid ADS
      * otherwise.
      */
-    public static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
-                                                               final Alphabet<I> input,
-                                                               final Set<S> states) {
+    public static <S, I, O> Optional<ADSNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
+                                                               Alphabet<I> input,
+                                                               Set<S> states) {
 
         if (states.isEmpty()) {
             return Optional.empty();
@@ -84,9 +84,9 @@ public final class ADS {
      *         <li>the partition of the provided node contains as many states as the automaton</li>
      *         </ul>
      */
-    static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
-                                                        final Alphabet<I> input,
-                                                        final SplitTree<S, I, O> node) {
+    static <S, I, O> Optional<ADSNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
+                                                        Alphabet<I> input,
+                                                        SplitTree<S, I, O> node) {
 
         if (node.getPartition().isEmpty()) {
             throw new IllegalArgumentException("Empty partitions should be handled by the specific algorithm");

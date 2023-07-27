@@ -32,9 +32,7 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPD
 
     private final @Nullable Object[] globalSymbolCache;
 
-    public DefaultVPDAlphabet(final Collection<I> internalSymbols,
-                              final Collection<I> callSymbols,
-                              final Collection<I> returnSymbols) {
+    public DefaultVPDAlphabet(Collection<I> internalSymbols, Collection<I> callSymbols, Collection<I> returnSymbols) {
         this(Alphabets.fromCollection(internalSymbols),
              Alphabets.fromCollection(callSymbols),
              Alphabets.fromCollection(returnSymbols));
@@ -42,9 +40,7 @@ public class DefaultVPDAlphabet<I> extends AbstractVPDAlphabet<I> implements VPD
 
     // False positive, because our intended semantic is currently not supported by CF (https://github.com/typetools/checker-framework/issues/3760)
     @SuppressWarnings({"method.invocation.invalid", "methodref.receiver.bound.invalid"})
-    public DefaultVPDAlphabet(final Alphabet<I> internalAlphabet,
-                              final Alphabet<I> callAlphabet,
-                              final Alphabet<I> returnAlphabet) {
+    public DefaultVPDAlphabet(Alphabet<I> internalAlphabet, Alphabet<I> callAlphabet, Alphabet<I> returnAlphabet) {
         super(internalAlphabet, callAlphabet, returnAlphabet);
         this.globalSymbolCache = new Object[super.size()];
         Arrays.setAll(this.globalSymbolCache, super::getSymbol);

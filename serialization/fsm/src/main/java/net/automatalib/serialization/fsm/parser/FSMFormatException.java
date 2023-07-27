@@ -32,11 +32,11 @@ public class FSMFormatException extends FormatException {
         super(message);
     }
 
-    public FSMFormatException(final String message, final StreamTokenizer streamTokenizer) {
+    public FSMFormatException(String message, StreamTokenizer streamTokenizer) {
         super(String.format(MESSAGE, message, streamTokenizer.lineno()));
     }
 
-    public FSMFormatException(Exception e, final StreamTokenizer streamTokenizer) {
+    public FSMFormatException(Exception e, StreamTokenizer streamTokenizer) {
         super(String.format(MESSAGE, e.getMessage(), streamTokenizer.lineno()));
     }
 }

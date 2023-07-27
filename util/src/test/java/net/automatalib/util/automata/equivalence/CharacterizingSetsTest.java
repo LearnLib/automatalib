@@ -160,7 +160,7 @@ public class CharacterizingSetsTest {
 
     private <S, I> void checkCharacterizingSet(DetSuffixOutputAutomaton<S, I, ?, ?> automaton,
                                                Collection<Word<I>> characterizingSet) {
-        for (final S s : automaton) {
+        for (S s : automaton) {
             checkCharacterizingSet(automaton, s, characterizingSet);
         }
     }
@@ -170,9 +170,9 @@ public class CharacterizingSetsTest {
                                                   Collection<Word<I>> characterizingSet) {
 
         outer:
-        for (final S s : automaton) {
+        for (S s : automaton) {
             if (!Objects.equals(s, state)) {
-                for (final Word<I> trace : characterizingSet) {
+                for (Word<I> trace : characterizingSet) {
 
                     final D baseOutput = automaton.computeStateOutput(state, trace);
                     final D checkOutput = automaton.computeStateOutput(s, trace);

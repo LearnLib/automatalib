@@ -51,7 +51,7 @@ public class ScalingThreadPoolExecutorTest {
         }
 
         // this code only returns, if 'tasks' threads are spawned, which all decrease the shared latch
-        for (final Future<?> f : futures) {
+        for (Future<?> f : futures) {
             f.get();
         }
 
@@ -92,7 +92,7 @@ public class ScalingThreadPoolExecutorTest {
         }
 
         // this code only returns, if the short-running tasks were scheduled 9 times to unblock the long-running task
-        for (final Future<?> f : futures) {
+        for (Future<?> f : futures) {
             f.get();
         }
 

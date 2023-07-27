@@ -30,7 +30,7 @@ public final class State<L> {
     private final L loc;
     private final @Nullable StackContents stack;
 
-    public State(final L loc, final @Nullable StackContents stack) {
+    public State(L loc, @Nullable StackContents stack) {
         this.loc = loc;
         this.stack = stack;
     }

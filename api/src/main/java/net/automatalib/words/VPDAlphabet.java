@@ -119,7 +119,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
 
     default int callReturnBalance(Word<I> word) {
         int crb = 0;
-        for (final I sym : word) {
+        for (I sym : word) {
             switch (getSymbolType(sym)) {
                 case CALL:
                     crb++;
@@ -135,7 +135,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
 
     default boolean isCallMatched(Word<I> word) {
         int crb = 0;
-        for (final I sym : word) {
+        for (I sym : word) {
             switch (getSymbolType(sym)) {
                 case CALL:
                     crb++;
@@ -161,7 +161,7 @@ public interface VPDAlphabet<I> extends Alphabet<I> {
 
     default boolean isReturnMatched(Word<I> word) {
         int crb = 0;
-        for (final I sym : word) {
+        for (I sym : word) {
             switch (getSymbolType(sym)) {
                 case CALL:
                     crb++;

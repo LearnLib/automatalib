@@ -33,11 +33,11 @@ public class DefaultNSEVPA<I> extends AbstractDefaultSEVPA<I> {
     private final Location[] moduleEntries;
     private final ResizingArrayStorage<I> moduleMapping;
 
-    public DefaultNSEVPA(final VPDAlphabet<I> alphabet) {
+    public DefaultNSEVPA(VPDAlphabet<I> alphabet) {
         this(alphabet, DEFAULT_SIZE);
     }
 
-    public DefaultNSEVPA(final VPDAlphabet<I> alphabet, int capacityHint) {
+    public DefaultNSEVPA(VPDAlphabet<I> alphabet, int capacityHint) {
         super(alphabet, capacityHint);
         this.moduleEntries = new Location[alphabet.getNumCalls()];
         this.moduleMapping = new ResizingArrayStorage<>(Object.class);

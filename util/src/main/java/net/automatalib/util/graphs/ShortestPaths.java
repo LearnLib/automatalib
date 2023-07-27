@@ -51,10 +51,10 @@ public final class ShortestPaths {
         return shortestPaths(graph, Collections.singleton(start), limit, targetPred);
     }
 
-    public static <N, E> Iterable<Path<N, E>> shortestPaths(final IndefiniteGraph<N, E> graph,
-                                                            final Collection<? extends N> start,
-                                                            final int limit,
-                                                            final Predicate<? super N> targetPred) {
+    public static <N, E> Iterable<Path<N, E>> shortestPaths(IndefiniteGraph<N, E> graph,
+                                                            Collection<? extends N> start,
+                                                            int limit,
+                                                            Predicate<? super N> targetPred) {
         Objects.requireNonNull(graph);
         Objects.requireNonNull(start);
         Objects.requireNonNull(targetPred);

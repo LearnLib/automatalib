@@ -70,9 +70,9 @@ public final class BacktrackingSearch {
      * @return {@code Optional.empty()} if there exists no ADS that distinguishes the given states, a valid ADS
      * otherwise.
      */
-    public static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
-                                                               final Alphabet<I> input,
-                                                               final Set<S> states) {
+    public static <S, I, O> Optional<ADSNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
+                                                               Alphabet<I> input,
+                                                               Set<S> states) {
 
         if (states.size() == 1) {
             return ADS.compute(automaton, input, states);
@@ -87,16 +87,16 @@ public final class BacktrackingSearch {
      * See {@link #compute(MealyMachine, Alphabet, Set)}. Internal version, that uses the {@link SplitTree}
      * representation.
      */
-    static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
-                                                        final Alphabet<I> input,
-                                                        final SplitTree<S, I, O> node) {
+    static <S, I, O> Optional<ADSNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
+                                                        Alphabet<I> input,
+                                                        SplitTree<S, I, O> node) {
         return compute(automaton, input, node, node.getPartition().size());
     }
 
-    private static <S, I, T, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, T, O> automaton,
-                                                                   final Alphabet<I> input,
-                                                                   final SplitTree<S, I, O> node,
-                                                                   final int originalPartitionSize) {
+    private static <S, I, T, O> Optional<ADSNode<S, I, O>> compute(MealyMachine<S, I, T, O> automaton,
+                                                                   Alphabet<I> input,
+                                                                   SplitTree<S, I, O> node,
+                                                                   int originalPartitionSize) {
 
         final long maximumSplittingWordLength = ADSUtil.computeMaximumSplittingWordLength(automaton.size(),
                                                                                           node.getPartition().size(),
@@ -119,7 +119,7 @@ public final class BacktrackingSearch {
                                                                                                                 prefix),
                                                                                     Function.identity()));
             final BitSet currentSetAsBitSet = new BitSet();
-            for (final S s : currentToInitialMapping.keySet()) {
+            for (S s : currentToInitialMapping.keySet()) {
                 currentSetAsBitSet.set(stateIds.getStateId(s));
             }
 
@@ -128,11 +128,11 @@ public final class BacktrackingSearch {
             }
 
             oneSymbolFuture:
-            for (final I i : input) {
+            for (I i : input) {
                 // compute successors
                 final Map<O, SplitTree<S, I, O>> successors = new HashMap<>();
 
-                for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
+                for (Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
                     final S current = entry.getKey();
                     final T trans = automaton.getTransition(current, i);
 
@@ -162,12 +162,12 @@ public final class BacktrackingSearch {
                 if (successors.size() > 1) {
                     final Map<O, ADSNode<S, I, O>> results = new HashMap<>();
 
-                    for (final Map.Entry<O, SplitTree<S, I, O>> entry : successors.entrySet()) {
+                    for (Map.Entry<O, SplitTree<S, I, O>> entry : successors.entrySet()) {
 
                         final SplitTree<S, I, O> currentNode = entry.getValue();
 
                         final BitSet currentNodeAsBitSet = new BitSet();
-                        for (final S s : currentNode.getPartition()) {
+                        for (S s : currentNode.getPartition()) {
                             currentNodeAsBitSet.set(stateIds.getStateId(s));
                         }
 
@@ -196,7 +196,7 @@ public final class BacktrackingSearch {
                     final ADSNode<S, I, O> head = ads.getFirst();
                     final ADSNode<S, I, O> tail = ads.getSecond();
 
-                    for (final Map.Entry<O, ADSNode<S, I, O>> entry : results.entrySet()) {
+                    for (Map.Entry<O, ADSNode<S, I, O>> entry : results.entrySet()) {
                         entry.getValue().setParent(tail);
                         tail.getChildren().put(entry.getKey(), entry.getValue());
                     }
@@ -235,10 +235,10 @@ public final class BacktrackingSearch {
      * @return {@code Optional.empty()} if there exists no ADS that distinguishes the given states, a valid ADS
      * otherwise.
      */
-    public static <S, I, O> Optional<ADSNode<S, I, O>> computeOptimal(final MealyMachine<S, I, ?, O> automaton,
-                                                                      final Alphabet<I> input,
-                                                                      final Set<S> states,
-                                                                      final CostAggregator costAggregator) {
+    public static <S, I, O> Optional<ADSNode<S, I, O>> computeOptimal(MealyMachine<S, I, ?, O> automaton,
+                                                                      Alphabet<I> input,
+                                                                      Set<S> states,
+                                                                      CostAggregator costAggregator) {
 
         if (states.size() == 1) {
             return ADS.compute(automaton, input, states);
@@ -255,13 +255,13 @@ public final class BacktrackingSearch {
         return searchState.map(s -> constructADS(automaton, new ReflexiveMapView<>(states), s));
     }
 
-    private static <S, I, T, O> Optional<SearchState<S, I, O>> exploreSearchSpace(final MealyMachine<S, I, T, O> automaton,
-                                                                                  final Alphabet<I> alphabet,
-                                                                                  final Set<S> targets,
-                                                                                  final CostAggregator costAggregator,
-                                                                                  final Map<Set<S>, Optional<SearchState<S, I, O>>> stateCache,
-                                                                                  final Set<Set<S>> currentTraceCache,
-                                                                                  final int costsBound) {
+    private static <S, I, T, O> Optional<SearchState<S, I, O>> exploreSearchSpace(MealyMachine<S, I, T, O> automaton,
+                                                                                  Alphabet<I> alphabet,
+                                                                                  Set<S> targets,
+                                                                                  CostAggregator costAggregator,
+                                                                                  Map<Set<S>, Optional<SearchState<S, I, O>>> stateCache,
+                                                                                  Set<Set<S>> currentTraceCache,
+                                                                                  int costsBound) {
 
         final Optional<SearchState<S, I, O>> cachedValue = stateCache.get(targets);
 
@@ -292,12 +292,12 @@ public final class BacktrackingSearch {
         I bestInputSymbol = null;
 
         alphabetLoop:
-        for (final I i : alphabet) {
+        for (I i : alphabet) {
 
             // compute successors
             final Map<O, Set<S>> successors = new HashMap<>();
 
-            for (final S s : targets) {
+            for (S s : targets) {
                 final T trans = automaton.getTransition(s, i);
 
                 if (trans == null) {
@@ -331,7 +331,7 @@ public final class BacktrackingSearch {
                 successorsForInputSymbol = Maps.newHashMapWithExpectedSize(successors.size());
                 int partitionCosts = 0;
 
-                for (final Map.Entry<O, Set<S>> entry : successors.entrySet()) {
+                for (Map.Entry<O, Set<S>> entry : successors.entrySet()) {
 
                     final Optional<SearchState<S, I, O>> potentialResult = exploreSearchSpace(automaton,
                                                                                               alphabet,
@@ -409,9 +409,9 @@ public final class BacktrackingSearch {
         return result;
     }
 
-    private static <S, I, O> ADSNode<S, I, O> constructADS(final MealyMachine<S, I, ?, O> automaton,
-                                                           final Map<S, S> currentToInitialMapping,
-                                                           final SearchState<S, I, O> searchState) {
+    private static <S, I, O> ADSNode<S, I, O> constructADS(MealyMachine<S, I, ?, O> automaton,
+                                                           Map<S, S> currentToInitialMapping,
+                                                           SearchState<S, I, O> searchState) {
 
         if (currentToInitialMapping.size() == 1) {
             return new ADSLeafNode<>(null, currentToInitialMapping.values().iterator().next());
@@ -420,7 +420,7 @@ public final class BacktrackingSearch {
         final I i = searchState.symbol;
         final Map<O, Map<S, S>> successors = new HashMap<>();
 
-        for (final Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
+        for (Map.Entry<S, S> entry : currentToInitialMapping.entrySet()) {
             final S current = entry.getKey();
             final S nextState = automaton.getSuccessor(current, i);
             final O nextOutput = automaton.getOutput(current, i);
@@ -441,7 +441,7 @@ public final class BacktrackingSearch {
 
         final ADSNode<S, I, O> result = new ADSSymbolNode<>(null, i);
 
-        for (final Map.Entry<O, Map<S, S>> entry : successors.entrySet()) {
+        for (Map.Entry<O, Map<S, S>> entry : successors.entrySet()) {
 
             final O output = entry.getKey();
             final Map<S, S> nextMapping = entry.getValue();

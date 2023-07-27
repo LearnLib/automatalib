@@ -159,7 +159,7 @@ public class NearLinearEquivalenceTestTest {
     private static <I> void checkPartialTrace(CompactDFA<I> dfa, Word<I> trace) {
 
         Integer iter = dfa.getInitialState();
-        for (final I i : trace) {
+        for (I i : trace) {
             final Integer trans = dfa.getTransition(iter, i);
             if (trans == null) {
                 return;

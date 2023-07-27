@@ -72,7 +72,7 @@ public class TraversalTest {
     private static <N, EP> void addTreeTrace(MutableGraph<N, ?, ?, EP> tree, N init, EP... traceElements) {
         N iter = init;
 
-        for (final EP ep : traceElements) {
+        for (EP ep : traceElements) {
             final N next = tree.addNode();
             tree.connect(iter, next, ep);
             iter = next;
@@ -81,7 +81,7 @@ public class TraversalTest {
 
     @Test
     public void testSingleToSingleShortestPath() {
-        for (final Integer s : automaton.getStates()) {
+        for (Integer s : automaton.getStates()) {
             final Path<Integer, TransitionEdge<Integer, Integer>> path =
                     ShortestPaths.shortestPath(graph, automaton.getInitialState(), size - 1, s);
 

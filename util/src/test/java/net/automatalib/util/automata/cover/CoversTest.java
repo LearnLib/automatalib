@@ -179,7 +179,7 @@ public class CoversTest {
 
         final Set<S> states = new HashSet<>(automaton.getStates());
 
-        for (final Word<I> w : cover) {
+        for (Word<I> w : cover) {
             Assert.assertTrue(states.remove(automaton.getState(w)));
         }
 
@@ -198,8 +198,8 @@ public class CoversTest {
 
         final List<T> transitions = new ArrayList<>(automaton.size() * alphabet.size());
 
-        for (final S s : automaton.getStates()) {
-            for (final I i : alphabet) {
+        for (S s : automaton.getStates()) {
+            for (I i : alphabet) {
                 T t = automaton.getTransition(s, i);
                 if (t != null) {
                     transitions.add(t);
@@ -209,7 +209,7 @@ public class CoversTest {
 
         Assert.assertEquals(cover.size(), transitions.size()); // make sure we only cover defined transitions
 
-        for (final Word<I> w : cover) {
+        for (Word<I> w : cover) {
             final S s = automaton.getState(w.prefix(-1));
             Assert.assertTrue(transitions.remove(automaton.getTransition(s, w.lastSymbol())));
         }

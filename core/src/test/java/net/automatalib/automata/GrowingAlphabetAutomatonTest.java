@@ -144,7 +144,7 @@ public class GrowingAlphabetAutomatonTest {
         this.testNewTransitions(automaton, s1, s2, s3);
     }
 
-    private <M extends Output<Integer, D>, D> void testOutput(final M automaton) {
+    private <M extends Output<Integer, D>, D> void testOutput(M automaton) {
         // check that any output the automaton generates does not throw an error
         automaton.computeOutput(A1);
         automaton.computeOutput(A2);
@@ -156,10 +156,10 @@ public class GrowingAlphabetAutomatonTest {
         automaton.computeOutput(B4);
     }
 
-    private <M extends MutableAutomaton<S, Integer, T, SP, TP>, S, T, SP, TP> void testInitialTransitions(final M automaton,
-                                                                                                          final S s1,
-                                                                                                          final S s2,
-                                                                                                          final S s3) {
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP>, S, T, SP, TP> void testInitialTransitions(M automaton,
+                                                                                                          S s1,
+                                                                                                          S s2,
+                                                                                                          S s3) {
         // set initial transitions
         automaton.setTransitions(s1, 1, Collections.singleton(automaton.createTransition(s2, null)));
         automaton.setTransitions(s2, 2, Collections.singleton(automaton.createTransition(s3, null)));
@@ -173,10 +173,10 @@ public class GrowingAlphabetAutomatonTest {
         Assert.assertEquals(automaton.getStates(A4), Collections.singleton(s3));
     }
 
-    private <M extends MutableAutomaton<S, Integer, T, SP, TP>, S, T, SP, TP> void testNewTransitions(final M automaton,
-                                                                                                      final S s1,
-                                                                                                      final S s2,
-                                                                                                      final S s3) {
+    private <M extends MutableAutomaton<S, Integer, T, SP, TP>, S, T, SP, TP> void testNewTransitions(M automaton,
+                                                                                                      S s1,
+                                                                                                      S s2,
+                                                                                                      S s3) {
         // set new transitions
         automaton.setTransitions(s1, 3, Collections.singleton(automaton.createTransition(s3, null)));
         automaton.setTransitions(s2, 3, Collections.singleton(automaton.createTransition(s3, null)));

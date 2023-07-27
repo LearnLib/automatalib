@@ -107,7 +107,7 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
         // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
         final int newAlphabetSize = this.inputAlphabet.size();
 
-        for (final S s : this.getStates()) {
+        for (S s : this.getStates()) {
             s.ensureInputCapacity(newAlphabetSize);
         }
     }

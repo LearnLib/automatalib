@@ -23,12 +23,13 @@ import java.util.function.Predicate;
 import net.automatalib.automata.concepts.TransitionOutput;
 import net.automatalib.commons.util.functions.FunctionsUtil;
 import net.automatalib.ts.TransitionPredicate;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class TransitionPredicates {
 
     private TransitionPredicates() {}
 
-    public static <S, I, T> TransitionPredicate<S, I, T> safePred(TransitionPredicate<S, I, T> pred,
+    public static <S, I, T> TransitionPredicate<S, I, T> safePred(@Nullable TransitionPredicate<S, I, T> pred,
                                                                   boolean nullValue) {
         if (pred != null) {
             return pred;
@@ -36,9 +37,9 @@ public final class TransitionPredicates {
         return (s, i, t) -> nullValue;
     }
 
-    public static <S, I, T> TransitionPredicate<S, I, T> compose(Predicate<? super S> sourcePred,
-                                                                 Predicate<? super I> inputPred,
-                                                                 Predicate<? super T> transPred) {
+    public static <S, I, T> TransitionPredicate<S, I, T> compose(@Nullable Predicate<? super S> sourcePred,
+                                                                 @Nullable Predicate<? super I> inputPred,
+                                                                 @Nullable Predicate<? super T> transPred) {
         final Predicate<? super S> safeSource = FunctionsUtil.safeToTrue(sourcePred);
         final Predicate<? super I> safeInput = FunctionsUtil.safeToTrue(inputPred);
         final Predicate<? super T> safeTrans = FunctionsUtil.safeToTrue(transPred);
@@ -69,16 +70,16 @@ public final class TransitionPredicates {
         return (s, i, t) -> transPred.test(t);
     }
 
-    public static <S, I, T> TransitionPredicate<S, I, T> inputIs(Object input) {
+    public static <S, I, T> TransitionPredicate<S, I, T> inputIs(@Nullable Object input) {
         return (s, i, t) -> Objects.equals(i, input);
     }
 
-    public static <S, I, T> TransitionPredicate<S, I, T> inputIsNot(Object input) {
+    public static <S, I, T> TransitionPredicate<S, I, T> inputIsNot(@Nullable Object input) {
         return (s, i, t) -> !Objects.equals(i, input);
     }
 
     @SafeVarargs
-    public static <S, I, T> TransitionPredicate<S, I, T> inputIn(Object... inputs) {
+    public static <S, I, T> TransitionPredicate<S, I, T> inputIn(@Nullable Object... inputs) {
         return inputIn(Arrays.asList(inputs));
     }
 
@@ -87,7 +88,7 @@ public final class TransitionPredicates {
     }
 
     @SafeVarargs
-    public static <S, I, T> TransitionPredicate<S, I, T> inputNotIn(Object... inputs) {
+    public static <S, I, T> TransitionPredicate<S, I, T> inputNotIn(@Nullable Object... inputs) {
         return inputNotIn(Arrays.asList(inputs));
     }
 
@@ -96,7 +97,7 @@ public final class TransitionPredicates {
     }
 
     public static <S, I, T> TransitionPredicate<S, I, T> outputIs(TransitionOutput<? super T, ?> transOut,
-                                                                  Object output) {
+                                                                  @Nullable Object output) {
         return outputSatisfies(transOut, o -> Objects.equals(o, output));
     }
 
@@ -106,7 +107,7 @@ public final class TransitionPredicates {
     }
 
     public static <S, I, T> TransitionPredicate<S, I, T> outputIsNot(TransitionOutput<? super T, ?> transOut,
-                                                                     Object output) {
+                                                                     @Nullable Object output) {
         return outputViolates(transOut, o -> Objects.equals(o, output));
     }
 
@@ -116,7 +117,7 @@ public final class TransitionPredicates {
     }
 
     public static <S, I, T> TransitionPredicate<S, I, T> outputIn(TransitionOutput<? super T, ?> transOut,
-                                                                  Object... outputs) {
+                                                                  @Nullable Object... outputs) {
         return outputIn(transOut, Arrays.asList(outputs));
     }
 
@@ -126,7 +127,7 @@ public final class TransitionPredicates {
     }
 
     public static <S, I, T> TransitionPredicate<S, I, T> outputNotIn(TransitionOutput<? super T, ?> transOut,
-                                                                     Object... outputs) {
+                                                                     @Nullable Object... outputs) {
         return outputNotIn(transOut, Arrays.asList(outputs));
     }
 

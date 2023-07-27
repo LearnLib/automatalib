@@ -41,17 +41,17 @@ public class TS {
         return new BFSOrderIterator<>(ts, inputs);
     }
 
-    public static <S, SP> Function<S, SP> stateProperties(final UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
+    public static <S, SP> Function<S, SP> stateProperties(UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
         return uts::getStateProperty;
     }
 
-    public static <T, TP> Function<T, TP> transitionProperties(final UniversalTransitionSystem<?, ?, T, ?, TP> uts) {
+    public static <T, TP> Function<T, TP> transitionProperties(UniversalTransitionSystem<?, ?, T, ?, TP> uts) {
         return uts::getTransitionProperty;
     }
 
-    public static <S, I> Iterable<I> definedInputs(final DeterministicTransitionSystem<S, I, ?> dts,
-                                                   final S state,
-                                                   final Iterable<? extends I> inputs) {
+    public static <S, I> Iterable<I> definedInputs(DeterministicTransitionSystem<S, I, ?> dts,
+                                                   S state,
+                                                   Iterable<? extends I> inputs) {
         return () -> definedInputsIterator(dts, state, inputs.iterator());
     }
 
@@ -61,9 +61,9 @@ public class TS {
         return new DefinedInputsIterator<>(ts, state, inputsIt);
     }
 
-    public static <S, I> Iterable<TransRef<S, I, ?>> allDefinedInputs(final TransitionSystem<S, I, ?> ts,
-                                                                      final Iterable<? extends S> states,
-                                                                      final Iterable<? extends I> inputs) {
+    public static <S, I> Iterable<TransRef<S, I, ?>> allDefinedInputs(TransitionSystem<S, I, ?> ts,
+                                                                      Iterable<? extends S> states,
+                                                                      Iterable<? extends I> inputs) {
         return () -> allDefinedInputsIterator(ts, states.iterator(), inputs);
     }
 
@@ -73,9 +73,9 @@ public class TS {
         return new AllDefinedInputsIterator<>(stateIt, ts, inputs);
     }
 
-    public static <S, I> Iterable<I> undefinedInputs(final TransitionSystem<S, I, ?> ts,
-                                                     final S state,
-                                                     final Iterable<? extends I> inputs) {
+    public static <S, I> Iterable<I> undefinedInputs(TransitionSystem<S, I, ?> ts,
+                                                     S state,
+                                                     Iterable<? extends I> inputs) {
         return () -> undefinedInputsIterator(ts, state, inputs.iterator());
     }
 
@@ -85,9 +85,9 @@ public class TS {
         return new UndefinedInputsIterator<>(ts, state, inputsIt);
     }
 
-    public static <S, I> Iterable<TransRef<S, I, ?>> allUndefinedTransitions(final TransitionSystem<S, I, ?> ts,
-                                                                             final Iterable<? extends S> states,
-                                                                             final Iterable<? extends I> inputs) {
+    public static <S, I> Iterable<TransRef<S, I, ?>> allUndefinedTransitions(TransitionSystem<S, I, ?> ts,
+                                                                             Iterable<? extends S> states,
+                                                                             Iterable<? extends I> inputs) {
         return () -> allUndefinedTransitionsIterator(ts, states.iterator(), inputs);
     }
 

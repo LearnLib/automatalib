@@ -69,7 +69,7 @@ public final class CollectionsUtil {
         return new ArrayList<>(coll);
     }
 
-    public static <T> Iterable<List<T>> allTuples(final Iterable<? extends T> domain, final int length) {
+    public static <T> Iterable<List<T>> allTuples(Iterable<? extends T> domain, int length) {
         return allTuples(domain, length, length);
     }
 
@@ -93,9 +93,7 @@ public final class CollectionsUtil {
      * @return an iterator that iterates over all tuples of the given source domain whose length (dimension) is within
      * the specified range
      */
-    public static <T> Iterable<List<T>> allTuples(final Iterable<? extends T> domain,
-                                                  final int minLength,
-                                                  final int maxLength) {
+    public static <T> Iterable<List<T>> allTuples(Iterable<? extends T> domain, int minLength, int maxLength) {
         // Check if domain is empty
         // If it is, then the empty tuple (if not excluded by minLength > 0) is still part of the result
         // Otherwise, the result is empty
@@ -125,7 +123,7 @@ public final class CollectionsUtil {
      * @return an iterator that iterates over the cartesian product of its given source domains
      */
     @SafeVarargs
-    public static <T> Iterable<List<T>> cartesianProduct(final Iterable<T>... iterables) {
+    public static <T> Iterable<List<T>> cartesianProduct(Iterable<T>... iterables) {
         if (iterables.length == 0) {
             return Collections.singletonList(Collections.emptyList());
         }

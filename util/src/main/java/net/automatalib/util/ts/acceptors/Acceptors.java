@@ -38,7 +38,7 @@ public final class Acceptors {
         return new DetAcceptorComposition<>(ts1, ts2, combiner);
     }
 
-    public static <S> Mapping<S, Boolean> acceptance(final AcceptorTS<S, ?> acceptor) {
+    public static <S> Mapping<S, Boolean> acceptance(AcceptorTS<S, ?> acceptor) {
         return acceptor::isAccepting;
     }
 

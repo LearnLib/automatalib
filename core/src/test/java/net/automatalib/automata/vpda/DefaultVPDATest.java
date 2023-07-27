@@ -127,7 +127,7 @@ public class DefaultVPDATest {
         final Location accepting = vpa.addLocation(true);
 
         // criss-cross internal successors
-        for (final Integer i : internalAlphabet) {
+        for (Integer i : internalAlphabet) {
             final Location initSucc;
             final Location accSucc;
 
@@ -144,7 +144,7 @@ public class DefaultVPDATest {
         }
 
         // criss-cross return successors
-        for (final Integer r : returnAlphabet) {
+        for (Integer r : returnAlphabet) {
 
             for (int i = 0; i < callAlphabet.size(); i++) {
 
@@ -178,7 +178,7 @@ public class DefaultVPDATest {
 
         Assert.assertEquals(new HashSet<>(vpa.getLocations()), new HashSet<>(graph.getNodes()));
 
-        for (final L loc : vpa.getLocations()) {
+        for (L loc : vpa.getLocations()) {
             for (SevpaViewEdge<L, I> edge : graph.getOutgoingEdges(loc)) {
 
                 final I input = edge.input;

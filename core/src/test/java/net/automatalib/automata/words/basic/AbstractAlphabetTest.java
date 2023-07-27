@@ -78,18 +78,18 @@ public abstract class AbstractAlphabetTest<I, M extends Alphabet<I>> {
 
     @Test
     public void testContains() {
-        for (final I sym : alphabetSymbols) {
+        for (I sym : alphabetSymbols) {
             Assert.assertTrue(this.alphabet.containsSymbol(sym));
         }
 
-        for (final I sym : nonAlphabetSymbols) {
+        for (I sym : nonAlphabetSymbols) {
             Assert.assertFalse(this.alphabet.containsSymbol(sym));
         }
     }
 
     @Test
     public void testNonContainedSymbols() {
-        for (final I i : this.nonAlphabetSymbols) {
+        for (I i : this.nonAlphabetSymbols) {
             Assert.assertThrows(() -> this.alphabet.getSymbolIndex(i));
         }
     }

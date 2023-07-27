@@ -68,11 +68,11 @@ public class GraphsTest {
 
         final Mapping<N, Collection<E>> incomingEdges = Graphs.incomingEdges(graph);
 
-        for (final S tgt : dfa) {
+        for (S tgt : dfa) {
             final Set<S> incomingStates = new HashSet<>();
 
-            for (final S src : dfa) {
-                for (final I i : alphabet) {
+            for (S src : dfa) {
+                for (I i : alphabet) {
                     if (Objects.equals(tgt, dfa.getSuccessor(src, i))) {
                         incomingStates.add(src);
                     }
@@ -83,7 +83,7 @@ public class GraphsTest {
             final Set<E> edges = new HashSet<>(incomingEdges.get(mappedTgt));
             final Set<E> checkEdges = Sets.newHashSetWithExpectedSize(edges.size());
 
-            for (final S src : incomingStates) {
+            for (S src : incomingStates) {
                 final N mappedSrc = nodeMapping.get(src);
                 checkEdges.addAll(graph.getEdgesBetween(mappedSrc, mappedTgt));
             }

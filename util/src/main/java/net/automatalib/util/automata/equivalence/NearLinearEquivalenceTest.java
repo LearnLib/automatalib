@@ -38,10 +38,10 @@ public class NearLinearEquivalenceTest<I> {
         this.target = target;
     }
 
-    public static <S, I> @Nullable Word<I> findSeparatingWord(final UniversalDeterministicAutomaton<S, I, ?, ?, ?> target,
-                                                              final S init1,
-                                                              final S init2,
-                                                              final Collection<? extends I> inputs) {
+    public static <S, I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, ?, ?, ?> target,
+                                                              S init1,
+                                                              S init2,
+                                                              Collection<? extends I> inputs) {
         return findSeparatingWord(target, init1, init2, inputs, false);
     }
 
@@ -68,11 +68,11 @@ public class NearLinearEquivalenceTest<I> {
      *
      * @return A word separating the two states, {@code null} if no such word can be found
      */
-    public static <S, I, T> @Nullable Word<I> findSeparatingWord(final UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
-                                                                 final S init1,
-                                                                 final S init2,
-                                                                 final Collection<? extends I> inputs,
-                                                                 final boolean ignoreUndefinedTransitions) {
+    public static <S, I, T> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, T, ?, ?> target,
+                                                                 S init1,
+                                                                 S init2,
+                                                                 Collection<? extends I> inputs,
+                                                                 boolean ignoreUndefinedTransitions) {
 
         Object sprop1 = target.getStateProperty(init1);
         Object sprop2 = target.getStateProperty(init2);

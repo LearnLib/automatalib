@@ -129,8 +129,8 @@ public class WpMethodTestsIteratorTest {
         // Phase 2: transitions (not in state cover) * middle part * local suffixes
         transitionCover.removeAll(stateCover);
 
-        for (final Word<I> prefix : transitionCover) {
-            for (final Word<I> middle : middleParts) {
+        for (Word<I> prefix : transitionCover) {
+            for (Word<I> middle : middleParts) {
                 final Word<I> prefixWithMiddle = prefix.concat(middle);
                 final S s = automaton.getState(prefixWithMiddle);
 
@@ -138,7 +138,7 @@ public class WpMethodTestsIteratorTest {
                 CharacterizingSets.findCharacterizingSet(automaton, inputs, s, suffixes);
                 assert !suffixes.isEmpty();
 
-                for (final Word<I> suffix : suffixes) {
+                for (Word<I> suffix : suffixes) {
                     result.add(prefixWithMiddle.concat(suffix));
                 }
             }

@@ -27,11 +27,11 @@ public class StackContents {
     private final int topElem;
     private final @Nullable StackContents rest;
 
-    public StackContents(final int topElem) {
+    public StackContents(int topElem) {
         this(topElem, null);
     }
 
-    public StackContents(final int topElem, final @Nullable StackContents rest) {
+    public StackContents(int topElem, @Nullable StackContents rest) {
         this.topElem = topElem;
         this.rest = rest;
     }
@@ -44,11 +44,11 @@ public class StackContents {
         return rest;
     }
 
-    public StackContents push(final int elem) {
+    public StackContents push(int elem) {
         return new StackContents(elem, this);
     }
 
-    public static StackContents push(final int elem, final @Nullable StackContents rest) {
+    public static StackContents push(int elem, @Nullable StackContents rest) {
         return new StackContents(elem, rest);
     }
 }

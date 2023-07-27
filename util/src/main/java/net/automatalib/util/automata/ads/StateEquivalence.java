@@ -63,9 +63,9 @@ public final class StateEquivalence {
      * @throws IllegalArgumentException
      *         if passed anything other than two states.
      */
-    public static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
-                                                               final Alphabet<I> input,
-                                                               final Set<S> states) {
+    public static <S, I, O> Optional<ADSNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
+                                                               Alphabet<I> input,
+                                                               Set<S> states) {
 
         if (states.size() != 2) {
             throw new IllegalArgumentException("StateEquivalence can only distinguish 2 states");
@@ -80,9 +80,9 @@ public final class StateEquivalence {
      * See {@link #compute(MealyMachine, Alphabet, Set)}. Internal version, that uses the {@link SplitTree}
      * representation.
      */
-    static <S, I, O> Optional<ADSNode<S, I, O>> compute(final MealyMachine<S, I, ?, O> automaton,
-                                                        final Alphabet<I> input,
-                                                        final SplitTree<S, I, O> node) {
+    static <S, I, O> Optional<ADSNode<S, I, O>> compute(MealyMachine<S, I, ?, O> automaton,
+                                                        Alphabet<I> input,
+                                                        SplitTree<S, I, O> node) {
 
         final Iterator<S> targetStateIterator = node.getPartition().iterator();
         final S s1 = targetStateIterator.next();

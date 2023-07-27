@@ -35,7 +35,7 @@ public class Location {
     private final int index;
     private boolean accepting;
 
-    public Location(final VPDAlphabet<?> alphabet, final int index, final boolean accepting) {
+    public Location(VPDAlphabet<?> alphabet, int index, boolean accepting) {
         this.index = index;
         this.accepting = accepting;
         this.intSuccessors = new ArrayStorage<>(alphabet.getNumInternals());
@@ -50,11 +50,11 @@ public class Location {
         return accepting;
     }
 
-    public void setAccepting(final boolean accepting) {
+    public void setAccepting(boolean accepting) {
         this.accepting = accepting;
     }
 
-    public @Nullable Location getReturnSuccessor(final int retSymId, final int stackSym) {
+    public @Nullable Location getReturnSuccessor(int retSymId, int stackSym) {
         final @Nullable List<@Nullable Location> succList = returnSuccessors.get(retSymId);
         if (succList != null && stackSym < succList.size()) {
             return succList.get(stackSym);
@@ -62,7 +62,7 @@ public class Location {
         return null;
     }
 
-    public void setReturnSuccessor(final int retSymId, final int stackSym, final Location succ) {
+    public void setReturnSuccessor(int retSymId, int stackSym, Location succ) {
         @Nullable List<@Nullable Location> succList = returnSuccessors.get(retSymId);
         if (succList == null) {
             succList = new ArrayList<>(stackSym + 1);
@@ -75,11 +75,11 @@ public class Location {
         succList.set(stackSym, succ);
     }
 
-    public Location getInternalSuccessor(final int intSymId) {
+    public Location getInternalSuccessor(int intSymId) {
         return intSuccessors.get(intSymId);
     }
 
-    public void setInternalSuccessor(final int intSymId, final Location succ) {
+    public void setInternalSuccessor(int intSymId, Location succ) {
         intSuccessors.set(intSymId, succ);
     }
 

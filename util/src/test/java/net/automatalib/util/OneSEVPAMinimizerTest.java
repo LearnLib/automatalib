@@ -77,8 +77,8 @@ public class OneSEVPAMinimizerTest {
         Location locToCopy = null;
 
         outer:
-        for (final Location l : automaton.getLocations()) {
-            for (final I i : alphabet.getInternalAlphabet()) {
+        for (Location l : automaton.getLocations()) {
+            for (I i : alphabet.getInternalAlphabet()) {
                 final Location succ = automaton.getInternalSuccessor(l, i);
                 if (!locationCache.add(succ)) {
                     incomingLoc = l;
@@ -97,12 +97,12 @@ public class OneSEVPAMinimizerTest {
         final Location locCopy = automaton.addLocation(automaton.isAcceptingLocation(locToCopy));
 
         // make return transitions of old states behave identical for the new stack symbol
-        for (final I callSym : alphabet.getCallAlphabet()) {
+        for (I callSym : alphabet.getCallAlphabet()) {
             final int oldStackSym = automaton.encodeStackSym(locToCopy, callSym);
             final int newStackSym = automaton.encodeStackSym(locCopy, callSym);
 
-            for (final Location l : oldStates) {
-                for (final I retSym : alphabet.getReturnAlphabet()) {
+            for (Location l : oldStates) {
+                for (I retSym : alphabet.getReturnAlphabet()) {
                     final Location oldReturn = automaton.getReturnSuccessor(l, retSym, oldStackSym);
                     automaton.setReturnSuccessor(l, retSym, newStackSym, oldReturn);
                 }
@@ -110,13 +110,13 @@ public class OneSEVPAMinimizerTest {
         }
 
         // make internal transitions of new state behave identical to the state to copy
-        for (final I i : alphabet.getInternalAlphabet()) {
+        for (I i : alphabet.getInternalAlphabet()) {
             final Location target = automaton.getInternalSuccessor(locToCopy, i);
             automaton.setInternalSuccessor(locCopy, i, target);
         }
 
         // make return transitions of new state behave identical to the state to copy
-        for (final I i : alphabet.getReturnAlphabet()) {
+        for (I i : alphabet.getReturnAlphabet()) {
             for (int stackSym = 0; stackSym < automaton.getNumStackSymbols(); stackSym++) {
                 final Location target = automaton.getReturnSuccessor(locToCopy, i, stackSym);
                 automaton.setReturnSuccessor(locCopy, i, stackSym, target);

@@ -104,8 +104,8 @@ public class AUTSerializationTest {
     }
 
     private <S, I> void equalityTest(SimpleAutomaton<S, I> src, SimpleAutomaton<S, I> target, Alphabet<I> inputs) {
-        for (final S s : src.getStates()) {
-            for (final I i : inputs) {
+        for (S s : src.getStates()) {
+            for (I i : inputs) {
                 Assert.assertEquals(src.getSuccessors(s, i), target.getSuccessors(s, i));
             }
         }

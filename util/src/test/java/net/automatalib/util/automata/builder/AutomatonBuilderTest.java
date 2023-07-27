@@ -44,9 +44,9 @@ public class AutomatonBuilderTest {
 
         Assert.assertFalse(nfa.accepts(Word.epsilon()));
 
-        for (final Integer i1 : alphabet) {
+        for (Integer i1 : alphabet) {
             Assert.assertTrue(nfa.accepts(Word.fromLetter(i1)));
-            for (final Integer i2 : alphabet) {
+            for (Integer i2 : alphabet) {
                 Assert.assertFalse(nfa.accepts(Word.fromSymbols(i1, i2)));
             }
         }

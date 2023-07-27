@@ -43,11 +43,11 @@ class SplitTree<S, I, O> {
 
     private Word<I> sequence;
 
-    SplitTree(final Set<S> partition) {
+    SplitTree(Set<S> partition) {
         this(partition, new HashMap<>());
     }
 
-    SplitTree(final Set<S> partition, final Map<S, S> mapping) {
+    SplitTree(Set<S> partition, Map<S, S> mapping) {
         this.partition = partition;
         this.mapping = mapping;
 
@@ -75,9 +75,9 @@ class SplitTree<S, I, O> {
         this.sequence = sequence;
     }
 
-    public Optional<SplitTree<S, I, O>> findLowestSubsetNode(final Set<S> nodes) {
+    public Optional<SplitTree<S, I, O>> findLowestSubsetNode(Set<S> nodes) {
 
-        for (final SplitTree<S, I, O> st : successors.values()) {
+        for (SplitTree<S, I, O> st : successors.values()) {
             final Optional<SplitTree<S, I, O>> candidate = st.findLowestSubsetNode(nodes);
 
             if (candidate.isPresent()) {

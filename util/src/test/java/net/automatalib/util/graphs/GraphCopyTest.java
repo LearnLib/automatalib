@@ -90,7 +90,7 @@ public class GraphCopyTest {
 
         Assert.assertEquals(targetNodes, mappedSourceNodes);
 
-        for (final N1 node : source.getNodes()) {
+        for (N1 node : source.getNodes()) {
             final N2 mappedNode = mapping.get(node);
 
             final Set<N2> sourceSuccsMapped =

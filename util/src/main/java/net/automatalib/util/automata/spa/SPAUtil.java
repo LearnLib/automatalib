@@ -150,7 +150,7 @@ public final class SPAUtil {
         while (!stable) {
             stable = true;
 
-            for (final I i : new ArrayList<>(remainingProcedures)) {
+            for (I i : new ArrayList<>(remainingProcedures)) {
 
                 final DFA<?, I> dfa = procedures.get(i);
 
@@ -467,7 +467,7 @@ public final class SPAUtil {
         final ATRSequences<I> atr1 = computeATRSequences(spa1, alphabet);
         final ATRSequences<I> atr2 = computeATRSequences(spa2, alphabet);
 
-        for (final I procedure : alphabet.getCallAlphabet()) {
+        for (I procedure : alphabet.getCallAlphabet()) {
             final DFA<?, I> p1 = spa1.getProcedures().get(procedure);
             final DFA<?, I> p2 = spa2.getProcedures().get(procedure);
 

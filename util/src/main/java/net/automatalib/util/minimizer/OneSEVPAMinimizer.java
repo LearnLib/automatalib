@@ -33,7 +33,7 @@ public final class OneSEVPAMinimizer {
 
     private OneSEVPAMinimizer() {}
 
-    public static <I> DefaultOneSEVPA<I> minimize(final OneSEVPA<?, I> sevpa, final VPDAlphabet<I> alphabet) {
+    public static <I> DefaultOneSEVPA<I> minimize(OneSEVPA<?, I> sevpa, VPDAlphabet<I> alphabet) {
         final PaigeTarjan pt = new PaigeTarjan();
         initPaigeTarjan(pt, sevpa, alphabet);
         pt.initWorklist(false);
@@ -168,9 +168,9 @@ public final class OneSEVPAMinimizer {
         pt.setSize(numStates, numInputs);
     }
 
-    private static <L, I> DefaultOneSEVPA<I> fromPaigeTarjan(final PaigeTarjan pt,
-                                                             final OneSEVPA<L, I> original,
-                                                             final VPDAlphabet<I> alphabet) {
+    private static <L, I> DefaultOneSEVPA<I> fromPaigeTarjan(PaigeTarjan pt,
+                                                             OneSEVPA<L, I> original,
+                                                             VPDAlphabet<I> alphabet) {
 
         final int numBlocks = pt.getNumBlocks();
         final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, numBlocks);

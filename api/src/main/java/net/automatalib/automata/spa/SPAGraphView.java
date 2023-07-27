@@ -60,7 +60,7 @@ public class SPAGraphView<S, I> implements Graph<Pair<I, S>, Triple<I, I, S>> {
     public Collection<Pair<I, S>> getNodes() {
         final List<Pair<I, S>> result = new ArrayList<>();
 
-        for (final Map.Entry<I, DFA<S, I>> e : subModels.entrySet()) {
+        for (Map.Entry<I, DFA<S, I>> e : subModels.entrySet()) {
             final I procedure = e.getKey();
             for (S s : e.getValue()) {
                 result.add(Pair.of(procedure, s));
@@ -79,7 +79,7 @@ public class SPAGraphView<S, I> implements Graph<Pair<I, S>, Triple<I, I, S>> {
 
         final List<Triple<I, I, S>> result = new ArrayList<>(this.proceduralAlphabet.size());
 
-        for (final I i : this.proceduralAlphabet) {
+        for (I i : this.proceduralAlphabet) {
             final S next = subModel.getSuccessor(state, i);
 
             if (next != null) {

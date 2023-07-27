@@ -45,9 +45,9 @@ public final class OneSEVPAs {
      *
      * @return a new SEVPA representing the conjunction of the specified SEVPA
      */
-    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> and(final OneSEVPA<L1, I> sevpa1,
-                                                            final OneSEVPA<L2, I> sevpa2,
-                                                            final VPDAlphabet<I> alphabet) {
+    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> and(OneSEVPA<L1, I> sevpa1,
+                                                            OneSEVPA<L2, I> sevpa2,
+                                                            VPDAlphabet<I> alphabet) {
         return combine(sevpa1, sevpa2, alphabet, AcceptanceCombiner.AND);
     }
 
@@ -67,10 +67,10 @@ public final class OneSEVPAs {
      *
      * @return a new SEVPA representing the conjunction of the specified SEVPA
      */
-    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> combine(final OneSEVPA<L1, I> sevpa1,
-                                                                final OneSEVPA<L2, I> sevpa2,
-                                                                final VPDAlphabet<I> alphabet,
-                                                                final AcceptanceCombiner combiner) {
+    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> combine(OneSEVPA<L1, I> sevpa1,
+                                                                OneSEVPA<L2, I> sevpa2,
+                                                                VPDAlphabet<I> alphabet,
+                                                                AcceptanceCombiner combiner) {
         return new ProductOneSEVPA<>(alphabet, sevpa1, sevpa2, combiner);
     }
 
@@ -86,9 +86,9 @@ public final class OneSEVPAs {
      *
      * @return a new SEVPA representing the conjunction of the specified SEVPA
      */
-    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> or(final OneSEVPA<L1, I> sevpa1,
-                                                           final OneSEVPA<L2, I> sevpa2,
-                                                           final VPDAlphabet<I> alphabet) {
+    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> or(OneSEVPA<L1, I> sevpa1,
+                                                           OneSEVPA<L2, I> sevpa2,
+                                                           VPDAlphabet<I> alphabet) {
         return combine(sevpa1, sevpa2, alphabet, AcceptanceCombiner.OR);
     }
 
@@ -104,9 +104,9 @@ public final class OneSEVPAs {
      *
      * @return a new SEVPA representing the conjunction of the specified SEVPA
      */
-    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> xor(final OneSEVPA<L1, I> sevpa1,
-                                                            final OneSEVPA<L2, I> sevpa2,
-                                                            final VPDAlphabet<I> alphabet) {
+    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> xor(OneSEVPA<L1, I> sevpa1,
+                                                            OneSEVPA<L2, I> sevpa2,
+                                                            VPDAlphabet<I> alphabet) {
         return combine(sevpa1, sevpa2, alphabet, AcceptanceCombiner.XOR);
     }
 
@@ -122,9 +122,9 @@ public final class OneSEVPAs {
      *
      * @return a new SEVPA representing the conjunction of the specified SEVPA
      */
-    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> equiv(final OneSEVPA<L1, I> sevpa1,
-                                                              final OneSEVPA<L2, I> sevpa2,
-                                                              final VPDAlphabet<I> alphabet) {
+    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> equiv(OneSEVPA<L1, I> sevpa1,
+                                                              OneSEVPA<L2, I> sevpa2,
+                                                              VPDAlphabet<I> alphabet) {
         return combine(sevpa1, sevpa2, alphabet, AcceptanceCombiner.EQUIV);
     }
 
@@ -140,9 +140,9 @@ public final class OneSEVPAs {
      *
      * @return a new SEVPA representing the conjunction of the specified SEVPA
      */
-    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> impl(final OneSEVPA<L1, I> sevpa1,
-                                                             final OneSEVPA<L2, I> sevpa2,
-                                                             final VPDAlphabet<I> alphabet) {
+    public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> impl(OneSEVPA<L1, I> sevpa1,
+                                                             OneSEVPA<L2, I> sevpa2,
+                                                             VPDAlphabet<I> alphabet) {
         return combine(sevpa1, sevpa2, alphabet, AcceptanceCombiner.IMPL);
     }
 

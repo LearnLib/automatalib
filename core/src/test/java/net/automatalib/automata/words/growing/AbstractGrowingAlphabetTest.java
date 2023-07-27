@@ -67,7 +67,7 @@ public abstract class AbstractGrowingAlphabetTest<I, M extends GrowingAlphabet<I
 
         final int oldMaxIndex = initialAlphabetSymbols.size() - 1;
 
-        for (final I i : additionalAlphabetSymbols) {
+        for (I i : additionalAlphabetSymbols) {
             Assert.assertTrue(alphabet.addSymbol(i) >= oldMaxIndex);
         }
 
@@ -82,7 +82,7 @@ public abstract class AbstractGrowingAlphabetTest<I, M extends GrowingAlphabet<I
     @Test(dependsOnMethods = "testAddAdditionalSymbols")
     public void testAddInitialSymbols() {
 
-        for (final I i : initialAlphabetSymbols) {
+        for (I i : initialAlphabetSymbols) {
             Assert.assertTrue(alphabet.addSymbol(i) >= 0);
         }
 

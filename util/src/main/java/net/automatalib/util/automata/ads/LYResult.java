@@ -44,7 +44,7 @@ public class LYResult<S, I, O> {
         this.indistinguishableStates = Collections.emptySet();
     }
 
-    LYResult(final Set<S> indistinguishableStates) {
+    LYResult(Set<S> indistinguishableStates) {
         this.delegate = null;
         this.indistinguishableStates = indistinguishableStates;
     }

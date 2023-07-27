@@ -76,8 +76,8 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
     public Collection<Pair<S0, S1>> initialize(Map<Pair<S0, S1>, S> mapping) {
         Collection<Pair<S0, S1>> initialElements =
                 new ArrayList<>(mts0.getInitialStates().size() * mts1.getInitialStates().size());
-        for (final S0 s0 : mts0.getInitialStates()) {
-            for (final S1 s1 : mts1.getInitialStates()) {
+        for (S0 s0 : mts0.getInitialStates()) {
+            for (S1 s1 : mts1.getInitialStates()) {
                 final Pair<S0, S1> init = Pair.of(s0, s1);
                 final S newState = result.addInitialState();
 

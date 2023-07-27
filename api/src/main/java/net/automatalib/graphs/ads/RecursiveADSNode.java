@@ -91,7 +91,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
      *
      * @return all nodes in the specified subtree, including the root node itself
      */
-    default Collection<N> getNodesForRoot(final N root) {
+    default Collection<N> getNodesForRoot(N root) {
         final List<N> result = new ArrayList<>();
         final Queue<N> queue = new ArrayDeque<>();
 
@@ -117,12 +117,12 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
     Map<O, N> getChildren();
 
     @Override
-    default Collection<N> getOutgoingEdges(final N node) {
+    default Collection<N> getOutgoingEdges(N node) {
         return Collections.unmodifiableCollection(node.getChildren().values());
     }
 
     @Override
-    default N getTarget(final N edge) {
+    default N getTarget(N edge) {
         return edge;
     }
 
@@ -133,7 +133,7 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
         return new VisualizationHelper<N, N>() {
 
             @Override
-            public boolean getNodeProperties(final N node, final Map<String, String> properties) {
+            public boolean getNodeProperties(N node, Map<String, String> properties) {
                 if (node.isLeaf()) {
                     properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
                     properties.put(NodeAttrs.LABEL, String.valueOf(node.getHypothesisState()));
@@ -146,12 +146,9 @@ public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N
             }
 
             @Override
-            public boolean getEdgeProperties(final N src,
-                                             final N edge,
-                                             final N tgt,
-                                             final Map<String, String> properties) {
+            public boolean getEdgeProperties(N src, N edge, N tgt, Map<String, String> properties) {
 
-                for (final Map.Entry<O, N> e : src.getChildren().entrySet()) {
+                for (Map.Entry<O, N> e : src.getChildren().entrySet()) {
                     if (e.getValue().equals(tgt)) {
                         properties.put(EdgeAttrs.LABEL, String.valueOf(e.getKey()));
                         return true;

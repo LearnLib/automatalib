@@ -91,7 +91,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    protected <S> @Nullable Word<I> doFindSeparatingWord(final DFA<S, I> target,
+    protected <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
                                                          Collection<? extends I> inputs,
                                                          boolean omitUndefined) {
         S automatonInit = target.getInitialState();

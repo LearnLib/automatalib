@@ -44,12 +44,12 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
     }
 
     @Override
-    public Collection<SevpaViewEdge<L, I>> getOutgoingEdges(final L location) {
+    public Collection<SevpaViewEdge<L, I>> getOutgoingEdges(L location) {
 
         final List<SevpaViewEdge<L, I>> result = new ArrayList<>();
 
         // all call transitions
-        for (final I i : alphabet.getCallAlphabet()) {
+        for (I i : alphabet.getCallAlphabet()) {
             final L succ = sevpa.getModuleEntry(i);
             if (succ != null) {
                 result.add(new SevpaViewEdge<>(i, succ));
@@ -57,7 +57,7 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
         }
 
         // all internal transitions
-        for (final I i : alphabet.getInternalAlphabet()) {
+        for (I i : alphabet.getInternalAlphabet()) {
             final L succ = sevpa.getInternalSuccessor(location, i);
             if (succ != null) {
                 result.add(new SevpaViewEdge<>(i, succ));
@@ -65,9 +65,9 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
         }
 
         // all return transitions for every possible stack contents
-        for (final I i : alphabet.getReturnAlphabet()) {
-            for (final L loc : sevpa.getLocations()) {
-                for (final I stackSymbol : alphabet.getCallAlphabet()) {
+        for (I i : alphabet.getReturnAlphabet()) {
+            for (L loc : sevpa.getLocations()) {
+                for (I stackSymbol : alphabet.getCallAlphabet()) {
                     final int sym = sevpa.encodeStackSym(loc, stackSymbol);
                     final L succ = sevpa.getReturnSuccessor(location, i, sym);
 
@@ -82,7 +82,7 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
     }
 
     @Override
-    public L getTarget(final SevpaViewEdge<L, I> edge) {
+    public L getTarget(SevpaViewEdge<L, I> edge) {
         return edge.target;
     }
 
@@ -96,7 +96,7 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
             }
 
             @Override
-            public boolean getNodeProperties(final L node, final Map<String, String> properties) {
+            public boolean getNodeProperties(L node, Map<String, String> properties) {
                 super.getNodeProperties(node, properties);
 
                 properties.put(NodeAttrs.SHAPE,
@@ -107,10 +107,7 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
             }
 
             @Override
-            public boolean getEdgeProperties(final L src,
-                                             final SevpaViewEdge<L, I> edge,
-                                             final L tgt,
-                                             final Map<String, String> properties) {
+            public boolean getEdgeProperties(L src, SevpaViewEdge<L, I> edge, L tgt, Map<String, String> properties) {
 
                 final I input = edge.input;
 

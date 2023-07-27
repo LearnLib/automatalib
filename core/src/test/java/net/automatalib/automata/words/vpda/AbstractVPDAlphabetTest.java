@@ -73,7 +73,7 @@ public abstract class AbstractVPDAlphabetTest<I, M extends VPDAlphabet<I>> {
         testIndices(returnSymbols, alphabet.getReturnAlphabet());
     }
 
-    private void testIndices(final List<I> source, final Alphabet<I> alphabet) {
+    private void testIndices(List<I> source, Alphabet<I> alphabet) {
         for (int i = 0; i < source.size(); i++) {
             final I sym = source.get(i);
 
@@ -89,7 +89,7 @@ public abstract class AbstractVPDAlphabetTest<I, M extends VPDAlphabet<I>> {
         testOutOfBoundsIndex(returnSymbols, alphabet.getReturnAlphabet());
     }
 
-    private void testOutOfBoundsIndex(final List<I> source, final Alphabet<I> alphabet) {
+    private void testOutOfBoundsIndex(List<I> source, Alphabet<I> alphabet) {
         Assert.assertThrows(() -> alphabet.getSymbol(-1));
         Assert.assertThrows(() -> alphabet.getSymbol(source.size() + 1));
     }
@@ -101,8 +101,8 @@ public abstract class AbstractVPDAlphabetTest<I, M extends VPDAlphabet<I>> {
         testNonContainedSymbols(alphabet.getReturnAlphabet());
     }
 
-    private void testNonContainedSymbols(final Alphabet<I> alphabet) {
-        for (final I i : this.nonAlphabetSymbols) {
+    private void testNonContainedSymbols(Alphabet<I> alphabet) {
+        for (I i : this.nonAlphabetSymbols) {
             Assert.assertThrows(() -> alphabet.getSymbolIndex(i));
         }
     }
