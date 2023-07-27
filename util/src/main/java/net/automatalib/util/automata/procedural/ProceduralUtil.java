@@ -108,6 +108,7 @@ final class ProceduralUtil {
 
     static <I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> Map<I, Word<I>> computeAccessSequences(Map<I, ? extends M> procedures,
                                                                                                                 ProceduralInputAlphabet<I> alphabet,
+                                                                                                                Collection<I> proceduralInputs,
                                                                                                                 I initialProcedure,
                                                                                                                 Map<I, Word<I>> terminatingSequences,
                                                                                                                 BiPredicate<M, Word<I>> transitionPredicate) {
@@ -138,6 +139,7 @@ final class ProceduralUtil {
 
             if (p != null) {
                 final Collection<I> newProcedures = discoverAccessSequences(alphabet,
+                                                                            proceduralInputs,
                                                                             i,
                                                                             p,
                                                                             finishedProcedures,
@@ -153,6 +155,7 @@ final class ProceduralUtil {
 
     private static <I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>> Collection<I> discoverAccessSequences(
             ProceduralInputAlphabet<I> alphabet,
+            Collection<I> proceduralInputs,
             I procedure,
             M p,
             Set<I> finishedProcedures,
@@ -161,7 +164,7 @@ final class ProceduralUtil {
             BiPredicate<M, Word<I>> predicate) {
 
         final List<I> newAS = new ArrayList<>();
-        final Iterator<Word<I>> transitionCoverIterator = Covers.transitionCoverIterator(p, alphabet);
+        final Iterator<Word<I>> transitionCoverIterator = Covers.transitionCoverIterator(p, proceduralInputs);
 
         while (transitionCoverIterator.hasNext()) {
             final Word<I> trace = transitionCoverIterator.next();

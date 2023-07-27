@@ -36,8 +36,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * A system of procedural automata. An {@link SPA} is a context-free system where each non-terminal (procedure) is
  * represented by a {@link DFA} that accepts the language of right-hand sides of its respective production rules.
  * <p>
- * Take, for example, the following context-free palindrome system over {@code a,b,c} using two non-terminals {@code
- * S,T}:
+ * Take, for example, the following context-free palindrome system over {@code a,b,c} using two non-terminals
+ * {@code S,T}:
  * <pre>
  *     S -&gt; a | a S a | b | b S b | T | ε
  *     T -&gt; c | c T c | S
@@ -46,15 +46,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * regular languages {@code {a,aSa,b,bSb,T,ε}} and {@code {c,cTc,S}} respectively.
  * <p>
  * In {@link SPA}s, calls to and returns from procedures are visible which make {@link SPA}s a special kind of visibly
- * push-down automata. For the above example, a possible word accepted by the respective {@link SPA} (when using {@code
- * S} as {@link #getInitialProcedure() initial procedure}) would be {@code SaSTcRRaR} (where {@code R} denotes the
- * designated {@link ProceduralInputAlphabet#getReturnSymbol() return symbol}.
+ * push-down automata. For the above example, a possible word accepted by the respective {@link SPA} (when using
+ * {@code S} as {@link #getInitialProcedure() initial procedure}) would be {@code SaSTcRRaR} (where {@code R} denotes
+ * the designated {@link ProceduralInputAlphabet#getReturnSymbol() return symbol}.
  * <p>
  * This interface makes no assumptions about how the semantics are implemented. One may use a stack-based approach,
  * graph expansion, or else. However, {@link SPA}s should be <i>consistent</i> with their alphabet definitions, i.e. an
- * {@link SPA} should be able to {@link #accepts(Iterable) parse} words over the {@link #getInputAlphabet() specified
- * alphabet} and each {@link #getProcedures() procedure} should be able to {@link DFA#accepts(Iterable) parse} words
- * over the {@link #getProceduralInputs() procedural inputs}.
+ * {@link SPA} should be able to {@link #accepts(Iterable) parse} words over the
+ * {@link #getInputAlphabet() specified alphabet} and each {@link #getProcedures() procedure} should be able to
+ * {@link DFA#accepts(Iterable) parse} words over the {@link #getProceduralInputs() procedural inputs}.
  *
  * @param <S>
  *         state type
@@ -100,7 +100,7 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
     }
 
     /**
-     * Convenience method for {@link #getProceduralInputs(ProceduralInputAlphabet)} which uses the
+     * Convenience method for {@link #getProceduralInputs(Collection)} which uses the
      * {@link #getInputAlphabet() input alphabet} of {@code this} {@link SPA} as {@code constraints}.
      *
      * @return a collection of defined inputs for {@code this} {@link SPA}'s procedures.
@@ -118,32 +118,29 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
      * intersection operation with the previous collection.
      *
      * @param constraints
-     *         an {@link ProceduralInputAlphabet} for additionally constraining the returned procedural inputs.
+     *         a {@link Collection} for additionally constraining the returned procedural inputs.
      *
      * @return the (constrained) procedural inputs
      */
-    default Collection<I> getProceduralInputs(ProceduralInputAlphabet<I> constraints) {
-        final List<I> symbols = new ArrayList<>(constraints.size() - 1);
+    default Collection<I> getProceduralInputs(Collection<I> constraints) {
+        final ProceduralInputAlphabet<I> alphabet = getInputAlphabet();
+        final Map<I, DFA<?, I>> procedures = getProcedures();
 
-        for (I i : getInputAlphabet()) {
-            if (constraints.isInternalSymbol(i)) {
-                symbols.add(i);
+        final List<I> result = new ArrayList<>(Math.min(alphabet.size() - 1, constraints.size()));
+
+        for (I i : constraints) {
+            if (procedures.containsKey(i) || alphabet.isInternalSymbol(i)) {
+                result.add(i);
             }
         }
 
-        for (I procedure : getProcedures().keySet()) {
-            if (constraints.isCallSymbol(procedure)) {
-                symbols.add(procedure);
-            }
-        }
-
-        return symbols;
+        return result;
     }
 
     /**
-     * Return the size of this {@link SPA} which is given by the sum of the sizes of all {@link #getProcedures()
-     * procedures}. Note that this value does not necessarily correspond to the classical notion of {@link
-     * SimpleAutomaton#size()}, since semantically an {@link SPA}s may be infinite-sized {@link SimpleTS}.
+     * Return the size of this {@link SPA} which is given by the sum of the sizes of all
+     * {@link #getProcedures() procedures}. Note that this value does not necessarily correspond to the classical notion
+     * of {@link SimpleAutomaton#size()}, since semantically an {@link SPA}s may be infinite-sized {@link SimpleTS}.
      *
      * @return the size of this {@link SPA}
      */

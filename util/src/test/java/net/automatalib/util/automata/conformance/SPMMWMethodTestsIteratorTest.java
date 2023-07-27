@@ -36,6 +36,7 @@ import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automata.procedural.ATSequences;
 import net.automatalib.util.automata.procedural.SPMMUtil;
 import net.automatalib.util.automata.random.RandomAutomata;
+import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
@@ -51,27 +52,60 @@ import org.testng.annotations.Test;
 @Test
 public class SPMMWMethodTestsIteratorTest {
 
-    @Test
-    public void testIterator() {
+    private final Random random;
+    private final SPMM<?, Character, ?, Character> spmm;
 
-        final Random random = new Random(42);
+    public SPMMWMethodTestsIteratorTest() {
         final ProceduralInputAlphabet<Character> inputAlphabet =
                 new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'e'),
                                                      Alphabets.characters('A', 'C'),
                                                      'R');
         final ProceduralOutputAlphabet<Character> outputAlphabet =
                 new DefaultProceduralOutputAlphabet<>(Alphabets.characters('x', 'z'), '-');
-        final SPMM<?, Character, ?, Character> spmm =
-                RandomAutomata.randomSPMM(random, inputAlphabet, outputAlphabet, 10);
-        final List<Word<Character>> testWords = Lists.newArrayList(new SPMMWMethodTestsIterator<>(spmm));
 
-        final ATSequences<Character> atSequences = SPMMUtil.computeATSequences(spmm);
+        this.random = new Random(42);
+        this.spmm = RandomAutomata.randomSPMM(this.random, inputAlphabet, outputAlphabet, 10);
+    }
+
+    @Test
+    public void testNonMinimalSPMM() {
+
+        final ProceduralInputAlphabet<Character> alphabet = this.spmm.getInputAlphabet();
+
+        final Alphabet<Character> extendedCalls = Alphabets.characters('A', 'D');
+        final DefaultProceduralInputAlphabet<Character> extendedAlphabet =
+                new DefaultProceduralInputAlphabet<>(alphabet.getInternalAlphabet(),
+                                                     extendedCalls,
+                                                     alphabet.getReturnSymbol());
+        final Character initialOutput =
+                this.spmm.computeOutput(Word.fromLetter(this.spmm.getInitialProcedure())).firstSymbol();
+
+        final SPMM<?, Character, ?, Character> extendedSPMM = new StackSPMM<>(extendedAlphabet,
+                                                                              this.spmm.getOutputAlphabet(),
+                                                                              this.spmm.getInitialProcedure(),
+                                                                              initialOutput,
+                                                                              this.spmm.getProcedures());
+
+        final SPMMWMethodTestsIterator<Character, Character> iter = new SPMMWMethodTestsIterator<>(extendedSPMM);
+
+        while (iter.hasNext()) {
+            Word<Character> w = iter.next();
+            Assert.assertEquals(extendedSPMM.computeOutput(w), this.spmm.computeOutput(w));
+        }
+    }
+
+    @Test
+    public void testIterator() {
+        final List<Word<Character>> testWords = Lists.newArrayList(new SPMMWMethodTestsIterator<>(this.spmm));
+
+        final ProceduralInputAlphabet<Character> inputAlphabet = this.spmm.getInputAlphabet();
+        final ATSequences<Character> atSequences = SPMMUtil.computeATSequences(this.spmm);
         final List<Character> continuableSymbols = new ArrayList<>(inputAlphabet.size() - 1);
         continuableSymbols.addAll(inputAlphabet.getInternalAlphabet());
         continuableSymbols.addAll(atSequences.terminatingSequences.keySet());
 
         for (Entry<Character, MealyMachine<?, Character, ?, Character>> e : spmm.getProcedures().entrySet()) {
-            testWithModifiedProcedure(spmm, e.getKey(), e.getValue(), continuableSymbols, testWords, random);
+            testWithModifiedProcedure(this.spmm, e.getKey(), e.getValue(), continuableSymbols, testWords, this.random);
         }
     }
 

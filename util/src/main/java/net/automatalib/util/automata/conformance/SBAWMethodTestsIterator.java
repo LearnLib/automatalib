@@ -34,7 +34,11 @@ public class SBAWMethodTestsIterator<I> extends ProceduralWMethodTestsIterator<I
     }
 
     public SBAWMethodTestsIterator(SBA<?, I> sba, ProceduralInputAlphabet<I> alphabet, int maxDepth) {
-        super(alphabet, sba.getProcedures(), SBAUtil.computeATSequences(sba, alphabet), maxDepth);
+        super(alphabet,
+              sba.getProceduralInputs(alphabet),
+              sba.getProcedures(),
+              SBAUtil.computeATSequences(sba, alphabet),
+              maxDepth);
     }
 
 }

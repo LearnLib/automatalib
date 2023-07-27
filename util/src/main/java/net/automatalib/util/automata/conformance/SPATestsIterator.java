@@ -15,23 +15,25 @@
  */
 package net.automatalib.util.automata.conformance;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 
-import com.google.common.base.Preconditions;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.commons.util.collections.AbstractTwoLevelIterator;
 import net.automatalib.util.automata.procedural.ATRSequences;
 import net.automatalib.util.automata.procedural.SPAUtil;
-import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * A conformance test for {@link SPA}s that applies a given regular conformance test to each procedure of the {@link
- * SPA}.
+ * A conformance test for {@link SPA}s that applies a given regular conformance test to each procedure of the
+ * {@link SPA}.
  *
  * @param <I>
  *         input symbol type
@@ -42,34 +44,33 @@ public class SPATestsIterator<I> extends AbstractTwoLevelIterator<I, Word<I>, Wo
 
     private final SPA<?, I> spa;
     private final ProceduralInputAlphabet<I> alphabet;
-    private final BiFunction<DFA<?, I>, Alphabet<I>, Iterator<Word<I>>> conformanceTestProvider;
+    private final BiFunction<DFA<?, I>, Collection<I>, Iterator<Word<I>>> conformanceTestProvider;
 
+    private final Collection<I> proceduralInputs;
     private final ATRSequences<I> atrSequences;
 
     public SPATestsIterator(SPA<?, I> spa,
-                            BiFunction<DFA<?, I>, Alphabet<I>, Iterator<Word<I>>> conformanceTestProvider) {
+                            BiFunction<DFA<?, I>, Collection<I>, Iterator<Word<I>>> conformanceTestProvider) {
         this(spa, spa.getInputAlphabet(), conformanceTestProvider);
     }
 
     public SPATestsIterator(SPA<?, I> spa,
                             ProceduralInputAlphabet<I> alphabet,
-                            BiFunction<DFA<?, I>, Alphabet<I>, Iterator<Word<I>>> conformanceTestProvider) {
-        super(alphabet.getCallAlphabet().iterator());
+                            BiFunction<DFA<?, I>, Collection<I>, Iterator<Word<I>>> conformanceTestProvider) {
+        super(availableProceduresIterator(spa, alphabet));
 
         this.spa = spa;
         this.alphabet = alphabet;
         this.conformanceTestProvider = conformanceTestProvider;
+        this.proceduralInputs = spa.getProceduralInputs(alphabet);
         this.atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
-
-        Preconditions.checkArgument(SPAUtil.isMinimal(alphabet, this.atrSequences),
-                                    "The given SPA is not minimal. You want me to check procedures I cannot check.");
     }
 
     @Override
     protected Iterator<Word<I>> l2Iterator(I callSymbol) {
-        @SuppressWarnings("assignment.type.incompatible") // we check minimality in the constructor
+        @SuppressWarnings("assignment.type.incompatible") // we only iterate over existing procedures
         final @NonNull DFA<?, I> dfa = spa.getProcedure(callSymbol);
-        return conformanceTestProvider.apply(dfa, alphabet.getProceduralAlphabet());
+        return this.conformanceTestProvider.apply(dfa, this.proceduralInputs);
     }
 
     @Override
@@ -82,5 +83,19 @@ public class SPATestsIterator<I> extends AbstractTwoLevelIterator<I, Word<I>, Wo
         final @NonNull Word<I> rs = this.atrSequences.returnSequences.get(callSymbol);
 
         return Word.fromWords(as, ts, rs);
+    }
+
+    private static <I> Iterator<I> availableProceduresIterator(SPA<?, I> spa, ProceduralInputAlphabet<I> alphabet) {
+
+        final Map<I, DFA<?, I>> procedures = spa.getProcedures();
+        final List<I> result = new ArrayList<>(procedures.size());
+
+        for (I i : alphabet.getCallAlphabet()) {
+            if (procedures.containsKey(i)) {
+                result.add(i);
+            }
+        }
+
+        return result.iterator();
     }
 }

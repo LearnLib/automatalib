@@ -61,24 +61,19 @@ public interface SPMM<S, I, T, O> extends MealyTransitionSystem<S, I, T, O>,
         return getProceduralInputs(this.getInputAlphabet());
     }
 
-    default Collection<I> getProceduralInputs(ProceduralInputAlphabet<I> constraints) {
-        final List<I> symbols = new ArrayList<>(constraints.size());
+    default Collection<I> getProceduralInputs(Collection<I> constraints) {
+        final ProceduralInputAlphabet<I> alphabet = getInputAlphabet();
+        final Map<I, MealyMachine<?, I, ?, O>> procedures = getProcedures();
 
-        for (I i : getInputAlphabet()) {
-            if (constraints.isInternalSymbol(i)) {
-                symbols.add(i);
+        final List<I> result = new ArrayList<>(Math.min(alphabet.size(), constraints.size()));
+
+        for (I i : constraints) {
+            if (procedures.containsKey(i) || alphabet.isInternalSymbol(i) || alphabet.isReturnSymbol(i)) {
+                result.add(i);
             }
         }
 
-        for (I procedure : getProcedures().keySet()) {
-            if (constraints.isCallSymbol(procedure)) {
-                symbols.add(procedure);
-            }
-        }
-
-        symbols.add(constraints.getReturnSymbol());
-
-        return symbols;
+        return result;
     }
 
     @Override
@@ -113,7 +108,7 @@ public interface SPMM<S, I, T, O> extends MealyTransitionSystem<S, I, T, O>,
         final ProceduralInputAlphabet<I> alphabet = this.getInputAlphabet();
         // explicit type specification is required by checker-framework
         return new ProceduralGraphView<@Nullable Object, I>(alphabet.getCallAlphabet(),
-                                         this.getProceduralInputs(alphabet),
-                                         this.getProcedures());
+                                                            this.getProceduralInputs(alphabet),
+                                                            this.getProcedures());
     }
 }

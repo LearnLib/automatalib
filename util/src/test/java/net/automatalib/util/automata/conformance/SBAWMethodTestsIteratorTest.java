@@ -50,24 +50,51 @@ import org.testng.annotations.Test;
 @Test
 public class SBAWMethodTestsIteratorTest {
 
-    @Test
-    public void testIterator() {
+    private final Random random;
+    private final SBA<?, Character> sba;
 
-        final Random random = new Random(42);
+    public SBAWMethodTestsIteratorTest() {
         final ProceduralInputAlphabet<Character> alphabet =
                 new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'e'),
                                                      Alphabets.characters('A', 'C'),
                                                      'R');
-        final SBA<?, Character> sba = RandomAutomata.randomSBA(random, alphabet, 10);
-        final List<Word<Character>> testWords = Lists.newArrayList(new SBAWMethodTestsIterator<>(sba));
 
-        final ATSequences<Character> atSequences = SBAUtil.computeATSequences(sba);
+        this.random = new Random(42);
+        this.sba = RandomAutomata.randomSBA(random, alphabet, 10);
+    }
+
+    @Test
+    public void testNonMinimalSBA() {
+
+        final ProceduralInputAlphabet<Character> alphabet = this.sba.getInputAlphabet();
+
+        final Alphabet<Character> extendedCalls = Alphabets.characters('A', 'D');
+        final DefaultProceduralInputAlphabet<Character> extendedAlphabet =
+                new DefaultProceduralInputAlphabet<>(alphabet.getInternalAlphabet(),
+                                                     extendedCalls,
+                                                     alphabet.getReturnSymbol());
+        final SBA<?, Character> extendedSBA =
+                new StackSBA<>(extendedAlphabet, this.sba.getInitialProcedure(), this.sba.getProcedures());
+
+        final SBAWMethodTestsIterator<Character> iter = new SBAWMethodTestsIterator<>(extendedSBA);
+
+        while (iter.hasNext()) {
+            Word<Character> w = iter.next();
+            Assert.assertEquals(extendedSBA.accepts(w), this.sba.accepts(w));
+        }
+    }
+
+    @Test
+    public void testIterator() {
+        final ProceduralInputAlphabet<Character> alphabet = this.sba.getInputAlphabet();
+        final List<Word<Character>> testWords = Lists.newArrayList(new SBAWMethodTestsIterator<>(sba));
+        final ATSequences<Character> atSequences = SBAUtil.computeATSequences(this.sba);
         final List<Character> continuableSymbols = new ArrayList<>(alphabet.size() - 1);
         continuableSymbols.addAll(alphabet.getInternalAlphabet());
         continuableSymbols.addAll(atSequences.terminatingSequences.keySet());
 
-        for (Entry<Character, DFA<?, Character>> e : sba.getProcedures().entrySet()) {
-            testWithModifiedProcedure(sba, e.getKey(), e.getValue(), continuableSymbols, testWords, random);
+        for (Entry<Character, DFA<?, Character>> e : this.sba.getProcedures().entrySet()) {
+            testWithModifiedProcedure(this.sba, e.getKey(), e.getValue(), continuableSymbols, testWords, random);
         }
     }
 

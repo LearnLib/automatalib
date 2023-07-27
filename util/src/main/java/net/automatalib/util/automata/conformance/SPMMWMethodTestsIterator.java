@@ -34,7 +34,11 @@ public class SPMMWMethodTestsIterator<I, O> extends ProceduralWMethodTestsIterat
     }
 
     public SPMMWMethodTestsIterator(SPMM<?, I, ?, O> spmm, ProceduralInputAlphabet<I> alphabet, int maxDepth) {
-        super(alphabet, spmm.getProcedures(), SPMMUtil.computeATSequences(spmm, alphabet), maxDepth);
+        super(alphabet,
+              spmm.getProceduralInputs(alphabet),
+              spmm.getProcedures(),
+              SPMMUtil.computeATSequences(spmm, alphabet),
+              maxDepth);
     }
 
 }

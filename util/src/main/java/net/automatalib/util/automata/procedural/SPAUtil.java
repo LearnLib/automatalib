@@ -34,7 +34,6 @@ import net.automatalib.automata.procedural.SPA;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.automata.vpda.SEVPA;
 import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.util.automata.Automata;
@@ -196,8 +195,7 @@ public final class SPAUtil {
                                                                       Map<I, Word<I>> returnSequences) {
 
         final List<I> newASRS = new ArrayList<>();
-        final List<Word<I>> acceptingPaths =
-                exploreAccessSequences(dfa, CollectionsUtil.randomAccessList(proceduralInputs), alphabet::isCallSymbol);
+        final List<Word<I>> acceptingPaths = exploreAccessSequences(dfa, proceduralInputs, alphabet::isCallSymbol);
 
         tc:
         for (Word<I> trace : acceptingPaths) {
@@ -261,7 +259,7 @@ public final class SPAUtil {
     }
 
     private static <S, I> List<Word<I>> exploreAccessSequences(DFA<S, I> dfa,
-                                                               List<I> inputs,
+                                                               Collection<I> inputs,
                                                                Predicate<I> callPredicate) {
         final S init = dfa.getInitialState();
 

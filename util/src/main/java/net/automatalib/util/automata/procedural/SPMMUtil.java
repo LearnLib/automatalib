@@ -71,6 +71,7 @@ public final class SPMMUtil {
 
         return ProceduralUtil.computeAccessSequences(spmm.getProcedures(),
                                                      alphabet,
+                                                     spmm.getProceduralInputs(alphabet),
                                                      spmm.getInitialProcedure(),
                                                      terminatingSequences,
                                                      (mealy, trace) -> !outputAlphabet.isErrorSymbol(mealy.computeOutput(
@@ -81,17 +82,22 @@ public final class SPMMUtil {
         return isValid(spmm, spmm.getInputAlphabet());
     }
 
-    public static <I, O> boolean isValid(SPMM<?, I, ?, O> spmm, ProceduralInputAlphabet<I> inputAlphabet) {
+    public static <I, O> boolean isValid(SPMM<?, I, ?, O> spmm, ProceduralInputAlphabet<I> alphabet) {
 
-        final Map<I, Word<I>> ts = computeTerminatingSequences(spmm, inputAlphabet);
-        final Set<I> nonContinuableSymbols = new HashSet<>(inputAlphabet.getCallAlphabet());
+        final Map<I, Word<I>> ts = computeTerminatingSequences(spmm, alphabet);
+        final Collection<I> proceduralInputs = spmm.getProceduralInputs(alphabet);
+        final Set<I> nonContinuableSymbols = new HashSet<>(alphabet.getCallAlphabet());
         nonContinuableSymbols.removeAll(ts.keySet());
-        nonContinuableSymbols.add(inputAlphabet.getReturnSymbol());
+        nonContinuableSymbols.retainAll(proceduralInputs);
+        nonContinuableSymbols.add(alphabet.getReturnSymbol());
 
         final ProceduralOutputAlphabet<O> outputAlphabet = spmm.getOutputAlphabet();
 
         for (MealyMachine<?, I, ?, O> p : spmm.getProcedures().values()) {
-            if (!isErrorReturnAndCallClosed(p, inputAlphabet, nonContinuableSymbols, outputAlphabet.getErrorSymbol())) {
+            if (!isErrorReturnAndCallClosed(p,
+                                            proceduralInputs,
+                                            nonContinuableSymbols,
+                                            outputAlphabet.getErrorSymbol())) {
                 return false;
             }
         }
@@ -100,13 +106,13 @@ public final class SPMMUtil {
     }
 
     private static <S, I, O> boolean isErrorReturnAndCallClosed(MealyMachine<S, I, ?, O> procedure,
-                                                                ProceduralInputAlphabet<I> inputAlphabet,
-                                                                Set<I> nonContinuableSymbols,
+                                                                Collection<I> inputs,
+                                                                Collection<I> nonContinuableInputs,
                                                                 O errorOutput) {
 
-        for (I i : inputAlphabet) {
+        for (I i : inputs) {
 
-            boolean isNonContinuable = nonContinuableSymbols.contains(i);
+            boolean isNonContinuable = nonContinuableInputs.contains(i);
 
             for (S s : procedure) {
 
@@ -114,7 +120,7 @@ public final class SPMMUtil {
                 final S succ = procedure.getSuccessor(s, i);
 
                 if (succ != null && (isNonContinuable || Objects.equals(output, errorOutput)) &&
-                    !isSink(procedure, inputAlphabet, succ, errorOutput)) {
+                    !isSink(procedure, inputs, succ, errorOutput)) {
                     return false;
                 }
             }

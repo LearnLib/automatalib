@@ -16,7 +16,7 @@
 package net.automatalib.util.automata.conformance;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +38,7 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
         extends AbstractTwoLevelIterator<I, Word<I>, Word<I>> {
 
     private final ProceduralInputAlphabet<I> alphabet;
+    private final Collection<I> proceduralInputs;
     private final Map<I, M> procedures;
     private final ATSequences<I> atSequences;
     private final int maxDepth;
@@ -46,12 +47,14 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
     private final List<I> nonContinuableSymbols;
 
     ProceduralWMethodTestsIterator(ProceduralInputAlphabet<I> alphabet,
+                                   Collection<I> proceduralInputs,
                                    Map<I, M> procedures,
                                    ATSequences<I> atSequences,
                                    int maxDepth) {
-        super(alphabet.getCallAlphabet().iterator());
+        super(atSequences.accessSequences.keySet().iterator());
 
         this.alphabet = alphabet;
+        this.proceduralInputs = proceduralInputs;
         this.procedures = procedures;
         this.atSequences = atSequences;
         this.maxDepth = maxDepth;
@@ -73,36 +76,32 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
 
     @Override
     protected Iterator<Word<I>> l2Iterator(I callSymbol) {
-        final M p = procedures.get(callSymbol);
-
-        if (p == null) {
-            return Collections.emptyIterator();
-        }
-
+        @SuppressWarnings("assignment.type.incompatible") // we only iterate over existing procedures
+        final @NonNull M p = procedures.get(callSymbol);
         return proceduralTestWords(p);
     }
 
     @Override
     protected Word<I> combine(I callSymbol, Word<I> testSequence) {
-        @SuppressWarnings("assignment.type.incompatible") // we check validity in the constructor
+        @SuppressWarnings("assignment.type.incompatible") // we only iterate over accessible procedures
         final @NonNull Word<I> as = this.atSequences.accessSequences.get(callSymbol);
 
         if (testSequence.isEmpty()) {
             return as;
         }
 
-        @SuppressWarnings("assignment.type.incompatible") // we check redundancy-free-ness in the constructor
-        final Word<I> ts = this.alphabet.expand(testSequence.prefix(-1), this.atSequences.terminatingSequences::get);
+        @SuppressWarnings("assignment.type.incompatible")
+        final Word<I> exp = this.alphabet.expand(testSequence.prefix(-1), this.atSequences.terminatingSequences::get);
 
-        return Word.fromWords(as, ts, Word.fromLetter(testSequence.lastSymbol()));
+        return Word.fromWords(as, exp, Word.fromLetter(testSequence.lastSymbol()));
     }
 
     private Iterator<Word<I>> proceduralTestWords(M automaton) {
 
         final List<Word<I>> sCov = Automata.stateCover(automaton, this.continuableSymbols);
-        final List<Word<I>> cSet = Automata.characterizingSet(automaton, this.alphabet);
+        final List<Word<I>> cSet = Automata.characterizingSet(automaton, this.proceduralInputs);
 
-        List<Word<I>> result = new ArrayList<>();
+        final List<Word<I>> result = new ArrayList<>();
         final WordBuilder<I> wb = new WordBuilder<>();
 
         for (Word<I> sC : sCov) {

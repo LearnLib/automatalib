@@ -76,6 +76,7 @@ public final class SBAUtil {
 
         return ProceduralUtil.computeAccessSequences(sba.getProcedures(),
                                                      alphabet,
+                                                     sba.getProceduralInputs(alphabet),
                                                      sba.getInitialProcedure(),
                                                      terminatingSequences,
                                                      DFA::accepts);
@@ -88,12 +89,15 @@ public final class SBAUtil {
     public static <I> boolean isValid(SBA<?, I> sba, ProceduralInputAlphabet<I> alphabet) {
 
         final Map<I, Word<I>> ts = computeTerminatingSequences(sba, alphabet);
+        final Collection<I> proceduralInputs = sba.getProceduralInputs(alphabet);
         final Set<I> nonContinuableSymbols = new HashSet<>(alphabet.getCallAlphabet());
         nonContinuableSymbols.removeAll(ts.keySet());
+        nonContinuableSymbols.retainAll(proceduralInputs);
         nonContinuableSymbols.add(alphabet.getReturnSymbol());
 
         for (DFA<?, I> p : sba.getProcedures().values()) {
-            if (!DFAs.isPrefixClosed(p, alphabet) || !isCallAndReturnClosed(p, alphabet, nonContinuableSymbols)) {
+            if (!DFAs.isPrefixClosed(p, proceduralInputs) ||
+                !isCallAndReturnClosed(p, proceduralInputs, nonContinuableSymbols)) {
                 return false;
             }
         }
@@ -102,11 +106,11 @@ public final class SBAUtil {
     }
 
     private static <S, I> boolean isCallAndReturnClosed(DFA<S, I> procedure,
-                                                        ProceduralInputAlphabet<I> alphabet,
-                                                        Set<I> nonContinuableSymbols) {
+                                                        Collection<I> inputs,
+                                                        Collection<I> nonContinuableInputs) {
 
         for (S s : procedure) {
-            for (I i : nonContinuableSymbols) {
+            for (I i : nonContinuableInputs) {
                 final S succ = procedure.getSuccessor(s, i);
                 final S toAnalyze;
 
@@ -114,7 +118,7 @@ public final class SBAUtil {
                     toAnalyze = procedure.getSuccessor(succ, i);
 
                     // ensure that toAnalyze is effectively a "success sink"
-                    for (I i2 : alphabet) {
+                    for (I i2 : inputs) {
                         if (!Objects.equals(procedure.getSuccessor(succ, i2), toAnalyze)) {
                             return false;
                         }
@@ -123,7 +127,7 @@ public final class SBAUtil {
                     toAnalyze = succ;
                 }
 
-                if (toAnalyze != null && !isSink(procedure, alphabet, toAnalyze)) {
+                if (toAnalyze != null && !isSink(procedure, inputs, toAnalyze)) {
                     return false;
                 }
             }
@@ -132,7 +136,7 @@ public final class SBAUtil {
         return true;
     }
 
-    private static <S, I> boolean isSink(DFA<S, I> dfa, Collection<? extends I> inputs, S state) {
+    private static <S, I> boolean isSink(DFA<S, I> dfa, Collection<I> inputs, S state) {
 
         if (dfa.isAccepting(state)) {
             return false;

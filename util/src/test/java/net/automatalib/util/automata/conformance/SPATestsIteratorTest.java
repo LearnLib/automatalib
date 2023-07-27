@@ -25,8 +25,10 @@ import java.util.Random;
 import java.util.function.BiFunction;
 
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.StackSPA;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
@@ -41,6 +43,38 @@ import org.testng.annotations.Test;
  */
 public class SPATestsIteratorTest {
 
+    private final SPA<?, Character> spa;
+
+    public SPATestsIteratorTest() {
+        final Random random = new Random(42);
+        final ProceduralInputAlphabet<Character> alphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'e'),
+                                                     Alphabets.characters('A', 'C'),
+                                                     'R');
+        this.spa = RandomAutomata.randomSPA(random, alphabet, 10);
+    }
+
+    @Test
+    public void testNonMinimalSPA() {
+
+        final ProceduralInputAlphabet<Character> alphabet = this.spa.getInputAlphabet();
+
+        final Alphabet<Character> extendedCalls = Alphabets.characters('A', 'D');
+        final DefaultProceduralInputAlphabet<Character> extendedAlphabet =
+                new DefaultProceduralInputAlphabet<>(alphabet.getInternalAlphabet(),
+                                                     extendedCalls,
+                                                     alphabet.getReturnSymbol());
+        final SPA<?, Character> extendedSPA =
+                new StackSPA<>(extendedAlphabet, this.spa.getInitialProcedure(), this.spa.getProcedures());
+
+        final SPATestsIterator<Character> iter = new SPATestsIterator<>(extendedSPA, WpMethodTestsIterator::new);
+
+        while (iter.hasNext()) {
+            Word<Character> w = iter.next();
+            Assert.assertEquals(extendedSPA.accepts(w), this.spa.accepts(w));
+        }
+    }
+
     @Test
     public void testWMethodVariant() {
         testIterator(WMethodTestsIterator::new);
@@ -51,17 +85,12 @@ public class SPATestsIteratorTest {
         testIterator(WpMethodTestsIterator::new);
     }
 
-    private void testIterator(BiFunction<DFA<?, Character>, Alphabet<Character>, Iterator<Word<Character>>> conformanceTestProvider) {
-        final Random random = new Random(42);
-        final ProceduralInputAlphabet<Character> alphabet =
-                new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'e'), Alphabets.characters('A', 'C'), 'R');
-        final SPA<?, Character> spa = RandomAutomata.randomSPA(random, alphabet, 10);
+    private void testIterator(BiFunction<DFA<?, Character>, Collection<Character>, Iterator<Word<Character>>> conformanceTestProvider) {
+        final List<Word<Character>> testTraces =
+                Lists.newArrayList(new SPATestsIterator<>(this.spa, conformanceTestProvider));
 
-        final List<Word<Character>> testTraces = new ArrayList<>();
-        Iterators.addAll(testTraces, new SPATestsIterator<>(spa, conformanceTestProvider));
-
-        for (Entry<Character, DFA<?, Character>> e : spa.getProcedures().entrySet()) {
-            verifyProcedure(e.getKey(), e.getValue(), alphabet, testTraces, conformanceTestProvider);
+        for (Entry<Character, DFA<?, Character>> e : this.spa.getProcedures().entrySet()) {
+            verifyProcedure(e.getKey(), e.getValue(), this.spa.getInputAlphabet(), testTraces, conformanceTestProvider);
         }
     }
 
@@ -69,7 +98,7 @@ public class SPATestsIteratorTest {
                                      DFA<?, I> dfa,
                                      ProceduralInputAlphabet<I> alphabet,
                                      Collection<Word<I>> globalTraces,
-                                     BiFunction<DFA<?, I>, Alphabet<I>, Iterator<Word<I>>> conformanceTestProvider) {
+                                     BiFunction<DFA<?, I>, Collection<I>, Iterator<Word<I>>> conformanceTestProvider) {
 
         final Alphabet<I> proceduralAlphabet = alphabet.getProceduralAlphabet();
         final List<Word<I>> localTraces = new ArrayList<>();
