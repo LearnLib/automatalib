@@ -17,14 +17,19 @@ package net.automatalib.util.automata.conformance;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Iterators;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.commons.util.collections.AbstractThreeLevelIterator;
 import net.automatalib.commons.util.collections.AbstractTwoLevelIterator;
 import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.util.automata.Automata;
+import net.automatalib.commons.util.collections.ReusableIterator;
+import net.automatalib.util.automata.cover.Covers;
+import net.automatalib.util.automata.equivalence.CharacterizingSets;
 import net.automatalib.util.automata.procedural.ATSequences;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
@@ -37,6 +42,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>>
         extends AbstractTwoLevelIterator<I, Word<I>, Word<I>> {
 
+    private static final Iterator<List<Word<?>>> EPSILON =
+            Iterators.singletonIterator(Collections.singletonList(Word.epsilon()));
+
     private final ProceduralInputAlphabet<I> alphabet;
     private final Collection<I> proceduralInputs;
     private final Map<I, M> procedures;
@@ -44,7 +52,8 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
     private final int maxDepth;
 
     private final List<I> continuableSymbols;
-    private final List<I> nonContinuableSymbols;
+    private final List<Word<I>> continuableWords;
+    private final List<Word<I>> nonContinuableWords;
 
     ProceduralWMethodTestsIterator(ProceduralInputAlphabet<I> alphabet,
                                    Collection<I> proceduralInputs,
@@ -60,18 +69,28 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
         this.maxDepth = maxDepth;
 
         this.continuableSymbols = new ArrayList<>(alphabet.size() - 1);
-        this.nonContinuableSymbols = new ArrayList<>(alphabet.getNumCalls() + 1);
+        this.continuableWords = new ArrayList<>(alphabet.size());
+        this.nonContinuableWords = new ArrayList<>(alphabet.getNumCalls() + 1);
 
+        // internal symbols
         this.continuableSymbols.addAll(alphabet.getInternalAlphabet());
-        this.nonContinuableSymbols.add(alphabet.getReturnSymbol());
+        for (I i : alphabet.getInternalAlphabet()) {
+            this.continuableWords.add(Word.fromLetter(i));
+        }
+        this.continuableWords.add(Word.epsilon());
 
+        // call symbols
         for (I i : alphabet.getCallAlphabet()) {
             if (this.atSequences.terminatingSequences.containsKey(i)) {
                 this.continuableSymbols.add(i);
+                this.continuableWords.add(Word.fromLetter(i));
             } else {
-                this.nonContinuableSymbols.add(i);
+                this.nonContinuableWords.add(Word.fromLetter(i));
             }
         }
+
+        // return symbols
+        this.nonContinuableWords.add(Word.fromLetter(alphabet.getReturnSymbol()));
     }
 
     @Override
@@ -98,46 +117,67 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
 
     private Iterator<Word<I>> proceduralTestWords(M automaton) {
 
-        final List<Word<I>> sCov = Automata.stateCover(automaton, this.continuableSymbols);
-        final List<Word<I>> cSet = Automata.characterizingSet(automaton, this.proceduralInputs);
+        final Iterable<Word<I>> sCov =
+                new ReusableIterator<>(Covers.stateCoverIterator(automaton, this.continuableSymbols));
+        final Iterator<Word<I>> cSet = CharacterizingSets.characterizingSetIterator(automaton, this.proceduralInputs);
 
-        final List<Word<I>> result = new ArrayList<>();
-        final WordBuilder<I> wb = new WordBuilder<>();
+        final Iterator<Word<I>> continuableIter = new ContinuableIterator(sCov, cSet);
+        final Iterator<Word<I>> nonContinuableIter = new NonContinuableIterator(sCov);
 
-        for (Word<I> sC : sCov) {
-            for (I con : this.continuableSymbols) {
-                for (List<I> tu : CollectionsUtil.allTuples(this.continuableSymbols, 0, maxDepth)) {
-                    for (Word<I> c : cSet) {
-                        wb.append(sC);
-                        wb.append(con);
-                        wb.append(tu);
-                        wb.append(c);
-                        result.add(wb.toWord());
-                        wb.clear();
-                    }
-                }
-            }
+        // we need sCov in both iterators but cSet only in the continuable one.
+        // therefore, start with the non-continuable one in hopes of saving unnecessary computations
+        return Iterators.concat(nonContinuableIter, continuableIter);
+    }
+
+    private class ContinuableIterator extends AbstractThreeLevelIterator<Word<I>, List<Word<I>>, List<I>, Word<I>> {
+
+        private final Iterable<Word<I>> sCov;
+
+        ContinuableIterator(Iterable<Word<I>> sCov, Iterator<Word<I>> cSet) {
+            super(cSet);
+            this.sCov = sCov;
         }
 
-        // special case for epsilon as transition cover set element
-        for (List<I> tu : CollectionsUtil.allTuples(this.continuableSymbols, 0, maxDepth)) {
-            for (Word<I> c : cSet) {
-                wb.append(tu);
-                wb.append(c);
-                result.add(wb.toWord());
-                wb.clear();
-            }
+        @SuppressWarnings("unchecked")
+        @Override
+        protected Iterator<List<Word<I>>> l2Iterator(Word<I> cSet) {
+            final Iterator<List<Word<I>>> epsilon = (Iterator<List<Word<I>>>) ((Iterator<?>) EPSILON);
+            return Iterators.concat(epsilon, CollectionsUtil.cartesianProduct(sCov, continuableWords).iterator());
         }
 
-        for (Word<I> sC : sCov) {
-            for (I con : this.nonContinuableSymbols) {
-                wb.append(sC);
-                wb.append(con);
-                result.add(wb.toWord());
-                wb.clear();
-            }
+        @Override
+        protected Iterator<List<I>> l3Iterator(Word<I> cSet, List<Word<I>> tCov) {
+            return CollectionsUtil.allTuples(continuableSymbols, 0, maxDepth).iterator();
         }
 
-        return result.iterator();
+        @Override
+        protected Word<I> combine(Word<I> cSet, List<Word<I>> tCov, List<I> tuples) {
+            final WordBuilder<I> wb = new WordBuilder<>();
+
+            for (Word<I> w : tCov) {
+                wb.append(w);
+            }
+
+            wb.append(tuples);
+            wb.append(cSet);
+            return wb.toWord();
+        }
+    }
+
+    private class NonContinuableIterator extends AbstractTwoLevelIterator<Word<I>, Word<I>, Word<I>> {
+
+        NonContinuableIterator(Iterable<Word<I>> sCov) {
+            super(sCov.iterator());
+        }
+
+        @Override
+        protected Iterator<Word<I>> l2Iterator(Word<I> sCov) {
+            return nonContinuableWords.iterator();
+        }
+
+        @Override
+        protected Word<I> combine(Word<I> sCov, Word<I> nonCon) {
+            return sCov.concat(nonCon);
+        }
     }
 }
