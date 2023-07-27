@@ -20,47 +20,25 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.automata.concepts.FiniteRepresentation;
-import net.automatalib.automata.concepts.InputAlphabetHolder;
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.concepts.GraphViewable;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author frohme
  */
-public interface SPMM<S, I, T, O> extends MealyTransitionSystem<S, I, T, O>,
-                                          SuffixOutput<I, Word<O>>,
-                                          InputAlphabetHolder<I>,
-                                          GraphViewable,
-                                          FiniteRepresentation {
-
-    @Override
-    ProceduralInputAlphabet<I> getInputAlphabet();
+public interface SPMM<S, I, T, O> extends ProceduralSystem<I, MealyMachine<?, I, ?, O>>,
+                                          MealyTransitionSystem<S, I, T, O>,
+                                          SuffixOutput<I, Word<O>> {
 
     ProceduralOutputAlphabet<O> getOutputAlphabet();
 
-    @Nullable I getInitialProcedure();
-
-    Map<I, MealyMachine<?, I, ?, O>> getProcedures();
-
-    default @Nullable MealyMachine<?, I, ?, O> getProcedure(I callSymbol) {
-        assert getInputAlphabet().isCallSymbol(callSymbol);
-        return getProcedures().get(callSymbol);
-    }
-
-    default Collection<I> getProceduralInputs() {
-        return getProceduralInputs(this.getInputAlphabet());
-    }
-
+    @Override
     default Collection<I> getProceduralInputs(Collection<I> constraints) {
         final ProceduralInputAlphabet<I> alphabet = getInputAlphabet();
         final Map<I, MealyMachine<?, I, ?, O>> procedures = getProcedures();
@@ -74,17 +52,6 @@ public interface SPMM<S, I, T, O> extends MealyTransitionSystem<S, I, T, O>,
         }
 
         return result;
-    }
-
-    @Override
-    default int size() {
-        int size = 0;
-
-        for (MealyMachine<?, I, ?, O> m : getProcedures().values()) {
-            size += m.size();
-        }
-
-        return size;
     }
 
     @Override
@@ -103,12 +70,4 @@ public interface SPMM<S, I, T, O> extends MealyTransitionSystem<S, I, T, O>,
         return result.toWord();
     }
 
-    @Override
-    default Graph<?, ?> graphView() {
-        final ProceduralInputAlphabet<I> alphabet = this.getInputAlphabet();
-        // explicit type specification is required by checker-framework
-        return new ProceduralGraphView<@Nullable Object, I>(alphabet.getInternalAlphabet(),
-                                                            this.getProceduralInputs(alphabet),
-                                                            this.getProcedures());
-    }
 }
