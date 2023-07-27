@@ -42,16 +42,16 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  */
 public class ProceduralGraphView<S, I> implements Graph<Pair<I, S>, Triple<I, I, S>> {
 
-    private final Alphabet<I> callAlphabet;
+    private final Alphabet<I> internalAlphabet;
     private final Collection<I> proceduralAlphabet;
     private final Map<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>> subModels;
 
     // cast is fine, because we make sure to only query states belonging to the respective procedures
     @SuppressWarnings("unchecked")
-    public ProceduralGraphView(Alphabet<I> callAlphabet,
+    public ProceduralGraphView(Alphabet<I> internalAlphabet,
                                Collection<I> proceduralAlphabet,
                                Map<I, ? extends UniversalDeterministicAutomaton<? extends S, I, ?, ?, ?>> subModels) {
-        this.callAlphabet = callAlphabet;
+        this.internalAlphabet = internalAlphabet;
         this.proceduralAlphabet = proceduralAlphabet;
         this.subModels = (Map<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>>) subModels;
     }
@@ -97,7 +97,7 @@ public class ProceduralGraphView<S, I> implements Graph<Pair<I, S>, Triple<I, I,
 
     @Override
     public VisualizationHelper<Pair<I, S>, Triple<I, I, S>> getVisualizationHelper() {
-        return new ProceduralVisualizationHelper<>(callAlphabet, subModels);
+        return new ProceduralVisualizationHelper<>(internalAlphabet, subModels);
     }
 
 }

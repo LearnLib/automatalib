@@ -164,7 +164,7 @@ public interface SPA<S, I> extends DeterministicAcceptorTS<S, I>,
     default Graph<?, ?> graphView() {
         final ProceduralInputAlphabet<I> alphabet = this.getInputAlphabet();
         // explicit type specification is required by checker-framework
-        return new ProceduralGraphView<@Nullable Object, I>(alphabet.getCallAlphabet(),
+        return new ProceduralGraphView<@Nullable Object, I>(alphabet.getInternalAlphabet(),
                                                             this.getProceduralInputs(alphabet),
                                                             this.getProcedures());
     }

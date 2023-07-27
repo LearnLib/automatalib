@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.collect.Maps;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
+import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.Triple;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -30,15 +32,21 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHelper<Pair<I, S>, Triple<I, I, S>> {
 
-    final Map<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>> subModels;
-    final Alphabet<I> callAlphabet;
+    private final Map<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>> subModels;
+    private final Map<I, StateIDs<S>> stateIDs;
+    private final Alphabet<I> internalAlphabet;
 
     // cast is fine, because we make sure to only query states belonging to the respective procedures
     @SuppressWarnings("unchecked")
-    public ProceduralVisualizationHelper(Alphabet<I> callAlphabet,
+    public ProceduralVisualizationHelper(Alphabet<I> internalAlphabet,
                                          Map<I, ? extends UniversalDeterministicAutomaton<? extends S, I, ?, ?, ?>> subModels) {
-        this.callAlphabet = callAlphabet;
+        this.internalAlphabet = internalAlphabet;
         this.subModels = (Map<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>>) subModels;
+        this.stateIDs = Maps.newHashMapWithExpectedSize(subModels.size());
+
+        for (Entry<I, ? extends UniversalDeterministicAutomaton<? extends S, I, ?, ?, ?>> e : subModels.entrySet()) {
+            this.stateIDs.put(e.getKey(), (StateIDs<S>) e.getValue().stateIDs());
+        }
     }
 
     @Override
@@ -62,8 +70,10 @@ public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHel
         }
 
         final I identifier = node.getFirst();
-        @SuppressWarnings("assignment.type.incompatible") // we only use identifier for which procedures exists
+        @SuppressWarnings("assignment.type.incompatible") // we only use identifiers for which procedures exists
         final @NonNull UniversalDeterministicAutomaton<S, I, ?, ?, ?> subModel = subModels.get(identifier);
+        @SuppressWarnings("assignment.type.incompatible") // we only use identifiers for which procedures exists
+        final @NonNull StateIDs<S> stateID = stateIDs.get(identifier);
 
         if (Boolean.TRUE.equals(subModel.getStateProperty(node.getSecond()))) {
             properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
@@ -71,7 +81,7 @@ public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHel
             properties.put(NodeAttrs.SHAPE, NodeShapes.CIRCLE);
         }
 
-        properties.put(NodeAttrs.LABEL, node.getFirst() + " " + node.getSecond());
+        properties.put(NodeAttrs.LABEL, node.getFirst() + " " + stateID.getStateId(node.getSecond()));
 
         return true;
     }
@@ -100,7 +110,7 @@ public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHel
             properties.put(EdgeAttrs.LABEL, String.valueOf(edge.getSecond()));
         }
 
-        if (callAlphabet.containsSymbol(edge.getSecond())) {
+        if (!internalAlphabet.containsSymbol(edge.getSecond())) {
             properties.put(EdgeAttrs.STYLE, EdgeStyles.BOLD);
         }
 

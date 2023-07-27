@@ -19,10 +19,21 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.automatalib.automata.fsa.impl.FastDFA;
+import net.automatalib.automata.fsa.impl.FastDFAState;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.SPMM;
+import net.automatalib.automata.procedural.StackSBA;
+import net.automatalib.automata.procedural.StackSPA;
+import net.automatalib.automata.procedural.StackSPMM;
+import net.automatalib.automata.transducers.impl.FastMealy;
+import net.automatalib.automata.transducers.impl.FastMealyState;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
 import net.automatalib.automata.transducers.impl.compact.CompactSST;
@@ -38,8 +49,11 @@ import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgePropertyImpl;
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
+import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.words.impl.DefaultProceduralOutputAlphabet;
 
 /**
  * @author frohme
@@ -61,6 +75,9 @@ final class DOTSerializationUtil {
     static final String CLUSTER_RESOURCE = "/cluster.dot";
     static final String PMPG_RESOURCE = "/pmpg.dot";
     static final String CFMPS_RESOURCE = "/cfmps.dot";
+    static final String SPA_RESOURCE = "/spa.dot";
+    static final String SBA_RESOURCE = "/sba.dot";
+    static final String SPMM_RESOURCE = "/spmm.dot";
 
     static final String FAULTY_AUTOMATON_RESOURCE = "/faulty_automaton.dot";
     static final String FAULTY_GRAPH_RESOURCE = "/faulty_graph.dot";
@@ -79,6 +96,9 @@ final class DOTSerializationUtil {
     static final CompactMTS<String> MTS;
     static final CompactMC<String> MC;
     static final DefaultCFMPS<Character, Character> CFMPS;
+    static final SPA<?, Character> SPA;
+    static final SBA<?, Character> SBA;
+    static final SPMM<?, Character, ?, Character> SPMM;
 
     static {
         STRING_ALPHABET = Alphabets.closedCharStringRange('a', 'c');
@@ -93,6 +113,9 @@ final class DOTSerializationUtil {
         MTS = buildMTS();
         MC = buildMC();
         CFMPS = buildCFMPS();
+        SPA = buildSPA();
+        SBA = buildSBA();
+        SPMM = buildSPMM();
     }
 
     private DOTSerializationUtil() {}
@@ -289,5 +312,141 @@ final class DOTSerializationUtil {
         pmpgs.put('t', t);
 
         return new DefaultCFMPS<>('s', pmpgs);
+    }
+
+    private static StackSPA<?, Character> buildSPA() {
+
+        final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
+        final Alphabet<Character> callAlphabet = Alphabets.characters('F', 'G');
+        final ProceduralInputAlphabet<Character> alphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, 'R');
+
+        final CompactDFA<Character> pF = new CompactDFA<>(alphabet.getProceduralAlphabet());
+
+        final Integer f0 = pF.addInitialState(true);
+        final Integer f1 = pF.addState(true);
+        final Integer f2 = pF.addState(true);
+        final Integer f3 = pF.addState(false);
+        final Integer f4 = pF.addState(false);
+        final Integer f5 = pF.addState(true);
+
+        pF.setTransition(f0, (Character) 'a', f1);
+        pF.setTransition(f0, (Character) 'b', f2);
+        pF.setTransition(f0, (Character) 'G', f5);
+        pF.setTransition(f1, (Character) 'F', f3);
+        pF.setTransition(f2, (Character) 'F', f4);
+        pF.setTransition(f3, (Character) 'a', f5);
+        pF.setTransition(f4, (Character) 'b', f5);
+
+        final FastDFA<Character> pG = new FastDFA<>(alphabet.getProceduralAlphabet());
+
+        final FastDFAState g0 = pG.addInitialState(false);
+        final FastDFAState g1 = pG.addState(true);
+        final FastDFAState g2 = pG.addState(false);
+        final FastDFAState g3 = pG.addState(true);
+
+        pG.setTransition(g0, 'c', g1);
+        pG.setTransition(g0, 'F', g3);
+        pG.setTransition(g1, 'G', g2);
+        pG.setTransition(g2, 'c', g3);
+
+        return new StackSPA<>(alphabet, 'F', ImmutableMap.of('F', pF, 'G', pG));
+    }
+
+    private static StackSBA<?, Character> buildSBA() {
+
+        final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
+        final Alphabet<Character> callAlphabet = Alphabets.characters('F', 'G');
+        final ProceduralInputAlphabet<Character> alphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, 'R');
+
+        final CompactDFA<Character> pF = new CompactDFA<>(alphabet);
+
+        final Integer f0 = pF.addInitialState(true);
+        final Integer f1 = pF.addState(true);
+        final Integer f2 = pF.addState(true);
+        final Integer f3 = pF.addState(true);
+        final Integer f4 = pF.addState(true);
+        final Integer f5 = pF.addState(true);
+        final Integer f6 = pF.addState(true);
+
+        pF.setTransition(f0, (Character) 'a', f1);
+        pF.setTransition(f0, (Character) 'b', f2);
+        pF.setTransition(f0, (Character) 'G', f5);
+        pF.setTransition(f0, (Character) 'R', f6);
+        pF.setTransition(f1, (Character) 'F', f3);
+        pF.setTransition(f1, (Character) 'R', f6);
+        pF.setTransition(f2, (Character) 'F', f4);
+        pF.setTransition(f2, (Character) 'R', f6);
+        pF.setTransition(f3, (Character) 'a', f5);
+        pF.setTransition(f4, (Character) 'b', f5);
+        pF.setTransition(f5, (Character) 'R', f6);
+
+        final FastDFA<Character> pG = new FastDFA<>(alphabet);
+
+        final FastDFAState g0 = pG.addInitialState(true);
+        final FastDFAState g1 = pG.addState(true);
+        final FastDFAState g2 = pG.addState(true);
+        final FastDFAState g3 = pG.addState(true);
+        final FastDFAState g4 = pG.addState(true);
+
+        pG.setTransition(g0, 'c', g1);
+        pG.setTransition(g0, 'F', g3);
+        pG.setTransition(g1, 'G', g2);
+        pG.setTransition(g1, 'R', g4);
+        pG.setTransition(g2, 'c', g3);
+        pG.setTransition(g3, 'R', g4);
+
+        return new StackSBA<>(alphabet, 'F', ImmutableMap.of('F', pF, 'G', pG));
+    }
+
+    private static StackSPMM<?, Character, ?, Character> buildSPMM() {
+
+        final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
+        final Alphabet<Character> callAlphabet = Alphabets.characters('F', 'G');
+        final ProceduralInputAlphabet<Character> alphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, 'R');
+        final Alphabet<Character> internalOutputs = Alphabets.characters('x', 'z');
+        final DefaultProceduralOutputAlphabet<Character> outputAlphabet =
+                new DefaultProceduralOutputAlphabet<>(internalOutputs, '-');
+
+        final CompactMealy<Character, Character> pF = new CompactMealy<>(alphabet);
+
+        final Integer f0 = pF.addInitialState();
+        final Integer f1 = pF.addState();
+        final Integer f2 = pF.addState();
+        final Integer f3 = pF.addState();
+        final Integer f4 = pF.addState();
+        final Integer f5 = pF.addState();
+        final Integer f6 = pF.addState();
+
+        pF.setTransition(f0, (Character) 'a', f1, (Character) 'x');
+        pF.setTransition(f0, (Character) 'b', f2, (Character) 'y');
+        pF.setTransition(f0, (Character) 'G', f5, (Character) '+');
+        pF.setTransition(f0, (Character) 'R', f6, (Character) '-');
+        pF.setTransition(f1, (Character) 'F', f3, (Character) '+');
+        pF.setTransition(f1, (Character) 'R', f6, (Character) '-');
+        pF.setTransition(f2, (Character) 'F', f4, (Character) '+');
+        pF.setTransition(f2, (Character) 'R', f6, (Character) '-');
+        pF.setTransition(f3, (Character) 'a', f5, (Character) 'x');
+        pF.setTransition(f4, (Character) 'b', f5, (Character) 'y');
+        pF.setTransition(f5, (Character) 'R', f6, (Character) '-');
+
+        final FastMealy<Character, Character> pG = new FastMealy<>(alphabet);
+
+        final FastMealyState<Character> g0 = pG.addInitialState();
+        final FastMealyState<Character> g1 = pG.addState();
+        final FastMealyState<Character> g2 = pG.addState();
+        final FastMealyState<Character> g3 = pG.addState();
+        final FastMealyState<Character> g4 = pG.addState();
+
+        pG.setTransition(g0, 'c', g1, 'z');
+        pG.setTransition(g0, 'F', g3, '+');
+        pG.setTransition(g1, 'G', g2, '+');
+        pG.setTransition(g1, 'R', g4, '-');
+        pG.setTransition(g2, 'c', g3, 'z');
+        pG.setTransition(g3, 'R', g4, '-');
+
+        return new StackSPMM<>(alphabet, outputAlphabet, 'F', '+', ImmutableMap.of('F', pF, 'G', pG));
     }
 }
