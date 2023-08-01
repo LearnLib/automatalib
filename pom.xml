@@ -243,7 +243,7 @@ limitations under the License.
 
         <!-- dependency versions -->
         <addlib.version>2.0.20-BETA-SNAPSHOT</addlib.version>
-        <assertj.version>3.21.0</assertj.version>
+        <assertj.version>3.17.1</assertj.version>
         <buildergen.version>0.1</buildergen.version>
         <brics-automaton.version>1.11-8</brics-automaton.version>
         <cacio.version>1.10</cacio.version>
@@ -607,6 +607,20 @@ limitations under the License.
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-swing</artifactId>
+                <version>${assertj.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-swing-testng</artifactId>
                 <version>${assertj.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -1187,7 +1201,7 @@ limitations under the License.
                 <jdk>11</jdk>
             </activation>
             <properties>
-                <cacio.version>1.11</cacio.version>
+                <cacio.version>1.11.1</cacio.version>
             </properties>
         </profile>
         <profile>
@@ -1196,7 +1210,7 @@ limitations under the License.
                 <jdk>17</jdk>
             </activation>
             <properties>
-                <cacio.version>1.17</cacio.version>
+                <cacio.version>1.17.2</cacio.version>
             </properties>
         </profile>
         <profile>

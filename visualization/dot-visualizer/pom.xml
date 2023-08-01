@@ -86,6 +86,14 @@ limitations under the License.
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-swing</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-swing-testng</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
