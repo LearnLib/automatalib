@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.
 * `Symbol` now has a type-safe user object and id-based `hashcode`/`equals` semantics.
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
+* `StrictPriorityQueue` is now package-private as it is only meant for internal use.
 
 ### Fixed
 

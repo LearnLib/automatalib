@@ -18,7 +18,6 @@ package net.automatalib.util.automata.conformance;
 import java.util.AbstractQueue;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.commons.smartcollections.ResizingArrayStorage;
@@ -32,8 +31,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * MergeOperation}'s {@link MergeOperation#merge(Object, Object)} method is invoked to determine the replacement
  * element.
  * <p>
- * The name derives from the fact that subsequent calls to {@link #extractMin()} will yield a <i>strictly</i> growing
- * sequence of elements.
+ * The name derives from the fact that subsequent calls to {@link #poll()} will yield a <i>strictly</i> growing sequence
+ * of elements.
  * <p>
  * This class does not disallow {@code null} values, but the supplied {@link Comparator} has to support them.
  *
@@ -42,7 +41,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Malte Isberner
  */
-public class StrictPriorityQueue<E> extends AbstractQueue<E> {
+class StrictPriorityQueue<E> extends AbstractQueue<E> {
 
     private final ResizingArrayStorage<E> storage = new ResizingArrayStorage<>(Object.class);
     private final Comparator<? super E> comparator;
@@ -57,43 +56,15 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
      * @param mergeOp
      *         the merge operation to perform for equally-ranked elements
      */
-    public StrictPriorityQueue(Comparator<? super E> comparator, MergeOperation<E> mergeOp) {
+    StrictPriorityQueue(Comparator<? super E> comparator, MergeOperation<E> mergeOp) {
         this.comparator = comparator;
         this.mergeOp = mergeOp;
     }
 
-    /**
-     * Retrieves, but does not remove the element at the head of the queue (i.e., the minimum element in the queue).
-     * <p>
-     * Note: Unlike {@link #peek()}, this method throws a {@link NoSuchElementException} in case of an empty priority
-     * queue.
-     *
-     * @return the minimum element in the queue
-     */
-    public E peekMin() {
-        if (size == 0) {
-            throw new NoSuchElementException();
-        }
-        return storage.array[0];
-    }
-
     @Override
     public boolean offer(E e) {
-        return insert(e);
-    }
-
-    /**
-     * Inserts an element into the queue.
-     *
-     * @param object
-     *         the element to insert
-     *
-     * @return {@code true} if a new element has been inserted (i.e., the size has grown), {@code false} otherwise
-     * (i.e., an existing element has been replaced)
-     */
-    public boolean insert(E object) {
         storage.ensureCapacity(size + 1);
-        storage.array[size++] = object;
+        storage.array[size++] = e;
         if (!upHeap()) {
             size--;
             return false;
@@ -140,25 +111,10 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
     }
 
     @Override
+    @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
     public @Nullable E poll() {
         if (size == 0) {
             return null;
-        }
-        return extractMin();
-    }
-
-    /**
-     * Retrieves and removes the element at the head of the queue (i.e., the minimum element in the queue).
-     * <p>
-     * Note: Unlike {@link #poll()}, this method throws a {@link NoSuchElementException} in case of an empty priority
-     * queue.
-     *
-     * @return the minimum element in the queue
-     */
-    @SuppressWarnings("nullness") // setting 'null' is fine, because we also decrease the size
-    public E extractMin() {
-        if (size == 0) {
-            throw new NoSuchElementException();
         }
         E result = storage.array[0];
         size--;
@@ -178,23 +134,23 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
         E elem = storage.array[0];
         int currIdx = 0;
 
-        while (2 * currIdx < size) {
-            int leftChildIdx = 2 * currIdx;
-            E leftChild = storage.array[leftChildIdx];
-            if (comparator.compare(elem, leftChild) > 0) {
-                storage.array[currIdx] = leftChild;
-                storage.array[leftChildIdx] = elem;
-                currIdx = leftChildIdx;
-            } else if (2 * currIdx + 1 < size) {
-                int rightChildIdx = 2 * currIdx + 1;
+        while (2 * currIdx + 1 < size) {
+            int childIdx = 2 * currIdx + 1;
+            E child = storage.array[childIdx];
+            int rightChildIdx = childIdx + 1;
+
+            if (rightChildIdx < size) {
                 E rightChild = storage.array[rightChildIdx];
-                if (comparator.compare(elem, rightChild) > 0) {
-                    storage.array[currIdx] = rightChild;
-                    storage.array[rightChildIdx] = elem;
-                    currIdx = rightChildIdx;
-                } else {
-                    return;
+                if (comparator.compare(child, rightChild) > 0) {
+                    child = rightChild;
+                    childIdx = rightChildIdx;
                 }
+            }
+
+            if (comparator.compare(elem, child) > 0) {
+                storage.array[currIdx] = child;
+                storage.array[childIdx] = elem;
+                currIdx = childIdx;
             } else {
                 return;
             }
@@ -222,21 +178,6 @@ public class StrictPriorityQueue<E> extends AbstractQueue<E> {
     @Override
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    @Override
-    public String toString() {
-        if (size == 0) {
-            return "[]";
-        }
-        StringBuilder result = new StringBuilder();
-        result.append('[').append(storage.array[0]);
-        for (int i = 1; i < size; i++) {
-            result.append(',');
-            result.append(storage.array[i]);
-        }
-        result.append(']');
-        return result.toString();
     }
 
     /**

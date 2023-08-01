@@ -73,7 +73,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
             item.suffixIdx = oldNumSuffixes;
             item.minSuffix = oldNumSuffixes;
             item.middle = Word.epsilon();
-            itemQueue.insert(item);
+            itemQueue.offer(item);
         }
         // new prefixes with *all* suffixes
         if (newPrefixes) {
@@ -84,7 +84,7 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
             item.suffixIdx = 0;
             item.minSuffix = 0;
             item.middle = Word.epsilon();
-            itemQueue.insert(item);
+            itemQueue.offer(item);
         }
     }
 
@@ -95,12 +95,12 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 
     @Override
     public Word<I> next() {
-        Item<I> nextItem = itemQueue.extractMin();
+        Item<I> nextItem = itemQueue.remove();
 
         Word<I> result = assembleWord(nextItem);
         @Nullable Item<I> inc = increment(nextItem);
         if (inc != null) {
-            itemQueue.insert(inc);
+            itemQueue.offer(inc);
         }
         return result;
     }
@@ -142,10 +142,6 @@ public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
         private int minPrefix;
         private int maxPrefix;
 
-        @Override
-        public String toString() {
-            return prefixIdx + " | " + middle + " | " + suffixIdx;
-        }
     }
 
     private static final class ItemMerge<I> implements StrictPriorityQueue.MergeOperation<Item<I>> {
