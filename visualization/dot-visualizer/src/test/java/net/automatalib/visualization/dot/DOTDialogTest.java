@@ -70,9 +70,11 @@ public class DOTDialogTest extends AssertJSwingTestngTestCase {
 
     @Override
     protected void onSetUp() {
-        final DOTDialog frame = GuiActionRunner.execute(() -> new DOTDialog(dot, false));
-        window = new DialogFixture(robot(), frame);
-        window.show(); // shows the frame to test
+        if (DOT.checkUsable()) {
+            final DOTDialog frame = GuiActionRunner.execute(() -> new DOTDialog(dot, false));
+            window = new DialogFixture(robot(), frame);
+            window.show(); // shows the frame to test
+        }
     }
 
     @Test
