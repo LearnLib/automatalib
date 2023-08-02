@@ -22,8 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * Various methods for operating on collections.
  *
@@ -33,16 +31,6 @@ public final class CollectionsUtil {
 
     private CollectionsUtil() {
         // prevent instantiation.
-    }
-
-    public static <E> @Nullable E removeReplace(List<E> list, int index) {
-        int lastIdx = list.size() - 1;
-        E last = list.remove(lastIdx);
-        if (lastIdx != index) {
-            list.set(index, last);
-            return last;
-        }
-        return null;
     }
 
     public static List<Integer> intRange(int start, int end) {
@@ -61,7 +49,6 @@ public final class CollectionsUtil {
         return new CharStringRange(start, end);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> List<? extends T> randomAccessList(Collection<? extends T> coll) {
         if (coll instanceof List && coll instanceof RandomAccess) {
             return (List<? extends T>) coll;

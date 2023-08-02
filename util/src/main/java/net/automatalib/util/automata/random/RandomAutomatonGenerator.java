@@ -95,7 +95,9 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
 
     public void chooseInitial() {
         S init = random.choose(states);
-        automaton.setInitial(init, true);
+        if (init != null) {
+            automaton.setInitial(init, true);
+        }
     }
 
     public void chooseInitials(int num) {

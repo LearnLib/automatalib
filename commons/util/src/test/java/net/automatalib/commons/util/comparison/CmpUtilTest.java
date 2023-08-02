@@ -18,7 +18,6 @@ package net.automatalib.commons.util.comparison;
 import java.util.Comparator;
 import java.util.List;
 
-import net.automatalib.commons.util.comparison.CmpUtil.NullOrdering;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
@@ -53,7 +52,7 @@ public class CmpUtilTest {
         Assert.assertEquals(CmpUtil.canonicalCompare(l1, l2), 1);
         Assert.assertEquals(CmpUtil.canonicalCompare(l2, l1), -1);
 
-        final Comparator<Integer> comp = CmpUtil.safeComparator(Integer::compareTo, NullOrdering.MAX);
+        final Comparator<Integer> comp = Comparator.nullsFirst(Integer::compareTo);
 
         final Comparator<List<Integer>> canonicalComp = CmpUtil.canonicalComparator(comp);
         final Comparator<List<Integer>> lexComparator = CmpUtil.lexComparator(comp);

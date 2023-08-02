@@ -36,14 +36,9 @@ public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
 
     private final Map<D, R> map;
 
-    public MapMapping(Map<D, R> map, boolean copy) {
-        if (!copy) {
-            this.map = map;
-        } else {
-            this.map = new HashMap<>(map);
-        }
-    }
-
+    /**
+     * Constructor.
+     */
     public MapMapping() {
         this(new HashMap<>());
     }
@@ -55,7 +50,23 @@ public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
      *         the underlying {@link java.util.Map} object.
      */
     public MapMapping(Map<D, R> map) {
-        this.map = map;
+        this(map, false);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param map
+     *         the underlying {@link java.util.Map} object.
+     * @param copy
+     *         whether the given map should be copied or stored by reference.
+     */
+    public MapMapping(Map<D, R> map, boolean copy) {
+        if (copy) {
+            this.map = new HashMap<>(map);
+        } else {
+            this.map = map;
+        }
     }
 
     public static <D, R> MapMapping<D, R> create(Map<D, R> map) {

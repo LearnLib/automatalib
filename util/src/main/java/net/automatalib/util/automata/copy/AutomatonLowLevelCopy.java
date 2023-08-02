@@ -24,6 +24,7 @@ import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.automata.UniversalAutomaton;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.ts.TransitionPredicate;
+import net.automatalib.util.automata.predicates.TransitionPredicates;
 
 public final class AutomatonLowLevelCopy {
 
@@ -75,7 +76,15 @@ public final class AutomatonLowLevelCopy {
                                                                              Function<? super I1, ? extends I2> inputsMapping,
                                                                              Function<? super S1, ? extends SP2> spMapping,
                                                                              Function<? super T1, ? extends TP2> tpMapping) {
-        return rawCopy(method, in, inputs, out, inputsMapping, spMapping, tpMapping, s -> true, (s, i, t) -> true);
+        return rawCopy(method,
+                       in,
+                       inputs,
+                       out,
+                       inputsMapping,
+                       spMapping,
+                       tpMapping,
+                       s -> true,
+                       TransitionPredicates.alwaysTrue());
     }
 
     /**
@@ -179,7 +188,7 @@ public final class AutomatonLowLevelCopy {
                                                                         MutableAutomaton<S2, I, T2, SP2, TP2> out,
                                                                         Function<? super S1, ? extends SP2> spMapping,
                                                                         Function<? super T1, ? extends TP2> tpMapping) {
-        return rawCopy(method, in, inputs, out, spMapping, tpMapping, s -> true, (s, i, t) -> true);
+        return rawCopy(method, in, inputs, out, spMapping, tpMapping, s -> true, TransitionPredicates.alwaysTrue());
     }
 
     /**
@@ -227,7 +236,7 @@ public final class AutomatonLowLevelCopy {
                                                                         Function<? super T1, ? extends TP2> tpMapping,
                                                                         Predicate<? super S1> stateFilter,
                                                                         TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
-        return rawCopy(method, in, inputs, out, i -> i, spMapping, tpMapping, stateFilter, transFilter);
+        return rawCopy(method, in, inputs, out, Function.identity(), spMapping, tpMapping, stateFilter, transFilter);
     }
 
     /**
@@ -278,7 +287,15 @@ public final class AutomatonLowLevelCopy {
                                                                                     Function<? super I1, ? extends I2> inputsMapping,
                                                                                     Function<? super SP1, ? extends SP2> spTransform,
                                                                                     Function<? super TP1, ? extends TP2> tpTransform) {
-        return copy(method, in, inputs, out, inputsMapping, spTransform, tpTransform, s -> true, (s, i, t) -> true);
+        return copy(method,
+                    in,
+                    inputs,
+                    out,
+                    inputsMapping,
+                    spTransform,
+                    tpTransform,
+                    s -> true,
+                    TransitionPredicates.alwaysTrue());
     }
 
     /**
@@ -383,7 +400,7 @@ public final class AutomatonLowLevelCopy {
                                                                                MutableAutomaton<S2, I, T2, ? super SP2, ? super TP2> out,
                                                                                Function<? super SP1, ? extends SP2> spTransform,
                                                                                Function<? super TP1, ? extends TP2> tpTransform) {
-        return copy(method, in, inputs, out, spTransform, tpTransform, s -> true, (s, i, t) -> true);
+        return copy(method, in, inputs, out, spTransform, tpTransform, s -> true, TransitionPredicates.alwaysTrue());
     }
 
     /**
@@ -435,7 +452,7 @@ public final class AutomatonLowLevelCopy {
                                                                                Function<? super TP1, ? extends TP2> tpTransform,
                                                                                Predicate<? super S1> stateFilter,
                                                                                TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
-        return copy(method, in, inputs, out, i -> i, spTransform, tpTransform, stateFilter, transFilter);
+        return copy(method, in, inputs, out, Function.identity(), spTransform, tpTransform, stateFilter, transFilter);
     }
 
     /**
@@ -476,7 +493,7 @@ public final class AutomatonLowLevelCopy {
                                                                         Collection<? extends I1> inputs,
                                                                         MutableAutomaton<S2, I2, T2, ? super SP, ? super TP> out,
                                                                         Function<? super I1, ? extends I2> inputsMapping) {
-        return copy(method, in, inputs, out, inputsMapping, s -> true, (s, i, t) -> true);
+        return copy(method, in, inputs, out, inputsMapping, s -> true, TransitionPredicates.alwaysTrue());
     }
 
     /**
@@ -522,7 +539,15 @@ public final class AutomatonLowLevelCopy {
                                                                         Function<? super I1, ? extends I2> inputsMapping,
                                                                         Predicate<? super S1> stateFilter,
                                                                         TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
-        return copy(method, in, inputs, out, inputsMapping, sp -> sp, tp -> tp, stateFilter, transFilter);
+        return copy(method,
+                    in,
+                    inputs,
+                    out,
+                    inputsMapping,
+                    Function.identity(),
+                    Function.identity(),
+                    stateFilter,
+                    transFilter);
     }
 
     /**
@@ -558,7 +583,7 @@ public final class AutomatonLowLevelCopy {
                                                                    UniversalAutomaton<S1, ? super I, T1, ? extends SP, ? extends TP> in,
                                                                    Collection<? extends I> inputs,
                                                                    MutableAutomaton<S2, I, T2, ? super SP, ? super TP> out) {
-        return copy(method, in, inputs, out, s -> true, (s, i, t) -> true);
+        return copy(method, in, inputs, out, s -> true, TransitionPredicates.alwaysTrue());
     }
 
     /**
@@ -599,7 +624,7 @@ public final class AutomatonLowLevelCopy {
                                                                    MutableAutomaton<S2, I, T2, ? super SP, ? super TP> out,
                                                                    Predicate<? super S1> stateFilter,
                                                                    TransitionPredicate<? super S1, ? super I, ? super T1> transFilter) {
-        return copy(method, in, inputs, out, i -> i, stateFilter, transFilter);
+        return copy(method, in, inputs, out, Function.identity(), stateFilter, transFilter);
     }
 
 }

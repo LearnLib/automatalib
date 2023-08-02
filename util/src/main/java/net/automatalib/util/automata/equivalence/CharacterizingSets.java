@@ -29,6 +29,7 @@ import java.util.Queue;
 import com.google.common.collect.AbstractIterator;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.fsa.FiniteStateAcceptor;
+import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -190,6 +191,8 @@ public final class CharacterizingSets {
 
             if (!it.hasNext()) {
                 return trans == null;
+            } else if (trans == null) {
+                return false;
             }
 
             TP transitionProperty = automaton.getTransitionProperty(trans);
@@ -217,7 +220,7 @@ public final class CharacterizingSets {
         boolean refined = false;
 
         // We need a list to ensure a stable iteration order
-        List<? extends Word<I>> oldSuffixList = toList(oldSuffixes);
+        List<? extends Word<I>> oldSuffixList = CollectionsUtil.randomAccessList(oldSuffixes);
 
         Queue<List<S>> blocks = buildInitialBlocks(automaton, oldSuffixList);
 
@@ -240,14 +243,6 @@ public final class CharacterizingSets {
                                                                              Collection<? extends I> inputs,
                                                                              Collection<? extends Word<I>> oldSuffixes) {
         return new IncrementalCharacterizingSetIterator<>(automaton, inputs, oldSuffixes);
-    }
-
-    private static <T> List<T> toList(Collection<T> collection) {
-        if (collection instanceof List) {
-            return (List<T>) collection;
-        } else {
-            return new ArrayList<>(collection);
-        }
     }
 
     private static <S, I> Queue<List<S>> buildInitialBlocks(UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton,
@@ -325,7 +320,7 @@ public final class CharacterizingSets {
                 suffix = Automata.findSeparatingWord(automaton, ref, state, inputs);
             }
 
-            if (suffix != null) {
+            if (state != null && suffix != null) {
                 int otherBlocks = blockQueue.size();
 
                 Map<List<?>, List<S>> buckets = new HashMap<>();
@@ -396,7 +391,7 @@ public final class CharacterizingSets {
                                              Collection<? extends Word<I>> oldSuffixes) {
             this.automaton = automaton;
             this.inputs = inputs;
-            this.oldSuffixes = toList(oldSuffixes);
+            this.oldSuffixes = CollectionsUtil.randomAccessList(oldSuffixes);
         }
 
         @Override

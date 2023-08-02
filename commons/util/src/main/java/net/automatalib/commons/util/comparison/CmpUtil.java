@@ -19,8 +19,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * Various methods for dealing with the comparison of objects.
  *
@@ -103,7 +101,9 @@ public final class CmpUtil {
      * @return <code>&lt; 0</code> iff o1 is lexicographically smaller, <code>0</code> if o1 equals o2 and <code>&gt;
      * 0</code> otherwise.
      */
-    public static <U> int lexCompare(Iterable<? extends U> o1, Iterable<? extends U> o2, Comparator<U> elemComparator) {
+    public static <U> int lexCompare(Iterable<? extends U> o1,
+                                     Iterable<? extends U> o2,
+                                     Comparator<? super U> elemComparator) {
         Iterator<? extends U> it1 = o1.iterator(), it2 = o2.iterator();
 
         while (it1.hasNext() && it2.hasNext()) {
@@ -208,59 +208,4 @@ public final class CmpUtil {
         return CmpUtil::canonicalCompare;
     }
 
-    /**
-     * Retrieves a <i>safe</i> comparator, which can handle <code>null</code> element values. Whether <code>null</code>
-     * values are smaller or bigger than regular values is controlled by the {@link NullOrdering} parameter.
-     *
-     * @param <T>
-     *         original element class.
-     * @param baseComp
-     *         the basic comparator.
-     * @param nullOrd
-     *         the ordering policy for <code>null</code> values.
-     *
-     * @return a safe comparator using the specified underlying comparator.
-     */
-    public static <T> Comparator<@Nullable T> safeComparator(Comparator<? super T> baseComp, NullOrdering nullOrd) {
-        return nullOrd.toComparator(baseComp);
-    }
-
-    /**
-     * Enum for controlling which rank is assigned to a <code>null</code> element when using a safe comparator ({@link
-     * CmpUtil#safeComparator(Comparator, NullOrdering)}).
-     *
-     * @author Malte Isberner
-     */
-    public enum NullOrdering {
-        /**
-         * <code>null</code> elements are smaller than all regular elements.
-         */
-        MIN {
-            @Override
-            <T> Comparator<@Nullable T> toComparator(Comparator<? super T> baseComp) {
-                return Comparator.nullsFirst(baseComp);
-            }
-        },
-        /**
-         * <code>null</code> elements are bigger than all regular elements.
-         */
-        MAX {
-            @Override
-            <T> Comparator<@Nullable T> toComparator(Comparator<? super T> baseComp) {
-                return Comparator.nullsLast(baseComp);
-            }
-        };
-
-        /**
-         * Returns the null-safe comparator, given a base comparator for non-null values.
-         *
-         * @param baseComp
-         *         the base comparator for ordering non-null elements
-         * @param <T>
-         *         element type
-         *
-         * @return the null-safe comparator
-         */
-        abstract <T> Comparator<@Nullable T> toComparator(Comparator<? super T> baseComp);
-    }
 }
