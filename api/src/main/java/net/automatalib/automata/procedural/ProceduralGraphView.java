@@ -60,7 +60,7 @@ public class ProceduralGraphView<S, I> implements Graph<Pair<I, S>, Triple<I, I,
     public Collection<Pair<I, S>> getNodes() {
         final List<Pair<I, S>> result = new ArrayList<>();
 
-        for (final Map.Entry<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>> e : subModels.entrySet()) {
+        for (Map.Entry<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>> e : subModels.entrySet()) {
             final I procedure = e.getKey();
             for (S s : e.getValue()) {
                 result.add(Pair.of(procedure, s));

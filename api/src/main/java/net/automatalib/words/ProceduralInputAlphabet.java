@@ -219,7 +219,7 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
     }
 
     @SuppressWarnings("PMD.AvoidReassigningLoopVariables") // we want to skip indices here
-    default <O> Pair<Word<I>, Word<O>> project(final Word<I> input, final Word<O> output, final int idx) {
+    default <O> Pair<Word<I>, Word<O>> project(Word<I> input, Word<O> output, int idx) {
         assert input.size() == output.size();
         final WordBuilder<I> inBuilder = new WordBuilder<>(input.size() - idx);
         final WordBuilder<O> outBuilder = new WordBuilder<>(input.size() - idx);

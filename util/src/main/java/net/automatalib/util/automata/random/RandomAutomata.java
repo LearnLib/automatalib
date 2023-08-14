@@ -182,7 +182,7 @@ public final class RandomAutomata {
             final Map<I, DFA<?, I>> dfas = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
             final Alphabet<I> proceduralAlphabet = alphabet.getProceduralAlphabet();
 
-            for (final I procedure : alphabet.getCallAlphabet()) {
+            for (I procedure : alphabet.getCallAlphabet()) {
                 final DFA<?, I> dfa = RandomAutomata.randomDFA(random, procedureSize, proceduralAlphabet, minimize);
                 dfas.put(procedure, dfa);
             }
@@ -217,7 +217,7 @@ public final class RandomAutomata {
 
         final Map<I, DFA<?, I>> dfas = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
 
-        for (final I procedure : alphabet.getCallAlphabet()) {
+        for (I procedure : alphabet.getCallAlphabet()) {
             final CompactDFA<I> dfa = new CompactDFA<>(alphabet);
             RandomAutomata.randomDeterministic(random,
                                                procedureSize - 2,
@@ -287,7 +287,7 @@ public final class RandomAutomata {
 
         final Map<I, MealyMachine<?, I, ?, O>> mealies = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
 
-        for (final I procedure : inputAlphabet.getCallAlphabet()) {
+        for (I procedure : inputAlphabet.getCallAlphabet()) {
             final CompactMealy<I, O> mealy = new CompactMealy<>(inputAlphabet);
             RandomAutomata.randomDeterministic(random,
                                                procedureSize - 1,

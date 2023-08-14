@@ -409,7 +409,7 @@ public final class SPAUtil {
         final ATRSequences<I> atr1 = computeATRSequences(spa1, alphabet);
         final ATRSequences<I> atr2 = computeATRSequences(spa2, alphabet);
 
-        for (final I procedure : alphabet.getCallAlphabet()) {
+        for (I procedure : alphabet.getCallAlphabet()) {
             final DFA<?, I> p1 = spa1.getProcedure(procedure);
             final DFA<?, I> p2 = spa2.getProcedure(procedure);
 

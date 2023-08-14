@@ -79,7 +79,7 @@ final class ProceduralUtil {
         while (!stable) {
             stable = true;
 
-            for (final I i : new ArrayList<>(remainingProcedures)) {
+            for (I i : new ArrayList<>(remainingProcedures)) {
 
                 final M p = procedures.get(i);
 
@@ -201,7 +201,7 @@ final class ProceduralUtil {
                                                                                                               Map<I, M> sys2,
                                                                                                               ATSequences<I> at2,
                                                                                                               ProceduralInputAlphabet<I> alphabet) {
-        for (final I procedure : alphabet.getCallAlphabet()) {
+        for (I procedure : alphabet.getCallAlphabet()) {
             final M p1 = sys1.get(procedure);
             final M p2 = sys2.get(procedure);
 
