@@ -17,14 +17,14 @@ package net.automatalib.words;
 
 import java.util.List;
 
-import net.automatalib.automata.procedural.SPA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 
 /**
- * A specialized version of a {@link VPDAlphabet} that is tailored towards {@link SPA}s. Specifically, it only supports
- * a {@link #getReturnSymbol() single return symbol} and the special structure of {@link SPA} words allows for a series
- * of utility functions to transform the nesting structure of {@link SPA} {@link Word words}.
+ * A specialized version of a {@link VPDAlphabet} that is tailored towards {@link ProceduralInputAlphabet}s.
+ * Specifically, it only supports a {@link #getReturnSymbol() single return symbol} and the special structure of
+ * {@link ProceduralInputAlphabet} words allows for a series of utility functions to transform the nesting structure of
+ * {@link ProceduralInputAlphabet} words.
  *
  * @param <I>
  *         input symbol type
@@ -194,7 +194,7 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
      *         the index from {@code input} will be analyzed
      *
      * @return a transformed word where all well-matched occurrences of procedural invocations have been replaced with
-     * the single respective * {@link #getCallAlphabet() call symbol}.
+     * the single respective {@link #getCallAlphabet() call symbol}.
      */
     @SuppressWarnings("PMD.AvoidReassigningLoopVariables") // we want to skip indices here
     default Word<I> project(Word<I> input, int idx) {
@@ -218,6 +218,22 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
         return wb.toWord();
     }
 
+    /**
+     * A generalization of {@link #project(Word, int)} which applies the transformation to the input word as well as an
+     * output word (in a symbol-wise fashion).
+     *
+     * @param input
+     *         the input word to analyze
+     * @param output
+     *         the output word to transform as well
+     * @param idx
+     *         the index from {@code input} will be analyzed
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a pair of transformed words where all well-matched occurrences of procedural invocations have been
+     * replaced with the single respective {@link #getCallAlphabet() call symbol} / call symbol output.
+     */
     @SuppressWarnings("PMD.AvoidReassigningLoopVariables") // we want to skip indices here
     default <O> Pair<Word<I>, Word<O>> project(Word<I> input, Word<O> output, int idx) {
         assert input.size() == output.size();
@@ -230,9 +246,9 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
             if (isCallSymbol(sym)) {
                 final int returnIdx = findReturnIndex(input, i + 1);
 
-                // an unmatched call is only allowed for the last symbol
+                // an unmatched call symbol is only allowed for the last symbol
                 if (returnIdx == -1 && i < input.size() - 1) {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException("An unmatched call symbol is only allowed for the last symbol");
                 }
 
                 inBuilder.append(input.getSymbol(i));
@@ -246,6 +262,5 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
 
         return Pair.of(inBuilder.toWord(), outBuilder.toWord());
     }
-
 
 }

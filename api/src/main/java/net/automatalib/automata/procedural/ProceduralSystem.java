@@ -28,6 +28,17 @@ import net.automatalib.ts.simple.SimpleTS;
 import net.automatalib.words.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * (Meta-) Interface for procedural systems, i.e., systems that consist of multiple procedural automata that can
+ * mutually call each other.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <M>
+ *         procedural model type
+ *
+ * @author frohme
+ */
 interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>>
         extends FiniteRepresentation, GraphViewable, InputAlphabetHolder<I> {
 
@@ -42,9 +53,9 @@ interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?,
 
     /**
      * Convenience method for {@link #getProceduralInputs(Collection)} which uses the
-     * {@link #getInputAlphabet() input alphabet} of {@code this} {@link SPA} as {@code constraints}.
+     * {@link #getInputAlphabet() input alphabet} of {@code this} {@link ProceduralSystem} as {@code constraints}.
      *
-     * @return a collection of defined inputs for {@code this} {@link SPA}'s procedures.
+     * @return a collection of defined inputs for {@code this} {@link ProceduralSystem}'s procedures.
      */
     default Collection<I> getProceduralInputs() {
         return getProceduralInputs(this.getInputAlphabet());
@@ -52,7 +63,8 @@ interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?,
 
     /**
      * Returns a collection of input symbols which the procedural automata can process. The collection is computed by
-     * the union of this {@link SPA}s {@link ProceduralInputAlphabet#getInternalAlphabet() internal symbols} and the
+     * the union of this {@link ProceduralSystem}s
+     * {@link ProceduralInputAlphabet#getInternalAlphabet() internal symbols} and the
      * {@link #getProcedures() available procedure keys}.
      * <p>
      * This collection can be further constrained via the {@code constraints} parameter which is used in a final
@@ -66,32 +78,43 @@ interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?,
     Collection<I> getProceduralInputs(Collection<I> constraints);
 
     /**
-     * Returns the initial procedure of this {@link SBA}, i.e. the call symbol with which each accepted word has to
-     * start.
+     * Returns the initial procedure of this {@link ProceduralSystem}, i.e. the call symbol with which successful run
+     * has to start.
      *
      * @return the initial procedure
      */
     @Nullable I getInitialProcedure();
 
     /**
-     * In a complete {@link SBA} every {@link #getInputAlphabet() call symbol} should be mapped to a corresponding
-     * procedure.
+     * Return a {@link Map} from {@link ProceduralInputAlphabet#getCallAlphabet() call symbols} to the procedures of
+     * this {@link ProceduralSystem}. Note that a (non-minimal) {@link ProceduralSystem} may not contain a procedure for
+     * every call symbol.
      *
-     * @return the procedures of this {@link SBA}
+     * @return the procedures of this {@link ProceduralSystem}
      */
     Map<I, M> getProcedures();
 
+    /**
+     * Convenience method for {@link #getProcedures()} to quickly return the procedure of a given call symbol.
+     *
+     * @param callSymbol
+     *         the call symbol
+     *
+     * @return the corresponding procedure. May be {@code null} if the {@link ProceduralSystem} does not have a
+     * procedure for the given call symbol.
+     */
     default @Nullable M getProcedure(I callSymbol) {
         assert getInputAlphabet().isCallSymbol(callSymbol);
         return getProcedures().get(callSymbol);
     }
 
     /**
-     * Return the size of this {@link SPA} which is given by the sum of the sizes of all
+     * Return the size of this {@link ProceduralSystem} which is given by the sum of the sizes of all
      * {@link #getProcedures() procedures}. Note that this value does not necessarily correspond to the classical notion
-     * of {@link SimpleAutomaton#size()}, since semantically an {@link SPA}s may be infinite-sized {@link SimpleTS}.
+     * of {@link SimpleAutomaton#size()}, since semantically a {@link ProceduralSystem} may be infinite-sized
+     * {@link SimpleTS}.
      *
-     * @return the size of this {@link SPA}
+     * @return the size of this {@link ProceduralSystem}
      */
     @Override
     default int size() {

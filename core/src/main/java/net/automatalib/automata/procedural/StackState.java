@@ -19,7 +19,7 @@ import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A stack-based state in a procedural system. Consists of a back-reference to the previous stack-element a values for
+ * A stack-based state in a procedural system. Consists of a back-reference to the previous stack-element and values for
  * the current top-of-stack configuration.
  *
  * @param <I>

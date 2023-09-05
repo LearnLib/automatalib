@@ -29,19 +29,22 @@ import net.automatalib.words.ProceduralInputAlphabet;
  * A system of procedural automata. An {@link SPA} is a context-free system where each non-terminal (procedure) is
  * represented by a {@link DFA} that accepts the language of right-hand sides of its respective production rules.
  * <p>
- * Take, for example, the following context-free palindrome system over {@code a,b,c} using two non-terminals
- * {@code S,T}:
+ * For example, take the following context-free palindrome system over {@code a,b,c} using two non-terminals
+ * {@code F,G}:
  * <pre>
- *     S -&gt; a | a S a | b | b S b | T | ε
- *     T -&gt; c | c T c | S
+ *     F -&gt; a | a F a | b | b F b | G | ε
+ *     G -&gt; c | c G c | F
  * </pre>
- * The corresponding {@link SPA} would consist of {@link DFA procedures} (for {@code S} and {@code T}), accepting the
- * regular languages {@code {a,aSa,b,bSb,T,ε}} and {@code {c,cTc,S}} respectively.
+ * The corresponding {@link SPA} would consist of {@link DFA procedures} (for {@code F} and {@code G}), accepting the
+ * regular languages {@code {a,aFa,b,bFb,G,ε}} and {@code {c,cGc,F}} respectively.
  * <p>
- * In {@link SPA}s, calls to and returns from procedures are visible which make {@link SPA}s a special kind of visibly
- * push-down automata. For the above example, a possible word accepted by the respective {@link SPA} (when using
- * {@code S} as {@link #getInitialProcedure() initial procedure}) would be {@code SaSTcRRaR} (where {@code R} denotes
- * the designated {@link ProceduralInputAlphabet#getReturnSymbol() return symbol}.
+ * In {@link SPA}s, calls to and returns from procedures are visible. For the above example, a possible word accepted by
+ * the respective {@link SPA} (when using {@code F} as {@link #getInitialProcedure() initial procedure}) would be
+ * {@code FaFGcRRaR} (where {@code R} denotes the designated
+ * {@link ProceduralInputAlphabet#getReturnSymbol() return symbol}.
+ * <p>
+ * For further information, see "<a href="https://doi.org/10.1007/s10009-021-00634-y">Compositional learning of mutually
+ * recursive procedural systems</a>".
  * <p>
  * This interface makes no assumptions about how the semantics are implemented. One may use a stack-based approach,
  * graph expansion, or else. However, {@link SPA}s should be <i>consistent</i> with their alphabet definitions, i.e. an

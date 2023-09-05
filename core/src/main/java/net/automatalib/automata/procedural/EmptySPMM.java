@@ -26,6 +26,14 @@ import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * A utility implementation of an {@link SPMM} that transduces all input words to a sequence of erroneous output
+ * symbols.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ *
  * @author frohme
  */
 public class EmptySPMM<I, O> implements SPMM<Void, I, Void, O> {

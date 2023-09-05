@@ -26,6 +26,16 @@ import net.automatalib.ts.acceptors.DeterministicAcceptorTS;
 import net.automatalib.words.ProceduralInputAlphabet;
 
 /**
+ * A system of behavioral automata. {@link SBA}s extend the idea of {@link SPA}s by supporting a direct response
+ * mechanism which makes them especially suited for reactive systems with immediate feedback. Language-wise, this can be
+ * thought of as a form of prefix-closure of {@link SPA} languages. However, {@link SBA}s are also able to model
+ * non-terminating procedures which are not expressible via (the prefixes of) {@link SPA} words.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ *
  * @author frohme
  */
 public interface SBA<S, I>

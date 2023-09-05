@@ -21,9 +21,6 @@ import java.util.List;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
 
-/**
- * @author frohme
- */
 public class DefaultProceduralOutputAlphabet<O> extends MapAlphabet<O> implements ProceduralOutputAlphabet<O> {
 
     private final Alphabet<O> internalOutputs;

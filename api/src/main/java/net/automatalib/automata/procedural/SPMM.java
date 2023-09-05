@@ -30,6 +30,20 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
 /**
+ * A system of procedural Mealy machines. {@link SPMM}s extend the idea of {@link SBA}s by supporting deterministic
+ * bi-languages with lock-step semantics (typically known from {@link MealyMachine}s in the regular case). This makes
+ * {@link SPMM}s a preferable model for (instrumented) dialog-systems in which the system responds to an external input
+ * stimuli with an observable output symbol.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <O>
+ *         output symbol type
+ *
  * @author frohme
  */
 public interface SPMM<S, I, T, O> extends ProceduralSystem<I, MealyMachine<?, I, ?, O>>,
