@@ -53,7 +53,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.words.impl.DefaultProceduralOutputAlphabet;
 
 /**
  * @author frohme
@@ -406,9 +405,6 @@ final class DOTSerializationUtil {
         final Alphabet<Character> callAlphabet = Alphabets.characters('F', 'G');
         final ProceduralInputAlphabet<Character> alphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, 'R');
-        final Alphabet<Character> internalOutputs = Alphabets.characters('x', 'z');
-        final DefaultProceduralOutputAlphabet<Character> outputAlphabet =
-                new DefaultProceduralOutputAlphabet<>(internalOutputs, '-');
 
         final CompactMealy<Character, Character> pF = new CompactMealy<>(alphabet);
 
@@ -447,6 +443,6 @@ final class DOTSerializationUtil {
         pG.setTransition(g2, 'c', g3, 'z');
         pG.setTransition(g3, 'R', g4, '-');
 
-        return new StackSPMM<>(alphabet, outputAlphabet, 'F', '+', ImmutableMap.of('F', pF, 'G', pG));
+        return new StackSPMM<>(alphabet, '-', 'F', '+', ImmutableMap.of('F', pF, 'G', pG));
     }
 }

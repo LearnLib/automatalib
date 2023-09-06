@@ -23,12 +23,12 @@ import net.automatalib.words.ProceduralOutputAlphabet;
 
 public class DefaultProceduralOutputAlphabet<O> extends MapAlphabet<O> implements ProceduralOutputAlphabet<O> {
 
-    private final Alphabet<O> internalOutputs;
+    private final Alphabet<O> regularAlphabet;
     private final O errorSymbol;
 
-    public DefaultProceduralOutputAlphabet(Alphabet<O> internalOutputs, O errorSymbol) {
-        super(buildCombinedAlphabet(internalOutputs, errorSymbol));
-        this.internalOutputs = internalOutputs;
+    public DefaultProceduralOutputAlphabet(Alphabet<O> regularAlphabet, O errorSymbol) {
+        super(buildCombinedAlphabet(regularAlphabet, errorSymbol));
+        this.regularAlphabet = regularAlphabet;
         this.errorSymbol = errorSymbol;
     }
 
@@ -41,8 +41,8 @@ public class DefaultProceduralOutputAlphabet<O> extends MapAlphabet<O> implement
     }
 
     @Override
-    public Alphabet<O> getInternalAlphabet() {
-        return this.internalOutputs;
+    public Alphabet<O> getRegularAlphabet() {
+        return this.regularAlphabet;
     }
 
     @Override

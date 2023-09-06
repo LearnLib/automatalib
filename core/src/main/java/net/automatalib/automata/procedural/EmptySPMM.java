@@ -21,7 +21,6 @@ import java.util.Map;
 import com.google.common.collect.Iterables;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -39,11 +38,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class EmptySPMM<I, O> implements SPMM<Void, I, Void, O> {
 
     private final ProceduralInputAlphabet<I> alphabet;
-    private final ProceduralOutputAlphabet<O> outputAlphabet;
+    private final O errorOutput;
 
-    public EmptySPMM(ProceduralInputAlphabet<I> alphabet, ProceduralOutputAlphabet<O> outputAlphabet) {
+    public EmptySPMM(ProceduralInputAlphabet<I> alphabet, O errorOutput) {
         this.alphabet = alphabet;
-        this.outputAlphabet = outputAlphabet;
+        this.errorOutput = errorOutput;
     }
 
     @Override
@@ -57,8 +56,8 @@ public class EmptySPMM<I, O> implements SPMM<Void, I, Void, O> {
     }
 
     @Override
-    public ProceduralOutputAlphabet<O> getOutputAlphabet() {
-        return this.outputAlphabet;
+    public O getErrorOutput() {
+        return this.errorOutput;
     }
 
     @Override
@@ -69,7 +68,7 @@ public class EmptySPMM<I, O> implements SPMM<Void, I, Void, O> {
     @Override
     public Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
         final int length = Iterables.size(suffix);
-        return Word.fromList(Collections.nCopies(length, outputAlphabet.getErrorSymbol()));
+        return Word.fromList(Collections.nCopies(length, errorOutput));
     }
 
     @Override
@@ -84,7 +83,7 @@ public class EmptySPMM<I, O> implements SPMM<Void, I, Void, O> {
 
     @Override
     public O getTransitionOutput(Void transition) {
-        return outputAlphabet.getErrorSymbol();
+        return errorOutput;
     }
 
     @Override

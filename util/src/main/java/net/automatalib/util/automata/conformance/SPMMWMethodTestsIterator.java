@@ -21,7 +21,15 @@ import net.automatalib.util.automata.procedural.SPMMUtil;
 import net.automatalib.words.ProceduralInputAlphabet;
 
 /**
+ * A conformance test iterator for {@link SPMM}s that is based on the W-method.
+ *
+ * @param <I>
+ *         input symbol type
+ * @param <O>
+ *         output symbol type
+ *
  * @author frohme
+ * @see WMethodTestsIterator
  */
 public class SPMMWMethodTestsIterator<I, O> extends ProceduralWMethodTestsIterator<I, MealyMachine<?, I, ?, O>> {
 

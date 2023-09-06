@@ -320,9 +320,9 @@ public final class RandomAutomata {
             mealies.put(procedure, mealy);
         }
 
-        final Alphabet<O> internalOutputs = outputAlphabet.getInternalAlphabet();
+        final Alphabet<O> internalOutputs = outputAlphabet.getRegularAlphabet();
         return new StackSPMM<>(inputAlphabet,
-                               outputAlphabet,
+                               outputAlphabet.getErrorSymbol(),
                                inputAlphabet.getCallSymbol(random.nextInt(inputAlphabet.getNumCalls())),
                                internalOutputs.getSymbol(random.nextInt(internalOutputs.size())),
                                mealies);

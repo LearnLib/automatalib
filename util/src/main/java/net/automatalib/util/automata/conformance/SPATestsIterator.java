@@ -32,7 +32,7 @@ import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * A conformance test for {@link SPA}s that applies a given regular conformance test to each procedure of the
+ * A conformance test iterator for {@link SPA}s that applies a given regular conformance test to each procedure of the
  * {@link SPA}.
  *
  * @param <I>

@@ -21,7 +21,13 @@ import net.automatalib.util.automata.procedural.SBAUtil;
 import net.automatalib.words.ProceduralInputAlphabet;
 
 /**
+ * A conformance test iterator for {@link SBA}s that is based on the W-method.
+ *
+ * @param <I>
+ *         input symbol type
+ *
  * @author frohme
+ * @see WMethodTestsIterator
  */
 public class SBAWMethodTestsIterator<I> extends ProceduralWMethodTestsIterator<I, DFA<?, I>> {
 

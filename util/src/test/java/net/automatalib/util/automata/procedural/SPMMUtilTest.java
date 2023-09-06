@@ -65,7 +65,7 @@ public class SPMMUtilTest {
         Assert.assertTrue(atSequences.accessSequences.keySet().containsAll(inputAlphabet.getCallAlphabet()));
 
         for (Word<Character> as : atSequences.accessSequences.values()) {
-            Assert.assertFalse(outputAlphabet.isErrorSymbol(spmm.computeOutput(as).lastSymbol()));
+            Assert.assertFalse(spmm.isErrorOutput(spmm.computeOutput(as).lastSymbol()));
         }
 
         for (Entry<Character, Word<Character>> e : atSequences.terminatingSequences.entrySet()) {
@@ -85,14 +85,14 @@ public class SPMMUtilTest {
                     inputAlphabet.project(globalInput, globalOutput, as.size());
 
             Assert.assertEquals(procedure.computeOutput(localOutput.getFirst()), localOutput.getSecond());
-            Assert.assertFalse(outputAlphabet.isErrorSymbol(localOutput.getSecond().lastSymbol()));
-            Assert.assertFalse(outputAlphabet.isErrorSymbol(globalOutput.lastSymbol()));
+            Assert.assertFalse(spmm.isErrorOutput(localOutput.getSecond().lastSymbol()));
+            Assert.assertFalse(spmm.isErrorOutput(globalOutput.lastSymbol()));
         }
     }
 
     @Test
     public void testEmptyCompleteATRSequences() {
-        final SPMM<?, Character, ?, Character> spmm = new EmptySPMM<>(inputAlphabet, outputAlphabet);
+        final SPMM<?, Character, ?, Character> spmm = new EmptySPMM<>(inputAlphabet, outputAlphabet.getErrorSymbol());
         final ATSequences<Character> atrSequences = SPMMUtil.computeATSequences(spmm);
 
         Assert.assertTrue(atrSequences.accessSequences.isEmpty());
@@ -128,6 +128,8 @@ public class SPMMUtilTest {
     // Copied and adjusted from the corresponding method in the SPAUtil test
     @Test
     public void testIntricateSeparatingWord() {
+        final Character errorOutput = outputAlphabet.getErrorSymbol();
+
         // construct a simple (pseudo) palindrome system which we will gradually alter to model different cases
         final CompactMealy<Character, Character> s1 = new CompactMealy<>(inputAlphabet);
         final FastMealy<Character, Character> t1 = new FastMealy<>(inputAlphabet);
@@ -138,7 +140,7 @@ public class SPMMUtilTest {
         t1.addTransition(t1t0, 'R', t1t4, '-');
 
         final SPMM<?, Character, ?, Character> spmm1 =
-                new StackSPMM<>(inputAlphabet, outputAlphabet, 'S', '✓', ImmutableMap.of('S', s1, 'T', t1));
+                new StackSPMM<>(inputAlphabet, errorOutput, 'S', '✓', ImmutableMap.of('S', s1, 'T', t1));
 
         final CompactMealy<Character, Character> s2 = new CompactMealy<>(inputAlphabet);
         final FastMealy<Character, Character> t2 = new FastMealy<>(inputAlphabet);
@@ -149,8 +151,8 @@ public class SPMMUtilTest {
         t2.addTransition(t2t0, 'R', t2t4, '-');
 
         final SPMM<?, Character, ?, Character> spmm2 =
-                new StackSPMM<>(inputAlphabet, outputAlphabet, 'S', '✓', ImmutableMap.of('S', s2, 'T', t2));
-        final SPMM<?, Character, ?, Character> emptySPMM = new EmptySPMM<>(inputAlphabet, outputAlphabet);
+                new StackSPMM<>(inputAlphabet, errorOutput, 'S', '✓', ImmutableMap.of('S', s2, 'T', t2));
+        final SPMM<?, Character, ?, Character> emptySPMM = new EmptySPMM<>(inputAlphabet, errorOutput);
 
         // no accessible procedures, no separating word should exist. Even with the empty SPMMs
         Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm2, inputAlphabet));
@@ -213,7 +215,7 @@ public class SPMMUtilTest {
 
         // this should also work for partial SPMMs
         final SPMM<?, Character, ?, Character> partial1 =
-                new StackSPMM<>(inputAlphabet, outputAlphabet, 'S', '✓', ImmutableMap.of('S', s1));
+                new StackSPMM<>(inputAlphabet, errorOutput, 'S', '✓', ImmutableMap.of('S', s1));
         verifySepWord(spmm1, partial1, inputAlphabet);
         verifySepWord(partial1, spmm1, inputAlphabet);
 

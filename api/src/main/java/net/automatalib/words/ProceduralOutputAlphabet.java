@@ -18,14 +18,41 @@ package net.automatalib.words;
 import java.util.Objects;
 
 /**
+ * A specialized {@link Alphabet} for procedural systems that combines an internal output alphabet with a designated
+ * error symbol.
+ *
+ * @param <O>
+ *         output symbol type
+ *
  * @author frohme
  */
 public interface ProceduralOutputAlphabet<O> extends Alphabet<O> {
 
-    Alphabet<O> getInternalAlphabet();
+    /**
+     * Returns the regular output symbols of this alphabet. Note that this alphabet must not contain the
+     * {@link #getErrorSymbol() error symbol}.
+     *
+     * @return the regular output symbols of this alphabet
+     */
+    Alphabet<O> getRegularAlphabet();
 
+    /**
+     * Returns the error symbol of this alphabet.
+     *
+     * @return the error symbol
+     */
     O getErrorSymbol();
 
+    /**
+     * Convenience method that compares the given {@code symbol} with this alphabet's
+     * {@link #getErrorSymbol() error symbol}.
+     *
+     * @param symbol
+     *         the symbol to check
+     *
+     * @return {@code true} if {@code symbol} equals this alphabet's {@link #getErrorSymbol() error symbol},
+     * {@code false} otherwise.
+     */
     default boolean isErrorSymbol(O symbol) {
         return Objects.equals(getErrorSymbol(), symbol);
     }

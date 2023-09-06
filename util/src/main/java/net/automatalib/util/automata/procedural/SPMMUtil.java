@@ -24,11 +24,12 @@ import java.util.Set;
 import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
+ * Utility methods for {@link SPMM}s.
+ *
  * @author frohme
  */
 public final class SPMMUtil {
@@ -37,51 +38,157 @@ public final class SPMMUtil {
         // prevent instantiation
     }
 
+    /**
+     * Computes a set of access and terminating sequences for a given {@link SPMM}.
+     *
+     * @param spmm
+     *         the {@link SPMM} for which the sequences should be computed
+     * @param <I>
+     *         input symbol type
+     *
+     * @return a {@link ATSequences} object which contains the respective sequences.
+     */
     public static <I, O> ATSequences<I> computeATSequences(SPMM<?, I, ?, O> spmm) {
         return computeATSequences(spmm, spmm.getInputAlphabet());
     }
 
-    public static <I, O> ATSequences<I> computeATSequences(SPMM<?, I, ?, O> spmm,
-                                                           ProceduralInputAlphabet<I> inputAlphabet) {
+    /**
+     * Computes a set of access and return sequences for a given {@link SPMM} limited to the symbols of the given
+     * {@link ProceduralInputAlphabet}.
+     *
+     * @param spmm
+     *         the {@link SPMM} for which the sequences should be computed
+     * @param alphabet
+     *         the {@link ProceduralInputAlphabet} whose symbols should be used for computing the respective sequences
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a {@link ATSequences} object which contains the respective sequences.
+     */
+    public static <I, O> ATSequences<I> computeATSequences(SPMM<?, I, ?, O> spmm, ProceduralInputAlphabet<I> alphabet) {
 
-        assert isValid(spmm, inputAlphabet);
+        assert isValid(spmm, alphabet);
 
-        final Map<I, Word<I>> terminatingSequences = computeTerminatingSequences(spmm, inputAlphabet);
-        final Map<I, Word<I>> accessSequences = computeAccessSequences(spmm, inputAlphabet, terminatingSequences);
+        final Map<I, Word<I>> terminatingSequences = computeTerminatingSequences(spmm, alphabet);
+        final Map<I, Word<I>> accessSequences = computeAccessSequences(spmm, alphabet, terminatingSequences);
 
         return new ATSequences<>(accessSequences, terminatingSequences);
     }
 
+    /**
+     * Computes for a given {@link SPMM} the set of terminating sequences using the given
+     * {@link ProceduralInputAlphabet alphabet}. Terminating sequences transfer a procedure from its initial state to a
+     * returnable state. This method furthermore checks that the hierarchy of calls is well-defined, i.e. it only
+     * includes procedural invocations <i>p</i> for determining a terminating sequence if <i>p</i> has a valid
+     * terminating sequence itself.
+     *
+     * @param spmm
+     *         the {@link SPMM} to analyze
+     * @param alphabet
+     *         the {@link ProceduralInputAlphabet} whose symbols should be used for computing the terminating sequences
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return A map from procedures (restricted to the call symbols of the given alphabet) to the terminating
+     * sequences. This map may be partial as some procedures may not have a well-defined terminating sequence for the
+     * given alphabet.
+     */
     public static <I, O> Map<I, Word<I>> computeTerminatingSequences(SPMM<?, I, ?, O> spmm,
                                                                      ProceduralInputAlphabet<I> alphabet) {
         final Word<I> returnWord = Word.fromLetter(alphabet.getReturnSymbol());
-        final ProceduralOutputAlphabet<O> outputAlphabet = spmm.getOutputAlphabet();
 
         return ProceduralUtil.computeTerminatingSequences(spmm.getProcedures(), alphabet, (mealy, trace) -> {
             final Word<O> output = mealy.computeSuffixOutput(trace, returnWord);
-            return !output.isEmpty() && !outputAlphabet.isErrorSymbol(output.lastSymbol());
+            return !output.isEmpty() && !spmm.isErrorOutput(output.lastSymbol());
         });
     }
 
+    /**
+     * Computes for a given {@link SPMM} the set of access sequences using the SPMM
+     * {@link ProceduralInputAlphabet alphabet}. An access sequence (for procedure <i>p</i>) transfers an {@link SPMM}
+     * from its initial state to a state that is able to successfully execute a run of <i>p</i>. This method
+     * furthermore checks that potentially nested calls are well-defined, i.e. it only includes procedural invocations
+     * <i>p</i> for determining access sequences if <i>p</i> has a valid terminating sequence and therefore can
+     * be expanded correctly.
+     *
+     * @param spmm
+     *         the {@link SPMM} to analyze
+     * @param alphabet
+     *         the {@link ProceduralInputAlphabet} whose symbols should be used for computing the access sequences
+     * @param terminatingSequences
+     *         a {@link Map} of call symbols to terminating sequences used to expand nested invocations in access
+     *         sequences
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return A map from procedures (restricted to the call symbols of the given alphabet) to the access sequences.
+     * This map may be partial as some procedures may not have well-defined access sequences for the given alphabet.
+     */
     public static <I, O> Map<I, Word<I>> computeAccessSequences(SPMM<?, I, ?, O> spmm,
                                                                 ProceduralInputAlphabet<I> alphabet,
                                                                 Map<I, Word<I>> terminatingSequences) {
-
-        final ProceduralOutputAlphabet<O> outputAlphabet = spmm.getOutputAlphabet();
-
         return ProceduralUtil.computeAccessSequences(spmm.getProcedures(),
                                                      alphabet,
                                                      spmm.getProceduralInputs(alphabet),
                                                      spmm.getInitialProcedure(),
                                                      terminatingSequences,
-                                                     (mealy, trace) -> !outputAlphabet.isErrorSymbol(mealy.computeOutput(
-                                                             trace).lastSymbol()));
+                                                     (mealy, trace) -> !spmm.isErrorOutput(mealy.computeOutput(trace)
+                                                                                                .lastSymbol()));
     }
 
+    /**
+     * Checks whether the given {@link SPMM} is valid, This is a convenience method for
+     * {@link #isValid(SPMM, ProceduralInputAlphabet)} that uses the {@link SPMM#getInputAlphabet() input alphabet} of
+     * the given {@link SPMM}.
+     *
+     * @param spmm
+     *         the {@link SPMM} to analyze
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return {@code true} if {@code spmm} is valid, {@code false} otherwise.
+     *
+     * @see #isValid(SPMM, ProceduralInputAlphabet)
+     */
     public static <I, O> boolean isValid(SPMM<?, I, ?, O> spmm) {
         return isValid(spmm, spmm.getInputAlphabet());
     }
 
+    /**
+     * Checks whether the given {@link SPMM} is valid with respect to the given {@link ProceduralInputAlphabet}, i.e.,
+     * whether its {@link SPMM#getProcedures() procedures} are error-closed, return-closed, and call-closed.
+     * <p>
+     * A procedure is considered error-closed iff any transition that emits an
+     * {@link SPMM#getErrorOutput() error output} transitions the procedure into a sink state that continues to output
+     * the {@link SPMM#getErrorOutput() error output}.
+     * <p>
+     * A procedure is considered return-closed iff the {@link ProceduralInputAlphabet#getReturnSymbol() return symbol}
+     * transitions the procedure into a sink state that continues to output the
+     * {@link SPMM#getErrorOutput() error output}.
+     * <p>
+     * A procedure is considered call-closed iff any transition labeled with a non-terminating
+     * {@link ProceduralInputAlphabet#getCallAlphabet() call symbol} transitions the procedure into a sink state that
+     * continues to output the {@link SPMM#getErrorOutput() error output}.
+     *
+     * @param spmm
+     *         the {@link SPMM} to analyze
+     * @param alphabet
+     *         the {@link ProceduralInputAlphabet} whose symbols should be used for checking validity
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return {@code true} if {@code spmm} is valid, {@code false} otherwise.
+     */
     public static <I, O> boolean isValid(SPMM<?, I, ?, O> spmm, ProceduralInputAlphabet<I> alphabet) {
 
         final Map<I, Word<I>> ts = computeTerminatingSequences(spmm, alphabet);
@@ -91,13 +198,8 @@ public final class SPMMUtil {
         nonContinuableSymbols.retainAll(proceduralInputs);
         nonContinuableSymbols.add(alphabet.getReturnSymbol());
 
-        final ProceduralOutputAlphabet<O> outputAlphabet = spmm.getOutputAlphabet();
-
         for (MealyMachine<?, I, ?, O> p : spmm.getProcedures().values()) {
-            if (!isErrorReturnAndCallClosed(p,
-                                            proceduralInputs,
-                                            nonContinuableSymbols,
-                                            outputAlphabet.getErrorSymbol())) {
+            if (!isErrorReturnAndCallClosed(p, proceduralInputs, nonContinuableSymbols, spmm.getErrorOutput())) {
                 return false;
             }
         }
@@ -143,12 +245,48 @@ public final class SPMMUtil {
         return true;
     }
 
+    /**
+     * Checks if the two given {@link SPMM}s are equivalent, i.e. whether there exists a
+     * {@link #findSeparatingWord(SPMM, SPMM, ProceduralInputAlphabet) separating word} for them.
+     *
+     * @param spmm1
+     *         the first {@link SPMM}
+     * @param spmm2
+     *         the second {@link SPMM}
+     * @param alphabet
+     *         the {@link ProceduralInputAlphabet} whose symbols should be used for checking equivalence
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return {@code true} if the two {@link SPMM}s are equivalent, {@code false} otherwise.
+     *
+     * @see #findSeparatingWord(SPMM, SPMM, ProceduralInputAlphabet)
+     */
     public static <I, O> boolean testEquivalence(SPMM<?, I, ?, O> spmm1,
                                                  SPMM<?, I, ?, O> spmm2,
                                                  ProceduralInputAlphabet<I> alphabet) {
         return findSeparatingWord(spmm1, spmm2, alphabet) == null;
     }
 
+    /**
+     * Computes a separating word for the two given {@link SPMM}s, if existent. A separating word is a {@link Word} such
+     * that one {@link SPMM} {@link SPMM#computeOutput(Iterable) behaves} different than the other.
+     *
+     * @param spmm1
+     *         the first {@link SPMM}
+     * @param spmm2
+     *         the second {@link SPMM}
+     * @param alphabet
+     *         the {@link ProceduralInputAlphabet} whose symbols should be used for computing the separating word
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
+     *
+     * @return a separating word, if existent, {@code null} otherwise.
+     */
     public static <I, O> @Nullable Word<I> findSeparatingWord(SPMM<?, I, ?, O> spmm1,
                                                               SPMM<?, I, ?, O> spmm2,
                                                               ProceduralInputAlphabet<I> alphabet) {

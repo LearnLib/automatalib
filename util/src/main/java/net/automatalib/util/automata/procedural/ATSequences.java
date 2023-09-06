@@ -27,7 +27,7 @@ import net.automatalib.words.Word;
  * initial state to the initial state of the respective procedure.
  * <p>
  * A terminating sequence of a procedure is an input word that guarantees to transition the respective procedure from
- * its initial state to an accepting state. The terminating sequence may contain nested invocations to other
+ * its initial state to a returnable state. The terminating sequence may contain nested invocations to other
  * procedures.
  *
  * @param <I>

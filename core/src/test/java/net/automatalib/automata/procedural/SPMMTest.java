@@ -24,11 +24,9 @@ import net.automatalib.automata.transducers.impl.FastMealyState;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.words.impl.DefaultProceduralOutputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -48,14 +46,13 @@ public class SPMMTest {
                 new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), smallCallAlphabet, 'R');
         final ProceduralInputAlphabet<Character> bigAlphabet =
                 new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), bigCallAlphabet, 'R');
-        final ProceduralOutputAlphabet<Character> outputAlphabet =
-                new DefaultProceduralOutputAlphabet<>(Alphabets.characters('x', 'z'), '-');
+        final Character errorOutput = '-';
 
         final Map<Character, MealyMachine<?, Character, ?, Character>> mealies =
                 ImmutableMap.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
 
-        spmm = new StackSPMM<>(bigAlphabet, outputAlphabet, 'S', '✓', mealies);
-        emptySpmm = new EmptySPMM<>(bigAlphabet, outputAlphabet);
+        spmm = new StackSPMM<>(bigAlphabet, errorOutput, 'S', '✓', mealies);
+        emptySpmm = new EmptySPMM<>(bigAlphabet, errorOutput);
     }
 
     private static MealyMachine<?, Character, ?, Character> buildSProcedure(ProceduralInputAlphabet<Character> alphabet) {

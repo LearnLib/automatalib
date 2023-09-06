@@ -81,7 +81,7 @@ public class SPMMWMethodTestsIteratorTest {
                 this.spmm.computeOutput(Word.fromLetter(this.spmm.getInitialProcedure())).firstSymbol();
 
         final SPMM<?, Character, ?, Character> extendedSPMM = new StackSPMM<>(extendedAlphabet,
-                                                                              this.spmm.getOutputAlphabet(),
+                                                                              this.spmm.getErrorOutput(),
                                                                               this.spmm.getInitialProcedure(),
                                                                               initialOutput,
                                                                               this.spmm.getProcedures());
@@ -117,13 +117,12 @@ public class SPMMWMethodTestsIteratorTest {
                                                      Random random) {
 
         final ProceduralInputAlphabet<I> inputAlphabet = spmm.getInputAlphabet();
-        final ProceduralOutputAlphabet<O> outputAlphabet = spmm.getOutputAlphabet();
         final I init = spmm.getInitialProcedure();
 
         for (S s : mealy) {
             if (!isSink(mealy, inputAlphabet, s)) { // ensure validity of modified SPMM
                 for (I i : continuableSymbols) {
-                    if (!outputAlphabet.isErrorSymbol(mealy.getOutput(s, i))) {
+                    if (!spmm.isErrorOutput(mealy.getOutput(s, i))) {
                         final CompactMealy<I, O> newMealy = new CompactMealy<>(inputAlphabet);
                         final Mapping<S, Integer> mapping =
                                 AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE,
@@ -144,7 +143,7 @@ public class SPMMWMethodTestsIteratorTest {
                         newP.put(procedure, newMealy);
 
                         final SPMM<?, I, ?, O> copy = new StackSPMM<>(inputAlphabet,
-                                                                      outputAlphabet,
+                                                                      spmm.getErrorOutput(),
                                                                       init,
                                                                       spmm.computeOutput(Word.fromLetter(init))
                                                                           .lastSymbol(),

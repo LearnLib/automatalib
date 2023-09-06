@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import net.automatalib.automata.concepts.Output;
 import net.automatalib.automata.concepts.SuffixOutput;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 
@@ -50,7 +50,28 @@ public interface SPMM<S, I, T, O> extends ProceduralSystem<I, MealyMachine<?, I,
                                           MealyTransitionSystem<S, I, T, O>,
                                           SuffixOutput<I, Word<O>> {
 
-    ProceduralOutputAlphabet<O> getOutputAlphabet();
+    /**
+     * Returns the output symbol that identifies erroneous transitions. Note that for the validity of this {@link SPMM},
+     * each transition labeled with this output symbol must lead into a sink state that continues to output this
+     * symbol.
+     *
+     * @return the output symbol that identifies erroneous transitions
+     */
+    O getErrorOutput();
+
+    /**
+     * Convenience method that compares the given {@code output} with this {@link SPMM}'s
+     * {@link #getErrorOutput() error output}.
+     *
+     * @param output
+     *         the symbol to check
+     *
+     * @return {@code true} if {@code output} equals this {@link SPMM}'s {@link #getErrorOutput() error output},
+     * {@code false} otherwise.
+     */
+    default boolean isErrorOutput(O output) {
+        return Objects.equals(this.getErrorOutput(), output);
+    }
 
     @Override
     default Collection<I> getProceduralInputs(Collection<I> constraints) {

@@ -21,8 +21,8 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 
 /**
- * A specialized version of a {@link VPDAlphabet} that is tailored towards {@link ProceduralInputAlphabet}s.
- * Specifically, it only supports a {@link #getReturnSymbol() single return symbol} and the special structure of
+ * A specialized version of a {@link VPDAlphabet} that is tailored towards procedural systems. Specifically, it only
+ * supports a {@link #getReturnSymbol() single return symbol} and the special structure of
  * {@link ProceduralInputAlphabet} words allows for a series of utility functions to transform the nesting structure of
  * {@link ProceduralInputAlphabet} words.
  *

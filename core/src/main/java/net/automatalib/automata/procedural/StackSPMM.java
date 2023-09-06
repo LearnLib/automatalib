@@ -22,7 +22,6 @@ import java.util.Objects;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.MealyTransition;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.ProceduralOutputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -42,21 +41,21 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class StackSPMM<S, I, T, O>
         implements SPMM<StackState<S, I, MealyMachine<S, I, T, O>>, I, MealyTransition<StackState<S, I, MealyMachine<S, I, T, O>>, O>, O> {
 
-    private final ProceduralInputAlphabet<I> inputAlphabet;
-    private final ProceduralOutputAlphabet<O> outputAlphabet;
+    private final ProceduralInputAlphabet<I> alphabet;
+    private final O errorOutput;
 
     private final @Nullable I initialCall;
     private final O initialOutput;
     private final Map<I, MealyMachine<S, I, T, O>> procedures;
 
     @SuppressWarnings("unchecked")
-    public StackSPMM(ProceduralInputAlphabet<I> inputAlphabet,
-                     ProceduralOutputAlphabet<O> outputAlphabet,
+    public StackSPMM(ProceduralInputAlphabet<I> alphabet,
+                     O errorOutput,
                      @Nullable I initialCall,
                      O initialOutput,
                      Map<I, ? extends MealyMachine<? extends S, I, ? extends T, O>> procedures) {
-        this.inputAlphabet = inputAlphabet;
-        this.outputAlphabet = outputAlphabet;
+        this.alphabet = alphabet;
+        this.errorOutput = errorOutput;
         this.initialCall = initialCall;
         this.initialOutput = initialOutput;
         this.procedures = (Map<I, MealyMachine<S, I, T, O>>) procedures;
@@ -67,7 +66,7 @@ public class StackSPMM<S, I, T, O>
                                                                                         I input) {
         if (state.isSink() || state.isTerm()) {
             return sink();
-        } else if (inputAlphabet.isInternalSymbol(input)) {
+        } else if (alphabet.isInternalSymbol(input)) {
             if (state.isInit()) {
                 return sink();
             }
@@ -76,12 +75,12 @@ public class StackSPMM<S, I, T, O>
             final T t = model.getTransition(state.getCurrentState(), input);
 
             // undefined internal transition
-            if (t == null || outputAlphabet.isErrorSymbol(model.getTransitionOutput(t))) {
+            if (t == null || isErrorOutput(model.getTransitionOutput(t))) {
                 return sink();
             }
 
             return new MealyTransition<>(state.updateState(model.getSuccessor(t)), model.getTransitionOutput(t));
-        } else if (inputAlphabet.isCallSymbol(input)) {
+        } else if (alphabet.isCallSymbol(input)) {
             if (state.isInit() && !Objects.equals(this.initialCall, input)) {
                 return sink();
             }
@@ -108,7 +107,7 @@ public class StackSPMM<S, I, T, O>
                 final MealyMachine<S, I, T, O> p = state.getProcedure();
                 final T t = p.getTransition(state.getCurrentState(), input);
 
-                if (t == null || outputAlphabet.isErrorSymbol(p.getTransitionOutput(t))) {
+                if (t == null || isErrorOutput(p.getTransitionOutput(t))) {
                     return sink();
                 }
                 returnState = state.updateState(p.getSuccessor(t));
@@ -116,7 +115,7 @@ public class StackSPMM<S, I, T, O>
             }
 
             return new MealyTransition<>(returnState.push(model, next), output);
-        } else if (inputAlphabet.isReturnSymbol(input)) {
+        } else if (alphabet.isReturnSymbol(input)) {
             if (state.isInit()) {
                 return sink();
             }
@@ -125,7 +124,7 @@ public class StackSPMM<S, I, T, O>
             final MealyMachine<S, I, T, O> model = state.getProcedure();
             final T t = model.getTransition(state.getCurrentState(), input);
 
-            if (t == null || outputAlphabet.isErrorSymbol(model.getTransitionOutput(t))) {
+            if (t == null || isErrorOutput(model.getTransitionOutput(t))) {
                 return sink();
             }
 
@@ -147,12 +146,12 @@ public class StackSPMM<S, I, T, O>
 
     @Override
     public ProceduralInputAlphabet<I> getInputAlphabet() {
-        return this.inputAlphabet;
+        return this.alphabet;
     }
 
     @Override
-    public ProceduralOutputAlphabet<O> getOutputAlphabet() {
-        return this.outputAlphabet;
+    public O getErrorOutput() {
+        return this.errorOutput;
     }
 
     @Override
@@ -171,7 +170,7 @@ public class StackSPMM<S, I, T, O>
     }
 
     private MealyTransition<StackState<S, I, MealyMachine<S, I, T, O>>, O> sink() {
-        return new MealyTransition<>(StackState.sink(), outputAlphabet.getErrorSymbol());
+        return new MealyTransition<>(StackState.sink(), errorOutput);
     }
 
 }

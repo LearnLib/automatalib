@@ -106,7 +106,8 @@ public final class SPAUtil {
      * @param spa
      *         the {@link SPA} to analyze
      * @param alphabet
-     *         the set of allowed alphabet symbols for determining the terminating sequences
+     *         the {@link ProceduralInputAlphabet} whose symbols should be used for determining the terminating
+     *         sequences
      * @param <I>
      *         input symbol type
      *
@@ -124,21 +125,22 @@ public final class SPAUtil {
      * from its initial state to a state that is able to successfully execute a run of <i>p</i>, whereas the
      * corresponding return sequence transfers the {@link SPA} to the global accepting state from an accepting state of
      * <i>p</i>. This method furthermore checks that potentially nested calls are well-defined, i.e. it only includes
-     * procedural invocations <i>p</i> for determining a access/return sequences if <i>p</i> has a valid terminating
+     * procedural invocations <i>p</i> for determining access/return sequences if <i>p</i> has a valid terminating
      * sequence and therefore can be expanded correctly.
      *
      * @param spa
      *         the {@link SPA} to analyze
      * @param alphabet
-     *         the set of allowed alphabet symbols for determining the access and return sequences
+     *         the {@link ProceduralInputAlphabet} whose symbols should be used for determining the access and return
+     *         sequences
      * @param terminatingSequences
-     *         a map of terminating sequences (for a given call symbol) used to expand nested invocations in access and
-     *         return sequences
+     *         a {@link Map} of call symbols to terminating sequences used to expand nested invocations in access
+     *         sequences
      * @param <I>
      *         input symbol type
      *
      * @return A pair of maps from procedures (restricted to the call symbols of the given alphabet) to the
-     * access/return sequences. tha  These maps may be partial as some procedures may not have well-defined
+     * access/return sequences. These maps may be partial as some procedures may not have well-defined
      * access/terminating sequences for the given alphabet.
      */
     public static <I> Pair<Map<I, Word<I>>, Map<I, Word<I>>> computeAccessAndReturnSequences(SPA<?, I> spa,
@@ -337,7 +339,8 @@ public final class SPAUtil {
      * @param spa
      *         the {@link SPA} to check
      * @param alphabet
-     *         the {@link ProceduralInputAlphabet alphabet} which should be used for computing the respective sequences
+     *         the {@link ProceduralInputAlphabet alphabet} whose symbols should be used for computing the respective
+     *         sequences
      * @param <I>
      *         input symbol type
      *
@@ -377,11 +380,13 @@ public final class SPAUtil {
      * @param spa2
      *         the second {@link SPA}
      * @param alphabet
-     *         the {@link ProceduralInputAlphabet} which should be considered for equivalence testing
+     *         the {@link ProceduralInputAlphabet} whose symbols should be considered for equivalence testing
      * @param <I>
      *         input symbol type
      *
-     * @return {@code true} if the two {@link SPA}s are equivalent, {@code false} otherwise
+     * @return {@code true} if the two {@link SPA}s are equivalent, {@code false} otherwise.
+     *
+     * @see #findSeparatingWord(SPA, SPA, ProceduralInputAlphabet)
      */
     public static <I> boolean testEquivalence(SPA<?, I> spa1, SPA<?, I> spa2, ProceduralInputAlphabet<I> alphabet) {
         return findSeparatingWord(spa1, spa2, alphabet) == null;
@@ -396,7 +401,7 @@ public final class SPAUtil {
      * @param spa2
      *         the second {@link SPA}
      * @param alphabet
-     *         the {@link ProceduralInputAlphabet} that should be considered for computing the separating word
+     *         the {@link ProceduralInputAlphabet} whose symbols should be considered for computing the separating word
      * @param <I>
      *         input symbol type
      *
@@ -468,10 +473,30 @@ public final class SPAUtil {
         return null;
     }
 
+    /**
+     * Transforms the given {@link SPA} into a langauge-equivalent {@link OneSEVPA}.
+     *
+     * @param spa
+     *         the {@link SPA} to transform
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the language-equivalent {@link OneSEVPA}
+     */
     public static <I> OneSEVPA<?, I> toOneSEVPA(SPA<?, I> spa) {
         return OneSEVPAConverter.convert(spa);
     }
 
+    /**
+     * Transforms the given {@link SPA} into a langauge-equivalent {@link SEVPA N-SEVPA}.
+     *
+     * @param spa
+     *         the {@link SPA} to transform
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the language-equivalent {@link SEVPA N-SEVPA}
+     */
     public static <I> SEVPA<?, I> toNSEVPA(SPA<?, I> spa) {
         return NSEVPAConverter.convert(spa);
     }
