@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.util;
+package net.automatalib.util.automata.vpda;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -24,7 +24,6 @@ import net.automatalib.automata.vpda.DefaultOneSEVPA;
 import net.automatalib.automata.vpda.Location;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.util.automata.vpda.OneSEVPAs;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultVPDAlphabet;
@@ -34,7 +33,7 @@ import org.testng.annotations.Test;
 /**
  * @author frohme
  */
-public class OneSEVPAMinimizerTest {
+public class OneSEVPAsTest {
 
     @Test
     public void testMinimization() {
