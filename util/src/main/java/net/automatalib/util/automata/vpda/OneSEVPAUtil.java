@@ -29,6 +29,7 @@ import com.google.common.collect.Sets;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.commons.smartcollections.ArrayStorage;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.util.automata.vpda.SPAConverter.ConversionResult;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -304,6 +305,14 @@ public final class OneSEVPAUtil {
         return result;
     }
 
+    public static <AI, CI> ConversionResult<AI, CI> toSPA(OneSEVPA<?, AI> sevpa,
+                                                          VPDAlphabet<AI> alphabet,
+                                                          CI mainProcedure,
+                                                          SymbolMapper<AI, CI> symbolMapper,
+                                                          boolean minimize) {
+        return SPAConverter.convert(sevpa, alphabet, mainProcedure, symbolMapper, minimize);
+    }
+
     public static class ReachResult<L, I> {
 
         public final @Nullable L terminateLoc;
@@ -316,5 +325,4 @@ public final class OneSEVPAUtil {
             this.accessSequences = accessSequences;
         }
     }
-
 }
