@@ -41,12 +41,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author frohme
  */
-public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
+public class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
 
     private final SPA<?, I> spa;
     private final Map<I, ProceduralModalProcessGraph<?, I, ?, Void, ?>> pmpgs;
 
-    public CFMPSView(SPA<?, I> spa) {
+    public CFMPSViewSPA(SPA<?, I> spa) {
         this.spa = spa;
 
         final Map<I, DFA<?, I>> procedures = spa.getProcedures();
@@ -68,7 +68,7 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
     }
 
     private static class MPGView<S, I>
-            implements ProceduralModalProcessGraph<S, I, SPAEdge<I, S>, Void, ProceduralModalEdgeProperty> {
+            implements ProceduralModalProcessGraph<S, I, PMPGEdge<I, S>, Void, ProceduralModalEdgeProperty> {
 
         private static final Object INIT = new Object();
         private static final Object END = new Object();
@@ -87,6 +87,7 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
         MPGView(SPA<?, I> spa, I procedure, DFA<S, I> dfa) {
 
             final S dfaInit = dfa.getInitialState();
+
             if (dfaInit == null) {
                 throw new IllegalArgumentException("Empty DFAs cannot be mapped to ModalProcessGraphs");
             }
@@ -102,19 +103,19 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
         }
 
         @Override
-        public Collection<SPAEdge<I, S>> getOutgoingEdges(S node) {
+        public Collection<PMPGEdge<I, S>> getOutgoingEdges(S node) {
             if (node == init) {
-                return Collections.singletonList(new SPAEdge<>(this.procedure, this.dfaInit, ProceduralType.INTERNAL));
+                return Collections.singletonList(new PMPGEdge<>(this.procedure, this.dfaInit, ProceduralType.INTERNAL));
             } else if (node == end) {
                 return Collections.emptyList();
             } else {
-                final List<SPAEdge<I, S>> result;
+                final List<PMPGEdge<I, S>> result;
 
                 if (this.dfa.isAccepting(node)) {
                     result = new ArrayList<>(this.proceduralInputs.size() + 1);
-                    result.add(new SPAEdge<>(this.alphabet.getReturnSymbol(),
-                                             this.getFinalNode(),
-                                             ProceduralType.INTERNAL));
+                    result.add(new PMPGEdge<>(this.alphabet.getReturnSymbol(),
+                                              this.getFinalNode(),
+                                              ProceduralType.INTERNAL));
                 } else {
                     result = new ArrayList<>(this.proceduralInputs.size());
                 }
@@ -132,7 +133,7 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
                             throw new IllegalStateException("Unexpected symbol type");
                         }
 
-                        result.add(new SPAEdge<>(i, succ, type));
+                        result.add(new PMPGEdge<>(i, succ, type));
                     }
                 }
 
@@ -141,7 +142,7 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
         }
 
         @Override
-        public S getTarget(SPAEdge<I, S> edge) {
+        public S getTarget(PMPGEdge<I, S> edge) {
             return edge.succ;
         }
 
@@ -160,12 +161,12 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
         }
 
         @Override
-        public ProceduralModalEdgeProperty getEdgeProperty(SPAEdge<I, S> edge) {
+        public ProceduralModalEdgeProperty getEdgeProperty(PMPGEdge<I, S> edge) {
             return edge;
         }
 
         @Override
-        public I getEdgeLabel(SPAEdge<I, S> edge) {
+        public I getEdgeLabel(PMPGEdge<I, S> edge) {
             return edge.input;
         }
 
@@ -179,28 +180,4 @@ public class CFMPSView<I> implements ContextFreeModalProcessSystem<I, Void> {
             return this.init;
         }
     }
-
-    private static class SPAEdge<I, S> implements ProceduralModalEdgeProperty {
-
-        private final I input;
-        private final S succ;
-        private final ProceduralType type;
-
-        SPAEdge(I input, S succ, ProceduralType type) {
-            this.input = input;
-            this.succ = succ;
-            this.type = type;
-        }
-
-        @Override
-        public ModalType getModalType() {
-            return ModalType.MUST;
-        }
-
-        @Override
-        public ProceduralType getProceduralType() {
-            return this.type;
-        }
-    }
-
 }

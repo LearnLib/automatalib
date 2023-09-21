@@ -25,12 +25,12 @@ import org.testng.annotations.Test;
 /**
  * @author frohme
  */
-public class CFMPSViewTest {
+public class CFMPSViewSBATest {
 
     @Test
     public void testPartialView() {
-        final SPA<?, Character> spa = new StackSPA<>(SPATest.ALPHABET, 'S', SPATest.SUB_MODELS);
-        final CFMPSView<Character> view = new CFMPSView<>(spa);
+        final SBA<?, Character> sba = new StackSBA<>(SBATest.ALPHABET, 'S', SBATest.SUB_MODELS);
+        final CFMPSViewSBA<Character> view = new CFMPSViewSBA<>(sba);
 
         final Map<Character, ProceduralModalProcessGraph<?, Character, ?, Void, ?>> pmpgs = view.getPMPGs();
 
@@ -40,6 +40,8 @@ public class CFMPSViewTest {
     }
 
     private <N, E> void testPMPG(ProceduralModalProcessGraph<N, Character, E, Void, ?> pmpg) {
+
+        Assert.assertEquals(pmpg.size(), 8);
 
         final N initialNode = pmpg.getInitialNode();
         Assert.assertNotNull(initialNode);
@@ -52,7 +54,7 @@ public class CFMPSViewTest {
 
         final N initialTarget = pmpg.getTarget(initialEdge);
         final Collection<E> targetOutgoing = pmpg.getOutgoingEdges(initialTarget);
-        Assert.assertEquals(targetOutgoing.size(), 4); // should contain 'S', 'T', 'a', 'b'
+        Assert.assertEquals(targetOutgoing.size(), 4); // should contain 'T', 'a', 'b', 'R'
     }
 
 

@@ -35,23 +35,18 @@ import org.testng.annotations.Test;
  */
 public class SBATest {
 
-    private final SBA<?, Character> sba;
-    private final EmptySBA<Character> emptySba;
+    static final ProceduralInputAlphabet<Character> ALPHABET;
+    static final Map<Character, DFA<?, Character>> SUB_MODELS;
 
-    public SBATest() {
+    static {
         final Alphabet<Character> smallCallAlphabet = Alphabets.characters('S', 'T');
         final Alphabet<Character> bigCallAlphabet = Alphabets.characters('S', 'U');
 
         final ProceduralInputAlphabet<Character> smallAlphabet =
                 new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), smallCallAlphabet, 'R');
-        final ProceduralInputAlphabet<Character> bigAlphabet =
-                new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), bigCallAlphabet, 'R');
 
-        final Map<Character, DFA<?, Character>> dfas =
-                ImmutableMap.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
-
-        sba = new StackSBA<>(bigAlphabet, 'S', dfas);
-        emptySba = new EmptySBA<>(bigAlphabet);
+        ALPHABET = new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), bigCallAlphabet, 'R');
+        SUB_MODELS = ImmutableMap.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
     }
 
     private static DFA<?, Character> buildSProcedure(ProceduralInputAlphabet<Character> alphabet) {
@@ -101,6 +96,8 @@ public class SBATest {
 
     @Test
     public void testSBA() {
+        final SBA<?, Character> sba = new StackSBA<>(ALPHABET, 'S', SUB_MODELS);
+
         final Word<Character> i1 = Word.fromCharSequence("SaSTcRRaR");
         Assert.assertTrue(sba.accepts(i1));
 
@@ -140,40 +137,42 @@ public class SBATest {
 
     @Test
     public void testEmptySBA() {
+        final SBA<?, Character> sba = new EmptySBA<>(ALPHABET);
+
         final Word<Character> i1 = Word.fromCharSequence("SaSTcRRaR");
-        Assert.assertFalse(emptySba.accepts(i1));
+        Assert.assertFalse(sba.accepts(i1));
 
         final Word<Character> i2 = Word.fromCharSequence("SaSbRaR");
-        Assert.assertFalse(emptySba.accepts(i2));
+        Assert.assertFalse(sba.accepts(i2));
 
         final Word<Character> i3 = Word.fromCharSequence("SaSbaRcRabc");
-        Assert.assertFalse(emptySba.accepts(i3));
+        Assert.assertFalse(sba.accepts(i3));
 
         final Word<Character> i4 = Word.fromCharSequence("SaUcR");
-        Assert.assertFalse(emptySba.accepts(i4));
+        Assert.assertFalse(sba.accepts(i4));
 
         final Word<Character> i5 = Word.fromCharSequence("TcR");
-        Assert.assertFalse(emptySba.accepts(i5));
+        Assert.assertFalse(sba.accepts(i5));
 
         final Word<Character> i6 = Word.fromCharSequence("Sd");
-        Assert.assertFalse(emptySba.accepts(i6));
+        Assert.assertFalse(sba.accepts(i6));
 
         final Word<Character> i7 = Word.fromCharSequence("aca");
-        Assert.assertFalse(emptySba.accepts(i7));
+        Assert.assertFalse(sba.accepts(i7));
 
         final Word<Character> i8 = Word.fromCharSequence("SacTcR");
-        Assert.assertFalse(emptySba.accepts(i8));
+        Assert.assertFalse(sba.accepts(i8));
 
         final Word<Character> i9 = Word.fromCharSequence("R");
-        Assert.assertFalse(emptySba.accepts(i9));
+        Assert.assertFalse(sba.accepts(i9));
 
         final Word<Character> i10 = Word.fromCharSequence("STTc");
-        Assert.assertFalse(emptySba.accepts(i10));
+        Assert.assertFalse(sba.accepts(i10));
 
         final Word<Character> i11 = Word.fromCharSequence("SaSRR");
-        Assert.assertFalse(emptySba.accepts(i11));
+        Assert.assertFalse(sba.accepts(i11));
 
         final Word<Character> i12 = Word.epsilon();
-        Assert.assertTrue(sba.accepts(i12));
+        Assert.assertFalse(sba.accepts(i12));
     }
 }

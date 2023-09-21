@@ -17,7 +17,7 @@ package net.automatalib.examples.modelchecking;
 
 import java.util.function.Function;
 
-import net.automatalib.automata.procedural.CFMPSView;
+import net.automatalib.automata.procedural.CFMPSViewSPA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.examples.procedural.PalindromeSPAExample;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
@@ -47,7 +47,7 @@ public final class M3CSPAExample {
 
     public static void main(String[] args) throws ParseException {
         final SPA<?, Character> spa = PalindromeSPAExample.buildSPA();
-        final CFMPSView<Character> view = new CFMPSView<>(spa);
+        final CFMPSViewSPA<Character> view = new CFMPSViewSPA<>(spa);
 
         //@formatter:off
         final String[] formulas = {"EF <b><b>true", // there exists a path with "bb"

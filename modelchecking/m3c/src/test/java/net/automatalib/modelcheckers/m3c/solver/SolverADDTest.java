@@ -18,7 +18,7 @@ package net.automatalib.modelcheckers.m3c.solver;
 import java.util.Collections;
 
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.procedural.CFMPSView;
+import net.automatalib.automata.procedural.CFMPSViewSPA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.automata.procedural.StackSPA;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
@@ -57,7 +57,7 @@ public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, Str
         p.addTransition(s1, 'S', s1);
 
         final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', Collections.singletonMap('S', p));
-        final CFMPSView<Character> cfmps = new CFMPSView<>(spa);
+        final CFMPSViewSPA<Character> cfmps = new CFMPSViewSPA<>(spa);
 
         final FormulaNode<Character, Void> formula = M3CParser.parse("[S][a][R]false", l -> l.charAt(0), ap -> null);
         final ADDSolver<Character, Void> solver = new ADDSolver<>(cfmps);
