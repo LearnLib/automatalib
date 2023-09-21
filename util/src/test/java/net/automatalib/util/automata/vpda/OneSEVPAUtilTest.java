@@ -185,7 +185,7 @@ public class OneSEVPAUtilTest {
         final VPDAlphabet<Character> alphabet =
                 new DefaultVPDAlphabet<>(internalAlphabet, callCalphabet, returnAlphabet);
 
-        return RandomAutomata.randomOneSEVPA(random, 5, alphabet, 0.5, 0.5, true);
+        return RandomAutomata.randomOneSEVPA(random, 10, alphabet, 0.5, 0.5, true);
     }
 
     private static DefaultOneSEVPA<Character> getSingleReturnRandomSystem() {

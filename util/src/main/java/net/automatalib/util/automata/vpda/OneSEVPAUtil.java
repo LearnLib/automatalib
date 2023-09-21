@@ -28,12 +28,15 @@ import java.util.function.Predicate;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.commons.smartcollections.ArrayStorage;
+import net.automatalib.commons.util.IntDisjointSets;
 import net.automatalib.commons.util.Pair;
+import net.automatalib.commons.util.UnionFindRemSP;
 import net.automatalib.util.automata.vpda.SPAConverter.ConversionResult;
 import net.automatalib.words.VPDAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Utility class revolving around 1-SEVPAs.
@@ -170,70 +173,134 @@ public final class OneSEVPAUtil {
     }
 
     public static <L, I> @Nullable Pair<Word<I>, Word<I>> findSeparatingWord(OneSEVPA<L, I> sevpa,
-                                                                             L l1,
-                                                                             L l2,
+                                                                             L init1,
+                                                                             L init2,
                                                                              VPDAlphabet<I> alphabet) {
-
-        final ArrayStorage<Word<I>> as = computeAccessSequences(sevpa, alphabet);
-        final Word<I> as1 = as.get(sevpa.getLocationId(l1));
-        final Word<I> as2 = as.get(sevpa.getLocationId(l2));
-
-        if (sevpa.accepts(as1) != sevpa.accepts(as2)) {
+        if (sevpa.isAcceptingLocation(init1) != sevpa.isAcceptingLocation(init2)) {
             return Pair.of(Word.epsilon(), Word.epsilon());
         }
 
-        final Deque<Pair<Word<I>, Word<I>>> queue = new ArrayDeque<>();
-        queue.add(Pair.of(Word.epsilon(), Word.epsilon()));
+        final ArrayStorage<Word<I>> as = computeAccessSequences(sevpa, alphabet);
+        final IntDisjointSets uf = new UnionFindRemSP(sevpa.size());
+        uf.link(sevpa.getLocationId(init1), sevpa.getLocationId(init2));
 
-        int nestingDepth = 0;
-        while (!queue.isEmpty()) {
-            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            final @NonNull Pair<Word<I>, Word<I>> curr = queue.poll();
-            final Word<I> pref = curr.getFirst();
-            final Word<I> suff = curr.getSecond();
+        final Queue<Record<L, I>> queue = new ArrayDeque<>();
+        queue.add(new Record<>(init1, init2));
+
+        Pair<Word<I>, Word<I>> lastPair = null;
+        Record<L, I> current;
+
+        explore:
+        while ((current = queue.poll()) != null) {
+            final L l1 = current.l1;
+            final L l2 = current.l2;
 
             for (I i : alphabet.getInternalAlphabet()) {
-                final Pair<Word<I>, Word<I>> candidate = Pair.of(pref, suff.append(i));
+                final Pair<Word<I>, Word<I>> pair = Pair.of(Word.epsilon(), Word.fromLetter(i));
 
-                if (sevpa.accepts(Word.fromWords(candidate.getFirst(), as1, candidate.getSecond())) !=
-                    sevpa.accepts(Word.fromWords(candidate.getFirst(), as2, candidate.getSecond()))) {
-                    return candidate;
-                } else if (nestingDepth < sevpa.size()) {
-                    queue.add(candidate);
+                final L succ1 = sevpa.getInternalSuccessor(l1, i);
+                final L succ2 = sevpa.getInternalSuccessor(l2, i);
+
+                assert succ1 != null && succ2 != null;
+
+                if (sevpa.isAcceptingLocation(succ1) != sevpa.isAcceptingLocation(succ2)) {
+                    lastPair = pair;
+                    break explore;
                 }
+
+                final int r1 = uf.find(sevpa.getLocationId(succ1)), r2 = uf.find(sevpa.getLocationId(succ2));
+
+                if (r1 == r2) {
+                    continue;
+                }
+
+                uf.link(r1, r2);
+
+                queue.add(new Record<>(succ1, succ2, pair, current));
             }
 
-            for (I callSymbol : alphabet.getCallAlphabet()) {
-                final Word<I> c = Word.fromLetter(callSymbol);
+            for (I c : alphabet.getCallAlphabet()) {
+                final Word<I> cWord = Word.fromLetter(c);
 
-                for (I returnSymbol : alphabet.getReturnAlphabet()) {
-                    final Word<I> r = Word.fromLetter(returnSymbol);
+                for (I r : alphabet.getReturnAlphabet()) {
+                    final Word<I> rWord = Word.fromLetter(r);
 
+                    // check l as source location for l1/l2
                     for (L l : sevpa.getLocations()) {
-                        final Word<I> v = as.get(sevpa.getLocationId(l));
+                        final int sym = sevpa.encodeStackSym(l, c);
+                        final L rSucc1 = sevpa.getReturnSuccessor(l1, r, sym);
+                        final L rSucc2 = sevpa.getReturnSuccessor(l2, r, sym);
 
-                        final Pair<Word<I>, Word<I>> candidate1 = Pair.of(pref, Word.fromWords(suff, c, v, r));
-                        if (sevpa.accepts(Word.fromWords(candidate1.getFirst(), as1, candidate1.getSecond())) !=
-                            sevpa.accepts(Word.fromWords(candidate1.getFirst(), as2, candidate1.getSecond()))) {
-                            return candidate1;
-                        } else if (nestingDepth < sevpa.size()) {
-                            queue.add(candidate1);
+                        assert rSucc1 != null && rSucc2 != null;
+
+                        final Pair<Word<I>, Word<I>> pair =
+                                Pair.of(Word.fromWords(as.get(sevpa.getLocationId(l)), cWord), rWord);
+
+                        if (sevpa.isAcceptingLocation(rSucc1) != sevpa.isAcceptingLocation(rSucc2)) {
+                            lastPair = pair;
+                            break explore;
                         }
 
-                        final Pair<Word<I>, Word<I>> candidate2 = Pair.of(Word.fromWords(v, c, pref), suff.concat(r));
-                        if (sevpa.accepts(Word.fromWords(candidate2.getFirst(), as1, candidate2.getSecond())) !=
-                            sevpa.accepts(Word.fromWords(candidate2.getFirst(), as2, candidate2.getSecond()))) {
-                            return candidate2;
-                        } else if (nestingDepth < sevpa.size()) {
-                            queue.add(candidate2);
+                        final int r1 = uf.find(sevpa.getLocationId(rSucc1)), r2 = uf.find(sevpa.getLocationId(rSucc2));
+
+                        if (r1 == r2) {
+                            continue;
                         }
+
+                        uf.link(r1, r2);
+
+                        queue.add(new Record<>(rSucc1, rSucc2, pair, current));
+                    }
+
+                    // check l1/l2 as source location for l
+                    for (L l : sevpa.getLocations()) {
+                        final int sym1 = sevpa.encodeStackSym(l1, c);
+                        final int sym2 = sevpa.encodeStackSym(l2, c);
+                        final L rSucc1 = sevpa.getReturnSuccessor(l, r, sym1);
+                        final L rSucc2 = sevpa.getReturnSuccessor(l, r, sym2);
+
+                        assert rSucc1 != null && rSucc2 != null;
+
+                        final Pair<Word<I>, Word<I>> pair =
+                                Pair.of(Word.epsilon(), Word.fromWords(cWord, as.get(sevpa.getLocationId(l)), rWord));
+
+                        if (sevpa.isAcceptingLocation(rSucc1) != sevpa.isAcceptingLocation(rSucc2)) {
+                            lastPair = pair;
+                            break explore;
+                        }
+
+                        final int r1 = uf.find(sevpa.getLocationId(rSucc1)), r2 = uf.find(sevpa.getLocationId(rSucc2));
+
+                        if (r1 == r2) {
+                            continue;
+                        }
+
+                        uf.link(r1, r2);
+
+                        queue.add(new Record<>(rSucc1, rSucc2, pair, current));
                     }
                 }
             }
-            nestingDepth++;
         }
 
-        return null;
+        if (current == null) {
+            return null;
+        }
+
+        final Deque<Word<I>> prefixBuilder = new ArrayDeque<>();
+        final Deque<Word<I>> suffixBuilder = new ArrayDeque<>();
+
+        prefixBuilder.add(lastPair.getFirst());
+        suffixBuilder.add(lastPair.getSecond());
+
+        while (current.reachedFrom != null) {
+            final Pair<Word<I>, Word<I>> reachedBy = current.reachedBy;
+            prefixBuilder.offerLast(reachedBy.getFirst());
+            suffixBuilder.offerFirst(reachedBy.getSecond());
+            current = current.reachedFrom;
+        }
+
+        return Pair.of(Word.fromWords(prefixBuilder), Word.fromWords(suffixBuilder));
     }
 
     public static <L, I> Collection<Pair<Word<I>, Word<I>>> findCharacterizingSet(OneSEVPA<L, I> sevpa,
@@ -323,6 +390,25 @@ public final class OneSEVPAUtil {
             this.terminateLoc = terminateLoc;
             this.reachableLocs = reachableLocs;
             this.accessSequences = accessSequences;
+        }
+    }
+
+    private static final class Record<L, I> {
+
+        private final L l1;
+        private final L l2;
+        private final @PolyNull Pair<Word<I>, Word<I>> reachedBy;
+        private final @PolyNull Record<L, I> reachedFrom;
+
+        Record(L l1, L l2) {
+            this(l1, l2, null, null);
+        }
+
+        Record(L l1, L l2, @PolyNull Pair<Word<I>, Word<I>> reachedBy, @PolyNull Record<L, I> reachedFrom) {
+            this.l1 = l1;
+            this.l2 = l2;
+            this.reachedBy = reachedBy;
+            this.reachedFrom = reachedFrom;
         }
     }
 }
