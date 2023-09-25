@@ -322,9 +322,9 @@ public final class RandomAutomata {
 
         final Alphabet<O> internalOutputs = outputAlphabet.getRegularAlphabet();
         return new StackSPMM<>(inputAlphabet,
-                               outputAlphabet.getErrorSymbol(),
                                inputAlphabet.getCallSymbol(random.nextInt(inputAlphabet.getNumCalls())),
                                internalOutputs.getSymbol(random.nextInt(internalOutputs.size())),
+                               outputAlphabet.getErrorSymbol(),
                                mealies);
     }
 

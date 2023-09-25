@@ -50,9 +50,9 @@ public class StackSPMM<S, I, T, O>
 
     @SuppressWarnings("unchecked")
     public StackSPMM(ProceduralInputAlphabet<I> alphabet,
-                     O errorOutput,
                      @Nullable I initialCall,
                      O initialOutput,
+                     O errorOutput,
                      Map<I, ? extends MealyMachine<? extends S, I, ? extends T, O>> procedures) {
         this.alphabet = alphabet;
         this.errorOutput = errorOutput;

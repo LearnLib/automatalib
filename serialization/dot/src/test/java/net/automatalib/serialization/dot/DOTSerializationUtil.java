@@ -443,6 +443,6 @@ final class DOTSerializationUtil {
         pG.setTransition(g2, 'c', g3, 'z');
         pG.setTransition(g3, 'R', g4, '-');
 
-        return new StackSPMM<>(alphabet, '-', 'F', '+', ImmutableMap.of('F', pF, 'G', pG));
+        return new StackSPMM<>(alphabet, 'F', '+', '-', ImmutableMap.of('F', pF, 'G', pG));
     }
 }

@@ -51,7 +51,7 @@ public class SPMMTest {
         final Map<Character, MealyMachine<?, Character, ?, Character>> mealies =
                 ImmutableMap.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
 
-        spmm = new StackSPMM<>(bigAlphabet, errorOutput, 'S', '✓', mealies);
+        spmm = new StackSPMM<>(bigAlphabet, 'S', '✓', errorOutput, mealies);
         emptySpmm = new EmptySPMM<>(bigAlphabet, errorOutput);
     }
 

@@ -140,7 +140,7 @@ public class SPMMUtilTest {
         t1.addTransition(t1t0, 'R', t1t4, '-');
 
         final SPMM<?, Character, ?, Character> spmm1 =
-                new StackSPMM<>(inputAlphabet, errorOutput, 'S', '✓', ImmutableMap.of('S', s1, 'T', t1));
+                new StackSPMM<>(inputAlphabet, 'S', '✓', errorOutput, ImmutableMap.of('S', s1, 'T', t1));
 
         final CompactMealy<Character, Character> s2 = new CompactMealy<>(inputAlphabet);
         final FastMealy<Character, Character> t2 = new FastMealy<>(inputAlphabet);
@@ -151,7 +151,7 @@ public class SPMMUtilTest {
         t2.addTransition(t2t0, 'R', t2t4, '-');
 
         final SPMM<?, Character, ?, Character> spmm2 =
-                new StackSPMM<>(inputAlphabet, errorOutput, 'S', '✓', ImmutableMap.of('S', s2, 'T', t2));
+                new StackSPMM<>(inputAlphabet, 'S', '✓', errorOutput, ImmutableMap.of('S', s2, 'T', t2));
         final SPMM<?, Character, ?, Character> emptySPMM = new EmptySPMM<>(inputAlphabet, errorOutput);
 
         // no accessible procedures, no separating word should exist. Even with the empty SPMMs
@@ -215,7 +215,7 @@ public class SPMMUtilTest {
 
         // this should also work for partial SPMMs
         final SPMM<?, Character, ?, Character> partial1 =
-                new StackSPMM<>(inputAlphabet, errorOutput, 'S', '✓', ImmutableMap.of('S', s1));
+                new StackSPMM<>(inputAlphabet, 'S', '✓', errorOutput, ImmutableMap.of('S', s1));
         verifySepWord(spmm1, partial1, inputAlphabet);
         verifySepWord(partial1, spmm1, inputAlphabet);
 

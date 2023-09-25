@@ -81,9 +81,9 @@ public class SPMMWMethodTestsIteratorTest {
                 this.spmm.computeOutput(Word.fromLetter(this.spmm.getInitialProcedure())).firstSymbol();
 
         final SPMM<?, Character, ?, Character> extendedSPMM = new StackSPMM<>(extendedAlphabet,
-                                                                              this.spmm.getErrorOutput(),
                                                                               this.spmm.getInitialProcedure(),
                                                                               initialOutput,
+                                                                              this.spmm.getErrorOutput(),
                                                                               this.spmm.getProcedures());
 
         final SPMMWMethodTestsIterator<Character, Character> iter = new SPMMWMethodTestsIterator<>(extendedSPMM);
@@ -143,10 +143,10 @@ public class SPMMWMethodTestsIteratorTest {
                         newP.put(procedure, newMealy);
 
                         final SPMM<?, I, ?, O> copy = new StackSPMM<>(inputAlphabet,
-                                                                      spmm.getErrorOutput(),
                                                                       init,
                                                                       spmm.computeOutput(Word.fromLetter(init))
                                                                           .lastSymbol(),
+                                                                      spmm.getErrorOutput(),
                                                                       newP);
 
                         Assert.assertFalse(Automata.testEquivalence(mealy, newMealy, inputAlphabet));
