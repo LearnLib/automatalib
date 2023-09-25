@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableMap;
 import net.automatalib.automata.words.vpda.AbstractVPDAlphabetTest;
+import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
@@ -122,22 +123,83 @@ public abstract class AbstractProceduralInputAlphabetTest<M extends ProceduralIn
     }
 
     @Test
-    public void testNormalize() {
+    public void testProjectWellMatched() {
         final M alphabet = getAlphabet();
         final Word<Character> word = Word.fromCharSequence("SaSTcRRaR");
+        final Word<Character> outs = Word.fromCharSequence("012345678");
 
-        Assert.assertEquals(alphabet.project(Word.epsilon(), 0), Word.epsilon());
-        Assert.assertEquals(alphabet.project(word, -1), Word.fromLetter('S'));
-        Assert.assertEquals(alphabet.project(word, 0), Word.fromLetter('S')); //S
-        Assert.assertEquals(alphabet.project(word, 1), Word.fromCharSequence("aSaR")); //a
-        Assert.assertEquals(alphabet.project(word, 2), Word.fromCharSequence("SaR")); //S
-        Assert.assertEquals(alphabet.project(word, 3), Word.fromCharSequence("TRaR")); //T
-        Assert.assertEquals(alphabet.project(word, 4), Word.fromCharSequence("cRRaR")); //c
-        Assert.assertEquals(alphabet.project(word, 5), Word.fromCharSequence("RRaR")); //R
-        Assert.assertEquals(alphabet.project(word, 6), Word.fromCharSequence("RaR")); //R
-        Assert.assertEquals(alphabet.project(word, 7), Word.fromCharSequence("aR")); //a
-        Assert.assertEquals(alphabet.project(word, 8), Word.fromLetter('R')); //R
-        Assert.assertEquals(alphabet.project(word, 9), Word.epsilon());
-        Assert.assertEquals(alphabet.project(word, 10), Word.epsilon());
+        final Pair<Word<Character>, Word<Character>> r0 = Pair.of(Word.fromLetter('S'), Word.fromLetter('0'));
+        final Pair<Word<Character>, Word<Character>> r1 = Pair.of(Word.fromString("aSaR"), Word.fromString("1278"));
+        final Pair<Word<Character>, Word<Character>> r2 = Pair.of(Word.fromString("SaR"), Word.fromString("278"));
+        final Pair<Word<Character>, Word<Character>> r3 = Pair.of(Word.fromString("TRaR"), Word.fromString("3678"));
+        final Pair<Word<Character>, Word<Character>> r4 = Pair.of(Word.fromString("cRRaR"), Word.fromString("45678"));
+        final Pair<Word<Character>, Word<Character>> r5 = Pair.of(Word.fromString("RRaR"), Word.fromString("5678"));
+        final Pair<Word<Character>, Word<Character>> r6 = Pair.of(Word.fromString("RaR"), Word.fromString("678"));
+        final Pair<Word<Character>, Word<Character>> r7 = Pair.of(Word.fromString("aR"), Word.fromString("78"));
+        final Pair<Word<Character>, Word<Character>> r8 = Pair.of(Word.fromString("R"), Word.fromString("8"));
+        final Pair<Word<Character>, Word<Character>> r9 = Pair.of(Word.epsilon(), Word.epsilon());
+
+        Assert.assertEquals(alphabet.project(word, -1), r0.getFirst());
+        Assert.assertEquals(alphabet.project(word, 0), r0.getFirst()); //S
+        Assert.assertEquals(alphabet.project(word, 1), r1.getFirst()); //a
+        Assert.assertEquals(alphabet.project(word, 2), r2.getFirst()); //S
+        Assert.assertEquals(alphabet.project(word, 3), r3.getFirst()); //T
+        Assert.assertEquals(alphabet.project(word, 4), r4.getFirst()); //c
+        Assert.assertEquals(alphabet.project(word, 5), r5.getFirst()); //R
+        Assert.assertEquals(alphabet.project(word, 6), r6.getFirst()); //R
+        Assert.assertEquals(alphabet.project(word, 7), r7.getFirst()); //a
+        Assert.assertEquals(alphabet.project(word, 8), r8.getFirst()); //R
+        Assert.assertEquals(alphabet.project(word, 9), r9.getFirst());
+
+        Assert.assertEquals(alphabet.project(word, outs, -1), r0);
+        Assert.assertEquals(alphabet.project(word, outs, 0), r0); //S
+        Assert.assertEquals(alphabet.project(word, outs, 1), r1); //a
+        Assert.assertEquals(alphabet.project(word, outs, 2), r2); //S
+        Assert.assertEquals(alphabet.project(word, outs, 3), r3); //T
+        Assert.assertEquals(alphabet.project(word, outs, 4), r4); //c
+        Assert.assertEquals(alphabet.project(word, outs, 5), r5); //R
+        Assert.assertEquals(alphabet.project(word, outs, 6), r6); //R
+        Assert.assertEquals(alphabet.project(word, outs, 7), r7); //a
+        Assert.assertEquals(alphabet.project(word, outs, 8), r8); //R
+        Assert.assertEquals(alphabet.project(word, outs, 9), r9);
+    }
+
+    @Test
+    public void testProjectReturnMatched() {
+        final M alphabet = getAlphabet();
+        final Word<Character> word = Word.fromCharSequence("SaSTcRRa");
+        final Word<Character> outs = Word.fromCharSequence("01234567");
+
+        final Pair<Word<Character>, Word<Character>> r0 = Pair.of(Word.fromString("SaSa"), Word.fromString("0127"));
+        final Pair<Word<Character>, Word<Character>> r1 = Pair.of(Word.fromString("aSa"), Word.fromString("127"));
+        final Pair<Word<Character>, Word<Character>> r2 = Pair.of(Word.fromString("Sa"), Word.fromString("27"));
+        final Pair<Word<Character>, Word<Character>> r3 = Pair.of(Word.fromString("TRa"), Word.fromString("367"));
+        final Pair<Word<Character>, Word<Character>> r4 = Pair.of(Word.fromString("cRRa"), Word.fromString("4567"));
+        final Pair<Word<Character>, Word<Character>> r5 = Pair.of(Word.fromString("RRa"), Word.fromString("567"));
+        final Pair<Word<Character>, Word<Character>> r6 = Pair.of(Word.fromString("Ra"), Word.fromString("67"));
+        final Pair<Word<Character>, Word<Character>> r7 = Pair.of(Word.fromString("a"), Word.fromString("7"));
+        final Pair<Word<Character>, Word<Character>> r8 = Pair.of(Word.epsilon(), Word.epsilon());
+
+        Assert.assertEquals(alphabet.project(word, -1), r0.getFirst());
+        Assert.assertEquals(alphabet.project(word, 0), r0.getFirst()); //S
+        Assert.assertEquals(alphabet.project(word, 1), r1.getFirst()); //a
+        Assert.assertEquals(alphabet.project(word, 2), r2.getFirst()); //S
+        Assert.assertEquals(alphabet.project(word, 3), r3.getFirst()); //T
+        Assert.assertEquals(alphabet.project(word, 4), r4.getFirst()); //c
+        Assert.assertEquals(alphabet.project(word, 5), r5.getFirst()); //R
+        Assert.assertEquals(alphabet.project(word, 6), r6.getFirst()); //R
+        Assert.assertEquals(alphabet.project(word, 7), r7.getFirst()); //a
+        Assert.assertEquals(alphabet.project(word, 8), r8.getFirst());
+
+        Assert.assertEquals(alphabet.project(word, outs, -1), r0);
+        Assert.assertEquals(alphabet.project(word, outs, 0), r0); //S
+        Assert.assertEquals(alphabet.project(word, outs, 1), r1); //a
+        Assert.assertEquals(alphabet.project(word, outs, 2), r2); //S
+        Assert.assertEquals(alphabet.project(word, outs, 3), r3); //T
+        Assert.assertEquals(alphabet.project(word, outs, 4), r4); //c
+        Assert.assertEquals(alphabet.project(word, outs, 5), r5); //R
+        Assert.assertEquals(alphabet.project(word, outs, 6), r6); //R
+        Assert.assertEquals(alphabet.project(word, outs, 7), r7); //a
+        Assert.assertEquals(alphabet.project(word, outs, 8), r8);
     }
 }

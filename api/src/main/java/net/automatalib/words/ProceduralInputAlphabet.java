@@ -205,15 +205,13 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
         for (int i = Math.max(0, idx); i < input.size(); i++) {
             final I sym = input.getSymbol(i);
 
+            wb.append(input.getSymbol(i));
+
             if (isCallSymbol(sym)) {
                 final int returnIdx = findReturnIndex(input, i + 1);
-
                 if (returnIdx > -1) { // found matching return
-                    wb.append(input.getSymbol(i));
                     i = returnIdx;
                 }
-            } else {
-                wb.append(input.getSymbol(i));
             }
         }
 
@@ -244,23 +242,17 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
         final WordBuilder<I> inBuilder = new WordBuilder<>(input.size() - idx);
         final WordBuilder<O> outBuilder = new WordBuilder<>(input.size() - idx);
 
-        for (int i = idx; i < input.size(); i++) {
+        for (int i = Math.max(0, idx); i < input.size(); i++) {
             final I sym = input.getSymbol(i);
+
+            inBuilder.append(input.getSymbol(i));
+            outBuilder.append(output.getSymbol(i));
 
             if (isCallSymbol(sym)) {
                 final int returnIdx = findReturnIndex(input, i + 1);
-
-                // an unmatched call symbol is only allowed for the last symbol
-                if (returnIdx == -1 && i < input.size() - 1) {
-                    throw new IllegalArgumentException("An unmatched call symbol is only allowed for the last symbol");
+                if (returnIdx > -1) { // found matching return
+                    i = returnIdx;
                 }
-
-                inBuilder.append(input.getSymbol(i));
-                outBuilder.append(output.getSymbol(i));
-                i = returnIdx == -1 ? input.size() : returnIdx;
-            } else {
-                inBuilder.append(input.getSymbol(i));
-                outBuilder.append(output.getSymbol(i));
             }
         }
 
