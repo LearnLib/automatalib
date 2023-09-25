@@ -34,7 +34,7 @@ public final class OneSEVPAs {
     }
 
     /**
-     * Calculates the conjunction ("and") of two SEVPA, and returns the result as a new SEVPA.
+     * Returns a view on the conjunction ("and") of two {@link OneSEVPA}s.
      *
      * @param sevpa1
      *         the first SEVPA
@@ -43,7 +43,7 @@ public final class OneSEVPAs {
      * @param alphabet
      *         the input alphabet
      *
-     * @return a new SEVPA representing the conjunction of the specified SEVPA
+     * @return a view representing the conjunction of the specified {@link OneSEVPA}s
      */
     public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> and(OneSEVPA<L1, I> sevpa1,
                                                             OneSEVPA<L2, I> sevpa2,
@@ -52,9 +52,9 @@ public final class OneSEVPAs {
     }
 
     /**
-     * Most general way of combining two SEVPAs. The {@link AcceptanceCombiner} specified via the {@code combiner}
-     * parameter specifies how acceptance values of the SEVPAs will be combined to an acceptance value in the result
-     * SEVPAs.
+     * Most general way of combining two {@link OneSEVPA}s. The {@link AcceptanceCombiner} specified via the
+     * {@code combiner} parameter specifies how acceptance values of the {@link OneSEVPA}s will be combined to an
+     * acceptance value in the resulting {@link ProductOneSEVPA}.
      *
      * @param sevpa1
      *         the first SEVPA
@@ -65,7 +65,7 @@ public final class OneSEVPAs {
      * @param combiner
      *         combination method for acceptance values
      *
-     * @return a new SEVPA representing the conjunction of the specified SEVPA
+     * @return a view representing the given combination of the specified {@link OneSEVPA}s
      */
     public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> combine(OneSEVPA<L1, I> sevpa1,
                                                                 OneSEVPA<L2, I> sevpa2,
@@ -75,7 +75,7 @@ public final class OneSEVPAs {
     }
 
     /**
-     * Calculates the disjunction ("or") of two SEVPA, and returns the result as a new SEVPA.
+     * Returns a view on the disjunction ("or") of two {@link OneSEVPA}s.
      *
      * @param sevpa1
      *         the first SEVPA
@@ -84,7 +84,7 @@ public final class OneSEVPAs {
      * @param alphabet
      *         the input alphabet
      *
-     * @return a new SEVPA representing the conjunction of the specified SEVPA
+     * @return a view representing the disjunction of the specified {@link OneSEVPA}s
      */
     public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> or(OneSEVPA<L1, I> sevpa1,
                                                            OneSEVPA<L2, I> sevpa2,
@@ -93,7 +93,7 @@ public final class OneSEVPAs {
     }
 
     /**
-     * Calculates the exclusive-or ("xor") of two SEVPA, and stores the result in a given mutable SEVPA.
+     * Returns a view on the exclusive-or ("xor") of two {@link OneSEVPA}s.
      *
      * @param sevpa1
      *         the first SEVPA
@@ -102,7 +102,7 @@ public final class OneSEVPAs {
      * @param alphabet
      *         the input alphabet
      *
-     * @return a new SEVPA representing the conjunction of the specified SEVPA
+     * @return a view representing the exclusive-or of the specified {@link OneSEVPA}s
      */
     public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> xor(OneSEVPA<L1, I> sevpa1,
                                                             OneSEVPA<L2, I> sevpa2,
@@ -111,7 +111,7 @@ public final class OneSEVPAs {
     }
 
     /**
-     * Calculates the equivalence ("&lt;=&gt;") of two SEVPA, and stores the result in a given mutable SEVPA.
+     * Returns a view on  the equivalence ("&lt;=&gt;") of two {@link OneSEVPA}s.
      *
      * @param sevpa1
      *         the first SEVPA
@@ -120,7 +120,7 @@ public final class OneSEVPAs {
      * @param alphabet
      *         the input alphabet
      *
-     * @return a new SEVPA representing the conjunction of the specified SEVPA
+     * @return a view representing the equivalence of the specified {@link OneSEVPA}s
      */
     public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> equiv(OneSEVPA<L1, I> sevpa1,
                                                               OneSEVPA<L2, I> sevpa2,
@@ -129,7 +129,7 @@ public final class OneSEVPAs {
     }
 
     /**
-     * Calculates the implication ("=&gt;") of two SEVPA, and stores the result in a given mutable SEVPA.
+     * Returns a view on  the implication ("=&gt;") of two {@link OneSEVPA}s.
      *
      * @param sevpa1
      *         the first SEVPA
@@ -138,7 +138,7 @@ public final class OneSEVPAs {
      * @param alphabet
      *         the input alphabet
      *
-     * @return a new SEVPA representing the conjunction of the specified SEVPA
+     * @return a view representing the implication of the specified {@link OneSEVPA}s
      */
     public static <L1, L2, I> OneSEVPA<Pair<L1, L2>, I> impl(OneSEVPA<L1, I> sevpa1,
                                                              OneSEVPA<L2, I> sevpa2,
@@ -147,8 +147,10 @@ public final class OneSEVPAs {
     }
 
     /**
-     * Minimizes the given SEVPA over the given alphabet. This method does not modify the given SEVPA, but returns the
-     * minimized version as a new instance. <b>Note:</b> the SEVPA must be completely specified.
+     * Minimizes the given {@link OneSEVPA} over the given alphabet. This method does not modify the given
+     * {@link OneSEVPA}, but returns the minimized version as a new instance.
+     * <p>
+     * <b>Note:</b> the method currently does not support partial {@link OneSEVPA}s.
      *
      * @param sevpa
      *         the SEVPA to be minimized
@@ -156,7 +158,7 @@ public final class OneSEVPAs {
      *         the input alphabet to consider for minimization (this will also be the input alphabet of the resulting
      *         automaton)
      *
-     * @return a minimized version of the specified SEVPA
+     * @return a minimized version of the specified {@link OneSEVPA}
      */
     public static <I> DefaultOneSEVPA<I> minimize(OneSEVPA<?, I> sevpa, VPDAlphabet<I> alphabet) {
         return OneSEVPAMinimizer.minimize(sevpa, alphabet);

@@ -25,10 +25,10 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A stack-based implementation for {@link SPA}s.
+ * A stack-based implementation for the (instrumented) language of an {@link SPA}.
  *
  * @param <S>
- *         unified super type of procedure states
+ *         procedural state type
  * @param <I>
  *         input symbol type
  *

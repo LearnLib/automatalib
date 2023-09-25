@@ -39,22 +39,26 @@ public final class SPMMUtil {
     }
 
     /**
-     * Computes a set of access and terminating sequences for a given {@link SPMM}.
+     * Computes a set of access sequences and terminating sequences for a given {@link SPMM}.  This is a convenience
+     * method for {@link #computeATSequences(SPMM, ProceduralInputAlphabet)} that automatically uses the
+     * {@link SPMM#getInputAlphabet() input alphabet} of the given {@code spmm}.
      *
      * @param spmm
      *         the {@link SPMM} for which the sequences should be computed
      * @param <I>
      *         input symbol type
      *
-     * @return a {@link ATSequences} object which contains the respective sequences.
+     * @return an {@link ATSequences} object which contains the respective sequences.
+     *
+     * @see #computeATSequences(SPMM, ProceduralInputAlphabet)
      */
     public static <I, O> ATSequences<I> computeATSequences(SPMM<?, I, ?, O> spmm) {
         return computeATSequences(spmm, spmm.getInputAlphabet());
     }
 
     /**
-     * Computes a set of access and return sequences for a given {@link SPMM} limited to the symbols of the given
-     * {@link ProceduralInputAlphabet}.
+     * Computes a set of access sequences and return sequences for a given {@link SPMM} limited to the symbols of the
+     * given {@link ProceduralInputAlphabet}.
      *
      * @param spmm
      *         the {@link SPMM} for which the sequences should be computed
@@ -65,7 +69,10 @@ public final class SPMMUtil {
      * @param <O>
      *         output symbol type
      *
-     * @return a {@link ATSequences} object which contains the respective sequences.
+     * @return an {@link ATSequences} object which contains the respective sequences.
+     *
+     * @see #computeAccessSequences(SPMM, ProceduralInputAlphabet, Map)
+     * @see #computeTerminatingSequences(SPMM, ProceduralInputAlphabet)
      */
     public static <I, O> ATSequences<I> computeATSequences(SPMM<?, I, ?, O> spmm, ProceduralInputAlphabet<I> alphabet) {
 
@@ -78,7 +85,7 @@ public final class SPMMUtil {
     }
 
     /**
-     * Computes for a given {@link SPMM} the set of terminating sequences using the given
+     * Computes for a given {@link SPMM} the a of terminating sequences using the given
      * {@link ProceduralInputAlphabet alphabet}. Terminating sequences transfer a procedure from its initial state to a
      * returnable state. This method furthermore checks that the hierarchy of calls is well-defined, i.e. it only
      * includes procedural invocations <i>p</i> for determining a terminating sequence if <i>p</i> has a valid
@@ -108,10 +115,10 @@ public final class SPMMUtil {
     }
 
     /**
-     * Computes for a given {@link SPMM} the set of access sequences using the SPMM
+     * Computes for a given {@link SPMM} a set of access sequences using the SPMM
      * {@link ProceduralInputAlphabet alphabet}. An access sequence (for procedure <i>p</i>) transfers an {@link SPMM}
-     * from its initial state to a state that is able to successfully execute a run of <i>p</i>. This method
-     * furthermore checks that potentially nested calls are well-defined, i.e. it only includes procedural invocations
+     * from its initial state to a state that is able to successfully execute a run of <i>p</i>. This method furthermore
+     * checks that potentially nested calls are well-defined, i.e. it only includes procedural invocations
      * <i>p</i> for determining access sequences if <i>p</i> has a valid terminating sequence and therefore can
      * be expanded correctly.
      *

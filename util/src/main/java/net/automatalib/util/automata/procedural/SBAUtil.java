@@ -54,22 +54,26 @@ public final class SBAUtil {
     }
 
     /**
-     * Computes a set of access and terminating sequences for a given {@link SBA}.
+     * Computes a set of access sequences and terminating sequences for a given {@link SBA}. This is a convenience
+     * method for {@link #computeATSequences(SBA, ProceduralInputAlphabet)} that automatically uses the
+     * {@link SBA#getInputAlphabet() input alphabet} of the given {@code sba}.
      *
      * @param sba
      *         the {@link SBA} for which the sequences should be computed
      * @param <I>
      *         input symbol type
      *
-     * @return a {@link ATSequences} object which contains the respective sequences.
+     * @return an {@link ATSequences} object which contains the respective sequences.
+     *
+     * @see #computeATSequences(SBA, ProceduralInputAlphabet)
      */
     public static <I> ATSequences<I> computeATSequences(SBA<?, I> sba) {
         return computeATSequences(sba, sba.getInputAlphabet());
     }
 
     /**
-     * Computes a set of access and terminating sequences for a given {@link SBA} limited to the symbols of the given
-     * {@link ProceduralInputAlphabet}.
+     * Computes a set of access sequences and terminating sequences for a given {@link SBA} limited to the symbols of
+     * the given {@link ProceduralInputAlphabet}.
      *
      * @param sba
      *         the {@link SBA} for which the sequences should be computed
@@ -78,7 +82,10 @@ public final class SBAUtil {
      * @param <I>
      *         input symbol type
      *
-     * @return a {@link ATSequences} object which contains the respective sequences.
+     * @return an {@link ATSequences} object which contains the respective sequences.
+     *
+     * @see #computeAccessSequences(SBA, ProceduralInputAlphabet, Map)
+     * @see #computeTerminatingSequences(SBA, ProceduralInputAlphabet)
      */
     public static <I> ATSequences<I> computeATSequences(SBA<?, I> sba, ProceduralInputAlphabet<I> alphabet) {
 
@@ -91,7 +98,7 @@ public final class SBAUtil {
     }
 
     /**
-     * Computes for a given {@link SBA} the set of terminating sequences using the given
+     * Computes for a given {@link SBA} a set of terminating sequences using the given
      * {@link ProceduralInputAlphabet alphabet}. Terminating sequences transfer a procedure from its initial state to a
      * returnable state. This method furthermore checks that the hierarchy of calls is well-defined, i.e. it only
      * includes procedural invocations <i>p</i> for determining a terminating sequence if <i>p</i> has a valid
@@ -117,7 +124,7 @@ public final class SBAUtil {
     }
 
     /**
-     * Computes for a given {@link SBA} the set of access sequences using the given
+     * Computes for a given {@link SBA} a set of access sequences using the given
      * {@link ProceduralInputAlphabet alphabet}. An access sequence (for procedure <i>p</i>) transfers an {@link SBA}
      * from its initial state to a state that is able to successfully execute a run of <i>p</i>. This method furthermore
      * checks that potentially nested calls are well-defined, i.e. it only includes procedural invocations <i>p</i> for
@@ -161,7 +168,7 @@ public final class SBAUtil {
      * @param <I>
      *         input symbol type
      *
-     * @return {@code true} if {@code spmm} is valid, {@code false} otherwise.
+     * @return {@code true} if {@code sba} is valid, {@code false} otherwise.
      *
      * @see #isValid(SBA, ProceduralInputAlphabet)
      */

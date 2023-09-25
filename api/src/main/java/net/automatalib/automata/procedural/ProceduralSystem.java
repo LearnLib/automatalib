@@ -43,8 +43,8 @@ interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?,
         extends FiniteRepresentation, GraphViewable, InputAlphabetHolder<I> {
 
     /**
-     * Refinement of {@link InputAlphabetHolder#getInputAlphabet()}' to add the constraint that an this system operates
-     * on {@link ProceduralInputAlphabet}s.
+     * Refinement of {@link InputAlphabetHolder#getInputAlphabet()} to add the constraint that {@code this} system
+     * operates on {@link ProceduralInputAlphabet}s.
      *
      * @return the input alphabet
      */
@@ -53,19 +53,19 @@ interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?,
 
     /**
      * Convenience method for {@link #getProceduralInputs(Collection)} which uses the
-     * {@link #getInputAlphabet() input alphabet} of {@code this} {@link ProceduralSystem} as {@code constraints}.
+     * {@link #getInputAlphabet() input alphabet} of {@code this} system as {@code constraints}.
      *
-     * @return a collection of defined inputs for {@code this} {@link ProceduralSystem}'s procedures.
+     * @return a collection of defined inputs for {@code this} system's procedures.
      */
     default Collection<I> getProceduralInputs() {
         return getProceduralInputs(this.getInputAlphabet());
     }
 
     /**
-     * Returns a collection of input symbols which the procedural automata can process. The collection is computed by
-     * the union of this {@link ProceduralSystem}s
-     * {@link ProceduralInputAlphabet#getInternalAlphabet() internal symbols} and the
-     * {@link #getProcedures() available procedure keys}.
+     * Returns a collection of input symbols which the procedural automata can process. Depending on {@code this}
+     * system's semantics, this can exclude certain symbols such as the
+     * {@link ProceduralInputAlphabet#getReturnSymbol() return symbol} or
+     * {@link ProceduralInputAlphabet#getCallAlphabet() call symbols} for which no procedure exists.
      * <p>
      * This collection can be further constrained via the {@code constraints} parameter which is used in a final
      * intersection operation with the previous collection.
@@ -78,19 +78,19 @@ interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?,
     Collection<I> getProceduralInputs(Collection<I> constraints);
 
     /**
-     * Returns the initial procedure of this {@link ProceduralSystem}, i.e. the call symbol with which successful run
-     * has to start.
+     * Returns the initial procedure (represented via its {@link ProceduralInputAlphabet#getCallAlphabet() call symbol})
+     * of this system.
      *
-     * @return the initial procedure
+     * @return the initial procedure, may be {@code null} if undefined
      */
     @Nullable I getInitialProcedure();
 
     /**
-     * Return a {@link Map} from {@link ProceduralInputAlphabet#getCallAlphabet() call symbols} to the procedures of
-     * this {@link ProceduralSystem}. Note that a (non-minimal) {@link ProceduralSystem} may not contain a procedure for
-     * every call symbol.
+     * Returns a {@link Map} from {@link ProceduralInputAlphabet#getCallAlphabet() call symbols} to the procedures of
+     * {@code this} system. Note that a (non-minimal) {@link ProceduralSystem} may not contain a procedure for every
+     * call symbol.
      *
-     * @return the procedures of this {@link ProceduralSystem}
+     * @return the procedures of this system
      */
     Map<I, M> getProcedures();
 
@@ -100,8 +100,10 @@ interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?,
      * @param callSymbol
      *         the call symbol
      *
-     * @return the corresponding procedure. May be {@code null} if the {@link ProceduralSystem} does not have a
-     * procedure for the given call symbol.
+     * @return the corresponding procedure. May be {@code null} if {@code this} system does not have a procedure for the
+     * given call symbol.
+     *
+     * @see #getProcedures()
      */
     default @Nullable M getProcedure(I callSymbol) {
         assert getInputAlphabet().isCallSymbol(callSymbol);
@@ -109,12 +111,12 @@ interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?,
     }
 
     /**
-     * Return the size of this {@link ProceduralSystem} which is given by the sum of the sizes of all
+     * Returns the size of {@code this} system which is given by the sum of the sizes of all
      * {@link #getProcedures() procedures}. Note that this value does not necessarily correspond to the classical notion
      * of {@link SimpleAutomaton#size()}, since semantically a {@link ProceduralSystem} may be infinite-sized
      * {@link SimpleTS}.
      *
-     * @return the size of this {@link ProceduralSystem}
+     * @return the size of {@code this} system
      */
     @Override
     default int size() {

@@ -22,9 +22,7 @@ import net.automatalib.commons.util.mappings.Mapping;
 
 /**
  * A specialized version of a {@link VPDAlphabet} that is tailored towards procedural systems. Specifically, it only
- * supports a {@link #getReturnSymbol() single return symbol} and the special structure of
- * {@link ProceduralInputAlphabet} words allows for a series of utility functions to transform the nesting structure of
- * {@link ProceduralInputAlphabet} words.
+ * supports a {@link #getReturnSymbol() single return symbol}.
  *
  * @param <I>
  *         input symbol type
@@ -59,6 +57,8 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
      *         the index of the currently executing symbol for which the call index should be determined.
      *
      * @return the index of the respective call symbol or {@code -1} if this index doesn't exist
+     *
+     * @see #findCallIndex(List, int)
      */
     default int findCallIndex(Word<I> input, int idx) {
         return findCallIndex(input.asList(), idx);
@@ -112,6 +112,8 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
      *         should be determined.
      *
      * @return the index of the return symbol or {@code -1} if this index doesn't exist or {@code idx} has invalid range
+     *
+     * @see #findReturnIndex(List, int)
      */
     default int findReturnIndex(Word<I> input, int idx) {
         return findReturnIndex(input.asList(), idx);
@@ -157,8 +159,8 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
     }
 
     /**
-     * Replaces all occurrences of {@link #getCallAlphabet() calls symbols} in {@code input} with an embedded
-     * terminating sequence provided by {@code terminatingSequences}.
+     * Replaces all occurrences of {@link #getCallAlphabet() call symbols} in {@code input} with an embedded terminating
+     * sequence provided by {@code terminatingSequences}.
      *
      * @param input
      *         the input sequence to analyze
@@ -194,7 +196,7 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
      *         the index from {@code input} will be analyzed
      *
      * @return a transformed word where all well-matched occurrences of procedural invocations have been replaced with
-     * the single respective {@link #getCallAlphabet() call symbol}.
+     * the single respective {@link #getCallAlphabet() call symbols}.
      */
     @SuppressWarnings("PMD.AvoidReassigningLoopVariables") // we want to skip indices here
     default Word<I> project(Word<I> input, int idx) {
@@ -233,6 +235,8 @@ public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
      *
      * @return a pair of transformed words where all well-matched occurrences of procedural invocations have been
      * replaced with the single respective {@link #getCallAlphabet() call symbol} / call symbol output.
+     *
+     * @see #project(Word, int)
      */
     @SuppressWarnings("PMD.AvoidReassigningLoopVariables") // we want to skip indices here
     default <O> Pair<Word<I>, Word<O>> project(Word<I> input, Word<O> output, int idx) {

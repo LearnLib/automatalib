@@ -18,6 +18,14 @@ package net.automatalib.words.impl;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 
+/**
+ * Default implementation of a {@link ProceduralInputAlphabet}.
+ *
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
 public class DefaultProceduralInputAlphabet<I> extends DefaultVPDAlphabet<I> implements ProceduralInputAlphabet<I> {
 
     private final Alphabet<I> proceduralAlphabet;

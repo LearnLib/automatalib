@@ -42,6 +42,7 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
  * Utility class revolving around 1-SEVPAs.
  *
  * @author Malte Isberner
+ * @author frohme
  */
 public final class OneSEVPAUtil {
 
@@ -326,6 +327,7 @@ public final class OneSEVPAUtil {
         blockQueue.add(rejectionLocations);
 
         while (!blockQueue.isEmpty()) {
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
             final @NonNull List<L> block = blockQueue.poll();
             if (block.size() == 1) {
                 continue;

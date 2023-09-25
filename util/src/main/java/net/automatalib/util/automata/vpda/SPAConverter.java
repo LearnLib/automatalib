@@ -62,7 +62,9 @@ final class SPAConverter {
                                                                CI mainProcedure,
                                                                SymbolMapper<AI, CI> symbolMapper,
                                                                boolean minimize) {
-        assert alphabet.getNumReturns() == 1 : "Currently only single return symbols are supported.";
+        if (alphabet.getNumReturns() != 1) {
+            throw new IllegalArgumentException("Currently only single return symbols are supported.");
+        }
 
         // build alphabet
         final Map<AI, Map<L, CI>> procedureMap = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());

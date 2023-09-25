@@ -25,10 +25,10 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A stack-based implementation for the (instrumented) semantics of a System of Procedural Automata.
+ * A stack-based implementation for the (instrumented) language of an {@link SBA}.
  *
  * @param <S>
- *         hypotheses state type
+ *         procedural state type
  * @param <I>
  *         input symbol type
  *

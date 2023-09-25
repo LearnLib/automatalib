@@ -33,8 +33,8 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * This class represents a {@link ContextFreeModalProcessSystem}-based view on the instrumented language of a given
- * {@link SPA}, which allows one to model-check language properties of an {@link SPA} with tools such as M3C.
+ * This class represents a {@link ContextFreeModalProcessSystem}-based view of the instrumented language for a given
+ * {@link SPA}, which allows one to model-check language properties of {@link SPA}s with tools such as M3C.
  *
  * @param <I>
  *         input symbol type

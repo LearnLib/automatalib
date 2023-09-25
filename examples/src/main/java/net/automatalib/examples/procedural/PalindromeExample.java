@@ -40,11 +40,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author frohme
  */
-public final class PalindromeSPAExample {
+public final class PalindromeExample {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PalindromeSPAExample.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PalindromeExample.class);
 
-    private PalindromeSPAExample() {
+    private PalindromeExample() {
         // prevent instantiation
     }
 

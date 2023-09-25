@@ -30,7 +30,7 @@ import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
- * Graph representation of an {@link SPA} that displays all states of its sub-procedures once, i.e., without
+ * Graph representation of a {@link ProceduralSystem} that displays all states of its sub-procedures once, i.e., without
  * incorporating execution semantics such as stack contents.
  *
  * @param <S>

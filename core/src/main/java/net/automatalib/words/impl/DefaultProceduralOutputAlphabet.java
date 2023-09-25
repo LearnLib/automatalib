@@ -19,8 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.automatalib.words.Alphabet;
+import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
 
+/**
+ * Default implementation of a {@link ProceduralOutputAlphabet}.
+ *
+ * @param <O>
+ *         input symbol type
+ *
+ * @author frohme
+ */
 public class DefaultProceduralOutputAlphabet<O> extends MapAlphabet<O> implements ProceduralOutputAlphabet<O> {
 
     private final Alphabet<O> regularAlphabet;

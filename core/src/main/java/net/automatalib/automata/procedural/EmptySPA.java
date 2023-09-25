@@ -23,7 +23,7 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A utility implementation of an {@link SPA} that rejects all inputs (i.e. describes the empty language).
+ * A utility implementation of an {@link SPA} that rejects all inputs, i.e., describes the empty language.
  *
  * @param <I>
  *         input symbol type

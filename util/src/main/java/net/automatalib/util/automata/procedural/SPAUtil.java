@@ -30,6 +30,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.procedural.SBA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.automata.vpda.SEVPA;
@@ -58,22 +59,26 @@ public final class SPAUtil {
     }
 
     /**
-     * Computes a set of access, terminating and return sequences for a given {@link SPA}.
+     * Computes a set of access sequences, terminating sequences, and return sequences for a given {@link SPA}. This is
+     * a convenience method for {@link #computeATRSequences(SPA, ProceduralInputAlphabet)} that automatically uses the
+     * {@link SPA#getInputAlphabet() input alphabet} of the given {@code spa}.
      *
      * @param spa
      *         the {@link SPA} for which the sequences should be computed
      * @param <I>
      *         input symbol type
      *
-     * @return a {@link ATRSequences} object which contains the respective sequences.
+     * @return an {@link ATRSequences} object which contains the respective sequences.
+     *
+     * @see #computeATRSequences(SPA, ProceduralInputAlphabet)
      */
     public static <I> ATRSequences<I> computeATRSequences(SPA<?, I> spa) {
         return computeATRSequences(spa, spa.getInputAlphabet());
     }
 
     /**
-     * Computes a set of access, terminating and return sequences for a given {@link SPA} limited to the symbols of the
-     * given {@link ProceduralInputAlphabet}.
+     * Computes a set of access sequences, terminating sequences, and return sequences for a given {@link SPA} limited
+     * to the symbols of the given {@link ProceduralInputAlphabet}.
      *
      * @param spa
      *         the {@link SPA} for which the sequences should be computed
@@ -82,7 +87,10 @@ public final class SPAUtil {
      * @param <I>
      *         input symbol type
      *
-     * @return a {@link ATRSequences} object which contains the respective sequences.
+     * @return an {@link ATRSequences} object which contains the respective sequences.
+     *
+     * @see #computeAccessAndReturnSequences(SPA, ProceduralInputAlphabet, Map)
+     * @see #computeTerminatingSequences(SPA, ProceduralInputAlphabet)
      */
     public static <I> ATRSequences<I> computeATRSequences(SPA<?, I> spa, ProceduralInputAlphabet<I> alphabet) {
 
@@ -97,7 +105,7 @@ public final class SPAUtil {
     }
 
     /**
-     * Computes for a given {@link SPA} the set of terminating sequences using the given
+     * Computes for a given {@link SPA} a set of terminating sequences using the given
      * {@link ProceduralInputAlphabet alphabet}. Terminating sequences transfer a procedure from its initial state to an
      * accepting state. This method furthermore checks that the hierarchy of calls is well-defined, i.e. it only
      * includes procedural invocations <i>p</i> for determining a terminating sequence if <i>p</i> has a valid
@@ -120,7 +128,7 @@ public final class SPAUtil {
     }
 
     /**
-     * Computes for a given {@link SPA} the set of access and return sequences using the given
+     * Computes for a given {@link SPA} a set of access sequences and return sequences using the given
      * {@link ProceduralInputAlphabet alphabet}. An access sequence (for procedure <i>p</i>) transfers an {@link SPA}
      * from its initial state to a state that is able to successfully execute a run of <i>p</i>, whereas the
      * corresponding return sequence transfers the {@link SPA} to the global accepting state from an accepting state of
@@ -327,6 +335,8 @@ public final class SPAUtil {
      *         input symbol type
      *
      * @return {@code true} if {@code spa} is redundancy-free, {@code false} otherwise.
+     *
+     * @see #isMinimal(SPA, ProceduralInputAlphabet)
      */
     public static <I> boolean isMinimal(SPA<?, I> spa) {
         return isMinimal(spa, spa.getInputAlphabet());
@@ -334,7 +344,7 @@ public final class SPAUtil {
 
     /**
      * Checks if a given {@link SPA} is redundancy-free, i.e. if for all {@link SPA#getProcedures() procedures} there
-     * exist access, terminating and return sequences.
+     * exists an access sequence, terminating sequence, and return sequence.
      *
      * @param spa
      *         the {@link SPA} to check
@@ -351,7 +361,7 @@ public final class SPAUtil {
     }
 
     /**
-     * Checks if a pre-computed set of {@link ATRSequences} of an {@link SPA} is redundancy-free.
+     * Checks if a pre-computed set of {@link ATRSequences} of an {@link SPA} is minimal.
      *
      * @param alphabet
      *         the {@link ProceduralInputAlphabet alphabet} which should be used for computing the respective sequences
@@ -474,7 +484,7 @@ public final class SPAUtil {
     }
 
     /**
-     * Transforms the given {@link SPA} into a langauge-equivalent {@link OneSEVPA}.
+     * Transforms the given {@link SPA} into a language-equivalent {@link OneSEVPA}.
      *
      * @param spa
      *         the {@link SPA} to transform
@@ -488,7 +498,7 @@ public final class SPAUtil {
     }
 
     /**
-     * Transforms the given {@link SPA} into a langauge-equivalent {@link SEVPA N-SEVPA}.
+     * Transforms the given {@link SPA} into a language-equivalent {@link SEVPA N-SEVPA}.
      *
      * @param spa
      *         the {@link SPA} to transform

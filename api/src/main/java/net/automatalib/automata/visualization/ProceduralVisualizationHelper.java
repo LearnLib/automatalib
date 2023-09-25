@@ -27,9 +27,20 @@ import net.automatalib.automata.concepts.StateIDs;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.Triple;
 import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
+/**
+ * Default {@link VisualizationHelper} for procedural systems.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ *
+ * @author frohme
+ */
 public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHelper<Pair<I, S>, Triple<I, I, S>> {
 
     private final Map<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>> subModels;
