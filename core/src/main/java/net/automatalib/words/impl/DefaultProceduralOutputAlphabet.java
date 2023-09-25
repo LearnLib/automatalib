@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.automatalib.words.Alphabet;
-import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
 
 /**

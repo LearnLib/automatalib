@@ -30,7 +30,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.automata.procedural.SBA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.automata.vpda.OneSEVPA;
 import net.automatalib.automata.vpda.SEVPA;
