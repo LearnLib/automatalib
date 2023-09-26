@@ -1,0 +1,38 @@
+digraph g {
+
+	s0 [shape="circle" label="F 0"];
+	s1 [shape="circle" label="F 1"];
+	s2 [shape="circle" label="F 2"];
+	s3 [shape="circle" label="F 3"];
+	s4 [shape="circle" label="F 4"];
+	s5 [shape="circle" label="F 5"];
+	s6 [shape="circle" label="F 6"];
+	s7 [shape="circle" label="G 0"];
+	s8 [shape="circle" label="G 1"];
+	s9 [shape="circle" label="G 2"];
+	s10 [shape="circle" label="G 3"];
+	s11 [shape="circle" label="G 4"];
+	s0 -> s1 [label="a / x"];
+	s0 -> s2 [label="b / y"];
+	s0 -> s5 [style="bold" label="G / +"];
+	s0 -> s6 [style="bold" label="R / -"];
+	s1 -> s3 [style="bold" label="F / +"];
+	s1 -> s6 [style="bold" label="R / -"];
+	s2 -> s4 [style="bold" label="F / +"];
+	s2 -> s6 [style="bold" label="R / -"];
+	s3 -> s5 [label="a / x"];
+	s4 -> s5 [label="b / y"];
+	s5 -> s6 [style="bold" label="R / -"];
+	s7 -> s8 [label="c / z"];
+	s7 -> s10 [style="bold" label="F / +"];
+	s8 -> s9 [style="bold" label="G / +"];
+	s8 -> s11 [style="bold" label="R / -"];
+	s9 -> s10 [label="c / z"];
+	s10 -> s11 [style="bold" label="R / -"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s7;
+__start1 [label="" shape="none" width="0" height="0"];
+__start1 -> s0;
+
+}

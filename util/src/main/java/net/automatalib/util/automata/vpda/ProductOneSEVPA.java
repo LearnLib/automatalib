@@ -26,8 +26,8 @@ import net.automatalib.words.VPDAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Production automaton that allows to join two given 1-SEVPAs. Acceptance semantics of the product automaton depends on
- * the given {@link AcceptanceCombiner}.
+ * Production automaton that allows to join two given {@link OneSEVPA}s. Acceptance semantics of the product automaton
+ * depends on the given {@link AcceptanceCombiner}.
  *
  * @param <L1>
  *         location type of first 1-SEVPA

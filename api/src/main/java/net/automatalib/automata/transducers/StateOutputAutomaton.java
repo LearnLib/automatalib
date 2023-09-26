@@ -15,9 +15,8 @@
  */
 package net.automatalib.automata.transducers;
 
-import java.util.Collection;
-
 import net.automatalib.automata.concepts.DetSuffixOutputAutomaton;
+import net.automatalib.automata.concepts.Output;
 import net.automatalib.ts.output.DeterministicStateOutputTS;
 import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
@@ -27,14 +26,7 @@ public interface StateOutputAutomaton<S, I, T, O>
 
     @Override
     default Word<O> computeStateOutput(S state, Iterable<? extends I> input) {
-        WordBuilder<O> result;
-        if (input instanceof Word) {
-            result = new WordBuilder<>(((Word<?>) input).length() + 1);
-        } else if (input instanceof Collection) {
-            result = new WordBuilder<>(((Collection<?>) input).size() + 1);
-        } else {
-            result = new WordBuilder<>();
-        }
+        final WordBuilder<O> result = Output.getBuilderFor(input);
 
         trace(state, input, result);
 

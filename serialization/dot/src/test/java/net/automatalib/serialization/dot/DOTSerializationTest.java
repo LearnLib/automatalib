@@ -31,6 +31,9 @@ import net.automatalib.automata.base.compact.CompactTransition;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.automata.fsa.impl.compact.CompactNFA;
 import net.automatalib.automata.graphs.TransitionEdge;
+import net.automatalib.automata.procedural.SBA;
+import net.automatalib.automata.procedural.SPA;
+import net.automatalib.automata.procedural.SPMM;
 import net.automatalib.automata.transducers.MealyMachine.MealyGraphView;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
@@ -166,6 +169,33 @@ public class DOTSerializationTest {
 
         ThrowingWriter writer = w -> GraphDOT.write(cfmps, w);
         checkDOTOutput(writer, DOTSerializationUtil.CFMPS_RESOURCE);
+    }
+
+    @Test
+    public void testSPAExport() throws IOException {
+
+        final SPA<?, Character> spa = DOTSerializationUtil.SPA;
+
+        ThrowingWriter writer = w -> GraphDOT.write(spa, w);
+        checkDOTOutput(writer, DOTSerializationUtil.SPA_RESOURCE);
+    }
+
+    @Test
+    public void testSBAExport() throws IOException {
+
+        final SBA<?, Character> sba = DOTSerializationUtil.SBA;
+
+        ThrowingWriter writer = w -> GraphDOT.write(sba, w);
+        checkDOTOutput(writer, DOTSerializationUtil.SBA_RESOURCE);
+    }
+
+    @Test
+    public void testSPMMExport() throws IOException {
+
+        final SPMM<?, Character, ?, Character> spmm = DOTSerializationUtil.SPMM;
+
+        ThrowingWriter writer = w -> GraphDOT.write(spmm, w);
+        checkDOTOutput(writer, DOTSerializationUtil.SPMM_RESOURCE);
     }
 
     @Test
