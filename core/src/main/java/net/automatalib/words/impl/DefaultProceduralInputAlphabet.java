@@ -26,7 +26,7 @@ import net.automatalib.words.ProceduralInputAlphabet;
  *
  * @author frohme
  */
-public class DefaultProceduralInputAlphabet<I> extends DefaultVPDAlphabet<I> implements ProceduralInputAlphabet<I> {
+public class DefaultProceduralInputAlphabet<I> extends DefaultVPAlphabet<I> implements ProceduralInputAlphabet<I> {
 
     private final Alphabet<I> proceduralAlphabet;
 

@@ -15,13 +15,13 @@
  */
 package net.automatalib.util.minimizer;
 
-import net.automatalib.automata.vpda.DefaultOneSEVPA;
-import net.automatalib.automata.vpda.Location;
-import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpa.DefaultOneSEVPA;
+import net.automatalib.automata.vpa.Location;
+import net.automatalib.automata.vpa.OneSEVPA;
 import net.automatalib.util.partitionrefinement.Block;
 import net.automatalib.util.partitionrefinement.PaigeTarjan;
 import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;
-import net.automatalib.words.VPDAlphabet;
+import net.automatalib.words.VPAlphabet;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
@@ -33,7 +33,7 @@ public final class OneSEVPAMinimizer {
 
     private OneSEVPAMinimizer() {}
 
-    public static <I> DefaultOneSEVPA<I> minimize(OneSEVPA<?, I> sevpa, VPDAlphabet<I> alphabet) {
+    public static <I> DefaultOneSEVPA<I> minimize(OneSEVPA<?, I> sevpa, VPAlphabet<I> alphabet) {
         final PaigeTarjan pt = new PaigeTarjan();
         initPaigeTarjan(pt, sevpa, alphabet);
         pt.initWorklist(false);
@@ -42,7 +42,7 @@ public final class OneSEVPAMinimizer {
         return fromPaigeTarjan(pt, sevpa, alphabet);
     }
 
-    private static <L, I> void initPaigeTarjan(PaigeTarjan pt, OneSEVPA<L, I> sevpa, VPDAlphabet<I> alphabet) {
+    private static <L, I> void initPaigeTarjan(PaigeTarjan pt, OneSEVPA<L, I> sevpa, VPAlphabet<I> alphabet) {
         final int numStates = sevpa.size();
         final int numInputs =
                 alphabet.getNumInternals() + alphabet.getNumCalls() * alphabet.getNumReturns() * sevpa.size() * 2;
@@ -170,7 +170,7 @@ public final class OneSEVPAMinimizer {
 
     private static <L, I> DefaultOneSEVPA<I> fromPaigeTarjan(PaigeTarjan pt,
                                                              OneSEVPA<L, I> original,
-                                                             VPDAlphabet<I> alphabet) {
+                                                             VPAlphabet<I> alphabet) {
 
         final int numBlocks = pt.getNumBlocks();
         final DefaultOneSEVPA<I> result = new DefaultOneSEVPA<>(alphabet, numBlocks);

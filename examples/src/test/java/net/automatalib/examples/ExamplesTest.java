@@ -36,7 +36,7 @@ import net.automatalib.examples.modelchecking.LTSminExample;
 import net.automatalib.examples.modelchecking.LTSminMonitorExample;
 import net.automatalib.examples.modelchecking.M3CSPAExample;
 import net.automatalib.examples.procedural.PalindromeExample;
-import net.automatalib.examples.vpda.OneSEVPAExample;
+import net.automatalib.examples.vpa.OneSEVPAExample;
 import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
 import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
 import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;

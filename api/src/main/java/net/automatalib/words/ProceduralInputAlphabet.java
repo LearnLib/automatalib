@@ -21,7 +21,7 @@ import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 
 /**
- * A specialized version of a {@link VPDAlphabet} that is tailored towards procedural systems. Specifically, it only
+ * A specialized version of a {@link VPAlphabet} that is tailored towards procedural systems. Specifically, it only
  * supports a {@link #getReturnSymbol() single return symbol}.
  *
  * @param <I>
@@ -29,7 +29,7 @@ import net.automatalib.commons.util.mappings.Mapping;
  *
  * @author frohme
  */
-public interface ProceduralInputAlphabet<I> extends VPDAlphabet<I> {
+public interface ProceduralInputAlphabet<I> extends VPAlphabet<I> {
 
     /**
      * Returns the union of {@link #getCallAlphabet() call} and {@link #getInternalAlphabet() internal} symbols.

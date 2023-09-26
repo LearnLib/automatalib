@@ -24,9 +24,9 @@ import java.util.Map.Entry;
 
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.procedural.SPA;
-import net.automatalib.automata.vpda.DefaultOneSEVPA;
-import net.automatalib.automata.vpda.Location;
-import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpa.DefaultOneSEVPA;
+import net.automatalib.automata.vpa.Location;
+import net.automatalib.automata.vpa.OneSEVPA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.words.ProceduralInputAlphabet;

@@ -14,7 +14,7 @@ Its original purpose is to serve as the automaton framework for the [LearnLib][3
 However, it is completely independent of LearnLib and can be used for other projects as well.
 
 AutomataLib supports modeling a variety of graph-based structures.
-Currently, it covers generic transition systems, Deterministic Finite Automata (DFAs) and Mealy machines as well as more advanced structures such as Modal Transition Systems (MTSs), Subsequential Transducers (SSTs), Visibly Pushdown Automata (VPDAs) and Procedural Systems (SPAs, SBAs, SPMMs).
+Currently, it covers generic transition systems, Deterministic Finite Automata (DFAs) and Mealy machines as well as more advanced structures such as Modal Transition Systems (MTSs), Subsequential Transducers (SSTs), Visibly Pushdown Automata (VPAs) and Procedural Systems (SPAs, SBAs, SPMMs).
 
 Models of AutomataLib can be (de-)serialized (from) to one of the various supported serialization formats and may be visualized using either the GraphViz or JUNG library.
 Furthermore, a plethora of graph-/automata-based algorithms is implemented, covering the following topics:

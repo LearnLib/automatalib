@@ -38,8 +38,8 @@ import net.automatalib.automata.procedural.StackSPMM;
 import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.automata.transducers.impl.compact.CompactMoore;
-import net.automatalib.automata.vpda.DefaultOneSEVPA;
-import net.automatalib.automata.vpda.Location;
+import net.automatalib.automata.vpa.DefaultOneSEVPA;
+import net.automatalib.automata.vpa.Location;
 import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.fsa.DFAs;
 import net.automatalib.util.automata.procedural.SPAUtil;
@@ -47,7 +47,7 @@ import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.ProceduralOutputAlphabet;
-import net.automatalib.words.VPDAlphabet;
+import net.automatalib.words.VPAlphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 public final class RandomAutomata {
@@ -89,7 +89,7 @@ public final class RandomAutomata {
 
     public static <I> DefaultOneSEVPA<I> randomOneSEVPA(Random r,
                                                         int locCount,
-                                                        VPDAlphabet<I> alphabet,
+                                                        VPAlphabet<I> alphabet,
                                                         double acceptanceProb,
                                                         double initialRetTransProb,
                                                         boolean minimize) {
@@ -104,7 +104,7 @@ public final class RandomAutomata {
 
     public static <I> DefaultOneSEVPA<I> randomOneSEVPA(Random r,
                                                         int locCount,
-                                                        VPDAlphabet<I> alphabet,
+                                                        VPAlphabet<I> alphabet,
                                                         double acceptanceProb,
                                                         double initialRetTransProb,
                                                         boolean minimize,
@@ -174,7 +174,10 @@ public final class RandomAutomata {
         return randomSPA(random, alphabet, procedureSize, true);
     }
 
-    public static <I> SPA<?, I> randomSPA(Random random, ProceduralInputAlphabet<I> alphabet, int procedureSize, boolean minimize) {
+    public static <I> SPA<?, I> randomSPA(Random random,
+                                          ProceduralInputAlphabet<I> alphabet,
+                                          int procedureSize,
+                                          boolean minimize) {
 
         SPA<?, I> result;
 
@@ -197,7 +200,10 @@ public final class RandomAutomata {
         return randomSBA(random, alphabet, procedureSize, true);
     }
 
-    public static <I> SBA<?, I> randomSBA(Random random, ProceduralInputAlphabet<I> alphabet, int procedureSize, boolean minimize) {
+    public static <I> SBA<?, I> randomSBA(Random random,
+                                          ProceduralInputAlphabet<I> alphabet,
+                                          int procedureSize,
+                                          boolean minimize) {
 
         assert procedureSize > 1;
 

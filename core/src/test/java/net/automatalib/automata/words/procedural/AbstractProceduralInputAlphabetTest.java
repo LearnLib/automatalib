@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableMap;
-import net.automatalib.automata.words.vpda.AbstractVPDAlphabetTest;
+import net.automatalib.automata.words.vpa.AbstractVPAlphabetTest;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.mappings.Mapping;
 import net.automatalib.words.Alphabet;
@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
  * @author frohme
  */
 public abstract class AbstractProceduralInputAlphabetTest<M extends ProceduralInputAlphabet<Character>>
-        extends AbstractVPDAlphabetTest<Character, M> {
+        extends AbstractVPAlphabetTest<Character, M> {
 
     private final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
     private final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');

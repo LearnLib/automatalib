@@ -29,7 +29,7 @@ import net.automatalib.automata.graphs.TransitionEdge;
 import net.automatalib.automata.procedural.SBA;
 import net.automatalib.automata.procedural.SPA;
 import net.automatalib.automata.procedural.SPMM;
-import net.automatalib.automata.vpda.OneSEVPA;
+import net.automatalib.automata.vpa.OneSEVPA;
 import net.automatalib.commons.util.collections.CollectionsUtil;
 import net.automatalib.graphs.Graph;
 import net.automatalib.graphs.UniversalGraph;
@@ -40,14 +40,14 @@ import net.automatalib.util.automata.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.util.automata.procedural.SBAUtil;
 import net.automatalib.util.automata.procedural.SPAUtil;
 import net.automatalib.util.automata.procedural.SPMMUtil;
-import net.automatalib.util.automata.vpda.OneSEVPAUtil;
+import net.automatalib.util.automata.vpa.OneSEVPAUtil;
 import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.util.ts.TS;
 import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.VPDAlphabet;
+import net.automatalib.words.VPAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -192,7 +192,7 @@ public class Automata extends TS {
         return findSeparatingWord(reference, other, inputs) == null;
     }
 
-    public static <I> boolean testEquivalence(OneSEVPA<?, I> sevpa1, OneSEVPA<?, I> sevpa2, VPDAlphabet<I> inputs) {
+    public static <I> boolean testEquivalence(OneSEVPA<?, I> sevpa1, OneSEVPA<?, I> sevpa2, VPAlphabet<I> inputs) {
         return OneSEVPAUtil.testEquivalence(sevpa1, sevpa2, inputs);
     }
 
@@ -260,7 +260,7 @@ public class Automata extends TS {
 
     public static <I> @Nullable Word<I> findSeparatingWord(OneSEVPA<?, I> sevpa1,
                                                            OneSEVPA<?, I> sevpa2,
-                                                           VPDAlphabet<I> inputs) {
+                                                           VPAlphabet<I> inputs) {
         return OneSEVPAUtil.findSeparatingWord(sevpa1, sevpa2, inputs);
     }
 
