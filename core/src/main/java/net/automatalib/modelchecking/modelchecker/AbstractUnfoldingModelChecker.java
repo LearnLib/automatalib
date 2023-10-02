@@ -24,7 +24,7 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  * <p>
  * Unfolding a lasso is done according to two conditions:
  * 1. the lasso has to be unfolded a minimum number of times ({@link #getMinimumUnfolds()}.
- * 2. the lasso has to be unfolded relative to the number of states in an hypothesis, multiplied by some double
+ * 2. the lasso has to be unfolded relative to the number of states in a hypothesis, multiplied by some double
  * ({@link #getMultiplier()}.
  * <p>
  * Note that one can unfold a lasso a fixed number of times if the multiplier is set to {@code 0.0}.

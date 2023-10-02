@@ -403,7 +403,7 @@ public final class SPAUtil {
 
     /**
      * Computes a separating word for the two given {@link SPA}s, if existent. A separating word is a {@link Word} such
-     * that one {@link SPA} {@link SPA#accepts(Iterable) behaves} different than the other.
+     * that one {@link SPA} {@link SPA#accepts(Iterable) behaves} different from the other.
      *
      * @param spa1
      *         the first {@link SPA}

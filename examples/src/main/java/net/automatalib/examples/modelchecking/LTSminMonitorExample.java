@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Example for using LTSmin to perform modelchecking using monitors. Make sure to correctly setup your LTSmin
+ * Example for using LTSmin to perform modelchecking using monitors. Make sure to correctly set up your LTSmin
  * installation.
  * <p>
  * This example requires at least an LTSmin version ≥ 3.1.0.

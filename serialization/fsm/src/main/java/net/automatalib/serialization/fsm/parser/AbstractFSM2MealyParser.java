@@ -36,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An FSM parser for Mealy machines. It provides general functionality for both Mealy machines with straightforward edge
- * semantics, as well as alternating edge semantics.
+ * semantics, and alternating edge semantics.
  *
  * @param <I> the input type.
  * @param <O> the output type.
@@ -62,7 +62,7 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      * Constructs a new AbstractFSM2MealyParser.
      *
      * @param targetInputs
-     *         An collection containing the inputs which should constitute the input alphabet of the parsed automaton.
+     *         A collection containing the inputs which should constitute the input alphabet of the parsed automaton.
      *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser the input parser (see {@link #inputParser}).
      * @param outputParser the output parser (similar to {@code inputParser}).
@@ -102,7 +102,7 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
     }
 
     /**
-     * We don not care about data definitions.
+     * We do not care about data definitions.
      */
     @Override
     protected void parseDataDefinition(StreamTokenizer streamTokenizer) {}

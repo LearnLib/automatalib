@@ -95,7 +95,7 @@ public final class Alphabets {
      * @param <I>
      *         input symbol type
      *
-     * @return the same alphabet instance, casted to a {@link GrowingAlphabet}.
+     * @return the same alphabet instance, cast to a {@link GrowingAlphabet}.
      *
      * @throws GrowingAlphabetNotSupportedException
      *         if the given alphabet is not an instance of {@link GrowingAlphabet}.

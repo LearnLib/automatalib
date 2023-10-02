@@ -22,7 +22,7 @@ import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
 import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
 
 /**
- * Java representation of a "AWU" (sub-)formula.
+ * Java representation of an "AWU" (sub-)formula.
  *
  * @param <L>
  *         label type

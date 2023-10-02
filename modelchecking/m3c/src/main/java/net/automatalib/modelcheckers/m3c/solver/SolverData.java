@@ -77,7 +77,7 @@ public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     /**
-     * Returns a {@link Mapping} which maps nodes to their initial property transformer. This methods requires a {@link
+     * Returns a {@link Mapping} which maps nodes to their initial property transformer. This method requires a {@link
      * TransformerSerializer} as all property transform are stored as {@link String}s in this class. The returned map is
      * not cached and will be re-computed on each call.
      *

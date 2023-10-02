@@ -77,7 +77,7 @@ public final class ProcessUtil {
 
     /**
      * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
-     * process. Additionally allows to supply an input stream to the invoked program. Discards any output of the
+     * process. Additionally, allows to supply an input stream to the invoked program. Discards any output of the
      * process.
      *
      * @param commandLine
@@ -98,7 +98,7 @@ public final class ProcessUtil {
 
     /**
      * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
-     * process. Additionally allows to supply an input stream to the invoked program. Discards any output of the
+     * process. Additionally, allows to supply an input stream to the invoked program. Discards any output of the
      * process.
      *
      * @param commandLine
@@ -161,7 +161,7 @@ public final class ProcessUtil {
 
     /**
      * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
-     * process. Additionally allows to supply an input stream to the invoked program. Outputs of the process (both
+     * process. Additionally, allows to supply an input stream to the invoked program. Outputs of the process (both
      * normal and error) are passed to the {@code consumer}.
      *
      * @param commandLine
@@ -185,7 +185,7 @@ public final class ProcessUtil {
 
     /**
      * Runs the given set of command line arguments as a system process and returns the exit value of the spawned
-     * process. Additionally allows to supply an input stream to the invoked program. Outputs of the process (both
+     * process. Additionally, allows to supply an input stream to the invoked program. Outputs of the process (both
      * normal and error) are passed to the {@code consumer}.
      *
      * @param commandLine
@@ -238,7 +238,7 @@ public final class ProcessUtil {
     }
 
     /**
-     * Builds and starts a system process for the given set of command line arguments. Additionally allows to supply an
+     * Builds and starts a system process for the given set of command line arguments. Additionally, allows to supply an
      * input stream to the invoked program, as well as independent consumers for the process' standard and error output.
      * <p>
      * The consumers for the process' outputs run in separate threads, preventing potential deadlock scenarios where

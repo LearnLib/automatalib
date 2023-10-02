@@ -40,7 +40,7 @@ public final class PaigeTarjanExtractors {
     private PaigeTarjanExtractors() {}
 
     /**
-     * Translates the results of a coarsest stable partition computation into a deterministic automaton.
+     * Translates the results of the coarsest stable partition computation into a deterministic automaton.
      * <p>
      * This method is designed to match the following methods from {@link PaigeTarjanInitializers}:
      * <ul>

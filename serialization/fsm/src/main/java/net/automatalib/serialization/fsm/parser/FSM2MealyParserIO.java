@@ -40,12 +40,12 @@ public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O>
      * Constructs a new FSM2MealyParserIO. Use one of the static parse() methods to actually parse an FSM source.
      *
      * @param targetInputs
-     *         An collection containing the inputs which should constitute the input alphabet of the parsed automaton.
+     *         A collection containing the inputs which should constitute the input alphabet of the parsed automaton.
      *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser
      *         the input parser (see {@link #inputParser}).
      * @param outputParser
-     *         the output parser (similar to {@code inputParser}.
+     *         the output parser (similar to {@code inputParser}).
      */
     private FSM2MealyParserIO(@Nullable Collection<? extends I> targetInputs,
                               Function<String, I> inputParser,

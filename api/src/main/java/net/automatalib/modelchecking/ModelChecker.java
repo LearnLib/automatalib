@@ -23,7 +23,7 @@ import net.automatalib.exception.ModelCheckingException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A model checker checks whether a given automaton satisfies a given property. If the property can not be satisfied it
+ * A model-checker checks whether a given automaton satisfies a given property. If the property can not be satisfied it
  * provides counter examples. In fact, the counter examples is an automaton which language is a subset of the language
  * of the given automaton.
  *
@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <P>
  *         the property type
  * @param <R>
- *         the type of a counterexample
+ *         the type of counterexample
  *
  * @author Jeroen Meijer
  */

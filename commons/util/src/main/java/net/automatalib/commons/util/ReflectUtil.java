@@ -101,7 +101,7 @@ public final class ReflectUtil {
     }
 
     /**
-     * See {@link #findMethod(Class, String, Class...)}. This variation does not required the types of input parameters,
+     * See {@link #findMethod(Class, String, Class...)}. This variation does not require the types of input parameters,
      * but can handle the actual objects, which should be passed to the method.
      *
      * @param clazz

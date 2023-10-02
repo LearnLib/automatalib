@@ -46,7 +46,7 @@ public interface InputModelSerializer<I, M extends SimpleTS<?, I>> extends Model
      * @param model
      *         the model to write
      * @param alphabet
-     *         the inputs of the model to which serialization should be limit
+     *         the inputs of the model to which serialization should be limited
      *
      * @throws IOException
      *         when writing to the output stream fails.
@@ -61,7 +61,7 @@ public interface InputModelSerializer<I, M extends SimpleTS<?, I>> extends Model
      * @param model
      *         the model to write
      * @param alphabet
-     *         the inputs of the model to which serialization should be limit
+     *         the inputs of the model to which serialization should be limited
      *
      * @throws IOException
      *         when writing to the output stream fails.

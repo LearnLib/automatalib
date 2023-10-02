@@ -23,7 +23,7 @@ import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.ts.UniversalTransitionSystem;
 
 /**
- * A universal automaton is a generalized representation of automata, with a unified access to the properties of states
+ * A universal automaton is a generalized representation of automata, with unified access to the properties of states
  * and transitions. See {@link UniversalTransitionSystem} for a further explanation of this concept.
  *
  * @param <S>

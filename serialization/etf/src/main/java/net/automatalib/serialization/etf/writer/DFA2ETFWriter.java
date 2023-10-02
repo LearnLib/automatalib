@@ -35,7 +35,7 @@ public final class DFA2ETFWriter<I> extends AbstractETFWriter<I, DFA<?, I>> {
     private static final DFA2ETFWriter<?> INSTANCE = new DFA2ETFWriter<>();
 
     /**
-     * Writes the type of the edge. A DFA edge contains one label, named 'letter', of type 'letter.
+     * Writes the type of the edge. A DFA edge contains one label, named 'letter', of type 'letter'.
      *
      * @param pw the Writer.
      */
@@ -48,7 +48,7 @@ public final class DFA2ETFWriter<I> extends AbstractETFWriter<I, DFA<?, I>> {
 
     /**
      * Write DFA specific parts in the ETF.
-     *
+     * <p>
      *  - initial state,
      *  - the valuations for the state 'id',
      *  - the letters in the alphabet,

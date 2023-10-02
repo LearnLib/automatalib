@@ -40,12 +40,13 @@ import net.automatalib.words.impl.Alphabets;
  * Another important feature is that rejecting states are NOT part of the LTS. This avoids the need for an unconditional
  * fairness constraint in LTL formulae.
  *
- * @param <I> the input type.
- * @param <R> the type of a counterexample
- *
- * @see DFAs#isPrefixClosed(DFA, Collection)
+ * @param <I>
+ *         the input type.
+ * @param <R>
+ *         the type of counterexample
  *
  * @author Jeroen Meijer
+ * @see DFAs#isPrefixClosed(DFA, Collection)
  */
 public interface LTSminDFA<I, R> extends LTSmin<I, DFA<?, I>, R>, ModelChecker.DFAModelChecker<I, String, R> {
 
@@ -76,8 +77,10 @@ public interface LTSminDFA<I, R> extends LTSmin<I, DFA<?, I>, R>, ModelChecker.D
      * @param <S>
      *         the state type
      *
-     * @throws IOException if the dfa couldn't be written to the provided file.
-     * @throws ModelCheckingException if the dfa cannot be transformed into a valid LTS.
+     * @throws IOException
+     *         if the dfa couldn't be written to the provided file.
+     * @throws ModelCheckingException
+     *         if the dfa cannot be transformed into a valid LTS.
      */
     default <S> void dfa2ETF(DFA<S, I> dfa, Collection<? extends I> inputs, File etf) throws IOException {
         // check that the DFA rejects the empty language

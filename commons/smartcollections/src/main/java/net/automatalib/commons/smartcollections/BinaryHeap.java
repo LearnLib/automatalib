@@ -389,7 +389,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
          * @param element
          *         the element stored in this entry.
          */
-        protected Reference(int index, E element) {
+        Reference(int index, E element) {
             this.element = element;
             this.index = index;
         }

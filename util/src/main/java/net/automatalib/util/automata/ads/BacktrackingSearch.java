@@ -214,7 +214,7 @@ public final class BacktrackingSearch {
     }
 
     /**
-     * Computes an ADS by iterating over the successor tree in a breadth-first manner, yielding an optimal (dependant on
+     * Computes an ADS by iterating over the successor tree in a breadth-first manner, yielding an optimal (dependent on
      * the passed optimization function) ADS.
      *
      * @param automaton

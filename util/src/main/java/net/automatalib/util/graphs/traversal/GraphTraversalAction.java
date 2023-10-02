@@ -16,7 +16,7 @@
 package net.automatalib.util.graphs.traversal;
 
 /**
- * The type of a {@link GraphTraversalAction} to be performed.
+ * The type of {@link GraphTraversalAction} to be performed.
  *
  * @author Malte Isberner
  */

@@ -93,9 +93,9 @@ public final class MealyMachines {
     }
 
     /**
-     * Constructs a copy of the given Mealy machine in which every transition (with regards to the specified alphabet)
-     * is guaranteed to be defined. This includes adding an additional sink state if the original Mealy machine has
-     * undefined transitions.
+     * Constructs a copy of the given Mealy machine in which every transition (in regard to the specified alphabet) is
+     * guaranteed to be defined. This includes adding a sink state if the original Mealy machine has undefined
+     * transitions.
      *
      * @param mealy
      *         the original Mealy machine
@@ -108,7 +108,7 @@ public final class MealyMachines {
      * @param <O>
      *         output symbol type
      *
-     * @return a copy of the given Mealy machine in which every transition (with regards to the specified alphabet) is
+     * @return a copy of the given Mealy machine in which every transition (in regard to the specified alphabet) is
      * guaranteed to be defined
      */
     public static <I, O> CompactMealy<I, O> complete(MealyMachine<?, I, ?, O> mealy,
@@ -118,9 +118,9 @@ public final class MealyMachines {
     }
 
     /**
-     * Constructs a copy of the given Mealy machine in which every transition (with regards to the specified alphabet)
-     * is guaranteed to be defined. This includes adding an additional sink state if the original Mealy machine has
-     * undefined transitions.
+     * Constructs a copy of the given Mealy machine in which every transition (in regard to the specified alphabet) is
+     * guaranteed to be defined. This includes adding a sink state if the original Mealy machine has undefined
+     * transitions.
      *
      * @param mealy
      *         the original Mealy machine

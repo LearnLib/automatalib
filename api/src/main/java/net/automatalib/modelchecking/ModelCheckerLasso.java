@@ -30,7 +30,7 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
  * @param <P>
  *         the property type.
  * @param <R>
- *         the type of a counterexample
+ *         the type of counterexample
  *
  * @author Jeroen Meijer
  */

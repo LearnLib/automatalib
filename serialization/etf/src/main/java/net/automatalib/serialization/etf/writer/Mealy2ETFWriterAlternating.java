@@ -57,13 +57,13 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
 
     /**
      * Write the specific parts of the ETF for Mealy machines with alternating edge semantics.
-     *
+     * <p>
      * Writes:
      *  - the initial state,
      *  - the transitions,
      *  - the valuations for the state ids,
      *  - the letters from the alphabet.
-     *
+     * <p>
      * Note that in this context, the alphabet that is written to ETF is not just the inputs, it is the union of
      * inputs and outputs, of type 'letter'.
      *

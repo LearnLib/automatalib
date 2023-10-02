@@ -50,7 +50,7 @@ public interface SimpleAutomatonSerializer<I> extends InputModelSerializer<I, Si
      * @param model
      *         the model to write
      * @param alphabet
-     *         the inputs of the model to which serialization should be limit
+     *         the inputs of the model to which serialization should be limited
      * @param inputTransformer
      *         a function to transform the inputs of the model to the inputs of {@code this} serializer.
      * @param <I2>
@@ -72,7 +72,7 @@ public interface SimpleAutomatonSerializer<I> extends InputModelSerializer<I, Si
      * @param model
      *         the model to write
      * @param alphabet
-     *         the inputs of the model to which serialization should be limit
+     *         the inputs of the model to which serialization should be limited
      * @param inputTransformer
      *         a function to transform the inputs of the model to the inputs of {@code this} serializer.
      * @param <I2>

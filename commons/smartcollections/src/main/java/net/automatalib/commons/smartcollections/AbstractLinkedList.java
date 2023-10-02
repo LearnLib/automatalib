@@ -68,7 +68,7 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
     }
 
     /**
-     * Concatenates two linked lists. All elements of the specified list (which will be empty afterwards) are added at
+     * Concatenates two linked lists. All elements of the specified list (which will be empty afterward) are added at
      * the end of this list. This operation runs in constant time.
      *
      * @param other

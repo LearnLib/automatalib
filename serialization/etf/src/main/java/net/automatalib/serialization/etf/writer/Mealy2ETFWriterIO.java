@@ -52,7 +52,7 @@ public final class Mealy2ETFWriterIO<I, O> extends AbstractETFWriter<I, MealyMac
 
     /**
      * Write ETF parts specific for Mealy machines with IO semantics.
-     *
+     * <p>
      * Writes:
      *  - the initial state,
      *  - the valuations for the state ids,

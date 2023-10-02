@@ -24,9 +24,9 @@ import net.automatalib.modelchecking.ModelCheckerCache.DFAModelCheckerCache;
 /**
  * A DFAModelCheckerCache that invalidates the cached counter examples when
  * {@link ModelChecker#findCounterExample(Object, Collection, Object)} is called with a DFA with a size different, and
- * an input alphabet different than the previous call.
+ * an input alphabet different from the previous call.
  * <p>
- * In active learning the automaton increases in size with every proper counter example. Hence these caches are useful
+ * In active learning the automaton increases in size with every proper counter example. Hence, these caches are useful
  * in between calls to disproving properties and finding counter examples to hypotheses.
  *
  * @param <I>

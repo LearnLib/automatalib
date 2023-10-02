@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * @param <A>
  *         the automaton type.
  * @param <R>
- *         the type of a counterexample
+ *         the type of counterexample
  *
  * @author Jeroen Meijer
  * @see <a href="http://ltsmin.utwente.nl">http://ltsmin.utwente.nl</a>

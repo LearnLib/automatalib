@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Example for using LTSmin to perform modelchecking. Make sure to correctly setup your LTSmin installation.
+ * Example for using LTSmin to perform modelchecking. Make sure to correctly set up your LTSmin installation.
  * <p>
  * This example requires at least an LTSmin version ≥ 3.0.0.
  *

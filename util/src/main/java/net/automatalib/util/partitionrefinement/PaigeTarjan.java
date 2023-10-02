@@ -31,7 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * this class nor any of its methods/referenced objects are exposed at an API level.
  * <p>
  * This class stores most of its internal data in several, or possibly even a single, (mostly {@code int}) array(s), to
- * achieve maximal cache efficiency. The layout of of these arrays is described in the documentation of the respective
+ * achieve maximal cache efficiency. The layout of these arrays is described in the documentation of the respective
  * public fields: <ul> <li>{@link #blockData}</li> <li>{@link #predOfsData}</li> <li>{@link #predData}</li> <li>{@link
  * #blockForState}</li> </ul> The {@link PaigeTarjanInitializers} provides methods for initializing this data structure
  * for common cases (e.g., DFA minimization). Similarly, the {@link PaigeTarjanExtractors} class provides methods for

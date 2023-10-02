@@ -34,7 +34,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Parses a Mealy machine with alternating edge semantics from an FSM source.
- *
+ * <p>
  * Some public static parse() methods accept an {@link Output} object. This is used as follows.
  * If the Mealy machine that is read from the FSM file has no defined output symbol after an input word. The
  * last output symbol is taken from {@link Output#computeOutput(Iterable)}. If a parse() method is used that does not
@@ -59,7 +59,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     public static final String INPUT_HAS_NO_OUTPUT = "FSM input '%s' at state '%d' has no corresponding output";
 
     /**
-     * A multi-map containing all outgoing transitions from a state in the FSM source.
+     * A multimap containing all outgoing transitions from a state in the FSM source.
      */
     private final Multimap<Integer, Pair<String, Integer>> transitionsFSM = ArrayListMultimap.create();
 
@@ -138,7 +138,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      * <p>
      * This method will for each new state make transitions.
      * This is done by switching behavior between input, and output transitions in the FSM source.
-     *
+     * <p>
      * This is a recursive DFS.
      *
      * @param currentState

@@ -26,14 +26,17 @@ import net.automatalib.serialization.fsm.parser.FSM2MealyParserIO;
 import net.automatalib.words.impl.Alphabets;
 
 /**
- * An model checker using LTSmin for Mealy machines using synchronous edge semantics.
+ * A model checker using LTSmin for Mealy machines using synchronous edge semantics.
+ * <p>
+ * The implementation uses {@link FSM2MealyParserIO}, and {@link Mealy2ETFWriterIO}, to read the {@link MealyMachine},
+ * and write the {@link MealyMachine} respectively.
  *
- * The implementation uses {@link FSM2MealyParserIO}, and {@link Mealy2ETFWriterIO}, to read the {@link
- * MealyMachine}, and write the {@link MealyMachine} respectively.
- *
- * @param <I> the input type.
- * @param <O> the output type.
- * @param <R> the type of a counterexample
+ * @param <I>
+ *         the input type.
+ * @param <O>
+ *         the output type.
+ * @param <R>
+ *         the type of counterexample
  *
  * @author Jeroen Meijer
  */

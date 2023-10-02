@@ -65,7 +65,7 @@ public final class PaigeTarjanInitializers {
      * The return value of the {@code initialClassification} function can be any valid {@code Object} reference (even
      * {@code null}). States are initially placed in the same partition class if their return values from applying
      * {@code initialClassification} have the same hash code (determined according to {@link Objects#hashCode(Object)})
-     * and are equal (determined according to {@link Objects#equals(Object, Object)}.
+     * and are equal (determined according to {@link Objects#equals(Object, Object)}).
      *
      * @param pt
      *         the partition refinement data structure

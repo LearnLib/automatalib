@@ -34,7 +34,6 @@ import net.automatalib.commons.util.io.UnclosableOutputStream;
 import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.ArrayAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -71,8 +70,6 @@ public class AUTSerializationTest {
         try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/sinkStateTest.aut")) {
             final SimpleAutomaton<Integer, String> automaton = AUTParser.readAutomaton(is).model;
             Assert.assertEquals(3, automaton.size());
-
-            final Alphabet<String> alphabet = new ArrayAlphabet<String>("input", "output");
 
             final Set<Integer> s0 = automaton.getInitialStates();
             final Set<Integer> t1 = automaton.getSuccessors(s0, Collections.singletonList("input"));

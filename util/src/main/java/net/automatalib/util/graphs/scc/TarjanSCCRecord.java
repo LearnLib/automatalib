@@ -24,7 +24,7 @@ final class TarjanSCCRecord {
     public final int number;
 
     /**
-     * The id of the SCC of the node. Initially it is assumed that each nodes has its own SCC, thus this value is
+     * The id of the SCC of the node. Initially it is assumed that each node has its own SCC, thus this value is
      * initialized with {@link #number}.
      */
     public int sccId;

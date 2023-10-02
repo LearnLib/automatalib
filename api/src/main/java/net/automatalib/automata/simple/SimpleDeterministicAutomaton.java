@@ -87,7 +87,7 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
         /**
          * Representative for an invalid state. This is the value being returned by methods that would return {@code
          * null} in their non-abstracted version. However, for determining whether a state is valid or not, code should
-         * never rely on the corresponding integer being equal to this value, since any integer outside of the range
+         * never rely on the corresponding integer being equal to this value, since any integer outside the range
          * {@code [0, size() - 1]} is invalid, in particular all negative integers.
          */
         int INVALID_STATE = -1;

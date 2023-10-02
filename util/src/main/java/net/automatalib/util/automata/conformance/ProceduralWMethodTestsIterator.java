@@ -109,7 +109,7 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
             return as;
         }
 
-        @SuppressWarnings("assignment.type.incompatible")
+        @SuppressWarnings("methodref.return.invalid") // we only iterate over accessible procedures
         final Word<I> exp = this.alphabet.expand(testSequence.prefix(-1), this.atSequences.terminatingSequences::get);
 
         return Word.fromWords(as, exp, Word.fromLetter(testSequence.lastSymbol()));

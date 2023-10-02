@@ -27,8 +27,8 @@ import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * An iterator for the state cover of an automaton. Words are computed lazily (i.e. only when request by {@link
- * #next()}.
+ * An iterator for the state cover of an automaton. Words are computed lazily (i.e., only when request by {@link
+ * #next()}).
  * <p>
  * Supports incremental computation, i.e. given a set of cover traces, only sequences for states not covered by these
  * traces are returned.

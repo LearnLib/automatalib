@@ -52,7 +52,7 @@ public interface WorksetMappingAlgorithm<T, E, R> {
     Collection<T> update(Map<T, E> mapping, T currentT);
 
     /**
-     * Provides the result of this algorithms internal action. More precise, this function returns the accumulated
+     * Provides the result of this algorithm's internal action. More precise, this function returns the accumulated
      * object E after the successful application of <i>all</i> {@link #update(Map, Object) update} calls.
      *
      * @return the resulting object

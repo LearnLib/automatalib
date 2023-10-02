@@ -35,7 +35,7 @@ import net.automatalib.util.partitionrefinement.StateSignature;
 import net.automatalib.words.Alphabet;
 
 /**
- * A utility class that offers short-hand methods for minimizing automata using the partition refinement approach of
+ * A utility class that offers shorthand methods for minimizing automata using the partition refinement approach of
  * {@link PaigeTarjan}.
  * <p>
  * This implementation is specifically tailored towards partial automata by allowing to provide a custom {@code

@@ -39,6 +39,7 @@ import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * @author frohme
@@ -50,15 +51,15 @@ final class NSEVPAConverter {
     }
 
     public static <I> SEVPA<?, I> convert(SPA<?, I> spa) {
-        final Map<I, List<Pair<Word<I>, Word<I>>>> contextPairs = computeContextPairs(spa);
+        final Map<@Nullable I, List<Pair<Word<I>, Word<I>>>> contextPairs = computeContextPairs(spa);
         return constructNSEVPA(spa, contextPairs);
     }
 
-    private static <I> Map<I, List<Pair<Word<I>, Word<I>>>> computeContextPairs(SPA<?, I> spa) {
+    private static <I> Map<@Nullable I, List<Pair<Word<I>, Word<I>>>> computeContextPairs(SPA<?, I> spa) {
 
         final ATRSequences<I> atrSequences = SPAUtil.computeATRSequences(spa);
         final ProceduralInputAlphabet<I> inputAlphabet = spa.getInputAlphabet();
-        final Map<I, List<Pair<Word<I>, Word<I>>>> contextPairs =
+        final Map<@Nullable I, List<Pair<Word<I>, Word<I>>>> contextPairs =
                 Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls() + 1);
 
         contextPairs.put(null, Collections.singletonList(Pair.of(Word.epsilon(), Word.epsilon())));
@@ -105,7 +106,8 @@ final class NSEVPAConverter {
         return result;
     }
 
-    private static <I> SEVPA<?, I> constructNSEVPA(SPA<?, I> spa, Map<I, List<Pair<Word<I>, Word<I>>>> contextPairs) {
+    private static <I> SEVPA<?, I> constructNSEVPA(SPA<?, I> spa,
+                                                   Map<@Nullable I, List<Pair<Word<I>, Word<I>>>> contextPairs) {
 
         final ProceduralInputAlphabet<I> alphabet = spa.getInputAlphabet();
         final Map<Word<I>, Location> mainLocations = new HashMap<>();
@@ -252,12 +254,12 @@ final class NSEVPAConverter {
 
     private static class ModuleContext<I> {
 
-        final I procedure;
+        final @Nullable I procedure;
         final Word<I> sp;
         final Map<Word<I>, Location> locationMap;
         final Map<BitSet, Location> signatureMap;
 
-        ModuleContext(I procedure, Word<I> sp, Map<Word<I>, Location> locationMap, Map<BitSet, Location> signatureMap) {
+        ModuleContext(@Nullable I procedure, Word<I> sp, Map<Word<I>, Location> locationMap, Map<BitSet, Location> signatureMap) {
             this.procedure = procedure;
             this.sp = sp;
             this.locationMap = locationMap;

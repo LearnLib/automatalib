@@ -23,7 +23,8 @@ import net.automatalib.automata.simple.SimpleAutomaton;
 import net.automatalib.serialization.InputModelData;
 
 /**
- * A parser for automata specified in the AUT format (see http://cadp.inria.fr/man/aut.html for further information).
+ * A parser for automata specified in the AUT format (see <a
+ * href="http://cadp.inria.fr/man/aut.html">http://cadp.inria.fr/man/aut.html</a> for further information).
  *
  * @author frohme
  */

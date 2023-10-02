@@ -174,10 +174,10 @@ public interface SmartCollection<E> extends Collection<E> {
 
     /**
      * Quickly clears this collection. This method is supposed to perform the minimum amount of effort such that this
-     * collection is emptied, disregarding all other side-effects such as referencing or garbage collection issues.
+     * collection is emptied, disregarding all other side effects such as referencing or garbage collection issues.
      * <p>
      * Depending on the implementation, this may be just the same as {@link Collection#clear()}. However, this could
-     * also have side-effects like hampering the garbage collection or such.
+     * also have side effects like hampering the garbage collection or such.
      * <p>
      * After calling this method, even a call of the normal {@link Collection#clear()} is not guaranteed to fix all
      * these issues. This can only be achieved by the method {@link #deepClear()} below.

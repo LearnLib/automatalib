@@ -26,9 +26,12 @@ import net.automatalib.modelchecking.ModelChecker;
 /**
  * An LTSmin model checker.
  *
- * @param <I> the input type.
- * @param <A> the automaton type.
- * @param <R> the type of a counterexample
+ * @param <I>
+ *         the input type.
+ * @param <A>
+ *         the automaton type.
+ * @param <R>
+ *         the type of counterexample
  *
  * @author Jeroen Meijer
  */

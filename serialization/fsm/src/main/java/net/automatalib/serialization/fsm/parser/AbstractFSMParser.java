@@ -76,7 +76,7 @@ public abstract class AbstractFSMParser<I> {
      * Constructs a new AbstractFSMParser and defines all possible tokens.
      *
      * @param targetInputs
-     *         An collection containing the inputs which should constitute the input alphabet of the parsed automaton.
+     *         A collection containing the inputs which should constitute the input alphabet of the parsed automaton.
      *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser the Function that parses strings in the FSM file to input.
      */
@@ -210,8 +210,8 @@ public abstract class AbstractFSMParser<I> {
      * and this method expects to parse state vectors. The behavior is similar for state vectors and transitions.
      * For each line this method will increment {@link #partLineNumber}, and reset it when a new part in the FSM file
      * begins.
-     *
-     * Note that {@link StreamTokenizer} allows one to push back tokens. This is used whenever we have checked type
+     * <p>
+     * Note that {@link StreamTokenizer} allows one to push back tokens. This is used whenever we have checked the
      * type of token we are going to read.
      *
      * @param reader

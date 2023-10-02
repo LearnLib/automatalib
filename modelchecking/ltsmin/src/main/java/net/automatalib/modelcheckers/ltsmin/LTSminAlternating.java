@@ -27,13 +27,16 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * A model checker using LTSmin for Mealy machines using alternating edge semantics.
- *
+ * <p>
  * The implementation uses {@link FSM2MealyParserAlternating}, and {@link Mealy2ETFWriterAlternating}, to read the
  * {@link MealyMachine}, and write the {@link MealyMachine} respectively.
  *
- * @param <I> the input type.
- * @param <O> the output type.
- * @param <R> the type of a counterexample
+ * @param <I>
+ *         the input type.
+ * @param <O>
+ *         the output type.
+ * @param <R>
+ *         the type of counterexample
  *
  * @author Jeroen Meijer
  */

@@ -23,7 +23,7 @@ import java.util.function.Function;
  * <p>
  * A mapping is very much like a {@link Map}, but the perspective is a different one: Whereas a map is a (particularly
  * finite) key/value collection, a mapping is more like a function: it does not support retrieval of all keys or values,
- * because it does not requires them to be stored at all. Instead, they can be calculated on the fly upon an invocation
+ * because it does not require them to be stored at all. Instead, they can be calculated on the fly upon an invocation
  * of {@link #get(Object)}.
  *
  * @param <D>

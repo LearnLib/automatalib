@@ -105,7 +105,7 @@ public final class IOUtil {
     }
 
     /**
-     * Returns an input stream that reads the contents of the given file. Additionally buffers the input stream to
+     * Returns an input stream that reads the contents of the given file. Additionally, buffers the input stream to
      * improve performance.
      *
      * @param file
@@ -138,7 +138,7 @@ public final class IOUtil {
     }
 
     /**
-     * Returns an output stream that writes the contents to the given file. Additionally buffers the input stream to
+     * Returns an output stream that writes the contents to the given file. Additionally, buffers the input stream to
      * improve performance.
      *
      * @param file
@@ -155,7 +155,7 @@ public final class IOUtil {
 
     /**
      * Returns a reader that parses the contents of the given file with {@link StandardCharsets#UTF_8} encoding.
-     * Additionally buffers the input stream to improve performance.
+     * Additionally, buffers the input stream to improve performance.
      *
      * @param file
      *         the file to read
@@ -200,7 +200,7 @@ public final class IOUtil {
 
     /**
      * Returns a writer that writes contents to the given file with {@link StandardCharsets#UTF_8} encoding.
-     * Additionally buffers the input stream to improve performance.
+     * Additionally, buffers the input stream to improve performance.
      *
      * @param file
      *         the file to write to

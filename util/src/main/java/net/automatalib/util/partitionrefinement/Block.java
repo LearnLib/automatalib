@@ -38,7 +38,7 @@ public class Block {
     public int low;
     /**
      * The current pointer, i.e., the delimiter between elements of this block which were found to belong to a potential
-     * sub-class of this block, and those that do not or have not been checked.
+     * subclass of this block, and those that do not or have not been checked.
      * <p>
      * This variable will be maintained such that either <code>ptr == -1</code>, or <code>{@link #low} &lt;= ptr &lt;=
      * {@link #high}</code>.

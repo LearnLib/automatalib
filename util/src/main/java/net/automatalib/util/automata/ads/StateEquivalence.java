@@ -90,7 +90,7 @@ public final class StateEquivalence {
 
         final Word<I> separatingWord = Automata.findSeparatingWord(automaton, s1, s2, input);
 
-        // sep word may be non existent, if current hypothesis is not consistent
+        // sep word may be non-existent, if current hypothesis is not consistent
         if (separatingWord == null) {
             return Optional.empty();
         }

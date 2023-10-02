@@ -35,7 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An monitor model checker using LTSmin for Mealy machines.
+ * A monitor model checker using LTSmin for Mealy machines.
  *
  * @param <I>
  *         the input type.

@@ -82,7 +82,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
      * Constructs an FSM2DFAParser. To parse a DFA use one of the parse() methods.
      *
      * @param targetInputs
-     *         An collection containing the inputs which should constitute the input alphabet of the parsed automaton.
+     *         A collection containing the inputs which should constitute the input alphabet of the parsed automaton.
      *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
      * @param inputParser
      *         the input parser (see {@link AbstractFSMParser#inputParser}).

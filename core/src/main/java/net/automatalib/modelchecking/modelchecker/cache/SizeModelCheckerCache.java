@@ -37,14 +37,14 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <P>
  *         the property type
  * @param <R>
- *         the result type of a call to {@link #findCounterExample(SimpleAutomaton, Collection, Object)}.
+ *         the result type of call to {@link #findCounterExample(SimpleAutomaton, Collection, Object)}.
  */
 class SizeModelCheckerCache<I, A extends SimpleAutomaton<?, I>, P, R> implements ModelCheckerCache<I, A, P, R> {
 
     /**
      * The actual cache. We need to wrap R in an {@link Optional} because {@link Map#computeIfAbsent(Object, Function)}
      * does not accept null values. Results from {@link ModelChecker#findCounterExample(Object, Collection, Object)} can
-     * be null however.
+     * be null, however.
      */
     private final Map<Pair<Collection<? extends I>, P>, Optional<R>> counterExamples = new HashMap<>();
 

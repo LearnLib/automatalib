@@ -24,7 +24,7 @@ import net.automatalib.automata.transducers.MealyMachine;
 import net.automatalib.words.Word;
 
 /**
- * A lasso is an single infinite word.
+ * A lasso is a single infinite word.
  * <p>
  * The implementation is an automaton such that its singleton language is the infinite word. Also, the implementation is
  * actually the finite representation (by unrolling the loop) of the infinite word, including information how many times
@@ -68,13 +68,13 @@ public interface Lasso<I, D> extends DetOutputAutomaton<Integer, I, Integer, D>,
     D getOutput();
 
     /**
-     * The sorted set containing some symbol indices after which the begin state of the loop is visited.
+     * The sorted set containing some symbol indices after which the beginning state of the loop is visited.
      */
     SortedSet<Integer> getLoopBeginIndices();
 
     /**
      * Returns the number of times the loop is unfolded.
-     *
+     * <p>
      * The returned value is always greater than 0.
      *
      * @return the number of times the loop is unfolded.

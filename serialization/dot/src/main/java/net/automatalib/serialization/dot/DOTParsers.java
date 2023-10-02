@@ -94,7 +94,7 @@ public final class DOTParsers {
     };
 
     /**
-     * Edge input parser that parses an edges's "{@link EdgeAttrs#LABEL label}" attribute and returns its {@link
+     * Edge input parser that parses an edge's "{@link EdgeAttrs#LABEL label}" attribute and returns its {@link
      * Object#toString() string} representation. Returns {@code null} if the attribute is not specified.
      */
     public static final Function<Map<String, String>, @Nullable String> DEFAULT_EDGE_PARSER =
@@ -122,7 +122,7 @@ public final class DOTParsers {
     };
 
     /**
-     * Edge input parser that parses an edges's {@link MTSEdgeAttrs#MODALITY modality} attribute and constructs a
+     * Edge input parser that parses an edge's {@link MTSEdgeAttrs#MODALITY modality} attribute and constructs a
      * corresponding {@link MutableModalEdgeProperty}. Throws an {@link IllegalArgumentException} if the attribute is
      * missing or doesn't match its expected {@link ModalType format}.
      */

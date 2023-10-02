@@ -34,9 +34,9 @@ public interface VisualizationHelper<N, E> {
     default void getGlobalEdgeProperties(Map<String, String> properties) {}
 
     /**
-     * Retrieves the properties for rendering a single node. Additionally, the return value allows to control whether or
-     * not to omit this node from rendering. If {@code false} is returned, the node will not be rendered. Consequently,
-     * any modifications to the properties map will have no effect.
+     * Retrieves the properties for rendering a single node. Additionally, the return value allows to control whether to
+     * omit this node from rendering. If {@code false} is returned, the node will not be rendered. Consequently, any
+     * modifications to the properties map will have no effect.
      * <p>
      * The properties are stored in the {@link Map} argument. Note that if an implementation of a base class is
      * overridden, it is probably a good idea to call {@code super.getNodeProperties(node, properties);} at the
@@ -52,9 +52,9 @@ public interface VisualizationHelper<N, E> {
     boolean getNodeProperties(N node, Map<String, String> properties);
 
     /**
-     * Retrieves the properties for rendering a single edge. Additionally, the return value allows to control whether or
-     * not to omit this edge from rendering. If {@code false} is returned, the edge will not be rendered. Consequently,
-     * any modifications to the properties map will have no effect.
+     * Retrieves the properties for rendering a single edge. Additionally, the return value allows to control whether to
+     * omit this edge from rendering. If {@code false} is returned, the edge will not be rendered. Consequently, any
+     * modifications to the properties map will have no effect.
      * <p>
      * The properties are stored in the {@link Map} argument. Note that if an implementation of a base class is
      * overridden, it is probably a good idea to call {@code super.getEdgeProperties(node, properties);} at the
@@ -162,24 +162,6 @@ public interface VisualizationHelper<N, E> {
         public static final String MODALITY = "modality";
 
         private MTSEdgeAttrs() {
-            // prevent instantiation
-        }
-    }
-
-    class MCEdgeAttrs extends MTSEdgeAttrs {
-
-        public static final String CONTRACT = "contract";
-
-        private MCEdgeAttrs() {
-            // prevent instantiation
-        }
-    }
-
-    final class MMCEdgeAttrs extends MCEdgeAttrs {
-
-        public static final String MEMBERSHIP = "group";
-
-        private MMCEdgeAttrs() {
             // prevent instantiation
         }
     }

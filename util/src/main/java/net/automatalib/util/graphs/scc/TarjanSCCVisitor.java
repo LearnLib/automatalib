@@ -139,7 +139,7 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
         int tgtId = tgtData.sccId;
         /*
          * if during backtracking, we detect our successor has a lower scc id than we do, it belongs to an SCC of one of
-         * our ascendants. Thus we have detected a cycle and belong to the same SCC.
+         * our ascendants. Thus, we have detected a cycle and belong to the same SCC.
          */
         if (tgtId != SCC_FINISHED && tgtId < srcData.sccId) {
             srcData.sccId = tgtId;

@@ -30,7 +30,7 @@ import net.automatalib.automata.transducers.MealyMachine;
  * @param <P>
  *         the property type
  * @param <R>
- *         the type of a counterexample
+ *         the type of counterexample
  *
  * @author Jeroen Meijer
  */

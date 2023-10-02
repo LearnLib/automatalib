@@ -212,7 +212,7 @@ public class ADDTransformer<L, AP> extends AbstractPropertyTransformer<ADDTransf
                                                           EquationalBlock<L, AP> currentBlock) {
         assert this.add != null : "The identity function should never be updated";
         /* We create a new XDD where the information of this.add (the add before the update) is 'injected'
-        into rightDD, the first composition DD, such that the bits corresponding to subformulas outside of the current
+        into rightDD, the first composition DD, such that the bits corresponding to subformulas outside the current
         block are preserved */
         return this.add.apply((booleanVectorBeforeUpdate, booleanVectorRight) -> {
             boolean[] result = booleanVectorBeforeUpdate.data().clone();

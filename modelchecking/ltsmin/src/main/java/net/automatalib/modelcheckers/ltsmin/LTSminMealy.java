@@ -30,12 +30,15 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * A feature of this {@link net.automatalib.modelchecking.ModelChecker}, is that one can remove particular output
- * symbols from the a given MealyMachine hypothesis. This is useful when those symbols are actually symbols representing
+ * symbols from the given MealyMachine hypothesis. This is useful when those symbols are actually symbols representing
  * system deadlocks. When checking LTL formulae special attention has to be given to deadlock situations.
  *
- * @param <I> the input type
- * @param <O> the input type
- * @param <R> the type of a counterexample
+ * @param <I>
+ *         the input type
+ * @param <O>
+ *         the input type
+ * @param <R>
+ *         the type of counterexample
  *
  * @author Jeroen Meijer
  */
@@ -78,8 +81,8 @@ public interface LTSminMealy<I, O, R>
     void mealy2ETF(MealyMachine<?, I, ?, O> automaton, Collection<? extends I> inputs, File etf) throws IOException;
 
     /**
-     * Writes the {@link MealyMachine} to the {@code etf} file while pruning way the outputs given in {@link
-     * #getSkipOutputs()}.
+     * Writes the {@link MealyMachine} to the {@code etf} file while pruning way the outputs given in
+     * {@link #getSkipOutputs()}.
      *
      * @param mealyMachine
      *         the {@link MealyMachine} to write.

@@ -286,7 +286,7 @@ public final class SBAUtil {
 
     /**
      * Computes a separating word for the two given {@link SBA}s, if existent. A separating word is a {@link Word} such
-     * that one {@link SBA} {@link SBA#accepts(Iterable) behaves} different than the other.
+     * that one {@link SBA} {@link SBA#accepts(Iterable) behaves} different from the other.
      *
      * @param sba1
      *         the first {@link SBA}

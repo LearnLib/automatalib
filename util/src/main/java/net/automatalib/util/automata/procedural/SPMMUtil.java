@@ -85,7 +85,7 @@ public final class SPMMUtil {
     }
 
     /**
-     * Computes for a given {@link SPMM} the a of terminating sequences using the given
+     * Computes for a given {@link SPMM} the set of terminating sequences using the given
      * {@link ProceduralInputAlphabet alphabet}. Terminating sequences transfer a procedure from its initial state to a
      * returnable state. This method furthermore checks that the hierarchy of calls is well-defined, i.e. it only
      * includes procedural invocations <i>p</i> for determining a terminating sequence if <i>p</i> has a valid
@@ -279,7 +279,7 @@ public final class SPMMUtil {
 
     /**
      * Computes a separating word for the two given {@link SPMM}s, if existent. A separating word is a {@link Word} such
-     * that one {@link SPMM} {@link SPMM#computeOutput(Iterable) behaves} different than the other.
+     * that one {@link SPMM} {@link SPMM#computeOutput(Iterable) behaves} different from the other.
      *
      * @param spmm1
      *         the first {@link SPMM}

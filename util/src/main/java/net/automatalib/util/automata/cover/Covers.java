@@ -62,8 +62,8 @@ public final class Covers {
     }
 
     /**
-     * Returns an iterator for the sequences of a state cover. Sequences are computed lazily (i.e. as requested by the
-     * iterators {@link Iterator#next() next} method.
+     * Returns an iterator for the sequences of a state cover. Sequences are computed lazily (i.e., as requested by the
+     * iterators {@link Iterator#next() next} method).
      *
      * @param automaton
      *         the automaton for which the cover should be computed
@@ -107,8 +107,8 @@ public final class Covers {
     }
 
     /**
-     * Returns an iterator for the sequences of a transition cover. Sequences are computed lazily (i.e. as requested by
-     * the iterators {@link Iterator#next() next} method.
+     * Returns an iterator for the sequences of a transition cover. Sequences are computed lazily (i.e., as requested by
+     * the iterators {@link Iterator#next() next} method).
      *
      * @param automaton
      *         the automaton for which the cover should be computed
@@ -288,8 +288,8 @@ public final class Covers {
     }
 
     /**
-     * Returns an iterator for the remaining sequences of a state cover. Sequences are computed lazily (i.e. as
-     * requested by the iterators {@link Iterator#next() next} method.
+     * Returns an iterator for the remaining sequences of a state cover. Sequences are computed lazily (i.e., as
+     * requested by the iterators {@link Iterator#next() next} method).
      *
      * @param automaton
      *         the automaton for which the cover should be computed
@@ -341,8 +341,8 @@ public final class Covers {
     }
 
     /**
-     * Returns an iterator for the remaining sequences of a transition cover. Sequences are computed lazily (i.e. as
-     * requested by the iterators {@link Iterator#next() next} method.
+     * Returns an iterator for the remaining sequences of a transition cover. Sequences are computed lazily (i.e., as
+     * requested by the iterators {@link Iterator#next() next} method).
      *
      * @param automaton
      *         the automaton for which the cover should be computed

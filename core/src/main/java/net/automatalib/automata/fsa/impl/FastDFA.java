@@ -33,7 +33,7 @@ public final class FastDFA<I> extends AbstractFastMutableDet<FastDFAState, I, Fa
         return createState(WrapperUtil.booleanValue(accepting));
     }
 
-    protected FastDFAState createState(boolean accepting) {
+    private FastDFAState createState(boolean accepting) {
         return new FastDFAState(inputAlphabet.size(), accepting);
     }
 
