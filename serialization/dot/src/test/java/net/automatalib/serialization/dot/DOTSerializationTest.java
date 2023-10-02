@@ -45,7 +45,6 @@ import net.automatalib.graphs.ProceduralModalProcessGraph;
 import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.graphs.base.compact.CompactEdge;
 import net.automatalib.graphs.base.compact.CompactGraph;
-import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
@@ -112,15 +111,6 @@ public class DOTSerializationTest {
     }
 
     @Test
-    public void testRegularMCExport() throws IOException {
-
-        final CompactMC<String> mc = DOTSerializationUtil.MC;
-
-        ThrowingWriter writer = w -> GraphDOT.write(mc.graphView(), w);
-        checkDOTOutput(writer, DOTSerializationUtil.MC_RESOURCE);
-    }
-
-    @Test
     public void testRegularClusterExport() throws IOException {
 
         final Graph<?, ?> dfa = DOTSerializationUtil.DFA.graphView();
@@ -144,7 +134,7 @@ public class DOTSerializationTest {
                         };
                     }
                 };
-        final Graph<?, ?> mc = DOTSerializationUtil.MC.graphView();
+        final Graph<?, ?> mc = DOTSerializationUtil.MTS.graphView();
 
         final List<Graph<?, ?>> clusters = Arrays.asList(dfa, mealy, mc);
 

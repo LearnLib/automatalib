@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-* Added modal transition systems (MTSs), modal contracts (MCs) and Membership-MCs (MMCs).
+* Added modal transition systems (MTSs) including related utilities (composition, conjunction, refinement).
 * Added `SubsequentialTransducer` interface and implementations/utilities.
 * Added support for procedural systems (SPAs, SBA, SPMMs) as well as related concepts (verification, testing, transformations, etc.).
 * Added the M3C model-checker for verifying µ-calculus and CTL formulas on context-free modal process systems (thanks to [Alnis Murtovi](https://github.com/AlnisM)).

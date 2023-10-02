@@ -15,13 +15,13 @@
  */
 package net.automatalib.util.ts.modal.regression;
 
-public class CompositionTest {
+class CompositionTest {
 
-    public final String input0;
-    public final String input1;
-    public final String merge;
+    final String input0;
+    final String input1;
+    final String merge;
 
-    public CompositionTest(String input0, String input1, String merge) {
+    CompositionTest(String input0, String input1, String merge) {
         this.input0 = input0;
         this.input1 = input1;
         this.merge = merge;

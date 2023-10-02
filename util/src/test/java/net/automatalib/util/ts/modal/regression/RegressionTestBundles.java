@@ -18,10 +18,9 @@ package net.automatalib.util.ts.modal.regression;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class RegressionTestBundles {
+final class RegressionTestBundles {
 
     public static final List<CompositionTest> COMPOSITION_TESTS;
-    public static final List<DecompositionTest> DECOMPOSITION_TESTS;
 
     static {
         COMPOSITION_TESTS = new ArrayList<>();
@@ -40,40 +39,6 @@ public final class RegressionTestBundles {
         COMPOSITION_TESTS.add(new CompositionTest("/modal/integration/problem101-system-3.dot",
                                                   "/modal/integration/problem101-extended-context-3.dot",
                                                   "/modal/integration/problem101-merged-1.dot"));
-
-        DECOMPOSITION_TESTS = new ArrayList<>();
-        DECOMPOSITION_TESTS.add(new DecompositionTest("/modal/integration/problem101-context-4.dot",
-                                                      "/modal/integration/problem101-mc-4.dot",
-                                                      "/modal/integration/3-phils-component21.dot",
-                                                      "/modal/integration/problem101-system-4.dot"));
-        DECOMPOSITION_TESTS.add(new DecompositionTest("/modal/integration/problem101-context-6.dot",
-                                                      "/modal/integration/problem101-mc-6.dot",
-                                                      "/modal/integration/3-phils-component01.dot",
-                                                      "/modal/integration/problem101-system-6.dot"));
-        DECOMPOSITION_TESTS.add(new DecompositionTest("/modal/integration/problem101-context-8.dot",
-                                                      "/modal/integration/problem101-mc-8.dot",
-                                                      "/modal/integration/problem101-extended-context-6.dot",
-                                                      "/modal/integration/problem101-system-8.dot"));
-        DECOMPOSITION_TESTS.add(new DecompositionTest("/modal/integration/problem101-context-2.dot",
-                                                      "/modal/integration/problem101-mc-2.dot",
-                                                      "/modal/integration/3-phils-component22.dot",
-                                                      "/modal/integration/problem101-system-2.dot"));
-        DECOMPOSITION_TESTS.add(new DecompositionTest("/modal/integration/problem101-context-7.dot",
-                                                      "/modal/integration/problem101-mc-7.dot",
-                                                      "/modal/integration/problem101-extended-context-2.dot",
-                                                      "/modal/integration/problem101-system-7.dot"));
-        DECOMPOSITION_TESTS.add(new DecompositionTest("/modal/integration/problem101-context-1.dot",
-                                                      "/modal/integration/problem101-mc-1.dot",
-                                                      "/modal/integration/3-phils-component02.dot",
-                                                      "/modal/integration/problem101-system-1.dot"));
-        DECOMPOSITION_TESTS.add(new DecompositionTest("/modal/integration/problem101-context-3.dot",
-                                                      "/modal/integration/problem101-mc-3.dot",
-                                                      "/modal/integration/3-phils-component12.dot",
-                                                      "/modal/integration/problem101-system-3.dot"));
-        DECOMPOSITION_TESTS.add(new DecompositionTest("/modal/integration/problem101-context-5.dot",
-                                                      "/modal/integration/problem101-mc-5.dot",
-                                                      "/modal/integration/3-phils-component11.dot",
-                                                      "/modal/integration/problem101-system-5.dot"));
     }
 
     private RegressionTestBundles() {

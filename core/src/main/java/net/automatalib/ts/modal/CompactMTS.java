@@ -22,7 +22,8 @@ import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class CompactMTS<I> extends AbstractCompactMTS<I, MutableModalEdgeProperty> {
+public class CompactMTS<I>
+        extends AbstractCompactMTS<I, MTSTransition<MutableModalEdgeProperty>, MutableModalEdgeProperty> {
 
     public CompactMTS(Alphabet<I> alphabet) {
         super(alphabet);
@@ -40,6 +41,33 @@ public class CompactMTS<I> extends AbstractCompactMTS<I, MutableModalEdgePropert
     @Override
     protected MutableModalEdgeProperty buildModalProperty(ModalType type) {
         return new ModalEdgePropertyImpl(type);
+    }
+
+    @Override
+    public void setTransitionProperty(MTSTransition<MutableModalEdgeProperty> transition,
+                                      MutableModalEdgeProperty property) {
+        transition.setProperty(property);
+    }
+
+    @Override
+    public MTSTransition<MutableModalEdgeProperty> createTransition(Integer successor) {
+        return createTransition(successor, null);
+    }
+
+    @Override
+    public MTSTransition<MutableModalEdgeProperty> createTransition(Integer successor,
+                                                                    @Nullable MutableModalEdgeProperty properties) {
+        return new MTSTransition<>(successor, properties == null ? getDefaultTransitionProperty() : properties);
+    }
+
+    @Override
+    public Integer getSuccessor(MTSTransition<MutableModalEdgeProperty> transition) {
+        return transition.getTarget();
+    }
+
+    @Override
+    public MutableModalEdgeProperty getTransitionProperty(MTSTransition<MutableModalEdgeProperty> transition) {
+        return transition.getProperty();
     }
 
     public static final class Creator<I> implements AutomatonCreator<CompactMTS<I>, I> {

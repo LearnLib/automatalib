@@ -37,10 +37,9 @@ import net.automatalib.automata.transducers.impl.compact.CompactSST;
 import net.automatalib.automata.transducers.probabilistic.ProbabilisticOutput;
 import net.automatalib.commons.util.random.RandomUtil;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
-import net.automatalib.ts.modal.transition.ModalContractEdgePropertyImpl;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transition.MutableModalContractEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
@@ -59,12 +58,11 @@ public class MutableAutomatonTest {
     static final List<Character> TRANS_PROPS = Arrays.asList('a', 'b', 'c');
     static final List<ProbabilisticOutput<Character>> PROB_TRANS_PROPS =
             TRANS_PROPS.stream().map(p -> new ProbabilisticOutput<>(0.5f, p)).collect(Collectors.toList());
-    static final List<MutableModalContractEdgeProperty> MC_TRANS_PROPS = TRANS_PROPS.stream()
-                                                                                    .map(p -> new ModalContractEdgePropertyImpl(
-                                                                                            ModalType.MUST,
-                                                                                            RANDOM.nextBoolean(),
-                                                                                            EdgeColor.GREEN))
-                                                                                    .collect(Collectors.toList());
+    static final List<MutableModalEdgeProperty> MTS_TRANS_PROPS = TRANS_PROPS.stream()
+                                                                             .map(p -> new ModalEdgePropertyImpl(RANDOM.nextBoolean() ?
+                                                                                                                         ModalType.MUST :
+                                                                                                                         ModalType.MAY))
+                                                                             .collect(Collectors.toList());
     static final List<Void> EMPTY_PROPS = Collections.emptyList();
     static final List<Word<Character>> SST_TRANS_PROPS = Arrays.asList(Word.fromCharSequence("xy"), Word.fromCharSequence("yz"));
     static final List<Word<Character>> SST_STATE_PROPS = Arrays.asList(Word.fromCharSequence("ab"), Word.fromCharSequence("bc"));
@@ -116,7 +114,7 @@ public class MutableAutomatonTest {
 
     @Test
     public void testCompactMTS() {
-        this.checkAutomaton(CompactMTS::new, ALPHABET, EMPTY_PROPS, MC_TRANS_PROPS);
+        this.checkAutomaton(CompactMTS::new, ALPHABET, EMPTY_PROPS, MTS_TRANS_PROPS);
     }
 
     @Test

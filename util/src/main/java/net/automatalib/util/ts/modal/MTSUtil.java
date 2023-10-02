@@ -19,27 +19,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import com.google.common.collect.Sets;
 import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.commons.util.fixpoint.Worksets;
-import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
-import net.automatalib.util.automata.copy.AutomatonCopyMethod;
-import net.automatalib.util.automata.copy.AutomatonLowLevelCopy;
-import net.automatalib.util.graphs.Graphs;
-import net.automatalib.util.graphs.sssp.SSSPResult;
-import net.automatalib.util.ts.modal.Subgraphs.SubgraphType;
-import net.automatalib.words.impl.Alphabets;
 
 /**
  * @author msc
@@ -105,54 +91,4 @@ public final class MTSUtil {
         return statesA.isEmpty() && statesB.isEmpty();
     }
 
-    public static <S, I> Set<S> reachableSubset(UniversalFiniteAlphabetAutomaton<S, I, ?, ?, ?> ts,
-                                                Collection<I> inputs,
-                                                Set<S> states) {
-        Pair<Map<Set<S>, Integer>, CompactDFA<I>> graphView =
-                Subgraphs.subgraphView(new CompactDFA.Creator<>(), SubgraphType.DISREGARD_UNKNOWN_LABELS, ts, inputs);
-
-        CompactDFA<I> dfa = graphView.getSecond();
-        Integer init = dfa.getInitialState();
-        assert init != null;
-
-        SSSPResult<Integer, ?> ssspResult = Graphs.findSSSP(dfa.transitionGraphView(), init, e -> 1);
-
-        HashSet<S> reachableStates = new HashSet<>();
-        for (Map.Entry<Set<S>, Integer> entry : graphView.getFirst().entrySet()) {
-            Set<S> reachableSubset = Sets.intersection(states, entry.getKey());
-            if (!reachableSubset.isEmpty() &&
-                ssspResult.getShortestPathDistance(entry.getValue()) != Graphs.INVALID_DISTANCE) {
-                reachableStates.addAll(reachableSubset);
-            }
-        }
-
-        return reachableStates;
-    }
-
-    public static <S, I, T> ModalTransitionSystem<?, I, ?, ?> toLTS(ModalTransitionSystem<S, I, T, ?> mts,
-                                                                    TransitionPredicate<S, I, T> transFilter) {
-        return toLTS(mts, transFilter, Function.identity());
-    }
-
-    public static <S, I, T> ModalTransitionSystem<?, I, ?, ?> toLTS(ModalTransitionSystem<S, I, T, ?> mts,
-                                                                    TransitionPredicate<S, I, T> transFilter,
-                                                                    Function<I, I> inputMapping) {
-
-        CompactMTS<I> result = new CompactMTS<>(Alphabets.fromList(mts.getInputAlphabet()
-                                                                      .stream()
-                                                                      .map(inputMapping)
-                                                                      .collect(Collectors.toList())));
-
-        AutomatonLowLevelCopy.copy(AutomatonCopyMethod.DFS,
-                                   mts,
-                                   mts.getInputAlphabet(),
-                                   result,
-                                   inputMapping,
-                                   sp -> null,
-                                   tp -> new ModalEdgePropertyImpl(ModalType.MUST),
-                                   sf -> true,
-                                   transFilter);
-
-        return result;
-    }
 }

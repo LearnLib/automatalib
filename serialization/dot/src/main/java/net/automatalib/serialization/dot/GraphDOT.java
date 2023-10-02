@@ -423,11 +423,11 @@ public final class GraphDOT {
         }
     }
 
-    static String initialLabel(int n) {
+    public static String initialLabel(int n) {
         return initialLabel("", n);
     }
 
-    static String initialLabel(String idPrefix, int n) {
+    public static String initialLabel(String idPrefix, int n) {
         return idPrefix + INITIAL_LABEL + n;
     }
 

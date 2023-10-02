@@ -41,9 +41,7 @@ import net.automatalib.graphs.base.DefaultCFMPS;
 import net.automatalib.graphs.base.compact.CompactGraph;
 import net.automatalib.graphs.base.compact.CompactPMPG;
 import net.automatalib.graphs.base.compact.CompactPMPGEdge;
-import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.transition.ModalContractEdgeProperty.EdgeColor;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
@@ -70,7 +68,6 @@ final class DOTSerializationUtil {
     static final String GRAPH_GLOBAL_RESOURCE = "/graph_global.dot";
     static final String GRAPH_HTML_RESOURCE = "/graph_html.dot";
     static final String MTS_RESOURCE = "/mts.dot";
-    static final String MC_RESOURCE = "/mc.dot";
     static final String CLUSTER_RESOURCE = "/cluster.dot";
     static final String PMPG_RESOURCE = "/pmpg.dot";
     static final String CFMPS_RESOURCE = "/cfmps.dot";
@@ -93,7 +90,6 @@ final class DOTSerializationUtil {
     static final CompactSST<Character, Character> SST;
     static final CompactGraph<String, String> GRAPH;
     static final CompactMTS<String> MTS;
-    static final CompactMC<String> MC;
     static final DefaultCFMPS<Character, Character> CFMPS;
     static final SPA<?, Character> SPA;
     static final SBA<?, Character> SBA;
@@ -110,7 +106,6 @@ final class DOTSerializationUtil {
         SST = buildSST();
         GRAPH = buildGraph();
         MTS = buildMTS();
-        MC = buildMC();
         CFMPS = buildCFMPS();
         SPA = buildSPA();
         SBA = buildSBA();
@@ -246,27 +241,6 @@ final class DOTSerializationUtil {
         result.addModalTransition(s2, "a", s0, ModalType.MAY);
         result.addModalTransition(s2, "b", s1, ModalType.MUST);
         result.addModalTransition(s2, "c", s2, ModalType.MAY);
-
-        return result;
-    }
-
-    private static CompactMC<String> buildMC() {
-        final CompactMC<String> result = new CompactMC<>(STRING_ALPHABET, STRING_ALPHABET);
-        final Integer s0 = result.addInitialState();
-        final Integer s1 = result.addState();
-        final Integer s2 = result.addState();
-
-        result.addContractTransition(s0, "a", s0, ModalType.MAY, false, EdgeColor.NONE);
-        result.addContractTransition(s0, "b", s1, ModalType.MUST, false, EdgeColor.RED);
-        result.addContractTransition(s0, "c", s2, ModalType.MAY, false, EdgeColor.GREEN);
-
-        result.addContractTransition(s1, "a", s0, ModalType.MUST, false, EdgeColor.RED);
-        result.addContractTransition(s1, "b", s1, ModalType.MAY, false, EdgeColor.NONE);
-        result.addContractTransition(s1, "c", s2, ModalType.MUST, false, EdgeColor.GREEN);
-
-        result.addContractTransition(s2, "a", s0, ModalType.MAY, false, EdgeColor.GREEN);
-        result.addContractTransition(s2, "b", s1, ModalType.MUST, false, EdgeColor.RED);
-        result.addContractTransition(s2, "c", s2, ModalType.MAY, false, EdgeColor.NONE);
 
         return result;
     }

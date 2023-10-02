@@ -22,15 +22,15 @@ import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.dot.DOTParsers;
 import net.automatalib.ts.modal.CompactMTS;
 
-public class CompositionInstance {
+class CompositionInstance {
 
     private static final InputModelDeserializer<String, CompactMTS<String>> PARSER = DOTParsers.mts();
 
-    public final CompactMTS<String> input0;
-    public final CompactMTS<String> input1;
-    public final CompactMTS<String> merge;
+    final CompactMTS<String> input0;
+    final CompactMTS<String> input1;
+    final CompactMTS<String> merge;
 
-    public CompositionInstance(CompositionTest compositionTest) throws IOException {
+    CompositionInstance(CompositionTest compositionTest) throws IOException {
         input0 = loadMTSFromPath(compositionTest.input0);
         input1 = loadMTSFromPath(compositionTest.input1);
         merge = loadMTSFromPath(compositionTest.merge);

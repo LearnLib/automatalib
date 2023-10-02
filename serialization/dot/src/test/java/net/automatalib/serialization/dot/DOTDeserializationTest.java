@@ -40,7 +40,6 @@ import net.automatalib.commons.util.io.UnclosableInputStream;
 import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.serialization.FormatException;
 import net.automatalib.serialization.InputModelData;
-import net.automatalib.ts.modal.CompactMC;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
@@ -145,19 +144,6 @@ public class DOTDeserializationTest {
         final CompactMTS<String> parsed = model.model;
 
         checkIsomorphism(mts, parsed, alphabet);
-    }
-
-    @Test
-    public void testRegularMCDeserialization() throws IOException {
-        final CompactMC<String> mc = DOTSerializationUtil.MC;
-
-        InputModelData<String, CompactMC<String>> model =
-                DOTParsers.mc().readModel(DOTSerializationUtil.getResource(DOTSerializationUtil.MC_RESOURCE));
-
-        final Alphabet<String> alphabet = model.alphabet;
-        final CompactMC<String> parsed = model.model;
-
-        checkIsomorphism(mc, parsed, alphabet);
     }
 
     @Test(expectedExceptions = FormatException.class)

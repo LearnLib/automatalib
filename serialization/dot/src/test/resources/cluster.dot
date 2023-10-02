@@ -35,15 +35,15 @@ subgraph cluster2 {
 	c2_s0 [shape="circle" label="0"];
 	c2_s1 [shape="circle" label="1"];
 	c2_s2 [shape="circle" label="2"];
-	c2_s0 -> c2_s0 [modality="MAY" contract="NONE" style="dashed" label="a"];
-	c2_s0 -> c2_s1 [modality="MUST" color="red" contract="RED" label="b"];
-	c2_s0 -> c2_s2 [modality="MAY" color="green" contract="GREEN" style="dashed" label="c"];
-	c2_s1 -> c2_s0 [modality="MUST" color="red" contract="RED" label="a"];
-	c2_s1 -> c2_s1 [modality="MAY" contract="NONE" style="dashed" label="b"];
-	c2_s1 -> c2_s2 [modality="MUST" color="green" contract="GREEN" label="c"];
-	c2_s2 -> c2_s0 [modality="MAY" color="green" contract="GREEN" style="dashed" label="a"];
-	c2_s2 -> c2_s1 [modality="MUST" color="red" contract="RED" label="b"];
-	c2_s2 -> c2_s2 [modality="MAY" contract="NONE" style="dashed" label="c"];
+	c2_s0 -> c2_s0 [modality="MAY" style="dashed" label="a"];
+	c2_s0 -> c2_s1 [modality="MUST" label="b"];
+	c2_s0 -> c2_s2 [modality="MAY" style="dashed" label="c"];
+	c2_s1 -> c2_s0 [modality="MUST" label="a"];
+	c2_s1 -> c2_s1 [modality="MAY" style="dashed" label="b"];
+	c2_s1 -> c2_s2 [modality="MUST" label="c"];
+	c2_s2 -> c2_s0 [modality="MAY" style="dashed" label="a"];
+	c2_s2 -> c2_s1 [modality="MUST" label="b"];
+	c2_s2 -> c2_s2 [modality="MAY" style="dashed" label="c"];
 
 c2___start0 [label="" shape="none" width="0" height="0"];
 c2___start0 -> c2_s0;

@@ -100,7 +100,7 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0
             for (T0 transition0 : transitions0) {
 
                 if (mts0.getTransitionProperty(transition0).isMust() && transitions1.isEmpty()) {
-                    throw new IllegalConjunctionException(String.format(
+                    throw new IllegalArgumentException(String.format(
                             "Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
                             "Error for transition %s (t0), leading trace: %s",
                             currentStatePair.getFirst(),
@@ -145,7 +145,7 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0
             for (T1 transition1 : transitions1) {
 
                 if (mts1.getTransitionProperty(transition1).isMust() && transitions0.isEmpty()) {
-                    throw new IllegalConjunctionException(String.format(
+                    throw new IllegalArgumentException(String.format(
                             "Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
                             "Error for transition %s (t1), leading trace: %s",
                             currentStatePair.getFirst(),
