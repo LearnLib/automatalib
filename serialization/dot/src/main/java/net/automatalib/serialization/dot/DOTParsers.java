@@ -50,6 +50,7 @@ import net.automatalib.visualization.VisualizationHelper.EdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.MTSEdgeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import net.automatalib.visualization.VisualizationHelper.NodeShapes;
+import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -621,13 +622,13 @@ public final class DOTParsers {
     /**
      * Default parser for {@link ModalTransitionSystem}s serialized by AutomataLib.
      * <p>
-     * Invokes {@link #mts(AutomatonCreator, Function, Function)} with {@link CompactMTS.Creator} as {@code creator},
+     * Invokes {@link #mts(AutomatonCreator, Function, Function)} with {@link CompactMTS#CompactMTS(Alphabet)} as {@code creator},
      * {@link #DEFAULT_EDGE_PARSER} as {@code inputParser} and {@link #DEFAULT_EDGE_PARSER} as {@code propertyParser}.
      *
      * @return a {@link DOTInputModelDeserializer} for {@link CompactMTS}s.
      */
     public static DOTInputModelDeserializer<Integer, @Nullable String, CompactMTS<@Nullable String>> mts() {
-        return mts(new CompactMTS.Creator<@Nullable String>(), DEFAULT_EDGE_PARSER, DEFAULT_MTS_EDGE_PARSER);
+        return mts(CompactMTS::new, DEFAULT_EDGE_PARSER, DEFAULT_MTS_EDGE_PARSER);
     }
 
     /**

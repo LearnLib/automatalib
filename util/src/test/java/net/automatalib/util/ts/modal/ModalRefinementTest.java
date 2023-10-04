@@ -15,12 +15,12 @@
  */
 package net.automatalib.util.ts.modal;
 
+import com.google.common.collect.ImmutableSet;
 import net.automatalib.commons.util.Pair;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import org.assertj.core.api.Assertions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -124,8 +124,8 @@ public class ModalRefinementTest {
 
         b.addTransition(bs0, "a", bs0, null);
 
-        Assertions.assertThat(ModalRefinement.refinementRelation(a, b, alphabet))
-                  .containsExactlyInAnyOrder(Pair.of(as0, bs0), Pair.of(as1, bs0));
+        Assert.assertEquals(ModalRefinement.refinementRelation(a, b, alphabet),
+                            ImmutableSet.of(Pair.of(as0, bs0), Pair.of(as1, bs0)));
         Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
         Assert.assertTrue(MTSUtil.isRefinementOf(b, a, alphabet));
     }

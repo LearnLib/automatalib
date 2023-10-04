@@ -15,7 +15,6 @@
  */
 package net.automatalib.ts.modal;
 
-import net.automatalib.automata.AutomatonCreator;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
@@ -68,31 +67,5 @@ public class CompactMTS<I>
     @Override
     public MutableModalEdgeProperty getTransitionProperty(MTSTransition<MutableModalEdgeProperty> transition) {
         return transition.getProperty();
-    }
-
-    public static final class Creator<I> implements AutomatonCreator<CompactMTS<I>, I> {
-
-        private final @Nullable Alphabet<I> defaultInputAlphabet;
-
-        public Creator() {
-            this(null);
-        }
-
-        public Creator(@Nullable Alphabet<I> defaultInputAlphabet) {
-            this.defaultInputAlphabet = defaultInputAlphabet;
-        }
-
-        @Override
-        public CompactMTS<I> createAutomaton(Alphabet<I> alphabet) {
-            return this.createAutomaton(alphabet, DEFAULT_INIT_CAPACITY);
-        }
-
-        @Override
-        public CompactMTS<I> createAutomaton(Alphabet<I> alphabet, int sizeHint) {
-            return new CompactMTS<>(
-                    defaultInputAlphabet != null ? defaultInputAlphabet : alphabet,
-                    sizeHint,
-                    DEFAULT_RESIZE_FACTOR);
-        }
     }
 }

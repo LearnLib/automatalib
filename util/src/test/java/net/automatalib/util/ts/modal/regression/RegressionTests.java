@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.util.ts.modal.MTSUtil;
-import org.assertj.core.api.Assertions;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -42,10 +41,8 @@ public class RegressionTests {
 
         CompactMTS<String> currentMerge = MTSUtil.compose(instance.input0, instance.input1);
 
-        Assertions.assertThat(currentMerge.getInputAlphabet())
-                  .containsExactlyInAnyOrderElementsOf(instance.merge.getInputAlphabet());
-        Assertions.assertThat(instance.merge.getInputAlphabet())
-                  .containsExactlyInAnyOrderElementsOf(currentMerge.getInputAlphabet());
+        Assert.assertTrue(currentMerge.getInputAlphabet().containsAll(instance.merge.getInputAlphabet()));
+        Assert.assertTrue(instance.merge.getInputAlphabet().containsAll(currentMerge.getInputAlphabet()));
         Assert.assertTrue(MTSUtil.isRefinementOf(currentMerge, instance.merge, currentMerge.getInputAlphabet()));
         Assert.assertTrue(MTSUtil.isRefinementOf(instance.merge, currentMerge, currentMerge.getInputAlphabet()));
     }

@@ -16,6 +16,7 @@
 package net.automatalib.util.automata.procedural;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
-import org.assertj.core.api.Assertions;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -108,11 +108,11 @@ public class SPAUtilTest {
         final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', s, 'T', t));
         ATRSequences<Character> atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
 
-        Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry);
-        Assertions.assertThat(atrSequences.terminatingSequences).isEmpty();
-        Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry);
-        Assertions.assertThat(SPAUtil.isMinimal(spa)).isFalse();
-        Assertions.assertThat(SPAUtil.isMinimal(emptyAlphabet, atrSequences)).isTrue();
+        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry));
+        Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
+        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry));
+        Assert.assertFalse(SPAUtil.isMinimal(spa));
+        Assert.assertTrue(SPAUtil.isMinimal(emptyAlphabet, atrSequences));
 
         // Now we make the initial state of S accepting
         // This should give us a terminating sequence for S but still no sequences for T.
@@ -120,12 +120,12 @@ public class SPAUtilTest {
 
         atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
 
-        Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry);
-        Assertions.assertThat(atrSequences.terminatingSequences).containsOnly(sTsEntry);
-        Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry);
-        Assertions.assertThat(SPAUtil.isMinimal(spa)).isFalse();
-        Assertions.assertThat(SPAUtil.isMinimal(halfAlphabet, atrSequences)).isTrue();
-        Assertions.assertThat(SPAUtil.isMinimal(emptyAlphabet, atrSequences)).isTrue();
+        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry));
+        Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry));
+        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry));
+        Assert.assertFalse(SPAUtil.isMinimal(spa));
+        Assert.assertTrue(SPAUtil.isMinimal(halfAlphabet, atrSequences));
+        Assert.assertTrue(SPAUtil.isMinimal(emptyAlphabet, atrSequences));
 
         // Now we make s5 of S accepting.
         // This gives us a terminating sequence that traverses T and therefore allows us to extract access and terminating sequences for T.
@@ -133,12 +133,12 @@ public class SPAUtilTest {
 
         atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
 
-        Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry, tAsEntry);
-        Assertions.assertThat(atrSequences.terminatingSequences).containsOnly(sTsEntry);
-        Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry, tRsEntry);
-        Assertions.assertThat(SPAUtil.isMinimal(spa)).isFalse();
-        Assertions.assertThat(SPAUtil.isMinimal(halfAlphabet, atrSequences)).isTrue();
-        Assertions.assertThat(SPAUtil.isMinimal(emptyAlphabet, atrSequences)).isTrue();
+        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry, tAsEntry));
+        Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry));
+        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry, tRsEntry));
+        Assert.assertFalse(SPAUtil.isMinimal(spa));
+        Assert.assertTrue(SPAUtil.isMinimal(halfAlphabet, atrSequences));
+        Assert.assertTrue(SPAUtil.isMinimal(emptyAlphabet, atrSequences));
 
         // Now make t3 of T accepting.
         // The only path to an accepting state contains a recursive call to T, so we still cannot extract a valid terminating sequence.
@@ -146,12 +146,12 @@ public class SPAUtilTest {
 
         atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
 
-        Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry, tAsEntry);
-        Assertions.assertThat(atrSequences.terminatingSequences).containsOnly(sTsEntry);
-        Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry, tRsEntry);
-        Assertions.assertThat(SPAUtil.isMinimal(spa)).isFalse();
-        Assertions.assertThat(SPAUtil.isMinimal(halfAlphabet, atrSequences)).isTrue();
-        Assertions.assertThat(SPAUtil.isMinimal(emptyAlphabet, atrSequences)).isTrue();
+        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry, tAsEntry));
+        Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry));
+        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry, tRsEntry));
+        Assert.assertFalse(SPAUtil.isMinimal(spa));
+        Assert.assertTrue(SPAUtil.isMinimal(halfAlphabet, atrSequences));
+        Assert.assertTrue(SPAUtil.isMinimal(emptyAlphabet, atrSequences));
 
         // Now make t1 of T accepting.
         // This allows us to construct a valid terminating sequence for T and therefore make the global ATRSequences valid.
@@ -159,10 +159,10 @@ public class SPAUtilTest {
 
         atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
 
-        Assertions.assertThat(atrSequences.accessSequences).containsOnly(sAsEntry, tAsEntry);
-        Assertions.assertThat(atrSequences.terminatingSequences).containsOnly(sTsEntry, tTsEntry);
-        Assertions.assertThat(atrSequences.returnSequences).containsOnly(sRsEntry, tRsEntry);
-        Assertions.assertThat(SPAUtil.isMinimal(spa)).isTrue();
+        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry, tAsEntry));
+        Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry, tTsEntry));
+        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry, tRsEntry));
+        Assert.assertTrue(SPAUtil.isMinimal(spa));
     }
 
     @Test
@@ -174,12 +174,12 @@ public class SPAUtilTest {
 
         final ATRSequences<Character> atrSequences = SPAUtil.computeATRSequences(spa, halfAlphabet);
 
-        Assertions.assertThat(atrSequences.accessSequences).containsOnlyKeys('S');
-        Assertions.assertThat(atrSequences.terminatingSequences).containsOnlyKeys('S');
-        Assertions.assertThat(atrSequences.returnSequences).containsOnlyKeys('S');
+        Assert.assertEquals(atrSequences.accessSequences.keySet(), Collections.singleton('S'));
+        Assert.assertEquals(atrSequences.terminatingSequences.keySet(), Collections.singleton('S'));
+        Assert.assertEquals(atrSequences.returnSequences.keySet(), Collections.singleton('S'));
 
-        Assertions.assertThat(SPAUtil.isMinimal(spa, halfAlphabet)).isTrue();
-        Assertions.assertThat(SPAUtil.isMinimal(alphabet, atrSequences)).isFalse();
+        Assert.assertTrue(SPAUtil.isMinimal(spa, halfAlphabet));
+        Assert.assertFalse(SPAUtil.isMinimal(alphabet, atrSequences));
     }
 
     @Test
@@ -240,9 +240,9 @@ public class SPAUtilTest {
         final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', s, 'T', t));
 
         final ATRSequences<Character> atrSequences = SPAUtil.computeATRSequences(spa);
-        Assertions.assertThat(atrSequences.accessSequences).containsOnlyKeys('S');
-        Assertions.assertThat(atrSequences.terminatingSequences).isEmpty();
-        Assertions.assertThat(atrSequences.returnSequences).containsOnlyKeys('S');
+        Assert.assertEquals(atrSequences.accessSequences.keySet(), Collections.singleton('S'));
+        Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
+        Assert.assertEquals(atrSequences.returnSequences.keySet(), Collections.singleton('S'));
     }
 
     @Test

@@ -16,8 +16,10 @@
 package net.automatalib.ts.modal;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
@@ -25,7 +27,6 @@ import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
-import org.assertj.core.api.Assertions;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -152,34 +153,33 @@ public class CompactMTSTest {
         final MTSTransition<MutableModalEdgeProperty> t5 = s.addModalTransition(as2, "a", as2, ModalType.MAY);
         final MTSTransition<MutableModalEdgeProperty> t6 = s.addModalTransition(as2, "b", as2, ModalType.MAY);
 
-        Assertions.assertThat(s.getTransitions(as0, "a"))
-                  .containsExactly(t1)
-                  .extracting(MTSTransition::getTarget)
-                  .containsExactly(as0);
+        final Collection<MTSTransition<MutableModalEdgeProperty>> r1 = s.getTransitions(as0, "a");
+        Assert.assertEquals(r1, Collections.singleton(t1));
+        Assert.assertTrue(r1.stream().allMatch(propertyPredicate(as0, ModalType.MUST)));
 
-        Assertions.assertThat(s.getTransitions(as0, "b"))
-                  .containsExactly(t2)
-                  .allMatch(t -> Objects.equals(t.getTarget(), as1))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MUST);
+        final Collection<MTSTransition<MutableModalEdgeProperty>> r2 = s.getTransitions(as0, "b");
+        Assert.assertEquals(r2, Collections.singleton(t2));
+        Assert.assertTrue(r2.stream().allMatch(propertyPredicate(as1, ModalType.MUST)));
 
-        Assertions.assertThat(s.getTransitions(as1, "a"))
-                  .containsExactly(t3)
-                  .allMatch(t -> Objects.equals(t.getTarget(), as1))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MUST);
+        final Collection<MTSTransition<MutableModalEdgeProperty>> r3 = s.getTransitions(as1, "a");
+        Assert.assertEquals(r3, Collections.singleton(t3));
+        Assert.assertTrue(r3.stream().allMatch(propertyPredicate(as1, ModalType.MUST)));
 
-        Assertions.assertThat(s.getTransitions(as1, "b"))
-                  .containsExactly(t4)
-                  .allMatch(t -> Objects.equals(t.getTarget(), as2))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY);
+        final Collection<MTSTransition<MutableModalEdgeProperty>> r4 = s.getTransitions(as1, "b");
+        Assert.assertEquals(r4, Collections.singleton(t4));
+        Assert.assertTrue(r4.stream().allMatch(propertyPredicate(as2, ModalType.MAY)));
 
-        Assertions.assertThat(s.getTransitions(as2, "a"))
-                  .containsExactly(t5)
-                  .allMatch(t -> Objects.equals(t.getTarget(), as2))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY);
+        final Collection<MTSTransition<MutableModalEdgeProperty>> r5 = s.getTransitions(as2, "a");
+        Assert.assertEquals(r5, Collections.singleton(t5));
+        Assert.assertTrue(r5.stream().allMatch(propertyPredicate(as2, ModalType.MAY)));
 
-        Assertions.assertThat(s.getTransitions(as2, "b"))
-                  .containsExactly(t6)
-                  .allMatch(t -> Objects.equals(t.getTarget(), as2))
-                  .allMatch(t -> t.getProperty().getModalType() == ModalType.MAY);
+        final Collection<MTSTransition<MutableModalEdgeProperty>> r6 = s.getTransitions(as2, "b");
+        Assert.assertEquals(r6, Collections.singleton(t6));
+        Assert.assertTrue(r6.stream().allMatch(propertyPredicate(as2, ModalType.MAY)));
+    }
+
+    private static Predicate<MTSTransition<MutableModalEdgeProperty>> propertyPredicate(Integer tgt,
+                                                                                        ModalType modalType) {
+        return t -> Objects.equals(t.getTarget(), tgt) && t.getProperty().getModalType() == modalType;
     }
 }

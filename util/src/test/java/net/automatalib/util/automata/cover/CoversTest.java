@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
 import net.automatalib.automata.UniversalDeterministicAutomaton;
 import net.automatalib.automata.fsa.DFA;
 import net.automatalib.automata.fsa.impl.compact.CompactDFA;
@@ -32,7 +33,6 @@ import net.automatalib.util.graphs.Graphs;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
-import org.assertj.core.util.Lists;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
