@@ -327,7 +327,7 @@ limitations under the License.
 
             <!-- build-tools -->
             <dependency>
-                <groupId>net.automatalib</groupId>
+                <groupId>net.automatalib.tooling</groupId>
                 <artifactId>automata-build-tools</artifactId>
                 <version>${project.version}</version>
             </dependency>
