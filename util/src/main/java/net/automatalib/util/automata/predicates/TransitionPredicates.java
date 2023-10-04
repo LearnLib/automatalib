@@ -78,7 +78,6 @@ public final class TransitionPredicates {
         return (s, i, t) -> !Objects.equals(i, input);
     }
 
-    @SafeVarargs
     public static <S, I, T> TransitionPredicate<S, I, T> inputIn(@Nullable Object... inputs) {
         return inputIn(Arrays.asList(inputs));
     }
@@ -87,7 +86,6 @@ public final class TransitionPredicates {
         return (s, i, t) -> inputs.contains(i);
     }
 
-    @SafeVarargs
     public static <S, I, T> TransitionPredicate<S, I, T> inputNotIn(@Nullable Object... inputs) {
         return inputNotIn(Arrays.asList(inputs));
     }
