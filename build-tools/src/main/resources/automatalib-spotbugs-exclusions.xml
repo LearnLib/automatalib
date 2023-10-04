@@ -85,7 +85,7 @@ limitations under the License.
         <Class name="net.automatalib.commons.smartcollections.ArrayStorage"/>
     </Match>
     <Match>
-        <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT"/>
+        <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT,UC_USELESS_VOID_METHOD,MS_SHOULD_BE_FINAL,URF_UNREAD_FIELD,UCF_USELESS_CONTROL_FLOW"/>
         <!-- TODO: these modules/packages currently contains generated javaCC code that we cannot easily change -->
         <Or>
             <Class name="net.automatalib.serialization.dot.InternalDOTParser"/>
