@@ -44,3 +44,4 @@ public class LTSminMonitorIOTest extends AbstractLTSminMonitorMealyTest {
         return "input == \"b\"";
     }
 }
+

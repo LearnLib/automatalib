@@ -91,7 +91,7 @@ public interface SmartCollection<E> extends Collection<E> {
      * This function is deprecated and should not be used, in favor of the removal by reference {@link
      * #remove(ElementReference)}.
      *
-     * @see Collection#remove(Object)
+     * @deprecated use {@link #remove(ElementReference)} instead
      */
     @Deprecated
     @Override

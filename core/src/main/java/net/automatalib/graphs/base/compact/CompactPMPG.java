@@ -36,7 +36,6 @@ public class CompactPMPG<L, AP>
     private int finalNode;
 
     public CompactPMPG(L defaultLabel) {
-        super();
         this.nodeProperties = new ResizingArrayStorage<>(Set.class);
         this.defaultLabel = defaultLabel;
         this.initialNode = -1;

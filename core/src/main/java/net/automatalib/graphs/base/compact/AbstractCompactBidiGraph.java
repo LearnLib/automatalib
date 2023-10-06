@@ -33,7 +33,6 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
     private final ResizingArrayStorage<List<CompactBidiEdge<EP>>> inEdges;
 
     public AbstractCompactBidiGraph() {
-        super();
         this.inEdges = new ResizingArrayStorage<>(List.class);
     }
 

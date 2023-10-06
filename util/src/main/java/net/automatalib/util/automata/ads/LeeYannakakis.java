@@ -96,11 +96,11 @@ public final class LeeYannakakis {
                                              .mapToInt(x -> x.getPartition().size())
                                              .max()
                                              .orElseThrow(IllegalStateException::new);
-            final Set<SplitTree<S, I, O>> R =
+            final Set<SplitTree<S, I, O>> r =
                     leaves.stream().filter(x -> x.getPartition().size() == maxCardinality).collect(Collectors.toSet());
 
             final Map<Validity, Set<Pair<Word<I>, SplitTree<S, I, O>>>> validitySetMap =
-                    computeValidities(automaton, input, R, leaves);
+                    computeValidities(automaton, input, r, leaves);
 
             if (!validitySetMap.get(Validity.INVALID).isEmpty()) {
                 final Set<Pair<Word<I>, SplitTree<S, I, O>>> set = validitySetMap.get(Validity.INVALID);
@@ -186,13 +186,13 @@ public final class LeeYannakakis {
                                                                 .collect(Collectors.toMap(x -> automaton.getSuccessor(x,
                                                                                                                       cValidInput),
                                                                                           Function.identity()));
-                final SplitTree<S, I, O> C =
+                final SplitTree<S, I, O> c =
                         st.findLowestSubsetNode(successorsToNodes.keySet()).orElseThrow(IllegalStateException::new);
 
-                nodeToRefine.setSequence(cValidInput.concat(C.getSequence()));
+                nodeToRefine.setSequence(cValidInput.concat(c.getSequence()));
                 leaves.remove(nodeToRefine);
 
-                for (Map.Entry<O, SplitTree<S, I, O>> entry : C.getSuccessors().entrySet()) {
+                for (Map.Entry<O, SplitTree<S, I, O>> entry : c.getSuccessors().entrySet()) {
 
                     final Set<S> wSet = entry.getValue().getPartition();
                     final Set<S> intersection = new HashSet<>(successorsToNodes.keySet());
@@ -207,7 +207,7 @@ public final class LeeYannakakis {
                     }
                 }
                 for (S s : nodeToRefine.getPartition()) {
-                    nodeToRefine.getMapping().put(s, C.getMapping().get(automaton.getSuccessor(s, cValidInput)));
+                    nodeToRefine.getMapping().put(s, c.getMapping().get(automaton.getSuccessor(s, cValidInput)));
                 }
             }
         }
@@ -286,7 +286,7 @@ public final class LeeYannakakis {
 
     private static <S, I, O> Map<Validity, Set<Pair<Word<I>, SplitTree<S, I, O>>>> computeValidities(MealyMachine<S, I, ?, O> automaton,
                                                                                                      Alphabet<I> inputs,
-                                                                                                     Set<SplitTree<S, I, O>> R,
+                                                                                                     Set<SplitTree<S, I, O>> r,
                                                                                                      Set<SplitTree<S, I, O>> pi) {
 
         final Map<Validity, Set<Pair<Word<I>, SplitTree<S, I, O>>>> result = new EnumMap<>(Validity.class);
@@ -317,12 +317,12 @@ public final class LeeYannakakis {
         }
 
         partitionLoop:
-        for (SplitTree<S, I, O> B : R) {
+        for (SplitTree<S, I, O> b : r) {
 
             // general validity
             final Map<I, Boolean> validInputMap = Maps.newHashMapWithExpectedSize(inputs.size());
             for (I i : inputs) {
-                validInputMap.put(i, isValidInput(automaton, i, B.getPartition()));
+                validInputMap.put(i, isValidInput(automaton, i, b.getPartition()));
             }
 
             // a valid
@@ -333,11 +333,11 @@ public final class LeeYannakakis {
                 }
 
                 final Set<O> outputs =
-                        B.getPartition().stream().map(s -> automaton.getOutput(s, i)).collect(Collectors.toSet());
+                        b.getPartition().stream().map(s -> automaton.getOutput(s, i)).collect(Collectors.toSet());
 
                 if (outputs.size() > 1) {
-                    result.get(Validity.A_VALID).add(Pair.of(Word.fromSymbols(i), B));
-                    partitionToClassificationMap.put(stateToPartitionMap.get(B.getPartition().iterator().next()),
+                    result.get(Validity.A_VALID).add(Pair.of(Word.fromSymbols(i), b));
+                    partitionToClassificationMap.put(stateToPartitionMap.get(b.getPartition().iterator().next()),
                                                      Validity.A_VALID);
                     continue partitionLoop;
                 }
@@ -350,14 +350,14 @@ public final class LeeYannakakis {
                     continue;
                 }
 
-                final Set<Integer> successors = B.getPartition()
+                final Set<Integer> successors = b.getPartition()
                                                  .stream()
                                                  .map(s -> stateToPartitionMap.get(automaton.getSuccessor(s, i)))
                                                  .collect(Collectors.toSet());
 
                 if (successors.size() > 1) {
-                    result.get(Validity.B_VALID).add(Pair.of(Word.fromSymbols(i), B));
-                    partitionToClassificationMap.put(stateToPartitionMap.get(B.getPartition().iterator().next()),
+                    result.get(Validity.B_VALID).add(Pair.of(Word.fromSymbols(i), b));
+                    partitionToClassificationMap.put(stateToPartitionMap.get(b.getPartition().iterator().next()),
                                                      Validity.B_VALID);
                     continue partitionLoop;
                 }
@@ -371,7 +371,7 @@ public final class LeeYannakakis {
                     continue;
                 }
 
-                final S nodeInPartition = B.getPartition().iterator().next();
+                final S nodeInPartition = b.getPartition().iterator().next();
                 final S successor = automaton.getSuccessor(nodeInPartition, i);
 
                 final Integer partition = stateToPartitionMap.get(nodeInPartition);
@@ -379,16 +379,16 @@ public final class LeeYannakakis {
 
                 if (!partition.equals(successorPartition)) {
                     implicationGraph.connect(partition, successorPartition, i);
-                    pendingCs.add(B);
+                    pendingCs.add(b);
                 }
             }
 
-            if (pendingCs.contains(B)) {
+            if (pendingCs.contains(b)) {
                 continue partitionLoop;
             }
 
             //if we haven't continued the loop up until here, there is no valid input
-            result.get(Validity.INVALID).add(Pair.of(null, B));
+            result.get(Validity.INVALID).add(Pair.of(null, b));
         }
 
         //check remaining potential Cs

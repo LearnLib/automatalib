@@ -24,13 +24,6 @@ package net.automatalib.commons.smartcollections;
 public class InvalidReferenceException extends IllegalArgumentException {
 
     /**
-     * Default constructor.
-     */
-    public InvalidReferenceException() {
-        super();
-    }
-
-    /**
      * Constructor.
      *
      * @see RuntimeException#RuntimeException(String)

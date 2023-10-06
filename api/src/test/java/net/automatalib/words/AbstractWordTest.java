@@ -217,12 +217,12 @@ public abstract class AbstractWordTest {
         Assert.assertFalse(it.hasNext());
     }
 
-    @Test(expectedExceptions = {IndexOutOfBoundsException.class})
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
     public void testSubword1() {
         testWord.subWord(-1, testWord.length());
     }
 
-    @Test(expectedExceptions = {IndexOutOfBoundsException.class})
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
     public void testSubword2() {
         testWord.subWord(0, testWord.length() + 1);
     }
@@ -244,12 +244,12 @@ public abstract class AbstractWordTest {
         }
     }
 
-    @Test(expectedExceptions = {IndexOutOfBoundsException.class})
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
     public void testPrefix1() {
         testWord.prefix(testWord.length() + 1);
     }
 
-    @Test(expectedExceptions = {IndexOutOfBoundsException.class})
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
     public void testPrefix2() {
         testWord.prefix(-testWord.length() - 1);
     }
@@ -271,12 +271,12 @@ public abstract class AbstractWordTest {
         }
     }
 
-    @Test(expectedExceptions = {IndexOutOfBoundsException.class})
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
     public void testSuffix1() {
         testWord.suffix(testWord.length() + 1);
     }
 
-    @Test(expectedExceptions = {IndexOutOfBoundsException.class})
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
     public void testSuffix2() {
         testWord.suffix(-testWord.length() - 1);
     }

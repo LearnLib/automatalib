@@ -23,7 +23,6 @@ public class CompactGraph<@Nullable NP, @Nullable EP> extends AbstractCompactGra
     private final ResizingArrayStorage<NP> nodeProperties;
 
     public CompactGraph() {
-        super();
         this.nodeProperties = new ResizingArrayStorage<>(Object.class);
     }
 

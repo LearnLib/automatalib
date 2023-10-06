@@ -49,3 +49,4 @@ public class DefaultVPAlphabetTest extends AbstractVPAlphabetTest<Character, Def
                                        DefaultVPAlphabetTestUtil.RETURN_SYMBOLS);
     }
 }
+

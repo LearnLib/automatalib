@@ -37,3 +37,4 @@ public class GrowingMapAlphabetTest extends AbstractGrowingAlphabetTest<Integer,
         return new GrowingMapAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_LIST);
     }
 }
+

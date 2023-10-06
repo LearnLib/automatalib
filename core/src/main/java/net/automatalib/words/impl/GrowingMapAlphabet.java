@@ -28,7 +28,7 @@ import net.automatalib.words.GrowingAlphabet;
 public class GrowingMapAlphabet<I> extends MapAlphabet<I> implements GrowingAlphabet<I> {
 
     public GrowingMapAlphabet() {
-        super();
+        // default constructor
     }
 
     public GrowingMapAlphabet(Collection<? extends I> symbols) {

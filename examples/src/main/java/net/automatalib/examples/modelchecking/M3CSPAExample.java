@@ -59,7 +59,7 @@ public final class M3CSPAExample {
                                    "EF [] false", // there exists a path to the final state
                                    "AF [] false", // all paths reach the final state
                                    "AG EF [] false", // on all paths there exists a path to the final state
-                                   "AG ([S] (AF <R>true))", // globally, every S path must be followed by an R eventually
+                                   "AG ([S] (AF <R>true))" // globally, every S path must be followed by an R eventually
         };
         //@formatter:on
 

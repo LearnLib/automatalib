@@ -38,3 +38,4 @@ public class FastAlphabetTest extends AbstractGrowingAlphabetTest<InputSymbol, F
         return new FastAlphabet<>(FastAlphabetTestUtil.ALPHABET_SYMBOLS);
     }
 }
+

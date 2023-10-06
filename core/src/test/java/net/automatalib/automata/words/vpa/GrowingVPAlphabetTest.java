@@ -48,3 +48,4 @@ public class GrowingVPAlphabetTest extends AbstractVPAlphabetTest<VPSym<Characte
         return GrowingVPAlphabetTestUtil.ALPHABET;
     }
 }
+

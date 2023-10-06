@@ -20,7 +20,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class CompactSimpleBidiGraph<@Nullable EP> extends AbstractCompactBidiGraph<Void, EP> {
 
     public CompactSimpleBidiGraph() {
-        super();
+        // default constructor
     }
 
     public CompactSimpleBidiGraph(int initialCapacity) {

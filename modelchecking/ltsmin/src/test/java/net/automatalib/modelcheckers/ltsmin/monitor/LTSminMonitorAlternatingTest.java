@@ -45,3 +45,4 @@ public class LTSminMonitorAlternatingTest extends AbstractLTSminMonitorMealyTest
         return "X letter == \"a\"";
     }
 }
+

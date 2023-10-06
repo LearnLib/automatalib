@@ -26,7 +26,7 @@ public class ConflictException extends IllegalArgumentException {
      * @see IllegalArgumentException#IllegalArgumentException()
      */
     public ConflictException() {
-        super();
+        // default constructor
     }
 
     /**

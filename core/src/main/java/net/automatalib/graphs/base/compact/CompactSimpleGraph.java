@@ -20,7 +20,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class CompactSimpleGraph<@Nullable EP> extends AbstractCompactGraph<CompactEdge<EP>, Void, EP> {
 
     public CompactSimpleGraph() {
-        super();
+        // default constructor
     }
 
     public CompactSimpleGraph(int initialCapacity) {

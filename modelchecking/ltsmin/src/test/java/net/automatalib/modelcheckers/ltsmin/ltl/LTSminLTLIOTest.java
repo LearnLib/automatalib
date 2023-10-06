@@ -52,3 +52,4 @@ public class LTSminLTLIOTest extends AbstractLTSminLTLMealyTest {
         return "input == \"b\"";
     }
 }
+

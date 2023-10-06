@@ -53,3 +53,4 @@ public class LTSminLTLAlternatingTest extends AbstractLTSminLTLMealyTest {
         return "X letter == \"a\"";
     }
 }
+

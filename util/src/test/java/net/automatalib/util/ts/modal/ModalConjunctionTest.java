@@ -217,7 +217,7 @@ public class ModalConjunctionTest {
     }
 
     @Test(dataProvider = "randomSource")
-    void random(CompactMTS<Character> a, CompactMTS<Character> b, int K) {
+    void random(CompactMTS<Character> a, CompactMTS<Character> b, int k) {
 
         algo = new ModalConjunction<>(a, b, CompactMTS::new);
 
