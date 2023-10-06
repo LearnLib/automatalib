@@ -45,8 +45,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public class BDDTransformer<L, AP> extends AbstractPropertyTransformer<BDDTransformer<L, AP>, L, AP> {
 

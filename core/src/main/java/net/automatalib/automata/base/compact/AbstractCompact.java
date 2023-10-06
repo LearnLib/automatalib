@@ -49,9 +49,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         state property type
  * @param <TP>
  *         transition property type
- *
- * @author frohme
- * @author Malte Isberner
  */
 public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<Integer, I, T, SP, TP>,
                                                                StateIDs<Integer>,

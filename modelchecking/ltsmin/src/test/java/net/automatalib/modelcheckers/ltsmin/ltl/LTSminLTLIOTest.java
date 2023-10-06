@@ -21,7 +21,6 @@ import net.automatalib.modelchecking.lasso.MealyLassoImpl;
 /**
  * Tests whether LTSminLTLAlternating actually uses regular edge semantics.
  *
- * @author Jeroen Meijer
  * @see LTSminLTLAlternatingTest
  */
 public class LTSminLTLIOTest extends AbstractLTSminLTLMealyTest {

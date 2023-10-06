@@ -26,8 +26,6 @@ import net.automatalib.modelchecking.Lasso.DFALasso;
  *
  * @param <I>
  *         the input type
- *
- * @author Jeroen Meijer
  */
 public class DFALassoImpl<I> extends AbstractLasso<I, Boolean> implements DFALasso<I> {
 

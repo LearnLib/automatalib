@@ -36,8 +36,6 @@ import net.automatalib.ts.UniversalTransitionSystem;
  *         state property class
  * @param <TP>
  *         transition property class
- *
- * @author Malte Isberner
  */
 public interface UniversalAutomaton<S, I, T, SP, TP>
         extends Automaton<S, I, T>, UniversalTransitionSystem<S, I, T, SP, TP> {

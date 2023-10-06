@@ -30,7 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>
  * The FSM is parsed by means of a tokenizer (a grammar is not used).
  *
- * @author Jeroen Meijer
  * @see <a href="http://www.win.tue.nl/vis1/home/apretori/data/fsm.html">the FSM format</a>
  */
 public abstract class AbstractFSMParser<I> {

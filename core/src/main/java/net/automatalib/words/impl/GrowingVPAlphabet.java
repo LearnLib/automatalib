@@ -29,8 +29,6 @@ import net.automatalib.words.abstractimpl.AbstractVPAlphabet;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class GrowingVPAlphabet<I> extends AbstractVPAlphabet<VPSym<I>> implements VPAlphabet<VPSym<I>> {
 

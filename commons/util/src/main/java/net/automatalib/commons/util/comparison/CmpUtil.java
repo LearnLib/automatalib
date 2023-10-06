@@ -21,8 +21,6 @@ import java.util.List;
 
 /**
  * Various methods for dealing with the comparison of objects.
- *
- * @author Malte Isberner
  */
 public final class CmpUtil {
 

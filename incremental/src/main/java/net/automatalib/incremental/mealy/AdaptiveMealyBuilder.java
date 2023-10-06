@@ -25,9 +25,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author ferreira
- * @author frohme
  */
 public interface AdaptiveMealyBuilder<I, O> extends MealyBuilder<I, O> {
 

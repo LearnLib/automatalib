@@ -31,8 +31,6 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class MapAlphabet<I> extends AbstractAlphabet<I> {
 

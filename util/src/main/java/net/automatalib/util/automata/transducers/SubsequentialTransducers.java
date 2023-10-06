@@ -34,8 +34,6 @@ import net.automatalib.words.Word;
 
 /**
  * Utility methods of {@link SubsequentialTransducer}s.
- *
- * @author frohme
  */
 public final class SubsequentialTransducers {
 

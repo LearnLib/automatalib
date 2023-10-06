@@ -33,8 +33,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         state class.
  * @param <L>
  *         transition label class.
- *
- * @author Malte Isberner
  */
 public final class Block<S, L> extends AbstractBasicLinkedListEntry<Block<S, L>, Block<S, L>> {
 

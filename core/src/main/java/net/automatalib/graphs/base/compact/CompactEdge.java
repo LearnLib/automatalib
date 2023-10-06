@@ -20,8 +20,6 @@ package net.automatalib.graphs.base.compact;
  *
  * @param <EP>
  *         edge property class.
- *
- * @author Malte Isberner
  */
 public class CompactEdge<EP> {
 

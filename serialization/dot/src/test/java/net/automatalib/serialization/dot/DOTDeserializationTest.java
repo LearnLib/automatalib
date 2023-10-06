@@ -47,9 +47,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class DOTDeserializationTest {
 
     @Test

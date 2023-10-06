@@ -25,9 +25,6 @@ import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * A base {@link VisualizationHelper} for {@link WitnessTree}s.
- *
- * @author freese
- * @author frohme
  */
 abstract class AbstractVisualizationHelper extends DefaultVisualizationHelper<Integer, CompactEdge<String>> {
 

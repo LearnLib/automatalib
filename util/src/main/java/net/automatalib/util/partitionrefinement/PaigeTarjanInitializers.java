@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>
  * The counterpart of this class is {@link PaigeTarjanExtractors}, which provides methods to translate the contents of
  * the partition refinement data structure after coarsest stable partition computation back to such structures.
- *
- * @author Malte Isberner
  */
 public final class PaigeTarjanInitializers {
 

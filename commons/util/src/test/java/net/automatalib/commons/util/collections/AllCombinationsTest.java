@@ -28,9 +28,6 @@ import com.google.common.collect.Streams;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class AllCombinationsTest {
 
     private static final List<Integer> DOMAIN1 = Arrays.asList(1, 2);

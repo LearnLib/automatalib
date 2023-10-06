@@ -27,9 +27,6 @@ import net.automatalib.modelcheckers.m3c.formula.visitor.NNFVisitor;
  *         label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
- * @author frohme
  */
 public interface FormulaNode<L, AP> extends Printable {
 

@@ -20,9 +20,6 @@ import java.util.Properties;
 import net.automatalib.commons.util.settings.SettingsSource;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author Malte Isberner
- */
 public final class AutomataLibSettings {
 
     private static final AutomataLibSettings INSTANCE = new AutomataLibSettings();

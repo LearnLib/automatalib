@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Shared functionality for (non-) deterministic mutable automata.
- *
- * @author frohme
  */
 public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, SP, TP>
         implements ShrinkableAutomaton<S, I, T, SP, TP>,

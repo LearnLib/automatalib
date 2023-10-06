@@ -23,9 +23,6 @@ import net.automatalib.modelchecking.modelchecker.cache.ModelCheckerMock.DFAMode
 import net.automatalib.words.impl.Alphabets;
 import org.mockito.Mockito;
 
-/**
- * @author frohme
- */
 public class SizeDFAModelCheckerCacheTest<I>
         extends AbstractSizeModelCheckerCacheTest<I, DFALasso<I>, MutableDFA<?, I>, DFAModelCheckerMock<I>, DFAModelCheckerCache<I, Object, DFALasso<I>>> {
 

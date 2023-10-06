@@ -25,9 +25,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeroen Meijer
- */
 public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, String>> {
 
     @Override

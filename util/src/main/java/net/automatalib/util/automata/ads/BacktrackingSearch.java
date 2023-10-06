@@ -43,8 +43,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 /**
  * A class containing methods for computing adaptive distinguishing sequences (for arbitrary sets of states) by means of
  * a backtracking approach.
- *
- * @author frohme
  */
 public final class BacktrackingSearch {
 

@@ -44,8 +44,6 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  *         state class.
  * @param <L>
  *         transition label class.
- *
- * @author Malte Isberner
  */
 public final class Minimizer<S, L> {
 

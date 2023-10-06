@@ -27,9 +27,6 @@ import net.automatalib.modelchecking.ModelCheckerLasso;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 
-/**
- * @author frohme
- */
 class ModelCheckerMock<I, A, P, R extends Lasso<I, ?>> implements ModelCheckerLasso<I, A, P, R>, ModelCheckCounter {
 
     static final double DEFAULT_MULTIPLIER = Math.PI;

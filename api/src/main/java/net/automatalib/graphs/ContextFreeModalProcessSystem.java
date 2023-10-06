@@ -32,9 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author frohme
- * @author murtovi
  */
 public interface ContextFreeModalProcessSystem<L, AP> extends FiniteRepresentation, GraphViewable {
 

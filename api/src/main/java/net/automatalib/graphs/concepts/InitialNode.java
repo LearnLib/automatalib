@@ -22,8 +22,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <N>
  *         node class.
- *
- * @author Malte Isberner
  */
 public interface InitialNode<N> {
 

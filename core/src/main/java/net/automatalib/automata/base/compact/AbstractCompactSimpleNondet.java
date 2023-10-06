@@ -42,9 +42,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <SP>
  *         state property type
- *
- * @author frohme
- * @author Malte Isberner
  */
 public abstract class AbstractCompactSimpleNondet<I, SP> extends AbstractCompact<I, Integer, SP, Void> {
 

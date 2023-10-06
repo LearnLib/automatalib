@@ -27,8 +27,6 @@ import net.automatalib.automata.fsa.NFA;
  * As a DFA can be regarded as a special case of an NFA, using this class on a Brics {@link Automaton} will always work.
  * However, determining successor states for input characters might be much less efficient than when using a {@link
  * BricsDFA}.
- *
- * @author Malte Isberner
  */
 public class BricsNFA extends AbstractBricsAutomaton implements NFA<State, Character> {
 

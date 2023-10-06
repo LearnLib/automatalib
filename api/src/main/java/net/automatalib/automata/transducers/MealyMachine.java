@@ -25,9 +25,6 @@ import net.automatalib.graphs.UniversalGraph;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 
-/**
- * @author fh
- */
 public interface MealyMachine<S, I, T, O> extends UniversalDeterministicAutomaton<S, I, T, Void, O>,
                                                   TransitionOutputAutomaton<S, I, T, O>,
                                                   MealyTransitionSystem<S, I, T, O> {

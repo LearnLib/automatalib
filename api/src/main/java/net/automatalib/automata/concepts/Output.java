@@ -27,8 +27,6 @@ import net.automatalib.words.WordBuilder;
  *         input symbol type
  * @param <D>
  *         output domain type
- *
- * @author Malte Isberner
  */
 public interface Output<I, D> {
 

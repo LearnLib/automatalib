@@ -34,8 +34,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests for DFA2ETFWriter.
- *
- * @author Jeroen Meijer
  */
 public class DFA2ETFWriterTest {
 

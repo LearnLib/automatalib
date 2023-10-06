@@ -48,8 +48,6 @@ import net.automatalib.words.Word;
  * <p>
  * See: D. Lee and M. Yannakakis - "Testing Finite-State Machines: State Identification and Verification", IEEE
  * Transactions on Computers 43.3 (1994)
- *
- * @author frohme
  */
 @SuppressWarnings("nullness")
 public final class LeeYannakakis {

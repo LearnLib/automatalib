@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Collection of various methods dealing with {@link Mapping}s.
- *
- * @author Malte Isberner
  */
 public final class Mappings {
 

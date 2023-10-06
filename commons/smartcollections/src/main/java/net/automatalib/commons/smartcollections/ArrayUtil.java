@@ -17,8 +17,6 @@ package net.automatalib.commons.smartcollections;
 
 /**
  * Utility methods for arrays.
- *
- * @author frohme
  */
 public final class ArrayUtil {
 

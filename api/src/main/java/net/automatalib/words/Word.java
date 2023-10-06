@@ -62,8 +62,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         symbol type
- *
- * @author Malte Isberner
  */
 public abstract class Word<I> extends AbstractPrintable implements ArrayWritable<I>, Iterable<I> {
 

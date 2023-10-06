@@ -20,9 +20,6 @@ import java.util.List;
 import net.automatalib.automata.words.util.DefaultVPAlphabetTestUtil;
 import net.automatalib.words.impl.DefaultVPAlphabet;
 
-/**
- * @author frohme
- */
 public class DefaultVPAlphabetTest extends AbstractVPAlphabetTest<Character, DefaultVPAlphabet<Character>> {
 
     @Override

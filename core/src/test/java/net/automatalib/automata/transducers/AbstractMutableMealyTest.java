@@ -25,10 +25,6 @@ import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Maik Merten
- * @author frohme
- */
 public abstract class AbstractMutableMealyTest {
 
     protected abstract MutableMealyMachine<?, Symbol<Character>, ?, String> getMealy();

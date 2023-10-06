@@ -20,8 +20,6 @@ package net.automatalib.commons.smartcollections;
  *
  * @param <E>
  *         element class.
- *
- * @author Malte Isberner
  */
 public interface SmartDeque<E> extends SmartCollection<E> {
 

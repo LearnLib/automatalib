@@ -21,8 +21,6 @@ import net.automatalib.serialization.FormatException;
 
 /**
  * Exception that may be thrown whenever an FSM is illegal.
- *
- * @author Jeroen Meijer
  */
 public class FSMFormatException extends FormatException {
 

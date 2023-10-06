@@ -52,8 +52,6 @@ import net.automatalib.words.Alphabet;
  * Otherwise, pruning can be chosen to be performed on the automaton to be minimized ({@link PruningMode#PRUNE_BEFORE}),
  * or on the calculated state partition ({@link PruningMode#PRUNE_AFTER}). For methods that do not provide a {@code
  * pruningMode} parameter, the default is {@link PruningMode#PRUNE_AFTER}.
- *
- * @author Malte Isberner
  */
 public final class HopcroftMinimization {
 
@@ -278,8 +276,6 @@ public final class HopcroftMinimization {
 
     /**
      * Allows for controlling how automata are pruned during minimization.
-     *
-     * @author Malte Isberner
      */
     public enum PruningMode {
         /**

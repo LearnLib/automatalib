@@ -25,8 +25,6 @@ import net.automatalib.words.abstractimpl.AbstractAlphabet;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class SingletonAlphabet<I> extends AbstractAlphabet<I> implements Alphabet<I> {
 

@@ -36,7 +36,6 @@ import org.testng.annotations.Test;
  * This tests will involve parsing Mealy machines where transitions in the FSM are alternating (opposed to regular
  * transitions that can be directly mapped).
  *
- * @author Jeroen Meijer
  * @see FSM2MealyParserIOTest
  */
 public class FSM2MealyParserAlternatingTest extends AbstractFSM2ParserTest {

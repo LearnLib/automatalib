@@ -23,9 +23,6 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class DynamicStateMappingTest {
 
     @Test

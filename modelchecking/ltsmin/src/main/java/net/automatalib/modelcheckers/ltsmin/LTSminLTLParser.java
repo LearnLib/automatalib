@@ -38,8 +38,6 @@ import org.slf4j.LoggerFactory;
  *     <li>'letter' checks that each register is named "letter". This is used by {@link DFA}-based hypotheses and {@link MealyMachine}-based hypotheses with alternating input/output labels.</li>
  *     <li>'io' checks that each register is named "input" or "output". This is used by {@link MealyMachine}-based hypotheses with synchronous labeling.</li>
  * </ul>
- *
- * @author frohme
  */
 public final class LTSminLTLParser {
 

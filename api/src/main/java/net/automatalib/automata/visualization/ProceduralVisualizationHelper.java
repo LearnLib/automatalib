@@ -38,8 +38,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *         state type
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHelper<Pair<I, S>, Triple<I, I, S>> {
 

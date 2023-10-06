@@ -36,8 +36,6 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * Utility class for integration tests.
- *
- * @author frohme
  */
 public final class IntegrationUtil {
 

@@ -41,8 +41,6 @@ package net.automatalib.ts;
  *         state property class
  * @param <TP>
  *         transition property class
- *
- * @author Malte Isberner
  */
 public interface UniversalTransitionSystem<S, I, T, SP, TP> extends TransitionSystem<S, I, T> {
 

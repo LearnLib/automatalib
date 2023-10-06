@@ -20,9 +20,6 @@ import java.util.Arrays;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class WordBuilderTest {
 
     @Test

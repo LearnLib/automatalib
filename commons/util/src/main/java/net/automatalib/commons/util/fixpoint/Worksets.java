@@ -25,9 +25,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.automatalib.commons.util.Pair;
 
-/**
- * @author msc
- */
 public final class Worksets {
 
     private Worksets() {

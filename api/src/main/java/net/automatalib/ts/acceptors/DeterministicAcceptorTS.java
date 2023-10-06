@@ -26,7 +26,6 @@ import net.automatalib.ts.UniversalDTS;
 /**
  * A deterministic acceptor transition system.
  *
- * @author Malte Isberner
  * @see AcceptorTS
  * @see DeterministicTransitionSystem
  */

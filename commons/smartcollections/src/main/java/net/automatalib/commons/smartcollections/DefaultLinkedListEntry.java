@@ -21,8 +21,6 @@ package net.automatalib.commons.smartcollections;
  *
  * @param <E>
  *         element class.
- *
- * @author Malte Isberner
  */
 public class DefaultLinkedListEntry<E> extends AbstractBasicLinkedListEntry<E, DefaultLinkedListEntry<E>> {
 

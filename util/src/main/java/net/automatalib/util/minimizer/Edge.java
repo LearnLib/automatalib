@@ -22,8 +22,6 @@ package net.automatalib.util.minimizer;
  *         state class.
  * @param <T>
  *         transition label class.
- *
- * @author Malte Isberner
  */
 final class Edge<S, T> {
 

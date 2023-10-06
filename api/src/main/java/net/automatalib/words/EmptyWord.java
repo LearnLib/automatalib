@@ -30,7 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * This class has no type parameter, as there are no non-{@code null} instances of the symbol class involved. Hence,
  * Java's generic mechanism allows to maintain only a single instance of this class.
  *
- * @author Malte Isberner
  * @see Collections#emptyList()
  */
 final class EmptyWord extends Word<Object> {

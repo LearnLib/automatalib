@@ -28,8 +28,6 @@ import java.util.stream.Stream;
  *         node type
  * @param <E>
  *         edge type
- *
- * @author Malte Isberner
  */
 public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
 

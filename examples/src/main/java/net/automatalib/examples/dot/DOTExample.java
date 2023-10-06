@@ -33,8 +33,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Example for using the DOT visualizer for displaying multiple automata at the same time.
- *
- * @author frohme
  */
 public final class DOTExample {
 

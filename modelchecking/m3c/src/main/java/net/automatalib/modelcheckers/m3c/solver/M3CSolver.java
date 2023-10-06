@@ -23,8 +23,6 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
  *
  * @param <F>
  *         formula type
- *
- * @author frohme
  */
 public interface M3CSolver<F> {
 
@@ -47,8 +45,6 @@ public interface M3CSolver<F> {
      *
      * @param <F>
      *         formula type
-     *
-     * @author frohme
      */
     interface TypedM3CSolver<F> extends M3CSolver<F> {
 

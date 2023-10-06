@@ -25,8 +25,6 @@ import net.automatalib.automata.fsa.DFA;
  * This adapter is backed by the Brics automaton, so changes to the {@link Automaton} are reflected. Please note that
  * any changes which result in a loss of determinism will result in incorrect behavior exposed by this class until
  * determinism is restored.
- *
- * @author Malte Isberner
  */
 public class BricsDFA extends AbstractBricsAutomaton implements DFA<State, Character> {
 

@@ -24,8 +24,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A class for describing LTSmin version.
- *
- * @author frohme
  */
 public final class LTSminVersion {
 

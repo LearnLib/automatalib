@@ -22,8 +22,6 @@ package net.automatalib.util.ts.traversal;
  *         state class.
  * @param <D>
  *         user data class.
- *
- * @author Malte Isberner
  */
 final class BFSRecord<S, D> {
 

@@ -26,8 +26,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T>
  *         referent class.
- *
- * @author Malte Isberner
  */
 public interface Ref<T> {
 

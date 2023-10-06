@@ -20,9 +20,6 @@ import java.util.Map;
 
 import net.automatalib.graphs.Graph;
 
-/**
- * @author Malte Isberner
- */
 public interface VisualizationProvider {
 
     /**

@@ -37,9 +37,6 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 final class ProceduralUtil {
 
     private ProceduralUtil() {

@@ -37,9 +37,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class WpMethodTestsIteratorTest {
 
     private final Alphabet<Integer> alphabet = Alphabets.integers(0, 5);

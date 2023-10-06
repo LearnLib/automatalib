@@ -38,8 +38,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <E>
  *         element type
- *
- * @author Malte Isberner
  */
 class StrictPriorityQueue<E> extends AbstractQueue<E> {
 
@@ -185,8 +183,6 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
      *
      * @param <E>
      *         element type
-     *
-     * @author Malte Isberner
      */
     public interface MergeOperation<E> {
 

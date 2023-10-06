@@ -40,9 +40,6 @@ import net.automatalib.visualization.VisualizationHelper;
  *         atomic proposition type
  * @param <TP>
  *         edge property type
- *
- * @author frohme
- * @author murtovi
  */
 public interface ProceduralModalProcessGraph<N, L, E, AP, TP extends ProceduralModalEdgeProperty>
         extends UniversalGraph<N, E, Set<AP>, TP>,

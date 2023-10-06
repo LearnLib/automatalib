@@ -27,7 +27,6 @@ import net.automatalib.graphs.concepts.KripkeInterpretation;
  * @param <AP>
  *         atomic property class
  *
- * @author Malte Isberner
  * @see KripkeInterpretation
  */
 public interface FiniteKripkeStructure<N, E, AP> extends Graph<N, E>, KripkeInterpretation<N, AP> {}

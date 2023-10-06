@@ -31,8 +31,6 @@ import info.scce.addlib.serializer.XDDSerializer;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public class ADDTransformerSerializer<L, AP> implements TransformerSerializer<ADDTransformer<L, AP>, L, AP> {
 

@@ -21,9 +21,6 @@ import java.util.stream.IntStream;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 @Test
 public class ReusableIteratorTest {
 

@@ -22,8 +22,6 @@ package net.automatalib.automata.concepts;
  *         transition class.
  * @param <O>
  *         output class.
- *
- * @author Malte Isberner
  */
 public interface TransitionOutput<T, O> {
 

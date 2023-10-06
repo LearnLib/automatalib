@@ -46,8 +46,6 @@ import org.checkerframework.dataflow.qual.Pure;
  *         output alphabet type
  * @param <N>
  *         the concrete node type
- *
- * @author frohme
  */
 public interface RecursiveADSNode<S, I, O, N extends RecursiveADSNode<S, I, O, N>> extends Graph<N, N> {
 

@@ -31,8 +31,6 @@ import java.util.PriorityQueue;
  *
  * @param <E>
  *         element class.
- *
- * @author Malte Isberner
  */
 public interface SmartDynamicPriorityQueue<E> extends SmartPriorityQueue<E> {
 

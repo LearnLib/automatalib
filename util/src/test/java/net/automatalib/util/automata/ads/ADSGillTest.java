@@ -24,8 +24,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests for the automata of the paper "State-Identification Experiments in Finite Automata" by Arthur Gill.
- *
- * @author frohme
  */
 public class ADSGillTest extends AbstractADSTest {
 

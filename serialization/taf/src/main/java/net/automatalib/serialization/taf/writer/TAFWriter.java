@@ -43,8 +43,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * This class provides methods to write automata in the TAF format.
- *
- * @author Malte Isberner
  */
 public final class TAFWriter {
 

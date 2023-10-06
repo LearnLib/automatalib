@@ -24,8 +24,6 @@ import net.automatalib.words.GrowingAlphabet;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class GrowingMapAlphabet<I> extends MapAlphabet<I> implements GrowingAlphabet<I> {
 

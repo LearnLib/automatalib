@@ -29,8 +29,6 @@ import org.testng.annotations.Test;
  * Tests whether lassos are constructed correctly for any automaton.
  *
  * @param <L> the {@link AbstractLasso} type to test.
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractLassoTest<L extends AbstractLasso<String, ?>> {
 

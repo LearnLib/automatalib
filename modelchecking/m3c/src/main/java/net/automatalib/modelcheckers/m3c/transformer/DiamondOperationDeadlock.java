@@ -35,8 +35,6 @@ import net.automatalib.modelcheckers.m3c.formula.TrueNode;
  *
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public class DiamondOperationDeadlock<AP> implements UnaryOperator<BooleanVector> {
 

@@ -30,8 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility class for invoking system processes.
- *
- * @author frohme
  */
 public final class ProcessUtil {
 

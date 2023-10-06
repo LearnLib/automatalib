@@ -24,9 +24,6 @@ import net.automatalib.visualization.VisualizationHelper;
 /**
  * A {@link VisualizationHelper} for {@link WitnessTree}s that emphasizes nodes and edges of the witness and
  * de-emphasizes the remaining ones.
- *
- * @author freese
- * @author frohme
  */
 public class ColorVisualizationHelper extends AbstractVisualizationHelper {
 

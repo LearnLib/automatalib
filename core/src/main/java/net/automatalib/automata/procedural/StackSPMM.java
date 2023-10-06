@@ -35,8 +35,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         transition type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class StackSPMM<S, I, T, O>
         implements SPMM<StackState<S, I, MealyMachine<S, I, T, O>>, I, MealyTransition<StackState<S, I, MealyMachine<S, I, T, O>>, O>, O> {

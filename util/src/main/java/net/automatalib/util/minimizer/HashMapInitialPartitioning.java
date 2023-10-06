@@ -27,8 +27,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         state class.
  * @param <L>
  *         transition
- *
- * @author Malte Isberner
  */
 class HashMapInitialPartitioning<S, L> implements InitialPartitioning<S, L> {
 

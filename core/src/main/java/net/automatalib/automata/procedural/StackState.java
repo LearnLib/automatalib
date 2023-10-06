@@ -28,8 +28,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         hypothesis state type
  * @param <P>
  *         hypothesis type
- *
- * @author frohme
  */
 final class StackState<S, I, P> {
 

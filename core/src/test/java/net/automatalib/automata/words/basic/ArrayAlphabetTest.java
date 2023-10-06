@@ -20,9 +20,6 @@ import java.util.List;
 import net.automatalib.automata.words.util.AlphabetTestUtil;
 import net.automatalib.words.impl.ArrayAlphabet;
 
-/**
- * @author frohme
- */
 public class ArrayAlphabetTest extends AbstractAlphabetTest<Integer, ArrayAlphabet<Integer>> {
 
     @Override

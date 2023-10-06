@@ -24,8 +24,6 @@ import net.automatalib.graphs.concepts.NodeAcceptance;
  *         node class
  * @param <E>
  *         edge class
- *
- * @author Malte Isberner
  */
 public interface AcceptanceGraph<N, E> extends Graph<N, E>, NodeAcceptance<N> {}
 

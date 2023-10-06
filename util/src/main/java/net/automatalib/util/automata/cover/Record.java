@@ -27,8 +27,6 @@ import net.automatalib.words.Word;
  *         automaton state type
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 final class Record<S, I> {
 

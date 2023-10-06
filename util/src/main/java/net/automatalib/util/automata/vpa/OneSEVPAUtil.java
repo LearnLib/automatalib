@@ -40,9 +40,6 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 
 /**
  * Utility class revolving around 1-SEVPAs.
- *
- * @author Malte Isberner
- * @author frohme
  */
 public final class OneSEVPAUtil {
 

@@ -25,8 +25,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Location type used for the default 1-SEVPA.
- *
- * @author Malte Isberner
  */
 public class Location {
 

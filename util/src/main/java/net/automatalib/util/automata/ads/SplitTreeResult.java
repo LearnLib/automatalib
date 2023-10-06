@@ -30,8 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 class SplitTreeResult<S, I, O> {
 

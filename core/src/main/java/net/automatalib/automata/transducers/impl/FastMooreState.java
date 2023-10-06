@@ -22,8 +22,6 @@ import net.automatalib.automata.base.fast.AbstractFastState;
  *
  * @param <O>
  *         output symbol class.
- *
- * @author Malte Isberner
  */
 public final class FastMooreState<O> extends AbstractFastState<FastMooreState<O>> {
 

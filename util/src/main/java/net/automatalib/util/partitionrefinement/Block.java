@@ -27,8 +27,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Like {@link PaigeTarjan}, this is a very low-level class that exposes a lot (almost all) of its fields directly. Care
  * should be taken that instances of this class are not returned (in any form) to the API user, but are hidden behind a
  * facade.
- *
- * @author Malte Isberner
  */
 public class Block {
 

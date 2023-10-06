@@ -32,7 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * An LTSmin model checker for full LTL.
  *
- * @author Jeroen Meijer
  * @see <a href="http://ltsmin.utwente.nl/assets/man/etf2lts-mc.html">man etf2lts-mc</a>
  * @see AbstractLTSmin
  */

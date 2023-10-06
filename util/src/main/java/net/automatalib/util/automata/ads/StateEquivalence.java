@@ -33,8 +33,6 @@ import net.automatalib.words.Word;
 /**
  * A utility class for computing an adaptive distinguishing sequence by means of solving the state equivalence problems,
  * i.e. computing and ADS for two states only.
- *
- * @author frohme
  */
 public final class StateEquivalence {
 

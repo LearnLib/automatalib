@@ -27,8 +27,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         node class
  * @param <E>
  *         edge class
- *
- * @author Malte Isberner
  */
 public interface SSSPResult<N, E> {
 

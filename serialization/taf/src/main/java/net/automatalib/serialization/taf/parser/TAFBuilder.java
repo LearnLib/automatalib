@@ -21,8 +21,6 @@ import net.automatalib.words.Alphabet;
 
 /**
  * Interface for a builder object that takes care of the actual automaton construction during parsing of a TAF file.
- *
- * @author Malte Isberner
  */
 interface TAFBuilder {
 

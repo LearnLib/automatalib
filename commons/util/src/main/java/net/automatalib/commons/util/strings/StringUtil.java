@@ -25,8 +25,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Miscellaneous utility functions for {@link String}s.
- *
- * @author Malte Isberner
  */
 public final class StringUtil {
 

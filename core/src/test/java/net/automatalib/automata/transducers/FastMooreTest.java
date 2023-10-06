@@ -19,9 +19,6 @@ import net.automatalib.automata.transducers.impl.FastMoore;
 import net.automatalib.automata.util.TestUtil;
 import net.automatalib.words.impl.Symbol;
 
-/**
- * @author frohme
- */
 public class FastMooreTest extends AbstractMutableMooreTest {
 
     @Override

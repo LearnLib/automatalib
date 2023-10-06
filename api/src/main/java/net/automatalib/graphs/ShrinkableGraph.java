@@ -24,8 +24,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         node class
  * @param <E>
  *         edge class
- *
- * @author Malte Isberner
  */
 public interface ShrinkableGraph<N, E> extends Graph<N, E> {
 

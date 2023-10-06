@@ -8,8 +8,6 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * An example class that creates a simple Mealy Machine and displays it via the JUNG library.
- *
- * @author frohme
  */
 public final class Example {
 

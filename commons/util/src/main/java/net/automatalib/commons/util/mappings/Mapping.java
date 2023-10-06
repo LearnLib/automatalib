@@ -30,8 +30,6 @@ import java.util.function.Function;
  *         domain type.
  * @param <R>
  *         range type.
- *
- * @author Malte Isberner
  */
 @FunctionalInterface
 public interface Mapping<D, R> extends Function<D, R> {

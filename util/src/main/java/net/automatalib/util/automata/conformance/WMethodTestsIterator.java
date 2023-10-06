@@ -37,8 +37,6 @@ import net.automatalib.words.WordBuilder;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>, List<I>, Word<I>, Word<I>> {
 

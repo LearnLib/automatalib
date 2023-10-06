@@ -24,8 +24,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A {@link Set} for positive {@link Integer int}s that internally stores its elements in a {@link BitSet}. This class
  * may also be used as a(n) (im)mutable {@link Set}-view of an existing {@link BitSet}.
- *
- * @author frohme
  */
 public class PositiveIntSet extends AbstractSet<Integer> {
 

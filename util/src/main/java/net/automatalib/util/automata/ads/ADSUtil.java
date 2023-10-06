@@ -30,8 +30,6 @@ import net.automatalib.words.WordBuilder;
 
 /**
  * Utility class, that offers some operations revolving around adaptive distinguishing sequences.
- *
- * @author frohme
  */
 public final class ADSUtil {
 

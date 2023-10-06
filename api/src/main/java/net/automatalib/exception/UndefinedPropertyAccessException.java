@@ -18,8 +18,6 @@ package net.automatalib.exception;
 /**
  * This specialized exception can be thrown if during the traversal of an automaton or transition system an undefined
  * property (e.g. a state or a transition output) is accessed, that is otherwise required for returning a valid result.
- *
- * @author frohme
  */
 public class UndefinedPropertyAccessException extends IllegalStateException {
 

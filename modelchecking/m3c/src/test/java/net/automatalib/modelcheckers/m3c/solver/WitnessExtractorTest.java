@@ -41,10 +41,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
-/**
- * @author freese
- * @author frohme
- */
 public class WitnessExtractorTest {
 
     @DataProvider

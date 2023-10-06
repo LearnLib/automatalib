@@ -22,9 +22,6 @@ import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeroen Meijer
- */
 public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>, DFALasso<String>> {
 
     private LTSminLTLDFA<String> modelChecker;
@@ -36,7 +33,7 @@ public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>, DFAL
 
     @Override
     public void newModelChecker() {
-        modelChecker = new LTSminLTLDFABuilder<String>().withString2Input(s -> s).create();
+        modelChecker = new net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLDFABuilder<String>().withString2Input(s -> s).create();
     }
 
     @Override

@@ -24,8 +24,6 @@ import net.automatalib.words.VPAlphabet;
 
 /**
  * Operations on {@link OneSEVPA}s.
- *
- * @author frohme
  */
 public final class OneSEVPAs {
 

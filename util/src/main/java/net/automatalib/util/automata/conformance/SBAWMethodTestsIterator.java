@@ -29,7 +29,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
  * @param <I>
  *         input symbol type
  *
- * @author frohme
  * @see WMethodTestsIterator
  */
 public class SBAWMethodTestsIterator<I> extends ProceduralWMethodTestsIterator<I, DFA<?, I>> {

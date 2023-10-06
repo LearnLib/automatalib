@@ -32,9 +32,6 @@ import net.automatalib.words.WordBuilder;
 import net.automatalib.words.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author Jeroen Meijer
- */
 public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
 
     public static final String NO_LASSO = "Automaton is not lasso shaped";

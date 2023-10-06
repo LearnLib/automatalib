@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A small example for constructing a {@link net.automatalib.automata.vpa.OneSEVPA visibly push-down automaton} and
  * displaying it.
- *
- * @author frohme
  */
 public final class OneSEVPAExample {
 

@@ -35,8 +35,6 @@ import net.automatalib.words.Alphabet;
  *
  * @param <I>
  *         The default input symbol type
- *
- * @author frohme
  */
 public interface SimpleAutomatonSerializer<I> extends InputModelSerializer<I, SimpleAutomaton<?, I>> {
 

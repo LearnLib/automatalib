@@ -44,9 +44,6 @@ import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 @Test
 public class SBAWMethodTestsIteratorTest {
 

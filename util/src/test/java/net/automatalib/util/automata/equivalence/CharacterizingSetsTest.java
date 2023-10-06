@@ -35,9 +35,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class CharacterizingSetsTest {
 
     private static final Random RANDOM = new Random(0);

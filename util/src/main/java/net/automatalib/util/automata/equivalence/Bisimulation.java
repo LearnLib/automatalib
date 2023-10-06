@@ -23,9 +23,6 @@ import com.google.common.collect.Sets;
 import net.automatalib.automata.Automaton;
 import net.automatalib.commons.util.Pair;
 
-/**
- * @author msc
- */
 public final class Bisimulation {
 
     private Bisimulation() {

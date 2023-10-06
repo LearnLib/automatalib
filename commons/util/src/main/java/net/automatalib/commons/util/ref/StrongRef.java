@@ -20,8 +20,6 @@ package net.automatalib.commons.util.ref;
  *
  * @param <T>
  *         referent class.
- *
- * @author Malte Isberner
  */
 public final class StrongRef<T> implements Ref<T> {
 

@@ -20,8 +20,6 @@ package net.automatalib.words;
  *
  * @param <I>
  *         symbol class.
- *
- * @author Malte Isberner
  */
 public interface GrowingAlphabet<I> extends Alphabet<I> {
 

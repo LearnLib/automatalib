@@ -26,8 +26,6 @@ import com.google.common.collect.Iterators;
  *
  * @param <S>
  *         state class.
- *
- * @author Malte Isberner
  */
 class OriginalStateCollection<S> extends AbstractCollection<S> {
 

@@ -28,9 +28,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <SP>
  *         state property type
- *
- * @author frohme
- * @author Malte Isberner
  */
 public class UniversalCompactSimpleDet<I, @Nullable SP> extends AbstractCompactSimpleDeterministic<I, SP> {
 

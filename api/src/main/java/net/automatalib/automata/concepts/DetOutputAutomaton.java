@@ -29,7 +29,5 @@ import net.automatalib.automata.DeterministicAutomaton;
  *         transition class
  * @param <D>
  *         output domain class
- *
- * @author Malte Isberner
  */
 public interface DetOutputAutomaton<S, I, T, D> extends OutputAutomaton<S, I, T, D>, DeterministicAutomaton<S, I, T> {}

@@ -33,9 +33,6 @@ import net.automatalib.words.Alphabet;
 import net.automatalib.words.GrowingAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
-/**
- * @author msc
- */
 class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?>, S, S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {
 

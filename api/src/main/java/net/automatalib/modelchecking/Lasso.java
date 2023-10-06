@@ -34,8 +34,6 @@ import net.automatalib.words.Word;
  *         the input type
  * @param <D>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public interface Lasso<I, D> extends DetOutputAutomaton<Integer, I, Integer, D>, InputAlphabetHolder<I> {
 

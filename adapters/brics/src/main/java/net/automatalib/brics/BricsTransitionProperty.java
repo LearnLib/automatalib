@@ -20,8 +20,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * The properties of an edge in a Brics automaton.
- *
- * @author Malte Isberner
  */
 public class BricsTransitionProperty {
 

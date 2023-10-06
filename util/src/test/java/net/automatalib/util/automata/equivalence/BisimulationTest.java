@@ -27,9 +27,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author msc
- */
 public class BisimulationTest {
 
     @Test

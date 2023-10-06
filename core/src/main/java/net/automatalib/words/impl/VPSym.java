@@ -24,8 +24,6 @@ import net.automatalib.words.VPAlphabet.SymbolType;
  *
  * @param <T>
  *         type of the payload
- *
- * @author Malte Isberner
  */
 public final class VPSym<T> {
 

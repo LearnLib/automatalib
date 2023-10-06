@@ -22,8 +22,6 @@ import net.automatalib.automata.base.fast.AbstractFastState;
  *
  * @param <O>
  *         output symbol class.
- *
- * @author Malte Isberner
  */
 public final class FastMealyState<O> extends AbstractFastState<MealyTransition<FastMealyState<O>, O>> {
 

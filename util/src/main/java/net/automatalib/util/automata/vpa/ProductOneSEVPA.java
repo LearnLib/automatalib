@@ -35,8 +35,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         location type of second 1-SEVPA
  * @param <I>
  *         input alphabet type
- *
- * @author Malte Isberner
  */
 public class ProductOneSEVPA<L1, L2, I> extends AbstractSEVPA<Pair<L1, L2>, I> implements OneSEVPA<Pair<L1, L2>, I> {
 

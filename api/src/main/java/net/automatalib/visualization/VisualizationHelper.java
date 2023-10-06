@@ -24,8 +24,6 @@ import java.util.Map;
  *         node class
  * @param <E>
  *         edge class
- *
- * @author Malte Isberner
  */
 public interface VisualizationHelper<N, E> {
 

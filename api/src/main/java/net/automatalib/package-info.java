@@ -21,7 +21,6 @@
  * This package contains classes for accessing global AutomataLib settings, as defined in, e.g., the {@code
  * automatalib.properties} file.
  *
- * @author Malte Isberner
  * @see net.automatalib.AutomataLibSettings
  */
 package net.automatalib;

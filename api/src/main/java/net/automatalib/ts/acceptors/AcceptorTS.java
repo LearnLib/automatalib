@@ -26,8 +26,6 @@ import net.automatalib.ts.UniversalTransitionSystem;
  *         state class
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 public interface AcceptorTS<S, I> extends UniversalTransitionSystem<S, I, S, Boolean, Void> {
 

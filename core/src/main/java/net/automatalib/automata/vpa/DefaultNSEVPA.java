@@ -25,8 +25,6 @@ import net.automatalib.words.VPAlphabet;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class DefaultNSEVPA<I> extends AbstractDefaultSEVPA<I> {
 

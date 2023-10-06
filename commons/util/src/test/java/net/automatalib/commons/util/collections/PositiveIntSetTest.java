@@ -25,9 +25,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.internal.collections.Ints;
 
-/**
- * @author frohme
- */
 public class PositiveIntSetTest {
 
     @Test

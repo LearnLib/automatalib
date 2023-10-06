@@ -37,8 +37,6 @@ import net.automatalib.commons.util.io.NonClosingOutputStream;
 
 /**
  * Utility methods for operating with {@code java.io.*} classes.
- *
- * @author Malte Isberner
  */
 public final class IOUtil {
 

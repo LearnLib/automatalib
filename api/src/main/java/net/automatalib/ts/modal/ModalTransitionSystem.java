@@ -44,8 +44,6 @@ import net.automatalib.visualization.VisualizationHelper;
  *         transition type
  * @param <TP>
  *         (specific) transition property type
- *
- * @author msc
  */
 public interface ModalTransitionSystem<S, I, T, TP extends ModalEdgeProperty>
         extends UniversalFiniteAlphabetAutomaton<S, I, T, Void, TP> {

@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         output alphabet type
  * @param <N>
  *         the concrete node type
- *
- * @author frohme
  */
 public abstract class AbstractRecursiveADSSymbolNode<S, I, O, N extends RecursiveADSNode<S, I, O, N>>
         implements RecursiveADSNode<S, I, O, N> {

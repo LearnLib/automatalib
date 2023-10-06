@@ -20,9 +20,6 @@ import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeroen Meijer
- */
 public class LTSminMonitorDFATest extends AbstractLTSminMonitorTest<DFA<?, String>, DFA<?, String>> {
 
     private LTSminMonitorDFA<String> modelChecker;
@@ -34,7 +31,7 @@ public class LTSminMonitorDFATest extends AbstractLTSminMonitorTest<DFA<?, Strin
 
     @Override
     public void newModelChecker() {
-        modelChecker = new LTSminMonitorDFABuilder<String>().withString2Input(s -> s).create();
+        modelChecker = new net.automatalib.modelcheckers.ltsmin.monitor.LTSminMonitorDFABuilder<String>().withString2Input(s -> s).create();
     }
 
     @Override

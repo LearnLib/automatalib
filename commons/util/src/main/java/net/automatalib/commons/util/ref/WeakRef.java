@@ -24,8 +24,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T>
  *         referent class.
- *
- * @author Malte Isberner
  */
 public final class WeakRef<T> implements Ref<T> {
 

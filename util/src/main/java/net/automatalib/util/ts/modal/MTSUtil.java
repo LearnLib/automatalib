@@ -27,10 +27,6 @@ import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 
-/**
- * @author msc
- * @author frohme
- */
 public final class MTSUtil {
 
     private MTSUtil() {

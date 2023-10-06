@@ -24,8 +24,6 @@ import net.automatalib.graphs.Graph;
  *         edge class
  * @param <L>
  *         label class
- *
- * @author Malte Isberner
  */
 public interface EdgeLabels<E, L> {
 

@@ -48,9 +48,6 @@ import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
-/**
- * @author frohme
- */
 final class SPAConverter {
 
     private SPAConverter() {

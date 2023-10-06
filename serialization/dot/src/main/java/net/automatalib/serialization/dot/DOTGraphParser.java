@@ -38,8 +38,6 @@ import net.automatalib.serialization.ModelDeserializer;
  *         the edge property type
  * @param <G>
  *         the graph type
- *
- * @author frohme
  */
 public class DOTGraphParser<NP, EP, G extends MutableGraph<?, ?, NP, EP>> implements ModelDeserializer<G> {
 

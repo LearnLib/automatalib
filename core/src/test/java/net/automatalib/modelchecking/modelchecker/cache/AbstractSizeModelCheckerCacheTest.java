@@ -38,8 +38,6 @@ import org.testng.annotations.Test;
  *         model checker type
  * @param <C>
  *         cache type
- *
- * @author frohme
  */
 public abstract class AbstractSizeModelCheckerCacheTest<I, R extends Lasso<I, ?>, MA extends MutableAutomaton<?, I, ?, ?, ?>, MC extends ModelCheckerLasso<I, ? super MA, Object, R> & ModelCheckCounter, C extends ModelCheckerCache<I, ? super MA, Object, R>> {
 

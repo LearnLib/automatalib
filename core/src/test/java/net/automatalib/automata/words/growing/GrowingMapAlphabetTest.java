@@ -20,9 +20,6 @@ import java.util.List;
 import net.automatalib.automata.words.util.AlphabetTestUtil;
 import net.automatalib.words.impl.GrowingMapAlphabet;
 
-/**
- * @author frohme
- */
 public class GrowingMapAlphabetTest extends AbstractGrowingAlphabetTest<Integer, GrowingMapAlphabet<Integer>> {
 
     @Override

@@ -34,8 +34,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         state class
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 public interface SimpleDTS<S, I> extends SimpleTS<S, I> {
 

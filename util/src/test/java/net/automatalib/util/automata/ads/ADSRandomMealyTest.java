@@ -30,9 +30,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class ADSRandomMealyTest extends AbstractADSTest {
 
     final boolean completeExpected, partialExpected;

@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.UnknownKeyFor;
  *
  * @param <T>
  *         element type
- *
- * @author frohme
  */
 public class ReflexiveMapView<T> extends AbstractMap<T, T> {
 

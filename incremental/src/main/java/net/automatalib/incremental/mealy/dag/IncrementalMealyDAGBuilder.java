@@ -51,8 +51,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol class
  * @param <O>
  *         output symbol class
- *
- * @author Malte Isberner
  */
 public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder<I, O>, InputAlphabetHolder<I> {
 

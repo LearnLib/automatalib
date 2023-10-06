@@ -20,8 +20,6 @@ import java.io.InputStream;
 
 /**
  * A delegating input stream that throws an exception when closed. This is mainly used for testing purposes.
- *
- * @author frohme
  */
 public class UnclosableInputStream extends InputStream {
 

@@ -45,8 +45,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         state property type
  * @param <TP>
  *         transition property type
- *
- * @author Malte Isberner
  */
 @SuppressWarnings("nullness") // for now the nullness of SP/TP depends on the provided suppliers
 public class RandomICAutomatonGenerator<SP, TP> {

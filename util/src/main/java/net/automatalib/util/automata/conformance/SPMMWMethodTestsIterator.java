@@ -28,7 +28,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
  * @param <O>
  *         output symbol type
  *
- * @author frohme
  * @see WMethodTestsIterator
  */
 public class SPMMWMethodTestsIterator<I, O> extends ProceduralWMethodTestsIterator<I, MealyMachine<?, I, ?, O>> {

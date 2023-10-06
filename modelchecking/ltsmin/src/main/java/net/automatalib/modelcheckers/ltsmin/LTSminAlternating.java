@@ -37,8 +37,6 @@ import net.automatalib.words.impl.Alphabets;
  *         the output type.
  * @param <R>
  *         the type of counterexample
- *
- * @author Jeroen Meijer
  */
 public interface LTSminAlternating<I, O, R> extends LTSminMealy<I, O, R> {
 

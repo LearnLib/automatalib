@@ -25,8 +25,6 @@ package net.automatalib.commons.smartcollections;
  *
  * @param <T>
  *         element class, must implement {@link LinkedListEntry}.
- *
- * @author Malte Isberner
  */
 public class IntrusiveLinkedList<T extends LinkedListEntry<T, T>> extends AbstractLinkedList<T, T> {
 

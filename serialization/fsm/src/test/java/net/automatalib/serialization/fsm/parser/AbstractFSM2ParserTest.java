@@ -27,9 +27,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeroen Meijer
- */
 public abstract class AbstractFSM2ParserTest {
 
     protected abstract UniversalDeterministicAutomaton<?, Character, ?, ?, ?> getParsedAutomaton(@Nullable Collection<Character> requiredInputs)

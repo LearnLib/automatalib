@@ -47,9 +47,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author freese
- * @author frohme
  */
 final class WitnessTreeExtractor<L, AP> {
 

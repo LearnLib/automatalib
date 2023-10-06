@@ -38,7 +38,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol type
  *
- * @author frohme
  * @see Covers#stateCover(DeterministicAutomaton, Collection, Collection)
  */
 class IncrementalStateCoverIterator<S, I> extends AbstractIterator<Word<I>> {

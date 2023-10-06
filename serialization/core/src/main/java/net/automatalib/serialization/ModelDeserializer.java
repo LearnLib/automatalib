@@ -28,8 +28,6 @@ import net.automatalib.commons.util.IOUtil;
  *
  * @param <M>
  *         the type of objects implementing classes can deserialize
- *
- * @author frohme
  */
 public interface ModelDeserializer<M> {
 

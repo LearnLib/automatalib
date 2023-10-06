@@ -33,8 +33,6 @@ import net.automatalib.ts.simple.SimpleTS;
  *         input symbol class
  * @param <T>
  *         transition class
- *
- * @author Malte Isberner
  */
 public interface TransitionSystem<S, I, T> extends SimpleTS<S, I> {
 

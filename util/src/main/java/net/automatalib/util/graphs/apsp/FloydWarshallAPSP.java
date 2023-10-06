@@ -34,8 +34,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         node class
  * @param <E>
  *         edge class
- *
- * @author Malte Isberner
  */
 public class FloydWarshallAPSP<N, E> implements APSPResult<N, E> {
 

@@ -17,8 +17,6 @@ package net.automatalib;
 
 /**
  * An enum of all the system properties currently used by AutomataLib.
- *
- * @author frohme
  */
 public enum AutomataLibProperty {
 

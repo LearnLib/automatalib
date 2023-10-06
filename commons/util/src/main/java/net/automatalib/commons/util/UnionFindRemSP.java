@@ -19,8 +19,6 @@ package net.automatalib.commons.util;
  * Implementation of a disjoint set (union-find) data structure for integers, based on Rem's algorithm, as described in
  * the paper <a href="http://www.ii.uib.no/~fredrikm/fredrik/papers/SEA2010.pdf"><i>Experiments on Union-Find Algorithms
  * for the Disjoint-Set Data Structure</i> (M. Patwary, J. Blair, F. Manne; Proc. SEA 2010)</a>.
- *
- * @author Malte Isberner
  */
 public class UnionFindRemSP implements IntDisjointSets {
 

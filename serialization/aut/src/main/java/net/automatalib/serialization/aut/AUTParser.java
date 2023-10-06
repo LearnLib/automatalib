@@ -25,8 +25,6 @@ import net.automatalib.serialization.InputModelData;
 /**
  * A parser for automata specified in the AUT format (see <a
  * href="http://cadp.inria.fr/man/aut.html">http://cadp.inria.fr/man/aut.html</a> for further information).
- *
- * @author frohme
  */
 public final class AUTParser {
 

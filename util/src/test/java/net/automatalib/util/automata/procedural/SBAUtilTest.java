@@ -39,9 +39,6 @@ import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class SBAUtilTest {
 
     private final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');

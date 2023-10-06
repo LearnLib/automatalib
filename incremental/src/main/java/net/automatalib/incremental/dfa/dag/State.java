@@ -21,8 +21,6 @@ import net.automatalib.incremental.dfa.Acceptance;
 /**
  * State data structure. Note that states are generally unique throughout the algorithm, hence comparisons are always
  * identity comparisons.
- *
- * @author Malte Isberner
  */
 final class State {
 

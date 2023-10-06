@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility (singleton) class to manage loading of native libraries.
- *
- * @author Malte Isberner
  */
 public final class LibLoader {
 

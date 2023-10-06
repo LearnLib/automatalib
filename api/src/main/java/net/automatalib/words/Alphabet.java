@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         symbol type
- *
- * @author Malte Isberner
  */
 public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator<I>, IntFunction<I>, ToIntFunction<I> {
 

@@ -50,8 +50,6 @@ import net.automatalib.words.WordBuilder;
  *         transition type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public interface SubsequentialTransducer<S, I, T, O> extends DeterministicOutputTS<S, I, T, O>,
                                                              DetSuffixOutputAutomaton<S, I, T, Word<O>>,

@@ -20,8 +20,6 @@ package net.automatalib.commons.util.strings;
  * <p>
  * Besides implementing the {@link Printable} interface, it provides a standard {@link #toString()} implementation using
  * a {@link StringBuilder} and the {@link #print(Appendable)} method.
- *
- * @author Malte Isberner
  */
 public abstract class AbstractPrintable implements Printable {
 

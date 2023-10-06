@@ -17,8 +17,6 @@ package net.automatalib.incremental.dfa;
 
 /**
  * Tri-state acceptance value.
- *
- * @author Malte Isberner
  */
 public enum Acceptance {
     FALSE {

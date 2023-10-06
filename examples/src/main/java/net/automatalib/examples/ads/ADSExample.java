@@ -30,8 +30,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A small example for computing and displaying adaptive distinguishing sequences.
- *
- * @author frohme
  */
 public final class ADSExample {
 

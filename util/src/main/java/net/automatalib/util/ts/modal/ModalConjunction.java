@@ -33,9 +33,6 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.util.graphs.traversal.DFSVisitor;
 import net.automatalib.util.graphs.traversal.GraphTraversal;
 
-/**
- * @author msc
- */
 class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0, S1, I, T, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {
 

@@ -25,8 +25,6 @@ import java.util.Set;
  *         node class
  * @param <AP>
  *         atomic proposition class
- *
- * @author Malte Isberner
  */
 public interface KripkeInterpretation<N, AP> {
 

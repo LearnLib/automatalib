@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
 
 /**
  * A small test for checking, if writing directly to files is working.
- *
- * @author frohme
  */
 public class FileVisualizationTest {
 

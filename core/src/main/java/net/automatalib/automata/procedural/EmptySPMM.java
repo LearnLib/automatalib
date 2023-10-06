@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class EmptySPMM<I, O> implements SPMM<Void, I, Void, O> {
 

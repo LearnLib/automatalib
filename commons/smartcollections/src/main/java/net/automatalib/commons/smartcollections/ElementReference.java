@@ -20,7 +20,5 @@ package net.automatalib.commons.smartcollections;
  * <p>
  * This interface defines no methods, its aim is to allow distinguishing more explicitly between operations on concrete
  * elements and on their references.
- *
- * @author Malte Isberner
  */
 public interface ElementReference {}

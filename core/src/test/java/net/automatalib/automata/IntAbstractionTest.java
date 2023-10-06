@@ -24,9 +24,6 @@ import net.automatalib.words.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class IntAbstractionTest extends MutableAutomatonTest {
 
     // disable tests for non-deterministic automata

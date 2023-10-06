@@ -31,8 +31,6 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
  *         the property type.
  * @param <R>
  *         the type of counterexample
- *
- * @author Jeroen Meijer
  */
 public interface ModelCheckerLasso<I, A, P, R extends Lasso<I, ?>> extends ModelChecker<I, A, P, R> {
 

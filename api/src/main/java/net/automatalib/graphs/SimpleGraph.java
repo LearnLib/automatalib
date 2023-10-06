@@ -32,8 +32,6 @@ import net.automatalib.visualization.VisualizationHelper;
  *
  * @param <N>
  *         node type
- *
- * @author Malte Isberner
  */
 public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N>, FiniteRepresentation {
 

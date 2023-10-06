@@ -37,10 +37,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Malte Isberner
- * @author frohme
- */
 @Test
 public class CoversTest {
 

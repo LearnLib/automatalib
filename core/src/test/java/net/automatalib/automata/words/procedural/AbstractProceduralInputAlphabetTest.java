@@ -30,9 +30,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public abstract class AbstractProceduralInputAlphabetTest<M extends ProceduralInputAlphabet<Character>>
         extends AbstractVPAlphabetTest<Character, M> {
 

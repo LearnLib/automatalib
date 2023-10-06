@@ -15,9 +15,6 @@
  */
 package net.automatalib.util.automata.copy;
 
-/**
- * @author frohme
- */
 public class BFSTraversalCopyTest extends AbstractAutomatonCopyTest {
 
     @Override

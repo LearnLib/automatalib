@@ -21,9 +21,6 @@ import net.automatalib.automata.words.util.GrowingVPAlphabetTestUtil;
 import net.automatalib.words.impl.GrowingVPAlphabet;
 import net.automatalib.words.impl.VPSym;
 
-/**
- * @author frohme
- */
 public class GrowingVPAlphabetTest extends AbstractVPAlphabetTest<VPSym<Character>, GrowingVPAlphabet<Character>> {
 
     @Override

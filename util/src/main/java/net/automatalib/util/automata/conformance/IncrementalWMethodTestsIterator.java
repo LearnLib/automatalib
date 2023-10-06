@@ -33,8 +33,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class IncrementalWMethodTestsIterator<I> implements Iterator<Word<I>> {
 

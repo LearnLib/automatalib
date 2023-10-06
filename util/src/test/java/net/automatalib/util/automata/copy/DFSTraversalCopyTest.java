@@ -15,9 +15,6 @@
  */
 package net.automatalib.util.automata.copy;
 
-/**
- * @author frohme
- */
 public class DFSTraversalCopyTest extends AbstractAutomatonCopyTest {
 
     @Override

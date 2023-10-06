@@ -22,8 +22,6 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
 
 /**
  * @see ModelCheckerCache
- *
- * @author Jeroen Meijer
  */
 public interface ModelCheckerLassoCache<I, A, P, R extends Lasso<I, ?>>
         extends ModelCheckerCache<I, A, P, R>, ModelCheckerLasso<I, A, P, R> {

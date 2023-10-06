@@ -30,8 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         original state class.
  * @param <L>
  *         original transition label class.
- *
- * @author Malte Isberner
  */
 final class State<S, L> extends AbstractBasicLinkedListEntry<State<S, L>, State<S, L>> {
 

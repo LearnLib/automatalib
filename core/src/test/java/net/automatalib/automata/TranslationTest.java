@@ -25,9 +25,6 @@ import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class TranslationTest {
 
     @Test

@@ -36,8 +36,6 @@ import net.automatalib.modelcheckers.m3c.transformer.TransformerSerializer;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public final class SolverState<N, T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 

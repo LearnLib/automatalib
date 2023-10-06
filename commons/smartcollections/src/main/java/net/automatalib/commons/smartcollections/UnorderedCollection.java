@@ -29,8 +29,6 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
  *
  * @param <E>
  *         element class.
- *
- * @author Malte Isberner
  */
 public final class UnorderedCollection<E> extends AbstractSmartCollection<E> implements CapacityManagement {
 

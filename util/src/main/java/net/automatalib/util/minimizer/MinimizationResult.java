@@ -40,8 +40,6 @@ import net.automatalib.commons.util.mappings.Mapping;
  *         state class.
  * @param <L>
  *         transition label class.
- *
- * @author Malte Isberner
  */
 public final class MinimizationResult<S, L> {
 

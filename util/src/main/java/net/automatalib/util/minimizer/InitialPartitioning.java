@@ -27,8 +27,6 @@ import java.util.Collection;
  *         state class.
  * @param <L>
  *         transition label class.
- *
- * @author Malte Isberner
  */
 interface InitialPartitioning<S, L> {
 

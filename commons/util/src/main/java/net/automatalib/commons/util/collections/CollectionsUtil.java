@@ -24,8 +24,6 @@ import java.util.RandomAccess;
 
 /**
  * Various methods for operating on collections.
- *
- * @author Malte Isberner
  */
 public final class CollectionsUtil {
 

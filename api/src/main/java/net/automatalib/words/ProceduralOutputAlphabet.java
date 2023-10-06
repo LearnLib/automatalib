@@ -23,8 +23,6 @@ import java.util.Objects;
  *
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public interface ProceduralOutputAlphabet<O> extends Alphabet<O> {
 

@@ -17,8 +17,6 @@ package net.automatalib.exception;
 
 /**
  * An Exception that may occur during model checking.
- *
- * @author Jeroen Meijer
  */
 public class ModelCheckingException extends RuntimeException {
 

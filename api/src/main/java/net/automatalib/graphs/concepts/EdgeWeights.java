@@ -20,8 +20,6 @@ package net.automatalib.graphs.concepts;
  *
  * @param <E>
  *         edge class
- *
- * @author Malte Isberner
  */
 public interface EdgeWeights<E> {
 

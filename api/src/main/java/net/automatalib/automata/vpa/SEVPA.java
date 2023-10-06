@@ -40,8 +40,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         location type
  * @param <I>
  *         input alphabet type
- *
- * @author Malte Isberner
  */
 public interface SEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>,
                                      SuffixOutput<I, Boolean>,

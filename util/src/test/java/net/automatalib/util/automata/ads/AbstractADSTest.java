@@ -29,9 +29,6 @@ import net.automatalib.graphs.ads.ADSNode;
 import net.automatalib.words.Word;
 import org.testng.Assert;
 
-/**
- * @author frohme
- */
 public abstract class AbstractADSTest {
 
     protected <I, O> void verifySuccess(CompactMealy<I, O> mealy) {

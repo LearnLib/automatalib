@@ -25,8 +25,6 @@ import net.automatalib.commons.util.IOUtil;
 
 /**
  * A utility interface for an input stream consumer that is allowed to throw {@link IOException}s.
- *
- * @author frohme
  */
 interface InputStreamConsumer {
 

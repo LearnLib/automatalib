@@ -22,8 +22,6 @@ package net.automatalib.util.minimizer;
  *         state class.
  * @param <L>
  *         transition label class.
- *
- * @author Malte Isberner
  */
 public class BlockEdge<S, L> {
 

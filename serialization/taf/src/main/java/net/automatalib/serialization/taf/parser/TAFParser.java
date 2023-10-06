@@ -29,8 +29,6 @@ import net.automatalib.commons.util.IOUtil;
 /**
  * Facade for TAF parsing. This class provides several static methods to read TAF descriptions for DFA and Mealy
  * machines.
- *
- * @author Malte Isberner
  */
 public final class TAFParser {
 

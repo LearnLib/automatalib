@@ -23,9 +23,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility methods for using Java reflection.
- *
- * @author frohme
- * @author Malte Isberner
  */
 public final class ReflectUtil {
 

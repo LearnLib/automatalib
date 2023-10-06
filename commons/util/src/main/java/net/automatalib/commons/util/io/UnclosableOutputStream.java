@@ -20,8 +20,6 @@ import java.io.OutputStream;
 
 /**
  * A delegating output stream that throws an exception when closed. This is mainly used for testing purposes.
- *
- * @author frohme
  */
 public class UnclosableOutputStream extends OutputStream {
 

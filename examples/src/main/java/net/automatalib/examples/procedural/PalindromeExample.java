@@ -37,8 +37,6 @@ import org.slf4j.LoggerFactory;
 /**
  * A small example for constructing a (context-free) palindrome example over the letters {@code a, b, c} using two
  * separate procedures (non-terminals) {@code F} and {@code G}.
- *
- * @author frohme
  */
 public final class PalindromeExample {
 

@@ -22,8 +22,6 @@ import net.automatalib.words.VPAlphabet;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
  */
 public class DefaultOneSEVPA<I> extends AbstractDefaultSEVPA<I> implements OneSEVPA<Location, I> {
 

@@ -24,9 +24,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeroen Meijer
- */
 public class DFALassoTest extends AbstractLassoTest<DFALassoImpl<String>> {
 
     @Override

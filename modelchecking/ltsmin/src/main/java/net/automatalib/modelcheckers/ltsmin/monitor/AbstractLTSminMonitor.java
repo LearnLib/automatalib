@@ -26,7 +26,6 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 /**
  * An LTSmin model checker for monitors.
  *
- * @author Jeroen Meijer
  * @see AbstractLTSmin
  * @see <a href="https://spot.lrde.epita.fr/tut11.html">https://spot.lrde.epita.fr/tut11.html</a>
  * @see <a href="http://ltsmin.utwente.nl/assets/man/etf2lts-mc.html">man etf2lts-mc</a>

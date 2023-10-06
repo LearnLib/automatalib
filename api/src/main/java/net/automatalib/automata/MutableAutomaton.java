@@ -37,8 +37,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         state property.
  * @param <TP>
  *         transition property.
- *
- * @author Malte Isberner
  */
 public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S, I, T, SP, TP> {
 

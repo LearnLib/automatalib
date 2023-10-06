@@ -34,8 +34,6 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This example requires at least an LTSmin version ≥ 3.0.0.
  *
- * @author frohme
- * @author Jeroen Meijer
  * @see <a href="http://ltsmin.utwente.nl">http://ltsmin.utwente.nl</a>
  * @see net.automatalib.AutomataLibProperty#LTSMIN_PATH
  */

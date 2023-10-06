@@ -24,8 +24,6 @@ package net.automatalib.commons.util.mappings;
  *         intermediate object class, i.e. range of the first and domain of the second.
  * @param <R>
  *         range class of the second (and final) mapping.
- *
- * @author Malte Isberner
  */
 final class MappingComposition<D, I, R> implements Mapping<D, R> {
 

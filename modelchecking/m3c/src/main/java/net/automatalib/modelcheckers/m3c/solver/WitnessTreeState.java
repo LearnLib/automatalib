@@ -33,9 +33,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         edge type of the referenced {@link ProceduralModalProcessGraph}
  * @param <AP>
  *         atomic proposition type
- *
- * @author freese
- * @author frohme
  */
 public class WitnessTreeState<N, L, E, AP> {
 

@@ -26,9 +26,6 @@ import java.util.Collection;
  *         state type
  * @param <I>
  *         input symbol type
- *
- * @author Maren Geske
- * @author frohme
  */
 public interface StateLocalInput<S, I> {
 

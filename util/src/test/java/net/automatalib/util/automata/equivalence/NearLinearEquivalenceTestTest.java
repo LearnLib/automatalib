@@ -29,9 +29,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class NearLinearEquivalenceTestTest {
 
     private static final Alphabet<Integer> ALPHABET;

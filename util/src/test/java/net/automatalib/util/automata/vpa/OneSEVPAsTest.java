@@ -30,9 +30,6 @@ import net.automatalib.words.impl.DefaultVPAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class OneSEVPAsTest {
 
     @Test

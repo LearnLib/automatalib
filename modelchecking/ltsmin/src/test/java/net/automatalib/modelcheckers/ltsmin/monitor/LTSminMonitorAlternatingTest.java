@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.ltsmin.monitor;
 /**
  * Tests whether LTSminLTLAlternating actually uses alternating edge semantics.
  *
- * @author Jeroen Meijer
  * @see LTSminMonitorIOTest
  */
 public class LTSminMonitorAlternatingTest extends AbstractLTSminMonitorMealyTest {

@@ -36,9 +36,6 @@ import net.automatalib.words.Word;
 import net.automatalib.words.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-/**
- * @author frohme
- */
 class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>>
         extends AbstractTwoLevelIterator<I, Word<I>, Word<I>> {
 

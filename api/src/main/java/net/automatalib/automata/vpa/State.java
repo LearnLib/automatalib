@@ -22,8 +22,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <L>
  *         type of the object to connect with stack information
- *
- * @author Malte Isberner
  */
 public final class State<L> {
 

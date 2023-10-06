@@ -38,9 +38,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         state property type
  * @param <TP>
  *         transition property type
- *
- * @author frohme
- * @author Malte Isberner
  */
 public abstract class AbstractCompactDeterministic<I, T, SP, TP> extends AbstractCompact<I, T, SP, TP> implements
                                                                                                        MutableDeterministic<Integer, I, T, SP, TP>,

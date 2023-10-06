@@ -42,8 +42,6 @@ import org.testng.annotations.Test;
  * A test for various copy constructors of automaton types. Note that this test better suites to the "core" module,
  * however, the "util" module makes this test a lot simpler due to its available convenience methods for generating
  * random automata and testing equivalence.
- *
- * @author frohme
  */
 public class CopyConstructorTest {
 

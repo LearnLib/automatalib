@@ -25,8 +25,6 @@ package net.automatalib.automata.vpa;
  *         location type
  * @param <I>
  *         input alphabet type
- *
- * @author Malte Isberner
  */
 public interface OneSEVPA<L, I> extends SEVPA<L, I> {
 

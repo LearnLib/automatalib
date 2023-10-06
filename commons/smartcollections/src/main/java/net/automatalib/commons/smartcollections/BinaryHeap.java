@@ -30,8 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <E>
  *         element class.
- *
- * @author Malte Isberner
  */
 public class BinaryHeap<E> extends AbstractSmartCollection<E>
         implements SmartDynamicPriorityQueue<E>, CapacityManagement, Queue<E> {
@@ -373,8 +371,6 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
      *
      * @param <E>
      *         element class.
-     *
-     * @author Malte Isberner
      */
     private static final class Reference<E> implements ElementReference {
 

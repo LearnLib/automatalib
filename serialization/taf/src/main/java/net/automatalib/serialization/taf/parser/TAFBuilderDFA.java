@@ -21,8 +21,6 @@ import net.automatalib.automata.fsa.DFA;
 
 /**
  * Interface for a {@link TAFBuilder} that builds DFAs.
- *
- * @author Malte Isberner
  */
 interface TAFBuilderDFA extends TAFBuilder {
 

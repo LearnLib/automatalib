@@ -26,9 +26,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol type
- *
- * @author Malte Isberner
- * @author frohme
  */
 public abstract class AbstractDefaultSEVPA<I> extends AbstractSEVPA<Location, I> {
 

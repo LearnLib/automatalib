@@ -30,9 +30,6 @@ import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
  *         transition type
  * @param <TP>
  *         (specific) transition property type
- *
- * @author msc
- * @author frohme
  */
 public interface MutableModalTransitionSystem<S, I, T, TP extends MutableModalEdgeProperty>
         extends ModalTransitionSystem<S, I, T, TP>, MutableAutomaton<S, I, T, Void, TP> {

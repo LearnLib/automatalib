@@ -30,8 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         state property type
  * @param <TP>
  *         transition property type
- *
- * @author frohme
  */
 public class UniversalCompactDet<I, SP, TP> extends AbstractCompactDeterministic<I, CompactTransition<TP>, SP, TP> {
 

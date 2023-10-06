@@ -44,9 +44,6 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class OneSEVPAUtilTest {
 
     @DataProvider(name = "systems")

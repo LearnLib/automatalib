@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         node property class
  * @param <EP>
  *         edge property class
- *
- * @author Malte Isberner
  */
 public interface MutableGraph<N, E, NP, EP> extends UniversalGraph<N, E, NP, EP> {
 

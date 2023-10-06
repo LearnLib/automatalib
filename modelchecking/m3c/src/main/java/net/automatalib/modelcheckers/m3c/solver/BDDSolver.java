@@ -30,8 +30,6 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public class BDDSolver<L, AP> extends AbstractDDSolver<BDDTransformer<L, AP>, L, AP> {
 

@@ -37,8 +37,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *         common procedural state type
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class ProceduralGraphView<S, I> implements Graph<Pair<I, S>, Triple<I, I, S>> {
 

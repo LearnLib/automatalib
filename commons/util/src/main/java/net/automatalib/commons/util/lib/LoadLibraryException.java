@@ -17,8 +17,6 @@ package net.automatalib.commons.util.lib;
 
 /**
  * Unified exception to signal that loading of a native library has failed.
- *
- * @author Malte Isberner
  */
 public class LoadLibraryException extends RuntimeException {
 

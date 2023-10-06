@@ -22,9 +22,6 @@ import net.automatalib.words.impl.DefaultVPAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class DefaultVPAlphabetTest extends AbstractAlphabetTest<Character, DefaultVPAlphabet<Character>> {
 
     @Override

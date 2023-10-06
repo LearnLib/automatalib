@@ -21,8 +21,6 @@ import net.automatalib.automata.transducers.MealyMachine;
 
 /**
  * Interface for a {@link TAFBuilder} that builds Mealy machines.
- *
- * @author Malte Isberner
  */
 interface TAFBuilderMealy extends TAFBuilder {
 

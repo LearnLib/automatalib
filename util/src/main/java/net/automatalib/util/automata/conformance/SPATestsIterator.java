@@ -37,8 +37,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class SPATestsIterator<I> extends AbstractTwoLevelIterator<I, Word<I>, Word<I>> {
 

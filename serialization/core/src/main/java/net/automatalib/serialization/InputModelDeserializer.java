@@ -25,7 +25,5 @@ import net.automatalib.ts.simple.SimpleTS;
  *         the type of input symbols
  * @param <M>
  *         the type of objects implementing classes can deserialize
- *
- * @author frohme
  */
 public interface InputModelDeserializer<I, M extends SimpleTS<?, I>> extends ModelDeserializer<InputModelData<I, M>> {}

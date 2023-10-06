@@ -32,9 +32,6 @@ import net.automatalib.serialization.InputModelData;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author frohme
- */
 class InternalAUTParser {
 
     private int initialState;

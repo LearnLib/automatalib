@@ -30,8 +30,6 @@ import net.automatalib.modelchecking.Lasso.MealyLasso;
  *         the input type
  * @param <O>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public class LTSminLTLAlternating<I, O> extends AbstractLTSminLTLMealy<I, O>
         implements LTSminAlternating<I, O, MealyLasso<I, O>> {

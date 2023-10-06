@@ -34,8 +34,6 @@ import org.slf4j.LoggerFactory;
 /**
  * An example in which we transform the {@link PalindromeExample palindrome SPA} into a
  * {@link ContextFreeModalProcessSystem} and use the {@link M3CSolver} to evaluate properties on the system.
- *
- * @author frohme
  */
 public final class M3CSPAExample {
 

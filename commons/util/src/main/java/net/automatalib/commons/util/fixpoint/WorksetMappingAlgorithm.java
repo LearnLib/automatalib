@@ -18,9 +18,6 @@ package net.automatalib.commons.util.fixpoint;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * @author msc
- */
 public interface WorksetMappingAlgorithm<T, E, R> {
 
     /**

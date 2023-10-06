@@ -22,8 +22,6 @@ package net.automatalib.commons.smartcollections;
  *
  * @param <E>
  *         element class
- *
- * @author Malte Isberner
  */
 public interface SmartPriorityQueue<E> extends SmartCollection<E> {
 

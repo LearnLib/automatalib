@@ -32,7 +32,6 @@ import net.automatalib.graphs.concepts.KripkeInterpretation;
  * @param <I>
  *         input symbol class
  *
- * @author Malte Isberner
  * @see KripkeInterpretation
  * @see FiniteKripkeStructure
  */

@@ -37,8 +37,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilder<I> {
 

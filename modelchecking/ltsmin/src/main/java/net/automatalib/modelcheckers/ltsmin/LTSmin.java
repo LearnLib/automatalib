@@ -32,8 +32,6 @@ import net.automatalib.modelchecking.ModelChecker;
  *         the automaton type.
  * @param <R>
  *         the type of counterexample
- *
- * @author Jeroen Meijer
  */
 public interface LTSmin<I, A, R> extends ModelChecker<I, A, String, R> {
 

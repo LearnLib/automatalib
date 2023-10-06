@@ -21,9 +21,6 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
 
-/**
- * @author Jeroen Meijer
- */
 public class Alternating2ETF2FSM2AlternatingTest extends AbstractMealy2ETF2FSM2MealyTest {
 
     @Override

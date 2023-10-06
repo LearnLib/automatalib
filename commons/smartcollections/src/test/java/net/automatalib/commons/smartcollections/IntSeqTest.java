@@ -19,9 +19,6 @@ import com.google.common.primitives.Ints;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class IntSeqTest {
 
     private final int[] arr1 = {1, 2, 3, 4, 5, 6};

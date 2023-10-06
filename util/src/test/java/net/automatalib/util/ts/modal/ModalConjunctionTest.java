@@ -37,9 +37,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * @author msc
- */
 public class ModalConjunctionTest {
 
     private CompactMTS<Character> block0;

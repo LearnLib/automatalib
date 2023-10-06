@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility methods for {@link SPMM}s.
- *
- * @author frohme
  */
 public final class SPMMUtil {
 

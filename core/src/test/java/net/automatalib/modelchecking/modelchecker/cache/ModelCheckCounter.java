@@ -15,9 +15,6 @@
  */
 package net.automatalib.modelchecking.modelchecker.cache;
 
-/**
- * @author frohme
- */
 public interface ModelCheckCounter {
 
     int getChecks();

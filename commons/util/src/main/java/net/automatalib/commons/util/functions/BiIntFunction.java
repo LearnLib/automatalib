@@ -22,8 +22,6 @@ import java.util.function.BiFunction;
  *
  * @param <R>
  *         return value type
- *
- * @author frohme
  */
 @FunctionalInterface
 public interface BiIntFunction<R> {

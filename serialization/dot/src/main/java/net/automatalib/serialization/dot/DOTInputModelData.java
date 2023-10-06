@@ -29,8 +29,6 @@ import net.automatalib.words.Alphabet;
  *         the input symbol type
  * @param <M>
  *         the model type
- *
- * @author frohme
  */
 public class DOTInputModelData<S, I, M extends SimpleTS<S, I>> extends InputModelData<I, M> {
 

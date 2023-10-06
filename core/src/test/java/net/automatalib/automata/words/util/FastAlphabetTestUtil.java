@@ -23,8 +23,6 @@ import net.automatalib.commons.util.nid.MutableNumericID;
 
 /**
  * Utility class, aggregating definitions used for testing {@link net.automatalib.words.impl.FastAlphabet}s.
- *
- * @author frohme
  */
 public final class FastAlphabetTestUtil {
 

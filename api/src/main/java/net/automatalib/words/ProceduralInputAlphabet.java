@@ -26,8 +26,6 @@ import net.automatalib.commons.util.mappings.Mapping;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public interface ProceduralInputAlphabet<I> extends VPAlphabet<I> {
 

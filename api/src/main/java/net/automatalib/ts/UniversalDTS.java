@@ -20,7 +20,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Universal deterministic transition system.
  *
- * @author Malte Isberner
  * @see UniversalTransitionSystem
  * @see DeterministicTransitionSystem
  */

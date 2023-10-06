@@ -35,8 +35,6 @@ public interface SimpleDeterministicAbstractions {
      *         state type
      * @param <A>
      *         automaton type
-     *
-     * @author Malte Isberner
      */
     class IntAbstraction<S, A extends SimpleDeterministicAutomaton<S, ?>>
             implements SimpleDeterministicAutomaton.IntAbstraction {
@@ -86,7 +84,6 @@ public interface SimpleDeterministicAbstractions {
      * @param <A>
      *         automaton type
      *
-     * @author Malte Isberner
      * @see IntAbstraction
      */
     class StateIntAbstraction<S, I, A extends SimpleDeterministicAutomaton<S, I>> extends IntAbstraction<S, A>
@@ -110,8 +107,6 @@ public interface SimpleDeterministicAbstractions {
      *         input symbol type
      * @param <A>
      *         state abstraction type
-     *
-     * @author Malte Isberner
      */
     class FullIntAbstraction<I, A extends SimpleDeterministicAutomaton.StateIntAbstraction<I>>
             implements SimpleDeterministicAutomaton.FullIntAbstraction {

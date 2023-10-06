@@ -15,9 +15,6 @@
  */
 package net.automatalib.automata.fsa;
 
-/**
- * @author fh
- */
 public interface MutableNFA<S, I> extends NFA<S, I>, MutableFSA<S, I> {
 
 }

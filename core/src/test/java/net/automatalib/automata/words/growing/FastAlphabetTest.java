@@ -21,9 +21,6 @@ import net.automatalib.automata.words.util.FastAlphabetTestUtil;
 import net.automatalib.automata.words.util.FastAlphabetTestUtil.InputSymbol;
 import net.automatalib.words.impl.FastAlphabet;
 
-/**
- * @author frohme
- */
 public class FastAlphabetTest extends AbstractGrowingAlphabetTest<InputSymbol, FastAlphabet<InputSymbol>> {
 
     @Override

@@ -46,8 +46,6 @@ import org.testng.annotations.Test;
 
 /**
  * Run the examples as part of (integration) testing.
- *
- * @author frohme
  */
 public class ExamplesTest {
 

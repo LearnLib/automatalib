@@ -24,9 +24,6 @@ import net.automatalib.visualization.VisualizationHelper;
 /**
  * A {@link VisualizationHelper} for {@link WitnessTree}s that renders the node labels as an HTML-based table. Note that
  * the syntax is specific to a DOT-based visualization.
- *
- * @author freese
- * @author frohme
  */
 public class HTMLVisualizationHelper extends AbstractVisualizationHelper {
 

@@ -26,8 +26,6 @@ import net.automatalib.words.impl.VPSym;
 
 /**
  * Utility class, aggregating definitions used for testing {@link GrowingAlphabet}s.
- *
- * @author frohme
  */
 public final class GrowingVPAlphabetTestUtil {
 

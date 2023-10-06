@@ -22,8 +22,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * <p>
  * Note that this enum only declares one value. The value {@link #NOT_VISITED} for unvisited nodes/states is identified
  * with {@code null}.
- *
- * @author Malte Isberner
  */
 public enum VisitedState {
     /**

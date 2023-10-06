@@ -48,8 +48,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<I> {
 

@@ -32,8 +32,6 @@ import net.automatalib.words.Alphabet;
  * Most of the methods defined in this class expect the partition data to be in a certain form, and moreover may require
  * additional information, both of which is provided by corresponding methods defined in {@link
  * PaigeTarjanInitializers}.
- *
- * @author Malte Isberner
  */
 public final class PaigeTarjanExtractors {
 

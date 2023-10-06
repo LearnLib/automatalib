@@ -39,9 +39,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class SAFSerializationTest {
 
     private static final Alphabet<Integer> ALPHABET = Alphabets.integers(0, 4);

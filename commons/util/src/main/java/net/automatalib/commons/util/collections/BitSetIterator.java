@@ -23,9 +23,6 @@ import java.util.PrimitiveIterator;
 /**
  * Iterator for iterating over a BitSet like over a normal collection. The type returned by next() is {@link Integer}.
  * Supports mutable and immutable modes.
- *
- * @author Malte Isberner
- * @author frohme
  */
 public class BitSetIterator implements Iterator<Integer>, PrimitiveIterator.OfInt {
 

@@ -19,9 +19,6 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.util.automata.cover.CoverIteratorsTest;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 @Test
 public class CharacterizingSetIteratorTest {
 

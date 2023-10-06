@@ -33,9 +33,6 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class MutableDFAsTest {
 
     @DataProvider(name = "creators")

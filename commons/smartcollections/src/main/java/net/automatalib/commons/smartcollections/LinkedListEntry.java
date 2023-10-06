@@ -24,8 +24,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         element class.
  * @param <T>
  *         linked list entry class.
- *
- * @author Malte Isberner
  */
 public interface LinkedListEntry<E, T extends LinkedListEntry<E, T>> extends ElementReference {
 

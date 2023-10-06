@@ -27,8 +27,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input alphabet type
  * @param <O>
  *         output alphabet type
- *
- * @author frohme
  */
 public class ADSLeafNode<S, I, O> extends AbstractRecursiveADSLeafNode<S, I, O, ADSNode<S, I, O>>
         implements ADSNode<S, I, O> {

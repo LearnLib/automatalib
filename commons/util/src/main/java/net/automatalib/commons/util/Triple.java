@@ -37,9 +37,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         type of the triple's second component.
  * @param <T3>
  *         type of the triple's third component.
- *
- * @author Malte Isberner
- * @author frohme
  */
 public final class Triple<T1, T2, T3> extends AbstractPrintable {
 

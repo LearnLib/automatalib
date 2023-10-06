@@ -27,8 +27,6 @@ import net.automatalib.words.Alphabet;
 /**
  * General purpose facade for computing adaptive distinguishing sequences. Delegates to {@link LeeYannakakis}, {@link
  * BacktrackingSearch} (non-optimal) and {@link StateEquivalence} for the actual computation of the ADS.
- *
- * @author frohme
  */
 public final class ADS {
 

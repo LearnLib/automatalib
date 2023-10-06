@@ -24,8 +24,6 @@ import java.util.Comparator;
  *         iterable class
  * @param <U>
  *         element class
- *
- * @author Malte Isberner
  */
 final class LexComparator<T extends Iterable<U>, U> implements Comparator<T> {
 

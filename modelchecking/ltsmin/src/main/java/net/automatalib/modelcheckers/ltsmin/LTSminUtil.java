@@ -29,9 +29,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A utility class that encapsulates certain technical aspects of LTSmin (e.g. accessibility of the binary, etc.)
- *
- * @author Jeroen Meijer
- * @author frohme
  */
 public final class LTSminUtil {
 

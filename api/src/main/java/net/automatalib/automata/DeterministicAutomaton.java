@@ -33,8 +33,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <T>
  *         transition type
- *
- * @author Malte Isberner
  */
 public interface DeterministicAutomaton<S, I, T>
         extends Automaton<S, I, T>, SimpleDeterministicAutomaton<S, I>, DeterministicTransitionSystem<S, I, T> {
@@ -60,8 +58,6 @@ public interface DeterministicAutomaton<S, I, T>
      *
      * @param <T>
      *         transition type
-     *
-     * @author Malte Isberner
      */
     interface IntAbstraction<T> extends SimpleDeterministicAutomaton.IntAbstraction {
 
@@ -84,8 +80,6 @@ public interface DeterministicAutomaton<S, I, T>
      *         input symbol type
      * @param <T>
      *         transition type
-     *
-     * @author Malte Isberner
      */
     interface StateIntAbstraction<I, T> extends IntAbstraction<T>, SimpleDeterministicAutomaton.StateIntAbstraction<I> {
 
@@ -119,8 +113,6 @@ public interface DeterministicAutomaton<S, I, T>
      *
      * @param <T>
      *         transition type
-     *
-     * @author Malte Isberner
      */
     interface FullIntAbstraction<T> extends IntAbstraction<T>, SimpleDeterministicAutomaton.FullIntAbstraction {
 

@@ -34,8 +34,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         element class.
  * @param <K>
  *         key class.
- *
- * @author Malte Isberner
  */
 public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends AbstractSmartCollection<E>
         implements SmartGeneralPriorityQueue<E, K> {

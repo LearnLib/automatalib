@@ -22,9 +22,6 @@ import net.automatalib.graphs.ProceduralModalProcessGraph;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class CFMPSViewSBATest {
 
     @Test

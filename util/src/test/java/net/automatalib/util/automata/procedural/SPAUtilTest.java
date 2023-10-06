@@ -50,9 +50,6 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class SPAUtilTest {
 
     private final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');

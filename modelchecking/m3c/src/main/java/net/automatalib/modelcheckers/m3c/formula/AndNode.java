@@ -26,8 +26,6 @@ import net.automatalib.modelcheckers.m3c.formula.visitor.FormulaNodeVisitor;
  *         label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public class AndNode<L, AP> extends AbstractBinaryFormulaNode<L, AP> {
 

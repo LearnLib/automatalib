@@ -29,8 +29,6 @@ import net.automatalib.ts.UniversalTransitionSystem;
  *         node property class
  * @param <EP>
  *         edge property class
- *
- * @author Malte Isberner
  */
 public interface UniversalIndefiniteGraph<N, E, NP, EP> extends IndefiniteGraph<N, E> {
 

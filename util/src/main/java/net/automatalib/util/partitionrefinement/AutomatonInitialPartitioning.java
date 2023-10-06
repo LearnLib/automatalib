@@ -24,9 +24,6 @@ import net.automatalib.words.Alphabet;
 /**
  * This enum allows to conveniently specify how the states of a deterministic automaton are initially partitioned when
  * initializing the partition refinement data structure.
- *
- * @author Malte Isberner
- * @author frohme
  */
 public enum AutomatonInitialPartitioning {
     /**

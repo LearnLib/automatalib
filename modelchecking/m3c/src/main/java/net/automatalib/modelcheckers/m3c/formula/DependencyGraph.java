@@ -35,8 +35,6 @@ import net.automatalib.modelcheckers.m3c.formula.modalmu.VariableNode;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public final class DependencyGraph<L, AP> {
 

@@ -36,8 +36,6 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
  *         node class
  * @param <E>
  *         edge class
- *
- * @author Malte Isberner
  */
 public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
 

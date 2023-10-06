@@ -58,7 +58,6 @@ import org.slf4j.LoggerFactory;
  * @param <R>
  *         the type of counterexample
  *
- * @author Jeroen Meijer
  * @see <a href="http://ltsmin.utwente.nl">http://ltsmin.utwente.nl</a>
  * @see AbstractFSMParser
  * @see AbstractETFWriter

@@ -36,8 +36,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol class
  * @param <T>
  *         transition class
- *
- * @author Malte Isberner
  */
 public interface DeterministicTransitionSystem<S, I, T> extends TransitionSystem<S, I, T>, SimpleDTS<S, I> {
 

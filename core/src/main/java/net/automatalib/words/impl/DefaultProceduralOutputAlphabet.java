@@ -26,8 +26,6 @@ import net.automatalib.words.ProceduralOutputAlphabet;
  *
  * @param <O>
  *         input symbol type
- *
- * @author frohme
  */
 public class DefaultProceduralOutputAlphabet<O> extends MapAlphabet<O> implements ProceduralOutputAlphabet<O> {
 

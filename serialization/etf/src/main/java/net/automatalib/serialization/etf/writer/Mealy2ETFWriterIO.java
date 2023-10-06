@@ -28,8 +28,6 @@ import net.automatalib.words.Alphabet;
 /**
  * Write a Mealy machine with straightforward IO semantics.
  *
- * @author Jeroen Meijer
- *
  * @param <I> the input type
  * @param <O> the output type
  */

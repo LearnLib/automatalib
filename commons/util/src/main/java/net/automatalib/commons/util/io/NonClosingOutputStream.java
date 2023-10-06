@@ -21,8 +21,6 @@ import java.io.OutputStream;
 /**
  * A delegating output stream that does not close but flush the delegate output stream. This is mainly useful for
  * scenarios where we want to close wrappers (to free their resources) but do not want to close the source stream.
- *
- * @author frohme
  */
 public class NonClosingOutputStream extends OutputStream {
 

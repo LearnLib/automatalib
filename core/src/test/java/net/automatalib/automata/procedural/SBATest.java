@@ -30,9 +30,6 @@ import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class SBATest {
 
     static final ProceduralInputAlphabet<Character> ALPHABET;

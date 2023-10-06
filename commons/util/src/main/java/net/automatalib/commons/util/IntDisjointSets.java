@@ -17,8 +17,6 @@ package net.automatalib.commons.util;
 
 /**
  * Interface for disjoint-set forest implementations that operate on a universe of contiguous integers.
- *
- * @author Malte Isberner
  */
 public interface IntDisjointSets {
 

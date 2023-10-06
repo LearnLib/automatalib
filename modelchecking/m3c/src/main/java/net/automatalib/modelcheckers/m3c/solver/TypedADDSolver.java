@@ -21,8 +21,6 @@ import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 
 /**
  * An {@link ADDSolver ADD solver} for strongly-typed formulas.
- *
- * @author frohme
  */
 public class TypedADDSolver<L, AP> extends ADDSolver<L, AP> implements TypedM3CSolver<FormulaNode<L, AP>> {
 

@@ -23,8 +23,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <E>
  *         element class.
- *
- * @author Malte Isberner
  */
 public interface SmartSequence<E> extends SmartCollection<E> {
 

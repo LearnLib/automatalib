@@ -30,8 +30,6 @@ import net.automatalib.visualization.VisualizationHelper;
  *         node type
  * @param <E>
  *         edge type
- *
- * @author Malte Isberner
  */
 public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
 

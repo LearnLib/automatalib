@@ -43,8 +43,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
 

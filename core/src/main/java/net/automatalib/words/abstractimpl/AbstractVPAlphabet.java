@@ -24,8 +24,6 @@ import net.automatalib.words.VPAlphabet;
 
 /**
  * Abstract utility class that implements functionality shared across different subtypes.
- *
- * @author frohme
  */
 public abstract class AbstractVPAlphabet<I> extends AbstractAlphabet<I> implements VPAlphabet<I> {
 

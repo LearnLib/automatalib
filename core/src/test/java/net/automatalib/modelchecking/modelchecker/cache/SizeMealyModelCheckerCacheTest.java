@@ -23,9 +23,6 @@ import net.automatalib.modelchecking.modelchecker.cache.ModelCheckerMock.MealyMo
 import net.automatalib.words.impl.Alphabets;
 import org.mockito.Mockito;
 
-/**
- * @author frohme
- */
 public class SizeMealyModelCheckerCacheTest<I, O>
         extends AbstractSizeModelCheckerCacheTest<I, MealyLasso<I, O>, MutableMealyMachine<?, I, ?, O>, MealyModelCheckerMock<I, O>, MealyModelCheckerCache<I, O, Object, MealyLasso<I, O>>> {
 

@@ -21,8 +21,6 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 
 /**
  * An {@link ADDSolver ADD solver} for generic, string-based formulas.
- *
- * @author frohme
  */
 public class StringADDSolver extends ADDSolver<String, String> implements M3CSolver<String> {
 

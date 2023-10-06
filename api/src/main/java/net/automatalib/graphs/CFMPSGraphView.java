@@ -38,8 +38,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
  *         edge type
  * @param <AP>
  *         atomic proposition type
- *
- * @author frohme
  */
 public class CFMPSGraphView<N, L, E, AP> implements Graph<Pair<L, N>, Pair<L, E>> {
 

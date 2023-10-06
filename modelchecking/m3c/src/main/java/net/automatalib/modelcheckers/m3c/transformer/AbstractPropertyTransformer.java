@@ -31,8 +31,6 @@ import net.automatalib.modelcheckers.m3c.formula.EquationalBlock;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public abstract class AbstractPropertyTransformer<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 

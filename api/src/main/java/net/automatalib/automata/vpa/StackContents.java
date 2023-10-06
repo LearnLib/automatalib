@@ -19,8 +19,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A simplified stack implementation that allows to store integer values.
- *
- * @author Malte Isberner
  */
 public class StackContents {
 

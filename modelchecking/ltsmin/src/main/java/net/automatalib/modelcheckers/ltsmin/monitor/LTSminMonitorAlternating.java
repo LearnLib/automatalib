@@ -31,8 +31,6 @@ import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
  *         the input type
  * @param <O>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public class LTSminMonitorAlternating<I, O> extends AbstractLTSminMonitorMealy<I, O>
         implements LTSminAlternating<I, O, MealyMachine<?, I, ?, O>> {

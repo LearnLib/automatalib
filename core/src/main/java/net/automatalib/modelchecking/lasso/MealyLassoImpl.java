@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  *         the input type
  * @param <O>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public class MealyLassoImpl<I, O> extends AbstractLasso<I, Word<O>> implements MealyLasso<I, O> {
 

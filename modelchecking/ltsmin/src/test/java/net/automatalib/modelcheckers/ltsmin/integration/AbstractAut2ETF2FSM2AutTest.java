@@ -41,8 +41,6 @@ import org.testng.annotations.Test;
  *  - read the FSM into an automaton.
  *  - perform an equivalence check between the two automata.
  *
- * @author Jeroen Meijer
- *
  * @param <A> the automaton type.
  */
 public abstract class AbstractAut2ETF2FSM2AutTest<

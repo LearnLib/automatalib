@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 final class SharedWord<I> extends Word<I> {
 
@@ -133,8 +131,6 @@ final class SharedWord<I> extends Word<I> {
      *
      * @param <I>
      *         symbol class.
-     *
-     * @author Malte Isberner
      */
     private static final class Iterator<I> implements ListIterator<I> {
 

@@ -20,9 +20,6 @@ import java.io.InputStream;
 import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.serialization.taf.parser.TAFParser;
 
-/**
- * @author Jeroen Meijer
- */
 public abstract class AbstractMealy2ETF2FSM2MealyTest extends AbstractAut2ETF2FSM2AutTest<CompactMealy<String, String>> {
 
     @Override

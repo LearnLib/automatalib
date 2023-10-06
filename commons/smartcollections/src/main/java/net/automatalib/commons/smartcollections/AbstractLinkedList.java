@@ -35,7 +35,6 @@ import org.checkerframework.framework.qual.EnsuresQualifierIf;
  * @param <T>
  *         linked list entry type
  *
- * @author Malte Isberner
  * @see IntrusiveLinkedList
  * @see DefaultLinkedList
  */
@@ -495,8 +494,6 @@ public abstract class AbstractLinkedList<E, T extends LinkedListEntry<E, T>> ext
 
     /**
      * Iterator that follows the linked structure of the elements.
-     *
-     * @author Malte Isberner
      */
     private class LinkedListEntryIterator implements Iterator<T> {
 

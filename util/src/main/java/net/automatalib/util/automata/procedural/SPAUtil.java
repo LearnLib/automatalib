@@ -48,8 +48,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility methods for {@link SPA}s.
- *
- * @author frohme
  */
 public final class SPAUtil {
 

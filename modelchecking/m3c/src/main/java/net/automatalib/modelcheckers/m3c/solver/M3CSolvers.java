@@ -21,8 +21,6 @@ import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 
 /**
  * A factory for constructing {@link M3CSolver}s depending on the given {@link ContextFreeModalProcessSystem}.
- *
- * @author frohme
  */
 public final class M3CSolvers {
 

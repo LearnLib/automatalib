@@ -33,8 +33,6 @@ import net.automatalib.util.graphs.traversal.GraphTraversalVisitor;
  *         node class
  * @param <E>
  *         edge class
- *
- * @author Malte Isberner
  */
 public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, TarjanSCCRecord> {
 

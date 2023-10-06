@@ -33,8 +33,6 @@ import net.automatalib.words.Alphabet;
 
 /**
  * Serializer for the SAF (simple automaton format).
- *
- * @author frohme
  */
 public class SAFOutput {
 

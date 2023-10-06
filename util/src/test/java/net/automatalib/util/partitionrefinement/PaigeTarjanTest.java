@@ -26,9 +26,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class PaigeTarjanTest {
 
     private static final String SINK_OUTPUT = "sink";

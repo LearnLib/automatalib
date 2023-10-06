@@ -23,8 +23,6 @@ import net.automatalib.words.GrowingAlphabet;
  *
  * @param <I>
  *         input alphabet type
- *
- * @author frohme
  */
 public interface SupportsGrowingAlphabet<I> {
 

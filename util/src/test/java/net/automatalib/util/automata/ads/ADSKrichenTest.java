@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 /**
  * Tests for the automata of the chapter "State Identification" (in "Model-Based Testing of Reactive Systems") by Moez
  * Krichen.
- *
- * @author frohme
  */
 public class ADSKrichenTest extends AbstractADSTest {
 

@@ -38,9 +38,6 @@ import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class SPATestsIteratorTest {
 
     private final SPA<?, Character> spa;

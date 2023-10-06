@@ -22,7 +22,5 @@ package net.automatalib.graphs;
  *         node class.
  * @param <E>
  *         edge class.
- *
- * @author Malte Isberner
  */
 public interface UndirectedGraph<N, E> extends Graph<N, E> {}

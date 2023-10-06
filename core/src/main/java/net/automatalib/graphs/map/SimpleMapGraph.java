@@ -39,8 +39,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <N>
  *         node type
- *
- * @author Malte Isberner
  */
 public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void>, ShrinkableGraph<N, N> {
 

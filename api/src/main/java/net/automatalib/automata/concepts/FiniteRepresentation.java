@@ -22,8 +22,6 @@ import net.automatalib.automata.simple.SimpleAutomaton;
  * entities. Note that this does not necessarily correspond to <i>states</i> in the usual sense (like in the case of
  * {@link SimpleAutomaton}). For example, push-down systems can have infinitely many states but may be representable
  * with a finite amount of locations.
- *
- * @author frohme
  */
 public interface FiniteRepresentation {
 

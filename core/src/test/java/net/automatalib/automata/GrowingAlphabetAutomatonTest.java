@@ -40,9 +40,6 @@ import net.automatalib.words.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class GrowingAlphabetAutomatonTest {
 
     private static final Alphabet<Integer> ALPHABET = Alphabets.integers(1, 2);

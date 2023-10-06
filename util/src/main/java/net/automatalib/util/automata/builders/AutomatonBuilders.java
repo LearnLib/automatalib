@@ -31,8 +31,6 @@ import net.automatalib.words.Word;
 
 /**
  * Fluent interface automaton builders.
- *
- * @author Malte Isberner
  */
 public final class AutomatonBuilders {
 

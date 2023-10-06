@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <T>
  *         the type of stored elements
- *
- * @author frohme
  */
 public final class ArrayStorage<T> extends AbstractList<T> implements RandomAccess, Cloneable {
 

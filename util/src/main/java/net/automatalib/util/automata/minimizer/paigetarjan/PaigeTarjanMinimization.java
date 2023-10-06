@@ -48,7 +48,6 @@ import net.automatalib.words.Alphabet;
  * <p>
  * For minimizing complete automata, use {@link HopcroftMinimization}.
  *
- * @author frohme
  * @see PaigeTarjan
  * @see HopcroftMinimization
  */

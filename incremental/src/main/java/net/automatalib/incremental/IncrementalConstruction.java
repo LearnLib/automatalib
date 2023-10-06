@@ -30,8 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the automaton model which is constructed
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 public interface IncrementalConstruction<A, I> {
 

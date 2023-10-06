@@ -27,8 +27,6 @@ import net.automatalib.words.Alphabet;
  *         input symbol class.
  * @param <O>
  *         output symbol class.
- *
- * @author Malte Isberner
  */
 public class FastMealy<I, O>
         extends AbstractFastMutableDet<FastMealyState<O>, I, MealyTransition<FastMealyState<O>, O>, Void, O> implements

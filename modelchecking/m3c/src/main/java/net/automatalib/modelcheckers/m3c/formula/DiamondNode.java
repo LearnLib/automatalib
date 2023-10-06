@@ -27,8 +27,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public class DiamondNode<L, AP> extends AbstractModalFormulaNode<L, AP> {
 

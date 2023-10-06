@@ -44,8 +44,6 @@ import java.util.function.Supplier;
  *
  * @param <T>
  *         the supplied type
- *
- * @author Malte Isberner
  */
 public class WeightedSupplier<T> implements Supplier<T>, Function<Random, T> {
 

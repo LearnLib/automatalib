@@ -22,8 +22,6 @@ import net.automatalib.graphs.Graph;
  *
  * @param <N>
  *         node class
- *
- * @author Malte Isberner
  */
 public interface NodeAcceptance<N> {
 

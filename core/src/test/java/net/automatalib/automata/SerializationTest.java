@@ -41,8 +41,6 @@ import org.testng.annotations.Test;
 /**
  * A test for checking if the automaton (and alphabet) implementations can be properly serialized and de-serialized.
  * This test mainly exists for the "Resumable" feature of LearnLib.
- *
- * @author frohme
  */
 public class SerializationTest {
 

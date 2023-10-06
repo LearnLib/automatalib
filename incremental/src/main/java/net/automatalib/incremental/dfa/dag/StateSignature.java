@@ -24,8 +24,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * Signature of a state. A signature consists of the list of all successor states for all alphabet symbols, and the
  * acceptance status.
- *
- * @author Malte Isberner
  */
 final class StateSignature {
 

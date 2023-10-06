@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <V>
  *         value class.
- *
- * @author Malte Isberner
  */
 public class BlockMap<V> implements MutableMapping<Block<?, ?>, V> {
 

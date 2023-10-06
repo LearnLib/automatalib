@@ -27,8 +27,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class EmptySBA<I> implements SBA<Void, I> {
 

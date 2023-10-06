@@ -19,8 +19,5 @@
  * href="http://dx.doi.org/10.1007/978-3-030-00244-2_15">M3C: Modal Meta Model Checking</a> by Bernhard Steffen and
  * Alnis Murtovi. The paper is based on <a href="https://link.springer.com/chapter/10.1007/BFb0084787">Model Checking
  * for Context-Free Processes</a> by Olaf Burkart and Bernhard Steffen.
- *
- * @author frohme
- * @author murtovi
  */
 package net.automatalib.modelcheckers.m3c;

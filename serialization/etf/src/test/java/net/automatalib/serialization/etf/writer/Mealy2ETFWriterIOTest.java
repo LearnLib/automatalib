@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests for Mealy2ETFWriterIO.
- *
- * @author Jeroen Meijer
  */
 public class Mealy2ETFWriterIOTest {
 

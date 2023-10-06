@@ -24,9 +24,6 @@ import net.automatalib.util.automata.builders.AutomatonBuilders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Jeroen Meijer
- */
 public abstract class AbstractLTSminLTLMealyTest
         extends AbstractLTSminLTLTest<MealyMachine<?, String, ?, String>, MealyLasso<String, String>> {
 

@@ -30,8 +30,6 @@ import net.automatalib.words.Alphabet;
 /**
  * A utility class that exports automata to the AUT format (see <a
  * href="http://cadp.inria.fr/man/aut.html">http://cadp.inria.fr/man/aut.html</a> for further information).
- *
- * @author frohme
  */
 public final class AUTWriter {
 

@@ -27,8 +27,6 @@ import net.automatalib.words.GrowingAlphabet;
  *
  * @param <I>
  *         input symbol class.
- *
- * @author Malte Isberner
  */
 public final class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> implements GrowingAlphabet<I> {
 

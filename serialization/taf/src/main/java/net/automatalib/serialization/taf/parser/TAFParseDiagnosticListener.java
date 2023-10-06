@@ -21,8 +21,6 @@ import java.text.MessageFormat;
  * Diagnostic listener for non-fatal errors and warnings during parsing of a TAF file. The parser will usually recover
  * from these errors and produce a valid automaton anyway. Fatal errors are not reported to a diagnostic listener, but
  * instead a {@link TAFFormatException} is thrown.
- *
- * @author Malte Isberner
  */
 public interface TAFParseDiagnosticListener {
 

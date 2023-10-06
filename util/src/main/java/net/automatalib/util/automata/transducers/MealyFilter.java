@@ -31,8 +31,6 @@ import net.automatalib.words.Alphabet;
 
 /**
  * Various utility methods to filter Mealy machines.
- *
- * @author Malte Isberner
  */
 public final class MealyFilter {
 

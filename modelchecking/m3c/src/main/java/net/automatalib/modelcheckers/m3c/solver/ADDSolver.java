@@ -32,8 +32,6 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public class ADDSolver<L, AP> extends AbstractDDSolver<ADDTransformer<L, AP>, L, AP> {
 

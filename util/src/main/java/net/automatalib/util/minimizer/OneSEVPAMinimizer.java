@@ -26,8 +26,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**
  * A Paige/Tarjan partition refinement based minimizer for {@link OneSEVPA}s.
- *
- * @author Malte Isberner
  */
 public final class OneSEVPAMinimizer {
 

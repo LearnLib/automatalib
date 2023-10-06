@@ -25,9 +25,6 @@ import net.automatalib.serialization.etf.writer.DFA2ETFWriter;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
 import net.automatalib.serialization.taf.parser.TAFParser;
 
-/**
- * @author Jeroen Meijer
- */
 public class DFA2ETF2FSM2DFATest extends AbstractAut2ETF2FSM2AutTest<CompactDFA<String>> {
 
     @Override

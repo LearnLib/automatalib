@@ -24,10 +24,6 @@ import net.automatalib.graphs.base.compact.CompactSimpleGraph;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author Malte Isberner
- * @author Malte Mues
- */
 public class SCCTest {
 
     @Test

@@ -31,8 +31,6 @@ import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * Base class for Brics automata adapters.
- *
- * @author Malte Isberner
  */
 public abstract class AbstractBricsAutomaton implements FiniteStateAcceptor<State, Character>, GraphViewable {
 

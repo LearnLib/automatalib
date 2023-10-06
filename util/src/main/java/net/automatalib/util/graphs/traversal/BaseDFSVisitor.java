@@ -26,8 +26,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         edge class
  * @param <D>
  *         user data class
- *
- * @author Malte Isberner
  */
 public class BaseDFSVisitor<N, E, @Nullable D> implements DFSVisitor<N, E, D> {
 

@@ -44,8 +44,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility methods for {@link SBA}s.
- *
- * @author frohme
  */
 public final class SBAUtil {
 

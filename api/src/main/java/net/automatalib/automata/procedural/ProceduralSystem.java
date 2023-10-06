@@ -36,8 +36,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <M>
  *         procedural model type
- *
- * @author frohme
  */
 interface ProceduralSystem<I, M extends UniversalDeterministicAutomaton<?, I, ?, ?, ?>>
         extends FiniteRepresentation, GraphViewable, InputAlphabetHolder<I> {

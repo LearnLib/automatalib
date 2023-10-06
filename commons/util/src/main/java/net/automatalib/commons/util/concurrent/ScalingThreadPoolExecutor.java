@@ -33,8 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * For further information, see
  * <a href="https://github.com/kimchy/kimchy.github.com/blob/master/_posts/2008-11-23-juc-executorservice-gotcha.textile">
  * this blog post</a>.
- *
- * @author frohme
  */
 public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
 
@@ -70,8 +68,6 @@ public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
      * To prevent {@link RejectedExecutionException}s when reaching the limit of the thread pool, this class is only
      * useful in combination with a {@link ForceEnqueuingHandler} that forcefully enqueues the scheduled task to this
      * (otherwise unbounded) queue.
-     *
-     * @author frohme
      */
     private static class ScalingLinkedBlockingQueue extends LinkedBlockingQueue<Runnable> {
 
@@ -94,8 +90,6 @@ public final class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
     /**
      * A {@link RejectedExecutionHandler} that forces the enqueuing of rejected tasks to the queue of a
      * {@link ThreadPoolExecutor}. Mainly useful in combination with {@link ScalingLinkedBlockingQueue}.
-     *
-     * @author frohme
      */
     static class ForceEnqueuingHandler implements RejectedExecutionHandler {
 

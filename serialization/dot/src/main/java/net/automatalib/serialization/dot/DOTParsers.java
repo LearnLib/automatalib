@@ -55,8 +55,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An aggregation of factory methods for obtaining DOT parsers for several types of automata / graphs.
- *
- * @author frohme
  */
 public final class DOTParsers {
 

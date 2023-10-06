@@ -24,8 +24,6 @@ import com.google.common.collect.ForwardingListIterator;
  *
  * @param <T>
  *         type of elements in the given iterator
- *
- * @author frohme
  */
 public class UnmodifiableListIterator<T> extends ForwardingListIterator<T> {
 

@@ -32,8 +32,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <T>
  *         type class. This is a marker parameter that is not reflected in the signatures, but can be respected by
  *         methods requiring type information.
- *
- * @author Malte Isberner
  */
 public interface ArrayWritable<T> {
 

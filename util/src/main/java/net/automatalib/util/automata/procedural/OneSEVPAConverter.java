@@ -32,9 +32,6 @@ import net.automatalib.util.automata.Automata;
 import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 
-/**
- * @author frohme
- */
 final class OneSEVPAConverter {
 
     private OneSEVPAConverter() {

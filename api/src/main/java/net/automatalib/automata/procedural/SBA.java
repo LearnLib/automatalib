@@ -35,8 +35,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
  *         state type
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public interface SBA<S, I>
         extends ProceduralSystem<I, DFA<?, I>>, DeterministicAcceptorTS<S, I>, SuffixOutput<I, Boolean> {

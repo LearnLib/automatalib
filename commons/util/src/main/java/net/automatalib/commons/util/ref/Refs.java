@@ -17,8 +17,6 @@ package net.automatalib.commons.util.ref;
 
 /**
  * Utility functions for dealing with references.
- *
- * @author Malte Isberner
  */
 public final class Refs {
 

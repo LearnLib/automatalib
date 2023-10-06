@@ -41,9 +41,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility class to simplify operating the GraphVIZ "dot" utility. Please note that all the provided methods require
  * GraphVIZ to be installed on the system, and that the "dot" binary resides in the execution path.
- *
- * @author Malte Isberner
- * @author frohme
  */
 public final class DOT {
 

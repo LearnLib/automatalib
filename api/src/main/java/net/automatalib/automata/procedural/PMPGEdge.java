@@ -25,8 +25,6 @@ import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
  *         input symbol type
  * @param <S>
  *         state type
- *
- * @author frohme
  */
 class PMPGEdge<I, S> implements ProceduralModalEdgeProperty {
 

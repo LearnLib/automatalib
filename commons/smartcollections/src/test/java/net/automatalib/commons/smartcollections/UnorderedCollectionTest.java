@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Some tests for manipulating an {@link UnorderedCollection}.
- *
- * @author frohme
  */
 public class UnorderedCollectionTest {
 

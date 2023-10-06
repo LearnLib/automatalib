@@ -47,8 +47,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * A characterizing set for a single state <i>s</i> is a set <i>W</i> of words such that for every state <i>t</i>, there
  * exists a word <i>w &isin; W</i> such that <i>w</i> exposes a difference between <i>s</i> and <i>t</i>, or there
  * exists no such word at all.
- *
- * @author Malte Isberner
  */
 public final class CharacterizingSets {
 

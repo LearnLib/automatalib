@@ -30,8 +30,6 @@ import net.automatalib.words.VPAlphabet;
  *         abstract input symbol type
  * @param <CI>
  *         concrete input symbol type
- *
- * @author frohme
  */
 public interface SymbolMapper<AI, CI> {
 

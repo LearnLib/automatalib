@@ -18,9 +18,6 @@ package net.automatalib.automata.transducers;
 import net.automatalib.automata.MutableDeterministic;
 import net.automatalib.automata.concepts.MutableTransitionOutput;
 
-/**
- * @author fh
- */
 public interface MutableMealyMachine<S, I, T, O>
         extends MealyMachine<S, I, T, O>, MutableDeterministic<S, I, T, Void, O>, MutableTransitionOutput<T, O> {
 

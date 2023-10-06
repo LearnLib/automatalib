@@ -31,8 +31,6 @@ import org.testng.annotations.Test;
  *         input symbol type
  * @param <M>
  *         concrete alphabet type
- *
- * @author frohme
  */
 public abstract class AbstractVPAlphabetTest<I, M extends VPAlphabet<I>> {
 

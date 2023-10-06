@@ -28,8 +28,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests for AbstractLTSmin with arbitrary LTSs.
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractLTSminTest<A, R extends Output<String, ?>> {
 

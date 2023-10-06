@@ -39,9 +39,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class TAFSerializationTest {
 
     private static final Alphabet<String> INPUT_ALPHABET = Alphabets.closedCharStringRange('0', '3');

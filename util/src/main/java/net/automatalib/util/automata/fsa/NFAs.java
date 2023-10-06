@@ -45,9 +45,6 @@ import net.automatalib.words.Alphabet;
  * <p>
  * Note that the methods provided by this class do not modify their input arguments. Furthermore, results are copied
  * into new datastructures. For read-only views you may use the more generic {@link Acceptors} factory.
- *
- * @author Malte Isberner
- * @author frohme
  */
 public final class NFAs {
 

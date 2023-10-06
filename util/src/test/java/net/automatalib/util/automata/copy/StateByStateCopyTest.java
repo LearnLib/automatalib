@@ -15,9 +15,6 @@
  */
 package net.automatalib.util.automata.copy;
 
-/**
- * @author frohme
- */
 public class StateByStateCopyTest extends AbstractAutomatonCopyTest {
 
     @Override

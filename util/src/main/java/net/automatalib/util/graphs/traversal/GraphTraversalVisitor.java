@@ -28,8 +28,6 @@ import net.automatalib.commons.util.Holder;
  *         edge class
  * @param <D>
  *         user data class
- *
- * @author Malte Isberner
  */
 public interface GraphTraversalVisitor<N, E, D> {
 

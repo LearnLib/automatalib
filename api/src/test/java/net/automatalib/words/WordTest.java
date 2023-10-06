@@ -26,8 +26,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests for static utility methods.
- *
- * @author frohme
  */
 public class WordTest {
 

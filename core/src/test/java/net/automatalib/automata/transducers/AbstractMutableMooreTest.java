@@ -24,9 +24,6 @@ import net.automatalib.words.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public abstract class AbstractMutableMooreTest {
 
     protected abstract MutableMooreMachine<?, Symbol<Character>, ?, String> getMoore();

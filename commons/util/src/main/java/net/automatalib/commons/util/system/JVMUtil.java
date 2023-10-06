@@ -20,8 +20,6 @@ import java.lang.management.RuntimeMXBean;
 
 /**
  * Utility class for Java/JVM specific utilities.
- *
- * @author frohme
  */
 public final class JVMUtil {
 

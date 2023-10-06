@@ -26,8 +26,6 @@ import java.util.List;
  *         the label class
  * @param <AP>
  *         the atomic proposition class
- *
- * @author frohme
  */
 public interface TransformerSerializer<T extends AbstractPropertyTransformer<T, L, AP>, L, AP> {
 

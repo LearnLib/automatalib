@@ -38,9 +38,6 @@ import net.automatalib.modelcheckers.m3c.formula.ctl.EWUNode;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author murtovi
- */
 public class ParserCTLTest {
 
     private final List<FormulaNode<String, String>> formulas = new ArrayList<>();

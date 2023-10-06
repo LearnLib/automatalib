@@ -23,9 +23,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public abstract class AbstractSizeModelCheckLassoCacheTest<I, R extends Lasso<I, ?>, MA extends MutableAutomaton<?, I, ?, ?, ?>, MC extends ModelCheckerLasso<I, ? super MA, Object, R> & ModelCheckCounter, C extends ModelCheckerLassoCache<I, ? super MA, Object, R>>
         extends AbstractSizeModelCheckerCacheTest<I, R, MA, MC, C> {
 

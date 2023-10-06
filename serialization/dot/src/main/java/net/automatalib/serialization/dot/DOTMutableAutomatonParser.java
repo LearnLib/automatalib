@@ -49,8 +49,6 @@ import net.automatalib.words.impl.Alphabets;
  *         transition property type
  * @param <A>
  *         automaton type
- *
- * @author frohme
  */
 public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<S, I, ?, SP, TP>>
         implements DOTInputModelDeserializer<S, I, A> {

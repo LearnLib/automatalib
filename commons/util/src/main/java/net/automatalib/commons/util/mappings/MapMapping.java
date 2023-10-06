@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         domain type.
  * @param <R>
  *         range type.
- *
- * @author Malte Isberner
  */
 public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
 

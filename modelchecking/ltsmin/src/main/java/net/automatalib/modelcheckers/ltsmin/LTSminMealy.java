@@ -39,8 +39,6 @@ import net.automatalib.words.impl.Alphabets;
  *         the input type
  * @param <R>
  *         the type of counterexample
- *
- * @author Jeroen Meijer
  */
 public interface LTSminMealy<I, O, R>
         extends ModelChecker.MealyModelChecker<I, O, String, R>, LTSmin<I, MealyMachine<?, I, ?, O>, R> {

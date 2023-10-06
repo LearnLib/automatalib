@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 
 /**
  * Tests for FSM2DFAParser.
- *
- * @author Jeroen Meijer
  */
 public class FSM2DFAParserTest extends AbstractFSM2ParserTest {
 

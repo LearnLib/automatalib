@@ -15,9 +15,6 @@
  */
 package net.automatalib.commons.util.lib;
 
-/**
- * @author frohme
- */
 public class NativeGreeter {
 
     public native String greet(String person);

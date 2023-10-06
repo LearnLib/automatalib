@@ -22,9 +22,6 @@ import java.util.List;
 import net.automatalib.automata.words.basic.EnumAlphabetTest.Symbol;
 import net.automatalib.words.impl.EnumAlphabet;
 
-/**
- * @author frohme
- */
 public class EnumAlphabetTest extends AbstractAlphabetTest<Symbol, EnumAlphabet<Symbol>> {
 
     @Override

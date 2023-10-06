@@ -43,8 +43,6 @@ import net.automatalib.words.WordBuilder;
  *         transition type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public interface SPMM<S, I, T, O> extends ProceduralSystem<I, MealyMachine<?, I, ?, O>>,
                                           MealyTransitionSystem<S, I, T, O>,

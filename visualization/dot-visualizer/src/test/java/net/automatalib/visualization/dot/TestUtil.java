@@ -25,9 +25,6 @@ import net.automatalib.util.automata.random.RandomAutomata;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.Alphabets;
 
-/**
- * @author frohme
- */
 public final class TestUtil {
 
     private static final Alphabet<Integer> INPUT_ALPHABET = Alphabets.integers(1, 6);

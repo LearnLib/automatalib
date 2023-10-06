@@ -40,8 +40,6 @@ import org.slf4j.LoggerFactory;
  *
  * @param <I>
  *         the input type
- *
- * @author Jeroen Meijer
  */
 public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>>
         implements DFAModelCheckerLasso<I, String>, LTSminDFA<I, DFALasso<I>> {

@@ -22,8 +22,6 @@ package net.automatalib.commons.util.mappings;
  *         domain class
  * @param <R>
  *         range class
- *
- * @author Malte Isberner
  */
 public interface MutableMapping<D, R> extends Mapping<D, R> {
 

@@ -23,8 +23,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A utility class to consume a given {@link InputStream} inside a standalone thread.
- *
- * @author frohme
  */
 final class StreamGobbler extends Thread {
 

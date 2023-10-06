@@ -38,8 +38,6 @@ import org.slf4j.LoggerFactory;
  *
  * @param <I>
  *         the input type
- *
- * @author Jeroen Meijer
  */
 public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA<?, I>>
         implements LTSminDFA<I, DFA<?, I>> {

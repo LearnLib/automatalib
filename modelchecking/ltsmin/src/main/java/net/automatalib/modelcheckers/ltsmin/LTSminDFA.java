@@ -45,7 +45,6 @@ import net.automatalib.words.impl.Alphabets;
  * @param <R>
  *         the type of counterexample
  *
- * @author Jeroen Meijer
  * @see DFAs#isPrefixClosed(DFA, Collection)
  */
 public interface LTSminDFA<I, R> extends LTSmin<I, DFA<?, I>, R>, ModelChecker.DFAModelChecker<I, String, R> {

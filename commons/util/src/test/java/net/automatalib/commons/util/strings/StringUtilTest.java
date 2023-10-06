@@ -18,9 +18,6 @@ package net.automatalib.commons.util.strings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class StringUtilTest {
 
     @Test

@@ -38,8 +38,6 @@ import net.automatalib.words.Alphabet;
  * Note that the methods provided by this class do not modify their input arguments. Such methods are instead provided
  * by the {@link MutableDFAs} class. Furthermore, results are copied into new datastructures. For read-only views you
  * may use the more generic {@link Acceptors} factory.
- *
- * @author Malte Isberner
  */
 public final class DFAs {
 

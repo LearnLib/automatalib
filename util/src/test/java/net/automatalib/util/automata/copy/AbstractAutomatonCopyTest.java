@@ -34,9 +34,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public abstract class AbstractAutomatonCopyTest {
 
     private static final Alphabet<Character> INPUT_ALPHABET = Alphabets.characters('a', 'c');

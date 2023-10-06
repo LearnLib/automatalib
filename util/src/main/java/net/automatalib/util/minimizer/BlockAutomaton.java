@@ -26,8 +26,6 @@ import java.util.List;
  *         state class.
  * @param <L>
  *         transition label class.
- *
- * @author Malte Isberner
  */
 public class BlockAutomaton<S, L> {
 

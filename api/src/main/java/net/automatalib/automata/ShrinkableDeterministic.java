@@ -29,8 +29,6 @@ package net.automatalib.automata;
  *         state property class
  * @param <TP>
  *         transition property class
- *
- * @author Malte Isberner
  */
 public interface ShrinkableDeterministic<S, I, T, SP, TP>
         extends MutableDeterministic<S, I, T, SP, TP>, ShrinkableAutomaton<S, I, T, SP, TP> {

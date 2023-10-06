@@ -22,8 +22,6 @@ package net.automatalib.automata.concepts;
  *         state class.
  * @param <O>
  *         output class.
- *
- * @author Malte Isberner
  */
 public interface StateOutput<S, O> {
 

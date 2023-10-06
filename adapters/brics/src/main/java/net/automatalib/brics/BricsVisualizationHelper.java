@@ -24,8 +24,6 @@ import net.automatalib.visualization.DefaultVisualizationHelper;
 
 /**
  * Rendering helper for Brics automaton adapters.
- *
- * @author Malte Isberner
  */
 final class BricsVisualizationHelper extends DefaultVisualizationHelper<State, Transition> {
 

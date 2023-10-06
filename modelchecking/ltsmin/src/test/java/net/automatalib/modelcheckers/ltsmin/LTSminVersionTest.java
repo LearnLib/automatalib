@@ -20,8 +20,6 @@ import org.testng.annotations.Test;
 
 /**
  * Test cases for the {@link LTSminVersion} class.
- *
- * @author frohme
  */
 public class LTSminVersionTest {
 

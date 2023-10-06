@@ -25,8 +25,6 @@ import java.util.List;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public class EquationalBlock<L, AP> {
 

@@ -41,9 +41,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author frohme
- */
 final class NSEVPAConverter {
 
     private NSEVPAConverter() {

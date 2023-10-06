@@ -31,8 +31,6 @@ import net.automatalib.ts.simple.SimpleTS;
  *         The type of objects that should be serialized
  * @param <IN>
  *         The type of objects that should be de-serialized
- *
- * @author frohme
  */
 public interface InputModelSerializationProvider<I, OUT extends SimpleTS<?, I>, IN extends SimpleTS<?, I>> extends
                                                                                                            InputModelSerializer<I, OUT>,

@@ -17,9 +17,6 @@ package net.automatalib.commons.util;
 
 /**
  * The well-known disjoint-set forest data structure for dealing with partitions on a fixed-range integer domain.
- *
- * @author fhowar
- * @author Malte Isberner
  */
 public final class UnionFind implements IntDisjointSets {
 

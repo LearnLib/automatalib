@@ -29,8 +29,6 @@ import net.automatalib.words.Word;
  *         transition type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public interface MutableSubsequentialTransducer<S, I, T, O>
         extends SubsequentialTransducer<S, I, T, O>, MutableDeterministic<S, I, T, Word<O>, Word<O>> {}

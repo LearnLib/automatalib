@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         procedural state type
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class StackSPA<S, I> implements SPA<StackState<S, I, DFA<S, I>>, I>, SimpleDTS<StackState<S, I, DFA<S, I>>, I> {
 

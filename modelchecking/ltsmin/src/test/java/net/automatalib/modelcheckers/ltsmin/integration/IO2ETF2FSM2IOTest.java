@@ -21,9 +21,6 @@ import net.automatalib.automata.transducers.impl.compact.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserIO;
 
-/**
- * @author Jeroen Meijer
- */
 public class IO2ETF2FSM2IOTest extends AbstractMealy2ETF2FSM2MealyTest {
 
     @Override

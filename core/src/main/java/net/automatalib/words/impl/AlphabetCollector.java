@@ -32,8 +32,6 @@ import net.automatalib.words.GrowingAlphabet;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 final class AlphabetCollector<I> implements Collector<I, GrowingAlphabet<I>, GrowingAlphabet<I>> {
 

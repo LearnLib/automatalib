@@ -18,9 +18,6 @@ package net.automatalib.automata.words.procedural;
 import net.automatalib.words.Alphabet;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 
-/**
- * @author frohme
- */
 public class DefaultProceduralInputAlphabetTest extends AbstractProceduralInputAlphabetTest<DefaultProceduralInputAlphabet<Character>> {
 
     @Override

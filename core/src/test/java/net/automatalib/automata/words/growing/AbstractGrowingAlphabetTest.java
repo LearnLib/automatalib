@@ -30,8 +30,6 @@ import org.testng.annotations.Test;
  *         input symbol type
  * @param <M>
  *         concrete alphabet type
- *
- * @author frohme
  */
 public abstract class AbstractGrowingAlphabetTest<I, M extends GrowingAlphabet<I>> {
 

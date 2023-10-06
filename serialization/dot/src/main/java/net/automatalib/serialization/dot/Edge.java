@@ -19,8 +19,6 @@ import java.util.Map;
 
 /**
  * A utility class to aggregate information of an edge of a DOT graph.
- *
- * @author frohme
  */
 public class Edge {
 

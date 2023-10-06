@@ -29,8 +29,6 @@ import java.util.stream.Collector;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 final class WordCollector<I> implements Collector<I, WordBuilder<I>, Word<I>> {
 

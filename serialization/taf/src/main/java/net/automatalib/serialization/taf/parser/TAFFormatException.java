@@ -19,8 +19,6 @@ import net.automatalib.serialization.FormatException;
 
 /**
  * Exception to signal fatal errors during parsing TAF inputs.
- *
- * @author Malte Isberner
  */
 public class TAFFormatException extends FormatException {
 

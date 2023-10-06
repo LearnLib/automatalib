@@ -21,8 +21,6 @@ import net.automatalib.modelcheckers.m3c.formula.parser.ParseException;
 
 /**
  * A {@link BDDSolver BDD solver} for generic, string-based formulas.
- *
- * @author frohme
  */
 public class StringBDDSolver extends BDDSolver<String, String> implements M3CSolver<String> {
 

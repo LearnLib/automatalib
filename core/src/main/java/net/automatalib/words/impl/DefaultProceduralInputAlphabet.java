@@ -23,8 +23,6 @@ import net.automatalib.words.ProceduralInputAlphabet;
  *
  * @param <I>
  *         input symbol type
- *
- * @author frohme
  */
 public class DefaultProceduralInputAlphabet<I> extends DefaultVPAlphabet<I> implements ProceduralInputAlphabet<I> {
 

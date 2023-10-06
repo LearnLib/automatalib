@@ -33,9 +33,6 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
  *         label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author freese
- * @author frohme
  */
 @SuppressWarnings("type.argument.type.incompatible") // we only add non-null properties
 public class WitnessTree<L, AP> extends CompactGraph<WitnessTreeState<?, L, ?, AP>, String> {

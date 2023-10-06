@@ -25,7 +25,6 @@
  * automata, such as {@link net.automatalib.automata.fsa.DFA DFAs} or {@link net.automatalib.automata.transducers.MealyMachine
  * Mealy machines} can be found in the respective subpackages.
  *
- * @author Malte Isberner
  * @see net.automatalib.ts
  */
 package net.automatalib.automata;

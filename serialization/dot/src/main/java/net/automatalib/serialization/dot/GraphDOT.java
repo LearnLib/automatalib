@@ -41,8 +41,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Methods for rendering a {@link Graph} or {@link Automaton} in the GraphVIZ DOT format.
- *
- * @author Malte Isberner
  */
 public final class GraphDOT {
 

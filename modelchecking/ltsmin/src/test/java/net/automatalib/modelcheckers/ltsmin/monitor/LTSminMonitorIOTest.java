@@ -18,7 +18,6 @@ package net.automatalib.modelcheckers.ltsmin.monitor;
 /**
  * Tests whether LTSminMonitorAlternating actually uses regular edge semantics.
  *
- * @author Jeroen Meijer
  * @see LTSminMonitorAlternatingTest
  */
 public class LTSminMonitorIOTest extends AbstractLTSminMonitorMealyTest {

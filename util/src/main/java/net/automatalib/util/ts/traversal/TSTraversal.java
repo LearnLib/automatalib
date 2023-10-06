@@ -24,9 +24,6 @@ import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.traversal.TraversalOrder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-/**
- * @author Malte Isberner
- */
 public final class TSTraversal {
 
     public static final int NO_LIMIT = -1;

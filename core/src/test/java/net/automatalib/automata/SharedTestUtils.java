@@ -20,9 +20,6 @@ import net.automatalib.automata.fsa.NFA;
 import net.automatalib.words.Word;
 import org.testng.Assert;
 
-/**
- * @author frohme
- */
 final class SharedTestUtils {
 
     private SharedTestUtils() {}

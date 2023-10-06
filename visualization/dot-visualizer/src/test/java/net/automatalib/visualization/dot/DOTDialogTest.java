@@ -42,9 +42,6 @@ import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class DOTDialogTest extends AssertJSwingTestngTestCase {
 
     private final String dot;

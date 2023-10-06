@@ -31,8 +31,6 @@ import net.automatalib.automata.transducers.MealyMachine;
  *         the property type
  * @param <R>
  *         the type of counterexample
- *
- * @author Jeroen Meijer
  */
 public interface ModelCheckerCache<I, A, P, R> extends ModelChecker<I, A, P, R> {
 

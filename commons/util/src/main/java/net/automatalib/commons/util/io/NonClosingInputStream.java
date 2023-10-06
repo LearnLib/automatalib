@@ -21,8 +21,6 @@ import java.io.InputStream;
 /**
  * A delegating input stream that does nothing when being closed. This is mainly useful for scenarios where we want to
  * close wrappers (to free their resources) but do not want to close the source stream.
- *
- * @author frohme
  */
 public class NonClosingInputStream extends InputStream {
 

@@ -41,8 +41,6 @@ import org.slf4j.LoggerFactory;
  *         the input type.
  * @param <O>
  *         the output type.
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractLTSminMonitorMealy<I, O>
         extends AbstractLTSminMonitor<I, MealyMachine<?, I, ?, O>, MealyMachine<?, I, ?, O>>

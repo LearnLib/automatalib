@@ -40,8 +40,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <I>
  *         symbol class.
- *
- * @author Malte Isberner
  */
 public final class WordBuilder<I> extends AbstractList<I> {
 

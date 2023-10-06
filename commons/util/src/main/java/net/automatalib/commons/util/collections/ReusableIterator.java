@@ -30,8 +30,6 @@ import com.google.common.collect.AbstractIterator;
  *
  * @param <T>
  *         type of elements to iterate.
- *
- * @author frohme
  */
 public class ReusableIterator<T> implements Iterable<T> {
 

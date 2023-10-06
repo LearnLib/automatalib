@@ -32,8 +32,6 @@ import net.automatalib.ts.TransitionSystem;
  *         input symbol type
  * @param <T>
  *         transition type
- *
- * @author Malte Isberner
  */
 public interface Automaton<S, I, T> extends TransitionSystem<S, I, T>, SimpleAutomaton<S, I> {
 

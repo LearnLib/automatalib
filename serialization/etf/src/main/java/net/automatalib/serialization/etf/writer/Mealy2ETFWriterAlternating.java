@@ -33,8 +33,6 @@ import net.automatalib.words.Alphabet;
  *
  * @see <a href="http://rers-challenge.org/2017/index.php?page=problemDescS#">RERS 2017</a>
  *
- * @author Jeroen Meijer
- *
  * @param <I> the input type
  * @param <O> the output type
  */

@@ -52,9 +52,6 @@ import net.automatalib.words.Word;
 import net.automatalib.words.impl.Alphabets;
 import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
 
-/**
- * @author frohme
- */
 final class DOTSerializationUtil {
 
     static final String EMPTY_RESOURCE = "/empty.dot";

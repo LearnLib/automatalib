@@ -19,9 +19,6 @@ import net.automatalib.automata.MutableAutomaton;
 import net.automatalib.commons.util.WrapperUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author fh
- */
 public interface MutableFSA<S, I> extends FiniteStateAcceptor<S, I>, MutableAutomaton<S, I, S, Boolean, Void> {
 
     default void flipAcceptance() {

@@ -25,8 +25,6 @@ import net.automatalib.words.Alphabet;
  * This class provides methods to write automata in LTSmin's ETF format.
  *
  * @see <a href="http://ltsmin.utwente.nl/assets/man/etf.html">the ETF format</a>
- *
- * @author Jeroen Meijer
  */
 public abstract class AbstractETFWriter<I, A extends Automaton<?, I, ?>> implements InputModelSerializer<I, A> {
 

@@ -31,8 +31,6 @@ import net.automatalib.words.Alphabet;
  *         the type of input symbols
  * @param <M>
  *         the type of objects implementing classes can deserialize
- *
- * @author frohme
  */
 public interface InputModelSerializer<I, M extends SimpleTS<?, I>> extends ModelSerializer<InputModelData<I, M>> {
 

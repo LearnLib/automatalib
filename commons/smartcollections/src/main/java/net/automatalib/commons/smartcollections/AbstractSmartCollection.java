@@ -34,8 +34,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @param <E>
  *         element class.
- *
- * @author Malte Isberner
  */
 public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> implements SmartCollection<E> {
 

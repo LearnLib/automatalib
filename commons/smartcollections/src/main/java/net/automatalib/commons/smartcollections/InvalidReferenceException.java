@@ -20,8 +20,6 @@ package net.automatalib.commons.smartcollections;
  * previously removed element, or to an element stored in a different collection.
  * <p>
  * This exception does not need to be caught explicitly.
- *
- * @author Malte Isberner
  */
 public class InvalidReferenceException extends IllegalArgumentException {
 

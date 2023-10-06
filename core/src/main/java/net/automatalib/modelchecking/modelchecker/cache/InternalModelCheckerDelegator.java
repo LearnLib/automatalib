@@ -40,8 +40,6 @@ import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
  *         property type
  * @param <R>
  *         counterexample type
- *
- * @author frohme
  */
 interface InternalModelCheckerDelegator<MC extends ModelChecker<I, A, P, R>, I, A, P, R> {
 

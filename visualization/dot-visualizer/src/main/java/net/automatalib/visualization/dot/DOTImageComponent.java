@@ -43,8 +43,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Component that displays a {@link BufferedImage}.
- *
- * @author Malte Isberner
  */
 class DOTImageComponent extends JComponent {
 

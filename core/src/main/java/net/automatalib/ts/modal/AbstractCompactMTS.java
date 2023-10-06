@@ -36,8 +36,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <TP>
  *         (specific) transition property type
- *
- * @author msc
  */
 public abstract class AbstractCompactMTS<I, T, TP extends MutableModalEdgeProperty>
         extends AbstractCompact<I, T, Void, TP>

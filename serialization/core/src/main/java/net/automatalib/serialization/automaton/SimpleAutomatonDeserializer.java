@@ -40,8 +40,6 @@ import net.automatalib.serialization.InputModelDeserializer;
  *         The state type of the de-serialized hypothesis
  * @param <I>
  *         The default input symbol type
- *
- * @author frohme
  */
 public interface SimpleAutomatonDeserializer<S, I> extends InputModelDeserializer<I, SimpleAutomaton<S, I>> {
 

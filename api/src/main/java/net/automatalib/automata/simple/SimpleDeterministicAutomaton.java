@@ -29,8 +29,6 @@ import net.automatalib.words.Alphabet;
  *         state class.
  * @param <I>
  *         input symbol class.
- *
- * @author Malte Isberner
  */
 public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I>, SimpleDTS<S, I> {
 
@@ -79,8 +77,6 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
      * identified with an integer in the range {@code [0, size() - 1]}. A similar abstraction may be imposed on the
      * input symbols, this is however not prescribed by this interface (see {@link StateIntAbstraction} and {@link
      * FullIntAbstraction}).
-     *
-     * @author Malte Isberner
      */
     interface IntAbstraction extends FiniteRepresentation {
 
@@ -108,8 +104,6 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
      *
      * @param <I>
      *         input symbol type
-     *
-     * @author Malte Isberner
      */
     interface StateIntAbstraction<I> extends IntAbstraction {
 
@@ -132,8 +126,6 @@ public interface SimpleDeterministicAutomaton<S, I> extends SimpleAutomaton<S, I
      * Interface for an {@link IntAbstraction integer abstraction} that abstracts both states and input symbols to
      * integers. In addition to the modalities specified in {@link IntAbstraction}, this interface prescribes that input
      * symbols are abstracted to integers in the range {@code [0, numInputs() - 1]}.
-     *
-     * @author Malte Isberner
      */
     interface FullIntAbstraction extends IntAbstraction {
 

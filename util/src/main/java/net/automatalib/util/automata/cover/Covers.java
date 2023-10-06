@@ -29,10 +29,6 @@ import net.automatalib.commons.util.mappings.MutableMapping;
 import net.automatalib.words.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-/**
- * @author Malte Isberner
- * @author frohme
- */
 public final class Covers {
 
     private Covers() {}

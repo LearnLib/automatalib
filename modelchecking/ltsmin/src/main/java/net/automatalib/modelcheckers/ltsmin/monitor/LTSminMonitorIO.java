@@ -29,8 +29,6 @@ import net.automatalib.modelcheckers.ltsmin.LTSminIO;
  *         the input type
  * @param <O>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public class LTSminMonitorIO<I, O> extends AbstractLTSminMonitorMealy<I, O>
         implements LTSminIO<I, O, MealyMachine<?, I, ?, O>> {

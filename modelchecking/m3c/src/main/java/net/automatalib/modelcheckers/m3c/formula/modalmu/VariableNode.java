@@ -29,8 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 public class VariableNode<L, AP> extends AbstractFormulaNode<L, AP> {
 

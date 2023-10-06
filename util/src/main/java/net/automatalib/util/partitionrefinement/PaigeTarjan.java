@@ -36,8 +36,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * #blockForState}</li> </ul> The {@link PaigeTarjanInitializers} provides methods for initializing this data structure
  * for common cases (e.g., DFA minimization). Similarly, the {@link PaigeTarjanExtractors} class provides methods for
  * transforming the resulting data structure.
- *
- * @author Malte Isberner
  */
 public class PaigeTarjan {
 
@@ -429,8 +427,6 @@ public class PaigeTarjan {
 
     /**
      * Determines how the worklist is managed, i.e., where newly created blocks are inserted.
-     *
-     * @author Malte Isberner
      */
     public enum WorklistPolicy {
         /**

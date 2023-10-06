@@ -25,8 +25,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An alphabet-based, fixed size implementation of a {@link VPAlphabet}.
- *
- * @author frohme
  */
 public class DefaultVPAlphabet<I> extends AbstractVPAlphabet<I> implements VPAlphabet<I> {
 

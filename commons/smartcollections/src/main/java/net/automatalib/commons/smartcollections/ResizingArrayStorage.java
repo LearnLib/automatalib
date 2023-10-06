@@ -23,8 +23,6 @@ import java.util.Arrays;
  *
  * @param <T>
  *         element class.
- *
- * @author Malte Isberner
  */
 public final class ResizingArrayStorage<T> implements CapacityManagement {
 

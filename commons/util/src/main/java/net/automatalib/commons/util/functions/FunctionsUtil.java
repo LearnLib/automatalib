@@ -24,8 +24,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * This class provides utility methods for Java 8 {@link Function} objects (and for the corresponding primitive
  * specializations).
- *
- * @author Malte Isberner
  */
 public final class FunctionsUtil {
 

@@ -36,8 +36,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         state property.
  * @param <TP>
  *         transition property.
- *
- * @author Malte Isberner
  */
 public interface MutableDeterministic<S, I, T, SP, TP>
         extends UniversalDeterministicAutomaton<S, I, T, SP, TP>, MutableAutomaton<S, I, T, SP, TP> {
@@ -168,8 +166,6 @@ public interface MutableDeterministic<S, I, T, SP, TP>
      *         state property type
      * @param <TP>
      *         transition property type
-     *
-     * @author Malte Isberner
      */
     interface IntAbstraction<T, SP, TP> extends UniversalDeterministicAutomaton.IntAbstraction<T, SP, TP> {
 
@@ -206,8 +202,6 @@ public interface MutableDeterministic<S, I, T, SP, TP>
      *         state property type
      * @param <TP>
      *         transition property type
-     *
-     * @author Malte Isberner
      */
     interface StateIntAbstraction<I, T, SP, TP>
             extends IntAbstraction<T, SP, TP>, UniversalDeterministicAutomaton.StateIntAbstraction<I, T, SP, TP> {
@@ -228,8 +222,6 @@ public interface MutableDeterministic<S, I, T, SP, TP>
      *         state property type
      * @param <TP>
      *         transition property type
-     *
-     * @author Malte Isberner
      */
     interface FullIntAbstraction<T, SP, TP>
             extends IntAbstraction<T, SP, TP>, UniversalDeterministicAutomaton.FullIntAbstraction<T, SP, TP> {

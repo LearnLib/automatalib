@@ -31,8 +31,6 @@ import net.automatalib.words.Word;
  *
  * @param <I>
  *         input symbol class
- *
- * @author Malte Isberner
  */
 public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFABuilder<I>, InputAlphabetHolder<I> {
 

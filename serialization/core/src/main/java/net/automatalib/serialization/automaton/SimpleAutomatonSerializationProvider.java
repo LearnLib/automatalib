@@ -25,8 +25,6 @@ package net.automatalib.serialization.automaton;
  *         The state type of the de-serialized hypothesis
  * @param <I>
  *         The default input symbol type
- *
- * @author frohme
  */
 public interface SimpleAutomatonSerializationProvider<S, I>
         extends SimpleAutomatonSerializer<I>, SimpleAutomatonDeserializer<S, I> {}

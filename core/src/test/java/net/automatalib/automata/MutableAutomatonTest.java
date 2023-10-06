@@ -46,9 +46,6 @@ import net.automatalib.words.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class MutableAutomatonTest {
 
     static final Random RANDOM = new Random(42);

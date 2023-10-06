@@ -20,8 +20,6 @@ import java.util.List;
 
 /**
  * Utilities for regular {@link net.automatalib.words.Alphabet} tests.
- *
- * @author frohme
  */
 public final class AlphabetTestUtil {
 

@@ -25,9 +25,6 @@ import java.util.concurrent.TimeUnit;
 import org.testng.annotations.Test;
 import org.testng.internal.thread.ThreadTimeoutException;
 
-/**
- * @author frohme
- */
 public class ScalingThreadPoolExecutorTest {
 
     @Test(timeOut = 2000)

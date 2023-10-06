@@ -19,9 +19,6 @@ import net.automatalib.automata.transducers.impl.FastMealy;
 import net.automatalib.automata.util.TestUtil;
 import net.automatalib.words.impl.Symbol;
 
-/**
- * @author frohme
- */
 public class FastMealyTest extends AbstractMutableMealyTest {
 
     @Override

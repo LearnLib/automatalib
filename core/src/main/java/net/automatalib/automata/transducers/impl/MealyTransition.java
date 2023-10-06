@@ -22,8 +22,6 @@ package net.automatalib.automata.transducers.impl;
  *         state class.
  * @param <O>
  *         output symbol class.
- *
- * @author Malte Isberner
  */
 public class MealyTransition<S, O> {
 

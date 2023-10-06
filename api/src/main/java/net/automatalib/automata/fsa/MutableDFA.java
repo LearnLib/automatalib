@@ -17,9 +17,6 @@ package net.automatalib.automata.fsa;
 
 import net.automatalib.automata.MutableDeterministic;
 
-/**
- * @author fh
- */
 public interface MutableDFA<S, I> extends DFA<S, I>, MutableDeterministic<S, I, S, Boolean, Void>, MutableFSA<S, I> {
 
 }

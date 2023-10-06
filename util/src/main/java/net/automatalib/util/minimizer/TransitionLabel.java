@@ -29,8 +29,6 @@ import net.automatalib.commons.smartcollections.UnorderedCollection;
  *         state class.
  * @param <EP>
  *         edge property class.
- *
- * @author Malte Isberner
  */
 final class TransitionLabel<S, EP> extends AbstractBasicLinkedListEntry<TransitionLabel<S, EP>, TransitionLabel<S, EP>> {
 

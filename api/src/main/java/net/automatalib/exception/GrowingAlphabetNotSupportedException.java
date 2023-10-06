@@ -22,8 +22,6 @@ import net.automatalib.words.GrowingAlphabet;
  * An exception to be thrown when functionality revolving around {@link GrowingAlphabet#addSymbol(Object)} is accessed
  * (e.g. by trying to add an alphabet symbol to an automaton) but the given data structure was not properly set up (e.g.
  * the automaton was initialized with an immutable alphabet).
- *
- * @author frohme
  */
 public class GrowingAlphabetNotSupportedException extends UnsupportedOperationException {
 

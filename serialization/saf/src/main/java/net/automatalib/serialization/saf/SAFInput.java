@@ -35,8 +35,6 @@ import net.automatalib.words.impl.Alphabets;
 
 /**
  * Deserializer for the SAF (simple automaton format).
- *
- * @author Malte Isberner
  */
 class SAFInput {
 

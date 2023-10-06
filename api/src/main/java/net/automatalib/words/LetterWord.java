@@ -30,7 +30,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         symbol class
  *
- * @author Malte Isberner
  * @see Collections#singletonList(Object)
  */
 final class LetterWord<I> extends Word<I> {

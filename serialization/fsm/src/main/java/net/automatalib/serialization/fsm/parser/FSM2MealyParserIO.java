@@ -31,8 +31,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the input type
  * @param <O>
  *         the output type
- *
- * @author Jeroen Meijer
  */
 public final class FSM2MealyParserIO<I, O> extends AbstractFSM2MealyParser<I, O> {
 

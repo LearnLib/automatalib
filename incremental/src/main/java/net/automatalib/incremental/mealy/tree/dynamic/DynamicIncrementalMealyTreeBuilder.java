@@ -42,8 +42,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         input symbol type
  * @param <O>
  *         output symbol type
- *
- * @author frohme
  */
 public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Node<I, O>, I, O>
         implements IncrementalMealyBuilder<I, O> {

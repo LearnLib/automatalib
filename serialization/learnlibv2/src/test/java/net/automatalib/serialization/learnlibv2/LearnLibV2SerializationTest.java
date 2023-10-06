@@ -34,9 +34,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-/**
- * @author frohme
- */
 public class LearnLibV2SerializationTest {
 
     private CompactDFA<Integer> automaton;

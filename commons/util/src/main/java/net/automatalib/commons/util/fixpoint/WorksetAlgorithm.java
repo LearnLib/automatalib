@@ -17,9 +17,6 @@ package net.automatalib.commons.util.fixpoint;
 
 import java.util.Collection;
 
-/**
- * @author msc
- */
 public interface WorksetAlgorithm<T, R> {
 
     /**

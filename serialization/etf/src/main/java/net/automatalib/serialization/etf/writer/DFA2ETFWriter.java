@@ -26,8 +26,6 @@ import net.automatalib.words.Alphabet;
 /**
  * Write a DFA to ETF.
  *
- * @author Jeroen Meijer
- *
  * @param <I> the input type.
  */
 public final class DFA2ETFWriter<I> extends AbstractETFWriter<I, DFA<?, I>> {

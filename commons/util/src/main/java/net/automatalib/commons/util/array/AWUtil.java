@@ -24,8 +24,6 @@ import net.automatalib.commons.smartcollections.ArrayWritable;
  * <p>
  * It is generally preferable to use the static methods this class offers than using {@link
  * ArrayWritable#writeToArray(int, Object[], int, int)} directly.
- *
- * @author Malte Isberner
  */
 public final class AWUtil {
 

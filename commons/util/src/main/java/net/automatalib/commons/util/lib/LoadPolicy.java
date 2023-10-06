@@ -17,8 +17,6 @@ package net.automatalib.commons.util.lib;
 
 /**
  * Specifies in which order a library to be loaded is searched for.
- *
- * @author Malte Isberner
  */
 public enum LoadPolicy {
     /**

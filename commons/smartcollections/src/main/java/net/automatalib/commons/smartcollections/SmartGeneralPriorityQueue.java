@@ -34,8 +34,6 @@ import java.util.Comparator;
  *         element class.
  * @param <K>
  *         key class.
- *
- * @author Malte Isberner
  */
 public interface SmartGeneralPriorityQueue<E, K extends Comparable<K>> extends SmartPriorityQueue<E> {
 

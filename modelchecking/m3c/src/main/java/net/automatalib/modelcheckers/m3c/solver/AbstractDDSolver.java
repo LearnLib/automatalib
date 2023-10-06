@@ -65,8 +65,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         edge label type
  * @param <AP>
  *         atomic proposition type
- *
- * @author murtovi
  */
 abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>, L, AP>
         implements ModelChecker<L, ContextFreeModalProcessSystem<L, AP>, FormulaNode<L, AP>, WitnessTree<L, AP>> {

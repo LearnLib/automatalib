@@ -26,7 +26,5 @@ package net.automatalib.serialization;
  *         The type of objects that should be serialized
  * @param <IN>
  *         The type of objects that should be de-serialized
- *
- * @author frohme
  */
 public interface SerializationProvider<OUT, IN> extends ModelSerializer<OUT>, ModelDeserializer<IN> {}

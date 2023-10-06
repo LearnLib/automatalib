@@ -21,8 +21,6 @@ package net.automatalib.words;
  *
  * @param <I>
  *         input alphabet type
- *
- * @author Malte Isberner
  */
 public interface VPAlphabet<I> extends Alphabet<I> {
 

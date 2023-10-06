@@ -24,8 +24,6 @@ import net.automatalib.words.impl.DefaultVPAlphabet;
 
 /**
  * Utility class, aggregating definitions used for testing {@link DefaultVPAlphabet}s.
- *
- * @author frohme
  */
 public final class DefaultVPAlphabetTestUtil {
 

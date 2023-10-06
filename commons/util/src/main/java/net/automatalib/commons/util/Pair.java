@@ -35,9 +35,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         type of the pair's first component.
  * @param <T2>
  *         type of the pair's second component.
- *
- * @author Malte Isberner
- * @author frohme
  */
 public final class Pair<T1, T2> extends AbstractPrintable {
 

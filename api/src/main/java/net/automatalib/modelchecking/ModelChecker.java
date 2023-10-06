@@ -35,8 +35,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *         the property type
  * @param <R>
  *         the type of counterexample
- *
- * @author Jeroen Meijer
  */
 public interface ModelChecker<I, A, P, R> {
 
