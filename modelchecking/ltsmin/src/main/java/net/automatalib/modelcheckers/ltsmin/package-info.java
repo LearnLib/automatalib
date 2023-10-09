@@ -24,3 +24,4 @@
  * binaries</a> which are not explicitly included in this artifact due to packaging reasons.
  */
 package net.automatalib.modelcheckers.ltsmin;
+

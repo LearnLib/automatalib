@@ -25,3 +25,4 @@
  * artifact due to packaging reasons.
  */
 package net.automatalib.modelcheckers.m3c;
+
