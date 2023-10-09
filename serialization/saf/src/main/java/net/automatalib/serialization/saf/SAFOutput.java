@@ -123,8 +123,8 @@ public class SAFOutput {
     }
 
     private <S, SP> void encodeStatesDet(UniversalAutomaton<S, ?, ?, SP, ?> source,
-                                         final S init,
-                                         final List<S> states,
+                                         S init,
+                                         List<S> states,
                                          BlockPropertyEncoder<? super SP> encoder) throws IOException {
         out.writeInt(states.indexOf(init));
         encodeStateProperties(source, states, encoder);
@@ -163,8 +163,8 @@ public class SAFOutput {
     }
 
     private <S, SP> void encodeStatesNondet(UniversalAutomaton<S, ?, ?, SP, ?> source,
-                                            final Collection<? extends S> initialStates,
-                                            final List<S> states,
+                                            Collection<? extends S> initialStates,
+                                            List<S> states,
                                             BlockPropertyEncoder<? super SP> encoder) throws IOException {
         // 'writeInts'
         out.writeInt(initialStates.size());

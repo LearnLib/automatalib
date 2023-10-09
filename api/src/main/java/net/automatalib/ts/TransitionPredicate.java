@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 @FunctionalInterface
 public interface TransitionPredicate<S, I, T> {
 
-    default Predicate<? super T> toUnaryPredicate(S source, final I input) {
+    default Predicate<? super T> toUnaryPredicate(S source, I input) {
         return trans -> apply(source, input, trans);
     }
 
