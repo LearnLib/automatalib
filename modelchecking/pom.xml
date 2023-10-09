@@ -29,7 +29,9 @@ limitations under the License.
     <packaging>pom</packaging>
 
     <name>AutomataLib :: Model Checking</name>
-    <description>AutomataLib model checking libraries.</description>
+    <description>
+        Meta-module for various model checkers that can be used with automata and graph models from AutomataLib.
+    </description>
 
     <modules>
         <module>ltsmin</module>

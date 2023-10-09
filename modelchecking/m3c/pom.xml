@@ -28,9 +28,14 @@ limitations under the License.
     <artifactId>automata-modelchecking-m3c</artifactId>
 
     <name>AutomataLib :: Model Checking :: M3C</name>
-    <description>The Modal Meta Model Checker as presented in the paper "M3C: Modal Meta Model Checking". Note that this
-        implementation requires a dependency to a specific ADDLib backend (see https://add-lib.scce.info/), which is
-        not explicitly included due to packaging reasons.
+    <description>
+        This artifact provides the implementation of the model checker presented in the paper "M3C: Modal Meta Model
+        Checking" (https://dx.doi.org/10.1007/978-3-030-00244-2_15) by Bernhard Steffen and Alnis Murtovi. The paper is
+        based on "Model Checking for Context-Free Processes" (https://link.springer.com/chapter/10.1007/BFb0084787) by
+        Olaf Burkart and Bernhard Steffen.
+
+        Note that this implementation requires a runtime dependency to a specific ADDLib backend (see
+        https://add-lib.scce.info/), which is not explicitly included in this artifact due to packaging reasons.
     </description>
 
     <dependencies>

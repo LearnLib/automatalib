@@ -49,6 +49,10 @@ public final class M3CSolvers {
      *
      * @param cfmps
      *         the system to evaluate formulas on
+     * @param <L>
+     *         label type
+     * @param <AP>
+     *         atomic proposition type
      *
      * @return a default {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
      *
@@ -75,6 +79,10 @@ public final class M3CSolvers {
      *
      * @param cfmps
      *         the system to evaluate formulas on
+     * @param <L>
+     *         label type
+     * @param <AP>
+     *         atomic proposition type
      *
      * @return an ADD-backed {@link TypedM3CSolver} solver for strongly-typed modal context-free process systems
      */
@@ -99,6 +107,10 @@ public final class M3CSolvers {
      *
      * @param cfmps
      *         the system to evaluate formulas on
+     * @param <L>
+     *         label type
+     * @param <AP>
+     *         atomic proposition type
      *
      * @return a BDD-backed {@link TypedM3CSolver} for strongly-typed systems
      */

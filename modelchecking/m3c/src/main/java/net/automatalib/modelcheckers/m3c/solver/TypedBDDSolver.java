@@ -21,6 +21,11 @@ import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 
 /**
  * A {@link BDDSolver BDD solver} for strongly-typed formulas.
+ *
+ * @param <L>
+ *         label type
+ * @param <AP>
+ *         atomic proposition type
  */
 public class TypedBDDSolver<L, AP> extends BDDSolver<L, AP> implements TypedM3CSolver<FormulaNode<L, AP>> {
 

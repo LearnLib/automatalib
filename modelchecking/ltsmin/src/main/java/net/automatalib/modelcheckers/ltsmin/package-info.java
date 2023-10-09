@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.modelcheckers.m3c.solver;
-
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
-import net.automatalib.modelcheckers.m3c.formula.FormulaNode;
-import net.automatalib.modelcheckers.m3c.solver.M3CSolver.TypedM3CSolver;
 
 /**
- * An {@link ADDSolver ADD solver} for strongly-typed formulas.
- *
- * @param <L>
- *         label type
- * @param <AP>
- *         atomic proposition type
+ * This package (and sub-packages) provides the integration of the model checker <a
+ * href="https://ltsmin.utwente.nl/">LTSmin</a> as described in the paper <a
+ * href="https://dx.doi.org/10.1007/s11334-019-00342-6">Sound Black-Box Checking in the LearnLib</a> by Jeroen Meijer
+ * and Jaco van de Pol.
+ * <p>
+ * Note that this implementation requires a local installation of the <a href="https://ltsmin.utwente.nl/">LTSmin
+ * binaries</a> which are not explicitly included in this artifact due to packaging reasons.
  */
-public class TypedADDSolver<L, AP> extends ADDSolver<L, AP> implements TypedM3CSolver<FormulaNode<L, AP>> {
-
-    TypedADDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
-        super(cfmps);
-    }
-
-}
+package net.automatalib.modelcheckers.ltsmin;

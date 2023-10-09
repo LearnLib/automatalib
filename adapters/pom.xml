@@ -30,9 +30,8 @@ limitations under the License.
 
     <name>AutomataLib :: Adapters</name>
     <description>
-        Common parent metaproject for various adapters, i.e., wrapper class that allow to
-        treat automaton or graph models from other software libraries as AutomataLib automata
-        or graphs.
+        Common parent meta-project for various adapters, i.e., wrapper class that allow to treat automaton or graph
+        models from other software libraries as AutomataLib automata or graphs.
     </description>
 
     <modules>
