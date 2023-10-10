@@ -24,9 +24,9 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Java Version [e.g. 8, 11, 17]
- - AutomataLib [e.g. 0.11]
+ - OS: [e.g. Windows, Linux]
+ - Java version: [e.g. 8, 11, 17]
+ - AutomataLib version: [e.g. 0.11.0]
 
 **Additional context**
 Add any other context about the problem here.
