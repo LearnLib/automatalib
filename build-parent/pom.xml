@@ -70,27 +70,27 @@ limitations under the License.
                             <exclude>net/automatalib/serialization/taf/parser/TokenMgrError.class</exclude>
 
                             <!-- generated parser for LTSmin LTL parser -->
-                            <exclude>net/automatalib/modelcheckers/ltsmin/InternalLTSminLTLParser*.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/ParseException.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/SimpleCharStream.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/Token.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/TokenMgrError.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/InternalLTSminLTLParser*.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/ParseException.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/SimpleCharStream.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/Token.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/TokenMgrError.class</exclude>
 
                             <!-- generated parser for M3C formula parser -->
-                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/InternalM3CParser*.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/ParseException.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/SimpleCharStream.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/Token.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/m3c/formula/parser/TokenMgrError.class</exclude>
+                            <exclude>net/automatalib/modelchecker/m3c/formula/parser/InternalM3CParser*.class</exclude>
+                            <exclude>net/automatalib/modelchecker/m3c/formula/parser/ParseException.class</exclude>
+                            <exclude>net/automatalib/modelchecker/m3c/formula/parser/SimpleCharStream.class</exclude>
+                            <exclude>net/automatalib/modelchecker/m3c/formula/parser/Token.class</exclude>
+                            <exclude>net/automatalib/modelchecker/m3c/formula/parser/TokenMgrError.class</exclude>
 
                             <!-- generated builders for model checkers -->
-                            <exclude>net/automatalib/modelcheckers/ltsmin/ltl/LTSminLTLAlternatingBuilder.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/ltl/LTSminLTLDFABuilder.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/ltl/LTSminLTLIOBuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/ltl/LTSminLTLAlternatingBuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/ltl/LTSminLTLDFABuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/ltl/LTSminLTLIOBuilder.class</exclude>
 
-                            <exclude>net/automatalib/modelcheckers/ltsmin/monitor/LTSminMonitorAlternatingBuilder.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/monitor/LTSminMonitorDFABuilder.class</exclude>
-                            <exclude>net/automatalib/modelcheckers/ltsmin/monitor/LTSminMonitorIOBuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/monitor/LTSminMonitorAlternatingBuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/monitor/LTSminMonitorDFABuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/monitor/LTSminMonitorIOBuilder.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
