@@ -71,11 +71,9 @@ For developing the code base of AutomataLib it is suggested to use one of the ma
 * **API Documentation:** [latest release](http://learnlib.github.io/automatalib/maven-site/latest/apidocs/) | [older versions](http://learnlib.github.io/automatalib/maven-site/)
 
 
-## Mailing Lists
+## Questions?
 
-  * [Q&A @ Google Groups][automatalib-qa] -- General questions regarding the usage of Automatalib.
-  * [Discussion @ Google Groups][automatalib-discussion] -- Discussions about the internals of AutomataLib.
-  * [Devel (private) @ Google Groups][automatalib-devel] -- Discussions about future development plans.
+If you have any questions regarding the usage of AutomataLib or if you want to discuss new and exiting ideas for future contributions, feel free to use the [Discussions](https://github.com/LearnLib/automatalib/discussions) page to get in touch with the AutomataLib community.
 
 
 ## Maintainers
