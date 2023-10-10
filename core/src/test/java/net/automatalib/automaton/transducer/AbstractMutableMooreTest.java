@@ -18,9 +18,9 @@ package net.automatalib.automaton.transducer;
 import java.util.Arrays;
 import java.util.List;
 
+import net.automatalib.alphabet.impl.Symbol;
 import net.automatalib.automaton.util.TestUtil;
 import net.automatalib.word.Word;
-import net.automatalib.word.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

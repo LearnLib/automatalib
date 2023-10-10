@@ -19,12 +19,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
-import net.automatalib.word.Alphabet;
 
 public final class SAFSerializationDFA
         implements InputModelSerializationProvider<Integer, DFA<?, Integer>, DFA<Integer, Integer>> {

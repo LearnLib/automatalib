@@ -21,10 +21,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.base.fast.AbstractFastMutableNondet;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.common.util.collection.PositiveIntSet;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

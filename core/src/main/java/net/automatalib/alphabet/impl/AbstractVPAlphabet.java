@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.abstractimpl;
+package net.automatalib.alphabet.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.VPAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.VPAlphabet;
 
 /**
  * Abstract utility class that implements functionality shared across different subtypes.

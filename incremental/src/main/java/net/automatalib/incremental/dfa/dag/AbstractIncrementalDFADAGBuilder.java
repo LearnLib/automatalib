@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.util.IntDisjointSets;
@@ -32,10 +34,8 @@ import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.Acceptance;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.helper.DelegateVisualizationHelper;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import net.automatalib.word.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDFABuilder<I> {

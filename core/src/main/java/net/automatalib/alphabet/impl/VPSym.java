@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet.impl;
 
-import net.automatalib.word.VPAlphabet;
-import net.automatalib.word.VPAlphabet.SymbolType;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.alphabet.VPAlphabet.SymbolType;
 
 /**
  * Utility class used to wrap input symbols of a {@link VPAlphabet}. Stores additional index information to allow fast

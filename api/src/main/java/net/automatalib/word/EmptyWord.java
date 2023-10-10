@@ -22,6 +22,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Function;
 
+import net.automatalib.alphabet.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

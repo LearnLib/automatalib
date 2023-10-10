@@ -18,10 +18,10 @@ package net.automatalib.util.automaton.vpa;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.vpa.SEVPA;
-import net.automatalib.word.ProceduralInputAlphabet;
-import net.automatalib.word.VPAlphabet;
 
 /**
  * An interface for mapping (abstract) {@link SEVPA} input symbols to concrete {@link SPA} input symbols.

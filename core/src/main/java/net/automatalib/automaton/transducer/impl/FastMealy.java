@@ -15,10 +15,10 @@
  */
 package net.automatalib.automaton.transducer.impl;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.base.fast.AbstractFastMutableDet;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
-import net.automatalib.word.Alphabet;
 
 /**
  * A fast implementation of a Mealy machine.

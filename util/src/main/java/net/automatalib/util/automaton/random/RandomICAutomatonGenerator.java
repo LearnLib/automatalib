@@ -24,11 +24,11 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.common.util.random.RandomUtil;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

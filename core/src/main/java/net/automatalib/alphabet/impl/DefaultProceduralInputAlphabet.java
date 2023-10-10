@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet.impl;
 
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.ProceduralInputAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 
 /**
  * Default implementation of a {@link ProceduralInputAlphabet}.

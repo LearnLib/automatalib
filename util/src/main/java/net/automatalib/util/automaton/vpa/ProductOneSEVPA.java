@@ -18,11 +18,11 @@ package net.automatalib.util.automaton.vpa;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.AbstractSEVPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
-import net.automatalib.word.VPAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

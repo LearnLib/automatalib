@@ -38,6 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   While this may cause some refactoring, it should only affect import statements as the names of most classes remain identical.
   * Some actual re-namings concerns
     * all code around visibly push-down automata now uses the "vpa" acronym (previously "vpda"). This includes package names, class names and (Maven) module names.
+    * `Alphabet`-related code has been moved from the `net.automatlib.word` package to the `net.automatalib.alphabet` package.
     * `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automaton.base.compact.CompactTransition`.
     * `net.automatalib.commons.util.BitSetIterator` -> `net.automatalib.common.util.collection.BitSetIterator`.
     * `net.automatalib.graphs.base.compact.AbstractCompactGraph#getNodeProperties(int)` -> `net.automatalib.graph.base.compact.AbstractCompactGraph#getNodeProperty(int)`.

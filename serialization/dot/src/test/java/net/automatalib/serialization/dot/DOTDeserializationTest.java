@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
@@ -41,9 +43,7 @@ import net.automatalib.graph.UniversalGraph;
 import net.automatalib.serialization.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

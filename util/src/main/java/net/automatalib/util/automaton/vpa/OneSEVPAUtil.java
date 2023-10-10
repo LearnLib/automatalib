@@ -26,13 +26,13 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import com.google.common.collect.Sets;
+import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.common.smartcollection.ArrayStorage;
 import net.automatalib.common.util.IntDisjointSets;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.UnionFindRemSP;
 import net.automatalib.util.automaton.vpa.SPAConverter.ConversionResult;
-import net.automatalib.word.VPAlphabet;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;

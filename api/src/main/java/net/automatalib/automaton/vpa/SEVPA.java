@@ -18,6 +18,7 @@ package net.automatalib.automaton.vpa;
 import java.util.List;
 
 import com.google.common.collect.Iterables;
+import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.SuffixOutput;
@@ -25,7 +26,6 @@ import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
-import net.automatalib.word.VPAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

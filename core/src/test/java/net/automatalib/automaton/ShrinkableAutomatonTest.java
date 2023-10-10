@@ -17,6 +17,7 @@ package net.automatalib.automaton;
 
 import java.util.Collections;
 
+import net.automatalib.alphabet.impl.Symbol;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.impl.FastNFA;
 import net.automatalib.automaton.fsa.impl.FastNFAState;
@@ -24,7 +25,6 @@ import net.automatalib.automaton.transducer.impl.FastMealy;
 import net.automatalib.automaton.transducer.impl.FastMealyState;
 import net.automatalib.automaton.util.TestUtil;
 import net.automatalib.word.Word;
-import net.automatalib.word.impl.Symbol;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

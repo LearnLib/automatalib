@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.ts.output.MealyTransitionSystem;
-import net.automatalib.word.ProceduralInputAlphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 

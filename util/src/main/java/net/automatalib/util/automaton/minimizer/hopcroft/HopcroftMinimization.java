@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.automaton.minimizer.hopcroft;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
@@ -31,7 +32,6 @@ import net.automatalib.util.partitionrefinement.AutomatonInitialPartitioning;
 import net.automatalib.util.partitionrefinement.PaigeTarjan;
 import net.automatalib.util.partitionrefinement.PaigeTarjanExtractors;
 import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;
-import net.automatalib.word.Alphabet;
 
 /**
  * Versions of Hopcroft's minimization algorithm for deterministic finite automata.

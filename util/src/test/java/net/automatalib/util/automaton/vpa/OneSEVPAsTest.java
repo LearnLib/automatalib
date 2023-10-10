@@ -20,13 +20,13 @@ import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.automaton.vpa.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.Location;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
-import net.automatalib.word.VPAlphabet;
-import net.automatalib.word.impl.Alphabets;
-import net.automatalib.word.impl.DefaultVPAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

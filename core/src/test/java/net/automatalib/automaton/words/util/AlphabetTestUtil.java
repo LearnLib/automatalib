@@ -18,8 +18,10 @@ package net.automatalib.automaton.words.util;
 import java.util.Arrays;
 import java.util.List;
 
+import net.automatalib.alphabet.Alphabet;
+
 /**
- * Utilities for regular {@link net.automatalib.word.Alphabet} tests.
+ * Utilities for regular {@link Alphabet} tests.
  */
 public final class AlphabetTestUtil {
 

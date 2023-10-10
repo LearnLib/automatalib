@@ -29,6 +29,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
 import net.automatalib.common.util.Pair;
@@ -39,7 +40,6 @@ import net.automatalib.graph.base.compact.CompactSimpleGraph;
 import net.automatalib.util.graph.Path;
 import net.automatalib.util.graph.ShortestPaths;
 import net.automatalib.util.graph.traversal.GraphTraversal;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 
 /**

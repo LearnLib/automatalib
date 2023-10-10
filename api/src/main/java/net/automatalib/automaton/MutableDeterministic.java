@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.abstraction.MutableDeterministicAbstraction;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

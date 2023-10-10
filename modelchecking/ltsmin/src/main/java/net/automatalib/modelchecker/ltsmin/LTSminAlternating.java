@@ -19,11 +19,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
-import net.automatalib.word.impl.Alphabets;
 
 /**
  * A model checker using LTSmin for Mealy machines using alternating edge semantics.

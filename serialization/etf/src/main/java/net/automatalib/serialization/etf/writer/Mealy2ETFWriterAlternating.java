@@ -21,10 +21,10 @@ import java.util.Map;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
-import net.automatalib.word.Alphabet;
 
 /**
  * Write a Mealy machine with alternating edge semantics.

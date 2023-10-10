@@ -17,9 +17,9 @@ package net.automatalib.util.partitionrefinement;
 
 import java.util.function.IntFunction;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
-import net.automatalib.word.Alphabet;
 
 /**
  * This enum allows to conveniently specify how the states of a deterministic automaton are initially partitioned when

@@ -15,10 +15,10 @@
  */
 package net.automatalib.automaton.transducer.impl.compact;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.base.compact.CompactTransition;
 import net.automatalib.automaton.base.compact.UniversalCompactDet;
 import net.automatalib.automaton.transducer.MutableSubsequentialTransducer;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 
 public class CompactSST<I, O> extends UniversalCompactDet<I, Word<O>, Word<O>>

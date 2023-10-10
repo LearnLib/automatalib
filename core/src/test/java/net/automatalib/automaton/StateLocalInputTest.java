@@ -18,6 +18,8 @@ package net.automatalib.automaton;
 import java.util.HashSet;
 
 import com.google.common.collect.Sets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.StateLocalInput;
 import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.fsa.impl.FastNFA;
@@ -29,8 +31,6 @@ import net.automatalib.automaton.transducer.impl.FastProbMealy;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
 import net.automatalib.automaton.transducer.impl.compact.CompactSST;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

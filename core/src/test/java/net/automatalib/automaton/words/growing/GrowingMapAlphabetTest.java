@@ -17,8 +17,8 @@ package net.automatalib.automaton.words.growing;
 
 import java.util.List;
 
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.words.util.AlphabetTestUtil;
-import net.automatalib.word.impl.GrowingMapAlphabet;
 
 public class GrowingMapAlphabetTest extends AbstractGrowingAlphabetTest<Integer, GrowingMapAlphabet<Integer>> {
 

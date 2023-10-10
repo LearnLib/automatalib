@@ -20,11 +20,11 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;

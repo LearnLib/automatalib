@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.google.common.collect.Maps;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
@@ -37,8 +39,6 @@ import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.fsa.DFAs;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.predicate.TransitionPredicates;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.ProceduralInputAlphabet;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

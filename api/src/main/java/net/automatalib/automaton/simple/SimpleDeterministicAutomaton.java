@@ -17,10 +17,10 @@ package net.automatalib.automaton.simple;
 
 import java.util.function.IntFunction;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.abstraction.SimpleDeterministicAbstractions;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.ts.simple.SimpleDTS;
-import net.automatalib.word.Alphabet;
 
 /**
  * A simple deterministic automaton.

@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.Automaton;
 import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
@@ -46,8 +48,6 @@ import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.util.ts.TS;
-import net.automatalib.word.ProceduralInputAlphabet;
-import net.automatalib.word.VPAlphabet;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

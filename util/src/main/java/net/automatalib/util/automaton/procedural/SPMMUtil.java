@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.word.ProceduralInputAlphabet;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

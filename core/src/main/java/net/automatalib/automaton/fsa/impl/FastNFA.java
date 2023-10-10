@@ -15,10 +15,10 @@
  */
 package net.automatalib.automaton.fsa.impl;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.base.fast.AbstractFastMutableNondet;
 import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.common.util.WrapperUtil;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class FastNFA<I> extends AbstractFastMutableNondet<FastNFAState, I, FastNFAState, Boolean, Void>

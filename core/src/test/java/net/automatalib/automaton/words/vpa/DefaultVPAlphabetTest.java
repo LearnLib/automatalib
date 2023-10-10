@@ -17,8 +17,8 @@ package net.automatalib.automaton.words.vpa;
 
 import java.util.List;
 
+import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.automaton.words.util.DefaultVPAlphabetTestUtil;
-import net.automatalib.word.impl.DefaultVPAlphabet;
 
 public class DefaultVPAlphabetTest extends AbstractVPAlphabetTest<Character, DefaultVPAlphabet<Character>> {
 

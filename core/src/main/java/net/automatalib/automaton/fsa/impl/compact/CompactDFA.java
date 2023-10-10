@@ -17,11 +17,11 @@ package net.automatalib.automaton.fsa.impl.compact;
 
 import java.util.BitSet;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.base.compact.AbstractCompactSimpleDeterministic;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.common.util.WrapperUtil;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactDFA<I> extends AbstractCompactSimpleDeterministic<I, Boolean> implements MutableDFA<Integer, I> {

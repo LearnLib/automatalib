@@ -15,8 +15,8 @@
  */
 package net.automatalib.serialization;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.ts.simple.SimpleTS;
-import net.automatalib.word.Alphabet;
 
 /**
  * A utility data class, that allows to pair a model that can react to input symbols with a corresponding alphabet.

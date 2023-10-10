@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet.impl;
 
 import java.util.Collections;
 import java.util.Set;
@@ -23,8 +23,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.GrowingAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
 
 /**
  * A {@link Collector} that collects individual symbols and aggregates them in a {@link Alphabet}. Convenience class to

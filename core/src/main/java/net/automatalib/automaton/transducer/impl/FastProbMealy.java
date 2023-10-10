@@ -15,10 +15,10 @@
  */
 package net.automatalib.automaton.transducer.impl;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.base.fast.AbstractFastMutableNondet;
 import net.automatalib.automaton.transducer.probabilistic.MutableProbabilisticMealy;
 import net.automatalib.automaton.transducer.probabilistic.ProbabilisticOutput;
-import net.automatalib.word.Alphabet;
 
 public class FastProbMealy<I, O>
         extends AbstractFastMutableNondet<FastProbMealyState<O>, I, MealyTransition<FastProbMealyState<O>, ProbabilisticOutput<O>>, Void, ProbabilisticOutput<O>>

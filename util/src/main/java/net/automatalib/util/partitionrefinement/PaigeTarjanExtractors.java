@@ -18,12 +18,12 @@ package net.automatalib.util.partitionrefinement;
 import java.util.Arrays;
 import java.util.function.IntFunction;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
 import net.automatalib.common.util.function.BiIntFunction;
-import net.automatalib.word.Alphabet;
 
 /**
  * This class provides methods for translating the result of a {@link PaigeTarjan} coarsest stable partition computation

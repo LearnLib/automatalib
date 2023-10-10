@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.automaton.minimizer.paigetarjan;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
@@ -32,7 +33,6 @@ import net.automatalib.util.partitionrefinement.PaigeTarjan;
 import net.automatalib.util.partitionrefinement.PaigeTarjanExtractors;
 import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;
 import net.automatalib.util.partitionrefinement.StateSignature;
-import net.automatalib.word.Alphabet;
 
 /**
  * A utility class that offers shorthand methods for minimizing automata using the partition refinement approach of

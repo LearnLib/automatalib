@@ -22,6 +22,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.fsa.impl.FastDFAState;
 import net.automatalib.automaton.graph.TransitionEdge;
@@ -32,8 +34,6 @@ import net.automatalib.graph.base.compact.CompactGraph;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.graph.copy.GraphCopy;
 import net.automatalib.util.traversal.TraversalOrder;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

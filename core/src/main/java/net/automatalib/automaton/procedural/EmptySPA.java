@@ -18,8 +18,8 @@ package net.automatalib.automaton.procedural;
 import java.util.Collections;
 import java.util.Map;
 
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.word.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

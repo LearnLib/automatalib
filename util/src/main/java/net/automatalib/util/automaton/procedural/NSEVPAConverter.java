@@ -26,6 +26,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import com.google.common.collect.Maps;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.automaton.procedural.SPA;
@@ -36,8 +38,6 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.ProceduralInputAlphabet;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

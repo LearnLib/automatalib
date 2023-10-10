@@ -18,7 +18,7 @@ package net.automatalib.automaton.base.compact;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import net.automatalib.word.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

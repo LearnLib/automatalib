@@ -29,6 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Maps;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
@@ -36,7 +37,6 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ads.ADSNode;
 import net.automatalib.graph.ads.impl.ADSLeafNode;
 import net.automatalib.graph.ads.impl.ADSSymbolNode;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 

@@ -15,13 +15,13 @@
  */
 package net.automatalib.example.vpa;
 
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.automaton.vpa.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.Location;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.word.VPAlphabet;
 import net.automatalib.word.Word;
-import net.automatalib.word.impl.Alphabets;
-import net.automatalib.word.impl.DefaultVPAlphabet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

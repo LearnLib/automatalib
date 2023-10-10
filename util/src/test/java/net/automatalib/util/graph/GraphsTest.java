@@ -22,6 +22,8 @@ import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.Mappings;
@@ -34,8 +36,6 @@ import net.automatalib.graph.map.SimpleMapGraph;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.graph.copy.GraphCopy;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

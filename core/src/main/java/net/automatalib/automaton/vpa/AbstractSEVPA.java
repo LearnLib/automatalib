@@ -15,7 +15,7 @@
  */
 package net.automatalib.automaton.vpa;
 
-import net.automatalib.word.VPAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

@@ -15,7 +15,7 @@
  */
 package net.automatalib.automaton.concept;
 
-import net.automatalib.word.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 public interface InputAlphabetHolder<I> {
 

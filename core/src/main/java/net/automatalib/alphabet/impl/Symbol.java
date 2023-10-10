@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.abstractimpl;
+package net.automatalib.alphabet.impl;
 
-import java.util.AbstractList;
+public class Symbol<I> extends AbstractSymbol<Symbol<I>> {
 
-import net.automatalib.word.Alphabet;
+    private final I userObject;
 
-public abstract class AbstractAlphabet<I> extends AbstractList<I> implements Alphabet<I> {
+    public Symbol(I userObject) {
+        this.userObject = userObject;
+    }
+
+    public I getUserObject() {
+        return userObject;
+    }
 
     @Override
-    public I get(int index) {
-        return getSymbol(index);
+    public String toString() {
+        return String.valueOf(userObject);
     }
 }

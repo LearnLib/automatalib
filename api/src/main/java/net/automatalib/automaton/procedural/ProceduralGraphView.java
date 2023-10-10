@@ -20,13 +20,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.visualization.ProceduralVisualizationHelper;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.Triple;
 import net.automatalib.graph.Graph;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**

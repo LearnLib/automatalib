@@ -19,11 +19,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Random;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.random.RandomAutomata;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 
 public final class TestUtil {
 

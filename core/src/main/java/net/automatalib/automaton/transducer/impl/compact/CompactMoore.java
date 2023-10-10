@@ -15,10 +15,10 @@
  */
 package net.automatalib.automaton.transducer.impl.compact;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.base.compact.UniversalCompactSimpleDet;
 import net.automatalib.automaton.transducer.MutableMooreMachine;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactMoore<I, @Nullable O> extends UniversalCompactSimpleDet<I, O>

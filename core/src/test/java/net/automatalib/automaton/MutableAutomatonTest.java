@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.impl.FastDFA;
 import net.automatalib.automaton.fsa.impl.FastNFA;
@@ -40,9 +42,7 @@ import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

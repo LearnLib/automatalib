@@ -17,8 +17,8 @@ package net.automatalib.automaton.words.basic;
 
 import java.util.List;
 
+import net.automatalib.alphabet.impl.MapAlphabet;
 import net.automatalib.automaton.words.util.AlphabetTestUtil;
-import net.automatalib.word.impl.MapAlphabet;
 
 public class MapAlphabetTest extends AbstractAlphabetTest<Integer, MapAlphabet<Integer>> {
 

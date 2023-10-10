@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.Map;
 
 import com.google.common.collect.Iterables;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.word.ProceduralInputAlphabet;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

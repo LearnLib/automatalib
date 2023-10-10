@@ -15,11 +15,11 @@
  */
 package net.automatalib.util.automaton.transducer;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.impl.compact.CompactSST;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

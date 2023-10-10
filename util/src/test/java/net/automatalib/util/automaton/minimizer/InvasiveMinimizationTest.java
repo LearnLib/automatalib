@@ -15,12 +15,12 @@
  */
 package net.automatalib.util.automaton.minimizer;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.word.Alphabet;
 
 public class InvasiveMinimizationTest extends AbstractMinimizationTest {
 

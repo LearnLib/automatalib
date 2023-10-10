@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
@@ -32,9 +34,7 @@ import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.fsa.NFAs;
 import net.automatalib.util.automaton.random.RandomAutomata;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -15,14 +15,14 @@
  */
 package net.automatalib.util.partitionrefinement;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
 import net.automatalib.util.automaton.minimizer.paigetarjan.PaigeTarjanMinimization;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

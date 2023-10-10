@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet.impl;
 
 import java.util.Iterator;
 import java.util.List;
@@ -21,7 +21,6 @@ import java.util.ListIterator;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.common.util.collection.UnmodifiableListIterator;
-import net.automatalib.word.abstractimpl.AbstractAlphabet;
 
 public class ListAlphabet<I> extends AbstractAlphabet<I> {
 

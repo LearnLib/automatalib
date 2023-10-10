@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.common.util.collection.CollectionsUtil;
-import net.automatalib.word.impl.DefaultVPAlphabet;
 
 /**
  * Utility class, aggregating definitions used for testing {@link DefaultVPAlphabet}s.

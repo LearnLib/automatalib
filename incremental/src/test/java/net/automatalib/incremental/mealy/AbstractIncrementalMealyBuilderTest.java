@@ -20,17 +20,17 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.GrowingAlphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import net.automatalib.word.impl.Alphabets;
-import net.automatalib.word.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;

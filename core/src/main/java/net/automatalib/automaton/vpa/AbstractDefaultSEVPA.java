@@ -18,7 +18,7 @@ package net.automatalib.automaton.vpa;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.word.VPAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

@@ -18,15 +18,15 @@ package net.automatalib.automaton.procedural;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.FastMealy;
 import net.automatalib.automaton.transducer.impl.FastMealyState;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.ProceduralInputAlphabet;
 import net.automatalib.word.Word;
-import net.automatalib.word.impl.Alphabets;
-import net.automatalib.word.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

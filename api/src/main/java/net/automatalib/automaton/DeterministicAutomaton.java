@@ -17,10 +17,10 @@ package net.automatalib.automaton;
 
 import java.util.function.IntFunction;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.abstraction.DeterministicAbstractions;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
 import net.automatalib.ts.DeterministicTransitionSystem;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

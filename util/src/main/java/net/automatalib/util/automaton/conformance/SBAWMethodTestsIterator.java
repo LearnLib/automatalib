@@ -15,10 +15,10 @@
  */
 package net.automatalib.util.automaton.conformance;
 
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.util.automaton.procedural.SBAUtil;
-import net.automatalib.word.ProceduralInputAlphabet;
 
 /**
  * A conformance test iterator for {@link SBA}s that is based on the {@link WMethodTestsIterator W-method}. Note that

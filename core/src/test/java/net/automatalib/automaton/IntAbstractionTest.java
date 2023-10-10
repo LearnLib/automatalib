@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.StateIDs;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.annotations.Test;
 

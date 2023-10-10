@@ -18,16 +18,16 @@ package net.automatalib.incremental.mealy;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.mealy.tree.AdaptiveMealyTreeBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.GrowingAlphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import net.automatalib.word.impl.Alphabets;
-import net.automatalib.word.impl.GrowingMapAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

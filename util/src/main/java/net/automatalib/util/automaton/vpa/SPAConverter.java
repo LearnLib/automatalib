@@ -28,6 +28,13 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.StackSPA;
@@ -38,15 +45,8 @@ import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.procedural.ATRSequences;
 import net.automatalib.util.automaton.procedural.SPAUtil;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.GrowingAlphabet;
-import net.automatalib.word.ProceduralInputAlphabet;
-import net.automatalib.word.VPAlphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import net.automatalib.word.impl.Alphabets;
-import net.automatalib.word.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.word.impl.GrowingMapAlphabet;
 
 final class SPAConverter {
 

@@ -17,6 +17,7 @@ package net.automatalib.util.automaton.transducer;
 
 import java.util.Collection;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
@@ -28,7 +29,6 @@ import net.automatalib.util.ts.copy.TSCopy;
 import net.automatalib.util.ts.transducer.Transducers;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.util.ts.traversal.TSTraversalMethod;
-import net.automatalib.word.Alphabet;
 
 public final class MealyMachines {
 

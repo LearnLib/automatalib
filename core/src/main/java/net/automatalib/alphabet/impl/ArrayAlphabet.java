@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet.impl;
 
 import java.util.Objects;
 
-import net.automatalib.word.abstractimpl.AbstractAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ArrayAlphabet<I> extends AbstractAlphabet<I> {

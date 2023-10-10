@@ -18,6 +18,7 @@ package net.automatalib.automaton.procedural;
 import java.util.Collection;
 import java.util.Map;
 
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
@@ -25,7 +26,6 @@ import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.ts.simple.SimpleTS;
-import net.automatalib.word.ProceduralInputAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

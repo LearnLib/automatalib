@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
@@ -27,7 +28,6 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ads.ADSNode;
 import net.automatalib.graph.ads.impl.ADSLeafNode;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 
 /**

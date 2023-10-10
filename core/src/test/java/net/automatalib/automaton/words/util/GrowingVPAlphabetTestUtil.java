@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.automatalib.word.GrowingAlphabet;
-import net.automatalib.word.VPAlphabet.SymbolType;
-import net.automatalib.word.impl.GrowingVPAlphabet;
-import net.automatalib.word.impl.VPSym;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.VPAlphabet.SymbolType;
+import net.automatalib.alphabet.impl.GrowingVPAlphabet;
+import net.automatalib.alphabet.impl.VPSym;
 
 /**
  * Utility class, aggregating definitions used for testing {@link GrowingAlphabet}s.

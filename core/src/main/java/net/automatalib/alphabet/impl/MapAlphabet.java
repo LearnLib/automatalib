@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import net.automatalib.word.abstractimpl.AbstractAlphabet;
 
 /**
  * A map-based alphabet implementation, that does not impose any restriction on the input symbol class. This

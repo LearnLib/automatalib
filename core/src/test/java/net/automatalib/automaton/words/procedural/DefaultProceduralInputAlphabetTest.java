@@ -15,8 +15,8 @@
  */
 package net.automatalib.automaton.words.procedural;
 
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 
 public class DefaultProceduralInputAlphabetTest extends AbstractProceduralInputAlphabetTest<DefaultProceduralInputAlphabet<Character>> {
 

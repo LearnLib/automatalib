@@ -17,6 +17,7 @@ package net.automatalib.util.automaton.fsa;
 
 import java.util.Collection;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
@@ -30,7 +31,6 @@ import net.automatalib.util.ts.acceptor.Acceptors;
 import net.automatalib.util.ts.copy.TSCopy;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.util.ts.traversal.TSTraversalMethod;
-import net.automatalib.word.Alphabet;
 
 /**
  * Operations on {@link DFA}s.

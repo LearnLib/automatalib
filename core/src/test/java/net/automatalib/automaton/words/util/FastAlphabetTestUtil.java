@@ -19,10 +19,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import net.automatalib.alphabet.impl.FastAlphabet;
 import net.automatalib.common.util.nid.MutableNumericID;
 
 /**
- * Utility class, aggregating definitions used for testing {@link net.automatalib.word.impl.FastAlphabet}s.
+ * Utility class, aggregating definitions used for testing {@link FastAlphabet}s.
  */
 public final class FastAlphabetTestUtil {
 

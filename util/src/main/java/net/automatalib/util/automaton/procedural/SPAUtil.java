@@ -28,6 +28,8 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.procedural.SPA;
@@ -39,8 +41,6 @@ import net.automatalib.graph.UniversalGraph;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.graph.Graphs;
 import net.automatalib.util.graph.apsp.APSPResult;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.ProceduralInputAlphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;

@@ -18,10 +18,10 @@ package net.automatalib.serialization.etf.writer;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.word.Alphabet;
 
 /**
  * Write a DFA to ETF.

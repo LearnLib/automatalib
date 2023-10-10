@@ -21,11 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graph.Graph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.word.VPAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {

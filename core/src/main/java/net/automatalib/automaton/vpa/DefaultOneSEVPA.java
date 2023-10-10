@@ -15,7 +15,7 @@
  */
 package net.automatalib.automaton.vpa;
 
-import net.automatalib.word.VPAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
 
 /**
  * Default implementation for 1-SEVPAs.

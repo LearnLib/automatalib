@@ -17,8 +17,8 @@ package net.automatalib.automaton.words.vpa;
 
 import java.util.List;
 
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.VPAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

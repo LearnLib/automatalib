@@ -16,11 +16,11 @@
 package net.automatalib.util.ts.modal;
 
 import com.google.common.collect.ImmutableSet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.common.util.Pair;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

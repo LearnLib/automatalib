@@ -18,6 +18,8 @@ package net.automatalib.automaton.base.fast;
 import java.util.Collection;
 
 import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.ShrinkableAutomaton;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
@@ -26,8 +28,6 @@ import net.automatalib.common.util.mapping.ArrayMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.common.util.nid.DynamicList;
 import net.automatalib.common.util.nid.IDChangeNotifier;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

@@ -15,9 +15,9 @@
  */
 package net.automatalib.automaton.transducer;
 
+import net.automatalib.alphabet.impl.Symbol;
 import net.automatalib.automaton.transducer.impl.FastMoore;
 import net.automatalib.automaton.util.TestUtil;
-import net.automatalib.word.impl.Symbol;
 
 public class FastMooreTest extends AbstractMutableMooreTest {
 

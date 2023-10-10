@@ -17,9 +17,9 @@ package net.automatalib.automaton.words.basic;
 
 import java.util.List;
 
+import net.automatalib.alphabet.impl.FastAlphabet;
 import net.automatalib.automaton.words.util.FastAlphabetTestUtil;
 import net.automatalib.automaton.words.util.FastAlphabetTestUtil.InputSymbol;
-import net.automatalib.word.impl.FastAlphabet;
 
 public class FastAlphabetTest extends AbstractAlphabetTest<InputSymbol, FastAlphabet<InputSymbol>> {
 

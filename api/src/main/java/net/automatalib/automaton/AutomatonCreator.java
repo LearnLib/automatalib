@@ -15,7 +15,7 @@
  */
 package net.automatalib.automaton;
 
-import net.automatalib.word.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 
 @FunctionalInterface
 public interface AutomatonCreator<A, I> {

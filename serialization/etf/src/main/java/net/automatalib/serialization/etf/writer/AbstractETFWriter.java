@@ -17,9 +17,9 @@ package net.automatalib.serialization.etf.writer;
 
 import java.io.PrintWriter;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.Automaton;
 import net.automatalib.serialization.InputModelSerializer;
-import net.automatalib.word.Alphabet;
 
 /**
  * This class provides methods to write automata in LTSmin's ETF format.

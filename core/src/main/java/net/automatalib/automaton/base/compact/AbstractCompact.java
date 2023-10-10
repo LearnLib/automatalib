@@ -22,14 +22,14 @@ import java.util.List;
 import java.util.function.IntFunction;
 
 import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.MutableDeterministic.FullIntAbstraction;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.concept.StateLocalInput;
 import net.automatalib.common.util.collection.CollectionsUtil;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

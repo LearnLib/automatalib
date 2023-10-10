@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet.impl;
 
 import java.util.Arrays;
 import java.util.List;
 
+import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.common.util.nid.DynamicList;
 import net.automatalib.common.util.nid.MutableNumericID;
-import net.automatalib.word.GrowingAlphabet;
 
 /**
  * A fast alphabet implementation, that assumes identifiers are stored directly in the input symbols.

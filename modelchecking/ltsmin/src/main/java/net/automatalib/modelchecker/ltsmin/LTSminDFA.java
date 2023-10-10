@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
@@ -28,8 +30,6 @@ import net.automatalib.serialization.etf.writer.DFA2ETFWriter;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.fsa.DFAs;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 
 /**
  * A model checker using LTSmin for DFAs.

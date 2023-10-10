@@ -24,14 +24,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.automaton.fsa.impl.compact.CompactNFA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.FormatException;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 
 /**
  * Deserializer for the SAF (simple automaton format).

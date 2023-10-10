@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.vpa.DefaultOneSEVPA;
@@ -29,7 +30,6 @@ import net.automatalib.automaton.vpa.Location;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.word.ProceduralInputAlphabet;
 import net.automatalib.word.Word;
 
 final class OneSEVPAConverter {

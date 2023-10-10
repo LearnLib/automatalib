@@ -20,10 +20,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
-import net.automatalib.word.ProceduralInputAlphabet;
 
 /**
  * A system of procedural automata. An {@link SPA} is a context-free system where each non-terminal (procedure) is

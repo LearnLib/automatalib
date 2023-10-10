@@ -19,10 +19,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 
 /**

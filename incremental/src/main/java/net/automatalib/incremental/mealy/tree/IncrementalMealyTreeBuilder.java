@@ -17,9 +17,9 @@ package net.automatalib.incremental.mealy.tree;
 
 import java.util.Objects;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 
 public class IncrementalMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTreeBuilder<I, O>

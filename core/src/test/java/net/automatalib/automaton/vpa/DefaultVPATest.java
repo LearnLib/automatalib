@@ -18,13 +18,13 @@ package net.automatalib.automaton.vpa;
 import java.util.Collections;
 import java.util.HashSet;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graph.Graph;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.VPAlphabet;
 import net.automatalib.word.Word;
-import net.automatalib.word.impl.Alphabets;
-import net.automatalib.word.impl.DefaultVPAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

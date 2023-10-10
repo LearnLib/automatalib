@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.automaton.builder;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.base.compact.CompactTransition;
 import net.automatalib.automaton.fsa.MutableDFA;
@@ -26,7 +27,6 @@ import net.automatalib.automaton.transducer.MutableSubsequentialTransducer;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
 import net.automatalib.automaton.transducer.impl.compact.CompactSST;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 
 /**

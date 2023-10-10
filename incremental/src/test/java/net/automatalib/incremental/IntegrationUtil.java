@@ -26,13 +26,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.dfa.IncrementalDFADAGBuilderTest;
-import net.automatalib.word.Alphabet;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import net.automatalib.word.impl.Alphabets;
 
 /**
  * Utility class for integration tests.

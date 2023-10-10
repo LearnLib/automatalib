@@ -19,9 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.ts.simple.SimpleTS;
-import net.automatalib.word.Alphabet;
 
 /**
  * A refinement of the {@link ModelSerializer} interface for arbitrary models that can react to inputs. Introduces a new

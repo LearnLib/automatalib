@@ -17,8 +17,8 @@ package net.automatalib.automaton.words.basic;
 
 import java.util.List;
 
+import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.automaton.words.util.DefaultVPAlphabetTestUtil;
-import net.automatalib.word.impl.DefaultVPAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

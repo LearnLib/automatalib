@@ -15,12 +15,12 @@
  */
 package net.automatalib.util.automaton.vpa;
 
+import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
-import net.automatalib.word.VPAlphabet;
 
 /**
  * Operations on {@link OneSEVPA}s.

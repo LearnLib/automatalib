@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet.impl;
 
 import java.util.Collection;
 
-import net.automatalib.word.GrowingAlphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
 
 /**
  * An extension of the {@link MapAlphabet} that also allows adding new symbol after construction.

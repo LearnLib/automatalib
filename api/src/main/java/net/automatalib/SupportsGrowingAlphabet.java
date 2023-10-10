@@ -15,8 +15,8 @@
  */
 package net.automatalib;
 
+import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
-import net.automatalib.word.GrowingAlphabet;
 
 /**
  * Interface for declaring that a data structure supports adding new alphabet symbols after its instantiation.

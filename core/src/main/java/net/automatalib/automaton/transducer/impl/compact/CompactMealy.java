@@ -17,13 +17,13 @@ package net.automatalib.automaton.transducer.impl.compact;
 
 import java.util.Arrays;
 
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.base.compact.AbstractCompact;
 import net.automatalib.automaton.base.compact.AbstractCompactDeterministic;
 import net.automatalib.automaton.base.compact.CompactTransition;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.StateLocalInputMealyMachine;
-import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactMealy<I, O> extends AbstractCompactDeterministic<I, CompactTransition<O>, Void, O> implements

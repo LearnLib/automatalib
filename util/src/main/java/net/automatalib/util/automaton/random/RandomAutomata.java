@@ -25,6 +25,10 @@ import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.ProceduralOutputAlphabet;
+import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.Automaton;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.fsa.DFA;
@@ -44,10 +48,6 @@ import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.DFAs;
 import net.automatalib.util.automaton.procedural.SPAUtil;
 import net.automatalib.util.minimizer.OneSEVPAMinimizer;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.ProceduralInputAlphabet;
-import net.automatalib.word.ProceduralOutputAlphabet;
-import net.automatalib.word.VPAlphabet;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 public final class RandomAutomata {

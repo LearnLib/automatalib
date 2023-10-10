@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word;
+package net.automatalib.alphabet;
 
 import java.util.List;
 
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * A specialized version of a {@link VPAlphabet} that is tailored towards procedural systems. Specifically, it only

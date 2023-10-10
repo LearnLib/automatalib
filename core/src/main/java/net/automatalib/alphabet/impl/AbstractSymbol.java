@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.abstractimpl;
+package net.automatalib.alphabet.impl;
 
 import java.util.Objects;
 
 import net.automatalib.common.util.nid.AbstractMutableNumericID;
-import net.automatalib.word.impl.Symbol;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractSymbol<S extends AbstractSymbol<S>> extends AbstractMutableNumericID

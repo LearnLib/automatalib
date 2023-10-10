@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.ProceduralOutputAlphabet;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralOutputAlphabet;
 
 /**
  * Default implementation of a {@link ProceduralOutputAlphabet}.

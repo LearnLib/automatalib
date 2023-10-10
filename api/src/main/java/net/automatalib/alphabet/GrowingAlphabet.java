@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.impl;
+package net.automatalib.alphabet;
 
-import net.automatalib.word.abstractimpl.AbstractSymbol;
+/**
+ * {@link Alphabet} class that supports adding new symbols.
+ *
+ * @param <I>
+ *         symbol class.
+ */
+public interface GrowingAlphabet<I> extends Alphabet<I> {
 
-public class Symbol<I> extends AbstractSymbol<Symbol<I>> {
+    /**
+     * Adds a new symbol to the alphabet. Some alphabets may prevent symbols from being added twice. In this case, the
+     * original alphabet remains unchanged, but this is not considered an error.
+     *
+     * @return the index of the symbol in the alphabet, after adding it.
+     */
+    int addSymbol(I a);
 
-    private final I userObject;
-
-    public Symbol(I userObject) {
-        this.userObject = userObject;
-    }
-
-    public I getUserObject() {
-        return userObject;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(userObject);
-    }
 }

@@ -18,6 +18,8 @@ package net.automatalib.util.automaton.copy;
 import java.util.Random;
 import java.util.function.Predicate;
 
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.ShrinkableAutomaton;
@@ -28,8 +30,6 @@ import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.predicate.TransitionPredicates;
 import net.automatalib.util.automaton.random.RandomAutomata;
-import net.automatalib.word.Alphabet;
-import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
