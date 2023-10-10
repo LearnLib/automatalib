@@ -23,11 +23,11 @@ options {
 
 PARSER_BEGIN(InternalM3CParser)
 
-package net.automatalib.modelcheckers.m3c.formula.parser;
+package net.automatalib.modelchecker.m3c.formula.parser;
 
-import net.automatalib.modelcheckers.m3c.formula.*;
-import net.automatalib.modelcheckers.m3c.formula.ctl.*;
-import net.automatalib.modelcheckers.m3c.formula.modalmu.*;
+import net.automatalib.modelchecker.m3c.formula.*;
+import net.automatalib.modelchecker.m3c.formula.ctl.*;
+import net.automatalib.modelchecker.m3c.formula.modalmu.*;
 
 import java.util.Set;
 import java.util.HashSet;

@@ -18,10 +18,10 @@ package net.automatalib.examples.modelchecking;
 import java.util.Objects;
 
 import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.modelcheckers.ltsmin.LTSminUtil;
-import net.automatalib.modelcheckers.ltsmin.LTSminVersion;
-import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLIO;
-import net.automatalib.modelcheckers.ltsmin.ltl.LTSminLTLIOBuilder;
+import net.automatalib.modelchecker.ltsmin.LTSminUtil;
+import net.automatalib.modelchecker.ltsmin.LTSminVersion;
+import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLIO;
+import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLIOBuilder;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.util.automata.builders.AutomatonBuilders;
 import net.automatalib.words.Alphabet;

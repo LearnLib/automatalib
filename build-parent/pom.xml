@@ -260,8 +260,8 @@ limitations under the License.
                                         <arg>-J-Xbootclasspath/p:${com.google.errorprone:javac:jar}</arg>
                                         <arg>-AskipDefs=^net.automatalib.serialization.taf.parser.(Internal.*|Token.*|SimpleCharStream)|\
                                                         ^net.automatalib.serialization.dot.(Internal.*|Token.*|SimpleCharStream)|\
-                                                        ^net.automatalib.modelcheckers.ltsmin.(Internal.*|Token.*|SimpleCharStream)|\
-                                                        ^net.automatalib.modelcheckers.m3c.formula.parser.(Internal.*|Token.*|SimpleCharStream)|\
+                                                        ^net.automatalib.modelchecker.ltsmin.(Internal.*|Token.*|SimpleCharStream)|\
+                                                        ^net.automatalib.modelchecker.m3c.formula.parser.(Internal.*|Token.*|SimpleCharStream)|\
                                         </arg>
                                         <arg>-AskipUses=^com.google.*|\
                                                         ^java.(awt.*|util.Arrays|io.StreamTokenizer)|\

@@ -23,7 +23,7 @@ options {
 
 PARSER_BEGIN(InternalLTSminLTLParser)
 
-package net.automatalib.modelcheckers.ltsmin;
+package net.automatalib.modelchecker.ltsmin;
 
 class InternalLTSminLTLParser {}
 

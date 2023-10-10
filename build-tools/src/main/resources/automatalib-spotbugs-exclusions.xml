@@ -104,21 +104,21 @@ limitations under the License.
             <Class name="net.automatalib.serialization.taf.parser.Token"/>
             <Class name="net.automatalib.serialization.taf.parser.TokenMgrError"/>
 
-            <Class name="net.automatalib.modelcheckers.ltsmin.InternalLTSminLTLParser"/>
-            <Class name="net.automatalib.modelcheckers.ltsmin.InternalLTSminLTLParserConstants"/>
-            <Class name="net.automatalib.modelcheckers.ltsmin.InternalLTSminLTLParserTokenManager"/>
-            <Class name="net.automatalib.modelcheckers.ltsmin.ParseException"/>
-            <Class name="net.automatalib.modelcheckers.ltsmin.SimpleCharStream"/>
-            <Class name="net.automatalib.modelcheckers.ltsmin.Token"/>
-            <Class name="net.automatalib.modelcheckers.ltsmin.TokenMgrError"/>
+            <Class name="net.automatalib.modelchecker.ltsmin.InternalLTSminLTLParser"/>
+            <Class name="net.automatalib.modelchecker.ltsmin.InternalLTSminLTLParserConstants"/>
+            <Class name="net.automatalib.modelchecker.ltsmin.InternalLTSminLTLParserTokenManager"/>
+            <Class name="net.automatalib.modelchecker.ltsmin.ParseException"/>
+            <Class name="net.automatalib.modelchecker.ltsmin.SimpleCharStream"/>
+            <Class name="net.automatalib.modelchecker.ltsmin.Token"/>
+            <Class name="net.automatalib.modelchecker.ltsmin.TokenMgrError"/>
 
-            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.InternalM3CParser"/>
-            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.InternalM3CParserConstants"/>
-            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.InternalM3CParserTokenManager"/>
-            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.ParseException"/>
-            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.SimpleCharStream"/>
-            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.Token"/>
-            <Class name="net.automatalib.modelcheckers.m3c.formula.parser.TokenMgrError"/>
+            <Class name="net.automatalib.modelchecker.m3c.formula.parser.InternalM3CParser"/>
+            <Class name="net.automatalib.modelchecker.m3c.formula.parser.InternalM3CParserConstants"/>
+            <Class name="net.automatalib.modelchecker.m3c.formula.parser.InternalM3CParserTokenManager"/>
+            <Class name="net.automatalib.modelchecker.m3c.formula.parser.ParseException"/>
+            <Class name="net.automatalib.modelchecker.m3c.formula.parser.SimpleCharStream"/>
+            <Class name="net.automatalib.modelchecker.m3c.formula.parser.Token"/>
+            <Class name="net.automatalib.modelchecker.m3c.formula.parser.TokenMgrError"/>
         </Or>
     </Match>
 </FindBugsFilter>
