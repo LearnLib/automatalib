@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.examples.brics;
+package net.automatalib.example.brics;
 
 import java.util.Arrays;
 import java.util.List;

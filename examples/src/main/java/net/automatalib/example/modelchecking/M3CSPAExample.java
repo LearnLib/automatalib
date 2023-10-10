@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.examples.modelchecking;
+package net.automatalib.example.modelchecking;
 
 import java.util.function.Function;
 
 import net.automatalib.automata.procedural.CFMPSViewSPA;
 import net.automatalib.automata.procedural.SPA;
-import net.automatalib.examples.procedural.PalindromeExample;
+import net.automatalib.example.procedural.PalindromeExample;
 import net.automatalib.graphs.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;

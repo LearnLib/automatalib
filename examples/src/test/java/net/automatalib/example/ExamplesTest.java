@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.examples;
+package net.automatalib.example;
 
 import java.awt.AWTEvent;
 import java.awt.Toolkit;
@@ -25,18 +25,18 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 
 import net.automatalib.commons.util.system.JVMUtil;
-import net.automatalib.examples.ads.ADSExample;
-import net.automatalib.examples.brics.SimpleBricsExample;
-import net.automatalib.examples.dot.DOTExample;
-import net.automatalib.examples.graph.DFSExample;
-import net.automatalib.examples.incremental.IncrementalDFAExample;
-import net.automatalib.examples.incremental.IncrementalMealyExample;
-import net.automatalib.examples.incremental.IncrementalPCDFAExample;
-import net.automatalib.examples.modelchecking.LTSminExample;
-import net.automatalib.examples.modelchecking.LTSminMonitorExample;
-import net.automatalib.examples.modelchecking.M3CSPAExample;
-import net.automatalib.examples.procedural.PalindromeExample;
-import net.automatalib.examples.vpa.OneSEVPAExample;
+import net.automatalib.example.ads.ADSExample;
+import net.automatalib.example.brics.SimpleBricsExample;
+import net.automatalib.example.dot.DOTExample;
+import net.automatalib.example.graph.DFSExample;
+import net.automatalib.example.incremental.IncrementalDFAExample;
+import net.automatalib.example.incremental.IncrementalMealyExample;
+import net.automatalib.example.incremental.IncrementalPCDFAExample;
+import net.automatalib.example.modelchecking.LTSminExample;
+import net.automatalib.example.modelchecking.LTSminMonitorExample;
+import net.automatalib.example.modelchecking.M3CSPAExample;
+import net.automatalib.example.procedural.PalindromeExample;
+import net.automatalib.example.vpa.OneSEVPAExample;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;

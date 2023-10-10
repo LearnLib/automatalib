@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.examples.modelchecking;
+package net.automatalib.example.modelchecking;
 
 import java.util.Objects;
 
