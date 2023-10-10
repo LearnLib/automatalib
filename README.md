@@ -10,7 +10,7 @@ AutomataLib is a free, open source ([Apache License, v2.0][1]) Java library for 
 ## About
 
 AutomataLib is developed at [TU Dortmund University, Germany][2].
-Its original purpose is to serve as the automaton framework for the [LearnLib][3] active automata learning library.
+Its original purpose is to serve as the automaton framework for the [LearnLib][3] automata learning library.
 However, it is completely independent of LearnLib and can be used for other projects as well.
 
 AutomataLib supports modeling a variety of graph-based structures.
@@ -73,7 +73,7 @@ For developing the code base of AutomataLib it is suggested to use one of the ma
 
 ## Questions?
 
-If you have any questions regarding the usage of AutomataLib or if you want to discuss new and exiting ideas for future contributions, feel free to use the [Discussions](https://github.com/LearnLib/automatalib/discussions) page to get in touch with the AutomataLib community.
+If you have any questions regarding the usage of AutomataLib or if you want to discuss new and exciting ideas for future contributions, feel free to use the [Discussions](https://github.com/LearnLib/automatalib/discussions) page to get in touch with the AutomataLib community.
 
 
 ## Maintainers
