@@ -34,10 +34,10 @@ import java.util.HashSet;
 
 import java.text.MessageFormat;
 
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.GrowingMapAlphabet;
-import net.automatalib.commons.util.strings.StringUtil;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
+import net.automatalib.word.impl.GrowingMapAlphabet;
+import net.automatalib.common.util.string.StringUtil;
 
 class InternalTAFParser {
 

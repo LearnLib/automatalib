@@ -17,7 +17,7 @@ package net.automatalib.modelchecker.m3c.solver;
 
 import java.util.BitSet;
 
-import net.automatalib.graphs.ProceduralModalProcessGraph;
+import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.modelchecker.m3c.formula.DependencyGraph;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import org.checkerframework.checker.nullness.qual.Nullable;

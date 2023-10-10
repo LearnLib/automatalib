@@ -17,7 +17,7 @@ package net.automatalib;
 
 import java.util.Properties;
 
-import net.automatalib.commons.util.settings.SettingsSource;
+import net.automatalib.common.util.setting.SettingsSource;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class AutomataLibSettings {

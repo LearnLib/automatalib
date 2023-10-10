@@ -18,8 +18,8 @@ package net.automatalib.util.minimizer;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.commons.smartcollections.AbstractBasicLinkedListEntry;
-import net.automatalib.commons.smartcollections.ElementReference;
+import net.automatalib.common.smartcollection.AbstractBasicLinkedListEntry;
+import net.automatalib.common.smartcollection.ElementReference;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

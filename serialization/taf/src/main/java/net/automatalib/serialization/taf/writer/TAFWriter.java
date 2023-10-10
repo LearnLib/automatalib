@@ -30,15 +30,15 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automata.Automaton;
-import net.automatalib.automata.FiniteAlphabetAutomaton;
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.strings.StringUtil;
+import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.FiniteAlphabetAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.string.StringUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

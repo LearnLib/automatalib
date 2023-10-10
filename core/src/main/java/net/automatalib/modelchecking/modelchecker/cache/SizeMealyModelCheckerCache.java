@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelchecking.modelchecker.cache;
 
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
 import net.automatalib.modelchecking.ModelCheckerCache.MealyModelCheckerCache;
 import net.automatalib.modelchecking.modelchecker.cache.InternalModelCheckerDelegator.MealyModelCheckerDelegator;

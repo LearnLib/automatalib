@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelchecking.modelchecker.cache;
 
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 import net.automatalib.modelchecking.ModelCheckerLassoCache.DFAModelCheckerLassoCache;

@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.base.compact.CompactGraph;
-import net.automatalib.words.Word;
+import net.automatalib.graph.Graph;
+import net.automatalib.graph.base.compact.CompactGraph;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 
 /**

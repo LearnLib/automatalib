@@ -17,7 +17,7 @@ package net.automatalib.modelchecking.modelchecker.cache;
 
 import java.util.Collection;
 
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.modelchecking.ModelCheckerCache.DFAModelCheckerCache;
 

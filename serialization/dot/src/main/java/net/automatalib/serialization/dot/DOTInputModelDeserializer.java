@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.ts.simple.SimpleTS;
 

@@ -22,10 +22,10 @@ import java.util.Map;
 
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
-import net.automatalib.automata.Automaton;
-import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.concepts.GraphViewable;
+import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.graph.Graph;
+import net.automatalib.graph.concept.GraphViewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

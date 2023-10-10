@@ -25,8 +25,8 @@ import java.util.function.Function;
 
 import com.google.common.collect.Lists;
 import net.automatalib.AutomataLibSettings;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.commons.util.process.ProcessUtil;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.common.util.process.ProcessUtil;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.etf.writer.AbstractETFWriter;

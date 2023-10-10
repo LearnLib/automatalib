@@ -25,9 +25,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.commons.util.strings.StringUtil;
-import net.automatalib.words.Alphabet;
+import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.common.util.string.StringUtil;
+import net.automatalib.word.Alphabet;
 
 @SuppressWarnings("nullness")
 abstract class AbstractTAFBuilder<S, I, T, SP, TP, M extends MutableDeterministic<S, I, T, SP, TP>>

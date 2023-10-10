@@ -21,14 +21,14 @@ import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.commons.util.system.JVMUtil;
-import net.automatalib.util.automata.random.RandomAutomata;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.common.util.system.JVMUtil;
+import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.visualization.VPManager;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationProvider;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;

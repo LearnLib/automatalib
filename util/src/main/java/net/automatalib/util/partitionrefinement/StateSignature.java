@@ -17,8 +17,8 @@ package net.automatalib.util.partitionrefinement;
 
 import java.util.Arrays;
 
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.words.Alphabet;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

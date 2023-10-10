@@ -22,10 +22,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
-import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.simple.SimpleAutomaton;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.words.Alphabet;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.simple.SimpleAutomaton;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.word.Alphabet;
 
 /**
  * A utility class that exports automata to the AUT format (see <a

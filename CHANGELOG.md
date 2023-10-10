@@ -17,15 +17,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-* Refactored
-  * `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automata.base.compact.CompactTransition`
-  * `net.automatalib.commons.util.BitSetIterator` -> `net.automatalib.commons.util.collections.BitSetIterator`
-  * `net.automatalib.graphs.base.compact.AbstractCompactGraph#getNodeProperties(int)` -> `net.automatalib.graphs.base.compact.AbstractCompactGraph#getNodeProperty(int)`
-  * `net.automatalib.graphs.FiniteKTS` -> `net.automatalib.ts.FiniteKTS` and `FiniteKTS` no longer extends the `Graph` interface but the `Automaton` interface and has its type variables re-ordered.
-  * `net.automatalib.graphs.FiniteLTS` -> `net.automatalib.graphs.FiniteLabeledGraph`
-  * moved the package `net.automatalib.ts.comp` to `net.automatalib.util.ts.comp` in the `automata-util` module
-  * all code concerning visibly push-down automata now uses the "vpa" acronym (previously "vpda"). This includes package names, class names and (Maven) module names.
-  * renamed the `net.automatalib.modelcheckers.*` packages to `net.automatalib.modelchecker.*`.
+* Refactorings
+  * Many AutomataLib packages have been refactored from plural-based keywords to singular-based keywords. Some examples are
+    * renamed `net.automatalib.automata.*` to `net.automatalib.automaton.*`.
+    * renamed `net.automatalib.automata.concepts.*` to `net.automatalib.automaton.concept.*`.
+    * renamed `net.automatalib.automata.graphs.*` to `net.automatalib.automaton.graph.*`.
+    * renamed `net.automatalib.automata.helpers.*` to `net.automatalib.automaton.helper.*`.
+    * renamed `net.automatalib.automata.transducers.*` to `net.automatalib.automaton.transducer.*`.
+    * renamed `net.automatalib.graphs.*` to `net.automatalib.graph.*`.
+    * renamed `net.automatalib.graph.concepts.*` to `net.automatalib.graph.concept.*`.
+    * renamed `net.automatalib.graph.helpers.*` to `net.automatalib.graph.helper.*`.
+    * renamed `net.automatalib.ts.acceptors.*` to `net.automatalib.ts.acceptor.*`.
+    * renamed `net.automatalib.settignssources.*` to `net.automatalib.settingsource.*`.
+    * renamed `net.automatalib.words.*` to `net.automatalib.word.*`.
+    * renamed `net.automatalib.commons.smartcollections.*` to `net.automatalib.common.smartcollection.*`.
+    * renamed `net.automatalib.commons.util.*` to `net.automatalib.common.util.*`.
+    * renamed `net.automatalib.modelcheckers.*` to `net.automatalib.modelchecker.*`.
+    * renamed `net.automatalib.util.automata.*` to `net.automatalib.util.automaton.*`.
+    * etc.
+  While this may cause some refactoring, it should only affect import statements as the names of most classes remain identical.
+  * Some actual re-namings concerns
+    * all code around visibly push-down automata now uses the "vpa" acronym (previously "vpda"). This includes package names, class names and (Maven) module names.
+    * `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automaton.base.compact.CompactTransition`.
+    * `net.automatalib.commons.util.BitSetIterator` -> `net.automatalib.common.util.collection.BitSetIterator`.
+    * `net.automatalib.graphs.base.compact.AbstractCompactGraph#getNodeProperties(int)` -> `net.automatalib.graph.base.compact.AbstractCompactGraph#getNodeProperty(int)`.
+    * `net.automatalib.graphs.FiniteKTS` -> `net.automatalib.ts.FiniteKTS` and `FiniteKTS` no longer extends the `Graph` interface but the `Automaton` interface and has its type variables re-ordered.
+    * `net.automatalib.graphs.FiniteLTS` -> `net.automatalib.graph.FiniteLabeledGraph`.
+    * moved the package `net.automatalib.ts.comp` to `net.automatalib.util.ts.comp` in the `automata-util` module.
 * AutomataLib classes no longer implement `Serializable`. We never fully supported the semantics of the interface and never intended to do so. In fact, the old approach failed miserably if any class was involved where we missed an "implements Serializable" statement. In order to prevent confusion by promising false contracts, implementing this markup interface has been removed. Serialization should now be done in user-land via one of the many external (and more optimizable) serialization frameworks such as FST, XStream, etc.
 * `Minimizer` no longer provides a `getInstance()` method but can be instantiated directly.
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.

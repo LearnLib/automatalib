@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelchecking.modelchecker.cache;
 
-import net.automatalib.automata.MutableAutomaton;
+import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
 import net.automatalib.modelchecking.ModelCheckerLassoCache;

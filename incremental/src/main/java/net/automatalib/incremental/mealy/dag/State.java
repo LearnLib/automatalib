@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.mealy.dag;
 
-import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import net.automatalib.common.smartcollection.ResizingArrayStorage;
 
 public final class State<O> {
 

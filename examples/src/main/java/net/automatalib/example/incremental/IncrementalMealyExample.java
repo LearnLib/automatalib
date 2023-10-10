@@ -19,9 +19,9 @@ import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.impl.Alphabets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

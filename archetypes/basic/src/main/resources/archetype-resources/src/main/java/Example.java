@@ -1,10 +1,10 @@
 package ${package};
 
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 
 /**
  * An example class that creates a simple Mealy Machine and displays it via the JUNG library.

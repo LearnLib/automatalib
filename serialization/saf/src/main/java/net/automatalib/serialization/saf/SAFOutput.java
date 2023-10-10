@@ -25,11 +25,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import net.automatalib.automata.UniversalAutomaton;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.NFA;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.words.Alphabet;
+import net.automatalib.automaton.UniversalAutomaton;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.NFA;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.word.Alphabet;
 
 /**
  * Serializer for the SAF (simple automaton format).

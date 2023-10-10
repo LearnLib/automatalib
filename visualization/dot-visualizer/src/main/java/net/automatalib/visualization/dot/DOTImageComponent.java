@@ -35,7 +35,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JViewport;
 import javax.swing.event.MouseInputAdapter;
 
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.common.util.IOUtil;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;

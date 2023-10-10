@@ -22,9 +22,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import net.automatalib.incremental.mealy.AdaptiveMealyBuilder;
-import net.automatalib.util.graphs.traversal.GraphTraversal;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.util.graph.traversal.GraphTraversal;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTreeBuilder<I, O>

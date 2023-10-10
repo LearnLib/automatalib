@@ -18,8 +18,8 @@ package net.automatalib.modelchecking.modelchecker.cache;
 import java.util.Collection;
 import java.util.Collections;
 
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.Lasso.MealyLasso;

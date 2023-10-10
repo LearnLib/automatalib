@@ -17,11 +17,11 @@ package net.automatalib.modelchecking;
 
 import java.util.SortedSet;
 
-import net.automatalib.automata.concepts.DetOutputAutomaton;
-import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.concept.DetOutputAutomaton;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.word.Word;
 
 /**
  * A lasso is a single infinite word.

@@ -21,10 +21,10 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 
-import net.automatalib.automata.FiniteAlphabetAutomaton;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.automaton.FiniteAlphabetAutomaton;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.common.util.IOUtil;
 
 /**
  * Facade for TAF parsing. This class provides several static methods to read TAF descriptions for DFA and Mealy

@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.common.util.IOUtil;
 
 /**
  * A generic interface for formalizing an arbitrary serializer for a given model type.

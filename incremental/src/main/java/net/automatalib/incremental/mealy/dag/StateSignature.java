@@ -17,7 +17,7 @@ package net.automatalib.incremental.mealy.dag;
 
 import java.util.Arrays;
 
-import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import net.automatalib.common.smartcollection.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class StateSignature<O> {

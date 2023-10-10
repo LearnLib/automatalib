@@ -26,10 +26,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.google.common.collect.Maps;
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
-import net.automatalib.graphs.MutableProceduralModalProcessGraph;
-import net.automatalib.graphs.base.DefaultCFMPS;
-import net.automatalib.graphs.base.compact.CompactPMPG;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.graph.MutableProceduralModalProcessGraph;
+import net.automatalib.graph.base.DefaultCFMPS;
+import net.automatalib.graph.base.compact.CompactPMPG;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;

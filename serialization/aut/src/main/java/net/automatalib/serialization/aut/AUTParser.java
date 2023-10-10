@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Function;
 
-import net.automatalib.automata.simple.SimpleAutomaton;
+import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.serialization.InputModelData;
 
 /**

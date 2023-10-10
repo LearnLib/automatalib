@@ -18,7 +18,7 @@ package net.automatalib.ts.modal;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
-import net.automatalib.words.Alphabet;
+import net.automatalib.word.Alphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CompactMTS<I>

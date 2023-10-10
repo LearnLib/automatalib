@@ -19,7 +19,7 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 
-import net.automatalib.commons.util.Holder;
+import net.automatalib.common.util.Holder;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.traversal.TraversalOrder;
 import org.checkerframework.checker.nullness.qual.NonNull;

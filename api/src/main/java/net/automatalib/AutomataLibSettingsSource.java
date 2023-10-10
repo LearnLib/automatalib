@@ -15,6 +15,6 @@
  */
 package net.automatalib;
 
-import net.automatalib.commons.util.settings.SettingsSource;
+import net.automatalib.common.util.setting.SettingsSource;
 
 public interface AutomataLibSettingsSource extends SettingsSource {}

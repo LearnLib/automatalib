@@ -20,10 +20,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.function.Function;
 
-import net.automatalib.automata.simple.SimpleAutomaton;
+import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.automaton.SimpleAutomatonSerializationProvider;
-import net.automatalib.words.Alphabet;
+import net.automatalib.word.Alphabet;
 
 public final class AUTSerializationProvider implements SimpleAutomatonSerializationProvider<Integer, String> {
 

@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
-import net.automatalib.commons.util.process.ProcessUtil;
+import net.automatalib.common.util.process.ProcessUtil;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;

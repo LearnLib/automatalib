@@ -17,7 +17,7 @@ package net.automatalib.util.minimizer;
 
 import java.util.Collection;
 
-import net.automatalib.commons.util.mappings.Mapping;
+import net.automatalib.common.util.mapping.Mapping;
 
 /**
  * The result structure of a minimization process. The result of a minimization process is a partition on the original

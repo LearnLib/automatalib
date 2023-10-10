@@ -1,0 +1,312 @@
+/* Copyright (C) 2013-2023 TU Dortmund
+ * This file is part of AutomataLib, http://www.automatalib.net/.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package net.automatalib.util.automaton.procedural;
+
+import java.util.Map.Entry;
+import java.util.Random;
+
+import com.google.common.collect.ImmutableMap;
+import net.automatalib.automaton.fsa.MutableDFA;
+import net.automatalib.automaton.fsa.impl.FastDFA;
+import net.automatalib.automaton.fsa.impl.FastDFAState;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.procedural.EmptySBA;
+import net.automatalib.automaton.procedural.SBA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.automaton.procedural.StackSBA;
+import net.automatalib.automaton.procedural.StackSPA;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.fsa.MutableDFAs;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.ProceduralInputAlphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.impl.Alphabets;
+import net.automatalib.word.impl.DefaultProceduralInputAlphabet;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class SBAUtilTest {
+
+    private final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
+    private final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
+    private final char returnSymbol = 'R';
+
+    private final ProceduralInputAlphabet<Character> alphabet =
+            new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, returnSymbol);
+    final ProceduralInputAlphabet<Character> emptyAlphabet =
+            new DefaultProceduralInputAlphabet<>(Alphabets.fromArray(), Alphabets.fromArray(), returnSymbol);
+
+    @Test
+    public void testATSequences() {
+        final Random random = new Random(42);
+        final SBA<?, Character> sba = RandomAutomata.randomSBA(random, alphabet, 10);
+        final ATSequences<Character> atSequences = SBAUtil.computeATSequences(sba);
+
+        Assert.assertTrue(atSequences.accessSequences.keySet().containsAll(alphabet.getCallAlphabet()));
+
+        for (Word<Character> as : atSequences.accessSequences.values()) {
+            Assert.assertTrue(sba.accepts(as));
+        }
+
+        for (Entry<Character, Word<Character>> e : atSequences.terminatingSequences.entrySet()) {
+            final Character proc = e.getKey();
+            final Word<Character> ts = e.getValue();
+
+            Assert.assertTrue(sba.getProcedure(proc)
+                                 .accepts(alphabet.project(ts, 0).append(alphabet.getReturnSymbol())));
+            Assert.assertTrue(sba.accepts(Word.fromWords(atSequences.accessSequences.get(proc),
+                                                         atSequences.terminatingSequences.get(proc),
+                                                         Word.fromLetter(alphabet.getReturnSymbol()))));
+        }
+    }
+
+    @Test
+    public void testEmptyCompleteATRSequences() {
+        final SBA<?, Character> sba = new EmptySBA<>(alphabet);
+        final ATSequences<Character> atrSequences = SBAUtil.computeATSequences(sba);
+
+        Assert.assertTrue(atrSequences.accessSequences.isEmpty());
+        Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
+    }
+
+    @Test
+    public void testDefaultSeparatingWord() {
+        final Random random = new Random(42);
+        final int size = 10;
+
+        final SBA<?, Character> sba1 = RandomAutomata.randomSBA(random, alphabet, size);
+        final SBA<?, Character> sba2 = RandomAutomata.randomSBA(random, alphabet, size);
+
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba1, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba2, alphabet));
+
+        final Word<Character> sepWord1 = Automata.findSeparatingWord(sba1, sba2, alphabet);
+        final Word<Character> sepWord2 = Automata.findSeparatingWord(sba2, sba1, alphabet);
+        Assert.assertNotNull(sepWord1);
+        Assert.assertNotNull(sepWord2);
+        Assert.assertNotEquals(sba1.computeOutput(sepWord1), sba2.computeOutput(sepWord1));
+        Assert.assertNotEquals(sba1.computeOutput(sepWord2), sba2.computeOutput(sepWord2));
+
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba1, emptyAlphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba2, emptyAlphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, emptyAlphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, emptyAlphabet));
+    }
+
+    // Copied and adjusted from the corresponding method in the SPAUtil test
+    @Test
+    public void testIntricateSeparatingWord() {
+        // construct a simple (pseudo) palindrome system which we will gradually alter to model different cases
+        final CompactDFA<Character> s1 = new CompactDFA<>(alphabet);
+        final FastDFA<Character> t1 = new FastDFA<>(alphabet);
+
+        final FastDFAState t1t0 = t1.addInitialState(true);
+        final FastDFAState t1t4 = t1.addState(false);
+
+        t1.addTransition(t1t0, 'R', t1t4);
+
+        final SBA<?, Character> sba1 = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', s1, 'T', t1));
+
+        final CompactDFA<Character> s2 = new CompactDFA<>(alphabet);
+        final FastDFA<Character> t2 = new FastDFA<>(alphabet);
+
+        final FastDFAState t2t0 = t2.addInitialState(true);
+        final FastDFAState t2t4 = t2.addState(false);
+
+        t2.addTransition(t2t0, 'R', t2t4);
+
+        final SBA<?, Character> sba2 = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', s2, 'T', t2));
+        final SBA<?, Character> emptySBA = new EmptySBA<>(alphabet);
+
+        // no accessible procedures, no separating word should exist. Even with the empty SBAs
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(emptySBA, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba1, emptySBA, alphabet));
+
+        // make SBA1's 'S' procedure not empty. Now there should exist a separating word
+        final int s1s0 = s1.addInitialState(true);
+
+        verifySepWord(sba1, sba2, alphabet);
+        verifySepWord(sba2, sba1, alphabet);
+        verifySepWord(sba1, emptySBA, alphabet);
+        verifySepWord(emptySBA, sba1, alphabet);
+
+        // make SBA1's initial procedure accept 'a';
+        final int s1s1 = s1.addState(true);
+        s1.addTransition(s1s0, 'a', s1s1);
+
+        final int s2s0 = s2.addInitialState(true);
+        final int s2s1 = s2.addState(false);
+        s2.addTransition(s2s0, 'a', s2s1);
+
+        // There should not exist a separating word if we restrict the alphabet to 'b','c'
+        final ProceduralInputAlphabet<Character> bcAlphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.characters('b', 'c'), callAlphabet, returnSymbol);
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, bcAlphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, bcAlphabet));
+
+        // only with the empty SBA
+        Assert.assertEquals(Automata.findSeparatingWord(sba1, emptySBA, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(Automata.findSeparatingWord(emptySBA, sba1, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(Automata.findSeparatingWord(sba2, emptySBA, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(Automata.findSeparatingWord(emptySBA, sba2, bcAlphabet), Word.fromLetter('S'));
+
+        // update SBA2 according to SBA1. There should no longer exist a separating word
+        s2.setAccepting(s2s1, true);
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, alphabet));
+
+        // make SBA1's s5 accept so that we introduce procedure 'T'. This also adds a new separating word (two 'a's)
+        final int s1s5 = s1.addState(true);
+        s1.addTransition(s1s0, 'T', s1s5);
+
+        verifySepWord(sba1, sba2, alphabet);
+        verifySepWord(sba2, sba1, alphabet);
+
+        // update SBA2 accordingly
+        final int s2s5 = s2.addState(true);
+        s2.addTransition(s2s0, 'T', s2s5);
+
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, alphabet));
+
+        // make SBA1's procedure 'T' accept 'c' so that we can find another separating word
+        final FastDFAState t1t1 = t1.addState(true);
+        t1.addTransition(t1t0, 'c', t1t1);
+
+        verifySepWord(sba1, sba2, alphabet);
+        verifySepWord(sba2, sba1, alphabet);
+
+        // this should also work for partial SBAs
+        final SBA<?, Character> partial1 = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', s1));
+        verifySepWord(sba1, partial1, alphabet);
+        verifySepWord(partial1, sba1, alphabet);
+
+        // If we restrict ourselves to only 'S' call symbols, a separating word should no longer exist
+        final ProceduralInputAlphabet<Character> sAlphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, sAlphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, sAlphabet));
+
+        // update SBA2 accordingly
+        final FastDFAState t2t1 = t2.addState(true);
+        t2.addTransition(t2t0, 'c', t2t1);
+
+        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, alphabet));
+
+        // make SBA1's 'T' procedure return on c.
+        // This should yield a separating word even if we restrict ourselves to only 'c' as internal symbol
+        t1.setAccepting(t1t4, true);
+
+        final ProceduralInputAlphabet<Character> cAlphabet =
+                new DefaultProceduralInputAlphabet<>(Alphabets.singleton('c'), callAlphabet, returnSymbol);
+        verifySepWord(sba1, sba2, alphabet);
+        verifySepWord(sba2, sba1, alphabet);
+        verifySepWord(sba1, sba2, cAlphabet);
+        verifySepWord(sba2, sba1, cAlphabet);
+    }
+
+    private static <I> void verifySepWord(SBA<?, I> sba1, SBA<?, I> sba2, ProceduralInputAlphabet<I> alphabet) {
+        final Word<I> sepWord = Automata.findSeparatingWord(sba1, sba2, alphabet);
+        Assert.assertNotNull(sepWord);
+        Assert.assertNotEquals(sba1.accepts(sepWord), sba2.accepts(sepWord));
+    }
+
+    @Test
+    public void testEquivalence() {
+        final Random random = new Random(42);
+        final int size = 10;
+
+        final SBA<?, Character> sba1 = RandomAutomata.randomSBA(random, alphabet, size);
+        final SBA<?, Character> sba2 = RandomAutomata.randomSBA(random, alphabet, size);
+
+        Assert.assertTrue(Automata.testEquivalence(sba1, sba1, alphabet));
+        Assert.assertTrue(Automata.testEquivalence(sba2, sba2, alphabet));
+
+        Assert.assertFalse(Automata.testEquivalence(sba1, sba2, alphabet));
+        Assert.assertFalse(Automata.testEquivalence(sba2, sba1, alphabet));
+    }
+
+    @Test
+    public void testReduction() {
+        // construct palindrome SBA and SPA
+        final CompactDFA<Character> sbaS = new CompactDFA<>(alphabet);
+        final FastDFA<Character> sbaT = new FastDFA<>(alphabet);
+        final CompactDFA<Character> spaS = new CompactDFA<>(alphabet.getProceduralAlphabet());
+        final FastDFA<Character> spaT = new FastDFA<>(alphabet.getProceduralAlphabet());
+
+        fillS(sbaS, true);
+        fillT(sbaT, true);
+        fillS(spaS, false);
+        fillT(spaT, false);
+
+        MutableDFAs.complete(sbaS, alphabet);
+        MutableDFAs.complete(sbaT, alphabet);
+        MutableDFAs.complete(spaS, alphabet.getProceduralAlphabet());
+        MutableDFAs.complete(spaT, alphabet.getProceduralAlphabet());
+
+        final StackSBA<?, Character> sba = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', sbaS, 'T', sbaT));
+        final StackSPA<?, Character> spa = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', spaS, 'T', spaT));
+        final SPA<?, Character> reduced = SBAUtil.reduce(sba);
+
+        Assert.assertTrue(Automata.testEquivalence(spa, reduced, alphabet));
+    }
+
+    private static <S> void fillS(MutableDFA<S, Character> dfa, boolean sba) {
+        final S s0 = dfa.addInitialState(true);
+        final S s1 = dfa.addState(true);
+        final S s2 = dfa.addState(true);
+        final S s3 = dfa.addState(sba);
+        final S s4 = dfa.addState(sba);
+        final S s5 = dfa.addState(true);
+
+        dfa.addTransition(s0, 'T', s5);
+        dfa.addTransition(s0, 'a', s1);
+        dfa.addTransition(s0, 'b', s2);
+        dfa.addTransition(s1, 'S', s3);
+        dfa.addTransition(s2, 'S', s4);
+        dfa.addTransition(s3, 'a', s5);
+        dfa.addTransition(s4, 'b', s5);
+
+        if (sba) {
+            final S s6 = dfa.addState(true);
+            dfa.addTransition(s0, 'R', s6);
+            dfa.addTransition(s1, 'R', s6);
+            dfa.addTransition(s2, 'R', s6);
+            dfa.addTransition(s5, 'R', s6);
+        }
+    }
+
+    private static <S> void fillT(MutableDFA<S, Character> dfa, boolean sba) {
+        final S t0 = dfa.addInitialState(sba);
+        final S t1 = dfa.addState(true);
+        final S t2 = dfa.addState(sba);
+        final S t3 = dfa.addState(true);
+
+        dfa.addTransition(t0, 'c', t1);
+        dfa.addTransition(t1, 'T', t2);
+        dfa.addTransition(t2, 'c', t3);
+
+        if (sba) {
+            final S t4 = dfa.addState(true);
+            dfa.addTransition(t1, 'R', t4);
+            dfa.addTransition(t3, 'R', t4);
+        }
+    }
+
+}

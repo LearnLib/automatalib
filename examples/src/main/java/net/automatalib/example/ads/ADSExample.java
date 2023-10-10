@@ -18,13 +18,13 @@ package net.automatalib.example.ads;
 import java.util.HashSet;
 import java.util.Optional;
 
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.graphs.ads.ADSNode;
-import net.automatalib.util.automata.ads.ADS;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.graph.ads.ADSNode;
+import net.automatalib.util.automaton.ads.ADS;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

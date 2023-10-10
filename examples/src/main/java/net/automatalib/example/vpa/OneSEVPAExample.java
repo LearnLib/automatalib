@@ -15,18 +15,18 @@
  */
 package net.automatalib.example.vpa;
 
-import net.automatalib.automata.vpa.DefaultOneSEVPA;
-import net.automatalib.automata.vpa.Location;
+import net.automatalib.automaton.vpa.DefaultOneSEVPA;
+import net.automatalib.automaton.vpa.Location;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.words.VPAlphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultVPAlphabet;
+import net.automatalib.word.VPAlphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.impl.Alphabets;
+import net.automatalib.word.impl.DefaultVPAlphabet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A small example for constructing a {@link net.automatalib.automata.vpa.OneSEVPA visibly push-down automaton} and
+ * A small example for constructing a {@link net.automatalib.automaton.vpa.OneSEVPA visibly push-down automaton} and
  * displaying it.
  */
 public final class OneSEVPAExample {

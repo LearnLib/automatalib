@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelchecker.m3c.formula;
 
-import net.automatalib.commons.util.strings.AbstractPrintable;
+import net.automatalib.common.util.string.AbstractPrintable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

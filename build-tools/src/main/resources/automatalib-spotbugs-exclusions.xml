@@ -27,13 +27,13 @@ limitations under the License.
     <Match>
         <Bug pattern="SE_NO_SERIALVERSIONID,SE_BAD_FIELD"/>
         <!-- internal class, not exposed to public -->
-        <Class name="net.automatalib.commons.util.concurrent.ScalingThreadPoolExecutor$ScalingLinkedBlockingQueue"/>
+        <Class name="net.automatalib.common.util.concurrent.ScalingThreadPoolExecutor$ScalingLinkedBlockingQueue"/>
     </Match>
     <Match>
         <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
         <And>
             <!-- Fine according to JavaDoc -->
-            <Class name="net.automatalib.commons.smartcollections.AbstractLinkedList"/>
+            <Class name="net.automatalib.common.smartcollection.AbstractLinkedList"/>
             <Or>
                 <Method name="popBack" returns="java.lang.Object"/>
                 <Method name="popFront" returns="java.lang.Object"/>
@@ -66,23 +66,23 @@ limitations under the License.
         <!-- mostly internal structures, where this behavior is fine -->
         <Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS"/>
         <Or>
-            <Class name="net.automatalib.commons.smartcollections.BackedGeneralPriorityQueue$Entry"/>
-            <Class name="net.automatalib.util.graphs.sssp.DijkstraSSSP$Record"/>
+            <Class name="net.automatalib.common.smartcollection.BackedGeneralPriorityQueue$Entry"/>
+            <Class name="net.automatalib.util.graph.sssp.DijkstraSSSP$Record"/>
         </Or>
     </Match>
     <Match>
         <!-- fields are accessed from classes in other maven modules which is not detected by findBugs -->
         <Bug pattern="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD,UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
         <Or>
-            <Class name="net.automatalib.commons.util.Holder"/>
-            <Class name="net.automatalib.graphs.base.compact.CompactBidiEdge"/>
-            <Class name="net.automatalib.graphs.base.compact.CompactEdge"/>
+            <Class name="net.automatalib.common.util.Holder"/>
+            <Class name="net.automatalib.graph.base.compact.CompactBidiEdge"/>
+            <Class name="net.automatalib.graph.base.compact.CompactEdge"/>
         </Or>
     </Match>
     <Match>
         <Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
         <!-- we want to cut cloning hierarchy here -->
-        <Class name="net.automatalib.commons.smartcollections.ArrayStorage"/>
+        <Class name="net.automatalib.common.smartcollection.ArrayStorage"/>
     </Match>
     <Match>
         <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT,UC_USELESS_VOID_METHOD,MS_SHOULD_BE_FINAL,URF_UNREAD_FIELD,UCF_USELESS_CONTROL_FLOW"/>

@@ -25,8 +25,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 
 import com.google.common.io.CharStreams;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.commons.util.system.JVMUtil;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.common.util.system.JVMUtil;
 import org.assertj.swing.awt.AWT;
 import org.assertj.swing.core.ComponentDragAndDrop;
 import org.assertj.swing.core.GenericTypeMatcher;

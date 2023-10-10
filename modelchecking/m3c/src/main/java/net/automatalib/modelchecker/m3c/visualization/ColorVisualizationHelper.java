@@ -17,7 +17,7 @@ package net.automatalib.modelchecker.m3c.visualization;
 
 import java.util.Map;
 
-import net.automatalib.graphs.base.compact.CompactEdge;
+import net.automatalib.graph.base.compact.CompactEdge;
 import net.automatalib.modelchecker.m3c.solver.WitnessTree;
 import net.automatalib.visualization.VisualizationHelper;
 

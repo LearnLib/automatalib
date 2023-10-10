@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelchecker.m3c.formula;
 
-import net.automatalib.commons.util.strings.Printable;
+import net.automatalib.common.util.string.Printable;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.visitor.FormulaNodeVisitor;
 import net.automatalib.modelchecker.m3c.formula.visitor.NNFVisitor;

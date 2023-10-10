@@ -15,7 +15,7 @@
  */
 package net.automatalib.util.ts.comp;
 
-import net.automatalib.commons.util.Pair;
+import net.automatalib.common.util.Pair;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.TransitionSystem;
 

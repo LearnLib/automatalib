@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.mealy;
 
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

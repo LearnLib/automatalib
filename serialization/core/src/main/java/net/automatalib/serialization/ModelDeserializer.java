@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.common.util.IOUtil;
 
 /**
  * A generic interface for formalizing an arbitrary deserializer for a given model type.

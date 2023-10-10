@@ -20,15 +20,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
 import net.automatalib.serialization.taf.parser.TAFParser;
 import net.automatalib.serialization.taf.writer.TAFWriter;
-import net.automatalib.words.Alphabet;
+import net.automatalib.word.Alphabet;
 
 public final class TAFSerializationMealy
         implements InputModelSerializationProvider<String, MealyMachine<?, String, ?, ?>, MealyMachine<?, String, ?, String>> {

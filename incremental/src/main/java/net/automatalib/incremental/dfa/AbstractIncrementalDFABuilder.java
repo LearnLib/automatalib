@@ -19,11 +19,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import net.automatalib.automata.concepts.InputAlphabetHolder;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
 
 /**
  * Abstract base class for {@link IncrementalDFABuilder}s. This class takes care of holding the input alphabet and its

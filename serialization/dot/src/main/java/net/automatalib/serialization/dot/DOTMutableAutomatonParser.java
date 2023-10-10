@@ -26,15 +26,15 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.automata.MutableAutomaton;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 
 /**
  * General-purpose DOT parser for {@link MutableAutomaton}s.

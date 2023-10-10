@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.automatalib.commons.util.mappings.MapMapping;
-import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.common.util.mapping.MapMapping;
+import net.automatalib.common.util.mapping.MutableMapping;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

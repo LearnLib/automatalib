@@ -18,13 +18,13 @@ package net.automatalib.ts.modal;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.automatalib.automata.UniversalAutomaton;
-import net.automatalib.automata.UniversalFiniteAlphabetAutomaton;
-import net.automatalib.automata.graphs.TransitionEdge;
-import net.automatalib.automata.graphs.TransitionEdge.Property;
-import net.automatalib.automata.graphs.UniversalAutomatonGraphView;
-import net.automatalib.automata.visualization.MTSVisualizationHelper;
-import net.automatalib.graphs.UniversalGraph;
+import net.automatalib.automaton.UniversalAutomaton;
+import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
+import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.graph.TransitionEdge.Property;
+import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
+import net.automatalib.automaton.visualization.MTSVisualizationHelper;
+import net.automatalib.graph.UniversalGraph;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
 

@@ -18,9 +18,9 @@ package net.automatalib.modelchecking.lasso;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

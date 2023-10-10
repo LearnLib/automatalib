@@ -17,18 +17,18 @@ package net.automatalib.modelchecker.m3c.solver;
 
 import java.util.Collections;
 
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.automata.procedural.CFMPSViewSPA;
-import net.automatalib.automata.procedural.SPA;
-import net.automatalib.automata.procedural.StackSPA;
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.procedural.CFMPSViewSPA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.automaton.procedural.StackSPA;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.modelchecker.m3c.transformer.ADDTransformer;
-import net.automatalib.words.ProceduralInputAlphabet;
-import net.automatalib.words.impl.Alphabets;
-import net.automatalib.words.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.word.ProceduralInputAlphabet;
+import net.automatalib.word.impl.Alphabets;
+import net.automatalib.word.impl.DefaultProceduralInputAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

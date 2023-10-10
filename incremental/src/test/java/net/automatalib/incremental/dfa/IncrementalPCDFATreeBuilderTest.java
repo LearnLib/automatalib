@@ -16,7 +16,7 @@
 package net.automatalib.incremental.dfa;
 
 import net.automatalib.incremental.dfa.tree.IncrementalPCDFATreeBuilder;
-import net.automatalib.words.Alphabet;
+import net.automatalib.word.Alphabet;
 import org.testng.annotations.Test;
 
 @Test

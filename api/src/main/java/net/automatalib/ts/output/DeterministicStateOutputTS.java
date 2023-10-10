@@ -17,7 +17,7 @@ package net.automatalib.ts.output;
 
 import java.util.List;
 
-import net.automatalib.automata.concepts.StateOutput;
+import net.automatalib.automaton.concept.StateOutput;
 
 public interface DeterministicStateOutputTS<S, I, T, O> extends DeterministicOutputTS<S, I, T, O>, StateOutput<S, O> {
 

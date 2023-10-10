@@ -16,7 +16,7 @@
 package net.automatalib.incremental.mealy;
 
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
-import net.automatalib.words.Alphabet;
+import net.automatalib.word.Alphabet;
 import org.testng.annotations.Test;
 
 @Test

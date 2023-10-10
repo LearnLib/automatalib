@@ -44,16 +44,16 @@ limitations under the License.
                     <configuration>
                         <excludes>
                             <!-- generated builders for automata types -->
-                            <exclude>net/automatalib/util/automata/builders/AutomatonBuilder.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/AutomatonBuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/DFABuilder.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/DFABuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/FSABuilder.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/FSABuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/MealyBuilder.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/MealyBuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/MooreBuilder.class</exclude>
-                            <exclude>net/automatalib/util/automata/builders/MooreBuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/AutomatonBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/AutomatonBuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/DFABuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/DFABuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/FSABuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/FSABuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/MealyBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/MealyBuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/MooreBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/MooreBuilder$*.class</exclude>
 
                             <!-- generated parser for DOT serialization -->
                             <exclude>net/automatalib/serialization/dot/InternalDOTParser*.class</exclude>

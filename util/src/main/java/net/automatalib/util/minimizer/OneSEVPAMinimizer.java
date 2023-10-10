@@ -15,13 +15,13 @@
  */
 package net.automatalib.util.minimizer;
 
-import net.automatalib.automata.vpa.DefaultOneSEVPA;
-import net.automatalib.automata.vpa.Location;
-import net.automatalib.automata.vpa.OneSEVPA;
+import net.automatalib.automaton.vpa.DefaultOneSEVPA;
+import net.automatalib.automaton.vpa.Location;
+import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.util.partitionrefinement.Block;
 import net.automatalib.util.partitionrefinement.PaigeTarjan;
 import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;
-import net.automatalib.words.VPAlphabet;
+import net.automatalib.word.VPAlphabet;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**

@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Node<O>, I, O>

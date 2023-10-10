@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.function.Function;
 
-import net.automatalib.automata.simple.SimpleAutomaton;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.automaton.simple.SimpleAutomaton;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelSerializer;
-import net.automatalib.words.Alphabet;
+import net.automatalib.word.Alphabet;
 
 /**
  * A refining interface of {@link InputModelSerializer} that binds the model to {@link SimpleAutomaton}s. It also adds

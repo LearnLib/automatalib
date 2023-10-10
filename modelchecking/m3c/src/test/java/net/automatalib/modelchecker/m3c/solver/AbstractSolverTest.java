@@ -21,11 +21,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
-import net.automatalib.graphs.MutableProceduralModalProcessGraph;
-import net.automatalib.graphs.ProceduralModalProcessGraph;
-import net.automatalib.graphs.base.DefaultCFMPS;
-import net.automatalib.graphs.base.compact.CompactPMPG;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.graph.MutableProceduralModalProcessGraph;
+import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.graph.base.DefaultCFMPS;
+import net.automatalib.graph.base.compact.CompactPMPG;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.modelchecker.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelchecker.m3c.util.Examples;

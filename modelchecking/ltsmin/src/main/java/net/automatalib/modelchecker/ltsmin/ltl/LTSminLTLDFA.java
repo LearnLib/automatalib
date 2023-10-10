@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecker.ltsmin.LTSminDFA;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;

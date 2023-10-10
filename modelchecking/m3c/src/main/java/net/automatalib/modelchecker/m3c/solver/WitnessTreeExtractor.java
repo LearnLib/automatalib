@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
-import net.automatalib.graphs.ProceduralModalProcessGraph;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.modelchecker.m3c.formula.AtomicNode;
 import net.automatalib.modelchecker.m3c.formula.DependencyGraph;
 import net.automatalib.modelchecker.m3c.formula.DiamondNode;

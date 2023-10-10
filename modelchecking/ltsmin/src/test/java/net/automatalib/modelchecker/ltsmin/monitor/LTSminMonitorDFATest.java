@@ -15,9 +15,9 @@
  */
 package net.automatalib.modelchecker.ltsmin.monitor;
 
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.exception.ModelCheckingException;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.testng.annotations.Test;
 
 public class LTSminMonitorDFATest extends AbstractLTSminMonitorTest<DFA<?, String>, DFA<?, String>> {

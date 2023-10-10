@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.automatalib.commons.util.nid.NumericID;
+import net.automatalib.common.util.nid.NumericID;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.ts.TransitionSystem;

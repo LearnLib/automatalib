@@ -22,8 +22,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.function.Function;
 
-import net.automatalib.automata.simple.SimpleAutomaton;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.automaton.simple.SimpleAutomaton;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;

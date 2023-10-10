@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import net.automatalib.common.smartcollection.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class Node<O> {

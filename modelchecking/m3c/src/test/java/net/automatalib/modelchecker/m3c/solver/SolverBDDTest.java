@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelchecker.m3c.solver;
 
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.transformer.BDDTransformer;
 
 public class SolverBDDTest extends AbstractSolverTest<BDDTransformer<String, String>> {

@@ -18,12 +18,12 @@ package net.automatalib.incremental.dfa;
 import java.io.IOException;
 import java.util.List;
 
-import net.automatalib.commons.util.Pair;
+import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.IntegrationUtil;
 import net.automatalib.incremental.IntegrationUtil.ParsedTraces;
 import net.automatalib.incremental.dfa.dag.IncrementalDFADAGBuilder;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

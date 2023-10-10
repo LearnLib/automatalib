@@ -18,9 +18,9 @@ package net.automatalib.util.minimizer;
 import java.util.BitSet;
 import java.util.Collection;
 
-import net.automatalib.commons.smartcollections.AbstractBasicLinkedListEntry;
-import net.automatalib.commons.smartcollections.IntrusiveLinkedList;
-import net.automatalib.commons.smartcollections.UnorderedCollection;
+import net.automatalib.common.smartcollection.AbstractBasicLinkedListEntry;
+import net.automatalib.common.smartcollection.IntrusiveLinkedList;
+import net.automatalib.common.smartcollection.UnorderedCollection;
 
 /**
  * Represents a transition label in the automaton model the minimizer operates on.

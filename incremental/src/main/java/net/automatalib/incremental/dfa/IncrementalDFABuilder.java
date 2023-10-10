@@ -16,12 +16,12 @@
 package net.automatalib.incremental.dfa;
 
 import net.automatalib.SupportsGrowingAlphabet;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.graphs.Graph;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.UniversalDTS;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 
 /**
  * General interface for incremental DFA builders.

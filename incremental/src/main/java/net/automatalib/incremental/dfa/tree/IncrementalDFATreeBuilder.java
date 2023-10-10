@@ -25,17 +25,17 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Iterators;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.util.graph.traversal.GraphTraversal;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.helper.DelegateVisualizationHelper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
+import net.automatalib.word.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

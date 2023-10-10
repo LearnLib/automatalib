@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
-import net.automatalib.commons.util.strings.StringUtil;
+import net.automatalib.common.util.string.StringUtil;
 import net.automatalib.serialization.FormatException;
 
 /**

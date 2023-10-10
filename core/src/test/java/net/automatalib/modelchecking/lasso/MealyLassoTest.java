@@ -17,10 +17,10 @@ package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
 
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.MealyTransition;
-import net.automatalib.commons.util.collections.CollectionsUtil;
-import net.automatalib.words.Word;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.MealyTransition;
+import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -20,9 +20,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.fixpoint.Worksets;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.fixpoint.Worksets;
 import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;

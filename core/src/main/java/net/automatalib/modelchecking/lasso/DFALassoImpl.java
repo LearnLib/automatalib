@@ -17,8 +17,8 @@ package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
 
-import net.automatalib.automata.concepts.DetOutputAutomaton;
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.concept.DetOutputAutomaton;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 
 /**

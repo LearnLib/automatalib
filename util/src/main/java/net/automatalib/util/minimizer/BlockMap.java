@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.common.util.mapping.MutableMapping;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

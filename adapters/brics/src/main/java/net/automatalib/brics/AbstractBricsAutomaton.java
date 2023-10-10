@@ -23,10 +23,10 @@ import java.util.Set;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
-import net.automatalib.automata.fsa.FiniteStateAcceptor;
-import net.automatalib.automata.graphs.AbstractAutomatonGraphView;
-import net.automatalib.graphs.UniversalGraph;
-import net.automatalib.graphs.concepts.GraphViewable;
+import net.automatalib.automaton.fsa.FiniteStateAcceptor;
+import net.automatalib.automaton.graph.AbstractAutomatonGraphView;
+import net.automatalib.graph.UniversalGraph;
+import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.visualization.VisualizationHelper;
 
 /**

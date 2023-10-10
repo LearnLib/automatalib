@@ -27,21 +27,21 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
-import net.automatalib.automata.concepts.InputAlphabetHolder;
-import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.IntDisjointSets;
-import net.automatalib.commons.util.UnionFind;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.IntDisjointSets;
+import net.automatalib.common.util.UnionFind;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.AbstractGraphView;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.helper.DelegateVisualizationHelper;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
+import net.automatalib.word.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

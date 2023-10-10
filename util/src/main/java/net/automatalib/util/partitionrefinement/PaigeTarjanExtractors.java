@@ -18,12 +18,12 @@ package net.automatalib.util.partitionrefinement;
 import java.util.Arrays;
 import java.util.function.IntFunction;
 
-import net.automatalib.automata.AutomatonCreator;
-import net.automatalib.automata.MutableDeterministic;
-import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
-import net.automatalib.automata.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
-import net.automatalib.commons.util.functions.BiIntFunction;
-import net.automatalib.words.Alphabet;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
+import net.automatalib.automaton.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.common.util.function.BiIntFunction;
+import net.automatalib.word.Alphabet;
 
 /**
  * This class provides methods for translating the result of a {@link PaigeTarjan} coarsest stable partition computation
@@ -46,7 +46,7 @@ public final class PaigeTarjanExtractors {
      * boolean)}
      * </li>
      * <li> {@link PaigeTarjanInitializers#initCompleteDeterministic(PaigeTarjan,
-     * net.automatalib.automata.UniversalDeterministicAutomaton.FullIntAbstraction, AutomatonInitialPartitioning,
+     * net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction, AutomatonInitialPartitioning,
      * boolean)}
      * </li>
      * <li> and {@link PaigeTarjanInitializers#initDeterministic(PaigeTarjan, FullIntAbstraction, IntFunction, Object)}

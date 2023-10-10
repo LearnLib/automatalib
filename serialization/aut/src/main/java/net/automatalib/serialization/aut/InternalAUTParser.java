@@ -25,12 +25,12 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automata.fsa.impl.compact.CompactNFA;
-import net.automatalib.automata.simple.SimpleAutomaton;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.automaton.fsa.impl.compact.CompactNFA;
+import net.automatalib.automaton.simple.SimpleAutomaton;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 
 class InternalAUTParser {
 

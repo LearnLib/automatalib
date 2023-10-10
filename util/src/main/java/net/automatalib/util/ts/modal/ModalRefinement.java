@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 
 import com.google.common.collect.Sets;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.common.util.Pair;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;

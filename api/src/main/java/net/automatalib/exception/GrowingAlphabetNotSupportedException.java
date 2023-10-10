@@ -15,8 +15,8 @@
  */
 package net.automatalib.exception;
 
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.GrowingAlphabet;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.GrowingAlphabet;
 
 /**
  * An exception to be thrown when functionality revolving around {@link GrowingAlphabet#addSymbol(Object)} is accessed

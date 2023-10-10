@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.commons.util.collections.BitSetIterator;
+import net.automatalib.common.util.collection.BitSetIterator;
 import net.automatalib.modelchecker.m3c.formula.modalmu.AbstractFixedPointFormulaNode;
 import net.automatalib.modelchecker.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelchecker.m3c.formula.modalmu.LfpNode;

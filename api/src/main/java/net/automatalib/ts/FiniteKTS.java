@@ -15,9 +15,9 @@
  */
 package net.automatalib.ts;
 
-import net.automatalib.automata.Automaton;
-import net.automatalib.graphs.FiniteKripkeStructure;
-import net.automatalib.graphs.concepts.KripkeInterpretation;
+import net.automatalib.automaton.Automaton;
+import net.automatalib.graph.FiniteKripkeStructure;
+import net.automatalib.graph.concept.KripkeInterpretation;
 
 /**
  * A finite Kripke Transition System combines the properties of a {@link Automaton finite transition system} and a

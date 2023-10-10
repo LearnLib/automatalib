@@ -19,8 +19,8 @@ import java.util.Objects;
 
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
 
 public class IncrementalMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTreeBuilder<I, O>
         implements IncrementalMealyBuilder<I, O> {

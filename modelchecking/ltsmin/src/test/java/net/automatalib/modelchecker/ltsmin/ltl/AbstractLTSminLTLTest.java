@@ -18,8 +18,8 @@ package net.automatalib.modelchecker.ltsmin.ltl;
 import net.automatalib.modelchecker.ltsmin.AbstractLTSminTest;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import net.automatalib.modelchecking.Lasso;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

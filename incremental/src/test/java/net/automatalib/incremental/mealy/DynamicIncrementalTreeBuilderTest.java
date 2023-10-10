@@ -16,7 +16,7 @@
 package net.automatalib.incremental.mealy;
 
 import net.automatalib.incremental.mealy.tree.dynamic.DynamicIncrementalMealyTreeBuilder;
-import net.automatalib.words.Alphabet;
+import net.automatalib.word.Alphabet;
 
 public class DynamicIncrementalTreeBuilderTest extends AbstractIncrementalMealyBuilderTest {
 

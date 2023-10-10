@@ -18,10 +18,10 @@ package net.automatalib.example.graph;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.automatalib.graphs.base.compact.CompactEdge;
-import net.automatalib.graphs.base.compact.CompactSimpleGraph;
-import net.automatalib.util.graphs.traversal.BaseDFSVisitor;
-import net.automatalib.util.graphs.traversal.GraphTraversal;
+import net.automatalib.graph.base.compact.CompactEdge;
+import net.automatalib.graph.base.compact.CompactSimpleGraph;
+import net.automatalib.util.graph.traversal.BaseDFSVisitor;
+import net.automatalib.util.graph.traversal.GraphTraversal;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper.EdgeStyles;

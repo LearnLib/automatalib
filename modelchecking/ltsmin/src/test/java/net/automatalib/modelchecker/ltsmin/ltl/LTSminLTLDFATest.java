@@ -15,11 +15,11 @@
  */
 package net.automatalib.modelchecker.ltsmin.ltl;
 
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.lasso.DFALassoImpl;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.testng.annotations.Test;
 
 public class LTSminLTLDFATest extends AbstractLTSminLTLTest<DFA<?, String>, DFALasso<String>> {

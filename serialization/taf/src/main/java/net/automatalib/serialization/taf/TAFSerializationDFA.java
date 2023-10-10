@@ -20,15 +20,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
 import net.automatalib.serialization.taf.parser.TAFParser;
 import net.automatalib.serialization.taf.writer.TAFWriter;
-import net.automatalib.words.Alphabet;
+import net.automatalib.word.Alphabet;
 
 public final class TAFSerializationDFA
         implements InputModelSerializationProvider<String, DFA<?, String>, DFA<Integer, String>> {

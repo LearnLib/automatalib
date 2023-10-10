@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
-import net.automatalib.automata.UniversalDeterministicAutomaton;
-import net.automatalib.automata.simple.SimpleDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

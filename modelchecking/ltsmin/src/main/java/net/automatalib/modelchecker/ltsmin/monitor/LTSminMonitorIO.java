@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecker.ltsmin.LTSminIO;
 
 /**

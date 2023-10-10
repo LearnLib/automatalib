@@ -33,7 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
-import net.automatalib.commons.util.Pair;
+import net.automatalib.common.util.Pair;
 
 class DOTMultiDialog<I> extends JDialog {
 

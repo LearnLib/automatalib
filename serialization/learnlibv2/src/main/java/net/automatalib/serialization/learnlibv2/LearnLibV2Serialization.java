@@ -24,15 +24,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
-import net.automatalib.util.automata.Automata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.util.automaton.Automata;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 
 public class LearnLibV2Serialization
         implements InputModelSerializationProvider<Integer, DFA<?, Integer>, DFA<Integer, Integer>> {

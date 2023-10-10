@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-import net.automatalib.commons.util.mappings.MutableMapping;
+import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.ts.simple.SimpleTS;
 import net.automatalib.util.traversal.VisitedState;
 import org.checkerframework.checker.nullness.qual.Nullable;

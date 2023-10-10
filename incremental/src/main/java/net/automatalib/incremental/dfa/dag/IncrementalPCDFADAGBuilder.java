@@ -21,8 +21,8 @@ import java.util.Iterator;
 
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
 
 /**
  * The prefix-closed version of {@link IncrementalDFADAGBuilder}. Contrary to the regular lookup semantics, where an

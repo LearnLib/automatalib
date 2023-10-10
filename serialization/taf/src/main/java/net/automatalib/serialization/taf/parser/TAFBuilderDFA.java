@@ -17,7 +17,7 @@ package net.automatalib.serialization.taf.parser;
 
 import java.util.Collection;
 
-import net.automatalib.automata.fsa.DFA;
+import net.automatalib.automaton.fsa.DFA;
 
 /**
  * Interface for a {@link TAFBuilder} that builds DFAs.

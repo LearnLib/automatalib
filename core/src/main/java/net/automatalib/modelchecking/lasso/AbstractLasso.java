@@ -22,14 +22,14 @@ import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import net.automatalib.automata.concepts.DetOutputAutomaton;
-import net.automatalib.commons.util.collections.CollectionsUtil;
+import net.automatalib.automaton.concept.DetOutputAutomaton;
+import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.ts.simple.SimpleDTS;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.Word;
-import net.automatalib.words.WordBuilder;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
+import net.automatalib.word.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractLasso<I, D> implements Lasso<I, D> {

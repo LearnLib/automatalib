@@ -23,7 +23,7 @@ import dk.brics.automaton.RegExp;
 import net.automatalib.brics.AbstractBricsAutomaton;
 import net.automatalib.brics.BricsNFA;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

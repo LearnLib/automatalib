@@ -26,12 +26,12 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
 
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.commons.util.Pair;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.common.util.Pair;
 import net.automatalib.serialization.ModelDeserializer;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -63,7 +63,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
     private final SortedMap<Integer, Boolean> states = new TreeMap<>();
 
     /**
-     * The map of transitions. Like a {@link net.automatalib.automata.fsa.DFA}, a transition is a pair of a state
+     * The map of transitions. Like a {@link net.automatalib.automaton.fsa.DFA}, a transition is a pair of a state
      * index, and an input, that maps to a next state index.
      */
     private final Map<Pair<Integer, I>, Integer> transitions = new HashMap<>();
@@ -291,7 +291,7 @@ public final class FSM2DFAParser<I> extends AbstractFSMParser<I> implements Mode
     }
 
     /**
-     * Constructs the actual {@link net.automatalib.automata.fsa.DFA}.
+     * Constructs the actual {@link net.automatalib.automaton.fsa.DFA}.
      *
      * @return the DFA represented by the FSM file.
      *

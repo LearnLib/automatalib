@@ -17,7 +17,7 @@ package net.automatalib.modelchecking.modelchecker.cache;
 
 import java.util.Collections;
 
-import net.automatalib.automata.MutableAutomaton;
+import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerCache;
 import net.automatalib.modelchecking.ModelCheckerLasso;

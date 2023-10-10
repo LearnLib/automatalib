@@ -15,7 +15,7 @@
  */
 package net.automatalib.util.ts.traversal;
 
-import net.automatalib.commons.util.Holder;
+import net.automatalib.common.util.Holder;
 
 public interface TSTraversalVisitor<S, I, T, D> {
 

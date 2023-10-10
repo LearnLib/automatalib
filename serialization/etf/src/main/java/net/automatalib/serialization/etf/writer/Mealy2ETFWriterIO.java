@@ -20,10 +20,10 @@ import java.io.PrintWriter;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.automatalib.automata.concepts.StateIDs;
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.words.Alphabet;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.word.Alphabet;
 
 /**
  * Write a Mealy machine with straightforward IO semantics.

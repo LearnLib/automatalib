@@ -17,8 +17,8 @@ package net.automatalib.modelchecking;
 
 import java.util.Collection;
 
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.exception.ModelCheckingException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

@@ -30,10 +30,10 @@ import java.util.Set;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.commons.util.mappings.MutableMapping;
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
-import net.automatalib.graphs.ProceduralModalProcessGraph;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.modelchecker.m3c.formula.AndNode;
 import net.automatalib.modelchecker.m3c.formula.AtomicNode;
 import net.automatalib.modelchecker.m3c.formula.BoxNode;

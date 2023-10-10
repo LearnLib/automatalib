@@ -22,10 +22,10 @@ import java.util.function.Function;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.ts.UniversalTransitionSystem;
-import net.automatalib.util.ts.iterators.AllDefinedInputsIterator;
-import net.automatalib.util.ts.iterators.AllUndefinedInputsIterator;
-import net.automatalib.util.ts.iterators.DefinedInputsIterator;
-import net.automatalib.util.ts.iterators.UndefinedInputsIterator;
+import net.automatalib.util.ts.iterator.AllDefinedInputsIterator;
+import net.automatalib.util.ts.iterator.AllUndefinedInputsIterator;
+import net.automatalib.util.ts.iterator.DefinedInputsIterator;
+import net.automatalib.util.ts.iterator.UndefinedInputsIterator;
 import net.automatalib.util.ts.traversal.BFSOrderIterator;
 
 @SuppressWarnings("PMD.UseUtilityClass") // we want to allow extending for the 'Automata' class

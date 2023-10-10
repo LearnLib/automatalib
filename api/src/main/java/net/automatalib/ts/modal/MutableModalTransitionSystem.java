@@ -15,7 +15,7 @@
  */
 package net.automatalib.ts.modal;
 
-import net.automatalib.automata.MutableAutomaton;
+import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 

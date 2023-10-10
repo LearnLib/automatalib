@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.automatalib.commons.util.mappings.Mapping;
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
-import net.automatalib.graphs.ProceduralModalProcessGraph;
-import net.automatalib.graphs.concepts.NodeIDs;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.graph.concept.NodeIDs;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.TrueNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;

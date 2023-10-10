@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
 import net.automatalib.modelchecker.ltsmin.LTSminMealy;

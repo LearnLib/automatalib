@@ -17,15 +17,15 @@ package net.automatalib.example.modelchecking;
 
 import java.util.Objects;
 
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLIO;
 import net.automatalib.modelchecker.ltsmin.ltl.LTSminLTLIOBuilder;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

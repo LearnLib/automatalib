@@ -24,8 +24,8 @@ import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
-import net.automatalib.commons.util.Pair;
-import net.automatalib.commons.util.system.JVMUtil;
+import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.system.JVMUtil;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

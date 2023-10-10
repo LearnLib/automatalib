@@ -24,9 +24,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.google.common.collect.Maps;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.graphs.Graph;
-import net.automatalib.graphs.MutableGraph;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.graph.Graph;
+import net.automatalib.graph.MutableGraph;
 import net.automatalib.serialization.ModelDeserializer;
 
 /**

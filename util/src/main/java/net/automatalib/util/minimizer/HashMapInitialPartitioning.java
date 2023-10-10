@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.automatalib.graphs.UniversalIndefiniteGraph;
+import net.automatalib.graph.UniversalIndefiniteGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

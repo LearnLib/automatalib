@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.dfa.dag;
 
-import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import net.automatalib.common.smartcollection.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
 
 /**

@@ -17,7 +17,7 @@ package net.automatalib.incremental.dfa.dag;
 
 import java.util.Arrays;
 
-import net.automatalib.commons.smartcollections.ResizingArrayStorage;
+import net.automatalib.common.smartcollection.ResizingArrayStorage;
 import net.automatalib.incremental.dfa.Acceptance;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

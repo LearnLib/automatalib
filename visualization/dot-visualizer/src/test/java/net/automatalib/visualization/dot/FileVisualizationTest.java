@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
-import net.automatalib.automata.fsa.impl.compact.CompactDFA;
-import net.automatalib.commons.util.IOUtil;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.visualization.VisualizationHelper;
 import org.testng.Assert;

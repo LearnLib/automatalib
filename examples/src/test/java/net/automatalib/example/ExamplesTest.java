@@ -24,7 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
 
-import net.automatalib.commons.util.system.JVMUtil;
+import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.example.ads.ADSExample;
 import net.automatalib.example.brics.SimpleBricsExample;
 import net.automatalib.example.dot.DOTExample;

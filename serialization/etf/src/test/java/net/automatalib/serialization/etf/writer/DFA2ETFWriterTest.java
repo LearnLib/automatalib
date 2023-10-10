@@ -22,13 +22,13 @@ import java.util.Random;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.commons.util.IOUtil;
-import net.automatalib.commons.util.io.UnclosableOutputStream;
-import net.automatalib.util.automata.builders.AutomatonBuilders;
-import net.automatalib.util.automata.random.RandomAutomata;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.common.util.io.UnclosableOutputStream;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
+import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

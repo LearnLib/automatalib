@@ -17,7 +17,7 @@ package net.automatalib.modelchecking.modelchecker.cache;
 
 import java.util.Collection;
 
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelChecker;

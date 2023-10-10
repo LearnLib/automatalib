@@ -17,8 +17,8 @@ package net.automatalib.modelchecking;
 
 import java.util.Collection;
 
-import net.automatalib.automata.fsa.DFA;
-import net.automatalib.automata.transducers.MealyMachine;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
 
 /**
  * A model checker that caches calls to {@link #findCounterExample(Object, Collection, Object)}.

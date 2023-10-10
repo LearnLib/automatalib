@@ -17,7 +17,7 @@ package net.automatalib.ts.output;
 
 import java.util.List;
 
-import net.automatalib.automata.concepts.TransitionOutput;
+import net.automatalib.automaton.concept.TransitionOutput;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public interface DeterministicTransitionOutputTS<S, I, T, O>

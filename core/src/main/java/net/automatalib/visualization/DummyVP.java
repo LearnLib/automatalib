@@ -20,7 +20,7 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import net.automatalib.graphs.Graph;
+import net.automatalib.graph.Graph;
 import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

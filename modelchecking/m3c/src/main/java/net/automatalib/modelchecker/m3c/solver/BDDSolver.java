@@ -16,7 +16,7 @@
 package net.automatalib.modelchecker.m3c.solver;
 
 import info.scce.addlib.dd.bdd.BDDManager;
-import net.automatalib.graphs.ContextFreeModalProcessSystem;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.DependencyGraph;
 import net.automatalib.modelchecker.m3c.transformer.BDDTransformer;
 import net.automatalib.modelchecker.m3c.transformer.BDDTransformerSerializer;

@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
-import net.automatalib.automata.transducers.MealyMachine;
-import net.automatalib.automata.transducers.impl.compact.CompactMealy;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
-import net.automatalib.util.automata.transducers.MealyFilter;
-import net.automatalib.words.Alphabet;
-import net.automatalib.words.impl.Alphabets;
+import net.automatalib.util.automaton.transducer.MealyFilter;
+import net.automatalib.word.Alphabet;
+import net.automatalib.word.impl.Alphabets;
 
 /**
  * A feature of this {@link net.automatalib.modelchecking.ModelChecker}, is that one can remove particular output

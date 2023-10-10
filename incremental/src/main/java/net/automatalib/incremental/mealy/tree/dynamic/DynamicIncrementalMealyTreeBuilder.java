@@ -27,7 +27,7 @@ import net.automatalib.incremental.mealy.tree.AbstractMealyTreeBuilder;
 import net.automatalib.incremental.mealy.tree.AnnotatedEdge;
 import net.automatalib.incremental.mealy.tree.Edge;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
-import net.automatalib.words.Word;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
