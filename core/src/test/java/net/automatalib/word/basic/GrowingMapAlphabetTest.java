@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.basic;
+package net.automatalib.word.basic;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.FastAlphabet;
-import net.automatalib.automaton.words.util.FastAlphabetTestUtil;
-import net.automatalib.automaton.words.util.FastAlphabetTestUtil.InputSymbol;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.word.util.AlphabetTestUtil;
 
-public class FastAlphabetTest extends AbstractAlphabetTest<InputSymbol, FastAlphabet<InputSymbol>> {
+public class GrowingMapAlphabetTest extends AbstractAlphabetTest<Integer, GrowingMapAlphabet<Integer>> {
 
     @Override
-    protected List<InputSymbol> getAlphabetSymbols() {
-        return FastAlphabetTestUtil.ALPHABET_SYMBOLS;
+    protected List<Integer> getAlphabetSymbols() {
+        return AlphabetTestUtil.CONTAINED_SYMBOLS_LIST;
     }
 
     @Override
-    protected List<InputSymbol> getNonAlphabetSymbols() {
-        return FastAlphabetTestUtil.NON_ALPHABET_SYMBOLS;
+    protected List<Integer> getNonAlphabetSymbols() {
+        return AlphabetTestUtil.NON_CONTAINED_SYMBOLS_LIST;
     }
 
     @Override
-    protected FastAlphabet<InputSymbol> getAlphabet() {
-        return new FastAlphabet<>(FastAlphabetTestUtil.ALPHABET_SYMBOLS);
+    protected GrowingMapAlphabet<Integer> getAlphabet() {
+        return new GrowingMapAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_LIST);
     }
 }

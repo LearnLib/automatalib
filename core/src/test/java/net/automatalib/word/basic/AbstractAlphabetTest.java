@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.basic;
+package net.automatalib.word.basic;
 
 import java.util.Iterator;
 import java.util.List;

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.growing;
+package net.automatalib.word.growing;
 
 import java.util.List;
 
 import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.automaton.words.util.AlphabetTestUtil;
+import net.automatalib.word.util.AlphabetTestUtil;
 
 public class GrowingMapAlphabetTest extends AbstractGrowingAlphabetTest<Integer, GrowingMapAlphabet<Integer>> {
 

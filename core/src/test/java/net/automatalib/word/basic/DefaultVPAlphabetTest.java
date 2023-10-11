@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.basic;
+package net.automatalib.word.basic;
 
 import java.util.List;
 
 import net.automatalib.alphabet.impl.DefaultVPAlphabet;
-import net.automatalib.automaton.words.util.DefaultVPAlphabetTestUtil;
+import net.automatalib.word.util.DefaultVPAlphabetTestUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

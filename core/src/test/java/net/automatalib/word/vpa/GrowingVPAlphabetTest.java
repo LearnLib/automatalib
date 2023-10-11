@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.vpa;
+package net.automatalib.word.vpa;
 
 import java.util.List;
 
 import net.automatalib.alphabet.impl.GrowingVPAlphabet;
 import net.automatalib.alphabet.impl.VPSym;
-import net.automatalib.automaton.words.util.GrowingVPAlphabetTestUtil;
+import net.automatalib.word.util.GrowingVPAlphabetTestUtil;
 
 public class GrowingVPAlphabetTest extends AbstractVPAlphabetTest<VPSym<Character>, GrowingVPAlphabet<Character>> {
 

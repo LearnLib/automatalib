@@ -13,28 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.basic;
+package net.automatalib.word.basic;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.GrowingVPAlphabet;
-import net.automatalib.alphabet.impl.VPSym;
-import net.automatalib.automaton.words.util.GrowingVPAlphabetTestUtil;
+import net.automatalib.alphabet.impl.ArrayAlphabet;
+import net.automatalib.word.util.AlphabetTestUtil;
 
-public class GrowingVPAlphabetTest extends AbstractAlphabetTest<VPSym<Character>, GrowingVPAlphabet<Character>> {
+public class ArrayAlphabetTest extends AbstractAlphabetTest<Integer, ArrayAlphabet<Integer>> {
 
     @Override
-    protected List<VPSym<Character>> getAlphabetSymbols() {
-        return GrowingVPAlphabetTestUtil.JOINED_SYMBOLS;
+    protected List<Integer> getAlphabetSymbols() {
+        return AlphabetTestUtil.CONTAINED_SYMBOLS_LIST;
     }
 
     @Override
-    protected List<VPSym<Character>> getNonAlphabetSymbols() {
-        return GrowingVPAlphabetTestUtil.NON_CONTAINED_SYMBOLS;
+    protected List<Integer> getNonAlphabetSymbols() {
+        return AlphabetTestUtil.NON_CONTAINED_SYMBOLS_LIST;
     }
 
     @Override
-    protected GrowingVPAlphabet<Character> getAlphabet() {
-        return GrowingVPAlphabetTestUtil.ALPHABET;
+    protected ArrayAlphabet<Integer> getAlphabet() {
+        return new ArrayAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_ARR);
     }
 }

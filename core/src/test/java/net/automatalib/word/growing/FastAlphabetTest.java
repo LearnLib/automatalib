@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.growing;
+package net.automatalib.word.growing;
 
 import java.util.List;
 
 import net.automatalib.alphabet.impl.FastAlphabet;
-import net.automatalib.automaton.words.util.FastAlphabetTestUtil;
-import net.automatalib.automaton.words.util.FastAlphabetTestUtil.InputSymbol;
+import net.automatalib.word.util.FastAlphabetTestUtil;
+import net.automatalib.word.util.FastAlphabetTestUtil.InputSymbol;
 
 public class FastAlphabetTest extends AbstractGrowingAlphabetTest<InputSymbol, FastAlphabet<InputSymbol>> {
 

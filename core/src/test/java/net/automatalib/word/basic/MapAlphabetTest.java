@@ -13,36 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.basic;
+package net.automatalib.word.basic;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.alphabet.impl.EnumAlphabet;
-import net.automatalib.automaton.words.basic.EnumAlphabetTest.Symbol;
+import net.automatalib.alphabet.impl.MapAlphabet;
+import net.automatalib.word.util.AlphabetTestUtil;
 
-public class EnumAlphabetTest extends AbstractAlphabetTest<Symbol, EnumAlphabet<Symbol>> {
-
-    @Override
-    protected List<Symbol> getAlphabetSymbols() {
-        return Arrays.asList(Symbol.values());
-    }
+public class MapAlphabetTest extends AbstractAlphabetTest<Integer, MapAlphabet<Integer>> {
 
     @Override
-    protected List<Symbol> getNonAlphabetSymbols() {
-        return Collections.singletonList(null);
+    protected List<Integer> getAlphabetSymbols() {
+        return AlphabetTestUtil.CONTAINED_SYMBOLS_LIST;
     }
 
     @Override
-    protected EnumAlphabet<Symbol> getAlphabet() {
-        return new EnumAlphabet<>(Symbol.class, false);
+    protected List<Integer> getNonAlphabetSymbols() {
+        return AlphabetTestUtil.NON_CONTAINED_SYMBOLS_LIST;
     }
 
-    enum Symbol {
-        S1,
-        S2,
-        S3,
+    @Override
+    protected MapAlphabet<Integer> getAlphabet() {
+        return new MapAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_LIST);
     }
-
 }

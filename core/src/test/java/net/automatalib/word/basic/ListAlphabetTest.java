@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.basic;
+package net.automatalib.word.basic;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.automaton.words.util.AlphabetTestUtil;
+import net.automatalib.alphabet.impl.ListAlphabet;
+import net.automatalib.word.util.AlphabetTestUtil;
 
-public class GrowingMapAlphabetTest extends AbstractAlphabetTest<Integer, GrowingMapAlphabet<Integer>> {
+public class ListAlphabetTest extends AbstractAlphabetTest<Integer, ListAlphabet<Integer>> {
 
     @Override
     protected List<Integer> getAlphabetSymbols() {
@@ -33,7 +33,7 @@ public class GrowingMapAlphabetTest extends AbstractAlphabetTest<Integer, Growin
     }
 
     @Override
-    protected GrowingMapAlphabet<Integer> getAlphabet() {
-        return new GrowingMapAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_LIST);
+    protected ListAlphabet<Integer> getAlphabet() {
+        return new ListAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_LIST);
     }
 }

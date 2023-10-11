@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.words.basic;
+package net.automatalib.word.procedural;
 
-import java.util.List;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 
-import net.automatalib.alphabet.impl.ArrayAlphabet;
-import net.automatalib.automaton.words.util.AlphabetTestUtil;
-
-public class ArrayAlphabetTest extends AbstractAlphabetTest<Integer, ArrayAlphabet<Integer>> {
+public class DefaultProceduralInputAlphabetTest extends AbstractProceduralInputAlphabetTest<DefaultProceduralInputAlphabet<Character>> {
 
     @Override
-    protected List<Integer> getAlphabetSymbols() {
-        return AlphabetTestUtil.CONTAINED_SYMBOLS_LIST;
-    }
-
-    @Override
-    protected List<Integer> getNonAlphabetSymbols() {
-        return AlphabetTestUtil.NON_CONTAINED_SYMBOLS_LIST;
-    }
-
-    @Override
-    protected ArrayAlphabet<Integer> getAlphabet() {
-        return new ArrayAlphabet<>(AlphabetTestUtil.CONTAINED_SYMBOLS_ARR);
+    protected DefaultProceduralInputAlphabet<Character> getAlphabet(Alphabet<Character> internalAlphabet,
+                                                                    Alphabet<Character> callAlphabet,
+                                                                    char returnSymbol) {
+        return new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, returnSymbol);
     }
 }
