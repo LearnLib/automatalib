@@ -18,6 +18,7 @@ package net.automatalib.graph.visualization;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -59,7 +60,13 @@ public class PMPGVisualizationHelper<N, E, AP> extends DefaultVisualizationHelpe
             properties.put(NodeAttrs.LABEL, aps.toString());
         }
 
-        properties.put(NodeAttrs.SHAPE, NodeShapes.CIRCLE);
+        if (Objects.equals(pmpg.getInitialNode(), node)) {
+            properties.put(NodeAttrs.SHAPE, NodeShapes.OCTAGON);
+        } else if (Objects.equals(pmpg.getFinalNode(), node)) {
+            properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
+        } else {
+            properties.put(NodeAttrs.SHAPE, NodeShapes.CIRCLE);
+        }
 
         return true;
     }

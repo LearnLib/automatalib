@@ -18,10 +18,21 @@ package net.automatalib.modelchecker.m3c.util;
 import java.util.Collections;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableMap;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.automaton.fsa.impl.FastDFA;
+import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.procedural.StackSBA;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.base.DefaultCFMPS;
 import net.automatalib.graph.base.compact.CompactPMPG;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
+import net.automatalib.util.automaton.fsa.MutableDFAs;
+import net.automatalib.util.automaton.procedural.SBAUtil;
 
 public final class Examples {
 
@@ -30,6 +41,50 @@ public final class Examples {
     public static ContextFreeModalProcessSystem<String, String> getCfmpsAnBn(Set<String> finalNodesAP) {
         final CompactPMPG<String, String> pmpg = buildPMPG(new CompactPMPG<>(""), finalNodesAP);
         return new DefaultCFMPS<>("P", Collections.singletonMap("P", pmpg));
+    }
+
+    public static ContextFreeModalProcessSystem<String, Void> getSBASystem() {
+        final Alphabet<String> internalAlphabet = Alphabets.closedCharStringRange('a', 'd');
+        final Alphabet<String> callAlphabet = Alphabets.fromArray("P1", "P2", "P3", "P4");
+        final ProceduralInputAlphabet<String> alphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, "R");
+
+        // @formatter:off
+        final CompactDFA<String> p1 = AutomatonBuilders.forDFA(new CompactDFA<>(alphabet))
+                                                       .withInitial("s0")
+                                                       .from("s0").on("P2").to("s1")
+                                                       .from("s0").on("a").to("s1")
+                                                       .from("s1").on("R").to("s2")
+                                                       .withAccepting("s0", "s1", "s2")
+                                                       .create();
+        final FastDFA<String> p2 = AutomatonBuilders.forDFA(new FastDFA<>(alphabet))
+                                                    .withInitial("t0")
+                                                    .from("t0").on("b").to("t1")
+                                                    .from("t0").on("P3").to("t2")
+                                                    .from("t0").on("P4").to("t2")
+                                                    .from("t1").on("R").to("t2")
+                                                    .withAccepting("t0", "t1", "t2")
+                                                    .create();
+        final FastDFA<String> p3 = AutomatonBuilders.forDFA(new FastDFA<>(alphabet))
+                                                    .withInitial("t0")
+                                                    .from("t0").on("c").to("t1")
+                                                    .from("t0").on("P4").to("t2")
+                                                    .from("t1").on("d").to("t2")
+                                                    .withAccepting("t0", "t1", "t2")
+                                                    .create();
+        final CompactDFA<String> p4 = AutomatonBuilders.forDFA(new CompactDFA<>(alphabet))
+                                                       .withInitial("t0")
+                                                       .withAccepting("t0", "t1", "t2")
+                                                       .create();
+        // @formatter:on
+
+        MutableDFAs.complete(p3, alphabet, true);
+
+        // explicit type variable declaration to make checker-framework happy
+        final StackSBA<?, String> sba =
+                new StackSBA<>(alphabet, "P1", ImmutableMap.of("P1", p1, "P2", p2, "P3", p3, "P4", p4));
+
+        return SBAUtil.toCFMPS(sba);
     }
 
     private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, ?>> M buildPMPG(M pmpg,

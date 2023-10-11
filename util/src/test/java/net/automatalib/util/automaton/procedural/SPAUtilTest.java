@@ -15,6 +15,9 @@
  */
 package net.automatalib.util.automaton.procedural;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +28,7 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -39,6 +43,10 @@ import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.StackSPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.SEVPA;
+import net.automatalib.common.util.IOUtil;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;
@@ -574,6 +582,63 @@ public class SPAUtilTest {
         }
     }
 
+    @Test
+    public void testPalindromeSystemAsCFMPS() throws IOException {
+        final SPA<?, Character> spa = buildPalindromeSystem();
+        final ContextFreeModalProcessSystem<Character, Void> cfmps = SPAUtil.toCFMPS(spa);
+
+        Assert.assertEquals(cfmps.getMainProcess(), 'S');
+
+        final Map<Character, ProceduralModalProcessGraph<?, Character, ?, Void, ?>> pmpgs = cfmps.getPMPGs();
+        Assert.assertEquals(pmpgs.size(), 2);
+
+        final ProceduralModalProcessGraph<?, Character, ?, Void, ?> s = pmpgs.get('S');
+        Assert.assertNotNull(s);
+        Assert.assertEquals(s.getNodes().size(), 9);
+
+        final ProceduralModalProcessGraph<?, Character, ?, Void, ?> t = pmpgs.get('T');
+        Assert.assertNotNull(t);
+        Assert.assertEquals(t.getNodes().size(), 7);
+
+        verifyDot(cfmps, "/cfmps/palindrome.dot");
+    }
+
+    @Test
+    public void testDissSystemAsCFMPS() throws IOException {
+        final SPA<?, String> spa = buildDissSystem();
+        final ContextFreeModalProcessSystem<String, Void> cfmps = SPAUtil.toCFMPS(spa);
+
+        Assert.assertEquals(cfmps.getMainProcess(), "main");
+
+        final Map<String, ProceduralModalProcessGraph<?, String, ?, Void, ?>> pmpgs = cfmps.getPMPGs();
+        Assert.assertEquals(pmpgs.size(), 3);
+
+        final ProceduralModalProcessGraph<?, String, ?, Void, ?> main = pmpgs.get("main");
+        Assert.assertNotNull(main);
+        Assert.assertEquals(main.getNodes().size(), 6);
+
+        final ProceduralModalProcessGraph<?, String, ?, Void, ?> c1 = pmpgs.get("c_1");
+        Assert.assertNotNull(c1);
+        Assert.assertEquals(c1.getNodes().size(), 5);
+
+        final ProceduralModalProcessGraph<?, String, ?, Void, ?> c2 = pmpgs.get("c_2");
+        Assert.assertNotNull(c2);
+        Assert.assertEquals(c2.getNodes().size(), 5);
+
+        verifyDot(cfmps, "/cfmps/diss.dot");
+    }
+
+    static void verifyDot(ContextFreeModalProcessSystem<?, ?> cfmps, String expected) throws IOException {
+        final StringWriter dotWriter = new StringWriter();
+        final StringWriter expectedWriter = new StringWriter();
+
+        try (Reader reader = IOUtil.asBufferedUTF8Reader(SPAUtilTest.class.getResourceAsStream(expected))) {
+            CharStreams.copy(reader, expectedWriter);
+            GraphDOT.write(cfmps, dotWriter);
+            Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
+        }
+    }
+
     @DataProvider(name = "systems")
     private static Object[][] getExampleSystems() {
         final ProceduralInputAlphabet<Character> alphabet =
@@ -600,7 +665,7 @@ public class SPAUtilTest {
         }
     }
 
-    private static SPA<?, ?> buildPalindromeSystem() {
+    private static SPA<?, Character> buildPalindromeSystem() {
         final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
         final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
         final ProceduralInputAlphabet<Character> alphabet =
@@ -637,7 +702,7 @@ public class SPAUtilTest {
         return new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', sProcedure, 'T', tProcedure));
     }
 
-    private static SPA<?, ?> buildDissSystem() {
+    private static SPA<?, String> buildDissSystem() {
         final Alphabet<String> internalAlphabet = Alphabets.fromArray("a", "b");
         final Alphabet<String> callAlphabet = Alphabets.fromArray("main", "c_1", "c_2");
         final ProceduralInputAlphabet<String> alphabet =
@@ -647,8 +712,9 @@ public class SPAUtilTest {
         final MutableDFA<?, String> mainProcedure =
                 AutomatonBuilders.forDFA(new CompactDFA<>(alphabet.getProceduralAlphabet()))
                                  .withInitial("s0")
-                                 .from("s0").on("c_1", "c_2").to("s1")
-                                 .withAccepting("s1")
+                                 .from("s0").on("c_1").to("s1")
+                                 .from("s1").on("c_2").to("s2")
+                                 .withAccepting("s2")
                                  .create();
 
         final MutableDFA<?, String> aProcedure =

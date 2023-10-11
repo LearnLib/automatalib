@@ -276,6 +276,7 @@ final class DOTSerializationUtil {
         t.connect(t0, t1, p2);
         t.connect(t1, t1, p3);
         t.connect(t1, t0, p4);
+        t.setFinalNode(t1);
 
         final Map<Character, CompactPMPG<Character, Character>> pmpgs = Maps.newHashMapWithExpectedSize(2);
         pmpgs.put('s', s);

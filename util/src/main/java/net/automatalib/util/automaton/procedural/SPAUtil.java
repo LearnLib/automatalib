@@ -37,6 +37,7 @@ import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.UniversalGraph;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.graph.Graphs;
@@ -506,6 +507,23 @@ public final class SPAUtil {
      */
     public static <I> SEVPA<?, I> toNSEVPA(SPA<?, I> spa) {
         return NSEVPAConverter.convert(spa);
+    }
+
+    /**
+     * Returns a {@link ContextFreeModalProcessSystem}-based view on the language of a given {@link SPA} such that there
+     * exists a {@code w}-labeled path to the final node of the returned CFMPS' main procedure if and only if {@code w}
+     * is accepted by the given {@link SPA}. This allows one to model-check language properties of {@link SPA}s with
+     * tools such as M3C.
+     *
+     * @param spa
+     *         the {@link SPA} to convert
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the {@link ContextFreeModalProcessSystem}-based view on the given {@code spa}.
+     */
+    public static <I> ContextFreeModalProcessSystem<I, Void> toCFMPS(SPA<?, I> spa) {
+        return new CFMPSViewSPA<>(spa);
     }
 
 }

@@ -1,8 +1,8 @@
 digraph g {
 
 	s0 [shape="circle" label=""];
-	s1 [shape="circle" label="[d]"];
-	s2 [shape="circle" label=""];
+	s1 [shape="box" label="[d]"];
+	s2 [shape="octagon" label=""];
 	s3 [shape="circle" label="[a, b]"];
 	s4 [shape="circle" label="[c]"];
 	s0 -> s1 [style="" label="?"];

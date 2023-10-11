@@ -1,0 +1,47 @@
+digraph g {
+
+	s0 [shape="octagon" label=""];
+	s1 [shape="circle" label=""];
+	s2 [shape="circle" label=""];
+	s3 [shape="box" label=""];
+	s4 [shape="octagon" label=""];
+	s5 [shape="circle" label=""];
+	s6 [shape="circle" label=""];
+	s7 [shape="circle" label=""];
+	s8 [shape="box" label=""];
+	s9 [shape="octagon" label=""];
+	s10 [shape="box" label=""];
+	s11 [shape="circle" label=""];
+	s12 [shape="circle" label=""];
+	s13 [shape="circle" label=""];
+	s14 [shape="circle" label=""];
+	s15 [shape="octagon" label=""];
+	s16 [shape="box" label=""];
+	s0 -> s1 [style="" label="P1"];
+	s1 -> s2 [style="" label="a"];
+	s1 -> s2 [style="bold" label="P2"];
+	s2 -> s3 [style="" label="R"];
+	s4 -> s6 [style="" label="P2"];
+	s6 -> s7 [style="" label="b"];
+	s6 -> s5 [style="bold" label="P3"];
+	s6 -> s5 [style="bold" label="P4"];
+	s7 -> s8 [style="" label="R"];
+	s9 -> s12 [style="" label="P3"];
+	s12 -> s13 [style="" label="c"];
+	s12 -> s10 [style="" label="c"];
+	s12 -> s11 [style="bold" label="P4"];
+	s12 -> s10 [style="bold" label="P4"];
+	s13 -> s14 [style="" label="d"];
+	s13 -> s10 [style="" label="d"];
+	s15 -> s16 [style="" label="P4"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s4;
+__start1 [label="" shape="none" width="0" height="0"];
+__start1 -> s9;
+__start2 [label="" shape="none" width="0" height="0"];
+__start2 -> s15;
+__start3 [label="" shape="none" width="0" height="0"];
+__start3 -> s0;
+
+}

@@ -20,13 +20,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.function.Function;
 
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.graph.base.DefaultCFMPS;
 import net.automatalib.graph.base.compact.CompactPMPG;
+import net.automatalib.modelchecker.m3c.formula.FormulaNode;
+import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
+import net.automatalib.modelchecker.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelchecker.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelchecker.m3c.util.Examples;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -70,6 +74,40 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
 
         final String formulaWithNegatedAP = "mu X.(<>X || !('a' && 'b'))";
         assertSolve(solver, formulaWithNegatedAP, true);
+    }
+
+    @Test
+    void testSBASystem() throws ParseException {
+        final ContextFreeModalProcessSystem<String, Void> cfmps = Examples.getSBASystem();
+        final TypedM3CSolver<FormulaNode<String, Void>> solver = getTypedSolver(cfmps);
+
+        final Function<String, String> labelParser = Function.identity();
+        final Function<String, Void> apParser = s -> null;
+
+        assertSolve(solver, M3CParser.parse("EF <P1><P2><P3>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("EF <b>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("EF <c>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("EF <c><R>true", labelParser, apParser), false);
+        assertSolve(solver, M3CParser.parse("EF <c><c>true", labelParser, apParser), false);
+        assertSolve(solver, M3CParser.parse("EF <c><d>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><a>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><a><R>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><P2>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><P2><b>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><P2><b><R>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><P2><b><R><R>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><P2><P3>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><P2><P3><c>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><P2><P3><c><c>true", labelParser, apParser), false);
+        assertSolve(solver, M3CParser.parse("<P1><P2><P3><c><d>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("<P1><P2><P3><c><R>true", labelParser, apParser), false);
+        assertSolve(solver, M3CParser.parse("<P1><P2><P3><P4>true", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("EF <P4><>true", labelParser, apParser), false);
+        assertSolve(solver, M3CParser.parse("EF [] false", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("AF [] false", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("AG EF [] false", labelParser, apParser), true);
+        assertSolve(solver, M3CParser.parse("AG ([P1] (AF <R>true))", labelParser, apParser), false);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -132,6 +170,8 @@ public abstract class AbstractSolverTest<T extends AbstractPropertyTransformer<T
     }
 
     public abstract M3CSolver<String> getSolver(ContextFreeModalProcessSystem<String, String> cfmps);
+
+    public abstract <L, AP> TypedM3CSolver<FormulaNode<L, AP>> getTypedSolver(ContextFreeModalProcessSystem<L, AP> cfmps);
 
     protected <P> void assertSolve(M3CSolver<P> solver, P property, boolean expectedIsSat) throws ParseException {
         Assert.assertEquals(solver.solve(property), expectedIsSat);

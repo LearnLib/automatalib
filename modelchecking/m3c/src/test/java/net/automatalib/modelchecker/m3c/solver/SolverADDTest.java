@@ -21,14 +21,15 @@ import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
-import net.automatalib.automaton.procedural.CFMPSViewSPA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.StackSPA;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
+import net.automatalib.modelchecker.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelchecker.m3c.transformer.ADDTransformer;
+import net.automatalib.util.automaton.procedural.SPAUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -36,6 +37,10 @@ public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, Str
 
     public M3CSolver<String> getSolver(ContextFreeModalProcessSystem<String, String> cfmps) {
         return M3CSolvers.addSolver(cfmps);
+    }
+
+    public <L, AP> TypedM3CSolver<FormulaNode<L, AP>> getTypedSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        return M3CSolvers.typedADDSolver(cfmps);
     }
 
     /**
@@ -57,7 +62,7 @@ public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, Str
         p.addTransition(s1, 'S', s1);
 
         final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', Collections.singletonMap('S', p));
-        final CFMPSViewSPA<Character> cfmps = new CFMPSViewSPA<>(spa);
+        final ContextFreeModalProcessSystem<Character, Void> cfmps = SPAUtil.toCFMPS(spa);
 
         final FormulaNode<Character, Void> formula = M3CParser.parse("[S][a][R]false", l -> l.charAt(0), ap -> null);
         final ADDSolver<Character, Void> solver = new ADDSolver<>(cfmps);

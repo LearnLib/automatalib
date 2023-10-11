@@ -16,12 +16,18 @@
 package net.automatalib.modelchecker.m3c.solver;
 
 import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.modelchecker.m3c.formula.FormulaNode;
+import net.automatalib.modelchecker.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelchecker.m3c.transformer.BDDTransformer;
 
 public class SolverBDDTest extends AbstractSolverTest<BDDTransformer<String, String>> {
 
     public M3CSolver<String> getSolver(ContextFreeModalProcessSystem<String, String> cfmps) {
         return M3CSolvers.bddSolver(cfmps);
+    }
+
+    public <L, AP> TypedM3CSolver<FormulaNode<L, AP>> getTypedSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
+        return M3CSolvers.typedBDDSolver(cfmps);
     }
 
 }

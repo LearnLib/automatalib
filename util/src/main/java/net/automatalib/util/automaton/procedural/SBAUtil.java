@@ -33,6 +33,7 @@ import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.StackSPA;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
@@ -378,6 +379,23 @@ public final class SBAUtil {
 
         MutableDFAs.complete(result, proceduralAlphabet, true);
         return result;
+    }
+
+    /**
+     * Returns a {@link ContextFreeModalProcessSystem}-based view on the language of a given {@link SBA} such that there
+     * exists a {@code w}-labeled path in the returned CFMPS if and only if {@code w} is accepted by the given
+     * {@link SBA}. This allows one to model-check language properties of {@link SBA}s with tools such as M3C.
+     *
+     * @param sba
+     *         the {@link SBA} to convert
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the {@link ContextFreeModalProcessSystem}-based view on the given {@code sba}.
+     */
+    public static <I> ContextFreeModalProcessSystem<I, Void> toCFMPS(SBA<?, I> sba) {
+        assert SBAUtil.isValid(sba);
+        return new CFMPSViewSBA<>(sba);
     }
 
 }

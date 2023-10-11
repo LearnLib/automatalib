@@ -1,6 +1,6 @@
 digraph g {
 
-	s0 [shape="circle" label=""];
+	s0 [shape="octagon" label=""];
 	s1 [shape="circle" label="[a, b]"];
 	s2 [shape="circle" label="[c]"];
 	s0 -> s1 [style="" label="1"];

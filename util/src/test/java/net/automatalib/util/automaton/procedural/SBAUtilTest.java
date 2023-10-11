@@ -15,6 +15,8 @@
  */
 package net.automatalib.util.automaton.procedural;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -32,7 +34,10 @@ import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.StackSBA;
 import net.automatalib.automaton.procedural.StackSPA;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
@@ -267,6 +272,35 @@ public class SBAUtilTest {
         Assert.assertTrue(Automata.testEquivalence(spa, reduced, alphabet));
     }
 
+    @Test
+    public void testSBAasCFMPS() throws IOException {
+        final SBA<?, String> sba = buildSBAWithNonTerminatingProcedures();
+        final ContextFreeModalProcessSystem<String, Void> cfmps = SBAUtil.toCFMPS(sba);
+
+        Assert.assertEquals(cfmps.getMainProcess(), "P1");
+
+        final Map<String, ProceduralModalProcessGraph<?, String, ?, Void, ?>> pmpgs = cfmps.getPMPGs();
+        Assert.assertEquals(pmpgs.size(), 4);
+
+        final ProceduralModalProcessGraph<?, String, ?, Void, ?> p1 = pmpgs.get("P1");
+        Assert.assertNotNull(p1);
+        Assert.assertEquals(p1.getNodes().size(), 4);
+
+        final ProceduralModalProcessGraph<?, String, ?, Void, ?> p2 = pmpgs.get("P2");
+        Assert.assertNotNull(p2);
+        Assert.assertEquals(p2.getNodes().size(), 5);
+
+        final ProceduralModalProcessGraph<?, String, ?, Void, ?> p3 = pmpgs.get("P3");
+        Assert.assertNotNull(p3);
+        Assert.assertEquals(p3.getNodes().size(), 6);
+
+        final ProceduralModalProcessGraph<?, String, ?, Void, ?> p4 = pmpgs.get("P4");
+        Assert.assertNotNull(p4);
+        Assert.assertEquals(p4.getNodes().size(), 2);
+
+        SPAUtilTest.verifyDot(cfmps, "/cfmps/sba.dot");
+    }
+
     private static <S> void fillS(MutableDFA<S, Character> dfa, boolean sba) {
         final S s0 = dfa.addInitialState(true);
         final S s1 = dfa.addState(true);
@@ -307,6 +341,46 @@ public class SBAUtilTest {
             dfa.addTransition(t1, 'R', t4);
             dfa.addTransition(t3, 'R', t4);
         }
+    }
+
+    private static SBA<?, String> buildSBAWithNonTerminatingProcedures() {
+        final Alphabet<String> internalAlphabet = Alphabets.closedCharStringRange('a', 'd');
+        final Alphabet<String> callAlphabet = Alphabets.fromArray("P1", "P2", "P3", "P4");
+        final ProceduralInputAlphabet<String> alphabet =
+                new DefaultProceduralInputAlphabet<>(internalAlphabet, callAlphabet, "R");
+
+        // @formatter:off
+        final CompactDFA<String> p1 = AutomatonBuilders.forDFA(new CompactDFA<>(alphabet))
+                                                       .withInitial("s0")
+                                                       .from("s0").on("P2").to("s1")
+                                                       .from("s0").on("a").to("s1")
+                                                       .from("s1").on("R").to("s2")
+                                                       .withAccepting("s0", "s1", "s2")
+                                                       .create();
+        final FastDFA<String> p2 = AutomatonBuilders.forDFA(new FastDFA<>(alphabet))
+                                                    .withInitial("t0")
+                                                    .from("t0").on("b").to("t1")
+                                                    .from("t0").on("P3").to("t2")
+                                                    .from("t0").on("P4").to("t2")
+                                                    .from("t1").on("R").to("t2")
+                                                    .withAccepting("t0", "t1", "t2")
+                                                    .create();
+        final FastDFA<String> p3 = AutomatonBuilders.forDFA(new FastDFA<>(alphabet))
+                                                    .withInitial("t0")
+                                                    .from("t0").on("c").to("t1")
+                                                    .from("t0").on("P4").to("t2")
+                                                    .from("t1").on("d").to("t2")
+                                                    .withAccepting("t0", "t1", "t2")
+                                                    .create();
+        final CompactDFA<String> p4 = AutomatonBuilders.forDFA(new CompactDFA<>(alphabet))
+                                                       .withInitial("t0")
+                                                       .withAccepting("t0", "t1", "t2")
+                                                       .create();
+        // @formatter:on
+
+        MutableDFAs.complete(p3, alphabet, true);
+
+        return new StackSBA<>(alphabet, "P1", ImmutableMap.of("P1", p1, "P2", p2, "P3", p3, "P4", p4));
     }
 
 }

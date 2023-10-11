@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.automaton.procedural;
+package net.automatalib.util.automaton.procedural;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +26,7 @@ import java.util.Set;
 import com.google.common.collect.Maps;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
@@ -39,12 +40,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol type
  */
-public class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
+class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
 
     private final SPA<?, I> spa;
     private final Map<I, ProceduralModalProcessGraph<?, I, ?, Void, ?>> pmpgs;
 
-    public CFMPSViewSPA(SPA<?, I> spa) {
+    CFMPSViewSPA(SPA<?, I> spa) {
         this.spa = spa;
 
         final Map<I, DFA<?, I>> procedures = spa.getProcedures();
@@ -68,8 +69,8 @@ public class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
     private static class MPGView<S, I>
             implements ProceduralModalProcessGraph<S, I, PMPGEdge<I, S>, Void, ProceduralModalEdgeProperty> {
 
-        private static final Object INIT = new Object();
-        private static final Object END = new Object();
+        private static final Object INITIAL = new Object();
+        private static final Object FINAL = new Object();
 
         private final ProceduralInputAlphabet<I> alphabet;
         private final Collection<I> proceduralInputs;
@@ -77,8 +78,8 @@ public class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
         private final DFA<S, I> dfa;
         private final S dfaInit;
 
-        private final S init;
-        private final S end;
+        private final S initialNode;
+        private final S finalNode;
 
         // we make sure to handle 'init' and 'end' correctly
         @SuppressWarnings("unchecked")
@@ -96,15 +97,15 @@ public class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
             this.dfa = dfa;
             this.dfaInit = dfaInit;
 
-            this.init = (S) INIT;
-            this.end = (S) END;
+            this.initialNode = (S) INITIAL;
+            this.finalNode = (S) FINAL;
         }
 
         @Override
         public Collection<PMPGEdge<I, S>> getOutgoingEdges(S node) {
-            if (node == init) {
+            if (node == initialNode) {
                 return Collections.singletonList(new PMPGEdge<>(this.procedure, this.dfaInit, ProceduralType.INTERNAL));
-            } else if (node == end) {
+            } else if (node == finalNode) {
                 return Collections.emptyList();
             } else {
                 final List<PMPGEdge<I, S>> result;
@@ -147,8 +148,8 @@ public class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
         @Override
         public Collection<S> getNodes() {
             final List<S> nodes = new ArrayList<>(dfa.size() + 2);
-            nodes.add(this.init);
-            nodes.add(this.end);
+            nodes.add(this.initialNode);
+            nodes.add(this.finalNode);
             nodes.addAll(dfa.getStates());
             return nodes;
         }
@@ -170,12 +171,12 @@ public class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
 
         @Override
         public S getFinalNode() {
-            return this.end;
+            return this.finalNode;
         }
 
         @Override
         public S getInitialNode() {
-            return this.init;
+            return this.initialNode;
         }
     }
 }
