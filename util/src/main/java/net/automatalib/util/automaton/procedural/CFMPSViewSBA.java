@@ -24,7 +24,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.common.collect.Maps;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SBA;
@@ -52,17 +51,8 @@ class CFMPSViewSBA<I> implements ContextFreeModalProcessSystem<I, Void> {
         final Map<I, DFA<?, I>> procedures = sba.getProcedures();
         this.pmpgs = Maps.newHashMapWithExpectedSize(procedures.size());
 
-        final ProceduralInputAlphabet<I> alphabet = sba.getInputAlphabet();
-        final Alphabet<I> callAlphabet = alphabet.getCallAlphabet();
-        final boolean[] isTerminating = new boolean[callAlphabet.size()];
-
-        for (I i : callAlphabet) {
-            isTerminating[callAlphabet.getSymbolIndex(i)] =
-                    isTerminating(procedures.get(i), alphabet.getReturnSymbol());
-        }
-
         for (Entry<I, DFA<?, I>> e : procedures.entrySet()) {
-            this.pmpgs.put(e.getKey(), new MPGView<>(sba, e.getKey(), e.getValue(), isTerminating));
+            this.pmpgs.put(e.getKey(), new MPGView<>(sba, e.getKey(), e.getValue()));
         }
     }
 
@@ -76,57 +66,25 @@ class CFMPSViewSBA<I> implements ContextFreeModalProcessSystem<I, Void> {
         return this.sba.getInitialProcedure();
     }
 
-    private static <S, I> boolean isTerminating(DFA<S, I> dfa, I returnSymbol) {
-
-        for (S s : dfa) {
-            final S succ = dfa.getSuccessor(s, returnSymbol);
-            if (succ != null && dfa.isAccepting(succ)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    static <S, I> boolean acceptsOnlyEpsilon(DFA<S, I> dfa, Alphabet<I> alphabet) {
-
-        for (S s : dfa) {
-            for (I i : alphabet) {
-                final S succ = dfa.getSuccessor(s, i);
-                if (succ != null && dfa.isAccepting(succ)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
     private static class MPGView<S, I>
             implements ProceduralModalProcessGraph<S, I, PMPGEdge<I, S>, Void, ProceduralModalEdgeProperty> {
 
         private static final Object INITIAL = new Object();
         private static final Object FINAL = new Object();
-        private static final Object NON_TERM_FINAL = new Object();
 
         private final ProceduralInputAlphabet<I> alphabet;
         private final Collection<I> proceduralInputs;
         private final I procedure;
         private final DFA<S, I> dfa;
         private final S dfaInit;
-        private final boolean[] isTerminating;
-
-        private final boolean isNonTerminating;
-        private final boolean isEpsilon;
 
         private final S initialNode;
         private final S finalNode;
-        private final S nonTermFinalNode;
         private final List<S> nodes;
 
         // we make sure to handle 'init' correctly
         @SuppressWarnings("unchecked")
-        MPGView(SBA<?, I> sba, I procedure, DFA<S, I> dfa, boolean[] isTerminating) {
+        MPGView(SBA<?, I> sba, I procedure, DFA<S, I> dfa) {
 
             final S dfaInit = dfa.getInitialState();
             if (dfaInit == null) {
@@ -138,93 +96,60 @@ class CFMPSViewSBA<I> implements ContextFreeModalProcessSystem<I, Void> {
             this.procedure = procedure;
             this.dfa = dfa;
             this.dfaInit = dfaInit;
-            this.isTerminating = isTerminating;
 
-            this.isNonTerminating = !isTerminating[alphabet.getCallSymbolIndex(procedure)];
-            this.isEpsilon = acceptsOnlyEpsilon(dfa, alphabet);
-
-            this.initialNode = (S) INITIAL;
-            this.nonTermFinalNode = (S) NON_TERM_FINAL;
-
-            this.nodes = new ArrayList<>(dfa.size() + 1);
-            this.nodes.add(this.initialNode);
-
-            if (isNonTerminating) { // there exists no accepting r-successor, so use an artificial final node
-                this.finalNode = (S) FINAL;
-                this.nodes.add(this.finalNode);
-            } else { // there must exist at least one accepting r-successor that we can use as the final node
-                S finalNode = null;
-                for (S s : dfa) {
-                    final S rSucc = dfa.getSuccessor(s, alphabet.getReturnSymbol());
-                    if (rSucc != null && dfa.isAccepting(rSucc)) {
-                        finalNode = rSucc;
-                        break;
-                    }
-                }
-
-                assert finalNode != null;
-                this.finalNode = finalNode;
-            }
-
-            // if we have at least one call to a non-terminating procedure, we need an additional node to return to but
-            // not to progress from
-            outer:
+            S finalNode = null;
             for (S s : dfa) {
-                for (I i : alphabet.getCallAlphabet()) {
-                    if (!isTerminating[alphabet.getCallSymbolIndex(i)]) {
-                        final S succ = dfa.getSuccessor(s, i);
-                        if (succ != null && dfa.isAccepting(succ)) {
-                            this.nodes.add(this.nonTermFinalNode);
-                            break outer;
-                        }
-                    }
+                final S rSucc = dfa.getSuccessor(s, alphabet.getReturnSymbol());
+                if (rSucc != null && dfa.isAccepting(rSucc)) {
+                    finalNode = rSucc;
+                    break;
                 }
             }
 
-            if (!isEpsilon) {
-                for (S s : dfa) {
-                    if (dfa.isAccepting(s)) {
-                        this.nodes.add(s);
-                    }
+            final List<S> nodes;
+            this.initialNode = (S) INITIAL;
+
+            if (finalNode == null) {
+                this.finalNode = (S) FINAL;
+                nodes = new ArrayList<>(dfa.size() + 2);
+                nodes.add(this.finalNode);
+            } else {
+                this.finalNode = finalNode;
+                nodes = new ArrayList<>(dfa.size() + 1);
+            }
+
+            nodes.add(initialNode);
+
+            for (S s : dfa) {
+                if (dfa.isAccepting(s)) {
+                    nodes.add(s);
                 }
             }
+
+            this.nodes = Collections.unmodifiableList(nodes);
         }
 
         @Override
         public Collection<PMPGEdge<I, S>> getOutgoingEdges(S node) {
             if (node == initialNode) {
-                return isEpsilon ?
-                        Collections.singletonList(new PMPGEdge<>(procedure, finalNode, ProceduralType.INTERNAL)) :
-                        Collections.singletonList(new PMPGEdge<>(procedure, dfaInit, ProceduralType.INTERNAL));
-            } else if (node == finalNode || node == nonTermFinalNode) {
+                return Collections.singletonList(new PMPGEdge<>(procedure, dfaInit, ProceduralType.INTERNAL));
+            } else if (node == finalNode) {
                 return Collections.emptyList();
             } else {
-                final List<PMPGEdge<I, S>> result =
-                        new ArrayList<>(proceduralInputs.size() * (isNonTerminating ? 2 : 1));
+                final List<PMPGEdge<I, S>> result = new ArrayList<>(proceduralInputs.size());
 
                 for (I i : proceduralInputs) {
-                    final S succ = this.dfa.getSuccessor(node, i);
-                    if (succ != null && this.dfa.isAccepting(succ)) {
-
+                    final S succ = dfa.getSuccessor(node, i);
+                    if (succ != null && dfa.isAccepting(succ)) {
                         final ProceduralType type;
 
                         if (alphabet.isCallSymbol(i)) {
                             type = ProceduralType.PROCESS;
-
-                            if (!isTerminating[alphabet.getCallSymbolIndex(i)]) {
-                                result.add(new PMPGEdge<>(i, nonTermFinalNode, type));
-                            } else {
-                                result.add(new PMPGEdge<>(i, succ, type));
-                            }
                         } else {
                             type = ProceduralType.INTERNAL;
-
-                            result.add(new PMPGEdge<>(i, succ, type));
                         }
 
-                        if (isNonTerminating) {
-                            result.add(new PMPGEdge<>(i, finalNode, type));
-                        }
+                        result.add(new PMPGEdge<>(i, succ, type));
                     }
                 }
 
@@ -239,7 +164,7 @@ class CFMPSViewSBA<I> implements ContextFreeModalProcessSystem<I, Void> {
 
         @Override
         public Collection<S> getNodes() {
-            return Collections.unmodifiableList(this.nodes);
+            return this.nodes;
         }
 
         @Override

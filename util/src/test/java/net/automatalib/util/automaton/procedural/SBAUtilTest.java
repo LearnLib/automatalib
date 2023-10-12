@@ -288,15 +288,15 @@ public class SBAUtilTest {
 
         final ProceduralModalProcessGraph<?, String, ?, Void, ?> p2 = pmpgs.get("P2");
         Assert.assertNotNull(p2);
-        Assert.assertEquals(p2.getNodes().size(), 5);
+        Assert.assertEquals(p2.getNodes().size(), 4);
 
         final ProceduralModalProcessGraph<?, String, ?, Void, ?> p3 = pmpgs.get("P3");
         Assert.assertNotNull(p3);
-        Assert.assertEquals(p3.getNodes().size(), 6);
+        Assert.assertEquals(p3.getNodes().size(), 5);
 
         final ProceduralModalProcessGraph<?, String, ?, Void, ?> p4 = pmpgs.get("P4");
         Assert.assertNotNull(p4);
-        Assert.assertEquals(p4.getNodes().size(), 2);
+        Assert.assertEquals(p4.getNodes().size(), 3);
 
         SPAUtilTest.verifyDot(cfmps, "/cfmps/sba.dot");
     }
@@ -374,7 +374,7 @@ public class SBAUtilTest {
                                                     .create();
         final CompactDFA<String> p4 = AutomatonBuilders.forDFA(new CompactDFA<>(alphabet))
                                                        .withInitial("t0")
-                                                       .withAccepting("t0", "t1", "t2")
+                                                       .withAccepting("t0")
                                                        .create();
         // @formatter:on
 
