@@ -88,13 +88,13 @@ limitations under the License.
 
         <!-- test -->
         <dependency>
+            <groupId>com.github.caciocavallosilano</groupId>
+            <artifactId>cacio-tta</artifactId>
+        </dependency>
+        <dependency>
             <groupId>net.automatalib</groupId>
             <artifactId>automata-util</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.caciocavallosilano</groupId>
-            <artifactId>cacio-tta</artifactId>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>

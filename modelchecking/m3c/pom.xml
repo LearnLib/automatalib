@@ -58,7 +58,6 @@ limitations under the License.
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-
         <dependency>
             <groupId>info.scce</groupId>
             <artifactId>addlib-core</artifactId>
@@ -80,12 +79,12 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
+            <artifactId>automata-serialization-dot</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-serialization-dot</artifactId>
+            <artifactId>automata-util</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

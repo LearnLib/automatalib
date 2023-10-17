@@ -39,11 +39,11 @@ limitations under the License.
     <dependencies>
         <!-- internal -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-smartcollections</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-util</artifactId>
         </dependency>
 

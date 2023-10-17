@@ -74,17 +74,13 @@ limitations under the License.
 
         <!-- test -->
         <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.caciocavallosilano</groupId>
             <artifactId>cacio-tta</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-util</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
@@ -93,6 +89,10 @@ limitations under the License.
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-swing-testng</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
 

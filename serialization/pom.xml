@@ -29,16 +29,16 @@ limitations under the License.
     <packaging>pom</packaging>
 
     <name>AutomataLib :: Serialization</name>
-    <description>Serialization parent metaproject for various (de-)serialization methods.</description>
+    <description>Serialization parent meta project for various (de-)serialization methods.</description>
 
     <modules>
-        <module>core</module>
         <module>aut</module>
+        <module>core</module>
         <module>dot</module>
         <module>etf</module>
         <module>fsm</module>
+        <module>learnlibv2</module>
         <module>saf</module>
         <module>taf</module>
-        <module>learnlibv2</module>
     </modules>
 </project>

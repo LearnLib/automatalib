@@ -47,11 +47,11 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-util</artifactId>
+            <artifactId>automata-serialization-core</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-serialization-core</artifactId>
+            <artifactId>automata-util</artifactId>
         </dependency>
 
         <!-- test -->

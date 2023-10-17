@@ -48,11 +48,11 @@ limitations under the License.
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
+            <artifactId>automata-commons-util</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-commons-util</artifactId>
+            <artifactId>automata-core</artifactId>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>

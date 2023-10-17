@@ -68,7 +68,6 @@ limitations under the License.
             <artifactId>automata-util</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
