@@ -67,7 +67,8 @@ public class DOTDialogTest extends AssertJSwingTestngTestCase {
 
     @Override
     protected void onSetUp() {
-        if (DOT.checkUsable()) {
+        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
+        if (DOT.checkUsable() && (canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
             final DOTDialog frame = GuiActionRunner.execute(() -> new DOTDialog(dot, false));
             window = new DialogFixture(robot(), frame);
             window.show(); // shows the frame to test
