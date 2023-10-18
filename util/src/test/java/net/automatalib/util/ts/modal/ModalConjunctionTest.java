@@ -32,6 +32,7 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -130,32 +131,45 @@ public class ModalConjunctionTest {
         final Integer s1 = stateMapping.get(Pair.of(b0s1, b1s1));
         final Integer s2 = stateMapping.get(Pair.of(b0s2, b1s0));
 
-        Assert.assertNotNull(getSingleTransition(mts, s0, 'a', s1));
-        Assert.assertNotNull(getSingleTransition(mts, s1, 'b', s2));
-        Assert.assertNotNull(getSingleTransition(mts, s2, 'c', s0));
-        Assert.assertNotNull(getSingleTransition(mts, s2, 'c', s2));
-        Assert.assertNull(getSingleTransition(mts, s2, 'b', s1));
-        Assert.assertTrue(mts.getTransitionProperty(getSingleTransition(mts, s0, 'a', s1)).isMust());
-        Assert.assertTrue(mts.getTransitionProperty(getSingleTransition(mts, s1, 'b', s2)).isMust());
-        Assert.assertTrue(mts.getTransitionProperty(getSingleTransition(mts, s2, 'c', s0)).isMust());
-        Assert.assertTrue(mts.getTransitionProperty(getSingleTransition(mts, s2, 'c', s2)).isMayOnly());
+        final MTSTransition<MutableModalEdgeProperty> t1 = getSingleTransition(mts, s0, 'a', s1);
+        final MTSTransition<MutableModalEdgeProperty> t2 = getSingleTransition(mts, s1, 'b', s2);
+        final MTSTransition<MutableModalEdgeProperty> t3 = getSingleTransition(mts, s2, 'c', s0);
+        final MTSTransition<MutableModalEdgeProperty> t4 = getSingleTransition(mts, s2, 'c', s2);
+        final MTSTransition<MutableModalEdgeProperty> t5 = getSingleTransition(mts, s2, 'b', s1);
+
+        Assert.assertNotNull(t1);
+        Assert.assertNotNull(t2);
+        Assert.assertNotNull(t3);
+        Assert.assertNotNull(t4);
+        Assert.assertNull(t5);
+
+        Assert.assertTrue(mts.getTransitionProperty(t1).isMust());
+        Assert.assertTrue(mts.getTransitionProperty(t2).isMust());
+        Assert.assertTrue(mts.getTransitionProperty(t3).isMust());
+        Assert.assertTrue(mts.getTransitionProperty(t4).isMayOnly());
     }
 
     @Test
     void errorMustWithoutPartner() {
-        block1.getTransitionProperty(getSingleTransition(block1, b1s0, 'c', b1s0)).setMust();
-        Assert.assertThrows(IllegalArgumentException.class, () -> Worksets.map(algo));
+        final MTSTransition<MutableModalEdgeProperty> t = getSingleTransition(block1, b1s0, 'c', b1s0);
+        Assert.assertNotNull(t);
+        block1.getTransitionProperty(t).setMust();
+        Assert.assertThrows(IllegalConjunctionException.class, () -> Worksets.map(algo));
     }
 
     @Test
     void errorMustWithoutPartner2() {
-        block1.getTransitionProperty(getSingleTransition(block1, b1s0, 'a', b1s1)).setMust();
-        Assert.assertThrows(IllegalArgumentException.class, () -> Worksets.map(algo));
+        final MTSTransition<MutableModalEdgeProperty> t = getSingleTransition(block1, b1s0, 'a', b1s1);
+        Assert.assertNotNull(t);
+        block1.getTransitionProperty(t).setMust();
+        Assert.assertThrows(IllegalConjunctionException.class, () -> Worksets.map(algo));
     }
 
     @Test
     void reverseRefinement() {
-        block1.getTransitionProperty(getSingleTransition(block1, b1s1, 'b', b1s0)).setMayOnly();
+        final MTSTransition<MutableModalEdgeProperty> t = getSingleTransition(block1, b1s1, 'b', b1s0);
+        Assert.assertNotNull(t);
+        block1.getTransitionProperty(t).setMayOnly();
         // simple execute to check that no exception is thrown
         Worksets.map(algo);
     }
@@ -194,7 +208,7 @@ public class ModalConjunctionTest {
     @Test
     void errorSameTarget() {
         block1.addTransition(b1s0, 'a', b1s1, new ModalEdgePropertyImpl(ModalType.MUST));
-        Assert.assertThrows(IllegalArgumentException.class, () -> Worksets.map(algo));
+        Assert.assertThrows(IllegalConjunctionException.class, () -> Worksets.map(algo));
     }
 
     @Test
@@ -213,7 +227,7 @@ public class ModalConjunctionTest {
         int s1 = block2.addState();
         block2.addModalTransition(s0, 'a', s1, ModalType.MAY);
 
-        Assert.assertThrows(IllegalArgumentException.class, () -> MTSUtil.conjunction(block1, block2));
+        Assert.assertThrows(IllegalConjunctionException.class, () -> MTSUtil.conjunction(block1, block2));
     }
 
     @Test(dataProvider = "randomSource")
@@ -295,10 +309,10 @@ public class ModalConjunctionTest {
         return res;
     }
 
-    private static <S, I, T, TP extends ModalEdgeProperty> T getSingleTransition(ModalTransitionSystem<S, I, T, TP> mts,
-                                                                                 S source,
-                                                                                 I input,
-                                                                                 S target) {
+    private static <S, I, T, TP extends ModalEdgeProperty> @Nullable T getSingleTransition(ModalTransitionSystem<S, I, T, TP> mts,
+                                                                                           S source,
+                                                                                           I input,
+                                                                                           S target) {
 
         final Collection<T> transitions = mts.getTransitions(source, input);
 

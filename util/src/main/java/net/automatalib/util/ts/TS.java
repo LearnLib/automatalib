@@ -15,7 +15,6 @@
  */
 package net.automatalib.util.ts;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.Function;
 
@@ -26,20 +25,11 @@ import net.automatalib.util.ts.iterator.AllDefinedInputsIterator;
 import net.automatalib.util.ts.iterator.AllUndefinedInputsIterator;
 import net.automatalib.util.ts.iterator.DefinedInputsIterator;
 import net.automatalib.util.ts.iterator.UndefinedInputsIterator;
-import net.automatalib.util.ts.traversal.BFSOrderIterator;
 
 @SuppressWarnings("PMD.UseUtilityClass") // we want to allow extending for the 'Automata' class
 public class TS {
 
     protected TS() {}
-
-    public static <S, I> Iterable<S> bfsOrder(TransitionSystem<S, I, ?> ts, Collection<? extends I> inputs) {
-        return () -> bfsOrderIterator(ts, inputs);
-    }
-
-    public static <S, I> Iterator<S> bfsOrderIterator(TransitionSystem<S, I, ?> ts, Collection<? extends I> inputs) {
-        return new BFSOrderIterator<>(ts, inputs);
-    }
 
     public static <S, SP> Function<S, SP> stateProperties(UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
         return uts::getStateProperty;

@@ -397,7 +397,7 @@ public final class LeeYannakakis {
 
             final Integer pendingPartition = partitionToNodeMap.inverse().get(pendingC);
             final Iterator<Integer> iter =
-                    GraphTraversal.bfIterator(implicationGraph, Collections.singleton(pendingPartition));
+                    GraphTraversal.breadthFirstIterator(implicationGraph, Collections.singleton(pendingPartition));
 
             while (iter.hasNext()) {
 
@@ -409,8 +409,7 @@ public final class LeeYannakakis {
                                                                                           implicationGraph.size(),
                                                                                           successor);
                     assert path != null; // by construction should never be null
-                    final Word<I> word =
-                            path.edgeList().stream().map(CompactEdge::getProperty).collect(Word.collector());
+                    final Word<I> word = path.stream().map(CompactEdge::getProperty).collect(Word.collector());
 
                     result.get(Validity.C_VALID).add(Pair.of(word, pendingC));
                     continue pendingCLoop;

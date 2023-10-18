@@ -26,19 +26,19 @@ import net.automatalib.ts.simple.SimpleTS;
 import net.automatalib.util.traversal.VisitedState;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class BFSOrderIterator<S, I> implements Iterator<S> {
+final class BreadthFirstIterator<S, I> implements Iterator<S> {
 
-    private final Collection<? extends I> inputs;
-    private final SimpleTS<S, I> ts;
     private final Queue<S> bfsQueue = new ArrayDeque<>();
     private final MutableMapping<S, @Nullable VisitedState> seen;
+    private final SimpleTS<S, I> ts;
+    private final Collection<? extends I> inputs;
 
-    public BFSOrderIterator(SimpleTS<S, I> ts, Collection<? extends I> inputs) {
+    BreadthFirstIterator(SimpleTS<S, I> ts, Collection<? extends I> inputs) {
         this.ts = ts;
         this.inputs = inputs;
+        seen = ts.createStaticStateMapping();
         Collection<S> initial = ts.getInitialStates();
         bfsQueue.addAll(initial);
-        seen = ts.createStaticStateMapping();
         for (S state : initial) {
             seen.put(state, VisitedState.VISITED);
         }

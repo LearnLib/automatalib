@@ -57,50 +57,45 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements TSTraver
     }
 
     @Override
-    public TSTraversalAction processInitial(S1 state, Holder<S2> outData) {
-        @Nullable S2 s2 = stateMapping.get(state);
+    public TSTraversalAction processInitial(S1 initialState, Holder<S2> holder) {
+        @Nullable S2 s2 = stateMapping.get(initialState);
         if (s2 != null) {
             out.setInitial(s2, true);
             return TSTraversalAction.IGNORE;
-        } else if (!stateFilter.test(state)) {
+        } else if (!stateFilter.test(initialState)) {
             return TSTraversalAction.IGNORE;
         }
 
-        SP2 sp = spMapping.apply(state);
+        SP2 sp = spMapping.apply(initialState);
         s2 = out.addInitialState(sp);
 
-        stateMapping.put(state, s2);
+        stateMapping.put(initialState, s2);
 
-        outData.value = s2;
+        holder.value = s2;
         return TSTraversalAction.EXPLORE;
     }
 
     @Override
-    public boolean startExploration(S1 state, S2 data) {
-        return true;
-    }
-
-    @Override
-    public TSTraversalAction processTransition(S1 source,
+    public TSTraversalAction processTransition(S1 srcState,
                                                S2 source2,
                                                I1 input,
                                                T1 transition,
-                                               S1 succ,
-                                               Holder<S2> outData) {
-        if (!transFilter.apply(source, input, transition)) {
+                                               S1 tgtState,
+                                               Holder<S2> tgtHolder) {
+        if (!transFilter.apply(srcState, input, transition)) {
             return TSTraversalAction.IGNORE;
         }
 
         boolean ignore = false;
 
-        @Nullable S2 succ2 = stateMapping.get(succ);
+        @Nullable S2 succ2 = stateMapping.get(tgtState);
         if (succ2 == null) {
-            if (!stateFilter.test(succ)) {
+            if (!stateFilter.test(tgtState)) {
                 return TSTraversalAction.IGNORE;
             }
-            SP2 sp = spMapping.apply(succ);
+            SP2 sp = spMapping.apply(tgtState);
             succ2 = out.addState(sp);
-            stateMapping.put(succ, succ2);
+            stateMapping.put(tgtState, succ2);
         } else {
             ignore = true;
         }
@@ -109,7 +104,7 @@ public class TSCopyVisitor<S1, I1, T1, S2, I2, T2, SP2, TP2> implements TSTraver
         TP2 tp = tpMapping.apply(transition);
 
         out.addTransition(source2, input2, succ2, tp);
-        outData.value = succ2;
+        tgtHolder.value = succ2;
 
         return ignore ? TSTraversalAction.IGNORE : TSTraversalAction.EXPLORE;
     }

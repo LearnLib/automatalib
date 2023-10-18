@@ -36,6 +36,9 @@ final class BreadthFirstIterator<N, E> implements Iterator<N> {
         this.graph = graph;
         this.visited = graph.createStaticNodeMapping();
         bfsQueue.addAll(start);
+        for (N node : start) {
+            visited.put(node, VisitedState.VISITED);
+        }
     }
 
     @Override

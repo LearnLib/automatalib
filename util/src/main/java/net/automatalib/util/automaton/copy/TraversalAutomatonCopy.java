@@ -37,15 +37,15 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
     private final int limit;
 
     TraversalAutomatonCopy(TraversalOrder traversalOrder,
-                                  int limit,
-                                  TransitionSystem<S1, ? super I1, T1> in,
-                                  Collection<? extends I1> inputs,
-                                  MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-                                  Function<? super I1, ? extends I2> inputsMapping,
-                                  Function<? super S1, ? extends SP2> spMapping,
-                                  Function<? super T1, ? extends TP2> tpMapping,
-                                  Predicate<? super S1> stateFilter,
-                                  TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
+                           int limit,
+                           TransitionSystem<S1, ? super I1, T1> in,
+                           Collection<? extends I1> inputs,
+                           MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
+                           Function<? super I1, ? extends I2> inputsMapping,
+                           Function<? super S1, ? extends SP2> spMapping,
+                           Function<? super T1, ? extends TP2> tpMapping,
+                           Predicate<? super S1> stateFilter,
+                           TransitionPredicate<? super S1, ? super I1, ? super T1> transFilter) {
         super(in, inputs, out, inputsMapping, spMapping, tpMapping, stateFilter, transFilter);
         this.traversalOrder = traversalOrder;
         this.limit = limit;
@@ -57,32 +57,27 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
     }
 
     @Override
-    public TSTraversalAction processInitial(S1 state, Holder<S2> outData) {
-        if (stateFilter.test(state)) {
-            outData.value = copyInitialState(state);
+    public TSTraversalAction processInitial(S1 initialState, Holder<S2> holder) {
+        if (stateFilter.test(initialState)) {
+            holder.value = copyInitialState(initialState);
             return TSTraversalAction.EXPLORE;
         }
         return TSTraversalAction.IGNORE;
     }
 
     @Override
-    public boolean startExploration(S1 state, S2 data) {
-        return true;
-    }
-
-    @Override
-    public TSTraversalAction processTransition(S1 source,
+    public TSTraversalAction processTransition(S1 srcState,
                                                S2 srcData,
                                                I1 input,
                                                T1 transition,
-                                               S1 succ,
-                                               Holder<S2> outData) {
-        if (transFilter.apply(source, input, transition) && stateFilter.test(succ)) {
-            S2 succ2 = copyTransitionChecked(srcData, inputsMapping.apply(input), transition, succ);
+                                               S1 tgtState,
+                                               Holder<S2> tgtHolder) {
+        if (transFilter.apply(srcState, input, transition) && stateFilter.test(tgtState)) {
+            S2 succ2 = copyTransitionChecked(srcData, inputsMapping.apply(input), transition, tgtState);
             if (succ2 == null) {
                 return TSTraversalAction.IGNORE;
             }
-            outData.value = succ2;
+            tgtHolder.value = succ2;
             return TSTraversalAction.EXPLORE;
         }
         return TSTraversalAction.IGNORE;
@@ -97,15 +92,14 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
         }
 
         @Override
-        public <S1, I1, T1, S2, I2, T2, SP2, TP2> LowLevelAutomatonCopier<S1, S2> createLowLevelCopier(
-                Automaton<S1, ? super I1, T1> in,
-                Collection<? extends I1> inputs,
-                MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
-                Function<? super I1, ? extends I2> inputsMapping,
-                Function<? super S1, ? extends SP2> spMapping,
-                Function<? super T1, ? extends TP2> tpMapping,
-                Predicate<? super S1> stateFilter,
-                TransitionPredicate<? super S1, ? super I1, ? super T1> transitionFilter) {
+        public <S1, I1, T1, S2, I2, T2, SP2, TP2> LowLevelAutomatonCopier<S1, S2> createLowLevelCopier(Automaton<S1, ? super I1, T1> in,
+                                                                                                       Collection<? extends I1> inputs,
+                                                                                                       MutableAutomaton<S2, I2, T2, ? super SP2, ? super TP2> out,
+                                                                                                       Function<? super I1, ? extends I2> inputsMapping,
+                                                                                                       Function<? super S1, ? extends SP2> spMapping,
+                                                                                                       Function<? super T1, ? extends TP2> tpMapping,
+                                                                                                       Predicate<? super S1> stateFilter,
+                                                                                                       TransitionPredicate<? super S1, ? super I1, ? super T1> transitionFilter) {
             return new TraversalAutomatonCopy<>(traversalOrder,
                                                 in.size(),
                                                 in,
@@ -121,4 +115,3 @@ final class TraversalAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
     }
 
 }
-

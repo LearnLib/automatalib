@@ -69,7 +69,8 @@ public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTr
     }
 
     private void removeQueries(Node<O> node) {
-        GraphTraversal.bfIterator(this.asGraph(), Collections.singleton(node)).forEachRemaining(nodeToQuery::remove);
+        GraphTraversal.breadthFirstIterator(this.asGraph(), Collections.singleton(node))
+                      .forEachRemaining(nodeToQuery::remove);
     }
 
     private void removeEdge(Node<O> node, I symbol) {

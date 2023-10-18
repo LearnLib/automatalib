@@ -15,10 +15,29 @@
  */
 package net.automatalib.util.ts.traversal;
 
+/**
+ * The type of {@link TSTraversalAction} to be performed.
+ */
 public enum TSTraversalAction {
-    EXPLORE,
+
+    /**
+     * Ignore the current state or transition but continue with the remaining exploration.
+     */
     IGNORE,
+    /**
+     * Explore the respective state or transition.
+     */
+    EXPLORE,
+    /**
+     * Abort the exploration of the current input symbol.
+     */
     ABORT_INPUT,
+    /**
+     * Abort the exploration of the current state.
+     */
     ABORT_STATE,
+    /**
+     * Abort the traversal of the whole graph.
+     */
     ABORT_TRAVERSAL
 }

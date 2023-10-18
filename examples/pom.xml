@@ -99,6 +99,12 @@ limitations under the License.
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
+        <!-- build -->
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+        </dependency>
+
         <!-- test -->
         <dependency>
             <groupId>com.github.caciocavallosilano</groupId>

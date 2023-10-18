@@ -18,17 +18,29 @@ package net.automatalib.example.graph;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.automatalib.common.util.Holder;
+import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.IndefiniteGraph;
 import net.automatalib.graph.base.compact.CompactEdge;
 import net.automatalib.graph.base.compact.CompactSimpleGraph;
-import net.automatalib.util.graph.traversal.BaseDFSVisitor;
 import net.automatalib.util.graph.traversal.GraphTraversal;
+import net.automatalib.util.graph.traversal.GraphTraversalAction;
+import net.automatalib.util.graph.traversal.GraphTraversalVisitor;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper.EdgeStyles;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A small example of a {@link GraphTraversal graph traversal} that uses a custom {@link GraphTraversalVisitor} to
+ * generate some visualization properties based on the order in which nodes and edges are discovered.
+ */
 public final class DFSExample {
 
-    private DFSExample() {}
+    private DFSExample() {
+        // prevent instantiation
+    }
 
     public static void main(String[] args) {
         CompactSimpleGraph<Void> graph = new CompactSimpleGraph<>();
@@ -46,14 +58,14 @@ public final class DFSExample {
         graph.connect(n0, n4);
         graph.connect(n4, n3);
 
-        MyDFSVisitor<Integer, CompactEdge<Void>> vis = new MyDFSVisitor<>();
-        GraphTraversal.dfs(graph, n0, vis);
+        MyDFSVisitor<Integer, CompactEdge<Void>> vis = new MyDFSVisitor<>(graph);
+        GraphTraversal.depthFirst(graph, n0, vis);
         DFSResultDOTHelper<Integer, CompactEdge<Void>> helper = new DFSResultDOTHelper<>(vis);
 
         Visualization.visualize(graph, helper);
     }
 
-    public enum EdgeType {
+    enum EdgeType {
         TREE(EdgeStyles.BOLD),
         FORWARD(EdgeStyles.DOTTED),
         BACK(EdgeStyles.SOLID),
@@ -65,71 +77,101 @@ public final class DFSExample {
             this.style = style;
         }
 
-        public String getStyle() {
+        String getStyle() {
             return style;
         }
     }
 
-    public static class MyDFSVisitor<N, E> extends BaseDFSVisitor<N, E, Void> {
+    static class MyDFSVisitor<N, E> implements GraphTraversalVisitor<N, E, DFSData> {
 
-        private final Map<N, Integer> dfsNumbers = new HashMap<>();
-        private final Map<E, EdgeType> edgeTypes = new HashMap<>();
+        private final MutableMapping<N, @Nullable DFSData> records;
+        private final Map<E, EdgeType> edgeTypes;
+        private int dfsNum;
 
-        @Override
-        public void explore(N node, Void data) {
-            dfsNumbers.put(node, dfsNumbers.size());
+        MyDFSVisitor(IndefiniteGraph<N, E> graph) {
+            this.records = graph.createStaticNodeMapping();
+            this.edgeTypes = new HashMap<>();
         }
 
         @Override
-        public Void treeEdge(N srcNode, Void srcData, E edge, N tgtNode) {
-            edgeTypes.put(edge, EdgeType.TREE);
-            return null;
+        public GraphTraversalAction processInitial(N initialNode, Holder<DFSData> holder) {
+            final DFSData rec = new DFSData(dfsNum++);
+            records.put(initialNode, rec);
+            holder.value = rec;
+            return GraphTraversalAction.EXPLORE;
         }
 
         @Override
-        public void backEdge(N srcNode, Void srcData, E edge, N tgtNode, Void tgtData) {
-            edgeTypes.put(edge, EdgeType.BACK);
+        public void finishExploration(N node, DFSData data) {
+            data.finished = true;
         }
 
         @Override
-        public void crossEdge(N srcNode, Void srcData, E edge, N tgtNode, Void tgtData) {
-            edgeTypes.put(edge, EdgeType.CROSS);
+        public GraphTraversalAction processEdge(N srcNode,
+                                                DFSData srcData,
+                                                E edge,
+                                                N tgtNode,
+                                                Holder<DFSData> tgtHolder) {
+            DFSData tgtRec = records.get(tgtNode);
+            if (tgtRec == null) {
+                edgeTypes.put(edge, EdgeType.TREE);
+                tgtRec = new DFSData(dfsNum++);
+                records.put(tgtNode, tgtRec);
+
+                tgtHolder.value = tgtRec;
+                return GraphTraversalAction.EXPLORE;
+            }
+            if (!tgtRec.finished) {
+                edgeTypes.put(edge, EdgeType.BACK);
+            } else if (tgtRec.dfsNumber > srcData.dfsNumber) {
+                edgeTypes.put(edge, EdgeType.FORWARD);
+            } else {
+                edgeTypes.put(edge, EdgeType.CROSS);
+            }
+
+            return GraphTraversalAction.IGNORE;
         }
 
-        @Override
-        public void forwardEdge(N srcNode, Void srcData, E edge, N tgtNode, Void tgtData) {
-            edgeTypes.put(edge, EdgeType.FORWARD);
+        Mapping<N, @Nullable DFSData> getRecords() {
+            return records;
         }
 
-        public Map<N, Integer> getDfsNumbers() {
-            return dfsNumbers;
-        }
-
-        public Map<E, EdgeType> getEdgeTypes() {
+        Map<E, EdgeType> getEdgeTypes() {
             return edgeTypes;
         }
     }
 
-    public static class DFSResultDOTHelper<N, E> implements VisualizationHelper<N, E> {
+    static class DFSData {
 
-        private final Map<N, Integer> dfsNumbers;
+        final int dfsNumber;
+        boolean finished;
+
+        DFSData(int dfsNumber) {
+            this.dfsNumber = dfsNumber;
+            this.finished = false;
+        }
+    }
+
+    static class DFSResultDOTHelper<N, E> implements VisualizationHelper<N, E> {
+
+        private final Mapping<N, @Nullable DFSData> records;
         private final Map<E, EdgeType> edgeTypes;
 
-        public DFSResultDOTHelper(MyDFSVisitor<N, E> vis) {
-            this(vis.getDfsNumbers(), vis.getEdgeTypes());
+        DFSResultDOTHelper(MyDFSVisitor<N, E> vis) {
+            this(vis.getRecords(), vis.getEdgeTypes());
         }
 
-        public DFSResultDOTHelper(Map<N, Integer> dfsNumbers, Map<E, EdgeType> edgeTypes) {
-            this.dfsNumbers = dfsNumbers;
+        DFSResultDOTHelper(Mapping<N, @Nullable DFSData> records, Map<E, EdgeType> edgeTypes) {
+            this.records = records;
             this.edgeTypes = edgeTypes;
         }
 
         @Override
         public boolean getNodeProperties(N node, Map<String, String> properties) {
             String lbl = properties.get(NodeAttrs.LABEL);
-            Integer dfsNum = dfsNumbers.get(node);
-            assert dfsNum != null;
-            properties.put(NodeAttrs.LABEL, lbl + " [#" + dfsNum + "]");
+            DFSData record = records.get(node);
+            assert record != null;
+            properties.put(NodeAttrs.LABEL, lbl + " [#" + record.dfsNumber + "]");
             return true;
         }
 

@@ -157,7 +157,7 @@ public abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<
         @Override
         public Collection<N> getNodes() {
             List<N> result = new ArrayList<>();
-            Iterators.addAll(result, GraphTraversal.dfIterator(this, Collections.singleton(root)));
+            Iterators.addAll(result, GraphTraversal.depthFirstIterator(this, Collections.singleton(root)));
             return result;
         }
 

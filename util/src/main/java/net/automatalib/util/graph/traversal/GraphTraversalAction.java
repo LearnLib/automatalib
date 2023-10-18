@@ -20,9 +20,12 @@ package net.automatalib.util.graph.traversal;
  */
 public enum GraphTraversalAction {
 
+    /**
+     * Ignore the current node or edge but continue with the remaining exploration.
+     */
     IGNORE,
     /**
-     * Explore the respective node (in this case, the user data is regarded).
+     * Explore the respective node or edge.
      */
     EXPLORE,
     /**

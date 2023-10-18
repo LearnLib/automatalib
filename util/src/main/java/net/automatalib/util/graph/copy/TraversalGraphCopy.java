@@ -53,30 +53,19 @@ final class TraversalGraphCopy<N1, E1, N2, E2, NP2, EP2>
     }
 
     @Override
-    public GraphTraversalAction processInitial(N1 initialNode, Holder<N2> outData) {
-        outData.value = copyNode(initialNode);
+    public GraphTraversalAction processInitial(N1 initialNode, Holder<N2> holder) {
+        holder.value = copyNode(initialNode);
         return GraphTraversalAction.EXPLORE;
     }
 
     @Override
-    public boolean startExploration(N1 node, N2 data) {
-        return true;
-    }
-
-    @Override
-    public void finishExploration(N1 node, N2 data) {}
-
-    @Override
-    public GraphTraversalAction processEdge(N1 srcNode, N2 srcData, E1 edge, N1 tgtNode, Holder<N2> outData) {
+    public GraphTraversalAction processEdge(N1 srcNode, N2 srcData, E1 edge, N1 tgtNode, Holder<N2> tgtHolder) {
         N2 freshTgt = copyEdgeChecked(srcData, edge, tgtNode);
         if (freshTgt != null) {
-            outData.value = freshTgt;
+            tgtHolder.value = freshTgt;
             return GraphTraversalAction.EXPLORE;
         }
         return GraphTraversalAction.IGNORE;
     }
-
-    @Override
-    public void backtrackEdge(N1 srcNode, N2 srcData, E1 edge, N1 tgtNode, N2 tgtData) {}
 
 }

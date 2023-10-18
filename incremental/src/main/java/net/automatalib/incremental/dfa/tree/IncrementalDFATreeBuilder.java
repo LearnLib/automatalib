@@ -214,7 +214,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         @Override
         public Collection<Node<I>> getNodes() {
             List<Node<I>> result = new ArrayList<>();
-            Iterators.addAll(result, GraphTraversal.dfIterator(this, Collections.singleton(root)));
+            Iterators.addAll(result, GraphTraversal.depthFirstIterator(this, Collections.singleton(root)));
             return result;
         }
 

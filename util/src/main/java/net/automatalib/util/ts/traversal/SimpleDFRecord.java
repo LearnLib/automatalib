@@ -37,6 +37,10 @@ class SimpleDFRecord<S, I, T> {
         this.inputsIterator = inputs.iterator();
     }
 
+    public final boolean wasStarted() {
+        return transitionIterator != null;
+    }
+
     public boolean start(TransitionSystem<S, ? super I, T> ts) {
         if (transitionIterator != null) {
             return false;

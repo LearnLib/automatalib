@@ -63,7 +63,7 @@ public interface SSSPResult<N, E> {
 
     /**
      * Retrieves the incoming edge via which the given node is reached on the shortest path. If the node is not
-     * reachable or it is the initial node, {@code null} is returned.
+     * reachable, or it is the initial node, {@code null} is returned.
      *
      * @param target
      *         the target node

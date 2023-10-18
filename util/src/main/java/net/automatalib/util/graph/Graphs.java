@@ -18,13 +18,11 @@ package net.automatalib.util.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Predicate;
 
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.BidirectionalGraph;
 import net.automatalib.graph.Graph;
-import net.automatalib.graph.IndefiniteGraph;
 import net.automatalib.graph.concept.EdgeWeights;
 import net.automatalib.util.graph.apsp.APSPResult;
 import net.automatalib.util.graph.apsp.FloydWarshallAPSP;
@@ -67,20 +65,6 @@ public final class Graphs {
         }
 
         return inEdgesMapping;
-    }
-
-    public static <N, E> @Nullable Path<N, E> findShortestPath(IndefiniteGraph<N, E> graph,
-                                                               int limit,
-                                                               N start,
-                                                               Collection<? extends N> targets) {
-        return ShortestPaths.shortestPath(graph, start, limit, targets);
-    }
-
-    public static <N, E> @Nullable Path<N, E> findShortestPath(IndefiniteGraph<N, E> graph,
-                                                               int limit,
-                                                               N start,
-                                                               Predicate<? super N> targetPred) {
-        return ShortestPaths.shortestPath(graph, start, limit, targetPred);
     }
 
     /**

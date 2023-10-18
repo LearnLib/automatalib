@@ -17,13 +17,42 @@ package net.automatalib.util.ts.traversal;
 
 import java.util.Collection;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public class DFRecord<S, I, T, D> extends SimpleDFRecord<S, I, T> {
 
     public final D data;
+    private @Nullable LastTransition<S, I, T, D> lastTransition;
 
     public DFRecord(S state, Collection<? extends I> inputs, D data) {
         super(state, inputs);
         this.data = data;
+    }
+
+    public @Nullable LastTransition<S, I, T, D> getLastTransition() {
+        LastTransition<S, I, T, D> result = lastTransition;
+        lastTransition = null;
+        return result;
+    }
+
+    public void setLastTransition(I input, T transition, S targetState, D tgtData) {
+        assert lastTransition == null;
+        lastTransition = new LastTransition<>(input, transition, targetState, tgtData);
+    }
+
+    public static class LastTransition<S, I, T, D> {
+
+        public final I input;
+        public final T transition;
+        public final S state;
+        public final D data;
+
+        LastTransition(I input, T transition, S state, D data) {
+            this.input = input;
+            this.transition = transition;
+            this.state = state;
+            this.data = data;
+        }
     }
 
 }

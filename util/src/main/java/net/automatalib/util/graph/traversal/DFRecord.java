@@ -17,9 +17,9 @@ package net.automatalib.util.graph.traversal;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
+final class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
 
-    public final D data;
+    final D data;
     private @Nullable LastEdge<E, N, D> lastEdge;
 
     DFRecord(N node, D data) {
@@ -27,22 +27,18 @@ class DFRecord<N, E, D> extends SimpleDFRecord<N, E> {
         this.data = data;
     }
 
-    public D getData() {
-        return data;
-    }
-
-    public @Nullable LastEdge<E, N, D> getLastEdge() {
+    @Nullable LastEdge<E, N, D> getLastEdge() {
         LastEdge<E, N, D> result = lastEdge;
         lastEdge = null;
         return result;
     }
 
-    public void setLastEdge(E edge, N tgtNode, D tgtData) {
+    void setLastEdge(E edge, N tgtNode, D tgtData) {
         assert lastEdge == null;
         lastEdge = new LastEdge<>(edge, tgtNode, tgtData);
     }
 
-    public static class LastEdge<E, N, D> {
+    static final class LastEdge<E, N, D> {
 
         public final E edge;
         public final N node;

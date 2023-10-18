@@ -69,8 +69,8 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
     }
 
     @Override
-    public GraphTraversalAction processInitial(N initialNode, Holder<TarjanSCCRecord> outData) {
-        outData.value = createRecord();
+    public GraphTraversalAction processInitial(N initialNode, Holder<TarjanSCCRecord> holder) {
+        holder.value = createRecord();
         return GraphTraversalAction.EXPLORE;
     }
 
@@ -111,11 +111,11 @@ public class TarjanSCCVisitor<N, E> implements GraphTraversalVisitor<N, E, Tarja
                                             TarjanSCCRecord srcData,
                                             E edge,
                                             N tgtNode,
-                                            Holder<TarjanSCCRecord> dataHolder) {
+                                            Holder<TarjanSCCRecord> tgtHolder) {
         TarjanSCCRecord rec = records.get(tgtNode);
         if (rec == null) {
             rec = createRecord();
-            dataHolder.value = rec;
+            tgtHolder.value = rec;
             return GraphTraversalAction.EXPLORE;
         }
 

@@ -45,12 +45,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     * `net.automatalib.graphs.base.compact.AbstractCompactGraph#getNodeProperties(int)` -> `net.automatalib.graph.base.compact.AbstractCompactGraph#getNodeProperty(int)`.
     * `net.automatalib.graphs.FiniteKTS` -> `net.automatalib.ts.FiniteKTS` and `FiniteKTS` no longer extends the `Graph` interface but the `Automaton` interface and has its type variables re-ordered.
     * `net.automatalib.graphs.FiniteLTS` -> `net.automatalib.graph.FiniteLabeledGraph`.
+    * `GraphTraversal#dfIterator` -> `GraphTraversal#depthFirstIterator`.
     * moved the package `net.automatalib.ts.comp` to `net.automatalib.util.ts.comp` in the `automata-util` module.
+    * moved `TS#bfs{Order,Iterator}` to `TSTraversal#breadthFirst{Order,Iterator}`.
 * AutomataLib classes no longer implement `Serializable`. We never fully supported the semantics of the interface and never intended to do so. In fact, the old approach failed miserably if any class was involved where we missed an "implements Serializable" statement. In order to prevent confusion by promising false contracts, implementing this markup interface has been removed. Serialization should now be done in user-land via one of the many external (and more optimizable) serialization frameworks such as FST, XStream, etc.
 * `Minimizer` no longer provides a `getInstance()` method but can be instantiated directly.
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.
 * `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.
 * `Symbol` now has a type-safe user object and id-based `hashcode`/`equals` semantics.
+* `ShortestPaths` now offers fewer but less confusing methods. Previously there were methods such as `shortestPath` that took an initial node and multiple target nodes which much better fits to the idea of computing `shortestPath*s*` rather than any shortest path to one of the target nodes. The old behavior can still be replicated with the generic `Predicate`-based versions.
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
 * `StrictPriorityQueue` is now package-private as it is only meant for internal use.
 
@@ -66,11 +69,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed the (package-private) classes `net.automatalib.util.automata.predicates.{AcceptanceStatePredicate,OutputSatisfies,TransitionPropertySatisfies}`.
 * Removed `net.automatalib.graphs.IndefiniteLTS.java`. By naming, this class should denote a `TransitionSystem` and not a `Graph` structure. However, since `TransitionSystem`s are inherently labeled, this class serves no more real purpose. To re-establish the previous functionality, simply implement `Graph` and `EdgeLabels`.
 * Removed (unused) `SuffixTrie` class without replacement. Similar functionality can be achieved with AutomataLib's incremental module.
+* Removed (unused) `DisjointSetForestInt` class without replacement.
 * Removed non-static methods on `RandomAutomata` factory (including the `getInstance()` method).
 * Removed `AbstractCompactNPGraph`, use `AbstractCompactGraph` instead.
 * Removed `AbstractCompactSimpleGraph`. All functionality is provided in `CompactSimpleGraph`.
 * Removed `CmpUtil#safeComparator`. Use `Comparators#nullsFirst` or `Comparators#nullsLast` instead.
 * Removed `Iterable`- and `Iterator`-based methods for adjacent nodes/edges on graphs. For lazy/indefinite fetching use the `Stream`-based methods, for complete fetching use the `Collection`-based methods.
+* Removed the DFS-specific `DFSTraversalVisitor` (and related classes) without replacement. Client-code that relied on this class can re-implement the functionality by providing an own implementation of the more general `GraphTraversalVisitor`. See the changes on the `DFSExample` for reference.
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
 
 

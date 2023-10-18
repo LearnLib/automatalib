@@ -32,14 +32,18 @@ import net.automatalib.common.util.Holder;
 public interface GraphTraversalVisitor<N, E, D> {
 
     /**
-     * Called when a node is processed <i>initially</i>.
+     * Called when the initial nodes (as passed to the traversal method) are processed.
      *
      * @param initialNode
      *         the node that is processed
+     * @param holder
+     *         a writable reference whose (node-specific) data is passed to the corresponding methods during traversal
      *
      * @return the action to perform
      */
-    GraphTraversalAction processInitial(N initialNode, Holder<D> outData);
+    default GraphTraversalAction processInitial(N initialNode, Holder<D> holder) {
+        return GraphTraversalAction.EXPLORE;
+    }
 
     /**
      * Called when the exploration of a node is started.
@@ -49,19 +53,11 @@ public interface GraphTraversalVisitor<N, E, D> {
      * @param data
      *         the user data associated with this node
      *
-     * @return the action to perform
+     * @return {@code true}, if the node should be explored, {@code false} otherwise
      */
-    boolean startExploration(N node, D data);
-
-    /**
-     * Called when the exploration of a node is finished.
-     *
-     * @param node
-     *         the node whose exploration is being finished
-     * @param inData
-     *         the user data associated with this node
-     */
-    void finishExploration(N node, D inData);
+    default boolean startExploration(N node, D data) {
+        return true;
+    }
 
     /**
      * Called when an edge is processed.
@@ -72,10 +68,40 @@ public interface GraphTraversalVisitor<N, E, D> {
      *         the user data associated with the source node
      * @param edge
      *         the edge that is being processed
+     * @param tgtNode
+     *         the target node
+     * @param tgtHolder
+     *         a writable reference to provide user data that should be associated with the target node
      *
      * @return the action to perform
      */
-    GraphTraversalAction processEdge(N srcNode, D srcData, E edge, N tgtNode, Holder<D> outData);
+    default GraphTraversalAction processEdge(N srcNode, D srcData, E edge, N tgtNode, Holder<D> tgtHolder) {
+        return GraphTraversalAction.EXPLORE;
+    }
 
-    void backtrackEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData);
+    /**
+     * Called when an edge is backtracked. This typically happens only in depth-first style traversals.
+     *
+     * @param srcNode
+     *         the source node
+     * @param srcData
+     *         the user data associated with the source node
+     * @param edge
+     *         the edge that is being processed
+     * @param tgtNode
+     *         the target node
+     * @param tgtData
+     *         the user data associated with the target node
+     */
+    default void backtrackEdge(N srcNode, D srcData, E edge, N tgtNode, D tgtData) {}
+
+    /**
+     * Called when the exploration of a node is finished.
+     *
+     * @param node
+     *         the node whose exploration is being finished
+     * @param data
+     *         the user data associated with this node
+     */
+    default void finishExploration(N node, D data) {}
 }

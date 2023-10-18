@@ -30,167 +30,111 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public final class GraphTraversal {
 
-    private GraphTraversal() {} // prevent inheritance
+    public static final int NO_LIMIT = -1;
 
-    public static <N, E, D> boolean traverse(TraversalOrder order,
-                                             IndefiniteGraph<N, E> graph,
-                                             int limit,
-                                             N initialNode,
-                                             GraphTraversalVisitor<N, E, D> vis) {
-        return traverse(order, graph, limit, Collections.singleton(initialNode), vis);
+    private GraphTraversal() {
+        // prevent inheritance
     }
 
-    public static <N, E, D> boolean traverse(TraversalOrder order,
-                                             IndefiniteGraph<N, E> graph,
-                                             int limit,
-                                             Collection<? extends N> initialNodes,
-                                             GraphTraversalVisitor<N, E, D> vis) {
-        switch (order) {
-            case BREADTH_FIRST:
-                return breadthFirst(graph, limit, initialNodes, vis);
-            case DEPTH_FIRST:
-                return depthFirst(graph, limit, initialNodes, vis);
-            default:
-                throw new IllegalArgumentException("Unknown traversal order " + order);
-        }
+    /**
+     * Traverses the given graph in a breadth-first fashion. The traversal is steered by the specified visitor.
+     *
+     * @param graph
+     *         the graph
+     * @param initialNode
+     *         the node from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     */
+    public static <N, E, D> void breadthFirst(IndefiniteGraph<N, E> graph,
+                                              N initialNode,
+                                              GraphTraversalVisitor<N, E, D> visitor) {
+        breadthFirst(graph, NO_LIMIT, initialNode, visitor);
     }
 
-    public static <N, E, D> boolean traverse(TraversalOrder order,
-                                             IndefiniteGraph<N, E> graph,
-                                             N initialNode,
-                                             GraphTraversalVisitor<N, E, D> vis) {
-        return traverse(order, graph, Collections.singleton(initialNode), vis);
+    /**
+     * Traverses the given graph in a breadth-first fashion. The traversal is steered by the specified visitor.
+     *
+     * @param graph
+     *         the graph
+     * @param initialNodes
+     *         the nodes from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     */
+    public static <N, E, D> void breadthFirst(IndefiniteGraph<N, E> graph,
+                                              Collection<? extends N> initialNodes,
+                                              GraphTraversalVisitor<N, E, D> visitor) {
+        breadthFirst(graph, NO_LIMIT, initialNodes, visitor);
     }
 
-    public static <N, E, D> boolean traverse(TraversalOrder order,
-                                             IndefiniteGraph<N, E> graph,
-                                             Collection<? extends N> initialNodes,
-                                             GraphTraversalVisitor<N, E, D> vis) {
-        return traverse(order, graph, -1, initialNodes, vis);
+    /**
+     * Traverses the given graph in a breadth-first fashion. The traversal is steered by the specified visitor.
+     *
+     * @param graph
+     *         the graph
+     * @param limit
+     *         the upper bound on the number of nodes to be visited
+     * @param initialNode
+     *         the node from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     *
+     * @return {@code false} if the number of explored nodes reached {@code limit}, {@code true} otherwise
+     */
+    public static <N, E, D> boolean breadthFirst(IndefiniteGraph<N, E> graph,
+                                                 int limit,
+                                                 N initialNode,
+                                                 GraphTraversalVisitor<N, E, D> visitor) {
+        return breadthFirst(graph, limit, Collections.singleton(initialNode), visitor);
     }
 
-    public static <N, E, D> boolean depthFirst(IndefiniteGraph<N, E> graph,
-                                               int limit,
-                                               Collection<? extends N> initialNodes,
-                                               GraphTraversalVisitor<N, E, D> vis) {
-
-        // setting the following to false means that the traversal had to be aborted
-        // due to reaching the limit
-        boolean complete = true;
-
-        int nodeCount = 0;
-
-        Deque<DFRecord<N, E, D>> dfsStack = new ArrayDeque<>();
-
-        Holder<D> dataHolder = new Holder<>();
-
-        for (N init : initialNodes) {
-
-            dataHolder.value = null;
-            GraphTraversalAction act = vis.processInitial(init, dataHolder);
-
-            switch (act) {
-                case IGNORE:
-                case ABORT_NODE:
-                    continue;
-                case ABORT_TRAVERSAL:
-                    return complete;
-                case EXPLORE:
-                    if (nodeCount != limit) {
-                        dfsStack.push(new DFRecord<>(init, dataHolder.value));
-                        nodeCount++;
-                    } else {
-                        complete = false;
-                    }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown action " + act);
-            }
-        }
-
-        while (!dfsStack.isEmpty()) {
-            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
-            @NonNull DFRecord<N, E, D> current = dfsStack.peek();
-
-            N currNode = current.node;
-            D currData = current.data;
-
-            if (current.start(graph) && !vis.startExploration(currNode, currData)) {
-                dfsStack.pop();
-                continue;
-            }
-
-            LastEdge<E, N, D> lastEdge = current.getLastEdge();
-            if (lastEdge != null) {
-                vis.backtrackEdge(currNode, currData, lastEdge.edge, lastEdge.node, lastEdge.data);
-            }
-
-            if (!current.hasNextEdge()) {
-                dfsStack.pop();
-                vis.finishExploration(currNode, currData);
-                continue;
-            }
-
-            E edge = current.nextEdge();
-
-            N tgt = graph.getTarget(edge);
-
-            GraphTraversalAction act = vis.processEdge(currNode, currData, edge, tgt, dataHolder);
-
-            switch (act) {
-                case IGNORE:
-                    continue;
-                case ABORT_NODE:
-                    dfsStack.pop();
-                    continue;
-                case ABORT_TRAVERSAL:
-                    return complete;
-                case EXPLORE:
-                    if (nodeCount != limit) {
-                        D data = dataHolder.value;
-                        current.setLastEdge(edge, tgt, data);
-                        dfsStack.push(new DFRecord<>(tgt, data));
-                        nodeCount++;
-                    } else {
-                        complete = false;
-                    }
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown action " + act);
-            }
-        }
-
-        return complete;
-    }
-
-    public static <N, E, D> boolean depthFirst(IndefiniteGraph<N, E> graph,
-                                               N initNode,
-                                               GraphTraversalVisitor<N, E, D> vis) {
-        return depthFirst(graph, Collections.singleton(initNode), vis);
-    }
-
-    public static <N, E, D> boolean depthFirst(IndefiniteGraph<N, E> graph,
-                                               int limit,
-                                               N initNode,
-                                               GraphTraversalVisitor<N, E, D> vis) {
-        return depthFirst(graph, limit, Collections.singleton(initNode), vis);
-    }
-
-    public static <N, E, D> boolean depthFirst(IndefiniteGraph<N, E> graph,
-                                               Collection<? extends N> initialNodes,
-                                               GraphTraversalVisitor<N, E, D> vis) {
-        return depthFirst(graph, -1, initialNodes, vis);
-    }
-
+    /**
+     * Traverses the given graph in a breadth-first fashion. The traversal is steered by the specified visitor.
+     *
+     * @param graph
+     *         the graph
+     * @param limit
+     *         the upper bound on the number of nodes to be visited
+     * @param initialNodes
+     *         the nodes from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     *
+     * @return {@code false} if the number of explored nodes reached {@code limit}, {@code true} otherwise
+     */
     public static <N, E, D> boolean breadthFirst(IndefiniteGraph<N, E> graph,
                                                  int limit,
                                                  Collection<? extends N> initialNodes,
-                                                 GraphTraversalVisitor<N, E, D> vis) {
+                                                 GraphTraversalVisitor<N, E, D> visitor) {
 
         Queue<BFRecord<N, D>> bfsQueue = new ArrayDeque<>();
 
-        // setting the following to false means that the traversal had to be aborted
-        // due to reaching the limit
+        // setting the following to false means that the traversal had to be aborted due to reaching the limit
         boolean complete = true;
         int nodeCount = 0;
 
@@ -198,7 +142,7 @@ public final class GraphTraversal {
 
         for (N init : initialNodes) {
             dataHolder.value = null;
-            GraphTraversalAction act = vis.processInitial(init, dataHolder);
+            GraphTraversalAction act = visitor.processInitial(init, dataHolder);
 
             switch (act) {
                 case IGNORE:
@@ -227,7 +171,7 @@ public final class GraphTraversal {
             N currNode = current.node;
             D currData = current.data;
 
-            if (!vis.startExploration(currNode, currData)) {
+            if (!visitor.startExploration(currNode, currData)) {
                 continue;
             }
 
@@ -238,7 +182,7 @@ public final class GraphTraversal {
                 N tgtNode = graph.getTarget(edge);
 
                 dataHolder.value = null;
-                GraphTraversalAction act = vis.processEdge(currNode, currData, edge, tgtNode, dataHolder);
+                GraphTraversalAction act = visitor.processEdge(currNode, currData, edge, tgtNode, dataHolder);
 
                 switch (act) {
                     case IGNORE:
@@ -260,67 +204,378 @@ public final class GraphTraversal {
                 }
             }
 
-            vis.finishExploration(currNode, currData);
+            visitor.finishExploration(currNode, currData);
         }
 
         return complete;
     }
 
-    public static <N, E, D> boolean breadthFirst(IndefiniteGraph<N, E> graph,
-                                                 int limit,
-                                                 N initialNode,
-                                                 GraphTraversalVisitor<N, E, D> visitor) {
-        return breadthFirst(graph, limit, Collections.singleton(initialNode), visitor);
-    }
-
-    public static <N, E, D> boolean breadthFirst(IndefiniteGraph<N, E> graph,
-                                                 Collection<? extends N> initialNodes,
-                                                 GraphTraversalVisitor<N, E, D> visitor) {
-        return breadthFirst(graph, -1, initialNodes, visitor);
-    }
-
-    public static <N, E, D> boolean breadthFirst(IndefiniteGraph<N, E> graph,
-                                                 N initialNode,
-                                                 GraphTraversalVisitor<N, E, D> visitor) {
-        return breadthFirst(graph, Collections.singleton(initialNode), visitor);
-    }
-
-    public static <N, E, D> boolean dfs(IndefiniteGraph<N, E> graph,
-                                        N initialNode,
-                                        DFSVisitor<? super N, ? super E, D> visitor) {
-        return dfs(graph, Collections.singleton(initialNode), visitor);
-    }
-
-    public static <N, E, D> boolean dfs(IndefiniteGraph<N, E> graph,
-                                        int limit,
-                                        Collection<? extends N> initialNodes,
-                                        DFSVisitor<? super N, ? super E, D> visitor) {
-        GraphTraversalVisitor<N, E, DFSData<D>> traversalVisitor = new DFSTraversalVisitor<>(graph, visitor);
-        return depthFirst(graph, limit, initialNodes, traversalVisitor);
-    }
-
-    public static <N, E, D> boolean dfs(IndefiniteGraph<N, E> graph,
-                                        Collection<? extends N> initialNodes,
-                                        DFSVisitor<? super N, ? super E, D> visitor) {
-        return dfs(graph, -1, initialNodes, visitor);
-    }
-
+    /**
+     * Returns an {@link Iterable} for the (reachable) nodes of the given graph in breadth-first order.
+     *
+     * @param graph
+     *         the graph
+     * @param start
+     *         the nodes from which the traversal should start
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     *
+     * @return an {@link Iterable} for the (reachable) nodes of the given graph in breadth-first order
+     */
     public static <N, E> Iterable<N> breadthFirstOrder(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {
-
-        return () -> bfIterator(graph, start);
+        return () -> breadthFirstIterator(graph, start);
     }
 
-    public static <N, E> Iterator<N> bfIterator(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {
+    /**
+     * Returns an {@link Iterator} for the (reachable) nodes of the given graph in breadth-first order.
+     *
+     * @param graph
+     *         the graph
+     * @param start
+     *         the nodes from which the traversal should start
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     *
+     * @return an {@link Iterator} for the (reachable) nodes of the given graph in breadth-first order
+     */
+    public static <N, E> Iterator<N> breadthFirstIterator(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {
         return new BreadthFirstIterator<>(graph, start);
     }
 
-    public static <N, E> Iterable<N> depthFirstOrder(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {
-
-        return () -> dfIterator(graph, start);
+    /**
+     * Traverses the given graph in a depth-first fashion. The traversal is steered by the specified visitor.
+     *
+     * @param graph
+     *         the graph
+     * @param initialNode
+     *         the node from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     */
+    public static <N, E, D> void depthFirst(IndefiniteGraph<N, E> graph,
+                                            N initialNode,
+                                            GraphTraversalVisitor<N, E, D> visitor) {
+        depthFirst(graph, NO_LIMIT, initialNode, visitor);
     }
 
-    public static <N, E> Iterator<N> dfIterator(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {
+    /**
+     * Traverses the given graph in a depth-first fashion. The traversal is steered by the specified visitor.
+     *
+     * @param graph
+     *         the graph
+     * @param initialNodes
+     *         the nodes from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     */
+    public static <N, E, D> void depthFirst(IndefiniteGraph<N, E> graph,
+                                            Collection<? extends N> initialNodes,
+                                            GraphTraversalVisitor<N, E, D> visitor) {
+        depthFirst(graph, NO_LIMIT, initialNodes, visitor);
+    }
+
+    /**
+     * Traverses the given graph in a depth-first fashion. The traversal is steered by the specified visitor.
+     *
+     * @param graph
+     *         the graph
+     * @param limit
+     *         the upper bound on the number of nodes to be visited
+     * @param initialNode
+     *         the node from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     *
+     * @return {@code false} if the number of explored nodes reached {@code limit}, {@code true} otherwise
+     */
+    public static <N, E, D> boolean depthFirst(IndefiniteGraph<N, E> graph,
+                                               int limit,
+                                               N initialNode,
+                                               GraphTraversalVisitor<N, E, D> visitor) {
+        return depthFirst(graph, limit, Collections.singleton(initialNode), visitor);
+    }
+
+    /**
+     * Traverses the given graph in a breadth-first fashion. The traversal is steered by the specified visitor.
+     *
+     * @param graph
+     *         the graph
+     * @param limit
+     *         the upper bound on the number of nodes to be visited
+     * @param initialNodes
+     *         the nodes from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     *
+     * @return {@code false} if the number of explored nodes reached {@code limit}, {@code true} otherwise
+     */
+    public static <N, E, D> boolean depthFirst(IndefiniteGraph<N, E> graph,
+                                               int limit,
+                                               Collection<? extends N> initialNodes,
+                                               GraphTraversalVisitor<N, E, D> visitor) {
+
+        Deque<DFRecord<N, E, D>> dfsStack = new ArrayDeque<>();
+        Holder<D> dataHolder = new Holder<>();
+
+        // setting the following to false means that the traversal had to be aborted due to reaching the limit
+        boolean complete = true;
+        int nodeCount = 0;
+
+        for (N init : initialNodes) {
+            dataHolder.value = null;
+            GraphTraversalAction act = visitor.processInitial(init, dataHolder);
+
+            switch (act) {
+                case IGNORE:
+                case ABORT_NODE:
+                    continue;
+                case ABORT_TRAVERSAL:
+                    return complete;
+                case EXPLORE:
+                    if (nodeCount != limit) {
+                        dfsStack.push(new DFRecord<>(init, dataHolder.value));
+                        nodeCount++;
+                    } else {
+                        complete = false;
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown action " + act);
+            }
+        }
+
+        while (!dfsStack.isEmpty()) {
+            @SuppressWarnings("nullness") // false positive https://github.com/typetools/checker-framework/issues/399
+            @NonNull DFRecord<N, E, D> current = dfsStack.peek();
+
+            N currNode = current.node;
+            D currData = current.data;
+
+            if (current.start(graph) && !visitor.startExploration(currNode, currData)) {
+                dfsStack.pop();
+                continue;
+            }
+
+            LastEdge<E, N, D> lastEdge = current.getLastEdge();
+            if (lastEdge != null) {
+                visitor.backtrackEdge(currNode, currData, lastEdge.edge, lastEdge.node, lastEdge.data);
+            }
+
+            if (!current.hasNextEdge()) {
+                dfsStack.pop();
+                visitor.finishExploration(currNode, currData);
+                continue;
+            }
+
+            E edge = current.nextEdge();
+            N tgt = graph.getTarget(edge);
+            GraphTraversalAction act = visitor.processEdge(currNode, currData, edge, tgt, dataHolder);
+
+            switch (act) {
+                case IGNORE:
+                    continue;
+                case ABORT_NODE:
+                    dfsStack.pop();
+                    continue;
+                case ABORT_TRAVERSAL:
+                    return complete;
+                case EXPLORE:
+                    if (nodeCount != limit) {
+                        D data = dataHolder.value;
+                        current.setLastEdge(edge, tgt, data);
+                        dfsStack.push(new DFRecord<>(tgt, data));
+                        nodeCount++;
+                    } else {
+                        complete = false;
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown action " + act);
+            }
+        }
+
+        return complete;
+    }
+
+    /**
+     * Returns an {@link Iterable} for the (reachable) nodes of the given graph in depth-first order.
+     *
+     * @param graph
+     *         the graph
+     * @param start
+     *         the nodes from which the traversal should start
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     *
+     * @return an {@link Iterable} for the (reachable) nodes of the given graph in depth-first order
+     */
+    public static <N, E> Iterable<N> depthFirstOrder(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {
+        return () -> depthFirstIterator(graph, start);
+    }
+
+    /**
+     * Returns an {@link Iterator} for the (reachable) nodes of the given graph in depth-first order.
+     *
+     * @param graph
+     *         the graph
+     * @param start
+     *         the nodes from which the traversal should start
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     *
+     * @return an {@link Iterator} for the (reachable) nodes of the given graph in depth-first order
+     */
+    public static <N, E> Iterator<N> depthFirstIterator(IndefiniteGraph<N, E> graph, Collection<? extends N> start) {
         return new DepthFirstIterator<>(graph, start);
+    }
+
+    /**
+     * Traverses the given graph in a given order. The traversal is steered by the specified visitor.
+     *
+     * @param order
+     *         the order in which the states should be traversed
+     * @param graph
+     *         the graph
+     * @param initialNode
+     *         the node from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     */
+    public static <N, E, D> void traverse(TraversalOrder order,
+                                          IndefiniteGraph<N, E> graph,
+                                          N initialNode,
+                                          GraphTraversalVisitor<N, E, D> visitor) {
+        traverse(order, graph, NO_LIMIT, initialNode, visitor);
+    }
+
+    /**
+     * Traverses the given graph in a given order. The traversal is steered by the specified visitor.
+     *
+     * @param order
+     *         the order in which the states should be traversed
+     * @param graph
+     *         the graph
+     * @param initialNodes
+     *         the nodes from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     */
+    public static <N, E, D> void traverse(TraversalOrder order,
+                                          IndefiniteGraph<N, E> graph,
+                                          Collection<? extends N> initialNodes,
+                                          GraphTraversalVisitor<N, E, D> visitor) {
+        traverse(order, graph, NO_LIMIT, initialNodes, visitor);
+    }
+
+    /**
+     * Traverses the given graph in a given order. The traversal is steered by the specified visitor.
+     *
+     * @param order
+     *         the order in which the states should be traversed
+     * @param graph
+     *         the graph
+     * @param limit
+     *         the upper bound on the number of nodes to be visited
+     * @param initialNode
+     *         the node from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     *
+     * @return {@code false} if the number of explored nodes reached {@code limit}, {@code true} otherwise
+     */
+    public static <N, E, D> boolean traverse(TraversalOrder order,
+                                             IndefiniteGraph<N, E> graph,
+                                             int limit,
+                                             N initialNode,
+                                             GraphTraversalVisitor<N, E, D> visitor) {
+        return traverse(order, graph, limit, Collections.singleton(initialNode), visitor);
+    }
+
+    /**
+     * Traverses the given graph in a given order. The traversal is steered by the specified visitor.
+     *
+     * @param order
+     *         the order in which the states should be traversed
+     * @param graph
+     *         the graph
+     * @param limit
+     *         the upper bound on the number of nodes to be visited
+     * @param initialNodes
+     *         the nodes from which the traversal should start
+     * @param visitor
+     *         the visitor
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
+     * @param <D>
+     *         (user) data type
+     *
+     * @return {@code false} if the number of explored nodes reached {@code limit}, {@code true} otherwise
+     */
+    public static <N, E, D> boolean traverse(TraversalOrder order,
+                                             IndefiniteGraph<N, E> graph,
+                                             int limit,
+                                             Collection<? extends N> initialNodes,
+                                             GraphTraversalVisitor<N, E, D> visitor) {
+        switch (order) {
+            case BREADTH_FIRST:
+                return breadthFirst(graph, limit, initialNodes, visitor);
+            case DEPTH_FIRST:
+                return depthFirst(graph, limit, initialNodes, visitor);
+            default:
+                throw new IllegalArgumentException("Unknown traversal order " + order);
+        }
     }
 
 }

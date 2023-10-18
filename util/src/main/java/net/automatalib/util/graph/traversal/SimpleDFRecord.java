@@ -19,22 +19,22 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.automatalib.graph.IndefiniteGraph;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 class SimpleDFRecord<N, E> {
 
-    public final N node;
-
-    private Iterator<E> edgeIterator;
+    final N node;
+    private @Nullable Iterator<E> edgeIterator;
 
     SimpleDFRecord(N node) {
         this.node = node;
     }
 
-    public final boolean wasStarted() {
+    boolean wasStarted() {
         return edgeIterator != null;
     }
 
-    public final boolean start(IndefiniteGraph<N, E> graph) {
+    boolean start(IndefiniteGraph<N, E> graph) {
         if (edgeIterator != null) {
             return false;
         }
@@ -43,14 +43,14 @@ class SimpleDFRecord<N, E> {
         return true;
     }
 
-    public final boolean hasNextEdge() {
+    boolean hasNextEdge() {
         if (edgeIterator == null) {
             throw new IllegalStateException("Edge iteration not yet started");
         }
         return edgeIterator.hasNext();
     }
 
-    public final E nextEdge() {
+    E nextEdge() {
         if (edgeIterator == null) {
             throw new IllegalStateException("Edge iteration not yet started");
         }

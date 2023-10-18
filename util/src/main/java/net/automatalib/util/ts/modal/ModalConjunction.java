@@ -15,23 +15,25 @@
  */
 package net.automatalib.util.ts.modal;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.StringJoiner;
 
 import net.automatalib.automaton.AutomatonCreator;
-import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.common.util.Holder;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.fixpoint.WorksetMappingAlgorithm;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
-import net.automatalib.util.graph.traversal.DFSVisitor;
-import net.automatalib.util.graph.traversal.GraphTraversal;
+import net.automatalib.util.ts.traversal.TSTraversal;
+import net.automatalib.util.ts.traversal.TSTraversalAction;
+import net.automatalib.util.ts.traversal.TSTraversalVisitor;
 
 class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0, S1, I, T, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {
@@ -48,7 +50,7 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0
                      AutomatonCreator<A, I> creator) {
 
         if (!mts0.getInputAlphabet().equals(mts1.getInputAlphabet())) {
-            throw new IllegalArgumentException("conjunction input mts have to have the same input alphabet");
+            throw new IllegalArgumentException("Conjunction MTSs must have the same input alphabet");
         }
 
         this.mts0 = mts0;
@@ -97,7 +99,7 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0
             for (T0 transition0 : transitions0) {
 
                 if (mts0.getTransitionProperty(transition0).isMust() && transitions1.isEmpty()) {
-                    throw new IllegalArgumentException(String.format(
+                    throw new IllegalConjunctionException(String.format(
                             "Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
                             "Error for transition %s (t0), leading trace: %s",
                             currentStatePair.getFirst(),
@@ -142,7 +144,7 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0
             for (T1 transition1 : transitions1) {
 
                 if (mts1.getTransitionProperty(transition1).isMust() && transitions0.isEmpty()) {
-                    throw new IllegalArgumentException(String.format(
+                    throw new IllegalConjunctionException(String.format(
                             "Error in conjunction: States <%s,%s> for label=%s with outgoing transitions t0=%s, t1=%s. " +
                             "Error for transition %s (t1), leading trace: %s",
                             currentStatePair.getFirst(),
@@ -163,87 +165,67 @@ class ModalConjunction<A extends MutableModalTransitionSystem<S, I, T, ?>, S, S0
         return result;
     }
 
-    protected static <S, I, T, TP extends ModalEdgeProperty> String traceError(ModalTransitionSystem<S, I, T, TP> mts,
-                                                                               T transition) {
+    private static <S, I, T, TP extends ModalEdgeProperty> String traceError(ModalTransitionSystem<S, I, T, TP> mts,
+                                                                             T transition) {
         EdgeTracer<S, I, T> finder = new EdgeTracer<>(transition);
+        TSTraversal.depthFirst(mts, mts.getInputAlphabet(), finder);
 
-        GraphTraversal.dfs(mts.transitionGraphView(mts.getInputAlphabet()), mts.getInitialStates(), finder);
+        final StringJoiner sj = new StringJoiner(", ");
 
-        StringBuilder sb = new StringBuilder();
         for (S state : finder.getStateSequence()) {
-            sb.append(state);
-            sb.append(',');
+            sj.add(Objects.toString(state));
         }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+
+        return sj.toString();
     }
 
-    private static class EdgeTracer<S, I, T> implements DFSVisitor<S, TransitionEdge<I, T>, Void> {
+    private static class EdgeTracer<S, I, T> implements TSTraversalVisitor<S, I, T, Void> {
 
-        final Deque<S> stateStack;
-        final T targetTransition;
-        boolean freeze;
+        private final Set<S> stateStack;
+        private final T targetTransition;
 
         EdgeTracer(T transition) {
             targetTransition = transition;
-            stateStack = new ArrayDeque<>();
-            freeze = false;
+            stateStack = new LinkedHashSet<>();
         }
 
         @Override
-        public Void initialize(S node) {
-            return null;
+        public boolean startExploration(S state, Void data) {
+            this.stateStack.add(state);
+            return true;
         }
 
         @Override
-        public void explore(S node, Void data) {
-            if (!freeze) {
-                stateStack.push(node);
+        public void finishExploration(S state, Void data) {
+            stateStack.remove(state);
+        }
+
+        @Override
+        public TSTraversalAction processTransition(S srcState,
+                                                   Void srcData,
+                                                   I input,
+                                                   T transition,
+                                                   S tgtState,
+                                                   Holder<Void> tgtHolder) {
+
+            final boolean modified = stateStack.add(tgtState);
+
+            if (transition == targetTransition) {
+                return TSTraversalAction.ABORT_TRAVERSAL;
+            } else if (!modified) {
+                return TSTraversalAction.IGNORE;
+            } else {
+                return TSTraversalAction.EXPLORE;
             }
         }
 
         @Override
-        public void finish(S node, Void data) {
-            if (!freeze) {
-                S top = stateStack.pop();
-                assert top == node;
-            }
+        public void backtrackTransition(S srcState, Void srcData, I input, T transition, S tgtState, Void tgtData) {
+            stateStack.remove(tgtState);
         }
 
-        public void testEdge(TransitionEdge<I, T> edge) {
-            if (edge.getTransition() == targetTransition) {
-                freeze = true;
-            }
-        }
-
-        public List<S> getStateSequence() {
-            return new ArrayList<>(stateStack);
-        }
-
-        @Override
-        public Void treeEdge(S srcNode, Void srcData, TransitionEdge<I, T> edge, S tgtNode) {
-            testEdge(edge);
-            return null;
-        }
-
-        @Override
-        public void backEdge(S srcNode, Void srcData, TransitionEdge<I, T> edge, S tgtNode, Void tgtData) {
-            testEdge(edge);
-        }
-
-        @Override
-        public void crossEdge(S srcNode, Void srcData, TransitionEdge<I, T> edge, S tgtNode, Void tgtData) {
-            testEdge(edge);
-        }
-
-        @Override
-        public void forwardEdge(S srcNode, Void srcData, TransitionEdge<I, T> edge, S tgtNode, Void tgtData) {
-            testEdge(edge);
-        }
-
-        @Override
-        public void backtrackEdge(S srcNode, Void srcDate, TransitionEdge<I, T> edge, S tgtNode, Void tgtData) {
-            testEdge(edge);
+        Iterable<S> getStateSequence() {
+            return this.stateStack;
         }
     }
 }
