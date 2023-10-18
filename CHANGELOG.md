@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-* Added modal transition systems (MTSs) including related utilities such as composition, conjunction, refinement (thanks to Marc Jasper, [Maximilian Schlüter](https://github.com/Conturing), and [David Schmidt](https://github.com/dvs23)).
+* Added modal transition systems (MTSs) including related utilities such as composition, conjunction, refinement (thanks to [Marc Jasper](https://github.com/mjasper), [Maximilian Schlüter](https://github.com/Conturing), and [David Schmidt](https://github.com/dvs23)).
 * Added `SubsequentialTransducer` interface and implementations/utilities.
 * Added support for procedural systems (SPAs, SBA, SPMMs) as well as related concepts such as verification, testing, and transformations thereof (thanks to [Markus Frohme](https://github.com/mtf90)).
 * Added the M3C model-checker for verifying µ-calculus and CTL formulas on context-free modal process systems (thanks to [Alnis Murtovi](https://github.com/AlnisM)).
