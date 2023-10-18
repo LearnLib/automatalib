@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.procedural;
+package net.automatalib.alphabet.procedural;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.basic;
+package net.automatalib.alphabet.basic;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.vpa;
+package net.automatalib.alphabet.vpa;
 
 import java.util.List;
 
 import net.automatalib.alphabet.impl.DefaultVPAlphabet;
-import net.automatalib.word.util.DefaultVPAlphabetTestUtil;
+import net.automatalib.alphabet.util.DefaultVPAlphabetTestUtil;
 
 public class DefaultVPAlphabetTest extends AbstractVPAlphabetTest<Character, DefaultVPAlphabet<Character>> {
 

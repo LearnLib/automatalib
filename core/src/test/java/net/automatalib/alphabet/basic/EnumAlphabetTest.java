@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.basic;
+package net.automatalib.alphabet.basic;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import net.automatalib.alphabet.basic.EnumAlphabetTest.Symbol;
 import net.automatalib.alphabet.impl.EnumAlphabet;
-import net.automatalib.word.basic.EnumAlphabetTest.Symbol;
 
 public class EnumAlphabetTest extends AbstractAlphabetTest<Symbol, EnumAlphabet<Symbol>> {
 

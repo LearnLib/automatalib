@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.growing;
+package net.automatalib.alphabet.growing;
 
 import java.util.ArrayList;
 import java.util.List;

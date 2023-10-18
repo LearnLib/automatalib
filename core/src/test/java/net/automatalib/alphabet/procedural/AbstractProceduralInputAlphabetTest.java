@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.procedural;
+package net.automatalib.alphabet.procedural;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,10 +23,10 @@ import com.google.common.collect.ImmutableMap;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.vpa.AbstractVPAlphabetTest;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.word.Word;
-import net.automatalib.word.vpa.AbstractVPAlphabetTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

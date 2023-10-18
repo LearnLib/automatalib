@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.word.basic;
+package net.automatalib.alphabet.basic;
 
 import java.util.List;
 
 import net.automatalib.alphabet.impl.FastAlphabet;
-import net.automatalib.word.util.FastAlphabetTestUtil;
-import net.automatalib.word.util.FastAlphabetTestUtil.InputSymbol;
+import net.automatalib.alphabet.util.FastAlphabetTestUtil;
+import net.automatalib.alphabet.util.FastAlphabetTestUtil.InputSymbol;
 
 public class FastAlphabetTest extends AbstractAlphabetTest<InputSymbol, FastAlphabet<InputSymbol>> {
 
