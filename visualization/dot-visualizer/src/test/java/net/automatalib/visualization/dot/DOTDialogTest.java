@@ -26,7 +26,6 @@ import javax.swing.JScrollPane;
 
 import com.google.common.io.CharStreams;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.common.util.system.JVMUtil;
 import org.assertj.swing.awt.AWT;
 import org.assertj.swing.core.ComponentDragAndDrop;
 import org.assertj.swing.core.GenericTypeMatcher;
@@ -38,10 +37,10 @@ import org.assertj.swing.fixture.JFileChooserFixture;
 import org.assertj.swing.fixture.JMenuItemFixture;
 import org.assertj.swing.testng.testcase.AssertJSwingTestngTestCase;
 import org.testng.Assert;
-import org.testng.SkipException;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+@Listeners(DOTDialogListener.class)
 public class DOTDialogTest extends AssertJSwingTestngTestCase {
 
     private final String dot;
@@ -52,27 +51,11 @@ public class DOTDialogTest extends AssertJSwingTestngTestCase {
                 CharStreams.toString(IOUtil.asBufferedUTF8Reader(DOTDialogTest.class.getResourceAsStream("/dfa.dot")));
     }
 
-    @BeforeClass
-    public void beforeClass() {
-        if (!DOT.checkUsable()) {
-            // Do not fail on platforms, where DOT is not installed
-            throw new SkipException("DOT is not installed");
-        }
-
-        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
-            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
-        }
-    }
-
     @Override
     protected void onSetUp() {
-        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        if (DOT.checkUsable() && (canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
-            final DOTDialog frame = GuiActionRunner.execute(() -> new DOTDialog(dot, false));
-            window = new DialogFixture(robot(), frame);
-            window.show(); // shows the frame to test
-        }
+        final DOTDialog frame = GuiActionRunner.execute(() -> new DOTDialog(dot, false));
+        window = new DialogFixture(robot(), frame);
+        window.show(); // shows the frame to test
     }
 
     @Test

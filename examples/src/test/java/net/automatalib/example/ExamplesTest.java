@@ -51,29 +51,31 @@ public class ExamplesTest {
 
     @BeforeClass
     public void setupAutoClose() {
-        // As soon as we observe an event that indicates a new window, close it to prevent blocking the tests.
-        Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
-            final WindowEvent windowEvent = (WindowEvent) event;
-            final Window w = windowEvent.getWindow();
-            w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));
-        }, AWTEvent.WINDOW_FOCUS_EVENT_MASK);
+        if (isJVMCompatible()) {
+            // As soon as we observe an event that indicates a new window, close it to prevent blocking the tests.
+            Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
+                final WindowEvent windowEvent = (WindowEvent) event;
+                final Window w = windowEvent.getWindow();
+                w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));
+            }, AWTEvent.WINDOW_FOCUS_EVENT_MASK);
+        }
     }
 
     @Test
     public void testADSExample() throws InvocationTargetException, InterruptedException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> ADSExample.main(new String[0]));
     }
 
     @Test
     public void testSimpleBricsExample() throws InvocationTargetException, InterruptedException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> SimpleBricsExample.main(new String[0]));
     }
 
     @Test
     public void testDOTExample() throws InvocationTargetException, InterruptedException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> {
             try {
                 DOTExample.main(new String[0]);
@@ -85,25 +87,25 @@ public class ExamplesTest {
 
     @Test
     public void testDFSExample() throws InvocationTargetException, InterruptedException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> DFSExample.main(new String[0]));
     }
 
     @Test
     public void testIncrementalDFAExample() throws InvocationTargetException, InterruptedException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> IncrementalDFAExample.main(new String[0]));
     }
 
     @Test
     public void testIncrementalMealyExample() throws InvocationTargetException, InterruptedException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> IncrementalMealyExample.main(new String[0]));
     }
 
     @Test
     public void testIncrementalPCDFAExample() throws InvocationTargetException, InterruptedException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> IncrementalPCDFAExample.main(new String[0]));
     }
 
@@ -127,7 +129,7 @@ public class ExamplesTest {
 
     @Test
     public void testM3CSPAExample() throws InterruptedException, InvocationTargetException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> {
             try {
                 M3CSPAExample.main(new String[0]);
@@ -139,19 +141,23 @@ public class ExamplesTest {
 
     @Test
     public void testPalindromeExample() throws InvocationTargetException, InterruptedException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> PalindromeExample.main(new String[0]));
     }
 
     @Test
     public void testOneSEVPAExample() throws InvocationTargetException, InterruptedException {
-        checkJVMCompatibility();
+        requireJVMCompatibility();
         SwingUtilities.invokeAndWait(() -> OneSEVPAExample.main(new String[0]));
     }
 
-    private static void checkJVMCompatibility() {
+    private static boolean isJVMCompatible() {
         final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
+        return canonicalSpecVersion <= 8 || canonicalSpecVersion == 11;
+    }
+
+    private static void requireJVMCompatibility() {
+        if (!isJVMCompatible()) {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
     }
