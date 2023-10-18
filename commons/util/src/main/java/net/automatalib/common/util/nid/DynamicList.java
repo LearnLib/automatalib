@@ -17,6 +17,7 @@ package net.automatalib.common.util.nid;
 
 import java.util.AbstractList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.automatalib.common.smartcollection.ArrayWritable;
 import net.automatalib.common.smartcollection.ResizingArrayStorage;
@@ -24,9 +25,25 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DynamicList<T extends MutableNumericID> extends AbstractList<T> implements ArrayWritable<T> {
 
-    private final ResizingArrayStorage<T> storage = new ResizingArrayStorage<>(MutableNumericID.class);
-
+    private final ResizingArrayStorage<T> storage;
     private int size;
+
+    public DynamicList() {
+        this.size = 0;
+        this.storage = new ResizingArrayStorage<>(MutableNumericID.class);
+    }
+
+    public DynamicList(List<? extends T> initial) {
+        this.size = initial.size();
+        this.storage = new ResizingArrayStorage<>(MutableNumericID.class, size);
+
+        int idx = 0;
+        for (T t : initial) {
+            storage.array[idx] = t;
+            t.setId(idx);
+            idx++;
+        }
+    }
 
     @Override
     public int size() {

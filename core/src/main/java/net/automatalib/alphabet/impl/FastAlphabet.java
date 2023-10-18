@@ -28,7 +28,7 @@ import net.automatalib.common.util.nid.MutableNumericID;
  * @param <I>
  *         input symbol class.
  */
-public final class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> implements GrowingAlphabet<I> {
+public class FastAlphabet<I extends MutableNumericID> extends DynamicList<I> implements GrowingAlphabet<I> {
 
     public FastAlphabet() {}
 
@@ -38,9 +38,7 @@ public final class FastAlphabet<I extends MutableNumericID> extends DynamicList<
     }
 
     public FastAlphabet(List<? extends I> symbols) {
-        for (I sym : symbols) {
-            addSymbol(sym);
-        }
+        super(symbols);
     }
 
     @Override
@@ -72,6 +70,41 @@ public final class FastAlphabet<I extends MutableNumericID> extends DynamicList<
     public boolean containsSymbol(I symbol) {
         int index = symbol.getId();
         return index >= 0 && index < size() && get(index) == symbol;
+    }
+
+    /*
+     * This alphabet-specific view is required by the SequencedCollection changes introduced in JDK21,
+     * See https://openjdk.org/jeps/431 for more information.
+     */
+    @Override
+    public FastAlphabet<I> reversed() {
+        return new FastAlphabet<I>() {
+
+            @Override
+            public boolean containsSymbol(I symbol) {
+                return FastAlphabet.this.containsSymbol(symbol);
+            }
+
+            @Override
+            public I getSymbol(int index) {
+                return FastAlphabet.this.getSymbol(FastAlphabet.this.size() - 1 - index);
+            }
+
+            @Override
+            public int getSymbolIndex(I symbol) {
+                return FastAlphabet.this.size() - 1 - FastAlphabet.this.getSymbolIndex(symbol);
+            }
+
+            @Override
+            public int size() {
+                return FastAlphabet.this.size();
+            }
+
+            @Override
+            public int compare(I o1, I o2) {
+                return FastAlphabet.this.compare(o2, o1);
+            }
+        };
     }
 
 }

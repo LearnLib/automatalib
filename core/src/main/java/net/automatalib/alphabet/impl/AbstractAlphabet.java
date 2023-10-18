@@ -25,4 +25,39 @@ public abstract class AbstractAlphabet<I> extends AbstractList<I> implements Alp
     public I get(int index) {
         return getSymbol(index);
     }
+
+    /*
+     * This alphabet-specific view is required by the SequencedCollection changes introduced in JDK21,
+     * See https://openjdk.org/jeps/431 for more information.
+     */
+    @Override
+    public AbstractAlphabet<I> reversed() {
+        return new AbstractAlphabet<I>() {
+
+            @Override
+            public boolean containsSymbol(I symbol) {
+                return AbstractAlphabet.this.containsSymbol(symbol);
+            }
+
+            @Override
+            public I getSymbol(int index) {
+                return AbstractAlphabet.this.getSymbol(AbstractAlphabet.this.size() - 1 - index);
+            }
+
+            @Override
+            public int getSymbolIndex(I symbol) {
+                return AbstractAlphabet.this.size() - 1 - AbstractAlphabet.this.getSymbolIndex(symbol);
+            }
+
+            @Override
+            public int size() {
+                return AbstractAlphabet.this.size();
+            }
+
+            @Override
+            public int compare(I o1, I o2) {
+                return AbstractAlphabet.this.compare(o2, o1);
+            }
+        };
+    }
 }

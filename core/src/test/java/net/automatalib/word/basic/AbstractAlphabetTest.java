@@ -15,6 +15,8 @@
  */
 package net.automatalib.word.basic;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -143,5 +145,36 @@ public abstract class AbstractAlphabetTest<I, M extends Alphabet<I>> {
             Assert.assertThrows(UnsupportedOperationException.class, () -> listIter.set(next));
             Assert.assertThrows(UnsupportedOperationException.class, () -> listIter.add(next));
         }
+    }
+
+    @Test
+    public void testReversed() {
+        final Comparator<I> r = alphabet.reversed();
+        final Alphabet<I> reversed;
+
+        if (r instanceof Alphabet) {
+            reversed = (Alphabet<I>) r;
+        } else {
+            return;
+        }
+
+        for (I i : alphabet) {
+            Assert.assertTrue(reversed.containsSymbol(i));
+        }
+
+        Assert.assertEquals(reversed.size(), alphabet.size());
+
+        for (int i = 0, j = reversed.size() - 1; i < alphabet.size() && j >= 0; i++, j--) {
+            Assert.assertEquals(reversed.getSymbol(j), alphabet.getSymbol(i));
+        }
+
+        int idx = alphabet.size() - 1;
+        for (I i : alphabet) {
+            Assert.assertEquals(reversed.getSymbolIndex(i), idx--);
+        }
+
+        final List<I> list = new ArrayList<>(alphabet);
+        list.sort(reversed);
+        Assert.assertEquals(list, reversed);
     }
 }
