@@ -60,7 +60,7 @@ For developing the code base of AutomataLib it is suggested to use one of the ma
 
 * For [Eclipse][eclipse]:
   1. **Note**: AutomataLib uses annotation processing on several occasions throughout the build process.
-  This is usually handled correctly by Maven, however, for Eclipse you need to install the [m2e-apt-plugin](https://marketplace.eclipse.org/content/m2e-apt) and activate annotation processing afterwards (see the [LearnLib issue #32](https://github.com/LearnLib/learnlib/issues/32)).
+  This is usually handled correctly by Maven, however, for Eclipse you need to install the [m2e-apt-plugin](https://marketplace.eclipse.org/content/m2e-apt) and activate annotation processing afterward (see the [LearnLib issue #32](https://github.com/LearnLib/learnlib/issues/32)).
   1. Select `File` -> `Import...` and select "Existing Maven Projects".
   1. Select the folder containing the development checkout as the root directory and click `Finish`.
 
