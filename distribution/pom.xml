@@ -410,7 +410,7 @@ limitations under the License.
                                     <version>${duzzt.version}</version>
                                 </additionalDependency>
                                 <additionalDependency>
-                                    <groupId>dk.brics.automaton</groupId>
+                                    <groupId>dk.brics</groupId>
                                     <artifactId>automaton</artifactId>
                                     <version>${brics-automaton.version}</version>
                                 </additionalDependency>
