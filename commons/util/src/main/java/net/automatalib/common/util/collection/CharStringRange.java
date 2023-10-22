@@ -96,12 +96,7 @@ public class CharStringRange extends AbstractList<String> implements ArrayWritab
         int si = offset;
         int ti = tgtOfs;
         for (int i = 0; i < num; i++) {
-            array[ti++] = charGet(si++);
+            array[ti++] = get(si++);
         }
     }
-
-    public char charValue(int i) {
-        return (char) delegate.intValue(i);
-    }
-
 }

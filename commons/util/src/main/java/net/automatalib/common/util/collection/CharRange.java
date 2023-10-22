@@ -96,9 +96,4 @@ public class CharRange extends AbstractList<Character> implements ArrayWritable<
             array[ti++] = charGet(si++);
         }
     }
-
-    public char charValue(int i) {
-        return (char) delegate.intValue(i);
-    }
-
 }

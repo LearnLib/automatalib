@@ -31,6 +31,9 @@ public final class IntRangeIterator implements ListIterator<Integer>, PrimitiveI
     }
 
     public IntRangeIterator(int low, int step, int size, int startIdx) {
+        if (startIdx > size) {
+            throw new IndexOutOfBoundsException();
+        }
         this.low = low;
         this.size = size;
         this.step = step;

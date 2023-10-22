@@ -46,11 +46,7 @@ final class IntRange extends AbstractList<Integer> implements ArrayWritable<Inte
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        return intValue(index);
-    }
-
-    public int intValue(int i) {
-        return start + step * i;
+        return start + step * index;
     }
 
     @Override

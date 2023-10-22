@@ -15,10 +15,10 @@
  */
 package net.automatalib.common.util.collection;
 
-public class CharRangeTest extends AbstractRangeTest<Character, CharRange> {
+public class CharStringRangeTest extends AbstractRangeTest<String, CharStringRange> {
 
-    public CharRangeTest() {
-        super(new CharRange('a', 'f'));
+    public CharStringRangeTest() {
+        super(new CharStringRange('a', 'f'));
     }
 
 }
