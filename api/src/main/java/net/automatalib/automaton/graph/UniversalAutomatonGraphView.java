@@ -18,7 +18,6 @@ package net.automatalib.automaton.graph;
 import java.util.Collection;
 
 import net.automatalib.automaton.UniversalAutomaton;
-import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.graph.TransitionEdge.Property;
 import net.automatalib.graph.UniversalGraph;
 
@@ -28,17 +27,6 @@ public class UniversalAutomatonGraphView<S, I, T, SP, TP, A extends UniversalAut
 
     public UniversalAutomatonGraphView(A automaton, Collection<? extends I> inputs) {
         super(automaton, inputs);
-    }
-
-    public static <S, I, T, SP, TP, A extends UniversalAutomaton<S, I, T, SP, TP>> UniversalAutomatonGraphView<S, I, T, SP, TP, A> create(
-            A automaton,
-            Collection<? extends I> inputs) {
-        return new UniversalAutomatonGraphView<>(automaton, inputs);
-    }
-
-    public static <S, I, T, SP, TP, A extends UniversalAutomaton<S, I, T, SP, TP> & InputAlphabetHolder<I>> UniversalAutomatonGraphView<S, I, T, SP, TP, A> create(
-            A automaton) {
-        return new UniversalAutomatonGraphView<>(automaton, automaton.getInputAlphabet());
     }
 
     @Override

@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.automaton.Automaton;
-import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.visualization.AutomatonVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 
@@ -32,16 +31,6 @@ public class AutomatonGraphView<S, I, T, A extends Automaton<S, I, T>>
     public AutomatonGraphView(A automaton, Collection<? extends I> inputs) {
         super(automaton);
         this.inputs = inputs;
-    }
-
-    public static <S, I, T, A extends Automaton<S, I, T>> AutomatonGraphView<S, I, T, A> create(A automaton,
-                                                                                                Collection<? extends I> inputs) {
-        return new AutomatonGraphView<>(automaton, inputs);
-    }
-
-    public static <S, I, T, A extends Automaton<S, I, T> & InputAlphabetHolder<I>> AutomatonGraphView<S, I, T, A> create(
-            A automaton) {
-        return new AutomatonGraphView<>(automaton, automaton.getInputAlphabet());
     }
 
     @Override

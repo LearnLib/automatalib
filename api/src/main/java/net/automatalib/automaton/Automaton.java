@@ -45,6 +45,6 @@ public interface Automaton<S, I, T> extends TransitionSystem<S, I, T>, SimpleAut
      * @return a graph view of the transition graph of this automaton for the given input symbols
      */
     default Graph<S, TransitionEdge<I, T>> transitionGraphView(Collection<? extends I> inputs) {
-        return AutomatonGraphView.create(this, inputs);
+        return new AutomatonGraphView<>(this, inputs);
     }
 }

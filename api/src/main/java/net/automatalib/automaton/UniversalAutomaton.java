@@ -42,7 +42,7 @@ public interface UniversalAutomaton<S, I, T, SP, TP>
 
     @Override
     default UniversalGraph<S, TransitionEdge<I, T>, SP, TransitionEdge.Property<I, TP>> transitionGraphView(Collection<? extends I> inputs) {
-        return UniversalAutomatonGraphView.create(this, inputs);
+        return new UniversalAutomatonGraphView<>(this, inputs);
     }
 
 }
