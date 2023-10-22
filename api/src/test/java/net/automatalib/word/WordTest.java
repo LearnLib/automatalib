@@ -36,7 +36,7 @@ public class WordTest {
 
     @Test
     public void fromTest() {
-        final Word<Character> reference = Word.fromCharSequence("abc");
+        final Word<Character> reference = Word.fromString("abc");
         final Character[] referenceAsArray = new Character[] {'a', 'b', 'c'};
         final Word<Character> a = Word.fromLetter('a');
         final Word<Character> b = Word.fromLetter('b');
@@ -66,7 +66,7 @@ public class WordTest {
 
     @Test
     public void toArrayTest() {
-        final Word<Character> reference = Word.fromCharSequence("abc");
+        final Word<Character> reference = Word.fromString("abc");
         Character[] referenceAsArray;
 
         referenceAsArray = new Character[3];
@@ -93,7 +93,7 @@ public class WordTest {
 
     @Test
     public void transformTest() {
-        final Word<Character> source = Word.fromCharSequence("abc");
+        final Word<Character> source = Word.fromString("abc");
         final Word<String> target = Word.fromSymbols("aa", "bb", "cc");
 
         final Word<String> transform = source.transform(c -> new String(new char[] {c, c}));
@@ -106,7 +106,7 @@ public class WordTest {
         final Word<Character> b = Word.fromLetter('b');
         final Word<Character> c = Word.fromLetter('c');
         final Word<Character> bc = Word.fromSymbols('b', 'c');
-        final Word<Character> abc = Word.fromCharSequence("abc");
+        final Word<Character> abc = Word.fromString("abc");
 
         Assert.assertEquals(c, abc.subWord(2));
         Assert.assertEquals(bc, abc.subWord(1));
@@ -116,7 +116,7 @@ public class WordTest {
 
     @Test
     public void prefixSuffixSetTest() {
-        final Word<Character> w = Word.fromCharSequence("abcdefg");
+        final Word<Character> w = Word.fromString("abcdefg");
         final int n = w.size();
 
         List<Word<Character>> prefixes = w.prefixes(false);
@@ -145,7 +145,7 @@ public class WordTest {
     @Test
     public void toStringTest() {
         final Word<Character> empty = Word.epsilon();
-        final Word<Character> abc = Word.fromCharSequence("abc");
+        final Word<Character> abc = Word.fromString("abc");
 
         // See configuration in AutomataLibSettingsTest & automatalib.properties
         Assert.assertEquals(empty.toString(), "OVERRIDDEN");

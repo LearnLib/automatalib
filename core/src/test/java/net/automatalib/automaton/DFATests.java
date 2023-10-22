@@ -34,8 +34,8 @@ public class DFATests {
         dfa.setTransition(q0, sigma.getSymbolIndex('a'), q1);
         dfa.setTransition(q1, sigma.getSymbolIndex('b'), q0);
 
-        SharedTestUtils.checkOutput(dfa, Word.fromCharSequence("ababab"), true);
-        SharedTestUtils.checkOutput(dfa, Word.fromCharSequence("aabb"), false);
-        SharedTestUtils.checkOutput(dfa, Word.fromCharSequence("baba"), false);
+        SharedTestUtils.checkOutput(dfa, Word.fromString("ababab"), true);
+        SharedTestUtils.checkOutput(dfa, Word.fromString("aabb"), false);
+        SharedTestUtils.checkOutput(dfa, Word.fromString("baba"), false);
     }
 }

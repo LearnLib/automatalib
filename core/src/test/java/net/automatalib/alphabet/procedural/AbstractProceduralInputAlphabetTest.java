@@ -69,8 +69,8 @@ public abstract class AbstractProceduralInputAlphabetTest<M extends ProceduralIn
     @Test
     public void testFindCallIndex() {
         final M alphabet = getAlphabet();
-        final Word<Character> word = Word.fromCharSequence("SaSTcRRaR");
-        //                                                  012345678
+        final Word<Character> word = Word.fromString("SaSTcRRaR");
+        //                                            012345678
 
         Assert.assertEquals(alphabet.findCallIndex(word, -1), -1);
         Assert.assertEquals(alphabet.findCallIndex(word, 0), -1); //S
@@ -89,8 +89,8 @@ public abstract class AbstractProceduralInputAlphabetTest<M extends ProceduralIn
     @Test
     public void testFindReturnIndex() {
         final M alphabet = getAlphabet();
-        final Word<Character> word = Word.fromCharSequence("SaSTcRRaR");
-        //                                                  012345678
+        final Word<Character> word = Word.fromString("SaSTcRRaR");
+        //                                            012345678
 
         Assert.assertEquals(alphabet.findReturnIndex(word, -1), -1);
         Assert.assertEquals(alphabet.findReturnIndex(word, 0), -1); //S
@@ -113,17 +113,16 @@ public abstract class AbstractProceduralInputAlphabetTest<M extends ProceduralIn
                 ImmutableMap.of('S', Word.fromLetter('x'), 'T', Word.fromLetter('y'))::get;
 
         Assert.assertEquals(alphabet.expand(Word.epsilon(), ts), Word.epsilon());
-        Assert.assertEquals(alphabet.expand(Word.fromCharSequence("aSa"), ts), Word.fromCharSequence("aSxRa"));
-        Assert.assertEquals(alphabet.expand(Word.fromCharSequence("bTb"), ts), Word.fromCharSequence("bTyRb"));
-        Assert.assertEquals(alphabet.expand(Word.fromCharSequence("aSbTbSc"), ts),
-                            Word.fromCharSequence("aSxRbTyRbSxRc"));
+        Assert.assertEquals(alphabet.expand(Word.fromString("aSa"), ts), Word.fromString("aSxRa"));
+        Assert.assertEquals(alphabet.expand(Word.fromString("bTb"), ts), Word.fromString("bTyRb"));
+        Assert.assertEquals(alphabet.expand(Word.fromString("aSbTbSc"), ts), Word.fromString("aSxRbTyRbSxRc"));
     }
 
     @Test
     public void testProjectWellMatched() {
         final M alphabet = getAlphabet();
-        final Word<Character> word = Word.fromCharSequence("SaSTcRRaR");
-        final Word<Character> outs = Word.fromCharSequence("012345678");
+        final Word<Character> word = Word.fromString("SaSTcRRaR");
+        final Word<Character> outs = Word.fromString("012345678");
 
         final Pair<Word<Character>, Word<Character>> r0 = Pair.of(Word.fromLetter('S'), Word.fromLetter('0'));
         final Pair<Word<Character>, Word<Character>> r1 = Pair.of(Word.fromString("aSaR"), Word.fromString("1278"));
@@ -164,8 +163,8 @@ public abstract class AbstractProceduralInputAlphabetTest<M extends ProceduralIn
     @Test
     public void testProjectReturnMatched() {
         final M alphabet = getAlphabet();
-        final Word<Character> word = Word.fromCharSequence("SaSTcRRa");
-        final Word<Character> outs = Word.fromCharSequence("01234567");
+        final Word<Character> word = Word.fromString("SaSTcRRa");
+        final Word<Character> outs = Word.fromString("01234567");
 
         final Pair<Word<Character>, Word<Character>> r0 = Pair.of(Word.fromString("SaSa"), Word.fromString("0127"));
         final Pair<Word<Character>, Word<Character>> r1 = Pair.of(Word.fromString("aSa"), Word.fromString("127"));

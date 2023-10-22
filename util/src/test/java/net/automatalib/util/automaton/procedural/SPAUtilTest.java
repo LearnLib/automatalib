@@ -102,9 +102,9 @@ public class SPAUtilTest {
         final SimpleEntry<Character, Word<Character>> sAsEntry = new SimpleEntry<>('S', Word.fromLetter('S'));
         final SimpleEntry<Character, Word<Character>> sTsEntry = new SimpleEntry<>('S', Word.epsilon());
         final SimpleEntry<Character, Word<Character>> sRsEntry = new SimpleEntry<>('S', Word.fromLetter('R'));
-        final SimpleEntry<Character, Word<Character>> tAsEntry = new SimpleEntry<>('T', Word.fromCharSequence("ST"));
-        final SimpleEntry<Character, Word<Character>> tTsEntry = new SimpleEntry<>('T', Word.fromCharSequence("c"));
-        final SimpleEntry<Character, Word<Character>> tRsEntry = new SimpleEntry<>('T', Word.fromCharSequence("RR"));
+        final SimpleEntry<Character, Word<Character>> tAsEntry = new SimpleEntry<>('T', Word.fromString("ST"));
+        final SimpleEntry<Character, Word<Character>> tTsEntry = new SimpleEntry<>('T', Word.fromString("c"));
+        final SimpleEntry<Character, Word<Character>> tRsEntry = new SimpleEntry<>('T', Word.fromString("RR"));
 
         final DefaultProceduralInputAlphabet<Character> halfAlphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);

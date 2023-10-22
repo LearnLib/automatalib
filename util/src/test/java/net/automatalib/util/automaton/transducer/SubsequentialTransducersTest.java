@@ -32,21 +32,21 @@ public class SubsequentialTransducersTest {
 
         final CompactSST<Character, Character> sst = new CompactSST<>(INPUTS);
 
-        final int s1 = sst.addInitialState(Word.fromCharSequence("x"));
-        final int s2 = sst.addState(Word.fromCharSequence("x"));
-        final int s3 = sst.addState(Word.fromCharSequence("x"));
+        final int s1 = sst.addInitialState(Word.fromLetter('x'));
+        final int s2 = sst.addState(Word.fromLetter('x'));
+        final int s3 = sst.addState(Word.fromLetter('x'));
 
-        sst.setTransition(s1, (Character) 'a', s2, Word.fromCharSequence("x"));
-        sst.setTransition(s1, (Character) 'b', s2, Word.fromCharSequence("y"));
-        sst.setTransition(s1, (Character) 'c', s2, Word.fromCharSequence("z"));
+        sst.setTransition(s1, (Character) 'a', s2, Word.fromLetter('x'));
+        sst.setTransition(s1, (Character) 'b', s2, Word.fromLetter('y'));
+        sst.setTransition(s1, (Character) 'c', s2, Word.fromLetter('z'));
 
-        sst.setTransition(s2, (Character) 'a', s3, Word.fromCharSequence("x"));
-        sst.setTransition(s2, (Character) 'b', s3, Word.fromCharSequence("y"));
-        sst.setTransition(s2, (Character) 'c', s3, Word.fromCharSequence("z"));
+        sst.setTransition(s2, (Character) 'a', s3, Word.fromLetter('x'));
+        sst.setTransition(s2, (Character) 'b', s3, Word.fromLetter('y'));
+        sst.setTransition(s2, (Character) 'c', s3, Word.fromLetter('z'));
 
-        sst.setTransition(s3, (Character) 'a', s3, Word.fromCharSequence("x"));
-        sst.setTransition(s3, (Character) 'b', s3, Word.fromCharSequence("y"));
-        sst.setTransition(s3, (Character) 'c', s3, Word.fromCharSequence("z"));
+        sst.setTransition(s3, (Character) 'a', s3, Word.fromLetter('x'));
+        sst.setTransition(s3, (Character) 'b', s3, Word.fromLetter('y'));
+        sst.setTransition(s3, (Character) 'c', s3, Word.fromLetter('z'));
 
         final CompactSST<Character, Character> osst =
                 SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS), false);
@@ -60,17 +60,17 @@ public class SubsequentialTransducersTest {
 
         final CompactSST<Character, Character> sst = new CompactSST<>(INPUTS);
 
-        final int s1 = sst.addInitialState(Word.fromCharSequence("x"));
-        final int s2 = sst.addState(Word.fromCharSequence("x"));
-        final int s3 = sst.addState(Word.fromCharSequence("x"));
+        final int s1 = sst.addInitialState(Word.fromLetter('x'));
+        final int s2 = sst.addState(Word.fromLetter('x'));
+        final int s3 = sst.addState(Word.fromLetter('x'));
 
-        sst.setTransition(s1, (Character) 'a', s2, Word.fromCharSequence("x"));
-        sst.setTransition(s1, (Character) 'b', s2, Word.fromCharSequence("y"));
-        sst.setTransition(s1, (Character) 'c', s2, Word.fromCharSequence("z"));
+        sst.setTransition(s1, (Character) 'a', s2, Word.fromLetter('x'));
+        sst.setTransition(s1, (Character) 'b', s2, Word.fromLetter('y'));
+        sst.setTransition(s1, (Character) 'c', s2, Word.fromLetter('z'));
 
-        sst.setTransition(s2, (Character) 'a', s3, Word.fromCharSequence("x"));
-        sst.setTransition(s2, (Character) 'b', s3, Word.fromCharSequence("y"));
-        sst.setTransition(s2, (Character) 'c', s3, Word.fromCharSequence("z"));
+        sst.setTransition(s2, (Character) 'a', s3, Word.fromLetter('x'));
+        sst.setTransition(s2, (Character) 'b', s3, Word.fromLetter('y'));
+        sst.setTransition(s2, (Character) 'c', s3, Word.fromLetter('z'));
 
         final CompactSST<Character, Character> osst =
                 SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS), false);
@@ -79,17 +79,17 @@ public class SubsequentialTransducersTest {
 
         final CompactSST<Character, Character> expected = new CompactSST<>(INPUTS);
 
-        final int e1 = expected.addInitialState(Word.fromCharSequence("x"));
-        final int e2 = expected.addState(Word.fromCharSequence("x"));
+        final int e1 = expected.addInitialState(Word.fromLetter('x'));
+        final int e2 = expected.addState(Word.fromLetter('x'));
         final int e3 = expected.addState(Word.epsilon());
 
-        expected.setTransition(e1, (Character) 'a', e2, Word.fromCharSequence("x"));
-        expected.setTransition(e1, (Character) 'b', e2, Word.fromCharSequence("y"));
-        expected.setTransition(e1, (Character) 'c', e2, Word.fromCharSequence("z"));
+        expected.setTransition(e1, (Character) 'a', e2, Word.fromLetter('x'));
+        expected.setTransition(e1, (Character) 'b', e2, Word.fromLetter('y'));
+        expected.setTransition(e1, (Character) 'c', e2, Word.fromLetter('z'));
 
-        expected.setTransition(e2, (Character) 'a', e3, Word.fromCharSequence("xx"));
-        expected.setTransition(e2, (Character) 'b', e3, Word.fromCharSequence("yx"));
-        expected.setTransition(e2, (Character) 'c', e3, Word.fromCharSequence("zx"));
+        expected.setTransition(e2, (Character) 'a', e3, Word.fromString("xx"));
+        expected.setTransition(e2, (Character) 'b', e3, Word.fromString("yx"));
+        expected.setTransition(e2, (Character) 'c', e3, Word.fromString("zx"));
 
         Assert.assertTrue(Automata.testEquivalence(expected, osst, INPUTS));
     }
@@ -99,21 +99,21 @@ public class SubsequentialTransducersTest {
 
         final CompactSST<Character, Character> sst = new CompactSST<>(INPUTS);
 
-        final int s1 = sst.addInitialState(Word.fromCharSequence("x"));
-        final int s2 = sst.addState(Word.fromCharSequence("xx"));
-        final int s3 = sst.addState(Word.fromCharSequence("x"));
+        final int s1 = sst.addInitialState(Word.fromLetter('x'));
+        final int s2 = sst.addState(Word.fromString("xx"));
+        final int s3 = sst.addState(Word.fromString("x"));
 
-        sst.setTransition(s1, (Character) 'a', s2, Word.fromCharSequence("x"));
-        sst.setTransition(s1, (Character) 'b', s2, Word.fromCharSequence("y"));
-        sst.setTransition(s1, (Character) 'c', s2, Word.fromCharSequence("z"));
+        sst.setTransition(s1, (Character) 'a', s2, Word.fromLetter('x'));
+        sst.setTransition(s1, (Character) 'b', s2, Word.fromLetter('y'));
+        sst.setTransition(s1, (Character) 'c', s2, Word.fromLetter('z'));
 
-        sst.setTransition(s2, (Character) 'a', s3, Word.fromCharSequence("x"));
-        sst.setTransition(s2, (Character) 'b', s3, Word.fromCharSequence("x"));
-        sst.setTransition(s2, (Character) 'c', s3, Word.fromCharSequence("x"));
+        sst.setTransition(s2, (Character) 'a', s3, Word.fromLetter('x'));
+        sst.setTransition(s2, (Character) 'b', s3, Word.fromLetter('x'));
+        sst.setTransition(s2, (Character) 'c', s3, Word.fromLetter('x'));
 
-        sst.setTransition(s3, (Character) 'a', s3, Word.fromCharSequence("xx"));
-        sst.setTransition(s3, (Character) 'b', s3, Word.fromCharSequence("xy"));
-        sst.setTransition(s3, (Character) 'c', s3, Word.fromCharSequence("xz"));
+        sst.setTransition(s3, (Character) 'a', s3, Word.fromString("xx"));
+        sst.setTransition(s3, (Character) 'b', s3, Word.fromString("xy"));
+        sst.setTransition(s3, (Character) 'c', s3, Word.fromString("xz"));
 
         final CompactSST<Character, Character> osst =
                 SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS), false);
@@ -122,21 +122,21 @@ public class SubsequentialTransducersTest {
 
         final CompactSST<Character, Character> expected = new CompactSST<>(INPUTS);
 
-        final int e1 = expected.addInitialState(Word.fromCharSequence("x"));
+        final int e1 = expected.addInitialState(Word.fromLetter('x'));
         final int e2 = expected.addState(Word.epsilon());
         final int e3 = expected.addState(Word.epsilon());
 
-        expected.setTransition(e1, (Character) 'a', e2, Word.fromCharSequence("xxx"));
-        expected.setTransition(e1, (Character) 'b', e2, Word.fromCharSequence("yxx"));
-        expected.setTransition(e1, (Character) 'c', e2, Word.fromCharSequence("zxx"));
+        expected.setTransition(e1, (Character) 'a', e2, Word.fromString("xxx"));
+        expected.setTransition(e1, (Character) 'b', e2, Word.fromString("yxx"));
+        expected.setTransition(e1, (Character) 'c', e2, Word.fromString("zxx"));
 
         expected.setTransition(e2, (Character) 'a', e3, Word.epsilon());
         expected.setTransition(e2, (Character) 'b', e3, Word.epsilon());
         expected.setTransition(e2, (Character) 'c', e3, Word.epsilon());
 
-        expected.setTransition(e3, (Character) 'a', e3, Word.fromCharSequence("xx"));
-        expected.setTransition(e3, (Character) 'b', e3, Word.fromCharSequence("yx"));
-        expected.setTransition(e3, (Character) 'c', e3, Word.fromCharSequence("zx"));
+        expected.setTransition(e3, (Character) 'a', e3, Word.fromString("xx"));
+        expected.setTransition(e3, (Character) 'b', e3, Word.fromString("yx"));
+        expected.setTransition(e3, (Character) 'c', e3, Word.fromString("zx"));
 
         Assert.assertTrue(Automata.testEquivalence(expected, osst, INPUTS));
     }
@@ -146,21 +146,21 @@ public class SubsequentialTransducersTest {
 
         final CompactSST<Character, Character> sst = new CompactSST<>(INPUTS);
 
-        final int s1 = sst.addInitialState(Word.fromCharSequence("x"));
-        final int s2 = sst.addState(Word.fromCharSequence("x"));
-        final int s3 = sst.addState(Word.fromCharSequence("x"));
+        final int s1 = sst.addInitialState(Word.fromLetter('x'));
+        final int s2 = sst.addState(Word.fromLetter('x'));
+        final int s3 = sst.addState(Word.fromLetter('x'));
 
         sst.setTransition(s1, (Character) 'a', s2, Word.epsilon());
         sst.setTransition(s1, (Character) 'b', s2, Word.epsilon());
         sst.setTransition(s1, (Character) 'c', s2, Word.epsilon());
 
-        sst.setTransition(s2, (Character) 'a', s3, Word.fromCharSequence("xx"));
-        sst.setTransition(s2, (Character) 'b', s3, Word.fromCharSequence("xy"));
-        sst.setTransition(s2, (Character) 'c', s3, Word.fromCharSequence("xz"));
+        sst.setTransition(s2, (Character) 'a', s3, Word.fromString("xx"));
+        sst.setTransition(s2, (Character) 'b', s3, Word.fromString("xy"));
+        sst.setTransition(s2, (Character) 'c', s3, Word.fromString("xz"));
 
-        sst.setTransition(s3, (Character) 'a', s1, Word.fromCharSequence("xx"));
-        sst.setTransition(s3, (Character) 'b', s1, Word.fromCharSequence("xy"));
-        sst.setTransition(s3, (Character) 'c', s1, Word.fromCharSequence("xz"));
+        sst.setTransition(s3, (Character) 'a', s1, Word.fromString("xx"));
+        sst.setTransition(s3, (Character) 'b', s1, Word.fromString("xy"));
+        sst.setTransition(s3, (Character) 'c', s1, Word.fromString("xz"));
 
         final CompactSST<Character, Character> osst =
                 SubsequentialTransducers.toOnwardSST(sst, INPUTS, new CompactSST<>(INPUTS), false);
@@ -169,22 +169,22 @@ public class SubsequentialTransducersTest {
 
         final CompactSST<Character, Character> expected = new CompactSST<>(INPUTS);
 
-        final int e1 = expected.addInitialState(Word.fromCharSequence("x"));
+        final int e1 = expected.addInitialState(Word.fromLetter('x'));
         final int e2 = expected.addState(Word.epsilon());
         final int e3 = expected.addState(Word.epsilon());
         final int e4 = expected.addState(Word.epsilon());
 
-        expected.setTransition(e1, (Character) 'a', e2, Word.fromCharSequence("x"));
-        expected.setTransition(e1, (Character) 'b', e2, Word.fromCharSequence("x"));
-        expected.setTransition(e1, (Character) 'c', e2, Word.fromCharSequence("x"));
+        expected.setTransition(e1, (Character) 'a', e2, Word.fromLetter('x'));
+        expected.setTransition(e1, (Character) 'b', e2, Word.fromLetter('x'));
+        expected.setTransition(e1, (Character) 'c', e2, Word.fromLetter('x'));
 
-        expected.setTransition(e2, (Character) 'a', e3, Word.fromCharSequence("xx"));
-        expected.setTransition(e2, (Character) 'b', e3, Word.fromCharSequence("yx"));
-        expected.setTransition(e2, (Character) 'c', e3, Word.fromCharSequence("zx"));
+        expected.setTransition(e2, (Character) 'a', e3, Word.fromString("xx"));
+        expected.setTransition(e2, (Character) 'b', e3, Word.fromString("yx"));
+        expected.setTransition(e2, (Character) 'c', e3, Word.fromString("zx"));
 
-        expected.setTransition(e3, (Character) 'a', e4, Word.fromCharSequence("xx"));
-        expected.setTransition(e3, (Character) 'b', e4, Word.fromCharSequence("yx"));
-        expected.setTransition(e3, (Character) 'c', e4, Word.fromCharSequence("zx"));
+        expected.setTransition(e3, (Character) 'a', e4, Word.fromString("xx"));
+        expected.setTransition(e3, (Character) 'b', e4, Word.fromString("yx"));
+        expected.setTransition(e3, (Character) 'c', e4, Word.fromString("zx"));
 
         expected.setTransition(e4, (Character) 'a', e2, Word.epsilon());
         expected.setTransition(e4, (Character) 'b', e2, Word.epsilon());

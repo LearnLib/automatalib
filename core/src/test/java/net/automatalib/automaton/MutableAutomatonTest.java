@@ -61,8 +61,8 @@ public class MutableAutomatonTest {
                                                                                                                          ModalType.MAY))
                                                                              .collect(Collectors.toList());
     static final List<Void> EMPTY_PROPS = Collections.emptyList();
-    static final List<Word<Character>> SST_TRANS_PROPS = Arrays.asList(Word.fromCharSequence("xy"), Word.fromCharSequence("yz"));
-    static final List<Word<Character>> SST_STATE_PROPS = Arrays.asList(Word.fromCharSequence("ab"), Word.fromCharSequence("bc"));
+    static final List<Word<Character>> SST_TRANS_PROPS = Arrays.asList(Word.fromString("xy"), Word.fromString("yz"));
+    static final List<Word<Character>> SST_STATE_PROPS = Arrays.asList(Word.fromString("ab"), Word.fromString("bc"));
 
     @Test
     public void testCompactDFA() {

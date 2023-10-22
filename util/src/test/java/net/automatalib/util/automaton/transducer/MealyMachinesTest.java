@@ -56,9 +56,9 @@ public class MealyMachinesTest {
     public void testProductAutomaton() {
         final CompactMealy<Character, Pair<Integer, Integer>> product = MealyMachines.combine(mealy1, mealy2, alphabet);
 
-        final Word<Character> completeInput = Word.fromCharSequence("abcabcabc");
-        final Word<Character> partialInput = Word.fromCharSequence("abcbbb");
-        final Word<Character> undefinedInput = Word.fromCharSequence("abbbbb");
+        final Word<Character> completeInput = Word.fromString("abcabcabc");
+        final Word<Character> partialInput = Word.fromString("abcbbb");
+        final Word<Character> undefinedInput = Word.fromString("abbbbb");
 
         final Word<Pair<Integer, Integer>> completeOutput = product.computeOutput(completeInput);
         final Word<Pair<Integer, Integer>> partialOutput = product.computeOutput(partialInput);
@@ -78,9 +78,9 @@ public class MealyMachinesTest {
     public void testCompletion() {
         final CompactMealy<Character, Integer> completed = MealyMachines.complete(mealy1, alphabet, -1);
 
-        final Word<Character> originalInput = Word.fromCharSequence("abcabcabc");
-        final Word<Character> partialInput = Word.fromCharSequence("abcbbb");
-        final Word<Character> undefinedInput = Word.fromCharSequence("bbbbbb");
+        final Word<Character> originalInput = Word.fromString("abcabcabc");
+        final Word<Character> partialInput = Word.fromString("abcbbb");
+        final Word<Character> undefinedInput = Word.fromString("bbbbbb");
 
         final Word<Integer> originalOutput = completed.computeOutput(originalInput);
         final Word<Integer> partialOutput = completed.computeOutput(partialInput);

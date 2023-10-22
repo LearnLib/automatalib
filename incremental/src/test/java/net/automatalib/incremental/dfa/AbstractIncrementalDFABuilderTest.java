@@ -192,7 +192,7 @@ public abstract class AbstractIncrementalDFABuilderTest {
     @Test
     public void testCounterexampleOfLengthOne() {
         final IncrementalDFABuilder<Character> incDfa = createIncrementalDFABuilder(TEST_ALPHABET);
-        incDfa.insert(Word.fromCharSequence("a"), true);
+        incDfa.insert(Word.fromLetter('a'), true);
 
         final CompactDFA<Character> dfa = new CompactDFA<>(TEST_ALPHABET);
         final Integer q0 = dfa.addInitialState(true);
@@ -212,14 +212,14 @@ public abstract class AbstractIncrementalDFABuilderTest {
         growableBuilder.addAlphabetSymbol('d');
         growableBuilder.addAlphabetSymbol('d');
 
-        final Word<Character> input1 = Word.fromCharSequence("dcba");
+        final Word<Character> input1 = Word.fromString("dcba");
 
         growableBuilder.insert(input1, true);
 
         Assert.assertTrue(growableBuilder.hasDefinitiveInformation(input1));
         Assert.assertEquals(growableBuilder.lookup(input1), Acceptance.TRUE);
 
-        final Word<Character> input2 = Word.fromCharSequence("dddd");
+        final Word<Character> input2 = Word.fromString("dddd");
 
         Assert.assertFalse(growableBuilder.hasDefinitiveInformation(input2));
         Assert.assertEquals(growableBuilder.lookup(input2), Acceptance.DONT_KNOW);

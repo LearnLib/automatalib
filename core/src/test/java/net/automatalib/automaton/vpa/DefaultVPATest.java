@@ -94,17 +94,17 @@ public class DefaultVPATest {
     }
 
     private void checkBracketWord(SEVPA<?, Character> sevpa) {
-        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("()")));
-        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("[]")));
-        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("(([[]]))")));
-        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("([([])])")));
-        Assert.assertTrue(sevpa.accepts(Word.fromCharSequence("[(())]")));
+        Assert.assertTrue(sevpa.accepts(Word.fromString("()")));
+        Assert.assertTrue(sevpa.accepts(Word.fromString("[]")));
+        Assert.assertTrue(sevpa.accepts(Word.fromString("(([[]]))")));
+        Assert.assertTrue(sevpa.accepts(Word.fromString("([([])])")));
+        Assert.assertTrue(sevpa.accepts(Word.fromString("[(())]")));
 
-        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence("")));
-        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence("([([")));
-        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence("(((]]]")));
-        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence(")(")));
-        Assert.assertFalse(sevpa.accepts(Word.fromCharSequence("()()")));
+        Assert.assertFalse(sevpa.accepts(Word.fromString("")));
+        Assert.assertFalse(sevpa.accepts(Word.fromString("([([")));
+        Assert.assertFalse(sevpa.accepts(Word.fromString("(((]]]")));
+        Assert.assertFalse(sevpa.accepts(Word.fromString(")(")));
+        Assert.assertFalse(sevpa.accepts(Word.fromString("()()")));
     }
 
     /**

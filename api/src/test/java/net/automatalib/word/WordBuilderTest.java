@@ -34,7 +34,7 @@ public class WordBuilderTest {
         Assert.assertEquals(0, wb.size());
         Assert.assertEquals(Word.epsilon(), wb.toWord());
 
-        final Word<Character> aaaaa = Word.fromCharSequence("aaaaa");
+        final Word<Character> aaaaa = Word.fromString("aaaaa");
 
         wb = new WordBuilder<>('a', 5);
         Assert.assertEquals(5, wb.size());
@@ -52,7 +52,7 @@ public class WordBuilderTest {
         Assert.assertEquals(5, wb.size());
         Assert.assertEquals(aaaaa, wb.toWord());
 
-        final Word<Character> abc = Word.fromCharSequence("abc");
+        final Word<Character> abc = Word.fromString("abc");
 
         wb = new WordBuilder<>(abc);
         Assert.assertEquals(3, wb.size());
@@ -66,8 +66,8 @@ public class WordBuilderTest {
     @Test
     public void appendTest() {
         WordBuilder<Character> wb = new WordBuilder<>();
-        final Word<Character> aaa = Word.fromCharSequence("aaa");
-        final Word<Character> abc = Word.fromCharSequence("abc");
+        final Word<Character> aaa = Word.fromString("aaa");
+        final Word<Character> abc = Word.fromString("abc");
         final Word<Character> abcabcabc = abc.concat(abc, abc);
 
         wb.append('a');
@@ -120,8 +120,8 @@ public class WordBuilderTest {
     @Test
     public void reverseTest() {
         WordBuilder<Character> wb = new WordBuilder<>();
-        final Word<Character> abc = Word.fromCharSequence("abc");
-        final Word<Character> cba = Word.fromCharSequence("cba");
+        final Word<Character> abc = Word.fromString("abc");
+        final Word<Character> cba = Word.fromString("cba");
 
         wb.append(abc).reverse();
         Assert.assertEquals(cba, wb.toWord());
@@ -130,7 +130,7 @@ public class WordBuilderTest {
     @Test
     public void toWordTest() {
         WordBuilder<Character> wb = new WordBuilder<>();
-        final Word<Character> abc = Word.fromCharSequence("abc");
+        final Word<Character> abc = Word.fromString("abc");
 
         wb.repeatAppend(3, abc);
         Assert.assertEquals(abc, wb.toWord(3, 6));
@@ -142,7 +142,7 @@ public class WordBuilderTest {
     @Test
     public void truncateTest() {
         WordBuilder<Character> wb = new WordBuilder<>();
-        final Word<Character> abc = Word.fromCharSequence("abc");
+        final Word<Character> abc = Word.fromString("abc");
         final Word<Character> abcabc = abc.concat(abc);
         final Word<Character> abcabcabc = abcabc.concat(abc);
 

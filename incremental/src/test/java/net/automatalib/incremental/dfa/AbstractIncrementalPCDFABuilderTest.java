@@ -198,7 +198,7 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
         growableBuilder.addAlphabetSymbol('d');
         growableBuilder.addAlphabetSymbol('d');
 
-        final Word<Character> input1 = Word.fromCharSequence("dcba");
+        final Word<Character> input1 = Word.fromString("dcba");
 
         growableBuilder.insert(input1, true);
 
@@ -206,7 +206,7 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
         Assert.assertEquals(growableBuilder.lookup(input1), Acceptance.TRUE);
         Assert.assertEquals(growableBuilder.lookup(input1.prefix(2)), Acceptance.TRUE);
 
-        final Word<Character> input2 = Word.fromCharSequence("dddd");
+        final Word<Character> input2 = Word.fromString("dddd");
 
         Assert.assertFalse(growableBuilder.hasDefinitiveInformation(input2));
         Assert.assertEquals(growableBuilder.lookup(input2), Acceptance.DONT_KNOW);
@@ -219,7 +219,7 @@ public abstract class AbstractIncrementalPCDFABuilderTest {
     @Test
     public void testCounterexampleOfLengthOne() {
         final IncrementalDFABuilder<Character> incPcDfa = createIncrementalPCDFABuilder(TEST_ALPHABET);
-        incPcDfa.insert(Word.fromCharSequence("a"), true);
+        incPcDfa.insert(Word.fromLetter('a'), true);
 
         final CompactDFA<Character> dfa = new CompactDFA<>(TEST_ALPHABET);
         final Integer q0 = dfa.addInitialState(true);

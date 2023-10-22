@@ -203,7 +203,7 @@ public class AdaptiveMealyTreeBuilderTest {
     @Test
     public void testCounterexampleOfLengthOne() {
         final AdaptiveMealyBuilder<Character, Character> incMealy = new AdaptiveMealyTreeBuilder<>(TEST_ALPHABET);
-        incMealy.insert(Word.fromCharSequence("a"), Word.fromCharSequence("x"));
+        incMealy.insert(Word.fromLetter('a'), Word.fromLetter('x'));
 
         final CompactMealy<Character, Character> dfa = new CompactMealy<>(TEST_ALPHABET);
         final Integer q0 = dfa.addInitialState();
@@ -223,15 +223,15 @@ public class AdaptiveMealyTreeBuilderTest {
         growableBuilder.addAlphabetSymbol('d');
         growableBuilder.addAlphabetSymbol('d');
 
-        final Word<Character> input1 = Word.fromCharSequence("dcba");
-        final Word<Character> output1 = Word.fromCharSequence("1234");
+        final Word<Character> input1 = Word.fromString("dcba");
+        final Word<Character> output1 = Word.fromString("1234");
 
         growableBuilder.insert(input1, output1);
 
         Assert.assertTrue(growableBuilder.hasDefinitiveInformation(input1));
         Assert.assertEquals(growableBuilder.lookup(input1), output1);
 
-        final Word<Character> input2 = Word.fromCharSequence("dddd");
+        final Word<Character> input2 = Word.fromString("dddd");
 
         Assert.assertFalse(growableBuilder.hasDefinitiveInformation(input2));
         Assert.assertEquals(growableBuilder.lookup(input2), Word.fromLetter('1'));

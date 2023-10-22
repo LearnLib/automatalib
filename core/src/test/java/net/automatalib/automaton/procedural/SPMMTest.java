@@ -99,48 +99,48 @@ public class SPMMTest {
 
     @Test
     public void testSPMM() {
-        final Word<Character> i1 = Word.fromCharSequence("SaSTcRRaR");
-        final Word<Character> o1 = Word.fromCharSequence("✓x✓✓z✓✓x✓");
+        final Word<Character> i1 = Word.fromString("SaSTcRRaR");
+        final Word<Character> o1 = Word.fromString("✓x✓✓z✓✓x✓");
         Assert.assertEquals(spmm.computeOutput(i1), o1);
 
-        final Word<Character> i2 = Word.fromCharSequence("SaSbRaR");
-        final Word<Character> o2 = Word.fromCharSequence("✓x✓y✓x✓");
+        final Word<Character> i2 = Word.fromString("SaSbRaR");
+        final Word<Character> o2 = Word.fromString("✓x✓y✓x✓");
         Assert.assertEquals(spmm.computeOutput(i2), o2);
 
-        final Word<Character> i3 = Word.fromCharSequence("SaSbaRcRabc");
-        final Word<Character> o3 = Word.fromCharSequence("✓x✓y-------");
+        final Word<Character> i3 = Word.fromString("SaSbaRcRabc");
+        final Word<Character> o3 = Word.fromString("✓x✓y-------");
         Assert.assertEquals(spmm.computeOutput(i3), o3);
 
-        final Word<Character> i4 = Word.fromCharSequence("SaUcR");
-        final Word<Character> o4 = Word.fromCharSequence("✓x---");
+        final Word<Character> i4 = Word.fromString("SaUcR");
+        final Word<Character> o4 = Word.fromString("✓x---");
         Assert.assertEquals(spmm.computeOutput(i4), o4);
 
-        final Word<Character> i5 = Word.fromCharSequence("TcR");
-        final Word<Character> o5 = Word.fromCharSequence("---");
+        final Word<Character> i5 = Word.fromString("TcR");
+        final Word<Character> o5 = Word.fromString("---");
         Assert.assertEquals(spmm.computeOutput(i5), o5);
 
-        final Word<Character> i6 = Word.fromCharSequence("Sd");
-        final Word<Character> o6 = Word.fromCharSequence("✓-");
+        final Word<Character> i6 = Word.fromString("Sd");
+        final Word<Character> o6 = Word.fromString("✓-");
         Assert.assertEquals(spmm.computeOutput(i6), o6);
 
-        final Word<Character> i7 = Word.fromCharSequence("aca");
-        final Word<Character> o7 = Word.fromCharSequence("---");
+        final Word<Character> i7 = Word.fromString("aca");
+        final Word<Character> o7 = Word.fromString("---");
         Assert.assertEquals(spmm.computeOutput(i7), o7);
 
-        final Word<Character> i8 = Word.fromCharSequence("SacTcR");
-        final Word<Character> o8 = Word.fromCharSequence("✓x----");
+        final Word<Character> i8 = Word.fromString("SacTcR");
+        final Word<Character> o8 = Word.fromString("✓x----");
         Assert.assertEquals(spmm.computeOutput(i8), o8);
 
-        final Word<Character> i9 = Word.fromCharSequence("R");
-        final Word<Character> o9 = Word.fromCharSequence("-");
+        final Word<Character> i9 = Word.fromString("R");
+        final Word<Character> o9 = Word.fromString("-");
         Assert.assertEquals(spmm.computeOutput(i9), o9);
 
-        final Word<Character> i10 = Word.fromCharSequence("STTc");
-        final Word<Character> o10 = Word.fromCharSequence("✓✓--");
+        final Word<Character> i10 = Word.fromString("STTc");
+        final Word<Character> o10 = Word.fromString("✓✓--");
         Assert.assertEquals(spmm.computeOutput(i10), o10);
 
-        final Word<Character> i11 = Word.fromCharSequence("SaSRR");
-        final Word<Character> o11 = Word.fromCharSequence("✓x✓✓-");
+        final Word<Character> i11 = Word.fromString("SaSRR");
+        final Word<Character> o11 = Word.fromString("✓x✓✓-");
         Assert.assertEquals(spmm.computeOutput(i11), o11);
 
         final Word<Character> i12 = Word.epsilon();
@@ -150,48 +150,48 @@ public class SPMMTest {
 
     @Test
     public void testEmptySPMM() {
-        final Word<Character> i1 = Word.fromCharSequence("SaSTcRRaR");
-        final Word<Character> o1 = Word.fromCharSequence("---------");
+        final Word<Character> i1 = Word.fromString("SaSTcRRaR");
+        final Word<Character> o1 = Word.fromString("---------");
         Assert.assertEquals(emptySpmm.computeOutput(i1), o1);
 
-        final Word<Character> i2 = Word.fromCharSequence("SaSbRaR");
-        final Word<Character> o2 = Word.fromCharSequence("-------");
+        final Word<Character> i2 = Word.fromString("SaSbRaR");
+        final Word<Character> o2 = Word.fromString("-------");
         Assert.assertEquals(emptySpmm.computeOutput(i2), o2);
 
-        final Word<Character> i3 = Word.fromCharSequence("SaSbaRcRabc");
-        final Word<Character> o3 = Word.fromCharSequence("-----------");
+        final Word<Character> i3 = Word.fromString("SaSbaRcRabc");
+        final Word<Character> o3 = Word.fromString("-----------");
         Assert.assertEquals(emptySpmm.computeOutput(i3), o3);
 
-        final Word<Character> i4 = Word.fromCharSequence("SaUcR");
-        final Word<Character> o4 = Word.fromCharSequence("-----");
+        final Word<Character> i4 = Word.fromString("SaUcR");
+        final Word<Character> o4 = Word.fromString("-----");
         Assert.assertEquals(emptySpmm.computeOutput(i4), o4);
 
-        final Word<Character> i5 = Word.fromCharSequence("TcR");
-        final Word<Character> o5 = Word.fromCharSequence("---");
+        final Word<Character> i5 = Word.fromString("TcR");
+        final Word<Character> o5 = Word.fromString("---");
         Assert.assertEquals(emptySpmm.computeOutput(i5), o5);
 
-        final Word<Character> i6 = Word.fromCharSequence("Sd");
-        final Word<Character> o6 = Word.fromCharSequence("--");
+        final Word<Character> i6 = Word.fromString("Sd");
+        final Word<Character> o6 = Word.fromString("--");
         Assert.assertEquals(emptySpmm.computeOutput(i6), o6);
 
-        final Word<Character> i7 = Word.fromCharSequence("aca");
-        final Word<Character> o7 = Word.fromCharSequence("---");
+        final Word<Character> i7 = Word.fromString("aca");
+        final Word<Character> o7 = Word.fromString("---");
         Assert.assertEquals(emptySpmm.computeOutput(i7), o7);
 
-        final Word<Character> i8 = Word.fromCharSequence("SacTcR");
-        final Word<Character> o8 = Word.fromCharSequence("------");
+        final Word<Character> i8 = Word.fromString("SacTcR");
+        final Word<Character> o8 = Word.fromString("------");
         Assert.assertEquals(emptySpmm.computeOutput(i8), o8);
 
-        final Word<Character> i9 = Word.fromCharSequence("R");
-        final Word<Character> o9 = Word.fromCharSequence("-");
+        final Word<Character> i9 = Word.fromString("R");
+        final Word<Character> o9 = Word.fromString("-");
         Assert.assertEquals(emptySpmm.computeOutput(i9), o9);
 
-        final Word<Character> i10 = Word.fromCharSequence("STTc");
-        final Word<Character> o10 = Word.fromCharSequence("----");
+        final Word<Character> i10 = Word.fromString("STTc");
+        final Word<Character> o10 = Word.fromString("----");
         Assert.assertEquals(emptySpmm.computeOutput(i10), o10);
 
-        final Word<Character> i11 = Word.fromCharSequence("SaSRR");
-        final Word<Character> o11 = Word.fromCharSequence("-----");
+        final Word<Character> i11 = Word.fromString("SaSRR");
+        final Word<Character> o11 = Word.fromString("-----");
         Assert.assertEquals(emptySpmm.computeOutput(i11), o11);
 
         final Word<Character> i12 = Word.epsilon();

@@ -95,37 +95,37 @@ public class SBATest {
     public void testSBA() {
         final SBA<?, Character> sba = new StackSBA<>(ALPHABET, 'S', SUB_MODELS);
 
-        final Word<Character> i1 = Word.fromCharSequence("SaSTcRRaR");
+        final Word<Character> i1 = Word.fromString("SaSTcRRaR");
         Assert.assertTrue(sba.accepts(i1));
 
-        final Word<Character> i2 = Word.fromCharSequence("SaSbRaR");
+        final Word<Character> i2 = Word.fromString("SaSbRaR");
         Assert.assertTrue(sba.accepts(i2));
 
-        final Word<Character> i3 = Word.fromCharSequence("SaSbaRcRabc");
+        final Word<Character> i3 = Word.fromString("SaSbaRcRabc");
         Assert.assertFalse(sba.accepts(i3));
 
-        final Word<Character> i4 = Word.fromCharSequence("SaUcR");
+        final Word<Character> i4 = Word.fromString("SaUcR");
         Assert.assertFalse(sba.accepts(i4));
 
-        final Word<Character> i5 = Word.fromCharSequence("TcR");
+        final Word<Character> i5 = Word.fromString("TcR");
         Assert.assertFalse(sba.accepts(i5));
 
-        final Word<Character> i6 = Word.fromCharSequence("Sd");
+        final Word<Character> i6 = Word.fromString("Sd");
         Assert.assertFalse(sba.accepts(i6));
 
-        final Word<Character> i7 = Word.fromCharSequence("aca");
+        final Word<Character> i7 = Word.fromString("aca");
         Assert.assertFalse(sba.accepts(i7));
 
-        final Word<Character> i8 = Word.fromCharSequence("SacTcR");
+        final Word<Character> i8 = Word.fromString("SacTcR");
         Assert.assertFalse(sba.accepts(i8));
 
-        final Word<Character> i9 = Word.fromCharSequence("R");
+        final Word<Character> i9 = Word.fromString("R");
         Assert.assertFalse(sba.accepts(i9));
 
-        final Word<Character> i10 = Word.fromCharSequence("STTc");
+        final Word<Character> i10 = Word.fromString("STTc");
         Assert.assertFalse(sba.accepts(i10));
 
-        final Word<Character> i11 = Word.fromCharSequence("SaSRR");
+        final Word<Character> i11 = Word.fromString("SaSRR");
         Assert.assertFalse(sba.accepts(i11));
 
         final Word<Character> i12 = Word.epsilon();
@@ -136,37 +136,37 @@ public class SBATest {
     public void testEmptySBA() {
         final SBA<?, Character> sba = new EmptySBA<>(ALPHABET);
 
-        final Word<Character> i1 = Word.fromCharSequence("SaSTcRRaR");
+        final Word<Character> i1 = Word.fromString("SaSTcRRaR");
         Assert.assertFalse(sba.accepts(i1));
 
-        final Word<Character> i2 = Word.fromCharSequence("SaSbRaR");
+        final Word<Character> i2 = Word.fromString("SaSbRaR");
         Assert.assertFalse(sba.accepts(i2));
 
-        final Word<Character> i3 = Word.fromCharSequence("SaSbaRcRabc");
+        final Word<Character> i3 = Word.fromString("SaSbaRcRabc");
         Assert.assertFalse(sba.accepts(i3));
 
-        final Word<Character> i4 = Word.fromCharSequence("SaUcR");
+        final Word<Character> i4 = Word.fromString("SaUcR");
         Assert.assertFalse(sba.accepts(i4));
 
-        final Word<Character> i5 = Word.fromCharSequence("TcR");
+        final Word<Character> i5 = Word.fromString("TcR");
         Assert.assertFalse(sba.accepts(i5));
 
-        final Word<Character> i6 = Word.fromCharSequence("Sd");
+        final Word<Character> i6 = Word.fromString("Sd");
         Assert.assertFalse(sba.accepts(i6));
 
-        final Word<Character> i7 = Word.fromCharSequence("aca");
+        final Word<Character> i7 = Word.fromString("aca");
         Assert.assertFalse(sba.accepts(i7));
 
-        final Word<Character> i8 = Word.fromCharSequence("SacTcR");
+        final Word<Character> i8 = Word.fromString("SacTcR");
         Assert.assertFalse(sba.accepts(i8));
 
-        final Word<Character> i9 = Word.fromCharSequence("R");
+        final Word<Character> i9 = Word.fromString("R");
         Assert.assertFalse(sba.accepts(i9));
 
-        final Word<Character> i10 = Word.fromCharSequence("STTc");
+        final Word<Character> i10 = Word.fromString("STTc");
         Assert.assertFalse(sba.accepts(i10));
 
-        final Word<Character> i11 = Word.fromCharSequence("SaSRR");
+        final Word<Character> i11 = Word.fromString("SaSRR");
         Assert.assertFalse(sba.accepts(i11));
 
         final Word<Character> i12 = Word.epsilon();

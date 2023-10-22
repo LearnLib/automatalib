@@ -180,22 +180,22 @@ final class DOTSerializationUtil {
     private static CompactSST<Character, Character> buildSST() {
         final CompactSST<Character, Character> result = new CompactSST<>(Alphabets.characters('a', 'c'));
 
-        final Integer s0 = result.addInitialState(Word.fromCharSequence("x"));
+        final Integer s0 = result.addInitialState(Word.fromLetter('x'));
         final Integer s1 = result.addState(Word.epsilon());
         final Integer s2 = result.addState(Word.epsilon());
         final Integer s3 = result.addState(Word.epsilon());
 
-        result.addTransition(s0, 'a', s1, Word.fromCharSequence("x"));
-        result.addTransition(s0, 'b', s1, Word.fromCharSequence("x"));
-        result.addTransition(s0, 'c', s1, Word.fromCharSequence("x"));
+        result.addTransition(s0, 'a', s1, Word.fromLetter('x'));
+        result.addTransition(s0, 'b', s1, Word.fromLetter('x'));
+        result.addTransition(s0, 'c', s1, Word.fromLetter('x'));
 
-        result.addTransition(s1, 'a', s2, Word.fromCharSequence("xx"));
-        result.addTransition(s1, 'b', s2, Word.fromCharSequence("yx"));
-        result.addTransition(s1, 'c', s2, Word.fromCharSequence("zx"));
+        result.addTransition(s1, 'a', s2, Word.fromString("xx"));
+        result.addTransition(s1, 'b', s2, Word.fromString("yx"));
+        result.addTransition(s1, 'c', s2, Word.fromString("zx"));
 
-        result.addTransition(s2, 'a', s3, Word.fromCharSequence("xx"));
-        result.addTransition(s2, 'b', s3, Word.fromCharSequence("yx"));
-        result.addTransition(s2, 'c', s3, Word.fromCharSequence("zx"));
+        result.addTransition(s2, 'a', s3, Word.fromString("xx"));
+        result.addTransition(s2, 'b', s3, Word.fromString("yx"));
+        result.addTransition(s2, 'c', s3, Word.fromString("zx"));
 
         result.addTransition(s3, 'a', s1, Word.epsilon());
         result.addTransition(s3, 'b', s1, Word.epsilon());

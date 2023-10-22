@@ -58,24 +58,24 @@ public class SPATest {
         Assert.assertEquals(spa.size(), SUB_MODELS.values().stream().mapToInt(DFA::size).sum());
 
         // Well-matched palindromes
-        Assert.assertTrue(spa.computeOutput(Word.fromCharSequence("SR")));
-        Assert.assertTrue(spa.computeOutput(Word.fromCharSequence("SaR")));
-        Assert.assertTrue(spa.computeOutput(Word.fromCharSequence("SaSRaR")));
-        Assert.assertTrue(spa.computeOutput(Word.fromCharSequence("SbSTcRRbR")));
+        Assert.assertTrue(spa.computeOutput(Word.fromString("SR")));
+        Assert.assertTrue(spa.computeOutput(Word.fromString("SaR")));
+        Assert.assertTrue(spa.computeOutput(Word.fromString("SaSRaR")));
+        Assert.assertTrue(spa.computeOutput(Word.fromString("SbSTcRRbR")));
 
         // Well-matched but invalid words
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SaaR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SaTaRaR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SaaR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SaTaRaR")));
         Assert.assertFalse(spa.computeOutput(Word.epsilon()));
 
         // Ill-matched/non-rooted words
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SSS")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("RS")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("aba")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SSS")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("RS")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("aba")));
 
         // Un-specified symbols
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SdR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SaUcRaR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SdR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SaUcRaR")));
     }
 
     @Test
@@ -88,24 +88,24 @@ public class SPATest {
         Assert.assertTrue(spa.getProcedures().isEmpty());
 
         // Well-matched palindromes
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SaR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SaSRaR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SbSTcRRbR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SaR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SaSRaR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SbSTcRRbR")));
 
         // Well-matched but invalid words
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SaaR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SaTaRaR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SaaR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SaTaRaR")));
         Assert.assertFalse(spa.computeOutput(Word.epsilon()));
 
         // Ill-matched/non-rooted words
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SSS")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("RS")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("aba")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SSS")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("RS")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("aba")));
 
         // Un-specified symbols
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SdR")));
-        Assert.assertFalse(spa.computeOutput(Word.fromCharSequence("SaUcRaR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SdR")));
+        Assert.assertFalse(spa.computeOutput(Word.fromString("SaUcRaR")));
     }
 
     private static DFA<?, Character> buildSProcedure(ProceduralInputAlphabet<Character> alphabet) {

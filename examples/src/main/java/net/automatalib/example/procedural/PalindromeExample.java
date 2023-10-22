@@ -50,22 +50,22 @@ public final class PalindromeExample {
         final SPA<?, Character> spa = buildSPA();
 
         LOGGER.info("Well-matched palindromes");
-        checkWord(spa, Word.fromCharSequence("FR"));
-        checkWord(spa, Word.fromCharSequence("FaR"));
-        checkWord(spa, Word.fromCharSequence("FaFaR"));
-        checkWord(spa, Word.fromCharSequence("FbFGcRRbR"));
+        checkWord(spa, Word.fromString("FR"));
+        checkWord(spa, Word.fromString("FaR"));
+        checkWord(spa, Word.fromString("FaFaR"));
+        checkWord(spa, Word.fromString("FbFGcRRbR"));
 
         LOGGER.info("");
         LOGGER.info("Well-matched but invalid words");
-        checkWord(spa, Word.fromCharSequence("FaaR"));
-        checkWord(spa, Word.fromCharSequence("FaGaRaR"));
+        checkWord(spa, Word.fromString("FaaR"));
+        checkWord(spa, Word.fromString("FaGaRaR"));
         checkWord(spa, Word.epsilon());
 
         LOGGER.info("");
         LOGGER.info("Ill-matched/non-rooted words");
-        checkWord(spa, Word.fromCharSequence("FFF"));
-        checkWord(spa, Word.fromCharSequence("RF"));
-        checkWord(spa, Word.fromCharSequence("aba"));
+        checkWord(spa, Word.fromString("FFF"));
+        checkWord(spa, Word.fromString("RF"));
+        checkWord(spa, Word.fromString("aba"));
 
         Visualization.visualize(spa);
     }

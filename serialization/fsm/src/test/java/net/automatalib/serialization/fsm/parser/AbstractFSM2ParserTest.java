@@ -49,9 +49,9 @@ public abstract class AbstractFSM2ParserTest {
         final Collection<Character> nonExistingInputs = Collections.singleton('[');
         final Collection<Character> mixedInputs = Arrays.asList('a', '[');
 
-        final Word<Character> existingWord = Word.fromCharSequence("aaaa");
-        final Word<Character> nonExistingWord = Word.fromCharSequence("[[[[");
-        final Word<Character> mixedWord = Word.fromCharSequence("a[a[a[");
+        final Word<Character> existingWord = Word.fromString("aaaa");
+        final Word<Character> nonExistingWord = Word.fromString("[[[[");
+        final Word<Character> mixedWord = Word.fromString("a[a[a[");
 
         // check automatically parsed inputs
         final UniversalDeterministicAutomaton<?, Character, ?, ?, ?> automaticAutomaton = getParsedAutomaton(null);

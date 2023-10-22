@@ -50,7 +50,7 @@ public class CopyConstructorTest {
     private static final Alphabet<Character> INPUT_ALPHABET = Alphabets.characters('a', 'c');
     private static final Alphabet<Character> OUTPUT_ALPHABET = Alphabets.characters('1', '3');
     private static final List<Word<Character>> SST_PROPERTIES =
-            Arrays.asList(Word.fromCharSequence("Hello"), Word.fromCharSequence("World"));
+            Arrays.asList(Word.fromString("Hello"), Word.fromString("World"));
 
     @Test
     public void testDFA() {
