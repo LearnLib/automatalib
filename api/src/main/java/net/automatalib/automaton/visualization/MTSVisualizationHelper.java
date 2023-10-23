@@ -30,9 +30,7 @@ public class MTSVisualizationHelper<S, I, T, TP extends ModalEdgeProperty, M ext
 
     @Override
     public boolean getEdgeProperties(S src, TransitionEdge<I, T> edge, S tgt, Map<String, String> properties) {
-        if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-            return false;
-        }
+        super.getEdgeProperties(src, edge, tgt, properties);
 
         final TP transitionProperty = super.automaton.getTransitionProperty(edge.getTransition());
 

@@ -40,26 +40,21 @@ public class HTMLVisualizationHelper extends AbstractVisualizationHelper {
 
     @Override
     public boolean getNodeProperties(Integer node, Map<String, String> properties) {
+        super.getNodeProperties(node, properties);
 
-        if (super.getNodeProperties(node, properties)) {
+        final WitnessTreeState<?, ?, ?, ?> prop = resultTree.getNodeProperty(node);
+        final String label =
+                "<HTML><TABLE BORDER=\"0px\">" +
+                "<TR><TD>State:</TD><TD>" + prop.state + "</TD> </TR>" +
+                "<TR><TD>Context:</TD><TD>" + prop.context + "</TD></TR>" +
+                "<TR><TD>Procedure:</TD><TD>" + prop.procedure + "</TD> </TR>" +
+                "<TR><TD>ReturnAddress:</TD><TD>" + (prop.stack != null ? prop.stack.state : null) + "</TD></TR>" +
+                "<TR><TD>Formula:</TD><TD>" + renderFormula(node) + "</TD></TR>" +
+                "</TABLE>";
 
-            final WitnessTreeState<?, ?, ?, ?> prop = resultTree.getNodeProperty(node);
+        properties.put(NodeAttrs.LABEL, label);
 
-            final String label =
-                    "<HTML><TABLE BORDER=\"0px\">" +
-                    "<TR><TD>State:</TD><TD>" + prop.state + "</TD> </TR>" +
-                    "<TR><TD>Context:</TD><TD>" + prop.context + "</TD></TR>" +
-                    "<TR><TD>Procedure:</TD><TD>" + prop.procedure + "</TD> </TR>" +
-                    "<TR><TD>ReturnAddress:</TD><TD>" + (prop.stack != null ? prop.stack.state : null) + "</TD></TR>" +
-                    "<TR><TD>Formula:</TD><TD>" + renderFormula(node) + "</TD></TR>" +
-                    "</TABLE>";
-
-            properties.put(NodeAttrs.LABEL, label);
-            return true;
-        }
-
-        return false;
-
+        return true;
     }
 
     private String renderFormula(Integer node) {

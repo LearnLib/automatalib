@@ -309,12 +309,15 @@ public class DOTSerializationTest {
 
         @Override
         public boolean getNodeProperties(N node, Map<String, String> properties) {
+            super.getNodeProperties(node, properties);
+
             // Both types of HTML markup should be supported
             if (Objects.hashCode(node) % 2 == 0) {
                 properties.put(NodeAttrs.LABEL, "<HTML><U>" + node + "</U>");
             } else {
                 properties.put(NodeAttrs.LABEL, "<HTML><U>" + node + "</U></HTML>");
             }
+
             return true;
         }
     }

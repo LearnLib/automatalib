@@ -47,10 +47,7 @@ public class PMPGVisualizationHelper<N, E, AP> extends DefaultVisualizationHelpe
 
     @Override
     public boolean getNodeProperties(N node, Map<String, String> properties) {
-
-        if (!super.getNodeProperties(node, properties)) {
-            return false;
-        }
+        super.getNodeProperties(node, properties);
 
         final Set<AP> aps = pmpg.getNodeProperty(node);
 
@@ -73,10 +70,7 @@ public class PMPGVisualizationHelper<N, E, AP> extends DefaultVisualizationHelpe
 
     @Override
     public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
-
-        if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-            return false;
-        }
+        super.getEdgeProperties(src, edge, tgt, properties);
 
         final ProceduralModalEdgeProperty prop = pmpg.getEdgeProperty(edge);
         final StringJoiner styleJoiner = new StringJoiner(",");

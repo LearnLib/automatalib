@@ -36,14 +36,14 @@ public class EdgeVisualizationHelper extends AbstractVisualizationHelper {
                                      CompactEdge<String> edge,
                                      Integer tgt,
                                      Map<String, String> properties) {
-        if (super.getEdgeProperties(src, edge, tgt, properties)) {
-            if (resultTree.getNodeProperty(src).isPartOfResult && resultTree.getNodeProperty(tgt).isPartOfResult) {
-                properties.put(EdgeAttrs.STYLE, EdgeStyles.BOLD);
-            } else {
-                properties.put(EdgeAttrs.STYLE, EdgeStyles.DASHED);
-            }
-            return true;
+        super.getEdgeProperties(src, edge, tgt, properties);
+
+        if (resultTree.getNodeProperty(src).isPartOfResult && resultTree.getNodeProperty(tgt).isPartOfResult) {
+            properties.put(EdgeAttrs.STYLE, EdgeStyles.BOLD);
+        } else {
+            properties.put(EdgeAttrs.STYLE, EdgeStyles.DASHED);
         }
-        return false;
+
+        return true;
     }
 }

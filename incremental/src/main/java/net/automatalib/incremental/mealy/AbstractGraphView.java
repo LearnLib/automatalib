@@ -36,12 +36,12 @@ public abstract class AbstractGraphView<I, O, N, E> implements GraphView<I, O, N
 
             @Override
             public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
-                if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                    return false;
-                }
+                super.getEdgeProperties(src, edge, tgt, properties);
+
                 I input = getInputSymbol(edge);
                 O output = getOutputSymbol(edge);
                 properties.put(EdgeAttrs.LABEL, input + " / " + output);
+
                 return true;
             }
         };

@@ -28,9 +28,7 @@ public class MooreVisualizationHelper<S, I, T, O>
 
     @Override
     public boolean getNodeProperties(S node, Map<String, String> properties) {
-        if (!super.getNodeProperties(node, properties)) {
-            return false;
-        }
+        super.getNodeProperties(node, properties);
 
         final StringBuilder labelBuilder = new StringBuilder();
         labelBuilder.append(node).append(" / ");
@@ -39,6 +37,7 @@ public class MooreVisualizationHelper<S, I, T, O>
             labelBuilder.append(output);
         }
         properties.put(NodeAttrs.LABEL, labelBuilder.toString());
+
         return true;
     }
 

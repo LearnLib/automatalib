@@ -33,16 +33,15 @@ public class ColorVisualizationHelper extends AbstractVisualizationHelper {
 
     @Override
     public boolean getNodeProperties(Integer node, Map<String, String> properties) {
-        if (super.getNodeProperties(node, properties)) {
-            if (resultTree.getNodeProperty(node).isPartOfResult) {
-                properties.put(NodeAttrs.COLOR, "green");
-            } else {
-                properties.put(NodeAttrs.COLOR, "red");
-            }
-            return true;
+        super.getNodeProperties(node, properties);
+
+        if (resultTree.getNodeProperty(node).isPartOfResult) {
+            properties.put(NodeAttrs.COLOR, "green");
+        } else {
+            properties.put(NodeAttrs.COLOR, "red");
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -50,16 +49,15 @@ public class ColorVisualizationHelper extends AbstractVisualizationHelper {
                                      CompactEdge<String> edge,
                                      Integer tgt,
                                      Map<String, String> properties) {
-        if (super.getEdgeProperties(src, edge, tgt, properties)) {
-            if (resultTree.getNodeProperty(src).isPartOfResult && resultTree.getNodeProperty(tgt).isPartOfResult) {
-                properties.put(EdgeAttrs.COLOR, "green");
-            } else {
-                properties.put(EdgeAttrs.COLOR, "red");
-            }
-            return true;
+        super.getEdgeProperties(src, edge, tgt, properties);
+
+        if (resultTree.getNodeProperty(src).isPartOfResult && resultTree.getNodeProperty(tgt).isPartOfResult) {
+            properties.put(EdgeAttrs.COLOR, "green");
+        } else {
+            properties.put(EdgeAttrs.COLOR, "red");
         }
 
-        return false;
+        return true;
     }
 
 }

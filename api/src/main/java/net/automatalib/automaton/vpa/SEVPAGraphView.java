@@ -99,8 +99,9 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
             public boolean getNodeProperties(L node, Map<String, String> properties) {
                 super.getNodeProperties(node, properties);
 
-                properties.put(NodeAttrs.SHAPE,
-                               sevpa.isAcceptingLocation(node) ? NodeShapes.DOUBLECIRCLE : NodeShapes.CIRCLE);
+                if (sevpa.isAcceptingLocation(node)) {
+                    properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
+                }
                 properties.put(NodeAttrs.LABEL, "L" + sevpa.getLocationId(node));
 
                 return true;
@@ -108,9 +109,9 @@ public class SEVPAGraphView<L, I> implements Graph<L, SevpaViewEdge<L, I>> {
 
             @Override
             public boolean getEdgeProperties(L src, SevpaViewEdge<L, I> edge, L tgt, Map<String, String> properties) {
+                super.getEdgeProperties(src, edge, tgt, properties);
 
                 final I input = edge.input;
-
                 if (alphabet.isReturnSymbol(input)) {
                     properties.put(EdgeAttrs.LABEL, input + "/(L" + edge.callLocId + ',' + edge.callSymbol + ')');
                 } else {

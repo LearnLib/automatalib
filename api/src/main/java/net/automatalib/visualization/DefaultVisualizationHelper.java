@@ -46,7 +46,7 @@ public class DefaultVisualizationHelper<N, E> implements VisualizationHelper<N, 
 
     @Override
     public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
-        properties.putIfAbsent(NodeAttrs.LABEL, String.valueOf(edge));
+        properties.putIfAbsent(EdgeAttrs.LABEL, String.valueOf(edge));
         return true;
     }
 

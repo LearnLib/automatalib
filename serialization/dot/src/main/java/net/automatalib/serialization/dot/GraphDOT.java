@@ -311,7 +311,6 @@ public final class GraphDOT {
             if (Boolean.parseBoolean(props.remove(NodeAttrs.INITIAL))) {
                 initialNodes.add(id);
             }
-            props.remove(NodeAttrs.ACCEPTING);
 
             a.append('\t').append(id);
             appendParams(props, a);

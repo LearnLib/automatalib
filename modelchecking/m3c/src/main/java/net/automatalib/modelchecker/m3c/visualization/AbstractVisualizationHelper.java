@@ -36,13 +36,12 @@ abstract class AbstractVisualizationHelper extends DefaultVisualizationHelper<In
 
     @Override
     public boolean getNodeProperties(Integer node, Map<String, String> properties) {
-        if (super.getNodeProperties(node, properties)) {
-            properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
-            properties.put(NodeAttrs.LABEL, Objects.toString(resultTree.getNodeProperty(node)));
-            return true;
-        }
+        super.getNodeProperties(node, properties);
 
-        return false;
+        properties.put(NodeAttrs.SHAPE, NodeShapes.BOX);
+        properties.put(NodeAttrs.LABEL, Objects.toString(resultTree.getNodeProperty(node)));
+
+        return true;
     }
 
     @Override
@@ -50,12 +49,11 @@ abstract class AbstractVisualizationHelper extends DefaultVisualizationHelper<In
                                      CompactEdge<String> edge,
                                      Integer tgt,
                                      Map<String, String> properties) {
-        if (super.getEdgeProperties(src, edge, tgt, properties)) {
-            properties.put(EdgeAttrs.ARROWHEAD, "none");
-            properties.put(EdgeAttrs.LABEL, Objects.toString(edge.getProperty()));
-            return true;
-        }
+        super.getEdgeProperties(src, edge, tgt, properties);
 
-        return false;
+        properties.put(EdgeAttrs.ARROWHEAD, "none");
+        properties.put(EdgeAttrs.LABEL, Objects.toString(edge.getProperty()));
+
+        return true;
     }
 }

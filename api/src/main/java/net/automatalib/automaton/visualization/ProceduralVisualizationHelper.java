@@ -73,10 +73,7 @@ public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHel
 
     @Override
     public boolean getNodeProperties(Pair<I, S> node, Map<String, String> properties) {
-
-        if (!super.getNodeProperties(node, properties)) {
-            return false;
-        }
+        super.getNodeProperties(node, properties);
 
         final I identifier = node.getFirst();
         @SuppressWarnings("assignment.type.incompatible") // we only use identifiers for which procedures exists
@@ -100,10 +97,7 @@ public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHel
                                      Triple<I, I, S> edge,
                                      Pair<I, S> tgt,
                                      Map<String, String> properties) {
-
-        if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-            return false;
-        }
+        super.getEdgeProperties(src, edge, tgt, properties);
 
         final S state = src.getSecond();
         final I identifier = edge.getFirst();

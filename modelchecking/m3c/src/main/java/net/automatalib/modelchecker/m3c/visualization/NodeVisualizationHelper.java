@@ -32,16 +32,15 @@ public class NodeVisualizationHelper extends AbstractVisualizationHelper {
 
     @Override
     public boolean getNodeProperties(Integer node, Map<String, String> properties) {
-        if (super.getNodeProperties(node, properties)) {
-            if (resultTree.getNodeProperty(node).isPartOfResult) {
-                properties.put(NodeAttrs.STYLE, NodeStyles.BOLD);
-            } else {
-                properties.put(NodeAttrs.STYLE, NodeStyles.DASHED);
-            }
-            return true;
+        super.getNodeProperties(node, properties);
+
+        if (resultTree.getNodeProperty(node).isPartOfResult) {
+            properties.put(NodeAttrs.STYLE, NodeStyles.BOLD);
+        } else {
+            properties.put(NodeAttrs.STYLE, NodeStyles.DASHED);
         }
 
-        return false;
+        return true;
     }
 
 }

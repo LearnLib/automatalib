@@ -27,15 +27,13 @@ public class FSAVisualizationHelper<S, I> extends AutomatonVisualizationHelper<S
 
     @Override
     public boolean getNodeProperties(S node, Map<String, String> properties) {
-        if (!super.getNodeProperties(node, properties)) {
-            return false;
-        }
+        super.getNodeProperties(node, properties);
+
         if (automaton.isAccepting(node)) {
-            String oldShape = properties.getOrDefault(NodeAttrs.SHAPE, NodeShapes.OVAL);
+            String oldShape = properties.getOrDefault(NodeAttrs.SHAPE, NodeShapes.CIRCLE);
             properties.put(NodeAttrs.SHAPE, "double" + oldShape);
-            properties.put(NodeAttrs.ACCEPTING, "true");
         }
+
         return true;
     }
-
 }

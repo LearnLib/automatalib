@@ -87,7 +87,6 @@ public interface VisualizationHelper<N, E> {
         public static final String FIXEDSIZE = "fixedsize";
 
         public static final String INITIAL = "initial";
-        public static final String ACCEPTING = "accepting";
 
         private NodeAttrs() {
             // prevent instantiation

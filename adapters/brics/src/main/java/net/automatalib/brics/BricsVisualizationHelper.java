@@ -46,9 +46,7 @@ final class BricsVisualizationHelper extends DefaultVisualizationHelper<State, T
 
     @Override
     public boolean getNodeProperties(State node, Map<String, String> properties) {
-        if (!super.getNodeProperties(node, properties)) {
-            return false;
-        }
+        super.getNodeProperties(node, properties);
 
         String str = node.toString();
         int wsIdx1 = str.indexOf(' ');
@@ -57,17 +55,17 @@ final class BricsVisualizationHelper extends DefaultVisualizationHelper<State, T
         if (node.isAccept()) {
             properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
         }
+
         return true;
     }
 
     @Override
     public boolean getEdgeProperties(State src, Transition edge, State tgt, Map<String, String> properties) {
-        if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-            return false;
-        }
+        super.getEdgeProperties(src, edge, tgt, properties);
 
         String label = BricsTransitionProperty.toString(edge.getMin(), edge.getMax());
         properties.put(NodeAttrs.LABEL, label);
+
         return true;
     }
 

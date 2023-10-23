@@ -30,23 +30,21 @@ public class SSTVisualizationHelper<S, I, T, O>
 
     @Override
     public boolean getEdgeProperties(S src, TransitionEdge<I, T> edge, S tgt, Map<String, String> properties) {
-        if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-            return false;
-        }
+        super.getEdgeProperties(src, edge, tgt, properties);
 
         final Word<O> output = automaton.getTransitionProperty(edge.getTransition());
         properties.put(EdgeAttrs.LABEL, edge.getInput() + " / " + output);
+
         return true;
     }
 
     @Override
     public boolean getNodeProperties(S node, Map<String, String> properties) {
-        if (!super.getNodeProperties(node, properties)) {
-            return false;
-        }
+        super.getNodeProperties(node, properties);
 
         final String oldLabel = properties.get(NodeAttrs.LABEL);
         properties.put(NodeAttrs.LABEL, oldLabel + " / " + automaton.getStateProperty(node));
+
         return true;
     }
 }

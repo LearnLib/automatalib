@@ -76,9 +76,8 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
 
                 @Override
                 public boolean getNodeProperties(N node, Map<String, String> properties) {
-                    if (!super.getNodeProperties(node, properties)) {
-                        return false;
-                    }
+                    super.getNodeProperties(node, properties);
+
                     switch (getAcceptance(node)) {
                         case TRUE:
                             properties.put(NodeAttrs.SHAPE, NodeShapes.DOUBLECIRCLE);
@@ -88,19 +87,18 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
                             break;
                         default: // case FALSE: default style
                     }
+
                     return true;
                 }
 
                 @Override
                 public boolean getEdgeProperties(N src, E edge, N tgt, Map<String, String> properties) {
-                    if (!super.getEdgeProperties(src, edge, tgt, properties)) {
-                        return false;
-                    }
-                    I input = getInputSymbol(edge);
-                    properties.put(EdgeAttrs.LABEL, String.valueOf(input));
+                    super.getEdgeProperties(src, edge, tgt, properties);
+
+                    properties.put(EdgeAttrs.LABEL, String.valueOf(getInputSymbol(edge)));
+
                     return true;
                 }
-
             };
         }
     }
