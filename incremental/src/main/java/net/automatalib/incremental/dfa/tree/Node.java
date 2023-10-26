@@ -21,14 +21,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * A node in the tree internally used by {@link IncrementalDFATreeBuilder}.
- *
- * @param <I>
- *         input symbol type
  */
-public final class Node<I> {
+public final class Node {
 
     private Acceptance acceptance;
-    private @Nullable ResizingArrayStorage<Node<I>> children;
+    private @Nullable ResizingArrayStorage<Node> children;
 
     /**
      * Constructor. Constructs a new node with no children and an acceptance value of {@link Acceptance#DONT_KNOW}
@@ -74,7 +71,7 @@ public final class Node<I> {
      *
      * @return the child for the given index, or {@code null} if there is no such child
      */
-    public @Nullable Node<I> getChild(int idx) {
+    public @Nullable Node getChild(int idx) {
         if (children == null) {
             return null;
         }
@@ -91,7 +88,7 @@ public final class Node<I> {
      * @param child
      *         the new child
      */
-    public void setChild(int idx, int alphabetSize, Node<I> child) {
+    public void setChild(int idx, int alphabetSize, Node child) {
         if (children == null) {
             children = new ResizingArrayStorage<>(Node.class, alphabetSize);
         }

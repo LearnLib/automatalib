@@ -19,15 +19,15 @@ import net.automatalib.incremental.dfa.Acceptance;
 
 public final class Edge<I> {
 
-    private final Node<I> node;
+    private final Node node;
     private final I input;
 
-    public Edge(Node<I> node, I input) {
+    public Edge(Node node, I input) {
         this.node = node;
         this.input = input;
     }
 
-    public Node<I> getNode() {
+    public Node getNode() {
         return node;
     }
 

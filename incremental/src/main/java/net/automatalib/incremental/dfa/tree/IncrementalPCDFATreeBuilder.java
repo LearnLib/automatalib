@@ -46,7 +46,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I> {
 
-    private @Nullable Node<I> sink;
+    private @Nullable Node sink;
 
     public IncrementalPCDFATreeBuilder(Alphabet<I> alphabet) {
         super(alphabet);
@@ -85,7 +85,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
             I input = rec.inputIt.next();
             int inputIdx = inputAlphabet.getSymbolIndex(input);
 
-            Node<I> succ = rec.treeNode.getChild(inputIdx);
+            Node succ = rec.treeNode.getChild(inputIdx);
             if (succ == null) {
                 continue;
             }
@@ -131,7 +131,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
 
     @Override
     public Acceptance lookup(Word<? extends I> inputWord) {
-        Node<I> curr = root;
+        Node curr = root;
 
         for (I sym : inputWord) {
             if (curr.getAcceptance() == Acceptance.FALSE) {
@@ -139,7 +139,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
             }
 
             int symIdx = inputAlphabet.getSymbolIndex(sym);
-            Node<I> succ = curr.getChild(symIdx);
+            Node succ = curr.getChild(symIdx);
             if (succ == null) {
                 return Acceptance.DONT_KNOW;
             }
@@ -163,7 +163,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
     }
 
     private void insertTrue(Word<? extends I> word) {
-        Node<I> curr = root;
+        Node curr = root;
 
         int idx = 0;
         for (I sym : word) {
@@ -173,9 +173,9 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
             }
             curr.setAcceptance(Acceptance.TRUE);
             int symIdx = inputAlphabet.getSymbolIndex(sym);
-            Node<I> succ = curr.getChild(symIdx);
+            Node succ = curr.getChild(symIdx);
             if (succ == null) {
-                succ = new Node<>(Acceptance.TRUE);
+                succ = new Node(Acceptance.TRUE);
                 curr.setChild(symIdx, alphabetSize, succ);
             }
             curr = succ;
@@ -189,8 +189,8 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
     }
 
     private void insertFalse(Word<? extends I> word) {
-        Node<I> curr = root;
-        Node<I> prev = null;
+        Node curr = root;
+        Node prev = null;
         int lastSymIdx = -1;
 
         for (I sym : word) {
@@ -198,9 +198,9 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
                 return; // done!
             }
             int symIdx = inputAlphabet.getSymbolIndex(sym);
-            Node<I> succ = curr.getChild(symIdx);
+            Node succ = curr.getChild(symIdx);
             if (succ == null) {
-                succ = new Node<>(Acceptance.DONT_KNOW);
+                succ = new Node(Acceptance.DONT_KNOW);
                 curr.setChild(symIdx, alphabetSize, succ);
             }
             prev = curr;
@@ -220,14 +220,14 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
             assert curr == root;
             root.makeSink();
         } else {
-            Node<I> sink = getSink();
+            Node sink = getSink();
             prev.setChild(lastSymIdx, alphabetSize, sink);
         }
     }
 
-    public Node<I> getSink() {
+    public Node getSink() {
         if (sink == null) {
-            sink = new Node<>(Acceptance.FALSE);
+            sink = new Node(Acceptance.FALSE);
         }
         return sink;
     }
@@ -307,7 +307,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
     public class TransitionSystemView extends IncrementalDFATreeBuilder<I>.TransitionSystemView {
 
         @Override
-        public @Nullable Node<I> getTransition(Node<I> state, I input) {
+        public @Nullable Node getTransition(Node state, I input) {
             if (state.getAcceptance() == Acceptance.FALSE) {
                 return state;
             }

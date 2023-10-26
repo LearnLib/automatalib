@@ -51,11 +51,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<I> {
 
-    protected final Node<I> root;
+    protected final Node root;
 
     public IncrementalDFATreeBuilder(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
-        this.root = new Node<>();
+        this.root = new Node();
     }
 
     @Override
@@ -72,10 +72,10 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    private void ensureInputCapacity(Node<I> node, int oldAlphabetSize, int newAlphabetSize) {
+    private void ensureInputCapacity(Node node, int oldAlphabetSize, int newAlphabetSize) {
         node.ensureInputCapacity(newAlphabetSize);
         for (int i = 0; i < oldAlphabetSize; i++) {
-            final Node<I> child = node.getChild(i);
+            final Node child = node.getChild(i);
             if (child != null) {
                 ensureInputCapacity(child, oldAlphabetSize, newAlphabetSize);
             }
@@ -114,7 +114,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
             I input = rec.inputIt.next();
             int inputIdx = inputAlphabet.getSymbolIndex(input);
 
-            Node<I> succ = rec.treeNode.getChild(inputIdx);
+            Node succ = rec.treeNode.getChild(inputIdx);
             if (succ == null) {
                 continue;
             }
@@ -147,11 +147,11 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 
     @Override
     public Acceptance lookup(Word<? extends I> inputWord) {
-        Node<I> curr = root;
+        Node curr = root;
 
         for (I sym : inputWord) {
             int symIdx = inputAlphabet.getSymbolIndex(sym);
-            Node<I> succ = curr.getChild(symIdx);
+            Node succ = curr.getChild(symIdx);
             if (succ == null) {
                 return Acceptance.DONT_KNOW;
             }
@@ -162,13 +162,13 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 
     @Override
     public void insert(Word<? extends I> word, boolean acceptance) {
-        Node<I> curr = root;
+        Node curr = root;
 
         for (I sym : word) {
             int inputIdx = inputAlphabet.getSymbolIndex(sym);
-            Node<I> succ = curr.getChild(inputIdx);
+            Node succ = curr.getChild(inputIdx);
             if (succ == null) {
-                succ = new Node<>();
+                succ = new Node();
                 curr.setChild(inputIdx, alphabetSize, succ);
             }
             curr = succ;
@@ -197,11 +197,11 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
     protected static final class Record<S, I> {
 
         public final S automatonState;
-        public final Node<I> treeNode;
+        public final Node treeNode;
         public final I incomingInput;
         public final Iterator<? extends I> inputIt;
 
-        public Record(S automatonState, Node<I> treeNode, I incomingInput, Iterator<? extends I> inputIt) {
+        public Record(S automatonState, Node treeNode, I incomingInput, Iterator<? extends I> inputIt) {
             this.automatonState = automatonState;
             this.treeNode = treeNode;
             this.incomingInput = incomingInput;
@@ -209,20 +209,20 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    public class GraphView extends AbstractGraphView<I, Node<I>, Edge<I>> {
+    public class GraphView extends AbstractGraphView<I, Node, Edge<I>> {
 
         @Override
-        public Collection<Node<I>> getNodes() {
-            List<Node<I>> result = new ArrayList<>();
+        public Collection<Node> getNodes() {
+            List<Node> result = new ArrayList<>();
             Iterators.addAll(result, GraphTraversal.depthFirstIterator(this, Collections.singleton(root)));
             return result;
         }
 
         @Override
-        public Collection<Edge<I>> getOutgoingEdges(Node<I> node) {
+        public Collection<Edge<I>> getOutgoingEdges(Node node) {
             List<Edge<I>> result = new ArrayList<>(alphabetSize);
             for (int i = 0; i < alphabetSize; i++) {
-                Node<I> succ = node.getChild(i);
+                Node succ = node.getChild(i);
                 if (succ != null) {
                     result.add(new Edge<>(succ, inputAlphabet.getSymbol(i)));
                 }
@@ -231,7 +231,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
 
         @Override
-        public Node<I> getTarget(Edge<I> edge) {
+        public Node getTarget(Edge<I> edge) {
             return edge.getNode();
         }
 
@@ -241,23 +241,23 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
 
         @Override
-        public Acceptance getAcceptance(Node<I> node) {
+        public Acceptance getAcceptance(Node node) {
             return node.getAcceptance();
         }
 
         @Override
-        public Node<I> getInitialNode() {
+        public Node getInitialNode() {
             return root;
         }
 
         @Override
-        public VisualizationHelper<Node<I>, Edge<I>> getVisualizationHelper() {
-            return new DelegateVisualizationHelper<Node<I>, Edge<I>>(super.getVisualizationHelper()) {
+        public VisualizationHelper<Node, Edge<I>> getVisualizationHelper() {
+            return new DelegateVisualizationHelper<Node, Edge<I>>(super.getVisualizationHelper()) {
 
                 private int id;
 
                 @Override
-                public boolean getNodeProperties(Node<I> node, Map<String, String> properties) {
+                public boolean getNodeProperties(Node node, Map<String, String> properties) {
                     if (!super.getNodeProperties(node, properties)) {
                         return false;
                     }
@@ -268,26 +268,26 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    public class TransitionSystemView extends AbstractTransitionSystemView<Node<I>, I, Node<I>> {
+    public class TransitionSystemView extends AbstractTransitionSystemView<Node, I, Node> {
 
         @Override
-        public Node<I> getSuccessor(Node<I> transition) {
+        public Node getSuccessor(Node transition) {
             return transition;
         }
 
         @Override
-        public @Nullable Node<I> getTransition(Node<I> state, I input) {
+        public @Nullable Node getTransition(Node state, I input) {
             int inputIdx = inputAlphabet.getSymbolIndex(input);
             return state.getChild(inputIdx);
         }
 
         @Override
-        public Node<I> getInitialState() {
+        public Node getInitialState() {
             return root;
         }
 
         @Override
-        public Acceptance getAcceptance(Node<I> state) {
+        public Acceptance getAcceptance(Node state) {
             return state.getAcceptance();
         }
     }
