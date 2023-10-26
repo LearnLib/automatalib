@@ -71,7 +71,7 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
     GraphView<I, ?, ?> asGraph();
 
     @Override
-    TransitionSystemView<?, I, ?> asTransitionSystem();
+    UniversalDTS<?, I, ?, Acceptance, Void> asTransitionSystem();
 
     interface GraphView<I, N, E> extends Graph<N, E> {
 
@@ -80,10 +80,5 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
         Acceptance getAcceptance(N node);
 
         N getInitialNode();
-    }
-
-    interface TransitionSystemView<S, I, T> extends UniversalDTS<S, I, T, Acceptance, Void> {
-
-        Acceptance getAcceptance(S state);
     }
 }

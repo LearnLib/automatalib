@@ -26,7 +26,7 @@ import net.automatalib.alphabet.impl.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.dfa.IncrementalDFABuilder.TransitionSystemView;
+import net.automatalib.ts.UniversalDTS;
 import net.automatalib.visualization.Visualization;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -177,16 +177,16 @@ public abstract class AbstractIncrementalDFABuilderTest {
         testTSViewInternal(incDfa.asTransitionSystem());
     }
 
-    private static <S> void testTSViewInternal(TransitionSystemView<S, Character, ?> view) {
+    private static <S> void testTSViewInternal(UniversalDTS<S, Character, ?, Acceptance, Void> view) {
         final S s1 = view.getState(W_1);
         final S s2 = view.getState(W_2);
         final S s3 = view.getState(W_3);
         final S s4 = view.getState(W_4);
 
-        Assert.assertTrue(view.getAcceptance(s1).toBoolean());
-        Assert.assertFalse(view.getAcceptance(s2).toBoolean());
-        Assert.assertTrue(view.getAcceptance(s3).toBoolean());
-        Assert.assertTrue(view.getAcceptance(s4).toBoolean());
+        Assert.assertTrue(view.getStateProperty(s1).toBoolean());
+        Assert.assertFalse(view.getStateProperty(s2).toBoolean());
+        Assert.assertTrue(view.getStateProperty(s3).toBoolean());
+        Assert.assertTrue(view.getStateProperty(s4).toBoolean());
     }
 
     @Test

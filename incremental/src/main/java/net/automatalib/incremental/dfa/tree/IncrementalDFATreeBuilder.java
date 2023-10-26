@@ -287,7 +287,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
 
         @Override
-        public Acceptance getAcceptance(Node state) {
+        public Acceptance getStateProperty(Node state) {
             return state.getAcceptance();
         }
     }

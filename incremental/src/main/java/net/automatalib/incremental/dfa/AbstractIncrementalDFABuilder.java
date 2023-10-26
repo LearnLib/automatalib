@@ -21,6 +21,7 @@ import java.util.Map;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.ts.UniversalDTS;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
@@ -104,12 +105,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
     }
 
     protected abstract static class AbstractTransitionSystemView<S, I, T>
-            implements IncrementalDFABuilder.TransitionSystemView<S, I, T> {
-
-        @Override
-        public Acceptance getStateProperty(S state) {
-            return getAcceptance(state);
-        }
+            implements UniversalDTS<S, I, T, Acceptance, Void> {
 
         @Override
         public Void getTransitionProperty(T transition) {

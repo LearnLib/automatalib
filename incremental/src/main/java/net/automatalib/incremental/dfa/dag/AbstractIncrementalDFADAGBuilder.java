@@ -607,7 +607,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         }
 
         @Override
-        public Acceptance getAcceptance(State state) {
+        public Acceptance getStateProperty(State state) {
             return state.getAcceptance();
         }
     }
