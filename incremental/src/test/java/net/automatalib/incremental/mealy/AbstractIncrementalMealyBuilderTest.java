@@ -145,6 +145,12 @@ public abstract class AbstractIncrementalMealyBuilderTest {
     public void testFindSeparatingWord() {
         CompactMealy<Character, Character> testMealy = new CompactMealy<>(TEST_ALPHABET);
 
+        Word<Character> sepWord;
+        sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, true);
+        Assert.assertNull(sepWord);
+        sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, false);
+        Assert.assertEquals(sepWord, Word.epsilon());
+
         int s0 = testMealy.addInitialState();
         int s1 = testMealy.addState();
         int s2 = testMealy.addState();
@@ -158,7 +164,6 @@ public abstract class AbstractIncrementalMealyBuilderTest {
         testMealy.addTransition(s3, 'c', s4, 'z');
         testMealy.addTransition(s1, 'c', s5, 'w');
 
-        Word<Character> sepWord;
         sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
         sepWord = incMealy.findSeparatingWord(testMealy, TEST_ALPHABET, false);
@@ -237,7 +242,9 @@ public abstract class AbstractIncrementalMealyBuilderTest {
         Assert.assertTrue(growableBuilder.hasDefinitiveInformation(input1));
         Assert.assertEquals(growableBuilder.lookup(input1), output1);
 
-        final Word<Character> input2 = Word.fromString("dddd");
+        growableBuilder.addAlphabetSymbol('e');
+
+        final Word<Character> input2 = Word.fromString("ddee");
 
         Assert.assertFalse(growableBuilder.hasDefinitiveInformation(input2));
         Assert.assertEquals(growableBuilder.lookup(input2), Word.fromLetter('1'));

@@ -647,13 +647,13 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
 
                 @Override
                 public boolean getNodeProperties(State<O> node, Map<String, String> properties) {
-                    if (!super.getNodeProperties(node, properties)) {
-                        return false;
-                    }
+                    super.getNodeProperties(node, properties);
+
                     properties.put(NodeAttrs.LABEL, "n" + (id++));
                     if (node.isConfluence()) {
                         properties.put(NodeAttrs.SHAPE, NodeShapes.OCTAGON);
                     }
+
                     return true;
                 }
 

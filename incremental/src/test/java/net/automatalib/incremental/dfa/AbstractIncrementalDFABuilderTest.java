@@ -123,6 +123,12 @@ public abstract class AbstractIncrementalDFABuilderTest {
     public void testFindSeparatingWord() {
         CompactDFA<Character> testDfa = new CompactDFA<>(TEST_ALPHABET);
 
+        Word<Character> sepWord;
+        sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
+        Assert.assertNull(sepWord);
+        sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
+        Assert.assertEquals(sepWord, Word.epsilon());
+
         int s0 = testDfa.addInitialState(true);
         int s1 = testDfa.addState(false);
         int s2 = testDfa.addState(false);
@@ -132,7 +138,6 @@ public abstract class AbstractIncrementalDFABuilderTest {
         testDfa.addTransition(s1, 'b', s2);
         testDfa.addTransition(s2, 'c', s3);
 
-        Word<Character> sepWord;
         sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, true);
         Assert.assertNull(sepWord);
         sepWord = incDfa.findSeparatingWord(testDfa, TEST_ALPHABET, false);
@@ -219,7 +224,9 @@ public abstract class AbstractIncrementalDFABuilderTest {
         Assert.assertTrue(growableBuilder.hasDefinitiveInformation(input1));
         Assert.assertEquals(growableBuilder.lookup(input1), Acceptance.TRUE);
 
-        final Word<Character> input2 = Word.fromString("dddd");
+        growableBuilder.addAlphabetSymbol('e');
+
+        final Word<Character> input2 = Word.fromString("ddee");
 
         Assert.assertFalse(growableBuilder.hasDefinitiveInformation(input2));
         Assert.assertEquals(growableBuilder.lookup(input2), Acceptance.DONT_KNOW);

@@ -93,7 +93,12 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
                                                          Collection<? extends I> inputs,
                                                          boolean omitUndefined) {
         S automatonInit = target.getInitialState();
-        if (root.getAcceptance().conflicts(automatonInit != null && target.isAccepting(automatonInit))) {
+
+        if (automatonInit == null) {
+            return omitUndefined ? null : Word.epsilon();
+        }
+
+        if (root.getAcceptance().conflicts(target.isAccepting(automatonInit))) {
             return Word.epsilon();
         }
 

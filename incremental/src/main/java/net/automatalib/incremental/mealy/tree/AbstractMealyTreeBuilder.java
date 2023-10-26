@@ -82,11 +82,17 @@ public abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<
     private <S, T> @Nullable Word<I> doFindSeparatingWord(MealyMachine<S, I, T, O> target,
                                                           Collection<? extends I> inputs,
                                                           boolean omitUndefined) {
+        S automatonInit = target.getInitialState();
+
+        if (automatonInit == null) {
+            return omitUndefined ? null : Word.epsilon();
+        }
+
         Deque<Record<@Nullable S, N, I>> dfsStack = new ArrayDeque<>();
 
         // reachedFrom can be null here, because we will always skip the bottom stack element below
         @SuppressWarnings("nullness")
-        final Record<@Nullable S, N, I> init = new Record<>(target.getInitialState(), root, null, inputs.iterator());
+        final Record<@Nullable S, N, I> init = new Record<>(automatonInit, root, null, inputs.iterator());
 
         dfsStack.push(init);
 
@@ -194,10 +200,10 @@ public abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<
 
                 @Override
                 public boolean getNodeProperties(N node, Map<String, String> properties) {
-                    if (!super.getNodeProperties(node, properties)) {
-                        return false;
-                    }
+                    super.getNodeProperties(node, properties);
+
                     properties.put(NodeAttrs.LABEL, "n" + (id++));
+
                     return true;
                 }
             };
