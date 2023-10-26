@@ -205,8 +205,10 @@ public class NearLinearEquivalenceTest<I> {
         S init1 = target.getInitialState();
         S2 init2 = other.getInitialState();
 
-        if (init1 == null || init2 == null) {
-            return init1 == null && init2 == null ? null : Word.epsilon();
+        if (init1 == null && init2 == null) {
+            return null;
+        } else if (init1 == null || init2 == null) {
+            return ignoreUndefinedTransitions ? null : Word.epsilon();
         }
 
         SP sprop1 = target.getStateProperty(init1);
@@ -322,8 +324,10 @@ public class NearLinearEquivalenceTest<I> {
         int init1 = absTarget.getIntInitialState();
         int init2 = absOther.getIntInitialState();
 
-        if (init1 < 0 || init2 < 0) {
-            return init1 < 0 && init2 < 0 ? null : Word.epsilon();
+        if (init1 < 0 && init2 < 0) {
+            return null;
+        } else if (init1 < 0 || init2 < 0) {
+            return ignoreUndefinedTransitions ? null : Word.epsilon();
         }
 
         SP sprop1 = absTarget.getStateProperty(init1);

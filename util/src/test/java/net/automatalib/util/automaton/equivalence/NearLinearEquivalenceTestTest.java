@@ -15,6 +15,7 @@
  */
 package net.automatalib.util.automaton.equivalence;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -67,48 +68,66 @@ public class NearLinearEquivalenceTestTest {
 
     @Test
     public void testDFAAlphabetPartial() {
-        Word<Integer> sepWord;
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_1_PARTIAL, ALPHABET, true));
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(DFA_1_PARTIAL, DFA_1, ALPHABET, true));
 
-        sepWord = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_1_PARTIAL, ALPHABET, true);
-        Assert.assertNull(sepWord);
+        Word<Integer> sepWord1 = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_1_PARTIAL, ALPHABET, false);
+        Word<Integer> sepWord2 = NearLinearEquivalenceTest.findSeparatingWord(DFA_1_PARTIAL, DFA_1, ALPHABET, false);
+        Assert.assertNotNull(sepWord1);
+        Assert.assertNotNull(sepWord2);
 
-        sepWord = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_1_PARTIAL, ALPHABET, false);
-        Assert.assertNotNull(sepWord);
-
-        checkPartialTrace(DFA_1_PARTIAL, sepWord);
+        checkPartialTrace(DFA_1_PARTIAL, sepWord1);
+        checkPartialTrace(DFA_1_PARTIAL, sepWord2);
     }
 
     @Test
     public void testDFACollectionPartial() {
-        Word<Integer> sepWord;
+        final Set<Integer> inputSet = new HashSet<>(ALPHABET);
 
-        sepWord = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_1_PARTIAL, new HashSet<>(ALPHABET), true);
-        Assert.assertNull(sepWord);
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_1_PARTIAL, inputSet, true));
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(DFA_1_PARTIAL, DFA_1, inputSet, true));
 
-        sepWord = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_1_PARTIAL, new HashSet<>(ALPHABET), false);
-        Assert.assertNotNull(sepWord);
+        Word<Integer> sepWord1 = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_1_PARTIAL, inputSet, false);
+        Word<Integer> sepWord2 = NearLinearEquivalenceTest.findSeparatingWord(DFA_1_PARTIAL, DFA_1, inputSet, false);
+        Assert.assertNotNull(sepWord1);
+        Assert.assertNotNull(sepWord2);
 
-        checkPartialTrace(DFA_1_PARTIAL, sepWord);
+        checkPartialTrace(DFA_1_PARTIAL, sepWord1);
+        checkPartialTrace(DFA_1_PARTIAL, sepWord2);
     }
 
     @Test
     public void testNonEqualDFAAlphabet() {
-        final Word<Integer> sepWord = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_2, ALPHABET);
-        Assert.assertNotNull(sepWord);
-        Assert.assertNotEquals(DFA_1.computeOutput(sepWord), DFA_2.computeOutput(sepWord));
+        final Word<Integer> sepWord1 = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_2, ALPHABET);
+        final Word<Integer> sepWord2 = NearLinearEquivalenceTest.findSeparatingWord(DFA_2, DFA_1, ALPHABET);
+
+        Assert.assertNotNull(sepWord1);
+        Assert.assertNotNull(sepWord2);
+        Assert.assertNotEquals(DFA_1.computeOutput(sepWord1), DFA_2.computeOutput(sepWord1));
+        Assert.assertNotEquals(DFA_1.computeOutput(sepWord2), DFA_2.computeOutput(sepWord2));
     }
 
     @Test
     public void testNonEqualDFACollection() {
-        final Word<Integer> sepWord = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_2, new HashSet<>(ALPHABET));
-        Assert.assertNotNull(sepWord);
-        Assert.assertNotEquals(DFA_1.computeOutput(sepWord), DFA_2.computeOutput(sepWord));
+        final Set<Integer> inputSet = new HashSet<>(ALPHABET);
+
+        final Word<Integer> sepWord1 = NearLinearEquivalenceTest.findSeparatingWord(DFA_1, DFA_2, inputSet);
+        final Word<Integer> sepWord2 = NearLinearEquivalenceTest.findSeparatingWord(DFA_2, DFA_1, inputSet);
+
+        Assert.assertNotNull(sepWord1);
+        Assert.assertNotNull(sepWord2);
+        Assert.assertNotEquals(DFA_1.computeOutput(sepWord1), DFA_2.computeOutput(sepWord1));
+        Assert.assertNotEquals(DFA_1.computeOutput(sepWord2), DFA_2.computeOutput(sepWord2));
     }
 
     @Test
-    public void testEmptyDFAs() {
+    public void testEmptyDFAsAlphabet() {
         final CompactDFA<Integer> uninit = new CompactDFA<>(ALPHABET, 0);
         final CompactDFA<Integer> empty = new CompactDFA<>(ALPHABET, 1);
+
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(uninit, empty, ALPHABET));
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(empty, uninit, ALPHABET));
+
         empty.addInitialState(false);
 
         testForEmptySepWord(uninit, empty, ALPHABET);
@@ -116,25 +135,61 @@ public class NearLinearEquivalenceTestTest {
     }
 
     @Test
-    public void testEmptyMealies() {
+    public void testEmptyDFAsCollection() {
+        final CompactDFA<Integer> uninit = new CompactDFA<>(ALPHABET, 0);
+        final CompactDFA<Integer> empty = new CompactDFA<>(ALPHABET, 1);
+        final Set<Integer> inputSet = new HashSet<>(ALPHABET);
+
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(uninit, empty, inputSet));
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(empty, uninit, inputSet));
+
+        empty.addInitialState(false);
+
+        testForEmptySepWord(uninit, empty, inputSet);
+        testForEmptySepWord(empty, uninit, inputSet);
+    }
+
+    @Test
+    public void testEmptyMealiesAlphabet() {
         final CompactMealy<Integer, ?> uninit = new CompactMealy<>(ALPHABET, 0);
         final CompactMealy<Integer, ?> empty = new CompactMealy<>(ALPHABET, 1);
+
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(uninit, empty, ALPHABET));
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(empty, uninit, ALPHABET));
+
         empty.addInitialState();
 
         testForEmptySepWord(uninit, empty, ALPHABET);
         testForEmptySepWord(empty, uninit, ALPHABET);
     }
 
+    @Test
+    public void testEmptyMealiesCollection() {
+        final CompactMealy<Integer, ?> uninit = new CompactMealy<>(ALPHABET, 0);
+        final CompactMealy<Integer, ?> empty = new CompactMealy<>(ALPHABET, 1);
+        final Set<Integer> inputSet = new HashSet<>(ALPHABET);
+
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(uninit, empty, inputSet));
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(empty, uninit, inputSet));
+
+        empty.addInitialState();
+
+        testForEmptySepWord(uninit, empty, inputSet);
+        testForEmptySepWord(empty, uninit, inputSet);
+    }
+
     private static <I> void testForEmptySepWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> a1,
                                                 UniversalDeterministicAutomaton<?, I, ?, ?, ?> a2,
-                                                Alphabet<I> inputs) {
+                                                Collection<I> inputs) {
         Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a1, a1, inputs));
         Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a2, a2, inputs));
 
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a1, a2, inputs, true));
         final Word<I> sepWord1 = NearLinearEquivalenceTest.findSeparatingWord(a1, a2, inputs);
         Assert.assertEquals(sepWord1, Word.epsilon());
         Assert.assertNotEquals(a1.getState(sepWord1), a2.getState(sepWord1));
 
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a2, a1, inputs, true));
         final Word<I> sepWord2 = NearLinearEquivalenceTest.findSeparatingWord(a2, a1, inputs);
         Assert.assertEquals(sepWord2, Word.epsilon());
         Assert.assertNotEquals(a1.getState(sepWord2), a2.getState(sepWord2));
@@ -144,10 +199,12 @@ public class NearLinearEquivalenceTestTest {
         Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a1, a1, inputsAsSet));
         Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a2, a2, inputsAsSet));
 
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a1, a2, inputsAsSet, true));
         final Word<I> sepWord3 = NearLinearEquivalenceTest.findSeparatingWord(a1, a2, inputsAsSet);
         Assert.assertEquals(sepWord3, Word.epsilon());
         Assert.assertNotEquals(a1.getState(sepWord3), a2.getState(sepWord3));
 
+        Assert.assertNull(NearLinearEquivalenceTest.findSeparatingWord(a2, a1, inputsAsSet, true));
         final Word<I> sepWord4 = NearLinearEquivalenceTest.findSeparatingWord(a2, a1, inputsAsSet);
         Assert.assertEquals(sepWord4, Word.epsilon());
         Assert.assertNotEquals(a1.getState(sepWord4), a2.getState(sepWord4));
