@@ -53,6 +53,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.
 * `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.
 * The `Indefinite{,Simple}Graph` no longer has `Collection`-based getters but `Iterable`-based ones since indefinite structures typically cannot specify sizes. The `Collection`-based getters are delegated to the `Graph` class.
+* `Graph`'s `adjacentTarget{,Iterator}` (and related) methods have been renamed to `getAdjacentNodes{,Iterator}`.
 * `Symbol` now has a type-safe user object and id-based `hashcode`/`equals` semantics.
 * `ShortestPaths` now offers fewer but less confusing methods. Previously there were methods such as `shortestPath` that took an initial node and multiple target nodes which much better fits to the idea of computing `shortestPath*s*` rather than any shortest path to one of the target nodes. The old behavior can still be replicated with the generic `Predicate`-based versions.
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
@@ -69,6 +70,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * Removed the (package-private) classes `net.automatalib.util.automata.predicates.{AcceptanceStatePredicate,OutputSatisfies,TransitionPropertySatisfies}`.
 * Removed `net.automatalib.graphs.IndefiniteLTS.java`. By naming, this class should denote a `TransitionSystem` and not a `Graph` structure. However, since `TransitionSystem`s are inherently labeled, this class serves no more real purpose. To re-establish the previous functionality, simply implement `Graph` and `EdgeLabels`.
+* Removed the `IndefiniteSimpleGraph#asNormalGraph()` method. Existing code should not need the transformation.
 * Removed (unused) `SuffixTrie` class without replacement. Similar functionality can be achieved with AutomataLib's incremental module.
 * Removed (unused) `DisjointSetForestInt` class without replacement.
 * Removed non-static methods on `RandomAutomata` factory (including the `getInstance()` method).

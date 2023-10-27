@@ -29,8 +29,14 @@ public interface UniversalGraph<N, E, NP, EP> extends Graph<N, E>, UniversalInde
      */
     interface IntAbstraction<E, NP, EP> extends Graph.IntAbstraction<E> {
 
+        /**
+         * Int-abstracted version of {@link #getNodeProperty(Object)}.
+         */
         NP getNodeProperty(int node);
 
+        /**
+         * Int-abstracted version of {@link UniversalIndefiniteGraph#getEdgeProperty(Object)}.
+         */
         EP getEdgeProperty(E edge);
     }
 }

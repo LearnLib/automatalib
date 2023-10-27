@@ -91,8 +91,8 @@ public class GraphCopyTest {
             final N2 mappedNode = mapping.get(node);
 
             final Set<N2> sourceSuccsMapped =
-                    source.getAdjacentTargets(node).stream().map(mapping::get).collect(Collectors.toSet());
-            final Set<N2> targetSuccs = new HashSet<>(target.getAdjacentTargets(mappedNode));
+                    source.getAdjacentNodes(node).stream().map(mapping::get).collect(Collectors.toSet());
+            final Set<N2> targetSuccs = new HashSet<>(target.getAdjacentNodes(mappedNode));
 
             Assert.assertEquals(targetSuccs, sourceSuccsMapped);
 

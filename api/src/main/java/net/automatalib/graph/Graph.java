@@ -21,8 +21,6 @@ import java.util.Iterator;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import net.automatalib.visualization.DefaultVisualizationHelper;
-import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * Graph interface. Like an {@link IndefiniteGraph}, but with the additional requirement that the set of nodes be
@@ -36,37 +34,30 @@ import net.automatalib.visualization.VisualizationHelper;
 public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
 
     /**
-     * Retrieves the outgoing edges of a given node.
+     * Retrieves, for a given node, the (finite) collection of all outgoing edges.
      *
      * @param node
-     *         the node.
+     *         the node
      *
-     * @return a {@link Collection} of all outgoing edges.
+     * @return a collection containing the outgoing edges
      */
     Collection<E> getOutgoingEdges(N node);
 
-    default Collection<N> getAdjacentTargets(N node) {
+    /**
+     * Retrieves, for a given node, the (finite) collection of all adjacent nodes.
+     *
+     * @param node
+     *         the node
+     *
+     * @return a collection containing the outgoing edges
+     */
+    default Collection<N> getAdjacentNodes(N node) {
         return Collections2.transform(getOutgoingEdges(node), this::getTarget);
     }
 
     @Override
     default Iterator<E> getOutgoingEdgesIterator(N node) {
         return getOutgoingEdges(node).iterator();
-    }
-
-    @Override
-    default Iterator<N> getAdjacentTargetsIterator(N node) {
-        return getAdjacentTargets(node).iterator();
-    }
-
-    @Override
-    default VisualizationHelper<N, E> getVisualizationHelper() {
-        return new DefaultVisualizationHelper<>();
-    }
-
-    @Override
-    default Graph<N, E> asNormalGraph() {
-        return this;
     }
 
     /**
@@ -77,21 +68,36 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
      */
     interface IntAbstraction<E> extends SimpleGraph.IntAbstraction {
 
+        /**
+         * Int-abstracted version of {@link #getOutgoingEdges(Object)}.
+         */
         Collection<E> getOutgoingEdges(int node);
 
+        /**
+         * Int-abstracted version of {@link #getTarget(Object)}.
+         */
         int getIntTarget(E edge);
 
-        @Override
-        default boolean isConnected(int source, int target) {
-            return Iterators.any(getOutgoingEdgesIterator(source), e -> getIntTarget(e) == target);
-        }
-
+        /**
+         * Int-abstracted version of {@link #getOutgoingEdgesIterator(Object)}.
+         */
         default Iterator<E> getOutgoingEdgesIterator(int node) {
             return getOutgoingEdges(node).iterator();
         }
 
+        /**
+         * (Finite) int-abstracted version of {@link #getEdgesBetween(Object, Object)}.
+         */
         default Collection<E> getEdgesBetween(int from, int to) {
             return Lists.newArrayList(Iterators.filter(getOutgoingEdgesIterator(from), e -> getIntTarget(e) == to));
+        }
+
+        /**
+         * Int-abstracted version of {@link #isConnected(Object, Object)}.
+         */
+        @Override
+        default boolean isConnected(int source, int target) {
+            return Iterators.any(getOutgoingEdgesIterator(source), e -> getIntTarget(e) == target);
         }
     }
 }

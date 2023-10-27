@@ -31,21 +31,15 @@ import com.google.common.collect.Iterators;
  */
 public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
 
+    /**
+     * Retrieves, for a given node, all outgoing edges.
+     *
+     * @param node
+     *         the node
+     *
+     * @return an iterator over the outgoing edges
+     */
     Iterator<E> getOutgoingEdgesIterator(N node);
-
-    @Override
-    default Iterator<N> getAdjacentTargetsIterator(N node) {
-        return Iterators.transform(getOutgoingEdgesIterator(node), this::getTarget);
-    }
-
-    @Override
-    default IndefiniteGraph<N, E> asNormalGraph() {
-        return this;
-    }
-
-    default Iterator<E> getEdgesBetween(N from, N to) {
-        return Iterators.filter(getOutgoingEdgesIterator(from), e -> Objects.equals(getTarget(e), to));
-    }
 
     /**
      * Retrieves, for a given edge, its target node.
@@ -56,5 +50,24 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
      * @return the target node of the given edge.
      */
     N getTarget(E edge);
+
+    /**
+     * Returns, for two given nodes, the edges between those nodes.
+     *
+     * @param from
+     *         the source node
+     * @param to
+     *         the target node
+     *
+     * @return an iterator over the edges between the two nodes
+     */
+    default Iterator<E> getEdgesBetween(N from, N to) {
+        return Iterators.filter(getOutgoingEdgesIterator(from), e -> Objects.equals(getTarget(e), to));
+    }
+
+    @Override
+    default Iterator<N> getAdjacentNodesIterator(N node) {
+        return Iterators.transform(getOutgoingEdgesIterator(node), this::getTarget);
+    }
 
 }

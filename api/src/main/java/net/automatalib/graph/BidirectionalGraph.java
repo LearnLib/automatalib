@@ -56,8 +56,14 @@ public interface BidirectionalGraph<N, E> extends Graph<N, E> {
      */
     interface IntAbstraction<E> extends Graph.IntAbstraction<E> {
 
+        /**
+         * Int-abstracted version of {@link #getIncomingEdges(Object)}.
+         */
         Collection<E> getIncomingEdges(int node);
 
+        /**
+         * Int-abstracted version of {@link #getSource(Object)}.
+         */
         int getIntSource(E edge);
 
     }

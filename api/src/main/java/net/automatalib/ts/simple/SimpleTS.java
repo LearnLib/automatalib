@@ -116,6 +116,9 @@ public interface SimpleTS<S, I> {
      * Creates a {@link MutableMapping} allowing to associate arbitrary data with this transition system's states. The
      * returned mapping is however only guaranteed to work correctly if the transition system is not modified.
      *
+     * @param <V>
+     *         the value type of the mapping
+     *
      * @return the mutable mapping
      */
     default <@Nullable V> MutableMapping<S, V> createStaticStateMapping() {
@@ -125,6 +128,9 @@ public interface SimpleTS<S, I> {
     /**
      * Creates a {@link MutableMapping} allowing to associate arbitrary data with this transition system's states. The
      * returned mapping maintains the association even when the transition system is modified.
+     *
+     * @param <V>
+     *         the value type of the mapping
      *
      * @return the mutable mapping
      */

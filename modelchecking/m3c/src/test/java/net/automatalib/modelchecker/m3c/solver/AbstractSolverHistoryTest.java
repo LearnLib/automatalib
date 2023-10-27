@@ -185,8 +185,8 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
 
     protected <N, E> N getS2(ProceduralModalProcessGraph<N, String, E, String, ?> pmpg, N s1) {
         // s1's only adjacent target is s2
-        for (N adjacentTarget : pmpg.getAdjacentTargets(s1)) {
-            return adjacentTarget;
+        for (N adjacentNode : pmpg.getAdjacentNodes(s1)) {
+            return adjacentNode;
         }
         throw new IllegalStateException("unexpected modal process graph");
     }

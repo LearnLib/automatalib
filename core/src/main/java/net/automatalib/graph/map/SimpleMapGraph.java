@@ -89,12 +89,12 @@ public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void>,
     }
 
     @Override
-    public Collection<N> getAdjacentTargets(N node) {
+    public Collection<N> getAdjacentNodes(N node) {
         return getOutgoingEdges(node);
     }
 
     @Override
-    public Iterator<N> getAdjacentTargetsIterator(N node) {
+    public Iterator<N> getAdjacentNodesIterator(N node) {
         return getOutgoingEdgesIterator(node);
     }
 

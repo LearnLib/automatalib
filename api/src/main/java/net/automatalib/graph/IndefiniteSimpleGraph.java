@@ -21,7 +21,6 @@ import java.util.Objects;
 import com.google.common.collect.Iterators;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.graph.helper.IndefiniteNormalGraphView;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -31,24 +30,56 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <N>
  *         node type
  */
-public interface IndefiniteSimpleGraph<N> {
+public interface IndefiniteSimpleGraph<N> extends Iterable<N> {
 
-    Iterator<N> getAdjacentTargetsIterator(N node);
+    /**
+     * Retrieves, for a given node, all adjacent nodes.
+     *
+     * @param node
+     *         the node
+     *
+     * @return an iterator over the adjacent nodes
+     */
+    Iterator<N> getAdjacentNodesIterator(N node);
 
+    /**
+     * Checks, for two given nodes, whether they are connected.
+     *
+     * @param source
+     *         the source node
+     * @param target
+     *         the target node
+     *
+     * @return {@code true} if the nodes are connect, {@code false} otherwise
+     */
     default boolean isConnected(N source, N target) {
-        return Iterators.any(getAdjacentTargetsIterator(source), n -> Objects.equals(n, target));
+        return Iterators.any(getAdjacentNodesIterator(source), n -> Objects.equals(n, target));
     }
 
+    /**
+     * Creates a {@link MutableMapping} allowing to associate arbitrary data with this graph's nodes. The returned
+     * mapping is however only guaranteed to work correctly if the transition system is not modified.
+     *
+     * @param <V>
+     *         the value type of the mapping
+     *
+     * @return the mutable mapping
+     */
     default <@Nullable V> MutableMapping<N, V> createStaticNodeMapping() {
         return new MapMapping<>();
     }
 
+    /**
+     * Creates a {@link MutableMapping} allowing to associate arbitrary data with this graph's nodes. The returned
+     * mapping maintains the association even when the transition system is modified.
+     *
+     * @param <V>
+     *         the value type of the mapping
+     *
+     * @return the mutable mapping
+     */
     default <@Nullable V> MutableMapping<N, V> createDynamicNodeMapping() {
         return new MapMapping<>();
-    }
-
-    default IndefiniteGraph<N, ?> asNormalGraph() {
-        return new IndefiniteNormalGraphView<>(this);
     }
 
 }

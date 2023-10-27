@@ -17,13 +17,11 @@ package net.automatalib.graph;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.stream.Stream;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.graph.concept.NodeIDs;
 import net.automatalib.graph.helper.SimpleNodeIDs;
-import net.automatalib.graph.helper.SimpleNormalGraphView;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 
@@ -33,17 +31,7 @@ import net.automatalib.visualization.VisualizationHelper;
  * @param <N>
  *         node type
  */
-public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N>, FiniteRepresentation {
-
-    /**
-     * Retrieves the number of nodes of this graph.
-     *
-     * @return the number of nodes of this graph.
-     */
-    @Override
-    default int size() {
-        return getNodes().size();
-    }
+public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, FiniteRepresentation {
 
     /**
      * Retrieves an (unmodifiable) collection of the nodes in this graph.
@@ -52,26 +40,27 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, Iterable<N>, F
      */
     Collection<N> getNodes();
 
-    @Override
-    default Iterator<N> iterator() {
-        return Iterators.unmodifiableIterator(getNodes().iterator());
-    }
-
-    default Stream<N> nodesStream() {
-        return getNodes().stream();
-    }
-
     default NodeIDs<N> nodeIDs() {
         return new SimpleNodeIDs<>(this);
     }
 
+    /**
+     * Returns the {@link VisualizationHelper} that contains information for displaying this graph.
+     *
+     * @return the visualization helper
+     */
     default VisualizationHelper<N, ?> getVisualizationHelper() {
         return new DefaultVisualizationHelper<>();
     }
 
     @Override
-    default Graph<N, ?> asNormalGraph() {
-        return new SimpleNormalGraphView<>(this);
+    default Iterator<N> iterator() {
+        return Iterators.unmodifiableIterator(getNodes().iterator());
+    }
+
+    @Override
+    default int size() {
+        return getNodes().size();
     }
 
     /**
