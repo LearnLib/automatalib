@@ -149,14 +149,14 @@ limitations under the License.
     =============================== SCM =======================
     -->
     <scm>
-        <connection>scm:git:git@github.com:learnlib/automatalib.git</connection>
+        <connection>scm:git:https://github.com/LearnLib/automatalib.git</connection>
         <developerConnection>scm:git:git@github.com:learnlib/automatalib.git</developerConnection>
         <url>https://github.com/learnlib/automatalib/tree/develop</url>
         <tag>HEAD</tag>
     </scm>
     <issueManagement>
-        <url>https://github.com/learnlib/automatalib/issues</url>
         <system>GitHub Issues</system>
+        <url>https://github.com/learnlib/automatalib/issues</url>
     </issueManagement>
     <ciManagement>
         <system>GitHub Actions</system>
@@ -837,7 +837,6 @@ limitations under the License.
                             <report>index</report>
                             <report>licenses</report>
                             <report>team</report>
-                            <report>mailing-lists</report>
                             <report>scm</report>
                             <report>issue-management</report>
                             <report>ci-management</report>
