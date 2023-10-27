@@ -8,12 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+* Added the incremental `AdaptiveMealyBuilder` that allows for overriding previous traces (#56, thanks to [Tiago Ferreira](https://github.com/tiferrei)).
 * Added modal transition systems (MTSs) including related utilities such as composition, conjunction, refinement (thanks to [Marc Jasper](https://github.com/mjasper), [Maximilian Schlüter](https://github.com/Conturing), and [David Schmidt](https://github.com/dvs23)).
-* Added `SubsequentialTransducer` interface and implementations/utilities.
-* Added support for procedural systems (SPAs, SBA, SPMMs) as well as related concepts such as verification, testing, and transformations thereof (thanks to [Markus Frohme](https://github.com/mtf90)).
 * Added the M3C model-checker for verifying µ-calculus and CTL formulas on context-free modal process systems (thanks to [Alnis Murtovi](https://github.com/AlnisM)).
 * Added the ability to M3C to generate witnesses for negated safety properties (thanks to [Maximilian Freese](https://github.com/Viperish-byte)).
-* Added the incremental `AdaptiveMealyBuilder` that allows for overriding previous traces (#56, thanks to [Tiago Ferreira](https://github.com/tiferrei)).
+* Added support for procedural systems (SPAs, SBA, SPMMs) as well as related concepts such as verification, testing, and transformations thereof (thanks to [Markus Frohme](https://github.com/mtf90)).
+* Added `SubsequentialTransducer` interface and implementations/utilities (thanks to [Markus Frohme](https://github.com/mtf90)).
 
 ### Changed
 
@@ -48,37 +48,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     * `GraphTraversal#dfIterator` -> `GraphTraversal#depthFirstIterator`.
     * moved the package `net.automatalib.ts.comp` to `net.automatalib.util.ts.comp` in the `automata-util` module.
     * moved `TS#bfs{Order,Iterator}` to `TSTraversal#breadthFirst{Order,Iterator}`.
-* AutomataLib classes no longer implement `Serializable`. We never fully supported the semantics of the interface and never intended to do so. In fact, the old approach failed miserably if any class was involved where we missed an "implements Serializable" statement. In order to prevent confusion by promising false contracts, implementing this markup interface has been removed. Serialization should now be done in user-land via one of the many external (and more optimizable) serialization frameworks such as FST, XStream, etc.
+* `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.
+* The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
+* `Graph`'s `adjacentTarget{,Iterator}` (and related) methods have been renamed to `getAdjacentNodes{,Iterator}`.
+* The `Indefinite{,Simple}Graph` no longer has `Collection`-based getters but `Iterable`-based ones since indefinite structures typically cannot specify sizes. The `Collection`-based getters are delegated to the `Graph` class.
 * `Minimizer` no longer provides a `getInstance()` method but can be instantiated directly.
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.
-* `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.
-* The `Indefinite{,Simple}Graph` no longer has `Collection`-based getters but `Iterable`-based ones since indefinite structures typically cannot specify sizes. The `Collection`-based getters are delegated to the `Graph` class.
-* `Graph`'s `adjacentTarget{,Iterator}` (and related) methods have been renamed to `getAdjacentNodes{,Iterator}`.
-* `Symbol` now has a type-safe user object and id-based `hashcode`/`equals` semantics.
+* AutomataLib classes no longer implement `Serializable`. We never fully supported the semantics of the interface and never intended to do so. In fact, the old approach failed miserably if any class was involved where we missed an "implements Serializable" statement. In order to prevent confusion by promising false contracts, implementing this markup interface has been removed. Serialization should now be done in user-land via one of the many external (and more optimizable) serialization frameworks such as FST, XStream, etc.
 * `ShortestPaths` now offers fewer but less confusing methods. Previously there were methods such as `shortestPath` that took an initial node and multiple target nodes which much better fits to the idea of computing `shortestPath*s*` rather than any shortest path to one of the target nodes. The old behavior can still be replicated with the generic `Predicate`-based versions.
-* The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
 * `StrictPriorityQueue` is now package-private as it is only meant for internal use.
+* `Symbol` now has a type-safe user object and id-based `hashcode`/`equals` semantics.
 
 ### Fixed
 
-* Fixed a cache consistency bug in various DAG-based incremental builders.
 * Fixed a regression in `AbstractLTSminMonitorMealy` regarding BBC (#46).
 * Fixed a bug in `CharacterizingSets` which ignored the semantics of acceptors, i.e., not all states of an acceptor could be distinguished solely based on acceptance.
 * Fixed a bug in `Covers#transitionCoverIterator` which previously included undefined transitions.
+* Fixed a cache consistency bug in various DAG-based incremental builders.
 
 ### Removed
 
 * Removed the (package-private) classes `net.automatalib.util.automata.predicates.{AcceptanceStatePredicate,OutputSatisfies,TransitionPropertySatisfies}`.
-* Removed `net.automatalib.graphs.IndefiniteLTS.java`. By naming, this class should denote a `TransitionSystem` and not a `Graph` structure. However, since `TransitionSystem`s are inherently labeled, this class serves no more real purpose. To re-establish the previous functionality, simply implement `Graph` and `EdgeLabels`.
 * Removed the `IndefiniteSimpleGraph#asNormalGraph()` method. Existing code should not need the transformation.
-* Removed (unused) `SuffixTrie` class without replacement. Similar functionality can be achieved with AutomataLib's incremental module.
-* Removed (unused) `DisjointSetForestInt` class without replacement.
-* Removed non-static methods on `RandomAutomata` factory (including the `getInstance()` method).
 * Removed `AbstractCompactNPGraph`, use `AbstractCompactGraph` instead.
 * Removed `AbstractCompactSimpleGraph`. All functionality is provided in `CompactSimpleGraph`.
 * Removed `CmpUtil#safeComparator`. Use `Comparators#nullsFirst` or `Comparators#nullsLast` instead.
-* The `Stream`-based getters of `Indefinite{,Simple}Graph` have been removed in favor of the `Iterator`-based ones.
 * Removed the DFS-specific `DFSTraversalVisitor` (and related classes) without replacement. Client-code that relied on this class can re-implement the functionality by providing an own implementation of the more general `GraphTraversalVisitor`. See the changes on the `DFSExample` for reference.
+* Removed (unused) `DisjointSetForestInt` class without replacement.
+* Removed non-static methods on `RandomAutomata` factory (including the `getInstance()` method).
+* Removed `net.automatalib.graphs.IndefiniteLTS.java`. By naming, this class should denote a `TransitionSystem` and not a `Graph` structure. However, since `TransitionSystem`s are inherently labeled, this class serves no more real purpose. To re-establish the previous functionality, simply implement `Graph` and `EdgeLabels`.
+* The `Stream`-based getters of `Indefinite{,Simple}Graph` have been removed in favor of the `Iterator`-based ones.
+* Removed (unused) `SuffixTrie` class without replacement. Similar functionality can be achieved with AutomataLib's incremental module.
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
 
 
