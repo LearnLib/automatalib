@@ -21,6 +21,8 @@ import java.util.Iterator;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * Graph interface. Like an {@link IndefiniteGraph}, but with the additional requirement that the set of nodes be
@@ -58,6 +60,14 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
     @Override
     default Iterator<E> getOutgoingEdgesIterator(N node) {
         return getOutgoingEdges(node).iterator();
+    }
+
+    /*
+     * Refinement of the super method, that no longer makes the edge type variable a wildcard.
+     */
+    @Override
+    default VisualizationHelper<N, E> getVisualizationHelper() {
+        return new DefaultVisualizationHelper<>();
     }
 
     /**
