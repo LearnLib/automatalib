@@ -25,12 +25,12 @@ import net.automatalib.graph.concept.KripkeInterpretation;
  *
  * @param <S>
  *         state class
+ * @param <I>
+ *         input symbol class
  * @param <T>
  *         transition class
  * @param <AP>
  *         atomic proposition class
- * @param <I>
- *         input symbol class
  *
  * @see KripkeInterpretation
  * @see FiniteKripkeStructure
