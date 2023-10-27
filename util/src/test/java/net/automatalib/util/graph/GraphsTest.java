@@ -82,7 +82,7 @@ public class GraphsTest {
 
             for (S src : incomingStates) {
                 final N mappedSrc = nodeMapping.get(src);
-                checkEdges.addAll(graph.getEdgesBetween(mappedSrc, mappedTgt));
+                graph.getEdgesBetween(mappedSrc, mappedTgt).forEachRemaining(checkEdges::add);
             }
 
             Assert.assertEquals(checkEdges, edges);

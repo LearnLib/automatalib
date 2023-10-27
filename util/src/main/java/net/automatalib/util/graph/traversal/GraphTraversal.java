@@ -175,10 +175,10 @@ public final class GraphTraversal {
                 continue;
             }
 
-            Collection<E> edges = graph.getOutgoingEdges(currNode);
+            Iterator<E> edges = graph.getOutgoingEdgesIterator(currNode);
 
-            for (E edge : edges) {
-
+            while (edges.hasNext()) {
+                E edge = edges.next();
                 N tgtNode = graph.getTarget(edge);
 
                 dataHolder.value = null;

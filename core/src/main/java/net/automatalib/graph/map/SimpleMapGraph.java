@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.graph.MutableGraph;
@@ -95,8 +94,8 @@ public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void>,
     }
 
     @Override
-    public Stream<N> adjacentTargetsStream(N node) {
-        return outgoingEdgesStream(node);
+    public Iterator<N> getAdjacentTargetsIterator(N node) {
+        return getOutgoingEdgesIterator(node);
     }
 
     @SuppressWarnings("nullness") // the passed structureMap decides whether we support nulls

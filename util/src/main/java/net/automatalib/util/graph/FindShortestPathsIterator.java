@@ -19,6 +19,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.function.Predicate;
@@ -64,7 +65,9 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>>
 
             final int currentDepth = preds.get(curr).depth;
 
-            for (E edge : graph.getOutgoingEdges(curr)) {
+            Iterator<E> edgeIter = graph.getOutgoingEdgesIterator(curr);
+            while (edgeIter.hasNext()) {
+                E edge = edgeIter.next();
                 N tgt = graph.getTarget(edge);
                 Pred<N, E> targetPred = preds.get(tgt);
                 if (targetPred == null && currentDepth < limit) {

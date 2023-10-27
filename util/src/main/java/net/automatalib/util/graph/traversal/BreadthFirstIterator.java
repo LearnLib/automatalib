@@ -53,7 +53,9 @@ final class BreadthFirstIterator<N, E> implements Iterator<N> {
             throw new NoSuchElementException();
         }
 
-        for (E edge : graph.getOutgoingEdges(result)) {
+        final Iterator<E> edgeIter = graph.getOutgoingEdgesIterator(result);
+        while (edgeIter.hasNext()) {
+            E edge = edgeIter.next();
             N tgt = graph.getTarget(edge);
             if (visited.put(tgt, VisitedState.VISITED) != VisitedState.VISITED) {
                 bfsQueue.add(tgt);

@@ -52,6 +52,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `Minimizer` no longer provides a `getInstance()` method but can be instantiated directly.
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.
 * `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.
+* The `Indefinite{,Simple}Graph` no longer has `Collection`-based getters but `Iterable`-based ones since indefinite structures typically cannot specify sizes. The `Collection`-based getters are delegated to the `Graph` class.
 * `Symbol` now has a type-safe user object and id-based `hashcode`/`equals` semantics.
 * `ShortestPaths` now offers fewer but less confusing methods. Previously there were methods such as `shortestPath` that took an initial node and multiple target nodes which much better fits to the idea of computing `shortestPath*s*` rather than any shortest path to one of the target nodes. The old behavior can still be replicated with the generic `Predicate`-based versions.
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
@@ -74,7 +75,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed `AbstractCompactNPGraph`, use `AbstractCompactGraph` instead.
 * Removed `AbstractCompactSimpleGraph`. All functionality is provided in `CompactSimpleGraph`.
 * Removed `CmpUtil#safeComparator`. Use `Comparators#nullsFirst` or `Comparators#nullsLast` instead.
-* Removed `Iterable`- and `Iterator`-based methods for adjacent nodes/edges on graphs. For lazy/indefinite fetching use the `Stream`-based methods, for complete fetching use the `Collection`-based methods.
+* The `Stream`-based getters of `Indefinite{,Simple}Graph` have been removed in favor of the `Iterator`-based ones.
 * Removed the DFS-specific `DFSTraversalVisitor` (and related classes) without replacement. Client-code that relied on this class can re-implement the functionality by providing an own implementation of the more general `GraphTraversalVisitor`. See the changes on the `DFSExample` for reference.
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
 

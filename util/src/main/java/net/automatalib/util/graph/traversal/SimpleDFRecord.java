@@ -15,7 +15,6 @@
  */
 package net.automatalib.util.graph.traversal;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import net.automatalib.graph.IndefiniteGraph;
@@ -38,8 +37,7 @@ class SimpleDFRecord<N, E> {
         if (edgeIterator != null) {
             return false;
         }
-        Collection<E> outEdges = graph.getOutgoingEdges(node);
-        this.edgeIterator = outEdges.iterator();
+        this.edgeIterator = graph.getOutgoingEdgesIterator(node);
         return true;
     }
 

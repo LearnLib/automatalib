@@ -15,10 +15,10 @@
  */
 package net.automatalib.graph;
 
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
-import java.util.stream.Stream;
 
+import com.google.common.collect.Iterators;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.helper.IndefiniteNormalGraphView;
@@ -33,14 +33,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public interface IndefiniteSimpleGraph<N> {
 
-    Collection<N> getAdjacentTargets(N node);
-
-    default Stream<N> adjacentTargetsStream(N node) {
-        return getAdjacentTargets(node).stream();
-    }
+    Iterator<N> getAdjacentTargetsIterator(N node);
 
     default boolean isConnected(N source, N target) {
-        return adjacentTargetsStream(source).anyMatch(n -> Objects.equals(n, target));
+        return Iterators.any(getAdjacentTargetsIterator(source), n -> Objects.equals(n, target));
     }
 
     default <@Nullable V> MutableMapping<N, V> createStaticNodeMapping() {

@@ -15,10 +15,10 @@
  */
 package net.automatalib.graph;
 
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import com.google.common.collect.Iterators;
 
 /**
  * Interface for an (indefinite) graph structure. A graph consists of nodes, each of which has outgoing edges connecting
@@ -31,14 +31,11 @@ import java.util.stream.Stream;
  */
 public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
 
-    @Override
-    default Collection<N> getAdjacentTargets(N node) {
-        return adjacentTargetsStream(node).collect(Collectors.toList());
-    }
+    Iterator<E> getOutgoingEdgesIterator(N node);
 
     @Override
-    default Stream<N> adjacentTargetsStream(N node) {
-        return outgoingEdgesStream(node).map(this::getTarget);
+    default Iterator<N> getAdjacentTargetsIterator(N node) {
+        return Iterators.transform(getOutgoingEdgesIterator(node), this::getTarget);
     }
 
     @Override
@@ -46,24 +43,8 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
         return this;
     }
 
-    /**
-     * Retrieves the outgoing edges of a given node.
-     *
-     * @param node
-     *         the node.
-     *
-     * @return a {@link Collection} of all outgoing edges, or <code>null</code> if the node has no outgoing edges.
-     */
-    Collection<E> getOutgoingEdges(N node);
-
-    default Stream<E> outgoingEdgesStream(N node) {
-        return getOutgoingEdges(node).stream();
-    }
-
-    default Collection<E> getEdgesBetween(N from, N to) {
-        return getOutgoingEdges(from).stream()
-                                     .filter(e -> Objects.equals(getTarget(e), to))
-                                     .collect(Collectors.toList());
+    default Iterator<E> getEdgesBetween(N from, N to) {
+        return Iterators.filter(getOutgoingEdgesIterator(from), e -> Objects.equals(getTarget(e), to));
     }
 
     /**

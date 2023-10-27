@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+import com.google.common.collect.Lists;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.SimpleGraph;
 
@@ -32,6 +33,11 @@ public class SimpleNormalGraphView<N, G extends SimpleGraph<N>> extends Indefini
     @Override
     public int size() {
         return simpleGraph.size();
+    }
+
+    @Override
+    public Collection<N> getOutgoingEdges(N node) {
+        return Lists.newArrayList(simpleGraph.getAdjacentTargetsIterator(node));
     }
 
     @Override

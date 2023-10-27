@@ -21,6 +21,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Streams;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.graph.base.compact.CompactBidiGraph;
@@ -114,16 +116,19 @@ public class IntAbstractionTest {
                                         .collect(Collectors.toSet());
             Assert.assertEquals(gSuccs, aSuccs);
 
-            final Set<EP> gProps = graph.outgoingEdgesStream(n).map(graph::getEdgeProperty).collect(Collectors.toSet());
-            final Set<EP> aProps =
-                    abstraction.outgoingEdgesStream(id).map(abstraction::getEdgeProperty).collect(Collectors.toSet());
+            final Set<EP> gProps = Streams.stream(graph.getOutgoingEdgesIterator(n))
+                                          .map(graph::getEdgeProperty)
+                                          .collect(Collectors.toSet());
+            final Set<EP> aProps = Streams.stream(abstraction.getOutgoingEdgesIterator(id))
+                                          .map(abstraction::getEdgeProperty)
+                                          .collect(Collectors.toSet());
             Assert.assertEquals(gProps, aProps);
 
             for (N n1 : graph) {
                 final int id1 = nodeIDs.getNodeId(n1);
                 Assert.assertEquals(graph.isConnected(n, n1), abstraction.isConnected(id, id1));
 
-                final Collection<E1> gEdgesInBtwn = graph.getEdgesBetween(n, n1);
+                final Collection<E1> gEdgesInBtwn = Lists.newArrayList(graph.getEdgesBetween(n, n1));
                 final Collection<E2> aEdgesInBtwn = abstraction.getEdgesBetween(id, id1);
                 Assert.assertEquals(gEdgesInBtwn.size(), aEdgesInBtwn.size());
             }

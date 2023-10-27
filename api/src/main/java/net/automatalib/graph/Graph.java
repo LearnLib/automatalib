@@ -16,9 +16,11 @@
 package net.automatalib.graph;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Iterator;
 
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 
@@ -32,6 +34,30 @@ import net.automatalib.visualization.VisualizationHelper;
  *         edge type
  */
 public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
+
+    /**
+     * Retrieves the outgoing edges of a given node.
+     *
+     * @param node
+     *         the node.
+     *
+     * @return a {@link Collection} of all outgoing edges.
+     */
+    Collection<E> getOutgoingEdges(N node);
+
+    default Collection<N> getAdjacentTargets(N node) {
+        return Collections2.transform(getOutgoingEdges(node), this::getTarget);
+    }
+
+    @Override
+    default Iterator<E> getOutgoingEdgesIterator(N node) {
+        return getOutgoingEdges(node).iterator();
+    }
+
+    @Override
+    default Iterator<N> getAdjacentTargetsIterator(N node) {
+        return getAdjacentTargets(node).iterator();
+    }
 
     @Override
     default VisualizationHelper<N, E> getVisualizationHelper() {
@@ -57,15 +83,15 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
 
         @Override
         default boolean isConnected(int source, int target) {
-            return outgoingEdgesStream(source).mapToInt(this::getIntTarget).anyMatch(n -> n == target);
+            return Iterators.any(getOutgoingEdgesIterator(source), e -> getIntTarget(e) == target);
         }
 
-        default Stream<E> outgoingEdgesStream(int node) {
-            return getOutgoingEdges(node).stream();
+        default Iterator<E> getOutgoingEdgesIterator(int node) {
+            return getOutgoingEdges(node).iterator();
         }
 
         default Collection<E> getEdgesBetween(int from, int to) {
-            return outgoingEdgesStream(from).filter(e -> getIntTarget(e) == to).collect(Collectors.toList());
+            return Lists.newArrayList(Iterators.filter(getOutgoingEdgesIterator(from), e -> getIntTarget(e) == to));
         }
     }
 }
