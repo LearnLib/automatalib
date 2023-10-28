@@ -1154,7 +1154,10 @@ limitations under the License.
             <id>examples</id>
             <!-- define in a module so that we can disable the profile during a release -->
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>automatalib.release</name>
+                    <value>!true</value>
+                </property>
             </activation>
             <modules>
                 <module>examples</module>
