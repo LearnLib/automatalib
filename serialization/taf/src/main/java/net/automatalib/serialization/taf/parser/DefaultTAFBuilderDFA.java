@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.CompactDFA;
 
 final class DefaultTAFBuilderDFA extends AbstractTAFBuilder<Integer, String, Integer, Boolean, Void, CompactDFA<String>>
         implements TAFBuilderDFA {

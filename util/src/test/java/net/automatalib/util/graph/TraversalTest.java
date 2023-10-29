@@ -28,14 +28,14 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Streams;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.common.util.Holder;
+import net.automatalib.graph.CompactSimpleGraph;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.UniversalGraph;
-import net.automatalib.graph.base.compact.CompactEdge;
-import net.automatalib.graph.base.compact.CompactSimpleGraph;
+import net.automatalib.graph.base.CompactEdge;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.graph.traversal.GraphTraversal;
 import net.automatalib.util.graph.traversal.GraphTraversalAction;

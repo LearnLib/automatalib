@@ -16,7 +16,7 @@
 package net.automatalib.example.incremental;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.incremental.mealy.dag.IncrementalMealyDAGBuilder;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;

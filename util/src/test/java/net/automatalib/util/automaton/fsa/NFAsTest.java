@@ -16,10 +16,10 @@
 package net.automatalib.util.automaton.fsa;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.automaton.fsa.CompactNFA;
 import net.automatalib.automaton.fsa.NFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactNFA;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
 import org.testng.Assert;

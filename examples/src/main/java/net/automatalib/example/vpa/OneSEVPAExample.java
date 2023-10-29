@@ -15,9 +15,9 @@
  */
 package net.automatalib.example.vpa;
 
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.DefaultVPAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.automaton.vpa.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.Location;
 import net.automatalib.visualization.Visualization;

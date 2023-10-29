@@ -17,10 +17,10 @@ package net.automatalib.modelchecker.m3c.solver;
 
 import java.util.Collections;
 
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.StackSPA;
 import net.automatalib.graph.ContextFreeModalProcessSystem;

@@ -22,13 +22,13 @@ import java.io.InputStream;
 import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalAutomaton;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.serialization.InputModelDeserializer;

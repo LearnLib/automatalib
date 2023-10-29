@@ -26,7 +26,7 @@ import java.util.Objects;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.moore.AbstractGraphView;

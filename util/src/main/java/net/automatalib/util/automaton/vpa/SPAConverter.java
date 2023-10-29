@@ -29,13 +29,13 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.GrowingMapAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.StackSPA;
 import net.automatalib.automaton.vpa.OneSEVPA;

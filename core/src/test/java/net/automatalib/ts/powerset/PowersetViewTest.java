@@ -22,11 +22,11 @@ import java.util.HashSet;
 import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.fsa.CompactNFA;
+import net.automatalib.automaton.fsa.FastNFA;
+import net.automatalib.automaton.fsa.FastNFAState;
 import net.automatalib.automaton.fsa.MutableNFA;
-import net.automatalib.automaton.fsa.impl.FastNFA;
-import net.automatalib.automaton.fsa.impl.FastNFAState;
-import net.automatalib.automaton.fsa.impl.compact.CompactNFA;
 import net.automatalib.common.util.nid.NumericID;
 import net.automatalib.ts.PowersetViewTS;
 import net.automatalib.word.Word;

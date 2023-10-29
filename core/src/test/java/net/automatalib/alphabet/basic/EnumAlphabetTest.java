@@ -19,8 +19,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import net.automatalib.alphabet.EnumAlphabet;
 import net.automatalib.alphabet.basic.EnumAlphabetTest.Symbol;
-import net.automatalib.alphabet.impl.EnumAlphabet;
 
 public class EnumAlphabetTest extends AbstractAlphabetTest<Symbol, EnumAlphabet<Symbol>> {
 

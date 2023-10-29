@@ -19,9 +19,9 @@ import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;

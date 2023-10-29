@@ -25,8 +25,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.common.util.random.RandomUtil;
-import net.automatalib.graph.base.compact.CompactBidiGraph;
-import net.automatalib.graph.base.compact.CompactGraph;
 import net.automatalib.graph.concept.NodeIDs;
 import org.testng.Assert;
 import org.testng.annotations.Test;

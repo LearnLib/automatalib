@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

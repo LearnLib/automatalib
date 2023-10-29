@@ -18,8 +18,8 @@ package net.automatalib.util.graph;
 import java.util.Arrays;
 import java.util.List;
 
-import net.automatalib.graph.base.compact.CompactEdge;
-import net.automatalib.graph.base.compact.CompactSimpleGraph;
+import net.automatalib.graph.CompactSimpleGraph;
+import net.automatalib.graph.base.CompactEdge;
 import net.automatalib.graph.concept.EdgeWeights;
 import net.automatalib.util.graph.apsp.APSPResult;
 import net.automatalib.util.graph.concept.PropertyEdgeWeights;

@@ -17,7 +17,7 @@ package net.automatalib.alphabet.basic;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.DefaultVPAlphabet;
+import net.automatalib.alphabet.DefaultVPAlphabet;
 import net.automatalib.alphabet.util.DefaultVPAlphabetTestUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -17,7 +17,7 @@ package net.automatalib.alphabet.basic;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.ListAlphabet;
+import net.automatalib.alphabet.ListAlphabet;
 import net.automatalib.alphabet.util.AlphabetTestUtil;
 
 public class ListAlphabetTest extends AbstractAlphabetTest<Integer, ListAlphabet<Integer>> {

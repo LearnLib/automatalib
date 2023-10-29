@@ -39,10 +39,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     While this may cause some refactoring, it should only affect import statements as the names of most classes remain identical.
   * Some actual re-namings concern
     * all code around visibly push-down automata which now uses the "vpa" acronym (previously "vpda"). This includes package names, class names and (Maven) module names.
+    * many of the `automata-core` packages have been aligned with the `automata-api` packages which often results in dropping the `.impl` or `.compact` sub-packages.
     * `Alphabet`-related code which has been moved from the `net.automatlib.word` package to the `net.automatalib.alphabet` package.
-    * `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automaton.base.compact.CompactTransition`.
+    * `net.automatalib.automata.transducers.impl.compact.CompactMealyTransition` -> `net.automatalib.automaton.CompactTransition`.
     * `net.automatalib.commons.util.BitSetIterator` -> `net.automatalib.common.util.collection.BitSetIterator`.
-    * `net.automatalib.graphs.base.compact.AbstractCompactGraph#getNodeProperties(int)` -> `net.automatalib.graph.base.compact.AbstractCompactGraph#getNodeProperty(int)`.
+    * `net.automatalib.graphs.base.compact.AbstractCompactGraph#getNodeProperties(int)` -> `net.automatalib.graph.base.AbstractCompactGraph#getNodeProperty(int)`.
     * `net.automatalib.graphs.FiniteKTS` -> `net.automatalib.ts.FiniteKTS` and `FiniteKTS` no longer extends the `Graph` interface but the `Automaton` interface and has its type variables re-ordered.
     * `net.automatalib.graphs.FiniteLTS` -> `net.automatalib.graph.FiniteLabeledGraph`.
     * `GraphTraversal#dfIterator` -> `GraphTraversal#depthFirstIterator`.

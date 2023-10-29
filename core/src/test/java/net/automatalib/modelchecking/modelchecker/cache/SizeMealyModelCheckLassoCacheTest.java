@@ -15,11 +15,12 @@
  */
 package net.automatalib.modelchecking.modelchecker.cache;
 
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.ModelCheckerLassoCache.MealyModelCheckerLassoCache;
+import net.automatalib.modelchecking.SizeMealyModelCheckerLassoCache;
 import net.automatalib.modelchecking.modelchecker.cache.ModelCheckerMock.MealyModelCheckerMock;
 import org.mockito.Mockito;
 

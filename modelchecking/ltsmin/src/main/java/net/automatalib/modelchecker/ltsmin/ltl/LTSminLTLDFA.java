@@ -21,14 +21,14 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecker.ltsmin.LTSminDFA;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
+import net.automatalib.modelchecking.DFALassoImpl;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
-import net.automatalib.modelchecking.lasso.DFALassoImpl;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import org.checkerframework.checker.nullness.qual.Nullable;

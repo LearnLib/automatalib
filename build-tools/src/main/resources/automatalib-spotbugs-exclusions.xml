@@ -73,11 +73,7 @@ limitations under the License.
     <Match>
         <!-- fields are accessed from classes in other maven modules which is not detected by findBugs -->
         <Bug pattern="UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD,UWF_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
-        <Or>
-            <Class name="net.automatalib.common.util.Holder"/>
-            <Class name="net.automatalib.graph.base.compact.CompactBidiEdge"/>
-            <Class name="net.automatalib.graph.base.compact.CompactEdge"/>
-        </Or>
+        <Class name="net.automatalib.common.util.Holder"/>
     </Match>
     <Match>
         <Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>

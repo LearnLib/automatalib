@@ -18,12 +18,12 @@ package net.automatalib.util.automaton.fsa;
 import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.FastDFA;
 import net.automatalib.automaton.fsa.MutableDFA;
-import net.automatalib.automaton.fsa.impl.FastDFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;

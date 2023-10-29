@@ -21,8 +21,8 @@ import java.io.OutputStream;
 import java.io.Writer;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;

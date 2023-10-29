@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.MutableDFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.etf.writer.DFA2ETFWriter;

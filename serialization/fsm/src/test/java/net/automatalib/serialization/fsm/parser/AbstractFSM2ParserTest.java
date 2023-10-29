@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.base.compact.AbstractCompactDeterministic;
+import net.automatalib.automaton.base.AbstractCompactDeterministic;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;

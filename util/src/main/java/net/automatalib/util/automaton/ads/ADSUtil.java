@@ -24,7 +24,7 @@ import com.google.common.math.LongMath;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ads.ADSNode;
-import net.automatalib.graph.ads.impl.ADSSymbolNode;
+import net.automatalib.graph.ads.ADSSymbolNode;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 

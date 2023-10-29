@@ -15,8 +15,7 @@
  */
 package net.automatalib.automaton.transducer;
 
-import net.automatalib.alphabet.impl.Symbol;
-import net.automatalib.automaton.transducer.impl.compact.CompactMoore;
+import net.automatalib.alphabet.Symbol;
 import net.automatalib.automaton.util.TestUtil;
 
 public class CompactMooreTest extends AbstractMutableMooreTest {

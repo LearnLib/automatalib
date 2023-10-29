@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.function.Function;
 
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.modelchecker.ltsmin.LTSminDFA;
 import net.automatalib.serialization.etf.writer.DFA2ETFWriter;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;

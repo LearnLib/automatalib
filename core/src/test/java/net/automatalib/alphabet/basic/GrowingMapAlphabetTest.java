@@ -17,7 +17,7 @@ package net.automatalib.alphabet.basic;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.GrowingMapAlphabet;
 import net.automatalib.alphabet.util.AlphabetTestUtil;
 
 public class GrowingMapAlphabetTest extends AbstractAlphabetTest<Integer, GrowingMapAlphabet<Integer>> {

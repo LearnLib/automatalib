@@ -19,13 +19,13 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.impl.FastDFA;
-import net.automatalib.automaton.fsa.impl.FastDFAState;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.FastDFA;
+import net.automatalib.automaton.fsa.FastDFAState;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;

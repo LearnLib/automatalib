@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;

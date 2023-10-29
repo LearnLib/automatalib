@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.fixpoint.Worksets;
 import net.automatalib.ts.modal.CompactMTS;

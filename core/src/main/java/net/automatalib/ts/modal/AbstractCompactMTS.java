@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.base.compact.AbstractCompact;
+import net.automatalib.automaton.base.AbstractCompact;
 import net.automatalib.common.util.collection.PositiveIntSet;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;

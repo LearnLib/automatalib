@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.automatalib.alphabet.impl.DefaultVPAlphabet;
+import net.automatalib.alphabet.DefaultVPAlphabet;
 import net.automatalib.common.util.collection.CollectionsUtil;
 
 /**

@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.dfa.IncrementalDFADAGBuilderTest;

@@ -17,8 +17,8 @@ package net.automatalib.alphabet.basic;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.GrowingVPAlphabet;
-import net.automatalib.alphabet.impl.VPSym;
+import net.automatalib.alphabet.GrowingVPAlphabet;
+import net.automatalib.alphabet.VPSym;
 import net.automatalib.alphabet.util.GrowingVPAlphabetTestUtil;
 
 public class GrowingVPAlphabetTest extends AbstractAlphabetTest<VPSym<Character>, GrowingVPAlphabet<Character>> {

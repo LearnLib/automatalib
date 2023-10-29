@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.util.IntDisjointSets;

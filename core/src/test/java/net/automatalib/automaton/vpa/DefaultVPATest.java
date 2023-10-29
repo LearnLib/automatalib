@@ -19,9 +19,9 @@ import java.util.Collections;
 import java.util.HashSet;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.DefaultVPAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
 import net.automatalib.graph.Graph;
 import net.automatalib.word.Word;

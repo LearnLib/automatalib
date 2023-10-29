@@ -20,7 +20,7 @@ import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.visualization.VPManager;
 import net.automatalib.visualization.Visualization;

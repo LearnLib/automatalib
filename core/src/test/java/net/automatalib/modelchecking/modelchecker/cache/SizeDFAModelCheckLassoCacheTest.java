@@ -15,11 +15,12 @@
  */
 package net.automatalib.modelchecking.modelchecker.cache;
 
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.MutableDFA;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
 import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLassoCache.DFAModelCheckerLassoCache;
+import net.automatalib.modelchecking.SizeDFAModelCheckerLassoCache;
 import net.automatalib.modelchecking.modelchecker.cache.ModelCheckerMock.DFAModelCheckerMock;
 import org.mockito.Mockito;
 

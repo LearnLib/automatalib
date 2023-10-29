@@ -22,11 +22,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Function;
 
+import net.automatalib.graph.CompactPMPG;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.graph.DefaultCFMPS;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.ProceduralModalProcessGraph;
-import net.automatalib.graph.base.DefaultCFMPS;
-import net.automatalib.graph.base.compact.CompactPMPG;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;

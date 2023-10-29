@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.Automaton;
 import net.automatalib.common.util.Pair;
 import net.automatalib.serialization.dot.GraphDOT;

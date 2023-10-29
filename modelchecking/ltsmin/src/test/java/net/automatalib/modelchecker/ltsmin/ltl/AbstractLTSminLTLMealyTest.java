@@ -17,8 +17,8 @@ package net.automatalib.modelchecker.ltsmin.ltl;
 
 import java.util.HashSet;
 
+import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.testng.Assert;

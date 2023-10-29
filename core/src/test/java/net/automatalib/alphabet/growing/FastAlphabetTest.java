@@ -17,7 +17,7 @@ package net.automatalib.alphabet.growing;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.FastAlphabet;
+import net.automatalib.alphabet.FastAlphabet;
 import net.automatalib.alphabet.util.FastAlphabetTestUtil;
 import net.automatalib.alphabet.util.FastAlphabetTestUtil.InputSymbol;
 

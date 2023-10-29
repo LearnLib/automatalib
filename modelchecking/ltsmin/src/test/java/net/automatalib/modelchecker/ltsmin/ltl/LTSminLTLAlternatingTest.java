@@ -16,7 +16,7 @@
 package net.automatalib.modelchecker.ltsmin.ltl;
 
 import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.lasso.MealyLassoImpl;
+import net.automatalib.modelchecking.MealyLassoImpl;
 
 /**
  * Tests whether LTSminLTLAlternating actually uses alternating edge semantics.

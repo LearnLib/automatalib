@@ -26,7 +26,7 @@ import java.util.Map;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;

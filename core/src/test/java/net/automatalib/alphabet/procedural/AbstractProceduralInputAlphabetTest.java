@@ -21,8 +21,8 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableMap;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.vpa.AbstractVPAlphabetTest;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;

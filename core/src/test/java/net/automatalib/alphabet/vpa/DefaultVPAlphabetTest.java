@@ -17,7 +17,7 @@ package net.automatalib.alphabet.vpa;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.DefaultVPAlphabet;
+import net.automatalib.alphabet.DefaultVPAlphabet;
 import net.automatalib.alphabet.util.DefaultVPAlphabetTestUtil;
 
 public class DefaultVPAlphabetTest extends AbstractVPAlphabetTest<Character, DefaultVPAlphabet<Character>> {

@@ -21,8 +21,8 @@ import java.util.Random;
 
 import javax.swing.SwingUtilities;
 
-import net.automatalib.alphabet.impl.Alphabets;
-import net.automatalib.automaton.fsa.impl.compact.CompactDFA;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.visualization.VPManager;

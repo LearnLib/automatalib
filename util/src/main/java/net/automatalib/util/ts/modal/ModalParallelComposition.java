@@ -24,7 +24,7 @@ import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
-import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.alphabet.GrowingMapAlphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.fixpoint.WorksetMappingAlgorithm;

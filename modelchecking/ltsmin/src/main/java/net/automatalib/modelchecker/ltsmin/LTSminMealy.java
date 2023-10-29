@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import net.automatalib.util.automaton.transducer.MealyFilter;

@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.impl.MealyTransition;
+import net.automatalib.automaton.transducer.MealyTransition;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

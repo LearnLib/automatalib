@@ -17,7 +17,7 @@ package net.automatalib.alphabet.basic;
 
 import java.util.List;
 
-import net.automatalib.alphabet.impl.MapAlphabet;
+import net.automatalib.alphabet.MapAlphabet;
 import net.automatalib.alphabet.util.AlphabetTestUtil;
 
 public class MapAlphabetTest extends AbstractAlphabetTest<Integer, MapAlphabet<Integer>> {

@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
-import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
