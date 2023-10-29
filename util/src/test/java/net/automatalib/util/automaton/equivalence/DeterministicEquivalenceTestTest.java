@@ -47,6 +47,7 @@ public class DeterministicEquivalenceTestTest {
 
         testEquivalenceInternal(a1, a1, alphabet, true);
         testEquivalenceInternal(a1, a2, alphabet, false);
+        testEquivalenceInternal(a2, a1, alphabet, false);
     }
 
     @Test
@@ -57,6 +58,7 @@ public class DeterministicEquivalenceTestTest {
 
         testEquivalenceInternal(a1, a1, alphabet, true);
         testEquivalenceInternal(a1, a2, alphabet, false);
+        testEquivalenceInternal(a2, a1, alphabet, false);
     }
 
     @Test
@@ -70,6 +72,21 @@ public class DeterministicEquivalenceTestTest {
 
         testEquivalenceInternal(a1, a1, inputAlphabet, true);
         testEquivalenceInternal(a1, a2, inputAlphabet, false);
+        testEquivalenceInternal(a2, a1, inputAlphabet, false);
+    }
+
+    @Test
+    public void testEquivalenceMealyLarge() {
+        final Alphabet<Integer> inputAlphabet = Alphabets.integers(0, 5);
+        final Alphabet<Character> outputAlphabet = Alphabets.characters('a', 'f');
+        final MealyMachine<?, Integer, ?, Character> a1 =
+                RandomAutomata.randomMealy(RANDOM, AUTOMATON_SIZE_LARGE, inputAlphabet, outputAlphabet);
+        final MealyMachine<?, Integer, ?, Character> a2 =
+                RandomAutomata.randomMealy(RANDOM, AUTOMATON_SIZE_LARGE, inputAlphabet, outputAlphabet);
+
+        testEquivalenceInternal(a1, a1, inputAlphabet, true);
+        testEquivalenceInternal(a1, a2, inputAlphabet, false);
+        testEquivalenceInternal(a2, a1, inputAlphabet, false);
     }
 
     @Test

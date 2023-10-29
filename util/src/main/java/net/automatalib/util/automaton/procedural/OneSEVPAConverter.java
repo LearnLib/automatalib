@@ -45,7 +45,7 @@ final class OneSEVPAConverter {
 
     private static <I> List<Pair<Word<I>, Word<I>>> computeContextPairs(SPA<?, I> spa) {
 
-        final ATRSequences<I> atrSequences = SPAUtil.computeATRSequences(spa);
+        final ATRSequences<I> atrSequences = SPAs.computeATRSequences(spa);
         final ProceduralInputAlphabet<I> inputAlphabet = spa.getInputAlphabet();
         final List<Pair<Word<I>, Word<I>>> contextPairs = new ArrayList<>();
 

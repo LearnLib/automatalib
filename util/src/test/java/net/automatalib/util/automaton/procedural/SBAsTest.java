@@ -36,7 +36,6 @@ import net.automatalib.automaton.procedural.StackSBA;
 import net.automatalib.automaton.procedural.StackSPA;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
-import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -44,7 +43,7 @@ import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class SBAUtilTest {
+public class SBAsTest {
 
     private final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
     private final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
@@ -59,7 +58,7 @@ public class SBAUtilTest {
     public void testATSequences() {
         final Random random = new Random(42);
         final SBA<?, Character> sba = RandomAutomata.randomSBA(random, alphabet, 10);
-        final ATSequences<Character> atSequences = SBAUtil.computeATSequences(sba);
+        final ATSequences<Character> atSequences = SBAs.computeATSequences(sba);
 
         Assert.assertTrue(atSequences.accessSequences.keySet().containsAll(alphabet.getCallAlphabet()));
 
@@ -82,7 +81,7 @@ public class SBAUtilTest {
     @Test
     public void testEmptyCompleteATRSequences() {
         final SBA<?, Character> sba = new EmptySBA<>(alphabet);
-        final ATSequences<Character> atrSequences = SBAUtil.computeATSequences(sba);
+        final ATSequences<Character> atrSequences = SBAs.computeATSequences(sba);
 
         Assert.assertTrue(atrSequences.accessSequences.isEmpty());
         Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
@@ -96,20 +95,20 @@ public class SBAUtilTest {
         final SBA<?, Character> sba1 = RandomAutomata.randomSBA(random, alphabet, size);
         final SBA<?, Character> sba2 = RandomAutomata.randomSBA(random, alphabet, size);
 
-        Assert.assertNull(Automata.findSeparatingWord(sba1, sba1, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba2, sba2, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, sba1, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba2, sba2, alphabet));
 
-        final Word<Character> sepWord1 = Automata.findSeparatingWord(sba1, sba2, alphabet);
-        final Word<Character> sepWord2 = Automata.findSeparatingWord(sba2, sba1, alphabet);
+        final Word<Character> sepWord1 = SBAs.findSeparatingWord(sba1, sba2, alphabet);
+        final Word<Character> sepWord2 = SBAs.findSeparatingWord(sba2, sba1, alphabet);
         Assert.assertNotNull(sepWord1);
         Assert.assertNotNull(sepWord2);
         Assert.assertNotEquals(sba1.computeOutput(sepWord1), sba2.computeOutput(sepWord1));
         Assert.assertNotEquals(sba1.computeOutput(sepWord2), sba2.computeOutput(sepWord2));
 
-        Assert.assertNull(Automata.findSeparatingWord(sba1, sba1, emptyAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba2, sba2, emptyAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, emptyAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, emptyAlphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, sba1, emptyAlphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba2, sba2, emptyAlphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, sba2, emptyAlphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba2, sba1, emptyAlphabet));
     }
 
     // Copied and adjusted from the corresponding method in the SPAUtil test
@@ -138,9 +137,9 @@ public class SBAUtilTest {
         final SBA<?, Character> emptySBA = new EmptySBA<>(alphabet);
 
         // no accessible procedures, no separating word should exist. Even with the empty SBAs
-        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(emptySBA, sba2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba1, emptySBA, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(emptySBA, sba2, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, emptySBA, alphabet));
 
         // make SBA1's 'S' procedure not empty. Now there should exist a separating word
         final int s1s0 = s1.addInitialState(true);
@@ -161,19 +160,19 @@ public class SBAUtilTest {
         // There should not exist a separating word if we restrict the alphabet to 'b','c'
         final ProceduralInputAlphabet<Character> bcAlphabet =
                 new DefaultProceduralInputAlphabet<>(Alphabets.characters('b', 'c'), callAlphabet, returnSymbol);
-        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, bcAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, bcAlphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, sba2, bcAlphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba2, sba1, bcAlphabet));
 
         // only with the empty SBA
-        Assert.assertEquals(Automata.findSeparatingWord(sba1, emptySBA, bcAlphabet), Word.fromLetter('S'));
-        Assert.assertEquals(Automata.findSeparatingWord(emptySBA, sba1, bcAlphabet), Word.fromLetter('S'));
-        Assert.assertEquals(Automata.findSeparatingWord(sba2, emptySBA, bcAlphabet), Word.fromLetter('S'));
-        Assert.assertEquals(Automata.findSeparatingWord(emptySBA, sba2, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(SBAs.findSeparatingWord(sba1, emptySBA, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(SBAs.findSeparatingWord(emptySBA, sba1, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(SBAs.findSeparatingWord(sba2, emptySBA, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(SBAs.findSeparatingWord(emptySBA, sba2, bcAlphabet), Word.fromLetter('S'));
 
         // update SBA2 according to SBA1. There should no longer exist a separating word
         s2.setAccepting(s2s1, true);
-        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba2, sba1, alphabet));
 
         // make SBA1's s5 accept so that we introduce procedure 'T'. This also adds a new separating word (two 'a's)
         final int s1s5 = s1.addState(true);
@@ -186,8 +185,8 @@ public class SBAUtilTest {
         final int s2s5 = s2.addState(true);
         s2.addTransition(s2s0, 'T', s2s5);
 
-        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba2, sba1, alphabet));
 
         // make SBA1's procedure 'T' accept 'c' so that we can find another separating word
         final FastDFAState t1t1 = t1.addState(true);
@@ -204,15 +203,15 @@ public class SBAUtilTest {
         // If we restrict ourselves to only 'S' call symbols, a separating word should no longer exist
         final ProceduralInputAlphabet<Character> sAlphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
-        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, sAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, sAlphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, sba2, sAlphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba2, sba1, sAlphabet));
 
         // update SBA2 accordingly
         final FastDFAState t2t1 = t2.addState(true);
         t2.addTransition(t2t0, 'c', t2t1);
 
-        Assert.assertNull(Automata.findSeparatingWord(sba1, sba2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(sba2, sba1, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba1, sba2, alphabet));
+        Assert.assertNull(SBAs.findSeparatingWord(sba2, sba1, alphabet));
 
         // make SBA1's 'T' procedure return on c.
         // This should yield a separating word even if we restrict ourselves to only 'c' as internal symbol
@@ -227,7 +226,7 @@ public class SBAUtilTest {
     }
 
     private static <I> void verifySepWord(SBA<?, I> sba1, SBA<?, I> sba2, ProceduralInputAlphabet<I> alphabet) {
-        final Word<I> sepWord = Automata.findSeparatingWord(sba1, sba2, alphabet);
+        final Word<I> sepWord = SBAs.findSeparatingWord(sba1, sba2, alphabet);
         Assert.assertNotNull(sepWord);
         Assert.assertNotEquals(sba1.accepts(sepWord), sba2.accepts(sepWord));
     }
@@ -240,11 +239,11 @@ public class SBAUtilTest {
         final SBA<?, Character> sba1 = RandomAutomata.randomSBA(random, alphabet, size);
         final SBA<?, Character> sba2 = RandomAutomata.randomSBA(random, alphabet, size);
 
-        Assert.assertTrue(Automata.testEquivalence(sba1, sba1, alphabet));
-        Assert.assertTrue(Automata.testEquivalence(sba2, sba2, alphabet));
+        Assert.assertTrue(SBAs.testEquivalence(sba1, sba1, alphabet));
+        Assert.assertTrue(SBAs.testEquivalence(sba2, sba2, alphabet));
 
-        Assert.assertFalse(Automata.testEquivalence(sba1, sba2, alphabet));
-        Assert.assertFalse(Automata.testEquivalence(sba2, sba1, alphabet));
+        Assert.assertFalse(SBAs.testEquivalence(sba1, sba2, alphabet));
+        Assert.assertFalse(SBAs.testEquivalence(sba2, sba1, alphabet));
     }
 
     @Test
@@ -267,15 +266,15 @@ public class SBAUtilTest {
 
         final StackSBA<?, Character> sba = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', sbaS, 'T', sbaT));
         final StackSPA<?, Character> spa = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', spaS, 'T', spaT));
-        final SPA<?, Character> reduced = SBAUtil.reduce(sba);
+        final SPA<?, Character> reduced = SBAs.reduce(sba);
 
-        Assert.assertTrue(Automata.testEquivalence(spa, reduced, alphabet));
+        Assert.assertTrue(SPAs.testEquivalence(spa, reduced, alphabet));
     }
 
     @Test
     public void testSBAasCFMPS() throws IOException {
         final SBA<?, String> sba = buildSBAWithNonTerminatingProcedures();
-        final ContextFreeModalProcessSystem<String, Void> cfmps = SBAUtil.toCFMPS(sba);
+        final ContextFreeModalProcessSystem<String, Void> cfmps = SBAs.toCFMPS(sba);
 
         Assert.assertEquals(cfmps.getMainProcess(), "P1");
 
@@ -298,7 +297,7 @@ public class SBAUtilTest {
         Assert.assertNotNull(p4);
         Assert.assertEquals(p4.getNodes().size(), 3);
 
-        SPAUtilTest.verifyDot(cfmps, "/cfmps/sba.dot");
+        SPAsTest.verifyDot(cfmps, "/cfmps/sba.dot");
     }
 
     private static <S> void fillS(MutableDFA<S, Character> dfa, boolean sba) {

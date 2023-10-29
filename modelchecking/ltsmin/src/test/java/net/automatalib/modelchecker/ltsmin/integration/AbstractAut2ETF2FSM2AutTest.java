@@ -25,7 +25,7 @@ import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.common.util.process.ProcessUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
-import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
+import net.automatalib.util.automaton.Automata;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
@@ -105,6 +105,6 @@ public abstract class AbstractAut2ETF2FSM2AutTest<
         Assert.assertEquals(new HashSet<>(inputAlphabet), new HashSet<>(automatonIn.getInputAlphabet()));
 
         // test we have the same automaton
-        Assert.assertNull(new NearLinearEquivalenceTest<>(automatonOut).findSeparatingWord(automatonIn, inputAlphabet));
+        Assert.assertNull(Automata.findSeparatingWord(automatonOut, automatonIn, inputAlphabet));
     }
 }

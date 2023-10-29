@@ -38,7 +38,7 @@ import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.procedural.ATSequences;
-import net.automatalib.util.automaton.procedural.SBAUtil;
+import net.automatalib.util.automaton.procedural.SBAs;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -85,7 +85,7 @@ public class SBAWMethodTestsIteratorTest {
     public void testIterator() {
         final ProceduralInputAlphabet<Character> alphabet = this.sba.getInputAlphabet();
         final List<Word<Character>> testWords = Lists.newArrayList(new SBAWMethodTestsIterator<>(sba));
-        final ATSequences<Character> atSequences = SBAUtil.computeATSequences(this.sba);
+        final ATSequences<Character> atSequences = SBAs.computeATSequences(this.sba);
         final List<Character> continuableSymbols = new ArrayList<>(alphabet.size() - 1);
         continuableSymbols.addAll(alphabet.getInternalAlphabet());
         continuableSymbols.addAll(atSequences.terminatingSequences.keySet());
@@ -126,7 +126,7 @@ public class SBAWMethodTestsIteratorTest {
                     final StackSBA<?, I> copy = new StackSBA<>(alphabet, sba.getInitialProcedure(), newP);
 
                     Assert.assertFalse(Automata.testEquivalence(dfa, newDFA, alphabet));
-                    Assert.assertFalse(Automata.testEquivalence(sba, copy, alphabet));
+                    Assert.assertFalse(SBAs.testEquivalence(sba, copy, alphabet));
                     Assert.assertFalse(testEquivalence(sba, copy, testWords));
                 }
             }

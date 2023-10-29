@@ -30,12 +30,10 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class NearLinearEquivalenceTest<I> {
+public final class NearLinearEquivalenceTest {
 
-    private final UniversalDeterministicAutomaton<?, I, ?, ?, ?> target;
-
-    public NearLinearEquivalenceTest(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target) {
-        this.target = target;
+    private NearLinearEquivalenceTest() {
+        // prevent instantiation
     }
 
     public static <S, I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<S, I, ?, ?, ?> target,
@@ -168,11 +166,6 @@ public class NearLinearEquivalenceTest<I> {
         }
 
         return wb.toWord();
-    }
-
-    public @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
-                                                Collection<? extends I> inputs) {
-        return findSeparatingWord(target, other, inputs);
     }
 
     public static <I> @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> target,

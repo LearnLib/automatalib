@@ -95,7 +95,6 @@ public final class Bisimulation {
                     continue;
                 }
 
-                forall = true;
                 for (I sym : inputs) {
                     for (BT f : b.getTransitions(p.getSecond(), sym)) {
 

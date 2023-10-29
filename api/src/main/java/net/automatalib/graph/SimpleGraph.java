@@ -58,6 +58,11 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, FiniteRepresen
         return Iterators.unmodifiableIterator(getNodes().iterator());
     }
 
+    /**
+     * Retrieves the size (number of nodes) of this graph.
+     *
+     * @return the number of nodes of this graph
+     */
     @Override
     default int size() {
         return getNodes().size();

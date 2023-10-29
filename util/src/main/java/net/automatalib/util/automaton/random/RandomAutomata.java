@@ -46,7 +46,7 @@ import net.automatalib.automaton.vpa.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.Location;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.DFAs;
-import net.automatalib.util.automaton.procedural.SPAUtil;
+import net.automatalib.util.automaton.procedural.SPAs;
 import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import org.checkerframework.checker.index.qual.NonNegative;
 
@@ -191,7 +191,7 @@ public final class RandomAutomata {
             }
 
             result = new StackSPA<>(alphabet, alphabet.getCallSymbol(random.nextInt(alphabet.getNumCalls())), dfas);
-        } while (minimize && !SPAUtil.isMinimal(result));
+        } while (minimize && !SPAs.isMinimal(result));
 
         return result;
     }

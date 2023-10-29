@@ -18,7 +18,7 @@ package net.automatalib.util.automaton.conformance;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SBA;
-import net.automatalib.util.automaton.procedural.SBAUtil;
+import net.automatalib.util.automaton.procedural.SBAs;
 
 /**
  * A conformance test iterator for {@link SBA}s that is based on the {@link WMethodTestsIterator W-method}. Note that
@@ -45,7 +45,7 @@ public class SBAWMethodTestsIterator<I> extends ProceduralWMethodTestsIterator<I
         super(alphabet,
               sba.getProceduralInputs(alphabet),
               sba.getProcedures(),
-              SBAUtil.computeATSequences(sba, alphabet),
+              SBAs.computeATSequences(sba, alphabet),
               maxDepth);
     }
 

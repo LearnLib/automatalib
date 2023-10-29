@@ -29,7 +29,7 @@ import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.modelchecker.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelchecker.m3c.transformer.ADDTransformer;
-import net.automatalib.util.automaton.procedural.SPAUtil;
+import net.automatalib.util.automaton.procedural.SPAs;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -62,7 +62,7 @@ public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, Str
         p.addTransition(s1, 'S', s1);
 
         final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', Collections.singletonMap('S', p));
-        final ContextFreeModalProcessSystem<Character, Void> cfmps = SPAUtil.toCFMPS(spa);
+        final ContextFreeModalProcessSystem<Character, Void> cfmps = SPAs.toCFMPS(spa);
 
         final FormulaNode<Character, Void> formula = M3CParser.parse("[S][a][R]false", l -> l.charAt(0), ap -> null);
         final ADDSolver<Character, Void> solver = new ADDSolver<>(cfmps);

@@ -217,7 +217,7 @@ public class ModalConjunctionTest {
         block2.addInitialState();
 
         // simple execute to check that no exception is thrown
-        MTSUtil.conjunction(block1, block2);
+        MTSs.conjunction(block1, block2);
     }
 
     @Test
@@ -227,7 +227,7 @@ public class ModalConjunctionTest {
         int s1 = block2.addState();
         block2.addModalTransition(s0, 'a', s1, ModalType.MAY);
 
-        Assert.assertThrows(IllegalConjunctionException.class, () -> MTSUtil.conjunction(block1, block2));
+        Assert.assertThrows(IllegalConjunctionException.class, () -> MTSs.conjunction(block1, block2));
     }
 
     @Test(dataProvider = "randomSource")

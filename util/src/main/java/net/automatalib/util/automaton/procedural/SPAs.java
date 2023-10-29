@@ -48,11 +48,11 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Utility methods for {@link SPA}s.
+ * Operations on {@link SPA}s.
  */
-public final class SPAUtil {
+public final class SPAs {
 
-    private SPAUtil() {
+    private SPAs() {
         // prevent instantiation
     }
 

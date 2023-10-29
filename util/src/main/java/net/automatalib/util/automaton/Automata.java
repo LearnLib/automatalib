@@ -20,18 +20,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.Automaton;
 import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.graph.TransitionEdge;
-import net.automatalib.automaton.procedural.SBA;
-import net.automatalib.automaton.procedural.SPA;
-import net.automatalib.automaton.procedural.SPMM;
-import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.UniversalGraph;
@@ -39,19 +32,20 @@ import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
 import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
 import net.automatalib.util.automaton.equivalence.NearLinearEquivalenceTest;
-import net.automatalib.util.automaton.procedural.SBAUtil;
-import net.automatalib.util.automaton.procedural.SPAUtil;
-import net.automatalib.util.automaton.procedural.SPMMUtil;
-import net.automatalib.util.automaton.vpa.OneSEVPAUtil;
 import net.automatalib.util.minimizer.Block;
 import net.automatalib.util.minimizer.BlockMap;
 import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.util.ts.TS;
+import net.automatalib.util.ts.TS.TransRef;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class Automata extends TS {
+public final class Automata {
+
+    private Automata() {
+        // prevent instantiation
+    }
 
     public static <S, I, T> Graph<S, TransitionEdge<I, T>> asGraph(Automaton<S, I, T> automaton,
                                                                    Collection<? extends I> inputs) {
@@ -64,7 +58,7 @@ public class Automata extends TS {
             A output) {
 
         UniversalGraph<S, TransitionEdge<I, T>, SP, TransitionEdge.Property<I, TP>> aag =
-                asUniversalGraph(automaton, inputs);
+                automaton.transitionGraphView(inputs);
 
         MinimizationResult<S, TransitionEdge.Property<I, TP>> mr =
                 Minimizer.minimize(aag, automaton.getInitialStates());
@@ -103,12 +97,6 @@ public class Automata extends TS {
         return output;
     }
 
-    public static <S, I, T, SP, TP> UniversalGraph<S, TransitionEdge<I, T>, SP, TransitionEdge.Property<I, TP>> asUniversalGraph(
-            UniversalAutomaton<S, I, T, SP, TP> automaton,
-            Collection<? extends I> inputs) {
-        return automaton.transitionGraphView(inputs);
-    }
-
     @SuppressWarnings("unchecked")
     public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A invasiveMinimize(A automaton,
                                                                                                         Collection<? extends I> inputs) {
@@ -118,7 +106,7 @@ public class Automata extends TS {
         int numInputs = inputs.size();
 
         UniversalGraph<S, TransitionEdge<I, T>, SP, TransitionEdge.Property<I, TP>> aag =
-                asUniversalGraph(automaton, inputs);
+                automaton.transitionGraphView(inputs);
 
         MinimizationResult<S, TransitionEdge.Property<I, TP>> mr =
                 Minimizer.minimize(aag, automaton.getInitialStates());
@@ -180,34 +168,28 @@ public class Automata extends TS {
         return automaton;
     }
 
-    public static <I> @Nullable Word<I> findShortestSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
-                                                                   UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
-                                                                   Collection<? extends I> inputs) {
-        return DeterministicEquivalenceTest.findSeparatingWordLarge(reference, other, inputs);
-    }
-
+    /**
+     * Tests whether two automata are equivalent, i.e. whether there exists a
+     * {@link #findSeparatingWord(UniversalDeterministicAutomaton, UniversalDeterministicAutomaton, Collection)
+     * separating word} for the two given automata.
+     *
+     * @param <I>
+     *         input symbol type
+     * @param reference
+     *         the one automaton to consider
+     * @param other
+     *         the other automaton to consider
+     * @param inputs
+     *         the input symbols to consider
+     *
+     * @return {@code true} if the automata are equivalent, {@code false} otherwise.
+     *
+     * @see #findSeparatingWord(UniversalDeterministicAutomaton, UniversalDeterministicAutomaton, Collection)
+     */
     public static <I> boolean testEquivalence(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
                                               UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
                                               Collection<? extends I> inputs) {
         return findSeparatingWord(reference, other, inputs) == null;
-    }
-
-    public static <I> boolean testEquivalence(OneSEVPA<?, I> sevpa1, OneSEVPA<?, I> sevpa2, VPAlphabet<I> inputs) {
-        return OneSEVPAUtil.testEquivalence(sevpa1, sevpa2, inputs);
-    }
-
-    public static <I> boolean testEquivalence(SPA<?, I> spa1, SPA<?, I> spa2, ProceduralInputAlphabet<I> inputs) {
-        return SPAUtil.testEquivalence(spa1, spa2, inputs);
-    }
-
-    public static <I> boolean testEquivalence(SBA<?, I> sba1, SBA<?, I> sba2, ProceduralInputAlphabet<I> inputs) {
-        return SBAUtil.testEquivalence(sba1, sba2, inputs);
-    }
-
-    public static <I, O> boolean testEquivalence(SPMM<?, I, ?, O> spmm1,
-                                                 SPMM<?, I, ?, O> spmm2,
-                                                 ProceduralInputAlphabet<I> inputs) {
-        return SPMMUtil.testEquivalence(spmm1, spmm2, inputs);
     }
 
     /**
@@ -258,28 +240,26 @@ public class Automata extends TS {
         return NearLinearEquivalenceTest.findSeparatingWord(automaton, state1, state2, inputs);
     }
 
-    public static <I> @Nullable Word<I> findSeparatingWord(OneSEVPA<?, I> sevpa1,
-                                                           OneSEVPA<?, I> sevpa2,
-                                                           VPAlphabet<I> inputs) {
-        return OneSEVPAUtil.findSeparatingWord(sevpa1, sevpa2, inputs);
-    }
-
-    public static <I> @Nullable Word<I> findSeparatingWord(SPA<?, I> spa1,
-                                                           SPA<?, I> spa2,
-                                                           ProceduralInputAlphabet<I> inputs) {
-        return SPAUtil.findSeparatingWord(spa1, spa2, inputs);
-    }
-
-    public static <I> @Nullable Word<I> findSeparatingWord(SBA<?, I> sba1,
-                                                           SBA<?, I> sba2,
-                                                           ProceduralInputAlphabet<I> inputs) {
-        return SBAUtil.findSeparatingWord(sba1, sba2, inputs);
-    }
-
-    public static <I, O> @Nullable Word<I> findSeparatingWord(SPMM<?, I, ?, O> sba1,
-                                                              SPMM<?, I, ?, O> sba2,
-                                                              ProceduralInputAlphabet<I> inputs) {
-        return SPMMUtil.findSeparatingWord(sba1, sba2, inputs);
+    /**
+     * Finds a shortest separating word for two automata. A separating word is a word that exposes a difference
+     * (differing state or transition properties, or a transition undefined in only one of the automata) between the two
+     * automata.
+     *
+     * @param <I>
+     *         input symbol type
+     * @param reference
+     *         the one automaton to consider
+     * @param other
+     *         the other automaton to consider
+     * @param inputs
+     *         the input symbols to consider
+     *
+     * @return a separating word, or {@code null} if no such word could be found.
+     */
+    public static <I> @Nullable Word<I> findShortestSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference,
+                                                                   UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
+                                                                   Collection<? extends I> inputs) {
+        return DeterministicEquivalenceTest.findSeparatingWord(reference, other, inputs);
     }
 
     /**
@@ -453,35 +433,26 @@ public class Automata extends TS {
 
     public static <S, I> Iterator<TransRef<S, I, ?>> allDefinedInputsIterator(Automaton<S, I, ?> automaton,
                                                                               Iterable<? extends I> inputs) {
-        return allDefinedInputsIterator(automaton, automaton.iterator(), inputs);
+        return TS.allDefinedInputsIterator(automaton, automaton.iterator(), inputs);
     }
 
     public static <S, I> Iterable<TransRef<S, I, ?>> allDefinedInputs(Automaton<S, I, ?> automaton,
                                                                       Iterable<? extends I> inputs) {
-        return allDefinedInputs(automaton, automaton, inputs);
+        return TS.allDefinedInputs(automaton, automaton, inputs);
     }
 
     public static <S, I> Iterable<TransRef<S, I, ?>> allUndefinedInputs(Automaton<S, I, ?> automaton,
                                                                         Iterable<? extends I> inputs) {
-        return allUndefinedTransitions(automaton, automaton, inputs);
+        return TS.allUndefinedTransitions(automaton, automaton, inputs);
     }
 
     public static <I> boolean hasUndefinedInput(Automaton<?, I, ?> automaton, Iterable<? extends I> inputs) {
-        return findUndefinedInput(automaton, inputs) != null;
-    }
-
-    public static <S, I> @Nullable TransRef<S, I, ?> findUndefinedInput(Automaton<S, I, ?> automaton,
-                                                                        Iterable<? extends I> inputs) {
-        Iterator<TransRef<S, I, ?>> it = allUndefinedInputsIterator(automaton, inputs);
-        if (!it.hasNext()) {
-            return null;
-        }
-        return it.next();
+        return allUndefinedInputsIterator(automaton, inputs).hasNext();
     }
 
     public static <S, I> Iterator<TransRef<S, I, ?>> allUndefinedInputsIterator(Automaton<S, I, ?> automaton,
                                                                                 Iterable<? extends I> inputs) {
-        return allUndefinedTransitionsIterator(automaton, automaton.iterator(), inputs);
+        return TS.allUndefinedTransitionsIterator(automaton, automaton.iterator(), inputs);
     }
 
     private static final class ResultTransRecord<TP> {

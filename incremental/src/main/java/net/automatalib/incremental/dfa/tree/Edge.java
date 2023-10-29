@@ -15,8 +15,6 @@
  */
 package net.automatalib.incremental.dfa.tree;
 
-import net.automatalib.incremental.dfa.Acceptance;
-
 public final class Edge<I> {
 
     private final Node node;
@@ -33,9 +31,5 @@ public final class Edge<I> {
 
     public I getInput() {
         return input;
-    }
-
-    public Acceptance getAcceptance() {
-        return node.getAcceptance();
     }
 }

@@ -28,11 +28,11 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Utility methods for {@link SPMM}s.
+ * Operations on {@link SPMM}s.
  */
-public final class SPMMUtil {
+public final class SPMMs {
 
-    private SPMMUtil() {
+    private SPMMs() {
         // prevent instantiation
     }
 

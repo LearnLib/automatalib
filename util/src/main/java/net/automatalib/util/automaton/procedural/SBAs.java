@@ -44,11 +44,11 @@ import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Utility methods for {@link SBA}s.
+ * Operations on {@link SBA}s.
  */
-public final class SBAUtil {
+public final class SBAs {
 
-    private SBAUtil() {
+    private SBAs() {
         // prevent instantiation
     }
 
@@ -394,7 +394,7 @@ public final class SBAUtil {
      * @return the {@link ContextFreeModalProcessSystem}-based view on the given {@code sba}.
      */
     public static <I> ContextFreeModalProcessSystem<I, Void> toCFMPS(SBA<?, I> sba) {
-        assert SBAUtil.isValid(sba);
+        assert SBAs.isValid(sba);
         return new CFMPSViewSBA<>(sba);
     }
 

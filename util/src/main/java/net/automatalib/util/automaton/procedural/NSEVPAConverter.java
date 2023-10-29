@@ -54,7 +54,7 @@ final class NSEVPAConverter {
 
     private static <I> Map<@Nullable I, List<Pair<Word<I>, Word<I>>>> computeContextPairs(SPA<?, I> spa) {
 
-        final ATRSequences<I> atrSequences = SPAUtil.computeATRSequences(spa);
+        final ATRSequences<I> atrSequences = SPAs.computeATRSequences(spa);
         final ProceduralInputAlphabet<I> inputAlphabet = spa.getInputAlphabet();
         final Map<@Nullable I, List<Pair<Word<I>, Word<I>>>> contextPairs =
                 Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls() + 1);

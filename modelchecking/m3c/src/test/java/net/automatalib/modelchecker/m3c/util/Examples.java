@@ -32,7 +32,7 @@ import net.automatalib.graph.base.DefaultCFMPS;
 import net.automatalib.graph.base.compact.CompactPMPG;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
-import net.automatalib.util.automaton.procedural.SBAUtil;
+import net.automatalib.util.automaton.procedural.SBAs;
 
 public final class Examples {
 
@@ -84,7 +84,7 @@ public final class Examples {
         final StackSBA<?, String> sba =
                 new StackSBA<>(alphabet, "P1", ImmutableMap.of("P1", p1, "P2", p2, "P3", p3, "P4", p4));
 
-        return SBAUtil.toCFMPS(sba);
+        return SBAs.toCFMPS(sba);
     }
 
     private static <N, E, AP, M extends MutableProceduralModalProcessGraph<N, String, E, AP, ?>> M buildPMPG(M pmpg,

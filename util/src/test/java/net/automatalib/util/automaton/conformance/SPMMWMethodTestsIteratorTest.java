@@ -40,7 +40,7 @@ import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.procedural.ATSequences;
-import net.automatalib.util.automaton.procedural.SPMMUtil;
+import net.automatalib.util.automaton.procedural.SPMMs;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -96,7 +96,7 @@ public class SPMMWMethodTestsIteratorTest {
         final List<Word<Character>> testWords = Lists.newArrayList(new SPMMWMethodTestsIterator<>(this.spmm));
 
         final ProceduralInputAlphabet<Character> inputAlphabet = this.spmm.getInputAlphabet();
-        final ATSequences<Character> atSequences = SPMMUtil.computeATSequences(this.spmm);
+        final ATSequences<Character> atSequences = SPMMs.computeATSequences(this.spmm);
         final List<Character> continuableSymbols = new ArrayList<>(inputAlphabet.size() - 1);
         continuableSymbols.addAll(inputAlphabet.getInternalAlphabet());
         continuableSymbols.addAll(atSequences.terminatingSequences.keySet());
@@ -147,7 +147,7 @@ public class SPMMWMethodTestsIteratorTest {
                                                                       newP);
 
                         Assert.assertFalse(Automata.testEquivalence(mealy, newMealy, inputAlphabet));
-                        Assert.assertFalse(Automata.testEquivalence(spmm, copy, inputAlphabet));
+                        Assert.assertFalse(SPMMs.testEquivalence(spmm, copy, inputAlphabet));
                         Assert.assertFalse(testEquivalence(spmm, copy, testWords));
                     }
                 }

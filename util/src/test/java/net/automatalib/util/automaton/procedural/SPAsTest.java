@@ -47,7 +47,6 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.serialization.dot.GraphDOT;
-import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;
 import net.automatalib.util.automaton.conformance.WMethodTestsIterator;
@@ -58,7 +57,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class SPAUtilTest {
+public class SPAsTest {
 
     private final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
     private final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
@@ -111,63 +110,63 @@ public class SPAUtilTest {
 
         // With no accepting states, there exist no a/t/r sequences.
         final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', s, 'T', t));
-        ATRSequences<Character> atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
+        ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
         Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry));
         Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
         Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry));
-        Assert.assertFalse(SPAUtil.isMinimal(spa));
-        Assert.assertTrue(SPAUtil.isMinimal(emptyAlphabet, atrSequences));
+        Assert.assertFalse(SPAs.isMinimal(spa));
+        Assert.assertTrue(SPAs.isMinimal(emptyAlphabet, atrSequences));
 
         // Now we make the initial state of S accepting
         // This should give us a terminating sequence for S but still no sequences for T.
         s.setAccepting(s0, true);
 
-        atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
+        atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
         Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry));
         Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry));
         Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry));
-        Assert.assertFalse(SPAUtil.isMinimal(spa));
-        Assert.assertTrue(SPAUtil.isMinimal(halfAlphabet, atrSequences));
-        Assert.assertTrue(SPAUtil.isMinimal(emptyAlphabet, atrSequences));
+        Assert.assertFalse(SPAs.isMinimal(spa));
+        Assert.assertTrue(SPAs.isMinimal(halfAlphabet, atrSequences));
+        Assert.assertTrue(SPAs.isMinimal(emptyAlphabet, atrSequences));
 
         // Now we make s5 of S accepting.
         // This gives us a terminating sequence that traverses T and therefore allows us to extract access and terminating sequences for T.
         s.setAccepting(s5, true);
 
-        atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
+        atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
         Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry, tAsEntry));
         Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry));
         Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry, tRsEntry));
-        Assert.assertFalse(SPAUtil.isMinimal(spa));
-        Assert.assertTrue(SPAUtil.isMinimal(halfAlphabet, atrSequences));
-        Assert.assertTrue(SPAUtil.isMinimal(emptyAlphabet, atrSequences));
+        Assert.assertFalse(SPAs.isMinimal(spa));
+        Assert.assertTrue(SPAs.isMinimal(halfAlphabet, atrSequences));
+        Assert.assertTrue(SPAs.isMinimal(emptyAlphabet, atrSequences));
 
         // Now make t3 of T accepting.
         // The only path to an accepting state contains a recursive call to T, so we still cannot extract a valid terminating sequence.
         t.setAccepting(t3, true);
 
-        atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
+        atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
         Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry, tAsEntry));
         Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry));
         Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry, tRsEntry));
-        Assert.assertFalse(SPAUtil.isMinimal(spa));
-        Assert.assertTrue(SPAUtil.isMinimal(halfAlphabet, atrSequences));
-        Assert.assertTrue(SPAUtil.isMinimal(emptyAlphabet, atrSequences));
+        Assert.assertFalse(SPAs.isMinimal(spa));
+        Assert.assertTrue(SPAs.isMinimal(halfAlphabet, atrSequences));
+        Assert.assertTrue(SPAs.isMinimal(emptyAlphabet, atrSequences));
 
         // Now make t1 of T accepting.
         // This allows us to construct a valid terminating sequence for T and therefore make the global ATRSequences valid.
         t.setAccepting(t1, true);
 
-        atrSequences = SPAUtil.computeATRSequences(spa, alphabet);
+        atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
         Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry, tAsEntry));
         Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry, tTsEntry));
         Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry, tRsEntry));
-        Assert.assertTrue(SPAUtil.isMinimal(spa));
+        Assert.assertTrue(SPAs.isMinimal(spa));
     }
 
     @Test
@@ -177,14 +176,14 @@ public class SPAUtilTest {
         final DefaultProceduralInputAlphabet<Character> halfAlphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
 
-        final ATRSequences<Character> atrSequences = SPAUtil.computeATRSequences(spa, halfAlphabet);
+        final ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa, halfAlphabet);
 
         Assert.assertEquals(atrSequences.accessSequences.keySet(), Collections.singleton('S'));
         Assert.assertEquals(atrSequences.terminatingSequences.keySet(), Collections.singleton('S'));
         Assert.assertEquals(atrSequences.returnSequences.keySet(), Collections.singleton('S'));
 
-        Assert.assertTrue(SPAUtil.isMinimal(spa, halfAlphabet));
-        Assert.assertFalse(SPAUtil.isMinimal(alphabet, atrSequences));
+        Assert.assertTrue(SPAs.isMinimal(spa, halfAlphabet));
+        Assert.assertFalse(SPAs.isMinimal(alphabet, atrSequences));
     }
 
     @Test
@@ -193,37 +192,37 @@ public class SPAUtilTest {
         final DefaultProceduralInputAlphabet<Character> halfAlphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
 
-        final ATRSequences<Character> atrSequences = SPAUtil.computeATRSequences(spa, halfAlphabet);
+        final ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa, halfAlphabet);
 
         Assert.assertTrue(atrSequences.accessSequences.isEmpty());
         Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
         Assert.assertTrue(atrSequences.returnSequences.isEmpty());
 
-        Assert.assertFalse(SPAUtil.isMinimal(spa, halfAlphabet));
-        Assert.assertFalse(SPAUtil.isMinimal(alphabet, atrSequences));
+        Assert.assertFalse(SPAs.isMinimal(spa, halfAlphabet));
+        Assert.assertFalse(SPAs.isMinimal(alphabet, atrSequences));
     }
 
     @Test
     public void testCompleteATRSequences() {
         final Random random = new Random(42);
         final SPA<?, Character> spa = RandomAutomata.randomSPA(random, alphabet, 10);
-        final ATRSequences<Character> atrSequences = SPAUtil.computeATRSequences(spa);
+        final ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa);
 
         Assert.assertTrue(atrSequences.accessSequences.keySet().containsAll(alphabet.getCallAlphabet()));
         Assert.assertTrue(atrSequences.terminatingSequences.keySet().containsAll(alphabet.getCallAlphabet()));
         Assert.assertTrue(atrSequences.returnSequences.keySet().containsAll(alphabet.getCallAlphabet()));
-        Assert.assertTrue(SPAUtil.isMinimal(spa));
+        Assert.assertTrue(SPAs.isMinimal(spa));
     }
 
     @Test
     public void testEmptyCompleteATRSequences() {
         final SPA<?, Character> spa = new EmptySPA<>(alphabet);
-        final ATRSequences<Character> atrSequences = SPAUtil.computeATRSequences(spa);
+        final ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa);
 
         Assert.assertTrue(atrSequences.accessSequences.isEmpty());
         Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
         Assert.assertTrue(atrSequences.returnSequences.isEmpty());
-        Assert.assertFalse(SPAUtil.isMinimal(spa));
+        Assert.assertFalse(SPAs.isMinimal(spa));
     }
 
     @Test
@@ -244,7 +243,7 @@ public class SPAUtilTest {
 
         final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', s, 'T', t));
 
-        final ATRSequences<Character> atrSequences = SPAUtil.computeATRSequences(spa);
+        final ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa);
         Assert.assertEquals(atrSequences.accessSequences.keySet(), Collections.singleton('S'));
         Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
         Assert.assertEquals(atrSequences.returnSequences.keySet(), Collections.singleton('S'));
@@ -258,20 +257,20 @@ public class SPAUtilTest {
         final SPA<?, Character> spa1 = RandomAutomata.randomSPA(random, alphabet, size);
         final SPA<?, Character> spa2 = RandomAutomata.randomSPA(random, alphabet, size);
 
-        Assert.assertNull(Automata.findSeparatingWord(spa1, spa1, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa2, spa2, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, spa1, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa2, spa2, alphabet));
 
-        final Word<Character> sepWord1 = Automata.findSeparatingWord(spa1, spa2, alphabet);
-        final Word<Character> sepWord2 = Automata.findSeparatingWord(spa2, spa1, alphabet);
+        final Word<Character> sepWord1 = SPAs.findSeparatingWord(spa1, spa2, alphabet);
+        final Word<Character> sepWord2 = SPAs.findSeparatingWord(spa2, spa1, alphabet);
         Assert.assertNotNull(sepWord1);
         Assert.assertNotNull(sepWord2);
         Assert.assertNotEquals(spa1.computeOutput(sepWord1), spa2.computeOutput(sepWord1));
         Assert.assertNotEquals(spa1.computeOutput(sepWord2), spa2.computeOutput(sepWord2));
 
-        Assert.assertNull(Automata.findSeparatingWord(spa1, spa1, emptyAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa2, spa2, emptyAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa1, spa2, emptyAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa2, spa1, emptyAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, spa1, emptyAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa2, spa2, emptyAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, spa2, emptyAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa2, spa1, emptyAlphabet));
     }
 
     @Test
@@ -338,9 +337,9 @@ public class SPAUtilTest {
         final SPA<?, Character> emptySPA = new EmptySPA<>(alphabet);
 
         // no accessible procedures, no separating word should exist. Even with the empty SPAs
-        Assert.assertNull(Automata.findSeparatingWord(spa1, spa2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(emptySPA, spa2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa1, emptySPA, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, spa2, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(emptySPA, spa2, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, emptySPA, alphabet));
 
         // make SPA1's 'S' procedure accept 'a'. Now there should exist a separating word
         s1.setAccepting(s1s1, true);
@@ -352,15 +351,15 @@ public class SPAUtilTest {
         // however, not if we restrict the alphabet to 'b','c'
         final ProceduralInputAlphabet<Character> bcAlphabet =
                 new DefaultProceduralInputAlphabet<>(Alphabets.characters('b', 'c'), callAlphabet, returnSymbol);
-        Assert.assertNull(Automata.findSeparatingWord(spa1, spa2, bcAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa2, spa1, bcAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa1, emptySPA, bcAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(emptySPA, spa1, bcAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, spa2, bcAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa2, spa1, bcAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, emptySPA, bcAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(emptySPA, spa1, bcAlphabet));
 
         // update SPA2 according to SPA1. There should no longer exist a separating word
         s2.setAccepting(s2s1, true);
-        Assert.assertNull(Automata.findSeparatingWord(spa1, spa2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa2, spa1, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, spa2, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa2, spa1, alphabet));
 
         // make SPA1's s5 accept so that we introduce procedure 'T'. This also adds a new separating word (two 'a's)
         s1.setAccepting(s1s5, true);
@@ -369,8 +368,8 @@ public class SPAUtilTest {
 
         // update SPA2 accordingly
         s2.setAccepting(s2s5, true);
-        Assert.assertNull(Automata.findSeparatingWord(spa1, spa2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa2, spa1, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, spa2, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa2, spa1, alphabet));
 
         // make SPA1's procedure 'T' accept 'c' so that we can find another separating word
         t1.setAccepting(t1t1, true);
@@ -385,13 +384,13 @@ public class SPAUtilTest {
         // If we restrict ourselves to only 'S' call symbols, a separating word should no longer exist
         final ProceduralInputAlphabet<Character> sAlphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
-        Assert.assertNull(Automata.findSeparatingWord(spa1, spa2, sAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa2, spa1, sAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, spa2, sAlphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa2, spa1, sAlphabet));
 
         // update SPA2 accordingly
         t2.setAccepting(t2t1, true);
-        Assert.assertNull(Automata.findSeparatingWord(spa1, spa2, alphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spa2, spa1, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa1, spa2, alphabet));
+        Assert.assertNull(SPAs.findSeparatingWord(spa2, spa1, alphabet));
 
         // make SPA1's 'T' procedure also accept two c's.
         // This should yield a separating word even if we restrict ourselves to only 'c' as internal symbol
@@ -405,7 +404,7 @@ public class SPAUtilTest {
     }
 
     private static <I> void verifySepWord(SPA<?, I> spa1, SPA<?, I> spa2, ProceduralInputAlphabet<I> alphabet) {
-        final Word<I> sepWord = Automata.findSeparatingWord(spa1, spa2, alphabet);
+        final Word<I> sepWord = SPAs.findSeparatingWord(spa1, spa2, alphabet);
         Assert.assertNotNull(sepWord);
         Assert.assertNotEquals(spa1.accepts(sepWord), spa2.accepts(sepWord));
     }
@@ -457,7 +456,7 @@ public class SPAUtilTest {
 
         final SPA<?, Integer> spa = new StackSPA<>(alphabet, 11, procedures);
 
-        final ATRSequences<Integer> atr = SPAUtil.computeATRSequences(spa);
+        final ATRSequences<Integer> atr = SPAs.computeATRSequences(spa);
 
         verifyATR(spa, alphabet, atr);
     }
@@ -500,7 +499,7 @@ public class SPAUtilTest {
 
         final SPA<?, Integer> spa = new StackSPA<>(alphabet, 11, procedures);
 
-        final ATRSequences<Integer> atr = SPAUtil.computeATRSequences(spa);
+        final ATRSequences<Integer> atr = SPAs.computeATRSequences(spa);
 
         verifyATR(spa, alphabet, atr);
     }
@@ -540,7 +539,7 @@ public class SPAUtilTest {
 
         final SPA<?, Integer> spa = new StackSPA<>(alphabet, 1, procedures);
 
-        final ATRSequences<Integer> atr = SPAUtil.computeATRSequences(spa);
+        final ATRSequences<Integer> atr = SPAs.computeATRSequences(spa);
 
         verifyATR(spa, alphabet, atr);
     }
@@ -553,16 +552,16 @@ public class SPAUtilTest {
         final SPA<?, Character> spa1 = RandomAutomata.randomSPA(random, alphabet, size);
         final SPA<?, Character> spa2 = RandomAutomata.randomSPA(random, alphabet, size);
 
-        Assert.assertTrue(Automata.testEquivalence(spa1, spa1, alphabet));
-        Assert.assertTrue(Automata.testEquivalence(spa2, spa2, alphabet));
+        Assert.assertTrue(SPAs.testEquivalence(spa1, spa1, alphabet));
+        Assert.assertTrue(SPAs.testEquivalence(spa2, spa2, alphabet));
 
-        Assert.assertFalse(Automata.testEquivalence(spa1, spa2, alphabet));
-        Assert.assertFalse(Automata.testEquivalence(spa2, spa1, alphabet));
+        Assert.assertFalse(SPAs.testEquivalence(spa1, spa2, alphabet));
+        Assert.assertFalse(SPAs.testEquivalence(spa2, spa1, alphabet));
     }
 
     @Test(dataProvider = "systems")
     public <I> void testOneSEVPAConversion(SPA<?, I> spa) {
-        final OneSEVPA<?, I> oneSEVPA = SPAUtil.toOneSEVPA(spa);
+        final OneSEVPA<?, I> oneSEVPA = SPAs.toOneSEVPA(spa);
 
         final List<Word<I>> tests = Lists.newArrayList(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
 
@@ -573,7 +572,7 @@ public class SPAUtilTest {
 
     @Test(dataProvider = "systems")
     public <I> void testNSEVPAConversion(SPA<?, I> spa) {
-        final SEVPA<?, I> sevpa = SPAUtil.toNSEVPA(spa);
+        final SEVPA<?, I> sevpa = SPAs.toNSEVPA(spa);
 
         final List<Word<I>> tests = Lists.newArrayList(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
 
@@ -585,7 +584,7 @@ public class SPAUtilTest {
     @Test
     public void testPalindromeSystemAsCFMPS() throws IOException {
         final SPA<?, Character> spa = buildPalindromeSystem();
-        final ContextFreeModalProcessSystem<Character, Void> cfmps = SPAUtil.toCFMPS(spa);
+        final ContextFreeModalProcessSystem<Character, Void> cfmps = SPAs.toCFMPS(spa);
 
         Assert.assertEquals(cfmps.getMainProcess(), 'S');
 
@@ -606,7 +605,7 @@ public class SPAUtilTest {
     @Test
     public void testDissSystemAsCFMPS() throws IOException {
         final SPA<?, String> spa = buildDissSystem();
-        final ContextFreeModalProcessSystem<String, Void> cfmps = SPAUtil.toCFMPS(spa);
+        final ContextFreeModalProcessSystem<String, Void> cfmps = SPAs.toCFMPS(spa);
 
         Assert.assertEquals(cfmps.getMainProcess(), "main");
 
@@ -632,7 +631,7 @@ public class SPAUtilTest {
         final StringWriter dotWriter = new StringWriter();
         final StringWriter expectedWriter = new StringWriter();
 
-        try (Reader reader = IOUtil.asBufferedUTF8Reader(SPAUtilTest.class.getResourceAsStream(expected))) {
+        try (Reader reader = IOUtil.asBufferedUTF8Reader(SPAsTest.class.getResourceAsStream(expected))) {
             CharStreams.copy(reader, expectedWriter);
             GraphDOT.write(cfmps, dotWriter);
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());

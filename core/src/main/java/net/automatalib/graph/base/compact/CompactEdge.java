@@ -24,7 +24,6 @@ package net.automatalib.graph.base.compact;
 public class CompactEdge<EP> {
 
     private final int target;
-    protected int outIndex;
     private EP property;
 
     public CompactEdge(int target, EP property) {

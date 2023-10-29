@@ -50,21 +50,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     * moved `TS#bfs{Order,Iterator}` to `TSTraversal#breadthFirst{Order,Iterator}`.
 * `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
+* The `{Deterministc,NearLinear}EquivalenceTest` classes have become factories that cannot be instantiated anymore and only offer static methods.
 * `Graph`'s `adjacentTarget{,Iterator}` (and related) methods have been renamed to `getAdjacentNodes{,Iterator}`.
-* The `Indefinite{,Simple}Graph` no longer has `Collection`-based getters but `Iterable`-based ones since indefinite structures typically cannot specify sizes. The `Collection`-based getters are delegated to the `Graph` class.
+* The `Indefinite{,Simple}Graph` classes no longer have `Collection`-based getters but `Iterable`-based ones since indefinite structures typically cannot specify sizes. The `Collection`-based getters are delegated to the `Graph` class.
 * `Minimizer` no longer provides a `getInstance()` method but can be instantiated directly.
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.
+* The `OneSEVPAUtils` class has been merged into the `OneSEVPAs` class. 
 * AutomataLib classes no longer implement `Serializable`. We never fully supported the semantics of the interface and never intended to do so. In fact, the old approach failed miserably if any class was involved where we missed an "implements Serializable" statement. In order to prevent confusion by promising false contracts, implementing this markup interface has been removed. Serialization should now be done in user-land via one of the many external (and more optimizable) serialization frameworks such as FST, XStream, etc.
 * `ShortestPaths` now offers fewer but less confusing methods. Previously there were methods such as `shortestPath` that took an initial node and multiple target nodes which much better fits to the idea of computing `shortestPath*s*` rather than any shortest path to one of the target nodes. The old behavior can still be replicated with the generic `Predicate`-based versions.
 * `StrictPriorityQueue` is now package-private as it is only meant for internal use.
 * `Symbol` now has a type-safe user object and id-based `hashcode`/`equals` semantics.
-
-### Fixed
-
-* Fixed a regression in `AbstractLTSminMonitorMealy` regarding BBC (#46).
-* Fixed a bug in `CharacterizingSets` which ignored the semantics of acceptors, i.e., not all states of an acceptor could be distinguished solely based on acceptance.
-* Fixed a bug in `Covers#transitionCoverIterator` which previously included undefined transitions.
-* Fixed a cache consistency bug in various DAG-based incremental builders.
 
 ### Removed
 
@@ -80,6 +75,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `Stream`-based getters of `Indefinite{,Simple}Graph` have been removed in favor of the `Iterator`-based ones.
 * Removed (unused) `SuffixTrie` class without replacement. Similar functionality can be achieved with AutomataLib's incremental module.
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
+
+### Fixed
+
+* Fixed a regression in `AbstractLTSminMonitorMealy` regarding BBC (#46).
+* Fixed a bug in `CharacterizingSets` which ignored the semantics of acceptors, i.e., not all states of an acceptor could be distinguished solely based on acceptance.
+* Fixed a bug in `Covers#transitionCoverIterator` which previously included undefined transitions.
+* Fixed a cache consistency bug in various DAG-based incremental builders.
 
 
 ## [0.10.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.10.0) - 2020-10-11

@@ -20,8 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.automatalib.common.util.ref.Ref;
-import net.automatalib.common.util.ref.StrongRef;
-import net.automatalib.common.util.ref.WeakRef;
+import net.automatalib.common.util.ref.Refs;
 
 public class IDChangeNotifier<T extends NumericID> {
 
@@ -30,9 +29,9 @@ public class IDChangeNotifier<T extends NumericID> {
     public void addListener(IDChangeListener<T> listener, boolean weak) {
         Ref<IDChangeListener<T>> ref;
         if (weak) {
-            ref = new WeakRef<>(listener);
+            ref = Refs.weak(listener);
         } else {
-            ref = new StrongRef<>(listener);
+            ref = Refs.strong(listener);
         }
 
         listeners.add(ref);

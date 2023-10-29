@@ -26,10 +26,16 @@ import net.automatalib.word.Word;
  */
 public interface VPAlphabet<I> extends Alphabet<I> {
 
+    /**
+     * Returns the call symbols of {@code this} alphabet as a (sub-) alphabet.
+     *
+     * @return the call symbols of {@code this} alphabet
+     */
     Alphabet<I> getCallAlphabet();
 
     /**
-     * The {@link Alphabet#getSymbol(int)} variant for the call alphabet.
+     * The {@link Alphabet#getSymbol(int)} variant for the call alphabet. Note that the index must be relative to the
+     * {@link #getCallAlphabet() call alphabet} and not to {@code this} alphabet.
      *
      * @param index
      *         the index of the symbol
@@ -40,7 +46,8 @@ public interface VPAlphabet<I> extends Alphabet<I> {
     I getCallSymbol(int index);
 
     /**
-     * The {@link Alphabet#getSymbolIndex(Object)} variant for the call alphabet.
+     * The {@link Alphabet#getSymbolIndex(Object)} variant for the call alphabet. Note that the index is relative to the
+     * {@link #getCallAlphabet() call alphabet} and not to {@code this} alphabet.
      *
      * @param symbol
      *         the symbol whose index should be determined
@@ -50,12 +57,23 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      */
     int getCallSymbolIndex(I symbol);
 
+    /**
+     * The {@link Alphabet#size()} variant for the call alphabet.
+     *
+     * @return the number of call symbols
+     */
     int getNumCalls();
 
+    /**
+     * Returns the internal symbols of {@code this} alphabet as a (sub-) alphabet.
+     *
+     * @return the internal symbols of {@code this} alphabet
+     */
     Alphabet<I> getInternalAlphabet();
 
     /**
-     * The {@link Alphabet#getSymbol(int)} variant for the internal alphabet.
+     * The {@link Alphabet#getSymbol(int)} variant for the internal alphabet. Note that the index must be relative to
+     * the {@link #getInternalAlphabet() internal alphabet} and not to {@code this} alphabet.
      *
      * @param index
      *         the index of the symbol
@@ -66,7 +84,8 @@ public interface VPAlphabet<I> extends Alphabet<I> {
     I getInternalSymbol(int index);
 
     /**
-     * The {@link Alphabet#getSymbolIndex(Object)} variant for the internal alphabet.
+     * The {@link Alphabet#getSymbolIndex(Object)} variant for the internal alphabet. Note that the index is relative to
+     * the {@link #getInternalAlphabet() internal alphabet} and not to {@code this} alphabet.
      *
      * @param symbol
      *         the symbol whose index should be determined
@@ -76,12 +95,23 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      */
     int getInternalSymbolIndex(I symbol);
 
+    /**
+     * The {@link Alphabet#size()} variant for the internal alphabet.
+     *
+     * @return the number of internal symbols
+     */
     int getNumInternals();
 
+    /**
+     * Returns the return symbols of {@code this} alphabet as a (sub-) alphabet.
+     *
+     * @return the return symbols of {@code this} alphabet
+     */
     Alphabet<I> getReturnAlphabet();
 
     /**
-     * The {@link Alphabet#getSymbol(int)} variant for the return alphabet.
+     * The {@link Alphabet#getSymbol(int)} variant for the return alphabet. Note that the index must be relative to the
+     * {@link #getReturnAlphabet() return alphabet} and not to {@code this} alphabet.
      *
      * @param index
      *         the index of the symbol
@@ -92,7 +122,8 @@ public interface VPAlphabet<I> extends Alphabet<I> {
     I getReturnSymbol(int index);
 
     /**
-     * The {@link Alphabet#getSymbolIndex(Object)} variant for the return alphabet.
+     * The {@link Alphabet#getSymbolIndex(Object)} variant for the return alphabet. Note that the index is relative to
+     * the {@link #getReturnAlphabet() return alphabet} and not to {@code this} alphabet.
      *
      * @param symbol
      *         the symbol whose index should be determined
@@ -102,6 +133,11 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      */
     int getReturnSymbolIndex(I symbol);
 
+    /**
+     * The {@link Alphabet#size()} variant for the return alphabet.
+     *
+     * @return the number of return symbols
+     */
     int getNumReturns();
 
     /**
@@ -117,6 +153,61 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      */
     SymbolType getSymbolType(I symbol);
 
+    /**
+     * Returns whether the given symbol is a call symbol of {@code this} alphabet.
+     *
+     * @param symbol
+     *         the symbol to analyze
+     *
+     * @return {@code true} if the given symbol is a call symbol of this alphabet, {@code false} otherwise
+     *
+     * @throws IllegalArgumentException
+     *         if the provided symbol does not belong to the alphabet.
+     */
+    default boolean isCallSymbol(I symbol) {
+        return getSymbolType(symbol) == SymbolType.CALL;
+    }
+
+    /**
+     * Returns whether the given symbol is an internal symbol of {@code this} alphabet.
+     *
+     * @param symbol
+     *         the symbol to analyze
+     *
+     * @return {@code true} if the given symbol is an internal symbol of this alphabet, {@code false} otherwise
+     *
+     * @throws IllegalArgumentException
+     *         if the provided symbol does not belong to the alphabet.
+     */
+    default boolean isInternalSymbol(I symbol) {
+        return getSymbolType(symbol) == SymbolType.INTERNAL;
+    }
+
+    /**
+     * Returns whether the given symbol is a return symbol of {@code this} alphabet.
+     *
+     * @param symbol
+     *         the symbol to analyze
+     *
+     * @return {@code true} if the given symbol is a return symbol of this alphabet, {@code false} otherwise
+     *
+     * @throws IllegalArgumentException
+     *         if the provided symbol does not belong to the alphabet.
+     */
+    default boolean isReturnSymbol(I symbol) {
+        return getSymbolType(symbol) == SymbolType.RETURN;
+    }
+
+    /**
+     * Returns the call-return balance of the given word relative to this alphabet. The call-return balance is positive,
+     * if the given word contains more call symbols than return symbols, negative if the given word contains more return
+     * symbols than call symbols, and 0 if it contains an equal number of call symbols and return symbols.
+     *
+     * @param word
+     *         the word to analyze
+     *
+     * @return the call-return balance
+     */
     default int callReturnBalance(Word<I> word) {
         int crb = 0;
         for (I sym : word) {
@@ -133,6 +224,16 @@ public interface VPAlphabet<I> extends Alphabet<I> {
         return crb;
     }
 
+    /**
+     * Returns whether the given word is call-matched relative to {@code this} alphabet. A word is call-matched if every
+     * call symbol is at one point succeeded by a matching return symbol and there exist no un-matched call symbols.
+     * Note that a call-matched word may still contain un-matched return symbols.
+     *
+     * @param word
+     *         the word to analyze
+     *
+     * @return {@code true} if the given word is call-matched, {@code false} otherwise
+     */
     default boolean isCallMatched(Word<I> word) {
         int crb = 0;
         for (I sym : word) {
@@ -151,14 +252,16 @@ public interface VPAlphabet<I> extends Alphabet<I> {
         return crb == 0;
     }
 
-    default boolean isCallSymbol(I symbol) {
-        return getSymbolType(symbol) == SymbolType.CALL;
-    }
-
-    default boolean isInternalSymbol(I symbol) {
-        return getSymbolType(symbol) == SymbolType.INTERNAL;
-    }
-
+    /**
+     * Returns whether the given word is return-matched relative to {@code this} alphabet. A word is return-matched if
+     * every return symbol is at one point preceded by a matching call symbol and there exist no un-matched return
+     * symbols. Note that a return-matched word may still contain un-matched call symbols.
+     *
+     * @param word
+     *         the word to analyze
+     *
+     * @return {@code true} if the given word is return-matched, {@code false} otherwise
+     */
     default boolean isReturnMatched(Word<I> word) {
         int crb = 0;
         for (I sym : word) {
@@ -179,10 +282,16 @@ public interface VPAlphabet<I> extends Alphabet<I> {
         return true;
     }
 
-    default boolean isReturnSymbol(I symbol) {
-        return getSymbolType(symbol) == SymbolType.RETURN;
-    }
-
+    /**
+     * Returns whether the given word is well-matched relative to {@code this} alphabet. A word is well-matched if every
+     * call symbol is at one point succeeded by a matching return symbol and there exist no un-matched call symbols or
+     * return symbols.
+     *
+     * @param word
+     *         the word to analyze
+     *
+     * @return {@code true} if the given word is well-matched, {@code false} otherwise
+     */
     default boolean isWellMatched(Word<I> word) {
         int crb = 0;
         for (I sym : word) {
@@ -203,6 +312,15 @@ public interface VPAlphabet<I> extends Alphabet<I> {
         return crb == 0;
     }
 
+    /**
+     * Return the longest {@link #isWellMatched(Word) well-matched} (relative to {@code this} alphabet) prefix of the
+     * given word.
+     *
+     * @param word
+     *         the word to analyze
+     *
+     * @return the longest well-matched prefix of the given word
+     */
     default Word<I> longestWellMatchedPrefix(Word<I> word) {
         int idx = 0;
         int len = word.length();
@@ -231,6 +349,15 @@ public interface VPAlphabet<I> extends Alphabet<I> {
         return word.prefix(lastzero);
     }
 
+    /**
+     * Return the longest {@link #isWellMatched(Word) well-matched} (relative to {@code this} alphabet) suffix of the
+     * given word.
+     *
+     * @param word
+     *         the word to analyze
+     *
+     * @return the longest well-matched suffix of the given word
+     */
     default Word<I> longestWellMatchedSuffix(Word<I> word) {
         int idx = word.length();
         int crb = 0;
@@ -257,6 +384,9 @@ public interface VPAlphabet<I> extends Alphabet<I> {
         return word.subWord(lastZero);
     }
 
+    /**
+     * Classifies an input symbol either as a call symbol, an internal symbol, or a return symbol.
+     */
     enum SymbolType {
         CALL,
         INTERNAL,

@@ -33,7 +33,6 @@ import net.automatalib.graph.base.compact.CompactGraph;
 import net.automatalib.graph.base.compact.CompactSimpleBidiGraph;
 import net.automatalib.graph.base.compact.CompactSimpleGraph;
 import net.automatalib.graph.map.SimpleMapGraph;
-import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.graph.copy.GraphCopy;
 import org.testng.Assert;
@@ -58,7 +57,7 @@ public class GraphsTest {
                                                          Alphabet<I> alphabet,
                                                          MutableGraph<N, E, NP, EP> graph) {
 
-        final Mapping<S, N> nodeMapping = GraphCopy.copyUniversalPlain(Automata.asUniversalGraph(dfa, alphabet),
+        final Mapping<S, N> nodeMapping = GraphCopy.copyUniversalPlain(dfa.transitionGraphView(alphabet),
                                                                        graph,
                                                                        Mappings.nullMapping(),
                                                                        Mappings.nullMapping());

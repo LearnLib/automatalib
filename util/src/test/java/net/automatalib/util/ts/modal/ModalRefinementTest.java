@@ -44,7 +44,7 @@ public class ModalRefinementTest {
         b.addModalTransition(bs0, "a", bs0, ModalType.MUST);
         b.addModalTransition(bs0, "c", bs1, ModalType.MAY);
 
-        Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
+        Assert.assertTrue(MTSs.isRefinementOf(a, b, alphabet));
     }
 
     @Test(description = "Ensure that refinement is not preserved when changing a must to a may transition")
@@ -65,7 +65,7 @@ public class ModalRefinementTest {
         b.addModalTransition(bs0, "a", bs0, ModalType.MUST);
         b.addModalTransition(bs0, "c", bs1, ModalType.MAY);
 
-        Assert.assertFalse(MTSUtil.isRefinementOf(b, a, alphabet));
+        Assert.assertFalse(MTSs.isRefinementOf(b, a, alphabet));
     }
 
     @Test(description = "Ensure that refinement is preserved when removing a may transition")
@@ -85,7 +85,7 @@ public class ModalRefinementTest {
         b.addModalTransition(bs0, "a", bs0, ModalType.MUST);
         b.addModalTransition(bs0, "c", bs1, ModalType.MAY);
 
-        Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
+        Assert.assertTrue(MTSs.isRefinementOf(a, b, alphabet));
     }
 
     @Test(description = "Ensure that refinement is not preserved when adding a may transition")
@@ -105,7 +105,7 @@ public class ModalRefinementTest {
         b.addModalTransition(bs0, "a", bs0, ModalType.MUST);
         b.addModalTransition(bs0, "c", bs1, ModalType.MAY);
 
-        Assert.assertFalse(MTSUtil.isRefinementOf(b, a, alphabet));
+        Assert.assertFalse(MTSs.isRefinementOf(b, a, alphabet));
     }
 
     @Test(description = "Ensure that refinement is preserved when unrolling loops (in both directions)")
@@ -126,8 +126,8 @@ public class ModalRefinementTest {
 
         Assert.assertEquals(ModalRefinement.refinementRelation(a, b, alphabet),
                             ImmutableSet.of(Pair.of(as0, bs0), Pair.of(as1, bs0)));
-        Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
-        Assert.assertTrue(MTSUtil.isRefinementOf(b, a, alphabet));
+        Assert.assertTrue(MTSs.isRefinementOf(a, b, alphabet));
+        Assert.assertTrue(MTSs.isRefinementOf(b, a, alphabet));
     }
 
     @Test(description = "Ensure that refinement is preserved when branching non-deterministically on may")
@@ -156,7 +156,7 @@ public class ModalRefinementTest {
         b.addModalTransition(bs1, "b", bs2, ModalType.MAY);
         b.addModalTransition(bs1, "c", bs3, ModalType.MAY);
 
-        Assert.assertTrue(MTSUtil.isRefinementOf(a, b, alphabet));
+        Assert.assertTrue(MTSs.isRefinementOf(a, b, alphabet));
     }
 
     @Test(description = "Ensure that refinement is not preserved when branching non-deterministically on must")
@@ -185,8 +185,8 @@ public class ModalRefinementTest {
         b.addModalTransition(bs1, "b", bs2, ModalType.MUST);
         b.addModalTransition(bs1, "c", bs3, ModalType.MUST);
 
-        Assert.assertFalse(MTSUtil.isRefinementOf(a, b, alphabet));
-        Assert.assertFalse(MTSUtil.isRefinementOf(b, a, alphabet));
+        Assert.assertFalse(MTSs.isRefinementOf(a, b, alphabet));
+        Assert.assertFalse(MTSs.isRefinementOf(b, a, alphabet));
     }
 
     @Test(description = "Example for non-thoroughness (from Larsen \"On Modal Refinement and Consistency\")")
@@ -210,7 +210,7 @@ public class ModalRefinementTest {
         t.addModalTransition(bs0, "a", bs2, ModalType.MAY);
         t.addModalTransition(bs1, "b", bs2, ModalType.MUST);
 
-        Assert.assertFalse(MTSUtil.isRefinementOf(s, t, alphabet));
+        Assert.assertFalse(MTSs.isRefinementOf(s, t, alphabet));
     }
 
     @Test
@@ -234,7 +234,7 @@ public class ModalRefinementTest {
         t.addModalTransition(bs0, "a", bs2, ModalType.MAY);
         t.addModalTransition(bs1, "b", bs2, ModalType.MUST);
 
-        Assert.assertTrue(MTSUtil.isRefinementOf(s, t, alphabet));
+        Assert.assertTrue(MTSs.isRefinementOf(s, t, alphabet));
     }
 
     @Test(description = "Example from Jasper")
@@ -265,7 +265,7 @@ public class ModalRefinementTest {
         t.addModalTransition(bs2, "a", bs2, ModalType.MAY);
         t.addModalTransition(bs2, "b", bs2, ModalType.MAY);
 
-        Assert.assertTrue(MTSUtil.isRefinementOf(s, t, alphabet));
+        Assert.assertTrue(MTSs.isRefinementOf(s, t, alphabet));
     }
 
 }

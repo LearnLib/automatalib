@@ -33,8 +33,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * structure and semantics. Additionally -- unless specified other by an implementation -- this interface only accepts
  * well-matched words.
  * <p>
- * For more information on the semantics of VPAs see e.g. "Congruences for Visibly Pushdown Languages" by Alur, Kumar,
- * Madhusudan and Viswanathan.
+ * For more information on the semantics of VPAs see e.g. <a href="https://doi.org/10.1007/11523468_89">Congruences for
+ * Visibly Pushdown Languages</a> by Alur, Kumar, Madhusudan and Viswanathan.
  *
  * @param <L>
  *         location type

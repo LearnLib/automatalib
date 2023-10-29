@@ -26,10 +26,11 @@ import net.automatalib.util.ts.iterator.AllUndefinedInputsIterator;
 import net.automatalib.util.ts.iterator.DefinedInputsIterator;
 import net.automatalib.util.ts.iterator.UndefinedInputsIterator;
 
-@SuppressWarnings("PMD.UseUtilityClass") // we want to allow extending for the 'Automata' class
-public class TS {
+public final class TS {
 
-    protected TS() {}
+    private TS() {
+        // prevent initialization
+    }
 
     public static <S, SP> Function<S, SP> stateProperties(UniversalTransitionSystem<S, ?, ?, SP, ?> uts) {
         return uts::getStateProperty;

@@ -18,7 +18,7 @@ package net.automatalib.util.automaton.conformance;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.util.automaton.procedural.SPMMUtil;
+import net.automatalib.util.automaton.procedural.SPMMs;
 
 /**
  * A conformance test iterator for {@link SPMM}s that is based on the W-method.
@@ -44,7 +44,7 @@ public class SPMMWMethodTestsIterator<I, O> extends ProceduralWMethodTestsIterat
         super(alphabet,
               spmm.getProceduralInputs(alphabet),
               spmm.getProcedures(),
-              SPMMUtil.computeATSequences(spmm, alphabet),
+              SPMMs.computeATSequences(spmm, alphabet),
               maxDepth);
     }
 

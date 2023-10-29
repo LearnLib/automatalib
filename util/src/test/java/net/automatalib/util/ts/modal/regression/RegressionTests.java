@@ -18,7 +18,7 @@ package net.automatalib.util.ts.modal.regression;
 import java.io.IOException;
 
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.util.ts.modal.MTSUtil;
+import net.automatalib.util.ts.modal.MTSs;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -39,12 +39,12 @@ public class RegressionTests {
     public void testMerge(CompositionTest testCase) throws IOException {
         final CompositionInstance instance = new CompositionInstance(testCase);
 
-        CompactMTS<String> currentMerge = MTSUtil.compose(instance.input0, instance.input1);
+        CompactMTS<String> currentMerge = MTSs.compose(instance.input0, instance.input1);
 
         Assert.assertTrue(currentMerge.getInputAlphabet().containsAll(instance.merge.getInputAlphabet()));
         Assert.assertTrue(instance.merge.getInputAlphabet().containsAll(currentMerge.getInputAlphabet()));
-        Assert.assertTrue(MTSUtil.isRefinementOf(currentMerge, instance.merge, currentMerge.getInputAlphabet()));
-        Assert.assertTrue(MTSUtil.isRefinementOf(instance.merge, currentMerge, currentMerge.getInputAlphabet()));
+        Assert.assertTrue(MTSs.isRefinementOf(currentMerge, instance.merge, currentMerge.getInputAlphabet()));
+        Assert.assertTrue(MTSs.isRefinementOf(instance.merge, currentMerge, currentMerge.getInputAlphabet()));
     }
 
 }

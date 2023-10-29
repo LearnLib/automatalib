@@ -34,24 +34,23 @@ public final class Worksets {
     public static <T, R> R process(WorksetAlgorithm<T, R> algorithm) {
 
         final int expectedElementCount = algorithm.expectedElementCount();
-        final Deque<T> stack = new ArrayDeque<>(expectedElementCount);
+        final Deque<T> queue = new ArrayDeque<>(expectedElementCount);
         final Set<T> tracking = Sets.newHashSetWithExpectedSize(expectedElementCount);
 
         final Collection<T> initialElements = algorithm.initialize();
-        stack.addAll(initialElements);
+        queue.addAll(initialElements);
         tracking.addAll(initialElements);
 
-        while (!stack.isEmpty()) {
+        while (!queue.isEmpty()) {
 
-            T current = stack.pop();
+            T current = queue.remove();
             tracking.remove(current);
 
             final Collection<T> discovered = algorithm.update(current);
 
             for (T element : discovered) {
-                if (!tracking.contains(element)) {
-                    tracking.add(element);
-                    stack.addLast(element);
+                if (tracking.add(element)) {
+                    queue.add(element);
                 }
             }
 
@@ -62,25 +61,24 @@ public final class Worksets {
 
     public static <T, E, R> Pair<Map<T, E>, R> map(WorksetMappingAlgorithm<T, E, R> algorithm) {
 
-        final Deque<T> stack = new ArrayDeque<>(algorithm.expectedElementCount());
+        final Deque<T> queue = new ArrayDeque<>(algorithm.expectedElementCount());
         final Set<T> tracking = Sets.newHashSetWithExpectedSize(algorithm.expectedElementCount());
         final Map<T, E> mapping = Maps.newHashMapWithExpectedSize(algorithm.expectedElementCount());
 
         final Collection<T> initialElements = algorithm.initialize(mapping);
-        stack.addAll(initialElements);
+        queue.addAll(initialElements);
         tracking.addAll(initialElements);
 
-        while (!stack.isEmpty()) {
+        while (!queue.isEmpty()) {
 
-            T currentT = stack.pop();
+            T currentT = queue.remove();
             tracking.remove(currentT);
 
             final Collection<T> discovered = algorithm.update(mapping, currentT);
 
             for (T element : discovered) {
-                if (!tracking.contains(element)) {
-                    tracking.add(element);
-                    stack.addLast(element);
+                if (tracking.add(element)) {
+                    queue.add(element);
                 }
             }
         }

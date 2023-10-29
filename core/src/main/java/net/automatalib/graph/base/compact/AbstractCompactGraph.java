@@ -104,7 +104,6 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
     public E connect(int source, int target, @Nullable EP property) {
         E edge = createEdge(source, target, property);
         List<E> edges = this.edges.array[source];
-        edge.outIndex = edges.size();
         edges.add(edge);
         return edge;
     }

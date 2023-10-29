@@ -44,7 +44,7 @@ import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.procedural.ATRSequences;
-import net.automatalib.util.automaton.procedural.SPAUtil;
+import net.automatalib.util.automaton.procedural.SPAs;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 
@@ -119,15 +119,15 @@ final class SPAConverter {
 
         // prepare DTs
         final Map<AI, Node<AI, CI>> dts = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        final Collection<Pair<Word<AI>, Word<AI>>> cs = OneSEVPAUtil.findCharacterizingSet(sevpa, alphabet);
-        final ArrayStorage<Word<AI>> as = OneSEVPAUtil.computeAccessSequences(sevpa, alphabet);
+        final Collection<Pair<Word<AI>, Word<AI>>> cs = OneSEVPAs.findCharacterizingSet(sevpa, alphabet);
+        final ArrayStorage<Word<AI>> as = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
 
         // build SPA
         StackSPA<?, CI> spa = new StackSPA<>(spaAlphabet, mainProcedure, procedures);
 
         if (minimize) {
             // minimize SPA
-            final ATRSequences<CI> atr = SPAUtil.computeATRSequences(spa);
+            final ATRSequences<CI> atr = SPAs.computeATRSequences(spa);
             final Set<CI> accessibleProcedures = atr.accessSequences.keySet();
             final DefaultProceduralInputAlphabet<CI> minimizedAlphabet = new DefaultProceduralInputAlphabet<>(
                     spaAlphabet.getInternalAlphabet(),

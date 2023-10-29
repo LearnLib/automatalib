@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.PrimitiveIterator.OfInt;
 
 /**
- * An {@link IntSeq} is an abstract read-only view on a finite, random-access data-structure for primitive integer values. It
- * allows for a unified view on integer arrays, {@link List lists} of integers, words with an accompanying alphabet
- * index function, etc.
+ * An {@link IntSeq} is an abstract read-only view on a finite, random-access data-structure for primitive integer
+ * values. It allows for a unified view on integer arrays, {@link List lists} of integers, words with an accompanying
+ * alphabet index function, etc.
  */
 public interface IntSeq extends Iterable<Integer> {
 

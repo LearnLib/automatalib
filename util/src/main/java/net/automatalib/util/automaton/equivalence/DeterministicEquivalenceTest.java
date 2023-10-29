@@ -28,18 +28,12 @@ import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class DeterministicEquivalenceTest<I> {
+public final class DeterministicEquivalenceTest {
 
     private static final int MAP_THRESHOLD = 10_000;
-    private final UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference;
 
-    public DeterministicEquivalenceTest(UniversalDeterministicAutomaton<?, I, ?, ?, ?> reference) {
-        this.reference = reference;
-    }
-
-    public @Nullable Word<I> findSeparatingWord(UniversalDeterministicAutomaton<?, I, ?, ?, ?> other,
-                                                Collection<? extends I> inputs) {
-        return findSeparatingWord(reference, other, inputs);
+    private DeterministicEquivalenceTest() {
+        // prevent instantiation
     }
 
     public static <I, S, T, SP, TP, S2, T2, SP2, TP2> @Nullable Word<I> findSeparatingWord(
@@ -49,7 +43,7 @@ public class DeterministicEquivalenceTest<I> {
         int refSize = reference.size();
         int totalStates = refSize * other.size();
 
-        if (totalStates < 0 || totalStates > MAP_THRESHOLD) {
+        if (totalStates > MAP_THRESHOLD) {
             return findSeparatingWordLarge(reference, other, inputs);
         }
 

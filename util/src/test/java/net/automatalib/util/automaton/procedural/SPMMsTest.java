@@ -33,13 +33,12 @@ import net.automatalib.automaton.transducer.impl.FastMealy;
 import net.automatalib.automaton.transducer.impl.FastMealyState;
 import net.automatalib.automaton.transducer.impl.compact.CompactMealy;
 import net.automatalib.common.util.Pair;
-import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class SPMMUtilTest {
+public class SPMMsTest {
 
     private final Alphabet<Character> internalAlphabet = Alphabets.characters('a', 'c');
     private final Alphabet<Character> callAlphabet = Alphabets.characters('S', 'T');
@@ -57,7 +56,7 @@ public class SPMMUtilTest {
         final Random random = new Random(42);
         final SPMM<?, Character, ?, Character> spmm =
                 RandomAutomata.randomSPMM(random, inputAlphabet, outputAlphabet, 10);
-        final ATSequences<Character> atSequences = SPMMUtil.computeATSequences(spmm);
+        final ATSequences<Character> atSequences = SPMMs.computeATSequences(spmm);
 
         Assert.assertTrue(atSequences.accessSequences.keySet().containsAll(inputAlphabet.getCallAlphabet()));
 
@@ -90,7 +89,7 @@ public class SPMMUtilTest {
     @Test
     public void testEmptyCompleteATRSequences() {
         final SPMM<?, Character, ?, Character> spmm = new EmptySPMM<>(inputAlphabet, outputAlphabet.getErrorSymbol());
-        final ATSequences<Character> atrSequences = SPMMUtil.computeATSequences(spmm);
+        final ATSequences<Character> atrSequences = SPMMs.computeATSequences(spmm);
 
         Assert.assertTrue(atrSequences.accessSequences.isEmpty());
         Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
@@ -106,20 +105,20 @@ public class SPMMUtilTest {
         final SPMM<?, Character, ?, Character> spmm2 =
                 RandomAutomata.randomSPMM(random, inputAlphabet, outputAlphabet, size);
 
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm1, inputAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm2, spmm2, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, spmm1, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm2, spmm2, inputAlphabet));
 
-        final Word<Character> sepWord1 = Automata.findSeparatingWord(spmm1, spmm2, inputAlphabet);
-        final Word<Character> sepWord2 = Automata.findSeparatingWord(spmm2, spmm1, inputAlphabet);
+        final Word<Character> sepWord1 = SPMMs.findSeparatingWord(spmm1, spmm2, inputAlphabet);
+        final Word<Character> sepWord2 = SPMMs.findSeparatingWord(spmm2, spmm1, inputAlphabet);
         Assert.assertNotNull(sepWord1);
         Assert.assertNotNull(sepWord2);
         Assert.assertNotEquals(spmm1.computeOutput(sepWord1), spmm2.computeOutput(sepWord1));
         Assert.assertNotEquals(spmm1.computeOutput(sepWord2), spmm2.computeOutput(sepWord2));
 
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm1, emptyAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm2, spmm2, emptyAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm2, emptyAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm2, spmm1, emptyAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, spmm1, emptyAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm2, spmm2, emptyAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, spmm2, emptyAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm2, spmm1, emptyAlphabet));
     }
 
     // Copied and adjusted from the corresponding method in the SPAUtil test
@@ -152,9 +151,9 @@ public class SPMMUtilTest {
         final SPMM<?, Character, ?, Character> emptySPMM = new EmptySPMM<>(inputAlphabet, errorOutput);
 
         // no accessible procedures, no separating word should exist. Even with the empty SPMMs
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm2, inputAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(emptySPMM, spmm2, inputAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, emptySPMM, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, spmm2, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(emptySPMM, spmm2, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, emptySPMM, inputAlphabet));
 
         // make SPMM1's 'S' procedure not empty. Now there should exist a separating word
         final int s1s0 = s1.addInitialState();
@@ -175,19 +174,19 @@ public class SPMMUtilTest {
         // There should not exist a separating word if we restrict the alphabet to 'b','c'
         final ProceduralInputAlphabet<Character> bcAlphabet =
                 new DefaultProceduralInputAlphabet<>(Alphabets.characters('b', 'c'), callAlphabet, returnSymbol);
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm2, bcAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm2, spmm1, bcAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, spmm2, bcAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm2, spmm1, bcAlphabet));
 
         // only with the empty SPMM
-        Assert.assertEquals(Automata.findSeparatingWord(spmm1, emptySPMM, bcAlphabet), Word.fromLetter('S'));
-        Assert.assertEquals(Automata.findSeparatingWord(emptySPMM, spmm1, bcAlphabet), Word.fromLetter('S'));
-        Assert.assertEquals(Automata.findSeparatingWord(spmm2, emptySPMM, bcAlphabet), Word.fromLetter('S'));
-        Assert.assertEquals(Automata.findSeparatingWord(emptySPMM, spmm2, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(SPMMs.findSeparatingWord(spmm1, emptySPMM, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(SPMMs.findSeparatingWord(emptySPMM, spmm1, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(SPMMs.findSeparatingWord(spmm2, emptySPMM, bcAlphabet), Word.fromLetter('S'));
+        Assert.assertEquals(SPMMs.findSeparatingWord(emptySPMM, spmm2, bcAlphabet), Word.fromLetter('S'));
 
         // update SPMM2 according to SPMM1. There should no longer exist a separating word
         s2.setTransition(s2s0, (Character) 'a', s2s1, (Character) 'x');
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm2, inputAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm2, spmm1, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, spmm2, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm2, spmm1, inputAlphabet));
 
         // make SPMM1's s5 accept so that we introduce procedure 'T'. This also adds a new separating word (two 'a's)
         final int s1s5 = s1.addState();
@@ -200,8 +199,8 @@ public class SPMMUtilTest {
         final int s2s5 = s2.addState();
         s2.addTransition(s2s0, 'T', s2s5, '✓');
 
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm2, inputAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm2, spmm1, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, spmm2, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm2, spmm1, inputAlphabet));
 
         // make SPMM1's procedure 'T' transduce on 'c' so that we can find another separating word
         final FastMealyState<Character> t1t1 = t1.addState();
@@ -219,15 +218,15 @@ public class SPMMUtilTest {
         // If we restrict ourselves to only 'S' call symbols, a separating word should no longer exist
         final ProceduralInputAlphabet<Character> sAlphabet =
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm2, sAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm2, spmm1, sAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, spmm2, sAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm2, spmm1, sAlphabet));
 
         // update SPMM2 accordingly
         final FastMealyState<Character> t2t1 = t2.addState();
         t2.addTransition(t2t0, 'c', t2t1, 'z');
 
-        Assert.assertNull(Automata.findSeparatingWord(spmm1, spmm2, inputAlphabet));
-        Assert.assertNull(Automata.findSeparatingWord(spmm2, spmm1, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm1, spmm2, inputAlphabet));
+        Assert.assertNull(SPMMs.findSeparatingWord(spmm2, spmm1, inputAlphabet));
 
         // make SPMM1's 'T' procedure return on c.
         // This should yield a separating word even if we restrict ourselves to only 'c' as internal symbol
@@ -244,7 +243,7 @@ public class SPMMUtilTest {
     private static <I, O> void verifySepWord(SPMM<?, I, ?, O> spmm1,
                                              SPMM<?, I, ?, O> spmm2,
                                              ProceduralInputAlphabet<I> alphabet) {
-        final Word<I> sepWord = Automata.findSeparatingWord(spmm1, spmm2, alphabet);
+        final Word<I> sepWord = SPMMs.findSeparatingWord(spmm1, spmm2, alphabet);
         Assert.assertNotNull(sepWord);
         Assert.assertNotEquals(spmm1.computeOutput(sepWord), spmm2.computeOutput(sepWord));
     }
@@ -259,11 +258,11 @@ public class SPMMUtilTest {
         final SPMM<?, Character, ?, Character> spmm2 =
                 RandomAutomata.randomSPMM(random, inputAlphabet, outputAlphabet, size);
 
-        Assert.assertTrue(Automata.testEquivalence(spmm1, spmm1, inputAlphabet));
-        Assert.assertTrue(Automata.testEquivalence(spmm2, spmm2, inputAlphabet));
+        Assert.assertTrue(SPMMs.testEquivalence(spmm1, spmm1, inputAlphabet));
+        Assert.assertTrue(SPMMs.testEquivalence(spmm2, spmm2, inputAlphabet));
 
-        Assert.assertFalse(Automata.testEquivalence(spmm1, spmm2, inputAlphabet));
-        Assert.assertFalse(Automata.testEquivalence(spmm2, spmm1, inputAlphabet));
+        Assert.assertFalse(SPMMs.testEquivalence(spmm1, spmm2, inputAlphabet));
+        Assert.assertFalse(SPMMs.testEquivalence(spmm2, spmm1, inputAlphabet));
     }
 
 }

@@ -18,7 +18,6 @@ package net.automatalib.graph.base.compact;
 public class CompactBidiEdge<EP> extends CompactEdge<EP> {
 
     private final int source;
-    protected int inIndex;
 
     public CompactBidiEdge(int source, int target, EP property) {
         super(target, property);

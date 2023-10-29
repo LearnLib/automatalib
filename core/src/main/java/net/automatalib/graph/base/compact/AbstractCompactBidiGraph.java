@@ -73,7 +73,6 @@ public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>
     public CompactBidiEdge<EP> connect(int source, int target, @Nullable EP property) {
         CompactBidiEdge<EP> edge = super.connect(source, target, property);
         List<CompactBidiEdge<EP>> inEdges = this.inEdges.array[target];
-        edge.inIndex = inEdges.size();
         inEdges.add(edge);
         return edge;
     }
