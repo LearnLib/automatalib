@@ -23,6 +23,9 @@ import java.util.stream.Collector;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 
+/**
+ * Utility methods revolving around alphabets.
+ */
 public final class Alphabets {
 
     private Alphabets() {
