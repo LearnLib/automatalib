@@ -24,7 +24,7 @@ import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 
 /**
- * Utility methods revolving around alphabets.
+ * Utility methods concerning alphabets.
  */
 public final class Alphabets {
 
