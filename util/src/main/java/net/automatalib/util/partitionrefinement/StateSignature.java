@@ -77,10 +77,7 @@ public final class StateSignature {
                                                                S state) {
         int numInputs = alphabet.size();
         @Nullable Object[] properties = new Object[numInputs];
-        for (int i = 0; i < numInputs; i++) {
-            I sym = alphabet.getSymbol(i);
-            properties[i] = automaton.getTransitionProperty(state, sym);
-        }
+        fillTransitionProperties(automaton, alphabet, state, properties);
         return new StateSignature(properties);
     }
 
