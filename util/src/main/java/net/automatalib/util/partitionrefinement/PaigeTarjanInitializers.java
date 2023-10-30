@@ -146,12 +146,7 @@ public final class PaigeTarjanInitializers {
             }
         }
 
-        int curr = 0;
-        for (Block b : pt.blockList()) {
-            curr += b.high;
-            b.high = curr;
-            b.low = curr;
-        }
+        updateHighAndLowBlockIndices(pt.blockList());
 
         data[predOfsDataLow] += predDataLow;
         prefixSum(data, predOfsDataLow, predDataLow);
@@ -223,12 +218,7 @@ public final class PaigeTarjanInitializers {
             }
         }
 
-        int curr = 0;
-        for (Block b : pt.blockList()) {
-            curr += b.high;
-            b.high = curr;
-            b.low = curr;
-        }
+        updateHighAndLowBlockIndices(pt.blockList());
 
         data[predOfsDataLow] += predDataLow;
         prefixSum(data, predOfsDataLow, predDataLow);
@@ -362,12 +352,7 @@ public final class PaigeTarjanInitializers {
             }
         }
 
-        int curr = 0;
-        for (Block b : pt.blockList()) {
-            curr += b.high;
-            b.high = curr;
-            b.low = curr;
-        }
+        updateHighAndLowBlockIndices(pt.blockList());
 
         data[predOfsDataLow] += predDataLow;
         prefixSum(data, predOfsDataLow, predDataLow);
@@ -408,6 +393,15 @@ public final class PaigeTarjanInitializers {
         pt.setBlockForState(blockForState);
 
         pt.removeEmptyBlocks();
+    }
+
+    private static void updateHighAndLowBlockIndices(Iterable<Block> blockList) {
+        int curr = 0;
+        for (Block b : blockList) {
+            curr += b.high;
+            b.high = curr;
+            b.low = curr;
+        }
     }
 
 }
