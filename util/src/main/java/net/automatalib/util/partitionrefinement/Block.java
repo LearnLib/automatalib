@@ -102,6 +102,8 @@ public class Block {
      * <p>
      * When this method returns (regardless of whether a new block is created), the {@link #ptr} field will have been
      * reset to {@code -1}.
+     * <p>
+     * Preconditions: this.ptr != -1.
      *
      * @param newId
      *         the ID of the newly created block, if applicable
