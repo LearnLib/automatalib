@@ -131,14 +131,7 @@ public final class PaigeTarjanInitializers {
                 Block succBlock = blockForState[succ];
                 if (succBlock == null) {
                     Object succClass = initialClassification.apply(succ);
-                    succBlock = blockMap.get(succClass);
-                    if (succBlock == null) {
-                        succBlock = pt.createBlock();
-                        succBlock.high = 0;
-                        blockMap.put(succClass, succBlock);
-                    }
-                    succBlock.high++;
-                    blockForState[succ] = succBlock;
+                    blockForState[succ] = determineBlockForClassification(blockMap, succClass, pt);
                     statesBuff[reachableStates++] = succ;
                 }
                 data[predCountBase + succ]++;
@@ -196,14 +189,7 @@ public final class PaigeTarjanInitializers {
 
         for (int i = 0; i < numStates; i++) {
             Object classification = initialClassification.apply(i);
-            Block block = blockMap.get(classification);
-            if (block == null) {
-                block = pt.createBlock();
-                block.high = 0;
-                blockMap.put(classification, block);
-            }
-            block.high++;
-            blockForState[i] = block;
+            blockForState[i] = determineBlockForClassification(blockMap, classification, pt);
 
             int predCountBase = predOfsDataLow;
 
@@ -329,14 +315,7 @@ public final class PaigeTarjanInitializers {
                     } else {
                         succClass = initialClassification.apply(succ);
                     }
-                    succBlock = blockMap.get(succClass);
-                    if (succBlock == null) {
-                        succBlock = pt.createBlock();
-                        succBlock.high = 0;
-                        blockMap.put(succClass, succBlock);
-                    }
-                    succBlock.high++;
-                    blockForState[succId] = succBlock;
+                    blockForState[succId] = determineBlockForClassification(blockMap, succClass, pt);
                     statesBuff[reachableStates++] = succId;
                 }
                 data[predCountBase + succId]++;
@@ -393,6 +372,18 @@ public final class PaigeTarjanInitializers {
         pt.setBlockForState(blockForState);
 
         pt.removeEmptyBlocks();
+    }
+
+    private static Block determineBlockForClassification(
+            Map<@Nullable Object, Block> blockMap, Object classification, PaigeTarjan pt) {
+        Block block = blockMap.get(classification);
+        if (block == null) {
+            block = pt.createBlock();
+            block.high = 0;
+            blockMap.put(classification, block);
+        }
+        block.high++;
+        return block;
     }
 
     private static void updateHighAndLowBlockIndices(Iterable<Block> blockList) {
