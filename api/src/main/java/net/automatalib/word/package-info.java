@@ -15,6 +15,6 @@
  */
 
 /**
- * This package (including sub-packages) contains the basic classes concerning words.
+ * This package contains the basic classes concerning words.
  */
 package net.automatalib.word;

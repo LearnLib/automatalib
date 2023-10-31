@@ -15,6 +15,8 @@
  */
 
 /**
- * This package contains the basic classes concerning alphabets.
+ * This package contains efficient implementations for various collection data structures (especially linked lists and
+ * priority queues), which have very insufficient implementation in the Java Collections Framework that makes it hard or
+ * even impossible to exploit their efficiencies.
  */
-package net.automatalib.alphabet;
+package net.automatalib.common.smartcollection;

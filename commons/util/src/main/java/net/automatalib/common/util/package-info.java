@@ -15,6 +15,6 @@
  */
 
 /**
- * This package contains the basic classes concerning alphabets.
+ * This package (including sub-packages) contains basic utility classes to ease everyday programming.
  */
-package net.automatalib.alphabet;
+package net.automatalib.common.util;
