@@ -283,8 +283,9 @@ public class PaigeTarjan {
     }
 
     /**
-     * Move the state to the left of its Block ptr. This allows grouping of states with similar behavior.
-     * @param state - state to be moved left within its Block.
+     * Move the state to the left of its Block ptr. This allows for the grouping of states with similar behavior.
+     * @param state
+     *         state to be moved left within its Block.
      */
     private void moveLeft(int state) {
         Block b = blockForState[state];
