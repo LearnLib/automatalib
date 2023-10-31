@@ -284,6 +284,7 @@ public class PaigeTarjan {
 
     /**
      * Move the state to the left of its Block ptr. This allows for the grouping of states with similar behavior.
+     *
      * @param state
      *         state to be moved left within its Block.
      */
