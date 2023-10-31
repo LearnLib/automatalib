@@ -282,14 +282,20 @@ public class PaigeTarjan {
         return b;
     }
 
+    /**
+     * Move the state to the left of its Block ptr. This allows for the grouping of states with similar behavior.
+     *
+     * @param state
+     *         state to be moved left within its Block.
+     */
     private void moveLeft(int state) {
         Block b = blockForState[state];
-        //int[] blockData = b.data;
         int posIdx = posDataLow + state;
         int inBlockIdx = posData[posIdx];
         int ptr = b.ptr;
 
         if (ptr == -1) {
+            // This block has not been touched yet. Queue it up, and initialize its ptr.
             b.nextTouched = touchedHead;
             touchedHead = b;
             ptr = b.low;
@@ -298,6 +304,7 @@ public class PaigeTarjan {
 
         if (ptr <= inBlockIdx) {
             if (ptr < inBlockIdx) {
+                // inBlockIdx is to the right of ptr. Swap the block positions.
                 int other = blockData[ptr];
                 blockData[ptr] = blockData[inBlockIdx];
                 blockData[inBlockIdx] = other;
