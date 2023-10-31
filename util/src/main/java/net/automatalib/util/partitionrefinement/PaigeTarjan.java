@@ -358,6 +358,20 @@ public class PaigeTarjan {
     }
 
     /**
+     * Iterates over the current {@link #blockList() block list} and sets every block's {@link Block#low low} and
+     * {@link Block#high high} pointer to the accumulated sum of its own high pointer and its preceding blocks' high
+     * pointers, effectively reducing each block to a single representative padded by its previous range.
+     */
+    public void canonizeBlocks() {
+        int curr = 0;
+        for (Block b : blockList()) {
+            curr += b.high;
+            b.high = curr;
+            b.low = curr;
+        }
+    }
+
+    /**
      * Retrieves the corresponding block for a given state (ID).
      *
      * @param id

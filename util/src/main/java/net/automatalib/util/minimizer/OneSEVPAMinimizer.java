@@ -105,12 +105,7 @@ public final class OneSEVPAMinimizer {
             }
         }
 
-        int curr = 0;
-        for (Block b : pt.blockList()) {
-            curr += b.high;
-            b.high = curr;
-            b.low = curr;
-        }
+        pt.canonizeBlocks();
 
         data[predOfsDataLow] += predDataLow;
         PaigeTarjanInitializers.prefixSum(data, predOfsDataLow, predDataLow);
