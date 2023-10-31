@@ -21,17 +21,8 @@ package net.automatalib.exception;
  */
 public class UndefinedPropertyAccessException extends IllegalStateException {
 
-    public UndefinedPropertyAccessException() {}
-
     public UndefinedPropertyAccessException(String var1) {
         super(var1);
     }
 
-    public UndefinedPropertyAccessException(String var1, Throwable var2) {
-        super(var1, var2);
-    }
-
-    public UndefinedPropertyAccessException(Throwable var1) {
-        super(var1);
-    }
 }
