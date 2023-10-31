@@ -113,6 +113,10 @@ limitations under the License.
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>javacc-maven-plugin</artifactId>
+                <configuration>
+                    <!-- We want to share the output directory with javaCC / buildergen so that the "annotation" subdirectory is not actually picked up as a package-prefix by the javadoc plugin -->
+                    <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>
