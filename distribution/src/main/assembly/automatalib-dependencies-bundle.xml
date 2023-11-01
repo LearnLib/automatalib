@@ -47,6 +47,9 @@ limitations under the License.
             <includes>
                 <include>*:jar</include>
             </includes>
+            <excludes>
+                <exclude>net.automatalib:*:sources</exclude>
+            </excludes>
             <outputDirectory/>
             <useProjectArtifact>false</useProjectArtifact>
             <unpack>true</unpack>
