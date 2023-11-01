@@ -43,7 +43,7 @@ limitations under the License.
             <id>mtf90</id>
             <name>Markus Frohme</name>
             <email>markus.frohme@udo.edu</email>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
@@ -54,7 +54,7 @@ limitations under the License.
             <id>misberner</id>
             <name>Malte Isberner</name>
             <email>malte.isberner@gmail.com</email>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer (inactive)</role>
@@ -70,7 +70,7 @@ limitations under the License.
     <contributors>
         <contributor>
             <name>Maximilian Freese</name>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer (Graduate)</role>
@@ -104,7 +104,7 @@ limitations under the License.
         </contributor>
         <contributor>
             <name>Maximilian Schlüter</name>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
@@ -113,7 +113,7 @@ limitations under the License.
         <contributor>
             <name>David Schmidt</name>
             <email>david3.schmidt@tu-dortmund.de</email>
-            <organization>TU Dortmund University, Chair for Programming Systems</organization>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
             <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
             <roles>
                 <role>Developer</role>
@@ -150,7 +150,7 @@ limitations under the License.
     -->
     <scm>
         <connection>scm:git:https://github.com/LearnLib/automatalib.git</connection>
-        <developerConnection>scm:git:git@github.com:learnlib/automatalib.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:LearnLib/automatalib.git</developerConnection>
         <url>https://github.com/learnlib/automatalib/tree/develop</url>
         <tag>HEAD</tag>
     </scm>
