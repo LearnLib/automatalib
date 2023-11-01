@@ -45,11 +45,7 @@ limitations under the License.
     <dependencySets>
         <dependencySet>
             <includes>
-                <!--
-                Attention: Maven Assembly Plugin seems to be complete screwed up.
-                Replacing the following with 'net.automatalib:*:sources' will NOT work!
-                -->
-                <include>*:sources</include>
+                <include>net.automatalib:*:sources</include>
             </includes>
             <outputDirectory/>
             <useProjectArtifact>false</useProjectArtifact>
