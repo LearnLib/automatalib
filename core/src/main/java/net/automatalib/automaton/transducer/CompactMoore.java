@@ -32,7 +32,7 @@ public class CompactMoore<I, @Nullable O> extends UniversalCompactSimpleDet<I, O
     }
 
     public CompactMoore(CompactMoore<I, O> other) {
-        this(other.getInputAlphabet(), other);
+        super(other);
     }
 
     protected CompactMoore(Alphabet<I> alphabet, CompactMoore<?, O> other) {

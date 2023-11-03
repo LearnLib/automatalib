@@ -18,7 +18,7 @@ package net.automatalib.incremental.mealy;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.IncrementalConstruction;

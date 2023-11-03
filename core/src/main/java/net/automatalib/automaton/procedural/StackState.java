@@ -29,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <P>
  *         hypothesis type
  */
-final class StackState<S, I, P> {
+public final class StackState<S, I, P> {
 
     private static final StackState<?, ?, ?> INIT = new StackState<>();
     private static final StackState<?, ?, ?> SINK = new StackState<>();

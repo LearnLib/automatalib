@@ -26,7 +26,7 @@ interface TAFBuilder {
 
     void init(Alphabet<String> alphabet);
 
-    void declareState(String identifer, Set<String> options);
+    void declareState(String identifier, Set<String> options);
 
     Object finish();
 }

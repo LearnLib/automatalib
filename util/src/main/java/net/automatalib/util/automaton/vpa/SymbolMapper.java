@@ -15,9 +15,6 @@
  */
 package net.automatalib.util.automaton.vpa;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.procedural.SPA;
@@ -75,31 +72,4 @@ public interface SymbolMapper<AI, CI> {
      */
     CI mapReturnSymbol(AI ai);
 
-    /**
-     * A default implementation that maps abstract input symbol to their {@link String} representations while adding an
-     * incrementing number to mapped {@link #mapCallSymbol(Object) call symbols}.
-     *
-     * @param <AI>
-     *         abstract input symbol type
-     */
-    class StringSymbolMapper<AI> implements SymbolMapper<AI, String> {
-
-        private final Map<AI, Integer> map = new HashMap<>();
-
-        @Override
-        public String mapCallSymbol(AI s) {
-            map.putIfAbsent(s, -1);
-            return String.valueOf(s) + '_' + map.computeIfPresent(s, (k, v) -> v + 1);
-        }
-
-        @Override
-        public String mapInternalSymbol(AI s) {
-            return String.valueOf(s);
-        }
-
-        @Override
-        public String mapReturnSymbol(AI s) {
-            return String.valueOf(s);
-        }
-    }
 }

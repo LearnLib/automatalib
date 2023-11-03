@@ -105,7 +105,7 @@ class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?
         return discovered;
     }
 
-    protected List<TransitionData<S0, S1, I>> generateNewTransitions(Pair<S0, S1> productState) {
+    private List<TransitionData<S0, S1, I>> generateNewTransitions(Pair<S0, S1> productState) {
         List<TransitionData<S0, S1, I>> newTransitions = new ArrayList<>();
 
         for (I symbol : mts0.getInputAlphabet()) {

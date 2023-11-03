@@ -182,7 +182,7 @@ public class BinaryHeap<E> extends AbstractSmartCollection<E>
     }
 
     @Override
-    public Reference<E> referencedAdd(E elem) {
+    public ElementReference referencedAdd(E elem) {
         ensureCapacity(size + 1);
 
         Reference<E> entry = new Reference<>(size, elem);

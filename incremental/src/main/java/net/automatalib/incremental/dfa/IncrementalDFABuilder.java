@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.dfa;
 
-import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;

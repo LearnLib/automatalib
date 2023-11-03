@@ -21,17 +21,17 @@ import java.util.RandomAccess;
 import net.automatalib.common.smartcollection.ArrayWritable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class IntRange extends AbstractList<Integer> implements ArrayWritable<Integer>, RandomAccess {
+public final class IntRange extends AbstractList<Integer> implements ArrayWritable<Integer>, RandomAccess {
 
     private final int start;
     private final int step;
     private final int size;
 
-    IntRange(int start, int end) {
+    public IntRange(int start, int end) {
         this(start, end, 1);
     }
 
-    IntRange(int start, int end, int step) {
+    public IntRange(int start, int end, int step) {
         this.start = start;
         this.step = step;
         this.size = (end - start - 1) / step + 1;

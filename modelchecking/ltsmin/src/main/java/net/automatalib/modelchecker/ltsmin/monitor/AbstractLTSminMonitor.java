@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelchecker.ltsmin.monitor;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -51,5 +52,20 @@ public abstract class AbstractLTSminMonitor<I, A, R> extends AbstractLTSmin<I, A
     @Override
     protected List<String> getExtraCommandLineOptions() {
         return Collections.singletonList("--buchi-type=monitor"); // use a monitor created by spot
+    }
+
+    static final class BuilderDefaults {
+
+        private BuilderDefaults() {
+            // prevent instantiation
+        }
+
+        static boolean keepFiles() {
+            return false;
+        }
+
+        static <O> Collection<? super O> skipOutputs() {
+            return Collections.emptyList();
+        }
     }
 }

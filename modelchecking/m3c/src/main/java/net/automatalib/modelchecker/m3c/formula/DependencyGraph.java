@@ -36,7 +36,7 @@ import net.automatalib.modelchecker.m3c.formula.modalmu.VariableNode;
  * @param <AP>
  *         atomic proposition type
  */
-public final class DependencyGraph<L, AP> {
+public class DependencyGraph<L, AP> {
 
     /* All formulaNodes except FixedPoint- and VariableNode */
     private final List<FormulaNode<L, AP>> formulaNodes;

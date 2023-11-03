@@ -74,12 +74,12 @@ public class BricsDFA extends AbstractBricsAutomaton implements DFA<State, Chara
 
     @Override
     public State getSuccessor(State state, Character input) {
-        return state.step(input.charValue());
+        return state.step(input);
     }
 
     @Override
     public State getTransition(State state, Character input) {
-        return state.step(input.charValue());
+        return state.step(input);
     }
 
 }

@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.settingssource;
+package net.automatalib;
 
-import net.automatalib.AutomataLibSettingsSource;
-import net.automatalib.common.util.setting.AbstractClassPathFileSource;
+import net.automatalib.common.util.setting.AbstractSystemPropertiesSource;
 import org.kohsuke.MetaInfServices;
 
 @MetaInfServices(AutomataLibSettingsSource.class)
-public class AutomataLibPropertiesSource extends AbstractClassPathFileSource implements AutomataLibSettingsSource {
-
-    public AutomataLibPropertiesSource() {
-        super("automatalib.properties");
-    }
-}
+public class AutomataLibSystemPropertiesSource extends AbstractSystemPropertiesSource
+        implements AutomataLibSettingsSource {}

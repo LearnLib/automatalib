@@ -15,7 +15,7 @@
  */
 package net.automatalib.serialization.saf;
 
-enum AutomatonType {
+public enum AutomatonType {
     DFA(true),
     NFA(false),
     MEALY(true);

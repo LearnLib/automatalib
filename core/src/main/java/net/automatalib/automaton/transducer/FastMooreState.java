@@ -23,7 +23,7 @@ import net.automatalib.automaton.base.AbstractFastState;
  * @param <O>
  *         output symbol class.
  */
-public final class FastMooreState<O> extends AbstractFastState<FastMooreState<O>> {
+public class FastMooreState<O> extends AbstractFastState<FastMooreState<O>> {
 
     private O output;
 

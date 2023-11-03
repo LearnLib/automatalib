@@ -157,7 +157,8 @@ public abstract class AbstractWordTest {
 
     @Test
     public void testIsEmpty() {
-        Assert.assertEquals((testWord.length() == 0), testWord.isEmpty());
+        Assert.assertEquals(testWord.length(), 0);
+        Assert.assertTrue(testWord.isEmpty());
     }
 
     @Test

@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib;
+package net.automatalib.alphabet;
 
-import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 
 /**

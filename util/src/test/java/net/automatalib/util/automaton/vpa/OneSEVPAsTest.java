@@ -38,7 +38,6 @@ import net.automatalib.util.automaton.conformance.SPATestsIterator;
 import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.automaton.vpa.SPAConverter.ConversionResult;
-import net.automatalib.util.automaton.vpa.SymbolMapper.StringSymbolMapper;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;

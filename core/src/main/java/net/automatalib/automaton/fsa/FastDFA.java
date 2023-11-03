@@ -20,7 +20,7 @@ import net.automatalib.automaton.base.AbstractFastMutableDet;
 import net.automatalib.common.util.WrapperUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class FastDFA<I> extends AbstractFastMutableDet<FastDFAState, I, FastDFAState, Boolean, Void>
+public class FastDFA<I> extends AbstractFastMutableDet<FastDFAState, I, FastDFAState, Boolean, Void>
         implements MutableDFA<FastDFAState, I> {
 
     public FastDFA(Alphabet<I> alphabet) {

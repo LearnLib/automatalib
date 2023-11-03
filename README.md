@@ -87,10 +87,6 @@ If you have any questions regarding the usage of AutomataLib or if you want to d
 [4]: https://github.com/misberner
 [5]: https://github.com/mtf90
 
-[automatalib-qa]: https://groups.google.com/d/forum/automatalib-qa
-[automatalib-discussion]: https://groups.google.com/d/forum/automatalib-discussion
-[automatalib-devel]: https://groups.google.com/d/forum/automatalib-devel
-
 [maven-central]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib%22
 [maven-central-distr]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.automatalib.distribution%22
 [intellij]: https://www.jetbrains.com/idea/

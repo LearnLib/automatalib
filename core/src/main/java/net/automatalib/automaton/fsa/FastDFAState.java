@@ -17,7 +17,7 @@ package net.automatalib.automaton.fsa;
 
 import net.automatalib.automaton.base.AbstractFastState;
 
-public final class FastDFAState extends AbstractFastState<FastDFAState> {
+public class FastDFAState extends AbstractFastState<FastDFAState> {
 
     private boolean accepting;
 

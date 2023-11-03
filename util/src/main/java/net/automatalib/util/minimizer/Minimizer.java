@@ -37,8 +37,8 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  * defined. Note that undefined transitions are preserved, thus, they have no semantics that could be modeled otherwise
  * wrt. this algorithm.
  * <p>
- * The implemented algorithm is described in the paper "Minimizing incomplete automata" by Marie-Pierre Beal and Maxime
- * Crochemore.
+ * The implemented algorithm is described in the paper <a href="https://doi.org/10.1109/ISIT.2007.4557131">Minimizing
+ * incomplete automata</a> by Marie-Pierre Beal and Maxime Crochemore.
  *
  * @param <S>
  *         state class.

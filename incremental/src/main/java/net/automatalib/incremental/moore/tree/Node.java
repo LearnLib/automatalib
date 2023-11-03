@@ -22,7 +22,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * A node in the tree internally used by {@link IncrementalMooreTreeBuilder}.
  *
  * @param <O>
- *         outpu symbol type
+ *         output symbol type
  */
 public final class Node<O> {
 

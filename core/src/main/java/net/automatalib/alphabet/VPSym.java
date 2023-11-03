@@ -24,7 +24,7 @@ import net.automatalib.alphabet.VPAlphabet.SymbolType;
  * @param <T>
  *         type of the payload
  */
-public final class VPSym<T> {
+public class VPSym<T> {
 
     private final T userObject;
     private final SymbolType type;

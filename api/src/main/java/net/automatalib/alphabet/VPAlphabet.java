@@ -40,6 +40,8 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      * @param index
      *         the index of the symbol
      *
+     * @return the call symbol at the given index
+     *
      * @throws IllegalArgumentException
      *         if there is no symbol with this index
      */
@@ -51,6 +53,8 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      *
      * @param symbol
      *         the symbol whose index should be determined
+     *
+     * @return the index of the given call symbol
      *
      * @throws IllegalArgumentException
      *         if the provided symbol does not belong to the call alphabet.
@@ -78,6 +82,8 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      * @param index
      *         the index of the symbol
      *
+     * @return the internal symbol at the given index
+     *
      * @throws IllegalArgumentException
      *         if there is no symbol with this index
      */
@@ -89,6 +95,8 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      *
      * @param symbol
      *         the symbol whose index should be determined
+     *
+     * @return the index of the given internal symbol
      *
      * @throws IllegalArgumentException
      *         if the provided symbol does not belong to the internal alphabet.
@@ -116,6 +124,8 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      * @param index
      *         the index of the symbol
      *
+     * @return the return symbol at the given index
+     *
      * @throws IllegalArgumentException
      *         if there is no symbol with this index
      */
@@ -127,6 +137,8 @@ public interface VPAlphabet<I> extends Alphabet<I> {
      *
      * @param symbol
      *         the symbol whose index should be determined
+     *
+     * @return the index of the given return symbol
      *
      * @throws IllegalArgumentException
      *         if the provided symbol does not belong to the return alphabet.

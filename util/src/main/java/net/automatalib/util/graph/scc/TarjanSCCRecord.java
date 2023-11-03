@@ -15,7 +15,7 @@
  */
 package net.automatalib.util.graph.scc;
 
-final class TarjanSCCRecord {
+public final class TarjanSCCRecord {
 
     /**
      * The index of this record in the order of discovery, i.e. the record belongs to the number-th node discovered

@@ -99,25 +99,25 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
         unfolder.setMinimumUnfolds(minimumUnfolds);
     }
 
-    public static final class BuilderDefaults {
+    static final class BuilderDefaults {
 
         private BuilderDefaults() {
             // prevent instantiation
         }
 
-        public static boolean keepFiles() {
+        static boolean keepFiles() {
             return false;
         }
 
-        public static int minimumUnfolds() {
+        static int minimumUnfolds() {
             return 3; // super arbitrary number
         }
 
-        public static double multiplier() {
+        static double multiplier() {
             return 1.0; // quite arbitrary too
         }
 
-        public static <O> Collection<? super O> skipOutputs() {
+        static <O> Collection<? super O> skipOutputs() {
             return Collections.emptyList();
         }
     }

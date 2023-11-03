@@ -27,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol class.
  */
-public final class FastMoore<I, @Nullable O> extends AbstractFastMutableDet<FastMooreState<O>, I, FastMooreState<O>, O, Void>
+public class FastMoore<I, @Nullable O> extends AbstractFastMutableDet<FastMooreState<O>, I, FastMooreState<O>, O, Void>
         implements MutableMooreMachine<FastMooreState<O>, I, FastMooreState<O>, O> {
 
     public FastMoore(Alphabet<I> alphabet) {

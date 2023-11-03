@@ -18,21 +18,18 @@ package net.automatalib.incremental.moore;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
-import net.automatalib.incremental.mealy.AdaptiveMealyBuilder;
-import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MooreTransitionSystem;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * A utility interface to share functionality between {@link IncrementalMealyBuilder}s and
- * {@link AdaptiveMealyBuilder}s.
+ * General interface for incremental Moore builders.
  *
  * @param <I>
  *         input symbol type

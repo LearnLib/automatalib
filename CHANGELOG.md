@@ -47,6 +47,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     * `net.automatalib.graphs.FiniteKTS` -> `net.automatalib.ts.FiniteKTS` and `FiniteKTS` no longer extends the `Graph` interface but the `Automaton` interface and has its type variables re-ordered.
     * `net.automatalib.graphs.FiniteLTS` -> `net.automatalib.graph.FiniteLabeledGraph`.
     * `GraphTraversal#dfIterator` -> `GraphTraversal#depthFirstIterator`.
+    * moved the `net.automatalib.settingssource.*` classes to `net.automatalib`.
+    * moved `SupportsGrowingAlphabet` class to `net.automatalib.alphabet`.
     * moved the package `net.automatalib.ts.comp` to `net.automatalib.util.ts.comp` in the `automata-util` module.
     * moved `TS#bfs{Order,Iterator}` to `TSTraversal#breadthFirst{Order,Iterator}`.
 * `AbstractOneSEVPA` no longer implements the `Graph` interface, but `SEVPA`s are now `GraphViewable`.

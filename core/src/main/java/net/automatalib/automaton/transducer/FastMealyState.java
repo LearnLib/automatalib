@@ -23,7 +23,7 @@ import net.automatalib.automaton.base.AbstractFastState;
  * @param <O>
  *         output symbol class.
  */
-public final class FastMealyState<O> extends AbstractFastState<MealyTransition<FastMealyState<O>, O>> {
+public class FastMealyState<O> extends AbstractFastState<MealyTransition<FastMealyState<O>, O>> {
 
     public FastMealyState(int numInputs) {
         super(numInputs);

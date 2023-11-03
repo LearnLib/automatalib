@@ -20,10 +20,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import net.automatalib.SupportsGrowingAlphabet;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;

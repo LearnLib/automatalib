@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -295,21 +294,6 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
             return ProcessUtil.invokeProcess(commandLine, LOGGER::debug);
         } catch (IOException | InterruptedException e) {
             throw new ModelCheckingException(e);
-        }
-    }
-
-    public static final class BuilderDefaults {
-
-        private BuilderDefaults() {
-            // prevent instantiation
-        }
-
-        public static boolean keepFiles() {
-            return false;
-        }
-
-        public static <O> Collection<? super O> skipOutputs() {
-            return Collections.emptyList();
         }
     }
 }

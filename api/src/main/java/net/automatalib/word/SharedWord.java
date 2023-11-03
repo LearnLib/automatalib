@@ -69,7 +69,7 @@ final class SharedWord<I> extends Word<I> {
     }
 
     @Override
-    public Iterator<I> iterator() {
+    public java.util.Iterator<I> iterator() {
         return new Iterator<>(this);
     }
 
