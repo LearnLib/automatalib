@@ -122,6 +122,9 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
 
     @Override
     public Integer getNode(int id) {
+        if (id < 0 || id >= size) {
+            throw new IllegalArgumentException();
+        }
         return id;
     }
 

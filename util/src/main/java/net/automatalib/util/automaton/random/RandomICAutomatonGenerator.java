@@ -106,7 +106,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
 
     /**
      * Sets the possible state properties, and returns {@code this}. The collection is internally converted into a list,
-     * from which state properties are selected using {@link RandomUtil#choose(List, Random)}. If the collection is
+     * from which state properties are selected using {@link RandomUtil#choose(Random, List)}. If the collection is
      * empty, {@code null} will always be chosen as the state property.
      * <p>
      * Note that if the collection contains elements several times, the probability of these elements being selected is
@@ -122,12 +122,12 @@ public class RandomICAutomatonGenerator<SP, TP> {
             return withStateProperties(r -> null);
         }
         List<SP> spList = new ArrayList<>(possibleSps);
-        return withStateProperties((r) -> RandomUtil.choose(spList, r));
+        return withStateProperties((r) -> RandomUtil.choose(r, spList));
     }
 
     /**
      * Sets the possible state properties, and returns {@code this}. State properties are selected from this array using
-     * {@link RandomUtil#choose(Object[], Random)}. If the array is empty, {@code null} will always be chosen as the
+     * {@link RandomUtil#choose(Random, Object[])}. If the array is empty, {@code null} will always be chosen as the
      * state property.
      *
      * @param possibleSps
@@ -140,7 +140,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
         if (possibleSps.length == 0) {
             return withStateProperties(r -> null);
         }
-        return withStateProperties(r -> RandomUtil.choose(possibleSps, r));
+        return withStateProperties(r -> RandomUtil.choose(r, possibleSps));
     }
 
     /**
@@ -174,7 +174,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
 
     /**
      * Sets the possible transition properties, and returns {@code this}. Transition properties are selected from this
-     * array using {@link RandomUtil#choose(Object[], Random)}. If the array is empty, {@code null} will always be
+     * array using {@link RandomUtil#choose(Random, Object[])}. If the array is empty, {@code null} will always be
      * chosen as the state property.
      *
      * @param possibleTps
@@ -192,7 +192,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
 
     /**
      * Sets the possible transition properties, and returns {@code this}. The collection is internally converted into a
-     * list, from which transition properties are selected using {@link RandomUtil#choose(List, Random)}. If the
+     * list, from which transition properties are selected using {@link RandomUtil#choose(Random, List)}. If the
      * collection is empty, {@code null} will always be chosen as the transition property.
      * <p>
      * Note that if the collection contains elements several times, the probability of these elements being selected is
@@ -208,7 +208,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
             return withTransitionProperties(r -> null);
         }
         List<TP> tpList = new ArrayList<>(possibleTps);
-        return withTransitionProperties((r) -> RandomUtil.choose(tpList, r));
+        return withTransitionProperties((r) -> RandomUtil.choose(r, tpList));
     }
 
     /**
@@ -263,7 +263,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
             I input;
             do {
                 src = r.nextInt(i);
-                input = RandomUtil.choose(inputsList, r);
+                input = RandomUtil.choose(r, inputsList);
                 succ = resultAbs.getSuccessor(src, input);
             } while (succ >= 0);
             int next = resultAbs.addIntState(spSupplier.apply(r));

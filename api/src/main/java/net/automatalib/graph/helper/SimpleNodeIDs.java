@@ -52,6 +52,9 @@ public class SimpleNodeIDs<N> implements NodeIDs<N> {
 
     @Override
     public N getNode(int id) {
+        if (id < 0 || id >= nodes.size()) {
+            throw new IllegalArgumentException();
+        }
         return nodes.get(id);
     }
 }

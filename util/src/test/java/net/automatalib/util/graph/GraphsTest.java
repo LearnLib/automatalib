@@ -15,8 +15,12 @@
  */
 package net.automatalib.util.graph;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
@@ -33,6 +37,7 @@ import net.automatalib.graph.CompactSimpleBidiGraph;
 import net.automatalib.graph.CompactSimpleGraph;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.SimpleMapGraph;
+import net.automatalib.graph.concept.NodeIDs;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.graph.copy.GraphCopy;
 import org.testng.Assert;
@@ -51,6 +56,18 @@ public class GraphsTest {
         checkIncomingEdges(dfa, alphabet, new CompactSimpleGraph<>(dfa.size()));
         checkIncomingEdges(dfa, alphabet, new CompactSimpleBidiGraph<>(dfa.size()));
         checkIncomingEdges(dfa, alphabet, new SimpleMapGraph<>());
+    }
+
+    @Test
+    public void testNodeIDs() {
+        final List<Integer> nums = Arrays.asList(1, 2, 3, 4);
+        final List<Void> nulls = Collections.nCopies(4, null);
+
+        checkNodeIDs(new CompactGraph<>(), nums);
+        checkNodeIDs(new CompactBidiGraph<>(), nums);
+        checkNodeIDs(new CompactSimpleGraph<>(), nulls);
+        checkNodeIDs(new CompactSimpleBidiGraph<>(), nulls);
+        checkNodeIDs(new SimpleMapGraph<>(), nums);
     }
 
     private <S, I, N, E, NP, EP> void checkIncomingEdges(DFA<S, I> dfa,
@@ -86,5 +103,24 @@ public class GraphsTest {
 
             Assert.assertEquals(checkEdges, edges);
         }
+    }
+
+    private <N, NP> void checkNodeIDs(MutableGraph<N, ?, NP, ?> graph, List<NP> properties) {
+
+        final List<N> nodes = new ArrayList<>(properties.size());
+        for (NP p : properties) {
+            nodes.add(graph.addNode(p));
+        }
+
+        final NodeIDs<N> nodeIDs = graph.nodeIDs();
+
+        for (int i = 0; i < nodes.size(); i++) {
+            final N n = nodes.get(i);
+            Assert.assertEquals(nodeIDs.getNodeId(n), i);
+            Assert.assertEquals(nodeIDs.getNode(i), n);
+        }
+
+        Assert.assertThrows(IllegalArgumentException.class, () -> nodeIDs.getNode(-1));
+        Assert.assertThrows(IllegalArgumentException.class, () -> nodeIDs.getNode(4));
     }
 }

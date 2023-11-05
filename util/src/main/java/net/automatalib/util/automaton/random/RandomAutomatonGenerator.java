@@ -27,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomaton<S, I, T, SP, TP>> {
 
-    protected final RandomUtil random;
+    protected final Random random;
     protected final List<? extends I> inputs;
     protected final List<? extends SP> spList;
     protected final List<? extends TP> tpList;
@@ -40,7 +40,7 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
                                     Collection<? extends SP> stateProps,
                                     Collection<? extends TP> transProps,
                                     A automaton) {
-        this.random = new RandomUtil(random);
+        this.random = random;
 
         this.spList = CollectionsUtil.randomAccessList(stateProps);
         this.tpList = CollectionsUtil.randomAccessList(transProps);
@@ -55,11 +55,11 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
     }
 
     protected @Nullable TP randomTransProperty() {
-        return random.choose(tpList);
+        return RandomUtil.choose(random, tpList);
     }
 
     protected @Nullable S randomState() {
-        return random.choose(states);
+        return RandomUtil.choose(random, states);
     }
 
     protected @Nullable S randomDistinctState(int stateIdx) {
@@ -67,7 +67,7 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
             return null;
         }
 
-        int idx = random.getRandom().nextInt(states.size() - 1);
+        int idx = random.nextInt(states.size() - 1);
 
         if (idx >= stateIdx) {
             idx++;
@@ -77,7 +77,7 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
     }
 
     protected @Nullable I randomInput() {
-        return random.choose(inputs);
+        return RandomUtil.choose(random, inputs);
     }
 
     public void addStates(int numStates) {
@@ -90,18 +90,18 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
     }
 
     protected @Nullable SP randomStateProperty() {
-        return random.choose(spList);
+        return RandomUtil.choose(random, spList);
     }
 
     public void chooseInitial() {
-        S init = random.choose(states);
+        S init = RandomUtil.choose(random, states);
         if (init != null) {
             automaton.setInitial(init, true);
         }
     }
 
     public void chooseInitials(int num) {
-        List<S> inits = random.sampleUnique(states, num);
+        List<S> inits = RandomUtil.sampleUnique(random, states, num);
 
         for (S init : inits) {
             automaton.setInitial(init, true);

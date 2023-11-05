@@ -15,7 +15,7 @@
  */
 
 /**
- * This package (including sub-packages) contains several approaches for the visualization of the different types of
- * automata, transition systems, and graphs supported by AutomataLib.
+ * This package contains several approaches for the visualization of the different types of automata, transition
+ * systems, and graphs supported by AutomataLib.
  */
 package net.automatalib.visualization;

@@ -61,6 +61,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * `Minimizer` no longer provides a `getInstance()` method but can be instantiated directly.
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.
 * The `OneSEVPAUtils` class has been merged into the `OneSEVPAs` class. 
+* The `RandomUtil` class has been made a factory (non-instantiable, only static methods) and its methods now require the random object as first parameter.
 * AutomataLib classes no longer implement `Serializable`. We never fully supported the semantics of the interface and never intended to do so. In fact, the old approach failed miserably if any class was involved where we missed an "implements Serializable" statement. In order to prevent confusion by promising false contracts, implementing this markup interface has been removed. Serialization should now be done in user-land via one of the many external (and more optimizable) serialization frameworks such as FST, XStream, etc.
 * `ShortestPaths` now offers fewer but less confusing methods. Previously there were methods such as `shortestPath` that took an initial node and multiple target nodes which much better fits to the idea of computing `shortestPath*s*` rather than any shortest path to one of the target nodes. The old behavior can still be replicated with the generic `Predicate`-based versions.
 * `StrictPriorityQueue` is now package-private as it is only meant for internal use.
@@ -73,6 +74,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Removed `AbstractCompactNPGraph`, use `AbstractCompactGraph` instead.
 * Removed `AbstractCompactSimpleGraph`. All functionality is provided in `CompactSimpleGraph`.
 * Removed `CmpUtil#safeComparator`. Use `Comparators#nullsFirst` or `Comparators#nullsLast` instead.
+* Removed `DelegateVisualizationHelper` without replacement. Instead, directly override/extend the `VisualizationHelper` you want to delegate to.
 * Removed the DFS-specific `DFSTraversalVisitor` (and related classes) without replacement. Client-code that relied on this class can re-implement the functionality by providing an own implementation of the more general `GraphTraversalVisitor`. See the changes on the `DFSExample` for reference.
 * Removed (unused) `DisjointSetForestInt` class without replacement.
 * Removed non-static methods on `RandomAutomata` factory (including the `getInstance()` method).

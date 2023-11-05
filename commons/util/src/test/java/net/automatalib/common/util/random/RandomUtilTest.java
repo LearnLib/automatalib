@@ -31,62 +31,60 @@ public class RandomUtilTest {
 
     private static final int HIGH = 10;
 
-    private RandomUtil util;
-
+    private Random random;
     private List<Integer> list;
     private Integer[] array;
 
     @BeforeClass
     public void setUp() {
-        this.util = new RandomUtil(new Random(42));
+        this.random = new Random(42);
         this.list = CollectionsUtil.intRange(0, HIGH, 1);
         this.array = IntStream.range(0, HIGH).boxed().toArray(Integer[]::new);
     }
 
     @Test
     public void testChooseArray() {
-        Assert.assertNull(util.choose(new Object[0]));
-        Assert.assertEquals(util.choose(new Object[] {1}), 1);
+        Assert.assertNull(RandomUtil.choose(random, new Object[0]));
+        Assert.assertEquals(RandomUtil.choose(random, new Object[] {1}), 1);
 
-        final Integer chosenElement = util.choose(array);
+        final Integer chosenElement = RandomUtil.choose(random, array);
         Assert.assertNotNull(chosenElement);
         Assert.assertTrue(0 <= chosenElement && chosenElement < HIGH);
     }
 
     @Test
     public void testChooseList() {
-        Assert.assertNull(util.choose(Collections.emptyList()));
-        Assert.assertEquals(util.choose(Collections.singletonList(1)), (Integer) 1);
+        Assert.assertNull(RandomUtil.choose(random, Collections.emptyList()));
+        Assert.assertEquals(RandomUtil.choose(random, Collections.singletonList(1)), (Integer) 1);
 
-        final Integer chosenElement = util.choose(list);
+        final Integer chosenElement = RandomUtil.choose(random, list);
         Assert.assertNotNull(chosenElement);
         Assert.assertTrue(0 <= chosenElement && chosenElement < HIGH);
     }
 
     @Test
     public void testDistinctIntegers() {
-        Assert.assertEquals(util.distinctIntegers(0, HIGH).length, 0);
+        Assert.assertEquals(RandomUtil.distinctIntegers(random, 0, HIGH).length, 0);
 
-        int[] result = util.distinctIntegers(HIGH, HIGH);
-        util.distinctIntegers(HIGH, HIGH);
+        int[] result = RandomUtil.distinctIntegers(random, HIGH, HIGH);
         Assert.assertEquals(result.length, HIGH);
         Arrays.sort(result);
         Assert.assertEquals(box(result), array);
 
         // Sample from lower half domain
-        result = util.distinctIntegers(HIGH, HIGH / 2);
+        result = RandomUtil.distinctIntegers(random, HIGH, HIGH / 2);
         Assert.assertEquals(result.length, HIGH / 2);
         Arrays.sort(result);
         Assert.assertEquals(box(result), Arrays.copyOfRange(array, 0, HIGH / 2));
 
         // Sample from upper half domain
-        result = util.distinctIntegers(HIGH, HIGH / 2, HIGH);
+        result = RandomUtil.distinctIntegers(random, HIGH, HIGH / 2, HIGH);
         Assert.assertEquals(result.length, HIGH / 2);
         Arrays.sort(result);
         Assert.assertEquals(box(result), Arrays.copyOfRange(array, HIGH / 2, HIGH));
 
         // Sample all but one from full domain
-        result = util.distinctIntegers(HIGH - 1, HIGH);
+        result = RandomUtil.distinctIntegers(random, HIGH - 1, HIGH);
         Assert.assertEquals(result.length, HIGH - 1);
         Assert.assertEquals(new HashSet<>(Arrays.asList(box(result))).size(), HIGH - 1);
         Assert.assertTrue(Arrays.asList(array).containsAll(Arrays.asList(box(result))));
@@ -94,15 +92,15 @@ public class RandomUtilTest {
 
     @Test
     public void testSampleUnique() {
-        Assert.assertEquals(util.sampleUnique(Collections.emptyList(), HIGH), Collections.emptyList());
+        Assert.assertEquals(RandomUtil.sampleUnique(random, Collections.emptyList(), HIGH), Collections.emptyList());
 
-        List<Integer> result = util.sampleUnique(list, HIGH);
+        List<Integer> result = RandomUtil.sampleUnique(random, list, HIGH);
         Assert.assertEquals(result.size(), HIGH);
         result.sort(Integer::compareTo);
         Assert.assertEquals(result, list);
 
         // Sample all but one from full domain
-        result = util.sampleUnique(list, HIGH - 1);
+        result = RandomUtil.sampleUnique(random, list, HIGH - 1);
         Assert.assertEquals(result.size(), HIGH - 1);
         Assert.assertEquals(new HashSet<>(result).size(), HIGH - 1);
         Assert.assertTrue(list.containsAll(result));
@@ -110,14 +108,14 @@ public class RandomUtilTest {
 
     @Test
     public void testSampleList() {
-        Assert.assertEquals(util.sample(Collections.emptyList(), HIGH), Collections.emptyList());
+        Assert.assertEquals(RandomUtil.sample(random, Collections.emptyList(), HIGH), Collections.emptyList());
 
-        List<Integer> result = util.sample(list, HIGH);
+        List<Integer> result = RandomUtil.sample(random, list, HIGH);
         Assert.assertEquals(result.size(), HIGH);
         Assert.assertTrue(list.containsAll(result));
 
         // Sample double the size from full domain
-        result = util.sample(list, HIGH * 2);
+        result = RandomUtil.sample(random, list, HIGH * 2);
         Assert.assertEquals(result.size(), HIGH * 2);
         Assert.assertTrue(list.containsAll(result));
 

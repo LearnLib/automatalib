@@ -154,7 +154,7 @@ public class MutableAutomatonTest {
 
         for (S s : automaton) {
             for (I i : alphabet) {
-                final TP tProp = RandomUtil.choose(transProps, RANDOM);
+                final TP tProp = RandomUtil.choose(RANDOM, transProps);
                 final S succ = stateIDs.getState(RANDOM.nextInt(automaton.size()));
                 final T trans = automaton.createTransition(succ, null);
 
@@ -162,16 +162,16 @@ public class MutableAutomatonTest {
                 automaton.setTransitions(s, i, Collections.singleton(trans));
             }
 
-            final SP sProp = RandomUtil.choose(stateProps, RANDOM);
+            final SP sProp = RandomUtil.choose(RANDOM, stateProps);
             automaton.setStateProperty(s, sProp);
         }
     }
 
     private <M extends MutableAutomaton<S, I, T, SP, TP>, S, I, T, SP, TP> void addInitialAndCheck(M automaton,
                                                                                                    List<SP> stateProps) {
-        final S tmp = RandomUtil.choose(new ArrayList<>(automaton.getStates()), RANDOM);
+        final S tmp = RandomUtil.choose(RANDOM, new ArrayList<>(automaton.getStates()));
         final SP tmpSp = automaton.getStateProperty(tmp);
-        final SP sp = RandomUtil.choose(stateProps, RANDOM);
+        final SP sp = RandomUtil.choose(RANDOM, stateProps);
 
         final S init = automaton.addInitialState(sp);
 

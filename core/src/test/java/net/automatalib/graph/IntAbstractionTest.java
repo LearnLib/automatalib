@@ -64,7 +64,7 @@ public class IntAbstractionTest {
                                                 List<EP> edgeProperties) {
 
         for (int j = 0; j < size; j++) {
-            final NP np = RandomUtil.choose(nodeProperties, random);
+            final NP np = RandomUtil.choose(random, nodeProperties);
 
             graph.addNode(np);
             abstraction.addIntNode(np);
@@ -74,7 +74,7 @@ public class IntAbstractionTest {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (random.nextBoolean()) { // connect
-                    final EP ep = RandomUtil.choose(edgeProperties, random);
+                    final EP ep = RandomUtil.choose(random, edgeProperties);
 
                     if (random.nextBoolean()) { // direct EP
                         final E1 ge = graph.connect(nodeIDs.getNode(i), nodeIDs.getNode(j));
