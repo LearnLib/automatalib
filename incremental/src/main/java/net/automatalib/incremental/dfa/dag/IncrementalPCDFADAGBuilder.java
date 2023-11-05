@@ -54,7 +54,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
     }
 
     @Override
-    protected State getState(Word<? extends I> word) {
+    State getState(Word<? extends I> word) {
 
         if (init.getAcceptance() == Acceptance.FALSE) {
             return sink;
@@ -77,7 +77,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         State curr = init;
         State conf = null;
 
-        Deque<PathElem> path = new ArrayDeque<>();
+        Deque<Transition> path = new ArrayDeque<>();
 
         for (I sym : word) {
             if (curr.getAcceptance() == Acceptance.FALSE) {
@@ -97,7 +97,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
             if (succ == null) {
                 break;
             }
-            path.push(new PathElem(curr, idx));
+            path.push(new Transition(curr, idx));
             curr = succ;
         }
 
@@ -145,7 +145,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                 }
                 last = hiddenClone(last);
                 if (conf == null) {
-                    PathElem peek = path.peek();
+                    Transition peek = path.peek();
                     assert peek != null;
                     State prev = peek.state;
                     if (prev != init) {
@@ -173,7 +173,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
                 // the suffixState may be part of our current path and become confluent due to un-hiding
                 if (suffixState.isConfluence()) {
                     // update the reference with whatever state comes first
-                    final Iterator<PathElem> iter = path.descendingIterator();
+                    final Iterator<Transition> iter = path.descendingIterator();
                     while (iter.hasNext()) {
                         final State s = iter.next().state;
                         if (s == conf || s == suffixState) {
@@ -196,7 +196,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         }
 
         if (conf != null) {
-            PathElem next;
+            Transition next;
             do {
                 next = path.pop();
                 State state = next.state;
@@ -211,7 +211,7 @@ public class IncrementalPCDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuil
         }
 
         while (path.size() > 1) {
-            PathElem next = path.pop();
+            Transition next = path.pop();
             State state = next.state;
             int idx = next.transIdx;
 

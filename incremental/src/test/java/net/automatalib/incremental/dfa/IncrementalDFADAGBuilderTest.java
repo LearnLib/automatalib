@@ -35,6 +35,11 @@ public class IncrementalDFADAGBuilderTest extends AbstractIncrementalDFABuilderT
         return new IncrementalDFADAGBuilder<>(alphabet);
     }
 
+    @Override
+    protected String getDOTResource() {
+        return "/dfa/dag.dot";
+    }
+
     /**
      * This tests case validates a set of traces from an external system which exposed an issue in confluence
      * propagation.

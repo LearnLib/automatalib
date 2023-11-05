@@ -26,4 +26,9 @@ public class IncrementalMooreTreeBuilderTest extends AbstractIncrementalMooreBui
     protected <I, O> IncrementalMooreBuilder<I, O> createIncrementalMooreBuilder(Alphabet<I> alphabet) {
         return new IncrementalMooreTreeBuilder<>(alphabet);
     }
+
+    @Override
+    protected String getDOTResource() {
+        return "/moore/tree.dot";
+    }
 }

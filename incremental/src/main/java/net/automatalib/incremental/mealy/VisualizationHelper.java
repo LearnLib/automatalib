@@ -15,30 +15,37 @@
  */
 package net.automatalib.incremental.mealy;
 
-import net.automatalib.incremental.ConflictException;
-import net.automatalib.word.Word;
+import java.util.Map;
+
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.visualization.MealyVisualizationHelper;
 
 /**
- * General interface for incremental Mealy builders.
+ * A utility class for rendering {@link IncrementalMealyBuilder}s.
  *
+ * @param <S>
+ *         state type
  * @param <I>
  *         input symbol type
+ * @param <T>
+ *         transition type
  * @param <O>
  *         output symbol type
  */
-public interface IncrementalMealyBuilder<I, O> extends MealyBuilder<I, O> {
+public class VisualizationHelper<S, I, T, O> extends MealyVisualizationHelper<S, I, T, O> {
 
-    /**
-     * Incorporates a pair of input/output words into the stored information.
-     *
-     * @param inputWord
-     *         the input word
-     * @param outputWord
-     *         the corresponding output word
-     *
-     * @throws ConflictException
-     *         if this information conflicts with information already stored
-     */
-    void insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
+    private int idx;
 
+    public VisualizationHelper(MealyMachine<S, I, T, O> mealy) {
+        super(mealy);
+    }
+
+    @Override
+    public boolean getNodeProperties(S node, Map<String, String> properties) {
+        super.getNodeProperties(node, properties);
+
+        properties.put(NodeAttrs.LABEL, "n" + (idx++));
+
+        return true;
+    }
 }

@@ -27,4 +27,9 @@ public class IncrementalDFATreeBuilderTest extends AbstractIncrementalDFABuilder
         return new IncrementalDFATreeBuilder<>(alphabet);
     }
 
+    @Override
+    protected String getDOTResource() {
+        return "/dfa/tree.dot";
+    }
+
 }

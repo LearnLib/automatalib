@@ -16,12 +16,12 @@
 package net.automatalib.incremental.moore.dag;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,20 +31,24 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.automaton.transducer.MooreMachine.MooreGraphView;
+import net.automatalib.automaton.visualization.MooreVisualizationHelper;
 import net.automatalib.common.util.IntDisjointSets;
 import net.automatalib.common.util.UnionFind;
+import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.moore.AbstractGraphView;
 import net.automatalib.incremental.moore.IncrementalMooreBuilder;
 import net.automatalib.ts.output.MooreTransitionSystem;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * Incrementally builds an (acyclic) Moore machine, from a set of input and corresponding output words.
+ * Incrementally builds an (acyclic) Moore machine from a set of input and corresponding output words.
  *
  * @param <I>
  *         input symbol class
@@ -53,7 +57,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder<I, O>, InputAlphabetHolder<I> {
 
-    private final Map<@Nullable StateSignature<O>, State<O>> register = new HashMap<>();
+    private final Map<@Nullable StateSignature<O>, State<O>> register;
     private final Alphabet<I> inputAlphabet;
     private int alphabetSize;
     private @MonotonicNonNull State<O> init;
@@ -65,6 +69,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
      *         the input alphabet to use
      */
     public IncrementalMooreDAGBuilder(Alphabet<I> inputAlphabet) {
+        this.register = new LinkedHashMap<>();
         this.inputAlphabet = inputAlphabet;
         this.alphabetSize = inputAlphabet.size();
     }
@@ -153,7 +158,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
         State<O> curr = init;
         State<O> conf = null;
 
-        Deque<PathElem<O>> path = new ArrayDeque<>();
+        Deque<Transition<O>> path = new ArrayDeque<>();
 
         // Find the internal state in the automaton that can be reached by a
         // maximal prefix of the word (i.e., a path of secured information)
@@ -177,7 +182,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
                         "Error inserting " + word.prefix(path.size() + 1) + " / " + outputWord.prefix(path.size() + 1) +
                         ": Incompatible output symbols: " + outSym + " vs " + curr.getOutput());
             }
-            path.push(new PathElem<>(curr, idx));
+            path.push(new Transition<>(curr, idx));
             curr = succ;
         }
 
@@ -197,7 +202,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
             }
             last = hiddenClone(last);
             if (conf == null) {
-                PathElem<O> peek = path.peek();
+                Transition<O> peek = path.peek();
                 assert peek != null;
                 State<O> prev = peek.state;
                 if (prev != init) {
@@ -229,7 +234,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
             // the suffixState may be part of our current path and become confluent due to un-hiding
             if (suffixState.isConfluence()) {
                 // update the reference with whatever state comes first
-                final Iterator<PathElem<O>> iter = path.descendingIterator();
+                final Iterator<Transition<O>> iter = path.descendingIterator();
                 while (iter.hasNext()) {
                     final State<O> s = iter.next().state;
                     if (s == conf || s == suffixState) {
@@ -250,7 +255,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
             // If there was a confluence state, we have to clone all nodes on
             // the prefix path up to this state, in order to separate it from other
             // prefixes reaching the confluence state (we do not know anything about them plus the suffix).
-            PathElem<O> next;
+            Transition<O> next;
             do {
                 next = path.pop();
                 State<O> state = next.state;
@@ -262,7 +267,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
 
         // Finally, we have to refresh all the signatures, iterating backwards until the updating becomes stable.
         while (path.size() > 1) {
-            PathElem<O> next = path.pop();
+            Transition<O> next = path.pop();
             State<O> state = next.state;
             int idx = next.transIdx;
 
@@ -461,16 +466,6 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
     }
 
     @Override
-    public GraphView asGraph() {
-        return new GraphView();
-    }
-
-    @Override
-    public AutomatonView asTransitionSystem() {
-        return new AutomatonView();
-    }
-
-    @Override
     public @Nullable Word<I> findSeparatingWord(MooreMachine<?, I, ?, O> target,
                                                 Collection<? extends I> inputs,
                                                 boolean omitUndefined) {
@@ -589,6 +584,35 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
         return inputAlphabet;
     }
 
+    @Override
+    public MooreTransitionSystem<?, I, ?, O> asTransitionSystem() {
+        return new AutomatonView();
+    }
+
+    @Override
+    public Graph<?, ?> asGraph() {
+        return new MooreGraphView<State<O>, I, State<O>, O, AutomatonView>(new AutomatonView(), inputAlphabet) {
+
+            @Override
+            public VisualizationHelper<State<O>, TransitionEdge<I, State<O>>> getVisualizationHelper() {
+                return new MooreVisualizationHelper<State<O>, I, State<O>, O>(automaton) {
+
+                    @Override
+                    public boolean getNodeProperties(State<O> node, Map<String, String> properties) {
+                        super.getNodeProperties(node, properties);
+
+                        properties.put(NodeAttrs.LABEL, String.valueOf(node.getOutput()));
+                        if (node.isConfluence()) {
+                            properties.put(NodeAttrs.SHAPE, NodeShapes.OCTAGON);
+                        }
+
+                        return true;
+                    }
+                };
+            }
+        };
+    }
+
     // /////////////////////////////////////////////////////////////////////
     // Equivalence test //
     // /////////////////////////////////////////////////////////////////////
@@ -619,47 +643,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
         }
     }
 
-    public class GraphView extends AbstractGraphView<I, O, State<O>, TransitionRecord<O>> {
-
-        @Override
-        public Collection<TransitionRecord<O>> getOutgoingEdges(State<O> node) {
-            List<TransitionRecord<O>> edges = new ArrayList<>(alphabetSize);
-            for (int i = 0; i < alphabetSize; i++) {
-                if (node.getSuccessor(i) != null) {
-                    edges.add(new TransitionRecord<>(node, i));
-                }
-            }
-            return edges;
-        }
-
-        @Override
-        public State<O> getTarget(TransitionRecord<O> edge) {
-            return edge.source.getSuccessor(edge.transIdx);
-        }
-
-        @Override
-        public Collection<State<O>> getNodes() {
-            return Collections.unmodifiableCollection(register.values());
-        }
-
-        @Override
-        public I getInputSymbol(TransitionRecord<O> edge) {
-            return inputAlphabet.getSymbol(edge.transIdx);
-        }
-
-        @Override
-        public O getOutputSymbol(State<O> node) {
-            return node.getOutput();
-        }
-
-        @Override
-        public @Nullable State<O> getInitialNode() {
-            return init;
-        }
-
-    }
-
-    public class AutomatonView implements MooreTransitionSystem<State<O>, I, TransitionRecord<O>, O> {
+    private class AutomatonView implements MooreMachine<State<O>, I, State<O>, O> {
 
         @Override
         public O getStateOutput(State<O> state) {
@@ -667,18 +651,23 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
         }
 
         @Override
-        public @Nullable TransitionRecord<O> getTransition(State<O> state, I input) {
-            return new TransitionRecord<>(state, inputAlphabet.getSymbolIndex(input));
+        public @Nullable State<O> getTransition(State<O> state, I input) {
+            return state.getSuccessor(inputAlphabet.getSymbolIndex(input));
         }
 
         @Override
-        public State<O> getSuccessor(TransitionRecord<O> transition) {
-            return transition.source.getSuccessor(transition.transIdx);
+        public State<O> getSuccessor(State<O> transition) {
+            return transition;
         }
 
         @Override
         public @Nullable State<O> getInitialState() {
             return init;
+        }
+
+        @Override
+        public Collection<State<O>> getStates() {
+            return Collections.unmodifiableCollection(register.values());
         }
     }
 }

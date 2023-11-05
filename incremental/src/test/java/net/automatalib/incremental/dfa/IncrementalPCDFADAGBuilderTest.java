@@ -35,6 +35,11 @@ public class IncrementalPCDFADAGBuilderTest extends AbstractIncrementalPCDFABuil
         return new IncrementalPCDFADAGBuilder<>(alphabet);
     }
 
+    @Override
+    protected String getDOTResource() {
+        return "/dfa/pc_dag.dot";
+    }
+
     /**
      * This tests case validates a set of traces from an external system which exposed an issue in confluence
      * propagation.

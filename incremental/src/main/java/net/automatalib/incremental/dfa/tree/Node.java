@@ -22,7 +22,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 /**
  * A node in the tree internally used by {@link IncrementalDFATreeBuilder}.
  */
-public final class Node {
+final class Node {
 
     private Acceptance acceptance;
     private @Nullable ResizingArrayStorage<Node> children;
@@ -30,7 +30,7 @@ public final class Node {
     /**
      * Constructor. Constructs a new node with no children and an acceptance value of {@link Acceptance#DONT_KNOW}
      */
-    public Node() {
+    Node() {
         this(Acceptance.DONT_KNOW);
     }
 
@@ -40,7 +40,7 @@ public final class Node {
      * @param acceptance
      *         the acceptance value for the node
      */
-    public Node(Acceptance acceptance) {
+    Node(Acceptance acceptance) {
         this.acceptance = acceptance;
     }
 
@@ -49,7 +49,7 @@ public final class Node {
      *
      * @return the acceptance value of this node
      */
-    public Acceptance getAcceptance() {
+    Acceptance getAcceptance() {
         return acceptance;
     }
 
@@ -59,7 +59,7 @@ public final class Node {
      * @param acceptance
      *         the new acceptance value for this node
      */
-    public void setAcceptance(Acceptance acceptance) {
+    void setAcceptance(Acceptance acceptance) {
         this.acceptance = acceptance;
     }
 
@@ -71,7 +71,7 @@ public final class Node {
      *
      * @return the child for the given index, or {@code null} if there is no such child
      */
-    public @Nullable Node getChild(int idx) {
+    @Nullable Node getChild(int idx) {
         if (children == null) {
             return null;
         }
@@ -88,14 +88,14 @@ public final class Node {
      * @param child
      *         the new child
      */
-    public void setChild(int idx, int alphabetSize, Node child) {
+    void setChild(int idx, int alphabetSize, Node child) {
         if (children == null) {
             children = new ResizingArrayStorage<>(Node.class, alphabetSize);
         }
         children.array[idx] = child;
     }
 
-    public void makeSink() {
+    void makeSink() {
         children = null;
         acceptance = Acceptance.FALSE;
     }
@@ -103,11 +103,9 @@ public final class Node {
     /**
      * See {@link ResizingArrayStorage#ensureCapacity(int)}.
      */
-    boolean ensureInputCapacity(int capacity) {
-        if (this.children == null) {
-            return false;
+    void ensureInputCapacity(int capacity) {
+        if (this.children != null) {
+            this.children.ensureCapacity(capacity);
         }
-
-        return this.children.ensureCapacity(capacity);
     }
 }

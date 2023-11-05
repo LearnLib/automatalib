@@ -24,9 +24,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <O>
  *         output symbol type
  */
-public final class Node<O> {
+final class Node<O> {
 
-    private O output;
+    private final O output;
     private @Nullable ResizingArrayStorage<Node<O>> children;
 
     /**
@@ -35,7 +35,7 @@ public final class Node<O> {
      * @param output
      *         the output value for the node
      */
-    public Node(O output) {
+    Node(O output) {
         this.output = output;
     }
 
@@ -44,18 +44,8 @@ public final class Node<O> {
      *
      * @return the output value of this node
      */
-    public O getOutput() {
+    O getOutput() {
         return output;
-    }
-
-    /**
-     * Sets the output value for this node.
-     *
-     * @param output
-     *         the new output value for this node
-     */
-    public void setOutput(O output) {
-        this.output = output;
     }
 
     /**
@@ -66,7 +56,7 @@ public final class Node<O> {
      *
      * @return the child for the given index, or {@code null} if there is no such child
      */
-    public @Nullable Node<O> getChild(int idx) {
+    @Nullable Node<O> getChild(int idx) {
         if (children == null) {
             return null;
         }
@@ -83,7 +73,7 @@ public final class Node<O> {
      * @param child
      *         the new child
      */
-    public void setChild(int idx, int alphabetSize, Node<O> child) {
+    void setChild(int idx, int alphabetSize, Node<O> child) {
         if (children == null) {
             children = new ResizingArrayStorage<>(Node.class, alphabetSize);
         }
@@ -93,11 +83,9 @@ public final class Node<O> {
     /**
      * See {@link ResizingArrayStorage#ensureCapacity(int)}.
      */
-    boolean ensureInputCapacity(int capacity) {
-        if (this.children == null) {
-            return false;
+    void ensureInputCapacity(int capacity) {
+        if (this.children != null) {
+            this.children.ensureCapacity(capacity);
         }
-
-        return this.children.ensureCapacity(capacity);
     }
 }

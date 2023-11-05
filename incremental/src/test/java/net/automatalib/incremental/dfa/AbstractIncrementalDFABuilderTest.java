@@ -15,22 +15,22 @@
  */
 package net.automatalib.incremental.dfa;
 
-import java.lang.reflect.InvocationTargetException;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
 
-import javax.swing.SwingUtilities;
-
+import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.GrowingMapAlphabet;
 import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.common.util.system.JVMUtil;
+import net.automatalib.common.util.IOUtil;
 import net.automatalib.incremental.ConflictException;
+import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.ts.UniversalDTS;
-import net.automatalib.visualization.Visualization;
 import net.automatalib.word.Word;
 import org.testng.Assert;
-import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -52,6 +52,8 @@ public abstract class AbstractIncrementalDFABuilderTest {
     }
 
     protected abstract <I> IncrementalDFABuilder<I> createIncrementalDFABuilder(Alphabet<I> alphabet);
+
+    protected abstract String getDOTResource();
 
     @Test
     public void testConfluenceBug() {
@@ -167,14 +169,18 @@ public abstract class AbstractIncrementalDFABuilderTest {
     }
 
     @Test(dependsOnMethods = "testLookup")
-    public void testVisualization() throws InvocationTargetException, InterruptedException {
-        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
-            throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
-        }
+    public void testVisualization() throws IOException {
+        final StringWriter dotWriter = new StringWriter();
+        final StringWriter expectedWriter = new StringWriter();
 
-        // invokeAndWait so that TestNG doesn't kill our GUI thread that we want to check.
-        SwingUtilities.invokeAndWait(() -> Visualization.visualize(incDfa.asGraph(), false));
+        try (Reader reader = IOUtil.asBufferedUTF8Reader(AbstractIncrementalDFABuilderTest.class.getResourceAsStream(
+                getDOTResource()))) {
+
+            GraphDOT.write(incDfa.asGraph(), dotWriter);
+            CharStreams.copy(reader, expectedWriter);
+
+            Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
+        }
     }
 
     @Test(dependsOnMethods = "testLookup")

@@ -36,6 +36,11 @@ public class IncrementalMooreDAGBuilderTest extends AbstractIncrementalMooreBuil
         return new IncrementalMooreDAGBuilder<>(alphabet);
     }
 
+    @Override
+    protected String getDOTResource() {
+        return "/moore/dag.dot";
+    }
+
     /**
      * This test is a slightly modified version of {@link IncrementalMealyDAGBuilderTest#testIntegration()}.
      */

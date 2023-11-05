@@ -22,6 +22,14 @@ import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.word.Word;
 
+/**
+ * Incrementally builds a tree with transition outputs from a set of input and corresponding output words.
+ *
+ * @param <I>
+ *         input symbol class
+ * @param <O>
+ *         output symbol class
+ */
 public class IncrementalMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTreeBuilder<I, O>
         implements IncrementalMealyBuilder<I, O> {
 

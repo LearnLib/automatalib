@@ -13,15 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.incremental.dfa.dag;
+package net.automatalib.incremental.mealy.dag;
 
-final class EdgeRecord {
+/**
+ * A transition in the DAG internally used by {@link IncrementalMealyDAGBuilder}.
+ *
+ * @param <O>
+ *         output symbol type
+ */
+final class Transition<O> {
 
-    public final State source;
-    public final int transIdx;
+    final State<O> state;
+    final int transIdx;
 
-    EdgeRecord(State source, int transIdx) {
-        this.source = source;
+    Transition(State<O> state, int transIdx) {
+        this.state = state;
         this.transIdx = transIdx;
     }
 

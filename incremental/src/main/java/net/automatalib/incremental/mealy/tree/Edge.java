@@ -15,21 +15,27 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-public final class Edge<N, O> {
+/**
+ * An edge in the tree internally used by {@link IncrementalMealyTreeBuilder}.
+ *
+ * @param <O>
+ *         output symbol type
+ */
+final class Edge<N, O> {
 
     private final O output;
     private final N target;
 
-    public Edge(O output, N target) {
+    Edge(O output, N target) {
         this.output = output;
         this.target = target;
     }
 
-    public O getOutput() {
+    O getOutput() {
         return output;
     }
 
-    public N getTarget() {
+    N getTarget() {
         return target;
     }
 }

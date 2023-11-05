@@ -19,9 +19,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine.MealyGraphView;
+import net.automatalib.common.util.mapping.MapMapping;
+import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.Graph;
+import net.automatalib.util.ts.traversal.TSTraversal;
+import net.automatalib.visualization.VisualizationHelper;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Node<O>, I, O>
@@ -61,17 +70,17 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
     }
 
     @Override
-    protected @Nullable Edge<Node<O>, O> getEdge(Node<O> node, I symbol) {
+    @Nullable Edge<Node<O>, O> getEdge(Node<O> node, I symbol) {
         return node.getEdge(inputAlphabet.getSymbolIndex(symbol));
     }
 
     @Override
-    protected Node<O> createNode() {
+    Node<O> createNode() {
         return new Node<>(alphabetSize);
     }
 
     @Override
-    protected Node<O> insertNode(Node<O> parent, I symIdx, O output) {
+    Node<O> insertNode(Node<O> parent, I symIdx, O output) {
         Node<O> succ = createNode();
         Edge<Node<O>, O> edge = new Edge<>(output, succ);
         parent.setEdge(inputAlphabet.getSymbolIndex(symIdx), edge);
@@ -79,19 +88,38 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
     }
 
     @Override
-    protected Collection<AnnotatedEdge<Node<O>, I, O>> getOutgoingEdges(Node<O> node) {
-        List<AnnotatedEdge<Node<O>, I, O>> result = new ArrayList<>(alphabetSize);
-        for (int i = 0; i < alphabetSize; i++) {
-            Edge<Node<O>, O> edge = node.getEdge(i);
-            if (edge != null) {
-                result.add(new AnnotatedEdge<>(edge, inputAlphabet.getSymbol(i)));
-            }
-        }
-        return result;
+    public Alphabet<I> getInputAlphabet() {
+        return inputAlphabet;
     }
 
     @Override
-    public Alphabet<I> getInputAlphabet() {
-        return inputAlphabet;
+    public Graph<Node<O>, ?> asGraph() {
+        return new MealyGraphView<Node<O>, I, Edge<Node<O>, O>, O, MealyMachineView>(new MealyMachineView(),
+                                                                                     inputAlphabet) {
+            @Override
+            public VisualizationHelper<Node<O>, TransitionEdge<I, Edge<Node<O>, O>>> getVisualizationHelper() {
+                return new net.automatalib.incremental.mealy.VisualizationHelper<>(automaton);
+            }
+        };
+    }
+
+    private class MealyMachineView extends TransitionSystemView
+            implements MealyMachine<Node<O>, I, Edge<Node<O>, O>, O> {
+
+        @Override
+        public Collection<Node<O>> getStates() {
+            List<Node<O>> result = new ArrayList<>();
+            Iterators.addAll(result, TSTraversal.breathFirstIterator(this, inputAlphabet));
+            return result;
+        }
+
+        /*
+         * We need to override the default MooreMachine mapping, because its StateIDStaticMapping class requires our
+         * nodeIDs, which requires our states, which requires our nodeIDs, which requires ... infinite loop!
+         */
+        @Override
+        public <V> MutableMapping<Node<O>, V> createStaticStateMapping() {
+            return new MapMapping<>();
+        }
     }
 }

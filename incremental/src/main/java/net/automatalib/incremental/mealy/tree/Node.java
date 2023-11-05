@@ -18,6 +18,12 @@ package net.automatalib.incremental.mealy.tree;
 import net.automatalib.common.smartcollection.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A node in the tree internally used by {@link IncrementalMealyTreeBuilder}.
+ *
+ * @param <O>
+ *         output symbol type
+ */
 final class Node<O> {
 
     private final ResizingArrayStorage<@Nullable Edge<Node<O>, O>> outEdges;
@@ -45,7 +51,7 @@ final class Node<O> {
     /**
      * See {@link ResizingArrayStorage#ensureCapacity(int)}.
      */
-    boolean ensureInputCapacity(int capacity) {
-        return this.outEdges.ensureCapacity(capacity);
+    void ensureInputCapacity(int capacity) {
+        this.outEdges.ensureCapacity(capacity);
     }
 }

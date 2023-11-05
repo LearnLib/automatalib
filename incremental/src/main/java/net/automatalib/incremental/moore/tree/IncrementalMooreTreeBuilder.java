@@ -18,26 +18,40 @@ package net.automatalib.incremental.moore.tree;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.transducer.MooreMachine;
+import net.automatalib.automaton.transducer.MooreMachine.MooreGraphView;
+import net.automatalib.automaton.visualization.MooreVisualizationHelper;
+import net.automatalib.common.util.mapping.MapMapping;
+import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.moore.AbstractGraphView;
 import net.automatalib.incremental.moore.IncrementalMooreBuilder;
 import net.automatalib.ts.output.MooreTransitionSystem;
-import net.automatalib.util.graph.traversal.GraphTraversal;
+import net.automatalib.util.ts.traversal.TSTraversal;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * Incrementally builds a (tree-based) Moore machine from a set of input and corresponding output words.
+ *
+ * @param <I>
+ *         input symbol class
+ * @param <O>
+ *         output symbol class
+ */
 public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilder<I, O> {
 
     private final Alphabet<I> alphabet;
@@ -80,9 +94,9 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    protected <S, T> @Nullable Word<I> doFindSeparatingWord(MooreMachine<S, I, T, O> target,
-                                                            Collection<? extends I> inputs,
-                                                            boolean omitUndefined) {
+    private <S, T> @Nullable Word<I> doFindSeparatingWord(MooreMachine<S, I, T, O> target,
+                                                          Collection<? extends I> inputs,
+                                                          boolean omitUndefined) {
         S init2 = target.getInitialState();
 
         if (root == null && init2 == null) {
@@ -189,23 +203,37 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
     }
 
     @Override
-    public GraphView asGraph() {
-        return new GraphView();
-    }
-
-    @Override
-    public TransitionSystemView asTransitionSystem() {
+    public MooreTransitionSystem<?, I, ?, O> asTransitionSystem() {
         return new TransitionSystemView();
     }
 
-    protected static final class Record<S, I, O> {
+    @Override
+    public Graph<?, ?> asGraph() {
+        return new MooreGraphView<Node<O>, I, Node<O>, O, TransitionSystemView>(new TransitionSystemView(), alphabet) {
+
+            @Override
+            public VisualizationHelper<Node<O>, TransitionEdge<I, Node<O>>> getVisualizationHelper() {
+                return new MooreVisualizationHelper<Node<O>, I, Node<O>, O>(automaton) {
+
+                    @Override
+                    public boolean getNodeProperties(Node<O> node, Map<String, String> properties) {
+                        super.getNodeProperties(node, properties);
+                        properties.put(NodeAttrs.LABEL, String.valueOf(node.getOutput()));
+                        return true;
+                    }
+                };
+            }
+        };
+    }
+
+    private static final class Record<S, I, O> {
 
         public final S automatonState;
         public final Node<O> treeNode;
         public final I incomingInput;
         public final Iterator<? extends I> inputIt;
 
-        public Record(S automatonState, Node<O> treeNode, I incomingInput, Iterator<? extends I> inputIt) {
+        Record(S automatonState, Node<O> treeNode, I incomingInput, Iterator<? extends I> inputIt) {
             this.automatonState = automatonState;
             this.treeNode = treeNode;
             this.incomingInput = incomingInput;
@@ -213,49 +241,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
         }
     }
 
-    public class GraphView extends AbstractGraphView<I, O, Node<O>, Edge<I, O>> {
-
-        @Override
-        public Collection<Node<O>> getNodes() {
-            List<Node<O>> result = new ArrayList<>();
-            Iterators.addAll(result, GraphTraversal.depthFirstIterator(this, Collections.singleton(root)));
-            return result;
-        }
-
-        @Override
-        public Collection<Edge<I, O>> getOutgoingEdges(Node<O> node) {
-            List<Edge<I, O>> result = new ArrayList<>(alphabetSize);
-            for (int i = 0; i < alphabetSize; i++) {
-                Node<O> succ = node.getChild(i);
-                if (succ != null) {
-                    result.add(new Edge<>(alphabet.getSymbol(i), succ));
-                }
-            }
-            return result;
-        }
-
-        @Override
-        public Node<O> getTarget(Edge<I, O> edge) {
-            return edge.getSucc();
-        }
-
-        @Override
-        public I getInputSymbol(Edge<I, O> edge) {
-            return edge.getInput();
-        }
-
-        @Override
-        public O getOutputSymbol(Node<O> node) {
-            return node.getOutput();
-        }
-
-        @Override
-        public @Nullable Node<O> getInitialNode() {
-            return root;
-        }
-    }
-
-    public class TransitionSystemView implements MooreTransitionSystem<Node<O>, I, Edge<I, O>, O> {
+    private class TransitionSystemView implements MooreMachine<Node<O>, I, Node<O>, O> {
 
         @Override
         public @Nullable Node<O> getInitialState() {
@@ -268,14 +254,29 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
         }
 
         @Override
-        public @Nullable Edge<I, O> getTransition(Node<O> state, I input) {
-            final Node<O> child = state.getChild(alphabet.getSymbolIndex(input));
-            return child == null ? null : new Edge<>(input, child);
+        public @Nullable Node<O> getTransition(Node<O> state, I input) {
+            return state.getChild(alphabet.getSymbolIndex(input));
         }
 
         @Override
-        public Node<O> getSuccessor(Edge<I, O> transition) {
-            return transition.getSucc();
+        public Node<O> getSuccessor(Node<O> transition) {
+            return transition;
+        }
+
+        @Override
+        public Collection<Node<O>> getStates() {
+            List<Node<O>> result = new ArrayList<>();
+            Iterators.addAll(result, TSTraversal.breathFirstIterator(this, alphabet));
+            return result;
+        }
+
+        /*
+         * We need to override the default MooreMachine mapping, because its StateIDStaticMapping class requires our
+         * nodeIDs, which requires our states, which requires our nodeIDs, which requires ... infinite loop!
+         */
+        @Override
+        public <V> MutableMapping<Node<O>, V> createStaticStateMapping() {
+            return new MapMapping<>();
         }
     }
 }

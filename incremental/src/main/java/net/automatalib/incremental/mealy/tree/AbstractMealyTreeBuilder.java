@@ -16,33 +16,25 @@
 package net.automatalib.incremental.mealy.tree;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-import com.google.common.collect.Iterators;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.incremental.mealy.AbstractGraphView;
 import net.automatalib.incremental.mealy.MealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
-import net.automatalib.util.graph.traversal.GraphTraversal;
-import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<I, O> {
+abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<I, O> {
 
-    protected final N root;
+    final N root;
 
-    public AbstractMealyTreeBuilder(N root) {
+    AbstractMealyTreeBuilder(N root) {
         this.root = root;
     }
 
@@ -60,16 +52,6 @@ public abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<
         }
 
         return true;
-    }
-
-    @Override
-    public GraphView asGraph() {
-        return new GraphView();
-    }
-
-    @Override
-    public TransitionSystemView asTransitionSystem() {
-        return new TransitionSystemView();
     }
 
     @Override
@@ -135,13 +117,16 @@ public abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<
         return null;
     }
 
-    protected abstract @Nullable Edge<N, O> getEdge(N node, I symbol);
+    @Override
+    public MealyTransitionSystem<?, I, ?, O> asTransitionSystem() {
+        return new TransitionSystemView();
+    }
 
-    protected abstract N createNode();
+    abstract @Nullable Edge<N, O> getEdge(N node, I symbol);
 
-    protected abstract N insertNode(N parent, I symIdx, O output);
+    abstract N createNode();
 
-    protected abstract Collection<AnnotatedEdge<N, I, O>> getOutgoingEdges(N node);
+    abstract N insertNode(N parent, I symIdx, O output);
 
     private static final class Record<S, N, I> {
 
@@ -158,60 +143,7 @@ public abstract class AbstractMealyTreeBuilder<N, I, O> implements MealyBuilder<
         }
     }
 
-    public class GraphView extends AbstractGraphView<I, O, N, AnnotatedEdge<N, I, O>> {
-
-        @Override
-        public Collection<N> getNodes() {
-            List<N> result = new ArrayList<>();
-            Iterators.addAll(result, GraphTraversal.depthFirstIterator(this, Collections.singleton(root)));
-            return result;
-        }
-
-        @Override
-        public Collection<AnnotatedEdge<N, I, O>> getOutgoingEdges(N node) {
-            return AbstractMealyTreeBuilder.this.getOutgoingEdges(node);
-        }
-
-        @Override
-        public N getTarget(AnnotatedEdge<N, I, O> edge) {
-            return edge.getTarget();
-        }
-
-        @Override
-        public I getInputSymbol(AnnotatedEdge<N, I, O> edge) {
-            return edge.getInput();
-        }
-
-        @Override
-        public O getOutputSymbol(AnnotatedEdge<N, I, O> edge) {
-            return edge.getOutput();
-        }
-
-        @Override
-        public N getInitialNode() {
-            return root;
-        }
-
-        @Override
-        public VisualizationHelper<N, AnnotatedEdge<N, I, O>> getVisualizationHelper() {
-            return new DelegateVisualizationHelper<N, AnnotatedEdge<N, I, O>>(super.getVisualizationHelper()) {
-
-                private int id;
-
-                @Override
-                public boolean getNodeProperties(N node, Map<String, String> properties) {
-                    super.getNodeProperties(node, properties);
-
-                    properties.put(NodeAttrs.LABEL, "n" + (id++));
-
-                    return true;
-                }
-            };
-        }
-
-    }
-
-    public class TransitionSystemView implements MealyTransitionSystem<N, I, Edge<N, O>, O> {
+    class TransitionSystemView implements MealyTransitionSystem<N, I, Edge<N, O>, O> {
 
         @Override
         public @Nullable Edge<N, O> getTransition(N state, I input) {

@@ -1,0 +1,21 @@
+digraph g {
+
+	s0 [shape="doublecircle" label="n0"];
+	s1 [shape="doublecircle" label="n1"];
+	s2 [shape="doublecircle" label="n2"];
+	s3 [shape="doublecircle" label="n3"];
+	s4 [shape="doublecircle" label="n4"];
+	s5 [shape="circle" label="n5"];
+	s0 -> s1 [label="a"];
+	s1 -> s2 [label="b"];
+	s1 -> s3 [label="c"];
+	s2 -> s4 [label="c"];
+	s3 -> s5 [label="b"];
+	s5 -> s5 [label="a"];
+	s5 -> s5 [label="b"];
+	s5 -> s5 [label="c"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
+}

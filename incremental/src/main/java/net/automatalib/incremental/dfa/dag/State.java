@@ -24,7 +24,7 @@ import net.automatalib.incremental.dfa.Acceptance;
  */
 final class State {
 
-    public static final State SINK = new State(new StateSignature(0, Acceptance.FALSE));
+    static final State SINK = new State(new StateSignature(0, Acceptance.FALSE));
 
     private final StateSignature signature;
     private int numIncoming;
@@ -43,14 +43,14 @@ final class State {
     /**
      * Increases the number of incoming transitions.
      */
-    public void increaseIncoming() {
+    void increaseIncoming() {
         numIncoming++;
     }
 
     /**
      * Decreases the number of incoming transitions.
      */
-    public void decreaseIncoming() {
+    void decreaseIncoming() {
         numIncoming--;
     }
 
@@ -59,7 +59,7 @@ final class State {
      *
      * @return {@code true} if this node is a confluence node, {@code false} otherwise.
      */
-    public boolean isConfluence() {
+    boolean isConfluence() {
         return numIncoming > 1;
     }
 
@@ -68,7 +68,7 @@ final class State {
      *
      * @return the acceptance status of this node.
      */
-    public Acceptance getAcceptance() {
+    Acceptance getAcceptance() {
         if (signature == null) {
             return Acceptance.FALSE;
         }
@@ -83,7 +83,7 @@ final class State {
      *
      * @return the successor state for the given index
      */
-    public State getSuccessor(int idx) {
+    State getSuccessor(int idx) {
         return signature.successors.array[idx];
     }
 
@@ -92,7 +92,7 @@ final class State {
      *
      * @return the state's signature
      */
-    public StateSignature getSignature() {
+    StateSignature getSignature() {
         return signature;
     }
 
@@ -104,14 +104,14 @@ final class State {
         return "s";
     }
 
-    public boolean isSink() {
+    boolean isSink() {
         return this == SINK;
     }
 
     /**
      * See {@link ResizingArrayStorage#ensureCapacity(int)}.
      */
-    boolean ensureInputCapacity(int capacity) {
-        return signature.successors.ensureCapacity(capacity);
+    void ensureInputCapacity(int capacity) {
+        signature.successors.ensureCapacity(capacity);
     }
 }

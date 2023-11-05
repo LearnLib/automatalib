@@ -27,4 +27,9 @@ public class IncrementalPCDFATreeBuilderTest extends AbstractIncrementalPCDFABui
         return new IncrementalPCDFATreeBuilder<>(alphabet);
     }
 
+    @Override
+    protected String getDOTResource() {
+        return "/dfa/pc_tree.dot";
+    }
+
 }

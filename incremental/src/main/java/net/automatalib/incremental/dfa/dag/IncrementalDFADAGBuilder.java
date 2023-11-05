@@ -80,7 +80,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
         State curr = init;
         State conf = null;
 
-        Deque<PathElem> path = new ArrayDeque<>();
+        Deque<Transition> path = new ArrayDeque<>();
 
         // Find the internal state in the automaton that can be reached by a
         // maximal prefix of the word (i.e., a path of secured information)
@@ -95,7 +95,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
             if (succ == null) {
                 break;
             }
-            path.push(new PathElem(curr, idx));
+            path.push(new Transition(curr, idx));
             curr = succ;
         }
 
@@ -139,7 +139,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                 // confluence always requires cloning, to separate this path from other paths
                 last = hiddenClone(last);
                 if (conf == null) {
-                    PathElem peek = path.peek();
+                    Transition peek = path.peek();
                     assert peek != null;
                     State prev = peek.state;
                     if (prev != init) {
@@ -167,7 +167,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
                 // the suffixState may be part of our current path and become confluent due to un-hiding
                 if (suffixState.isConfluence()) {
                     // update the reference with whatever state comes first
-                    final Iterator<PathElem> iter = path.descendingIterator();
+                    final Iterator<Transition> iter = path.descendingIterator();
                     while (iter.hasNext()) {
                         final State s = iter.next().state;
                         if (s == conf || s == suffixState) {
@@ -186,7 +186,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
         }
 
         if (conf != null) {
-            PathElem next;
+            Transition next;
             do {
                 next = path.pop();
                 State state = next.state;
@@ -197,7 +197,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
         }
 
         while (path.size() > 1) {
-            PathElem next = path.pop();
+            Transition next = path.pop();
             State state = next.state;
             int idx = next.transIdx;
 
@@ -259,7 +259,7 @@ public class IncrementalDFADAGBuilder<I> extends AbstractIncrementalDFADAGBuilde
      * @return the state reached by the given word, or {@code null} if no state is reachable by that word
      */
     @Override
-    protected @Nullable State getState(Word<? extends I> word) {
+    @Nullable State getState(Word<? extends I> word) {
         State s = init;
 
         for (I sym : word) {

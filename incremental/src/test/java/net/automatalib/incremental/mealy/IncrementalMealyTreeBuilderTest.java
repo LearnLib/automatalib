@@ -26,4 +26,9 @@ public class IncrementalMealyTreeBuilderTest extends AbstractIncrementalMealyBui
     protected <I, O> IncrementalMealyBuilder<I, O> createIncrementalMealyBuilder(Alphabet<I> alphabet) {
         return new IncrementalMealyTreeBuilder<>(alphabet);
     }
+
+    @Override
+    protected String getDOTResource() {
+        return "/mealy/tree.dot";
+    }
 }

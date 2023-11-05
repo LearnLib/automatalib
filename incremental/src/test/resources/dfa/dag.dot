@@ -1,0 +1,17 @@
+digraph g {
+
+	s0 [shape="doublecircle" label="n0"];
+	s1 [shape="doubleoctagon" label="n1"];
+	s2 [shape="circle" style="dashed" label="n2"];
+	s3 [shape="circle" style="dashed" label="n3"];
+	s4 [shape="circle" label="n4"];
+	s0 -> s3 [label="a"];
+	s2 -> s1 [label="c"];
+	s3 -> s2 [label="b"];
+	s3 -> s4 [label="c"];
+	s4 -> s1 [label="b"];
+
+__start0 [label="" shape="none" width="0" height="0"];
+__start0 -> s0;
+
+}

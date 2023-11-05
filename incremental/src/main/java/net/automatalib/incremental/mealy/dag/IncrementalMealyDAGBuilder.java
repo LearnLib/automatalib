@@ -16,12 +16,12 @@
 package net.automatalib.incremental.mealy.dag;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,15 +31,16 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine.MealyGraphView;
 import net.automatalib.common.util.IntDisjointSets;
 import net.automatalib.common.util.UnionFind;
+import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
-import net.automatalib.incremental.mealy.AbstractGraphView;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -54,7 +55,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder<I, O>, InputAlphabetHolder<I> {
 
-    private final Map<@Nullable StateSignature<O>, State<O>> register = new HashMap<>();
+    private final Map<@Nullable StateSignature<O>, State<O>> register;
     private final Alphabet<I> inputAlphabet;
     private int alphabetSize;
     private final State<O> init;
@@ -66,6 +67,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
      *         the input alphabet to use
      */
     public IncrementalMealyDAGBuilder(Alphabet<I> inputAlphabet) {
+        this.register = new LinkedHashMap<>();
         this.inputAlphabet = inputAlphabet;
         this.alphabetSize = inputAlphabet.size();
         StateSignature<O> initSig = new StateSignature<>(alphabetSize);
@@ -135,7 +137,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
         State<O> curr = init;
         State<O> conf = null;
 
-        Deque<PathElem<O>> path = new ArrayDeque<>();
+        Deque<Transition<O>> path = new ArrayDeque<>();
 
         // Find the internal state in the automaton that can be reached by a
         // maximal prefix of the word (i.e., a path of secured information)
@@ -160,7 +162,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
                         "Error inserting " + word.prefix(path.size() + 1) + " / " + outputWord.prefix(path.size() + 1) +
                         ": Incompatible output symbols: " + outSym + " vs " + curr.getOutput(idx));
             }
-            path.push(new PathElem<>(curr, idx));
+            path.push(new Transition<>(curr, idx));
             curr = succ;
         }
 
@@ -180,7 +182,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
             }
             last = hiddenClone(last);
             if (conf == null) {
-                PathElem<O> peek = path.peek();
+                Transition<O> peek = path.peek();
                 assert peek != null;
                 State<O> prev = peek.state;
                 if (prev != init) {
@@ -212,7 +214,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
             // the suffixState may be part of our current path and become confluent due to un-hiding
             if (suffixState.isConfluence()) {
                 // update the reference with whatever state comes first
-                final Iterator<PathElem<O>> iter = path.descendingIterator();
+                final Iterator<Transition<O>> iter = path.descendingIterator();
                 while (iter.hasNext()) {
                     final State<O> s = iter.next().state;
                     if (s == conf || s == suffixState) {
@@ -233,7 +235,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
             // If there was a confluence state, we have to clone all nodes on
             // the prefix path up to this state, in order to separate it from other
             // prefixes reaching the confluence state (we do not know anything about them plus the suffix).
-            PathElem<O> next;
+            Transition<O> next;
             do {
                 next = path.pop();
                 State<O> state = next.state;
@@ -245,7 +247,7 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
 
         // Finally, we have to refresh all the signatures, iterating backwards until the updating becomes stable.
         while (path.size() > 1) {
-            PathElem<O> next = path.pop();
+            Transition<O> next = path.pop();
             State<O> state = next.state;
             int idx = next.transIdx;
 
@@ -446,16 +448,6 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
     }
 
     @Override
-    public GraphView asGraph() {
-        return new GraphView();
-    }
-
-    @Override
-    public AutomatonView asTransitionSystem() {
-        return new AutomatonView();
-    }
-
-    @Override
     public @Nullable Word<I> findSeparatingWord(MealyMachine<?, I, ?, O> target,
                                                 Collection<? extends I> inputs,
                                                 boolean omitUndefined) {
@@ -571,6 +563,32 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
         return inputAlphabet;
     }
 
+    @Override
+    public MealyTransitionSystem<?, I, ?, O> asTransitionSystem() {
+        return new AutomatonView();
+    }
+
+    @Override
+    public Graph<?, ?> asGraph() {
+        return new MealyGraphView<State<O>, I, Transition<O>, O, AutomatonView>(new AutomatonView(), inputAlphabet) {
+
+            @Override
+            public VisualizationHelper<State<O>, TransitionEdge<I, Transition<O>>> getVisualizationHelper() {
+                return new net.automatalib.incremental.mealy.VisualizationHelper<State<O>, I, Transition<O>, O>(this.automaton) {
+
+                    @Override
+                    public boolean getNodeProperties(State<O> node, Map<String, String> properties) {
+                        super.getNodeProperties(node, properties);
+                        if (node.isConfluence()) {
+                            properties.put(NodeAttrs.SHAPE, NodeShapes.OCTAGON);
+                        }
+                        return true;
+                    }
+                };
+            }
+        };
+    }
+
     // /////////////////////////////////////////////////////////////////////
     // Equivalence test //
     // /////////////////////////////////////////////////////////////////////
@@ -601,72 +619,11 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
         }
     }
 
-    public class GraphView extends AbstractGraphView<I, O, State<O>, TransitionRecord<O>> {
+    private class AutomatonView implements MealyMachine<State<O>, I, Transition<O>, O> {
 
         @Override
-        public Collection<TransitionRecord<O>> getOutgoingEdges(State<O> node) {
-            List<TransitionRecord<O>> edges = new ArrayList<>(alphabetSize);
-            for (int i = 0; i < alphabetSize; i++) {
-                if (node.getSuccessor(i) != null) {
-                    edges.add(new TransitionRecord<>(node, i));
-                }
-            }
-            return edges;
-        }
-
-        @Override
-        public State<O> getTarget(TransitionRecord<O> edge) {
-            return edge.source.getSuccessor(edge.transIdx);
-        }
-
-        @Override
-        public Collection<State<O>> getNodes() {
-            return Collections.unmodifiableCollection(register.values());
-        }
-
-        @Override
-        public I getInputSymbol(TransitionRecord<O> edge) {
-            return inputAlphabet.getSymbol(edge.transIdx);
-        }
-
-        @Override
-        public O getOutputSymbol(TransitionRecord<O> edge) {
-            return edge.source.getOutput(edge.transIdx);
-        }
-
-        @Override
-        public State<O> getInitialNode() {
-            return init;
-        }
-
-        @Override
-        public VisualizationHelper<State<O>, TransitionRecord<O>> getVisualizationHelper() {
-            return new DelegateVisualizationHelper<State<O>, TransitionRecord<O>>(super.getVisualizationHelper()) {
-
-                private int id;
-
-                @Override
-                public boolean getNodeProperties(State<O> node, Map<String, String> properties) {
-                    super.getNodeProperties(node, properties);
-
-                    properties.put(NodeAttrs.LABEL, "n" + (id++));
-                    if (node.isConfluence()) {
-                        properties.put(NodeAttrs.SHAPE, NodeShapes.OCTAGON);
-                    }
-
-                    return true;
-                }
-
-            };
-        }
-
-    }
-
-    public class AutomatonView implements MealyTransitionSystem<State<O>, I, TransitionRecord<O>, O> {
-
-        @Override
-        public State<O> getSuccessor(TransitionRecord<O> transition) {
-            State<O> src = transition.source;
+        public State<O> getSuccessor(Transition<O> transition) {
+            State<O> src = transition.state;
             return src.getSuccessor(transition.transIdx);
         }
 
@@ -676,18 +633,23 @@ public class IncrementalMealyDAGBuilder<I, O> implements IncrementalMealyBuilder
         }
 
         @Override
-        public @Nullable TransitionRecord<O> getTransition(State<O> state, I input) {
+        public @Nullable Transition<O> getTransition(State<O> state, I input) {
             int inputIdx = inputAlphabet.getSymbolIndex(input);
             if (state.getSuccessor(inputIdx) == null) {
                 return null;
             }
-            return new TransitionRecord<>(state, inputIdx);
+            return new Transition<>(state, inputIdx);
         }
 
         @Override
-        public O getTransitionOutput(TransitionRecord<O> transition) {
-            State<O> src = transition.source;
+        public O getTransitionOutput(Transition<O> transition) {
+            State<O> src = transition.state;
             return src.getOutput(transition.transIdx);
+        }
+
+        @Override
+        public Collection<State<O>> getStates() {
+            return Collections.unmodifiableCollection(register.values());
         }
     }
 }

@@ -21,10 +21,16 @@ import java.util.Objects;
 import net.automatalib.common.smartcollection.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+/**
+ * A signature of a DAG state internally used by {@link IncrementalMooreDAGBuilder}.
+ *
+ * @param <O>
+ *         output symbol type
+ */
 final class StateSignature<O> {
 
-    public final ResizingArrayStorage<State<O>> successors;
-    public final O output;
+    final ResizingArrayStorage<State<O>> successors;
+    final O output;
     private int hashCode;
 
     StateSignature(int numSuccs, O output) {
@@ -39,11 +45,11 @@ final class StateSignature<O> {
         updateHashCode();
     }
 
-    public StateSignature<O> duplicate() {
+    StateSignature<O> duplicate() {
         return new StateSignature<>(this);
     }
 
-    public void updateHashCode() {
+    void updateHashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + Arrays.hashCode(successors.array);

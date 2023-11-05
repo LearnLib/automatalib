@@ -22,9 +22,15 @@ import java.util.Iterator;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
+import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
+import net.automatalib.ts.UniversalDTS;
+import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -53,9 +59,9 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
     }
 
     @Override
-    protected <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
-                                                         Collection<? extends I> inputs,
-                                                         boolean omitUndefined) {
+    <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
+                                               Collection<? extends I> inputs,
+                                               boolean omitUndefined) {
 
         S automatonInit = target.getInitialState();
         Acceptance rootAcc = root.getAcceptance();
@@ -158,8 +164,26 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
     }
 
     @Override
-    public TransitionSystemView asTransitionSystem() {
+    public UniversalDTS<?, I, ?, Acceptance, Void> asTransitionSystem() {
         return new TransitionSystemView();
+    }
+
+    @Override
+    public Graph<?, ?> asGraph() {
+        return new UniversalAutomatonGraphView<Node, I, Node, Acceptance, Void, TransitionSystemView>(new TransitionSystemView(),
+                                                                                                      inputAlphabet) {
+
+            @Override
+            public VisualizationHelper<Node, TransitionEdge<I, Node>> getVisualizationHelper() {
+                return new AbstractVisualizationHelper<Node, I, Node, TransitionSystemView>(automaton) {
+
+                    @Override
+                    public Acceptance getAcceptance(Node node) {
+                        return node.getAcceptance();
+                    }
+                };
+            }
+        };
     }
 
     private void insertTrue(Word<? extends I> word) {
@@ -225,7 +249,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         }
     }
 
-    public Node getSink() {
+    private Node getSink() {
         if (sink == null) {
             sink = new Node(Acceptance.FALSE);
         }
@@ -304,7 +328,7 @@ public class IncrementalPCDFATreeBuilder<I> extends IncrementalDFATreeBuilder<I>
         }
     }
 
-    public class TransitionSystemView extends IncrementalDFATreeBuilder<I>.TransitionSystemView {
+    private class TransitionSystemView extends IncrementalDFATreeBuilder<I>.TransitionSystemView {
 
         @Override
         public @Nullable Node getTransition(Node state, I input) {

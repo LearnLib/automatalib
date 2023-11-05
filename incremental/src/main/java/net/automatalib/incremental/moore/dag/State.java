@@ -17,47 +17,49 @@ package net.automatalib.incremental.moore.dag;
 
 import net.automatalib.common.smartcollection.ResizingArrayStorage;
 
-public final class State<O> {
+/**
+ * A state in the DAG internally used by {@link IncrementalMooreDAGBuilder}.
+ *
+ * @param <O>
+ *         output symbol type
+ */
+final class State<O> {
 
     private final StateSignature<O> signature;
     private int numIncoming;
 
-    public State(StateSignature<O> signature) {
+    State(StateSignature<O> signature) {
         this.signature = signature;
     }
 
-    public void increaseIncoming() {
+    void increaseIncoming() {
         numIncoming++;
     }
 
-    public void decreaseIncoming() {
+    void decreaseIncoming() {
         numIncoming--;
     }
 
-    public int getNumIncoming() {
-        return numIncoming;
-    }
-
-    public boolean isConfluence() {
+    boolean isConfluence() {
         return numIncoming > 1;
     }
 
-    public State<O> getSuccessor(int idx) {
+    State<O> getSuccessor(int idx) {
         return signature.successors.array[idx];
     }
 
-    public O getOutput() {
+    O getOutput() {
         return signature.output;
     }
 
-    public StateSignature<O> getSignature() {
+    StateSignature<O> getSignature() {
         return signature;
     }
 
     /**
      * See {@link ResizingArrayStorage#ensureCapacity(int)}.
      */
-    boolean ensureInputCapacity(int capacity) {
-        return signature.successors.ensureCapacity(capacity);
+    void ensureInputCapacity(int capacity) {
+        signature.successors.ensureCapacity(capacity);
     }
 }

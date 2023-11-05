@@ -15,13 +15,19 @@
  */
 package net.automatalib.incremental.moore.dag;
 
-public final class TransitionRecord<O> {
+/**
+ * A transition in the DAG internally used by {@link IncrementalMooreDAGBuilder}.
+ *
+ * @param <O>
+ *         output symbol type
+ */
+final class Transition<O> {
 
-    public final State<O> source;
-    public final int transIdx;
+    final State<O> state;
+    final int transIdx;
 
-    public TransitionRecord(State<O> source, int transIdx) {
-        this.source = source;
+    Transition(State<O> state, int transIdx) {
+        this.state = state;
         this.transIdx = transIdx;
     }
 

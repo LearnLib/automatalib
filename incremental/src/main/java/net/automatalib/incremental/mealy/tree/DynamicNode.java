@@ -13,31 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.incremental.mealy.tree.dynamic;
+package net.automatalib.incremental.mealy.tree;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import net.automatalib.incremental.mealy.tree.Edge;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class Node<I, O> {
+/**
+ * A map-based node in the tree internally used by {@link DynamicIncrementalMealyTreeBuilder}.
+ *
+ * @param <O>
+ *         output symbol type
+ */
+final class DynamicNode<I, O> {
 
-    private final Map<I, Edge<Node<I, O>, O>> outEdges;
+    private final Map<I, Edge<DynamicNode<I, O>, O>> outEdges;
 
-    Node() {
+    DynamicNode() {
         this.outEdges = new HashMap<>();
     }
 
-    @Nullable Edge<Node<I, O>, O> getEdge(I input) {
+    @Nullable Edge<DynamicNode<I, O>, O> getEdge(I input) {
         return outEdges.get(input);
     }
 
-    void setEdge(I symbol, Edge<Node<I, O>, O> edge) {
+    void setEdge(I symbol, Edge<DynamicNode<I, O>, O> edge) {
         outEdges.put(symbol, edge);
     }
 
-    Map<I, Edge<Node<I, O>, O>> getOutEdges() {
+    Map<I, Edge<DynamicNode<I, O>, O>> getOutEdges() {
         return outEdges;
     }
 }

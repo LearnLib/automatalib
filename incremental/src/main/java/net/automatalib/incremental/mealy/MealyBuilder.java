@@ -20,7 +20,6 @@ import java.util.List;
 
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.graph.Graph;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.word.Word;
@@ -64,17 +63,6 @@ public interface MealyBuilder<I, O>
     }
 
     @Override
-    GraphView<I, O, ?, ?> asGraph();
-
-    @Override
     MealyTransitionSystem<?, I, ?, O> asTransitionSystem();
 
-    interface GraphView<I, O, N, E> extends Graph<N, E> {
-
-        I getInputSymbol(E edge);
-
-        O getOutputSymbol(E edge);
-
-        N getInitialNode();
-    }
 }

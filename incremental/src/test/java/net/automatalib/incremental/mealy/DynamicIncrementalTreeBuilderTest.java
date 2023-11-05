@@ -16,12 +16,17 @@
 package net.automatalib.incremental.mealy;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.incremental.mealy.tree.dynamic.DynamicIncrementalMealyTreeBuilder;
+import net.automatalib.incremental.mealy.tree.DynamicIncrementalMealyTreeBuilder;
 
 public class DynamicIncrementalTreeBuilderTest extends AbstractIncrementalMealyBuilderTest {
 
     @Override
     protected <I, O> IncrementalMealyBuilder<I, O> createIncrementalMealyBuilder(Alphabet<I> alphabet) {
         return new DynamicIncrementalMealyTreeBuilder<>();
+    }
+
+    @Override
+    protected String getDOTResource() {
+        return "/mealy/dynamic.dot";
     }
 }

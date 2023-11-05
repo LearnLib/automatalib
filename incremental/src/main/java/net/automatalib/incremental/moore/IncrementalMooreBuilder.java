@@ -20,13 +20,11 @@ import java.util.List;
 
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
 import net.automatalib.automaton.transducer.MooreMachine;
-import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
 import net.automatalib.ts.output.MooreTransitionSystem;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * General interface for incremental Moore builders.
@@ -78,17 +76,6 @@ public interface IncrementalMooreBuilder<I, O>
     void insert(Word<? extends I> inputWord, Word<? extends O> outputWord);
 
     @Override
-    GraphView<I, O, ?, ?> asGraph();
-
-    @Override
     MooreTransitionSystem<?, I, ?, O> asTransitionSystem();
 
-    interface GraphView<I, O, N, E> extends Graph<N, E> {
-
-        I getInputSymbol(E edge);
-
-        O getOutputSymbol(N node);
-
-        @Nullable N getInitialNode();
-    }
 }

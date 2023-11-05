@@ -27,8 +27,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 final class StateSignature {
 
-    public final ResizingArrayStorage<State> successors;
-    public Acceptance acceptance;
+    final ResizingArrayStorage<State> successors;
+    Acceptance acceptance;
     private int hashCode;
 
     StateSignature(int numSuccs, Acceptance acceptance) {
@@ -43,7 +43,7 @@ final class StateSignature {
         updateHashCode();
     }
 
-    public void updateHashCode() {
+    void updateHashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + acceptance.hashCode();
@@ -51,7 +51,7 @@ final class StateSignature {
         hashCode = result;
     }
 
-    public StateSignature duplicate() {
+    StateSignature duplicate() {
         return new StateSignature(this);
     }
 

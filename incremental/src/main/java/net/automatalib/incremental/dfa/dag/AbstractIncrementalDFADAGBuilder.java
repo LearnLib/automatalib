@@ -20,32 +20,38 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.common.util.IntDisjointSets;
 import net.automatalib.common.util.UnionFind;
+import net.automatalib.graph.Graph;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
+import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
+import net.automatalib.ts.UniversalDTS;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDFABuilder<I> {
+abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDFABuilder<I> {
 
-    protected final Map<StateSignature, State> register = new HashMap<>();
-    protected final State init;
-    protected State sink;
+    final Map<StateSignature, State> register;
+    final State init;
+    State sink;
 
-    public AbstractIncrementalDFADAGBuilder(Alphabet<I> inputAlphabet) {
+    AbstractIncrementalDFADAGBuilder(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
+        this.register = new LinkedHashMap<>();
         StateSignature sig = new StateSignature(alphabetSize, Acceptance.DONT_KNOW);
         this.init = new State(sig);
         register.put(sig, init);
@@ -53,15 +59,12 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
 
     @Override
     public void addAlphabetSymbol(I symbol) {
-        if (!this.inputAlphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
-        }
+        final int oldSize = alphabetSize;
+        super.addAlphabetSymbol(symbol);
+        final int newSize = alphabetSize;
 
-        final int newAlphabetSize = this.inputAlphabet.size();
-        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
-        if (alphabetSize < newAlphabetSize) {
-            register.values().forEach(n -> n.ensureInputCapacity(newAlphabetSize));
-            alphabetSize = newAlphabetSize;
+        if (oldSize < newSize) {
+            register.values().forEach(n -> n.ensureInputCapacity(newSize));
         }
     }
 
@@ -200,14 +203,14 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         return id;
     }
 
-    protected abstract @Nullable State getState(Word<? extends I> word);
+    abstract @Nullable State getState(Word<? extends I> word);
 
-    protected void updateInitSignature(Acceptance acc) {
+    void updateInitSignature(Acceptance acc) {
         StateSignature sig = init.getSignature();
         sig.acceptance = acc;
     }
 
-    protected void updateInitSignature(int idx, State succ) {
+    void updateInitSignature(int idx, State succ) {
         StateSignature sig = init.getSignature();
         State oldSucc = sig.successors.array[idx];
         if (oldSucc == succ) {
@@ -220,7 +223,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         succ.increaseIncoming();
     }
 
-    protected void updateInitSignature(Acceptance acc, int idx, State succ) {
+    void updateInitSignature(Acceptance acc, int idx, State succ) {
         StateSignature sig = init.getSignature();
         State oldSucc = sig.successors.array[idx];
         Acceptance oldAcc = sig.acceptance;
@@ -245,7 +248,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      *
      * @return the canonical state for the updated signature
      */
-    protected State updateSignature(State state, Acceptance acc) {
+    State updateSignature(State state, Acceptance acc) {
         assert state != init;
         StateSignature sig = state.getSignature();
         if (sig.acceptance == acc) {
@@ -269,7 +272,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      *
      * @return the canonical state for the updated signature
      */
-    protected State updateSignature(State state, int idx, State succ) {
+    State updateSignature(State state, int idx, State succ) {
         assert state != init;
 
         StateSignature sig = state.getSignature();
@@ -287,7 +290,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         return replaceOrRegister(state);
     }
 
-    protected State updateSignature(State state, Acceptance acc, int idx, State succ) {
+    State updateSignature(State state, Acceptance acc, int idx, State succ) {
         assert state != init;
 
         StateSignature sig = state.getSignature();
@@ -311,7 +314,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      *
      * @return the canonical state for the given state's signature
      */
-    protected State replaceOrRegister(State state) {
+    State replaceOrRegister(State state) {
         StateSignature sig = state.getSignature();
         State other = register.get(sig);
         if (other != null) {
@@ -338,7 +341,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      *
      * @return the canonical state for the given signature
      */
-    protected State replaceOrRegister(StateSignature sig) {
+    State replaceOrRegister(StateSignature sig) {
         State state = register.get(sig);
         if (state != null) {
             return state;
@@ -355,7 +358,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         return state;
     }
 
-    protected State hiddenClone(State other) {
+    State hiddenClone(State other) {
         assert other != init;
 
         StateSignature sig = other.getSignature().duplicate();
@@ -368,14 +371,14 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         return new State(sig);
     }
 
-    protected void hide(State state) {
+    void hide(State state) {
         assert state != init;
 
         StateSignature sig = state.getSignature();
         register.remove(sig);
     }
 
-    protected State unhide(State state, Acceptance acc, int idx, State succ) {
+    State unhide(State state, Acceptance acc, int idx, State succ) {
         assert state != init;
 
         StateSignature sig = state.getSignature();
@@ -393,7 +396,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         return replaceOrRegister(state);
     }
 
-    protected State unhide(State state, int idx, State succ) {
+    State unhide(State state, int idx, State succ) {
         assert state != init;
 
         StateSignature sig = state.getSignature();
@@ -420,7 +423,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      *
      * @return the canonical state for the derived signature
      */
-    protected State clone(State other, Acceptance acc) {
+    State clone(State other, Acceptance acc) {
         assert other != init;
 
         StateSignature sig = other.getSignature();
@@ -445,7 +448,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
      *
      * @return the canonical state for the derived signature
      */
-    protected State clone(State other, int idx, State succ) {
+    State clone(State other, int idx, State succ) {
         assert other != init;
 
         StateSignature sig = other.getSignature();
@@ -458,7 +461,7 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         return replaceOrRegister(sig);
     }
 
-    protected State clone(State other, Acceptance acc, int idx, State succ) {
+    State clone(State other, Acceptance acc, int idx, State succ) {
         assert other != init;
 
         StateSignature sig = other.getSignature();
@@ -472,13 +475,39 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
     }
 
     @Override
-    public GraphView asGraph() {
-        return new GraphView();
+    public UniversalDTS<?, I, ?, Acceptance, Void> asTransitionSystem() {
+        return new TransitionSystemView();
     }
 
     @Override
-    public TransitionSystemView asTransitionSystem() {
-        return new TransitionSystemView();
+    public Graph<?, ?> asGraph() {
+        return new UniversalAutomatonGraphView<State, I, State, Acceptance, Void, TransitionSystemView>(new TransitionSystemView(),
+                                                                                                        inputAlphabet) {
+
+            @Override
+            public VisualizationHelper<State, TransitionEdge<I, State>> getVisualizationHelper() {
+                return new AbstractVisualizationHelper<State, I, State, TransitionSystemView>(automaton) {
+
+                    @Override
+                    public boolean getNodeProperties(State node, Map<String, String> properties) {
+                        super.getNodeProperties(node, properties);
+
+                        if (node.isConfluence()) {
+                            String shape = (node.getAcceptance() == Acceptance.TRUE) ?
+                                    NodeShapes.DOUBLEOCTAGON :
+                                    NodeShapes.OCTAGON;
+                            properties.put(NodeAttrs.SHAPE, shape);
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    public Acceptance getAcceptance(State state) {
+                        return state.getAcceptance();
+                    }
+                };
+            }
+        };
     }
 
     private static final class Record<S, I> {
@@ -507,85 +536,8 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         }
     }
 
-    public class GraphView extends AbstractGraphView<I, State, EdgeRecord> {
-
-        @Override
-        public int size() {
-            return register.size() + ((sink == null) ? 0 : 1);
-        }
-
-        @Override
-        public Collection<State> getNodes() {
-            if (sink == null) {
-                return Collections.unmodifiableCollection(register.values());
-            }
-            List<State> result = new ArrayList<>(register.size() + 1);
-            result.addAll(register.values());
-            result.add(sink);
-            return result;
-        }
-
-        @Override
-        public Collection<EdgeRecord> getOutgoingEdges(State node) {
-            if (node.isSink()) {
-                return Collections.emptySet();
-            }
-            StateSignature sig = node.getSignature();
-            List<EdgeRecord> result = new ArrayList<>();
-            for (int i = 0; i < alphabetSize; i++) {
-                if (sig.successors.array[i] != null) {
-                    result.add(new EdgeRecord(node, i));
-                }
-            }
-            return result;
-        }
-
-        @Override
-        public State getTarget(EdgeRecord edge) {
-            int idx = edge.transIdx;
-            return edge.source.getSuccessor(idx);
-        }
-
-        @Override
-        public I getInputSymbol(EdgeRecord edge) {
-            return inputAlphabet.getSymbol(edge.transIdx);
-        }
-
-        @Override
-        public Acceptance getAcceptance(State node) {
-            return node.getAcceptance();
-        }
-
-        @Override
-        public State getInitialNode() {
-            return init;
-        }
-
-        @Override
-        public VisualizationHelper<State, EdgeRecord> getVisualizationHelper() {
-            return new DelegateVisualizationHelper<State, EdgeRecord>(super.getVisualizationHelper()) {
-
-                private int id;
-
-                @Override
-                public boolean getNodeProperties(State node, Map<String, String> properties) {
-                    if (!super.getNodeProperties(node, properties)) {
-                        return false;
-                    }
-                    properties.put(NodeAttrs.LABEL, "n" + (id++));
-                    if (node.isConfluence()) {
-                        String shape = (node.getAcceptance() == Acceptance.TRUE) ?
-                                NodeShapes.DOUBLEOCTAGON :
-                                NodeShapes.OCTAGON;
-                        properties.put(NodeAttrs.SHAPE, shape);
-                    }
-                    return true;
-                }
-            };
-        }
-    }
-
-    public class TransitionSystemView extends AbstractTransitionSystemView<State, I, State> {
+    private class TransitionSystemView implements UniversalDTS<State, I, State, Acceptance, Void>,
+                                                  UniversalAutomaton<State, I, State, Acceptance, Void> {
 
         @Override
         public State getSuccessor(State transition) {
@@ -609,6 +561,22 @@ public abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrem
         @Override
         public Acceptance getStateProperty(State state) {
             return state.getAcceptance();
+        }
+
+        @Override
+        public Void getTransitionProperty(State transition) {
+            return null;
+        }
+
+        @Override
+        public Collection<State> getStates() {
+            if (sink == null) {
+                return Collections.unmodifiableCollection(register.values());
+            }
+            List<State> result = new ArrayList<>(register.size() + 1);
+            result.addAll(register.values());
+            result.add(sink);
+            return result;
         }
     }
 

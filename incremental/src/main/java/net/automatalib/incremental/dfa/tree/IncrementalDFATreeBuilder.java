@@ -18,22 +18,26 @@ package net.automatalib.incremental.dfa.tree;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
+import net.automatalib.common.util.mapping.MapMapping;
+import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
+import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.util.graph.traversal.GraphTraversal;
+import net.automatalib.ts.UniversalDTS;
+import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.visualization.helper.DelegateVisualizationHelper;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -43,15 +47,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * Incrementally builds a tree, from a set of positive and negative words. Using {@link #insert(Word, boolean)}, either
  * the set of words definitely in the target language or definitely <i>not</i> in the target language is augmented. The
  * {@link #lookup(Word)} method then returns, for a given word, whether this word is in the set of definitely accepted
- * words ({@link Acceptance#TRUE}), definitely rejected words ({@link Acceptance#FALSE}), or neither ({@link
- * Acceptance#DONT_KNOW}).
+ * words ({@link Acceptance#TRUE}), definitely rejected words ({@link Acceptance#FALSE}), or neither
+ * ({@link Acceptance#DONT_KNOW}).
  *
  * @param <I>
  *         input symbol class
  */
 public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<I> {
 
-    protected final Node root;
+    final Node root;
 
     public IncrementalDFATreeBuilder(Alphabet<I> inputAlphabet) {
         super(inputAlphabet);
@@ -60,15 +64,12 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 
     @Override
     public void addAlphabetSymbol(I symbol) {
-        if (!this.inputAlphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
-        }
+        final int oldSize = alphabetSize;
+        super.addAlphabetSymbol(symbol);
+        final int newSize = alphabetSize;
 
-        final int newAlphabetSize = this.inputAlphabet.size();
-        // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol
-        if (alphabetSize < newAlphabetSize) {
-            ensureInputCapacity(root, alphabetSize, newAlphabetSize);
-            alphabetSize = newAlphabetSize;
+        if (oldSize < newSize) {
+            ensureInputCapacity(root, oldSize, newSize);
         }
     }
 
@@ -89,9 +90,9 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         return doFindSeparatingWord(target, inputs, omitUndefined);
     }
 
-    protected <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
-                                                         Collection<? extends I> inputs,
-                                                         boolean omitUndefined) {
+    <S> @Nullable Word<I> doFindSeparatingWord(DFA<S, I> target,
+                                               Collection<? extends I> inputs,
+                                               boolean omitUndefined) {
         S automatonInit = target.getInitialState();
 
         if (automatonInit == null) {
@@ -190,23 +191,36 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
     }
 
     @Override
-    public GraphView asGraph() {
-        return new GraphView();
-    }
-
-    @Override
-    public TransitionSystemView asTransitionSystem() {
+    public UniversalDTS<?, I, ?, Acceptance, Void> asTransitionSystem() {
         return new TransitionSystemView();
     }
 
-    protected static final class Record<S, I> {
+    @Override
+    public Graph<?, ?> asGraph() {
+        return new UniversalAutomatonGraphView<Node, I, Node, Acceptance, Void, TransitionSystemView>(new TransitionSystemView(),
+                                                                                                      inputAlphabet) {
+
+            @Override
+            public VisualizationHelper<Node, TransitionEdge<I, Node>> getVisualizationHelper() {
+                return new AbstractVisualizationHelper<Node, I, Node, TransitionSystemView>(automaton) {
+
+                    @Override
+                    public Acceptance getAcceptance(Node node) {
+                        return node.getAcceptance();
+                    }
+                };
+            }
+        };
+    }
+
+    static final class Record<S, I> {
 
         public final S automatonState;
         public final Node treeNode;
         public final I incomingInput;
         public final Iterator<? extends I> inputIt;
 
-        public Record(S automatonState, Node treeNode, I incomingInput, Iterator<? extends I> inputIt) {
+        Record(S automatonState, Node treeNode, I incomingInput, Iterator<? extends I> inputIt) {
             this.automatonState = automatonState;
             this.treeNode = treeNode;
             this.incomingInput = incomingInput;
@@ -214,66 +228,8 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         }
     }
 
-    public class GraphView extends AbstractGraphView<I, Node, Edge<I>> {
-
-        @Override
-        public Collection<Node> getNodes() {
-            List<Node> result = new ArrayList<>();
-            Iterators.addAll(result, GraphTraversal.depthFirstIterator(this, Collections.singleton(root)));
-            return result;
-        }
-
-        @Override
-        public Collection<Edge<I>> getOutgoingEdges(Node node) {
-            List<Edge<I>> result = new ArrayList<>(alphabetSize);
-            for (int i = 0; i < alphabetSize; i++) {
-                Node succ = node.getChild(i);
-                if (succ != null) {
-                    result.add(new Edge<>(succ, inputAlphabet.getSymbol(i)));
-                }
-            }
-            return result;
-        }
-
-        @Override
-        public Node getTarget(Edge<I> edge) {
-            return edge.getNode();
-        }
-
-        @Override
-        public I getInputSymbol(Edge<I> edge) {
-            return edge.getInput();
-        }
-
-        @Override
-        public Acceptance getAcceptance(Node node) {
-            return node.getAcceptance();
-        }
-
-        @Override
-        public Node getInitialNode() {
-            return root;
-        }
-
-        @Override
-        public VisualizationHelper<Node, Edge<I>> getVisualizationHelper() {
-            return new DelegateVisualizationHelper<Node, Edge<I>>(super.getVisualizationHelper()) {
-
-                private int id;
-
-                @Override
-                public boolean getNodeProperties(Node node, Map<String, String> properties) {
-                    if (!super.getNodeProperties(node, properties)) {
-                        return false;
-                    }
-                    properties.put(NodeAttrs.LABEL, "n" + (id++));
-                    return true;
-                }
-            };
-        }
-    }
-
-    public class TransitionSystemView extends AbstractTransitionSystemView<Node, I, Node> {
+    class TransitionSystemView implements UniversalDTS<Node, I, Node, Acceptance, Void>,
+                                          UniversalAutomaton<Node, I, Node, Acceptance, Void> {
 
         @Override
         public Node getSuccessor(Node transition) {
@@ -294,6 +250,27 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         @Override
         public Acceptance getStateProperty(Node state) {
             return state.getAcceptance();
+        }
+
+        @Override
+        public Void getTransitionProperty(Node transition) {
+            return null;
+        }
+
+        @Override
+        public Collection<Node> getStates() {
+            List<Node> result = new ArrayList<>();
+            Iterators.addAll(result, TSTraversal.breathFirstIterator(this, inputAlphabet));
+            return result;
+        }
+
+        /*
+         * We need to override the default MooreMachine mapping, because its StateIDStaticMapping class requires our
+         * nodeIDs, which requires our states, which requires our nodeIDs, which requires ... infinite loop!
+         */
+        @Override
+        public <V> MutableMapping<Node, V> createStaticStateMapping() {
+            return new MapMapping<>();
         }
     }
 

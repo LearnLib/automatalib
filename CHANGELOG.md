@@ -47,6 +47,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
     * `net.automatalib.graphs.FiniteKTS` -> `net.automatalib.ts.FiniteKTS` and `FiniteKTS` no longer extends the `Graph` interface but the `Automaton` interface and has its type variables re-ordered.
     * `net.automatalib.graphs.FiniteLTS` -> `net.automatalib.graph.FiniteLabeledGraph`.
     * `GraphTraversal#dfIterator` -> `GraphTraversal#depthFirstIterator`.
+    * moved the `net.automatalib.incremental.mealy.dynamic.*` classes to `net.automatalib.incremental.mealy`.
     * moved the `net.automatalib.settingssource.*` classes to `net.automatalib`.
     * moved `SupportsGrowingAlphabet` class to `net.automatalib.alphabet`.
     * moved the package `net.automatalib.ts.comp` to `net.automatalib.util.ts.comp` in the `automata-util` module.
@@ -55,6 +56,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * The `automata-dot-visualizer` module has been refactored and many Swing-related classes have been made package-private. The `DOT` class is now the central factory class to access the functionality of the module. The previous `DOTFrame` (whose functionality is now accessible via, e.g., `DOT#renderDOTStrings`) is now based on a `JDialog` which offers blocking modal semantics (e.g., for debugging purposes).
 * The `{Deterministc,NearLinear}EquivalenceTest` classes have become factories that cannot be instantiated anymore and only offer static methods.
 * `Graph`'s `adjacentTarget{,Iterator}` (and related) methods have been renamed to `getAdjacentNodes{,Iterator}`.
+* Many classes of the `automata-incremental` artifact have been cleaned up to no longer expose internal classes in public interfaces. 
 * The `Indefinite{,Simple}Graph` classes no longer have `Collection`-based getters but `Iterable`-based ones since indefinite structures typically cannot specify sizes. The `Collection`-based getters are delegated to the `Graph` class.
 * `Minimizer` no longer provides a `getInstance()` method but can be instantiated directly.
 * The `OneSEVPA` interface has been generalized to an arbitrary (k-)`SEVPA` interface. The old `OneSEVPA` specialization is still available and unchanged.

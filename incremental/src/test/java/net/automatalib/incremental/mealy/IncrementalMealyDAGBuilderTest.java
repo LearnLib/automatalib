@@ -35,6 +35,11 @@ public class IncrementalMealyDAGBuilderTest extends AbstractIncrementalMealyBuil
         return new IncrementalMealyDAGBuilder<>(alphabet);
     }
 
+    @Override
+    protected String getDOTResource() {
+        return "/mealy/dag.dot";
+    }
+
     /**
      * This tests case validates a set of traces from an external system which exposed an issue in confluence
      * propagation.

@@ -65,20 +65,19 @@ public interface IncrementalDFABuilder<I> extends IncrementalConstruction<DFA<?,
      *         if the newly provided information conflicts with existing information
      * @see #insert(Word, boolean)
      */
-    void insert(Word<? extends I> word);
+    default void insert(Word<? extends I> word) {
+        insert(word, true);
+    }
 
     @Override
-    GraphView<I, ?, ?> asGraph();
+    default boolean hasDefinitiveInformation(Word<? extends I> word) {
+        return lookup(word) != Acceptance.DONT_KNOW;
+    }
+
+    @Override
+    Graph<?, ?> asGraph();
 
     @Override
     UniversalDTS<?, I, ?, Acceptance, Void> asTransitionSystem();
 
-    interface GraphView<I, N, E> extends Graph<N, E> {
-
-        I getInputSymbol(E edge);
-
-        Acceptance getAcceptance(N node);
-
-        N getInitialNode();
-    }
 }

@@ -15,12 +15,15 @@
  */
 package net.automatalib.incremental.dfa.dag;
 
-final class PathElem {
+/**
+ * A transition in the DAG internally used by {@link IncrementalDFADAGBuilder}.
+ */
+final class Transition {
 
-    public final State state;
-    public final int transIdx;
+    final State state;
+    final int transIdx;
 
-    PathElem(State state, int transIdx) {
+    Transition(State state, int transIdx) {
         this.state = state;
         this.transIdx = transIdx;
     }
