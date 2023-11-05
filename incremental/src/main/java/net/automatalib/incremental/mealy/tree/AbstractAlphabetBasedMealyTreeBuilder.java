@@ -109,7 +109,7 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
         @Override
         public Collection<Node<O>> getStates() {
             List<Node<O>> result = new ArrayList<>();
-            Iterators.addAll(result, TSTraversal.breathFirstIterator(this, inputAlphabet));
+            Iterators.addAll(result, TSTraversal.breadthFirstIterator(this, inputAlphabet));
             return result;
         }
 

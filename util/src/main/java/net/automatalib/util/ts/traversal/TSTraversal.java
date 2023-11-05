@@ -182,7 +182,7 @@ public final class TSTraversal {
      * @return an {@link Iterable} for the (reachable) states of the given transition system in breadth-first order
      */
     public static <S, I> Iterable<S> breadthFirstOrder(TransitionSystem<S, I, ?> ts, Collection<? extends I> inputs) {
-        return () -> breathFirstIterator(ts, inputs);
+        return () -> breadthFirstIterator(ts, inputs);
     }
 
     /**
@@ -199,7 +199,7 @@ public final class TSTraversal {
      *
      * @return an {@link Iterator} for the (reachable) states of the given transition system in breadth-first order
      */
-    public static <S, I> Iterator<S> breathFirstIterator(TransitionSystem<S, I, ?> ts, Collection<? extends I> inputs) {
+    public static <S, I> Iterator<S> breadthFirstIterator(TransitionSystem<S, I, ?> ts, Collection<? extends I> inputs) {
         return new BreadthFirstIterator<>(ts, inputs);
     }
 

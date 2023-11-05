@@ -266,7 +266,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
         @Override
         public Collection<Node<O>> getStates() {
             List<Node<O>> result = new ArrayList<>();
-            Iterators.addAll(result, TSTraversal.breathFirstIterator(this, alphabet));
+            Iterators.addAll(result, TSTraversal.breadthFirstIterator(this, alphabet));
             return result;
         }
 

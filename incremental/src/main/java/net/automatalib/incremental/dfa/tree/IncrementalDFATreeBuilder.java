@@ -260,7 +260,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
         @Override
         public Collection<Node> getStates() {
             List<Node> result = new ArrayList<>();
-            Iterators.addAll(result, TSTraversal.breathFirstIterator(this, inputAlphabet));
+            Iterators.addAll(result, TSTraversal.breadthFirstIterator(this, inputAlphabet));
             return result;
         }
 
