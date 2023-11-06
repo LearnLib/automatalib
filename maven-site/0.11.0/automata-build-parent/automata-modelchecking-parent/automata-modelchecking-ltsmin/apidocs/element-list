@@ -1,0 +1,3 @@
+net.automatalib.modelchecker.ltsmin
+net.automatalib.modelchecker.ltsmin.ltl
+net.automatalib.modelchecker.ltsmin.monitor

@@ -1,0 +1,9 @@
+net.automatalib.modelchecker.m3c
+net.automatalib.modelchecker.m3c.formula
+net.automatalib.modelchecker.m3c.formula.ctl
+net.automatalib.modelchecker.m3c.formula.modalmu
+net.automatalib.modelchecker.m3c.formula.parser
+net.automatalib.modelchecker.m3c.formula.visitor
+net.automatalib.modelchecker.m3c.solver
+net.automatalib.modelchecker.m3c.transformer
+net.automatalib.modelchecker.m3c.visualization

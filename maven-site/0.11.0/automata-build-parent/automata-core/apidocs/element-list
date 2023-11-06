@@ -1,0 +1,17 @@
+net.automatalib.alphabet
+net.automatalib.automaton
+net.automatalib.automaton.base
+net.automatalib.automaton.fsa
+net.automatalib.automaton.procedural
+net.automatalib.automaton.transducer
+net.automatalib.automaton.transducer.probabilistic
+net.automatalib.automaton.vpa
+net.automatalib.graph
+net.automatalib.graph.ads
+net.automatalib.graph.base
+net.automatalib.modelchecking
+net.automatalib.ts.modal
+net.automatalib.ts.modal.transition
+net.automatalib.ts.powerset
+net.automatalib.visualization
+net.automatalib.visualization.helper

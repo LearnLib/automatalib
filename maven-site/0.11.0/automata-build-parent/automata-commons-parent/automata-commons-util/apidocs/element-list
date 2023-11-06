@@ -1,0 +1,17 @@
+net.automatalib.common.util
+net.automatalib.common.util.array
+net.automatalib.common.util.collection
+net.automatalib.common.util.comparison
+net.automatalib.common.util.concurrent
+net.automatalib.common.util.fixpoint
+net.automatalib.common.util.function
+net.automatalib.common.util.io
+net.automatalib.common.util.lib
+net.automatalib.common.util.mapping
+net.automatalib.common.util.nid
+net.automatalib.common.util.process
+net.automatalib.common.util.random
+net.automatalib.common.util.ref
+net.automatalib.common.util.setting
+net.automatalib.common.util.string
+net.automatalib.common.util.system
