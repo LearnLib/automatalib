@@ -50,22 +50,6 @@ limitations under the License.
                 <role>Maintainer</role>
             </roles>
         </developer>
-        <developer>
-            <id>misberner</id>
-            <name>Malte Isberner</name>
-            <email>malte.isberner@gmail.com</email>
-            <organization>TU Dortmund University, Chair of Programming Systems</organization>
-            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
-            <roles>
-                <role>Developer (inactive)</role>
-                <role>Maintainer (inactive)</role>
-            </roles>
-            <properties>
-                <picUrl>
-                    http://www.gravatar.com/avatar/c44dc4164f1a9a597ec0c24425d1b89d.png
-                </picUrl>
-            </properties>
-        </developer>
     </developers>
     <contributors>
         <contributor>
@@ -75,6 +59,21 @@ limitations under the License.
             <roles>
                 <role>Developer (Graduate)</role>
             </roles>
+        </contributor>
+        <contributor>
+            <name>Malte Isberner</name>
+            <email>malte.isberner@gmail.com</email>
+            <organization>TU Dortmund University, Chair of Programming Systems</organization>
+            <organizationUrl>http://ls5-www.cs.tu-dortmund.de/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+                <role>Maintainer</role>
+            </roles>
+            <properties>
+                <picUrl>
+                    http://www.gravatar.com/avatar/c44dc4164f1a9a597ec0c24425d1b89d.png
+                </picUrl>
+            </properties>
         </contributor>
         <contributor>
             <name>Marc Jasper</name>
