@@ -100,9 +100,10 @@ jobs:
           CI_BUILD_URL: https://github.com/${{ github.repository }}/commit/${{ github.event.after }}/checks
           BRANCH_NAME_OR_REF: ${{ github.head_ref || github.ref }}
         run: |
+          mvn -B install -Pcode-coverage
           export CI_BRANCH=${BRANCH_NAME_OR_REF#refs/heads/}
           export CI_PULL_REQUEST=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          mvn -B install -Pcode-coverage
+          export MAVEN_OPTS="$MAVEN_OPTS --add-modules java.xml.bind"
           mvn -B coveralls:report -DrepoToken=${{ secrets.GITHUB_TOKEN }} -DpullRequest=${{ github.event.number }}
   deploy:
     name: "Deploy"
