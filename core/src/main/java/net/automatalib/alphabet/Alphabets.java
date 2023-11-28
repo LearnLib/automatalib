@@ -20,8 +20,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collector;
 
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.GrowingAlphabet;
+import net.automatalib.api.exception.GrowingAlphabetNotSupportedException;
 import net.automatalib.common.util.collection.CollectionsUtil;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 
 /**
  * Utility methods concerning alphabets.

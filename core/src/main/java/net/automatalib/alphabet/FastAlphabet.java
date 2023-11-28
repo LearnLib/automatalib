@@ -18,6 +18,7 @@ package net.automatalib.alphabet;
 import java.util.Arrays;
 import java.util.List;
 
+import net.automatalib.api.alphabet.GrowingAlphabet;
 import net.automatalib.common.util.nid.DynamicList;
 import net.automatalib.common.util.nid.MutableNumericID;
 

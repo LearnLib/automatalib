@@ -19,10 +19,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.automatalib.api.ts.DeterministicTransitionSystem;
+import net.automatalib.api.ts.PowersetViewTS;
+import net.automatalib.api.ts.TransitionSystem;
 import net.automatalib.common.util.nid.NumericID;
-import net.automatalib.ts.DeterministicTransitionSystem;
-import net.automatalib.ts.PowersetViewTS;
-import net.automatalib.ts.TransitionSystem;
 
 public class FastPowersetDTS<S extends NumericID, I, T>
         implements DeterministicTransitionSystem<FastPowersetState<S>, I, Set<T>>,

@@ -21,10 +21,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.word.Word;
 import net.automatalib.incremental.mealy.AdaptiveMealyBuilder;
 import net.automatalib.util.graph.traversal.GraphTraversal;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AdaptiveMealyTreeBuilder<I, O> extends AbstractAlphabetBasedMealyTreeBuilder<I, O>

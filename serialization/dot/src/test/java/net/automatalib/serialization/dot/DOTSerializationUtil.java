@@ -22,17 +22,21 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.automaton.procedural.SBA;
+import net.automatalib.api.automaton.procedural.SPA;
+import net.automatalib.api.automaton.procedural.SPMM;
+import net.automatalib.api.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.api.ts.modal.transition.MutableProceduralModalEdgeProperty;
+import net.automatalib.api.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;
 import net.automatalib.automaton.fsa.FastDFA;
 import net.automatalib.automaton.fsa.FastDFAState;
-import net.automatalib.automaton.procedural.SBA;
-import net.automatalib.automaton.procedural.SPA;
-import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.StackSBA;
 import net.automatalib.automaton.procedural.StackSPA;
 import net.automatalib.automaton.procedural.StackSPMM;
@@ -46,11 +50,7 @@ import net.automatalib.graph.CompactPMPG;
 import net.automatalib.graph.CompactPMPGEdge;
 import net.automatalib.graph.DefaultCFMPS;
 import net.automatalib.ts.modal.CompactMTS;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
-import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgePropertyImpl;
-import net.automatalib.word.Word;
 
 final class DOTSerializationUtil {
 

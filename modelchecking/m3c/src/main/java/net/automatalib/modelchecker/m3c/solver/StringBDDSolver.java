@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelchecker.m3c.solver;
 
-import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.api.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 

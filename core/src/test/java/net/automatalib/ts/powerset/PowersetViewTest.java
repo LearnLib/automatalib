@@ -21,15 +21,16 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.function.Function;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.fsa.MutableNFA;
+import net.automatalib.api.ts.PowersetViewTS;
+import net.automatalib.api.ts.powerset.DirectPowersetDTS;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactNFA;
 import net.automatalib.automaton.fsa.FastNFA;
 import net.automatalib.automaton.fsa.FastNFAState;
-import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.common.util.nid.NumericID;
-import net.automatalib.ts.PowersetViewTS;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

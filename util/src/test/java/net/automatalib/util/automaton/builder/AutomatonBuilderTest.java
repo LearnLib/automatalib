@@ -15,10 +15,10 @@
  */
 package net.automatalib.util.automaton.builder;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactNFA;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

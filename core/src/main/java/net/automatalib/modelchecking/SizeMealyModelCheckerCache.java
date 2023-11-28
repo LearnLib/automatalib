@@ -15,10 +15,10 @@
  */
 package net.automatalib.modelchecking;
 
-import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.modelchecking.ModelChecker.MealyModelChecker;
+import net.automatalib.api.modelchecking.ModelCheckerCache.MealyModelCheckerCache;
 import net.automatalib.modelchecking.InternalModelCheckerDelegator.MealyModelCheckerDelegator;
-import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
-import net.automatalib.modelchecking.ModelCheckerCache.MealyModelCheckerCache;
 
 /**
  * @see SizeDFAModelCheckerCache

@@ -22,9 +22,9 @@ import java.util.Random;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.fsa.DFA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;

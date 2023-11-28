@@ -18,6 +18,9 @@ package net.automatalib.alphabet;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.VPAlphabet;
+
 /**
  * A {@link VPAlphabet} implementation that allows to add new symbols after its construction. Wraps input symbols in a
  * {@link VPSym} instance to allow faster mappings from symbols to indexes.

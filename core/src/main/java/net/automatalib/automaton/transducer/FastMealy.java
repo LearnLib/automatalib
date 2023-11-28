@@ -15,7 +15,9 @@
  */
 package net.automatalib.automaton.transducer;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
+import net.automatalib.api.automaton.transducer.StateLocalInputMealyMachine;
 import net.automatalib.automaton.base.AbstractFastMutableDet;
 
 /**

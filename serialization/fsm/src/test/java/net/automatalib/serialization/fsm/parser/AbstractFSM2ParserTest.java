@@ -20,9 +20,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.base.AbstractCompactDeterministic;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;

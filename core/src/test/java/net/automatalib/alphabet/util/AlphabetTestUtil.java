@@ -18,7 +18,7 @@ package net.automatalib.alphabet.util;
 import java.util.Arrays;
 import java.util.List;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
 
 /**
  * Utilities for regular {@link Alphabet} tests.

@@ -18,7 +18,7 @@ package net.automatalib.util.automaton.procedural;
 import java.util.Collections;
 import java.util.Map;
 
-import net.automatalib.word.Word;
+import net.automatalib.api.word.Word;
 
 /**
  * A data class for aggregating access sequences, terminating sequences, and return sequences.

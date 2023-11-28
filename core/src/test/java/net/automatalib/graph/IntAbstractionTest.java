@@ -23,9 +23,11 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
+import net.automatalib.api.graph.BidirectionalGraph;
+import net.automatalib.api.graph.MutableGraph;
+import net.automatalib.api.graph.concept.NodeIDs;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.common.util.random.RandomUtil;
-import net.automatalib.graph.concept.NodeIDs;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

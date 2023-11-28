@@ -15,7 +15,8 @@
  */
 package net.automatalib.alphabet;
 
-import net.automatalib.alphabet.VPAlphabet.SymbolType;
+import net.automatalib.api.alphabet.VPAlphabet;
+import net.automatalib.api.alphabet.VPAlphabet.SymbolType;
 
 /**
  * Utility class used to wrap input symbols of a {@link VPAlphabet}. Stores additional index information to allow fast

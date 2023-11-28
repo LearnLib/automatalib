@@ -18,11 +18,12 @@ package net.automatalib.graph;
 import java.util.Collections;
 import java.util.Set;
 
+import net.automatalib.api.graph.MutableProceduralModalProcessGraph;
+import net.automatalib.api.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.api.ts.modal.transition.MutableProceduralModalEdgeProperty;
+import net.automatalib.api.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
 import net.automatalib.common.smartcollection.ResizingArrayStorage;
 import net.automatalib.graph.base.AbstractCompactGraph;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transition.MutableProceduralModalEdgeProperty;
-import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty.ProceduralType;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgePropertyImpl;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

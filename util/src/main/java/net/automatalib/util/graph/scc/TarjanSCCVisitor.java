@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import net.automatalib.api.graph.Graph;
 import net.automatalib.common.util.Holder;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.graph.Graph;
 import net.automatalib.util.graph.traversal.GraphTraversalAction;
 import net.automatalib.util.graph.traversal.GraphTraversalVisitor;
 

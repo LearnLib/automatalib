@@ -15,8 +15,8 @@
  */
 package net.automatalib.incremental.mealy;
 
+import net.automatalib.api.word.Word;
 import net.automatalib.incremental.ConflictException;
-import net.automatalib.word.Word;
 
 /**
  * General interface for incremental Mealy builders.

@@ -18,7 +18,7 @@ package net.automatalib.util.automaton.ads;
 import java.util.Collections;
 import java.util.Set;
 
-import net.automatalib.graph.ads.ADSNode;
+import net.automatalib.api.graph.ads.ADSNode;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

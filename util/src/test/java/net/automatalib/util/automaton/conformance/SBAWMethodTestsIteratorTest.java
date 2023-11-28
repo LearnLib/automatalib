@@ -25,13 +25,14 @@ import java.util.Objects;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.procedural.SBA;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.StackSBA;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.util.automaton.Automata;
@@ -40,7 +41,6 @@ import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.procedural.ATSequences;
 import net.automatalib.util.automaton.procedural.SBAs;
 import net.automatalib.util.automaton.random.RandomAutomata;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -17,10 +17,13 @@ package net.automatalib.modelchecking;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.ModelChecker.MealyModelChecker;
-import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.modelchecking.Lasso;
+import net.automatalib.api.modelchecking.Lasso.MealyLasso;
+import net.automatalib.api.modelchecking.ModelChecker;
+import net.automatalib.api.modelchecking.ModelChecker.MealyModelChecker;
+import net.automatalib.api.modelchecking.ModelCheckerLasso;
+import net.automatalib.api.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
 
 /**
  * Internal utility interface to provide default implementations for {@link ModelChecker}s based on a given delegator

@@ -22,11 +22,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.ts.modal.MutableModalTransitionSystem;
+import net.automatalib.api.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.api.ts.modal.transition.MutableModalEdgeProperty;
 import net.automatalib.automaton.base.AbstractCompact;
 import net.automatalib.common.util.collection.PositiveIntSet;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

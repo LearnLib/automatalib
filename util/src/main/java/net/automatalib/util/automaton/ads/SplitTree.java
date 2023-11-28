@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import net.automatalib.word.Word;
+import net.automatalib.api.word.Word;
 
 /**
  * Utility class originally used by the algorithm of {@link LeeYannakakis} but utilized by other ADS computations as

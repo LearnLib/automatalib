@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.api.graph.ProceduralModalProcessGraph;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelchecker.m3c.transformer.TransformerSerializer;

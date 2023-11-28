@@ -19,22 +19,22 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
 import net.automatalib.alphabet.DefaultProceduralOutputAlphabet;
-import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.ProceduralOutputAlphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.alphabet.ProceduralOutputAlphabet;
+import net.automatalib.api.automaton.procedural.SPMM;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.procedural.EmptySPMM;
-import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.StackSPMM;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.FastMealy;
 import net.automatalib.automaton.transducer.FastMealyState;
-import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.random.RandomAutomata;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

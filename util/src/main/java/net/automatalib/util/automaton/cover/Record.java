@@ -18,7 +18,7 @@ package net.automatalib.util.automaton.cover;
 import java.util.Collections;
 import java.util.Set;
 
-import net.automatalib.word.Word;
+import net.automatalib.api.word.Word;
 
 /**
  * Utility class, that stores information about access sequences of automaton states.

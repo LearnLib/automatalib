@@ -15,7 +15,8 @@
  */
 package net.automatalib.automaton.vpa;
 
-import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.api.alphabet.VPAlphabet;
+import net.automatalib.api.automaton.vpa.OneSEVPA;
 
 /**
  * Default implementation for 1-SEVPAs.

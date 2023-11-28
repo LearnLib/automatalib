@@ -20,13 +20,13 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.util.automaton.random.RandomAutomata;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

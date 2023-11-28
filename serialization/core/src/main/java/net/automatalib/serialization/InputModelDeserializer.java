@@ -15,7 +15,7 @@
  */
 package net.automatalib.serialization;
 
-import net.automatalib.ts.simple.SimpleTS;
+import net.automatalib.api.ts.simple.SimpleTS;
 
 /**
  * A refinement of the {@link ModelDeserializer} interface for arbitrary models that can react to inputs. Introduces a

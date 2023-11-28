@@ -18,12 +18,12 @@ package net.automatalib.modelchecker.m3c.solver;
 import info.scce.addlib.dd.xdd.XDDManager;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
-import net.automatalib.graph.ContextFreeModalProcessSystem;
+import net.automatalib.api.graph.ContextFreeModalProcessSystem;
+import net.automatalib.api.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.modelchecker.m3c.formula.DependencyGraph;
 import net.automatalib.modelchecker.m3c.transformer.ADDTransformer;
 import net.automatalib.modelchecker.m3c.transformer.ADDTransformerSerializer;
 import net.automatalib.modelchecker.m3c.transformer.TransformerSerializer;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
 /**
  * Implementation based on property transformers being represented by ADDs (Algebraic Decision Diagrams).

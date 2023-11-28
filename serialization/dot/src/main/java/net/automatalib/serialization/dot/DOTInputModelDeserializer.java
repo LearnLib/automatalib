@@ -21,9 +21,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import net.automatalib.api.ts.simple.SimpleTS;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelDeserializer;
-import net.automatalib.ts.simple.SimpleTS;
 
 /**
  * A specialization of the {@link InputModelDeserializer} that returns a {@link DOTInputModelData} object which holds

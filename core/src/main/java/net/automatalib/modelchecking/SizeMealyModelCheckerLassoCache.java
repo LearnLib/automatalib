@@ -15,11 +15,11 @@
  */
 package net.automatalib.modelchecking;
 
-import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.modelchecking.Lasso.MealyLasso;
+import net.automatalib.api.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
+import net.automatalib.api.modelchecking.ModelCheckerLassoCache.MealyModelCheckerLassoCache;
 import net.automatalib.modelchecking.InternalModelCheckerDelegator.MealyModelCheckerLassoDelegator;
-import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
-import net.automatalib.modelchecking.ModelCheckerLassoCache.MealyModelCheckerLassoCache;
 
 /**
  * @see SizeDFAModelCheckerCache

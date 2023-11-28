@@ -15,8 +15,8 @@
  */
 package net.automatalib.util.ts.transducer;
 
+import net.automatalib.api.ts.output.MealyTransitionSystem;
 import net.automatalib.common.util.Pair;
-import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.util.ts.comp.DTSComposition;
 
 @SuppressWarnings("nullness") //nullness of composed states and transitions depends on partiality

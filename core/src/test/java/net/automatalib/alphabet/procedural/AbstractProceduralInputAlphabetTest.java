@@ -20,13 +20,13 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableMap;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.vpa.AbstractVPAlphabetTest;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.word.Word;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

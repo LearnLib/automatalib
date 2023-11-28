@@ -19,11 +19,11 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import net.automatalib.automaton.Automaton;
-import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.api.automaton.Automaton;
+import net.automatalib.api.automaton.MutableAutomaton;
+import net.automatalib.api.ts.TransitionPredicate;
+import net.automatalib.api.ts.TransitionSystem;
 import net.automatalib.common.util.Holder;
-import net.automatalib.ts.TransitionPredicate;
-import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.traversal.TraversalOrder;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.util.ts.traversal.TSTraversalAction;

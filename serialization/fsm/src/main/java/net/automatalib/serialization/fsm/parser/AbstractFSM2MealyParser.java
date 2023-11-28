@@ -26,8 +26,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
@@ -128,7 +129,7 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
     protected void checkStateVectors(StreamTokenizer streamTokenizer) {}
 
     /**
-     * Constructs the actual {@link net.automatalib.automaton.transducer.MealyMachine}, using {@link #states}, and
+     * Constructs the actual {@link MealyMachine}, using {@link #states}, and
      * {@link #transitions}.
      *
      * @return the Mealy machine defined in the FSM source.

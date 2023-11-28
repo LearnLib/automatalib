@@ -18,8 +18,8 @@ package net.automatalib.ts.powerset;
 import java.util.Collection;
 import java.util.Collections;
 
-import net.automatalib.ts.DeterministicTransitionSystem;
-import net.automatalib.ts.PowersetViewTS;
+import net.automatalib.api.ts.DeterministicTransitionSystem;
+import net.automatalib.api.ts.PowersetViewTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DeterministicPowersetView<S, I, T>

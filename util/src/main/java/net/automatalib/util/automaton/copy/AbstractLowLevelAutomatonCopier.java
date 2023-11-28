@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.api.automaton.MutableAutomaton;
+import net.automatalib.api.ts.TransitionPredicate;
+import net.automatalib.api.ts.TransitionSystem;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.ts.TransitionPredicate;
-import net.automatalib.ts.TransitionSystem;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2, TS1 extends TransitionSystem<S1, ? super I1, T1>>

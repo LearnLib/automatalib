@@ -18,7 +18,7 @@ package net.automatalib.alphabet.growing;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.api.alphabet.GrowingAlphabet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

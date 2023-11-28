@@ -19,8 +19,8 @@ import java.util.Map;
 
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
+import net.automatalib.api.graph.ProceduralModalProcessGraph;
 import net.automatalib.common.util.mapping.Mapping;
-import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.modelchecker.m3c.transformer.BDDTransformer;
 import net.automatalib.modelchecker.m3c.transformer.BDDTransformerSerializer;
 import org.testng.Assert;

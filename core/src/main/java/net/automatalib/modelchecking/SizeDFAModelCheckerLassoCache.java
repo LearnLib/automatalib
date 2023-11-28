@@ -15,11 +15,11 @@
  */
 package net.automatalib.modelchecking;
 
-import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.modelchecking.Lasso.DFALasso;
+import net.automatalib.api.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
+import net.automatalib.api.modelchecking.ModelCheckerLassoCache.DFAModelCheckerLassoCache;
 import net.automatalib.modelchecking.InternalModelCheckerDelegator.ModelCheckerLassoDelegator;
-import net.automatalib.modelchecking.Lasso.DFALasso;
-import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
-import net.automatalib.modelchecking.ModelCheckerLassoCache.DFAModelCheckerLassoCache;
 
 /**
  * @see SizeDFAModelCheckerCache

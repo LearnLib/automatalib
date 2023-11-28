@@ -17,14 +17,14 @@ package net.automatalib.automaton.util;
 
 import java.util.function.Function;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.FastAlphabet;
 import net.automatalib.alphabet.Symbol;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
+import net.automatalib.api.automaton.transducer.MutableMooreMachine;
 import net.automatalib.automaton.fsa.FastNFA;
 import net.automatalib.automaton.fsa.FastNFAState;
 import net.automatalib.automaton.transducer.FastMealy;
-import net.automatalib.automaton.transducer.MutableMealyMachine;
-import net.automatalib.automaton.transducer.MutableMooreMachine;
 
 public final class TestUtil {
 

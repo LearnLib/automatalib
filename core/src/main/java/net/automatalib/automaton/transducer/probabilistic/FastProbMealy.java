@@ -15,7 +15,9 @@
  */
 package net.automatalib.automaton.transducer.probabilistic;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.transducer.probabilistic.MutableProbabilisticMealy;
+import net.automatalib.api.automaton.transducer.probabilistic.ProbabilisticOutput;
 import net.automatalib.automaton.base.AbstractFastMutableNondet;
 import net.automatalib.automaton.transducer.MealyTransition;
 

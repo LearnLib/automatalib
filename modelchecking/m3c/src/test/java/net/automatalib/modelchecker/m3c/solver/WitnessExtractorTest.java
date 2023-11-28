@@ -24,8 +24,9 @@ import java.util.Collections;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.google.common.io.CharStreams;
+import net.automatalib.api.graph.ContextFreeModalProcessSystem;
+import net.automatalib.api.word.Word;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.NotNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
@@ -35,7 +36,6 @@ import net.automatalib.modelchecker.m3c.visualization.EdgeVisualizationHelper;
 import net.automatalib.modelchecker.m3c.visualization.HTMLVisualizationHelper;
 import net.automatalib.modelchecker.m3c.visualization.NodeVisualizationHelper;
 import net.automatalib.serialization.dot.GraphDOT;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

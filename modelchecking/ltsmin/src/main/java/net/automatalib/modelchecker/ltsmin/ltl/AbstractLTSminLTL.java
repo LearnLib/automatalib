@@ -21,11 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import net.automatalib.api.modelchecking.Lasso;
+import net.automatalib.api.modelchecking.ModelCheckerLasso;
 import net.automatalib.modelchecker.ltsmin.AbstractLTSmin;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
 import net.automatalib.modelchecking.AbstractUnfoldingModelChecker;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.ModelCheckerLasso;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

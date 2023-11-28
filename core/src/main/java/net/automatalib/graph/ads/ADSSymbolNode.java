@@ -15,6 +15,7 @@
  */
 package net.automatalib.graph.ads;
 
+import net.automatalib.api.graph.ads.ADSNode;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

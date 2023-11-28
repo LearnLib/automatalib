@@ -15,9 +15,9 @@
  */
 package net.automatalib.util.automaton.conformance;
 
-import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.automaton.procedural.SPMM;
-import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.automaton.procedural.SPMM;
+import net.automatalib.api.automaton.transducer.MealyMachine;
 import net.automatalib.util.automaton.procedural.SPMMs;
 
 /**

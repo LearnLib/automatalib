@@ -15,9 +15,9 @@
  */
 package net.automatalib.automaton;
 
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.NFA;
-import net.automatalib.word.Word;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.fsa.NFA;
+import net.automatalib.api.word.Word;
 import org.testng.Assert;
 
 final class SharedTestUtils {

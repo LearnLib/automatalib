@@ -19,8 +19,11 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.AutomatonCreator;
+import net.automatalib.api.automaton.MutableAutomaton;
+import net.automatalib.api.automaton.MutableDeterministic;
+import net.automatalib.api.automaton.concept.StateIDs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.annotations.Test;
 

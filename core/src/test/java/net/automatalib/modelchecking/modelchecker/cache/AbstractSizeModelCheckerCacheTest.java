@@ -17,10 +17,10 @@ package net.automatalib.modelchecking.modelchecker.cache;
 
 import java.util.Collections;
 
-import net.automatalib.automaton.MutableAutomaton;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.ModelCheckerCache;
-import net.automatalib.modelchecking.ModelCheckerLasso;
+import net.automatalib.api.automaton.MutableAutomaton;
+import net.automatalib.api.modelchecking.Lasso;
+import net.automatalib.api.modelchecking.ModelCheckerCache;
+import net.automatalib.api.modelchecking.ModelCheckerLasso;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

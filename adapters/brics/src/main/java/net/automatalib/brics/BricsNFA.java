@@ -17,7 +17,7 @@ package net.automatalib.brics;
 
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
-import net.automatalib.automaton.fsa.NFA;
+import net.automatalib.api.automaton.fsa.NFA;
 
 /**
  * Adapter class for wrapping a Brics automaton as an {@link NFA}.

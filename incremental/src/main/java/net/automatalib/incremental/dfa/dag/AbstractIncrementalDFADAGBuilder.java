@@ -25,22 +25,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalAutomaton;
-import net.automatalib.automaton.concept.StateIDs;
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.graph.TransitionEdge;
-import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.UniversalAutomaton;
+import net.automatalib.api.automaton.concept.StateIDs;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.graph.TransitionEdge;
+import net.automatalib.api.automaton.graph.UniversalAutomatonGraphView;
+import net.automatalib.api.graph.Graph;
+import net.automatalib.api.ts.UniversalDTS;
+import net.automatalib.api.visualization.VisualizationHelper;
+import net.automatalib.api.word.Word;
+import net.automatalib.api.word.WordBuilder;
 import net.automatalib.common.util.IntDisjointSets;
 import net.automatalib.common.util.UnionFind;
-import net.automatalib.graph.Graph;
 import net.automatalib.incremental.dfa.AbstractIncrementalDFABuilder;
 import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.ts.UniversalDTS;
-import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 abstract class AbstractIncrementalDFADAGBuilder<I> extends AbstractIncrementalDFABuilder<I> {

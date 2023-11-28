@@ -18,6 +18,7 @@ package net.automatalib.graph.ads;
 import java.util.Collections;
 import java.util.Map;
 
+import net.automatalib.api.graph.ads.RecursiveADSNode;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

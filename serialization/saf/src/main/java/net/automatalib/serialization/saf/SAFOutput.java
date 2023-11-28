@@ -25,10 +25,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalAutomaton;
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.NFA;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.UniversalAutomaton;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.fsa.NFA;
 import net.automatalib.common.util.IOUtil;
 
 /**

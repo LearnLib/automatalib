@@ -22,8 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import org.testng.annotations.DataProvider;

@@ -17,7 +17,7 @@ package net.automatalib.visualization.helper;
 
 import java.util.Map;
 
-import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.api.visualization.VisualizationHelper;
 
 public class PrettyVisualizationHelper<N, E> implements VisualizationHelper<N, E> {
 

@@ -15,7 +15,7 @@
  */
 package net.automatalib.modelchecker.ltsmin.ltl;
 
-import net.automatalib.modelchecking.Lasso.MealyLasso;
+import net.automatalib.api.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecking.MealyLassoImpl;
 
 /**

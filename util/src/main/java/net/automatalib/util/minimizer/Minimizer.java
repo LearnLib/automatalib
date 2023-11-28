@@ -22,12 +22,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.automatalib.api.graph.UniversalGraph;
 import net.automatalib.common.smartcollection.DefaultLinkedList;
 import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.IntrusiveLinkedList;
 import net.automatalib.common.smartcollection.UnorderedCollection;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.graph.UniversalGraph;
 import net.automatalib.util.graph.traversal.GraphTraversal;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;

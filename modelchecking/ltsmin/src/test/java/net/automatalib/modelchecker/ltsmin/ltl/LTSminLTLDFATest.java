@@ -15,10 +15,10 @@
  */
 package net.automatalib.modelchecker.ltsmin.ltl;
 
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.exception.ModelCheckingException;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.exception.ModelCheckingException;
+import net.automatalib.api.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.DFALassoImpl;
-import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.testng.annotations.Test;
 

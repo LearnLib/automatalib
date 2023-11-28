@@ -24,10 +24,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.AutomatonCreator;
-import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.AutomatonCreator;
+import net.automatalib.api.automaton.MutableAutomaton;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;
 import net.automatalib.common.util.IOUtil;

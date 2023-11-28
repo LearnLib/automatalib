@@ -18,9 +18,9 @@ package net.automatalib.util.ts;
 import java.util.Iterator;
 import java.util.function.Function;
 
-import net.automatalib.ts.DeterministicTransitionSystem;
-import net.automatalib.ts.TransitionSystem;
-import net.automatalib.ts.UniversalTransitionSystem;
+import net.automatalib.api.ts.DeterministicTransitionSystem;
+import net.automatalib.api.ts.TransitionSystem;
+import net.automatalib.api.ts.UniversalTransitionSystem;
 import net.automatalib.util.ts.iterator.AllDefinedInputsIterator;
 import net.automatalib.util.ts.iterator.AllUndefinedInputsIterator;
 import net.automatalib.util.ts.iterator.DefinedInputsIterator;

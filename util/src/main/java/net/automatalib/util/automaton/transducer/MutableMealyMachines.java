@@ -17,7 +17,7 @@ package net.automatalib.util.automaton.transducer;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
 import net.automatalib.util.automaton.Automata;
 
 public final class MutableMealyMachines {

@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

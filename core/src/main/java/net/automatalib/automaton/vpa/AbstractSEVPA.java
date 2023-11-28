@@ -15,7 +15,10 @@
  */
 package net.automatalib.automaton.vpa;
 
-import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.api.alphabet.VPAlphabet;
+import net.automatalib.api.automaton.vpa.SEVPA;
+import net.automatalib.api.automaton.vpa.StackContents;
+import net.automatalib.api.automaton.vpa.State;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

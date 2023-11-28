@@ -15,10 +15,10 @@
  */
 package net.automatalib.modelchecking.modelchecker.cache;
 
-import net.automatalib.automaton.MutableAutomaton;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.ModelCheckerLasso;
-import net.automatalib.modelchecking.ModelCheckerLassoCache;
+import net.automatalib.api.automaton.MutableAutomaton;
+import net.automatalib.api.modelchecking.Lasso;
+import net.automatalib.api.modelchecking.ModelCheckerLasso;
+import net.automatalib.api.modelchecking.ModelCheckerLassoCache;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;

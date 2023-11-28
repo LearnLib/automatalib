@@ -17,13 +17,13 @@ package net.automatalib.util.graph.copy;
 
 import java.util.Collection;
 
+import net.automatalib.api.graph.Graph;
+import net.automatalib.api.graph.IndefiniteGraph;
+import net.automatalib.api.graph.MutableGraph;
+import net.automatalib.api.graph.UniversalGraph;
+import net.automatalib.api.graph.UniversalIndefiniteGraph;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.Mappings;
-import net.automatalib.graph.Graph;
-import net.automatalib.graph.IndefiniteGraph;
-import net.automatalib.graph.MutableGraph;
-import net.automatalib.graph.UniversalGraph;
-import net.automatalib.graph.UniversalIndefiniteGraph;
 import net.automatalib.util.traversal.TraversalOrder;
 
 public final class GraphCopy {

@@ -18,6 +18,9 @@ package net.automatalib.alphabet;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.ProceduralOutputAlphabet;
+
 /**
  * Default implementation of a {@link ProceduralOutputAlphabet}.
  *

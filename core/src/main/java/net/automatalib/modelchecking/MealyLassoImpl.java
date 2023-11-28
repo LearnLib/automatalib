@@ -17,10 +17,10 @@ package net.automatalib.modelchecking;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.concept.DetOutputAutomaton;
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.word.Word;
+import net.automatalib.api.automaton.concept.DetOutputAutomaton;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.modelchecking.Lasso.MealyLasso;
+import net.automatalib.api.word.Word;
 
 /**
  * A MealyLasso is a lasso for {@link MealyMachine}s.

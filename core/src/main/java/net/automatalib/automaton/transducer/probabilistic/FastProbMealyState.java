@@ -17,6 +17,7 @@ package net.automatalib.automaton.transducer.probabilistic;
 
 import java.util.Collection;
 
+import net.automatalib.api.automaton.transducer.probabilistic.ProbabilisticOutput;
 import net.automatalib.automaton.base.AbstractFastState;
 import net.automatalib.automaton.transducer.MealyTransition;
 

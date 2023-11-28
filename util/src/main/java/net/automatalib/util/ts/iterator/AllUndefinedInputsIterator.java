@@ -17,8 +17,8 @@ package net.automatalib.util.ts.iterator;
 
 import java.util.Iterator;
 
+import net.automatalib.api.ts.TransitionSystem;
 import net.automatalib.common.util.collection.AbstractTwoLevelIterator;
-import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.ts.TS;
 import net.automatalib.util.ts.TS.TransRef;
 

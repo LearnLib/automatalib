@@ -15,7 +15,7 @@
  */
 package net.automatalib.ts.modal;
 
-import net.automatalib.ts.modal.transition.MutableModalEdgeProperty;
+import net.automatalib.api.ts.modal.transition.MutableModalEdgeProperty;
 
 public class MTSTransition<TP extends MutableModalEdgeProperty> {
 

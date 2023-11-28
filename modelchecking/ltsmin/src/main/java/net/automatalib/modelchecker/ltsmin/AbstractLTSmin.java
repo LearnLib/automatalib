@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.google.common.collect.Lists;
-import net.automatalib.AutomataLibSettings;
+import net.automatalib.api.AutomataLibSettings;
+import net.automatalib.api.exception.ModelCheckingException;
+import net.automatalib.api.modelchecking.ModelChecker;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.process.ProcessUtil;
-import net.automatalib.exception.ModelCheckingException;
-import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.etf.writer.AbstractETFWriter;
 import net.automatalib.serialization.fsm.parser.AbstractFSMParser;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;

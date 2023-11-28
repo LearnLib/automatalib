@@ -28,25 +28,25 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.collect.Maps;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.GrowingMapAlphabet;
-import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.GrowingAlphabet;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.alphabet.VPAlphabet;
+import net.automatalib.api.automaton.procedural.SPA;
+import net.automatalib.api.automaton.vpa.OneSEVPA;
+import net.automatalib.api.word.Word;
+import net.automatalib.api.word.WordBuilder;
 import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.StackSPA;
-import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.common.smartcollection.ArrayStorage;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.procedural.ATRSequences;
 import net.automatalib.util.automaton.procedural.SPAs;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 
 final class SPAConverter {
 

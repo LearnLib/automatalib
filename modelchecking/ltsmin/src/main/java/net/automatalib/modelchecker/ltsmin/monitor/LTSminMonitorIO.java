@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
-import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.api.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecker.ltsmin.LTSminIO;
 
 /**

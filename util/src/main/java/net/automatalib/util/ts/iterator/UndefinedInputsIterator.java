@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.google.common.collect.AbstractIterator;
-import net.automatalib.ts.TransitionSystem;
+import net.automatalib.api.ts.TransitionSystem;
 
 public final class UndefinedInputsIterator<S, I> extends AbstractIterator<I> {
 

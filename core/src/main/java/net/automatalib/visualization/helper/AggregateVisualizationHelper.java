@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.api.visualization.VisualizationHelper;
 
 public class AggregateVisualizationHelper<N, E> implements VisualizationHelper<N, E> {
 

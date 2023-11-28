@@ -17,7 +17,7 @@ package net.automatalib.automaton;
 
 import java.util.Arrays;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
 import net.automatalib.automaton.base.AbstractCompact;
 import net.automatalib.automaton.base.AbstractCompactDeterministic;
 import org.checkerframework.checker.nullness.qual.Nullable;

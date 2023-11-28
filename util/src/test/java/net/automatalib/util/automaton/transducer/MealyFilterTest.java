@@ -15,12 +15,12 @@
  */
 package net.automatalib.util.automaton.transducer;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.word.Word;
+import net.automatalib.api.word.WordBuilder;
 import net.automatalib.automaton.transducer.CompactMealy;
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

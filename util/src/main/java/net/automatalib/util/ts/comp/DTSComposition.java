@@ -15,8 +15,8 @@
  */
 package net.automatalib.util.ts.comp;
 
+import net.automatalib.api.ts.DeterministicTransitionSystem;
 import net.automatalib.common.util.Pair;
-import net.automatalib.ts.DeterministicTransitionSystem;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 @SuppressWarnings("nullness") // nullness of composed states and transitions depends on partiality

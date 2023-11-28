@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.Deque;
 
 import com.google.common.collect.AbstractIterator;
+import net.automatalib.api.ts.TransitionSystem;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.traversal.VisitedState;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

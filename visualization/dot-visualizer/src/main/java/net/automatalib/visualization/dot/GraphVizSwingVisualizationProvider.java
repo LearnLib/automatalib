@@ -21,9 +21,9 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import net.automatalib.graph.Graph;
+import net.automatalib.api.graph.Graph;
+import net.automatalib.api.visualization.VisualizationHelper;
 import net.automatalib.serialization.dot.GraphDOT;
-import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationProvider;
 import org.kohsuke.MetaInfServices;
 

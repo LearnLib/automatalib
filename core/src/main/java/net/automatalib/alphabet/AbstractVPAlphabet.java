@@ -19,6 +19,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.VPAlphabet;
+
 /**
  * Abstract utility class that implements functionality shared across different subtypes.
  */

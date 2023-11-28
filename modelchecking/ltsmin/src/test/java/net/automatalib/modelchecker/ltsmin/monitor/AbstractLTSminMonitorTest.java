@@ -15,10 +15,10 @@
  */
 package net.automatalib.modelchecker.ltsmin.monitor;
 
-import net.automatalib.automaton.concept.Output;
+import net.automatalib.api.automaton.concept.Output;
+import net.automatalib.api.word.Word;
 import net.automatalib.modelchecker.ltsmin.AbstractLTSminTest;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
-import net.automatalib.word.Word;
 
 public abstract class AbstractLTSminMonitorTest<A, R extends Output<String, ?>> extends AbstractLTSminTest<A, R> {
 

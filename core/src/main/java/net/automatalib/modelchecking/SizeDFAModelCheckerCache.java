@@ -17,8 +17,9 @@ package net.automatalib.modelchecking;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.modelchecking.ModelCheckerCache.DFAModelCheckerCache;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.modelchecking.ModelChecker;
+import net.automatalib.api.modelchecking.ModelCheckerCache.DFAModelCheckerCache;
 
 /**
  * A DFAModelCheckerCache that invalidates the cached counter examples when

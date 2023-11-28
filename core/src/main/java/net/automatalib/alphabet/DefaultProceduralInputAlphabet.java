@@ -15,6 +15,9 @@
  */
 package net.automatalib.alphabet;
 
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+
 /**
  * Default implementation of a {@link ProceduralInputAlphabet}.
  *

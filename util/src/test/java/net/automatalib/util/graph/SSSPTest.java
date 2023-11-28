@@ -18,9 +18,9 @@ package net.automatalib.util.graph;
 import java.util.Arrays;
 import java.util.List;
 
+import net.automatalib.api.graph.concept.EdgeWeights;
 import net.automatalib.graph.CompactSimpleGraph;
 import net.automatalib.graph.base.CompactEdge;
-import net.automatalib.graph.concept.EdgeWeights;
 import net.automatalib.util.graph.concept.PropertyEdgeWeights;
 import net.automatalib.util.graph.sssp.SSSPResult;
 import org.testng.Assert;

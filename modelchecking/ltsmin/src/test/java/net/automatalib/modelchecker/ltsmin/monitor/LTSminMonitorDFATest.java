@@ -15,8 +15,8 @@
  */
 package net.automatalib.modelchecker.ltsmin.monitor;
 
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.exception.ModelCheckingException;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.exception.ModelCheckingException;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.testng.annotations.Test;
 

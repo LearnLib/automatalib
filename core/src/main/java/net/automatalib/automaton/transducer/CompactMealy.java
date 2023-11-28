@@ -17,8 +17,10 @@ package net.automatalib.automaton.transducer;
 
 import java.util.Arrays;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.AutomatonCreator;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
+import net.automatalib.api.automaton.transducer.StateLocalInputMealyMachine;
 import net.automatalib.automaton.CompactTransition;
 import net.automatalib.automaton.base.AbstractCompact;
 import net.automatalib.automaton.base.AbstractCompactDeterministic;

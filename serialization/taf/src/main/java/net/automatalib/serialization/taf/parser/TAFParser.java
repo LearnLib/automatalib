@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 
-import net.automatalib.automaton.FiniteAlphabetAutomaton;
+import net.automatalib.api.automaton.FiniteAlphabetAutomaton;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.common.util.IOUtil;

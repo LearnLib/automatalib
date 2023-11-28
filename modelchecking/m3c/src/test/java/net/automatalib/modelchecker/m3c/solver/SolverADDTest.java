@@ -19,11 +19,11 @@ import java.util.Collections;
 
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.automaton.procedural.SPA;
+import net.automatalib.api.graph.ContextFreeModalProcessSystem;
 import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.StackSPA;
-import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;

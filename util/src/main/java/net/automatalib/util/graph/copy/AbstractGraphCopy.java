@@ -15,10 +15,10 @@
  */
 package net.automatalib.util.graph.copy;
 
+import net.automatalib.api.graph.IndefiniteGraph;
+import net.automatalib.api.graph.MutableGraph;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.graph.IndefiniteGraph;
-import net.automatalib.graph.MutableGraph;
 import org.checkerframework.checker.nullness.qual.EnsuresKeyFor;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;

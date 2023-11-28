@@ -20,12 +20,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import net.automatalib.AutomataLibProperty;
-import net.automatalib.AutomataLibSettings;
-import net.automatalib.automaton.Automaton;
-import net.automatalib.automaton.graph.TransitionEdge;
-import net.automatalib.graph.Graph;
-import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.api.AutomataLibProperty;
+import net.automatalib.api.AutomataLibSettings;
+import net.automatalib.api.automaton.Automaton;
+import net.automatalib.api.automaton.graph.TransitionEdge;
+import net.automatalib.api.graph.Graph;
+import net.automatalib.api.graph.concept.GraphViewable;
+import net.automatalib.api.visualization.VisualizationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

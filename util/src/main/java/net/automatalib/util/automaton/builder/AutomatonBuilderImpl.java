@@ -24,7 +24,7 @@ import java.util.Map;
 import de.learnlib.tooling.annotation.DocGenType;
 import de.learnlib.tooling.annotation.edsl.Action;
 import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
-import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.api.automaton.MutableAutomaton;
 
 /**
  * A fluent builder for {@link net.automatalib.automaton.Automaton automata}.

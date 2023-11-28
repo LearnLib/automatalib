@@ -24,9 +24,9 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import com.google.common.collect.Sets;
-import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.api.automaton.DeterministicAutomaton;
+import net.automatalib.api.word.Word;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Covers {

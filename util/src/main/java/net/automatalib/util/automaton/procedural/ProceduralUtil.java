@@ -29,12 +29,12 @@ import java.util.function.BiPredicate;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.word.Word;
+import net.automatalib.api.word.WordBuilder;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.cover.Covers;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 final class ProceduralUtil {

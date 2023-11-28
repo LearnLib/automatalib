@@ -18,12 +18,12 @@ package net.automatalib.modelchecking.modelchecker.cache;
 import java.util.Collection;
 import java.util.Collections;
 
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.modelchecking.Lasso;
-import net.automatalib.modelchecking.Lasso.DFALasso;
-import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.ModelCheckerLasso;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.modelchecking.Lasso;
+import net.automatalib.api.modelchecking.Lasso.DFALasso;
+import net.automatalib.api.modelchecking.Lasso.MealyLasso;
+import net.automatalib.api.modelchecking.ModelCheckerLasso;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 

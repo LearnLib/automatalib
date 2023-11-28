@@ -23,10 +23,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Maps;
+import net.automatalib.api.graph.ads.ADSNode;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.common.util.Pair;
-import net.automatalib.graph.ads.ADSNode;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 
 public abstract class AbstractADSTest {

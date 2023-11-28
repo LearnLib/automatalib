@@ -19,12 +19,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Predicate;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
+import net.automatalib.api.ts.TransitionPredicate;
 import net.automatalib.automaton.transducer.CompactMealy;
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.common.util.mapping.Mapping;
-import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.predicate.TransitionPredicates;

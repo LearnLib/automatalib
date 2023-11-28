@@ -15,7 +15,8 @@
  */
 package net.automatalib.automaton.transducer;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.transducer.MutableMooreMachine;
 import net.automatalib.automaton.base.AbstractFastMutableDet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

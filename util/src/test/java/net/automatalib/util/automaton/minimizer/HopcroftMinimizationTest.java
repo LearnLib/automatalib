@@ -15,11 +15,11 @@
  */
 package net.automatalib.util.automaton.minimizer;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.MutableDFA;
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.fsa.MutableDFA;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
 import net.automatalib.util.automaton.minimizer.hopcroft.HopcroftMinimization;
 import net.automatalib.util.automaton.minimizer.hopcroft.HopcroftMinimization.PruningMode;
 import org.testng.annotations.DataProvider;

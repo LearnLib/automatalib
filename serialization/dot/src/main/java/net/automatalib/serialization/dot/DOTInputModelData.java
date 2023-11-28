@@ -15,10 +15,10 @@
  */
 package net.automatalib.serialization.dot;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.ts.simple.SimpleTS;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.serialization.InputModelData;
-import net.automatalib.ts.simple.SimpleTS;
 
 /**
  * A utility data class, that extends {@link InputModelData} by labeling information of the model's states.

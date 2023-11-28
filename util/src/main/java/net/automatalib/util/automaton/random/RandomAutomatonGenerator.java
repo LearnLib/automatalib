@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.api.automaton.MutableAutomaton;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.common.util.random.RandomUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;

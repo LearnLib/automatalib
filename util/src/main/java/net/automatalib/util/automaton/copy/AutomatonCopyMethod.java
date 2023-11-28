@@ -19,9 +19,9 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import net.automatalib.automaton.Automaton;
-import net.automatalib.automaton.MutableAutomaton;
-import net.automatalib.ts.TransitionPredicate;
+import net.automatalib.api.automaton.Automaton;
+import net.automatalib.api.automaton.MutableAutomaton;
+import net.automatalib.api.ts.TransitionPredicate;
 import net.automatalib.util.traversal.TraversalOrder;
 
 public interface AutomatonCopyMethod {

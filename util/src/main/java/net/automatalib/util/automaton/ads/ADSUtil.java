@@ -21,12 +21,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.math.LongMath;
-import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.graph.ads.ADSNode;
+import net.automatalib.api.word.Word;
+import net.automatalib.api.word.WordBuilder;
 import net.automatalib.common.util.Pair;
-import net.automatalib.graph.ads.ADSNode;
 import net.automatalib.graph.ads.ADSSymbolNode;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 
 /**
  * Utility class, that offers some operations revolving around adaptive distinguishing sequences.

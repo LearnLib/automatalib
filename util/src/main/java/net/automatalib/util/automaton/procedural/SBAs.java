@@ -24,23 +24,23 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.google.common.collect.Maps;
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.fsa.MutableDFA;
+import net.automatalib.api.automaton.procedural.SBA;
+import net.automatalib.api.automaton.procedural.SPA;
+import net.automatalib.api.automaton.procedural.SPMM;
+import net.automatalib.api.graph.ContextFreeModalProcessSystem;
+import net.automatalib.api.ts.TransitionPredicate;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.MutableDFA;
-import net.automatalib.automaton.procedural.SBA;
-import net.automatalib.automaton.procedural.SPA;
-import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.StackSPA;
-import net.automatalib.graph.ContextFreeModalProcessSystem;
-import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.fsa.DFAs;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.predicate.TransitionPredicates;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

@@ -22,12 +22,12 @@ import java.util.Random;
 import javax.swing.SwingUtilities;
 
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.visualization.VisualizationHelper;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.common.util.system.JVMUtil;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.visualization.VPManager;
 import net.automatalib.visualization.Visualization;
-import net.automatalib.visualization.VisualizationHelper;
 import net.automatalib.visualization.VisualizationProvider;
 import org.testng.Assert;
 import org.testng.SkipException;

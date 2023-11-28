@@ -21,9 +21,9 @@ import java.util.Iterator;
 import java.util.Queue;
 
 import com.google.common.collect.AbstractIterator;
-import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.api.automaton.DeterministicAutomaton;
+import net.automatalib.api.word.Word;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

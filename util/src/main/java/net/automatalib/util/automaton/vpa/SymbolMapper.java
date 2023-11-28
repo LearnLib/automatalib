@@ -15,10 +15,10 @@
  */
 package net.automatalib.util.automaton.vpa;
 
-import net.automatalib.alphabet.ProceduralInputAlphabet;
-import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.automaton.procedural.SPA;
-import net.automatalib.automaton.vpa.SEVPA;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.alphabet.VPAlphabet;
+import net.automatalib.api.automaton.procedural.SPA;
+import net.automatalib.api.automaton.vpa.SEVPA;
 
 /**
  * An interface for mapping (abstract) {@link SEVPA} input symbols to concrete {@link SPA} input symbols.

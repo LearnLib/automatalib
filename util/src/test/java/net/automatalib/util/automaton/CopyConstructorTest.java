@@ -21,12 +21,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.automaton.fsa.NFA;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;
-import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.CompactMoore;
 import net.automatalib.automaton.transducer.CompactSST;
@@ -34,7 +35,6 @@ import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.fsa.NFAs;
 import net.automatalib.util.automaton.random.RandomAutomata;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

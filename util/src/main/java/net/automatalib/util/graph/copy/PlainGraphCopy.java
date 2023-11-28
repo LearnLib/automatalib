@@ -18,9 +18,9 @@ package net.automatalib.util.graph.copy;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.api.graph.Graph;
+import net.automatalib.api.graph.MutableGraph;
 import net.automatalib.common.util.mapping.Mapping;
-import net.automatalib.graph.Graph;
-import net.automatalib.graph.MutableGraph;
 
 final class PlainGraphCopy<N1, E1, N2, E2, NP2, EP2>
         extends AbstractGraphCopy<N1, E1, N2, E2, NP2, EP2, Graph<N1, E1>> {

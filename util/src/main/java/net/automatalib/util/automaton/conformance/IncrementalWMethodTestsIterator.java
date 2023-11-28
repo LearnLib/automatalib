@@ -20,11 +20,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.word.Word;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.cover.Covers;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

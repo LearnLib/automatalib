@@ -15,9 +15,9 @@
  */
 package net.automatalib.incremental.dfa;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.concept.InputAlphabetHolder;
 
 /**
  * Abstract base class for {@link IncrementalDFABuilder}s. This class takes care of holding the input alphabet and its

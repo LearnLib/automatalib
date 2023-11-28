@@ -23,9 +23,9 @@ import java.util.Objects;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;
-import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.common.util.Holder;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.util.ts.traversal.TSTraversalAction;

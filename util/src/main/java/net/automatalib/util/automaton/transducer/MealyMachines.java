@@ -17,12 +17,12 @@ package net.automatalib.util.automaton.transducer;
 
 import java.util.Collection;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
+import net.automatalib.api.ts.output.MealyTransitionSystem;
 import net.automatalib.automaton.transducer.CompactMealy;
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.common.util.Pair;
-import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.ts.copy.TSCopy;

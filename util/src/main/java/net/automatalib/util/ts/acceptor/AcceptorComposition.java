@@ -17,8 +17,8 @@ package net.automatalib.util.ts.acceptor;
 
 import java.util.Collection;
 
+import net.automatalib.api.ts.acceptor.AcceptorTS;
 import net.automatalib.common.util.Pair;
-import net.automatalib.ts.acceptor.AcceptorTS;
 import net.automatalib.util.ts.comp.TSComposition;
 
 final class AcceptorComposition<S1, S2, I, A1 extends AcceptorTS<S1, I>, A2 extends AcceptorTS<S2, I>>

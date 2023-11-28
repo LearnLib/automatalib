@@ -21,8 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
 import net.automatalib.common.util.mapping.Mapping;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

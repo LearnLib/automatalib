@@ -17,9 +17,9 @@ package net.automatalib.modelchecker.m3c.visualization;
 
 import java.util.Map;
 
+import net.automatalib.api.visualization.VisualizationHelper;
 import net.automatalib.graph.base.CompactEdge;
 import net.automatalib.modelchecker.m3c.solver.WitnessTree;
-import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * A {@link VisualizationHelper} for {@link WitnessTree}s that emphasizes edges of the witness and de-emphasizes the

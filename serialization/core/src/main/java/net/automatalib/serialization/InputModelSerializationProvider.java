@@ -15,7 +15,7 @@
  */
 package net.automatalib.serialization;
 
-import net.automatalib.ts.simple.SimpleTS;
+import net.automatalib.api.ts.simple.SimpleTS;
 
 /**
  * A utility interface that unions {@link InputModelSerializer} and {@link InputModelDeserializer} and extends {@link

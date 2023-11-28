@@ -17,8 +17,9 @@ package net.automatalib.automaton.fsa;
 
 import java.util.BitSet;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.AutomatonCreator;
+import net.automatalib.api.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.base.AbstractCompactSimpleDeterministic;
 import net.automatalib.common.util.WrapperUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;

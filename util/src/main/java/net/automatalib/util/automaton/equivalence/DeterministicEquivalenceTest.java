@@ -22,10 +22,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.concept.StateIDs;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
+import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.automaton.concept.StateIDs;
+import net.automatalib.api.word.Word;
+import net.automatalib.api.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class DeterministicEquivalenceTest {

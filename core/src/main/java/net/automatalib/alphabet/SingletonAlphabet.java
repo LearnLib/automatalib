@@ -17,6 +17,8 @@ package net.automatalib.alphabet;
 
 import java.util.Objects;
 
+import net.automatalib.api.alphabet.Alphabet;
+
 /**
  * A specialized implementation for {@link Alphabet}s containing only a single symbol.
  *

@@ -17,6 +17,7 @@ package net.automatalib.ts.modal.transition;
 
 import java.util.Objects;
 
+import net.automatalib.api.ts.modal.transition.MutableProceduralModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ProceduralModalEdgePropertyImpl extends ModalEdgePropertyImpl

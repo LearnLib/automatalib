@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.dfa;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
 import net.automatalib.incremental.dfa.tree.IncrementalDFATreeBuilder;
 import org.testng.annotations.Test;
 

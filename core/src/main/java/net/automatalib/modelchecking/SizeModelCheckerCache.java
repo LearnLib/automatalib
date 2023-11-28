@@ -21,7 +21,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import net.automatalib.automaton.simple.SimpleAutomaton;
+import net.automatalib.api.automaton.simple.SimpleAutomaton;
+import net.automatalib.api.modelchecking.ModelChecker;
+import net.automatalib.api.modelchecking.ModelCheckerCache;
 import net.automatalib.common.util.Pair;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

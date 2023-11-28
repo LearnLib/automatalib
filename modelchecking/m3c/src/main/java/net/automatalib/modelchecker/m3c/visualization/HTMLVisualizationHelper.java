@@ -17,9 +17,9 @@ package net.automatalib.modelchecker.m3c.visualization;
 
 import java.util.Map;
 
+import net.automatalib.api.visualization.VisualizationHelper;
 import net.automatalib.modelchecker.m3c.solver.WitnessTree;
 import net.automatalib.modelchecker.m3c.solver.WitnessTreeState;
-import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * A {@link VisualizationHelper} for {@link WitnessTree}s that renders the node labels as an HTML-based table. Note that

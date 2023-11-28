@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
 import net.automatalib.ts.powerset.FastPowersetDTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

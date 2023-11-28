@@ -25,11 +25,11 @@ import java.util.function.Function;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import net.automatalib.automaton.concept.Output;
-import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.api.automaton.concept.Output;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.word.Word;
+import net.automatalib.api.word.WordBuilder;
 import net.automatalib.common.util.Pair;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

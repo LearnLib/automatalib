@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.NFA;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.fsa.NFA;
 import net.automatalib.common.util.collection.PositiveIntSet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

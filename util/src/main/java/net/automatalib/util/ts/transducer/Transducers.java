@@ -15,8 +15,8 @@
  */
 package net.automatalib.util.ts.transducer;
 
+import net.automatalib.api.ts.output.MealyTransitionSystem;
 import net.automatalib.common.util.Pair;
-import net.automatalib.ts.output.MealyTransitionSystem;
 
 public final class Transducers {
 

@@ -18,6 +18,8 @@ package net.automatalib.alphabet;
 import java.util.Arrays;
 import java.util.Collection;
 
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.VPAlphabet;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

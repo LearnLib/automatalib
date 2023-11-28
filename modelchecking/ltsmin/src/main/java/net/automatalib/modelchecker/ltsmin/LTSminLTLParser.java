@@ -17,8 +17,8 @@ package net.automatalib.modelchecker.ltsmin;
 
 import java.io.StringReader;
 
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.transducer.MealyMachine;
 import net.automatalib.serialization.etf.writer.DFA2ETFWriter;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO;

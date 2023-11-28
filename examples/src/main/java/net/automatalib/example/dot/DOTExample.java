@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.Automaton;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.Automaton;
 import net.automatalib.common.util.Pair;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.random.RandomAutomata;

@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.Deque;
 
 import com.google.common.collect.AbstractIterator;
+import net.automatalib.api.graph.IndefiniteGraph;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.graph.IndefiniteGraph;
 import net.automatalib.util.traversal.VisitedState;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

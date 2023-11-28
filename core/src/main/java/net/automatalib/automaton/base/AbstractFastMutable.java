@@ -17,13 +17,13 @@ package net.automatalib.automaton.base;
 
 import java.util.Collection;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.ShrinkableAutomaton;
-import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
-import net.automatalib.automaton.concept.StateIDs;
-import net.automatalib.automaton.concept.StateLocalInput;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.api.automaton.ShrinkableAutomaton;
+import net.automatalib.api.automaton.UniversalFiniteAlphabetAutomaton;
+import net.automatalib.api.automaton.concept.StateIDs;
+import net.automatalib.api.automaton.concept.StateLocalInput;
 import net.automatalib.common.util.mapping.ArrayMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.common.util.nid.DynamicList;

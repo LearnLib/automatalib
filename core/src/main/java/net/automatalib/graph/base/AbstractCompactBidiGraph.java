@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import net.automatalib.api.graph.BidirectionalGraph;
+import net.automatalib.api.graph.MutableUniversalBidirectionalGraph;
 import net.automatalib.common.smartcollection.ResizingArrayStorage;
-import net.automatalib.graph.BidirectionalGraph;
-import net.automatalib.graph.MutableUniversalBidirectionalGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractCompactBidiGraph<@Nullable NP, @Nullable EP>

@@ -18,9 +18,10 @@ package net.automatalib.automaton;
 import java.util.HashSet;
 
 import com.google.common.collect.Sets;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.concept.StateLocalInput;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.MutableAutomaton;
+import net.automatalib.api.automaton.concept.StateLocalInput;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;
 import net.automatalib.automaton.fsa.FastDFA;

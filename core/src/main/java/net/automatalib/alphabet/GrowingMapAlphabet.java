@@ -17,6 +17,8 @@ package net.automatalib.alphabet;
 
 import java.util.Collection;
 
+import net.automatalib.api.alphabet.GrowingAlphabet;
+
 /**
  * An extension of the {@link MapAlphabet} that also allows adding new symbol after construction.
  *

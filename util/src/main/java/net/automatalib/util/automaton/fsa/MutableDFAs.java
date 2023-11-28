@@ -17,7 +17,7 @@ package net.automatalib.util.automaton.fsa;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.fsa.MutableDFA;
+import net.automatalib.api.automaton.fsa.MutableDFA;
 import net.automatalib.util.automaton.Automata;
 
 public final class MutableDFAs {

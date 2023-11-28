@@ -17,9 +17,9 @@ package net.automatalib.modelchecking;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.concept.DetOutputAutomaton;
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.modelchecking.Lasso.DFALasso;
+import net.automatalib.api.automaton.concept.DetOutputAutomaton;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.modelchecking.Lasso.DFALasso;
 
 /**
  * A DFALasso is a lasso for {@link DFA}s.

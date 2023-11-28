@@ -22,8 +22,8 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.Queue;
 
+import net.automatalib.api.graph.IndefiniteGraph;
 import net.automatalib.common.util.Holder;
-import net.automatalib.graph.IndefiniteGraph;
 import net.automatalib.util.graph.traversal.DFRecord.LastEdge;
 import net.automatalib.util.traversal.TraversalOrder;
 import org.checkerframework.checker.nullness.qual.NonNull;

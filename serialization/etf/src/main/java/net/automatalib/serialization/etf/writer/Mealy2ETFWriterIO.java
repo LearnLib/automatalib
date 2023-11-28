@@ -20,9 +20,9 @@ import java.io.PrintWriter;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.concept.StateIDs;
-import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.concept.StateIDs;
+import net.automatalib.api.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.IOUtil;
 
 /**

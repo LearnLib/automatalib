@@ -17,12 +17,12 @@ package net.automatalib.util.automaton.transducer;
 
 import java.util.Objects;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

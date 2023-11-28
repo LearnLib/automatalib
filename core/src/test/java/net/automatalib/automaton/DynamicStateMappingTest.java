@@ -18,6 +18,7 @@ package net.automatalib.automaton;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.api.automaton.ShrinkableAutomaton;
 import net.automatalib.automaton.util.TestUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
 import org.testng.Assert;

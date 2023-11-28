@@ -15,19 +15,19 @@
  */
 package net.automatalib.util.automaton.builder;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.MutableAutomaton;
+import net.automatalib.api.automaton.fsa.MutableDFA;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
+import net.automatalib.api.automaton.transducer.MutableMooreMachine;
+import net.automatalib.api.automaton.transducer.MutableSubsequentialTransducer;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.CompactTransition;
-import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;
-import net.automatalib.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.CompactMoore;
 import net.automatalib.automaton.transducer.CompactSST;
-import net.automatalib.automaton.transducer.MutableMealyMachine;
-import net.automatalib.automaton.transducer.MutableMooreMachine;
-import net.automatalib.automaton.transducer.MutableSubsequentialTransducer;
-import net.automatalib.word.Word;
 
 /**
  * Fluent builders for automata.

@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
+import net.automatalib.api.graph.Graph;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.graph.Graph;
 import net.automatalib.serialization.ModelSerializer;
 
 public final class DOTSerializationProvider<N, E> implements ModelSerializer<Graph<N, E>> {

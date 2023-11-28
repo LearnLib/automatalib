@@ -17,6 +17,8 @@ package net.automatalib.alphabet;
 
 import java.util.AbstractList;
 
+import net.automatalib.api.alphabet.Alphabet;
+
 public abstract class AbstractAlphabet<I> extends AbstractList<I> implements Alphabet<I> {
 
     @Override

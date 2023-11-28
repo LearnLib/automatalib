@@ -18,7 +18,7 @@ package net.automatalib.util.automaton.builder;
 import de.learnlib.tooling.annotation.DocGenType;
 import de.learnlib.tooling.annotation.edsl.Action;
 import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
-import net.automatalib.automaton.fsa.MutableFSA;
+import net.automatalib.api.automaton.fsa.MutableFSA;
 
 /**
  * A fluent builder for {@link net.automatalib.automaton.fsa.FiniteStateAcceptor}s.

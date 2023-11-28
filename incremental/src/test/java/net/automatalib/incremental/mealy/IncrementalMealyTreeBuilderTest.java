@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.mealy;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
 import net.automatalib.incremental.mealy.tree.IncrementalMealyTreeBuilder;
 import org.testng.annotations.Test;
 

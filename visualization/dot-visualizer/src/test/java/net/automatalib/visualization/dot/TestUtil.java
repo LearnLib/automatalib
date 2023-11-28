@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Random;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.serialization.dot.GraphDOT;
 import net.automatalib.util.automaton.random.RandomAutomata;

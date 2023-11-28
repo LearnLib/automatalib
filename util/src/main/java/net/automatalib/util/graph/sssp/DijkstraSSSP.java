@@ -19,12 +19,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.automatalib.api.graph.Graph;
+import net.automatalib.api.graph.concept.EdgeWeights;
 import net.automatalib.common.smartcollection.BinaryHeap;
 import net.automatalib.common.smartcollection.ElementReference;
 import net.automatalib.common.smartcollection.SmartDynamicPriorityQueue;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.graph.Graph;
-import net.automatalib.graph.concept.EdgeWeights;
 import net.automatalib.util.graph.Graphs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;

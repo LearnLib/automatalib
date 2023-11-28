@@ -16,6 +16,7 @@
 package net.automatalib.automaton.transducer;
 
 import net.automatalib.alphabet.Symbol;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.util.TestUtil;
 
 public class FastMealyTest extends AbstractMutableMealyTest {

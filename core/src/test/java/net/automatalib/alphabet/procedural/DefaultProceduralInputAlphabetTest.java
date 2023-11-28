@@ -15,8 +15,8 @@
  */
 package net.automatalib.alphabet.procedural;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
+import net.automatalib.api.alphabet.Alphabet;
 
 public class DefaultProceduralInputAlphabetTest extends AbstractProceduralInputAlphabetTest<DefaultProceduralInputAlphabet<Character>> {
 

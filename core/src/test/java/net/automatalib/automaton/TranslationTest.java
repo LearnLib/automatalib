@@ -18,11 +18,11 @@ package net.automatalib.automaton;
 import java.util.Arrays;
 import java.util.Collections;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;
-import net.automatalib.word.Word;
 import org.testng.annotations.Test;
 
 public class TranslationTest {

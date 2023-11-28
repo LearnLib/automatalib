@@ -23,6 +23,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.GrowingAlphabet;
+
 /**
  * A {@link Collector} that collects individual symbols and aggregates them in a {@link Alphabet}. Convenience class to
  * use a {@link GrowingMapAlphabet} in stream-reduction operations.

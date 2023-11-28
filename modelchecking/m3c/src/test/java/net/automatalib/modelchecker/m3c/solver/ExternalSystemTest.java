@@ -22,8 +22,8 @@ import java.util.function.Function;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.automatalib.api.graph.ContextFreeModalProcessSystem;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;

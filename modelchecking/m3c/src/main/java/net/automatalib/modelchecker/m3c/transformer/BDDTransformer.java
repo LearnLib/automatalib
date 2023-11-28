@@ -23,6 +23,7 @@ import java.util.Set;
 
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
+import net.automatalib.api.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.modelchecker.m3c.formula.AbstractModalFormulaNode;
 import net.automatalib.modelchecker.m3c.formula.AndNode;
 import net.automatalib.modelchecker.m3c.formula.AtomicNode;
@@ -35,7 +36,6 @@ import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.NotNode;
 import net.automatalib.modelchecker.m3c.formula.OrNode;
 import net.automatalib.modelchecker.m3c.formula.TrueNode;
-import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

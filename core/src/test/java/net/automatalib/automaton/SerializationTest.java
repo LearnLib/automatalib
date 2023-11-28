@@ -18,10 +18,11 @@ package net.automatalib.automaton;
 import java.util.Collection;
 
 import com.thoughtworks.xstream.XStream;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.FastAlphabet;
 import net.automatalib.alphabet.GrowingMapAlphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.MutableAutomaton;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;
 import net.automatalib.automaton.fsa.FastDFA;

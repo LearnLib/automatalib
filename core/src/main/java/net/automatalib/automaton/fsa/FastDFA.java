@@ -15,7 +15,8 @@
  */
 package net.automatalib.automaton.fsa;
 
-import net.automatalib.alphabet.Alphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.fsa.MutableDFA;
 import net.automatalib.automaton.base.AbstractFastMutableDet;
 import net.automatalib.common.util.WrapperUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;

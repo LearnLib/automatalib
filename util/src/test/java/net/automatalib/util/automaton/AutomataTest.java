@@ -15,8 +15,8 @@
  */
 package net.automatalib.util.automaton;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.util.automaton.fsa.DFAs;

@@ -20,8 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.automatalib.alphabet.Symbol;
+import net.automatalib.api.automaton.transducer.MutableMealyMachine;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.util.TestUtil;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

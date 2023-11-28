@@ -21,8 +21,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
+import net.automatalib.api.graph.IndefiniteGraph;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.graph.IndefiniteGraph;
 import net.automatalib.util.traversal.VisitedState;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

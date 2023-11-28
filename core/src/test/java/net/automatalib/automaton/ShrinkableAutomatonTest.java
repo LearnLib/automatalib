@@ -18,13 +18,13 @@ package net.automatalib.automaton;
 import java.util.Collections;
 
 import net.automatalib.alphabet.Symbol;
-import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.api.automaton.concept.StateIDs;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.FastNFA;
 import net.automatalib.automaton.fsa.FastNFAState;
 import net.automatalib.automaton.transducer.FastMealy;
 import net.automatalib.automaton.transducer.FastMealyState;
 import net.automatalib.automaton.util.TestUtil;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

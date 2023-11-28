@@ -20,11 +20,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.GrowingMapAlphabet;
-import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.automaton.concept.Output;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.api.automaton.MutableAutomaton;
+import net.automatalib.api.automaton.concept.Output;
+import net.automatalib.api.exception.GrowingAlphabetNotSupportedException;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.CompactNFA;
 import net.automatalib.automaton.fsa.FastDFA;
@@ -35,8 +38,6 @@ import net.automatalib.automaton.transducer.CompactSST;
 import net.automatalib.automaton.transducer.FastMealy;
 import net.automatalib.automaton.transducer.FastMoore;
 import net.automatalib.automaton.transducer.probabilistic.FastProbMealy;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

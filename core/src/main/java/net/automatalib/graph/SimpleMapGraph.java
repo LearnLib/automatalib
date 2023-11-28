@@ -26,6 +26,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import com.google.common.collect.Iterators;
+import net.automatalib.api.graph.MutableGraph;
+import net.automatalib.api.graph.ShrinkableGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

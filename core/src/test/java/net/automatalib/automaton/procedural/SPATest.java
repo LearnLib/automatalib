@@ -18,15 +18,16 @@ package net.automatalib.automaton.procedural;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
-import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.alphabet.ProceduralInputAlphabet;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.procedural.SPA;
+import net.automatalib.api.word.Word;
 import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.FastDFA;
 import net.automatalib.automaton.fsa.FastDFAState;
-import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

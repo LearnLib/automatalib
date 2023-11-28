@@ -17,10 +17,10 @@ package net.automatalib.modelchecking.lasso;
 
 import java.util.Collection;
 
-import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.word.Word;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.modelchecking.DFALassoImpl;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
 import org.testng.annotations.Test;

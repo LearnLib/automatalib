@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Paths;
 
-import net.automatalib.AutomataLibProperty;
-import net.automatalib.AutomataLibSettings;
+import net.automatalib.api.AutomataLibProperty;
+import net.automatalib.api.AutomataLibSettings;
 import net.automatalib.common.util.process.ProcessUtil;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;

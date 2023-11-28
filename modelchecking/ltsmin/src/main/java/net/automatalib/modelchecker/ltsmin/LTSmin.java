@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
-import net.automatalib.exception.ModelCheckingException;
-import net.automatalib.modelchecking.ModelChecker;
+import net.automatalib.api.exception.ModelCheckingException;
+import net.automatalib.api.modelchecking.ModelChecker;
 
 /**
  * An LTSmin model checker.

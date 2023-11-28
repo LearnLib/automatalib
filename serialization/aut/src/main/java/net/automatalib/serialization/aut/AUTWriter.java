@@ -22,9 +22,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.concept.StateIDs;
-import net.automatalib.automaton.simple.SimpleAutomaton;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.concept.StateIDs;
+import net.automatalib.api.automaton.simple.SimpleAutomaton;
 import net.automatalib.common.util.IOUtil;
 
 /**

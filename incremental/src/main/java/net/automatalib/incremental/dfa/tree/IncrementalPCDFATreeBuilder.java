@@ -20,19 +20,19 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 
-import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.fsa.DFA;
-import net.automatalib.automaton.graph.TransitionEdge;
-import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.api.automaton.graph.TransitionEdge;
+import net.automatalib.api.automaton.graph.UniversalAutomatonGraphView;
+import net.automatalib.api.graph.Graph;
+import net.automatalib.api.ts.UniversalDTS;
+import net.automatalib.api.visualization.VisualizationHelper;
+import net.automatalib.api.word.Word;
+import net.automatalib.api.word.WordBuilder;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.AbstractVisualizationHelper;
 import net.automatalib.incremental.dfa.Acceptance;
-import net.automatalib.ts.UniversalDTS;
-import net.automatalib.visualization.VisualizationHelper;
-import net.automatalib.word.Word;
-import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

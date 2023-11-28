@@ -18,13 +18,15 @@ package net.automatalib.visualization;
 import java.util.List;
 import java.util.Map;
 
-import net.automatalib.graph.Graph;
+import net.automatalib.api.AutomataLibProperty;
+import net.automatalib.api.graph.Graph;
+import net.automatalib.api.visualization.VisualizationHelper;
 
 public interface VisualizationProvider {
 
     /**
      * Returns the id of the visualization provider. This value is used and matched against the
-     * {@link net.automatalib.AutomataLibProperty#VISUALIZATION_PROVIDER} property to select the chosen visualization
+     * {@link AutomataLibProperty#VISUALIZATION_PROVIDER} property to select the chosen visualization
      * provider.
      *
      * @return the id of the provider
@@ -42,7 +44,7 @@ public interface VisualizationProvider {
 
     /**
      * Returns the priority of the provider. If no provider is selected via the
-     * {@link net.automatalib.AutomataLibProperty#VISUALIZATION_PROVIDER} property, the provider with the highest
+     * {@link AutomataLibProperty#VISUALIZATION_PROVIDER} property, the provider with the highest
      * priority is chosen.
      *
      * @return the priority of the provider

@@ -20,14 +20,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import net.automatalib.automaton.Automaton;
-import net.automatalib.automaton.DeterministicAutomaton;
-import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.api.automaton.Automaton;
+import net.automatalib.api.automaton.DeterministicAutomaton;
+import net.automatalib.api.automaton.MutableDeterministic;
+import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.automaton.graph.TransitionEdge;
+import net.automatalib.api.graph.Graph;
+import net.automatalib.api.graph.UniversalGraph;
+import net.automatalib.api.word.Word;
 import net.automatalib.common.util.collection.CollectionsUtil;
-import net.automatalib.graph.Graph;
-import net.automatalib.graph.UniversalGraph;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
 import net.automatalib.util.automaton.equivalence.DeterministicEquivalenceTest;
@@ -38,7 +39,6 @@ import net.automatalib.util.minimizer.MinimizationResult;
 import net.automatalib.util.minimizer.Minimizer;
 import net.automatalib.util.ts.TS;
 import net.automatalib.util.ts.TS.TransRef;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class Automata {

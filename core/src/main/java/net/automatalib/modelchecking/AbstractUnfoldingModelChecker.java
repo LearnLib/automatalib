@@ -15,6 +15,8 @@
  */
 package net.automatalib.modelchecking;
 
+import net.automatalib.api.modelchecking.Lasso;
+import net.automatalib.api.modelchecking.ModelCheckerLasso;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 /**

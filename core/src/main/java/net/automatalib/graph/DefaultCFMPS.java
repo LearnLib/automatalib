@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
+import net.automatalib.api.graph.ContextFreeModalProcessSystem;
+import net.automatalib.api.graph.ProceduralModalProcessGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DefaultCFMPS<L, AP> implements ContextFreeModalProcessSystem<L, AP> {

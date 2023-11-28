@@ -20,16 +20,16 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
-import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
+import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.api.modelchecking.ModelChecker;
 import net.automatalib.automaton.transducer.CompactMealy;
-import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import net.automatalib.util.automaton.transducer.MealyFilter;
 
 /**
- * A feature of this {@link net.automatalib.modelchecking.ModelChecker}, is that one can remove particular output
+ * A feature of this {@link ModelChecker}, is that one can remove particular output
  * symbols from the given MealyMachine hypothesis. This is useful when those symbols are actually symbols representing
  * system deadlocks. When checking LTL formulae special attention has to be given to deadlock situations.
  *

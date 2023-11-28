@@ -27,11 +27,11 @@ import java.util.Objects;
 import java.util.Queue;
 
 import com.google.common.collect.AbstractIterator;
-import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.fsa.FiniteStateAcceptor;
+import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.api.automaton.fsa.FiniteStateAcceptor;
+import net.automatalib.api.word.Word;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
