@@ -31,7 +31,7 @@ Contributions -- whether it is in the form of new features, better documentation
 
 For simply using AutomataLib you may use the Maven artifacts which are available in the [Maven Central repository][maven-central].
 It is also possible to download a bundled [distribution artifact][maven-central-distr] if you want to use AutomataLib without Maven support.
-Note that AutomataLib requires Java 8 or newer.
+Note that AutomataLib requires Java 11 (or newer) to build but still supports Java 8 at runtime.
 
 #### Building development versions
 

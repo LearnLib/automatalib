@@ -152,8 +152,7 @@ public class ExamplesTest {
     }
 
     private static boolean isJVMCompatible() {
-        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        return canonicalSpecVersion <= 8 || canonicalSpecVersion == 11;
+        return JVMUtil.getCanonicalSpecVersion() == 11;
     }
 
     private static void requireJVMCompatibility() {

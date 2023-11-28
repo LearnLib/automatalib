@@ -44,8 +44,7 @@ public class DOTMultiDialogTest {
     @Test(timeOut = 30000)
     public void testFrame() throws InvocationTargetException, InterruptedException {
 
-        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
+        if (!(JVMUtil.getCanonicalSpecVersion() == 11)) {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
 
@@ -69,8 +68,7 @@ public class DOTMultiDialogTest {
     @Test(timeOut = 30000)
     public void testEmptyFrame() throws InvocationTargetException, InterruptedException {
 
-        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
+        if (!(JVMUtil.getCanonicalSpecVersion() == 11)) {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
 

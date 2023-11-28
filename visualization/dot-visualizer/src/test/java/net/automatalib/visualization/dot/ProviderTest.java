@@ -58,8 +58,7 @@ public class ProviderTest {
     @Test(dependsOnMethods = "testProviderConfiguration", timeOut = 10000)
     public void testDisplay() throws InterruptedException, InvocationTargetException {
 
-        final int canonicalSpecVersion = JVMUtil.getCanonicalSpecVersion();
-        if (!(canonicalSpecVersion <= 8 || canonicalSpecVersion == 11)) {
+        if (!(JVMUtil.getCanonicalSpecVersion() == 11)) {
             throw new SkipException("The headless AWT environment currently only works with Java 11 or <=8");
         }
 
