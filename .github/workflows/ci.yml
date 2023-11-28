@@ -64,7 +64,7 @@ jobs:
           key: cache-platform-integration-${{ matrix.jdk }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: cache-platform-integration-${{ matrix.jdk }}-
       - name: Run Maven
-        run: mvn -B '-Dmaven.compiler.source=${{ matrix.jdk }}' '-Dmaven.compiler.target=${{ matrix.jdk }}' '-Dautomatalib.targetVersion=${{ matrix.jdk }}' install
+        run: mvn -B install
   coverage:
     name: "Coverage"
     needs: [ platform-integration ]
