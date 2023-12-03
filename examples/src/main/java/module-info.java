@@ -14,5 +14,5 @@ open module net.automatalib.example {
     requires java.desktop;
     requires org.slf4j;
 
-    requires automaton;
+    requires static automaton;
 }

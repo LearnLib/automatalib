@@ -190,8 +190,6 @@ limitations under the License.
         <maven.compiler.release>8</maven.compiler.release>
         <argLine /> <!-- compatibility for property expansion in surefire-plugin -->
 
-        <automatalib.module-level>9</automatalib.module-level>
-
         <!-- plugin versions -->
         <antrun-plugin.version>3.1.0</antrun-plugin.version>
         <archetype-plugin.version>3.2.1</archetype-plugin.version>
@@ -649,6 +647,19 @@ limitations under the License.
                     <configuration>
                         <enableAssertions>true</enableAssertions>
                     </configuration>
+                    <executions>
+                        <!-- check that code also works when not interpreted as a module (java8) -->
+                        <execution>
+                            <id>classpath-test</id>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>test</goal>
+                            </goals>
+                            <configuration>
+                                <useModulePath>false</useModulePath>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -728,7 +739,6 @@ limitations under the License.
                             <link>${brics-automaton.apidocs}</link>
                             <link>${checkerframework.apidocs}</link>
                             <link>${guava.apidocs}</link>
-                            <link>${java8.apidocs}</link>
                             <link>${jung.apidocs}</link>
                         </links>
                     </configuration>
@@ -804,28 +814,40 @@ limitations under the License.
                         </annotationProcessorPaths>
                     </configuration>
                     <executions>
-                        <!-- Compile only the module-info.java at a module-aware level.
-                             Note that we do it in this order because if the module-info is missing, the plugin will
-                             compiler *everything* instead. In this case, the second execution step would then
-                             (correctly) override the .class files with java-8 compatible code -->
                         <execution>
                             <id>default-compile</id>
                             <goals>
                                 <goal>compile</goal>
                             </goals>
                             <configuration>
-                                <release>${automatalib.module-level}</release>
-                                <includes>module-info.java</includes>
+                                <!-- build only the module-info.java. if non-existent, this step does nothing -->
+                                <release>9</release>
+                                <includes>
+                                    <include>module-info.java</include>
+                                </includes>
                             </configuration>
                         </execution>
-                        <!-- Build everything but the module-info.java file with the default target level -->
                         <execution>
-                            <id>java-8-compile</id>
+                            <id>base-compile</id>
                             <goals>
                                 <goal>compile</goal>
                             </goals>
                             <configuration>
-                                <excludes>module-info.java</excludes>
+                                <!-- compile everything for target VM except the module-info.java -->
+                                <excludes>
+                                    <exclude>module-info.java</exclude>
+                                </excludes>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>module-compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <!-- compile everything in module-mode to ensure module-info contains right entries -->
+                                <release>9</release>
+                                <outputDirectory>${project.build.directory}/module-compile</outputDirectory>
                             </configuration>
                         </execution>
                     </executions>
@@ -886,6 +908,12 @@ limitations under the License.
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <release>11</release>
+                    <!-- TODO preferably we would use the maven-dependency-plugin:properties goal for this (like in the
+                    jung-visualization module but this would require a dependency on the artifact :( -->
+                    <additionalJOption>--patch-module=jung.api=${settings.localRepository}/net/sf/jung/jung-graph-impl/${jung.version}/jung-graph-impl-${jung.version}.jar</additionalJOption>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <id>non-aggregate</id>
@@ -894,9 +922,6 @@ limitations under the License.
                     <reportSet>
                         <id>aggregate</id>
                         <inherited>false</inherited>
-                        <configuration>
-                            <release>${automatalib.module-level}</release>
-                        </configuration>
                         <reports>
                             <report>aggregate</report>
                         </reports>

@@ -25,7 +25,5 @@
  * The {@link net.automatalib.api.automaton.Automaton Automaton} interface has no inherent semantics. Special types of
  * automata, such as {@link net.automatalib.api.automaton.fsa.DFA DFAs} or
  * {@link net.automatalib.api.automaton.transducer.MealyMachine Mealy machines} can be found in the respective subpackages.
- *
- * @see net.automatalib.ts
  */
 package net.automatalib.api.automaton;

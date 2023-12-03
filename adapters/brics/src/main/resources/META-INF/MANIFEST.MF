@@ -1,1 +1,0 @@
-Automatic-Module-Name: net.automatalib.brics;

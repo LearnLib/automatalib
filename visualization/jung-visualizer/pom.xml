@@ -104,6 +104,39 @@ limitations under the License.
 
     <build>
         <plugins>
+            <!-- set properties so we can easily resolve the file path to the jung-graph-impl jar during compilation -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Patch jung-api JAR because it contains a split package with the jung-graph-impl JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <fork>true</fork>
+                            <compilerArgument>--patch-module=jung.api=${net.sf.jung:jung-graph-impl:jar}</compilerArgument>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>module-compile</id>
+                        <configuration>
+                            <fork>true</fork>
+                            <compilerArgument>--patch-module=jung.api=${net.sf.jung:jung-graph-impl:jar}</compilerArgument>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -113,8 +146,15 @@ limitations under the License.
                         <java.awt.graphicsenv>com.github.caciocavallosilano.cacio.ctc.CTCGraphicsEnvironment</java.awt.graphicsenv>
                         <java.awt.headless>false</java.awt.headless>
                     </systemPropertyVariables>
+                    <!-- append to existing argLine to nicely work together with jacoco plugin -->
+                    <argLine>@{argLine} --patch-module=jung.api=${net.sf.jung:jung-graph-impl:jar}</argLine>
                 </configuration>
             </plugin>
+            <!-- TODO: Currently the java compiler does not support exploded JARs with an Automatic-Module-Name.
+            Therefore, we use a module-info.java to make the compiler happy and be able to provide a module description
+            (e.g., during 'mvn site'). However, we do not want to include the compiled module-info because this artifact
+            has non-modular dependencies. If people want to use this artifact in a modular context (e.g., with jlink)
+            they need to setup the dependencies themselves -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -124,6 +164,9 @@ limitations under the License.
                             <Automatic-Module-Name>net.automatalib.visualization.jung</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
+                    <excludes>
+                        <exclude>module-info.class</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

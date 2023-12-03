@@ -5,9 +5,10 @@ open module net.automatalib.util {
     requires net.automatalib.core;
 
     requires com.google.common;
+    requires org.checkerframework.checker.qual;
 
-    requires static de.learnlib.tooling.annotation.processor;
     requires static java.compiler;
+    requires static de.learnlib.tooling.annotation.processor;
 
     exports net.automatalib.util.automaton;
     exports net.automatalib.util.automaton.ads;

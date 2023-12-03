@@ -1,1 +1,0 @@
-Automatic-Module-Name: net.automatalib.modelchecker.m3c;
