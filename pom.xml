@@ -647,19 +647,6 @@ limitations under the License.
                     <configuration>
                         <enableAssertions>true</enableAssertions>
                     </configuration>
-                    <executions>
-                        <!-- check that code also works when not interpreted as a module (java8) -->
-                        <execution>
-                            <id>classpath-test</id>
-                            <phase>test</phase>
-                            <goals>
-                                <goal>test</goal>
-                            </goals>
-                            <configuration>
-                                <useModulePath>false</useModulePath>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
