@@ -19,11 +19,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.Automaton;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.Automaton;
 import net.automatalib.common.util.Pair;
-import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.ts.modal.impl.CompactMTS;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

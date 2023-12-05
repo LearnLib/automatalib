@@ -17,10 +17,10 @@ package net.automatalib.util.graph.copy;
 
 import java.util.Collection;
 
-import net.automatalib.api.graph.IndefiniteGraph;
-import net.automatalib.api.graph.MutableGraph;
 import net.automatalib.common.util.Holder;
 import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.graph.IndefiniteGraph;
+import net.automatalib.graph.MutableGraph;
 import net.automatalib.util.graph.traversal.GraphTraversal;
 import net.automatalib.util.graph.traversal.GraphTraversalAction;
 import net.automatalib.util.graph.traversal.GraphTraversalVisitor;

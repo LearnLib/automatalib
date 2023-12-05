@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import net.automatalib.api.graph.ProceduralModalProcessGraph;
-import net.automatalib.api.graph.concept.NodeIDs;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.Mappings;
+import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.graph.concept.NodeIDs;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelchecker.m3c.transformer.TransformerSerializer;

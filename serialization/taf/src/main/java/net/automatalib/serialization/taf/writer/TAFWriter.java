@@ -30,12 +30,12 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import com.google.common.collect.Maps;
-import net.automatalib.api.automaton.Automaton;
-import net.automatalib.api.automaton.FiniteAlphabetAutomaton;
-import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.api.automaton.concept.StateIDs;
-import net.automatalib.api.automaton.fsa.DFA;
-import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.FiniteAlphabetAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.string.StringUtil;

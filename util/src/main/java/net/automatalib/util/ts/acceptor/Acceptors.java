@@ -15,10 +15,10 @@
  */
 package net.automatalib.util.ts.acceptor;
 
-import net.automatalib.api.ts.acceptor.AcceptorTS;
-import net.automatalib.api.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.ts.acceptor.AcceptorTS;
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 
 public final class Acceptors {
 

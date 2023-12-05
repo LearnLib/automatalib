@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
-import net.automatalib.api.ts.TransitionSystem;
 import net.automatalib.common.util.Pair;
+import net.automatalib.ts.TransitionSystem;
 
 public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I, T1>, TS2 extends TransitionSystem<S2, I, T2>>
         implements TransitionSystem<Pair<S1, S2>, I, Pair<T1, T2>> {

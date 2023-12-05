@@ -24,13 +24,13 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 import com.google.common.collect.Iterators;
-import net.automatalib.api.graph.Graph;
-import net.automatalib.api.visualization.DefaultVisualizationHelper;
-import net.automatalib.api.visualization.VisualizationHelper;
-import net.automatalib.api.word.Word;
+import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
 import net.automatalib.util.graph.traversal.GraphTraversal;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

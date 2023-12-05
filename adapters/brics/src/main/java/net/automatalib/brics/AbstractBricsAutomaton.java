@@ -23,11 +23,11 @@ import java.util.Set;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
-import net.automatalib.api.automaton.fsa.FiniteStateAcceptor;
-import net.automatalib.api.automaton.graph.AbstractAutomatonGraphView;
-import net.automatalib.api.graph.UniversalGraph;
-import net.automatalib.api.graph.concept.GraphViewable;
-import net.automatalib.api.visualization.VisualizationHelper;
+import net.automatalib.automaton.fsa.FiniteStateAcceptor;
+import net.automatalib.automaton.graph.AbstractAutomatonGraphView;
+import net.automatalib.graph.UniversalGraph;
+import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * Base class for Brics automata adapters.

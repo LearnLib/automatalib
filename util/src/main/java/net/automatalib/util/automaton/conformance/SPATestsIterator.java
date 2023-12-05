@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import net.automatalib.api.alphabet.ProceduralInputAlphabet;
-import net.automatalib.api.automaton.fsa.DFA;
-import net.automatalib.api.automaton.procedural.SPA;
-import net.automatalib.api.word.Word;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.common.util.collection.AbstractTwoLevelIterator;
 import net.automatalib.util.automaton.procedural.ATRSequences;
 import net.automatalib.util.automaton.procedural.SPAs;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 /**

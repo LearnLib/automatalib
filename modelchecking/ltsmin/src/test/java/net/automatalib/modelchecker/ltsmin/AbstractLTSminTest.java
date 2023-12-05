@@ -15,11 +15,11 @@
  */
 package net.automatalib.modelchecker.ltsmin;
 
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.concept.DetOutputAutomaton;
-import net.automatalib.api.automaton.concept.Output;
-import net.automatalib.api.word.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.concept.DetOutputAutomaton;
+import net.automatalib.automaton.concept.Output;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;

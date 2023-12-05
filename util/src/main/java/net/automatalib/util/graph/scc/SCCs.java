@@ -17,7 +17,7 @@ package net.automatalib.util.graph.scc;
 
 import java.util.List;
 
-import net.automatalib.api.graph.Graph;
+import net.automatalib.graph.Graph;
 import net.automatalib.util.graph.traversal.GraphTraversal;
 
 /**

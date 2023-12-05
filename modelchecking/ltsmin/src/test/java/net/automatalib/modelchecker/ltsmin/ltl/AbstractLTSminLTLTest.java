@@ -15,11 +15,11 @@
  */
 package net.automatalib.modelchecker.ltsmin.ltl;
 
-import net.automatalib.api.modelchecking.Lasso;
-import net.automatalib.api.word.Word;
-import net.automatalib.api.word.WordBuilder;
 import net.automatalib.modelchecker.ltsmin.AbstractLTSminTest;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
+import net.automatalib.modelchecking.Lasso;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

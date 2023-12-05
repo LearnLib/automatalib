@@ -19,11 +19,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.automatalib.api.graph.BidirectionalGraph;
-import net.automatalib.api.graph.Graph;
-import net.automatalib.api.graph.concept.EdgeWeights;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.BidirectionalGraph;
+import net.automatalib.graph.Graph;
+import net.automatalib.graph.concept.EdgeWeights;
 import net.automatalib.util.graph.apsp.APSPResult;
 import net.automatalib.util.graph.apsp.FloydWarshallAPSP;
 import net.automatalib.util.graph.scc.SCCListener;

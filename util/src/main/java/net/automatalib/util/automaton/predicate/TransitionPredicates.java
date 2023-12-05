@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import net.automatalib.api.automaton.concept.TransitionOutput;
-import net.automatalib.api.ts.TransitionPredicate;
+import net.automatalib.automaton.concept.TransitionOutput;
 import net.automatalib.common.util.function.FunctionsUtil;
+import net.automatalib.ts.TransitionPredicate;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public final class TransitionPredicates {

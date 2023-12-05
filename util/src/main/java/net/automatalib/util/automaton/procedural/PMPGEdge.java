@@ -15,8 +15,8 @@
  */
 package net.automatalib.util.automaton.procedural;
 
-import net.automatalib.api.graph.ProceduralModalProcessGraph;
-import net.automatalib.api.ts.modal.transition.ProceduralModalEdgeProperty;
+import net.automatalib.graph.ProceduralModalProcessGraph;
+import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
 
 /**
  * Edge class for the {@link ProceduralModalProcessGraph} view of procedural automata.

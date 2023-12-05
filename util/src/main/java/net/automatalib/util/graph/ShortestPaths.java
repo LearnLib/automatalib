@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import net.automatalib.api.graph.IndefiniteGraph;
+import net.automatalib.graph.IndefiniteGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

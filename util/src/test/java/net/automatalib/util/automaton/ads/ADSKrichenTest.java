@@ -17,9 +17,9 @@ package net.automatalib.util.automaton.ads;
 
 import java.util.Arrays;
 
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.testng.annotations.Test;
 

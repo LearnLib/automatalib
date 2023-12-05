@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.function.Function;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.simple.SimpleAutomaton;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelSerializer;
 

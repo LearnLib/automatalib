@@ -17,7 +17,7 @@ package net.automatalib.util.ts.traversal;
 
 import java.util.Collection;
 
-import net.automatalib.api.ts.TransitionSystem;
+import net.automatalib.ts.TransitionSystem;
 
 public interface TSTraversalMethod {
 

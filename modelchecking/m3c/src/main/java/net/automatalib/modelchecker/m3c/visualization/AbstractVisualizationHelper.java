@@ -18,10 +18,10 @@ package net.automatalib.modelchecker.m3c.visualization;
 import java.util.Map;
 import java.util.Objects;
 
-import net.automatalib.api.visualization.DefaultVisualizationHelper;
-import net.automatalib.api.visualization.VisualizationHelper;
 import net.automatalib.graph.base.CompactEdge;
 import net.automatalib.modelchecker.m3c.solver.WitnessTree;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * A base {@link VisualizationHelper} for {@link WitnessTree}s.

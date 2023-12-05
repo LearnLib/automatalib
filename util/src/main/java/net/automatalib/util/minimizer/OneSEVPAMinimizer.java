@@ -15,10 +15,10 @@
  */
 package net.automatalib.util.minimizer;
 
-import net.automatalib.api.alphabet.VPAlphabet;
-import net.automatalib.api.automaton.vpa.OneSEVPA;
-import net.automatalib.automaton.vpa.DefaultOneSEVPA;
-import net.automatalib.automaton.vpa.Location;
+import net.automatalib.alphabet.VPAlphabet;
+import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
+import net.automatalib.automaton.vpa.impl.Location;
 import net.automatalib.util.partitionrefinement.Block;
 import net.automatalib.util.partitionrefinement.PaigeTarjan;
 import net.automatalib.util.partitionrefinement.PaigeTarjanInitializers;

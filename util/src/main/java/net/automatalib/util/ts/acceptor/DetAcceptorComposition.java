@@ -15,8 +15,8 @@
  */
 package net.automatalib.util.ts.acceptor;
 
-import net.automatalib.api.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.common.util.Pair;
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.ts.comp.DTSComposition;
 
 final class DetAcceptorComposition<S1, S2, I, A1 extends DeterministicAcceptorTS<S1, I>, A2 extends DeterministicAcceptorTS<S2, I>>

@@ -17,7 +17,7 @@ package net.automatalib.serialization.dot;
 
 import java.io.IOException;
 
-import net.automatalib.api.visualization.VisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 
 /**
  * Extension to the {@link VisualizationHelper} interface for DOT specific methods.

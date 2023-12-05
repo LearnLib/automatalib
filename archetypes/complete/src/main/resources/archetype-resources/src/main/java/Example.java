@@ -1,8 +1,8 @@
 package ${package};
 
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.transducer.MealyMachine;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.visualization.Visualization;
 

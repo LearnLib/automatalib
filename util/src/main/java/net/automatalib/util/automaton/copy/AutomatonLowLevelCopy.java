@@ -19,11 +19,11 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import net.automatalib.api.automaton.Automaton;
-import net.automatalib.api.automaton.MutableAutomaton;
-import net.automatalib.api.automaton.UniversalAutomaton;
-import net.automatalib.api.ts.TransitionPredicate;
+import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.predicate.TransitionPredicates;
 
 public final class AutomatonLowLevelCopy {

@@ -26,10 +26,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Function;
 
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.fsa.DFA;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.serialization.ModelDeserializer;

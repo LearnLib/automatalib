@@ -17,10 +17,10 @@ package net.automatalib.incremental.mealy.tree;
 
 import java.util.Objects;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.word.Word;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
+import net.automatalib.word.Word;
 
 /**
  * Incrementally builds a tree with transition outputs from a set of input and corresponding output words.

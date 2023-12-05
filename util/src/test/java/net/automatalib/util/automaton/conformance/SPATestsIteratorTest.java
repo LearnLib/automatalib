@@ -26,15 +26,15 @@ import java.util.function.BiFunction;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.DefaultProceduralInputAlphabet;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.alphabet.ProceduralInputAlphabet;
-import net.automatalib.api.automaton.fsa.DFA;
-import net.automatalib.api.automaton.procedural.SPA;
-import net.automatalib.api.word.Word;
-import net.automatalib.automaton.procedural.StackSPA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.util.automaton.random.RandomAutomata;
+import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

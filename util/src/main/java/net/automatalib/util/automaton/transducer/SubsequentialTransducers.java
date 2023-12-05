@@ -22,15 +22,15 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import net.automatalib.api.automaton.transducer.MutableSubsequentialTransducer;
-import net.automatalib.api.automaton.transducer.SubsequentialTransducer;
-import net.automatalib.api.word.Word;
+import net.automatalib.automaton.transducer.MutableSubsequentialTransducer;
+import net.automatalib.automaton.transducer.SubsequentialTransducer;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
+import net.automatalib.word.Word;
 
 /**
  * Utility methods of {@link SubsequentialTransducer}s.

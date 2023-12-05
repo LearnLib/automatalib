@@ -41,10 +41,6 @@ limitations under the License.
             <groupId>net.automatalib</groupId>
             <artifactId>automata-commons-util</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
-            <artifactId>automata-core</artifactId>
-        </dependency>
 
         <!-- external -->
         <dependency>
@@ -90,6 +86,11 @@ limitations under the License.
         <dependency>
             <groupId>com.github.caciocavallosilano</groupId>
             <artifactId>cacio-tta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-core</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.automatalib</groupId>
@@ -141,6 +142,7 @@ limitations under the License.
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <!-- core is only a testing dependency not defined in module-info.java -->
                     <!-- append to existing argLine to nicely work together with jacoco plugin -->
                     <argLine>@{argLine} --patch-module=jung.api=${net.sf.jung:jung-graph-impl:jar}</argLine>
                 </configuration>

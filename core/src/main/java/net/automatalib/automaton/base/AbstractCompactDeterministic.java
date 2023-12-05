@@ -20,9 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.MutableDeterministic;
-import net.automatalib.ts.powerset.DeterministicPowersetView;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.ts.powerset.impl.DeterministicPowersetView;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

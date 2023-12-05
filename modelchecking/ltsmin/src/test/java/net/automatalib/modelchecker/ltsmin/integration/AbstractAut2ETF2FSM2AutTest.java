@@ -18,10 +18,10 @@ package net.automatalib.modelchecker.ltsmin.integration;
 import java.io.File;
 import java.util.HashSet;
 
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.api.automaton.concept.InputAlphabetHolder;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.common.util.process.ProcessUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;

@@ -15,8 +15,8 @@
  */
 package net.automatalib.util.graph.concept;
 
-import net.automatalib.api.graph.UniversalGraph;
-import net.automatalib.api.graph.concept.EdgeWeights;
+import net.automatalib.graph.UniversalGraph;
+import net.automatalib.graph.concept.EdgeWeights;
 
 public class PropertyEdgeWeights<E> implements EdgeWeights<E> {
 

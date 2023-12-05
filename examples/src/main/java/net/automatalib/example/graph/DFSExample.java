@@ -18,18 +18,18 @@ package net.automatalib.example.graph;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.automatalib.api.graph.IndefiniteGraph;
-import net.automatalib.api.visualization.VisualizationHelper;
-import net.automatalib.api.visualization.VisualizationHelper.EdgeStyles;
 import net.automatalib.common.util.Holder;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
-import net.automatalib.graph.CompactSimpleGraph;
+import net.automatalib.graph.IndefiniteGraph;
 import net.automatalib.graph.base.CompactEdge;
+import net.automatalib.graph.impl.CompactSimpleGraph;
 import net.automatalib.util.graph.traversal.GraphTraversal;
 import net.automatalib.util.graph.traversal.GraphTraversalAction;
 import net.automatalib.util.graph.traversal.GraphTraversalVisitor;
 import net.automatalib.visualization.Visualization;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper.EdgeStyles;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

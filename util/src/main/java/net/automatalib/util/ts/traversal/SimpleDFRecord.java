@@ -18,7 +18,7 @@ package net.automatalib.util.ts.traversal;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.automatalib.api.ts.TransitionSystem;
+import net.automatalib.ts.TransitionSystem;
 import org.checkerframework.checker.nullness.qual.EnsuresNonNullIf;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;

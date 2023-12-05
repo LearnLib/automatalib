@@ -25,8 +25,8 @@ import java.util.Queue;
 import java.util.function.Predicate;
 
 import com.google.common.collect.AbstractIterator;
-import net.automatalib.api.graph.IndefiniteGraph;
 import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.IndefiniteGraph;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 @SuppressWarnings("nullness") // dataflow dependent nullness is hard to describe

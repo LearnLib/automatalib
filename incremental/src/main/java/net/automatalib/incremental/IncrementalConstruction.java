@@ -17,9 +17,9 @@ package net.automatalib.incremental;
 
 import java.util.Collection;
 
-import net.automatalib.api.graph.Graph;
-import net.automatalib.api.ts.DeterministicTransitionSystem;
-import net.automatalib.api.word.Word;
+import net.automatalib.graph.Graph;
+import net.automatalib.ts.DeterministicTransitionSystem;
+import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

@@ -18,7 +18,7 @@ package net.automatalib.util.graph;
 import java.util.AbstractList;
 import java.util.List;
 
-import net.automatalib.api.graph.IndefiniteGraph;
+import net.automatalib.graph.IndefiniteGraph;
 
 public class Path<N, E> extends AbstractList<E> {
 

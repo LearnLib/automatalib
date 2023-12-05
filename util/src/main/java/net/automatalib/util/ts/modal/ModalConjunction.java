@@ -24,13 +24,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
-import net.automatalib.api.automaton.AutomatonCreator;
-import net.automatalib.api.ts.modal.ModalTransitionSystem;
-import net.automatalib.api.ts.modal.MutableModalTransitionSystem;
-import net.automatalib.api.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.common.util.Holder;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.fixpoint.WorksetMappingAlgorithm;
+import net.automatalib.ts.modal.ModalTransitionSystem;
+import net.automatalib.ts.modal.MutableModalTransitionSystem;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.util.ts.traversal.TSTraversal;
 import net.automatalib.util.ts.traversal.TSTraversalAction;
 import net.automatalib.util.ts.traversal.TSTraversalVisitor;

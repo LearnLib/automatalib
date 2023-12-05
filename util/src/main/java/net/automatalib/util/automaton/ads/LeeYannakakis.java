@@ -29,18 +29,18 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.transducer.MealyMachine;
-import net.automatalib.api.graph.ads.ADSNode;
-import net.automatalib.api.word.Word;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
 import net.automatalib.common.util.Pair;
-import net.automatalib.graph.CompactSimpleGraph;
-import net.automatalib.graph.ads.ADSLeafNode;
+import net.automatalib.graph.ads.ADSNode;
+import net.automatalib.graph.ads.impl.ADSLeafNode;
 import net.automatalib.graph.base.CompactEdge;
+import net.automatalib.graph.impl.CompactSimpleGraph;
 import net.automatalib.util.graph.Path;
 import net.automatalib.util.graph.ShortestPaths;
 import net.automatalib.util.graph.traversal.GraphTraversal;
+import net.automatalib.word.Word;
 
 /**
  * Algorithm of Lee and Yannakakis for computing adaptive distinguishing sequences (of length at most n^2) in O(n^2)

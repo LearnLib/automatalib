@@ -22,16 +22,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.automatalib.alphabet.GrowingMapAlphabet;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.alphabet.GrowingAlphabet;
-import net.automatalib.api.automaton.AutomatonCreator;
-import net.automatalib.api.ts.modal.ModalTransitionSystem;
-import net.automatalib.api.ts.modal.MutableModalTransitionSystem;
-import net.automatalib.api.ts.modal.transition.ModalEdgeProperty;
-import net.automatalib.api.ts.modal.transition.ModalEdgeProperty.ModalType;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.GrowingAlphabet;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.fixpoint.WorksetMappingAlgorithm;
+import net.automatalib.ts.modal.ModalTransitionSystem;
+import net.automatalib.ts.modal.MutableModalTransitionSystem;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 
 class ModalParallelComposition<A extends MutableModalTransitionSystem<S, I, ?, ?>, S, S0, S1, I, T0, T1, TP0 extends ModalEdgeProperty, TP1 extends ModalEdgeProperty>
         implements WorksetMappingAlgorithm<Pair<S0, S1>, S, A> {

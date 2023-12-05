@@ -25,10 +25,10 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.google.common.collect.Maps;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.simple.SimpleAutomaton;
-import net.automatalib.automaton.fsa.CompactNFA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.impl.CompactNFA;
+import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 

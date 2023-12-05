@@ -15,9 +15,9 @@
  */
 package net.automatalib.util.automaton.conformance;
 
-import net.automatalib.api.alphabet.ProceduralInputAlphabet;
-import net.automatalib.api.automaton.fsa.DFA;
-import net.automatalib.api.automaton.procedural.SBA;
+import net.automatalib.alphabet.ProceduralInputAlphabet;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.util.automaton.procedural.SBAs;
 
 /**

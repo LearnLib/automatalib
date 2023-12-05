@@ -15,18 +15,18 @@
  */
 package net.automatalib.util.automaton.minimizer.hopcroft;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.AutomatonCreator;
-import net.automatalib.api.automaton.MutableDeterministic;
-import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.api.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
-import net.automatalib.api.automaton.concept.InputAlphabetHolder;
-import net.automatalib.api.automaton.fsa.DFA;
-import net.automatalib.api.automaton.fsa.MutableDFA;
-import net.automatalib.api.automaton.transducer.MealyMachine;
-import net.automatalib.api.automaton.transducer.MutableMealyMachine;
-import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.AutomatonCreator;
+import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.MutableDFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.minimizer.paigetarjan.PaigeTarjanMinimization;
 import net.automatalib.util.partitionrefinement.AutomatonInitialPartitioning;
 import net.automatalib.util.partitionrefinement.PaigeTarjan;

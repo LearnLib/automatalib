@@ -19,10 +19,10 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.word.Word;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.dfa.Acceptance;
+import net.automatalib.word.Word;
 
 /**
  * The prefix-closed version of {@link IncrementalDFADAGBuilder}. Contrary to the regular lookup semantics, where an

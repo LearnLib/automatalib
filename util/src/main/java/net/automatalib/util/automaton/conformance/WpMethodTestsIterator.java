@@ -24,15 +24,15 @@ import java.util.Set;
 import com.google.common.collect.ForwardingIterator;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
-import net.automatalib.api.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.api.word.Word;
-import net.automatalib.api.word.WordBuilder;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

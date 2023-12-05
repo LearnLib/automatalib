@@ -19,7 +19,7 @@ import de.learnlib.tooling.annotation.DocGenType;
 import de.learnlib.tooling.annotation.edsl.Action;
 import de.learnlib.tooling.annotation.edsl.Expr;
 import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
-import net.automatalib.api.automaton.transducer.MutableMealyMachine;
+import net.automatalib.automaton.transducer.MutableMealyMachine;
 
 /**
  * A fluent builder for {@link net.automatalib.automaton.transducer.MealyMachine}s.

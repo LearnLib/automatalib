@@ -17,8 +17,8 @@ package net.automatalib.incremental.mealy;
 
 import java.util.Map;
 
-import net.automatalib.api.automaton.transducer.MealyMachine;
-import net.automatalib.api.automaton.visualization.MealyVisualizationHelper;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.visualization.MealyVisualizationHelper;
 
 /**
  * A utility class for rendering {@link IncrementalMealyBuilder}s.

@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.dot.DOTParsers;
-import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.ts.modal.impl.CompactMTS;
 
 class CompositionInstance {
 

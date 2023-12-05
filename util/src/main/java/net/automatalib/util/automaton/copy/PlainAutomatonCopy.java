@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import net.automatalib.api.automaton.Automaton;
-import net.automatalib.api.automaton.MutableAutomaton;
-import net.automatalib.api.ts.TransitionPredicate;
+import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.ts.TransitionPredicate;
 
 final class PlainAutomatonCopy<S1, I1, T1, S2, I2, T2, SP2, TP2>
         extends AbstractLowLevelAutomatonCopier<S1, I1, T1, S2, I2, T2, SP2, TP2, Automaton<S1, ? super I1, T1>> {

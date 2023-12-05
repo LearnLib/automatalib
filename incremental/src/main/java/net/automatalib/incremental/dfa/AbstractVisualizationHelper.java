@@ -17,8 +17,8 @@ package net.automatalib.incremental.dfa;
 
 import java.util.Map;
 
-import net.automatalib.api.automaton.Automaton;
-import net.automatalib.api.automaton.visualization.AutomatonVisualizationHelper;
+import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.visualization.AutomatonVisualizationHelper;
 
 /**
  * Abstract visualization helper for {@link IncrementalDFABuilder}s.

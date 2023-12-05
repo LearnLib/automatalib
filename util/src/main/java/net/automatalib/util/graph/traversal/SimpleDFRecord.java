@@ -17,7 +17,7 @@ package net.automatalib.util.graph.traversal;
 
 import java.util.Iterator;
 
-import net.automatalib.api.graph.IndefiniteGraph;
+import net.automatalib.graph.IndefiniteGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 class SimpleDFRecord<N, E> {

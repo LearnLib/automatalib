@@ -17,9 +17,9 @@ package net.automatalib.example.modelchecking;
 
 import java.util.function.Function;
 
-import net.automatalib.api.automaton.procedural.SPA;
-import net.automatalib.api.graph.ContextFreeModalProcessSystem;
+import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.example.procedural.PalindromeExample;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;

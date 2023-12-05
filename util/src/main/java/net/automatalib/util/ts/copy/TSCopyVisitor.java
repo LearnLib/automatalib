@@ -18,12 +18,12 @@ package net.automatalib.util.ts.copy;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import net.automatalib.api.automaton.MutableAutomaton;
-import net.automatalib.api.ts.TransitionPredicate;
-import net.automatalib.api.ts.TransitionSystem;
+import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.common.util.Holder;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.ts.TransitionPredicate;
+import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.ts.traversal.TSTraversalAction;
 import net.automatalib.util.ts.traversal.TSTraversalVisitor;
 import org.checkerframework.checker.nullness.qual.Nullable;

@@ -17,8 +17,8 @@ package net.automatalib.serialization.etf.writer;
 
 import java.io.PrintWriter;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.Automaton;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.Automaton;
 import net.automatalib.serialization.InputModelSerializer;
 
 /**

@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 
-import net.automatalib.api.ts.TransitionSystem;
 import net.automatalib.common.util.Holder;
+import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.traversal.TraversalOrder;
 import net.automatalib.util.ts.traversal.DFRecord.LastTransition;
 import org.checkerframework.checker.nullness.qual.NonNull;

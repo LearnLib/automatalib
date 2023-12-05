@@ -18,7 +18,7 @@ package net.automatalib.util.automaton.random;
 import java.util.Collection;
 import java.util.Random;
 
-import net.automatalib.api.automaton.MutableDeterministic;
+import net.automatalib.automaton.MutableDeterministic;
 
 public class RandomDeterministicAutomatonGenerator<S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>>
         extends RandomAutomatonGenerator<S, I, T, SP, TP, A> {

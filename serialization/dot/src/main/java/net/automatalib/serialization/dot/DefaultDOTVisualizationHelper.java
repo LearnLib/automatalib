@@ -18,8 +18,8 @@ package net.automatalib.serialization.dot;
 import java.io.IOException;
 import java.util.Map;
 
-import net.automatalib.api.visualization.DefaultVisualizationHelper;
-import net.automatalib.api.visualization.VisualizationHelper;
+import net.automatalib.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DefaultDOTVisualizationHelper<N, E> extends DefaultVisualizationHelper<N, E>

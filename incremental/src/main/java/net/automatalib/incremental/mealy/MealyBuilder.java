@@ -18,12 +18,12 @@ package net.automatalib.incremental.mealy;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.api.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.api.automaton.transducer.MealyMachine;
-import net.automatalib.api.ts.output.MealyTransitionSystem;
-import net.automatalib.api.word.Word;
-import net.automatalib.api.word.WordBuilder;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.incremental.IncrementalConstruction;
+import net.automatalib.ts.output.MealyTransitionSystem;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * A utility interface to share functionality between {@link IncrementalMealyBuilder}s and

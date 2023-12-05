@@ -29,8 +29,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import com.google.common.io.CharStreams;
-import net.automatalib.api.AutomataLibProperty;
-import net.automatalib.api.AutomataLibSettings;
+import net.automatalib.AutomataLibProperty;
+import net.automatalib.AutomataLibSettings;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.process.ProcessUtil;

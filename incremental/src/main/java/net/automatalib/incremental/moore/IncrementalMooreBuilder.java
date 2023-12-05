@@ -18,13 +18,13 @@ package net.automatalib.incremental.moore;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.automatalib.api.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.api.automaton.transducer.MooreMachine;
-import net.automatalib.api.ts.output.MooreTransitionSystem;
-import net.automatalib.api.word.Word;
-import net.automatalib.api.word.WordBuilder;
+import net.automatalib.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.IncrementalConstruction;
+import net.automatalib.ts.output.MooreTransitionSystem;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 
 /**
  * General interface for incremental Moore builders.

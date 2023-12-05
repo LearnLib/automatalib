@@ -1,7 +1,8 @@
-import net.automatalib.api.AutomataLibLocalPropertiesSource;
-import net.automatalib.api.AutomataLibPropertiesSource;
-import net.automatalib.api.AutomataLibSystemPropertiesSource;
+import net.automatalib.AutomataLibLocalPropertiesSource;
+import net.automatalib.AutomataLibPropertiesSource;
+import net.automatalib.AutomataLibSystemPropertiesSource;
 import net.automatalib.common.util.setting.SettingsSource;
+import net.automatalib.visualization.VisualizationProvider;
 
 open module net.automatalib.api {
     requires net.automatalib.common.smartcollection;
@@ -13,36 +14,37 @@ open module net.automatalib.api {
 
     requires static org.kohsuke.metainf_services;
 
+    uses VisualizationProvider;
     provides SettingsSource with AutomataLibLocalPropertiesSource, AutomataLibSystemPropertiesSource, AutomataLibPropertiesSource;
 
-    exports net.automatalib.api;
-    exports net.automatalib.api.alphabet;
-    exports net.automatalib.api.automaton;
-    exports net.automatalib.api.automaton.abstraction;
-    exports net.automatalib.api.automaton.concept;
-    exports net.automatalib.api.automaton.fsa;
-    exports net.automatalib.api.automaton.graph;
-    exports net.automatalib.api.automaton.helper;
-    exports net.automatalib.api.automaton.procedural;
-    exports net.automatalib.api.automaton.simple;
-    exports net.automatalib.api.automaton.transducer;
-    exports net.automatalib.api.automaton.transducer.probabilistic;
-    exports net.automatalib.api.automaton.visualization;
-    exports net.automatalib.api.automaton.vpa;
-    exports net.automatalib.api.exception;
-    exports net.automatalib.api.graph;
-    exports net.automatalib.api.graph.ads;
-    exports net.automatalib.api.graph.concept;
-    exports net.automatalib.api.graph.helper;
-    exports net.automatalib.api.graph.visualization;
-    exports net.automatalib.api.modelchecking;
-    exports net.automatalib.api.ts;
-    exports net.automatalib.api.ts.acceptor;
-    exports net.automatalib.api.ts.modal;
-    exports net.automatalib.api.ts.modal.transition;
-    exports net.automatalib.api.ts.output;
-    exports net.automatalib.api.ts.powerset;
-    exports net.automatalib.api.ts.simple;
-    exports net.automatalib.api.visualization;
-    exports net.automatalib.api.word;
+    exports net.automatalib;
+    exports net.automatalib.alphabet;
+    exports net.automatalib.automaton;
+    exports net.automatalib.automaton.abstraction;
+    exports net.automatalib.automaton.concept;
+    exports net.automatalib.automaton.fsa;
+    exports net.automatalib.automaton.graph;
+    exports net.automatalib.automaton.helper;
+    exports net.automatalib.automaton.procedural;
+    exports net.automatalib.automaton.simple;
+    exports net.automatalib.automaton.transducer;
+    exports net.automatalib.automaton.transducer.probabilistic;
+    exports net.automatalib.automaton.visualization;
+    exports net.automatalib.automaton.vpa;
+    exports net.automatalib.exception;
+    exports net.automatalib.graph;
+    exports net.automatalib.graph.ads;
+    exports net.automatalib.graph.concept;
+    exports net.automatalib.graph.helper;
+    exports net.automatalib.graph.visualization;
+    exports net.automatalib.modelchecking;
+    exports net.automatalib.ts;
+    exports net.automatalib.ts.acceptor;
+    exports net.automatalib.ts.modal;
+    exports net.automatalib.ts.modal.transition;
+    exports net.automatalib.ts.output;
+    exports net.automatalib.ts.powerset;
+    exports net.automatalib.ts.simple;
+    exports net.automatalib.visualization;
+    exports net.automatalib.word;
 }

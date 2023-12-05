@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
-import net.automatalib.api.automaton.Automaton;
+import net.automatalib.automaton.Automaton;
 import net.automatalib.common.util.Pair;
 
 public final class Bisimulation {

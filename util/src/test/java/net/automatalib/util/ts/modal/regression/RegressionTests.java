@@ -17,7 +17,7 @@ package net.automatalib.util.ts.modal.regression;
 
 import java.io.IOException;
 
-import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.util.ts.modal.MTSs;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;

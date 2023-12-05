@@ -27,16 +27,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import net.automatalib.api.automaton.Automaton;
-import net.automatalib.api.automaton.graph.TransitionEdge;
-import net.automatalib.api.graph.Graph;
-import net.automatalib.api.graph.UndirectedGraph;
-import net.automatalib.api.graph.concept.GraphViewable;
-import net.automatalib.api.visualization.VisualizationHelper;
-import net.automatalib.api.visualization.VisualizationHelper.CommonAttrs;
-import net.automatalib.api.visualization.VisualizationHelper.NodeAttrs;
+import net.automatalib.automaton.Automaton;
+import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.common.util.string.StringUtil;
+import net.automatalib.graph.Graph;
+import net.automatalib.graph.UndirectedGraph;
+import net.automatalib.graph.concept.GraphViewable;
+import net.automatalib.visualization.VisualizationHelper;
+import net.automatalib.visualization.VisualizationHelper.CommonAttrs;
+import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

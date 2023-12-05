@@ -17,12 +17,12 @@ package net.automatalib.util.automaton.fsa;
 
 import java.util.Collection;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.concept.InputAlphabetHolder;
-import net.automatalib.api.automaton.fsa.DFA;
-import net.automatalib.api.automaton.fsa.MutableDFA;
-import net.automatalib.api.ts.acceptor.DeterministicAcceptorTS;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.MutableDFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
 import net.automatalib.util.automaton.copy.AutomatonLowLevelCopy;
 import net.automatalib.util.automaton.minimizer.hopcroft.HopcroftMinimization;

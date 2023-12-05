@@ -20,17 +20,17 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.Iterators;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.concept.InputAlphabetHolder;
-import net.automatalib.api.automaton.graph.TransitionEdge;
-import net.automatalib.api.automaton.transducer.MealyMachine;
-import net.automatalib.api.automaton.transducer.MealyMachine.MealyGraphView;
-import net.automatalib.api.graph.Graph;
-import net.automatalib.api.visualization.VisualizationHelper;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.concept.InputAlphabetHolder;
+import net.automatalib.automaton.graph.TransitionEdge;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.MealyMachine.MealyGraphView;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.graph.Graph;
 import net.automatalib.util.ts.traversal.TSTraversal;
+import net.automatalib.visualization.VisualizationHelper;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealyTreeBuilder<Node<O>, I, O>

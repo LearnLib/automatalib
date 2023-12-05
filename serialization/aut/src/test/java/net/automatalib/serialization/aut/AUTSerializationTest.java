@@ -26,11 +26,11 @@ import java.util.Random;
 import java.util.Set;
 
 import com.google.common.io.ByteStreams;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.fsa.DFA;
-import net.automatalib.api.automaton.simple.SimpleAutomaton;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
 import net.automatalib.util.automaton.random.RandomAutomata;

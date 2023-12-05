@@ -19,9 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.api.automaton.transducer.MealyMachine;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserIO;
 

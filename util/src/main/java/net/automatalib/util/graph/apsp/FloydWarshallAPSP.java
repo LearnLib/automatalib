@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import net.automatalib.api.graph.Graph;
-import net.automatalib.api.graph.concept.EdgeWeights;
-import net.automatalib.api.graph.concept.NodeIDs;
+import net.automatalib.graph.Graph;
+import net.automatalib.graph.concept.EdgeWeights;
+import net.automatalib.graph.concept.NodeIDs;
 import net.automatalib.util.graph.Graphs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

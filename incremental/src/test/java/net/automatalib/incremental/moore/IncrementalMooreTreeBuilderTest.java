@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.moore;
 
-import net.automatalib.api.alphabet.Alphabet;
+import net.automatalib.alphabet.Alphabet;
 import net.automatalib.incremental.moore.tree.IncrementalMooreTreeBuilder;
 import org.testng.annotations.Test;
 

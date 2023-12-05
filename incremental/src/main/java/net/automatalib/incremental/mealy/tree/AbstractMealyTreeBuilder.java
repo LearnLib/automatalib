@@ -22,11 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import net.automatalib.api.automaton.transducer.MealyMachine;
-import net.automatalib.api.ts.output.MealyTransitionSystem;
-import net.automatalib.api.word.Word;
-import net.automatalib.api.word.WordBuilder;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.incremental.mealy.MealyBuilder;
+import net.automatalib.ts.output.MealyTransitionSystem;
+import net.automatalib.word.Word;
+import net.automatalib.word.WordBuilder;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

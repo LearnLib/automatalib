@@ -4,7 +4,6 @@ import net.automatalib.visualization.jung.JungGraphVisualizationProvider;
 open module net.automatalib.visualization.jung {
     requires net.automatalib.api;
     requires net.automatalib.common.util;
-    requires net.automatalib.core;
 
     requires com.google.common;
     requires org.checkerframework.checker.qual;

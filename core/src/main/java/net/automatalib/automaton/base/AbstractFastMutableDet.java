@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.ShrinkableDeterministic;
-import net.automatalib.ts.powerset.DeterministicPowersetView;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.ShrinkableDeterministic;
+import net.automatalib.ts.powerset.impl.DeterministicPowersetView;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastMutableDet<S extends AbstractFastState<T>, I, T, SP, TP>

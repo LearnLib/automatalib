@@ -16,12 +16,12 @@
 package net.automatalib.modelchecker.m3c.solver;
 
 import info.scce.addlib.dd.bdd.BDDManager;
-import net.automatalib.api.graph.ContextFreeModalProcessSystem;
-import net.automatalib.api.ts.modal.transition.ModalEdgeProperty;
+import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.DependencyGraph;
 import net.automatalib.modelchecker.m3c.transformer.BDDTransformer;
 import net.automatalib.modelchecker.m3c.transformer.BDDTransformerSerializer;
 import net.automatalib.modelchecker.m3c.transformer.TransformerSerializer;
+import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 
 /**
  * Implementation based on property transformers being represented by BDDs (Binary Decision Diagrams).

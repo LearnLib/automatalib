@@ -20,7 +20,7 @@ import java.util.Map;
 
 import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
-import net.automatalib.api.visualization.DefaultVisualizationHelper;
+import net.automatalib.visualization.DefaultVisualizationHelper;
 
 /**
  * Rendering helper for Brics automaton adapters.

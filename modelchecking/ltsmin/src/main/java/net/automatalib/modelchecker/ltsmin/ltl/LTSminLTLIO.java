@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
-import net.automatalib.api.modelchecking.Lasso.MealyLasso;
 import net.automatalib.modelchecker.ltsmin.LTSminIO;
+import net.automatalib.modelchecking.Lasso.MealyLasso;
 
 /**
  * An LTL model checker using LTSmin for Mealy machines using synchronous edge semantics.

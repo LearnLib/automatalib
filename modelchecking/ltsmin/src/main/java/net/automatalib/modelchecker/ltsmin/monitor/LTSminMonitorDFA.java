@@ -21,9 +21,9 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
-import net.automatalib.api.automaton.fsa.DFA;
-import net.automatalib.api.exception.ModelCheckingException;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecker.ltsmin.AbstractLTSmin;
 import net.automatalib.modelchecker.ltsmin.LTSminDFA;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;

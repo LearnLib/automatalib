@@ -20,11 +20,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.api.graph.MutableGraph;
-import net.automatalib.api.graph.MutableGraph.IntAbstraction;
-import net.automatalib.api.graph.concept.NodeIDs;
 import net.automatalib.common.smartcollection.ResizingArrayStorage;
 import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.graph.MutableGraph;
+import net.automatalib.graph.MutableGraph.IntAbstraction;
+import net.automatalib.graph.concept.NodeIDs;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>

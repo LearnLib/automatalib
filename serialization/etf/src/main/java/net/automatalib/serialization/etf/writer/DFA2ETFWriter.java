@@ -18,9 +18,9 @@ package net.automatalib.serialization.etf.writer;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.concept.StateIDs;
-import net.automatalib.api.automaton.fsa.DFA;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.common.util.IOUtil;
 
 /**

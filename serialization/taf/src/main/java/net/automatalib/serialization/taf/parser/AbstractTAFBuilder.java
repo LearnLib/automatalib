@@ -25,8 +25,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import net.automatalib.api.alphabet.Alphabet;
-import net.automatalib.api.automaton.MutableDeterministic;
+import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.common.util.string.StringUtil;
 
 @SuppressWarnings("nullness")
