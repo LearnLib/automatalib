@@ -18,27 +18,18 @@ package net.automatalib.visualization;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
 import net.automatalib.api.graph.Graph;
 import net.automatalib.api.visualization.VisualizationHelper;
-import org.kohsuke.MetaInfServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@MetaInfServices(VisualizationProvider.class)
-public class DummyVP implements VisualizationProvider {
+class NoopVP implements VisualizationProvider {
 
-    /**
-     * the {@link #getId() id} of this {@link VisualizationProvider}.
-     */
-    public static final String ID = "dummy";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DummyVP.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NoopVP.class);
 
     @Override
     public String getId() {
-        return ID;
+        return "noop";
     }
 
     @Override
@@ -51,16 +42,11 @@ public class DummyVP implements VisualizationProvider {
         return true;
     }
 
-    @SuppressWarnings("nullness") // false-positive on JOptionPane.showMessageDialog
     @Override
     public <N, E> void visualize(Graph<N, E> graph,
                                  List<VisualizationHelper<N, ? super E>> additionalHelpers,
                                  boolean modal,
                                  Map<String, String> options) {
-        final String errorMsg = "Attempted to visualize graph, but no usable visualization provider was configured.";
-        LOGGER.error(errorMsg);
-        if (modal) {
-            JOptionPane.showMessageDialog(null, errorMsg + "\nPress OK to continue ...");
-        }
+        LOGGER.error("Attempted to visualize graph, but no usable visualization provider was configured.");
     }
 }

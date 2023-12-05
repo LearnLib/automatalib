@@ -49,7 +49,7 @@ public final class Visualization {
         if (providerId != null) {
             vp = manager.getProviderById(providerId);
             if (vp == null) {
-                LOGGER.error("No provider found with id '{}'. Defaulting to dummy provider...", providerId);
+                LOGGER.warn("No provider found with id '{}'", providerId);
             }
         }
 

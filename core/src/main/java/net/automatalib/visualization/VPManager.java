@@ -24,13 +24,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class VPManager {
 
     private final Map<String, VisualizationProvider> providers = new HashMap<>();
-    private VisualizationProvider bestProvider = new DummyVP();
+    private VisualizationProvider bestProvider = new NoopVP();
 
     public void load() {
         providers.clear();
         ServiceLoader<VisualizationProvider> loader = ServiceLoader.load(VisualizationProvider.class);
 
-        bestProvider = new DummyVP();
+        bestProvider = new NoopVP();
         for (VisualizationProvider vp : loader) {
             registerProvider(vp);
         }
