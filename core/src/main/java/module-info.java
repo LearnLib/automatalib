@@ -1,12 +1,15 @@
 import net.automatalib.visualization.VisualizationProvider;
 
 open module net.automatalib.core {
+    requires java.desktop;
+
     requires net.automatalib.api;
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;
 
-    requires java.desktop;
+    requires com.google.common;
     requires org.checkerframework.checker.qual;
+    requires static org.kohsuke.metainf_services;
     requires org.slf4j;
 
     uses VisualizationProvider;

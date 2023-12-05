@@ -7,6 +7,7 @@ open module net.automatalib.modelchecker.ltsmin {
     requires net.automatalib.serialization.etf;
     requires net.automatalib.util;
 
+    requires com.google.common;
     requires org.checkerframework.checker.qual;
     requires org.slf4j;
 
