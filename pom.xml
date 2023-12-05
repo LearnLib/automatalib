@@ -898,7 +898,7 @@ limitations under the License.
                 <configuration>
                     <release>11</release>
                     <!-- TODO preferably we would use the maven-dependency-plugin:properties goal for this (like in the
-                    jung-visualization module but this would require a dependency on the artifact :( -->
+                    jung-visualization module) but this would require a dependency on the artifact :( -->
                     <additionalJOption>--patch-module=jung.api=${settings.localRepository}/net/sf/jung/jung-graph-impl/${jung.version}/jung-graph-impl-${jung.version}.jar</additionalJOption>
                 </configuration>
                 <reportSets>
