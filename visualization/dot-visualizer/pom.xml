@@ -30,7 +30,7 @@ limitations under the License.
 
     <name>AutomataLib :: Visualization :: DOT Visualizer</name>
     <description>
-        This artifact contains a visualization implementation for the GraphVIZ DOT (http://www.graphviz.org/) tool.
+        This artifact provides a visualization implementation based on the GraphVIZ DOT (http://www.graphviz.org/) tool.
     </description>
 
     <dependencies>

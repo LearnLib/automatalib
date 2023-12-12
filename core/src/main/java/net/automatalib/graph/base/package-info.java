@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2024 TU Dortmund University
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
  */
 
 /**
- * This package (including sub-packages) contains several utility methods for the different types of automata,
- * transition systems, and graphs supported by AutomataLib.
+ * Basic classes for {@link net.automatalib.graph} implementations.
  */
-package net.automatalib.util;
+package net.automatalib.graph.base;

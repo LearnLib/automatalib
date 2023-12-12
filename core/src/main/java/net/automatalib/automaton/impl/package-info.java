@@ -15,6 +15,6 @@
  */
 
 /**
- * This package (including sub-packages) contains basic utility classes to ease everyday programming.
+ * Implementations for {@link net.automatalib.automaton}.
  */
-package net.automatalib.common.util;
+package net.automatalib.automaton.impl;

@@ -30,9 +30,8 @@ limitations under the License.
 
     <name>AutomataLib :: Incremental</name>
     <description>
-        A library for incremental automata construction. This artifact contains algorithms for incrementally
-        constructing DFAs (prefix-closed and non-prefix-closed), Mealy machines, and Moore machines from a finite,
-        incrementally growing set of example inputs/outputs.
+        This artifact contains algorithms for incrementally constructing DFAs (prefix-closed and non-prefix-closed),
+        Mealy machines, and Moore machines from a finite, incrementally growing set of example inputs/outputs.
     </description>
 
     <dependencies>

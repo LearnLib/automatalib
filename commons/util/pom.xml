@@ -30,8 +30,7 @@ limitations under the License.
 
     <name>AutomataLib :: Commons :: Utilities</name>
     <description>
-        Basic utility library containing several useful classes (e.g., a Pair class) to ease
-        everyday programming.
+        Basic utility library containing several useful classes to ease everyday programming.
     </description>
 
     <dependencies>

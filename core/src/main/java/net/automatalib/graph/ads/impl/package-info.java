@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2024 TU Dortmund University
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
  */
 
 /**
- * This package (including sub-packages) contains several approaches for the incremental construction of automaton-like
- * structures.
+ * Implementations for {@link net.automatalib.graph.ads}.
  */
-package net.automatalib.incremental;
+package net.automatalib.graph.ads.impl;

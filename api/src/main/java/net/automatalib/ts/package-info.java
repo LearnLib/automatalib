@@ -15,6 +15,6 @@
  */
 
 /**
- * This package (including sub-packages) contains the basic classes concerning transition systems.
+ * This package (including sub-packages) contains the basic concepts concerning transition systems.
  */
 package net.automatalib.ts;

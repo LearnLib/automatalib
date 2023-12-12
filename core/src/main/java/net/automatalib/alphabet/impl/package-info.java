@@ -15,7 +15,6 @@
  */
 
 /**
- * This package contains adapter classes for treating the Automaton objects from the <a
- * href="http://www.brics.dk/automaton">BRICS library</a> as AutomataLib models.
+ * Implementations for {@link net.automatalib.alphabet}.
  */
-package net.automatalib.brics;
+package net.automatalib.alphabet.impl;

@@ -15,7 +15,7 @@
  */
 
 /**
- * This package (including sub-packages) contains the basic classes concerning automata.
+ * This package (including sub-packages) contains the basic concepts concerning automata.
  * <p>
  * An automaton (in the AutomataLib context) is a finite-state
  * {@link net.automatalib.ts.TransitionSystem transition system}. Like transition systems, automata are in general

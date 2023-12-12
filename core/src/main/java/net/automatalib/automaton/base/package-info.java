@@ -15,6 +15,6 @@
  */
 
 /**
- * This package contains the basic concepts concerning words.
+ * Basic classes for {@link net.automatalib.automaton} implementations.
  */
-package net.automatalib.word;
+package net.automatalib.automaton.base;

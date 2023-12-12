@@ -15,6 +15,6 @@
  */
 
 /**
- * This package contains the basic concepts concerning words.
+ * Implementations for {@link net.automatalib.automaton.fsa}.
  */
-package net.automatalib.word;
+package net.automatalib.automaton.fsa.impl;

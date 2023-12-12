@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2024 TU Dortmund University
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  */
 
 /**
- * This package contains efficient implementations for various collection data structures (especially linked lists and
- * priority queues), which have very insufficient implementation in the Java Collections Framework that makes it hard or
- * even impossible to exploit their efficiencies.
+ * Implementations for {@link net.automatalib.ts.powerset}.
  */
-package net.automatalib.common.smartcollection;
+package net.automatalib.ts.powerset.impl;

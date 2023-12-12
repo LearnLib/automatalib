@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2024 TU Dortmund University
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +15,6 @@
  */
 
 /**
- * This package (and sub-packages) provides the integration of the model checker <a
- * href="https://ltsmin.utwente.nl/">LTSmin</a> as described in the paper <a
- * href="https://dx.doi.org/10.1007/s11334-019-00342-6">Sound Black-Box Checking in the LearnLib</a> by Jeroen Meijer
- * and Jaco van de Pol.
- * <p>
- * Note that this implementation requires a local installation of the <a href="https://ltsmin.utwente.nl/">LTSmin
- * binaries</a> which are not explicitly included in this artifact due to packaging reasons.
+ * Implementations for {@link net.automatalib.ts.modal.transition}.
  */
-package net.automatalib.modelchecker.ltsmin;
-
+package net.automatalib.ts.modal.transition.impl;

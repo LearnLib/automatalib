@@ -1,4 +1,4 @@
-/* Copyright (C) 2013-2024 TU Dortmund University
+/* Copyright (C) 2013-2023 TU Dortmund
  * This file is part of AutomataLib, http://www.automatalib.net/.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,6 @@
  */
 
 /**
- * This package contains the basic concepts concerning words.
+ * Implementations for {@link net.automatalib.automaton.transducer.probabilistic}.
  */
-package net.automatalib.word;
+package net.automatalib.automaton.transducer.probabilistic.impl;

@@ -29,7 +29,9 @@ limitations under the License.
     <packaging>jar</packaging>
 
     <name>AutomataLib :: Visualization :: JUNG Visualizer</name>
-    <description>Visualizer using the Java Utility for Networks and Graphs</description>
+    <description>
+        This artifact provides a visualization implementation based on the JUNG (https://jung.sourceforge.net/) library.
+    </description>
 
     <dependencies>
         <!-- internal -->
