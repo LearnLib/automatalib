@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.exception.ModelCheckingException;

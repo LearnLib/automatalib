@@ -15,29 +15,24 @@
  */
 package net.automatalib.util.automaton.builder;
 
-import com.github.misberner.duzzt.annotations.DSLAction;
-import com.github.misberner.duzzt.annotations.GenerateEmbeddedDSL;
-import com.github.misberner.duzzt.annotations.SubExpr;
+import de.learnlib.tooling.annotation.edsl.Action;
+import de.learnlib.tooling.annotation.edsl.Expr;
+import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 
-@GenerateEmbeddedDSL(name = "MealyBuilder",
-                     syntax = "<transition>* withInitial <transition>* create",
-                     where = {@SubExpr(name = "transition", definedAs = "from (on withOutput? (to|loop))+")})
+@GenerateEDSL(name = "MealyBuilder",
+              syntax = "(<transition>)* withInitial (<transition>)* create",
+              where = {@Expr(name = "transition", syntax = "from (on withOutput? (to|loop))+")})
 class MealyBuilderImpl<S, I, T, O, A extends MutableMealyMachine<S, ? super I, T, ? super O>>
         extends AutomatonBuilderImpl<S, I, T, Void, O, A> {
 
+    @Action
     MealyBuilderImpl(A automaton) {
         super(automaton);
     }
 
-    @DSLAction
+    @Action
     public void withOutput(O output) {
         super.withProperty(output);
-    }
-
-    @Override
-    @DSLAction(autoVarArgs = false)
-    public void withInitial(Object stateId) {
-        super.withInitial(stateId);
     }
 }

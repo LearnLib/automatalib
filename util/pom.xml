@@ -58,18 +58,11 @@ limitations under the License.
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-        <!-- Java 11 compat -->
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
 
         <!-- build -->
         <dependency>
-            <groupId>com.github.misberner.duzzt</groupId>
-            <artifactId>duzzt-processor</artifactId>
+            <groupId>de.learnlib.tooling</groupId>
+            <artifactId>annotation-processor</artifactId>
         </dependency>
         <dependency>
             <groupId>org.checkerframework</groupId>
@@ -92,30 +85,4 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>fix-ST4</id>
-            <activation>
-                <jdk>[16,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <version>${compiler-plugin.version}</version>
-                            <configuration>
-                                <fork>true</fork>
-                                <compilerArgs>
-                                    <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-                                </compilerArgs>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-    </profiles>
 </project>

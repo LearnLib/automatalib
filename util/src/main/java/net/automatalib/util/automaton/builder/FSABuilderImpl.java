@@ -15,22 +15,35 @@
  */
 package net.automatalib.util.automaton.builder;
 
-import com.github.misberner.duzzt.annotations.DSLAction;
-import com.github.misberner.duzzt.annotations.GenerateEmbeddedDSL;
+import de.learnlib.tooling.annotation.edsl.Action;
+import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.fsa.MutableFSA;
 
-@GenerateEmbeddedDSL(name = "FSABuilder",
-                     enableAllMethods = false,
-                     syntax = "(((from (on <<to* loop? to*>>)+)+)|withAccepting|withInitial)* create")
+@GenerateEDSL(name = "FSABuilder", syntax = "(((from (on (to* loop? to*))+)+)|withAccepting|withInitial)* create")
 class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends AutomatonBuilderImpl<S, I, S, Boolean, Void, A> {
 
+    @Action
     FSABuilderImpl(A automaton) {
         super(automaton);
     }
 
-    @DSLAction
+    @Action
+    public void withInitial(Object stateId, Object... stateIds) {
+        for (S s : getStates(stateId, stateIds)) {
+            automaton.setInitial(s, true);
+        }
+    }
+
+    @Action
     public void withAccepting(Object stateId) {
         S state = getState(stateId);
         automaton.setAccepting(state, true);
+    }
+
+    @Action
+    public void withAccepting(Object stateId, Object... stateIds) {
+        for (S s : getStates(stateId, stateIds)) {
+            automaton.setAccepting(s, true);
+        }
     }
 }

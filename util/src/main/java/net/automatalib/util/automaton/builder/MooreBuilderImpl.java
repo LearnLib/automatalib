@@ -15,35 +15,29 @@
  */
 package net.automatalib.util.automaton.builder;
 
-import com.github.misberner.duzzt.annotations.DSLAction;
-import com.github.misberner.duzzt.annotations.GenerateEmbeddedDSL;
-import com.github.misberner.duzzt.annotations.SubExpr;
+import de.learnlib.tooling.annotation.edsl.Action;
+import de.learnlib.tooling.annotation.edsl.Expr;
+import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.transducer.MutableMooreMachine;
 
-@GenerateEmbeddedDSL(name = "MooreBuilder",
-                     enableAllMethods = false,
-                     syntax = "(withOutput|<transition>)* withInitial (withOutput|<transition>)* create",
-                     where = {@SubExpr(name = "transition", definedAs = "from (on (to|loop))+")})
+@GenerateEDSL(name = "MooreBuilder",
+              syntax = "(withOutput|<transition>)* withInitial (withOutput|<transition>)* create",
+              where = {@Expr(name = "transition", syntax = "(from (on (to|loop))+)")})
 public class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T, ? super O>>
         extends AutomatonBuilderImpl<S, I, T, O, Void, A> {
 
+    @Action
     MooreBuilderImpl(A automaton) {
         super(automaton);
     }
 
-    @Override
-    @DSLAction(autoVarArgs = false)
-    public void withInitial(Object stateId) {
-        super.withInitial(stateId);
-    }
-
-    @DSLAction(autoVarArgs = false)
+    @Action
     public void withInitial(Object stateId, O output) {
         super.withInitial(stateId);
         withOutput(stateId, output);
     }
 
-    @DSLAction(autoVarArgs = false)
+    @Action
     public void withOutput(Object stateId, O output) {
         super.withStateProperty(output, stateId);
     }
