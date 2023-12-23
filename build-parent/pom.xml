@@ -92,8 +92,8 @@ limitations under the License.
                             </configuration>
                             <dependencies>
                                 <dependency>
-                                    <groupId>net.automatalib.tooling</groupId>
-                                    <artifactId>automata-build-tools</artifactId>
+                                    <groupId>net.automatalib</groupId>
+                                    <artifactId>automata-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
                             </dependencies>
@@ -108,8 +108,8 @@ limitations under the License.
                             </configuration>
                             <dependencies>
                                 <dependency>
-                                    <groupId>net.automatalib.tooling</groupId>
-                                    <artifactId>automata-build-tools</artifactId>
+                                    <groupId>net.automatalib</groupId>
+                                    <artifactId>automata-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
                             </dependencies>
@@ -131,8 +131,8 @@ limitations under the License.
                                     <version>${checkstyle.version}</version>
                                 </dependency>
                                 <dependency>
-                                    <groupId>net.automatalib.tooling</groupId>
-                                    <artifactId>automata-build-tools</artifactId>
+                                    <groupId>net.automatalib</groupId>
+                                    <artifactId>automata-build-config</artifactId>
                                     <version>${project.version}</version>
                                 </dependency>
                             </dependencies>

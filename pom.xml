@@ -132,8 +132,8 @@ limitations under the License.
         <module>adapters</module>
         <module>api</module>
         <module>archetypes</module>
+        <module>build-config</module>
         <module>build-parent</module>
-        <module>build-tools</module>
         <module>commons</module>
         <module>core</module>
         <module>distribution</module>
@@ -290,19 +290,19 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- build-config -->
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-build-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- build-parent -->
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-build-parent</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
-            </dependency>
-
-            <!-- build-tools -->
-            <dependency>
-                <groupId>net.automatalib.tooling</groupId>
-                <artifactId>automata-build-tools</artifactId>
-                <version>${project.version}</version>
             </dependency>
 
             <!-- commons -->
