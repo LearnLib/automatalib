@@ -97,18 +97,6 @@ limitations under the License.
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <!-- FIXME disable incremental compilation for now because this module uses code-generation (javaCC) and annotation processing (buildergen) which Maven/javac apparently doesn't handle well. Cleanup, once tooling properly supports this -->
-                        <useIncrementalCompilation>false</useIncrementalCompilation>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

@@ -787,10 +787,12 @@ limitations under the License.
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${compiler-plugin.version}</version>
                     <configuration>
+                        <!-- explicitly list processors because in module-aware environments (such as IDEs on newer
+                         JDKs) the default classpath-based discovery process does not trigger -->
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>de.learnlib.tooling</groupId>
-                                <artifactId>processors</artifactId>
+                                <artifactId>annotation-processor</artifactId>
                                 <version>${build-tools.version}</version>
                             </path>
                             <path>
@@ -807,34 +809,27 @@ limitations under the License.
                                 <goal>compile</goal>
                             </goals>
                             <configuration>
-                                <!-- build only the module-info.java. if non-existent, this step does nothing -->
+                                <!-- compile everything in module-aware mode to check for errors -->
                                 <release>9</release>
-                                <includes>
-                                    <include>module-info.java</include>
-                                </includes>
+                                <createMissingPackageInfoClass>false</createMissingPackageInfoClass>
                             </configuration>
                         </execution>
                         <execution>
-                            <id>base-compile</id>
+                            <id>java-8-compile</id>
                             <goals>
                                 <goal>compile</goal>
                             </goals>
                             <configuration>
-                                <!-- compile everything for target VM except the module-info.java -->
+                                <!-- recompile generated sources as well -->
+                                <compileSourceRoots>
+                                    <compileSourceRoot>${project.build.sourceDirectory}</compileSourceRoot>
+                                    <compileSourceRoot>${project.build.directory}/generated-sources</compileSourceRoot>
+                                </compileSourceRoots>
+                                <proc>none</proc>
+                                <!-- re-compile everything for target VM except the module-info.java -->
                                 <excludes>
                                     <exclude>module-info.java</exclude>
                                 </excludes>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>module-compile</id>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                            <configuration>
-                                <!-- compile everything in module-mode to ensure module-info contains right entries -->
-                                <release>9</release>
-                                <outputDirectory>${project.build.directory}/module-compile</outputDirectory>
                             </configuration>
                         </execution>
                     </executions>
