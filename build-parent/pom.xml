@@ -48,18 +48,6 @@ limitations under the License.
                              fail on "unknown" classes.
                          -->
                         <excludes>
-                            <!-- generated builders for automata types -->
-                            <exclude>net/automatalib/util/automaton/builder/AutomatonBuilder.class</exclude>
-                            <exclude>net/automatalib/util/automaton/builder/AutomatonBuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automaton/builder/DFABuilder.class</exclude>
-                            <exclude>net/automatalib/util/automaton/builder/DFABuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automaton/builder/FSABuilder.class</exclude>
-                            <exclude>net/automatalib/util/automaton/builder/FSABuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automaton/builder/MealyBuilder.class</exclude>
-                            <exclude>net/automatalib/util/automaton/builder/MealyBuilder$*.class</exclude>
-                            <exclude>net/automatalib/util/automaton/builder/MooreBuilder.class</exclude>
-                            <exclude>net/automatalib/util/automaton/builder/MooreBuilder$*.class</exclude>
-
                             <!-- generated parser for DOT serialization -->
                             <exclude>net/automatalib/serialization/dot/InternalDOTParser*.class</exclude>
                             <exclude>net/automatalib/serialization/dot/ParseException.class</exclude>
@@ -87,15 +75,6 @@ limitations under the License.
                             <exclude>net/automatalib/modelchecker/m3c/formula/parser/SimpleCharStream.class</exclude>
                             <exclude>net/automatalib/modelchecker/m3c/formula/parser/Token.class</exclude>
                             <exclude>net/automatalib/modelchecker/m3c/formula/parser/TokenMgrError.class</exclude>
-
-                            <!-- generated builders for model checkers -->
-                            <exclude>net/automatalib/modelchecker/ltsmin/ltl/LTSminLTLAlternatingBuilder.class</exclude>
-                            <exclude>net/automatalib/modelchecker/ltsmin/ltl/LTSminLTLDFABuilder.class</exclude>
-                            <exclude>net/automatalib/modelchecker/ltsmin/ltl/LTSminLTLIOBuilder.class</exclude>
-
-                            <exclude>net/automatalib/modelchecker/ltsmin/monitor/LTSminMonitorAlternatingBuilder.class</exclude>
-                            <exclude>net/automatalib/modelchecker/ltsmin/monitor/LTSminMonitorDFABuilder.class</exclude>
-                            <exclude>net/automatalib/modelchecker/ltsmin/monitor/LTSminMonitorIOBuilder.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>

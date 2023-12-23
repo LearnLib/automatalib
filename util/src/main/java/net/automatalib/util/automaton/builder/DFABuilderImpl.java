@@ -15,45 +15,19 @@
  */
 package net.automatalib.util.automaton.builder;
 
-import de.learnlib.tooling.annotation.DocGenType;
 import de.learnlib.tooling.annotation.edsl.Action;
 import de.learnlib.tooling.annotation.edsl.Expr;
 import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.fsa.MutableDFA;
 
-/**
- * A fluent builder for {@link net.automatalib.automaton.fsa.DFA}s.
- *
- * @param <S>
- *         state type
- * @param <I>
- *         input symbol type
- * @param <A>
- *         concrete automaton type
- */
 @GenerateEDSL(name = "DFABuilder",
               syntax = "(<transOrAcc>)* withInitial (<transOrAcc>)* create",
-              where = @Expr(name = "transOrAcc", syntax = "(from (on (loop|to))+)+|withAccepting"),
-              constructorPublic = false,
-              docGenType = DocGenType.COPY)
+              where = {@Expr(name = "transOrAcc", syntax = "(from (on (loop|to))+)+|withAccepting")})
 class DFABuilderImpl<S, I, A extends MutableDFA<S, ? super I>> extends FSABuilderImpl<S, I, A> {
 
-    /**
-     * Constructs a new builder with the given (mutable) automaton to write to.
-     *
-     * @param automaton
-     *         the automaton to write to
-     */
     @Action
     DFABuilderImpl(A automaton) {
         super(automaton);
     }
 
-    // override to un-mark it as action
-    @Override
-    void withInitial(Object stateId, Object... stateIds) {
-        if (stateIds.length > 0) {
-            throw new IllegalArgumentException("deterministic automata can only have a single initial state");
-        }
-    }
 }

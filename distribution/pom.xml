@@ -394,7 +394,7 @@ limitations under the License.
                             <additionalDependencies>
                                 <additionalDependency>
                                     <groupId>de.learnlib.tooling</groupId>
-                                    <artifactId>annotations</artifactId>
+                                    <artifactId>annotation-processpr</artifactId>
                                     <version>${build-tools.version}</version>
                                 </additionalDependency>
                                 <additionalDependency>
