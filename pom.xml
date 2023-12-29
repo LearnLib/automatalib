@@ -217,8 +217,8 @@ limitations under the License.
 
         <!-- dependency versions -->
         <addlib.version>3.0.1</addlib.version>
+        <annotation-processor.version>0.1-SNAPSHOT</annotation-processor.version>
         <assertj.version>3.17.1</assertj.version>
-        <build-tools.version>0.1-SNAPSHOT</build-tools.version>
         <brics-automaton.version>1.12-4</brics-automaton.version>
         <build-tools.version>0.1</build-tools.version>
         <cacio.version>1.11.1</cacio.version>
@@ -500,7 +500,7 @@ limitations under the License.
             <dependency>
                 <groupId>de.learnlib.tooling</groupId>
                 <artifactId>annotation-processor</artifactId>
-                <version>${build-tools.version}</version>
+                <version>${annotation-processor.version}</version>
                 <!-- Compile-time only -->
                 <scope>provided</scope>
             </dependency>
