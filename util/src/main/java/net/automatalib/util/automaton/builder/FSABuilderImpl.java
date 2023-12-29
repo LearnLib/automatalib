@@ -19,7 +19,7 @@ import de.learnlib.tooling.annotation.edsl.Action;
 import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.fsa.MutableFSA;
 
-@GenerateEDSL(name = "FSABuilder", syntax = "(((from (on (to* loop? to*))+)+)|withAccepting|withInitial)* create")
+@GenerateEDSL(name = "FSABuilder", syntax = "(((from (on (loop|to)+)+)+)|withAccepting|withInitial)* create")
 class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends AutomatonBuilderImpl<S, I, S, Boolean, Void, A> {
 
     @Action
