@@ -36,8 +36,7 @@ open module net.automatalib.util {
     requires net.automatalib.core;
     requires org.checkerframework.checker.qual;
 
-    requires static java.compiler;
-    requires static de.learnlib.tooling.annotation.processor;
+    requires static de.learnlib.tooling.annotation_processor;
 
     exports net.automatalib.util.automaton;
     exports net.automatalib.util.automaton.ads;
