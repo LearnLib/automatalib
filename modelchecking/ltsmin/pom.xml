@@ -102,7 +102,10 @@ limitations under the License.
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>javacc-maven-plugin</artifactId>
                 <configuration>
-                    <!-- We want to share the output directory with javaCC / buildergen so that the "annotation" subdirectory is not actually picked up as a package-prefix by the javadoc plugin -->
+                    <!-- We want to share the output directory with other annotation processors. While this config
+                         causes a warning during regular compilation, removing it causes an error when recompiling the
+                         code on a dirty target directory (e.g. done by the javadoc plugin during bundled builds).
+                    -->
                     <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
                 </configuration>
             </plugin>
