@@ -42,7 +42,24 @@ limitations under the License.
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <configuration>
+                        <!-- Since jacoco's agent instrumentation is a separate step from its report generation, we need
+                             to explicitly exclude generated classes here and cannot rely on things such as a @Generated
+                             annotation. Otherwise, tools such as the coveralls-plugin (which scans the agent's output)
+                             fail on "unknown" classes.
+                         -->
                         <excludes>
+                            <!-- generated builders for automata types -->
+                            <exclude>net/automatalib/util/automaton/builder/AutomatonBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/AutomatonBuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/DFABuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/DFABuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/FSABuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/FSABuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/MealyBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/MealyBuilder$*.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/MooreBuilder.class</exclude>
+                            <exclude>net/automatalib/util/automaton/builder/MooreBuilder$*.class</exclude>
+
                             <!-- generated parser for DOT serialization -->
                             <exclude>net/automatalib/serialization/dot/InternalDOTParser*.class</exclude>
                             <exclude>net/automatalib/serialization/dot/ParseException.class</exclude>
@@ -70,6 +87,15 @@ limitations under the License.
                             <exclude>net/automatalib/modelchecker/m3c/formula/parser/SimpleCharStream.class</exclude>
                             <exclude>net/automatalib/modelchecker/m3c/formula/parser/Token.class</exclude>
                             <exclude>net/automatalib/modelchecker/m3c/formula/parser/TokenMgrError.class</exclude>
+
+                            <!-- generated builders for model checkers -->
+                            <exclude>net/automatalib/modelchecker/ltsmin/ltl/LTSminLTLAlternatingBuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/ltl/LTSminLTLDFABuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/ltl/LTSminLTLIOBuilder.class</exclude>
+
+                            <exclude>net/automatalib/modelchecker/ltsmin/monitor/LTSminMonitorAlternatingBuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/monitor/LTSminMonitorDFABuilder.class</exclude>
+                            <exclude>net/automatalib/modelchecker/ltsmin/monitor/LTSminMonitorIOBuilder.class</exclude>
                         </excludes>
                     </configuration>
                 </plugin>
