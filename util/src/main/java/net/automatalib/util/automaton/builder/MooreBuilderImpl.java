@@ -22,8 +22,14 @@ import net.automatalib.automaton.transducer.MutableMooreMachine;
 
 @GenerateEDSL(name = "MooreBuilder",
               syntax = "(withOutput|<transition>)* withInitial (withOutput|<transition>)* create",
-              where = {@Expr(name = "transition", syntax = "(from (on (to|loop))+)")})
-public class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T, ? super O>>
+              where = {@Expr(name = "transition", syntax = "(from (on (to|loop))+)")},
+              classDoc = "A fluent builder for a {@link MutableMooreMachine}.\n" +
+                         "@param <S> state type\n" +
+                         "@param <I> input symbol type\n" +
+                         "@param <T> transition type\n" +
+                         "@param <O> output symbol type\n" +
+                         "@param <A> automaton type\n")
+class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T, ? super O>>
         extends AutomatonBuilderImpl<S, I, T, O, Void, A> {
 
     @Action

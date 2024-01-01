@@ -22,7 +22,11 @@ import net.automatalib.automaton.fsa.MutableDFA;
 
 @GenerateEDSL(name = "DFABuilder",
               syntax = "(<transOrAcc>)* withInitial (<transOrAcc>)* create",
-              where = {@Expr(name = "transOrAcc", syntax = "(from (on (loop|to))+)+|withAccepting")})
+              where = {@Expr(name = "transOrAcc", syntax = "(from (on (loop|to))+)+|withAccepting")},
+              classDoc = "A fluent builder for a {@link MutableDFA}.\n" +
+                         "@param <S> state type\n" +
+                         "@param <I> input symbol type\n" +
+                         "@param <A> automaton type\n")
 class DFABuilderImpl<S, I, A extends MutableDFA<S, ? super I>> extends FSABuilderImpl<S, I, A> {
 
     @Action

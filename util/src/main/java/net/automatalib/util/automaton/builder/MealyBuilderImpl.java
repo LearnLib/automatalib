@@ -22,7 +22,13 @@ import net.automatalib.automaton.transducer.MutableMealyMachine;
 
 @GenerateEDSL(name = "MealyBuilder",
               syntax = "(<transition>)* withInitial (<transition>)* create",
-              where = {@Expr(name = "transition", syntax = "from (on withOutput? (to|loop))+")})
+              where = {@Expr(name = "transition", syntax = "from (on withOutput? (to|loop))+")},
+              classDoc = "A fluent builder for a {@link MutableMealyMachine}.\n" +
+                         "@param <S> state type\n" +
+                         "@param <I> input symbol type\n" +
+                         "@param <T> transition type\n" +
+                         "@param <O> output symbol type\n" +
+                         "@param <A> automaton type\n")
 class MealyBuilderImpl<S, I, T, O, A extends MutableMealyMachine<S, ? super I, T, ? super O>>
         extends AutomatonBuilderImpl<S, I, T, Void, O, A> {
 
