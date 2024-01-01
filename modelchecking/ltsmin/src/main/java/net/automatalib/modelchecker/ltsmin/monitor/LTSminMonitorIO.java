@@ -33,7 +33,10 @@ import net.automatalib.modelchecker.ltsmin.LTSminIO;
 public class LTSminMonitorIO<I, O> extends AbstractLTSminMonitorMealy<I, O>
         implements LTSminIO<I, O, MealyMachine<?, I, ?, O>> {
 
-    @GenerateBuilder(defaults = BuilderDefaults.class)
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     classDoc = "A builder for {@link LTSminMonitorIO}.\n" +
+                                "@param <I> the input type\n" +
+                                "@param <O> the output type\n")
     public LTSminMonitorIO(boolean keepFiles,
                            Function<String, I> string2Input,
                            Function<String, O> string2Output,

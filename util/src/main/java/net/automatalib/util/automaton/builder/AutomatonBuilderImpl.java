@@ -26,7 +26,14 @@ import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.MutableAutomaton;
 
 @GenerateEDSL(name = "AutomatonBuilder",
-              syntax = "((from (on (withProperty? (to* loop? to*))+)+)|withStateProperty|withInitial)* create")
+              syntax = "((from (on (withProperty? (to* loop? to*))+)+)|withStateProperty|withInitial)* create",
+              classDoc = "A fluent builder for a {@link MutableAutomaton}.\n" +
+                         "@param <S> state type\n" +
+                         "@param <I> input symbol type\n" +
+                         "@param <T> transition type\n" +
+                         "@param <SP> state property type\n" +
+                         "@param <TP> transition property type\n" +
+                         "@param <A> automaton type\n")
 @SuppressWarnings("nullness") // nullness correctness guaranteed by states of regular expression
 class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? super I, T, ? super SP, ? super TP>> {
 

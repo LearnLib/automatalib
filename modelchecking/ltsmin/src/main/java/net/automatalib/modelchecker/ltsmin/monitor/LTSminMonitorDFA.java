@@ -44,7 +44,9 @@ public class LTSminMonitorDFA<I> extends AbstractLTSminMonitor<I, DFA<?, I>, DFA
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LTSminMonitorDFA.class);
 
-    @GenerateBuilder(defaults = BuilderDefaults.class)
+    @GenerateBuilder(defaults = BuilderDefaults.class,
+                     classDoc = "A builder for {@link LTSminMonitorDFA}.\n" +
+                                "@param <I> the input type\n")
     public LTSminMonitorDFA(boolean keepFiles, Function<String, I> string2Input) {
         super(keepFiles, string2Input);
     }
