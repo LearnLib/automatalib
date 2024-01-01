@@ -792,8 +792,8 @@ limitations under the License.
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>de.learnlib.tooling</groupId>
-                                <artifactId>annotation-processor</artifactId>
-                                <version>${annotation-processor.version}</version>
+                                <artifactId>processors</artifactId>
+                                <version>${build-tools.version}</version>
                             </path>
                             <path>
                                 <groupId>org.kohsuke.metainf-services</groupId>

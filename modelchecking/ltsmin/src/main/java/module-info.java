@@ -43,7 +43,7 @@ open module net.automatalib.modelchecker.ltsmin {
     requires org.checkerframework.checker.qual;
     requires org.slf4j;
 
-    requires static de.learnlib.tooling.annotation_processor;
+    requires static de.learnlib.tooling.annotation;
 
     exports net.automatalib.modelchecker.ltsmin;
     exports net.automatalib.modelchecker.ltsmin.ltl;
