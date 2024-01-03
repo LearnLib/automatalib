@@ -56,9 +56,7 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
      */
     public static final String LABEL_VALUE = "accept";
 
-    @GenerateBuilder(defaults = AbstractLTSminLTL.BuilderDefaults.class,
-                     classDoc = "A builder for {@link LTSminLTLDFA}.\n" +
-                                "@param <I> the input type\n")
+    @GenerateBuilder(defaults = AbstractLTSminLTL.BuilderDefaults.class)
     public LTSminLTLDFA(boolean keepFiles, Function<String, I> string2Input, int minimumUnfolds, double multiplier) {
         super(keepFiles, string2Input, minimumUnfolds, multiplier);
     }

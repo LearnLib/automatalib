@@ -15,23 +15,45 @@
  */
 package net.automatalib.util.automaton.builder;
 
+import de.learnlib.tooling.annotation.DocGenType;
 import de.learnlib.tooling.annotation.edsl.Action;
 import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.fsa.MutableFSA;
 
+/**
+ * A fluent builder for {@link net.automatalib.automaton.fsa.FiniteStateAcceptor}s.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <A>
+ *         concrete automaton type
+ */
 @GenerateEDSL(name = "FSABuilder",
               syntax = "(((from (on (loop|to)+)+)+)|withAccepting|withInitial)* create",
-              classDoc = "A fluent builder for a {@link MutableFSA}.\n" +
-                         "@param <S> state type\n" +
-                         "@param <I> input symbol type\n" +
-                         "@param <A> automaton type\n")
+              docGenType = DocGenType.COPY)
 class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends AutomatonBuilderImpl<S, I, S, Boolean, Void, A> {
 
+    /**
+     * Constructs a new builder with the given (mutable) automaton to write to.
+     *
+     * @param automaton
+     *         the automaton to write to
+     */
     @Action
     FSABuilderImpl(A automaton) {
         super(automaton);
     }
 
+    /**
+     * Marks the given states as initial.
+     *
+     * @param stateId
+     *         the object to identify the mandatory state
+     * @param stateIds
+     *         the objects to identify the additional states
+     */
     @Action
     public void withInitial(Object stateId, Object... stateIds) {
         for (S s : getStates(stateId, stateIds)) {
@@ -39,12 +61,26 @@ class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends Automaton
         }
     }
 
+    /**
+     * Marks the given state as accepting.
+     *
+     * @param stateId
+     *         the object to identify the state
+     */
     @Action
     public void withAccepting(Object stateId) {
         S state = getState(stateId);
         automaton.setAccepting(state, true);
     }
 
+    /**
+     * Marks the given states as accepting.
+     *
+     * @param stateId
+     *         the object to identify the mandatory state
+     * @param stateIds
+     *         the objects to identify the additional states
+     */
     @Action
     public void withAccepting(Object stateId, Object... stateIds) {
         for (S s : getStates(stateId, stateIds)) {

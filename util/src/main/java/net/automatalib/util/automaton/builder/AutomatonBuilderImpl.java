@@ -21,19 +21,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.learnlib.tooling.annotation.DocGenType;
 import de.learnlib.tooling.annotation.edsl.Action;
 import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.MutableAutomaton;
 
+/**
+ * A fluent builder for {@link net.automatalib.automaton.Automaton automata}.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <SP>
+ *         state property type
+ * @param <TP>
+ *         transition property type
+ * @param <A>
+ *         concrete automaton type
+ */
 @GenerateEDSL(name = "AutomatonBuilder",
               syntax = "((from (on (withProperty? (to* loop? to*))+)+)|withStateProperty|withInitial)* create",
-              classDoc = "A fluent builder for a {@link MutableAutomaton}.\n" +
-                         "@param <S> state type\n" +
-                         "@param <I> input symbol type\n" +
-                         "@param <T> transition type\n" +
-                         "@param <SP> state property type\n" +
-                         "@param <TP> transition property type\n" +
-                         "@param <A> automaton type\n")
+              docGenType = DocGenType.COPY)
 @SuppressWarnings("nullness") // nullness correctness guaranteed by states of regular expression
 class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? super I, T, ? super SP, ? super TP>> {
 
@@ -44,19 +55,39 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
     protected List<I> currentInputs;
     protected TP currentTransProp;
 
+    /**
+     * Constructs a new builder with the given (mutable) automaton to write to.
+     *
+     * @param automaton
+     *         the automaton to write to
+     */
     @Action
     AutomatonBuilderImpl(A automaton) {
         this.automaton = automaton;
     }
 
+    /**
+     * Starts a definition of transition(s) from a given source state.
+     *
+     * @param stateId
+     *         the object to identify the state
+     */
     @Action
-    public void from(Object stateId) {
+    void from(Object stateId) {
         this.currentStates = getStates(stateId);
         this.currentInputs = null;
     }
 
+    /**
+     * Starts a definition of transition(s) from multiple given source states.
+     *
+     * @param firstStateId
+     *         the mandatory object to identify the first state
+     * @param otherStateIds
+     *         the optional objects to identify additional states
+     */
     @Action
-    public void from(Object firstStateId, Object... otherStateIds) {
+    void from(Object firstStateId, Object... otherStateIds) {
         this.currentStates = getStates(firstStateId, otherStateIds);
     }
 
@@ -81,26 +112,53 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
         return state;
     }
 
+    /**
+     * Specifies the input symbol of the current transition definition(s).
+     *
+     * @param input
+     *         the input symbol
+     */
     @Action
-    public void on(I input) {
+    void on(I input) {
         this.currentInputs = Collections.singletonList(input);
         this.currentTransProp = null;
     }
 
+    /**
+     * Specifies multiple input symbols of the current transition definition(s).
+     *
+     * @param firstInput
+     *         the mandatory first input symbol
+     * @param otherInputs
+     *         the optional additional input symbols
+     */
     @Action
     @SafeVarargs
-    public final void on(I firstInput, I... otherInputs) {
+    final void on(I firstInput, I... otherInputs) {
         this.currentInputs = new ArrayList<>(1 + otherInputs.length);
         this.currentInputs.add(firstInput);
         Collections.addAll(this.currentInputs, otherInputs);
         this.currentTransProp = null;
     }
 
+    /**
+     * Associates a transition property with the currently scoped transition(s).
+     *
+     * @param transProp
+     *         the property
+     */
     @Action
-    public void withProperty(TP transProp) {
+    void withProperty(TP transProp) {
         this.currentTransProp = transProp;
     }
 
+    /**
+     * Selects the target state of the current transition definition(s) and adds all resulting transitions to the
+     * automaton.
+     *
+     * @param stateId
+     *         the object to identify the state
+     */
     @Action
     public void to(Object stateId) {
         S tgt = getState(stateId);
@@ -111,6 +169,9 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
         }
     }
 
+    /**
+     * Selects the target state(s) of the current transition definition(s) by looping them to their source state.
+     */
     @Action
     public void loop() {
         for (S src : currentStates) {
@@ -120,17 +181,36 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
         }
     }
 
-    @Action(isTerminating = true)
+    /**
+     * Returns the constructed automaton.
+     *
+     * @return the automaton
+     */
+    @Action(terminating = true)
     public A create() {
         return automaton;
     }
 
+    /**
+     * Marks the given state as initial.
+     *
+     * @param stateId
+     *         the object to identify the state
+     */
     @Action
     public void withInitial(Object stateId) {
         S state = getState(stateId);
         automaton.setInitial(state, true);
     }
 
+    /**
+     * Associates with the given state the given state property.
+     *
+     * @param stateProperty
+     *         the property to associate with the state
+     * @param stateId
+     *         the object to identify the state
+     */
     @Action
     public void withStateProperty(SP stateProperty, Object stateId) {
         S state = getState(stateId);
