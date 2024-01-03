@@ -32,6 +32,7 @@ import net.automatalib.automaton.fsa.MutableFSA;
  */
 @GenerateEDSL(name = "FSABuilder",
               syntax = "(((from (on (loop|to)+)+)+)|withAccepting|withInitial)* create",
+              constructorPublic = false,
               docGenType = DocGenType.COPY)
 class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends AutomatonBuilderImpl<S, I, S, Boolean, Void, A> {
 
