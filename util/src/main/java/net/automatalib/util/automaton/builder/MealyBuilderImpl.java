@@ -15,28 +15,50 @@
  */
 package net.automatalib.util.automaton.builder;
 
+import de.learnlib.tooling.annotation.DocGenType;
 import de.learnlib.tooling.annotation.edsl.Action;
 import de.learnlib.tooling.annotation.edsl.Expr;
 import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 
+/**
+ * A fluent builder for {@link net.automatalib.automaton.transducer.MealyMachine}s.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <O>
+ *         output symbol type
+ * @param <A>
+ *         concrete automaton type
+ */
 @GenerateEDSL(name = "MealyBuilder",
               syntax = "(<transition>)* withInitial (<transition>)* create",
               where = {@Expr(name = "transition", syntax = "from (on withOutput? (to|loop))+")},
-              classDoc = "A fluent builder for a {@link MutableMealyMachine}.\n" +
-                         "@param <S> state type\n" +
-                         "@param <I> input symbol type\n" +
-                         "@param <T> transition type\n" +
-                         "@param <O> output symbol type\n" +
-                         "@param <A> automaton type\n")
+              docGenType = DocGenType.COPY)
 class MealyBuilderImpl<S, I, T, O, A extends MutableMealyMachine<S, ? super I, T, ? super O>>
         extends AutomatonBuilderImpl<S, I, T, Void, O, A> {
 
+    /**
+     * Constructs a new builder with the given (mutable) automaton to write to.
+     *
+     * @param automaton
+     *         the automaton to write to
+     */
     @Action
     MealyBuilderImpl(A automaton) {
         super(automaton);
     }
 
+    /**
+     * Associates an output symbol with the currently scoped transition(s).
+     *
+     * @param output
+     *         the output
+     */
     @Action
     public void withOutput(O output) {
         super.withProperty(output);

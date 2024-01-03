@@ -35,10 +35,7 @@ import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
 public class LTSminMonitorAlternating<I, O> extends AbstractLTSminMonitorMealy<I, O>
         implements LTSminAlternating<I, O, MealyMachine<?, I, ?, O>> {
 
-    @GenerateBuilder(defaults = BuilderDefaults.class,
-                     classDoc = "A builder for {@link LTSminMonitorAlternating}.\n" +
-                                "@param <I> the input type\n" +
-                                "@param <O> the output type\n")
+    @GenerateBuilder(defaults = BuilderDefaults.class)
     public LTSminMonitorAlternating(boolean keepFiles,
                                     Function<String, I> string2Input,
                                     Function<String, O> string2Output,
