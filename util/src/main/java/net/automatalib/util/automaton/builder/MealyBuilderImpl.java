@@ -60,7 +60,7 @@ class MealyBuilderImpl<S, I, T, O, A extends MutableMealyMachine<S, ? super I, T
      *         the output
      */
     @Action
-    public void withOutput(O output) {
+    void withOutput(O output) {
         super.withProperty(output);
     }
 }

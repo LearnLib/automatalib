@@ -160,7 +160,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
      *         the object to identify the state
      */
     @Action
-    public void to(Object stateId) {
+    void to(Object stateId) {
         S tgt = getState(stateId);
         for (S src : currentStates) {
             for (I input : currentInputs) {
@@ -173,7 +173,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
      * Selects the target state(s) of the current transition definition(s) by looping them to their source state.
      */
     @Action
-    public void loop() {
+    void loop() {
         for (S src : currentStates) {
             for (I input : currentInputs) {
                 automaton.addTransition(src, input, src, currentTransProp);
@@ -187,7 +187,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
      * @return the automaton
      */
     @Action(terminating = true)
-    public A create() {
+    A create() {
         return automaton;
     }
 
@@ -198,7 +198,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
      *         the object to identify the state
      */
     @Action
-    public void withInitial(Object stateId) {
+    void withInitial(Object stateId) {
         S state = getState(stateId);
         automaton.setInitial(state, true);
     }
@@ -212,7 +212,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
      *         the object to identify the state
      */
     @Action
-    public void withStateProperty(SP stateProperty, Object stateId) {
+    void withStateProperty(SP stateProperty, Object stateId) {
         S state = getState(stateId);
         automaton.setStateProperty(state, stateProperty);
     }

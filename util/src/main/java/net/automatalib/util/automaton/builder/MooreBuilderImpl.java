@@ -62,7 +62,7 @@ class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T
      *         the output of the state
      */
     @Action
-    public void withInitial(Object stateId, O output) {
+    void withInitial(Object stateId, O output) {
         super.withInitial(stateId);
         withOutput(stateId, output);
     }
@@ -76,7 +76,7 @@ class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T
      *         the output symbol
      */
     @Action
-    public void withOutput(Object stateId, O output) {
+    void withOutput(Object stateId, O output) {
         super.withStateProperty(output, stateId);
     }
 }
