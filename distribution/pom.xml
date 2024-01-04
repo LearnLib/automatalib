@@ -100,11 +100,6 @@ limitations under the License.
 
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-serialization-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-dot</artifactId>
         </dependency>
 
@@ -255,13 +250,6 @@ limitations under the License.
                 <dependency>
                     <groupId>net.automatalib</groupId>
                     <artifactId>automata-serialization-aut</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                </dependency>
-
-                <dependency>
-                    <groupId>net.automatalib</groupId>
-                    <artifactId>automata-serialization-core</artifactId>
                     <version>${project.version}</version>
                     <classifier>sources</classifier>
                 </dependency>

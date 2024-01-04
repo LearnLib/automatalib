@@ -24,7 +24,7 @@ import java.util.function.Function;
 
 import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.serialization.FormatException;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelDeserializer;
 

@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package net.automatalib.exception;
 
 /**
- * This module contains the general concepts for (de-) serializers of the different types of automata, transition
- * systems, and graphs supported by AutomataLib.
- * <p>
- * This module is provided by the following Maven dependency:
- * <pre>
- * &lt;dependency&gt;
- *   &lt;groupId&gt;net.automatalib&lt;/groupId&gt;
- *   &lt;artifactId&gt;automata-serialization-core&lt;/artifactId&gt;
- *   &lt;version&gt;${version}&lt;/version&gt;
- * &lt;/dependency&gt;
- * </pre>
+ * An exception that may be thrown when encountering an invalid format while de-serializing an automaton model.
  */
-open module net.automatalib.serialization.core {
+public class FormatException extends IllegalArgumentException {
 
-    requires net.automatalib.api;
-    requires net.automatalib.common.util;
+    public FormatException() {}
 
-    exports net.automatalib.serialization;
-    exports net.automatalib.serialization.automaton;
+    public FormatException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public FormatException(String message) {
+        super(message);
+    }
+
+    public FormatException(Throwable cause) {
+        super(cause);
+    }
+
 }
