@@ -33,7 +33,7 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 import net.automatalib.common.util.string.StringUtil;
-import net.automatalib.serialization.FormatException;
+import net.automatalib.exception.FormatException;
 
 /**
  * The parser is based on the official <a href="http://www.graphviz.org/doc/info/lang.html">language definition<a>.

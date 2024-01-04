@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.exception.FormatException;
 
 /**
  * A generic interface for formalizing an arbitrary deserializer for a given model type.

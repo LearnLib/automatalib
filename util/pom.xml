@@ -72,11 +72,6 @@ limitations under the License.
         <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>
-            <artifactId>automata-serialization-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.automatalib</groupId>
             <artifactId>automata-serialization-dot</artifactId>
             <scope>test</scope>
         </dependency>

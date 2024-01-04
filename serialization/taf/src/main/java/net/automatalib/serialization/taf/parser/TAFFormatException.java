@@ -15,7 +15,7 @@
  */
 package net.automatalib.serialization.taf.parser;
 
-import net.automatalib.serialization.FormatException;
+import net.automatalib.exception.FormatException;
 
 /**
  * Exception to signal fatal errors during parsing TAF inputs.

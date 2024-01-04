@@ -13,22 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * This package (including sub-packages) contains the general concepts for (de-) serializers of the different types of
+ * automata, transition systems, and graphs supported by AutomataLib.
+ */
 package net.automatalib.serialization;
-
-public class FormatException extends IllegalArgumentException {
-
-    public FormatException() {}
-
-    public FormatException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public FormatException(String message) {
-        super(message);
-    }
-
-    public FormatException(Throwable cause) {
-        super(cause);
-    }
-
-}

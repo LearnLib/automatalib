@@ -17,7 +17,7 @@ package net.automatalib.serialization.fsm.parser;
 
 import java.io.StreamTokenizer;
 
-import net.automatalib.serialization.FormatException;
+import net.automatalib.exception.FormatException;
 
 /**
  * Exception that may be thrown whenever an FSM is illegal.

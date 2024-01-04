@@ -31,7 +31,7 @@ import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.serialization.FormatException;
+import net.automatalib.exception.FormatException;
 
 /**
  * Deserializer for the SAF (simple automaton format).
