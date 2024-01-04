@@ -202,6 +202,7 @@ limitations under the License.
         <enforcer-plugin.version>3.4.1</enforcer-plugin.version>
         <gpg-plugin.version>3.1.0</gpg-plugin.version>
         <info-reports-plugin.version>3.4.5</info-reports-plugin.version>
+        <install-plugin.version>3.1.1</install-plugin.version>
         <jacoco-plugin.version>0.8.8</jacoco-plugin.version>
         <jar-plugin.version>3.3.0</jar-plugin.version>
         <javacc-plugin.version>3.0.1</javacc-plugin.version>
@@ -209,6 +210,7 @@ limitations under the License.
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
         <pmd-plugin.version>3.13.0</pmd-plugin.version>
         <release-plugin.version>3.0.1</release-plugin.version>
+        <resources-plugin.version>3.3.1</resources-plugin.version>
         <scm-publish-plugin.version>3.2.1</scm-publish-plugin.version>
         <site-plugin.version>3.12.1</site-plugin.version>
         <source-plugin.version>3.3.0</source-plugin.version>
@@ -817,8 +819,18 @@ limitations under the License.
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${install-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
