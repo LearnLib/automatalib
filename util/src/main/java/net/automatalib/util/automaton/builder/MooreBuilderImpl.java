@@ -37,7 +37,8 @@ import net.automatalib.automaton.transducer.MutableMooreMachine;
  */
 @GenerateEDSL(name = "MooreBuilder",
               syntax = "(withOutput|<transition>)* withInitial (withOutput|<transition>)* create",
-              where = {@Expr(name = "transition", syntax = "(from (on (to|loop))+)")},
+              where = @Expr(name = "transition", syntax = "(from (on (to|loop))+)"),
+              constructorPublic = false,
               docGenType = DocGenType.COPY)
 class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T, ? super O>>
         extends AutomatonBuilderImpl<S, I, T, O, Void, A> {
@@ -62,7 +63,7 @@ class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T
      *         the output of the state
      */
     @Action
-    public void withInitial(Object stateId, O output) {
+    void withInitial(Object stateId, O output) {
         super.withInitial(stateId);
         withOutput(stateId, output);
     }
@@ -76,7 +77,7 @@ class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T
      *         the output symbol
      */
     @Action
-    public void withOutput(Object stateId, O output) {
+    void withOutput(Object stateId, O output) {
         super.withStateProperty(output, stateId);
     }
 }

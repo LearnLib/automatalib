@@ -49,7 +49,7 @@ limitations under the License.
                     </systemPropertyVariables>
                 </configuration>
                 <executions>
-                    <!-- since we use META-INF/services also test in classpath mode -->
+                    <!-- since we use META-INF/services, also test in classpath mode -->
                     <execution>
                         <id>classpath-test</id>
                         <phase>test</phase>

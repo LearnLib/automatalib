@@ -32,6 +32,7 @@ import net.automatalib.automaton.fsa.MutableFSA;
  */
 @GenerateEDSL(name = "FSABuilder",
               syntax = "(((from (on (loop|to)+)+)+)|withAccepting|withInitial)* create",
+              constructorPublic = false,
               docGenType = DocGenType.COPY)
 class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends AutomatonBuilderImpl<S, I, S, Boolean, Void, A> {
 
@@ -55,7 +56,7 @@ class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends Automaton
      *         the objects to identify the additional states
      */
     @Action
-    public void withInitial(Object stateId, Object... stateIds) {
+    void withInitial(Object stateId, Object... stateIds) {
         for (S s : getStates(stateId, stateIds)) {
             automaton.setInitial(s, true);
         }
@@ -68,7 +69,7 @@ class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends Automaton
      *         the object to identify the state
      */
     @Action
-    public void withAccepting(Object stateId) {
+    void withAccepting(Object stateId) {
         S state = getState(stateId);
         automaton.setAccepting(state, true);
     }
@@ -82,7 +83,7 @@ class FSABuilderImpl<S, I, A extends MutableFSA<S, ? super I>> extends Automaton
      *         the objects to identify the additional states
      */
     @Action
-    public void withAccepting(Object stateId, Object... stateIds) {
+    void withAccepting(Object stateId, Object... stateIds) {
         for (S s : getStates(stateId, stateIds)) {
             automaton.setAccepting(s, true);
         }

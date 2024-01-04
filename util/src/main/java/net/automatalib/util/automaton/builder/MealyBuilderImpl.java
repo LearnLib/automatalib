@@ -37,7 +37,8 @@ import net.automatalib.automaton.transducer.MutableMealyMachine;
  */
 @GenerateEDSL(name = "MealyBuilder",
               syntax = "(<transition>)* withInitial (<transition>)* create",
-              where = {@Expr(name = "transition", syntax = "from (on withOutput? (to|loop))+")},
+              where = @Expr(name = "transition", syntax = "from (on withOutput? (to|loop))+"),
+              constructorPublic = false,
               docGenType = DocGenType.COPY)
 class MealyBuilderImpl<S, I, T, O, A extends MutableMealyMachine<S, ? super I, T, ? super O>>
         extends AutomatonBuilderImpl<S, I, T, Void, O, A> {
@@ -60,7 +61,7 @@ class MealyBuilderImpl<S, I, T, O, A extends MutableMealyMachine<S, ? super I, T
      *         the output
      */
     @Action
-    public void withOutput(O output) {
+    void withOutput(O output) {
         super.withProperty(output);
     }
 }

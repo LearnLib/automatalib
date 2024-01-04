@@ -44,6 +44,7 @@ import net.automatalib.automaton.MutableAutomaton;
  */
 @GenerateEDSL(name = "AutomatonBuilder",
               syntax = "((from (on (withProperty? (to* loop? to*))+)+)|withStateProperty|withInitial)* create",
+              constructorPublic = false,
               docGenType = DocGenType.COPY)
 @SuppressWarnings("nullness") // nullness correctness guaranteed by states of regular expression
 class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? super I, T, ? super SP, ? super TP>> {
@@ -113,7 +114,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
     }
 
     /**
-     * Specifies the input symbol of the current transition definition(s).
+     * Sets the input symbol of the current transition definition(s).
      *
      * @param input
      *         the input symbol
@@ -125,7 +126,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
     }
 
     /**
-     * Specifies multiple input symbols of the current transition definition(s).
+     * Sets multiple input symbols of the current transition definition(s).
      *
      * @param firstInput
      *         the mandatory first input symbol
@@ -153,14 +154,13 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
     }
 
     /**
-     * Selects the target state of the current transition definition(s) and adds all resulting transitions to the
-     * automaton.
+     * Sets the target state of the current transition definition(s).
      *
      * @param stateId
      *         the object to identify the state
      */
     @Action
-    public void to(Object stateId) {
+    void to(Object stateId) {
         S tgt = getState(stateId);
         for (S src : currentStates) {
             for (I input : currentInputs) {
@@ -170,10 +170,11 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
     }
 
     /**
-     * Selects the target state(s) of the current transition definition(s) by looping them to their source state.
+     * Sets the target state(s) of the current transition definition(s) by looping back to the respective source
+     * state(s).
      */
     @Action
-    public void loop() {
+    void loop() {
         for (S src : currentStates) {
             for (I input : currentInputs) {
                 automaton.addTransition(src, input, src, currentTransProp);
@@ -187,7 +188,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
      * @return the automaton
      */
     @Action(terminating = true)
-    public A create() {
+    A create() {
         return automaton;
     }
 
@@ -198,7 +199,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
      *         the object to identify the state
      */
     @Action
-    public void withInitial(Object stateId) {
+    void withInitial(Object stateId) {
         S state = getState(stateId);
         automaton.setInitial(state, true);
     }
@@ -212,7 +213,7 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
      *         the object to identify the state
      */
     @Action
-    public void withStateProperty(SP stateProperty, Object stateId) {
+    void withStateProperty(SP stateProperty, Object stateId) {
         S state = getState(stateId);
         automaton.setStateProperty(state, stateProperty);
     }
