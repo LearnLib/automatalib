@@ -33,7 +33,7 @@ import net.automatalib.automaton.fsa.MutableDFA;
  */
 @GenerateEDSL(name = "DFABuilder",
               syntax = "(<transOrAcc>)* withInitial (<transOrAcc>)* create",
-              where = {@Expr(name = "transOrAcc", syntax = "(from (on (loop|to))+)+|withAccepting")},
+              where = @Expr(name = "transOrAcc", syntax = "(from (on (loop|to))+)+|withAccepting"),
               constructorPublic = false,
               docGenType = DocGenType.COPY)
 class DFABuilderImpl<S, I, A extends MutableDFA<S, ? super I>> extends FSABuilderImpl<S, I, A> {
