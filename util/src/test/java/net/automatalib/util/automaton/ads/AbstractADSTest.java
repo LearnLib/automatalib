@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Maps;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ads.ADSNode;
 import net.automatalib.word.Word;

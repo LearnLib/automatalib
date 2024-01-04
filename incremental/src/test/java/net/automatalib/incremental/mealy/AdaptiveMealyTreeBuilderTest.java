@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.GrowingAlphabet;
-import net.automatalib.alphabet.GrowingMapAlphabet;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.GrowingMapAlphabet;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Pair;
 import net.automatalib.incremental.mealy.tree.AdaptiveMealyTreeBuilder;
 import net.automatalib.ts.output.MealyTransitionSystem;

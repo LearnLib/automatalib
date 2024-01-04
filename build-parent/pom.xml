@@ -131,6 +131,7 @@ limitations under the License.
                                 <rulesets>
                                     <ruleset>/automatalib-pmd-ruleset.xml</ruleset>
                                 </rulesets>
+                                <excludes>**/module-info.java</excludes>
                             </configuration>
                             <dependencies>
                                 <dependency>
@@ -149,6 +150,7 @@ limitations under the License.
                                 <suppressionsLocation>/automatalib-checkstyle-suppressions.xml</suppressionsLocation>
                                 <includeTestSourceDirectory>true</includeTestSourceDirectory>
                                 <linkXRef>false</linkXRef>
+                                <excludes>**/module-info.java</excludes>
                             </configuration>
                             <dependencies>
                                 <dependency>

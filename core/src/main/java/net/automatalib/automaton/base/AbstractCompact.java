@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.function.IntFunction;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.MutableDeterministic.FullIntAbstraction;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;

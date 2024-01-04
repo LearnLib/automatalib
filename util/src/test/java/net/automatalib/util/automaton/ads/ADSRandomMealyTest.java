@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;

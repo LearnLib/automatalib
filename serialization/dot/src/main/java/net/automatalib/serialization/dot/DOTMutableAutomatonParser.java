@@ -27,7 +27,7 @@ import java.util.function.Function;
 
 import com.google.common.collect.Maps;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.common.util.IOUtil;

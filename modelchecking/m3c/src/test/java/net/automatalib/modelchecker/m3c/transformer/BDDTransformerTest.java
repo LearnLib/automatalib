@@ -35,7 +35,7 @@ import net.automatalib.modelchecker.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
 import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
-import net.automatalib.ts.modal.transition.ModalEdgePropertyImpl;
+import net.automatalib.ts.modal.transition.impl.ModalEdgePropertyImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

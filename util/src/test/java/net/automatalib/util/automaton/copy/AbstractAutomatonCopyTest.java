@@ -19,13 +19,13 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.ShrinkableAutomaton;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
-import net.automatalib.automaton.fsa.CompactDFA;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.predicate.TransitionPredicates;

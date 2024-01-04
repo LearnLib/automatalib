@@ -16,9 +16,9 @@
 package net.automatalib.util.automaton.transducer;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.word.Word;
 import net.automatalib.word.WordBuilder;
 import org.testng.Assert;

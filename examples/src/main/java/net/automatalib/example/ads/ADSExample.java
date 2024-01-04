@@ -19,8 +19,8 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.graph.ads.ADSNode;
 import net.automatalib.util.automaton.ads.ADS;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;

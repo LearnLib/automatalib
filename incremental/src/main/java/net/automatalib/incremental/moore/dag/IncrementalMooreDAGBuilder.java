@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.graph.TransitionEdge;

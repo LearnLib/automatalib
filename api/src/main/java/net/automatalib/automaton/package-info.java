@@ -15,7 +15,7 @@
  */
 
 /**
- * This package (including sub-packages) contains the basic classes concerning automata.
+ * This package (including sub-packages) contains the basic concepts concerning automata.
  * <p>
  * An automaton (in the AutomataLib context) is a finite-state
  * {@link net.automatalib.ts.TransitionSystem transition system}. Like transition systems, automata are in general
@@ -25,7 +25,5 @@
  * The {@link net.automatalib.automaton.Automaton Automaton} interface has no inherent semantics. Special types of
  * automata, such as {@link net.automatalib.automaton.fsa.DFA DFAs} or
  * {@link net.automatalib.automaton.transducer.MealyMachine Mealy machines} can be found in the respective subpackages.
- *
- * @see net.automatalib.ts
  */
 package net.automatalib.automaton;

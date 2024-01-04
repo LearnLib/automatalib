@@ -25,13 +25,13 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.alphabet.DefaultVPAlphabet;
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.automaton.vpa.DefaultOneSEVPA;
-import net.automatalib.automaton.vpa.Location;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.alphabet.impl.DefaultVPAlphabet;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.State;
+import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
+import net.automatalib.automaton.vpa.impl.Location;
 import net.automatalib.common.smartcollection.ArrayStorage;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;

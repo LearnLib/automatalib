@@ -15,7 +15,7 @@
  */
 package net.automatalib.graph.base;
 
-import net.automatalib.graph.CompactSimpleGraph;
+import net.automatalib.graph.impl.CompactSimpleGraph;
 
 /**
  * An edge in a {@link CompactSimpleGraph}.

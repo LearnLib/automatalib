@@ -340,6 +340,11 @@ limitations under the License.
                             <outputDirectory>${project.build.directory}/bundles</outputDirectory>
                             <appendAssemblyId>true</appendAssemblyId>
                             <finalName>automatalib-${project.version}</finalName>
+                            <archive>
+                                <manifestEntries>
+                                    <Automatic-Module-Name>net.automatalib.distribution</Automatic-Module-Name>
+                                </manifestEntries>
+                            </archive>
                         </configuration>
                         <executions>
                             <execution>

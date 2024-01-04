@@ -16,8 +16,8 @@
 package net.automatalib.util.automaton.builder;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.fsa.CompactNFA;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.Test;

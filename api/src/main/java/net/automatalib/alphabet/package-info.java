@@ -15,6 +15,6 @@
  */
 
 /**
- * This package contains the basic classes concerning alphabets.
+ * This package contains the basic concepts concerning alphabets.
  */
 package net.automatalib.alphabet;

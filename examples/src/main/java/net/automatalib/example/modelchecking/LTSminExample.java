@@ -17,8 +17,9 @@ package net.automatalib.example.modelchecking;
 
 import java.util.Objects;
 
+import net.automatalib.AutomataLibProperty;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * This example requires at least an LTSmin version ≥ 3.0.0.
  *
  * @see <a href="http://ltsmin.utwente.nl">http://ltsmin.utwente.nl</a>
- * @see net.automatalib.AutomataLibProperty#LTSMIN_PATH
+ * @see AutomataLibProperty#LTSMIN_PATH
  */
 public final class LTSminExample {
 

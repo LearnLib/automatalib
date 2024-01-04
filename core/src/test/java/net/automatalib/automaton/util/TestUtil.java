@@ -18,13 +18,17 @@ package net.automatalib.automaton.util;
 import java.util.function.Function;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.FastAlphabet;
-import net.automatalib.alphabet.Symbol;
-import net.automatalib.automaton.fsa.FastNFA;
-import net.automatalib.automaton.fsa.FastNFAState;
-import net.automatalib.automaton.transducer.FastMealy;
+import net.automatalib.alphabet.impl.FastAlphabet;
+import net.automatalib.alphabet.impl.Symbol;
+import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.NFA;
+import net.automatalib.automaton.fsa.impl.FastNFA;
+import net.automatalib.automaton.fsa.impl.FastNFAState;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
 import net.automatalib.automaton.transducer.MutableMooreMachine;
+import net.automatalib.automaton.transducer.impl.FastMealy;
+import net.automatalib.word.Word;
+import org.testng.Assert;
 
 public final class TestUtil {
 
@@ -97,5 +101,16 @@ public final class TestUtil {
         fnfa.addTransition(s2, IN_B, s1);
 
         return fnfa;
+    }
+
+    public static <S, I> void checkOutput(DFA<S, I> dfa, Word<I> word, Boolean expected) {
+        Assert.assertEquals(dfa.computeOutput(word), expected);
+        Assert.assertEquals(dfa.computeStateOutput(dfa.getInitialState(), word), expected);
+        Assert.assertEquals(dfa.computeSuffixOutput(word.prefix(word.length()), word.suffix(word.length())), expected);
+    }
+
+    public static <S, I> void checkOutput(NFA<S, I> dfa, Word<I> word, Boolean expected) {
+        Assert.assertEquals(dfa.computeOutput(word), expected);
+        Assert.assertEquals(dfa.computeSuffixOutput(word.prefix(word.length()), word.suffix(word.length())), expected);
     }
 }

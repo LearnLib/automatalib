@@ -17,9 +17,9 @@ package net.automatalib.util.ts.modal;
 
 import com.google.common.collect.ImmutableSet;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.common.util.Pair;
-import net.automatalib.ts.modal.CompactMTS;
+import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import org.testng.Assert;
 import org.testng.annotations.Test;

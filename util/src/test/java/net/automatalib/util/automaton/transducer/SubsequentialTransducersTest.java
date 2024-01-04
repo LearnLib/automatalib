@@ -16,8 +16,8 @@
 package net.automatalib.util.automaton.transducer;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.transducer.CompactSST;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.transducer.impl.CompactSST;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
 import org.testng.Assert;

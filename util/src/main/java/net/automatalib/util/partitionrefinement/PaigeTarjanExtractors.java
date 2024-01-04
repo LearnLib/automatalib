@@ -21,6 +21,7 @@ import java.util.function.IntFunction;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
+import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton;
 import net.automatalib.automaton.simple.SimpleDeterministicAutomaton.FullIntAbstraction;
 import net.automatalib.common.util.function.BiIntFunction;
@@ -46,7 +47,7 @@ public final class PaigeTarjanExtractors {
      * boolean)}
      * </li>
      * <li> {@link PaigeTarjanInitializers#initCompleteDeterministic(PaigeTarjan,
-     * net.automatalib.automaton.UniversalDeterministicAutomaton.FullIntAbstraction, AutomatonInitialPartitioning,
+     * UniversalDeterministicAutomaton.FullIntAbstraction, AutomatonInitialPartitioning,
      * boolean)}
      * </li>
      * <li> and {@link PaigeTarjanInitializers#initDeterministic(PaigeTarjan, FullIntAbstraction, IntFunction, Object)}

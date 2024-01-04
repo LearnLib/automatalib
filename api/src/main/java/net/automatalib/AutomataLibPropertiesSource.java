@@ -16,9 +16,10 @@
 package net.automatalib;
 
 import net.automatalib.common.util.setting.AbstractClassPathFileSource;
+import net.automatalib.common.util.setting.SettingsSource;
 import org.kohsuke.MetaInfServices;
 
-@MetaInfServices(AutomataLibSettingsSource.class)
+@MetaInfServices(SettingsSource.class)
 public class AutomataLibPropertiesSource extends AbstractClassPathFileSource implements AutomataLibSettingsSource {
 
     public AutomataLibPropertiesSource() {

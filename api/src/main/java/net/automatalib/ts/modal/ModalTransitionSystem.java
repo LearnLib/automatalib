@@ -29,12 +29,11 @@ import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.visualization.VisualizationHelper;
 
 /**
- * A modal transition system is a {@link UniversalAutomaton} in which transitions can be marked as {@link
- * net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType#MAY may} or {@link
- * net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType#MUST must} edges. Since most MTS-based algorithms
- * require a finite transition domain, this includes a finite set input symbols. This is achieved by sub-typing the
- * {@link UniversalFiniteAlphabetAutomaton} interface, which additionally inherits several convenience methods for
- * working with MTSs.
+ * A modal transition system is a {@link UniversalAutomaton} in which transitions can be marked as
+ * {@link ModalEdgeProperty.ModalType#MAY may} or {@link ModalEdgeProperty.ModalType#MUST must} edges. Since most
+ * MTS-based algorithms require a finite transition domain, this includes a finite set input symbols. This is achieved
+ * by sub-typing the {@link UniversalFiniteAlphabetAutomaton} interface, which additionally inherits several convenience
+ * methods for working with MTSs.
  *
  * @param <S>
  *         state type

@@ -23,14 +23,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.fsa.FastDFA;
-import net.automatalib.automaton.fsa.FastDFAState;
+import net.automatalib.alphabet.impl.Alphabets;
+import net.automatalib.automaton.fsa.impl.FastDFA;
+import net.automatalib.automaton.fsa.impl.FastDFAState;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.common.util.mapping.Mapping;
-import net.automatalib.graph.CompactGraph;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.UniversalGraph;
+import net.automatalib.graph.impl.CompactGraph;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.util.graph.copy.GraphCopy;
 import net.automatalib.util.traversal.TraversalOrder;

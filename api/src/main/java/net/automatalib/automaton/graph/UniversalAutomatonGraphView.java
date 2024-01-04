@@ -23,7 +23,7 @@ import net.automatalib.graph.UniversalGraph;
 
 public class UniversalAutomatonGraphView<S, I, T, SP, TP, A extends UniversalAutomaton<S, I, T, SP, TP>>
         extends AutomatonGraphView<S, I, T, A>
-        implements UniversalGraph<S, TransitionEdge<I, T>, SP, TransitionEdge.Property<I, TP>> {
+        implements UniversalGraph<S, TransitionEdge<I, T>, SP, Property<I, TP>> {
 
     public UniversalAutomatonGraphView(A automaton, Collection<? extends I> inputs) {
         super(automaton, inputs);

@@ -15,6 +15,6 @@
  */
 
 /**
- * This package (including sub-packages) contains the basic classes concerning graphs.
+ * This package (including sub-packages) contains the basic concepts concerning graphs.
  */
 package net.automatalib.graph;

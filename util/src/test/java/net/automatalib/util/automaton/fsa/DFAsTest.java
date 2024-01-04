@@ -16,9 +16,9 @@
 package net.automatalib.util.automaton.fsa;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.fsa.CompactDFA;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.util.automaton.Automata;
 import org.testng.Assert;
 import org.testng.annotations.Test;

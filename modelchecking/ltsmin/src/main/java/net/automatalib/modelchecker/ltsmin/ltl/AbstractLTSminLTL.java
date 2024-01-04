@@ -23,9 +23,9 @@ import java.util.function.Function;
 
 import net.automatalib.modelchecker.ltsmin.AbstractLTSmin;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
-import net.automatalib.modelchecking.AbstractUnfoldingModelChecker;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.modelchecking.ModelCheckerLasso;
+import net.automatalib.modelchecking.impl.AbstractUnfoldingModelChecker;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

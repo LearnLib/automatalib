@@ -27,8 +27,8 @@ import java.util.function.Predicate;
 
 import com.google.common.collect.Sets;
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.automaton.vpa.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.common.smartcollection.ArrayStorage;
 import net.automatalib.common.util.IntDisjointSets;
 import net.automatalib.common.util.Pair;

@@ -23,9 +23,9 @@ import java.util.Set;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.fixpoint.Worksets;
-import net.automatalib.ts.modal.CompactMTS;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.MutableModalTransitionSystem;
+import net.automatalib.ts.modal.impl.CompactMTS;
 
 /**
  * Operations on {@link ModalTransitionSystem}s.

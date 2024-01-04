@@ -18,9 +18,9 @@ package net.automatalib.util.automaton.transducer;
 import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MutableMealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.Pair;
 import net.automatalib.ts.output.MealyTransitionSystem;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;

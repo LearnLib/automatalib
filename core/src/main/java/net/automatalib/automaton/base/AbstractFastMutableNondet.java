@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.ts.powerset.FastPowersetDTS;
+import net.automatalib.ts.powerset.impl.FastPowersetDTS;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public abstract class AbstractFastMutableNondet<S extends AbstractFastState<Collection<T>>, I, T, SP, TP>

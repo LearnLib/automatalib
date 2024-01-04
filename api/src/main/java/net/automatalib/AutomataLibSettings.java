@@ -26,7 +26,7 @@ public final class AutomataLibSettings {
     private final Properties properties;
 
     private AutomataLibSettings() {
-        properties = SettingsSource.readSettings(AutomataLibSettingsSource.class);
+        properties = SettingsSource.readSettings(SettingsSource.class);
     }
 
     public static AutomataLibSettings getInstance() {

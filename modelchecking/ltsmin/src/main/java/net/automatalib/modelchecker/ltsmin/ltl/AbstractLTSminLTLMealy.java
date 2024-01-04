@@ -20,14 +20,14 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Function;
 
-import net.automatalib.automaton.transducer.CompactMealy;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
 import net.automatalib.modelchecker.ltsmin.LTSminMealy;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
-import net.automatalib.modelchecking.MealyLassoImpl;
 import net.automatalib.modelchecking.ModelCheckerLasso.MealyModelCheckerLasso;
+import net.automatalib.modelchecking.impl.MealyLassoImpl;
 import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;

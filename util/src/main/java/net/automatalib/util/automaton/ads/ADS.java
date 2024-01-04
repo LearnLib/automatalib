@@ -21,8 +21,8 @@ import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
-import net.automatalib.graph.ads.ADSLeafNode;
 import net.automatalib.graph.ads.ADSNode;
+import net.automatalib.graph.ads.impl.ADSLeafNode;
 
 /**
  * General purpose facade for computing adaptive distinguishing sequences. Delegates to {@link LeeYannakakis}, {@link

@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.automaton.vpa.AbstractSEVPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
+import net.automatalib.automaton.vpa.impl.AbstractSEVPA;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
 import org.checkerframework.checker.nullness.qual.Nullable;

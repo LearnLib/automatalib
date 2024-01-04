@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
-import net.automatalib.graph.CompactSimpleGraph;
+import net.automatalib.graph.impl.CompactSimpleGraph;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

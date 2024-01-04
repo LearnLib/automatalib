@@ -18,8 +18,8 @@ package net.automatalib.automaton.base;
 import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.Alphabets;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
+import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.ShrinkableAutomaton;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automaton.concept.StateIDs;

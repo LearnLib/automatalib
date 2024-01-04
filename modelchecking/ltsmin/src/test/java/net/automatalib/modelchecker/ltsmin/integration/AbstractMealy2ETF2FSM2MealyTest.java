@@ -17,7 +17,7 @@ package net.automatalib.modelchecker.ltsmin.integration;
 
 import java.io.InputStream;
 
-import net.automatalib.automaton.transducer.CompactMealy;
+import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.serialization.taf.parser.TAFParser;
 
 public abstract class AbstractMealy2ETF2FSM2MealyTest extends AbstractAut2ETF2FSM2AutTest<CompactMealy<String, String>> {
