@@ -195,6 +195,7 @@ limitations under the License.
         <archetype-plugin.version>3.2.1</archetype-plugin.version>
         <assembly-plugin.version>3.6.0</assembly-plugin.version>
         <checkstyle-plugin.version>3.3.0</checkstyle-plugin.version>
+        <clean-plugin.version>3.3.2</clean-plugin.version>
         <compiler-plugin.version>3.11.0</compiler-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
         <dependency-plugin.version>3.6.0</dependency-plugin.version>
@@ -613,6 +614,11 @@ limitations under the License.
                     <groupId>com.github.spotbugs</groupId>
                     <artifactId>spotbugs-maven-plugin</artifactId>
                     <version>${spotbugs-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${clean-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
