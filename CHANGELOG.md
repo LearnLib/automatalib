@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 [Full changelog](https://github.com/LearnLib/automatalib/compare/automatalib-0.11.0...HEAD)
 
+### Changed
+
+* The `net:automatalib.tooling:automata-build-tools` module has been renamed to `net.automatalib:automata-build-config`.
 
 ## [0.11.0](https://github.com/LearnLib/automatalib/releases/tag/automatalib-0.11.0) - 2023-11-06
 

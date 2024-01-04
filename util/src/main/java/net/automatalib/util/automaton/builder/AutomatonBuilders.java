@@ -30,7 +30,7 @@ import net.automatalib.automaton.transducer.MutableSubsequentialTransducer;
 import net.automatalib.word.Word;
 
 /**
- * Fluent interface automaton builders.
+ * Fluent builders for automata.
  */
 public final class AutomatonBuilders {
 

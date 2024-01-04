@@ -393,14 +393,9 @@ limitations under the License.
                             </dependencySourceIncludes>
                             <additionalDependencies>
                                 <additionalDependency>
-                                    <groupId>com.github.misberner.buildergen</groupId>
-                                    <artifactId>buildergen</artifactId>
-                                    <version>${buildergen.version}</version>
-                                </additionalDependency>
-                                <additionalDependency>
-                                    <groupId>com.github.misberner.duzzt</groupId>
-                                    <artifactId>duzzt-annotations</artifactId>
-                                    <version>${duzzt.version}</version>
+                                    <groupId>de.learnlib.tooling</groupId>
+                                    <artifactId>annotations</artifactId>
+                                    <version>${build-tools.version}</version>
                                 </additionalDependency>
                                 <additionalDependency>
                                     <groupId>dk.brics</groupId>
@@ -412,12 +407,6 @@ limitations under the License.
                                     <artifactId>metainf-services</artifactId>
                                     <version>${metainf-services.version}</version>
                                 </additionalDependency>
-                                <!-- Java 11 compat -->
-                                <dependency>
-                                    <groupId>javax.annotation</groupId>
-                                    <artifactId>javax.annotation-api</artifactId>
-                                    <version>${javax-annotations.version}</version>
-                                </dependency>
                             </additionalDependencies>
                         </configuration>
                         <executions>

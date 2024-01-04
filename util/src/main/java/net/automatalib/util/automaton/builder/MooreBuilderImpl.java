@@ -15,36 +15,69 @@
  */
 package net.automatalib.util.automaton.builder;
 
-import com.github.misberner.duzzt.annotations.DSLAction;
-import com.github.misberner.duzzt.annotations.GenerateEmbeddedDSL;
-import com.github.misberner.duzzt.annotations.SubExpr;
+import de.learnlib.tooling.annotation.DocGenType;
+import de.learnlib.tooling.annotation.edsl.Action;
+import de.learnlib.tooling.annotation.edsl.Expr;
+import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.transducer.MutableMooreMachine;
 
-@GenerateEmbeddedDSL(name = "MooreBuilder",
-                     enableAllMethods = false,
-                     syntax = "(withOutput|<transition>)* withInitial (withOutput|<transition>)* create",
-                     where = {@SubExpr(name = "transition", definedAs = "from (on (to|loop))+")})
-public class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T, ? super O>>
+/**
+ * A fluent builder for {@link net.automatalib.automaton.transducer.MooreMachine}s.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <O>
+ *         output symbol type
+ * @param <A>
+ *         concrete automaton type
+ */
+@GenerateEDSL(name = "MooreBuilder",
+              syntax = "(withOutput|<transition>)* withInitial (withOutput|<transition>)* create",
+              where = @Expr(name = "transition", syntax = "(from (on (to|loop))+)"),
+              constructorPublic = false,
+              docGenType = DocGenType.COPY)
+class MooreBuilderImpl<S, I, T, O, A extends MutableMooreMachine<S, ? super I, T, ? super O>>
         extends AutomatonBuilderImpl<S, I, T, O, Void, A> {
 
+    /**
+     * Constructs a new builder with the given (mutable) automaton to write to.
+     *
+     * @param automaton
+     *         the automaton to write to
+     */
+    @Action
     MooreBuilderImpl(A automaton) {
         super(automaton);
     }
 
-    @Override
-    @DSLAction(autoVarArgs = false)
-    public void withInitial(Object stateId) {
-        super.withInitial(stateId);
-    }
-
-    @DSLAction(autoVarArgs = false)
-    public void withInitial(Object stateId, O output) {
+    /**
+     * Marks the given state as initial and allows to set its output.
+     *
+     * @param stateId
+     *         the object to identify the state
+     * @param output
+     *         the output of the state
+     */
+    @Action
+    void withInitial(Object stateId, O output) {
         super.withInitial(stateId);
         withOutput(stateId, output);
     }
 
-    @DSLAction(autoVarArgs = false)
-    public void withOutput(Object stateId, O output) {
+    /**
+     * Associates with the given state the given output symbol.
+     *
+     * @param stateId
+     *         the object to identify the state
+     * @param output
+     *         the output symbol
+     */
+    @Action
+    void withOutput(Object stateId, O output) {
         super.withStateProperty(output, stateId);
     }
 }

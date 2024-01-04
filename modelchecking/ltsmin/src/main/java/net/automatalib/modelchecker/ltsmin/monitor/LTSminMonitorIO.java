@@ -18,7 +18,7 @@ package net.automatalib.modelchecker.ltsmin.monitor;
 import java.util.Collection;
 import java.util.function.Function;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.modelchecker.ltsmin.LTSminIO;
 

@@ -21,13 +21,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.misberner.duzzt.annotations.DSLAction;
-import com.github.misberner.duzzt.annotations.GenerateEmbeddedDSL;
+import de.learnlib.tooling.annotation.DocGenType;
+import de.learnlib.tooling.annotation.edsl.Action;
+import de.learnlib.tooling.annotation.edsl.GenerateEDSL;
 import net.automatalib.automaton.MutableAutomaton;
 
-@GenerateEmbeddedDSL(name = "AutomatonBuilder",
-                     enableAllMethods = false,
-                     syntax = "((from (on (withProperty? <<to* loop? to*>>)+)+)|withStateProperty|withInitial)* create")
+/**
+ * A fluent builder for {@link net.automatalib.automaton.Automaton automata}.
+ *
+ * @param <S>
+ *         state type
+ * @param <I>
+ *         input symbol type
+ * @param <T>
+ *         transition type
+ * @param <SP>
+ *         state property type
+ * @param <TP>
+ *         transition property type
+ * @param <A>
+ *         concrete automaton type
+ */
+@GenerateEDSL(name = "AutomatonBuilder",
+              syntax = "((from (on (withProperty? (to* loop? to*))+)+)|withStateProperty|withInitial)* create",
+              constructorPublic = false,
+              docGenType = DocGenType.COPY)
 @SuppressWarnings("nullness") // nullness correctness guaranteed by states of regular expression
 class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? super I, T, ? super SP, ? super TP>> {
 
@@ -38,18 +56,39 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
     protected List<I> currentInputs;
     protected TP currentTransProp;
 
+    /**
+     * Constructs a new builder with the given (mutable) automaton to write to.
+     *
+     * @param automaton
+     *         the automaton to write to
+     */
+    @Action
     AutomatonBuilderImpl(A automaton) {
         this.automaton = automaton;
     }
 
-    @DSLAction
-    public void from(Object stateId) {
+    /**
+     * Starts a definition of transition(s) from a given source state.
+     *
+     * @param stateId
+     *         the object to identify the state
+     */
+    @Action
+    void from(Object stateId) {
         this.currentStates = getStates(stateId);
         this.currentInputs = null;
     }
 
-    @DSLAction
-    public void from(Object firstStateId, Object... otherStateIds) {
+    /**
+     * Starts a definition of transition(s) from multiple given source states.
+     *
+     * @param firstStateId
+     *         the mandatory object to identify the first state
+     * @param otherStateIds
+     *         the optional objects to identify additional states
+     */
+    @Action
+    void from(Object firstStateId, Object... otherStateIds) {
         this.currentStates = getStates(firstStateId, otherStateIds);
     }
 
@@ -74,28 +113,54 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
         return state;
     }
 
-    @DSLAction
-    public void on(I input) {
+    /**
+     * Sets the input symbol of the current transition definition(s).
+     *
+     * @param input
+     *         the input symbol
+     */
+    @Action
+    void on(I input) {
         this.currentInputs = Collections.singletonList(input);
         this.currentTransProp = null;
     }
 
-    @DSLAction
+    /**
+     * Sets multiple input symbols of the current transition definition(s).
+     *
+     * @param firstInput
+     *         the mandatory first input symbol
+     * @param otherInputs
+     *         the optional additional input symbols
+     */
+    @Action
     @SafeVarargs
-    public final void on(I firstInput, I... otherInputs) {
+    final void on(I firstInput, I... otherInputs) {
         this.currentInputs = new ArrayList<>(1 + otherInputs.length);
         this.currentInputs.add(firstInput);
         Collections.addAll(this.currentInputs, otherInputs);
         this.currentTransProp = null;
     }
 
-    @DSLAction
-    public void withProperty(TP transProp) {
+    /**
+     * Associates a transition property with the currently scoped transition(s).
+     *
+     * @param transProp
+     *         the property
+     */
+    @Action
+    void withProperty(TP transProp) {
         this.currentTransProp = transProp;
     }
 
-    @DSLAction
-    public void to(Object stateId) {
+    /**
+     * Sets the target state of the current transition definition(s).
+     *
+     * @param stateId
+     *         the object to identify the state
+     */
+    @Action
+    void to(Object stateId) {
         S tgt = getState(stateId);
         for (S src : currentStates) {
             for (I input : currentInputs) {
@@ -104,8 +169,12 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
         }
     }
 
-    @DSLAction
-    public void loop() {
+    /**
+     * Sets the target state(s) of the current transition definition(s) by looping back to the respective source
+     * state(s).
+     */
+    @Action
+    void loop() {
         for (S src : currentStates) {
             for (I input : currentInputs) {
                 automaton.addTransition(src, input, src, currentTransProp);
@@ -113,19 +182,38 @@ class AutomatonBuilderImpl<S, I, T, SP, TP, A extends MutableAutomaton<S, ? supe
         }
     }
 
-    @DSLAction(terminator = true)
-    public A create() {
+    /**
+     * Returns the constructed automaton.
+     *
+     * @return the automaton
+     */
+    @Action(terminating = true)
+    A create() {
         return automaton;
     }
 
-    @DSLAction
-    public void withInitial(Object stateId) {
+    /**
+     * Marks the given state as initial.
+     *
+     * @param stateId
+     *         the object to identify the state
+     */
+    @Action
+    void withInitial(Object stateId) {
         S state = getState(stateId);
         automaton.setInitial(state, true);
     }
 
-    @DSLAction
-    public void withStateProperty(SP stateProperty, Object stateId) {
+    /**
+     * Associates with the given state the given state property.
+     *
+     * @param stateProperty
+     *         the property to associate with the state
+     * @param stateId
+     *         the object to identify the state
+     */
+    @Action
+    void withStateProperty(SP stateProperty, Object stateId) {
         S state = getState(stateId);
         automaton.setStateProperty(state, stateProperty);
     }

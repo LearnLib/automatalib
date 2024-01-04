@@ -25,9 +25,8 @@ limitations under the License.
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>net.automatalib.tooling</groupId>
-    <artifactId>automata-build-tools</artifactId>
+    <artifactId>automata-build-config</artifactId>
 
-    <name>AutomataLib :: Build Tools</name>
-    <description>Tools and resources required for building AutomataLib</description>
+    <name>AutomataLib :: Build Config</name>
+    <description>Configs and resources required for building AutomataLib</description>
 </project>

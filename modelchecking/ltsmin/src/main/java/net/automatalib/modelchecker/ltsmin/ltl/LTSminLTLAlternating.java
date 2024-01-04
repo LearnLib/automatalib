@@ -18,7 +18,7 @@ package net.automatalib.modelchecker.ltsmin.ltl;
 import java.util.Collection;
 import java.util.function.Function;
 
-import com.github.misberner.buildergen.annotations.GenerateBuilder;
+import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.modelchecker.ltsmin.LTSminAlternating;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
 import net.automatalib.modelchecking.Lasso.MealyLasso;

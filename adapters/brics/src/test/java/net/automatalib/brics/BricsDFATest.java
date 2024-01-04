@@ -28,10 +28,9 @@ import dk.brics.automaton.State;
 import dk.brics.automaton.Transition;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.Alphabets;
-import net.automatalib.automaton.fsa.CompactDFA;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.util.automaton.Automata;
-import net.automatalib.util.automaton.builder.DFABuilder;
+import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.word.Word;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -106,11 +105,8 @@ public class BricsDFATest {
     @Test
     public void testEquivalence() {
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
-        final DFA<?, Character> target = new DFABuilder<>(new CompactDFA<>(alphabet)).withInitial("s0")
-                                                                                     .from("s0")
-                                                                                     .on('a', 'b', 'c')
-                                                                                     .loop()
-                                                                                     .create();
+        final DFA<?, Character> target =
+                AutomatonBuilders.newDFA(alphabet).withInitial("s0").from("s0").on('a', 'b', 'c').loop().create();
 
         final Automaton automaton1 = new RegExp("[a-b]{2}").toAutomaton();
         final Automaton automaton2 = new RegExp("[a-b]{2}").toAutomaton();

@@ -132,8 +132,8 @@ limitations under the License.
         <module>adapters</module>
         <module>api</module>
         <module>archetypes</module>
+        <module>build-config</module>
         <module>build-parent</module>
-        <module>build-tools</module>
         <module>commons</module>
         <module>core</module>
         <module>distribution</module>
@@ -218,16 +218,14 @@ limitations under the License.
         <!-- dependency versions -->
         <addlib.version>3.0.1</addlib.version>
         <assertj.version>3.17.1</assertj.version>
-        <buildergen.version>0.1</buildergen.version>
         <brics-automaton.version>1.12-4</brics-automaton.version>
+        <build-tools.version>0.1</build-tools.version>
         <cacio.version>1.11.1</cacio.version>
         <checkerframework.version>3.40.0</checkerframework.version>
         <checkstyle.version>9.3</checkstyle.version>
-        <duzzt.version>0.1.0</duzzt.version>
         <extra-enforcer-rules.version>1.7.0</extra-enforcer-rules.version>
         <guava.version>32.1.3-jre</guava.version>
         <graphviz-awt-shapes.version>0.0.1</graphviz-awt-shapes.version>
-        <javax-annotations.version>1.3.2</javax-annotations.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <jung.version>2.1.1</jung.version>
         <logback.version>1.3.11</logback.version>
@@ -292,19 +290,19 @@ limitations under the License.
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- build-config -->
+            <dependency>
+                <groupId>net.automatalib</groupId>
+                <artifactId>automata-build-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- build-parent -->
             <dependency>
                 <groupId>net.automatalib</groupId>
                 <artifactId>automata-build-parent</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
-            </dependency>
-
-            <!-- build-tools -->
-            <dependency>
-                <groupId>net.automatalib.tooling</groupId>
-                <artifactId>automata-build-tools</artifactId>
-                <version>${project.version}</version>
             </dependency>
 
             <!-- commons -->
@@ -470,13 +468,6 @@ limitations under the License.
                   <version>${checkerframework.version}</version>
             </dependency>
 
-            <!-- Java 11 compat -->
-            <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>${javax-annotations.version}</version>
-            </dependency>
-
             <!-- JUNG dependencies -->
             <dependency>
                 <groupId>net.sf.jung</groupId>
@@ -506,18 +497,9 @@ limitations under the License.
             </dependency>
 
             <dependency>
-                <groupId>com.github.misberner.buildergen</groupId>
-                <artifactId>buildergen</artifactId>
-                <version>${buildergen.version}</version>
-                <!-- Compile-time only -->
-                <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.misberner.duzzt</groupId>
-                <artifactId>duzzt-processor</artifactId>
-                <version>${duzzt.version}</version>
-                <!-- Compile-time only -->
+                <groupId>de.learnlib.tooling</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${build-tools.version}</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -790,6 +772,20 @@ limitations under the License.
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${compiler-plugin.version}</version>
+                    <configuration>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>de.learnlib.tooling</groupId>
+                                <artifactId>processors</artifactId>
+                                <version>${build-tools.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.kohsuke.metainf-services</groupId>
+                                <artifactId>metainf-services</artifactId>
+                                <version>${metainf-services.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
