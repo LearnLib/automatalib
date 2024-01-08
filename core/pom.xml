@@ -65,11 +65,6 @@ limitations under the License.
 
         <!-- test -->
         <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
@@ -78,26 +73,4 @@ limitations under the License.
             <artifactId>testng</artifactId>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>fix-xstream</id>
-            <activation>
-                <jdk>[16,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-surefire-plugin</artifactId>
-                            <configuration>
-                                <argLine>@{argLine} --add-opens=java.base/java.util=ALL-UNNAMED</argLine>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-    </profiles>
 </project>

@@ -237,7 +237,6 @@ limitations under the License.
         <mockito.version>5.6.0</mockito.version>
         <slf4j.version>2.0.9</slf4j.version>
         <testng.version>7.5.1</testng.version>
-        <xstream.version>1.4.20</xstream.version>
 
         <!-- Javadoc links -->
         <addlib.apidocs>http://scce.gitlab.io/add-lib/${addlib.version}/apidocs/</addlib.apidocs>
@@ -500,12 +499,6 @@ limitations under the License.
                 <artifactId>annotations</artifactId>
                 <version>${build-tools.version}</version>
                 <scope>provided</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.thoughtworks.xstream</groupId>
-                <artifactId>xstream</artifactId>
-                <version>${xstream.version}</version>
             </dependency>
 
             <dependency>
