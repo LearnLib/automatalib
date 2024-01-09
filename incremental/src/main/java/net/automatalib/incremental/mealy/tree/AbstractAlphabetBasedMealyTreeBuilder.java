@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -48,7 +47,7 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
     @Override
     public void addAlphabetSymbol(I symbol) {
         if (!inputAlphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(inputAlphabet).addSymbol(symbol);
+            inputAlphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final int newAlphabetSize = inputAlphabet.size();

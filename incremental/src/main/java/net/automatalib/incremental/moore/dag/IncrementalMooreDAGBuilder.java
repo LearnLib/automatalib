@@ -28,7 +28,6 @@ import java.util.Objects;
 import java.util.Queue;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.graph.TransitionEdge;
@@ -77,7 +76,7 @@ public class IncrementalMooreDAGBuilder<I, O> implements IncrementalMooreBuilder
     @Override
     public void addAlphabetSymbol(I symbol) {
         if (!this.inputAlphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
+            this.inputAlphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final int newAlphabetSize = this.inputAlphabet.size();

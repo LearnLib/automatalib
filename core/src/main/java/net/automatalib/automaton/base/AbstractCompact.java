@@ -23,7 +23,6 @@ import java.util.function.IntFunction;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.MutableDeterministic.FullIntAbstraction;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
@@ -149,7 +148,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     public final void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final int newAlphabetSize = this.alphabet.size();

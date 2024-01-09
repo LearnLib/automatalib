@@ -26,7 +26,6 @@ import java.util.Objects;
 
 import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.transducer.MooreMachine.MooreGraphView;
@@ -66,7 +65,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
     @Override
     public void addAlphabetSymbol(I symbol) {
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final int newAlphabetSize = this.alphabet.size();

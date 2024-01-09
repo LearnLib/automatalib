@@ -16,7 +16,6 @@
 package net.automatalib.incremental.dfa;
 
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 
 /**
@@ -50,7 +49,7 @@ public abstract class AbstractIncrementalDFABuilder<I> implements IncrementalDFA
     @Override
     public void addAlphabetSymbol(I symbol) {
         if (!this.inputAlphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
+            this.inputAlphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         this.alphabetSize = this.inputAlphabet.size();
