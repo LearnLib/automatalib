@@ -17,14 +17,15 @@ package net.automatalib.automaton.visualization;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Maps;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.Triple;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -51,7 +52,7 @@ public class ProceduralVisualizationHelper<S, I> extends DefaultVisualizationHel
                                          Map<I, ? extends UniversalDeterministicAutomaton<? extends S, I, ?, ?, ?>> subModels) {
         this.internalAlphabet = internalAlphabet;
         this.subModels = (Map<I, UniversalDeterministicAutomaton<S, I, ?, ?, ?>>) subModels;
-        this.stateIDs = Maps.newHashMapWithExpectedSize(subModels.size());
+        this.stateIDs = new HashMap<>(HashUtil.capacity(subModels.size()));
 
         for (Entry<I, ? extends UniversalDeterministicAutomaton<? extends S, I, ?, ?, ?>> e : subModels.entrySet()) {
             this.stateIDs.put(e.getKey(), (StateIDs<S>) e.getValue().stateIDs());

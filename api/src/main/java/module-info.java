@@ -36,7 +36,6 @@ import net.automatalib.visualization.VisualizationProvider;
  */
 open module net.automatalib.api {
 
-    requires com.google.common;
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;
     requires org.checkerframework.checker.qual;

@@ -23,8 +23,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Streams;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,9 +36,9 @@ public class AllCombinationsTest {
     public void testNormalDomain() {
 
         final Set<List<Integer>> combinations =
-                Streams.stream(CollectionsUtil.cartesianProduct(DOMAIN1, DOMAIN2, DOMAIN3))
-                       .map(ArrayList::new)
-                       .collect(Collectors.toSet());
+                IterableUtil.stream(CollectionsUtil.cartesianProduct(DOMAIN1, DOMAIN2, DOMAIN3))
+                            .map(ArrayList::new)
+                            .collect(Collectors.toSet());
 
         Assert.assertTrue(combinations.remove(Arrays.asList(1, 3, 4)));
         Assert.assertTrue(combinations.remove(Arrays.asList(1, 3, 5)));
@@ -55,7 +53,7 @@ public class AllCombinationsTest {
         final Iterable<List<Integer>> iter =
                 CollectionsUtil.cartesianProduct(DOMAIN1, Collections.emptyList(), DOMAIN3);
 
-        Assert.assertTrue(Iterables.isEmpty(iter));
+        Assert.assertEquals(IterableUtil.size(iter), 0);
         Assert.assertThrows(NoSuchElementException.class, () -> iter.iterator().next());
     }
 
@@ -63,7 +61,7 @@ public class AllCombinationsTest {
     public void testEmptyDimension() {
         final Iterable<List<Integer>> iter = CollectionsUtil.cartesianProduct();
 
-        Assert.assertEquals(Iterables.size(iter), 1);
-        Assert.assertTrue(Iterables.all(iter, List::isEmpty));
+        Assert.assertEquals(IterableUtil.size(iter), 1);
+        Assert.assertTrue(IterableUtil.all(iter, List::isEmpty));
     }
 }

@@ -16,6 +16,7 @@
 package net.automatalib.util.automaton.procedural;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,7 +24,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
-import com.google.common.collect.Maps;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
@@ -33,6 +33,7 @@ import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.impl.StackSPA;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.ts.TransitionPredicate;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
@@ -342,7 +343,7 @@ public final class SBAs {
      */
     public static <I> SPA<?, I> reduce(SBA<?, I> sba, ProceduralInputAlphabet<I> alphabet) {
         final Map<I, DFA<?, I>> procedures = sba.getProcedures();
-        final Map<I, DFA<?, I>> spaProcedures = Maps.newHashMapWithExpectedSize(procedures.size());
+        final Map<I, DFA<?, I>> spaProcedures = new HashMap<>(HashUtil.capacity(procedures.size()));
         final Collection<I> proceduralInputs = sba.getProceduralInputs(alphabet);
         proceduralInputs.remove(alphabet.getReturnSymbol());
 

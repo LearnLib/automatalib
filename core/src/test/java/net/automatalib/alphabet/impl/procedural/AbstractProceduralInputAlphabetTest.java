@@ -18,8 +18,8 @@ package net.automatalib.alphabet.impl.procedural;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -110,7 +110,7 @@ public abstract class AbstractProceduralInputAlphabetTest<M extends ProceduralIn
     public void testExpand() {
         final M alphabet = getAlphabet();
         final Mapping<Character, Word<Character>> ts =
-                ImmutableMap.of('S', Word.fromLetter('x'), 'T', Word.fromLetter('y'))::get;
+                Map.of('S', Word.fromLetter('x'), 'T', Word.fromLetter('y'))::get;
 
         Assert.assertEquals(alphabet.expand(Word.epsilon(), ts), Word.epsilon());
         Assert.assertEquals(alphabet.expand(Word.fromString("aSa"), ts), Word.fromString("aSxRa"));

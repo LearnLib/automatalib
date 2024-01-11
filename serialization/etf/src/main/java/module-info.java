@@ -28,7 +28,6 @@
  */
 open module net.automatalib.serialization.etf {
 
-    requires com.google.common;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
 

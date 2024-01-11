@@ -15,7 +15,7 @@
  */
 package net.automatalib.automaton.base;
 
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.common.util.nid.AbstractMutableNumericID;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

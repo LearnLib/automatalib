@@ -15,7 +15,7 @@
  */
 package net.automatalib.common.util.mapping;
 
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.common.util.nid.IDChangeListener;
 import net.automatalib.common.util.nid.NumericID;
 import org.checkerframework.checker.nullness.qual.Nullable;

@@ -16,12 +16,11 @@
 package net.automatalib.serialization.etf.writer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -49,9 +48,9 @@ public class Mealy2ETFWriterAlternatingTest {
 
             Mealy2ETFWriterAlternating.<Character, Character>getInstance().writeModel(baos, automaton, alphabet);
 
-            final String expected = CharStreams.toString(r);
+            final String expected = IOUtil.toString(r);
 
-            Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
+            Assert.assertEquals(baos.toString(StandardCharsets.UTF_8), expected);
         }
     }
 
@@ -61,9 +60,9 @@ public class Mealy2ETFWriterAlternatingTest {
         final MealyMachine<?, Character, ?, Character> automaton =
                 RandomAutomata.randomMealy(new Random(0), 10, alphabet, alphabet);
 
-        Mealy2ETFWriterAlternating.<Character, Character>getInstance().writeModel(new UnclosableOutputStream(ByteStreams
-                                                                                                                     .nullOutputStream()),
-                                                                                  automaton,
-                                                                                  alphabet);
+        Mealy2ETFWriterAlternating.<Character, Character>getInstance()
+                                  .writeModel(new UnclosableOutputStream(OutputStream.nullOutputStream()),
+                                              automaton,
+                                              alphabet);
     }
 }

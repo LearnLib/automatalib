@@ -188,6 +188,9 @@ limitations under the License.
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.release>8</maven.compiler.release>
+        <maven.compiler.testSource>11</maven.compiler.testSource>
+        <maven.compiler.testTarget>11</maven.compiler.testTarget>
+        <maven.compiler.testRelease>11</maven.compiler.testRelease>
         <argLine /> <!-- compatibility for property expansion in surefire-plugin -->
 
         <!-- plugin versions -->
@@ -242,7 +245,6 @@ limitations under the License.
         <addlib.apidocs>http://scce.gitlab.io/add-lib/${addlib.version}/apidocs/</addlib.apidocs>
         <brics-automaton.apidocs>http://www.brics.dk/automaton/doc</brics-automaton.apidocs>
         <checkerframework.apidocs>http://checkerframework.org/releases/${checkerframework.version}/api/</checkerframework.apidocs>
-        <guava.apidocs>http://google.github.io/guava/releases/${guava.version}/api/docs/</guava.apidocs>
         <java8.apidocs>http://docs.oracle.com/javase/8/docs/api/</java8.apidocs>
         <jung.apidocs>http://jung.sourceforge.net/doc/api/</jung.apidocs>
     </properties>
@@ -707,7 +709,6 @@ limitations under the License.
                             <link>${addlib.apidocs}</link>
                             <link>${brics-automaton.apidocs}</link>
                             <link>${checkerframework.apidocs}</link>
-                            <link>${guava.apidocs}</link>
                             <link>${jung.apidocs}</link>
                         </links>
                     </configuration>

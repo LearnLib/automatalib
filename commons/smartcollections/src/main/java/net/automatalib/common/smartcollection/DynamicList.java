@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.common.util.nid;
+package net.automatalib.common.smartcollection;
 
 import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.automatalib.common.smartcollection.ArrayWritable;
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
+import net.automatalib.common.util.nid.MutableNumericID;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class DynamicList<T extends MutableNumericID> extends AbstractList<T> implements ArrayWritable<T> {

@@ -16,11 +16,12 @@
 package net.automatalib.util.automaton.equivalence;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import net.automatalib.automaton.Automaton;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 
 public final class Bisimulation {
@@ -34,8 +35,8 @@ public final class Bisimulation {
             B b,
             Collection<I> inputs) {
 
-        Set<Pair<AS, BS>> bisim = Sets.newHashSetWithExpectedSize(a.size() * b.size());
-        Set<Pair<AS, BS>> change = Sets.newHashSetWithExpectedSize(a.size() * b.size());
+        Set<Pair<AS, BS>> bisim = new HashSet<>(HashUtil.capacity(a.size() * b.size()));
+        Set<Pair<AS, BS>> change = new HashSet<>(HashUtil.capacity(a.size() * b.size()));
 
         boolean empty;
 

@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,13 +30,13 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import com.google.common.collect.Maps;
 import net.automatalib.automaton.Automaton;
 import net.automatalib.automaton.FiniteAlphabetAutomaton;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.string.StringUtil;
@@ -115,7 +116,7 @@ public final class TAFWriter {
 
             beginState(name, options);
 
-            final Map<Pair<S, TP>, List<I>> groupedTransitions = Maps.newHashMapWithExpectedSize(inputs.size());
+            final Map<Pair<S, TP>, List<I>> groupedTransitions = new HashMap<>(HashUtil.capacity(inputs.size()));
             for (I i : inputs) {
                 final T t = automaton.getTransition(state, i);
 

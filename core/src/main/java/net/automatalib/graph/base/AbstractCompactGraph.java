@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.MutableGraph.IntAbstraction;

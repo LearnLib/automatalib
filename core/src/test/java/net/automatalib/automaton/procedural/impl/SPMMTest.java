@@ -17,7 +17,6 @@ package net.automatalib.automaton.procedural.impl;
 
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -47,7 +46,7 @@ public class SPMMTest {
         final Character errorOutput = '-';
 
         final Map<Character, MealyMachine<?, Character, ?, Character>> mealies =
-                ImmutableMap.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
+                Map.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
 
         spmm = new StackSPMM<>(bigAlphabet, 'S', '✓', errorOutput, mealies);
         emptySpmm = new EmptySPMM<>(bigAlphabet, errorOutput);

@@ -19,11 +19,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import com.google.common.collect.Maps;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.MutableGraph;
@@ -82,7 +83,7 @@ public class DOTGraphParser<NP, EP, G extends MutableGraph<?, ?, NP, EP>> implem
         final Collection<Node> nodes = parser.getNodes();
         final Collection<Edge> edges = parser.getEdges();
 
-        final Map<String, N> stateMap = Maps.newHashMapWithExpectedSize(nodes.size());
+        final Map<String, N> stateMap = new HashMap<>(HashUtil.capacity(nodes.size()));
 
         for (Node node : nodes) {
             final N n = graph.addNode(nodeParser.apply(node.attributes));

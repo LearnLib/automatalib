@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 
 /**

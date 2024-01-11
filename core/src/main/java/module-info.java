@@ -30,7 +30,6 @@
  */
 open module net.automatalib.core {
 
-    requires com.google.common;
     requires net.automatalib.api;
     requires net.automatalib.common.smartcollection;
     requires net.automatalib.common.util;

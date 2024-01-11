@@ -19,13 +19,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.google.common.collect.Maps;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.impl.CompactPMPG;
@@ -51,7 +52,7 @@ final class ExternalSystemDeserializer {
         final Element root = getRoot(is);
         final NodeList procedures = root.getElementsByTagName("pmpg");
         final Map<String, CompactPMPG<String, AP>> pmpgs =
-                Maps.newLinkedHashMapWithExpectedSize(procedures.getLength());
+                new LinkedHashMap<>(HashUtil.capacity(procedures.getLength()));
 
         for (int i = 0; i < procedures.getLength(); i++) {
             final Element procedure = (Element) procedures.item(i);

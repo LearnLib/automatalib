@@ -16,10 +16,11 @@
 package net.automatalib.graph.helper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.graph.SimpleGraph;
 import net.automatalib.graph.concept.NodeIDs;
 
@@ -31,7 +32,7 @@ public class SimpleNodeIDs<N> implements NodeIDs<N> {
     public SimpleNodeIDs(SimpleGraph<N> graph) {
         this.nodes = new ArrayList<>(graph.getNodes());
         int numNodes = this.nodes.size();
-        this.nodeIds = Maps.newHashMapWithExpectedSize(numNodes);
+        this.nodeIds = new HashMap<>(HashUtil.capacity(numNodes));
 
         for (int i = 0; i < numNodes; i++) {
             N node = this.nodes.get(i);

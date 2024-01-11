@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
+import java.util.function.Function;
 
 /**
  * Various methods for operating on collections.
@@ -114,6 +115,30 @@ public final class CollectionsUtil {
         }
 
         return () -> new AllCombinationsIterator<>(iterables);
+    }
+
+    public static <D, R> Collection<R> map(Collection<D> src, Function<? super D, ? extends R> mapping) {
+        return new MappingCollection<>(src, mapping);
+    }
+
+    @SafeVarargs
+    public static <T> List<T> list(T first, T... rest) {
+        final List<T> result = new ArrayList<>(rest.length + 1);
+        result.add(first);
+        Collections.addAll(result, rest);
+        return result;
+    }
+
+    public static <T> boolean add(Collection<T> collection, Iterable<T> iterable) {
+        return add(collection, iterable.iterator());
+    }
+
+    public static <T> boolean add(Collection<T> collection, Iterator<T> iterator) {
+        boolean changed = false;
+        while (iterator.hasNext()) {
+            changed |= collection.add(iterator.next());
+        }
+        return changed;
     }
 
 }

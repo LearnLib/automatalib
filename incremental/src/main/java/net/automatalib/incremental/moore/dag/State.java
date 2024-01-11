@@ -15,7 +15,7 @@
  */
 package net.automatalib.incremental.moore.dag;
 
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 
 /**
  * A state in the DAG internally used by {@link IncrementalMooreDAGBuilder}.

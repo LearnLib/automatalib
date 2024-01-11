@@ -30,7 +30,7 @@
  */
 open module net.automatalib.common.smartcollection {
 
-    requires com.google.common;
+    requires net.automatalib.common.util;
     requires org.checkerframework.checker.qual;
 
     exports net.automatalib.common.smartcollection;

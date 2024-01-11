@@ -19,20 +19,21 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.google.common.collect.Sets;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.IntDisjointSets;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.UnionFindRemSP;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.util.automaton.vpa.SPAConverter.ConversionResult;
 import net.automatalib.util.minimizer.OneSEVPAMinimizer;
 import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
@@ -597,7 +598,7 @@ public final class OneSEVPAs {
             }
         }
 
-        final Set<Pair<Word<I>, Word<I>>> result = Sets.newHashSetWithExpectedSize(sevpa.size());
+        final Set<Pair<Word<I>, Word<I>>> result = new HashSet<>(HashUtil.capacity(sevpa.size()));
         result.add(Pair.of(Word.epsilon(), Word.epsilon()));
 
         final Queue<List<L>> blockQueue = new ArrayDeque<>();

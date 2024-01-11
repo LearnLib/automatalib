@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import com.google.common.collect.Maps;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
@@ -34,6 +33,7 @@ import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.automaton.vpa.impl.DefaultNSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
@@ -57,7 +57,7 @@ final class NSEVPAConverter {
         final ATRSequences<I> atrSequences = SPAs.computeATRSequences(spa);
         final ProceduralInputAlphabet<I> inputAlphabet = spa.getInputAlphabet();
         final Map<@Nullable I, List<Pair<Word<I>, Word<I>>>> contextPairs =
-                Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls() + 1);
+                new HashMap<>(HashUtil.capacity(inputAlphabet.getNumCalls() + 1));
 
         contextPairs.put(null, Collections.singletonList(Pair.of(Word.epsilon(), Word.epsilon())));
 

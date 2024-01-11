@@ -51,12 +51,6 @@ limitations under the License.
             <artifactId>automata-commons-util</artifactId>
         </dependency>
 
-        <!-- external -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
         <!-- build -->
         <dependency>
             <groupId>org.checkerframework</groupId>

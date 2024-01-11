@@ -16,9 +16,9 @@
 package net.automatalib.common.util.string;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import com.google.common.collect.Iterators;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -192,11 +192,11 @@ public final class StringUtil {
     }
 
     public static void appendArray(Appendable a, Object[] array, String sepString) throws IOException {
-        appendIterable(a, () -> Iterators.forArray(array), sepString);
+        appendIterable(a, Arrays.asList(array), sepString);
     }
 
     public static void appendArrayEnquoted(Appendable a, Object[] array, String sepString) throws IOException {
-        appendIterableEnquoted(a, () -> Iterators.forArray(array), sepString);
+        appendIterableEnquoted(a, Arrays.asList(array), sepString);
     }
 
     public static void appendIterable(Appendable a, Iterable<?> it, String sepString) throws IOException {

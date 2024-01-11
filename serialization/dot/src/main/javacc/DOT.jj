@@ -31,7 +31,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
 import net.automatalib.common.util.string.StringUtil;
 import net.automatalib.exception.FormatException;
 
@@ -55,22 +54,30 @@ class InternalDOTParser {
 	private List<Edge> transformedEdges;
 
 	public List<Node> getNodes() {
-		Preconditions.checkArgument(this.parsed, "parse() needs to be called first");
+		if (!this.parsed) {
+			throw new IllegalStateException("parse() needs to be called first");
+		}
 		return this.transformedNodes;
 	}
 
 	public List<Edge> getEdges() {
-		Preconditions.checkArgument(this.parsed, "parse() needs to be called first");
+		if (!this.parsed) {
+			throw new IllegalStateException("parse() needs to be called first");
+		}
 		return this.transformedEdges;
 	}
 
 	public boolean isStrict() {
-		Preconditions.checkArgument(this.parsed, "parse() needs to be called first");
+		if (!this.parsed) {
+			throw new IllegalStateException("parse() needs to be called first");
+		}
 		return this.strict;
 	}
 
 	public boolean isDirected() {
-		Preconditions.checkArgument(this.parsed, "parse() needs to be called first");
+		if (!this.parsed) {
+			throw new IllegalStateException("parse() needs to be called first");
+		}
 		return this.directed;
 	}
 

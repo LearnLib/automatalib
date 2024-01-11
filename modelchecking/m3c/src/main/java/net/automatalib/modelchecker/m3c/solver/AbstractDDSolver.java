@@ -28,8 +28,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
@@ -85,7 +84,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     AbstractDDSolver(ContextFreeModalProcessSystem<L, AP> cfmps) {
         final Map<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs = cfmps.getPMPGs();
 
-        this.workUnits = Maps.newHashMapWithExpectedSize(pmpgs.size());
+        this.workUnits = new HashMap<>(HashUtil.capacity(pmpgs.size()));
         for (Map.Entry<L, ProceduralModalProcessGraph<?, L, ?, AP, ?>> e : pmpgs.entrySet()) {
             final L label = e.getKey();
             final ProceduralModalProcessGraph<?, L, ?, AP, ?> pmpg = e.getValue();
@@ -115,12 +114,17 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
             throw new IllegalArgumentException("PMPG '" + label + "' has no final node");
         }
 
-        Preconditions.checkArgument(isGuarded(pmpg, initialNode),
-                                    "PMPG '%s' is not guarded. All initial transitions must be labelled with atomic actions.",
-                                    label);
-        Preconditions.checkArgument(isTerminating(pmpg, finalNode),
-                                    "PMPG '%s' is not terminating. The final node is not allowed to have outgoing transitions.",
-                                    label);
+        if (!isGuarded(pmpg, initialNode)) {
+            throw new IllegalArgumentException(String.format(
+                    "PMPG '%s' is not guarded. All initial transitions must be labelled with atomic actions.",
+                    label));
+        }
+
+        if (!isTerminating(pmpg, finalNode)) {
+            throw new IllegalArgumentException(String.format(
+                    "PMPG '%s' is not terminating. The final node is not allowed to have outgoing transitions.",
+                    label));
+        }
     }
 
     private <N, E> boolean isGuarded(@UnderInitialization AbstractDDSolver<T, L, AP> this,
@@ -216,7 +220,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
         initialize(ast);
 
         try {
-            final Map<L, SolverData<?, T, L, AP>> data = Maps.newHashMapWithExpectedSize(this.workUnits.size());
+            final Map<L, SolverData<?, T, L, AP>> data = new HashMap<>(HashUtil.capacity(this.workUnits.size()));
             for (Entry<L, WorkUnit<?, ?>> e : this.workUnits.entrySet()) {
                 data.put(e.getKey(), createProcessData(e.getValue()));
             }
@@ -238,7 +242,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     private Map<L, List<String>> serializePropertyTransformerMap(Map<L, T> transformers) {
-        final Map<L, List<String>> serializedTransformers = Maps.newHashMapWithExpectedSize(transformers.size());
+        final Map<L, List<String>> serializedTransformers = new HashMap<>(HashUtil.capacity(transformers.size()));
         for (Map.Entry<L, T> entry : transformers.entrySet()) {
             serializedTransformers.put(entry.getKey(), serializer.serialize(entry.getValue()));
         }
@@ -295,7 +299,7 @@ abstract class AbstractDDSolver<T extends AbstractPropertyTransformer<T, L, AP>,
     }
 
     private Map<L, Set<?>> copyWorkSet() {
-        final Map<L, Set<?>> copy = Maps.newHashMapWithExpectedSize(workUnits.size());
+        final Map<L, Set<?>> copy = new HashMap<>(HashUtil.capacity(workUnits.size()));
         for (Map.Entry<L, WorkUnit<?, ?>> e : workUnits.entrySet()) {
             copy.put(e.getKey(), copyWorkSet(e.getValue()));
         }

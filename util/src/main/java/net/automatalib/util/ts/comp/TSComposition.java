@@ -18,10 +18,11 @@ package net.automatalib.util.ts.comp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.ts.TransitionSystem;
 
@@ -49,7 +50,7 @@ public class TSComposition<S1, S2, I, T1, T2, TS1 extends TransitionSystem<S1, I
         Collection<S1> init1 = ts1.getInitialStates();
         Collection<S2> init2 = ts2.getInitialStates();
 
-        Set<Pair<S1, S2>> result = Sets.newHashSetWithExpectedSize(init1.size() * init2.size());
+        Set<Pair<S1, S2>> result = new HashSet<>(HashUtil.capacity(init1.size() * init2.size()));
 
         for (S1 s1 : init1) {
             for (S2 s2 : init2) {

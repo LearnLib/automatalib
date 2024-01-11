@@ -18,15 +18,16 @@ package net.automatalib.util.automaton.procedural;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SPA;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.ts.modal.transition.ProceduralModalEdgeProperty;
@@ -49,7 +50,7 @@ class CFMPSViewSPA<I> implements ContextFreeModalProcessSystem<I, Void> {
         this.spa = spa;
 
         final Map<I, DFA<?, I>> procedures = spa.getProcedures();
-        this.pmpgs = Maps.newHashMapWithExpectedSize(procedures.size());
+        this.pmpgs = new HashMap<>(HashUtil.capacity(procedures.size()));
 
         for (Entry<I, DFA<?, I>> e : procedures.entrySet()) {
             this.pmpgs.put(e.getKey(), new MPGView<>(spa, e.getKey(), e.getValue()));

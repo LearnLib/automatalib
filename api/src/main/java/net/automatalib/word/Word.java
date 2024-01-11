@@ -35,9 +35,9 @@ import java.util.stream.StreamSupport;
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.common.smartcollection.AWUtil;
 import net.automatalib.common.smartcollection.ArrayWritable;
 import net.automatalib.common.smartcollection.IntSeq;
-import net.automatalib.common.util.array.AWUtil;
 import net.automatalib.common.util.string.AbstractPrintable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

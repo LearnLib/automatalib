@@ -17,9 +17,9 @@ package net.automatalib.serialization.etf.writer;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.transducer.MealyMachine;
@@ -83,8 +83,8 @@ public final class Mealy2ETFWriterIO<I, O> extends AbstractETFWriter<I, MealyMac
         mealy.getStates().forEach(s -> pw.printf("\"%s\"%n", s));
         pw.println("end sort");
 
-        // create a new bi-map that contains indices for the output alphabet
-        final BiMap<O, Integer> outputIndices = HashBiMap.create();
+        // create a new (insertion stable) map that contains indices for the output alphabet
+        final Map<O, Integer> outputIndices = new LinkedHashMap<>();
 
         // write the transitions
         pw.println("begin trans");
@@ -112,8 +112,8 @@ public final class Mealy2ETFWriterIO<I, O> extends AbstractETFWriter<I, MealyMac
 
         // write the letters in the output alphabet
         pw.println("begin sort output");
-        for (int i = 0; i < outputIndices.size(); i++) {
-            pw.printf("\"%s\"%n", outputIndices.inverse().get(i));
+        for (O o : outputIndices.keySet()) {
+            pw.printf("\"%s\"%n", o);
         }
         pw.println("end sort");
     }

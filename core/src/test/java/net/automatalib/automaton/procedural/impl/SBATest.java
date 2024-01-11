@@ -17,7 +17,6 @@ package net.automatalib.automaton.procedural.impl;
 
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -44,7 +43,7 @@ public class SBATest {
                 new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), smallCallAlphabet, 'R');
 
         ALPHABET = new DefaultProceduralInputAlphabet<>(Alphabets.characters('a', 'c'), bigCallAlphabet, 'R');
-        SUB_MODELS = ImmutableMap.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
+        SUB_MODELS = Map.of('S', buildSProcedure(smallAlphabet), 'T', buildTProcedure(smallAlphabet));
     }
 
     private static DFA<?, Character> buildSProcedure(ProceduralInputAlphabet<Character> alphabet) {

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
+import net.automatalib.common.util.HashUtil;
 
 /**
  * A map-based alphabet implementation, that does not impose any restriction on the input symbol class. This
@@ -40,7 +40,8 @@ public class MapAlphabet<I> extends AbstractAlphabet<I> {
 
     public MapAlphabet(Collection<? extends I> symbols) {
         this.symbols = new ArrayList<>(symbols);
-        this.indexMap = Maps.newHashMapWithExpectedSize(symbols.size()); // TODO: replace by primitive specialization
+        // TODO: replace by primitive specialization
+        this.indexMap = new HashMap<>(HashUtil.capacity(symbols.size()));
         int i = 0;
         for (I sym : this.symbols) {
             indexMap.put(sym, i++);

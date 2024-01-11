@@ -15,15 +15,13 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import com.google.common.collect.Iterators;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.incremental.ConflictException;
 import net.automatalib.incremental.mealy.IncrementalMealyBuilder;
@@ -114,9 +112,7 @@ public class DynamicIncrementalMealyTreeBuilder<I, O> extends AbstractMealyTreeB
 
         @Override
         public Collection<DynamicNode<I, O>> getNodes() {
-            List<DynamicNode<I, O>> result = new ArrayList<>();
-            Iterators.addAll(result, GraphTraversal.breadthFirstIterator(this, Collections.singleton(root)));
-            return result;
+            return IteratorUtil.list(GraphTraversal.breadthFirstIterator(this, Collections.singleton(root)));
         }
 
         @Override

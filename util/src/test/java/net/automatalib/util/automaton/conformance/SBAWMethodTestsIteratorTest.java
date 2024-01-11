@@ -24,7 +24,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Random;
 
-import com.google.common.collect.Lists;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -33,6 +32,7 @@ import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.procedural.SBA;
 import net.automatalib.automaton.procedural.impl.StackSBA;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
@@ -84,7 +84,7 @@ public class SBAWMethodTestsIteratorTest {
     @Test
     public void testIterator() {
         final ProceduralInputAlphabet<Character> alphabet = this.sba.getInputAlphabet();
-        final List<Word<Character>> testWords = Lists.newArrayList(new SBAWMethodTestsIterator<>(sba));
+        final List<Word<Character>> testWords = IteratorUtil.list(new SBAWMethodTestsIterator<>(sba));
         final ATSequences<Character> atSequences = SBAs.computeATSequences(this.sba);
         final List<Character> continuableSymbols = new ArrayList<>(alphabet.size() - 1);
         continuableSymbols.addAll(alphabet.getInternalAlphabet());

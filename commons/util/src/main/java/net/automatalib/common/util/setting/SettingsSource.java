@@ -15,13 +15,12 @@
  */
 package net.automatalib.common.util.setting;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.ServiceLoader;
 
-import com.google.common.collect.Iterators;
+import net.automatalib.common.util.collection.IteratorUtil;
 
 public interface SettingsSource {
 
@@ -33,8 +32,7 @@ public interface SettingsSource {
 
     static <S extends SettingsSource> void readSettings(Class<S> clazz, Properties p) {
         ServiceLoader<S> loader = ServiceLoader.load(clazz);
-        List<S> sources = new ArrayList<>();
-        Iterators.addAll(sources, loader.iterator());
+        List<S> sources = IteratorUtil.list(loader.iterator());
         sources.sort(Comparator.comparingInt(SettingsSource::getPriority));
 
         for (S source : sources) {

@@ -15,11 +15,11 @@
  */
 package net.automatalib.util.graph;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Sets;
 import net.automatalib.graph.impl.CompactSimpleGraph;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -44,8 +44,7 @@ public class SCCTest {
         graph.connect(n2, n1);
         graph.connect(n2, n3);
 
-        @SuppressWarnings("unchecked")
-        Set<Set<Integer>> expectedSCCs = Sets.newHashSet(Sets.newHashSet(0, 1, 2), Sets.newHashSet(3));
+        Set<Set<Integer>> expectedSCCs = Set.of(Set.of(0, 1, 2), Set.of(3));
 
         Set<Set<Integer>> computedSCCs = computeSCCs(graph);
 
@@ -70,9 +69,7 @@ public class SCCTest {
         graph.connect(n3, n1);
         graph.connect(n2, n4);
 
-        @SuppressWarnings("unchecked")
-        Set<Set<Integer>> expectedSCCs =
-                Sets.newHashSet(Sets.newHashSet(n0), Sets.newHashSet(n1, n2, n3), Sets.newHashSet(n4));
+        Set<Set<Integer>> expectedSCCs = Set.of(Set.of(n0), Set.of(n1, n2, n3), Set.of(n4));
 
         Set<Set<Integer>> computedSCCs = computeSCCs(graph);
 
@@ -111,11 +108,7 @@ public class SCCTest {
         graph.connect(g, f);
         graph.connect(g, h);
 
-        @SuppressWarnings("unchecked")
-        Set<Set<Integer>> expectedSCCs = Sets.newHashSet(Sets.newHashSet(a, b, e),
-                                                         Sets.newHashSet(c, d),
-                                                         Sets.newHashSet(h),
-                                                         Sets.newHashSet(f, g));
+        Set<Set<Integer>> expectedSCCs = Set.of(Set.of(a, b, e), Set.of(c, d), Set.of(h), Set.of(f, g));
 
         Set<Set<Integer>> computedSCCs = computeSCCs(graph);
 
@@ -165,11 +158,7 @@ public class SCCTest {
         graph.connect(i, h);
         graph.connect(i, g);
 
-        @SuppressWarnings("unchecked")
-        Set<Set<Integer>> expectedSCCs = Sets.newHashSet(Sets.newHashSet(a, b, c),
-                                                         Sets.newHashSet(d, e, f, g, l, k),
-                                                         Sets.newHashSet(i, h),
-                                                         Sets.newHashSet(j));
+        Set<Set<Integer>> expectedSCCs = Set.of(Set.of(a, b, c), Set.of(d, e, f, g, l, k), Set.of(i, h), Set.of(j));
 
         Set<Set<Integer>> computedSCCs = computeSCCs(graph);
 
@@ -214,17 +203,14 @@ public class SCCTest {
         graph.connect(n1, n0);
         graph.connect(n2, n0);
 
-        @SuppressWarnings("unchecked")
-        Set<Set<Integer>> expectedSCCs =
-                Sets.newHashSet(Sets.newHashSet(n3), Sets.newHashSet(n7),
-                                Sets.newHashSet(n1), Sets.newHashSet(n0, n2, n4, n5, n6, n8, n9));
+        Set<Set<Integer>> expectedSCCs = Set.of(Set.of(n3), Set.of(n7), Set.of(n1), Set.of(n0, n2, n4, n5, n6, n8, n9));
 
         Set<Set<Integer>> computedSCCs = computeSCCs(graph);
 
         /*
          * An invariant of this algorithm is that every node in the input graph should be maintained in the result set.
          */
-        Set<Integer> nodeSet = Sets.newHashSet(n0, n1, n2, n3, n4, n5, n6, n7, n8, n9);
+        Set<Integer> nodeSet = new HashSet<>(Arrays.asList(n0, n1, n2, n3, n4, n5, n6, n7, n8, n9));
         computedSCCs.forEach(nodeSet::removeAll);
         Assert.assertEquals(nodeSet.size(), 0);
 
@@ -265,9 +251,7 @@ public class SCCTest {
         graph.connect(n8, n1);
         graph.connect(n8, n7);
 
-        @SuppressWarnings("unchecked")
-        Set<Set<Integer>> expectedSCCs =
-                Sets.newHashSet(Sets.newHashSet(n1, n2, n8), Sets.newHashSet(n6), Sets.newHashSet(n3, n4, n5, n7));
+        Set<Set<Integer>> expectedSCCs = Set.of(Set.of(n1, n2, n8), Set.of(n6), Set.of(n3, n4, n5, n7));
 
         Set<Set<Integer>> computedSCCs = computeSCCs(graph);
 

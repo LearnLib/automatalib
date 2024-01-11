@@ -21,14 +21,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
@@ -54,7 +52,7 @@ public class WMethodTestsIteratorTest {
         dfa2.setInitial(oldInit2, false);
         dfa2.addInitialState(false);
 
-        final List<Word<Integer>> testWords = Lists.newArrayList(new WMethodTestsIterator<>(dfa1, alphabet, 0));
+        final List<Word<Integer>> testWords = IteratorUtil.list(new WMethodTestsIterator<>(dfa1, alphabet, 0));
 
         for (Word<Integer> t : testWords) {
             if (dfa1.accepts(t) != dfa2.accepts(t)) {
@@ -73,9 +71,9 @@ public class WMethodTestsIteratorTest {
         final List<Word<Integer>> characterizingSet = Automata.characterizingSet(dfa, alphabet);
 
         final List<Word<Integer>> expectedWords =
-                Streams.stream(CollectionsUtil.cartesianProduct(transCover, characterizingSet))
-                       .map(Word::fromWords)
-                       .collect(Collectors.toList());
+                IterableUtil.stream(CollectionsUtil.cartesianProduct(transCover, characterizingSet))
+                            .map(Word::fromWords)
+                            .collect(Collectors.toList());
 
         this.verifyIterator(new WMethodTestsIterator<>(dfa, alphabet, 0), expectedWords);
     }
@@ -88,21 +86,20 @@ public class WMethodTestsIteratorTest {
         Assert.assertFalse(transCover.contains(Word.epsilon()));
         transCover.add(Word.epsilon());
         final Iterable<Word<Integer>> middleTuples =
-                Iterables.transform(CollectionsUtil.allTuples(alphabet, 0, lookahead), Word::fromList);
+                IterableUtil.map(CollectionsUtil.allTuples(alphabet, 0, lookahead), Word::fromList);
         final List<Word<Integer>> characterizingSet = Automata.characterizingSet(dfa, alphabet);
 
         final List<Word<Integer>> expectedWords =
-                Streams.stream(CollectionsUtil.cartesianProduct(transCover, middleTuples, characterizingSet))
-                       .map(Word::fromWords)
-                       .collect(Collectors.toList());
+                IterableUtil.stream(CollectionsUtil.cartesianProduct(transCover, middleTuples, characterizingSet))
+                            .map(Word::fromWords)
+                            .collect(Collectors.toList());
 
         this.verifyIterator(new WMethodTestsIterator<>(dfa, alphabet, lookahead), expectedWords);
     }
 
     private void verifyIterator(WMethodTestsIterator<Integer> iter, Collection<Word<Integer>> expectedTests) {
         final List<Word<Integer>> expectedWMethodWords = new ArrayList<>(expectedTests);
-        final List<Word<Integer>> wMethodWords = new ArrayList<>(expectedTests.size());
-        Iterators.addAll(wMethodWords, iter);
+        final List<Word<Integer>> wMethodWords = IteratorUtil.list(iter);
 
         // Order may be different, but that is ok
         expectedWMethodWords.sort(Word.canonicalComparator(Integer::compare));

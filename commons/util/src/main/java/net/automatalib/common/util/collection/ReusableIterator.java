@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.common.collect.AbstractIterator;
-
 /**
  * A utility class that allows to reuse an {@link Iterator}.
  * <p>
@@ -66,7 +64,7 @@ public class ReusableIterator<T> implements Iterable<T> {
         return new CopyOnReadIterator(this.iterator);
     }
 
-    private class CopyOnReadIterator extends AbstractIterator<T> {
+    private class CopyOnReadIterator implements Iterator<T> {
 
         private final Iterator<T> source;
         private int pos;
@@ -76,16 +74,17 @@ public class ReusableIterator<T> implements Iterable<T> {
         }
 
         @Override
-        protected T computeNext() {
+        public boolean hasNext() {
+            return pos < frontier || source.hasNext();
+        }
+
+        @Override
+        public T next() {
             if (pos < frontier) {
                 return cache.get(pos++);
             }
 
-            if (!source.hasNext()) {
-                return endOfData();
-            }
-
-            T next = source.next();
+            final T next = source.next();
             cache.add(next);
             pos++;
             frontier++;

@@ -22,7 +22,6 @@ import java.io.Writer;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.google.common.io.CharStreams;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.process.InputStreamConsumer.DelegatingConsumer;
 import net.automatalib.common.util.process.InputStreamConsumer.NOPConsumer;
@@ -286,7 +285,7 @@ public final class ProcessUtil {
         if (input != null) {
             try (OutputStream processInput = process.getOutputStream();
                  Writer writer = IOUtil.asBufferedUTF8Writer(processInput)) {
-                CharStreams.copy(input, writer);
+                IOUtil.copy(input, writer);
             }
         }
     }

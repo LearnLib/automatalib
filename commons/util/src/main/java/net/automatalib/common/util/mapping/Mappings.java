@@ -17,13 +17,11 @@ package net.automatalib.common.util.mapping;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
+import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -132,7 +130,7 @@ public final class Mappings {
      * @return the mapped collection.
      */
     public static <D, R> Collection<R> apply(Mapping<? super D, R> mapping, Collection<? extends D> coll) {
-        return Collections2.transform(coll, mapping::get);
+        return CollectionsUtil.map(coll, mapping::get);
     }
 
     /**
@@ -151,22 +149,7 @@ public final class Mappings {
      * @return the mapped iterator.
      */
     public static <D, R> Iterator<R> apply(Mapping<? super D, R> mapping, Iterator<? extends D> baseIt) {
-        return Iterators.transform(baseIt, mapping::get);
-    }
-
-    /**
-     * Applies a mapping to a list, resulting in a list containing the result of applying the specified mapping to each
-     * element in the list.
-     *
-     * @param mapping
-     *         the mapping to apply.
-     * @param list
-     *         the list.
-     *
-     * @return the mapped list.
-     */
-    public static <D, R> List<R> apply(Mapping<? super D, R> mapping, List<? extends D> list) {
-        return Lists.transform(list, mapping::get);
+        return IteratorUtil.map(baseIt, mapping::get);
     }
 
     /**
@@ -185,7 +168,7 @@ public final class Mappings {
      * @return the mapped iterable.
      */
     public static <D, R> Iterable<R> apply(Mapping<? super D, R> mapping, Iterable<? extends D> it) {
-        return Iterables.transform(it, mapping::get);
+        return IterableUtil.map(it, mapping::get);
     }
 
     public static <D> D idGet(Mapping<D, D> mapping, D key) {

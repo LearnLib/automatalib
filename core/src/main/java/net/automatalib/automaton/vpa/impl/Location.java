@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.array.ArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

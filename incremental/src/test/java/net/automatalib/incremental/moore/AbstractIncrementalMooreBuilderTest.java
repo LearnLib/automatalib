@@ -20,7 +20,6 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
-import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -194,7 +193,7 @@ public abstract class AbstractIncrementalMooreBuilderTest {
                 getDOTResource()))) {
 
             GraphDOT.write(incMoore.asGraph(), dotWriter);
-            CharStreams.copy(reader, expectedWriter);
+            IOUtil.copy(reader, expectedWriter);
 
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
         }

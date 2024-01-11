@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.common.util.array;
+package net.automatalib.common.smartcollection;
 
 import java.util.Arrays;
-
-import net.automatalib.common.smartcollection.ArrayWritable;
 
 /**
  * Utility class for writing containers to arrays.

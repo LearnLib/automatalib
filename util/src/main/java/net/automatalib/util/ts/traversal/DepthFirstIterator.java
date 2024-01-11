@@ -19,13 +19,13 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 
-import com.google.common.collect.AbstractIterator;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.ts.TransitionSystem;
 import net.automatalib.util.traversal.VisitedState;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class DepthFirstIterator<S, I, T> extends AbstractIterator<S> {
+final class DepthFirstIterator<S, I, T> extends AbstractSimplifiedIterator<S> {
 
     private final MutableMapping<S, @Nullable VisitedState> visited;
     private final Deque<SimpleDFRecord<S, I, T>> dfsStack = new ArrayDeque<>();
@@ -42,13 +42,14 @@ final class DepthFirstIterator<S, I, T> extends AbstractIterator<S> {
     }
 
     @Override
-    protected S computeNext() {
+    protected boolean calculateNext() {
         SimpleDFRecord<S, I, T> rec;
         while ((rec = dfsStack.peek()) != null) {
             if (!rec.wasStarted()) {
                 visited.put(rec.state, VisitedState.VISITED);
                 rec.start(ts);
-                return rec.state;
+                super.nextValue = rec.state;
+                return true;
             } else if (rec.hasNextTransition(ts)) {
                 T t = rec.transition();
                 S succ = ts.getSuccessor(t);
@@ -59,7 +60,6 @@ final class DepthFirstIterator<S, I, T> extends AbstractIterator<S> {
                 dfsStack.pop();
             }
         }
-        return endOfData();
+        return false;
     }
-
 }
