@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+/**
+ * Utility methods for {@link Iterable}s.
+ */
 public final class IterableUtil {
 
     private IterableUtil() {

@@ -35,6 +35,7 @@ open module net.automatalib.common.util {
     requires org.slf4j;
 
     exports net.automatalib.common.util;
+    exports net.automatalib.common.util.array;
     exports net.automatalib.common.util.collection;
     exports net.automatalib.common.util.comparison;
     exports net.automatalib.common.util.concurrent;
@@ -51,7 +52,6 @@ open module net.automatalib.common.util {
     exports net.automatalib.common.util.setting;
     exports net.automatalib.common.util.string;
     exports net.automatalib.common.util.system;
-    exports net.automatalib.common.util.array;
 
     uses SettingsSource;
 }
