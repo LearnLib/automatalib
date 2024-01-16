@@ -140,16 +140,16 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     /**
      * Converts all the transitions from the FSM to transitions in a {@link MealyMachine}.
      * <p>
-     * This method will for each new state make transitions. This is done by switching behavior between input, and
-     * output transitions in the FSM source.
+     * This method will for each new state make transitions.
+     * This is done by switching behavior between input, and output transitions in the FSM source.
      * <p>
      * This is a recursive DFS.
      *
      * @param currentState
      *         the current state to make transitions for.
      * @param inputTrans
-     *         when {@code null}, this means outgoing transitions from {@code currentState} will be output, otherwise
-     *         input.
+     *         when {@code null}, this means outgoing transitions from {@code currentState} will be output,
+     *         otherwise input.
      * @param newStates
      *         the set of states that still need to be visited.
      * @param inputLength
@@ -160,12 +160,8 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
      * @throws FSMFormatException
      *         when non-determinism is detected.
      */
-    private void makeTransitions(Integer currentState,
-                                 @Nullable Pair<Integer, I> inputTrans,
-                                 Set<Integer> newStates,
-                                 int inputLength,
-                                 @Nullable WordBuilder<I> wb,
-                                 StreamTokenizer streamTokenizer) {
+    private void makeTransitions(Integer currentState, @Nullable Pair<Integer, I> inputTrans, Set<Integer> newStates,
+                                 int inputLength, @Nullable WordBuilder<I> wb, StreamTokenizer streamTokenizer) {
 
         // indicate we have seen currentState
         newStates.remove(currentState);

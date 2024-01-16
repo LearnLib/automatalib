@@ -98,8 +98,7 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
          * (Finite) int-abstracted version of {@link #getEdgesBetween(Object, Object)}.
          */
         default Collection<E> getEdgesBetween(int from, int to) {
-            return IteratorUtil.list(IteratorUtil.filter(getOutgoingEdgesIterator(from),
-                                                                 e -> getIntTarget(e) == to));
+            return IteratorUtil.list(IteratorUtil.filter(getOutgoingEdgesIterator(from), e -> getIntTarget(e) == to));
         }
 
         /**

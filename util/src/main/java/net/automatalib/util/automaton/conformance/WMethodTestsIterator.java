@@ -72,7 +72,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
     public WMethodTestsIterator(UniversalDeterministicAutomaton<?, I, ?, ?, ?> automaton,
                                 Collection<? extends I> inputs,
                                 int maxDepth) {
-        super(IteratorUtil.concat(Collections.singleton(Word.<I>epsilon()).iterator(),
+        super(IteratorUtil.concat(IteratorUtil.singleton(Word.epsilon()),
                                   Covers.transitionCoverIterator(automaton, inputs)));
 
         this.inputs = inputs;
