@@ -24,7 +24,7 @@ import java.util.RandomAccess;
 import java.util.function.Function;
 
 /**
- * Various methods for operating on collections.
+ * Various methods for operating on {@link Collection}s.
  */
 public final class CollectionsUtil {
 
@@ -117,10 +117,36 @@ public final class CollectionsUtil {
         return () -> new AllCombinationsIterator<>(iterables);
     }
 
-    public static <D, R> Collection<R> map(Collection<D> src, Function<? super D, ? extends R> mapping) {
-        return new MappingCollection<>(src, mapping);
+    /**
+     * Returns a (mutable) view on the given collection that transforms its elements as specified by the given mapping.
+     *
+     * @param collection
+     *         the source collection
+     * @param mapping
+     *         the transformation function
+     * @param <D>
+     *         mapping domain type
+     * @param <R>
+     *         mapping range type
+     *
+     * @return the mapped view on the given collection
+     */
+    public static <D, R> Collection<R> map(Collection<D> collection, Function<? super D, ? extends R> mapping) {
+        return new MappingCollection<>(collection, mapping);
     }
 
+    /**
+     * Constructs a list from the given elements.
+     *
+     * @param first
+     *         the first (mandatory) element
+     * @param rest
+     *         the remaining (optional) elements
+     * @param <T>
+     *         element type
+     *
+     * @return a list containing the specified elements
+     */
     @SafeVarargs
     public static <T> List<T> list(T first, T... rest) {
         final List<T> result = new ArrayList<>(rest.length + 1);
@@ -128,17 +154,4 @@ public final class CollectionsUtil {
         Collections.addAll(result, rest);
         return result;
     }
-
-    public static <T> boolean add(Collection<T> collection, Iterable<T> iterable) {
-        return add(collection, iterable.iterator());
-    }
-
-    public static <T> boolean add(Collection<T> collection, Iterator<T> iterator) {
-        boolean changed = false;
-        while (iterator.hasNext()) {
-            changed |= collection.add(iterator.next());
-        }
-        return changed;
-    }
-
 }

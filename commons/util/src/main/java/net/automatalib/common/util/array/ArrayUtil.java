@@ -76,7 +76,17 @@ public final class ArrayUtil {
         return newCapacity;
     }
 
-    public static <T> Iterator<T> iterator(T[] array) {
+    /**
+     * Returns an immutable iterator that iterates over the contents of the given array.
+     *
+     * @param array
+     *         the array over whose contents should be iterated
+     * @param <E>
+     *         element type
+     *
+     * @return an iterator for the contents of the array
+     */
+    public static <E> Iterator<E> iterator(E[] array) {
         return new ArrayIterator<>(array);
     }
 }

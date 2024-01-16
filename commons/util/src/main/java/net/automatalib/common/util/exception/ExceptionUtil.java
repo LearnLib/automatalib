@@ -15,12 +15,21 @@
  */
 package net.automatalib.common.util.exception;
 
+/**
+ * Utility methods for {@link Exception}s.
+ */
 public final class ExceptionUtil {
 
     private ExceptionUtil() {
         // prevent instantiation
     }
 
+    /**
+     * Throws the given throwable if it is an unchecked exception.
+     *
+     * @param throwable
+     *         the throwable to analyse
+     */
     public static void throwIfUnchecked(Throwable throwable) {
         if (throwable instanceof RuntimeException) {
             throw (RuntimeException) throwable;

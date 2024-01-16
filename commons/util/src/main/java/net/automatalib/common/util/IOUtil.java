@@ -189,7 +189,8 @@ public final class IOUtil {
     }
 
     /**
-     * Returns a reader that parses the contents of the given input stream with {@link StandardCharsets#UTF_8} encoding.
+     * Returns a reader that parses the contents of the given input stream with {@link StandardCharsets#UTF_8}
+     * encoding.
      *
      * @param is
      *         the input stream to read
@@ -339,6 +340,17 @@ public final class IOUtil {
         return os instanceof BufferedOutputStream || os instanceof ByteArrayOutputStream;
     }
 
+    /**
+     * Copies the contents of the given reader into the given writer.
+     *
+     * @param in
+     *         the reader to read data from
+     * @param out
+     *         the writer to write data to
+     *
+     * @throws IOException
+     *         if reading from or writing to the respective reader / writer throws this exception
+     */
     public static void copy(Reader in, Writer out) throws IOException {
         final char[] buf = new char[DEFAULT_BUFFER_SIZE];
         int read;
@@ -347,6 +359,17 @@ public final class IOUtil {
         }
     }
 
+    /**
+     * Reads the data from the given reader and returns its contents as a string.
+     *
+     * @param r
+     *         the reader to read data from
+     *
+     * @return the contents of the reader as a string
+     *
+     * @throws IOException
+     *         if reading from the reader throws this exception
+     */
     public static String toString(Reader r) throws IOException {
         final StringWriter w = new StringWriter();
         copy(r, w);

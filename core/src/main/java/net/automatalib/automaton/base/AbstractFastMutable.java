@@ -23,10 +23,10 @@ import net.automatalib.automaton.ShrinkableAutomaton;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.concept.StateLocalInput;
-import net.automatalib.common.smartcollection.DynamicList;
-import net.automatalib.common.smartcollection.IDChangeNotifier;
 import net.automatalib.common.util.mapping.ArrayMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.common.util.nid.DynamicList;
+import net.automatalib.common.util.nid.IDChangeNotifier;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

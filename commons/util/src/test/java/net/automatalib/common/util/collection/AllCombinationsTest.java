@@ -62,6 +62,6 @@ public class AllCombinationsTest {
         final Iterable<List<Integer>> iter = CollectionsUtil.cartesianProduct();
 
         Assert.assertEquals(IterableUtil.size(iter), 1);
-        Assert.assertTrue(IterableUtil.all(iter, List::isEmpty));
+        Assert.assertTrue(IterableUtil.stream(iter).allMatch(List::isEmpty));
     }
 }

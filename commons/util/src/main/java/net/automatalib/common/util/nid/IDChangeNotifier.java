@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.common.smartcollection;
+package net.automatalib.common.util.nid;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.automatalib.common.util.nid.IDChangeListener;
-import net.automatalib.common.util.nid.NumericID;
 import net.automatalib.common.util.ref.Ref;
 import net.automatalib.common.util.ref.Refs;
 

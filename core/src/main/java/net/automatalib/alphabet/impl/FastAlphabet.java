@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.automatalib.alphabet.GrowingAlphabet;
-import net.automatalib.common.smartcollection.DynamicList;
+import net.automatalib.common.util.nid.DynamicList;
 import net.automatalib.common.util.nid.MutableNumericID;
 
 /**

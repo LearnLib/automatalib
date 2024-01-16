@@ -20,19 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-/**
- * An iterator that aggregates elements of a given source iterator in batches of a given size. While elements are
- * collected eagerly within a batch, the overall batches are computed lazily.
- * <p>
- * The source iterator is consumed in this process.
- * <p>
- * <b>Note:</b> Subsequent calls to the {@link #next()} method return a reference to the same batch, and only update
- * the
- * contents of the batch. If you plan to reuse intermediate results, you'll need to explicitly copy them.
- *
- * @param <T>
- *         type of elements to aggregate
- */
 class BatchingIterator<T> implements Iterator<List<T>> {
 
     private final int batchSize;

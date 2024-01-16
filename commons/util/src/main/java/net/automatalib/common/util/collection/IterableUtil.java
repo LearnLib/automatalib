@@ -17,7 +17,6 @@ package net.automatalib.common.util.collection;
 
 import java.util.Collection;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public final class IterableUtil {
@@ -26,32 +25,68 @@ public final class IterableUtil {
         // prevent instantiation
     }
 
+    /**
+     * Returns an iterable that iterates over all elements of the given source iterables.
+     *
+     * @param iterables
+     *         the source iterables
+     * @param <T>
+     *         element type
+     *
+     * @return the concatenated iterable
+     */
     @SafeVarargs
     public static <T> Iterable<T> concat(Iterable<? extends T>... iterables) {
         return () -> new ConcatIterable<>(iterables);
     }
 
-    public static <D, R> Iterable<R> map(Iterable<D> src, Function<? super D, ? extends R> mapping) {
-        return () -> new MappingIterator<>(src.iterator(), mapping);
+    /**
+     * Returns a view on the given iterable that transforms its elements as specified by the given mapping.
+     *
+     * @param iterable
+     *         the source iterable
+     * @param mapping
+     *         the transformation function
+     * @param <D>
+     *         mapping domain type
+     * @param <R>
+     *         mapping range type
+     *
+     * @return the mapped view on the given iterable
+     */
+    public static <D, R> Iterable<R> map(Iterable<D> iterable, Function<? super D, ? extends R> mapping) {
+        return () -> new MappingIterator<>(iterable.iterator(), mapping);
     }
 
-    public static <T> int size(Iterable<T> iter) {
-        if (iter instanceof Collection) {
-            return ((Collection<?>) iter).size();
+    /**
+     * Returns the number of elements of the given iterable.
+     *
+     * @param iterable
+     *         the iterable whose elements should be counted
+     * @param <T>
+     *         element type
+     *
+     * @return the number of elements of the iterable
+     */
+    public static <T> int size(Iterable<T> iterable) {
+        if (iterable instanceof Collection) {
+            return ((Collection<?>) iterable).size();
         }
 
-        return IteratorUtil.size(iter.iterator());
+        return IteratorUtil.size(iterable.iterator());
     }
 
+    /**
+     * Transforms the given iterable into a stream.
+     *
+     * @param iterable
+     *         the source iterable
+     * @param <T>
+     *         element type
+     *
+     * @return the stream-based view on the iterable
+     */
     public static <T> Stream<T> stream(Iterable<T> iterable) {
         return IteratorUtil.stream(iterable.iterator());
-    }
-
-    public static <T> boolean any(Iterable<T> iterable, Predicate<? super T> predicate) {
-        return IteratorUtil.any(iterable.iterator(), predicate);
-    }
-
-    public static <T> boolean all(Iterable<T> iterable, Predicate<? super T> predicate) {
-        return IteratorUtil.all(iterable.iterator(), predicate);
     }
 }

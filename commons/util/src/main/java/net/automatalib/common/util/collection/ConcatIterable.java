@@ -26,6 +26,7 @@ class ConcatIterable<T> extends AbstractTwoLevelIterator<Iterable<? extends T>, 
         super(ArrayUtil.iterator(delegates));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Iterator<T> l2Iterator(Iterable<? extends T> l1Object) {
         return (Iterator<T>) l1Object.iterator();

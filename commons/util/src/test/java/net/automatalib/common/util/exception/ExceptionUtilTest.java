@@ -13,33 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.common.util.collection;
+package net.automatalib.common.util.exception;
 
-import java.util.Iterator;
-import java.util.function.Function;
+import java.io.IOException;
 
-class MappingIterator<D, R> implements Iterator<R> {
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-    private final Iterator<D> delegate;
-    private final Function<? super D, ? extends R> mapping;
+public class ExceptionUtilTest {
 
-    MappingIterator(Iterator<D> delegate, Function<? super D, ? extends R> mapping) {
-        this.delegate = delegate;
-        this.mapping = mapping;
-    }
+    @Test
+    public void testThrows() {
+        Assert.assertThrows(RuntimeException.class, () -> ExceptionUtil.throwIfUnchecked(new RuntimeException()));
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> ExceptionUtil.throwIfUnchecked(new IllegalArgumentException()));
+        Assert.assertThrows(Error.class, () -> ExceptionUtil.throwIfUnchecked(new Error()));
 
-    @Override
-    public boolean hasNext() {
-        return this.delegate.hasNext();
-    }
-
-    @Override
-    public R next() {
-        return this.mapping.apply(this.delegate.next());
-    }
-
-    @Override
-    public void remove() {
-        this.delegate.remove();
+        // assert not throwing
+        ExceptionUtil.throwIfUnchecked(new IOException());
     }
 }

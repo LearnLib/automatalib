@@ -18,6 +18,12 @@ package net.automatalib.common.util.collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * A simplified immutable iterator that only requires to implement the calculation of the next element.
+ *
+ * @param <E>
+ *         element type
+ */
 public abstract class AbstractSimplifiedIterator<E> implements Iterator<E> {
 
     protected E nextValue;
@@ -29,6 +35,12 @@ public abstract class AbstractSimplifiedIterator<E> implements Iterator<E> {
         FINISHED
     }
 
+    /**
+     * The method to calculate the next element. This method <b>must</b> set the {@link #nextValue} reference to
+     * indicate the next object and return {@code true} to signal that the next element is valid.
+     *
+     * @return {@code true} if the next element is valid, {@code false} if no more elements can be computed
+     */
     protected abstract boolean calculateNext();
 
     private boolean advance() {

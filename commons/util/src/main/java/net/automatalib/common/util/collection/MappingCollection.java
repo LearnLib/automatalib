@@ -18,7 +18,6 @@ package net.automatalib.common.util.collection;
 import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 class MappingCollection<D, R> extends AbstractCollection<R> {
@@ -34,26 +33,6 @@ class MappingCollection<D, R> extends AbstractCollection<R> {
     @Override
     public Iterator<R> iterator() {
         return IteratorUtil.map(this.delegate.iterator(), this.mapping);
-    }
-
-    @Override
-    public void clear() {
-        this.delegate.clear();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this.delegate.isEmpty();
-    }
-
-    @Override
-    public void forEach(Consumer<? super R> action) {
-        this.delegate.forEach((f) -> action.accept(this.mapping.apply(f)));
-    }
-
-    @Override
-    public boolean removeIf(java.util.function.Predicate<? super R> filter) {
-        return this.delegate.removeIf((element) -> filter.test(this.mapping.apply(element)));
     }
 
     @Override

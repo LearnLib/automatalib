@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.common.smartcollection;
+package net.automatalib.common.util.nid;
 
 import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.List;
 
 import net.automatalib.common.util.array.ResizingArrayStorage;
-import net.automatalib.common.util.nid.MutableNumericID;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class DynamicList<T extends MutableNumericID> extends AbstractList<T> implements ArrayWritable<T> {
+public class DynamicList<T extends MutableNumericID> extends AbstractList<T> {
 
     private final ResizingArrayStorage<T> storage;
     private int size;
@@ -179,10 +178,4 @@ public class DynamicList<T extends MutableNumericID> extends AbstractList<T> imp
         storage.array[a].setId(a);
         storage.array[b].setId(b);
     }
-
-    @Override
-    public void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num) {
-        System.arraycopy(storage.array, offset, array, tgtOfs, num);
-    }
-
 }
