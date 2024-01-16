@@ -189,8 +189,7 @@ public final class IOUtil {
     }
 
     /**
-     * Returns a reader that parses the contents of the given input stream with {@link StandardCharsets#UTF_8}
-     * encoding.
+     * Returns a reader that parses the contents of the given input stream with {@link StandardCharsets#UTF_8} encoding.
      *
      * @param is
      *         the input stream to read

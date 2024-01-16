@@ -22,9 +22,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `CollectionsUtil#allTuples` has been moved to `IterableUtil#allTuples`.
   * `CollectionsUtil#cartesianProduct` has been moved to `IterableUtil#cartesianProduct`.
   * `CollectionsUtil` has been renamed to `CollectionUtil`.
-* The `net:automatalib.tooling:automata-build-tools` module has been renamed to `net.automatalib:automata-build-config`.
-* The `Alphabets#toGrowingAlphabetOrThrowException` method has been moved to `Alphabet#asGrowingAlphabetOrThrowException` so that one does not require an `automata-core` dependency for a simple cast.
-* The `Visualization` factory has been moved from the `automata-core` artifact to the `automata-api` artifact. Furthermore, the previous `DummyVP` has been replaced with a `NoopVP` that does not show a swing window anymore when no proper VisualizationProvider is configured but instead logs an error message. This allows us to drop the `java.desktop` (module) dependency for headless setups and only require it in actual visualizers (DOT, JUNG, etc.).
+  * The `net:automatalib.tooling:automata-build-tools` module has been renamed to `net.automatalib:automata-build-config`.
+  * The `Alphabets#toGrowingAlphabetOrThrowException` method has been moved to `Alphabet#asGrowingAlphabetOrThrowException` so that one does not require an `automata-core` dependency for a simple cast.
+  * The `Visualization` factory has been moved from the `automata-core` artifact to the `automata-api` artifact. Furthermore, the previous `DummyVP` has been replaced with a `NoopVP` that does not show a swing window anymore when no proper VisualizationProvider is configured but instead logs an error message. This allows us to drop the `java.desktop` (module) dependency for headless setups and only require it in actual visualizers (DOT, JUNG, etc.).
 
 ### Removed
 
