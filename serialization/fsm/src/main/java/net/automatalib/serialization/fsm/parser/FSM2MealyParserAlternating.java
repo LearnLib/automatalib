@@ -17,14 +17,16 @@ package net.automatalib.serialization.fsm.parser;
 
 import java.io.IOException;
 import java.io.StreamTokenizer;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.Function;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import net.automatalib.automaton.concept.Output;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
@@ -61,7 +63,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
     /**
      * A multimap containing all outgoing transitions from a state in the FSM source.
      */
-    private final Multimap<Integer, Pair<String, Integer>> transitionsFSM = ArrayListMultimap.create();
+    private final Map<Integer, Collection<Pair<String, Integer>>> transitionsFSM;
 
     /**
      * @see FSM2MealyParserAlternating
@@ -74,6 +76,7 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
                                        Function<String, O> outputParser) {
         super(targetInputs, inputParser, outputParser);
         this.output = output;
+        this.transitionsFSM = new HashMap<>();
     }
 
     /**
@@ -122,7 +125,8 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
             final String letter = streamTokenizer.sval;
 
             // create a transition
-            final boolean isNew = transitionsFSM.put(from, Pair.of(letter, to));
+            final boolean isNew =
+                    transitionsFSM.computeIfAbsent(from, (k) -> new ArrayList<>()).add(Pair.of(letter, to));
 
             // test for non-determinism
             if (!isNew) {
@@ -163,7 +167,8 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
         newStates.remove(currentState);
 
         // collect all outgoing transitions from currentState
-        final Collection<Pair<String, Integer>> targets = transitionsFSM.get(currentState);
+        final Collection<Pair<String, Integer>> targets =
+                transitionsFSM.getOrDefault(currentState, Collections.emptyList());
 
         // check if we need to compute an undefined output.
         if (inputTrans != null && targets.isEmpty()) {
@@ -180,7 +185,8 @@ public final class FSM2MealyParserAlternating<I, O> extends AbstractFSM2MealyPar
                     throw new FSMFormatException(String.format(NON_DETERMINISM_DETECTED, prev), streamTokenizer);
                 }
             } else {
-                throw new FSMFormatException(String.format(INPUT_HAS_NO_OUTPUT, inputTrans.getSecond(),
+                throw new FSMFormatException(String.format(INPUT_HAS_NO_OUTPUT,
+                                                           inputTrans.getSecond(),
                                                            inputTrans.getFirst()), streamTokenizer);
             }
         }

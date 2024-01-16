@@ -21,9 +21,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.graph.BidirectionalGraph;
 import net.automatalib.graph.MutableGraph;
@@ -34,8 +33,8 @@ import org.testng.annotations.Test;
 public class IntAbstractionTest {
 
     private static final int SIZE = 25;
-    private static final List<Character> NPS = CollectionsUtil.charRange('A', 'F');
-    private static final List<Character> EPS = CollectionsUtil.charRange('0', '9');
+    private static final List<Character> NPS = CollectionUtil.charRange('A', 'F');
+    private static final List<Character> EPS = CollectionUtil.charRange('0', '9');
 
     @Test
     public void testCompactGraphs() {
@@ -116,19 +115,19 @@ public class IntAbstractionTest {
                                         .collect(Collectors.toSet());
             Assert.assertEquals(gSuccs, aSuccs);
 
-            final Set<EP> gProps = Streams.stream(graph.getOutgoingEdgesIterator(n))
-                                          .map(graph::getEdgeProperty)
-                                          .collect(Collectors.toSet());
-            final Set<EP> aProps = Streams.stream(abstraction.getOutgoingEdgesIterator(id))
-                                          .map(abstraction::getEdgeProperty)
-                                          .collect(Collectors.toSet());
+            final Set<EP> gProps = IteratorUtil.stream(graph.getOutgoingEdgesIterator(n))
+                                               .map(graph::getEdgeProperty)
+                                               .collect(Collectors.toSet());
+            final Set<EP> aProps = IteratorUtil.stream(abstraction.getOutgoingEdgesIterator(id))
+                                               .map(abstraction::getEdgeProperty)
+                                               .collect(Collectors.toSet());
             Assert.assertEquals(gProps, aProps);
 
             for (N n1 : graph) {
                 final int id1 = nodeIDs.getNodeId(n1);
                 Assert.assertEquals(graph.isConnected(n, n1), abstraction.isConnected(id, id1));
 
-                final Collection<E1> gEdgesInBtwn = Lists.newArrayList(graph.getEdgesBetween(n, n1));
+                final Collection<E1> gEdgesInBtwn = IteratorUtil.list(graph.getEdgesBetween(n, n1));
                 final Collection<E2> aEdgesInBtwn = abstraction.getEdgesBetween(id, id1);
                 Assert.assertEquals(gEdgesInBtwn.size(), aEdgesInBtwn.size());
             }

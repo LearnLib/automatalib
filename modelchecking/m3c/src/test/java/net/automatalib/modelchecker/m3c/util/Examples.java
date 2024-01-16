@@ -16,9 +16,9 @@
 package net.automatalib.modelchecker.m3c.util;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -81,8 +81,7 @@ public final class Examples {
         MutableDFAs.complete(p3, alphabet, true);
 
         // explicit type variable declaration to make checker-framework happy
-        final StackSBA<?, String> sba =
-                new StackSBA<>(alphabet, "P1", ImmutableMap.of("P1", p1, "P2", p2, "P3", p3, "P4", p4));
+        final StackSBA<?, String> sba = new StackSBA<>(alphabet, "P1", Map.of("P1", p1, "P2", p2, "P3", p3, "P4", p4));
 
         return SBAs.toCFMPS(sba);
     }

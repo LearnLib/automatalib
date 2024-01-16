@@ -17,19 +17,20 @@ package net.automatalib.util.automaton.cover;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Queue;
 
-import com.google.common.collect.AbstractIterator;
-import com.google.common.collect.Sets;
 import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.common.util.HashUtil;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
- * An iterator for the transition cover of an automaton. Words are computed lazily (i.e., only when request by {@link
- * #next()}).
+ * An iterator for the transition cover of an automaton. Words are computed lazily (i.e., only when request by
+ * {@link #next()}).
  * <p>
  * Supports incremental computation, i.e. given a set of cover traces, only sequences for transitions not covered by
  * these traces are returned.
@@ -41,7 +42,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @see Covers#transitionCover(DeterministicAutomaton, Collection, Collection)
  */
-class IncrementalTransitionCoverIterator<S, I> extends AbstractIterator<Word<I>> {
+class IncrementalTransitionCoverIterator<S, I> extends AbstractSimplifiedIterator<Word<I>> {
 
     private final DeterministicAutomaton<S, I, ?> automaton;
     private final Collection<? extends I> inputs;
@@ -64,13 +65,13 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractIterator<Word<I>>
     }
 
     @Override
-    protected Word<I> computeNext() {
+    protected boolean calculateNext() {
         // first invocation
         if (inputIterator == null) {
             final S init = automaton.getInitialState();
 
             if (init == null) {
-                return endOfData();
+                return false;
             }
 
             initialize(init);
@@ -91,12 +92,13 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractIterator<Word<I>>
 
                         if (reach.get(succ) == null) {
                             final Record<S, I> succRec =
-                                    new Record<>(succ, succAs, Sets.newHashSetWithExpectedSize(inputs.size()));
+                                    new Record<>(succ, succAs, new HashSet<>(HashUtil.capacity(inputs.size())));
                             reach.put(succ, succRec);
                             bfsQueue.add(succRec);
                         }
 
-                        return succAs;
+                        super.nextValue = succAs;
+                        return true;
                     }
                 }
             }
@@ -105,11 +107,12 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractIterator<Word<I>>
             inputIterator = inputs.iterator();
         }
 
-        return endOfData();
+        return false;
     }
 
     private void initialize(S init) {
-        final Record<S, I> initRec = new Record<>(init, Word.epsilon(), Sets.newHashSetWithExpectedSize(inputs.size()));
+        final Record<S, I> initRec =
+                new Record<>(init, Word.epsilon(), new HashSet<>(HashUtil.capacity(inputs.size())));
         reach.put(init, initRec);
         bfsQueue.add(initRec);
 
@@ -119,7 +122,7 @@ class IncrementalTransitionCoverIterator<S, I> extends AbstractIterator<Word<I>>
                                              oldCover,
                                              (s, as) -> new Record<>(s,
                                                                      as,
-                                                                     Sets.newHashSetWithExpectedSize(inputs.size())),
+                                                                     new HashSet<>(HashUtil.capacity(inputs.size()))),
                                              (w) -> {});
     }
 }

@@ -25,7 +25,7 @@ import java.util.TreeSet;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.DetOutputAutomaton;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.modelchecking.Lasso;
 import net.automatalib.ts.simple.SimpleDTS;
 import net.automatalib.word.Word;
@@ -214,7 +214,7 @@ public abstract class AbstractLasso<I, D> implements Lasso<I, D> {
 
     @Override
     public Collection<Integer> getStates() {
-        return CollectionsUtil.intRange(0, word.length());
+        return CollectionUtil.intRange(0, word.length());
     }
 
     /**

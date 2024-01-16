@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import com.google.common.collect.ImmutableMap;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -123,7 +122,7 @@ public class SBAsTest {
 
         t1.addTransition(t1t0, 'R', t1t4);
 
-        final SBA<?, Character> sba1 = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', s1, 'T', t1));
+        final SBA<?, Character> sba1 = new StackSBA<>(alphabet, 'S', Map.of('S', s1, 'T', t1));
 
         final CompactDFA<Character> s2 = new CompactDFA<>(alphabet);
         final FastDFA<Character> t2 = new FastDFA<>(alphabet);
@@ -133,7 +132,7 @@ public class SBAsTest {
 
         t2.addTransition(t2t0, 'R', t2t4);
 
-        final SBA<?, Character> sba2 = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', s2, 'T', t2));
+        final SBA<?, Character> sba2 = new StackSBA<>(alphabet, 'S', Map.of('S', s2, 'T', t2));
         final SBA<?, Character> emptySBA = new EmptySBA<>(alphabet);
 
         // no accessible procedures, no separating word should exist. Even with the empty SBAs
@@ -196,7 +195,7 @@ public class SBAsTest {
         verifySepWord(sba2, sba1, alphabet);
 
         // this should also work for partial SBAs
-        final SBA<?, Character> partial1 = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', s1));
+        final SBA<?, Character> partial1 = new StackSBA<>(alphabet, 'S', Map.of('S', s1));
         verifySepWord(sba1, partial1, alphabet);
         verifySepWord(partial1, sba1, alphabet);
 
@@ -264,8 +263,8 @@ public class SBAsTest {
         MutableDFAs.complete(spaS, alphabet.getProceduralAlphabet());
         MutableDFAs.complete(spaT, alphabet.getProceduralAlphabet());
 
-        final StackSBA<?, Character> sba = new StackSBA<>(alphabet, 'S', ImmutableMap.of('S', sbaS, 'T', sbaT));
-        final StackSPA<?, Character> spa = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', spaS, 'T', spaT));
+        final StackSBA<?, Character> sba = new StackSBA<>(alphabet, 'S', Map.of('S', sbaS, 'T', sbaT));
+        final StackSPA<?, Character> spa = new StackSPA<>(alphabet, 'S', Map.of('S', spaS, 'T', spaT));
         final SPA<?, Character> reduced = SBAs.reduce(sba);
 
         Assert.assertTrue(SPAs.testEquivalence(spa, reduced, alphabet));
@@ -379,7 +378,7 @@ public class SBAsTest {
 
         MutableDFAs.complete(p3, alphabet, true);
 
-        return new StackSBA<>(alphabet, "P1", ImmutableMap.of("P1", p1, "P2", p2, "P3", p3, "P4", p4));
+        return new StackSBA<>(alphabet, "P1", Map.of("P1", p1, "P2", p2, "P3", p3, "P4", p4));
     }
 
 }

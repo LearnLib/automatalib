@@ -16,12 +16,11 @@
 package net.automatalib.serialization.etf.writer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
@@ -49,9 +48,9 @@ public class DFA2ETFWriterTest {
 
             DFA2ETFWriter.<Character>getInstance().writeModel(baos, automaton, alphabet);
 
-            final String expected = CharStreams.toString(r);
+            final String expected = IOUtil.toString(r);
 
-            Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
+            Assert.assertEquals(baos.toString(StandardCharsets.UTF_8), expected);
         }
     }
 
@@ -66,9 +65,9 @@ public class DFA2ETFWriterTest {
 
             DFA2ETFWriter.<Character>getInstance().writeModel(baos, emptyLanguage, alphabet);
 
-            final String expected = CharStreams.toString(r);
+            final String expected = IOUtil.toString(r);
 
-            Assert.assertEquals(baos.toString(StandardCharsets.UTF_8.toString()), expected);
+            Assert.assertEquals(baos.toString(StandardCharsets.UTF_8), expected);
         }
     }
 
@@ -77,7 +76,7 @@ public class DFA2ETFWriterTest {
         final Alphabet<Character> alphabet = Alphabets.characters('a', 'c');
         final DFA<?, Character> automaton = RandomAutomata.randomDFA(new Random(0), 10, alphabet);
 
-        DFA2ETFWriter.<Character>getInstance().writeModel(new UnclosableOutputStream(ByteStreams.nullOutputStream()),
+        DFA2ETFWriter.<Character>getInstance().writeModel(new UnclosableOutputStream(OutputStream.nullOutputStream()),
                                                           automaton,
                                                           alphabet);
     }

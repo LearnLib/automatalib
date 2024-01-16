@@ -15,11 +15,12 @@
  */
 package net.automatalib.modelchecker.m3c.solver;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Maps;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelchecker.m3c.transformer.TransformerSerializer;
@@ -113,7 +114,7 @@ public final class SolverHistory<T extends AbstractPropertyTransformer<T, L, AP>
     }
 
     private Map<L, T> transform(Map<L, List<String>> input, TransformerSerializer<T, L, AP> serializer) {
-        final Map<L, T> result = Maps.newHashMapWithExpectedSize(input.size());
+        final Map<L, T> result = new HashMap<>(HashUtil.capacity(input.size()));
 
         for (Entry<L, List<String>> e : input.entrySet()) {
             result.put(e.getKey(), serializer.deserialize(e.getValue()));

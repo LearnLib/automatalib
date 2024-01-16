@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.graph.BidirectionalGraph;
 import net.automatalib.graph.MutableUniversalBidirectionalGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;

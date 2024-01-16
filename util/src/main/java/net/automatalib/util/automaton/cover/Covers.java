@@ -18,13 +18,14 @@ package net.automatalib.util.automaton.cover;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-import com.google.common.collect.Sets;
 import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -445,7 +446,7 @@ public final class Covers {
 
         // We enforce that the initial state *always* is covered by the empty word,
         // regardless of whether other sequence in oldCover cover it
-        Record<S, I> initRec = new Record<>(init, Word.epsilon(), Sets.newHashSetWithExpectedSize(inputs.size()));
+        Record<S, I> initRec = new Record<>(init, Word.epsilon(), new HashSet<>(HashUtil.capacity(inputs.size())));
         bfsQueue.add(initRec);
         reach.put(init, initRec);
 
@@ -457,7 +458,7 @@ public final class Covers {
                                                       oldStateCover,
                                                       (s, as) -> new Record<>(s,
                                                                               as,
-                                                                              Sets.newHashSetWithExpectedSize(inputs.size())));
+                                                                              new HashSet<>(HashUtil.capacity(inputs.size()))));
 
         // Add transition cover information from *state covers*
         for (Word<I> oldStateAs : oldStateCover) {
@@ -488,7 +489,7 @@ public final class Covers {
                                       bfsQueue,
                                       automaton,
                                       oldTransCover,
-                                      (s, as) -> new Record<>(s, as, Sets.newHashSetWithExpectedSize(inputs.size())),
+                                      (s, as) -> new Record<>(s, as, new HashSet<>(HashUtil.capacity(inputs.size()))),
                                       newStateCover);
 
         Record<S, I> curr;
@@ -504,7 +505,7 @@ public final class Covers {
 
                         if (succRec == null) {
                             // new state!
-                            succRec = new Record<>(succ, newAs, Sets.newHashSetWithExpectedSize(inputs.size()));
+                            succRec = new Record<>(succ, newAs, new HashSet<>(HashUtil.capacity(inputs.size())));
                             bfsQueue.add(succRec);
                             reach.put(succ, succRec);
 

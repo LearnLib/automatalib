@@ -18,10 +18,9 @@ package net.automatalib.common.util.collection;
 import java.util.AbstractList;
 import java.util.RandomAccess;
 
-import net.automatalib.common.smartcollection.ArrayWritable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public final class IntRange extends AbstractList<Integer> implements ArrayWritable<Integer>, RandomAccess {
+public final class IntRange extends AbstractList<Integer> implements RandomAccess {
 
     private final int start;
     private final int step;
@@ -103,15 +102,4 @@ public final class IntRange extends AbstractList<Integer> implements ArrayWritab
     public int size() {
         return size;
     }
-
-    @Override
-    public void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num) {
-        int x = start + offset * step;
-        int ti = tgtOfs;
-        for (int i = 0; i < num; i++) {
-            array[ti++] = x;
-            x += step;
-        }
-    }
-
 }

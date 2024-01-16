@@ -22,12 +22,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.AbstractTwoLevelIterator;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.collection.ReusableIterator;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
@@ -123,7 +123,7 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
 
         // we need sCov in both iterators but cSet only in the continuable one.
         // therefore, start with the non-continuable one in hopes of saving unnecessary computations
-        return Iterators.concat(nonContinuableIter, continuableIter);
+        return IteratorUtil.concat(nonContinuableIter, continuableIter);
     }
 
     private class ContinuableIterator extends AbstractThreeLevelIterator<Word<I>, List<Word<I>>, List<I>, Word<I>> {
@@ -139,12 +139,12 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
         @Override
         protected Iterator<List<Word<I>>> l2Iterator(Word<I> cSet) {
             final Iterator<List<Word<I>>> epsilon = ((List<List<Word<I>>>) (List<?>) EPSILON).iterator();
-            return Iterators.concat(epsilon, CollectionsUtil.cartesianProduct(sCov, continuableWords).iterator());
+            return IteratorUtil.concat(epsilon, IterableUtil.cartesianProduct(sCov, continuableWords).iterator());
         }
 
         @Override
         protected Iterator<List<I>> l3Iterator(Word<I> cSet, List<Word<I>> tCov) {
-            return CollectionsUtil.allTuples(continuableSymbols, 0, maxDepth).iterator();
+            return IterableUtil.allTuples(continuableSymbols, 0, maxDepth).iterator();
         }
 
         @Override

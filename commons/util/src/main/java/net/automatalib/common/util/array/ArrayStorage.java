@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.common.smartcollection;
+package net.automatalib.common.util.array;
 
 import java.util.AbstractList;
 import java.util.Arrays;

@@ -46,12 +46,6 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
-        <!-- external -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
         <!-- test -->
         <dependency>
             <groupId>net.automatalib</groupId>

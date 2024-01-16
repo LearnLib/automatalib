@@ -55,10 +55,6 @@ limitations under the License.
 
         <!-- external -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
             <groupId>info.scce</groupId>
             <artifactId>addlib-core</artifactId>
         </dependency>

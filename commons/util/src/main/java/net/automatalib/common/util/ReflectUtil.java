@@ -17,14 +17,31 @@ package net.automatalib.common.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-import com.google.common.primitives.Primitives;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * Utility methods for using Java reflection.
  */
 public final class ReflectUtil {
+
+    private static final Map<Class<?>, Class<?>> CLASS_TO_PRIMITIVE;
+
+    static {
+        CLASS_TO_PRIMITIVE = new HashMap<>();
+        CLASS_TO_PRIMITIVE.put(Boolean.class, boolean.class);
+        CLASS_TO_PRIMITIVE.put(Byte.class, byte.class);
+        CLASS_TO_PRIMITIVE.put(Character.class, char.class);
+        CLASS_TO_PRIMITIVE.put(Double.class, double.class);
+        CLASS_TO_PRIMITIVE.put(Float.class, float.class);
+        CLASS_TO_PRIMITIVE.put(Integer.class, int.class);
+        CLASS_TO_PRIMITIVE.put(Long.class, long.class);
+        CLASS_TO_PRIMITIVE.put(Short.class, short.class);
+        CLASS_TO_PRIMITIVE.put(Void.class, void.class);
+    }
 
     private ReflectUtil() {}
 
@@ -177,9 +194,9 @@ public final class ReflectUtil {
     }
 
     private static boolean w2pEquals(Class<?> a, Class<?> b) {
-        final Class<?> wrappedA = Primitives.unwrap(a);
-        final Class<?> wrappedB = Primitives.unwrap(b);
-        return wrappedA.equals(wrappedB);
+        final Class<?> primA = CLASS_TO_PRIMITIVE.getOrDefault(a, a);
+        final Class<?> primB = CLASS_TO_PRIMITIVE.getOrDefault(b, b);
+        return Objects.equals(primA, primB);
     }
 
     private static boolean isMatch(Class<?>[] paramTypes, @Nullable Object... args) {
@@ -195,7 +212,7 @@ public final class ReflectUtil {
                     return false;
                 }
                 Class<?> argType = arg.getClass();
-                if (paramType != Primitives.unwrap(argType)) {
+                if (paramType != CLASS_TO_PRIMITIVE.get(argType)) {
                     return false;
                 }
             } else {

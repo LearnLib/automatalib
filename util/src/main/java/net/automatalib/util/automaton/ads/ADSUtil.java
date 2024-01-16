@@ -20,7 +20,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.math.LongMath;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ads.ADSNode;
@@ -150,7 +149,25 @@ public final class ADSUtil {
             return n;
         }
 
-        return LongMath.binomial(n, i) - LongMath.binomial(m - 1, i - 1) - 1;
+        return binomial(n, i) - binomial(m - 1, i - 1) + 1;
+    }
+
+    private static long binomial(int n, int k) {
+
+        // abuse symmetry
+        final int effectiveK = Math.min(k, n - k);
+        long result = 1;
+
+        try {
+            for (int i = 1; i <= effectiveK; i++) {
+                result = Math.multiplyExact(result, n + 1 - i);
+                result /= i;
+            }
+
+            return result;
+        } catch (ArithmeticException ae) {
+            return Long.MAX_VALUE;
+        }
     }
 
 }

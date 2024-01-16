@@ -26,12 +26,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.zip.GZIPInputStream;
 
-import com.google.common.base.Preconditions;
 import net.automatalib.common.util.io.NonClosingInputStream;
 import net.automatalib.common.util.io.NonClosingOutputStream;
 
@@ -39,6 +39,8 @@ import net.automatalib.common.util.io.NonClosingOutputStream;
  * Utility methods for operating with {@code java.io.*} classes.
  */
 public final class IOUtil {
+
+    public static final int DEFAULT_BUFFER_SIZE = 4096;
 
     private IOUtil() {
         // prevent instantiation
@@ -64,7 +66,9 @@ public final class IOUtil {
      *         if the stream does not support {@link InputStream#markSupported() marking}
      */
     public static InputStream asUncompressedInputStream(InputStream is) throws IOException {
-        Preconditions.checkArgument(is.markSupported(), "input stream must support marking");
+        if (!is.markSupported()) {
+            throw new IllegalArgumentException("input stream must support marking");
+        }
 
         is.mark(2);
         byte[] buf = new byte[2];
@@ -333,5 +337,41 @@ public final class IOUtil {
 
     private static boolean isBufferedOutputStream(OutputStream os) {
         return os instanceof BufferedOutputStream || os instanceof ByteArrayOutputStream;
+    }
+
+    /**
+     * Copies the contents of the given reader into the given writer.
+     *
+     * @param in
+     *         the reader to read data from
+     * @param out
+     *         the writer to write data to
+     *
+     * @throws IOException
+     *         if reading from or writing to the respective reader / writer throws this exception
+     */
+    public static void copy(Reader in, Writer out) throws IOException {
+        final char[] buf = new char[DEFAULT_BUFFER_SIZE];
+        int read;
+        while ((read = in.read(buf)) >= 0) {
+            out.write(buf, 0, read);
+        }
+    }
+
+    /**
+     * Reads the data from the given reader and returns its contents as a string.
+     *
+     * @param r
+     *         the reader to read data from
+     *
+     * @return the contents of the reader as a string
+     *
+     * @throws IOException
+     *         if reading from the reader throws this exception
+     */
+    public static String toString(Reader r) throws IOException {
+        final StringWriter w = new StringWriter();
+        copy(r, w);
+        return w.toString();
     }
 }

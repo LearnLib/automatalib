@@ -18,10 +18,10 @@ package net.automatalib.util.ts.iterator;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.google.common.collect.AbstractIterator;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.ts.TransitionSystem;
 
-public final class UndefinedInputsIterator<S, I> extends AbstractIterator<I> {
+public final class UndefinedInputsIterator<S, I> extends AbstractSimplifiedIterator<I> {
 
     private final TransitionSystem<S, I, ?> ts;
     private final Iterator<? extends I> inputsIt;
@@ -34,14 +34,15 @@ public final class UndefinedInputsIterator<S, I> extends AbstractIterator<I> {
     }
 
     @Override
-    protected I computeNext() {
+    protected boolean calculateNext() {
         while (inputsIt.hasNext()) {
             I input = inputsIt.next();
             Collection<?> transitions = ts.getTransitions(state, input);
             if (transitions.isEmpty()) {
-                return input;
+                super.nextValue = input;
+                return true;
             }
         }
-        return endOfData();
+        return false;
     }
 }

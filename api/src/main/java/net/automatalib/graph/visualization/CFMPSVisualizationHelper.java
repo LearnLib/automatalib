@@ -17,11 +17,12 @@ package net.automatalib.graph.visualization;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Maps;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.visualization.DefaultVisualizationHelper;
@@ -36,7 +37,7 @@ public class CFMPSVisualizationHelper<N, L, E> extends DefaultVisualizationHelpe
     @SuppressWarnings("unchecked")
     public CFMPSVisualizationHelper(Map<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, ?, ?>> pmpgs) {
 
-        this.visualizers = Maps.newHashMapWithExpectedSize(pmpgs.size());
+        this.visualizers = new HashMap<>(HashUtil.capacity(pmpgs.size()));
         this.initialNodes = new ArrayList<>(pmpgs.size());
 
         for (Entry<L, ? extends ProceduralModalProcessGraph<? extends N, L, ? extends E, ?, ?>> e : pmpgs.entrySet()) {

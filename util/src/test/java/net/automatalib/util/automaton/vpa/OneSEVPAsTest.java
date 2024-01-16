@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -32,8 +31,9 @@ import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.State;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.util.automaton.conformance.SPATestsIterator;
 import net.automatalib.util.automaton.conformance.WpMethodTestsIterator;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -69,7 +69,7 @@ public class OneSEVPAsTest {
         final VPAlphabet<I> alphabet = sevpa.getInputAlphabet();
 
         final ArrayStorage<Word<I>> accessSequences = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
-        final Set<L> locations = Sets.newHashSetWithExpectedSize(sevpa.size());
+        final Set<L> locations = new HashSet<>(HashUtil.capacity(sevpa.size()));
 
         for (Word<I> as : accessSequences) {
             final State<L> s = sevpa.getState(as);
@@ -117,7 +117,7 @@ public class OneSEVPAsTest {
         final ArrayStorage<Word<I>> accessSequences = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
         final List<Pair<Word<I>, Word<I>>> cSet = new ArrayList<>(OneSEVPAs.findCharacterizingSet(sevpa, alphabet));
 
-        final Set<boolean[]> signatures = Sets.newHashSetWithExpectedSize(sevpa.size());
+        final Set<boolean[]> signatures = new HashSet<>(HashUtil.capacity(sevpa.size()));
 
         for (L l : sevpa.getLocations()) {
             final Word<I> as = accessSequences.get(sevpa.getLocationId(l));
@@ -207,7 +207,7 @@ public class OneSEVPAsTest {
     private static <I> void addRedundantState(DefaultOneSEVPA<I> automaton, VPAlphabet<? extends I> alphabet) {
 
         // cache reached states, so we copy the first state reached by two incoming transitions
-        final Set<Location> locationCache = Sets.newHashSetWithExpectedSize(automaton.size());
+        final Set<Location> locationCache = new HashSet<>(HashUtil.capacity(automaton.size()));
 
         Location incomingLoc = null;
         I incomingInput = null;

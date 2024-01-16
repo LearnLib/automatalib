@@ -33,13 +33,13 @@ public class AllTuplesTest {
 
     @Test
     public void testEmptyDomain() {
-        int count = count(CollectionsUtil.allTuples(Collections.emptySet(), 1), null);
+        int count = count(IterableUtil.allTuples(Collections.emptySet(), 1), null);
         Assert.assertEquals(count, 0);
 
-        count = count(CollectionsUtil.allTuples(Collections.emptySet(), 0), null);
+        count = count(IterableUtil.allTuples(Collections.emptySet(), 0), null);
         Assert.assertEquals(count, 1);
 
-        count = count(CollectionsUtil.allTuples(Collections.emptySet(), 0, 5), null);
+        count = count(IterableUtil.allTuples(Collections.emptySet(), 0, 5), null);
         Assert.assertEquals(count, 1);
     }
 
@@ -61,23 +61,23 @@ public class AllTuplesTest {
 
     @Test
     public void testAllTuples() {
-        int count = count(CollectionsUtil.allTuples(DOMAIN, 0), null);
+        int count = count(IterableUtil.allTuples(DOMAIN, 0), null);
         Assert.assertEquals(count, 1);
 
         Set<Object> set = new HashSet<>();
-        count = count(CollectionsUtil.allTuples(DOMAIN, 1), set);
+        count = count(IterableUtil.allTuples(DOMAIN, 1), set);
         Assert.assertEquals(count, DOMAIN.size());
         Assert.assertEquals(set.size(), count);
 
-        count = count(CollectionsUtil.allTuples(DOMAIN, 0, 1), set);
+        count = count(IterableUtil.allTuples(DOMAIN, 0, 1), set);
         Assert.assertEquals(count, DOMAIN.size() + 1);
         Assert.assertEquals(set.size(), count);
 
-        count = count(CollectionsUtil.allTuples(DOMAIN, 3), set);
+        count = count(IterableUtil.allTuples(DOMAIN, 3), set);
         Assert.assertEquals(count, (int) Math.pow(DOMAIN.size(), 3));
         Assert.assertEquals(set.size(), count);
 
-        for (List<?> lst : CollectionsUtil.allTuples(DOMAIN, 3)) {
+        for (List<?> lst : IterableUtil.allTuples(DOMAIN, 3)) {
             Assert.assertEquals(lst.size(), 3);
         }
     }

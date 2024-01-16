@@ -19,8 +19,8 @@ import java.util.AbstractQueue;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.google.common.collect.Iterators;
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ArrayUtil;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -165,7 +165,7 @@ class StrictPriorityQueue<E> extends AbstractQueue<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return Iterators.forArray(storage.array);
+        return ArrayUtil.iterator(storage.array);
     }
 
     @Override

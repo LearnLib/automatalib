@@ -24,7 +24,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Random;
 
-import com.google.common.collect.Lists;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralOutputAlphabet;
@@ -35,6 +34,7 @@ import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.impl.StackSPMM;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.copy.AutomatonCopyMethod;
@@ -93,7 +93,7 @@ public class SPMMWMethodTestsIteratorTest {
 
     @Test
     public void testIterator() {
-        final List<Word<Character>> testWords = Lists.newArrayList(new SPMMWMethodTestsIterator<>(this.spmm));
+        final List<Word<Character>> testWords = IteratorUtil.list(new SPMMWMethodTestsIterator<>(this.spmm));
 
         final ProceduralInputAlphabet<Character> inputAlphabet = this.spmm.getInputAlphabet();
         final ATSequences<Character> atSequences = SPMMs.computeATSequences(this.spmm);

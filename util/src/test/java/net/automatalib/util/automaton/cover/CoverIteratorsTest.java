@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.BiFunction;
 
-import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
@@ -63,10 +63,7 @@ public class CoverIteratorsTest {
 
         final List<Word<Integer>> cover = new ArrayList<>(coverGenerator.apply(dfa, alphabet));
 
-        final List<Word<Integer>> iteratorCover = new ArrayList<>(dfa.size());
-        final Iterator<Word<Integer>> iter = iteratorGenerator.apply(dfa, alphabet);
-
-        Iterators.addAll(iteratorCover, iter);
+        final List<Word<Integer>> iteratorCover = IteratorUtil.list(iteratorGenerator.apply(dfa, alphabet));
 
         Assert.assertEquals(iteratorCover, cover);
     }
@@ -86,10 +83,8 @@ public class CoverIteratorsTest {
         final List<Word<Integer>> incrementalCover = new ArrayList<>(fullCover.size() / 2);
         incrementalCoverGenerator.apply(dfa, alphabet, oldCover, incrementalCover);
 
-        final List<Word<Integer>> iteratorCover = new ArrayList<>(fullCover.size() / 2);
-        final Iterator<Word<Integer>> iter = incrementalIteratorGenerator.apply(dfa, alphabet, oldCover);
-
-        Iterators.addAll(iteratorCover, iter);
+        final List<Word<Integer>> iteratorCover =
+                IteratorUtil.list(incrementalIteratorGenerator.apply(dfa, alphabet, oldCover));
 
         Assert.assertEquals(iteratorCover, incrementalCover);
     }

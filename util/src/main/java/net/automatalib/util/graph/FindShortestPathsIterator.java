@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Queue;
 import java.util.function.Predicate;
 
-import com.google.common.collect.AbstractIterator;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.IndefiniteGraph;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 @SuppressWarnings("nullness") // dataflow dependent nullness is hard to describe
-final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>> {
+final class FindShortestPathsIterator<N, E> extends AbstractSimplifiedIterator<Path<N, E>> {
 
     private final Queue<N> bfsQueue;
     private final IndefiniteGraph<N, E> graph;
@@ -56,11 +56,12 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>>
     }
 
     @Override
-    protected Path<N, E> computeNext() {
+    protected boolean calculateNext() {
         while (!bfsQueue.isEmpty()) {
             N curr = bfsQueue.poll();
             if (targetPred.test(curr)) {
-                return makePath(curr);
+                super.nextValue = makePath(curr);
+                return true;
             }
 
             final int currentDepth = preds.get(curr).depth;
@@ -77,7 +78,7 @@ final class FindShortestPathsIterator<N, E> extends AbstractIterator<Path<N, E>>
             }
         }
 
-        return endOfData();
+        return false;
     }
 
     private Path<N, E> makePath(N target) {

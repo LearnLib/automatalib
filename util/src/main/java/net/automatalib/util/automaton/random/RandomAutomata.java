@@ -18,13 +18,13 @@ package net.automatalib.util.automaton.random;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.ProceduralOutputAlphabet;
@@ -44,6 +44,7 @@ import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.vpa.impl.DefaultOneSEVPA;
 import net.automatalib.automaton.vpa.impl.Location;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.DFAs;
 import net.automatalib.util.automaton.procedural.SPAs;
@@ -182,7 +183,7 @@ public final class RandomAutomata {
         SPA<?, I> result;
 
         do {
-            final Map<I, DFA<?, I>> dfas = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+            final Map<I, DFA<?, I>> dfas = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
             final Alphabet<I> proceduralAlphabet = alphabet.getProceduralAlphabet();
 
             for (I procedure : alphabet.getCallAlphabet()) {
@@ -221,7 +222,7 @@ public final class RandomAutomata {
             }
         }
 
-        final Map<I, DFA<?, I>> dfas = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+        final Map<I, DFA<?, I>> dfas = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
 
         for (I procedure : alphabet.getCallAlphabet()) {
             final CompactDFA<I> dfa = new CompactDFA<>(alphabet);
@@ -291,7 +292,7 @@ public final class RandomAutomata {
             }
         }
 
-        final Map<I, MealyMachine<?, I, ?, O>> mealies = Maps.newHashMapWithExpectedSize(inputAlphabet.getNumCalls());
+        final Map<I, MealyMachine<?, I, ?, O>> mealies = new HashMap<>(HashUtil.capacity(inputAlphabet.getNumCalls()));
 
         for (I procedure : inputAlphabet.getCallAlphabet()) {
             final CompactMealy<I, O> mealy = new CompactMealy<>(inputAlphabet);

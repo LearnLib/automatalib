@@ -15,19 +15,17 @@
  */
 package net.automatalib.alphabet.impl;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.google.common.collect.Iterators;
-import net.automatalib.common.util.collection.UnmodifiableListIterator;
-
 public class ListAlphabet<I> extends AbstractAlphabet<I> {
 
-    private final List<? extends I> list;
+    private final List<I> list;
 
     public ListAlphabet(List<? extends I> list) {
-        this.list = list;
+        this.list = Collections.unmodifiableList(list);
     }
 
     @Override
@@ -60,11 +58,11 @@ public class ListAlphabet<I> extends AbstractAlphabet<I> {
 
     @Override
     public Iterator<I> iterator() {
-        return Iterators.unmodifiableIterator(list.iterator());
+        return list.iterator();
     }
 
     @Override
     public ListIterator<I> listIterator(int index) {
-        return new UnmodifiableListIterator<>(list.listIterator(index));
+        return list.listIterator();
     }
 }

@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.common.util.mapping;
+package net.automatalib.common.util.exception;
 
-import java.util.List;
+import java.io.IOException;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.testng.collections.Lists;
 
-public class MappingsTest {
+public class ExceptionUtilTest {
 
     @Test
-    public void testIndexStringMapping() {
-        List<Long> indices = Lists.newArrayList(0L, 1L, 25L, 26L, 17575L);
-        List<String> strings = Lists.newArrayList("a", "b", "z", "ab", "zzz");
+    public void testThrows() {
+        Assert.assertThrows(RuntimeException.class, () -> ExceptionUtil.throwIfUnchecked(new RuntimeException()));
+        Assert.assertThrows(IllegalArgumentException.class,
+                            () -> ExceptionUtil.throwIfUnchecked(new IllegalArgumentException()));
+        Assert.assertThrows(Error.class, () -> ExceptionUtil.throwIfUnchecked(new Error()));
 
-        List<String> actualStrings = Mappings.apply(Mappings.indexToString(), indices);
-        Assert.assertEquals(actualStrings, strings);
-
-        // and backwards
-        List<Long> actualIndices = Mappings.apply(Mappings.stringToIndex(), actualStrings);
-        Assert.assertEquals(actualIndices, indices);
+        // assert not throwing
+        ExceptionUtil.throwIfUnchecked(new IOException());
     }
 }

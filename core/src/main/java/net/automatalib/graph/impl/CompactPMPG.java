@@ -18,7 +18,7 @@ package net.automatalib.graph.impl;
 import java.util.Collections;
 import java.util.Set;
 
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.graph.MutableProceduralModalProcessGraph;
 import net.automatalib.graph.base.AbstractCompactGraph;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;

@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.common.smartcollection;
+package net.automatalib.common.util.array;
+
+import java.util.Iterator;
 
 /**
  * Utility methods for arrays.
@@ -72,5 +74,19 @@ public final class ArrayUtil {
         }
 
         return newCapacity;
+    }
+
+    /**
+     * Returns an immutable iterator that iterates over the contents of the given array.
+     *
+     * @param array
+     *         the array over whose contents should be iterated
+     * @param <E>
+     *         element type
+     *
+     * @return an iterator for the contents of the array
+     */
+    public static <E> Iterator<E> iterator(E[] array) {
+        return new ArrayIterator<>(array);
     }
 }

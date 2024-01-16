@@ -19,17 +19,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import com.google.common.collect.Maps;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableAutomaton;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
@@ -119,7 +120,7 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
     private Mapping<S, String> parseNodesAndEdges(InternalDOTParser parser,
                                                   MutableAutomaton<S, I, ?, SP, TP> automaton) {
         final List<Node> nodes = parser.getNodes();
-        final Map<String, S> stateMap = Maps.newHashMapWithExpectedSize(nodes.size());
+        final Map<String, S> stateMap = new HashMap<>(HashUtil.capacity(nodes.size()));
         final MutableMapping<S, String> mapping = automaton.createDynamicStateMapping();
 
         for (Node node : nodes) {

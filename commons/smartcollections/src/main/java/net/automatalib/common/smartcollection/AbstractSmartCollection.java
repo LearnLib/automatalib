@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 
-import com.google.common.collect.Iterators;
+import net.automatalib.common.util.collection.IteratorUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -90,7 +90,7 @@ public abstract class AbstractSmartCollection<E> extends AbstractCollection<E> i
 
     @Override
     public Iterator<E> iterator() {
-        return Iterators.transform(referenceIterator(), this::get);
+        return IteratorUtil.map(referenceIterator(), this::get);
     }
 
     @Override

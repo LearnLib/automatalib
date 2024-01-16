@@ -18,7 +18,6 @@ package net.automatalib.graph.impl;
 import java.util.Collections;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -29,8 +28,9 @@ public class DefaultCFMPS<L, AP> implements ContextFreeModalProcessSystem<L, AP>
     private final L mainProcess;
 
     public DefaultCFMPS(L mainProcess, Map<L, ? extends ProceduralModalProcessGraph<?, L, ?, AP, ?>> pmpgs) {
-        Preconditions.checkArgument(pmpgs.containsKey(mainProcess),
-                                    "There exists no process graph for the main process");
+        if (!pmpgs.containsKey(mainProcess)) {
+            throw new IllegalArgumentException("There exists no process graph for the main process");
+        }
 
         this.pmpgs = Collections.unmodifiableMap(pmpgs);
         this.mainProcess = mainProcess;

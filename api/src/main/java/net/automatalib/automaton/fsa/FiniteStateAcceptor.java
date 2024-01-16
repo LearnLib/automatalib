@@ -20,13 +20,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.Iterables;
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.concept.OutputAutomaton;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
 import net.automatalib.automaton.visualization.FSAVisualizationHelper;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.graph.UniversalGraph;
 import net.automatalib.ts.acceptor.AcceptorTS;
 import net.automatalib.visualization.VisualizationHelper;
@@ -44,7 +44,7 @@ public interface FiniteStateAcceptor<S, I> extends AcceptorTS<S, I>,
 
     @Override
     default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        Iterable<I> input = Iterables.concat(prefix, suffix);
+        Iterable<I> input = IterableUtil.concat(prefix, suffix);
         return computeOutput(input);
     }
 

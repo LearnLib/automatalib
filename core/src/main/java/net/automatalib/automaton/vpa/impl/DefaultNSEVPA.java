@@ -18,7 +18,7 @@ package net.automatalib.automaton.vpa.impl;
 import java.util.Objects;
 
 import net.automatalib.alphabet.VPAlphabet;
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 
 /**
  * Default implementation for n-SEVPAs.

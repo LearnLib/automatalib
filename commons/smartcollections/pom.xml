@@ -37,10 +37,10 @@ limitations under the License.
     </description>
 
     <dependencies>
-        <!-- external -->
+        <!-- internal -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>net.automatalib</groupId>
+            <artifactId>automata-commons-util</artifactId>
         </dependency>
 
         <!-- build -->

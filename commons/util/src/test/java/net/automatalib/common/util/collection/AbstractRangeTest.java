@@ -22,11 +22,10 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
-import net.automatalib.common.smartcollection.ArrayWritable;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public abstract class AbstractRangeTest<I, R extends AbstractList<I> & ArrayWritable<I>> {
+public abstract class AbstractRangeTest<I, R extends AbstractList<I>> {
 
     protected final R range;
     private final List<I> reference;
@@ -100,36 +99,5 @@ public abstract class AbstractRangeTest<I, R extends AbstractList<I> & ArrayWrit
         Assert.assertThrows(UnsupportedOperationException.class, listIterator::remove);
         Assert.assertThrows(UnsupportedOperationException.class, () -> listIterator.add(null));
         Assert.assertThrows(UnsupportedOperationException.class, () -> listIterator.set(null));
-    }
-
-    @Test
-    public void testArrayWritable() {
-        final int size = this.range.size();
-        final Object[] target = new Object[size];
-
-        // write all
-        this.range.writeToArray(0, target, 0, size);
-        Assert.assertEquals(target, this.reference.toArray());
-
-        // write first range half into second array half
-        final int offset = size / 2;
-        this.range.writeToArray(0, target, offset, size - offset);
-
-        for (int i = 0; i < offset; i++) {
-            Assert.assertEquals(target[i], this.range.get(i));
-        }
-        for (int i = offset; i < size; i++) {
-            Assert.assertEquals(target[i], this.range.get(i - offset));
-        }
-
-        // write second range half into first array half
-        this.range.writeToArray(size - offset, target, 0, offset);
-
-        for (int i = 0; i < offset; i++) {
-            Assert.assertEquals(target[i], this.range.get(size - offset + i));
-        }
-        for (int i = offset; i < size; i++) {
-            Assert.assertEquals(target[i], this.range.get(i - offset));
-        }
     }
 }

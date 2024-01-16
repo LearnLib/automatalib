@@ -15,18 +15,18 @@
  */
 package net.automatalib.common.smartcollection;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class ReflexiveMapViewTest {
 
-    private final Set<Integer> elements = Sets.newHashSet(1, 2, 3, 4, 5);
+    private final Set<Integer> elements = new HashSet<>(Arrays.asList(1, 2, 3, 4, 5));
     private final Map<Integer, Integer> map = new ReflexiveMapView<>(elements);
 
     @Test

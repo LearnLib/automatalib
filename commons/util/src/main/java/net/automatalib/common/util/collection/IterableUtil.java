@@ -15,43 +15,20 @@
  */
 package net.automatalib.common.util.collection;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.RandomAccess;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
- * Various methods for operating on collections.
+ * Utility methods for {@link Iterable}s.
  */
-public final class CollectionsUtil {
+public final class IterableUtil {
 
-    private CollectionsUtil() {
-        // prevent instantiation.
-    }
-
-    public static List<Integer> intRange(int start, int end) {
-        return new IntRange(start, end);
-    }
-
-    public static List<Integer> intRange(int start, int end, int step) {
-        return new IntRange(start, end, step);
-    }
-
-    public static List<Character> charRange(char start, char end) {
-        return new CharRange(start, end);
-    }
-
-    public static List<String> charStringRange(char start, char end) {
-        return new CharStringRange(start, end);
-    }
-
-    public static <T> List<? extends T> randomAccessList(Collection<? extends T> coll) {
-        if (coll instanceof List && coll instanceof RandomAccess) {
-            return (List<? extends T>) coll;
-        }
-        return new ArrayList<>(coll);
+    private IterableUtil() {
+        // prevent instantiation
     }
 
     public static <T> Iterable<List<T>> allTuples(Iterable<? extends T> domain, int length) {
@@ -116,4 +93,68 @@ public final class CollectionsUtil {
         return () -> new AllCombinationsIterator<>(iterables);
     }
 
+    /**
+     * Returns an iterable that iterates over all elements of the given source iterables.
+     *
+     * @param iterables
+     *         the source iterables
+     * @param <T>
+     *         element type
+     *
+     * @return the concatenated iterable
+     */
+    @SafeVarargs
+    public static <T> Iterable<T> concat(Iterable<? extends T>... iterables) {
+        return () -> new ConcatIterable<>(iterables);
+    }
+
+    /**
+     * Returns a view on the given iterable that transforms its elements as specified by the given mapping.
+     *
+     * @param iterable
+     *         the source iterable
+     * @param mapping
+     *         the transformation function
+     * @param <D>
+     *         mapping domain type
+     * @param <R>
+     *         mapping range type
+     *
+     * @return the mapped view on the given iterable
+     */
+    public static <D, R> Iterable<R> map(Iterable<D> iterable, Function<? super D, ? extends R> mapping) {
+        return () -> new MappingIterator<>(iterable.iterator(), mapping);
+    }
+
+    /**
+     * Returns the number of elements of the given iterable.
+     *
+     * @param iterable
+     *         the iterable whose elements should be counted
+     * @param <T>
+     *         element type
+     *
+     * @return the number of elements of the iterable
+     */
+    public static <T> int size(Iterable<T> iterable) {
+        if (iterable instanceof Collection) {
+            return ((Collection<?>) iterable).size();
+        }
+
+        return IteratorUtil.size(iterable.iterator());
+    }
+
+    /**
+     * Transforms the given iterable into a stream.
+     *
+     * @param iterable
+     *         the source iterable
+     * @param <T>
+     *         element type
+     *
+     * @return the stream-based view on the iterable
+     */
+    public static <T> Stream<T> stream(Iterable<T> iterable) {
+        return IteratorUtil.stream(iterable.iterator());
+    }
 }

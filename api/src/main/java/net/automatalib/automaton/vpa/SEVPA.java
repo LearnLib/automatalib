@@ -17,12 +17,12 @@ package net.automatalib.automaton.vpa;
 
 import java.util.List;
 
-import com.google.common.collect.Iterables;
 import net.automatalib.alphabet.VPAlphabet;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.concept.SuffixOutput;
 import net.automatalib.automaton.vpa.SEVPAGraphView.SevpaViewEdge;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.concept.GraphViewable;
 import net.automatalib.ts.acceptor.DeterministicAcceptorTS;
@@ -73,7 +73,7 @@ public interface SEVPA<L, I> extends DeterministicAcceptorTS<State<L>, I>,
 
     @Override
     default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        return this.accepts(Iterables.concat(prefix, suffix));
+        return this.accepts(IterableUtil.concat(prefix, suffix));
     }
 
     @Override

@@ -25,7 +25,7 @@ import net.automatalib.automaton.DeterministicAutomaton;
 import net.automatalib.automaton.MutableDeterministic;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.graph.TransitionEdge;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.UniversalGraph;
 import net.automatalib.util.automaton.cover.Covers;
@@ -101,7 +101,7 @@ public final class Automata {
     public static <S, I, T, SP, TP, A extends MutableDeterministic<S, I, T, SP, TP>> A invasiveMinimize(A automaton,
                                                                                                         Collection<? extends I> inputs) {
 
-        final List<? extends I> inputList = CollectionsUtil.randomAccessList(inputs);
+        final List<? extends I> inputList = CollectionUtil.randomAccessList(inputs);
 
         int numInputs = inputs.size();
 

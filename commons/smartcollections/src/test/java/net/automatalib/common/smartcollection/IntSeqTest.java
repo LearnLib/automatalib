@@ -15,7 +15,10 @@
  */
 package net.automatalib.common.smartcollection;
 
-import com.google.common.primitives.Ints;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -24,15 +27,18 @@ public class IntSeqTest {
     private final int[] arr1 = {1, 2, 3, 4, 5, 6};
     private final int[] arr2 = {31, 43, 45, 1, 3445, 56};
 
+    private final List<Integer> asList1 = IntStream.of(arr1).boxed().collect(Collectors.toList());
+    private final List<Integer> asList2 = IntStream.of(arr2).boxed().collect(Collectors.toList());
+
     @Test
     public void testArrays() {
-        Assert.assertEquals(IntSeq.of(arr1), Ints.asList(arr1));
-        Assert.assertEquals(IntSeq.of(arr2), Ints.asList(arr2));
+        Assert.assertEquals(IntSeq.of(arr1), asList1);
+        Assert.assertEquals(IntSeq.of(arr2), asList2);
     }
 
     @Test
     public void testLists() {
-        Assert.assertEquals(IntSeq.of(Ints.asList(arr1)), Ints.asList(arr1));
-        Assert.assertEquals(IntSeq.of(Ints.asList(arr2)), Ints.asList(arr2));
+        Assert.assertEquals(IntSeq.of(asList1), asList1);
+        Assert.assertEquals(IntSeq.of(asList2), asList2);
     }
 }

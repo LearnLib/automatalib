@@ -28,10 +28,10 @@
  */
 open module net.automatalib.serialization.taf {
 
-    requires com.google.common;
     requires net.automatalib.api;
     requires net.automatalib.common.util;
     requires net.automatalib.core;
+    requires org.checkerframework.checker.qual;
 
     exports net.automatalib.serialization.taf;
     exports net.automatalib.serialization.taf.parser;

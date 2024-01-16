@@ -18,7 +18,6 @@ package net.automatalib.graph;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.google.common.collect.Iterators;
 import net.automatalib.automaton.concept.FiniteRepresentation;
 import net.automatalib.graph.concept.NodeIDs;
 import net.automatalib.graph.helper.SimpleNodeIDs;
@@ -55,7 +54,7 @@ public interface SimpleGraph<N> extends IndefiniteSimpleGraph<N>, FiniteRepresen
 
     @Override
     default Iterator<N> iterator() {
-        return Iterators.unmodifiableIterator(getNodes().iterator());
+        return getNodes().iterator();
     }
 
     /**

@@ -24,7 +24,6 @@ import javax.swing.AbstractButton;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 
-import com.google.common.io.CharStreams;
 import net.automatalib.common.util.IOUtil;
 import org.assertj.swing.awt.AWT;
 import org.assertj.swing.core.ComponentDragAndDrop;
@@ -47,8 +46,7 @@ public class DOTDialogTest extends AssertJSwingTestngTestCase {
     private DialogFixture window;
 
     public DOTDialogTest() throws IOException {
-        this.dot =
-                CharStreams.toString(IOUtil.asBufferedUTF8Reader(DOTDialogTest.class.getResourceAsStream("/dfa.dot")));
+        this.dot = IOUtil.toString(IOUtil.asBufferedUTF8Reader(DOTDialogTest.class.getResourceAsStream("/dfa.dot")));
     }
 
     @Override
@@ -108,7 +106,7 @@ public class DOTDialogTest extends AssertJSwingTestngTestCase {
         fileChooser = JFileChooserFinder.findFileChooser().using(robot());
         fileChooser.selectFile(tmpFile).approve();
 
-        Assert.assertEquals(CharStreams.toString(IOUtil.asBufferedUTF8Reader(tmpFile)), dot);
+        Assert.assertEquals(IOUtil.toString(IOUtil.asBufferedUTF8Reader(tmpFile)), dot);
     }
 
     @Test

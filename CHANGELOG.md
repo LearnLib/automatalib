@@ -16,9 +16,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * You now require at least a JDK 11 to build AutomataLib.
   * We use modules to better structure the aggregated JavaDoc. Since there exist breaking changes between Java 8 and Java 9 regarding documentation (see package-list vs. element-list), you can no longer link against the AutomataLib documentation on JDK 8 builds.
   * Split packages had to be refactored. This mainly concerns code from the `automata-core` artifact whose packages have been extended by a `.impl` suffix. This somewhat reverts the refactorings of the previous release (sorry for the back and forth) but since it only affects import statements, it should be fairly easy to address with IDE automation.
-* The `net:automatalib.tooling:automata-build-tools` module has been renamed to `net.automatalib:automata-build-config`.
-* The `Alphabets#toGrowingAlphabetOrThrowException` method has been moved to `Alphabet#asGrowingAlphabetOrThrowException` so that one does not require an `automata-core` dependency for a simple cast.
-* The `Visualization` factory has been moved from the `automata-core` artifact to the `automata-api` artifact. Furthermore, the previous `DummyVP` has been replaced with a `NoopVP` that does not show a swing window anymore when no proper VisualizationProvider is configured but instead logs an error message. This allows us to drop the `java.desktop` (module) dependency for headless setups and only require it in actual visualizers (DOT, JUNG, etc.).
+* Some other refactorings include:
+  * The `AWUtil` class has been moved from `net.automatalib.common.util.array` to `net.automatalib.common.smartcollection` (in the `automata-commons-smartcollections` artifact).
+  * The `{Resizing,}ArrayStorage` and `ArrayUtil` classes have been moved from `net.automatalib.common.smartcollection` to `net.automatalib.common.util.array` (in the `automata-commons-util` artifact).
+  * `CollectionsUtil#allTuples` has been moved to `IterableUtil#allTuples`.
+  * `CollectionsUtil#cartesianProduct` has been moved to `IterableUtil#cartesianProduct`.
+  * `CollectionsUtil` has been renamed to `CollectionUtil`.
+  * The `net:automatalib.tooling:automata-build-tools` module has been renamed to `net.automatalib:automata-build-config`.
+  * The `Alphabets#toGrowingAlphabetOrThrowException` method has been moved to `Alphabet#asGrowingAlphabetOrThrowException` so that one does not require an `automata-core` dependency for a simple cast.
+  * The `Visualization` factory has been moved from the `automata-core` artifact to the `automata-api` artifact. Furthermore, the previous `DummyVP` has been replaced with a `NoopVP` that does not show a swing window anymore when no proper VisualizationProvider is configured but instead logs an error message. This allows us to drop the `java.desktop` (module) dependency for headless setups and only require it in actual visualizers (DOT, JUNG, etc.).
 
 ### Removed
 

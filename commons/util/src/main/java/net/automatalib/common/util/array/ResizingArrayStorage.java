@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.automatalib.common.smartcollection;
+package net.automatalib.common.util.array;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import java.util.Arrays;
  * @param <T>
  *         element class.
  */
-public final class ResizingArrayStorage<T> implements CapacityManagement {
+public final class ResizingArrayStorage<T> {
 
     /**
      * The default initial capacity of the array storage.
@@ -69,7 +69,6 @@ public final class ResizingArrayStorage<T> implements CapacityManagement {
         this.nextCapacityHint = other.nextCapacityHint;
     }
 
-    @Override
     public boolean ensureCapacity(int minCapacity) {
         if (minCapacity <= array.length) {
             return false;
@@ -82,12 +81,6 @@ public final class ResizingArrayStorage<T> implements CapacityManagement {
         return true;
     }
 
-    @Override
-    public boolean ensureAdditionalCapacity(int additionalCapacity) {
-        return ensureCapacity(array.length + additionalCapacity);
-    }
-
-    @Override
     public void hintNextCapacity(int nextCapacityHint) {
         this.nextCapacityHint = nextCapacityHint;
     }

@@ -18,7 +18,7 @@ package net.automatalib.graph;
 import java.util.Iterator;
 import java.util.Objects;
 
-import com.google.common.collect.Iterators;
+import net.automatalib.common.util.collection.IteratorUtil;
 
 /**
  * Interface for an (indefinite) graph structure. A graph consists of nodes, each of which has outgoing edges connecting
@@ -62,12 +62,12 @@ public interface IndefiniteGraph<N, E> extends IndefiniteSimpleGraph<N> {
      * @return an iterator over the edges between the two nodes
      */
     default Iterator<E> getEdgesBetween(N from, N to) {
-        return Iterators.filter(getOutgoingEdgesIterator(from), e -> Objects.equals(getTarget(e), to));
+        return IteratorUtil.filter(getOutgoingEdgesIterator(from), e -> Objects.equals(getTarget(e), to));
     }
 
     @Override
     default Iterator<N> getAdjacentNodesIterator(N node) {
-        return Iterators.transform(getOutgoingEdgesIterator(node), this::getTarget);
+        return IteratorUtil.map(getOutgoingEdgesIterator(node), this::getTarget);
     }
 
 }

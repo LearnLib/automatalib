@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
 
-import com.google.common.io.ByteStreams;
 import net.automatalib.common.util.IOUtil;
 
 /**
@@ -37,7 +36,10 @@ interface InputStreamConsumer {
 
         @Override
         public void consume(InputStream inputStream) throws IOException {
-            ByteStreams.exhaust(inputStream);
+            final byte[] buf = new byte[IOUtil.DEFAULT_BUFFER_SIZE];
+            while (inputStream.read(buf) >= 0) {
+                // do nothing
+            }
         }
     }
 

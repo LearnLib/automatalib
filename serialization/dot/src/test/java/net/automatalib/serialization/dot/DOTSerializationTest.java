@@ -16,6 +16,7 @@
 package net.automatalib.serialization.dot;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -25,8 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.CharStreams;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.graph.TransitionEdge;
@@ -229,7 +228,7 @@ public class DOTSerializationTest {
     @Test
     public void doNotCloseOutputStreamTest() throws IOException {
         DOTSerializationProvider.<Integer, CompactEdge<String>>getInstance()
-                                .writeModel(new UnclosableOutputStream(ByteStreams.nullOutputStream()),
+                                .writeModel(new UnclosableOutputStream(OutputStream.nullOutputStream()),
                                             DOTSerializationUtil.GRAPH);
     }
 
@@ -240,7 +239,7 @@ public class DOTSerializationTest {
 
         try (Reader reader = IOUtil.asBufferedUTF8Reader(DOTSerializationUtil.class.getResourceAsStream(resource))) {
 
-            CharStreams.copy(reader, expectedWriter);
+            IOUtil.copy(reader, expectedWriter);
             writer.write(dotWriter);
 
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());

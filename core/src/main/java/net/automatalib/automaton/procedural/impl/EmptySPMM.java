@@ -18,10 +18,10 @@ package net.automatalib.automaton.procedural.impl;
 import java.util.Collections;
 import java.util.Map;
 
-import com.google.common.collect.Iterables;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -66,7 +66,7 @@ public class EmptySPMM<I, O> implements SPMM<Void, I, Void, O> {
 
     @Override
     public Word<O> computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        final int length = Iterables.size(suffix);
+        final int length = IterableUtil.size(suffix);
         return Word.fromList(Collections.nCopies(length, errorOutput));
     }
 

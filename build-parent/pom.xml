@@ -250,10 +250,7 @@ limitations under the License.
                                                         ^net.automatalib.modelchecker.ltsmin.(Internal.*|Token.*|SimpleCharStream)|\
                                                         ^net.automatalib.modelchecker.m3c.formula.parser.(Internal.*|Token.*|SimpleCharStream)|\
                                         </arg>
-                                        <arg>-AskipUses=^com.google.*|\
-                                                        ^java.(awt.*|util.Arrays|io.StreamTokenizer)|\
-                                                        ^javax.swing.*|\
-                                        </arg>
+                                        <arg>-AskipUses=^java.(awt.*|util.Arrays|io.StreamTokenizer)|^javax.swing.*</arg>
                                         <arg>-AsuppressWarnings=uninitialized</arg>
                                         <arg>-AassumeAssertionsAreEnabled</arg>
                                         <arg>-Astubs=jdk8.astub:collection-object-parameters-may-be-null.astub</arg>

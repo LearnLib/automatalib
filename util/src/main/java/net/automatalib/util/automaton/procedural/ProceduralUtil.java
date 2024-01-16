@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -27,10 +28,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.word.Word;
@@ -47,7 +47,7 @@ final class ProceduralUtil {
                                                                                                                      ProceduralInputAlphabet<I> alphabet,
                                                                                                                      BiPredicate<M, Word<I>> tracePredicate) {
 
-        final Map<I, Word<I>> terminatingSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+        final Map<I, Word<I>> terminatingSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
 
         // initial internal sequences
         for (I procedure : alphabet.getCallAlphabet()) {
@@ -120,8 +120,8 @@ final class ProceduralUtil {
             return Collections.emptyMap();
         }
 
-        final Map<I, Word<I>> accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        final Set<I> finishedProcedures = Sets.newHashSetWithExpectedSize(alphabet.getNumCalls());
+        final Map<I, Word<I>> accessSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
+        final Set<I> finishedProcedures = new HashSet<>(HashUtil.capacity(alphabet.getNumCalls()));
 
         // initial value
         accessSequences.put(initialProcedure, Word.fromLetter(initialProcedure));

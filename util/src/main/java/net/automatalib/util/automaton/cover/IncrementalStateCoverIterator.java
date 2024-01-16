@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
 
-import com.google.common.collect.AbstractIterator;
 import net.automatalib.automaton.DeterministicAutomaton;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -40,7 +40,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @see Covers#stateCover(DeterministicAutomaton, Collection, Collection)
  */
-class IncrementalStateCoverIterator<S, I> extends AbstractIterator<Word<I>> {
+class IncrementalStateCoverIterator<S, I> extends AbstractSimplifiedIterator<Word<I>> {
 
     private final DeterministicAutomaton<S, I, ?> automaton;
     private final Collection<? extends I> inputs;
@@ -63,16 +63,23 @@ class IncrementalStateCoverIterator<S, I> extends AbstractIterator<Word<I>> {
     }
 
     @Override
-    protected Word<I> computeNext() {
+    protected boolean calculateNext() {
         // first invocation
         if (inputIterator == null) {
-            boolean hasEpsilon = initialize();
+            final S init = automaton.getInitialState();
+
+            if (init == null) {
+                return false;
+            }
+
+            boolean hasEpsilon = initialize(init);
 
             curr = bfsQueue.poll();
             inputIterator = inputs.iterator();
 
             if (!hasEpsilon) {
-                return Word.epsilon();
+                super.nextValue = Word.epsilon();
+                return true;
             }
         }
 
@@ -93,7 +100,8 @@ class IncrementalStateCoverIterator<S, I> extends AbstractIterator<Word<I>> {
                     Record<S, I> succRec = new Record<>(succ, succAs);
                     reach.put(succ, succRec);
                     bfsQueue.add(succRec);
-                    return succAs;
+                    super.nextValue = succAs;
+                    return true;
                 }
             }
 
@@ -101,18 +109,10 @@ class IncrementalStateCoverIterator<S, I> extends AbstractIterator<Word<I>> {
             inputIterator = inputs.iterator();
         }
 
-        return endOfData();
+        return false;
     }
 
-    private boolean initialize() {
-
-        final S init = automaton.getInitialState();
-
-        if (init == null) {
-            // abuse the fact that endOfData() mutates our state, so we effectively construct the empty iterator here.
-            endOfData();
-            return false;
-        }
+    private boolean initialize(S init) {
 
         Covers.buildReachFromStateCover(reach, bfsQueue, automaton, oldCover, Record::new);
 
