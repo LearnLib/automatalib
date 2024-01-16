@@ -18,6 +18,7 @@ package net.automatalib.common.util.collection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.RandomAccess;
 import java.util.function.Function;
@@ -90,5 +91,25 @@ public final class CollectionUtil {
         result.add(first);
         Collections.addAll(result, rest);
         return result;
+    }
+
+    /**
+     * Adds all elements of the given iterator to the given collection.
+     *
+     * @param collection
+     *         the collection to add elements to
+     * @param iterator
+     *         the iterator to provide the elements to add
+     * @param <T>
+     *         element type
+     *
+     * @return {@code true} of the collection has {@link Collection#add(Object) changed}, {@code false} otherwise.
+     */
+    public static <T> boolean add(Collection<T> collection, Iterator<T> iterator) {
+        boolean changed = false;
+        while (iterator.hasNext()) {
+            changed |= collection.add(iterator.next());
+        }
+        return changed;
     }
 }
