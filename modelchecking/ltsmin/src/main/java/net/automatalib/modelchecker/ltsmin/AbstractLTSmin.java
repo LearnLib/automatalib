@@ -214,9 +214,9 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
                                                                    // add the ETF file that contains the hypothesis
                                                                    etf.getAbsolutePath(),
                                                                    // add the LTL formula
-                                                                    "--ltl=" + ltlFile,
+                                                                   "--ltl=" + ltlFile,
                                                                    // write the trace to this file
-                                                                    "--trace=" + gcf.getAbsolutePath(),
+                                                                   "--trace=" + gcf.getAbsolutePath(),
                                                                    // use only one thread (hypotheses are always small)
                                                                    "--threads=1",
                                                                    // use LTSmin LTL semantics
