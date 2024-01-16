@@ -22,7 +22,6 @@ import java.util.Set;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.Pair;
-import net.automatalib.common.util.math.MathUtil;
 import net.automatalib.graph.ads.ADSNode;
 import net.automatalib.graph.ads.impl.ADSSymbolNode;
 import net.automatalib.word.Word;
@@ -150,6 +149,34 @@ public final class ADSUtil {
             return n;
         }
 
-        return MathUtil.binomial(n, i) - MathUtil.binomial(m - 1, i - 1) - 1;
+        return binomial(n, i) - binomial(m - 1, i - 1) - 1;
     }
+
+    private static long binomial(int n, int k) {
+
+        // abuse symmetry
+        final int effectiveK = Math.min(k, n - k);
+
+        // pascal's triangle using a one dimensional storage
+        final int dimN = n + 1;
+        final int dimK = effectiveK + 1;
+        final long[] tmp = new long[dimN * dimK];
+
+        for (int i = 0; i <= n; i++) {
+            final int min = Math.min(i, effectiveK);
+            for (int j = 0; j <= min; j++) {
+                if (j == 0 || j == i) {
+                    // tmp[i][j] = 1
+                    tmp[i * dimK + j] = 1;
+                } else {
+                    // tmp[i][j] = tmp[i-1][j-1] + tmp[i-1][k]
+                    tmp[i * dimK + j] = tmp[(i - 1) * dimK + j - 1] + tmp[(i - 1) * dimK + j];
+                }
+            }
+        }
+
+        // tmp[n][k]
+        return tmp[n * dimK + effectiveK];
+    }
+
 }

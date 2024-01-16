@@ -45,7 +45,6 @@ open module net.automatalib.common.util {
     exports net.automatalib.common.util.io;
     exports net.automatalib.common.util.lib;
     exports net.automatalib.common.util.mapping;
-    exports net.automatalib.common.util.math;
     exports net.automatalib.common.util.nid;
     exports net.automatalib.common.util.process;
     exports net.automatalib.common.util.random;
