@@ -26,7 +26,6 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
-import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.comparison.CmpUtil;
@@ -83,7 +82,7 @@ public class WpMethodTestsIteratorTest {
         final List<Word<Integer>> iteratorWords = IteratorUtil.list(new WpMethodTestsIterator<>(dfa, alphabet, depth));
         final List<Word<Integer>> wpMethodWords = generateWpMethodTest(dfa,
                                                                        alphabet,
-                                                                       IterableUtil.stream(CollectionsUtil.allTuples(
+                                                                       IterableUtil.stream(IterableUtil.allTuples(
                                                                                            alphabet,
                                                                                            0,
                                                                                            depth))

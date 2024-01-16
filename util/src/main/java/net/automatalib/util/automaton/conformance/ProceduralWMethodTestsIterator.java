@@ -26,7 +26,7 @@ import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
 import net.automatalib.common.util.collection.AbstractTwoLevelIterator;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.collection.ReusableIterator;
 import net.automatalib.util.automaton.cover.Covers;
@@ -139,12 +139,12 @@ class ProceduralWMethodTestsIterator<I, M extends UniversalDeterministicAutomato
         @Override
         protected Iterator<List<Word<I>>> l2Iterator(Word<I> cSet) {
             final Iterator<List<Word<I>>> epsilon = ((List<List<Word<I>>>) (List<?>) EPSILON).iterator();
-            return IteratorUtil.concat(epsilon, CollectionsUtil.cartesianProduct(sCov, continuableWords).iterator());
+            return IteratorUtil.concat(epsilon, IterableUtil.cartesianProduct(sCov, continuableWords).iterator());
         }
 
         @Override
         protected Iterator<List<I>> l3Iterator(Word<I> cSet, List<Word<I>> tCov) {
-            return CollectionsUtil.allTuples(continuableSymbols, 0, maxDepth).iterator();
+            return IterableUtil.allTuples(continuableSymbols, 0, maxDepth).iterator();
         }
 
         @Override

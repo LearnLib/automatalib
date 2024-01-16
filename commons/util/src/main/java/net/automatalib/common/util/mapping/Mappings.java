@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -130,7 +130,7 @@ public final class Mappings {
      * @return the mapped collection.
      */
     public static <D, R> Collection<R> apply(Mapping<? super D, R> mapping, Collection<? extends D> coll) {
-        return CollectionsUtil.map(coll, mapping::get);
+        return CollectionUtil.map(coll, mapping::get);
     }
 
     /**

@@ -23,7 +23,6 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.Automata;
@@ -124,13 +123,13 @@ public class IncrementalWMethodTestsIteratorTest {
 
         final List<Word<Character>> characterizingSet = Automata.characterizingSet(mealy, alphabet);
         final List<Word<Character>> allMidTuples =
-                IterableUtil.stream(CollectionsUtil.allTuples(alphabet, 0, MAX_DEPTH))
+                IterableUtil.stream(IterableUtil.allTuples(alphabet, 0, MAX_DEPTH))
                             .map(Word::fromList)
                             .collect(Collectors.toList());
         final List<Word<Character>> transitionCover = Automata.transitionCover(mealy, alphabet);
 
         final Iterable<List<Word<Character>>> wMethodIter =
-                CollectionsUtil.cartesianProduct(transitionCover, allMidTuples, characterizingSet);
+                IterableUtil.cartesianProduct(transitionCover, allMidTuples, characterizingSet);
 
         return IterableUtil.stream(wMethodIter).map(Word::fromWords).collect(Collectors.toSet());
     }

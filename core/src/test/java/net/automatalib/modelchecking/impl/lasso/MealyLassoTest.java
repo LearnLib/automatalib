@@ -19,7 +19,7 @@ import java.util.Collection;
 
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.MealyTransition;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.modelchecking.impl.MealyLassoImpl;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -59,7 +59,7 @@ public class MealyLassoTest extends AbstractLassoTest<MealyLassoImpl<String, Str
 
         @Override
         public Collection<Integer> getStates() {
-            return CollectionsUtil.intRange(0, word.length());
+            return CollectionUtil.intRange(0, word.length());
         }
 
         @Override

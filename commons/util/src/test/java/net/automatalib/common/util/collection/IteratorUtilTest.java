@@ -31,11 +31,11 @@ public class IteratorUtilTest {
         final Iterator<List<Integer>> batchIterator = IteratorUtil.batch(iterator, 20);
 
         Assert.assertTrue(batchIterator.hasNext());
-        Assert.assertEquals(batchIterator.next(), CollectionsUtil.intRange(0, 20));
+        Assert.assertEquals(batchIterator.next(), CollectionUtil.intRange(0, 20));
         Assert.assertTrue(batchIterator.hasNext());
-        Assert.assertEquals(batchIterator.next(), CollectionsUtil.intRange(20, 40));
+        Assert.assertEquals(batchIterator.next(), CollectionUtil.intRange(20, 40));
         Assert.assertTrue(batchIterator.hasNext());
-        Assert.assertEquals(batchIterator.next(), CollectionsUtil.intRange(40, 50));
+        Assert.assertEquals(batchIterator.next(), CollectionUtil.intRange(40, 50));
         Assert.assertFalse(batchIterator.hasNext());
         Assert.assertThrows(NoSuchElementException.class, batchIterator::next);
 
@@ -43,11 +43,11 @@ public class IteratorUtilTest {
         final Iterator<List<Integer>> batchIterator2 = IteratorUtil.batch(iterator2, 20);
 
         Assert.assertTrue(batchIterator2.hasNext());
-        Assert.assertEquals(batchIterator2.next(), CollectionsUtil.intRange(0, 20));
+        Assert.assertEquals(batchIterator2.next(), CollectionUtil.intRange(0, 20));
         Assert.assertTrue(batchIterator2.hasNext());
-        Assert.assertEquals(batchIterator2.next(), CollectionsUtil.intRange(20, 40));
+        Assert.assertEquals(batchIterator2.next(), CollectionUtil.intRange(20, 40));
         Assert.assertTrue(batchIterator2.hasNext());
-        Assert.assertEquals(batchIterator2.next(), CollectionsUtil.intRange(40, 60));
+        Assert.assertEquals(batchIterator2.next(), CollectionUtil.intRange(40, 60));
         Assert.assertFalse(batchIterator2.hasNext());
         Assert.assertThrows(NoSuchElementException.class, batchIterator2::next);
     }

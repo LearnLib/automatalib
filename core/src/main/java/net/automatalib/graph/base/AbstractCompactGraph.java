@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.automatalib.common.util.array.ResizingArrayStorage;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.MutableGraph.IntAbstraction;
 import net.automatalib.graph.concept.NodeIDs;
@@ -48,7 +48,7 @@ public abstract class AbstractCompactGraph<E extends CompactEdge<EP>, NP, EP>
 
     @Override
     public Collection<Integer> getNodes() {
-        return CollectionsUtil.intRange(0, size);
+        return CollectionUtil.intRange(0, size);
     }
 
     @Override

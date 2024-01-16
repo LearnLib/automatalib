@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
-import net.automatalib.common.util.collection.CollectionsUtil;
 import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.Automata;
@@ -71,7 +70,7 @@ public class WMethodTestsIteratorTest {
         final List<Word<Integer>> characterizingSet = Automata.characterizingSet(dfa, alphabet);
 
         final List<Word<Integer>> expectedWords =
-                IterableUtil.stream(CollectionsUtil.cartesianProduct(transCover, characterizingSet))
+                IterableUtil.stream(IterableUtil.cartesianProduct(transCover, characterizingSet))
                             .map(Word::fromWords)
                             .collect(Collectors.toList());
 
@@ -86,11 +85,11 @@ public class WMethodTestsIteratorTest {
         Assert.assertFalse(transCover.contains(Word.epsilon()));
         transCover.add(Word.epsilon());
         final Iterable<Word<Integer>> middleTuples =
-                IterableUtil.map(CollectionsUtil.allTuples(alphabet, 0, lookahead), Word::fromList);
+                IterableUtil.map(IterableUtil.allTuples(alphabet, 0, lookahead), Word::fromList);
         final List<Word<Integer>> characterizingSet = Automata.characterizingSet(dfa, alphabet);
 
         final List<Word<Integer>> expectedWords =
-                IterableUtil.stream(CollectionsUtil.cartesianProduct(transCover, middleTuples, characterizingSet))
+                IterableUtil.stream(IterableUtil.cartesianProduct(transCover, middleTuples, characterizingSet))
                             .map(Word::fromWords)
                             .collect(Collectors.toList());
 

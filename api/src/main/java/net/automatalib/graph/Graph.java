@@ -18,7 +18,7 @@ package net.automatalib.graph;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
@@ -53,7 +53,7 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
      * @return a collection containing the outgoing edges
      */
     default Collection<N> getAdjacentNodes(N node) {
-        return CollectionsUtil.map(getOutgoingEdges(node), this::getTarget);
+        return CollectionUtil.map(getOutgoingEdges(node), this::getTarget);
     }
 
     @Override

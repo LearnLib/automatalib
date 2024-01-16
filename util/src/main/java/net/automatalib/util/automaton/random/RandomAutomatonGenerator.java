@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.automatalib.automaton.MutableAutomaton;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.random.RandomUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -42,10 +42,10 @@ public class RandomAutomatonGenerator<S, I, T, SP, TP, A extends MutableAutomato
                                     A automaton) {
         this.random = random;
 
-        this.spList = CollectionsUtil.randomAccessList(stateProps);
-        this.tpList = CollectionsUtil.randomAccessList(transProps);
+        this.spList = CollectionUtil.randomAccessList(stateProps);
+        this.tpList = CollectionUtil.randomAccessList(transProps);
 
-        this.inputs = CollectionsUtil.randomAccessList(inputs);
+        this.inputs = CollectionUtil.randomAccessList(inputs);
         this.states = new ArrayList<>();
         this.automaton = automaton;
     }

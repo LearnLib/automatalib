@@ -36,7 +36,7 @@ public class AllCombinationsTest {
     public void testNormalDomain() {
 
         final Set<List<Integer>> combinations =
-                IterableUtil.stream(CollectionsUtil.cartesianProduct(DOMAIN1, DOMAIN2, DOMAIN3))
+                IterableUtil.stream(IterableUtil.cartesianProduct(DOMAIN1, DOMAIN2, DOMAIN3))
                             .map(ArrayList::new)
                             .collect(Collectors.toSet());
 
@@ -51,7 +51,7 @@ public class AllCombinationsTest {
     @Test
     public void testEmptyDomain() {
         final Iterable<List<Integer>> iter =
-                CollectionsUtil.cartesianProduct(DOMAIN1, Collections.emptyList(), DOMAIN3);
+                IterableUtil.cartesianProduct(DOMAIN1, Collections.emptyList(), DOMAIN3);
 
         Assert.assertEquals(IterableUtil.size(iter), 0);
         Assert.assertThrows(NoSuchElementException.class, () -> iter.iterator().next());
@@ -59,7 +59,7 @@ public class AllCombinationsTest {
 
     @Test
     public void testEmptyDimension() {
-        final Iterable<List<Integer>> iter = CollectionsUtil.cartesianProduct();
+        final Iterable<List<Integer>> iter = IterableUtil.cartesianProduct();
 
         Assert.assertEquals(IterableUtil.size(iter), 1);
         Assert.assertTrue(IterableUtil.stream(iter).allMatch(List::isEmpty));

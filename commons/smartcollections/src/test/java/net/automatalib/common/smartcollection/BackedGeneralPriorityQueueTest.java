@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -31,7 +31,7 @@ public class BackedGeneralPriorityQueueTest {
 
     @BeforeClass
     public void setUp() {
-        final List<Character> values = CollectionsUtil.charRange('a', 'k');
+        final List<Character> values = CollectionUtil.charRange('a', 'k');
         final List<Integer> keys = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         Collections.reverse(keys);
 

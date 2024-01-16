@@ -24,7 +24,7 @@ import java.util.function.Function;
 
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.common.util.IOUtil;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.process.ProcessUtil;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.ModelChecker;
@@ -209,20 +209,20 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
         }
 
         // the command lines for the ProcessBuilder
-        final List<String> ltsminCommandLine = CollectionsUtil.list(// add the etf2lts-mc binary
-                                                                    LTSminUtil.ETF2LTS_MC,
-                                                                    // add the ETF file that contains the hypothesis
-                                                                    etf.getAbsolutePath(),
-                                                                    // add the LTL formula
+        final List<String> ltsminCommandLine = CollectionUtil.list(// add the etf2lts-mc binary
+                                                                   LTSminUtil.ETF2LTS_MC,
+                                                                   // add the ETF file that contains the hypothesis
+                                                                   etf.getAbsolutePath(),
+                                                                   // add the LTL formula
                                                                     "--ltl=" + ltlFile,
-                                                                    // write the trace to this file
+                                                                   // write the trace to this file
                                                                     "--trace=" + gcf.getAbsolutePath(),
-                                                                    // use only one thread (hypotheses are always small)
-                                                                    "--threads=1",
-                                                                    // use LTSmin LTL semantics
-                                                                    "--ltl-semantics=ltsmin",
-                                                                    // do not abort on partial LTSs
-                                                                    "--allow-undefined-edges");
+                                                                   // use only one thread (hypotheses are always small)
+                                                                   "--threads=1",
+                                                                   // use LTSmin LTL semantics
+                                                                   "--ltl-semantics=ltsmin",
+                                                                   // do not abort on partial LTSs
+                                                                   "--allow-undefined-edges");
 
         if (LTSminUtil.isVerbose()) {
             ltsminCommandLine.add("-v");
@@ -247,14 +247,14 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
                     throw new ModelCheckingException(ioe);
                 }
 
-                final List<String> convertCommandLine = CollectionsUtil.list(// add the ltsmin-convert binary
-                                                                             LTSminUtil.LTSMIN_CONVERT,
-                                                                             // use the GCF as input
-                                                                             gcf.getAbsolutePath(),
-                                                                             // use the FSM as output
-                                                                             fsm.getAbsolutePath(),
-                                                                             // required option
-                                                                             "--rdwr");
+                final List<String> convertCommandLine = CollectionUtil.list(// add the ltsmin-convert binary
+                                                                            LTSminUtil.LTSMIN_CONVERT,
+                                                                            // use the GCF as input
+                                                                            gcf.getAbsolutePath(),
+                                                                            // use the FSM as output
+                                                                            fsm.getAbsolutePath(),
+                                                                            // required option
+                                                                            "--rdwr");
 
                 if (LTSminUtil.isVerbose()) {
                     convertCommandLine.add("-v");

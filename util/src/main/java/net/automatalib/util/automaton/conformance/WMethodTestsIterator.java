@@ -22,7 +22,7 @@ import java.util.List;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.collection.ReusableIterator;
 import net.automatalib.util.automaton.cover.Covers;
@@ -91,7 +91,7 @@ public class WMethodTestsIterator<I> extends AbstractThreeLevelIterator<Word<I>,
 
     @Override
     protected Iterator<List<I>> l2Iterator(Word<I> l1Object) {
-        return CollectionsUtil.<I>allTuples(inputs, 0, maxDepth).iterator();
+        return IterableUtil.<I>allTuples(inputs, 0, maxDepth).iterator();
     }
 
     @Override

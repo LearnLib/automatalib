@@ -29,7 +29,7 @@ import java.util.Queue;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.FiniteStateAcceptor;
 import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -218,7 +218,7 @@ public final class CharacterizingSets {
         boolean refined = false;
 
         // We need a list to ensure a stable iteration order
-        List<? extends Word<I>> oldSuffixList = CollectionsUtil.randomAccessList(oldSuffixes);
+        List<? extends Word<I>> oldSuffixList = CollectionUtil.randomAccessList(oldSuffixes);
 
         Queue<List<S>> blocks = buildInitialBlocks(automaton, oldSuffixList);
 
@@ -389,7 +389,7 @@ public final class CharacterizingSets {
                                              Collection<? extends Word<I>> oldSuffixes) {
             this.automaton = automaton;
             this.inputs = inputs;
-            this.oldSuffixes = CollectionsUtil.randomAccessList(oldSuffixes);
+            this.oldSuffixes = CollectionUtil.randomAccessList(oldSuffixes);
         }
 
         @Override

@@ -21,7 +21,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.random.RandomUtil;
 import net.automatalib.graph.BidirectionalGraph;
@@ -33,8 +33,8 @@ import org.testng.annotations.Test;
 public class IntAbstractionTest {
 
     private static final int SIZE = 25;
-    private static final List<Character> NPS = CollectionsUtil.charRange('A', 'F');
-    private static final List<Character> EPS = CollectionsUtil.charRange('0', '9');
+    private static final List<Character> NPS = CollectionUtil.charRange('A', 'F');
+    private static final List<Character> EPS = CollectionUtil.charRange('0', '9');
 
     @Test
     public void testCompactGraphs() {

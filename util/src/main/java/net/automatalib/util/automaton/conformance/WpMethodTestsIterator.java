@@ -25,7 +25,7 @@ import java.util.Set;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.util.automaton.Automata;
@@ -91,7 +91,7 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
 
         // Phase 1: state cover * middle part * global suffixes
         final Iterator<Word<I>> firstIterator = new FirstPhaseIterator<>(stateCover,
-                                                                         CollectionsUtil.allTuples(inputs, 0, maxDepth),
+                                                                         IterableUtil.allTuples(inputs, 0, maxDepth),
                                                                          characterizingIter);
 
         // Phase 2: transitions (not in state cover) * middle part * local suffixes
@@ -99,9 +99,9 @@ public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
         final Iterator<Word<I>> secondIterator = new SecondPhaseIterator<>(automaton,
                                                                            inputs,
                                                                            transitionCover,
-                                                                           CollectionsUtil.allTuples(inputs,
-                                                                                                     0,
-                                                                                                     maxDepth));
+                                                                           IterableUtil.allTuples(inputs,
+                                                                                                  0,
+                                                                                                  maxDepth));
 
         wpIterator = IteratorUtil.concat(firstIterator, secondIterator);
     }
