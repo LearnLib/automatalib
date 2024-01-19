@@ -226,7 +226,7 @@ limitations under the License.
         <addlib.version>3.0.1</addlib.version>
         <assertj.version>3.17.1</assertj.version>
         <brics-automaton.version>1.12-4</brics-automaton.version>
-        <build-tools.version>0.1</build-tools.version>
+        <build-tools.version>0.1.1</build-tools.version>
         <cacio.version>1.11.1</cacio.version>
         <checkerframework.version>3.40.0</checkerframework.version>
         <checkstyle.version>9.3</checkstyle.version>
