@@ -205,7 +205,6 @@ public final class PaigeTarjanInitializers {
             updateBlockAndPosData(blockForState, i, data, posDataLow);
             int predOfsBase = predOfsDataLow;
 
-
             for (int j = 0; j < numInputs; j++) {
                 int succ = absAutomaton.getSuccessor(i, j);
                 assert succ >= 0;
@@ -303,7 +302,7 @@ public final class PaigeTarjanInitializers {
                     blockForState[succId] = getOrCreateSuccBlock(blockMap, succClass, pt);
                     statesBuff[reachableStates++] = succId;
                 }
-                data[predCountBase + succId]++;
+                data[predCountBase + succId]++; // predOfsData
                 predCountBase += numStatesWithSink;
             }
         }
@@ -311,15 +310,21 @@ public final class PaigeTarjanInitializers {
         if (partial) {
             int predCountIdx = predOfsDataLow + sinkId;
             for (int i = 0; i < numInputs; i++) {
-                data[predCountIdx]++;
+                data[predCountIdx]++; // predOfsData - sink state has all its symbols pointing to itself
                 predCountIdx += numStatesWithSink;
             }
         }
 
+        // data[predOfsDataLow + j*numStatesWithSink+i] now contains the count of transitions to state i from input j
+
         pt.canonizeBlocks();
 
+        // Make predOfsData cumulative
         data[predOfsDataLow] += predDataLow;
         prefixSum(data, predOfsDataLow, predDataLow);
+
+        // data[predOfsDataLow + j*numStatesWithSink+i] now contains the final predOfsData value,
+        // plus the count of transitions to state i from input j
 
         for (int i = 0; i < reachableStates; i++) {
             int stateId = statesBuff[i];
@@ -341,7 +346,7 @@ public final class PaigeTarjanInitializers {
                     }
                 }
 
-                data[--data[predOfsBase + succId]] = stateId;
+                data[--data[predOfsBase + succId]] = stateId; // predOfsData and predData
                 predOfsBase += numStatesWithSink;
             }
         }
