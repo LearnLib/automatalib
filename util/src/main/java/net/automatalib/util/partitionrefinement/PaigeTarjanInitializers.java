@@ -162,12 +162,7 @@ public final class PaigeTarjanInitializers {
             }
         }
 
-        pt.setBlockData(data);
-        pt.setPosData(data, posDataLow);
-        pt.setPredOfsData(data, predOfsDataLow);
-        pt.setPredData(data);
-        pt.setBlockForState(blockForState);
-        pt.setSize(numStates, numInputs);
+        updatePTFields(pt, data, posDataLow, predOfsDataLow, blockForState, numStates, numInputs);
     }
 
     private static void initCompleteDeterministicNoPrune(PaigeTarjan pt,
@@ -216,6 +211,7 @@ public final class PaigeTarjanInitializers {
             data[posDataLow + i] = pos;
             int predOfsBase = predOfsDataLow;
 
+
             for (int j = 0; j < numInputs; j++) {
                 int succ = absAutomaton.getSuccessor(i, j);
                 assert succ >= 0;
@@ -225,12 +221,7 @@ public final class PaigeTarjanInitializers {
             }
         }
 
-        pt.setBlockData(data);
-        pt.setPosData(data, posDataLow);
-        pt.setPredOfsData(data, predOfsDataLow);
-        pt.setPredData(data);
-        pt.setBlockForState(blockForState);
-        pt.setSize(numStates, numInputs);
+        updatePTFields(pt, data, posDataLow, predOfsDataLow, blockForState, numStates, numInputs);
     }
 
     public static void prefixSum(int[] array, int startInclusive, int endExclusive) {
@@ -364,12 +355,7 @@ public final class PaigeTarjanInitializers {
             }
         }
 
-        pt.setBlockData(data);
-        pt.setPosData(data, posDataLow);
-        pt.setPredOfsData(data, predOfsDataLow);
-        pt.setPredData(data);
-        pt.setSize(numStatesWithSink, numInputs);
-        pt.setBlockForState(blockForState);
+        updatePTFields(pt, data, posDataLow, predOfsDataLow, blockForState, numStatesWithSink, numInputs);
 
         pt.removeEmptyBlocks();
     }
@@ -386,4 +372,12 @@ public final class PaigeTarjanInitializers {
         return block;
     }
 
+    private static void updatePTFields(PaigeTarjan pt, int[] data, int posDataLow, int predOfsDataLow, Block[] blockForState, int numStates, int numInputs) {
+        pt.setBlockData(data);
+        pt.setPosData(data, posDataLow);
+        pt.setPredOfsData(data, predOfsDataLow);
+        pt.setPredData(data);
+        pt.setBlockForState(blockForState);
+        pt.setSize(numStates, numInputs);
+    }
 }
