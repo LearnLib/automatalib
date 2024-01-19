@@ -146,10 +146,7 @@ public final class PaigeTarjanInitializers {
 
         for (int i = 0; i < reachableStates; i++) {
             int stateId = statesBuff[i];
-            Block b = blockForState[stateId];
-            int pos = --b.low;
-            data[pos] = stateId;
-            data[posDataLow + stateId] = pos;
+            updateBlockAndPosData(blockForState, stateId, data, posDataLow);
 
             int predOfsBase = predOfsDataLow;
 
@@ -205,10 +202,7 @@ public final class PaigeTarjanInitializers {
         prefixSum(data, predOfsDataLow, predDataLow);
 
         for (int i = 0; i < numStates; i++) {
-            Block b = blockForState[i];
-            int pos = --b.low;
-            data[pos] = i;
-            data[posDataLow + i] = pos;
+            updateBlockAndPosData(blockForState, i, data, posDataLow);
             int predOfsBase = predOfsDataLow;
 
 
@@ -329,10 +323,7 @@ public final class PaigeTarjanInitializers {
 
         for (int i = 0; i < reachableStates; i++) {
             int stateId = statesBuff[i];
-            Block b = blockForState[stateId];
-            int pos = --b.low;
-            data[pos] = stateId;
-            data[posDataLow + stateId] = pos;
+            updateBlockAndPosData(blockForState, stateId, data, posDataLow);
 
             int predOfsBase = predOfsDataLow;
 
@@ -358,6 +349,13 @@ public final class PaigeTarjanInitializers {
         updatePTFields(pt, data, posDataLow, predOfsDataLow, blockForState, numStatesWithSink, numInputs);
 
         pt.removeEmptyBlocks();
+    }
+
+    private static void updateBlockAndPosData(Block[] blockForState, int i, int[] data, int posDataLow) {
+        Block b = blockForState[i];
+        int pos = --b.low;
+        data[pos] = i;
+        data[posDataLow + i] = pos;
     }
 
     private static Block getOrCreateSuccBlock(
