@@ -333,6 +333,7 @@ public class PaigeTarjan {
 
     /**
      * Invoke Block's split, and if it is successful, update PaigeTarjan fields to reflect the new block.
+     *
      * @param b block to split
      * @return smaller split block, or null if split is not successful
      * Post-conditions: b.ptr = -1.
