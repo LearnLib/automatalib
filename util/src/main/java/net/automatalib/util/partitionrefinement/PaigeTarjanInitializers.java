@@ -317,8 +317,8 @@ public final class PaigeTarjanInitializers {
         data[predOfsDataLow] += predDataLow;
         prefixSum(data, predOfsDataLow, predDataLow);
 
-        // data[predOfsDataLow + j*numStatesWithSink+i] now contains the final predOfsData value,
-        // plus the count of transitions to state i from input j
+        // data[predOfsDataLow + j*numStatesWithSink+i] now contains
+        // the final predOfsData value plus the count of transitions to state i from input j
 
         for (int i = 0; i < reachableStates; i++) {
             int stateId = statesBuff[i];
@@ -340,7 +340,7 @@ public final class PaigeTarjanInitializers {
                     }
                 }
 
-                data[--data[predOfsBase + succId]] = stateId; // predOfsData and predData
+                data[--data[predOfsBase + succId]] = stateId; // decrement predOfsData, set predData
                 predOfsBase += numStatesWithSink;
             }
         }
@@ -369,7 +369,9 @@ public final class PaigeTarjanInitializers {
         return block;
     }
 
-    private static void updatePTFields(PaigeTarjan pt, int[] data, int posDataLow, int predOfsDataLow, Block[] blockForState, int numStates, int numInputs) {
+    private static void updatePTFields(
+            PaigeTarjan pt, int[] data, int posDataLow, int predOfsDataLow,
+            Block[] blockForState, int numStates, int numInputs) {
         pt.setBlockData(data);
         pt.setPosData(data, posDataLow);
         pt.setPredOfsData(data, predOfsDataLow);

@@ -104,6 +104,7 @@ public class Block {
      * reset to {@code -1}.
      * <p>
      * Preconditions: this.ptr != -1.
+     * Post-conditions: this.ptr = -1.
      *
      * @param newId
      *         the ID of the newly created block, if applicable
