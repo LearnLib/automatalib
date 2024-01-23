@@ -30,6 +30,7 @@ import net.automatalib.common.util.random.RandomUtil;
  * by Deian Tabakov and Moshe Y&nbsp;Vardi.
  */
 public final class TabakovVardiRandomAutomata {
+
     private TabakovVardiRandomAutomata() {
         // prevent instantiation
     }
@@ -38,22 +39,21 @@ public final class TabakovVardiRandomAutomata {
      * Generates a random {@link NFA} with the given size, transition density, and acceptance density.
      *
      * @param r
-     *      random instance
+     *         random instance
      * @param size
-     *      number of states
+     *         number of states
      * @param td
-     *      transition density, in [0,size]
+     *         transition density, in [0,size]
      * @param ad
-     *      acceptance density, in (0,1]. 0.5 is the usual value
+     *         acceptance density, in (0,1]. 0.5 is the usual value
      * @param alphabet
-     *      the input symbols to consider when determining successors
+     *         the input symbols to consider when determining successors
      * @param <I>
-     *     input symbol type
-     * @return
-     *      a random NFA, not necessarily connected
+     *         input symbol type
+     *
+     * @return a random NFA, not necessarily connected
      */
-    public static <I> CompactNFA<I> generateNFA(
-            Random r, int size, float td, float ad, Alphabet<I> alphabet) {
+    public static <I> CompactNFA<I> generateNFA(Random r, int size, float td, float ad, Alphabet<I> alphabet) {
         return generateNFA(r, size, Math.round(td * size), Math.round(ad * size), alphabet);
     }
 
@@ -61,54 +61,57 @@ public final class TabakovVardiRandomAutomata {
      * Generates a random {@link NFA} with the given size, number of edges (per letter), number of accepting states.
      *
      * @param r
-     *      random instance
+     *         random instance
      * @param size
-     *      number of states
+     *         number of states
      * @param edgeNum
-     *      number of edges (per input)
+     *         number of edges (per input)
      * @param acceptNum
-     *      number of accepting states (at least one)
+     *         number of accepting states (at least one)
      * @param alphabet
-     *      the input symbols to consider when determining successors
+     *         the input symbols to consider when determining successors
      * @param <I>
-     *     input symbol type
-     * @return
-     *      a random NFA, not necessarily connected
+     *         input symbol type
+     *
+     * @return a random NFA, not necessarily connected
      */
-    public static <I> CompactNFA<I> generateNFA(
-            Random r, int size, int edgeNum, int acceptNum, Alphabet<I> alphabet) {
+    public static <I> CompactNFA<I> generateNFA(Random r, int size, int edgeNum, int acceptNum, Alphabet<I> alphabet) {
         return generateNFA(r, size, edgeNum, acceptNum, alphabet, new CompactNFA<>(alphabet));
     }
 
     /**
-     * Generates a random NFA with the given size, number of edges (per letter), and number of accepting states, written to the given {@link MutableNFA}.
-     * Note that the output automaton must be empty.
+     * Generates a random NFA with the given size, number of edges (per letter), and number of accepting states, written
+     * to the given {@link MutableNFA}. Note that the output automaton must be empty.
      *
      * @param r
-     *      random instance
+     *         random instance
      * @param size
-     *      number of states
+     *         number of states
      * @param edgeNum
-     *      number of edges (per input)
+     *         number of edges (per input)
      * @param acceptNum
-     *      number of accepting states (at least one)
+     *         number of accepting states (at least one)
      * @param alphabet
-     *      the input symbols to consider when determining successors
+     *         the input symbols to consider when determining successors
      * @param out
-     *      the (mutable) automaton to write the random structure to
+     *         the (mutable) automaton to write the random structure to
      * @param <S>
-     *     state type
+     *         state type
      * @param <I>
-     *     input symbol type
+     *         input symbol type
      * @param <A>
-     *     automaton type
-     * @return
-     *      the {@code out} parameter after the contents have been written to it
+     *         automaton type
+     *
+     * @return the {@code out} parameter after the contents have been written to it
      */
-    public static <S, I, A extends MutableNFA<S, I>> A generateNFA(
-            Random r, int size, int edgeNum, int acceptNum, Alphabet<I> alphabet, A out) {
+    public static <S, I, A extends MutableNFA<S, I>> A generateNFA(Random r,
+                                                                   int size,
+                                                                   int edgeNum,
+                                                                   int acceptNum,
+                                                                   Alphabet<I> alphabet,
+                                                                   A out) {
         assert acceptNum > 0 && acceptNum <= size;
-        assert edgeNum >= 0 && edgeNum <= size*size;
+        assert edgeNum >= 0 && edgeNum <= size * size;
 
         initNFA(size, out);
         final StateIDs<S> stateIDs = out.stateIDs();
@@ -122,8 +125,8 @@ public final class TabakovVardiRandomAutomata {
         }
 
         // For each letter, add edgeNum transitions.
-        for (I a: alphabet) {
-            for (int edgeIndex: RandomUtil.distinctIntegers(r, edgeNum, size*size)) {
+        for (I a : alphabet) {
+            for (int edgeIndex : RandomUtil.distinctIntegers(r, edgeNum, size * size)) {
                 out.addTransition(stateIDs.getState(edgeIndex / size), a, stateIDs.getState(edgeIndex % size));
             }
         }
