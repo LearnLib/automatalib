@@ -20,11 +20,12 @@ import java.util.Random;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.fsa.MutableNFA;
+import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.random.RandomUtil;
 
 /**
- * A generator for random automata (in particular, NFAs) using Tabakov and Vardi's approach, described in the paper
+ * A generator for random {@link NFA}s as described in the paper
  * <a href="https://doi.org/10.1007/11591191_28">Experimental Evaluation of Classical Automata Constructions</a>
  * by Deian Tabakov and Moshe Y&nbsp;Vardi.
  */
@@ -34,7 +35,7 @@ public final class TabakovVardiRandomAutomata {
     }
 
     /**
-     * Generate random NFA of given size, with specified transition and acceptance densities.
+     * Generates a random {@link NFA} with the given size, transition density, and acceptance density.
      *
      * @param r
      *      random instance
@@ -45,7 +46,9 @@ public final class TabakovVardiRandomAutomata {
      * @param ad
      *      acceptance density, in (0,1]. 0.5 is the usual value
      * @param alphabet
-     *      alphabet
+     *      the input symbols to consider when determining successors
+     * @param <I>
+     *     input symbol type
      * @return
      *      a random NFA, not necessarily connected
      */
@@ -55,18 +58,20 @@ public final class TabakovVardiRandomAutomata {
     }
 
     /**
-     * Generate random NFA of given size, with fixed number of edges (per letter) and accept states.
+     * Generates a random {@link NFA} with the given size, number of edges (per letter), number of accepting states.
      *
      * @param r
      *      random instance
      * @param size
      *      number of states
      * @param edgeNum
-     *      number of edges (per letter)
+     *      number of edges (per input)
      * @param acceptNum
      *      number of accepting states (at least one)
      * @param alphabet
-     *      alphabet
+     *      the input symbols to consider when determining successors
+     * @param <I>
+     *     input symbol type
      * @return
      *      a random NFA, not necessarily connected
      */
@@ -76,18 +81,21 @@ public final class TabakovVardiRandomAutomata {
     }
 
     /**
-     * Generates a random NFA with a given size, number of edges (per letter), and accept states and writes the result to the given {@link MutableNFA}.
+     * Generates a random NFA with the given size, number of edges (per letter), and number of accepting states, written to the given {@link MutableNFA}.
+     * Note that the output automaton must be empty.
      *
      * @param r
      *      random instance
      * @param size
      *      number of states
      * @param edgeNum
-     *      number of edges (per letter)
+     *      number of edges (per input)
      * @param acceptNum
      *      number of accepting states (at least one)
      * @param alphabet
-     *      alphabet
+     *      the input symbols to consider when determining successors
+     * @param out
+     *      the (mutable) automaton to write the random structure to
      * @param <S>
      *     state type
      * @param <I>
