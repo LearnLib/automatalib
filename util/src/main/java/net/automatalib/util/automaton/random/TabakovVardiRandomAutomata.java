@@ -44,8 +44,8 @@ public final class TabakovVardiRandomAutomata {
      * @return
      *      a random NFA, not necessarily connected
      */
-    public static CompactNFA<Integer> generateNFA(
-            Random r, int size, float td, float ad, Alphabet<Integer> alphabet) {
+    public static <I> CompactNFA<I> generateNFA(
+            Random r, int size, float td, float ad, Alphabet<I> alphabet) {
         return generateNFA(r, size, Math.round(td * size), Math.round(ad * size), alphabet);
     }
 
@@ -65,12 +65,12 @@ public final class TabakovVardiRandomAutomata {
      * @return
      *      a random NFA, not necessarily connected
      */
-    public static CompactNFA<Integer> generateNFA(
-            Random r, int size, int edgeNum, int acceptNum, Alphabet<Integer> alphabet) {
+    public static <I> CompactNFA<I> generateNFA(
+            Random r, int size, int edgeNum, int acceptNum, Alphabet<I> alphabet) {
         assert acceptNum > 0 && acceptNum <= size;
         assert edgeNum >= 0 && edgeNum <= size*size;
 
-        CompactNFA<Integer> nfa = basicNFA(size, alphabet);
+        CompactNFA<I> nfa = basicNFA(size, alphabet);
 
         // Set final states other than the initial state.
         // We want exactly acceptNum-1 of them, from the elements [1,size).
@@ -81,7 +81,7 @@ public final class TabakovVardiRandomAutomata {
         }
 
         // For each letter, add edgeNum transitions.
-        for (int a: alphabet) {
+        for (I a: alphabet) {
             for (int edgeIndex: RandomUtil.distinctIntegers(r, edgeNum, size*size)) {
                 nfa.addTransition(edgeIndex / size, a, edgeIndex % size);
             }
@@ -91,8 +91,8 @@ public final class TabakovVardiRandomAutomata {
     }
 
     // Helper method to generate NFA with initial accepting state.
-    private static CompactNFA<Integer> basicNFA(int size, Alphabet<Integer> alphabet) {
-        CompactNFA<Integer> basicNFA = new CompactNFA<>(alphabet);
+    private static <I> CompactNFA<I> basicNFA(int size, Alphabet<I> alphabet) {
+        CompactNFA<I> basicNFA = new CompactNFA<>(alphabet);
 
         // Create states
         for (int i = 0; i < size; i++) {
