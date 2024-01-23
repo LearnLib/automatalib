@@ -18,6 +18,8 @@ package net.automatalib.util.automaton.random;
 import java.util.Random;
 
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.concept.StateIDs;
+import net.automatalib.automaton.fsa.MutableNFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.random.RandomUtil;
 
@@ -70,41 +72,69 @@ public final class TabakovVardiRandomAutomata {
      */
     public static <I> CompactNFA<I> generateNFA(
             Random r, int size, int edgeNum, int acceptNum, Alphabet<I> alphabet) {
+        return generateNFA(r, size, edgeNum, acceptNum, alphabet, new CompactNFA<>(alphabet));
+    }
+
+    /**
+     * Generates a random NFA with a given size, number of edges (per letter), and accept states and writes the result to the given {@link MutableNFA}.
+     *
+     * @param r
+     *      random instance
+     * @param size
+     *      number of states
+     * @param edgeNum
+     *      number of edges (per letter)
+     * @param acceptNum
+     *      number of accepting states (at least one)
+     * @param alphabet
+     *      alphabet
+     * @param <S>
+     *     state type
+     * @param <I>
+     *     input symbol type
+     * @param <A>
+     *     automaton type
+     * @return
+     *      the {@code out} parameter after the contents have been written to it
+     */
+    public static <S, I, A extends MutableNFA<S, I>> A generateNFA(
+            Random r, int size, int edgeNum, int acceptNum, Alphabet<I> alphabet, A out) {
         assert acceptNum > 0 && acceptNum <= size;
         assert edgeNum >= 0 && edgeNum <= size*size;
 
-        CompactNFA<I> nfa = basicNFA(size, alphabet);
+        initNFA(size, out);
+        final StateIDs<S> stateIDs = out.stateIDs();
 
         // Set final states other than the initial state.
         // We want exactly acceptNum-1 of them, from the elements [1,size).
         // This works even if acceptNum == 1.
         int[] finalStates = RandomUtil.distinctIntegers(r, acceptNum - 1, 1, size);
         for (int f : finalStates) {
-            nfa.setAccepting(f, true);
+            out.setAccepting(stateIDs.getState(f), true);
         }
 
         // For each letter, add edgeNum transitions.
         for (I a: alphabet) {
             for (int edgeIndex: RandomUtil.distinctIntegers(r, edgeNum, size*size)) {
-                nfa.addTransition(edgeIndex / size, a, edgeIndex % size);
+                out.addTransition(stateIDs.getState(edgeIndex / size), a, stateIDs.getState(edgeIndex % size));
             }
         }
 
-        return nfa;
+        return out;
     }
 
     // Helper method to generate NFA with initial accepting state.
-    private static <I> CompactNFA<I> basicNFA(int size, Alphabet<I> alphabet) {
-        CompactNFA<I> basicNFA = new CompactNFA<>(alphabet);
+    private static <S, A extends MutableNFA<S, ?>> void initNFA(int size, A nfa) {
+        assert nfa.size() == 0;
 
-        // Create states
-        for (int i = 0; i < size; i++) {
-            basicNFA.addState(false);
-        }
         // per the paper, the first state is always initial and accepting
-        basicNFA.setInitial(0, true);
-        basicNFA.setAccepting(0, true);
-        return basicNFA;
+        final S init = nfa.addInitialState(true);
+        nfa.setAccepting(init, true);
+
+        // Create remaining states
+        for (int i = 1; i < size; i++) {
+            nfa.addState(false);
+        }
     }
 }
 
