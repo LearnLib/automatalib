@@ -44,16 +44,16 @@ class TabakovVardiRandomAutomataTest {
             }
         }
         // 5 transitions for 0
-        Assert.assertEquals(compactNFA.getTransitions(0, 0), Set.of(0,3));
+        Assert.assertEquals(compactNFA.getTransitions(0, 0), Set.of(0, 3));
         Assert.assertTrue(compactNFA.getTransitions(1, 0).isEmpty());
-        Assert.assertEquals(compactNFA.getTransitions(2, 0), Set.of(1,2));
+        Assert.assertEquals(compactNFA.getTransitions(2, 0), Set.of(1, 2));
         Assert.assertEquals(compactNFA.getTransitions(3, 0), Set.of(3));
 
         // 5 transitions for 1
         Assert.assertEquals(compactNFA.getTransitions(0, 1), Set.of(3));
         Assert.assertEquals(compactNFA.getTransitions(1, 1), Set.of(1));
         Assert.assertEquals(compactNFA.getTransitions(2, 1), Set.of(0));
-        Assert.assertEquals(compactNFA.getTransitions(3, 1), Set.of(1,2));
+        Assert.assertEquals(compactNFA.getTransitions(3, 1), Set.of(1, 2));
     }
 
     @Test

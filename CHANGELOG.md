@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 
 * AutomataLib now supports JPMS modules. Many of the artifacts now provide a `module-info` descriptor with the exception of `automata-brics`, `automata-modelchecking-m3c`, and `automata-jung-visualizer` which do not have modular dependencies and only provide an `Automatic-Module-Name` in their respective `MANIFEST.MF`s. As a consequence of this, the distribution artifacts (for Maven-less environments) also only provide an `Automatic-Module-Name`. Note that while this is a Java 9+ feature, AutomataLib still supports Java 8 byte code for the remaining class files.
-* Added `TabakovVardiRandomAutomata` that allows for creating Tabakov-Vardi random automata (in particular, NFAs).
+* Added `TabakovVardiRandomAutomata` that allows for creating Tabakov-Vardi random automata, in particular, NFAs (thanks to [John Nicol](https://github.com/jn1z)).
 
 ### Changed
 
