@@ -18,7 +18,7 @@ package net.automatalib.graph;
 import java.util.Iterator;
 import java.util.Objects;
 
-import com.google.common.collect.Iterators;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -53,7 +53,7 @@ public interface IndefiniteSimpleGraph<N> extends Iterable<N> {
      * @return {@code true} if the nodes are connect, {@code false} otherwise
      */
     default boolean isConnected(N source, N target) {
-        return Iterators.any(getAdjacentNodesIterator(source), n -> Objects.equals(n, target));
+        return IteratorUtil.any(getAdjacentNodesIterator(source), n -> Objects.equals(n, target));
     }
 
     /**

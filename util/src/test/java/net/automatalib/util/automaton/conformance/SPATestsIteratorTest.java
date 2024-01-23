@@ -15,7 +15,6 @@
  */
 package net.automatalib.util.automaton.conformance;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -24,8 +23,6 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.function.BiFunction;
 
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -33,6 +30,7 @@ import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.impl.StackSPA;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import net.automatalib.word.Word;
 import org.testng.Assert;
@@ -84,7 +82,7 @@ public class SPATestsIteratorTest {
 
     private void testIterator(BiFunction<DFA<?, Character>, Collection<Character>, Iterator<Word<Character>>> conformanceTestProvider) {
         final List<Word<Character>> testTraces =
-                Lists.newArrayList(new SPATestsIterator<>(this.spa, conformanceTestProvider));
+                IteratorUtil.list(new SPATestsIterator<>(this.spa, conformanceTestProvider));
 
         for (Entry<Character, DFA<?, Character>> e : this.spa.getProcedures().entrySet()) {
             verifyProcedure(e.getKey(), e.getValue(), this.spa.getInputAlphabet(), testTraces, conformanceTestProvider);
@@ -98,8 +96,7 @@ public class SPATestsIteratorTest {
                                      BiFunction<DFA<?, I>, Collection<I>, Iterator<Word<I>>> conformanceTestProvider) {
 
         final Alphabet<I> proceduralAlphabet = alphabet.getProceduralAlphabet();
-        final List<Word<I>> localTraces = new ArrayList<>();
-        Iterators.addAll(localTraces, conformanceTestProvider.apply(dfa, proceduralAlphabet));
+        final List<Word<I>> localTraces = IteratorUtil.list(conformanceTestProvider.apply(dfa, proceduralAlphabet));
 
         for (Word<I> trace : globalTraces) {
             for (int i = 0; i < trace.length(); i++) {

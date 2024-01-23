@@ -20,14 +20,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.DFA;
@@ -35,6 +34,7 @@ import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.SEVPA;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
@@ -161,9 +161,9 @@ public final class SPAs {
         final Map<I, DFA<?, I>> submodels = spa.getProcedures();
         final Collection<I> proceduralInputs = spa.getProceduralInputs(alphabet);
 
-        final Map<I, Word<I>> accessSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        final Map<I, Word<I>> returnSequences = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
-        final Set<I> finishedProcedures = Sets.newHashSetWithExpectedSize(alphabet.getNumCalls());
+        final Map<I, Word<I>> accessSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
+        final Map<I, Word<I>> returnSequences = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
+        final Set<I> finishedProcedures = new HashSet<>(HashUtil.capacity(alphabet.getNumCalls()));
 
         // initial value
         accessSequences.put(initialProcedure, Word.fromLetter(initialProcedure));

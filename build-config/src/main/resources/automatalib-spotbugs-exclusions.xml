@@ -78,7 +78,7 @@ limitations under the License.
     <Match>
         <Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
         <!-- we want to cut cloning hierarchy here -->
-        <Class name="net.automatalib.common.smartcollection.ArrayStorage"/>
+        <Class name="net.automatalib.common.util.array.ArrayStorage"/>
     </Match>
     <Match>
         <Bug pattern="DM_DEFAULT_ENCODING,URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,SBSC_USE_STRINGBUFFER_CONCATENATION,SF_SWITCH_NO_DEFAULT,UC_USELESS_VOID_METHOD,MS_SHOULD_BE_FINAL,URF_UNREAD_FIELD,UCF_USELESS_CONTROL_FLOW"/>

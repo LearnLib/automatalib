@@ -28,7 +28,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import com.google.common.io.CharStreams;
 import net.automatalib.AutomataLibProperty;
 import net.automatalib.AutomataLibSettings;
 import net.automatalib.common.util.IOUtil;
@@ -236,7 +235,7 @@ public final class DOT {
      *         if reading from the reader or the call to the DOT utility fails.
      */
     public static void renderDOT(Reader r, boolean modal) throws IOException {
-        renderDOT(CharStreams.toString(r), modal);
+        renderDOT(IOUtil.toString(r), modal);
     }
 
     /**
@@ -262,7 +261,7 @@ public final class DOT {
      *         if reading from the files or the calls to the DOT utility fail.
      */
     public static void renderDOTFiles(List<Pair<String, File>> files, boolean modal) throws IOException {
-        renderDOTInternal(files, modal, f -> CharStreams.toString(IOUtil.asBufferedUTF8Reader(f)));
+        renderDOTInternal(files, modal, f -> IOUtil.toString(IOUtil.asBufferedUTF8Reader(f)));
     }
 
     /**
@@ -273,7 +272,7 @@ public final class DOT {
      *         if reading from the readers or the calls to the DOT utility fail.
      */
     public static void renderDOTReaders(List<Pair<String, Reader>> readers, boolean modal) throws IOException {
-        renderDOTInternal(readers, modal, CharStreams::toString);
+        renderDOTInternal(readers, modal, IOUtil::toString);
     }
 
     /**

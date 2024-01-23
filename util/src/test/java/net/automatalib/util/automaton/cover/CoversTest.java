@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.random.RandomAutomata;
@@ -162,8 +162,8 @@ public class CoversTest {
         dfa.addState(true);
         dfa.addState(false);
 
-        final List<Word<Integer>> sCov = Lists.newArrayList(Covers.stateCoverIterator(dfa, alphabet));
-        final List<Word<Integer>> tCov = Lists.newArrayList(Covers.transitionCoverIterator(dfa, alphabet));
+        final List<Word<Integer>> sCov = IteratorUtil.list(Covers.stateCoverIterator(dfa, alphabet));
+        final List<Word<Integer>> tCov = IteratorUtil.list(Covers.transitionCoverIterator(dfa, alphabet));
 
         testStateCover(dfa, alphabet, sCov);
         testTransitionCover(dfa, alphabet, tCov);

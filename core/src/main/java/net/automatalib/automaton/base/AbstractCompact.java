@@ -23,13 +23,12 @@ import java.util.function.IntFunction;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.MutableAutomaton;
 import net.automatalib.automaton.MutableDeterministic.FullIntAbstraction;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.concept.StateLocalInput;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -80,7 +79,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
 
     @Override
     public Collection<Integer> getStates() {
-        return CollectionsUtil.intRange(0, numStates);
+        return CollectionUtil.intRange(0, numStates);
     }
 
     @Override
@@ -149,7 +148,7 @@ public abstract class AbstractCompact<I, T, SP, TP> implements MutableAutomaton<
     public final void addAlphabetSymbol(I symbol) {
 
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final int newAlphabetSize = this.alphabet.size();

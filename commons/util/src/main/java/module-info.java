@@ -31,9 +31,6 @@ import net.automatalib.common.util.setting.SettingsSource;
 open module net.automatalib.common.util {
 
     requires java.management;
-
-    requires com.google.common;
-    requires net.automatalib.common.smartcollection;
     requires org.checkerframework.checker.qual;
     requires org.slf4j;
 
@@ -42,6 +39,7 @@ open module net.automatalib.common.util {
     exports net.automatalib.common.util.collection;
     exports net.automatalib.common.util.comparison;
     exports net.automatalib.common.util.concurrent;
+    exports net.automatalib.common.util.exception;
     exports net.automatalib.common.util.fixpoint;
     exports net.automatalib.common.util.function;
     exports net.automatalib.common.util.io;

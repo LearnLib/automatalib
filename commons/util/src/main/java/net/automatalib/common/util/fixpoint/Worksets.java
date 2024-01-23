@@ -18,11 +18,12 @@ package net.automatalib.common.util.fixpoint;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 
 public final class Worksets {
@@ -35,7 +36,7 @@ public final class Worksets {
 
         final int expectedElementCount = algorithm.expectedElementCount();
         final Deque<T> queue = new ArrayDeque<>(expectedElementCount);
-        final Set<T> tracking = Sets.newHashSetWithExpectedSize(expectedElementCount);
+        final Set<T> tracking = new HashSet<>(HashUtil.capacity(expectedElementCount));
 
         final Collection<T> initialElements = algorithm.initialize();
         queue.addAll(initialElements);
@@ -62,8 +63,8 @@ public final class Worksets {
     public static <T, E, R> Pair<Map<T, E>, R> map(WorksetMappingAlgorithm<T, E, R> algorithm) {
 
         final Deque<T> queue = new ArrayDeque<>(algorithm.expectedElementCount());
-        final Set<T> tracking = Sets.newHashSetWithExpectedSize(algorithm.expectedElementCount());
-        final Map<T, E> mapping = Maps.newHashMapWithExpectedSize(algorithm.expectedElementCount());
+        final Set<T> tracking = new HashSet<>(HashUtil.capacity(algorithm.expectedElementCount()));
+        final Map<T, E> mapping = new HashMap<>(HashUtil.capacity(algorithm.expectedElementCount()));
 
         final Collection<T> initialElements = algorithm.initialize(mapping);
         queue.addAll(initialElements);

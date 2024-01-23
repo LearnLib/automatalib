@@ -16,16 +16,17 @@
 package net.automatalib.serialization.dot;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
+import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.fsa.impl.FastDFA;
@@ -36,6 +37,7 @@ import net.automatalib.automaton.procedural.SPMM;
 import net.automatalib.automaton.procedural.impl.StackSBA;
 import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.automaton.procedural.impl.StackSPMM;
+import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.automaton.transducer.impl.CompactMoore;
 import net.automatalib.automaton.transducer.impl.CompactSST;
@@ -254,7 +256,8 @@ final class DOTSerializationUtil {
 
         final CompactPMPG<Character, Character> s = new CompactPMPG<>('?');
         final int s0 = s.addIntNode();
-        final int s1 = s.addIntNode(Sets.newHashSet('a', 'b'));
+        // Set.of doesn't have a deterministic (hash-based) iteration order, so use this workaround instead
+        final int s1 = s.addIntNode(new HashSet<>(Arrays.asList('a', 'b')));
         final int s2 = s.addIntNode(Collections.singleton('c'));
 
         final CompactPMPGEdge<Character, MutableProceduralModalEdgeProperty> e1 = s.connect(s0, s1, p1);
@@ -278,7 +281,8 @@ final class DOTSerializationUtil {
         t.connect(t1, t0, p4);
         t.setFinalNode(t1);
 
-        final Map<Character, CompactPMPG<Character, Character>> pmpgs = Maps.newHashMapWithExpectedSize(2);
+        // Map.of doesn't have a deterministic (hash-based) iteration order, so use this workaround instead
+        final Map<Character, CompactPMPG<Character, Character>> pmpgs = new HashMap<>(3);
         pmpgs.put('s', s);
         pmpgs.put('t', t);
 
@@ -321,7 +325,11 @@ final class DOTSerializationUtil {
         pG.setTransition(g1, 'G', g2);
         pG.setTransition(g2, 'c', g3);
 
-        return new StackSPA<>(alphabet, 'F', ImmutableMap.of('F', pF, 'G', pG));
+        // Map.of doesn't have a deterministic (hash-based) iteration order, so use this workaround instead
+        final Map<Character, DFA<?, Character>> procedures = new HashMap<>(3);
+        procedures.put('F', pF);
+        procedures.put('G', pG);
+        return new StackSPA<>(alphabet, 'F', procedures);
     }
 
     private static StackSBA<?, Character> buildSBA() {
@@ -368,7 +376,11 @@ final class DOTSerializationUtil {
         pG.setTransition(g2, 'c', g3);
         pG.setTransition(g3, 'R', g4);
 
-        return new StackSBA<>(alphabet, 'F', ImmutableMap.of('F', pF, 'G', pG));
+        // Map.of doesn't have a deterministic (hash-based) iteration order, so use this workaround instead
+        final Map<Character, DFA<?, Character>> procedures = new HashMap<>(3);
+        procedures.put('F', pF);
+        procedures.put('G', pG);
+        return new StackSBA<>(alphabet, 'F', procedures);
     }
 
     private static StackSPMM<?, Character, ?, Character> buildSPMM() {
@@ -415,6 +427,10 @@ final class DOTSerializationUtil {
         pG.setTransition(g2, 'c', g3, 'z');
         pG.setTransition(g3, 'R', g4, '-');
 
-        return new StackSPMM<>(alphabet, 'F', '+', '-', ImmutableMap.of('F', pF, 'G', pG));
+        // Map.of doesn't have a deterministic (hash-based) iteration order, so use this workaround instead
+        final Map<Character, MealyMachine<?, Character, ?, Character>> procedures = new HashMap<>(3);
+        procedures.put('F', pF);
+        procedures.put('G', pG);
+        return new StackSPMM<>(alphabet, 'F', '+', '-', procedures);
     }
 }

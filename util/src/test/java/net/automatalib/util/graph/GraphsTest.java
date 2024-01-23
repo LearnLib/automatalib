@@ -25,10 +25,10 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.Mappings;
 import net.automatalib.graph.MutableGraph;
@@ -94,7 +94,7 @@ public class GraphsTest {
 
             final N mappedTgt = nodeMapping.get(tgt);
             final Set<E> edges = new HashSet<>(incomingEdges.get(mappedTgt));
-            final Set<E> checkEdges = Sets.newHashSetWithExpectedSize(edges.size());
+            final Set<E> checkEdges = new HashSet<>(HashUtil.capacity(edges.size()));
 
             for (S src : incomingStates) {
                 final N mappedSrc = nodeMapping.get(src);

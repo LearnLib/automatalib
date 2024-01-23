@@ -18,9 +18,8 @@ package net.automatalib.graph;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
+import net.automatalib.common.util.collection.CollectionUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.visualization.DefaultVisualizationHelper;
 import net.automatalib.visualization.VisualizationHelper;
 
@@ -54,7 +53,7 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
      * @return a collection containing the outgoing edges
      */
     default Collection<N> getAdjacentNodes(N node) {
-        return Collections2.transform(getOutgoingEdges(node), this::getTarget);
+        return CollectionUtil.map(getOutgoingEdges(node), this::getTarget);
     }
 
     @Override
@@ -99,7 +98,7 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
          * (Finite) int-abstracted version of {@link #getEdgesBetween(Object, Object)}.
          */
         default Collection<E> getEdgesBetween(int from, int to) {
-            return Lists.newArrayList(Iterators.filter(getOutgoingEdgesIterator(from), e -> getIntTarget(e) == to));
+            return IteratorUtil.list(IteratorUtil.filter(getOutgoingEdgesIterator(from), e -> getIntTarget(e) == to));
         }
 
         /**
@@ -107,7 +106,7 @@ public interface Graph<N, E> extends IndefiniteGraph<N, E>, SimpleGraph<N> {
          */
         @Override
         default boolean isConnected(int source, int target) {
-            return Iterators.any(getOutgoingEdgesIterator(source), e -> getIntTarget(e) == target);
+            return IteratorUtil.any(getOutgoingEdgesIterator(source), e -> getIntTarget(e) == target);
         }
     }
 }

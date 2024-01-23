@@ -18,7 +18,7 @@ package net.automatalib.incremental.moore.dag;
 import java.util.Arrays;
 import java.util.Objects;
 
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**

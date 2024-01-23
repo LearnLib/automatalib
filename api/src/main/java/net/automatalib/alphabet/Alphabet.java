@@ -23,6 +23,7 @@ import java.util.function.ToIntFunction;
 
 import net.automatalib.common.smartcollection.ArrayWritable;
 import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.exception.GrowingAlphabetNotSupportedException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -111,6 +112,23 @@ public interface Alphabet<I> extends ArrayWritable<I>, Collection<I>, Comparator
             return Objects.equals(symbol, getSymbol(index));
         } catch (IllegalArgumentException ex) {
             return false;
+        }
+    }
+
+    /**
+     * Casts {@code this} alphabet to a {@link GrowingAlphabet} if possible (i.e., if the alphabet actually is a
+     * {@link GrowingAlphabet}). Otherwise, throws a {@link GrowingAlphabetNotSupportedException}.
+     *
+     * @return the same alphabet instance, casted to a {@link GrowingAlphabet}.
+     *
+     * @throws GrowingAlphabetNotSupportedException
+     *         if {@code this} alphabet does not implement {@link GrowingAlphabet}
+     */
+    default GrowingAlphabet<I> asGrowingAlphabetOrThrowException() {
+        if (this instanceof GrowingAlphabet) {
+            return (GrowingAlphabet<I>) this;
+        } else {
+            throw new GrowingAlphabetNotSupportedException(this);
         }
     }
 }

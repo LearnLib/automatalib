@@ -16,7 +16,7 @@
 package net.automatalib.automaton.helper;
 
 import net.automatalib.automaton.concept.StateIDs;
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.common.util.mapping.MutableMapping;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

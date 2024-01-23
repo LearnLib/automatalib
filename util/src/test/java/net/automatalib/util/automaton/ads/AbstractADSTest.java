@@ -16,14 +16,15 @@
 package net.automatalib.util.automaton.ads;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Maps;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ads.ADSNode;
 import net.automatalib.word.Word;
@@ -93,7 +94,10 @@ public abstract class AbstractADSTest {
         Assert.assertEquals(targets, leaves.stream().map(ADSNode::getHypothesisState).collect(Collectors.toSet()));
 
         final Map<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> traces =
-                Maps.asMap(leaves, ADSUtil::buildTraceForNode);
+                new HashMap<>(HashUtil.capacity(leaves.size()));
+        for (ADSNode<Integer, I, O> leaf : leaves) {
+            traces.put(leaf, ADSUtil.buildTraceForNode(leaf));
+        }
 
         // check matching outputs
         for (Map.Entry<ADSNode<Integer, I, O>, Pair<Word<I>, Word<O>>> entry : traces.entrySet()) {

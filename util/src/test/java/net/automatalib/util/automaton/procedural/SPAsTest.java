@@ -26,9 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.google.common.io.CharStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -44,6 +41,7 @@ import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
 import net.automatalib.automaton.vpa.SEVPA;
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.serialization.dot.GraphDOT;
@@ -109,12 +107,12 @@ public class SPAsTest {
                 new DefaultProceduralInputAlphabet<>(internalAlphabet, Alphabets.singleton('S'), returnSymbol);
 
         // With no accepting states, there exist no a/t/r sequences.
-        final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', s, 'T', t));
+        final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', Map.of('S', s, 'T', t));
         ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
-        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry));
+        Assert.assertEquals(atrSequences.accessSequences, Map.ofEntries(sAsEntry));
         Assert.assertTrue(atrSequences.terminatingSequences.isEmpty());
-        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry));
+        Assert.assertEquals(atrSequences.returnSequences, Map.ofEntries(sRsEntry));
         Assert.assertFalse(SPAs.isMinimal(spa));
         Assert.assertTrue(SPAs.isMinimal(emptyAlphabet, atrSequences));
 
@@ -124,9 +122,9 @@ public class SPAsTest {
 
         atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
-        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry));
-        Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry));
-        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry));
+        Assert.assertEquals(atrSequences.accessSequences, Map.ofEntries(sAsEntry));
+        Assert.assertEquals(atrSequences.terminatingSequences, Map.ofEntries(sTsEntry));
+        Assert.assertEquals(atrSequences.returnSequences, Map.ofEntries(sRsEntry));
         Assert.assertFalse(SPAs.isMinimal(spa));
         Assert.assertTrue(SPAs.isMinimal(halfAlphabet, atrSequences));
         Assert.assertTrue(SPAs.isMinimal(emptyAlphabet, atrSequences));
@@ -137,9 +135,9 @@ public class SPAsTest {
 
         atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
-        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry, tAsEntry));
-        Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry));
-        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry, tRsEntry));
+        Assert.assertEquals(atrSequences.accessSequences, Map.ofEntries(sAsEntry, tAsEntry));
+        Assert.assertEquals(atrSequences.terminatingSequences, Map.ofEntries(sTsEntry));
+        Assert.assertEquals(atrSequences.returnSequences, Map.ofEntries(sRsEntry, tRsEntry));
         Assert.assertFalse(SPAs.isMinimal(spa));
         Assert.assertTrue(SPAs.isMinimal(halfAlphabet, atrSequences));
         Assert.assertTrue(SPAs.isMinimal(emptyAlphabet, atrSequences));
@@ -150,9 +148,9 @@ public class SPAsTest {
 
         atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
-        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry, tAsEntry));
-        Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry));
-        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry, tRsEntry));
+        Assert.assertEquals(atrSequences.accessSequences, Map.ofEntries(sAsEntry, tAsEntry));
+        Assert.assertEquals(atrSequences.terminatingSequences, Map.ofEntries(sTsEntry));
+        Assert.assertEquals(atrSequences.returnSequences, Map.ofEntries(sRsEntry, tRsEntry));
         Assert.assertFalse(SPAs.isMinimal(spa));
         Assert.assertTrue(SPAs.isMinimal(halfAlphabet, atrSequences));
         Assert.assertTrue(SPAs.isMinimal(emptyAlphabet, atrSequences));
@@ -163,9 +161,9 @@ public class SPAsTest {
 
         atrSequences = SPAs.computeATRSequences(spa, alphabet);
 
-        Assert.assertEquals(atrSequences.accessSequences, ImmutableMap.ofEntries(sAsEntry, tAsEntry));
-        Assert.assertEquals(atrSequences.terminatingSequences, ImmutableMap.ofEntries(sTsEntry, tTsEntry));
-        Assert.assertEquals(atrSequences.returnSequences, ImmutableMap.ofEntries(sRsEntry, tRsEntry));
+        Assert.assertEquals(atrSequences.accessSequences, Map.ofEntries(sAsEntry, tAsEntry));
+        Assert.assertEquals(atrSequences.terminatingSequences, Map.ofEntries(sTsEntry, tTsEntry));
+        Assert.assertEquals(atrSequences.returnSequences, Map.ofEntries(sRsEntry, tRsEntry));
         Assert.assertTrue(SPAs.isMinimal(spa));
     }
 
@@ -241,7 +239,7 @@ public class SPAsTest {
 
         t.addInitialState(false);
 
-        final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', s, 'T', t));
+        final SPA<?, Character> spa = new StackSPA<>(alphabet, 'S', Map.of('S', s, 'T', t));
 
         final ATRSequences<Character> atrSequences = SPAs.computeATRSequences(spa);
         Assert.assertEquals(atrSequences.accessSequences.keySet(), Collections.singleton('S'));
@@ -303,7 +301,7 @@ public class SPAsTest {
         t1.addTransition(t1t1, 'T', t1t2);
         t1.addTransition(t1t2, 'c', t1t3);
 
-        final SPA<?, Character> spa1 = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', s1, 'T', t1));
+        final SPA<?, Character> spa1 = new StackSPA<>(alphabet, 'S', Map.of('S', s1, 'T', t1));
 
         final CompactDFA<Character> s2 = new CompactDFA<>(alphabet.getProceduralAlphabet());
         final FastDFA<Character> t2 = new FastDFA<>(alphabet.getProceduralAlphabet());
@@ -332,7 +330,7 @@ public class SPAsTest {
         t2.addTransition(t2t1, 'T', t2t2);
         t2.addTransition(t2t2, 'c', t2t3);
 
-        final SPA<?, Character> spa2 = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', s2, 'T', t2));
+        final SPA<?, Character> spa2 = new StackSPA<>(alphabet, 'S', Map.of('S', s2, 'T', t2));
 
         final SPA<?, Character> emptySPA = new EmptySPA<>(alphabet);
 
@@ -377,7 +375,7 @@ public class SPAsTest {
         verifySepWord(spa2, spa1, alphabet);
 
         // this should also work for partial SPAs
-        final SPA<?, Character> partial1 = new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', s1));
+        final SPA<?, Character> partial1 = new StackSPA<>(alphabet, 'S', Map.of('S', s1));
         verifySepWord(spa1, partial1, alphabet);
         verifySepWord(partial1, spa1, alphabet);
 
@@ -563,7 +561,7 @@ public class SPAsTest {
     public <I> void testOneSEVPAConversion(SPA<?, I> spa) {
         final OneSEVPA<?, I> oneSEVPA = SPAs.toOneSEVPA(spa);
 
-        final List<Word<I>> tests = Lists.newArrayList(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
+        final List<Word<I>> tests = IteratorUtil.list(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
 
         for (Word<I> t : tests) {
             Assert.assertEquals(spa.accepts(t), oneSEVPA.accepts(t));
@@ -574,7 +572,7 @@ public class SPAsTest {
     public <I> void testNSEVPAConversion(SPA<?, I> spa) {
         final SEVPA<?, I> sevpa = SPAs.toNSEVPA(spa);
 
-        final List<Word<I>> tests = Lists.newArrayList(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
+        final List<Word<I>> tests = IteratorUtil.list(new SPATestsIterator<>(spa, WMethodTestsIterator::new));
 
         for (Word<I> t : tests) {
             Assert.assertEquals(spa.accepts(t), sevpa.accepts(t));
@@ -632,7 +630,7 @@ public class SPAsTest {
         final StringWriter expectedWriter = new StringWriter();
 
         try (Reader reader = IOUtil.asBufferedUTF8Reader(SPAsTest.class.getResourceAsStream(expected))) {
-            CharStreams.copy(reader, expectedWriter);
+            IOUtil.copy(reader, expectedWriter);
             GraphDOT.write(cfmps, dotWriter);
             Assert.assertEquals(dotWriter.toString(), expectedWriter.toString());
         }
@@ -698,7 +696,7 @@ public class SPAsTest {
         MutableDFAs.complete(sProcedure, alphabet.getProceduralAlphabet());
         MutableDFAs.complete(tProcedure, alphabet.getProceduralAlphabet());
 
-        return new StackSPA<>(alphabet, 'S', ImmutableMap.of('S', sProcedure, 'T', tProcedure));
+        return new StackSPA<>(alphabet, 'S', Map.of('S', sProcedure, 'T', tProcedure));
     }
 
     private static SPA<?, String> buildDissSystem() {
@@ -735,9 +733,7 @@ public class SPAsTest {
         MutableDFAs.complete(aProcedure, alphabet.getProceduralAlphabet());
         MutableDFAs.complete(bProcedure, alphabet.getProceduralAlphabet());
 
-        return new StackSPA<>(alphabet,
-                              "main",
-                              ImmutableMap.of("main", mainProcedure, "c_1", aProcedure, "c_2", bProcedure));
+        return new StackSPA<>(alphabet, "main", Map.of("main", mainProcedure, "c_1", aProcedure, "c_2", bProcedure));
     }
 
 }

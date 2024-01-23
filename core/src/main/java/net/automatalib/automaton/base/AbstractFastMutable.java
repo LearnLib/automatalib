@@ -19,7 +19,6 @@ import java.util.Collection;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.SupportsGrowingAlphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.ShrinkableAutomaton;
 import net.automatalib.automaton.UniversalFiniteAlphabetAutomaton;
 import net.automatalib.automaton.concept.StateIDs;
@@ -99,7 +98,7 @@ public abstract class AbstractFastMutable<S extends AbstractFastState<?>, I, T, 
     public void addAlphabetSymbol(I symbol) {
 
         if (!this.inputAlphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.inputAlphabet).addSymbol(symbol);
+            this.inputAlphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         // even if the symbol was already in the alphabet, we need to make sure to be able to store the new symbol

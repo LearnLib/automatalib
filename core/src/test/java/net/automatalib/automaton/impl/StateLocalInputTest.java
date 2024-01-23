@@ -16,8 +16,8 @@
 package net.automatalib.automaton.impl;
 
 import java.util.HashSet;
+import java.util.Set;
 
-import com.google.common.collect.Sets;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.MutableAutomaton;
@@ -109,10 +109,10 @@ public class StateLocalInputTest {
         automaton.addTransition(s2, 1, s1, null);
 
         // check defined inputs
-        Assert.assertEquals(new HashSet<>(automaton.getLocalInputs(s1)), Sets.newHashSet(1, 4));
-        Assert.assertEquals(new HashSet<>(automaton.getLocalInputs(s2)), Sets.newHashSet(1, 2));
-        Assert.assertEquals(new HashSet<>(automaton.getLocalInputs(s3)), Sets.newHashSet(2, 3));
-        Assert.assertEquals(new HashSet<>(automaton.getLocalInputs(s4)), Sets.newHashSet(3, 4));
+        Assert.assertEquals(new HashSet<>(automaton.getLocalInputs(s1)), Set.of(1, 4));
+        Assert.assertEquals(new HashSet<>(automaton.getLocalInputs(s2)), Set.of(1, 2));
+        Assert.assertEquals(new HashSet<>(automaton.getLocalInputs(s3)), Set.of(2, 3));
+        Assert.assertEquals(new HashSet<>(automaton.getLocalInputs(s4)), Set.of(3, 4));
 
     }
 

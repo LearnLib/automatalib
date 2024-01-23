@@ -18,10 +18,9 @@ package net.automatalib.common.util.collection;
 import java.util.AbstractList;
 import java.util.RandomAccess;
 
-import net.automatalib.common.smartcollection.ArrayWritable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public class CharRange extends AbstractList<Character> implements ArrayWritable<Character>, RandomAccess {
+public class CharRange extends AbstractList<Character> implements RandomAccess {
 
     private final IntRange delegate;
 
@@ -86,14 +85,5 @@ public class CharRange extends AbstractList<Character> implements ArrayWritable<
     @Override
     public int size() {
         return delegate.size();
-    }
-
-    @Override
-    public void writeToArray(int offset, @Nullable Object[] array, int tgtOfs, int num) {
-        int si = offset;
-        int ti = tgtOfs;
-        for (int i = 0; i < num; i++) {
-            array[ti++] = charGet(si++);
-        }
     }
 }

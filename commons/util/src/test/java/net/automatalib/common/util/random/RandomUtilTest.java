@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -38,7 +38,7 @@ public class RandomUtilTest {
     @BeforeClass
     public void setUp() {
         this.random = new Random(42);
-        this.list = CollectionsUtil.intRange(0, HIGH, 1);
+        this.list = CollectionUtil.intRange(0, HIGH, 1);
         this.array = IntStream.range(0, HIGH).boxed().toArray(Integer[]::new);
     }
 

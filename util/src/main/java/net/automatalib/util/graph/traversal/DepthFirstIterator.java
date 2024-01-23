@@ -19,13 +19,13 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 
-import com.google.common.collect.AbstractIterator;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.IndefiniteGraph;
 import net.automatalib.util.traversal.VisitedState;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-final class DepthFirstIterator<N, E> extends AbstractIterator<N> {
+final class DepthFirstIterator<N, E> extends AbstractSimplifiedIterator<N> {
 
     private final MutableMapping<N, @Nullable VisitedState> visited;
     private final Deque<SimpleDFRecord<N, E>> dfsStack = new ArrayDeque<>();
@@ -40,13 +40,14 @@ final class DepthFirstIterator<N, E> extends AbstractIterator<N> {
     }
 
     @Override
-    protected N computeNext() {
+    protected boolean calculateNext() {
         SimpleDFRecord<N, E> rec;
         while ((rec = dfsStack.peek()) != null) {
             if (!rec.wasStarted()) {
                 visited.put(rec.node, VisitedState.VISITED);
                 rec.start(graph);
-                return rec.node;
+                super.nextValue = rec.node;
+                return true;
             } else if (rec.hasNextEdge()) {
                 E edge = rec.nextEdge();
                 N tgt = graph.getTarget(edge);
@@ -57,7 +58,6 @@ final class DepthFirstIterator<N, E> extends AbstractIterator<N> {
                 dfsStack.pop();
             }
         }
-        return endOfData();
+        return false;
     }
-
 }

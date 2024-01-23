@@ -16,18 +16,16 @@
 package net.automatalib.incremental.dfa.tree;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.List;
 
-import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.UniversalAutomaton;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.graph.UniversalAutomatonGraphView;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.Graph;
@@ -259,9 +257,7 @@ public class IncrementalDFATreeBuilder<I> extends AbstractIncrementalDFABuilder<
 
         @Override
         public Collection<Node> getStates() {
-            List<Node> result = new ArrayList<>();
-            Iterators.addAll(result, TSTraversal.breadthFirstIterator(this, inputAlphabet));
-            return result;
+            return IteratorUtil.list(TSTraversal.breadthFirstIterator(this, inputAlphabet));
         }
 
         /*

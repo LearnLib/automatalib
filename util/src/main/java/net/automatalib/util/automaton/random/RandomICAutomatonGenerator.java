@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.AutomatonCreator;
 import net.automatalib.automaton.MutableDeterministic;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.random.RandomUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -255,7 +255,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
                                                                                                                    Random r) {
         MutableDeterministic.StateIntAbstraction<I, ?, ? super SP, ? super TP> resultAbs = result.stateIntAbstraction();
 
-        List<? extends I> inputsList = CollectionsUtil.randomAccessList(inputs);
+        List<? extends I> inputsList = CollectionUtil.randomAccessList(inputs);
 
         resultAbs.addIntInitialState(spSupplier.apply(r));
         for (int i = 1; i < numStates; i++) {

@@ -19,7 +19,7 @@ import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.google.common.collect.Iterators;
+import net.automatalib.common.util.collection.IteratorUtil;
 
 /**
  * Class that maps a {@link Collection} of states to a collection of the respective original states.
@@ -43,7 +43,7 @@ class OriginalStateCollection<S> extends AbstractCollection<S> {
 
     @Override
     public Iterator<S> iterator() {
-        return Iterators.transform(stateColl.iterator(), State::getOriginalState);
+        return IteratorUtil.map(stateColl.iterator(), State::getOriginalState);
     }
 
     @Override

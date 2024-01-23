@@ -19,13 +19,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Sets;
-import com.google.common.collect.Streams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import net.automatalib.word.Word;
@@ -113,7 +112,7 @@ public class IncrementalWMethodTestsIteratorTest {
         iter.setMaxDepth(MAX_DEPTH);
         iter.update(dfa);
 
-        final Set<Word<Character>> tests = Streams.stream(iter).collect(Collectors.toSet());
+        final Set<Word<Character>> tests = IteratorUtil.stream(iter).collect(Collectors.toSet());
 
         for (Character c : alphabet) {
             Assert.assertTrue(tests.contains(Word.fromLetter(c)));
@@ -123,19 +122,20 @@ public class IncrementalWMethodTestsIteratorTest {
     private Set<Word<Character>> computeWMethodTests() {
 
         final List<Word<Character>> characterizingSet = Automata.characterizingSet(mealy, alphabet);
-        final List<Word<Character>> allMidTuples = Streams.stream(CollectionsUtil.allTuples(alphabet, 0, MAX_DEPTH))
-                                                          .map(Word::fromList)
-                                                          .collect(Collectors.toList());
+        final List<Word<Character>> allMidTuples =
+                IterableUtil.stream(IterableUtil.allTuples(alphabet, 0, MAX_DEPTH))
+                            .map(Word::fromList)
+                            .collect(Collectors.toList());
         final List<Word<Character>> transitionCover = Automata.transitionCover(mealy, alphabet);
 
         final Iterable<List<Word<Character>>> wMethodIter =
-                CollectionsUtil.cartesianProduct(transitionCover, allMidTuples, characterizingSet);
+                IterableUtil.cartesianProduct(transitionCover, allMidTuples, characterizingSet);
 
-        return Streams.stream(wMethodIter).map(Word::fromWords).collect(Collectors.toSet());
+        return IterableUtil.stream(wMethodIter).map(Word::fromWords).collect(Collectors.toSet());
     }
 
     private Set<Word<Character>> computeIteratorTests() {
-        return Sets.newHashSet(incIt);
+        return IteratorUtil.set(incIt);
     }
 
 }

@@ -15,17 +15,14 @@
  */
 package net.automatalib.incremental.mealy.tree;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.MealyMachine.MealyGraphView;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.Graph;
@@ -48,7 +45,7 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
     @Override
     public void addAlphabetSymbol(I symbol) {
         if (!inputAlphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(inputAlphabet).addSymbol(symbol);
+            inputAlphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final int newAlphabetSize = inputAlphabet.size();
@@ -108,9 +105,7 @@ abstract class AbstractAlphabetBasedMealyTreeBuilder<I, O> extends AbstractMealy
 
         @Override
         public Collection<Node<O>> getStates() {
-            List<Node<O>> result = new ArrayList<>();
-            Iterators.addAll(result, TSTraversal.breadthFirstIterator(this, inputAlphabet));
-            return result;
+            return IteratorUtil.list(TSTraversal.breadthFirstIterator(this, inputAlphabet));
         }
 
         /*

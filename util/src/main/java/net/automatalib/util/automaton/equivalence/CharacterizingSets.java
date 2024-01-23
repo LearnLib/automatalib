@@ -26,10 +26,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 
-import com.google.common.collect.AbstractIterator;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.FiniteStateAcceptor;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.AbstractSimplifiedIterator;
+import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -218,7 +218,7 @@ public final class CharacterizingSets {
         boolean refined = false;
 
         // We need a list to ensure a stable iteration order
-        List<? extends Word<I>> oldSuffixList = CollectionsUtil.randomAccessList(oldSuffixes);
+        List<? extends Word<I>> oldSuffixList = CollectionUtil.randomAccessList(oldSuffixes);
 
         Queue<List<S>> blocks = buildInitialBlocks(automaton, oldSuffixList);
 
@@ -377,7 +377,7 @@ public final class CharacterizingSets {
         }
     }
 
-    private static class IncrementalCharacterizingSetIterator<S, I> extends AbstractIterator<Word<I>> {
+    private static class IncrementalCharacterizingSetIterator<S, I> extends AbstractSimplifiedIterator<Word<I>> {
 
         private final UniversalDeterministicAutomaton<S, I, ?, ?, ?> automaton;
         private final Collection<? extends I> inputs;
@@ -389,27 +389,27 @@ public final class CharacterizingSets {
                                              Collection<? extends Word<I>> oldSuffixes) {
             this.automaton = automaton;
             this.inputs = inputs;
-            this.oldSuffixes = CollectionsUtil.randomAccessList(oldSuffixes);
+            this.oldSuffixes = CollectionUtil.randomAccessList(oldSuffixes);
         }
 
         @Override
-        protected Word<I> computeNext() {
-
+        protected boolean calculateNext() {
             // first call
             if (blocks == null) {
                 blocks = buildInitialBlocks(automaton, oldSuffixes);
                 if (!oldSuffixes.contains(Word.epsilon()) && epsilonRefine(automaton, blocks)) {
-                    return Word.epsilon();
+                    super.nextValue = Word.epsilon();
+                    return true;
                 }
             }
 
             final Word<I> suffix = refine(automaton, inputs, blocks);
 
             if (suffix != null) {
-                return suffix;
+                super.nextValue = suffix;
+                return true;
             }
-
-            return endOfData();
+            return false;
         }
     }
 }

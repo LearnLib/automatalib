@@ -24,11 +24,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import com.google.common.collect.Maps;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.automaton.simple.SimpleAutomaton;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.serialization.InputModelData;
 
@@ -58,7 +58,10 @@ class InternalAUTParser {
             while (parseTransition(br)) {}
 
             // automaton construction
-            final Map<String, I> inputMap = Maps.asMap(alphabetSymbols, inputTransformer::apply);
+            final Map<String, I> inputMap = new HashMap<>(HashUtil.capacity(this.alphabetSymbols.size()));
+            for (String s : this.alphabetSymbols) {
+                inputMap.put(s, inputTransformer.apply(s));
+            }
             final Alphabet<I> alphabet = Alphabets.fromCollection(inputMap.values());
 
             final CompactNFA<I> result = new CompactNFA<>(alphabet, numStates);

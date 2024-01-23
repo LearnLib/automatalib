@@ -15,10 +15,11 @@
  */
 package net.automatalib.modelchecker.m3c.solver;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.Mappings;
 import net.automatalib.graph.ProceduralModalProcessGraph;
@@ -85,7 +86,7 @@ public final class SolverData<N, T extends AbstractPropertyTransformer<T, L, AP>
      * @return a {@link Mapping} which maps nodes to their initial property transformer
      */
     public Mapping<N, T> getInitialPropertyTransformers(TransformerSerializer<T, L, AP> serializer) {
-        final Map<N, T> result = Maps.newHashMapWithExpectedSize(this.pmpg.size());
+        final Map<N, T> result = new HashMap<>(HashUtil.capacity(this.pmpg.size()));
 
         for (N n : this.pmpg) {
             result.put(n, serializer.deserialize(this.initialPropertyTransformers.get(n)));

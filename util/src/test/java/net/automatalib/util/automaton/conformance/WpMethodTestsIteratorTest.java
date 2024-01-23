@@ -22,13 +22,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.comparison.CmpUtil;
 import net.automatalib.util.automaton.cover.Covers;
 import net.automatalib.util.automaton.equivalence.CharacterizingSets;
@@ -55,7 +54,7 @@ public class WpMethodTestsIteratorTest {
         dfa2.setInitial(oldInit2, false);
         dfa2.addInitialState(false);
 
-        final List<Word<Integer>> testWords = Lists.newArrayList(new WpMethodTestsIterator<>(dfa1, alphabet, 0));
+        final List<Word<Integer>> testWords = IteratorUtil.list(new WpMethodTestsIterator<>(dfa1, alphabet, 0));
 
         for (Word<Integer> t : testWords) {
             if (dfa1.accepts(t) != dfa2.accepts(t)) {
@@ -68,7 +67,7 @@ public class WpMethodTestsIteratorTest {
 
     @Test
     public void testIteratorWithoutMiddleParts() {
-        final List<Word<Integer>> iteratorWords = Lists.newArrayList(new WpMethodTestsIterator<>(dfa, alphabet, 0));
+        final List<Word<Integer>> iteratorWords = IteratorUtil.list(new WpMethodTestsIterator<>(dfa, alphabet, 0));
         final List<Word<Integer>> wpMethodWords =
                 generateWpMethodTest(dfa, alphabet, Collections.singletonList(Word.epsilon()));
 
@@ -80,14 +79,15 @@ public class WpMethodTestsIteratorTest {
 
         final int depth = 3;
 
-        final List<Word<Integer>> iteratorWords = Lists.newArrayList(new WpMethodTestsIterator<>(dfa, alphabet, depth));
+        final List<Word<Integer>> iteratorWords = IteratorUtil.list(new WpMethodTestsIterator<>(dfa, alphabet, depth));
         final List<Word<Integer>> wpMethodWords = generateWpMethodTest(dfa,
                                                                        alphabet,
-                                                                       Streams.stream(CollectionsUtil.allTuples(alphabet,
-                                                                                                                0,
-                                                                                                                depth))
-                                                                              .map(Word::fromList)
-                                                                              .collect(Collectors.toList()));
+                                                                       IterableUtil.stream(IterableUtil.allTuples(
+                                                                                           alphabet,
+                                                                                           0,
+                                                                                           depth))
+                                                                                   .map(Word::fromList)
+                                                                                   .collect(Collectors.toList()));
 
         checkTestWords(iteratorWords, wpMethodWords);
     }
@@ -118,10 +118,13 @@ public class WpMethodTestsIteratorTest {
         final List<Word<I>> result = new ArrayList<>();
 
         // Phase 1: state cover * middle part * global suffixes
-        Lists.cartesianProduct(stateCover, middleParts, characterizingSet)
-             .stream()
-             .map(Word::fromWords)
-             .forEach(result::add);
+        for (Word<I> sc : stateCover) {
+            for (Word<I> mp : middleParts) {
+                for (Word<I> cs : characterizingSet) {
+                    result.add(Word.fromWords(sc, mp, cs));
+                }
+            }
+        }
 
         // Phase 2: transitions (not in state cover) * middle part * local suffixes
         transitionCover.removeAll(stateCover);

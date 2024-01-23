@@ -22,8 +22,7 @@ import java.util.stream.Collector;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
-import net.automatalib.common.util.collection.CollectionsUtil;
-import net.automatalib.exception.GrowingAlphabetNotSupportedException;
+import net.automatalib.common.util.collection.CollectionUtil;
 
 /**
  * Utility methods concerning alphabets.
@@ -48,7 +47,7 @@ public final class Alphabets {
     }
 
     public static Alphabet<Integer> integers(int startInclusive, int endInclusive) {
-        List<Integer> lst = CollectionsUtil.intRange(startInclusive, endInclusive + 1);
+        List<Integer> lst = CollectionUtil.intRange(startInclusive, endInclusive + 1);
         return fromList(lst);
     }
 
@@ -57,12 +56,12 @@ public final class Alphabets {
     }
 
     public static Alphabet<Character> characters(char startInclusive, char endInclusive) {
-        List<Character> lst = CollectionsUtil.charRange(startInclusive, (char) (endInclusive + 1));
+        List<Character> lst = CollectionUtil.charRange(startInclusive, (char) (endInclusive + 1));
         return fromList(lst);
     }
 
     public static Alphabet<String> closedCharStringRange(char startInclusive, char endInclusive) {
-        List<String> lst = CollectionsUtil.charStringRange(startInclusive, (char) (endInclusive + 1));
+        List<String> lst = CollectionUtil.charStringRange(startInclusive, (char) (endInclusive + 1));
         return fromList(lst);
     }
 
@@ -87,28 +86,6 @@ public final class Alphabets {
         }
 
         return new MapAlphabet<>(symbols);
-    }
-
-    /**
-     * Casts the given alphabet to a {@link GrowingAlphabet} if possible (i.e. the given alphabet is actually an
-     * instance of a {@link GrowingAlphabet}). Throws a {@link GrowingAlphabetNotSupportedException} otherwise.
-     *
-     * @param alphabet
-     *         the alphabet to cast
-     * @param <I>
-     *         input symbol type
-     *
-     * @return the same alphabet instance, cast to a {@link GrowingAlphabet}.
-     *
-     * @throws GrowingAlphabetNotSupportedException
-     *         if the given alphabet is not an instance of {@link GrowingAlphabet}.
-     */
-    public static <I> GrowingAlphabet<I> toGrowingAlphabetOrThrowException(Alphabet<I> alphabet) {
-        if (alphabet instanceof GrowingAlphabet) {
-            return (GrowingAlphabet<I>) alphabet;
-        } else {
-            throw new GrowingAlphabetNotSupportedException(alphabet);
-        }
     }
 
     /**

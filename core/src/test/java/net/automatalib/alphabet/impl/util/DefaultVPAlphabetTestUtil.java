@@ -20,16 +20,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.automatalib.alphabet.impl.DefaultVPAlphabet;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.CollectionUtil;
 
 /**
  * Utility class, aggregating definitions used for testing {@link DefaultVPAlphabet}s.
  */
 public final class DefaultVPAlphabetTestUtil {
 
-    public static final List<Character> INTERNAL_SYMBOLS = CollectionsUtil.charRange('1', '3');
-    public static final List<Character> CALL_SYMBOLS = CollectionsUtil.charRange('a', 'c');
-    public static final List<Character> RETURN_SYMBOLS = CollectionsUtil.charRange('r', 't');
+    public static final List<Character> INTERNAL_SYMBOLS = CollectionUtil.charRange('1', '3');
+    public static final List<Character> CALL_SYMBOLS = CollectionUtil.charRange('a', 'c');
+    public static final List<Character> RETURN_SYMBOLS = CollectionUtil.charRange('r', 't');
     public static final List<Character> NON_CONTAINED_SYMBOLS = Arrays.asList('x', '8', ' ');
 
     public static final List<Character> JOINED_SYMBOLS;

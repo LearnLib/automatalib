@@ -25,13 +25,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.smartcollection.ReflexiveMapView;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.graph.ads.ADSNode;
 import net.automatalib.graph.ads.impl.ADSLeafNode;
@@ -87,7 +84,7 @@ public final class LeeYannakakis {
                                                                        Alphabet<I> input) {
 
         final SplitTree<S, I, O> st = new SplitTree<>(new HashSet<>(automaton.getStates()));
-        final Set<SplitTree<S, I, O>> leaves = Sets.newHashSetWithExpectedSize(automaton.size());
+        final Set<SplitTree<S, I, O>> leaves = new HashSet<>(HashUtil.capacity(automaton.size()));
         leaves.add(st);
 
         while (leaves.stream().anyMatch(LeeYannakakis::needsRefinement)) {
@@ -291,7 +288,7 @@ public final class LeeYannakakis {
 
         final Map<Validity, Set<Pair<Word<I>, SplitTree<S, I, O>>>> result = new EnumMap<>(Validity.class);
         final Map<S, Integer> stateToPartitionMap = new HashMap<>();
-        final BiMap<Integer, SplitTree<S, I, O>> partitionToNodeMap = HashBiMap.create();
+        final Map<SplitTree<S, I, O>, Integer> nodeToPartitionMap = new HashMap<>(HashUtil.capacity(pi.size()));
 
         int counter = 0;
         for (SplitTree<S, I, O> partition : pi) {
@@ -299,8 +296,7 @@ public final class LeeYannakakis {
                 final Integer previousValue = stateToPartitionMap.put(s, counter);
                 assert previousValue == null : "Not a true partition";
             }
-            partitionToNodeMap.put(counter, partition);
-            counter++;
+            nodeToPartitionMap.put(partition, counter++);
         }
 
         for (Validity v : Validity.values()) {
@@ -310,9 +306,9 @@ public final class LeeYannakakis {
         final Set<SplitTree<S, I, O>> pendingCs = new HashSet<>();
         final Map<Integer, Validity> partitionToClassificationMap = new HashMap<>();
 
-        final CompactSimpleGraph<I> implicationGraph = new CompactSimpleGraph<>(partitionToNodeMap.size());
+        final CompactSimpleGraph<I> implicationGraph = new CompactSimpleGraph<>(nodeToPartitionMap.size());
 
-        for (int i = 0; i < partitionToNodeMap.size(); i++) {
+        for (int i = 0; i < nodeToPartitionMap.size(); i++) {
             implicationGraph.addIntNode();
         }
 
@@ -320,7 +316,7 @@ public final class LeeYannakakis {
         for (SplitTree<S, I, O> b : r) {
 
             // general validity
-            final Map<I, Boolean> validInputMap = Maps.newHashMapWithExpectedSize(inputs.size());
+            final Map<I, Boolean> validInputMap = new HashMap<>(HashUtil.capacity(inputs.size()));
             for (I i : inputs) {
                 validInputMap.put(i, isValidInput(automaton, i, b.getPartition()));
             }
@@ -395,7 +391,7 @@ public final class LeeYannakakis {
         pendingCLoop:
         for (SplitTree<S, I, O> pendingC : pendingCs) {
 
-            final Integer pendingPartition = partitionToNodeMap.inverse().get(pendingC);
+            final Integer pendingPartition = nodeToPartitionMap.get(pendingC);
             final Iterator<Integer> iter =
                     GraphTraversal.breadthFirstIterator(implicationGraph, Collections.singleton(pendingPartition));
 

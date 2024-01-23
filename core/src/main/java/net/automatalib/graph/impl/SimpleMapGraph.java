@@ -25,7 +25,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import com.google.common.collect.Iterators;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.ShrinkableGraph;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -116,7 +115,7 @@ public class SimpleMapGraph<@Nullable N> implements MutableGraph<N, N, N, Void>,
 
     @Override
     public Iterator<N> iterator() {
-        return Iterators.unmodifiableIterator(structureMap.keySet().iterator());
+        return getNodes().iterator();
     }
 
     @Override

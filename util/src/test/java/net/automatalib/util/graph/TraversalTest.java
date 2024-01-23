@@ -26,12 +26,12 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.Streams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.common.util.Holder;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.graph.UniversalGraph;
 import net.automatalib.graph.base.CompactEdge;
@@ -229,9 +229,9 @@ public class TraversalTest {
     }
 
     private <S, I, T> List<Word<I>> collectPathInputs(Iterable<Path<S, TransitionEdge<I, T>>> paths) {
-        return Streams.stream(paths)
-                      .map(p -> p.stream().map(TransitionEdge::getInput).collect(Word.collector()))
-                      .collect(Collectors.toList());
+        return IterableUtil.stream(paths)
+                           .map(p -> p.stream().map(TransitionEdge::getInput).collect(Word.collector()))
+                           .collect(Collectors.toList());
     }
 
     private abstract static class AbstractVisitor<N, E, D> implements GraphTraversalVisitor<N, E, D> {

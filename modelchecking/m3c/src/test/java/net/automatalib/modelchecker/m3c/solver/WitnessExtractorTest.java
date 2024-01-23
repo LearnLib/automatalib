@@ -23,7 +23,6 @@ import java.util.Collections;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.google.common.io.CharStreams;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
@@ -146,7 +145,7 @@ public class WitnessExtractorTest {
     private String parseDOT(String name) throws IOException {
         try (InputStream is = WitnessExtractorTest.class.getResourceAsStream("/dot/witness/" + name);
              Reader r = IOUtil.asBufferedUTF8Reader(is)) {
-            return CharStreams.toString(r);
+            return IOUtil.toString(r);
         }
     }
 

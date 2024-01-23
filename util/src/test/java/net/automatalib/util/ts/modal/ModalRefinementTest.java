@@ -15,7 +15,8 @@
  */
 package net.automatalib.util.ts.modal;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Set;
+
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.common.util.Pair;
@@ -125,7 +126,7 @@ public class ModalRefinementTest {
         b.addTransition(bs0, "a", bs0, null);
 
         Assert.assertEquals(ModalRefinement.refinementRelation(a, b, alphabet),
-                            ImmutableSet.of(Pair.of(as0, bs0), Pair.of(as1, bs0)));
+                            Set.of(Pair.of(as0, bs0), Pair.of(as1, bs0)));
         Assert.assertTrue(MTSs.isRefinementOf(a, b, alphabet));
         Assert.assertTrue(MTSs.isRefinementOf(b, a, alphabet));
     }

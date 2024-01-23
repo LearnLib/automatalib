@@ -18,8 +18,8 @@ package net.automatalib.ts.acceptor;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.google.common.collect.Iterables;
 import net.automatalib.automaton.concept.SuffixOutput;
+import net.automatalib.common.util.collection.IterableUtil;
 import net.automatalib.ts.DeterministicTransitionSystem;
 import net.automatalib.ts.UniversalDTS;
 
@@ -39,7 +39,7 @@ public interface DeterministicAcceptorTS<S, I>
 
     @Override
     default Boolean computeSuffixOutput(Iterable<? extends I> prefix, Iterable<? extends I> suffix) {
-        return computeOutput(Iterables.concat(prefix, suffix));
+        return computeOutput(IterableUtil.concat(prefix, suffix));
     }
 
     @Override

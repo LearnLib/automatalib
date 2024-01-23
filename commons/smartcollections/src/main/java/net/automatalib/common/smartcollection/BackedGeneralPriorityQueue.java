@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import com.google.common.collect.Iterators;
+import net.automatalib.common.util.collection.IteratorUtil;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -116,7 +116,7 @@ public class BackedGeneralPriorityQueue<E, K extends Comparable<K>> extends Abst
     @SuppressWarnings("nullness") // function is only called on elements of the iterator for which we know non-nullness
     @Override
     public Iterator<E> iterator() {
-        return Iterators.transform(backingQueue.iterator(), e -> e.element);
+        return IteratorUtil.map(backingQueue.iterator(), e -> e.element);
     }
 
     @Override

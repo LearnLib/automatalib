@@ -15,7 +15,7 @@
  */
 package net.automatalib.graph.impl;
 
-import net.automatalib.common.smartcollection.ResizingArrayStorage;
+import net.automatalib.common.util.array.ResizingArrayStorage;
 import net.automatalib.graph.base.AbstractCompactGraph;
 import net.automatalib.graph.base.CompactEdge;
 import org.checkerframework.checker.nullness.qual.Nullable;

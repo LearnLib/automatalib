@@ -17,11 +17,11 @@ package net.automatalib.serialization.etf.writer;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import net.automatalib.alphabet.Alphabet;
+import net.automatalib.automaton.concept.StateIDs;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
@@ -76,20 +76,18 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
 
     private <S, T> void writeETFInternal(PrintWriter pw, MealyMachine<S, I, T, O> mealy, Alphabet<I> inputs) {
 
-        // create a bi-mapping from states to integers
-        final BiMap<S, Integer> oldStates = HashBiMap.create();
-        mealy.getStates().forEach(s -> oldStates.put(s, oldStates.size()));
+        final StateIDs<S> oldStateIDs = mealy.stateIDs();
 
         // write the initial state, using the bi-map
         pw.println("begin init");
-        pw.printf("%d%n", oldStates.get(mealy.getInitialState()));
+        pw.printf("%d%n", oldStateIDs.getStateId(mealy.getInitialState()));
         pw.println("end init");
 
-        // create a bi-map for transitions containing output
-        final BiMap<Pair<O, S>, Integer> outputTransitions = HashBiMap.create();
+        // create a (insertion stable) map for transitions containing output
+        final Map<Pair<O, S>, Integer> outputTransitions = new LinkedHashMap<>();
 
-        // create a bi-map that maps output to integers
-        final BiMap<O, Integer> outputIndices = HashBiMap.create();
+        // create a (insertion stable) map that maps output to integers
+        final Map<O, Integer> outputIndices = new LinkedHashMap<>();
 
         /*
          Write the transitions (here is where the horror begins).
@@ -121,15 +119,15 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
                                 Write the output transition. Note that this will only be done if the output
                                 transition was not written before.
                                 */
-                                final Integer res = oldStates.size() + outputTransitions.size();
-                                pw.printf("%d/%d %d%n", res, oldStates.get(n), outputIndex);
+                                final Integer res = mealy.size() + outputTransitions.size();
+                                pw.printf("%d/%d %d%n", res, oldStateIDs.getStateId(n), outputIndex);
                                 return res;
                             });
 
                     // always write the input transition to the output transition
                     pw.printf(
                             "%d/%d %d%n",
-                            oldStates.get(s),
+                            oldStateIDs.getStateId(s),
                             intermediateState,
                             inputs.getSymbolIndex(i));
                 }
@@ -139,14 +137,11 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
 
         // write all state ids, including the newly created intermediate states
         pw.println("begin sort id");
-        for (int i = 0; i < oldStates.size(); i++) {
-            pw.printf("\"%s\"%n", oldStates.inverse().get(i));
+        for (int i = 0; i < mealy.size(); i++) {
+            pw.printf("\"%s\"%n", oldStateIDs.getState(i));
         }
 
-        final Map<Integer, Pair<O, S>> inverseTransitions = outputTransitions.inverse();
-        for (int i = 0; i < outputTransitions.size(); i++) {
-            final Pair<O, S> t = inverseTransitions.get(oldStates.size() + i);
-            assert t != null;
+        for (Pair<O, S> t : outputTransitions.keySet()) {
             pw.printf("\"(%s,%s)\"%n", t.getFirst(), t.getSecond());
         }
         pw.println("end sort");
@@ -154,8 +149,8 @@ public final class Mealy2ETFWriterAlternating<I, O> extends AbstractETFWriter<I,
         // write all the letters in the new alphabet
         pw.println("begin sort letter");
         inputs.forEach(i -> pw.printf("\"%s\"%n", i));
-        for (int i = 0; i < outputIndices.size(); i++) {
-            pw.printf("\"%s\"%n", outputIndices.inverse().get(inputs.size() + i));
+        for (O o : outputIndices.keySet()) {
+            pw.printf("\"%s\"%n", o);
         }
         pw.println("end sort");
     }

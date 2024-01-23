@@ -19,13 +19,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-import com.google.common.io.ByteStreams;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
@@ -125,7 +125,7 @@ public class AUTSerializationTest {
         final CompactDFA<Integer> automaton = RandomAutomata.randomDFA(new Random(0), 10, Alphabets.integers(0, 2));
 
         AUTSerializationProvider.getInstance()
-                                .writeModel(new UnclosableOutputStream(ByteStreams.nullOutputStream()),
+                                .writeModel(new UnclosableOutputStream(OutputStream.nullOutputStream()),
                                             automaton,
                                             automaton.getInputAlphabet(),
                                             Objects::toString);

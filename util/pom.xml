@@ -53,12 +53,6 @@ limitations under the License.
             <artifactId>automata-core</artifactId>
         </dependency>
 
-        <!--external -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
         <!-- build -->
         <dependency>
             <groupId>de.learnlib.tooling</groupId>

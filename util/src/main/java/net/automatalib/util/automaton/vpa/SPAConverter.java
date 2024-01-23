@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.google.common.collect.Maps;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.GrowingAlphabet;
 import net.automatalib.alphabet.ProceduralInputAlphabet;
@@ -39,8 +38,9 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.impl.StackSPA;
 import net.automatalib.automaton.vpa.OneSEVPA;
-import net.automatalib.common.smartcollection.ArrayStorage;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
+import net.automatalib.common.util.array.ArrayStorage;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.fsa.MutableDFAs;
 import net.automatalib.util.automaton.procedural.ATRSequences;
@@ -64,7 +64,7 @@ final class SPAConverter {
         }
 
         // build alphabet
-        final Map<AI, Map<L, CI>> procedureMap = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+        final Map<AI, Map<L, CI>> procedureMap = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
         final Map<CI, AI> reverseMapping = new HashMap<>();
         final GrowingAlphabet<CI> callAlphabet = new GrowingMapAlphabet<>();
         final GrowingAlphabet<CI> intAlphabet = new GrowingMapAlphabet<>();
@@ -72,7 +72,7 @@ final class SPAConverter {
         callAlphabet.addSymbol(mainProcedure);
 
         for (AI ai : alphabet.getCallAlphabet()) {
-            final Map<L, CI> locationMap = Maps.newHashMapWithExpectedSize(sevpa.size());
+            final Map<L, CI> locationMap = new HashMap<>(HashUtil.capacity(sevpa.size()));
             for (L l : sevpa.getLocations()) {
                 final CI cc = symbolMapper.mapCallSymbol(ai);
                 locationMap.put(l, cc);
@@ -95,8 +95,8 @@ final class SPAConverter {
                 new DefaultProceduralInputAlphabet<>(intAlphabet, callAlphabet, cRet);
 
         // build procedures
-        final Map<CI, CompactDFA<CI>> procedures = Maps.newHashMapWithExpectedSize(callAlphabet.size() * sevpa.size());
-        final Map<L, Integer> l2sMap = Maps.newHashMapWithExpectedSize(sevpa.size());
+        final Map<CI, CompactDFA<CI>> procedures = new HashMap<>(HashUtil.capacity(callAlphabet.size() * sevpa.size()));
+        final Map<L, Integer> l2sMap = new HashMap<>(HashUtil.capacity(sevpa.size()));
         final CompactDFA<CI> template = buildTemplate(sevpa, alphabet, spaAlphabet, symbolMapper, procedureMap, l2sMap);
 
         for (L l : sevpa.getLocations()) {
@@ -118,7 +118,7 @@ final class SPAConverter {
         procedures.put(mainProcedure, mCopy);
 
         // prepare DTs
-        final Map<AI, Node<AI, CI>> dts = Maps.newHashMapWithExpectedSize(alphabet.getNumCalls());
+        final Map<AI, Node<AI, CI>> dts = new HashMap<>(HashUtil.capacity(alphabet.getNumCalls()));
         final Collection<Pair<Word<AI>, Word<AI>>> cs = OneSEVPAs.findCharacterizingSet(sevpa, alphabet);
         final ArrayStorage<Word<AI>> as = OneSEVPAs.computeAccessSequences(sevpa, alphabet);
 

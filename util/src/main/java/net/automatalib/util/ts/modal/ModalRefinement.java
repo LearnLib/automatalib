@@ -18,11 +18,12 @@ package net.automatalib.util.ts.modal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
-import com.google.common.collect.Sets;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.ts.modal.ModalTransitionSystem;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
@@ -39,7 +40,7 @@ public final class ModalRefinement {
                                                                                          I input,
                                                                                          Set<ModalType> acceptableValues) {
 
-        Set<BT> coTransitions = Sets.newHashSetWithExpectedSize(b.getInputAlphabet().size());
+        Set<BT> coTransitions = new HashSet<>(HashUtil.capacity(b.getInputAlphabet().size()));
 
         for (BT candidateTransition : b.getTransitions(source, input)) {
             BTP property = b.getTransitionProperty(candidateTransition);
@@ -86,7 +87,7 @@ public final class ModalRefinement {
                                                                    ModalTransitionSystem<BS, I, ?, ?> specification,
                                                                    Collection<I> inputs) {
 
-        Set<Pair<AS, BS>> refinement = Sets.newHashSetWithExpectedSize(implementation.size() * specification.size());
+        Set<Pair<AS, BS>> refinement = new HashSet<>(HashUtil.capacity(implementation.size() * specification.size()));
 
         // lower approximation only correct if automaton is finite (image-finite)
         for (AS p : implementation.getStates()) {

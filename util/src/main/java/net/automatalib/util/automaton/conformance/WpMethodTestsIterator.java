@@ -17,16 +17,16 @@ package net.automatalib.util.automaton.conformance;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ForwardingIterator;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Sets;
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
+import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.collection.AbstractThreeLevelIterator;
-import net.automatalib.common.util.collection.CollectionsUtil;
+import net.automatalib.common.util.collection.IterableUtil;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.cover.Covers;
@@ -44,7 +44,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @param <I>
  *         input symbol type
  */
-public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
+public class WpMethodTestsIterator<I> implements Iterator<Word<I>> {
 
     private final Iterator<Word<I>> wpIterator;
 
@@ -76,8 +76,8 @@ public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
                                  Collection<? extends I> inputs,
                                  int maxDepth) {
 
-        final Set<Word<I>> stateCover = Sets.newHashSetWithExpectedSize(automaton.size());
-        final Set<Word<I>> transitionCover = Sets.newHashSetWithExpectedSize(automaton.size() * inputs.size());
+        final Set<Word<I>> stateCover = new HashSet<>(HashUtil.capacity(automaton.size()));
+        final Set<Word<I>> transitionCover = new HashSet<>(HashUtil.capacity(automaton.size() * inputs.size()));
 
         Covers.cover(automaton, inputs, stateCover, transitionCover);
 
@@ -86,12 +86,12 @@ public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
         // Special case: List of characterizing suffixes may be empty,
         // but in this case we still need to iterate over the prefixes!
         if (!characterizingIter.hasNext()) {
-            characterizingIter = Iterators.singletonIterator(Word.epsilon());
+            characterizingIter = IteratorUtil.singleton(Word.epsilon());
         }
 
         // Phase 1: state cover * middle part * global suffixes
         final Iterator<Word<I>> firstIterator = new FirstPhaseIterator<>(stateCover,
-                                                                         CollectionsUtil.allTuples(inputs, 0, maxDepth),
+                                                                         IterableUtil.allTuples(inputs, 0, maxDepth),
                                                                          characterizingIter);
 
         // Phase 2: transitions (not in state cover) * middle part * local suffixes
@@ -99,16 +99,21 @@ public class WpMethodTestsIterator<I> extends ForwardingIterator<Word<I>> {
         final Iterator<Word<I>> secondIterator = new SecondPhaseIterator<>(automaton,
                                                                            inputs,
                                                                            transitionCover,
-                                                                           CollectionsUtil.allTuples(inputs,
-                                                                                                     0,
-                                                                                                     maxDepth));
+                                                                           IterableUtil.allTuples(inputs,
+                                                                                                  0,
+                                                                                                  maxDepth));
 
-        wpIterator = Iterators.concat(firstIterator, secondIterator);
+        wpIterator = IteratorUtil.concat(firstIterator, secondIterator);
     }
 
     @Override
-    protected Iterator<Word<I>> delegate() {
-        return wpIterator;
+    public boolean hasNext() {
+        return this.wpIterator.hasNext();
+    }
+
+    @Override
+    public Word<I> next() {
+        return this.wpIterator.next();
     }
 
     private static class FirstPhaseIterator<I> extends AbstractThreeLevelIterator<Word<I>, List<I>, Word<I>, Word<I>> {

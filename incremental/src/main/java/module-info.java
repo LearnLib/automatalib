@@ -36,8 +36,6 @@ open module net.automatalib.incremental {
 
     requires net.automatalib.api;
     requires net.automatalib.common.util;
-    requires net.automatalib.common.smartcollection;
-    requires net.automatalib.core;
     requires net.automatalib.util;
     requires org.checkerframework.checker.qual;
 

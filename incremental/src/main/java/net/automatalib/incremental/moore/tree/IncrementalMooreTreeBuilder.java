@@ -16,7 +16,6 @@
 package net.automatalib.incremental.moore.tree;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
@@ -24,13 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.google.common.collect.Iterators;
 import net.automatalib.alphabet.Alphabet;
-import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.graph.TransitionEdge;
 import net.automatalib.automaton.transducer.MooreMachine;
 import net.automatalib.automaton.transducer.MooreMachine.MooreGraphView;
 import net.automatalib.automaton.visualization.MooreVisualizationHelper;
+import net.automatalib.common.util.collection.IteratorUtil;
 import net.automatalib.common.util.mapping.MapMapping;
 import net.automatalib.common.util.mapping.MutableMapping;
 import net.automatalib.graph.Graph;
@@ -66,7 +64,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
     @Override
     public void addAlphabetSymbol(I symbol) {
         if (!this.alphabet.containsSymbol(symbol)) {
-            Alphabets.toGrowingAlphabetOrThrowException(this.alphabet).addSymbol(symbol);
+            this.alphabet.asGrowingAlphabetOrThrowException().addSymbol(symbol);
         }
 
         final int newAlphabetSize = this.alphabet.size();
@@ -265,9 +263,7 @@ public class IncrementalMooreTreeBuilder<I, O> implements IncrementalMooreBuilde
 
         @Override
         public Collection<Node<O>> getStates() {
-            List<Node<O>> result = new ArrayList<>();
-            Iterators.addAll(result, TSTraversal.breadthFirstIterator(this, alphabet));
-            return result;
+            return IteratorUtil.list(TSTraversal.breadthFirstIterator(this, alphabet));
         }
 
         /*
