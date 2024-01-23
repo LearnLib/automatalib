@@ -16,6 +16,7 @@
 package net.automatalib.util.automaton.random;
 
 import java.util.Random;
+import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
@@ -32,8 +33,8 @@ class TabakovVardiRandomAutomataTest {
         float ad = 0.5f; // exactly 2 accepting states
         Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
         CompactNFA<Integer> compactNFA = TabakovVardiRandomAutomata.generateNFA(r, size, td, ad, alphabet);
-        Assert.assertEquals(size, compactNFA.size());
-        Assert.assertEquals(1, compactNFA.getInitialStates().size());
+        Assert.assertEquals(compactNFA.size(), size);
+        Assert.assertEquals(compactNFA.getInitialStates().size(), 1);
         for (int s : compactNFA.getStates()) {
             if (s == 0 || s == 3) {
                 // 2 accepting states
@@ -42,19 +43,17 @@ class TabakovVardiRandomAutomataTest {
                 Assert.assertFalse(compactNFA.isAccepting(s));
             }
         }
-        StringBuilder sb = new StringBuilder();
-        for (int s : compactNFA.getStates()) {
-            sb.append(compactNFA.getTransitions(s, 0));
-        }
         // 5 transitions for 0
-        Assert.assertEquals("[0, 3][][1, 2][3]", sb.toString());
+        Assert.assertEquals(compactNFA.getTransitions(0, 0), Set.of(0,3));
+        Assert.assertTrue(compactNFA.getTransitions(1, 0).isEmpty());
+        Assert.assertEquals(compactNFA.getTransitions(2, 0), Set.of(1,2));
+        Assert.assertEquals(compactNFA.getTransitions(3, 0), Set.of(3));
 
-        sb = new StringBuilder();
-        for (int s : compactNFA.getStates()) {
-            sb.append(compactNFA.getTransitions(s, 1));
-        }
         // 5 transitions for 1
-        Assert.assertEquals("[3][1][0][1, 2]", sb.toString());
+        Assert.assertEquals(compactNFA.getTransitions(0, 1), Set.of(3));
+        Assert.assertEquals(compactNFA.getTransitions(1, 1), Set.of(1));
+        Assert.assertEquals(compactNFA.getTransitions(2, 1), Set.of(0));
+        Assert.assertEquals(compactNFA.getTransitions(3, 1), Set.of(1,2));
     }
 
     @Test
@@ -65,11 +64,11 @@ class TabakovVardiRandomAutomataTest {
         float ad = 0.5f; // exactly 1 accepting state
         Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
         CompactNFA<Integer> compactNFA = TabakovVardiRandomAutomata.generateNFA(r, size, td, ad, alphabet);
-        Assert.assertEquals(size, compactNFA.size());
-        Assert.assertEquals(1, compactNFA.getInitialStates().size());
+        Assert.assertEquals(compactNFA.size(), size);
+        Assert.assertEquals(compactNFA.getInitialStates().size(), 1);
         Assert.assertTrue(compactNFA.isAccepting(0));
         Assert.assertFalse(compactNFA.isAccepting(1));
-        Assert.assertEquals(0, compactNFA.getTransitions(0).size());
-        Assert.assertEquals(0, compactNFA.getTransitions(1).size());
+        Assert.assertTrue(compactNFA.getTransitions(0).isEmpty());
+        Assert.assertTrue(compactNFA.getTransitions(1).isEmpty());
     }
 }
