@@ -236,7 +236,7 @@ public class RandomICAutomatonGenerator<SP, TP> {
 
     /**
      * Generates an initially connected (IC) deterministic automaton with the given parameters. Note that the automaton
-     * will <b>not</b> be minized.
+     * will <b>not</b> be minimized.
      *
      * @param numStates
      *         the number of states of the resulting automaton

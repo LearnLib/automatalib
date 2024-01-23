@@ -21,15 +21,18 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.random.RandomUtil;
 
+/**
+ * A generator for random automata (in particular, NFAs) using Tabakov and Vardi's approach, described in the paper
+ * <a href="https://doi.org/10.1007/11591191_28">Experimental Evaluation of Classical Automata Constructions</a>
+ * by Deian Tabakov and Moshe Y&nbsp;Vardi.
+ */
 public final class TabakovVardiRandomAutomata {
     private TabakovVardiRandomAutomata() {
         // prevent instantiation
     }
 
     /**
-     * Generate random NFA using Tabakov and Vardi's approach, described in the paper
-     * <a href="https://doi.org/10.1007/11591191_28">Experimental Evaluation of Classical Automata Constructions</a>
-     * by Deian Tabakov and Moshe Y. Vardi.
+     * Generate random NFA of given size, with specified transition and acceptance densities.
      *
      * @param r
      *      random instance
@@ -50,7 +53,7 @@ public final class TabakovVardiRandomAutomata {
     }
 
     /**
-     * Generate random NFA, with fixed number of accept states and edges (per letter).
+     * Generate random NFA of given size, with fixed number of edges (per letter) and accept states.
      *
      * @param r
      *      random instance

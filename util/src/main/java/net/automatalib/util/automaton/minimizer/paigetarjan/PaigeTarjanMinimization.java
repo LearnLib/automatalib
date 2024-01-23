@@ -155,7 +155,7 @@ public final class PaigeTarjanMinimization {
     /**
      * Minimizes the given automaton depending on the given partitioning function. The {@code sinkClassification} is
      * used to describe the signature of the sink state ("successor" of undefined transitions) and may introduce a new,
-     * on-thy-fly equivalence class if it doesn't match a signature of any existing state. See the {@link
+     * on-the-fly equivalence class if it doesn't match a signature of any existing state. See the {@link
      * StateSignature} class for creating signatures for existing states.
      *
      * @param automaton
