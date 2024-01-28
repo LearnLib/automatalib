@@ -58,8 +58,12 @@ public interface VisualizationHelper<N, E> {
      * overridden, it is probably a good idea to call {@code super.getEdgeProperties(node, properties);} at the
      * beginning of the method.
      *
+     * @param src
+     *         the source node of the edge
      * @param edge
      *         the edge to be rendered
+     * @param tgt
+     *         the target node of the edge
      * @param properties
      *         the property map
      *

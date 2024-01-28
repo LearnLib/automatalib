@@ -77,6 +77,10 @@ public final class Graphs {
      *         the graph
      * @param init
      *         the initial node
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @return the node list corresponding to the given edge list.
      */
@@ -100,6 +104,10 @@ public final class Graphs {
      *         the graph
      * @param edgeWeights
      *         the edge weights
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @return the all pairs shortest paths result
      *
@@ -119,6 +127,10 @@ public final class Graphs {
      *         the source node
      * @param edgeWeights
      *         the edge weights
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @return the single-source shortest paths result
      *
@@ -135,6 +147,10 @@ public final class Graphs {
      *
      * @param graph
      *         the graph
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @return a list of all SCCs, each represented as a list of its nodes
      *
@@ -155,6 +171,10 @@ public final class Graphs {
      *         the graph
      * @param sccListener
      *         the SCC listener
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @see TarjanSCCVisitor
      * @see SCCs

@@ -31,6 +31,9 @@ public interface WorksetMappingAlgorithm<T, E, R> {
      * Provide the initial elements that should be processed by {@link #update(Map, Object) update}. Also performs any
      * required action on the initial elements (e.g. update mapping).
      *
+     * @param mapping
+     *         the calculated mapping (should be updated appropriately)
+     *
      * @return initial elements
      */
     Collection<T> initialize(Map<T, E> mapping);

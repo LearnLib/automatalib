@@ -26,6 +26,9 @@ public class InvalidReferenceException extends IllegalArgumentException {
     /**
      * Constructor.
      *
+     * @param message
+     *         the error message
+     *
      * @see RuntimeException#RuntimeException(String)
      */
     public InvalidReferenceException(String message) {

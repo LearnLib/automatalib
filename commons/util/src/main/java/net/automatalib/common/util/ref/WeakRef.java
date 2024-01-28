@@ -23,7 +23,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * A weak reference wrapper, complying to the {@link Ref} interface.
  *
  * @param <T>
- *         referent class.
+ *         referent type
  */
 public final class WeakRef<T> implements Ref<T> {
 

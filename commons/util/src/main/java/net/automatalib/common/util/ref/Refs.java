@@ -26,7 +26,9 @@ public final class Refs {
      * Creates a strong reference to the given referent.
      *
      * @param referent
-     *         the referent.
+     *         the referent
+     * @param <T>
+     *         referent type
      *
      * @return a strong reference to the referent.
      */
@@ -38,7 +40,9 @@ public final class Refs {
      * Creates a weak reference to the given referent.
      *
      * @param referent
-     *         the referent.
+     *         the referent
+     * @param <T>
+     *         referent type
      *
      * @return a weak reference to the referent.
      */

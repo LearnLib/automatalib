@@ -32,15 +32,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * that has meaningful identifiers for the individual components.
  *
  * @param <T1>
- *         type of the pair's first component.
+ *         type of the first component
  * @param <T2>
- *         type of the pair's second component.
+ *         type of the second component
  */
 public final class Pair<T1, T2> extends AbstractPrintable {
 
-    /*
-     * Components
-     */
     private final T1 first;
     private final T2 second;
 
@@ -50,7 +47,18 @@ public final class Pair<T1, T2> extends AbstractPrintable {
     }
 
     /**
-     * Convenience function for creating a pair, allowing the user to omit the type parameters.
+     * Creates a new pair from the given components.
+     *
+     * @param first
+     *         the first pair component
+     * @param second
+     *         the second pair component
+     * @param <T1>
+     *         type of the first component
+     * @param <T2>
+     *         type of the second component
+     *
+     * @return the new pair object
      */
     public static <T1, T2> Pair<T1, T2> of(T1 first, T2 second) {
         return new Pair<>(first, second);

@@ -40,6 +40,8 @@ public final class CmpUtil {
      *         the second list
      * @param elemComparator
      *         the comparator for comparing the single elements
+     * @param <U>
+     *         element type
      *
      * @return the result of the comparison
      */
@@ -73,6 +75,8 @@ public final class CmpUtil {
      *         the first list
      * @param o2
      *         the second list
+     * @param <U>
+     *         element type
      *
      * @return the result of the comparison
      */
@@ -95,9 +99,10 @@ public final class CmpUtil {
      *         the second iterable.
      * @param elemComparator
      *         the comparator.
+     * @param <U>
+     *         element type
      *
-     * @return <code>&lt; 0</code> iff o1 is lexicographically smaller, <code>0</code> if o1 equals o2 and <code>&gt;
-     * 0</code> otherwise.
+     * @return {@code < 0} iff o1 is lexicographically smaller, {@code 0} if o1 equals o2 and {@code > 0} otherwise.
      */
     public static <U> int lexCompare(Iterable<? extends U> o1,
                                      Iterable<? extends U> o2,
@@ -141,7 +146,16 @@ public final class CmpUtil {
     }
 
     /**
-     * Lexicographically compares two {@link Iterable}s, whose element types are comparable.
+     * Lexicographically compares two {@link Iterable}s using the inert comparability of their elements.
+     *
+     * @param o1
+     *         the first iterable.
+     * @param o2
+     *         the second iterable.
+     * @param <U>
+     *         element type
+     *
+     * @return {@code < 0} iff o1 is lexicographically smaller, {@code 0} if o1 equals o2 and {@code > 0} otherwise.
      */
     public static <U extends Comparable<? super U>> int lexCompare(Iterable<? extends U> o1, Iterable<? extends U> o2) {
         Iterator<? extends U> it1 = o1.iterator(), it2 = o2.iterator();
@@ -166,16 +180,25 @@ public final class CmpUtil {
      *
      * @param elemComp
      *         the comparator to use for comparing the elements.
+     * @param <U>
+     *         element type
+     * @param <T>
+     *         iterable type
      *
-     * @return a comparator for comparing objects of type <code>T</code> based on lexicographical ordering.
+     * @return a comparator for comparing iterables of type {@code U} based on lexicographical ordering.
      */
-    public static <T extends Iterable<U>, U> Comparator<T> lexComparator(Comparator<U> elemComp) {
+    public static <T extends Iterable<U>, U> Comparator<T> lexComparator(Comparator<? super U> elemComp) {
         return new LexComparator<>(elemComp);
     }
 
     /**
-     * Retrieves a lexicographical comparator for the given type, which has to be an {@link Iterable} of {@link
-     * Comparable} types.
+     * Retrieves a lexicographical comparator for the given type, which has to be an {@link Iterable} of
+     * {@link Comparable} types.
+     *
+     * @param <U>
+     *         element type
+     * @param <T>
+     *         iterable type
      *
      * @return the lexicographical comparator.
      */
@@ -188,8 +211,12 @@ public final class CmpUtil {
      *
      * @param elemComp
      *         the comparator to use for comparing the elements.
+     * @param <U>
+     *         element type
+     * @param <T>
+     *         list type
      *
-     * @return a comparator for comparing objects of type <code>T</code> based on canonical ordering.
+     * @return a comparator for comparing iterables of type {@code U} based on canonical ordering.
      */
     public static <T extends List<? extends U>, U> Comparator<T> canonicalComparator(Comparator<? super U> elemComp) {
         return new CanonicalComparator<>(elemComp);
@@ -197,6 +224,11 @@ public final class CmpUtil {
 
     /**
      * Retrieves a canonical comparator for the given type, which has to be a {@link List} of {@link Comparable} types.
+     *
+     * @param <U>
+     *         element type
+     * @param <T>
+     *         list type
      *
      * @return the canonical comparator
      *

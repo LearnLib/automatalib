@@ -59,11 +59,17 @@ public final class GraphDOT {
      * Renders an {@link Automaton} in the GraphVIZ DOT format.
      *
      * @param automaton
-     *         the automaton to render.
+     *         the automaton to render
      * @param inputAlphabet
      *         the input alphabet to consider
      * @param a
      *         the appendable to write to
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
      *
      * @throws IOException
      *         if writing to {@code a} fails
@@ -78,13 +84,19 @@ public final class GraphDOT {
      * Renders an {@link Automaton} in the GraphVIZ DOT format.
      *
      * @param automaton
-     *         the automaton to render.
+     *         the automaton to render
      * @param inputAlphabet
      *         the input alphabet to consider
      * @param a
      *         the appendable to write to
      * @param additionalHelpers
-     *         additional helpers for providing visualization properties.
+     *         additional helpers for providing visualization properties
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
      *
      * @throws IOException
      *         if writing to {@code a} fails
@@ -102,13 +114,19 @@ public final class GraphDOT {
      * Renders an {@link Automaton} in the GraphVIZ DOT format.
      *
      * @param automaton
-     *         the automaton to render.
+     *         the automaton to render
      * @param inputAlphabet
      *         the input alphabet to consider
      * @param a
      *         the appendable to write to
      * @param additionalHelpers
-     *         additional helpers for providing visualization properties.
+     *         additional helpers for providing visualization properties
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
      *
      * @throws IOException
      *         if writing to {@code a} fails
@@ -127,10 +145,14 @@ public final class GraphDOT {
      * @param graph
      *         the graph to render
      * @param a
-     *         the appendable to write to.
+     *         the appendable to write to
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @throws IOException
-     *         if writing to {@code a} fails.
+     *         if writing to {@code a} fails
      */
     public static <N, E> void write(Graph<N, E> graph, Appendable a) throws IOException {
         writeRaw(graph, a, toDOTVisualizationHelper(graph.getVisualizationHelper()));
@@ -142,12 +164,16 @@ public final class GraphDOT {
      * @param graph
      *         the graph to render
      * @param a
-     *         the appendable to write to.
+     *         the appendable to write to
      * @param additionalHelpers
-     *         additional helpers for providing visualization properties.
+     *         additional helpers for providing visualization properties
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @throws IOException
-     *         if writing to {@code a} fails.
+     *         if writing to {@code a} fails
      */
     @SafeVarargs
     public static <N, E> void write(Graph<N, E> graph,
@@ -162,9 +188,13 @@ public final class GraphDOT {
      * @param graph
      *         the graph to render
      * @param a
-     *         the appendable to write to.
+     *         the appendable to write to
      * @param additionalHelpers
-     *         additional helpers for providing visualization properties.
+     *         additional helpers for providing visualization properties
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @throws IOException
      *         if writing to {@code a} fails.
@@ -183,8 +213,8 @@ public final class GraphDOT {
 
     /**
      * Renders a list of {@link Graph}s as clusters (subgraphs) in the GraphVIZ DOT format. Note that any markup
-     * information for each cluster must be provided by the respective graph's {@link Graph#getVisualizationHelper()
-     * visualization helper}.
+     * information for each cluster must be provided by the respective graph's
+     * {@link Graph#getVisualizationHelper() visualization helper}.
      *
      * @param graphs
      *         the graphs to render

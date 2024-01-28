@@ -70,6 +70,10 @@ public class DijkstraSSSP<N, E> implements SSSPResult<N, E> {
      *         the initial (source) node
      * @param edgeWeights
      *         the edge weights
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @return the single-source shortest path results
      */

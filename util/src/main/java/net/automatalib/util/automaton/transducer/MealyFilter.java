@@ -51,6 +51,10 @@ public final class MealyFilter {
      *         the input alphabet
      * @param outputs
      *         the outputs to remove
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy machine with all transitions removed that have one of the specified outputs.
      */
@@ -71,6 +75,10 @@ public final class MealyFilter {
      *         the input alphabet
      * @param outputs
      *         the outputs to remove
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy machine with all transitions removed that have one of the specified outputs.
      */
@@ -110,6 +118,10 @@ public final class MealyFilter {
      *         the input alphabet
      * @param outputs
      *         the outputs to retain
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy machine with all transitions retained that have one of the specified outputs.
      */
@@ -130,6 +142,10 @@ public final class MealyFilter {
      *         the input alphabet
      * @param outputs
      *         the outputs to retain
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return a Mealy machine with all transitions retained that have one of the specified outputs.
      */

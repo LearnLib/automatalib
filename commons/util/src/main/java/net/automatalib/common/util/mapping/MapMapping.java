@@ -87,9 +87,9 @@ public class MapMapping<D, @Nullable R> implements MutableMapping<D, R> {
     }
 
     /**
-     * Delegates to the underlying {@link java.util.Map}.
+     * Returns the {@link Map#entrySet()} of the underlying map.
      *
-     * @see java.util.Map#entrySet()
+     * @return the {@link Map#entrySet()} of the underlying map
      */
     public Set<Map.Entry<@KeyFor("this.map") D, R>> entrySet() {
         return map.entrySet();

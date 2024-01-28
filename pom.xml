@@ -193,6 +193,8 @@ limitations under the License.
         <maven.compiler.testRelease>11</maven.compiler.testRelease>
         <argLine /> <!-- compatibility for property expansion in surefire-plugin -->
 
+        <automatalib.jdk16orLower>false</automatalib.jdk16orLower>
+
         <!-- plugin versions -->
         <antrun-plugin.version>3.1.0</antrun-plugin.version>
         <archetype-plugin.version>3.2.1</archetype-plugin.version>
@@ -913,6 +915,10 @@ limitations under the License.
         <profile>
             <!-- enables additional plugins that perform static code analysis, also see the 'build-parent' pom -->
             <id>code-analysis</id>
+            <properties>
+                <!-- from JDK17 onward, all missing javadoc generates warnings. we don't support that yet -->
+                <maven.javadoc.failOnWarnings>${automatalib.jdk16orLower}</maven.javadoc.failOnWarnings>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -1169,6 +1175,15 @@ limitations under the License.
             </activation>
             <properties>
                 <cacio.version>1.17.3</cacio.version>
+            </properties>
+        </profile>
+        <profile>
+            <id>jdk16orLower</id>
+            <activation>
+                <jdk>(,17)</jdk>
+            </activation>
+            <properties>
+                <automatalib.jdk16orLower>true</automatalib.jdk16orLower>
             </properties>
         </profile>
         <profile>

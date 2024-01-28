@@ -53,11 +53,21 @@ public final class SubsequentialTransducers {
      *         the alphabet symbols to consider for this transformation
      * @param out
      *         the target automaton to write the onward form to
+     * @param <S>
+     *         state type (of the output SST)
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type (of the output SST)
+     * @param <O>
+     *         output symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
-    public static <S1, S2, I, T1, T2, O, A extends MutableSubsequentialTransducer<S2, I, T2, O>> A toOnwardSST(
-            SubsequentialTransducer<S1, I, T1, O> sst,
+    public static <S, I, T, O, A extends MutableSubsequentialTransducer<S, I, T, O>> A toOnwardSST(
+            SubsequentialTransducer<?, I, ?, O> sst,
             Collection<? extends I> inputs,
             A out) {
         return toOnwardSST(sst, inputs, out, true);
@@ -77,11 +87,21 @@ public final class SubsequentialTransducers {
      *         the target automaton to write the onward form to
      * @param minimize
      *         a flag indicating whether the final result should be minimized
+     * @param <S>
+     *         state type (of the output SST)
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type (of the output SST)
+     * @param <O>
+     *         output symbol type
+     * @param <A>
+     *         automaton type
      *
      * @return {@code out}, for convenience
      */
-    public static <S1, S2, I, T1, T2, O, A extends MutableSubsequentialTransducer<S2, I, T2, O>> A toOnwardSST(
-            SubsequentialTransducer<S1, I, T1, O> sst,
+    public static <S, I, T, O, A extends MutableSubsequentialTransducer<S, I, T, O>> A toOnwardSST(
+            SubsequentialTransducer<?, I, ?, O> sst,
             Collection<? extends I> inputs,
             A out,
             boolean minimize) {
@@ -89,20 +109,20 @@ public final class SubsequentialTransducers {
         assert out.size() == 0;
         AutomatonLowLevelCopy.copy(AutomatonCopyMethod.STATE_BY_STATE, sst, inputs, out);
 
-        final Mapping<S2, Set<Pair<S2, I>>> incomingTransitions = getIncomingTransitions(out, inputs);
-        final Deque<S2> queue = new ArrayDeque<>(out.getStates());
+        final Mapping<S, Set<Pair<S, I>>> incomingTransitions = getIncomingTransitions(out, inputs);
+        final Deque<S> queue = new ArrayDeque<>(out.getStates());
 
-        final S2 oldInit = out.getInitialState();
+        final S oldInit = out.getInitialState();
 
         if (oldInit != null && !incomingTransitions.get(oldInit).isEmpty()) {
             // copy initial state to prevent push-back of prefixes for the initial state.
             out.setInitial(oldInit, false);
-            final S2 newInit = out.addInitialState(out.getStateProperty(oldInit));
+            final S newInit = out.addInitialState(out.getStateProperty(oldInit));
 
             for (I i : inputs) {
-                final T2 oldT = out.getTransition(oldInit, i);
+                final T oldT = out.getTransition(oldInit, i);
                 if (oldT != null) {
-                    final S2 succ = out.getSuccessor(oldT);
+                    final S succ = out.getSuccessor(oldT);
                     out.addTransition(newInit, i, succ, out.getTransitionProperty(oldT));
                     incomingTransitions.get(succ).add(Pair.of(newInit, i));
                 }
@@ -110,7 +130,7 @@ public final class SubsequentialTransducers {
         }
 
         while (!queue.isEmpty()) {
-            final S2 s = queue.pop();
+            final S s = queue.pop();
             if (Objects.equals(s, out.getInitialState())) {
                 continue;
             }
@@ -123,7 +143,7 @@ public final class SubsequentialTransducers {
                 out.setStateProperty(s, newStateProperty);
 
                 for (I i : inputs) {
-                    final T2 t = out.getTransition(s, i);
+                    final T t = out.getTransition(s, i);
                     if (t != null) {
                         final Word<O> oldTransitionProperty = out.getTransitionProperty(t);
                         final Word<O> newTransitionProperty = oldTransitionProperty.subWord(lcp.length());
@@ -132,9 +152,9 @@ public final class SubsequentialTransducers {
                     }
                 }
 
-                for (Pair<S2, I> trans : incomingTransitions.get(s)) {
-                    final S2 src = trans.getFirst();
-                    final T2 t = out.getTransition(src, trans.getSecond());
+                for (Pair<S, I> trans : incomingTransitions.get(s)) {
+                    final S src = trans.getFirst();
+                    final T t = out.getTransition(src, trans.getSecond());
                     assert t != null;
 
                     final Word<O> oldTransitionProperty = out.getTransitionProperty(t);
@@ -160,11 +180,17 @@ public final class SubsequentialTransducers {
      *         the SST to check
      * @param inputs
      *         the input symbols to consider for this check
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <O>
+     *         output symbol type
      *
      * @return {@code true} if {@code sst} is onward, {@code false} otherwise
      */
-    public static <S, I, T, O> boolean isOnwardSST(SubsequentialTransducer<S, I, T, O> sst,
-                                                   Collection<? extends I> inputs) {
+    public static <S, I, O> boolean isOnwardSST(SubsequentialTransducer<S, I, ?, O> sst,
+                                                Collection<? extends I> inputs) {
 
         for (S s : sst) {
             if (Objects.equals(s, sst.getInitialState())) {

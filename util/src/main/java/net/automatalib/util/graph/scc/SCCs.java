@@ -34,6 +34,10 @@ public final class SCCs {
      *
      * @param graph
      *         the graph
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @return a list of all SCCs, each represented as a list of its nodes
      *
@@ -55,6 +59,10 @@ public final class SCCs {
      *         the graph
      * @param listener
      *         the SCC listener
+     * @param <N>
+     *         node type
+     * @param <E>
+     *         edge type
      *
      * @see TarjanSCCVisitor
      */

@@ -25,7 +25,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * This class allows for treating normal ("strong") references the same way as {@link WeakReference}s.
  *
  * @param <T>
- *         referent class.
+ *         referent type
  */
 public interface Ref<T> {
 

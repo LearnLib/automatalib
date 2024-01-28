@@ -45,19 +45,42 @@ public interface MutableAutomaton<S, I, T, SP, TP> extends UniversalAutomaton<S,
      */
     void clear();
 
+    /**
+     * Adds a new state (with an empty property) to the automaton.
+     *
+     * @return the newly created state
+     */
     default S addState() {
         return addState(null);
     }
 
     /**
-     * Adds a state to the automaton.
+     * Adds a new state with the given property to the automaton.
+     *
+     * @param property
+     *         the property of the new state
+     *
+     * @return the newly created state
      */
     S addState(@Nullable SP property);
 
+    /**
+     * Adds an initial state (with an empty property) to the automaton.
+     *
+     * @return the newly created state
+     */
     default S addInitialState() {
         return addInitialState(null);
     }
 
+    /**
+     * Adds an initial state with the given property to the automaton.
+     *
+     * @param property
+     *         the property of the new state
+     *
+     * @return the newly created state
+     */
     default S addInitialState(@Nullable SP property) {
         S state = addState(property);
         setInitial(state, true);

@@ -38,6 +38,11 @@ public abstract class AbstractLTSminMonitor<I, A, R> extends AbstractLTSmin<I, A
     /**
      * Constructs a new AbstractLTSminMonitor.
      *
+     * @param keepFiles
+     *         whether to keep the files generated during model checking
+     * @param string2Input
+     *         the input parsing function
+     *
      * @see AbstractLTSmin#AbstractLTSmin(boolean, Function)
      */
     protected AbstractLTSminMonitor(boolean keepFiles, Function<String, I> string2Input) {

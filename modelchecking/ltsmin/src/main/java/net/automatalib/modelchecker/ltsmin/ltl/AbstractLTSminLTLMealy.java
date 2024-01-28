@@ -37,9 +37,9 @@ import org.slf4j.LoggerFactory;
  * An LTL model checker using LTSmin for Mealy machines.
  *
  * @param <I>
- *         the input type.
+ *         the input type
  * @param <O>
- *         the output type.
+ *         the output type
  */
 public abstract class AbstractLTSminLTLMealy<I, O>
         extends AbstractLTSminLTL<I, MealyMachine<?, I, ?, O>, MealyLasso<I, O>>
@@ -61,10 +61,18 @@ public abstract class AbstractLTSminLTLMealy<I, O>
     /**
      * Constructs a new AbstractLTSminLTLMealy.
      *
+     * @param keepFiles
+     *         whether to keep the files generated during model checking
+     * @param string2Input
+     *         the input parsing function
      * @param string2Output
-     *         the function that transforms edges in the FSM file to actual output.
+     *         the output parsing function
+     * @param multiplier
+     *         the multiplier
+     * @param minimumUnfolds
+     *         the minimum number of unfolds
      * @param skipOutputs
-     *         the set of outputs that need to be skipped while writing the Mealy machine to ETF.
+     *         the set of outputs that need to be skipped while writing the Mealy machine to ETF
      *
      * @see AbstractLTSminLTL
      */
@@ -114,8 +122,8 @@ public abstract class AbstractLTSminLTLMealy<I, O>
 
     @Override
     public @Nullable MealyLasso<I, O> findCounterExample(MealyMachine<?, I, ?, O> automaton,
-                                               Collection<? extends I> inputs,
-                                               String property) {
+                                                         Collection<? extends I> inputs,
+                                                         String property) {
         final File fsm = findCounterExampleFSM(automaton, inputs, property);
 
         if (fsm == null) {

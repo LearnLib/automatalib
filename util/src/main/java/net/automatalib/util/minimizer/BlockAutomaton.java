@@ -23,9 +23,9 @@ import java.util.List;
  * state.
  *
  * @param <S>
- *         state class.
+ *         state type
  * @param <L>
- *         transition label class.
+ *         transition label type
  */
 public class BlockAutomaton<S, L> {
 
@@ -60,9 +60,9 @@ public class BlockAutomaton<S, L> {
      * Retrieves a list of outgoing edges of a block (state).
      *
      * @param block
-     *         the block (state).
+     *         the block (state)
      *
-     * @return the outgoing edges of the given block (state).
+     * @return the outgoing edges of the given block (state)
      */
     public List<BlockEdge<S, L>> getOutgoingEdges(Block<S, L> block) {
         return Arrays.asList(edges[block.getId()]);
@@ -71,7 +71,10 @@ public class BlockAutomaton<S, L> {
     /**
      * Retrieves an array of outgoing edges of a block (state).
      *
-     * @see #getOutgoingEdges(Block)
+     * @param block
+     *         the block (state)
+     *
+     * @return the outgoing edges of the given block (state)
      */
     public BlockEdge<S, L>[] getOutgoingEdgeArray(Block<S, L> block) {
         return edges[block.getId()];

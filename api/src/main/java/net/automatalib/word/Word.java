@@ -92,6 +92,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @param symbols
      *         the symbol array
+     * @param <I>
+     *         symbol type
      *
      * @return a word containing the symbols in the specified array
      */
@@ -109,6 +111,9 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     /**
      * Retrieves the empty word.
      *
+     * @param <I>
+     *         symbol type
+     *
      * @return the empty word.
      *
      * @see Collections#emptyList()
@@ -123,6 +128,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @param letter
      *         the letter
+     * @param <I>
+     *         symbol type
      *
      * @return a word consisting of only this letter
      */
@@ -140,6 +147,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *         the starting index in the array
      * @param length
      *         the length of the resulting word (from the starting index on)
+     * @param <I>
+     *         symbol type
      *
      * @return the word consisting of the symbols in the range
      */
@@ -160,6 +169,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @param symbolList
      *         the list of symbols
+     * @param <I>
+     *         symbol type
      *
      * @return the resulting word
      */
@@ -226,6 +237,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @param word
      *         the word to upcast
+     * @param <I>
+     *         symbol type
      *
      * @return the upcasted word (reference identical to {@code word})
      */
@@ -415,7 +428,11 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
     }
 
     /**
-     * Retrieves a {@link IntSeq} view on the contents of this word for a given indexing function (e.g. an {@link Alphabet}).
+     * Retrieves a {@link IntSeq} view on the contents of this word for a given indexing function (e.g. an
+     * {@link Alphabet}).
+     *
+     * @param indexFunction
+     *         the mapping from symbols to indices
      *
      * @return an {@link IntSeq} view of the contained symbols.
      */
@@ -774,6 +791,8 @@ public abstract class Word<I> extends AbstractPrintable implements ArrayWritable
      *
      * @param transformer
      *         the transformation function
+     * @param <T>
+     *         the target type
      *
      * @return the transformed word
      */

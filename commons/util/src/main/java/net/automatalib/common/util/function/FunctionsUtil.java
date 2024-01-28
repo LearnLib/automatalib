@@ -38,11 +38,15 @@ public final class FunctionsUtil {
      *
      * @param func
      *         the function reference (may be {@code null})
+     * @param <D>
+     *         domain type
+     * @param <R>
+     *         range type
      *
      * @return a non-{@code null} object identical to the passed function, if it is non-{@code null}, or a function
      * object always returning {@code null} otherwise
      */
-    public static <T, R> Function<T, ? extends @Nullable R> safeDefault(@Nullable Function<T, R> func) {
+    public static <D, R> Function<D, ? extends @Nullable R> safeDefault(@Nullable Function<D, R> func) {
         if (func == null) {
             return (x) -> null;
         }
@@ -56,6 +60,8 @@ public final class FunctionsUtil {
      *
      * @param func
      *         the function reference (may be {@code null})
+     * @param <R>
+     *         range type
      *
      * @return a non-{@code null} object identical to the passed function, if it is non-{@code null}, or a function
      * object always returning {@code null} otherwise
@@ -74,6 +80,8 @@ public final class FunctionsUtil {
      *
      * @param func
      *         the function reference (may be {@code null})
+     * @param <R>
+     *         range type
      *
      * @return a non-{@code null} object identical to the passed function, if it is non-{@code null}, or a function
      * object always returning {@code null} otherwise

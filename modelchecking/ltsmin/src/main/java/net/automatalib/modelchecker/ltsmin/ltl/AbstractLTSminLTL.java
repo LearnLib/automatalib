@@ -45,10 +45,14 @@ public abstract class AbstractLTSminLTL<I, A, L extends Lasso<I, ?>> extends Abs
     /**
      * Constructs a new AbstractLTSminLTL.
      *
+     * @param keepFiles
+     *         whether to keep the files generated during model checking
+     * @param string2Input
+     *         the input parsing function
      * @param multiplier
-     *         the multiplier.
+     *         the multiplier
      * @param minimumUnfolds
-     *         the minimum number of unfolds.
+     *         the minimum number of unfolds
      *
      * @see AbstractLTSmin#AbstractLTSmin(boolean, Function)
      */

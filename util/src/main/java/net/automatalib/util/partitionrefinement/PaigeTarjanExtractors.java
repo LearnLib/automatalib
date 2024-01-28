@@ -72,6 +72,14 @@ public final class PaigeTarjanExtractors {
      *         the transition property extractor, or {@code null}
      * @param pruneUnreachable
      *         {@code true} if unreachable states should be pruned during construction, {@code false} otherwise
+     * @param <I>
+     *         input symbol type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     * @param <A>
+     *         automaton type
      *
      * @return an automaton created using the specified creator, over the specified input alphabet, and reflecting the
      * partition data of the specified {@link PaigeTarjan} object

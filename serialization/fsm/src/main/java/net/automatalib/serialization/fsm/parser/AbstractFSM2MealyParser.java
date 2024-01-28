@@ -39,10 +39,13 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * An FSM parser for Mealy machines. It provides general functionality for both Mealy machines with straightforward edge
  * semantics, and alternating edge semantics.
  *
- * @param <I> the input type.
- * @param <O> the output type.
+ * @param <I>
+ *         the input type.
+ * @param <O>
+ *         the output type.
  */
-public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I> implements ModelDeserializer<CompactMealy<I, O>> {
+public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
+        implements ModelDeserializer<CompactMealy<I, O>> {
 
     /**
      * A Function that transform strings from the FSM source to actual output.
@@ -63,10 +66,12 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
      * Constructs a new AbstractFSM2MealyParser.
      *
      * @param targetInputs
-     *         A collection containing the inputs which should constitute the input alphabet of the parsed automaton.
-     *         If {@code null}, the inputs will be automatically gathered from the read FSM file.
-     * @param inputParser the input parser (see {@link #inputParser}).
-     * @param outputParser the output parser (similar to {@code inputParser}).
+     *         A collection containing the inputs which should constitute the input alphabet of the parsed automaton. If
+     *         {@code null}, the inputs will be automatically gathered from the read FSM file
+     * @param inputParser
+     *         the input parser
+     * @param outputParser
+     *         the output parser (similar to {@code inputParser})
      */
     protected AbstractFSM2MealyParser(@Nullable Collection<? extends I> targetInputs,
                                       Function<String, I> inputParser,
@@ -129,13 +134,17 @@ public abstract class AbstractFSM2MealyParser<I, O> extends AbstractFSMParser<I>
     protected void checkStateVectors(StreamTokenizer streamTokenizer) {}
 
     /**
-     * Constructs the actual {@link MealyMachine}, using {@link #states}, and
-     * {@link #transitions}.
+     * Constructs the actual {@link MealyMachine}, using {@link #states}, and {@link #transitions}.
+     *
+     * @param reader
+     *         the reader providing the contents of the FSM file
      *
      * @return the Mealy machine defined in the FSM source.
      *
-     * @throws FSMFormatException (see {@link #parse(Reader)}).
-     * @throws IOException (see {@link #parse(Reader)}).
+     * @throws FSMFormatException
+     *         (see {@link #parse(Reader)}).
+     * @throws IOException
+     *         (see {@link #parse(Reader)}).
      */
     protected CompactMealy<I, O> parseMealy(Reader reader) throws IOException {
 

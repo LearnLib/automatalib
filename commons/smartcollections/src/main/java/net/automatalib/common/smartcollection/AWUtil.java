@@ -36,6 +36,10 @@ public final class AWUtil {
      *         the container.
      * @param array
      *         the array
+     * @param <T>
+     *         the array type
+     * @param <U>
+     *         the container type
      *
      * @return the number of elements copied
      */
@@ -61,6 +65,10 @@ public final class AWUtil {
      *         the container.
      * @param array
      *         the array
+     * @param <T>
+     *         the array type
+     * @param <U>
+     *         the container type
      *
      * @return the number of elements copied
      */

@@ -60,6 +60,12 @@ public final class OneSEVPAs {
      *         the second SEVPA
      * @param alphabet
      *         the input alphabet
+     * @param <L1>
+     *         location type of the first SEVPA
+     * @param <L2>
+     *         location type of the second SEVPA
+     * @param <I>
+     *         input symbol type
      *
      * @return a view representing the conjunction of the specified {@link OneSEVPA}s
      */
@@ -82,6 +88,12 @@ public final class OneSEVPAs {
      *         the input alphabet
      * @param combiner
      *         combination method for acceptance values
+     * @param <L1>
+     *         location type of the first SEVPA
+     * @param <L2>
+     *         location type of the second SEVPA
+     * @param <I>
+     *         input symbol type
      *
      * @return a view representing the given combination of the specified {@link OneSEVPA}s
      */
@@ -101,6 +113,12 @@ public final class OneSEVPAs {
      *         the second SEVPA
      * @param alphabet
      *         the input alphabet
+     * @param <L1>
+     *         location type of the first SEVPA
+     * @param <L2>
+     *         location type of the second SEVPA
+     * @param <I>
+     *         input symbol type
      *
      * @return a view representing the disjunction of the specified {@link OneSEVPA}s
      */
@@ -119,6 +137,12 @@ public final class OneSEVPAs {
      *         the second SEVPA
      * @param alphabet
      *         the input alphabet
+     * @param <L1>
+     *         location type of the first SEVPA
+     * @param <L2>
+     *         location type of the second SEVPA
+     * @param <I>
+     *         input symbol type
      *
      * @return a view representing the exclusive-or of the specified {@link OneSEVPA}s
      */
@@ -137,6 +161,12 @@ public final class OneSEVPAs {
      *         the second SEVPA
      * @param alphabet
      *         the input alphabet
+     * @param <L1>
+     *         location type of the first SEVPA
+     * @param <L2>
+     *         location type of the second SEVPA
+     * @param <I>
+     *         input symbol type
      *
      * @return a view representing the equivalence of the specified {@link OneSEVPA}s
      */
@@ -155,6 +185,12 @@ public final class OneSEVPAs {
      *         the second SEVPA
      * @param alphabet
      *         the input alphabet
+     * @param <L1>
+     *         location type of the first SEVPA
+     * @param <L2>
+     *         location type of the second SEVPA
+     * @param <I>
+     *         input symbol type
      *
      * @return a view representing the implication of the specified {@link OneSEVPA}s
      */
@@ -175,6 +211,8 @@ public final class OneSEVPAs {
      * @param alphabet
      *         the input alphabet to consider for minimization (this will also be the input alphabet of the resulting
      *         automaton)
+     * @param <I>
+     *         input symbol type
      *
      * @return a minimized version of the specified {@link OneSEVPA}
      */
