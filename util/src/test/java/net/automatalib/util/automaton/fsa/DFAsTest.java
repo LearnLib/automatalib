@@ -18,8 +18,10 @@ package net.automatalib.util.automaton.fsa;
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.fsa.DFA;
+import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.util.automaton.Automata;
+import net.automatalib.util.ts.acceptor.AcceptanceCombiner;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -65,6 +67,14 @@ public class DFAsTest {
         result.addTransition(prev, 0, first);
 
         return result;
+    }
+
+    @Test
+    public void testCombine() {
+        DFA<?, Integer> expected = forVector(AND_RESULT);
+        DFA<?, Integer> actual = DFAs.combine(testDfa1, testDfa2, testAlphabet, AcceptanceCombiner.AND);
+
+        Assert.assertTrue(Automata.testEquivalence(actual, expected, testAlphabet));
     }
 
     @Test
