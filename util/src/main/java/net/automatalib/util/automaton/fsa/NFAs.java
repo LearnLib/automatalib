@@ -420,8 +420,12 @@ public final class NFAs {
         for (SI init : initList) {
             initBs.set(stateIds.getStateId(init));
         }
-        SO initOut = out.addInitialState(nfa.isAccepting(initList));
+
+        boolean initAcc = nfa.isAccepting(initList);
+        SO initOut = out.addInitialState(initAcc);
+
         outStateMap.put(initBs, initOut);
+
         stack.push(new DeterminizeRecord<>(initList, initOut));
 
         while (!stack.isEmpty()) {
