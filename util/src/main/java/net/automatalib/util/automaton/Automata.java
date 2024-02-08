@@ -100,8 +100,23 @@ public final class Automata {
     /**
      * Minimize the given mutable DFA in-place.
      *
-     * @param automaton mutable DFA
-     * @param inputs the input symbols
+     * @param automaton
+     *         mutable DFA
+     * @param inputs
+     *         the input symbols
+     * @param <S>
+     *         state type
+     * @param <I>
+     *         input symbol type
+     * @param <T>
+     *         transition type
+     * @param <SP>
+     *         state property type
+     * @param <TP>
+     *         transition property type
+     * @param <A>
+     *         automaton type
+     *
      * @return the same mutable DFA (for convenience)
      */
     @SuppressWarnings("unchecked")

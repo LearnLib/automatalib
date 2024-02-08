@@ -295,8 +295,10 @@ public final class NFAs {
      *         the original NFA
      * @param inputAlphabet
      *         the input alphabet
+     * @param <I>
+     *         input symbol type
      *
-     * @return a DFA
+     * @return the determinized NFA
      */
     public static <I> CompactDFA<I> determinize(NFA<?, I> nfa, Alphabet<I> inputAlphabet) {
         return determinize(nfa, inputAlphabet, false, true);
@@ -313,8 +315,10 @@ public final class NFAs {
      *         allows the new DFA to be partial
      * @param minimize
      *         whether to minimize the DFA
+     * @param <I>
+     *         input symbol type
      *
-     * @return a DFA
+     * @return the determinized NFA
      */
     public static <I> CompactDFA<I> determinize(NFA<?, I> nfa,
                                                 Alphabet<I> inputAlphabet,
@@ -338,6 +342,8 @@ public final class NFAs {
      *         allows the new DFA to be partial
      * @param minimize
      *         whether to minimize the DFA
+     * @param <I>
+     *         input symbol type
      */
     public static <I> void determinize(NFA<?, I> nfa,
                                        Collection<? extends I> inputs,
@@ -354,8 +360,13 @@ public final class NFAs {
      * Determinizes the given NFA, and returns the result as a new DFA.
      *
      * @param nfa
-     *        the original NFA
-     * @return a DFA
+     *         the original NFA
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the determinized NFA
      */
     public static <I, A extends NFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> determinize(A nfa) {
         return determinize(nfa, false, true);
@@ -370,7 +381,12 @@ public final class NFAs {
      *         allows the new DFA to be partial
      * @param minimize
      *         whether to minimize the DFA
-     * @return a DFA
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         automaton type
+     *
+     * @return the determinized NFA
      */
     public static <I, A extends NFA<?, I> & InputAlphabetHolder<I>> CompactDFA<I> determinize(A nfa,
                                                                                               boolean partial,
@@ -382,11 +398,13 @@ public final class NFAs {
      * Determinizes the given NFA, and stores the result in a given mutable DFA.
      *
      * @param nfa
-     *        the original NFA
+     *         the original NFA
      * @param inputs
      *         the input symbols to consider
      * @param out
      *         a mutable DFA for storing the result
+     * @param <I>
+     *         input symbol type
      */
     public static <I> void determinize(NFA<?, I> nfa, Collection<? extends I> inputs, MutableDFA<?, I> out) {
         determinize(nfa, inputs, out, false, true);
@@ -403,6 +421,12 @@ public final class NFAs {
      *         a mutable DFA for storing the result
      * @param partial
      *         allows the new DFA to be partial
+     * @param <I>
+     *         input symbol type
+     * @param <SI>
+     *         state type of the input automaton
+     * @param <SO>
+     *         state type of the output automaton
      */
     private static <I, SI, SO> void doDeterminize(NFA<SI, I> nfa,
                                                   Collection<? extends I> inputs,
