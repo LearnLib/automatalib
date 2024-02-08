@@ -15,14 +15,7 @@
  */
 package net.automatalib.util.automaton.fsa;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
@@ -287,6 +280,35 @@ public final class NFAs {
                                                             A out) {
         return combine(nfa1, nfa2, inputs, out, AcceptanceCombiner.IMPL);
     }
+
+    public static <I> CompactNFA<I> reverse(MutableNFA<Integer, I> nfa, Alphabet<I> inputAlphabet) {
+        CompactNFA<I> result = new CompactNFA<>(inputAlphabet);
+        reverse(nfa, inputAlphabet, result);
+        return result;
+    }
+
+    public static <I> void reverse(MutableNFA<Integer, I> nfa,
+                                            Collection<? extends I> inputs,
+                                            MutableNFA<Integer, I> rNFA) {
+        Set<Integer> initialStates = nfa.getInitialStates();
+
+        // Accepting are initial states and vice versa
+        for(int i: nfa.getStates()) {
+            rNFA.addState(initialStates.contains(i));
+            if (nfa.isAccepting(i)) {
+                rNFA.setInitial(i, true);
+            }
+        }
+        // reverse transitions
+        for(int q: nfa.getStates()) {
+            for(I a: inputs) {
+                for(int s: nfa.getTransitions(q,a)) {
+                    rNFA.addTransition(s, a, q);
+                }
+            }
+        }
+    }
+
 
     /**
      * Determinizes the given NFA, and returns the result as a new complete DFA.
