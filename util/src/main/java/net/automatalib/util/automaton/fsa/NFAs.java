@@ -372,10 +372,10 @@ public final class NFAs {
         Set<S> initialStates = nfa.getInitialStates();
 
         // Accepting are initial states and vice versa
-        for(S i: nfa.getStates()) {
-            rNFA.addState(initialStates.contains(i));
-            if (nfa.isAccepting(i)) {
-                rNFA.setInitial(i, true);
+        for(S q: nfa.getStates()) {
+            rNFA.addState(initialStates.contains(q));
+            if (nfa.isAccepting(q)) {
+                rNFA.setInitial(q, true);
             }
         }
         // reverse transitions
@@ -453,19 +453,19 @@ public final class NFAs {
         }
     }
 
-    static <I> Set<Integer> rightTrimHelper(CompactNFA<I> nfa, Collection<? extends I> inputs) {
-        Set<Integer> found = new HashSet<>();
-        Deque<Integer> stack = new ArrayDeque<>();
+    static <S, I> Set<S> rightTrimHelper(NFA<S, I> nfa, Collection<? extends I> inputs) {
+        Set<S> found = new HashSet<>();
+        Deque<S> stack = new ArrayDeque<>();
 
-        for (Integer init : nfa.getInitialStates()) {
+        for (S init : nfa.getInitialStates()) {
             stack.push(init);
             found.add(init);
         }
 
         while (!stack.isEmpty()) {
-            Integer curr = stack.pop();
+            S curr = stack.pop();
             for (I sym : inputs) {
-                for (Integer succState : nfa.getSuccessors(curr, sym)) {
+                for (S succState : nfa.getSuccessors(curr, sym)) {
                     if (found.add(succState)) {
                         // Add states to stack if they haven't been visited
                         stack.push(succState);
