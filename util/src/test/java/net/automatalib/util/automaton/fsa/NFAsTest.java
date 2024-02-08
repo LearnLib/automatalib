@@ -132,6 +132,13 @@ public class NFAsTest {
         // double-reverse == no reverse
         assertEquivalence(testNfa1, NFAs.reverse(rNFA, testAlphabet), testAlphabet);
     }
+
+    @Test
+    public void testTrim() {
+        CompactNFA<Integer> trimNFA = NFAs.trim(testNfa1, testAlphabet);
+        assertEquivalence(testNfa1, trimNFA, testAlphabet);
+    }
+
     @Test
     public void testDeterminize() {
         Alphabet<Integer> alphabet = Alphabets.integers(0, 1);
