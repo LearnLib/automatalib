@@ -334,28 +334,54 @@ public final class NFAs {
         return combine(nfa1, nfa2, inputs, out, AcceptanceCombiner.IMPL);
     }
 
+    /**
+     * Reverse the specified NFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputAlphabet
+     *         the input alphabet
+     * @param <I>
+     *         input symbol type
+     *
+     * @return the reversed NFA
+     */
     public static <I> CompactNFA<I> reverse(MutableNFA<Integer, I> nfa, Alphabet<I> inputAlphabet) {
         CompactNFA<I> result = new CompactNFA<>(inputAlphabet);
         reverse(nfa, inputAlphabet, result);
         return result;
     }
 
-    public static <I> void reverse(MutableNFA<Integer, I> nfa,
+    /**
+     * Reverse the specified NFA, and stores the result in a given mutable NFA.
+     *
+     * @param nfa
+     *         the original NFA
+     * @param inputs
+     *         the input symbols to consider
+     * @param rNFA
+     *         a mutable NFA for storing the result
+     * @param <I>
+     *         input symbol type
+     * @param <S>
+     *         state type of the automata
+     */
+    public static <I, S> void reverse(MutableNFA<S, I> nfa,
                                             Collection<? extends I> inputs,
-                                            MutableNFA<Integer, I> rNFA) {
-        Set<Integer> initialStates = nfa.getInitialStates();
+                                            MutableNFA<S, I> rNFA) {
+        Set<S> initialStates = nfa.getInitialStates();
 
         // Accepting are initial states and vice versa
-        for(int i: nfa.getStates()) {
+        for(S i: nfa.getStates()) {
             rNFA.addState(initialStates.contains(i));
             if (nfa.isAccepting(i)) {
                 rNFA.setInitial(i, true);
             }
         }
         // reverse transitions
-        for(int q: nfa.getStates()) {
+        for(S q: nfa.getStates()) {
             for(I a: inputs) {
-                for(int s: nfa.getTransitions(q,a)) {
+                for(S s: nfa.getTransitions(q,a)) {
                     rNFA.addTransition(s, a, q);
                 }
             }
