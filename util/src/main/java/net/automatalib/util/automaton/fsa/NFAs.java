@@ -361,14 +361,16 @@ public final class NFAs {
      *         the input symbols to consider
      * @param rNFA
      *         a mutable NFA for storing the result
-     * @param <I>
-     *         input symbol type
      * @param <S>
      *         state type of the automata
+     * @param <I>
+     *         input symbol type
+     * @param <A>
+     *         reversed NFA type
      */
-    public static <I, S> void reverse(MutableNFA<S, I> nfa,
+    public static <S, I, A extends MutableNFA<S, I>> void reverse(MutableNFA<S, I> nfa,
                                       Collection<? extends I> inputs,
-                                      MutableNFA<S, I> rNFA) {
+                                      A rNFA) {
         Set<S> initialStates = nfa.getInitialStates();
 
         // Accepting are initial states and vice versa
@@ -413,12 +415,17 @@ public final class NFAs {
      *         the input alphabet
      * @param trimNFA
      *         a mutable NFA for storing the result
+     * @param <S>
+     *         state type of the automata
      * @param <I>
      *         input symbol type
+     * @param <A>
+     *         trim NFA type
      */
-    public static <I> void trim(CompactNFA<I> nfa,
+    @SuppressWarnings("unchecked")
+    public static <S, I, A extends MutableNFA<S, I>> void trim(CompactNFA<I> nfa,
                                 Alphabet<I> inputAlphabet,
-                                CompactNFA<I> trimNFA) {
+                                A trimNFA) {
         Set<Integer> coAccessibleStates = new HashSet<>(nfa.size());
         for (int i = 0; i < nfa.size(); i++) {
             coAccessibleStates.add(i);
@@ -430,11 +437,11 @@ public final class NFAs {
 
         // Quotient based upon co-accessible states
         // determine mapping of old states to new ones
-        int[] oldToNewMap = new int[nfa.size()];
+        Object[] oldToNewMap = new Object[nfa.size()];
         // Add new states -- initial, accepting properties
         for (int i = 0; i < nfa.size(); i++) {
             if (coAccessibleStates.contains(i)) {
-                int newState = trimNFA.addState(nfa.isAccepting(i));
+                S newState = trimNFA.addState(nfa.isAccepting(i));
                 oldToNewMap[i] = newState;
                 if (nfa.getInitialStates().contains(i)) {
                     trimNFA.setInitial(newState, true);
@@ -446,7 +453,7 @@ public final class NFAs {
             if (coAccessibleStates.contains(i)) {
                 for(I j: inputAlphabet) {
                     for (int k: nfa.getTransitions(i, j)) {
-                        trimNFA.addTransition(oldToNewMap[i], j, oldToNewMap[k]);
+                        trimNFA.addTransition((S)oldToNewMap[i], j, (S)oldToNewMap[k]);
                     }
                 }
             }
