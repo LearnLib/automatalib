@@ -367,8 +367,8 @@ public final class NFAs {
      *         state type of the automata
      */
     public static <I, S> void reverse(MutableNFA<S, I> nfa,
-                                            Collection<? extends I> inputs,
-                                            MutableNFA<S, I> rNFA) {
+                                      Collection<? extends I> inputs,
+                                      MutableNFA<S, I> rNFA) {
         Set<S> initialStates = nfa.getInitialStates();
 
         // Accepting are initial states and vice versa
@@ -386,6 +386,67 @@ public final class NFAs {
                 }
             }
         }
+    }
+
+    public static <I> CompactNFA<I> trim(CompactNFA<I> nfa, Alphabet<I> inputAlphabet) {
+        Set<Integer> remainingStates = new HashSet<>(nfa.size());
+        for (int i = 0; i < nfa.size(); i++) {
+            remainingStates.add(i);
+        }
+        remainingStates.retainAll(rightTrimHelper(nfa, inputAlphabet));
+        remainingStates.retainAll(leftTrimHelper(nfa, inputAlphabet));
+
+        CompactNFA<I> trimNFA = new CompactNFA<I>(inputAlphabet);
+
+        // determine mapping of old states to new ones
+        int[] oldToNewMap = new int[nfa.size()];
+        // Add new states -- initial, accepting properties
+        for (int i = 0; i < nfa.size(); i++) {
+            if (remainingStates.contains(i)) {
+                int newState = trimNFA.addState(nfa.isAccepting(i));
+                oldToNewMap[i] = newState;
+                if (nfa.getInitialStates().contains(i)) {
+                    trimNFA.setInitial(newState, true);
+                }
+            }
+        }
+        // Add transitions
+        for (int i = 0; i < nfa.size(); i++) {
+            if (remainingStates.contains(i)) {
+                for(I j: nfa.getInputAlphabet()) {
+                    for (int k: nfa.getTransitions(i, j)) {
+                        trimNFA.addTransition(oldToNewMap[i], j, oldToNewMap[k]);
+                    }
+                }
+            }
+        }
+        return trimNFA;
+    }
+
+    static <I> Set<Integer> leftTrimHelper(CompactNFA<I> nfa, Alphabet<I> inputAlphabet) {
+        return rightTrimHelper(reverse(nfa, inputAlphabet), inputAlphabet);
+    }
+
+    static <I> Set<Integer> rightTrimHelper(CompactNFA<I> nfa, Alphabet<I> inputAlphabet) {
+        Set<Integer> found = new HashSet<>();
+        Deque<Integer> stack = new ArrayDeque<>();
+
+        for (Integer init : nfa.getInitialStates()) {
+            stack.push(init);
+            found.add(init);
+        }
+
+        while (!stack.isEmpty()) {
+            Integer curr = stack.pop();
+            for (I sym : inputAlphabet) {
+                for (Integer succState : nfa.getSuccessors(curr, sym)) {
+                    if (found.add(succState)) {
+                        stack.push(succState);
+                    }
+                }
+            }
+        }
+        return found;
     }
 
 
