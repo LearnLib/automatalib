@@ -15,7 +15,16 @@
  */
 package net.automatalib.util.automaton.fsa;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.concept.InputAlphabetHolder;
@@ -321,16 +330,16 @@ public final class NFAs {
         Set<S> initialStates = nfa.getInitialStates();
 
         // Accepting are initial states and vice versa
-        for(S q: nfa.getStates()) {
+        for (S q: nfa.getStates()) {
             rNFA.addState(initialStates.contains(q));
             if (nfa.isAccepting(q)) {
                 rNFA.setInitial(q, true);
             }
         }
         // reverse transitions
-        for(S q: nfa.getStates()) {
-            for(I a: inputs) {
-                for(S s: nfa.getTransitions(q,a)) {
+        for (S q: nfa.getStates()) {
+            for (I a: inputs) {
+                for (S s: nfa.getTransitions(q, a)) {
                     rNFA.addTransition(s, a, q);
                 }
             }
@@ -356,6 +365,7 @@ public final class NFAs {
 
     /**
      * Create a trim (co-accessible) NFA from the specified NFA, and store the result in a given mutable NFA.
+     *
      * @param nfa
      *         the original NFA
      * @param inputAlphabet
