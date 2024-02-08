@@ -440,20 +440,24 @@ public final class NFAs {
         Object[] oldToNewMap = new Object[nfa.size()];
         // Add new states -- initial, accepting properties
         for (int i = 0; i < nfa.size(); i++) {
-            if (coAccessibleStates.contains(i)) {
-                S newState = trimNFA.addState(nfa.isAccepting(i));
-                oldToNewMap[i] = newState;
-                if (nfa.getInitialStates().contains(i)) {
-                    trimNFA.setInitial(newState, true);
-                }
+            if (!coAccessibleStates.contains(i)) {
+                continue;
+            }
+            S newState = trimNFA.addState(nfa.isAccepting(i));
+            oldToNewMap[i] = newState;
+            if (nfa.getInitialStates().contains(i)) {
+                trimNFA.setInitial(newState, true);
             }
         }
-        // Add transitions
+        // Add transitions to co-accessible states
         for (int i = 0; i < nfa.size(); i++) {
-            if (coAccessibleStates.contains(i)) {
-                for(I j: inputAlphabet) {
-                    for (int k: nfa.getTransitions(i, j)) {
-                        trimNFA.addTransition((S)oldToNewMap[i], j, (S)oldToNewMap[k]);
+            if (!coAccessibleStates.contains(i)) {
+                continue;
+            }
+            for (I j : inputAlphabet) {
+                for (int k : nfa.getTransitions(i, j)) {
+                    if (coAccessibleStates.contains(k)) {
+                        trimNFA.addTransition((S) oldToNewMap[i], j, (S) oldToNewMap[k]);
                     }
                 }
             }
