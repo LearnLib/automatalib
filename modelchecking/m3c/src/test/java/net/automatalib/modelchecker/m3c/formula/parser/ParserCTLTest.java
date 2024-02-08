@@ -71,12 +71,24 @@ public class ParserCTLTest {
         assertEquals("[c]true", new BoxNode<>("c", new TrueNode<>()));
     }
 
-    private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) throws ParseException {
-        FormulaNode<String, String> actualAST = M3CParser.parse(ctlFormula);
-        Assert.assertEquals(actualAST, expectedAST);
-        Assert.assertEquals(actualAST.hashCode(), expectedAST.hashCode());
-
-        this.formulas.add(actualAST);
+    @Test
+    public void tokensAsActionsTest() throws ParseException {
+        assertEquals("<A>true", new DiamondNode<>("A", new TrueNode<>()));
+        assertEquals("<AF>true", new DiamondNode<>("AF", new TrueNode<>()));
+        assertEquals("<AG>true", new DiamondNode<>("AG", new TrueNode<>()));
+        assertEquals("<E>true", new DiamondNode<>("E", new TrueNode<>()));
+        assertEquals("<EF>true", new DiamondNode<>("EF", new TrueNode<>()));
+        assertEquals("<EG>true", new DiamondNode<>("EG", new TrueNode<>()));
+        assertEquals("<U>true", new DiamondNode<>("U", new TrueNode<>()));
+        assertEquals("<W>true", new DiamondNode<>("W", new TrueNode<>()));
+        assertEquals("[A]true", new BoxNode<>("A", new TrueNode<>()));
+        assertEquals("[AF]true", new BoxNode<>("AF", new TrueNode<>()));
+        assertEquals("[AG]true", new BoxNode<>("AG", new TrueNode<>()));
+        assertEquals("[E]true", new BoxNode<>("E", new TrueNode<>()));
+        assertEquals("[EF]true", new BoxNode<>("EF", new TrueNode<>()));
+        assertEquals("[EG]true", new BoxNode<>("EG", new TrueNode<>()));
+        assertEquals("[U]true", new BoxNode<>("U", new TrueNode<>()));
+        assertEquals("[W]true", new BoxNode<>("W", new TrueNode<>()));
     }
 
     @Test
@@ -86,7 +98,7 @@ public class ParserCTLTest {
                                   new AndNode<>(new FalseNode<>(), new FalseNode<>())));
     }
 
-    @Test(dependsOnMethods = {"baseCasesTest", "nestedFormulasTest"})
+    @Test(dependsOnMethods = {"baseCasesTest", "tokensAsActionsTest", "nestedFormulasTest"})
     public void testEqualities() {
         for (FormulaNode<String, String> n1 : formulas) {
             for (FormulaNode<String, String> n2 : formulas) {
@@ -102,6 +114,14 @@ public class ParserCTLTest {
         assertIllegal("AG (mu X.(<>X))");
         assertIllegal("(AF true) && (mu X.(<b> true || <>X)");
         assertIllegal("(mu X.(<b> true || <>X) || (AF true)");
+    }
+
+    private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) throws ParseException {
+        FormulaNode<String, String> actualAST = M3CParser.parse(ctlFormula);
+        Assert.assertEquals(actualAST, expectedAST);
+        Assert.assertEquals(actualAST.hashCode(), expectedAST.hashCode());
+
+        this.formulas.add(actualAST);
     }
 
     private void assertIllegal(String formula) {

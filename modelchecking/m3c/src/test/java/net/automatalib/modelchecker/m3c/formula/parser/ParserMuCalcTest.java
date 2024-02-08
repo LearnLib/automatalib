@@ -60,6 +60,19 @@ public class ParserMuCalcTest {
                      new LfpNode<>("XY", new OrNode<>(new VariableNode<>("XY"), new FalseNode<>())));
         assertEquals("nu ZY.(ZY || false)",
                      new GfpNode<>("ZY", new OrNode<>(new VariableNode<>("ZY"), new FalseNode<>())));
+        // allow CTL tokens as variable names as well
+        assertEquals("mu E.(E || false)",
+                     new LfpNode<>("E", new OrNode<>(new VariableNode<>("E"), new FalseNode<>())));
+        assertEquals("nu AF.(AF || false)",
+                     new GfpNode<>("AF", new OrNode<>(new VariableNode<>("AF"), new FalseNode<>())));
+    }
+
+    @Test
+    public void tokensAsActionsTest() throws ParseException {
+        assertEquals("<mu>true", new DiamondNode<>("mu", new TrueNode<>()));
+        assertEquals("<nu>true", new DiamondNode<>("nu", new TrueNode<>()));
+        assertEquals("[mu]true", new BoxNode<>("mu", new TrueNode<>()));
+        assertEquals("[nu]true", new BoxNode<>("nu", new TrueNode<>()));
     }
 
     @Test
