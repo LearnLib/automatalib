@@ -19,6 +19,7 @@ import java.io.StringReader;
 
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.etf.writer.DFA2ETFWriter;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO;
@@ -53,18 +54,18 @@ public final class LTSminLTLParser {
      *
      * @return {@code formula}
      *
-     * @throws IllegalArgumentException
+     * @throws FormatException
      *         if the formula does not adhere to LTSmin's expected format ('letter' flavor)
      * @see DFA2ETFWriter
      * @see Mealy2ETFWriterAlternating
      */
-    public static String requireValidLetterFormula(String formula) {
+    public static String requireValidLetterFormula(String formula) throws FormatException {
         final InternalLTSminLTLParser parser = new InternalLTSminLTLParser(new StringReader(formula));
 
         try {
             parser.letterFormula();
         } catch (ParseException | TokenMgrError e) {
-            throw new IllegalArgumentException("Given formula does not adhere to expected format", e);
+            throw new FormatException("Given formula does not adhere to expected format", e);
         }
 
         return formula;
@@ -85,8 +86,8 @@ public final class LTSminLTLParser {
     public static boolean isValidLetterFormula(String formula) {
         try {
             requireValidLetterFormula(formula);
-        } catch (IllegalArgumentException iae) {
-            LOGGER.debug("Couldn't parse formula", iae);
+        } catch (FormatException fe) {
+            LOGGER.debug("Couldn't parse formula", fe);
             return false;
         }
 
@@ -101,17 +102,17 @@ public final class LTSminLTLParser {
      *
      * @return {@code formula}
      *
-     * @throws IllegalArgumentException
+     * @throws FormatException
      *         if the formula does not adhere to LTSmin's expected format ('io' flavor)
      * @see Mealy2ETFWriterIO
      */
-    public static String requireValidIOFormula(String formula) {
+    public static String requireValidIOFormula(String formula) throws FormatException {
         final InternalLTSminLTLParser parser = new InternalLTSminLTLParser(new StringReader(formula));
 
         try {
             parser.ioFormula();
         } catch (ParseException | TokenMgrError e) {
-            throw new IllegalArgumentException("Given formula does not adhere to expected format", e);
+            throw new FormatException("Given formula does not adhere to expected format", e);
         }
 
         return formula;
@@ -130,8 +131,8 @@ public final class LTSminLTLParser {
     public static boolean isValidIOFormula(String formula) {
         try {
             requireValidIOFormula(formula);
-        } catch (IllegalArgumentException iae) {
-            LOGGER.debug("Couldn't parse formula", iae);
+        } catch (FormatException fe) {
+            LOGGER.debug("Couldn't parse formula", fe);
             return false;
         }
 

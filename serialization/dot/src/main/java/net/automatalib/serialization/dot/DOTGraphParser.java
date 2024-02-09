@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 
 import net.automatalib.common.util.HashUtil;
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.exception.FormatException;
 import net.automatalib.graph.Graph;
 import net.automatalib.graph.MutableGraph;
 import net.automatalib.serialization.ModelDeserializer;
@@ -65,7 +66,7 @@ public class DOTGraphParser<NP, EP, G extends MutableGraph<?, ?, NP, EP>> implem
     }
 
     @Override
-    public G readModel(InputStream is) throws IOException {
+    public G readModel(InputStream is) throws IOException, FormatException {
 
         try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
             InternalDOTParser parser = new InternalDOTParser(r);

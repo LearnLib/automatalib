@@ -20,6 +20,7 @@ import java.util.function.Function;
 
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.automaton.transducer.MealyMachine;
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.ltsmin.LTSminAlternating;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
@@ -54,7 +55,7 @@ public class LTSminMonitorAlternating<I, O> extends AbstractLTSminMonitorMealy<I
     }
 
     @Override
-    protected void verifyFormula(String formula) {
+    protected void verifyFormula(String formula) throws FormatException {
         LTSminLTLParser.requireValidLetterFormula(formula);
     }
 }

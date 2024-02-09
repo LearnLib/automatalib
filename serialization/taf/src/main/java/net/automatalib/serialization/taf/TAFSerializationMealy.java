@@ -24,6 +24,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
 import net.automatalib.serialization.taf.parser.PrintStreamDiagnosticListener;
@@ -50,7 +51,8 @@ public final class TAFSerializationMealy
     }
 
     @Override
-    public InputModelData<String, MealyMachine<?, String, ?, String>> readModel(InputStream is) throws IOException {
+    public InputModelData<String, MealyMachine<?, String, ?, String>> readModel(InputStream is)
+            throws IOException, FormatException {
         final CompactMealy<String, String> automaton =
                 TAFParser.parseMealy(is, PrintStreamDiagnosticListener.getStderrDiagnosticListener());
         return new InputModelData<>(automaton, automaton.getInputAlphabet());

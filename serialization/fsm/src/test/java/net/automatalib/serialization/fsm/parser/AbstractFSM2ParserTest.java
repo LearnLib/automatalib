@@ -22,6 +22,7 @@ import java.util.Collections;
 
 import net.automatalib.automaton.UniversalDeterministicAutomaton;
 import net.automatalib.automaton.base.AbstractCompactDeterministic;
+import net.automatalib.exception.FormatException;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.testng.Assert;
@@ -30,7 +31,7 @@ import org.testng.annotations.Test;
 public abstract class AbstractFSM2ParserTest {
 
     protected abstract UniversalDeterministicAutomaton<?, Character, ?, ?, ?> getParsedAutomaton(@Nullable Collection<Character> requiredInputs)
-            throws IOException;
+            throws IOException, FormatException;
 
     /**
      * Asserts that no NullPointerException is thrown by implementations of
@@ -40,10 +41,10 @@ public abstract class AbstractFSM2ParserTest {
      * {@link AbstractCompactDeterministic#getInputAlphabet()}.
      *
      * @throws IOException if a test .fsm file could not be read
-     * @throws FSMFormatException if a test .fsm was malformed
+     * @throws FormatException if a test .fsm was malformed
      */
     @Test
-    public void testInputAlphabet() throws IOException {
+    public void testInputAlphabet() throws IOException, FormatException {
 
         final Collection<Character> existingInputs = Collections.singleton('a');
         final Collection<Character> nonExistingInputs = Collections.singleton('[');

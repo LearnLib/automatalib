@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.ts.simple.SimpleTS;
 
@@ -39,24 +40,24 @@ import net.automatalib.ts.simple.SimpleTS;
 public interface DOTInputModelDeserializer<S, I, M extends SimpleTS<S, I>> extends InputModelDeserializer<I, M> {
 
     @Override
-    DOTInputModelData<S, I, M> readModel(InputStream is) throws IOException;
+    DOTInputModelData<S, I, M> readModel(InputStream is) throws IOException, FormatException;
 
     @Override
-    default DOTInputModelData<S, I, M> readModel(URL url) throws IOException {
+    default DOTInputModelData<S, I, M> readModel(URL url) throws IOException, FormatException {
         try (InputStream is = IOUtil.asBufferedInputStream(url.openStream())) {
             return readModel(is);
         }
     }
 
     @Override
-    default DOTInputModelData<S, I, M> readModel(File f) throws IOException {
+    default DOTInputModelData<S, I, M> readModel(File f) throws IOException, FormatException {
         try (InputStream is = IOUtil.asBufferedInputStream(f)) {
             return readModel(is);
         }
     }
 
     @Override
-    default DOTInputModelData<S, I, M> readModel(byte[] buf) throws IOException {
+    default DOTInputModelData<S, I, M> readModel(byte[] buf) throws IOException, FormatException {
         try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
             return readModel(is);
         }

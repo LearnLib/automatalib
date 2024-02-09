@@ -58,7 +58,7 @@ class SAFInput {
         this(IOUtil.asBufferedInputStream(file));
     }
 
-    public <I> CompactDFA<I> readDFA(Alphabet<I> alphabet) throws IOException {
+    public <I> CompactDFA<I> readDFA(Alphabet<I> alphabet) throws IOException, FormatException {
         return readAutomaton(AutomatonType.DFA,
                              alphabet,
                              new CompactDFA.Creator<>(),
@@ -71,7 +71,7 @@ class SAFInput {
                                                                                     AutomatonCreator<? extends A, I> creator,
                                                                                     BlockPropertyDecoder<? extends SP> spDecoder,
                                                                                     SinglePropertyDecoder<? extends TP> tpDecoder)
-            throws IOException {
+            throws IOException, FormatException {
         AutomatonType type = readHeader();
         if (type != expectedType) {
             throw new FormatException();
@@ -83,7 +83,7 @@ class SAFInput {
         return readAutomatonBody(alphabet, type.isDeterministic(), creator, spDecoder, tpDecoder);
     }
 
-    private AutomatonType readHeader() throws IOException {
+    private AutomatonType readHeader() throws IOException, FormatException {
         final int headerSize = 4;
         byte[] header = new byte[headerSize];
         in.readFully(header);
@@ -238,7 +238,7 @@ class SAFInput {
         return result;
     }
 
-    public CompactDFA<Integer> readNativeDFA() throws IOException {
+    public CompactDFA<Integer> readNativeDFA() throws IOException, FormatException {
         return readNativeAutomaton(AutomatonType.DFA,
                                    new CompactDFA.Creator<>(),
                                    new AcceptanceDecoder(),
@@ -249,7 +249,7 @@ class SAFInput {
                                                                                              AutomatonCreator<? extends A, Integer> creator,
                                                                                              BlockPropertyDecoder<? extends SP> spDecoder,
                                                                                              SinglePropertyDecoder<? extends TP> tpDecoder)
-            throws IOException {
+            throws IOException, FormatException {
         AutomatonType type = readHeader();
         if (type != expectedType) {
             throw new FormatException();
@@ -262,7 +262,7 @@ class SAFInput {
         return readAutomatonBody(alphabet, type.isDeterministic(), creator, spDecoder, tpDecoder);
     }
 
-    public <I> CompactNFA<I> readNFA(Alphabet<I> alphabet) throws IOException {
+    public <I> CompactNFA<I> readNFA(Alphabet<I> alphabet) throws IOException, FormatException {
         return readAutomaton(AutomatonType.NFA,
                              alphabet,
                              new CompactNFA.Creator<>(),
@@ -270,7 +270,7 @@ class SAFInput {
                              SinglePropertyDecoder.nullDecoder());
     }
 
-    public CompactNFA<Integer> readNativeNFA() throws IOException {
+    public CompactNFA<Integer> readNativeNFA() throws IOException, FormatException {
         return readNativeAutomaton(AutomatonType.NFA,
                                    new CompactNFA.Creator<>(),
                                    new AcceptanceDecoder(),

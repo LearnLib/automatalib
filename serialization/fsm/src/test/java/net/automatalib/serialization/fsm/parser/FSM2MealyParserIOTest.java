@@ -24,6 +24,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
 import net.automatalib.common.util.io.UnclosableInputStream;
+import net.automatalib.exception.FormatException;
 import net.automatalib.util.automaton.Automata;
 import net.automatalib.util.automaton.builder.AutomatonBuilders;
 import org.testng.Assert;
@@ -60,7 +61,7 @@ public class FSM2MealyParserIOTest extends AbstractFSM2ParserTest {
 
     @Override
     protected CompactMealy<Character, Character> getParsedAutomaton(Collection<Character> requiredInputs)
-            throws IOException {
+            throws IOException, FormatException {
         try (InputStream is = FSM2MealyParserIOTest.class.getResourceAsStream("/MealyIO.fsm")) {
             final Function<String, Character> ep = s -> s.charAt(0);
             return FSM2MealyParserIO.getParser(requiredInputs, ep).readModel(is);
@@ -68,7 +69,7 @@ public class FSM2MealyParserIOTest extends AbstractFSM2ParserTest {
     }
 
     @Test
-    public void doNotCloseInputStreamTest() throws IOException {
+    public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream is = FSM2MealyParserIOTest.class.getResourceAsStream("/MealyIO.fsm")) {
             FSM2MealyParserIO.getParser(s -> s.charAt(0)).readModel(new UnclosableInputStream(is));
         }

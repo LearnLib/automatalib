@@ -18,6 +18,7 @@ package net.automatalib.modelchecker.m3c.formula.parser;
 import java.io.StringReader;
 import java.util.function.Function;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 
 /**
@@ -63,10 +64,10 @@ public final class M3CParser {
      *
      * @return {@code formula}'s abstract syntax tree.
      *
-     * @throws ParseException
+     * @throws FormatException
      *         if {@code formula} is not a valid formula.
      */
-    public static FormulaNode<String, String> parse(String formula) throws ParseException {
+    public static FormulaNode<String, String> parse(String formula) throws FormatException {
         return parse(formula, Function.identity(), Function.identity());
     }
 
@@ -87,15 +88,19 @@ public final class M3CParser {
      *
      * @return {@code formula}'s abstract syntax tree.
      *
-     * @throws ParseException
+     * @throws FormatException
      *         if {@code formula} is not a valid formula.
      */
     public static <L, AP> FormulaNode<L, AP> parse(String formula,
                                                    Function<String, L> labelParser,
-                                                   Function<String, AP> apParser) throws ParseException {
+                                                   Function<String, AP> apParser) throws FormatException {
         try (StringReader reader = new StringReader(formula)) {
             final InternalM3CParser<L, AP> parser = new InternalM3CParser<>(reader);
-            return parser.parse(labelParser, apParser);
+            try {
+                return parser.parse(labelParser, apParser);
+            } catch (ParseException e) {
+                throw new FormatException(e);
+            }
         }
     }
 

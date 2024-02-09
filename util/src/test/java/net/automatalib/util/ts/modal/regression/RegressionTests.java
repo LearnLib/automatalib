@@ -17,6 +17,7 @@ package net.automatalib.util.ts.modal.regression;
 
 import java.io.IOException;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.ts.modal.impl.CompactMTS;
 import net.automatalib.util.ts.modal.MTSs;
 import org.testng.Assert;
@@ -36,7 +37,7 @@ public class RegressionTests {
     }
 
     @Test(dataProvider = "Comp")
-    public void testMerge(CompositionTest testCase) throws IOException {
+    public void testMerge(CompositionTest testCase) throws IOException, FormatException {
         final CompositionInstance instance = new CompositionInstance(testCase);
 
         CompactMTS<String> currentMerge = MTSs.compose(instance.input0, instance.input1);

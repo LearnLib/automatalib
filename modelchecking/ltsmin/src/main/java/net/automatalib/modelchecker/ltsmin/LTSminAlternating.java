@@ -22,6 +22,7 @@ import java.util.Collection;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterAlternating;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserAlternating;
 
@@ -50,7 +51,7 @@ public interface LTSminAlternating<I, O, R> extends LTSminMealy<I, O, R> {
     @Override
     default CompactMealy<I, O> fsm2Mealy(File fsm,
                                          MealyMachine<?, I, ?, O> originalAutomaton,
-                                         Collection<? extends I> inputs) throws IOException {
+                                         Collection<? extends I> inputs) throws IOException, FormatException {
 
         // Here we optionally provide the parse method with the original automaton. So that an implementation can
         // decide whether undefined outputs are allowed in the fsm or not.

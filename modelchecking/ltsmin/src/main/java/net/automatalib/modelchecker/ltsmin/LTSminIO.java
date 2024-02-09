@@ -22,6 +22,7 @@ import java.util.Collection;
 import net.automatalib.alphabet.impl.Alphabets;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.etf.writer.Mealy2ETFWriterIO;
 import net.automatalib.serialization.fsm.parser.FSM2MealyParserIO;
 
@@ -43,7 +44,7 @@ public interface LTSminIO<I, O, R> extends LTSminMealy<I, O, R> {
     @Override
     default CompactMealy<I, O> fsm2Mealy(File fsm,
                                          MealyMachine<?, I, ?, O> originalAutomaton,
-                                         Collection<? extends I> inputs) throws IOException {
+                                         Collection<? extends I> inputs) throws IOException, FormatException {
         return FSM2MealyParserIO.getParser(inputs, getString2Input(), getString2Output()).readModel(fsm);
     }
 

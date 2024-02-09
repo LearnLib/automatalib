@@ -19,10 +19,10 @@ import java.util.function.Function;
 
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.example.procedural.PalindromeExample;
+import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.modelchecker.m3c.solver.M3CSolver;
 import net.automatalib.modelchecker.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelchecker.m3c.solver.M3CSolvers;
@@ -43,7 +43,7 @@ public final class M3CSPAExample {
         // prevent initialization
     }
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) throws FormatException {
         final SPA<?, Character> spa = PalindromeExample.buildSPA();
         final ContextFreeModalProcessSystem<Character, Void> view = SPAs.toCFMPS(spa);
 

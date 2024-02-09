@@ -18,6 +18,7 @@ package net.automatalib.modelchecker.m3c.formula.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.m3c.formula.AndNode;
 import net.automatalib.modelchecker.m3c.formula.AtomicNode;
 import net.automatalib.modelchecker.m3c.formula.BoxNode;
@@ -43,7 +44,7 @@ public class ParserCTLTest {
     private final List<FormulaNode<String, String>> formulas = new ArrayList<>();
 
     @Test
-    public void baseCasesTest() throws ParseException {
+    public void baseCasesTest() throws FormatException {
         assertEquals("false", new FalseNode<>());
         assertEquals("true", new TrueNode<>());
         assertEquals("true && true", new AndNode<>(new TrueNode<>(), new TrueNode<>()));
@@ -72,7 +73,7 @@ public class ParserCTLTest {
     }
 
     @Test
-    public void tokensAsActionsTest() throws ParseException {
+    public void tokensAsActionsTest() throws FormatException {
         assertEquals("<A>true", new DiamondNode<>("A", new TrueNode<>()));
         assertEquals("<AF>true", new DiamondNode<>("AF", new TrueNode<>()));
         assertEquals("<AG>true", new DiamondNode<>("AG", new TrueNode<>()));
@@ -92,7 +93,7 @@ public class ParserCTLTest {
     }
 
     @Test
-    public void nestedFormulasTest() throws ParseException {
+    public void nestedFormulasTest() throws FormatException {
         assertEquals("(true && true) || (false && false)",
                      new OrNode<>(new AndNode<>(new TrueNode<>(), new TrueNode<>()),
                                   new AndNode<>(new FalseNode<>(), new FalseNode<>())));
@@ -116,7 +117,7 @@ public class ParserCTLTest {
         assertIllegal("(mu X.(<b> true || <>X) || (AF true)");
     }
 
-    private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) throws ParseException {
+    private void assertEquals(String ctlFormula, FormulaNode<String, String> expectedAST) throws FormatException {
         FormulaNode<String, String> actualAST = M3CParser.parse(ctlFormula);
         Assert.assertEquals(actualAST, expectedAST);
         Assert.assertEquals(actualAST.hashCode(), expectedAST.hashCode());
@@ -125,7 +126,7 @@ public class ParserCTLTest {
     }
 
     private void assertIllegal(String formula) {
-        Assert.assertThrows(ParseException.class, () -> M3CParser.parse(formula));
+        Assert.assertThrows(FormatException.class, () -> M3CParser.parse(formula));
     }
 
 }

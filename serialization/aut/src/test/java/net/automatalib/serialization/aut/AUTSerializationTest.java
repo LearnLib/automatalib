@@ -33,6 +33,7 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.simple.SimpleAutomaton;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
+import net.automatalib.exception.FormatException;
 import net.automatalib.util.automaton.random.RandomAutomata;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -132,7 +133,7 @@ public class AUTSerializationTest {
     }
 
     @Test
-    public void doNotCloseInputStreamTest() throws IOException {
+    public void doNotCloseInputStreamTest() throws IOException, FormatException {
         try (InputStream is = AUTSerializationTest.class.getResourceAsStream("/quotationTest.aut")) {
             AUTSerializationProvider.getInstance().readModel(new UnclosableInputStream(is));
         }

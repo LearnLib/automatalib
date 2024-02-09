@@ -37,9 +37,9 @@ import net.automatalib.example.modelchecking.LTSminMonitorExample;
 import net.automatalib.example.modelchecking.M3CSPAExample;
 import net.automatalib.example.procedural.PalindromeExample;
 import net.automatalib.example.vpa.OneSEVPAExample;
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.ltsmin.LTSminUtil;
 import net.automatalib.modelchecker.ltsmin.LTSminVersion;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -133,7 +133,7 @@ public class ExamplesTest {
         SwingUtilities.invokeAndWait(() -> {
             try {
                 M3CSPAExample.main(new String[0]);
-            } catch (ParseException e) {
+            } catch (FormatException e) {
                 throw new RuntimeException(e);
             }
         });

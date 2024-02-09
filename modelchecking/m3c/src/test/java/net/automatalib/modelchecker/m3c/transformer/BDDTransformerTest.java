@@ -23,6 +23,7 @@ import java.util.Set;
 
 import info.scce.addlib.dd.bdd.BDD;
 import info.scce.addlib.dd.bdd.BDDManager;
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.m3c.formula.BoxNode;
 import net.automatalib.modelchecker.m3c.formula.DependencyGraph;
 import net.automatalib.modelchecker.m3c.formula.DiamondNode;
@@ -33,7 +34,6 @@ import net.automatalib.modelchecker.m3c.formula.TrueNode;
 import net.automatalib.modelchecker.m3c.formula.ctl.AGNode;
 import net.automatalib.modelchecker.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty.ModalType;
 import net.automatalib.ts.modal.transition.impl.ModalEdgePropertyImpl;
 import org.testng.Assert;
@@ -49,7 +49,7 @@ public class BDDTransformerTest {
     private final BoxNode<String, String> boxNode;
     private final TrueNode<String, String> trueNode;
 
-    public BDDTransformerTest() throws ParseException {
+    public BDDTransformerTest() throws FormatException {
         final String formula = "mu X.(<b>[b]true || <>X)";
         dg = new DependencyGraph<>(M3CParser.parse(formula));
         bddManager = new BDDManager();
@@ -212,7 +212,7 @@ public class BDDTransformerTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testUpdateException() throws ParseException {
+    public void testUpdateException() throws FormatException {
         final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
         DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
         BDDTransformer<String, String> transformer = new BDDTransformer<>(bddManager, dependencyGraph);

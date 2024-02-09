@@ -24,13 +24,13 @@ import java.util.Map;
 import java.util.Set;
 
 import net.automatalib.common.util.mapping.Mapping;
+import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.graph.ProceduralModalProcessGraph;
 import net.automatalib.graph.concept.NodeIDs;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.TrueNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.modelchecker.m3c.transformer.AbstractPropertyTransformer;
 import net.automatalib.modelchecker.m3c.transformer.TransformerSerializer;
 import net.automatalib.modelchecker.m3c.util.Examples;
@@ -61,7 +61,7 @@ public abstract class AbstractSolverHistoryTest<T extends AbstractPropertyTransf
     public abstract void shutdownDDManager();
 
     @Test
-    public void testSolverHistory() throws ParseException {
+    public void testSolverHistory() throws FormatException {
         final AbstractDDSolver<T, String, String> solver = getSolver();
         final FormulaNode<String, String> formula = M3CParser.parse("mu X.(<b><b>true || <>X)");
         final SolverHistory<T, String, String> history = solver.solveAndRecordHistory(formula);
