@@ -713,6 +713,10 @@ limitations under the License.
                             <link>${checkerframework.apidocs}</link>
                             <link>${jung.apidocs}</link>
                         </links>
+                        <sourceFileExcludes>
+                            <!-- TODO: should be package-private, anyway. See https://github.com/javacc/javacc/issues/277 -->
+                            <excludes>**/ParseException.java</excludes>
+                        </sourceFileExcludes>
                     </configuration>
                 </plugin>
                 <plugin>
