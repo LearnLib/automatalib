@@ -392,7 +392,7 @@ public final class NFAs {
     }
 
     /**
-     * Create a trim (co-accessible) NFA from the specified NFA.
+     * Create a trim (accessible and co-accessible) NFA from the specified NFA.
      *
      * @param nfa
      *         the original NFA
@@ -409,7 +409,7 @@ public final class NFAs {
     }
 
     /**
-     * Create a trim (co-accessible) NFA from the specified NFA, and store the result in a given mutable NFA.
+     * Create a trim NFA from the specified NFA, and store the result in a given mutable NFA.
      *
      * @param nfa
      *         the original NFA
@@ -428,21 +428,21 @@ public final class NFAs {
     public static <S, I, A extends MutableNFA<S, I>> void trim(CompactNFA<I> nfa,
                                 Alphabet<I> inputAlphabet,
                                 A trimNFA) {
-        Set<Integer> coAccessibleStates = new HashSet<>(nfa.size());
+        Set<Integer> trimStates = new HashSet<>(nfa.size());
         for (int i = 0; i < nfa.size(); i++) {
-            coAccessibleStates.add(i);
+            trimStates.add(i);
         }
-        // right trim
-        coAccessibleStates.retainAll(rightTrimHelper(nfa, inputAlphabet));
-        // left trim
-        coAccessibleStates.retainAll(rightTrimHelper(reverse(nfa, inputAlphabet), inputAlphabet));
+        // right (accessible) trim
+        trimStates.retainAll(rightTrimHelper(nfa, inputAlphabet));
+        // left (co-accessible) trim
+        trimStates.retainAll(rightTrimHelper(reverse(nfa, inputAlphabet), inputAlphabet));
 
-        // Quotient based upon co-accessible states
+        // Quotient based upon trim states
         // determine mapping of old states to new ones
         Object[] oldToNewMap = new Object[nfa.size()];
         // Add new states -- initial, accepting properties
         for (int i = 0; i < nfa.size(); i++) {
-            if (!coAccessibleStates.contains(i)) {
+            if (!trimStates.contains(i)) {
                 continue;
             }
             S newState = trimNFA.addState(nfa.isAccepting(i));
@@ -451,14 +451,14 @@ public final class NFAs {
                 trimNFA.setInitial(newState, true);
             }
         }
-        // Add transitions to co-accessible states
+        // Add transitions to trim states
         for (int i = 0; i < nfa.size(); i++) {
-            if (!coAccessibleStates.contains(i)) {
+            if (!trimStates.contains(i)) {
                 continue;
             }
             for (I j : inputAlphabet) {
                 for (int k : nfa.getTransitions(i, j)) {
-                    if (coAccessibleStates.contains(k)) {
+                    if (trimStates.contains(k)) {
                         trimNFA.addTransition((S) oldToNewMap[i], j, (S) oldToNewMap[k]);
                     }
                 }

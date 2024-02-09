@@ -156,11 +156,11 @@ public class NFAsTest {
         // With no accepting states, if trimmed this will have no states
         Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 0);
 
-        // Accepting state is not reachable
+        // Accepting state is not accessible
         int q1 = nfa.addState(true);
         Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 0);
 
-        // Co-accessible
+        // Accessible and co-accessible
         nfa.addTransition(q0, 0, q1);
         Assert.assertEquals(NFAs.trim(nfa, alphabet).size(), 2);
 
