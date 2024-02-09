@@ -69,7 +69,7 @@ public class ParserMuCalcTest {
     }
 
     @Test
-    public void tokensAsActionsTest() throws ParseException {
+    public void tokensAsActionsTest() throws FormatException {
         assertEquals("<mu>true", new DiamondNode<>("mu", new TrueNode<>()));
         assertEquals("<nu>true", new DiamondNode<>("nu", new TrueNode<>()));
         assertEquals("[mu]true", new BoxNode<>("mu", new TrueNode<>()));

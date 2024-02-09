@@ -64,7 +64,7 @@ public interface SimpleAutomatonDeserializer<S, I> extends InputModelDeserialize
      *         if the content of the stream was not in the expected format
      */
     <I2> InputModelData<I2, SimpleAutomaton<S, I2>> readModel(InputStream is, Function<I, I2> inputTransformer)
-            throws IOException;
+            throws IOException, FormatException;
 
     /**
      * Reads the contents from the given URL and de-serializes it into a {@link InputModelData} that contains the model
@@ -85,7 +85,7 @@ public interface SimpleAutomatonDeserializer<S, I> extends InputModelDeserialize
      *         if the content of the stream was not in the expected format
      */
     default <I2> InputModelData<I2, SimpleAutomaton<S, I2>> readModel(URL url, Function<I, I2> inputTransformer)
-            throws IOException {
+            throws IOException, FormatException {
         try (InputStream is = IOUtil.asBufferedInputStream(url.openStream())) {
             return readModel(is, inputTransformer);
         }
@@ -110,7 +110,7 @@ public interface SimpleAutomatonDeserializer<S, I> extends InputModelDeserialize
      *         if the content of the stream was not in the expected format
      */
     default <I2> InputModelData<I2, SimpleAutomaton<S, I2>> readModel(File f, Function<I, I2> inputTransformer)
-            throws IOException {
+            throws IOException, FormatException {
         try (InputStream is = IOUtil.asBufferedInputStream(f)) {
             return readModel(is, inputTransformer);
         }
@@ -135,14 +135,14 @@ public interface SimpleAutomatonDeserializer<S, I> extends InputModelDeserialize
      *         if the content of the stream was not in the expected format
      */
     default <I2> InputModelData<I2, SimpleAutomaton<S, I2>> readModel(byte[] buf, Function<I, I2> inputTransformer)
-            throws IOException {
+            throws IOException, FormatException {
         try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
             return readModel(is, inputTransformer);
         }
     }
 
     @Override
-    default InputModelData<I, SimpleAutomaton<S, I>> readModel(InputStream is) throws IOException {
+    default InputModelData<I, SimpleAutomaton<S, I>> readModel(InputStream is) throws IOException, FormatException {
         return readModel(is, Function.identity());
     }
 }
