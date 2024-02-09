@@ -23,6 +23,7 @@ import java.util.function.Function;
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
 import net.automatalib.automaton.fsa.DFA;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
+import net.automatalib.exception.FormatException;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecker.ltsmin.LTSminDFA;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
@@ -30,7 +31,6 @@ import net.automatalib.modelchecking.Lasso.DFALasso;
 import net.automatalib.modelchecking.ModelCheckerLasso.DFAModelCheckerLasso;
 import net.automatalib.modelchecking.impl.DFALassoImpl;
 import net.automatalib.serialization.fsm.parser.FSM2DFAParser;
-import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +62,7 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
     }
 
     @Override
-    protected void verifyFormula(String formula) {
+    protected void verifyFormula(String formula) throws FormatException {
         LTSminLTLParser.requireValidLetterFormula(formula);
     }
 
@@ -87,7 +87,7 @@ public class LTSminLTLDFA<I> extends AbstractLTSminLTL<I, DFA<?, I>, DFALasso<I>
                     FSM2DFAParser.getParser(inputs, getString2Input(), LABEL_NAME, LABEL_VALUE).readModel(fsm);
 
             return new DFALassoImpl<>(dfa, inputs, computeUnfolds(automaton.size()));
-        } catch (IOException | FSMFormatException e) {
+        } catch (IOException | FormatException e) {
             throw new ModelCheckingException(e);
         } finally {
             // check if we must keep the FSM

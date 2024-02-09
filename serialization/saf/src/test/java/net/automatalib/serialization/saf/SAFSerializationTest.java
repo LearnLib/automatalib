@@ -30,6 +30,7 @@ import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.io.UnclosableInputStream;
 import net.automatalib.common.util.io.UnclosableOutputStream;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelDeserializer;
 import net.automatalib.serialization.InputModelSerializer;
 import net.automatalib.util.automaton.Automata;
@@ -94,7 +95,7 @@ public class SAFSerializationTest {
     }
 
     @Test
-    public void doNotCloseInputOutputStreamDFATest() throws IOException {
+    public void doNotCloseInputOutputStreamDFATest() throws IOException, FormatException {
 
         final SAFSerializationDFA serializer = SAFSerializationDFA.getInstance();
 
@@ -106,7 +107,7 @@ public class SAFSerializationTest {
     }
 
     @Test
-    public void doNotCloseInputOutputStreamNFATest() throws IOException {
+    public void doNotCloseInputOutputStreamNFATest() throws IOException, FormatException {
 
         final SAFSerializationNFA serializer = SAFSerializationNFA.getInstance();
 
@@ -121,7 +122,7 @@ public class SAFSerializationTest {
             IN source,
             Alphabet<I> alphabet,
             InputModelSerializer<I, IN> serializer,
-            InputModelDeserializer<I, OUT> deserializer) throws IOException {
+            InputModelDeserializer<I, OUT> deserializer) throws IOException, FormatException {
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

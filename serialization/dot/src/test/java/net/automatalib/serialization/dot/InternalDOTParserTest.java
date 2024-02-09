@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.exception.FormatException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -36,7 +37,7 @@ public class InternalDOTParserTest {
     private int nodesChecked;
 
     @BeforeMethod
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, FormatException {
         try (InputStream is = InternalDOTParserTest.class.getResourceAsStream(DOTSerializationUtil.PARSER_RESOURCE);
              Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
 

@@ -35,6 +35,7 @@ import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.Pair;
 import net.automatalib.common.util.mapping.Mapping;
 import net.automatalib.common.util.mapping.MutableMapping;
+import net.automatalib.exception.FormatException;
 import net.automatalib.visualization.VisualizationHelper.NodeAttrs;
 
 /**
@@ -92,7 +93,7 @@ public class DOTMutableAutomatonParser<S, I, SP, TP, A extends MutableAutomaton<
     }
 
     @Override
-    public DOTInputModelData<S, I, A> readModel(InputStream is) throws IOException {
+    public DOTInputModelData<S, I, A> readModel(InputStream is) throws IOException, FormatException {
 
         try (Reader r = IOUtil.asUncompressedBufferedNonClosingUTF8Reader(is)) {
             InternalDOTParser parser = new InternalDOTParser(r);

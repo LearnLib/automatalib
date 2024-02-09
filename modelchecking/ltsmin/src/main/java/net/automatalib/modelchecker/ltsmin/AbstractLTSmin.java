@@ -26,6 +26,7 @@ import net.automatalib.AutomataLibSettings;
 import net.automatalib.common.util.IOUtil;
 import net.automatalib.common.util.collection.CollectionUtil;
 import net.automatalib.common.util.process.ProcessUtil;
+import net.automatalib.exception.FormatException;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecking.ModelChecker;
 import net.automatalib.serialization.etf.writer.AbstractETFWriter;
@@ -123,7 +124,7 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
      * @param formula
      *         the formula to verify
      */
-    protected abstract void verifyFormula(String formula);
+    protected abstract void verifyFormula(String formula) throws FormatException;
 
     @Override
     public boolean isKeepFiles() {
@@ -154,8 +155,8 @@ public abstract class AbstractLTSmin<I, A, R> implements ModelChecker<I, A, Stri
 
         try {
             verifyFormula(formula);
-        } catch (IllegalArgumentException iae) {
-            throw new ModelCheckingException(iae);
+        } catch (FormatException fe) {
+            throw new ModelCheckingException(fe);
         }
 
         final File etf;

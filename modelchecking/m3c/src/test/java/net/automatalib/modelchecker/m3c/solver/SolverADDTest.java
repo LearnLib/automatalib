@@ -23,10 +23,10 @@ import net.automatalib.alphabet.impl.DefaultProceduralInputAlphabet;
 import net.automatalib.automaton.fsa.impl.CompactDFA;
 import net.automatalib.automaton.procedural.SPA;
 import net.automatalib.automaton.procedural.impl.StackSPA;
+import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
 import net.automatalib.modelchecker.m3c.formula.FormulaNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.modelchecker.m3c.solver.M3CSolver.TypedM3CSolver;
 import net.automatalib.modelchecker.m3c.transformer.ADDTransformer;
 import net.automatalib.util.automaton.procedural.SPAs;
@@ -47,7 +47,7 @@ public class SolverADDTest extends AbstractSolverTest<ADDTransformer<String, Str
      * This test-case resulted from an external application of the M3C model-checker.
      */
     @Test
-    public void testRegression() throws ParseException {
+    public void testRegression() throws FormatException {
 
         final ProceduralInputAlphabet<Character> alphabet =
                 new DefaultProceduralInputAlphabet<>(Alphabets.singleton('a'), Alphabets.singleton('S'), 'R');

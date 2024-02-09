@@ -15,6 +15,7 @@
  */
 package net.automatalib.modelchecker.m3c.formula.visitor;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.m3c.formula.AndNode;
 import net.automatalib.modelchecker.m3c.formula.AtomicNode;
 import net.automatalib.modelchecker.m3c.formula.BoxNode;
@@ -28,7 +29,6 @@ import net.automatalib.modelchecker.m3c.formula.modalmu.GfpNode;
 import net.automatalib.modelchecker.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelchecker.m3c.formula.modalmu.VariableNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,47 +37,47 @@ public class CTLToMuCalcTest {
     private final CTLToMuCalc<String, String> transformer = new CTLToMuCalc<>();
 
     @Test
-    void testTrue() throws ParseException {
+    void testTrue() throws FormatException {
         equals("true", new TrueNode<>());
     }
 
     @Test
-    void testFalse() throws ParseException {
+    void testFalse() throws FormatException {
         equals("false", new FalseNode<>());
     }
 
     @Test
-    void testAtomicProposition() throws ParseException {
+    void testAtomicProposition() throws FormatException {
         equals("\"p\"", new AtomicNode<>("p"));
     }
 
     @Test
-    void testNegation() throws ParseException {
+    void testNegation() throws FormatException {
         equals("!\"p\"", new NotNode<>(new AtomicNode<>("p")));
     }
 
     @Test
-    void testBox() throws ParseException {
+    void testBox() throws FormatException {
         equals("[abc]true", new BoxNode<>("abc", new TrueNode<>()));
     }
 
     @Test
-    void testDiamond() throws ParseException {
+    void testDiamond() throws FormatException {
         equals("<>false", new DiamondNode<>(new FalseNode<>()));
     }
 
     @Test
-    void testOr() throws ParseException {
+    void testOr() throws FormatException {
         equals("\"p\" || \"q\"", new OrNode<>(new AtomicNode<>("p"), new AtomicNode<>("q")));
     }
 
     @Test
-    void testAnd() throws ParseException {
+    void testAnd() throws FormatException {
         equals("\"p\" && \"q\"", new AndNode<>(new AtomicNode<>("p"), new AtomicNode<>("q")));
     }
 
     @Test
-    void testAF() throws ParseException {
+    void testAF() throws FormatException {
         DiamondNode<String, String> diamond = new DiamondNode<>(new TrueNode<>());
         BoxNode<String, String> box = new BoxNode<>(new VariableNode<>("Z0"));
         AndNode<String, String> and = new AndNode<>(diamond, box);
@@ -86,14 +86,14 @@ public class CTLToMuCalcTest {
     }
 
     @Test
-    void testAG() throws ParseException {
+    void testAG() throws FormatException {
         AndNode<String, String> and = new AndNode<>(new AtomicNode<>("p"), new BoxNode<>(new VariableNode<>("Z0")));
         GfpNode<String, String> expected = new GfpNode<>("Z0", and);
         equals("AG \"p\"", expected);
     }
 
     @Test
-    void testAU() throws ParseException {
+    void testAU() throws FormatException {
         DiamondNode<String, String> diamond = new DiamondNode<>(new TrueNode<>());
         BoxNode<String, String> box = new BoxNode<>(new VariableNode<>("Z0"));
         AndNode<String, String> innerAnd = new AndNode<>(diamond, box);
@@ -104,7 +104,7 @@ public class CTLToMuCalcTest {
     }
 
     @Test
-    void testAWU() throws ParseException {
+    void testAWU() throws FormatException {
         /* A[p WU q] = !E[!q U (!p & !q)] */
         /* !E[!q U (!p & !q)] = !(mu X.((!p & !q) | (!q & <>X))) */
         NotNode<String, String> notQ = new NotNode<>(new AtomicNode<>("q"));
@@ -118,14 +118,14 @@ public class CTLToMuCalcTest {
     }
 
     @Test
-    void testEF() throws ParseException {
+    void testEF() throws FormatException {
         OrNode<String, String> or = new OrNode<>(new AtomicNode<>("p"), new DiamondNode<>(new VariableNode<>("Z0")));
         LfpNode<String, String> expected = new LfpNode<>("Z0", or);
         equals("EF \"p\"", expected);
     }
 
     @Test
-    void testEG() throws ParseException {
+    void testEG() throws FormatException {
         OrNode<String, String> or =
                 new OrNode<>(new DiamondNode<>(new VariableNode<>("Z0")), new BoxNode<>(new FalseNode<>()));
         GfpNode<String, String> expected = new GfpNode<>("Z0", new AndNode<>(new AtomicNode<>("p"), or));
@@ -133,14 +133,14 @@ public class CTLToMuCalcTest {
     }
 
     @Test
-    void testEU() throws ParseException {
+    void testEU() throws FormatException {
         AndNode<String, String> and = new AndNode<>(new AtomicNode<>("p"), new DiamondNode<>(new VariableNode<>("Z0")));
         LfpNode<String, String> expected = new LfpNode<>("Z0", new OrNode<>(new TrueNode<>(), and));
         equals("E(\"p\" U true)", expected);
     }
 
     @Test
-    void testEWU() throws ParseException {
+    void testEWU() throws FormatException {
         AndNode<String, String> and = new AndNode<>(new AtomicNode<>("p"), new DiamondNode<>(new VariableNode<>("Z0")));
         LfpNode<String, String> lfp = new LfpNode<>("Z0", new OrNode<>(new AtomicNode<>("q"), and));
         OrNode<String, String> or =
@@ -149,7 +149,7 @@ public class CTLToMuCalcTest {
         equals("E(\"p\" W \"q\")", new OrNode<>(lfp, gfp));
     }
 
-    private void equals(String inputFormula, FormulaNode<String, String> expectedResult) throws ParseException {
+    private void equals(String inputFormula, FormulaNode<String, String> expectedResult) throws FormatException {
         FormulaNode<String, String> ctlNode = M3CParser.parse(inputFormula);
         Assert.assertEquals(expectedResult, transformer.toMuCalc(ctlNode));
     }

@@ -23,8 +23,8 @@ import java.util.function.Function;
 import javax.xml.parsers.ParserConfigurationException;
 
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.exception.FormatException;
 import net.automatalib.graph.ContextFreeModalProcessSystem;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -52,72 +52,72 @@ public class ExternalSystemTest {
     }
 
     @Test
-    public void testSetting1System1() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting1System1() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting1/system1/");
     }
 
     @Test
-    public void testSetting1System2() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting1System2() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting1/system2/");
     }
 
     @Test
-    public void testSetting1System3() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting1System3() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting1/system3/");
     }
 
     @Test
-    public void testSetting2System1() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting2System1() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting2/system1/");
     }
 
     @Test
-    public void testSetting2System2() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting2System2() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting2/system2/");
     }
 
     @Test
-    public void testSetting2System3() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting2System3() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting2/system3/");
     }
 
     @Test
-    public void testSetting2System4() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting2System4() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting2/system4/");
     }
 
     @Test
-    public void testSetting2System5() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting2System5() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting2/system5/");
     }
 
     @Test
-    public void testSetting2System6() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting2System6() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting2/system6/");
     }
 
     @Test
-    public void testSetting2System7() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting2System7() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting2/system7/");
     }
 
     @Test
-    public void testSetting2System8() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting2System8() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting2/system8/");
     }
 
     @Test
-    public void testSetting2System9() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testSetting2System9() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/setting2/system9/");
     }
 
     @Test
-    public void testPalindrome() throws IOException, ParserConfigurationException, SAXException, ParseException {
+    public void testPalindrome() throws IOException, ParserConfigurationException, SAXException, FormatException {
         testBenchmark("/cfmps/palindrome/");
     }
 
     private void testBenchmark(String id)
-            throws IOException, ParserConfigurationException, SAXException, ParseException {
+            throws IOException, ParserConfigurationException, SAXException, FormatException {
 
         try (InputStream seed = ExternalSystemTest.class.getResourceAsStream(id + "seed.xml");
              InputStream properties = ExternalSystemTest.class.getResourceAsStream(id + "properties.txt");

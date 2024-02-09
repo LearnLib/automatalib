@@ -23,12 +23,12 @@ import java.util.function.Function;
 import net.automatalib.automaton.impl.CompactTransition;
 import net.automatalib.automaton.transducer.MealyMachine;
 import net.automatalib.automaton.transducer.impl.CompactMealy;
+import net.automatalib.exception.FormatException;
 import net.automatalib.exception.ModelCheckingException;
 import net.automatalib.modelchecker.ltsmin.AbstractLTSmin;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
 import net.automatalib.modelchecker.ltsmin.LTSminMealy;
 import net.automatalib.modelchecker.ltsmin.ltl.AbstractLTSminLTL;
-import net.automatalib.serialization.fsm.parser.FSMFormatException;
 import net.automatalib.word.Word;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
@@ -107,7 +107,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
     }
 
     @Override
-    protected void verifyFormula(String formula) {
+    protected void verifyFormula(String formula) throws FormatException {
         LTSminLTLParser.requireValidIOFormula(formula);
     }
 
@@ -170,7 +170,7 @@ public abstract class AbstractLTSminMonitorMealy<I, O>
                     return result.getStates();
                 }
             };
-        } catch (IOException | FSMFormatException e) {
+        } catch (IOException | FormatException e) {
             throw new ModelCheckingException(e);
         } finally {
             // check if we must keep the FSM

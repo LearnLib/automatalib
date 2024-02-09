@@ -19,15 +19,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class DependencyGraphTest {
 
     @Test
-    void testDependencyGraph() throws ParseException {
+    void testDependencyGraph() throws FormatException {
         String formula = "mu X.(<b><b>true || <>X)";
         FormulaNode<String, String> ast = M3CParser.parse(formula);
         DependencyGraph<String, String> dg = new DependencyGraph<>(ast);

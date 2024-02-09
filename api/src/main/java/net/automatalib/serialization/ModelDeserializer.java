@@ -47,7 +47,7 @@ public interface ModelDeserializer<M> {
      * @throws FormatException
      *         if the content of the stream was not in the expected format
      */
-    M readModel(InputStream is) throws IOException;
+    M readModel(InputStream is) throws IOException, FormatException;
 
     /**
      * Reads the contents from the given URL and de-serializes it into a model instance.
@@ -62,7 +62,7 @@ public interface ModelDeserializer<M> {
      * @throws FormatException
      *         if the content of the stream was not in the expected format
      */
-    default M readModel(URL url) throws IOException {
+    default M readModel(URL url) throws IOException, FormatException {
         try (InputStream is = IOUtil.asBufferedInputStream(url.openStream())) {
             return readModel(is);
         }
@@ -81,7 +81,7 @@ public interface ModelDeserializer<M> {
      * @throws FormatException
      *         if the content of the stream was not in the expected format
      */
-    default M readModel(File f) throws IOException {
+    default M readModel(File f) throws IOException, FormatException {
         try (InputStream is = IOUtil.asBufferedInputStream(f)) {
             return readModel(is);
         }
@@ -100,7 +100,7 @@ public interface ModelDeserializer<M> {
      * @throws FormatException
      *         if the content of the stream was not in the expected format
      */
-    default M readModel(byte[] buf) throws IOException {
+    default M readModel(byte[] buf) throws IOException, FormatException {
         try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
             return readModel(is);
         }

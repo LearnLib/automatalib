@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.function.Function;
 
 import de.learnlib.tooling.annotation.builder.GenerateBuilder;
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.ltsmin.LTSminAlternating;
 import net.automatalib.modelchecker.ltsmin.LTSminLTLParser;
 import net.automatalib.modelchecking.Lasso.MealyLasso;
@@ -53,7 +54,7 @@ public class LTSminLTLAlternating<I, O> extends AbstractLTSminLTLMealy<I, O>
     }
 
     @Override
-    protected void verifyFormula(String formula) {
+    protected void verifyFormula(String formula) throws FormatException {
         LTSminLTLParser.requireValidLetterFormula(formula);
     }
 }

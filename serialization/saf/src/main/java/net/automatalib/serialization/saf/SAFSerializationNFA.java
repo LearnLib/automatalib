@@ -23,6 +23,7 @@ import net.automatalib.alphabet.Alphabet;
 import net.automatalib.automaton.fsa.NFA;
 import net.automatalib.automaton.fsa.impl.CompactNFA;
 import net.automatalib.common.util.IOUtil;
+import net.automatalib.exception.FormatException;
 import net.automatalib.serialization.InputModelData;
 import net.automatalib.serialization.InputModelSerializationProvider;
 
@@ -38,7 +39,8 @@ public final class SAFSerializationNFA
     }
 
     @Override
-    public InputModelData<Integer, NFA<Integer, Integer>> readModel(InputStream is) throws IOException {
+    public InputModelData<Integer, NFA<Integer, Integer>> readModel(InputStream is)
+            throws IOException, FormatException {
         try (InputStream stream = IOUtil.asUncompressedBufferedNonClosingInputStream(is)) {
             SAFInput in = new SAFInput(stream);
             final CompactNFA<Integer> automaton = in.readNativeNFA();

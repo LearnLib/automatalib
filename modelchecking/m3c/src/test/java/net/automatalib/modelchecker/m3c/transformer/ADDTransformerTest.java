@@ -23,6 +23,7 @@ import java.util.Set;
 import info.scce.addlib.dd.xdd.XDD;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVector;
 import info.scce.addlib.dd.xdd.latticedd.example.BooleanVectorLogicDDManager;
+import net.automatalib.exception.FormatException;
 import net.automatalib.modelchecker.m3c.formula.BoxNode;
 import net.automatalib.modelchecker.m3c.formula.DependencyGraph;
 import net.automatalib.modelchecker.m3c.formula.DiamondNode;
@@ -33,7 +34,6 @@ import net.automatalib.modelchecker.m3c.formula.TrueNode;
 import net.automatalib.modelchecker.m3c.formula.ctl.AGNode;
 import net.automatalib.modelchecker.m3c.formula.modalmu.LfpNode;
 import net.automatalib.modelchecker.m3c.formula.parser.M3CParser;
-import net.automatalib.modelchecker.m3c.formula.parser.ParseException;
 import net.automatalib.ts.modal.transition.ModalEdgeProperty;
 import net.automatalib.ts.modal.transition.impl.ModalEdgePropertyImpl;
 import org.testng.Assert;
@@ -49,7 +49,7 @@ public class ADDTransformerTest {
     private final BoxNode<String, String> boxNode;
     private final TrueNode<String, String> trueNode;
 
-    public ADDTransformerTest() throws ParseException {
+    public ADDTransformerTest() throws FormatException {
         String formula = "mu X.(<b>[b]true || <>X)";
         dg = new DependencyGraph<>(M3CParser.parse(formula));
         xddManager = new BooleanVectorLogicDDManager(dg.getNumVariables());
@@ -216,7 +216,7 @@ public class ADDTransformerTest {
     }
 
     @Test
-    void testUpdate() throws ParseException {
+    void testUpdate() throws FormatException {
         final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
         DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
         ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dependencyGraph);
@@ -239,7 +239,7 @@ public class ADDTransformerTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    void testUpdateDeadlockException() throws ParseException {
+    void testUpdateDeadlockException() throws FormatException {
         final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
         DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
         ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dependencyGraph);
@@ -251,7 +251,7 @@ public class ADDTransformerTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    void testUpdateException() throws ParseException {
+    void testUpdateException() throws FormatException {
         final String formulaWithNegatedAP = "mu X.(<b><b>!'a' || <>X)";
         DependencyGraph<String, String> dependencyGraph = new DependencyGraph<>(M3CParser.parse(formulaWithNegatedAP));
         ADDTransformer<String, String> transformer = new ADDTransformer<>(xddManager, dependencyGraph);
